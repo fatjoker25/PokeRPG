@@ -5,7 +5,18 @@
    ------------------------------------------------------------ */
 const C24_ABERTURAS = ['c24_a_primeira', 'c24_ab_a_fila', 'c24_ab_quem_voltou', 'c24_ab_o_aviso'];
 function c24_cabe(id, d){ return true; }
-function c24_abertura(d){ return Dados.escolher(C24_ABERTURAS.filter(id => c24_cabe(id, d))); }
+function c24_abertura(d){
+  const id = Dados.escolher(C24_ABERTURAS.filter(id => c24_cabe(id, d)));
+  if (d && d.relogio && d.flags && d.flags.c24_chegada == null){
+    /* a fila da primeira guarita já tem três barrados às nove */
+    Relogio.ate(9);
+    d.flags.c24_chegada = d.relogio.dia;
+  }
+  return id;
+}
+function c24_hora(d){ sincronizarHora(d.relogio); return d.relogio.hora; }
+/* a convocação é na segunda às dez; numa segunda, é a da semana que vem */
+function c24_segunda(){ return Calendario.hoje().semanaIdx === 0 ? 'Segunda que vem' : 'Segunda'; }
 
 /* ============================================================
    CAPÍTULO 24 — SETE GUARITAS
@@ -159,7 +170,7 @@ c24_a_primeira:{
     fala('o guarda da primeira', 'Cartão de treinador, por favor.'),
     'Você entrega. Ele passa o leitor. A máquina apita uma vez.',
     d=>fala('o guarda da primeira', `${c21_insignias(d).replace(/^./, c => c.toUpperCase())}, licença válida, sem restrição.`),
-    fala('o guarda da primeira', 'Passa na segunda que eles conferem de novo.', 'frio')
+    fala('o guarda da primeira', 'Passa na segunda guarita, que lá eles conferem de novo.', 'frio')
   ],
   ef:{flag:'entrou_nas_guaritas',
       registrar:'As sete guaritas da Rota 23 agora têm gente dentro. Uniforme cinza.'},
@@ -223,14 +234,17 @@ c24_anotou_a_sigla:{
 c24_contornou:{
   texto:[
     'As guaritas não têm porta, não têm cerca e não têm nada dos lados. Elas são sete casinhas de pedra numa estrada de montanha.',
-    'Você sai da estrada, anda trinta metros de mato, e passa as sete em quarenta minutos sem falar com ninguém.',
+    d=>d.flags.barrado_na_setima
+      ? 'Você espera escurecer, volta até a curva e sai da estrada antes da sétima. Trinta metros de mato no escuro, devagar, e a cancela fica pra trás sem ninguém ver.'
+      : 'Você sai da estrada, anda trinta metros de mato, e passa as sete em quarenta minutos sem falar com ninguém.',
     'Do outro lado, esperando na pedra, sentado, tem um oitavo guarda que não tem guarita.',
     fala('o oitavo guarda', 'Todo mundo tenta.', null, 'Ele nem levanta.'),
     fala('o oitavo guarda', 'Eu fico aqui justamente porque todo mundo tenta, e porque sair da estrada não é crime, e porque eu não posso te prender.'),
     fala('o oitavo guarda', 'Eu só anoto. Você quer me dizer o seu nome ou eu escrevo "desconhecido" e descrevo a sua cara?', 'frio')
   ],
   ef:{flag:'contornou_as_guaritas',
-      registrar:'Contornou as sete guaritas pelo mato. Tinha um oitavo guarda do outro lado.'},
+      registrar:'Contornou as sete guaritas pelo mato. Tinha um oitavo guarda do outro lado.',
+      executar:d=>{ if (d.flags.barrado_na_setima && c24_hora(d) < 19) Relogio.ate(20); }},
   escolhas:[
     {texto:'Dar o nome.', vai:'c24_deu_o_nome',
      ef:{rep:{eixo:'bom',delta:1,motivo:'Deu o próprio nome quando podia mentir'}}},
@@ -251,7 +265,7 @@ c24_deu_o_nome:{
     fala('o oitavo guarda', 'Papel sozinho some. Sete papéis não somem.')
   ],
   ef:{flag:'conselho_do_oitavo_guarda', moral:2,
-      npc:{nome:'Oitavo guarda', opiniao:3, memoria:'Te ensinou que sete papéis não somem e um papel sozinho some.'},
+      npc:{nome:'o oitavo guarda', opiniao:3, memoria:'Te ensinou que sete papéis não somem e um papel sozinho some.'},
       rep:{eixo:'bom',delta:1,motivo:'Escutou um conselho que ninguém era obrigado a dar'},
       registrar:'O oitavo guarda: "papel sozinho some, sete papéis não somem".'},
   escolhas:[
@@ -317,7 +331,7 @@ c24_exigiu_o_visor:{
   texto:[
     'Você pede pra ver, e ele diz que não pode, e você pede de novo, e ele olha pros lados e vira o visor dez graus.',
     'Dez graus é o suficiente.',
-    fala('o visor', 'ACOMP. ATIVO — ORIGEM: 704 — NÍVEL: 2 — REVISÃO: TRIMESTRAL', 'frio'),
+    '**ACOMP. ATIVO — ORIGEM: 704 — NÍVEL: 2 — REVISÃO: TRIMESTRAL**',
     'Sala 704. Sétimo andar. Você conhece o corredor.',
     'Nível 2. Existe nível 1 e existem níveis acima de 2.',
     fala('o guarda da terceira', '{O senhor|A senhora} não viu isso.', 'baixo'),
@@ -325,7 +339,7 @@ c24_exigiu_o_visor:{
   ],
   ef:{flag:'viu_o_visor', moral:-2,
       itens:{'Anotação: ACOMP. ATIVO — 704 — NÍVEL 2':1},
-      npc:{nome:'Guarda da terceira', opiniao:2, memoria:'Virou o visor dez graus pra você ver. Tem filho.'},
+      npc:{nome:'o guarda da terceira', opiniao:2, memoria:'Virou o visor dez graus pra você ver. Tem filho.'},
       rep:{eixo:'bom',delta:2,motivo:'Insistiu até ver o que estava escrito sobre você', rep:{notorio:true}},
       registrar:'ACOMP. ATIVO — ORIGEM 704 — NÍVEL 2 — REVISÃO TRIMESTRAL.'},
   escolhas:[
@@ -339,7 +353,7 @@ c24_quantos_niveis:{
     d=>fala(d.jogador.nome, 'Quantos níveis existem?'),
     'Ele fecha o visor com a mão, o que é tarde demais e ele sabe.',
     fala('o guarda da terceira', 'Quatro.'),
-    fala('o guarda da terceira', 'No quatro a cancela não levanta. Eu nunca vi um quatro. O turno da noite viu um em março.'),
+    fala('o guarda da terceira', 'No quatro a cancela não levanta. Eu nunca vi um quatro. O turno da noite viu um na primeira noite.'),
     d=>fala(d.jogador.nome, 'E aí?'),
     fala('o guarda da terceira', 'E aí a cancela não levantou.', 'frio')
   ],
@@ -395,7 +409,7 @@ c24_agradeceu_o_aviso:{
     fala('o guarda da quinta', 'E o meu visor apitou quando eles chegaram, e eu não apertei nada.', 'baixo')
   ],
   ef:{flag:'o_guarda_da_quinta_ajudou',
-      npc:{nome:'Guarda da quinta', opiniao:3, memoria:'Te avisou do carro preto com um movimento de dois centímetros.'},
+      npc:{nome:'o guarda da quinta', opiniao:3, memoria:'Te avisou do carro preto com um movimento de dois centímetros.'},
       rep:{eixo:'bom',delta:1,motivo:'Agradeceu quem se arriscou por você'},
       registrar:'O carro preto estava na quinta guarita desde as sete da manhã.'},
   escolhas:[
@@ -412,12 +426,12 @@ c24_bateu_no_vidro:{
     'O vidro de trás desce vinte centímetros.',
     fala('a mulher de crachá azul', 'Você é a primeira pessoa que bate no vidro.', null, 'Dá pra ver só os olhos dela e parte da boca.'),
     fala('a mulher de crachá azul', 'Em três anos fazendo isso, ninguém nunca bateu no vidro. Todo mundo passa reto e olha pelo canto.'),
-    fala('a mulher de crachá azul', 'Segunda, dez horas, Saffron. Eu vou estar na sala.'),
+    d=>fala('a mulher de crachá azul', `${c24_segunda()}, dez horas, Saffron. Eu vou estar na sala.`),
     fala('a mulher de crachá azul', 'Eu vim aqui só pra ter certeza de que você ia subir essa estrada. Agora eu tenho.', 'frio'),
     'O vidro sobe. O carro liga. Eles vão embora na direção de Saffron e não olham pra trás.'
   ],
   ef:{flag:'bateu_no_vidro_do_carro', moral:3,
-      npc:{nome:'Mulher de crachá azul', opiniao:2, memoria:'Você bateu no vidro do carro dela. Ninguém nunca tinha batido.'},
+      npc:{nome:'a mulher de crachá azul', opiniao:2, memoria:'Você bateu no vidro do carro dela. Ninguém nunca tinha batido.'},
       rep:{eixo:'bom',delta:3,motivo:'Bateu no vidro do carro que estava te esperando', rep:{notorio:true}},
       registrar:'Bateu no vidro do carro preto. Ela disse que ninguém nunca tinha batido.'},
   escolhas:[{texto:'Seguir para a sexta e a sétima.', vai:'c24_chegou_no_planalto'}]
@@ -443,10 +457,10 @@ c24_esperou:{
     'Aos cinquenta e dois minutos, o vidro de trás desce vinte centímetros.',
     fala('a mulher de crachá azul', 'Você venceu.', 'riso'),
     fala('a mulher de crachá azul', 'Eu tenho uma reunião às três e você acabou de gastar cinquenta minutos meus, e eu não consigo nem ficar brava.'),
-    fala('a mulher de crachá azul', 'Segunda, dez horas, Saffron. Agora sobe a estrada.', 'frio')
+    d=>fala('a mulher de crachá azul', `${c24_segunda()}, dez horas, Saffron. Agora sobe a estrada.`, 'frio')
   ],
-  ef:{flag:'esperou_o_carro', moral:4,
-      npc:{nome:'Mulher de crachá azul', opiniao:3, memoria:'Sentou numa pedra e esperou cinquenta e dois minutos até ela abrir o vidro.'},
+  ef:{flag:'esperou_o_carro', moral:4, executar:d=>{ Relogio.avancar(1); },
+      npc:{nome:'a mulher de crachá azul', opiniao:3, memoria:'Sentou numa pedra e esperou cinquenta e dois minutos até ela abrir o vidro.'},
       rep:{eixo:'bom',delta:3,motivo:'Sentou numa pedra e ganhou no tempo', rep:{notorio:true}},
       registrar:'Esperou cinquenta e dois minutos sentad{o|a} numa pedra até o vidro descer.'},
   escolhas:[{texto:'Subir a estrada.', vai:'c24_chegou_no_planalto'}]
@@ -458,14 +472,20 @@ c24_chegou_no_planalto:{
     d=>d.flags.contornou_as_guaritas ? '' : 'Sétima guarita: a máquina não apita. Ela faz um som diferente, mais grave, uma nota só.',
     d=>d.flags.contornou_as_guaritas ? '' : 'O guarda da sétima olha o visor, olha você, e levanta a cancela sem falar nada — e é a única das sete que levanta a cancela antes de devolver o cartão.',
     'Do outro lado das sete guaritas a estrada sobe mais quatro quilômetros e vira à direita, e do alto da curva dá pra ver o Planalto Indigo inteiro.',
-    d=>d.flags.bateu_no_vidro_do_carro || d.flags.esperou_o_carro
+    d=>d.flags.passou_reto_pelo_carro
       ? 'Tem um carro preto estacionado no pátio, de vidro escuro, com placa de Saffron. Chegou primeiro.'
+      : d.flags.bateu_no_vidro_do_carro || d.flags.esperou_o_carro
+      ? 'No pátio não tem carro preto nenhum. O de vidro escuro desceu pra Saffron.'
       : 'Tem um carro preto estacionado no pátio, de vidro escuro, com placa de Saffron. Você não sabe há quanto tempo.',
-    d=>d.flags.sabe_da_convocacao || d.flags.falou_com_o_cracha_azul
-      ? 'Segunda, dez horas. Sala com mesa comprida, quatro cadeiras.'
-      : 'Segunda, dez horas. É o que diz a convocação, e ela não diz mais nada.'
+    d=>d.flags.sabe_da_convocacao
+      ? `${c24_segunda()}, dez horas. Quatro nomes no protocolo, e dois você não sabe.`
+      : d.flags.falou_com_o_cracha_azul
+      ? `${c24_segunda()}, dez horas. Uma sala e uma mesa comprida, como ela disse na arquibancada.`
+      : `${c24_segunda()}, dez horas. É o que diz a convocação, e ela não diz mais nada.`
   ],
   ef:{flag:'chegou_pro_planalto',
+      /* as guaritas, os quatro quilômetros e a curva levam até perto do meio-dia */
+      executar:d=>{ if (c24_hora(d) < 12) Relogio.ate(12); },
       registrar:d=>d.flags.contornou_as_guaritas
         ? 'Passou pelas sete guaritas da Rota 23.'
         : 'Passou as sete guaritas. A sétima levantou a cancela antes de devolver o cartão.'},

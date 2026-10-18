@@ -585,13 +585,13 @@ c24_fim_voltou:{
   texto:[
     'Você desce os quatro quilômetros e não volta pra casa: para na primeira guarita e senta na pedra em frente a ela.',
     'Sentar na pedra em frente à primeira guarita da Rota 23 não é crime nenhum. É uma pedra numa estrada pública.',
-    'Às onze da manhã passa uma pessoa subindo e você conta pra ela o que tem na sétima.',
-    'Às onze e quarenta passam duas.',
-    'À uma da tarde o guarda da primeira sai da guarita e vem falar com você, e você está preparad{o|a} pra briga e não é briga.',
+    'Ao meio-dia passa uma pessoa subindo e você conta pra ela o que tem na sétima.',
+    'Meio-dia e quarenta passam duas.',
+    'Às duas da tarde o guarda da primeira sai da guarita e vem falar com você, e você está preparad{o|a} pra briga e não é briga.',
     fala('o guarda da primeira', 'Você vai ficar aí o dia inteiro?'),
     d=>fala(d.jogador.nome, 'Vou.'),
     'Ele olha a estrada. Depois a guarita. Depois a estrada de novo.',
-    fala('o guarda da primeira', 'Então pega uma sombra. Aí onde você tá bate sol das duas em diante.')
+    fala('o guarda da primeira', 'Então pega uma sombra. Aí onde você tá bate sol a tarde inteira.')
   ],
   final:{id:'a_pedra_da_primeira', titulo:'A PEDRA EM FRENTE À PRIMEIRA', texto:[
     'Você senta naquela pedra por cento e quarenta e um dias.',
