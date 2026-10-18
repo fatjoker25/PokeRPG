@@ -104,6 +104,12 @@ const RECUSAM_O_NOME = {
   'a ex-técnica da Estação 2': () => [
     fala('a ex-técnica da Estação 2', 'As iniciais estão na carta. Foi de propósito.'),
     fala('a ex-técnica da Estação 2', 'Eu passei sete meses chamando Pokémon por matrícula. Deixa eu ter um nome que é só meu.', 'baixo')
+  ],
+  /* o refeitório da Estação 4, no 19: ele já avisou na primeira frase */
+  'o voluntário sem nome': () => [
+    'Ele não levanta a cabeça do prato.',
+    fala('o voluntário sem nome', 'Eu já disse que não vou dizer.'),
+    fala('o voluntário sem nome', 'Nome é o que eles anotam na escala. Aqui com você, eu prefiro não estar escrito em lugar nenhum.', 'baixo')
   ]
 };
 
@@ -272,7 +278,7 @@ const NOMES_DA_HISTORIA = new Set([
   'Odile','Orin','Pascal','Pia','Poplar','Quince','Quint','Ridge','Rina','Roland','Roque',
   'Sibyl','Sorrel','Stellan','Thea','Thistle','Tobias','Ulla','Ulric','Varian','Vernon',
   'Vesna','Waldo','Wilma','Xavi','Yarrow','Ylva','Yves','Zane','Zelda','Hawthorn',
-  'Larch','Silas','Toby','Bertram','Edwin','Garth','Edith',
+  'Larch','Silas','Toby','Bertram','Edwin','Garth','Edith','Tansy','Elda',
   /* os nomes fixos daqui de cima */
   'Marlow','Myrtle','Tito','Pike','Rufo','Lena','Gina',
   'Tessa','Rue',

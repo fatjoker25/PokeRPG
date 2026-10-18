@@ -1201,7 +1201,8 @@ const Estado = {
       const ITEM_NOVO = {'Colete de Couro':'Colete de Lona', 'Cobertor de lã':'Cobertor de flanela',
         'Caixa de ventilador com um bicho dentro':'Caixa de ventilador com um Pokémon dentro',
         'Mapa de nove anos atrás':'Mapa velho de Kanto', 'Caderno do Teco':'Caderno do Toby',
-        'Recorte da constituição da CGRB':'Recorte da ata da CGRB', 'Papel com o nome de Maeve Corwin':'Papel com o nome de Maeve Bracken'};
+        'Recorte da constituição da CGRB':'Recorte da ata da CGRB', 'Papel com o nome de Maeve Corwin':'Papel com o nome de Maeve Bracken',
+        'Caderno de campo de K. Fuji':'Caderno de campo do Dr. Fuji', 'Anilha 41-C-07':'Anilha 41-C-107'};
       for (const [velho, novo] of Object.entries(ITEM_NOVO)){
         if (d.itens && d.itens[velho]){ d.itens[novo] = (d.itens[novo] || 0) + d.itens[velho]; delete d.itens[velho]; }
         for (const p of [].concat(d.time || [], d.pc || [])) if (p && p.segurando === velho) p.segurando = novo;
@@ -1211,7 +1212,8 @@ const Estado = {
                         'o veterinário do conselho':'o médico do conselho', 'a veterinária de Cerulean':'a médica de Cerulean',
                         'Sr. Roland Poplar':'Sr. Emory Poplar', 'Garoto de Fuchsia':'Rory', 'Ivy Calder':'Tess Calder',
                         'Sr. Holt':'Sr. Larch', 'Secretária da Colônia Z-14':'a secretária da colônia',
-                        'Maeve Corwin':'Maeve Bracken', 'o bibliotecário':'Sr. Pell'};
+                        'Maeve Corwin':'Maeve Bracken', 'o bibliotecário':'Sr. Pell',
+                        'Sra. Hazel':'Sra. Tansy', 'o homem do zoológico':'o mais velho da mesa'};
       /* a mesma pessoa gravada com duas grafias virava duas pessoas, com
          opinião separada: junta na grafia certa */
       const MESMA_PESSOA = {'a Terceira':'A Terceira', 'Mulher da pasta de vinil':'a mulher da pasta',

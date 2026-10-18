@@ -3776,7 +3776,7 @@ c18_pedir_cracha:{
     'Ele olha para o teto da lanchonete por uns três segundos, fazendo uma conta que você não vê.',
     fala('Curador Fabre', 'O meu tem foto.'),
     d=>fala(d.jogador.nome, 'O seu não. Outro.'),
-    fala('Curador Fabre', 'Tem o da Elda, que está de licença até o dia vinte.'),
+    fala('Curador Fabre', 'Tem o da Elda, que está de licença.'),
     'Ele fala devagar, ouvindo a si mesmo cometer o erro.',
     fala('Curador Fabre', 'Ela deixou na gaveta porque licença-maternidade não devolve crachá.'),
     'Ele passa a mão na cara.',

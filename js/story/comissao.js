@@ -55,7 +55,7 @@ const GENTE_COMISSAO = {
   },
   tecnico:{
     nome:'Dr. Hollis', cargo:'Técnico-chefe de Viveiro',
-    descricao:'Trabalhou na Silph até o andar 11 ser lacrado. Migrou com o projeto, como se muda de sala.'
+    descricao:'Foi da parte técnica do laboratório de Cinnabar e do andar 11 da Silph. Quando a Comissão abriu a Estação 4, migrou com a parte de população, como quem muda de sala.'
   }
 };
 
