@@ -5,7 +5,35 @@
    ------------------------------------------------------------ */
 const C22_ABERTURAS = ['c22_o_quadro', 'c22_ab_a_arquibancada', 'c22_ab_o_outro_inscrito', 'c22_ab_o_recibo'];
 function c22_cabe(id, d){ return true; }
-function c22_abertura(d){ return Dados.escolher(C22_ABERTURAS.filter(id => c22_cabe(id, d))); }
+function c22_abertura(d){
+  const id = Dados.escolher(C22_ABERTURAS.filter(id => c22_cabe(id, d)));
+  if (d && d.relogio && d.flags && d.flags.c22_chegada == null){
+    /* você chega cedo: a arquibancada ainda está quase vazia */
+    Relogio.ate(8);
+    d.flags.c22_chegada = d.relogio.dia;
+  }
+  return id;
+}
+function c22_hora(d){ sincronizarHora(d.relogio); return d.relogio.hora; }
+/* quem tirou o nome do quadro e foi embora não viu o torneio: desce de manhã */
+function c22_desceuCedo(d){ return !!d.flags.recusou_o_torneio && !d.flags.assistiu_da_arquibancada; }
+/* o mês de k meses atrás, pelo calendário do jogo */
+function c22_mesAtras(k){ return Calendario.MESES[(((Calendario.hoje().mes - k) % 12) + 12) % 12]; }
+/* quem atende quando você liga pra perguntar da inscrição: alguém da
+   agenda que conhece a Liga de perto */
+const C22_QUEM_SABE = ['goro', 'blue', 'brock', 'misty', 'surge', 'erika', 'koga', 'sabrina', 'blaine', 'enfermeira'];
+function c22_quemSabe(){
+  if (typeof Estado === 'undefined' || !Estado.temPokenav()) return null;
+  const tem = Estado.contatosNaAgenda().map(c => c.id);
+  const c = contatoPorId(C22_QUEM_SABE.find(id => tem.includes(id)) || '');
+  if (!c) return null;
+  return c.falaComo || (typeof c.nome === 'function' ? c.nome(Estado.dados) : c.nome);
+}
+/* quanto tempo de estrada, pela boca de quem está nela */
+function c22_tempoDeEstrada(d){
+  const dias = (d.relogio.dia || 1) - 1;
+  return dias < 50 ? 'Um mês e pouco.' : dias < 75 ? 'Dois meses.' : 'Uns meses.';
+}
 
 /* ============================================================
    CAPÍTULO 22 — O CHAVEAMENTO
@@ -49,9 +77,9 @@ c22_ab_os_tres_da_folha:{
     fala('o homem da folha', 'É você.'),
     d=>fala(d.jogador.nome, 'Eu não me inscrevi.'),
     'Os três se olham. A mulher do lado é a que responde.',
-    fala('a mulher do lado', 'Isso já aconteceu duas vezes esse ano.'),
+    fala('a mulher do lado', 'Isso já aconteceu duas vezes.'),
     d=>fala(d.jogador.nome, 'Já aconteceu?'),
-    fala('a mulher do lado', 'Em março e em julho. Dois inscritos que apareceram na véspera e que ninguém conhecia.'),
+    d=>fala('a mulher do lado', `Em ${c22_mesAtras(5)} e em ${c22_mesAtras(2)}. Dois inscritos que apareceram na véspera e que ninguém conhecia.`),
     fala('o homem da folha', 'Os dois ganharam o torneio.'),
     'Silêncio dos quatro.',
     fala('a mulher do lado', 'E os dois sumiram depois. Não é conspiração, é fato: os dois não aparecem em nenhum torneio desde então.'),
@@ -59,7 +87,7 @@ c22_ab_os_tres_da_folha:{
   ],
   ef:{flag:['dois_inscritos_antes','inscrito_por_terceiro'],
       npc:{nome:'a mulher do lado', opiniao:2, viuVoce:'Te contou dos dois inscritos de véspera que ganharam e sumiram.'},
-      registrar:'Já houve dois inscritos de véspera este ano. Os dois venceram e não competiram mais.'},
+      registrar:'Já houve dois inscritos de véspera antes de você. Os dois venceram e não competiram mais.'},
   escolhas:[
     {texto:'Descer e exigir o nome de quem pagou.', vai:'c22_exigiu_o_nome'},
     {texto:'Recusar a vaga.', vai:'c22_recusou_a_vaga'},
@@ -73,7 +101,7 @@ c22_ab_o_outro_inscrito:{
     'Ele te vê chegar e circula mais um sem olhar pra folha.',
     fala('o rapaz da caneta', 'Chave quatro.'),
     d=>fala(d.jogador.nome, 'Como você sabe?'),
-    fala('o rapaz da caneta', 'Porque eu sou chave cinco e a chave cinco luta com a chave quatro na segunda rodada.'),
+    fala('o rapaz da caneta', 'Porque eu sou chave três, e a chave três luta com a chave quatro na segunda rodada.'),
     'Ele levanta a folha e mostra. Tem sete nomes circulados de trinta e dois.',
     fala('o rapaz da caneta', 'Eu circulo os que eu conheço de vista. Sete, de trinta e dois.'),
     d=>fala(d.jogador.nome, 'E os outros vinte e cinco?'),
@@ -162,14 +190,14 @@ c22_o_quadro:{
     {texto:'Recusar a vaga. Sair do chaveamento.', vai:'c22_recusou_a_vaga'},
     {texto:'Aceitar e lutar. Quem pagou aparece ou não aparece.', vai:'c22_aceitou'},
     {texto:'Ligar pra alguém que possa saber disso.', vai:'c22_ligou_perguntando',
-     cond:d=>Estado.temPokenav() && Estado.contatosNaAgenda().length > 1}
+     cond:d=>!!c22_quemSabe()}
   ]
 },
 
 c22_exigiu_o_nome:{
   texto:[
     'Você exige, e o funcionário da mesa te leva à supervisora, e a supervisora abre uma pasta e vira a pasta pra você ver.',
-    fala('a supervisora', 'Dinheiro vivo, no balcão, três dias atrás. Quem paga em dinheiro não deixa nome.'),
+    fala('a supervisora', 'Dinheiro vivo, no balcão, ontem no fim do expediente. Quem paga em dinheiro não deixa nome.'),
     fala('a supervisora', 'Eu posso te dizer o que o rapaz do balcão lembrou: mulher, de terno, crachá azul pendurado no bolso.'),
     d=>d.flags.sabe_dos_crachas ? 'Crachá azul. Na Silph, é o crachá que sobe até o décimo andar.' : 'Crachá azul. Você guarda o detalhe.',
     fala('a supervisora', 'Isso não é ilegal, {moço|moça}. É esquisito, e eu concordo que é esquisito, mas não é ilegal.')
@@ -189,9 +217,9 @@ c22_ligou_perguntando:{
   texto:[
     'Você sai do galpão da arena, senta no muro de fora e abre o aparelho.',
     'Você liga pra três números antes de conseguir uma resposta que presta, e a terceira é a que presta.',
-    fala('quem te atendeu', 'Torneio aberto, chave quatro, inscrição paga por terceiro.'),
-    fala('quem te atendeu', 'Escuta o que eu vou falar: isso não é presente. Isso é pra te colocar num lugar onde muita gente olha, num dia marcado.'),
-    fala('quem te atendeu', 'Quem quer você visível quer você visível por um motivo. Vai lá e luta, mas vai sabendo.', 'baixo')
+    d=>fala(c22_quemSabe() || 'quem te atendeu', 'Torneio aberto, chave quatro, inscrição paga por terceiro.', null, 'Repete devagar, como quem anota.'),
+    d=>fala(c22_quemSabe() || 'quem te atendeu', 'Escuta o que eu vou falar: isso não é presente. Isso é pra te colocar num lugar onde muita gente olha, num dia marcado.'),
+    d=>fala(c22_quemSabe() || 'quem te atendeu', 'Quem quer você visível quer você visível por um motivo. Vai lá e luta, mas vai sabendo.', 'baixo')
   ],
   ef:{flag:'avisado_do_torneio', moral:2,
       rep:{eixo:'bom',delta:1,motivo:'Perguntou antes de entrar'},
@@ -209,11 +237,11 @@ c22_pagou_do_bolso:{
     fala('a supervisora', 'Eu vou ter que refazer três papéis por causa disso.'),
     fala('a supervisora', 'E eu vou refazer, porque em onze anos aqui você é a primeira pessoa que pediu pra pagar o que já estava pago.', 'riso'),
     'Ela risca, escreve, carimba, e devolve o dinheiro do desconhecido pro envelope da mesa.',
-    'Sai de lá mais pobre e completamente seu.'
+    'Sai de lá mais pobre e completamente {seu|sua}.'
   ],
   ef:{dinheiro:-2000, flag:'pagou_a_propria_inscricao', moral:4,
       rep:{eixo:'bom',delta:2,motivo:'Pagou do bolso o que já estava pago, pra não dever a ninguém', rep:{notorio:true}},
-      npc:{nome:'Supervisora da arena', opiniao:3, memoria:'Pagou a própria inscrição num torneio que já estava pago.'},
+      npc:{nome:'a supervisora', opiniao:3, memoria:'Pagou a própria inscrição num torneio que já estava pago.'},
       registrar:'Pagou a própria inscrição pra não dever nada a quem pagou antes.'},
   escolhas:[{texto:'Entrar na arena.', vai:'c22_aceitou'}]
 },
@@ -223,7 +251,7 @@ c22_recusou_a_vaga:{
     'Você pede pra tirar o seu nome do quadro e o funcionário da mesa demora a entender o pedido, porque ninguém faz esse pedido.',
     'Ele tira o percevejo e o papel sai, e o buraquinho fica.',
     'Trinta e um nomes. Uma chave com bye.',
-    'Você sai do galpão e do lado de fora tem umas quarenta pessoas olhando o quadro, e uma delas — uma menina de uns treze anos — vê o seu nome sendo tirado e não entende, e você não vai ficar pra explicar.'
+    'Você sai do galpão e do lado de fora tem umas quarenta pessoas olhando o quadro, e uma delas — uma menina de uns treze anos — vê o seu nome sendo tirado e não entende, e você não tem como explicar.'
   ],
   ef:{flag:'recusou_o_torneio',
       rep:{eixo:'bom',delta:1,motivo:'Recusou uma vaga que alguém comprou pra você'},
@@ -249,13 +277,23 @@ c22_voltou_pro_quadro:{
 
 c22_da_arquibancada:{
   texto:[
-    'Você assiste o torneio inteiro da arquibancada, com um saco de pipoca de quinhentos pokedólares e uma sensação incômoda no peito que você não quer nomear.',
+    d=>`Você assiste o torneio inteiro da arquibancada ${d.flags.c22_pipoca ? 'com um saco de pipoca de quinhentos pokedólares' : 'sem dinheiro nem pra pipoca'}. No peito, uma sensação incômoda que você não quer nomear.`,
     'A final é entre um garoto de Saffron e uma mulher de uns quarenta que ninguém conhecia até hoje de manhã.',
     'Ela ganha. Ela chora. O garoto de Saffron aplaude ela antes de qualquer pessoa da arquibancada aplaudir.',
     'É um torneio bonito. Você devia estar nele.'
   ],
-  ef:{itens:{'Saco de pipoca':1}, moral:-3, flag:'assistiu_da_arquibancada',
-      registrar:'Assistiu da arquibancada o torneio em que o seu nome estava.'},
+  ef:{moral:-3, flag:'assistiu_da_arquibancada',
+      registrar:'Assistiu da arquibancada o torneio em que o seu nome estava.',
+      /* o torneio inteiro, até o fim da tarde */
+      executar:d=>{
+        let av = [];
+        if (d.jogador.dinheiro >= 500){
+          d.jogador.dinheiro -= 500; Estado.darItem('Saco de pipoca', 1); d.flags.c22_pipoca = true;
+          av = [{tipo:'item', texto:'Comprou um saco de pipoca (−500 ₽).'}];
+        }
+        if (c22_hora(d) < 17) Relogio.ate(17);
+        return av;
+      }},
   escolhas:[{texto:'Ir embora quando esvaziar.', vai:'c22_foi_embora'}]
 },
 
@@ -263,15 +301,18 @@ c22_da_arquibancada:{
 c22_aceitou:{
   texto:[
     'A arena aberta não tem teto. É um círculo de terra batida de vinte metros com arquibancada de concreto dos quatro lados e uma torre de som que chia.',
-    'Você luta três vezes em quatro horas.',
+    'Você luta quatro vezes em cinco horas.',
     'A primeira é contra um garoto de Lavender que decorou o seu time pelo boletim da Liga e montou tudo pra te vencer, e quase consegue, e perde por uma escolha errada no quinto turno.',
-    'A segunda é contra uma mulher de Cinnabar que não decorou nada e luta pelo instinto, o que é muito pior de enfrentar.',
-    'A terceira você não lembra direito depois, porque foi rápida demais.',
+    d=>d.flags.vinte_e_cinco_desconhecidos
+      ? 'A segunda é contra o rapaz da caneta, chave três, como ele tinha dito. Oito torneios abertos dão pra ele uma calma que você não tem, e ele perde por um golpe e ri quando perde.'
+      : 'A segunda é contra uma mulher de Cinnabar que não decorou nada e luta pelo instinto, o que é muito pior de enfrentar.',
+    'A terceira e a quarta passam tão rápido que, quando o locutor grita, você ainda está tentando lembrar dos golpes.',
     fala('o locutor da arena', 'CHAVE QUATRO NA FINAL!', 'grita', 'A torre de som chia na palavra FINAL e a arquibancada acha graça.')
   ],
   ef:{flag:'chegou_na_final_do_aberto', moral:5,
       rep:{eixo:'bom',delta:2,motivo:'Chegou à final do torneio aberto do Planalto', rep:{notorio:true}},
-      registrar:'Chegou à final do torneio aberto.'},
+      registrar:'Chegou à final do torneio aberto.',
+      executar:d=>{ Relogio.avancar(5); }},
   escolhas:[
     {texto:'Ir pra final.', vai:'c22_a_final'},
     {texto:'Olhar a arquibancada primeiro, procurando um crachá azul.', vai:'c22_procurou_na_arquibancada'}
@@ -315,7 +356,7 @@ c22_subiu_a_arquibancada:{
     'Ela não levanta quando você chega. Ela tira a bolsa do lugar do lado pra você sentar.',
     fala('a mulher de crachá azul', 'Senta. Você tem quatro minutos antes de perderem a paciência.'),
     fala('a mulher de crachá azul', 'Eu paguei a sua inscrição. Eu não vou pedir desculpa e não vou explicar aqui.'),
-    fala('a mulher de crachá azul', 'Vai ter uma sala, uma mesa comprida e quatro cadeiras, e nessa sala eu explico. Eu só precisava que mais gente te visse antes.'),
+    fala('a mulher de crachá azul', 'Vai ter uma sala e uma mesa comprida, e nessa sala eu explico. Eu só precisava que mais gente te visse antes.'),
     fala('a mulher de crachá azul', 'Agora desce e ganha, porque se você perder tudo isso fica muito mais difícil.', 'frio')
   ],
   ef:{flag:'falou_com_o_cracha_azul',
@@ -327,7 +368,8 @@ c22_subiu_a_arquibancada:{
 c22_a_final:{
   texto:[
     'A final é contra a mulher de uns quarenta anos que ninguém conhecia até hoje de manhã.',
-    'Ela se chama Nadia. Ela se inscreveu sozinha, pagou a própria inscrição, e veio de ônibus de Lavender na madrugada.',
+    'Ela se chama Nadia, e o locutor faz questão de dizer no microfone que ela se inscreveu sozinha e pagou a própria inscrição.',
+    'Veio de Lavender, de ônibus, de madrugada: a mochila dela ainda tem a etiqueta do bagageiro.',
     'Ela tem um Arcanine que já foi de outra pessoa e que obedece a ela de um jeito que não se ensina em seis meses.',
     fala('Nadia', 'Eu tenho quarenta e um anos e essa é a minha segunda licença.'),
     fala('Nadia', 'A primeira caiu em 1979, porque eu passei seis meses sem registrar batalha, porque eu estava criando gente.'),
@@ -367,7 +409,7 @@ c22_perdeu_a_final:{
     'Ela atravessa a arena antes do locutor terminar de falar e aperta a sua mão com as duas dela.',
     fala('Nadia', 'Você é {bom|boa}. Você vai ser muito melhor.'),
     fala('Nadia', 'Eu levei vinte e dois anos pra voltar pra essa arena. Você chegou aqui em quanto tempo?'),
-    d=>fala(d.jogador.nome, 'Uns meses.'),
+    d=>fala(d.jogador.nome, c22_tempoDeEstrada(d)),
     fala('Nadia', 'Então não faz essa cara.', 'riso')
   ],
   ef:{dinheiro:6000, flag:'perdeu_o_aberto', moral:3,
@@ -395,15 +437,24 @@ c22_trocou_numero:{
 
 c22_foi_embora:{
   texto:[
-    'Você desce a estrada do Planalto no fim da tarde com a arquibancada esvaziando atrás de você e o quadro de cortiça já sem nome nenhum.',
-    d=>d.flags.viu_a_mulher_do_cracha_azul || d.flags.pagou_uma_de_cracha_azul
-      ? 'A vaga que alguém comprou pra você já foi usada. Quem comprou vai cobrar, e você já sabe que vai, e já sabe mais ou menos quando.'
-      : 'Alguém pagou a sua inscrição e nunca apareceu, e isso vai ficar guardado num canto da sua cabeça pelo resto da estrada.',
-    'Na descida você passa por uma placa nova, de madeira, que não estava aqui na sua última subida.',
+    d=>c22_desceuCedo(d)
+      ? 'Você desce a estrada do Planalto com a manhã pela metade e a arquibancada enchendo atrás de você.'
+      : 'Você desce a estrada do Planalto no fim da tarde com a arquibancada esvaziando atrás de você e o quadro de cortiça já sem nome nenhum.',
+    d=>{
+      const f = d.flags;
+      if (f.recusou_o_torneio) return 'A vaga que alguém comprou pra você ficou no quadro como um buraquinho de percevejo. Se quem comprou estava olhando, viu.';
+      if (f.pagou_a_propria_inscricao) return 'A vaga foi sua do começo ao fim, paga do seu bolso. O dinheiro de quem pagou antes ficou num envelope da mesa.';
+      if (f.falou_com_o_cracha_azul) return 'A vaga que alguém comprou pra você já foi usada. Quem comprou disse que explica numa sala, numa mesa comprida, e não disse quando.';
+      if (f.viu_a_mulher_do_cracha_azul) return 'A vaga que alguém comprou pra você já foi usada, e quem comprou sabe que você sabe.';
+      if (f.pagou_uma_de_cracha_azul) return 'A vaga que alguém comprou pra você já foi usada. Uma mulher de terno e crachá azul, em dinheiro vivo, e mais nada.';
+      return 'Alguém pagou a sua inscrição e nunca apareceu, e a dúvida desce a estrada com você.';
+    },
+    'Na descida você passa por uma placa nova, de madeira, que não estava aqui quando você subiu.',
     '**ROTA 23 — CONTROLE DE ACESSO. SETE POSTOS. TENHA O CARTÃO EM MÃOS.**'
   ],
   ef:{flag:'viu_a_placa_da_rota23',
-      registrar:'Viu a placa nova do controle de acesso da Rota 23.'},
+      registrar:'Viu a placa nova do controle de acesso da Rota 23.',
+      executar:d=>{ if (!c22_desceuCedo(d) && c22_hora(d) < 17) Relogio.ate(17); }},
   fim:true
 }
 
