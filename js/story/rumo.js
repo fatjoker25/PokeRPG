@@ -1,9 +1,10 @@
 /* ============================================================
    RUMO — o que você quer, do que você gosta e como Kanto te vê
-   A ficha pede um objetivo, o que você gosta e o que não gosta. O
-   jogo lê isso do mesmo jeito que lê a cor da mochila na vestimenta:
-   procurando palavra. O que ele achar fica guardado na ficha
-   (j.meta, j.gostos, j.desgostos) e pesa na história:
+   A ficha de inscrição (inscricao.js) pede um objetivo, do que você
+   gosta e do que não gosta, e grava a escolha pronta (j.meta,
+   j.gostos, j.desgostos). Save de antes dela tinha texto livre, e o
+   jogo lê o texto procurando palavra, uma vez, e guarda do mesmo
+   jeito. Tudo isso pesa na história:
    - cada capítulo abre com uma linha que sai da sua via e do seu
      objetivo (e muda quando a via muda no meio do caminho);
    - lugar de que você gosta dá um dado a mais nos testes lá dentro; lugar
@@ -34,8 +35,11 @@ const GOSTOS_LUGAR = {
   vulcao:['calor', 'vulcao', 'sol', 'quente'],
   campo:['campo', 'grama', 'correr', 'ar livre', 'vento', 'bicicleta']
 };
+/* as chaves são os nomes dos tipos no jogo (TIPOS): "Planta" aqui nunca
+   casava com Pokémon nenhum, porque o tipo se chama Grama */
 const TIPOS_GOSTO = {
-  'Água':['agua'], 'Fogo':['fogo'], 'Planta':['planta', 'grama', 'flor'], 'Inseto':['inseto'],
+  'Água':['agua'], 'Fogo':['fogo'], 'Grama':['planta', 'grama', 'flor'], 'Inseto':['inseto'],
+  'Sombrio':['sombrio', 'sombra'], 'Metálico':['metalic', 'metal', 'aco'],
   'Fantasma':['fantasma'], 'Pedra':['pedra', 'rocha'], 'Voador':['voador', 'passaro', 'voar'],
   'Elétrico':['eletric', 'raio', 'trovao'], 'Psíquico':['psiquic', 'mente'], 'Dragão':['dragao'],
   'Gelo':['gelo', 'neve', 'frio'], 'Lutador':['luta', 'lutador', 'briga'], 'Venenoso':['veneno'],
@@ -73,6 +77,9 @@ function rumoDe(d){
   if (!j.meta) j.meta = lerObjetivo(j.objetivo);
   if (!j.gostos) j.gostos = lerGostos(j.gosta || '');
   if (!j.desgostos) j.desgostos = lerGostos(j.naoGosta || '');
+  /* save antigo leu "Planta", que não é o nome de tipo nenhum */
+  for (const g of [j.gostos, j.desgostos])
+    if (g && g.tipos && g.tipos.includes('Planta')) g.tipos = g.tipos.map(t => t === 'Planta' ? 'Grama' : t);
   return {meta:j.meta, gostos:j.gostos, desgostos:j.desgostos};
 }
 

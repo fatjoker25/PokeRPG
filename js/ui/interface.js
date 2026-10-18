@@ -40,6 +40,14 @@ function varsCartao(k){
   const c = CORES_CARTAO[k] || CORES_CARTAO.azul;
   return {'--cart-clara':c[0], '--cart':c[1], '--cart-esc':c[2]};
 }
+/* O rosto do jogador no cartão e na ficha: o uniforme da rede, quando
+   veste um, ou a foto escolhida na inscrição. Sem nenhum, null. */
+function retratoDoJogador(d){
+  d = d || (typeof Estado !== 'undefined' ? Estado.dados : null);
+  if (typeof Rede !== 'undefined' && Rede.dentro && d && Rede.dentro(d)){ const r = Rede.retrato(); if (r) return r; }
+  const j = d && d.jogador;
+  return j && j.retrato && typeof caminhoNPC === 'function' ? caminhoNPC(j.retrato) : null;
+}
 
 /* Os seis status do treinador, na ordem da ficha, com o que cada um
    decide. A ficha e o fim de capítulo leem daqui; o tutorial conta o
@@ -139,7 +147,7 @@ const UI = {
      passa pra tela seguinte (o Ezra saía com o balão do Brock). */
   limpar(){
     this.app.innerHTML = '';
-    document.body.classList.remove('na-abertura');
+    document.body.classList.remove('na-abertura', 'na-criacao');
     this.npcDaCena = null; this.npcEhProprio = false; this.falanteDaCena = null;
     this.vozesDaCena = null; this.minhasFalasDaCena = null;
   },
@@ -360,117 +368,498 @@ const UI = {
   },
 
   /* ========================================================
-     CRIAÇÃO DE PERSONAGEM
+     CRIAÇÃO DE PERSONAGEM — a ficha de inscrição da Liga
+     Seis passos no idioma da abertura: quem você é, o seu jeito, o
+     que você quer, a aparência, quem fica em casa e a conferência.
+     O que pesa no jogo é escolha (js/data/inscricao.js); o que é só
+     descrição é texto livre, com sugestão sorteada. Ao lado, o
+     cartão de inscrição vai se preenchendo; no celular ele aparece
+     na conferência. O estado mora em UI._cr até "Sair de casa".
      ======================================================== */
+  PASSOS_CRIACAO: [['voce', 'Você'], ['jeito', 'Seu jeito'], ['rumo', 'O que você quer'],
+                   ['visual', 'Aparência'], ['casa', 'Casa e começo'], ['conferir', 'Conferir']],
+
   telaCriacao(){
     this.tom('leve'); this.limpar();
-    const cidades = CIDADES.map(c => `<option value="${c}">${c}</option>`).join('');
-    this.add(`<div class="painel">
-      <h2>Criação de Personagem</h2>
-      <div class="campo"><label>Nome do treinador</label>
-        <input id="f-nome" maxlength="24" placeholder="Como te chamam?"></div>
-      <div class="campo"><label>Gênero</label>
-        <div class="opcoes-radio" id="f-genero">
-          <button data-v="Homem" class="sel">Homem</button>
-          <button data-v="Mulher">Mulher</button>
-        </div></div>
-      <div class="campo"><label>Aniversário</label>
-        <div class="data-nasc">
-          <select id="f-nasc-dia" aria-label="Dia">${Array.from({length:31}, (_, i) => `<option value="${i + 1}">${i + 1}</option>`).join('')}</select>
-          <select id="f-nasc-mes" aria-label="Mês">${MESES_DO_ANO.map((m, i) => `<option value="${i + 1}">${m}</option>`).join('')}</select>
-        </div>
-        <div class="sussurro">Você sai de casa com quinze anos.</div></div>
-      <div class="campo"><label>Características físicas</label>
-        <textarea id="f-aparencia" maxlength="240" placeholder="Altura, cabelo, olhos, cicatriz, o que for."></textarea></div>
-      <div class="campo"><label>Personalidade (2 a 3 traços)</label>
-        <input id="f-personalidade" maxlength="120" placeholder="teimoso, leal, impulsivo"></div>
-      <div class="campo"><label>Vestimenta</label>
-        <input id="f-vestimenta" maxlength="160" placeholder="jaqueta velha do seu pai, tênis furado"></div>
-      <div class="dois">
-        <div class="campo"><label>Cidade de nascimento</label>
-          <select id="f-cidade">${cidades}</select></div>
-        <div class="campo"><label>Objetivo</label>
-          <input id="f-objetivo" maxlength="120" placeholder="O que você quer de verdade?"></div>
-      </div>
-      <div class="dois">
-        <div class="campo"><label>Do que você gosta</label>
-          <input id="f-gosta" maxlength="120" placeholder="mar, pescar, Pokémon de fogo, Eevee"></div>
-        <div class="campo"><label>Do que você não gosta</label>
-          <input id="f-nao-gosta" maxlength="120" placeholder="escuro, multidão, Zubat"></div>
-      </div>
-
-      <h3>Quem fica em casa</h3>
-      <div class="dois">
-        <div class="campo"><label>Nome</label>
-          <input id="f-casa-nome" maxlength="24" placeholder="Delia"></div>
-        <div class="campo"><label>É sua/seu</label>
-          <select id="f-casa-quem">
-            <option value="">sortear</option>
-            ${PARENTESCOS_F.map((f, i) => `<option>${f}</option><option>${PARENTESCOS_M[i]}</option>`).join('')}
-          </select></div>
-      </div>
-      <div class="sussurro">É essa pessoa que te acorda, te empurra pela porta e vai ficar
-        esperando notícia. Ela fala com você pelo nome dela — e você sabe de quem é a voz.</div>
-
-      <h3>Pokémon inicial</h3>
-      <div class="opcoes-radio" id="f-inicial" style="margin-bottom:10px">
-        <button data-v="classico" class="sel">Um dos três clássicos</button>
-        <button data-v="rand">Aleatório (o que já estava na casa)</button>
-      </div>
-      <div class="sussurro" id="f-inicial-desc">Tradição: você não começa com ele. Bulbasaur, Charmander ou Squirtle — a escolha é na hora, com os três fora da Pokébola, na sua frente. Em Pallet, quem traz é o Professor; em outra cidade, a perua do laboratório.</div>
-
-      <h3>Ritmo do combate</h3>
-      <div class="opcoes-radio" id="f-ritmo" style="margin-bottom:10px">
-        <button data-v="fiel" class="sel">Pokérole (do livro)</button>
-        <button data-v="longo">Combate prolongado</button>
-      </div>
-      <div class="sussurro" id="f-ritmo-desc">
-        Pokérole: parada de d6, HP do livro. Cada golpe pesa.
-      </div>
-
-      <div style="margin-top:26px;display:flex;gap:10px;flex-wrap:wrap">
-        <button class="btn destaque" onclick="Jogo.criar()">Sair de casa</button>
-        <button class="btn" onclick="UI.telaInicial()">Voltar</button>
-      </div>
-      <div id="f-erro" style="color:var(--perigo);margin-top:12px;font-size:13.5px"></div>
-    </div>`);
-
-    const grupo = (id, onSel) => {
-      const cont = document.getElementById(id);
-      cont.querySelectorAll('button').forEach(b => b.onclick = () => {
-        cont.querySelectorAll('button').forEach(x => x.classList.remove('sel'));
-        b.classList.add('sel');
-        if (onSel) onSel(b.dataset.v);
-      });
+    document.body.classList.add('na-criacao');
+    this._cr = {
+      passo:0, alcancado:0, nome:'', genero:'Homem',
+      nasc:{dia:Dados.entre(1, 28), mes:Dados.entre(1, 12)},
+      cidade:'Pallet', tracos:[], tracoLivre:'', forte:null,
+      meta:null, frase:'', fraseMexida:false,
+      gostos:{lugares:[], tipos:[], dex:[]}, desgostos:{lugares:[], tipos:[], dex:[]},
+      aparencia:'', vestimenta:'', mochila:null, retrato:null, corCartao:'azul',
+      casaNome:'', casaQuem:'', inicial:'classico', ritmo:'fiel'
     };
-    grupo('f-genero');
-    /* aniversário: só dia e mês; todo mundo sai de casa com quinze */
-    document.getElementById('f-nasc-dia').value = String(Dados.entre(1, 28));
-    document.getElementById('f-nasc-mes').value = String(Dados.entre(1, 12));
-    grupo('f-inicial', v => {
-      document.getElementById('f-inicial-desc').textContent = v === 'rand'
-        ? 'Aleatório: um Pokémon de 1ª Geração, primeiro estágio. Ele já morava na sua casa quando você decidiu sair — não é seu de papel, é seu de convivência. Vínculo máximo.'
-        : 'Tradição: você não começa com ele. Bulbasaur, Charmander ou Squirtle — a escolha é na hora, com os três fora da Pokébola, na sua frente. Em Pallet, quem traz é o Professor; em outra cidade, a perua do laboratório.';
+    const estrelas = Array.from({length:22}, () =>
+      `<i class="tt-estrela" style="--x:${(Math.random()*100).toFixed(1)}%;--y:${(Math.random()*100).toFixed(1)}%;--t:${(1.6+Math.random()*2.8).toFixed(2)}s;--a:${(Math.random()*3).toFixed(2)}s;--s:${Math.random() < .25 ? 3 : 2}px"></i>`).join('');
+    const raiz = this.add(`<div class="criacao" id="criacao">
+      <div class="cr-ceu" aria-hidden="true">${estrelas}</div>
+      <svg class="cr-pokebola" viewBox="0 0 100 100" aria-hidden="true">
+        <circle cx="50" cy="50" r="46" fill="none" stroke="currentColor" stroke-width="5"/>
+        <path d="M4 50h30M66 50h30" stroke="currentColor" stroke-width="5"/>
+        <circle cx="50" cy="50" r="15" fill="none" stroke="currentColor" stroke-width="5"/>
+      </svg>
+      <header class="cr-topo">
+        <div class="cr-sigla">Liga Pokémon de Kanto</div>
+        <h1 class="cr-titulo">Inscrição de treinador</h1>
+        <ol class="cr-passos" id="cr-passos"></ol>
+      </header>
+      <div class="cr-corpo">
+        <div class="cr-form" id="cr-form">${this.PASSOS_CRIACAO.map(([k], i) =>
+          `<section class="cr-sec" id="cr-sec-${k}" data-passo="${i}"${i ? ' hidden' : ''}></section>`).join('')}</div>
+        <aside class="cr-previa" id="cr-previa" aria-label="O cartão de inscrição"></aside>
+      </div>
+      <div class="cr-erro" id="f-erro" role="alert"></div>
+      <footer class="cr-pe">
+        <button class="tt-btn cr-voltar" id="cr-voltar" data-acao="voltar"></button>
+        <button class="tt-btn cr-sortear" id="cr-sortear" data-acao="sortear" title="Preenche o que ainda está em branco e vai pra conferência">
+          ${svgIcone('dado')}<span>Sortear o resto</span></button>
+        <button class="tt-btn tt-principal" id="cr-proximo" data-acao="proximo"></button>
+      </footer>
+    </div>`);
+    raiz.addEventListener('click', ev => {
+      const b = ev.target.closest('[data-acao]');
+      if (b && raiz.contains(b) && !b.disabled) this.crAcao(b.dataset.acao, b.dataset, b);
     });
-    grupo('f-ritmo', v => {
-      document.getElementById('f-ritmo-desc').textContent = v === 'fiel'
-        ? 'Pokérole: parada de d6, HP do livro. Cada golpe pesa.'
-        : 'Prolongado: mesmo dado, HP base de cada espécie em dobro. Combates duram mais turnos.';
+    raiz.addEventListener('input', ev => this.crCampo(ev.target));
+    raiz.addEventListener('change', ev => this.crCampo(ev.target, true));
+    raiz.addEventListener('keydown', ev => {
+      if (ev.key === 'Enter' && ev.target.id === 'f-objetivo'){ ev.preventDefault(); return; }
+      if (ev.key === 'Enter' && ev.target.tagName === 'INPUT' && ev.target.dataset.campo !== 'especie'){
+        ev.preventDefault(); this.crAcao('proximo', {});
+      }
     });
+    this.PASSOS_CRIACAO.forEach((_, i) => this.crSecao(i));
+    this.crMostrar();
   },
 
+  /* o passo na tela: barra de passos, seção visível, botões e o cartão */
+  crMostrar(){
+    const c = this._cr, n = this.PASSOS_CRIACAO.length;
+    document.getElementById('cr-passos').innerHTML = this.PASSOS_CRIACAO.map(([k, nome], i) => {
+      const estado = i === c.passo ? 'atual' : i < c.passo || i <= c.alcancado ? 'feito' : '';
+      return `<li class="cr-passo ${estado}">
+        <button data-acao="passo" data-v="${i}" ${i > c.alcancado ? 'disabled' : ''} ${i === c.passo ? 'aria-current="step"' : ''}>
+          <span class="cr-num">${i + 1}</span><span class="cr-pnome">${this.esc(nome)}</span></button></li>`;
+    }).join('');
+    document.querySelectorAll('#cr-form .cr-sec').forEach(s => { s.hidden = +s.dataset.passo !== c.passo; });
+    const raiz = document.getElementById('criacao');
+    raiz.dataset.passo = this.PASSOS_CRIACAO[c.passo][0];
+    const voltar = document.getElementById('cr-voltar');
+    voltar.textContent = c.passo ? '‹ Voltar' : '‹ Abertura';
+    document.getElementById('cr-proximo').textContent = c.passo === n - 1 ? 'Sair de casa' : 'Próximo ›';
+    document.getElementById('cr-sortear').hidden = c.passo === n - 1;
+    document.getElementById('f-erro').textContent = '';
+    if (c.passo === n - 1) this.crSecao(n - 1);
+    this.crPrevia();
+  },
+
+  /* uma seção redesenhada, com o foco onde estava */
+  crSecao(i){
+    const k = this.PASSOS_CRIACAO[i][0];
+    const sec = document.getElementById('cr-sec-' + k);
+    if (!sec) return;
+    const ativo = document.activeElement;
+    const chave = ativo && sec.contains(ativo) ? ativo.dataset.foco : null;
+    sec.innerHTML = this['crSec_' + k](this._cr);
+    if (chave){ const de = sec.querySelector(`[data-foco="${CSS.escape(chave)}"]`); if (de) de.focus({preventScroll:true}); }
+  },
+
+  /* o que falta pra sair do passo, ou '' */
+  crFalta(i){
+    const c = this._cr;
+    const k = this.PASSOS_CRIACAO[i][0];
+    if (k === 'voce' && !c.nome.trim()) return 'Seu personagem precisa de um nome.';
+    if (k === 'jeito' && c.tracos.length < TRACOS_MIN) return `Escolha pelo menos ${porExtenso(TRACOS_MIN)} traços do seu jeito.`;
+    if (k === 'jeito' && !c.forte) return 'Escolha no que você é bom.';
+    if (k === 'rumo' && !c.meta) return 'Escolha o que você quer: o objetivo aparece na história.';
+    return '';
+  },
+
+  crAcao(acao, ds, botao){
+    const c = this._cr, n = this.PASSOS_CRIACAO.length;
+    const erro = document.getElementById('f-erro');
+    const toggle = (lista, v, max) => {
+      const i = lista.indexOf(v);
+      if (i >= 0) lista.splice(i, 1); else if (lista.length < max) lista.push(v);
+    };
+    const refaz = (...secs) => { secs.forEach(s => this.crSecao(this.PASSOS_CRIACAO.findIndex(p => p[0] === s))); this.crPrevia(); };
+    switch (acao){
+      case 'passo': {
+        const i = +ds.v;
+        if (i <= c.alcancado){ c.passo = i; this.crMostrar(); this.crRolar(); }
+        return;
+      }
+      case 'voltar':
+        if (!c.passo){ document.body.classList.remove('na-criacao'); return this.telaInicial(); }
+        c.passo--; this.crMostrar(); this.crRolar(); return;
+      case 'proximo': {
+        const falta = this.crFalta(c.passo);
+        if (falta){ erro.textContent = falta; return; }
+        if (c.passo === n - 1) return Jogo.criar();
+        if (this.PASSOS_CRIACAO[c.passo][0] === 'rumo' && !c.frase.trim()) this.crFraseDoRumo();
+        c.passo++; c.alcancado = Math.max(c.alcancado, c.passo);
+        this.crMostrar(); this.crRolar(); return;
+      }
+      case 'sortear':
+        this.crSortearResto();
+        c.alcancado = c.passo = n - 1;
+        this.PASSOS_CRIACAO.forEach((_, i) => this.crSecao(i));
+        this.crMostrar(); this.crRolar(); return;
+      case 'genero': {
+        if (c.genero === ds.v) return;
+        c.genero = ds.v;
+        if (c.retrato && !RETRATOS_DA_FICHA[c.genero].includes(c.retrato)) c.retrato = null;
+        if (!c.fraseMexida && c.meta) this.crFraseDoRumo();
+        return refaz('voce', 'jeito', 'rumo', 'visual', 'casa');
+      }
+      case 'cidade': c.cidade = ds.v; return refaz('voce', 'casa');
+      case 'traco': toggle(c.tracos, ds.v, TRACOS_MAX); return refaz('jeito');
+      case 'forte': c.forte = c.forte === ds.v ? null : ds.v; return refaz('jeito');
+      case 'meta': c.meta = ds.v; if (!c.fraseMexida) this.crFraseDoRumo(); return refaz('rumo');
+      case 'gosto': {
+        const alvo = c[ds.lista], outra = c[ds.lista === 'gostos' ? 'desgostos' : 'gostos'];
+        const max = ds.lista === 'gostos' ? GOSTOS_MAX : DESGOSTOS_MAX;
+        const v = ds.cat === 'dex' ? +ds.v : ds.v;
+        if (!alvo[ds.cat].includes(v) && this.crContaGosto(alvo) >= max) return;
+        toggle(alvo[ds.cat], v, 99);
+        /* a mesma coisa não fica nas duas listas */
+        const j = outra[ds.cat].indexOf(v); if (j >= 0 && alvo[ds.cat].includes(v)) outra[ds.cat].splice(j, 1);
+        return refaz('rumo');
+      }
+      case 'mochila': c.mochila = c.mochila === ds.v ? null : ds.v; return refaz('visual');
+      case 'retrato': c.retrato = ds.v || null; return refaz('visual');
+      case 'cartao': c.corCartao = ds.v; return refaz('visual');
+      case 'casaQuem': c.casaQuem = c.casaQuem === ds.v ? '' : ds.v; return refaz('casa');
+      case 'inicial': c.inicial = ds.v; return refaz('casa');
+      case 'ritmo': c.ritmo = ds.v; return refaz('casa');
+      case 'dado': this.crDado(ds.v); return refaz(...{nome:['voce'], aparencia:['visual'], vestimenta:['visual'],
+        casaNome:['casa'], tracos:['jeito']}[ds.v] || []);
+      case 'editar': c.passo = +ds.v; this.crMostrar(); this.crRolar(); return;
+    }
+  },
+
+  crRolar(){ const r = document.getElementById('criacao'); if (r) r.scrollIntoView({block:'start', behavior:'smooth'}); },
+
+  /* o que se escreve: guarda no estado e repinta só o cartão */
+  crCampo(el, mudou){
+    const c = this._cr; if (!c || !el || !el.dataset) return;
+    const k = el.dataset.campo; if (!k) return;
+    const v = el.value;
+    if (k === 'nome') c.nome = v;
+    else if (k === 'dia') c.nasc.dia = +v;
+    else if (k === 'mes'){ c.nasc.mes = +v; this.crSecao(0); }
+    else if (k === 'tracoLivre') c.tracoLivre = v;
+    else if (k === 'frase'){
+      /* é uma frase dita: sem quebra de linha */
+      if (/\n/.test(v)){ el.value = v.replace(/\s*\n+\s*/g, ' '); }
+      c.frase = el.value; c.fraseMexida = true;
+    }
+    else if (k === 'aparencia') c.aparencia = v;
+    else if (k === 'vestimenta') c.vestimenta = v;
+    else if (k === 'casaNome') c.casaNome = v;
+    else if (k === 'especie' && mudou){
+      /* o nome escrito vira espécie da Pokédex de Kanto, se for uma */
+      const alvo = c[el.dataset.lista], nome = _norm(v);
+      const dex = DEX_KANTO_IDS.find(id => _norm(DEX[id].nome) === nome);
+      const max = el.dataset.lista === 'gostos' ? GOSTOS_MAX : DESGOSTOS_MAX;
+      if (dex && !alvo.dex.includes(dex) && this.crContaGosto(alvo) < max){
+        alvo.dex.push(dex);
+        const outra = c[el.dataset.lista === 'gostos' ? 'desgostos' : 'gostos'];
+        const j = outra.dex.indexOf(dex); if (j >= 0) outra.dex.splice(j, 1);
+      }
+      el.value = '';
+      this.crSecao(2);
+    }
+    this.crPrevia();
+  },
+
+  crContaGosto(g){ return g.lugares.length + g.tipos.length + g.dex.length; },
+  crFraseDoRumo(){
+    const c = this._cr;
+    c.frase = c.meta ? generoDaFicha(OBJETIVOS_DA_FICHA[c.meta].frase, c.genero) : '';
+    c.fraseMexida = false;
+  },
+  crPar(palavra){ return parDoTraco(palavra) || [palavra, palavra]; },
+
+  /* um campo sorteado (o dado do lado dele) */
+  crDado(campo){
+    const c = this._cr;
+    const outro = (lista, atual) => { const l = lista.filter(x => x !== atual); return Dados.escolher(l.length ? l : lista); };
+    /* nome de gente da história não vira o seu: duas Eldas confundem */
+    if (campo === 'nome') c.nome = outro((c.genero === 'Mulher' ? NOMES_F : NOMES_M)
+      .filter(n => typeof NOMES_DA_HISTORIA === 'undefined' || !NOMES_DA_HISTORIA.has(n)), c.nome);
+    if (campo === 'aparencia') c.aparencia = generoDaFicha(outro(APARENCIAS_DA_FICHA, null), c.genero);
+    if (campo === 'vestimenta') c.vestimenta = outro(VESTIMENTAS_DA_FICHA, c.vestimenta);
+    if (campo === 'casaNome'){
+      const mulher = c.casaQuem ? parentescoEhMulher(c.casaQuem) : Math.random() < .5;
+      c.casaNome = outro(mulher ? NOMES_DE_CASA_F : NOMES_DE_CASA_M, c.casaNome);
+    }
+    if (campo === 'tracos'){
+      const grupos = TRACOS_DA_FICHA.map(g => g.tracos).sort(() => Math.random() - .5);
+      c.tracos = grupos.slice(0, TRACOS_MIN).map(g => Dados.escolher(g)[0]);
+    }
+  },
+
+  /* "Sortear o resto": o que está em branco ganha uma escolha que combina */
+  crSortearResto(){
+    const c = this._cr;
+    if (!c.nome.trim()) this.crDado('nome');
+    if (c.tracos.length < TRACOS_MIN) this.crDado('tracos');
+    if (!c.forte) c.forte = Dados.escolher(STATUS_DO_TREINADOR)[0];
+    if (!c.meta){ c.meta = Dados.escolher(Object.keys(OBJETIVOS_DA_FICHA)); this.crFraseDoRumo(); }
+    if (!c.frase.trim()) this.crFraseDoRumo();
+    if (!this.crContaGosto(c.gostos) && !this.crContaGosto(c.desgostos)){
+      const lugares = LUGARES_DA_FICHA.map(l => l[0]).sort(() => Math.random() - .5);
+      c.gostos.lugares.push(lugares[0]);
+      c.gostos.tipos.push(Dados.escolher(TIPOS_KANTO));
+      c.desgostos.lugares.push(lugares[1]);
+    }
+    if (!c.aparencia.trim()) this.crDado('aparencia');
+    if (!c.vestimenta.trim()) this.crDado('vestimenta');
+    if (!c.mochila) c.mochila = Dados.escolher(MOCHILAS_DA_FICHA);
+    if (!c.retrato) c.retrato = Dados.escolher(RETRATOS_DA_FICHA[c.genero]);
+  },
+
+  /* ---------- as seções ---------- */
+  crCabeca(titulo, sub){
+    return `<h2 class="cr-h">${this.esc(titulo)}</h2>${sub ? `<p class="cr-sub">${sub}</p>` : ''}`;
+  },
+  crDadoBtn(campo, rotulo){
+    return `<button type="button" class="cr-dado" data-acao="dado" data-v="${campo}" data-foco="dado-${campo}"
+      title="${this.esc(rotulo)}" aria-label="${this.esc(rotulo)}">${svgIcone('dado')}</button>`;
+  },
+  crRetratoImg(arq, cls){
+    return `<img class="${cls || 'cr-sprite'}" src="${caminhoNPC('trainers/' + arq)}" alt="" onerror="this.remove()">`;
+  },
+
+  crSec_voce(c){
+    const e = s => this.esc(s);
+    const generos = [['Homem', '♂', RETRATOS_DA_FICHA.Homem[0]], ['Mulher', '♀', RETRATOS_DA_FICHA.Mulher[0]]].map(([g, s, arq]) =>
+      `<button type="button" class="cr-op cr-genero${c.genero === g ? ' sel' : ''}" data-acao="genero" data-v="${g}" data-foco="genero-${g}" aria-pressed="${c.genero === g}">
+        ${this.crRetratoImg(arq)}<span class="cr-op-nome">${s} ${g}</span></button>`).join('');
+    /* o mesmo calendário do Jogo.criar: fevereiro tem 28 */
+    const ult = [31,28,31,30,31,30,31,31,30,31,30,31][c.nasc.mes - 1];
+    if (c.nasc.dia > ult) c.nasc.dia = ult;
+    const cidades = CIDADES.map(cid => `<button type="button" class="cr-op cr-cidade${c.cidade === cid ? ' sel' : ''}" data-acao="cidade" data-v="${cid}" data-foco="cidade-${cid}" aria-pressed="${c.cidade === cid}">
+        <span class="cr-op-nome">${e(cid)}</span><span class="cr-op-nota">${e(CIDADES_DA_FICHA[cid] || '')}</span></button>`).join('');
+    const natal = c.cidade === 'Pallet'
+      ? 'Em Pallet, quem entrega o primeiro Pokémon é o Professor, na rua, na manhã em que você sai. A Pokédex sai da mão dele; o cartão de treinador, só no Centro de Viridian.'
+      : `Fora de Pallet, a perua do laboratório passa uma vez por mês com a caixa térmica. A Pokédex e o cartão saem do Centro Pokémon de ${c.cidade === 'Indigo' ? 'Viridian' : c.cidade}.${c.cidade !== 'Viridian' ? ' E da rodoviária sai o ônibus da Liga, uma vez, se você quiser.' : ''}`;
+    return this.crCabeca('Quem é você', 'Como te chamam, como você nasceu e de onde vem.') + `
+      <div class="cr-campo"><label class="cr-rot" for="f-nome">Nome</label>
+        <div class="cr-linha">
+          <input id="f-nome" data-campo="nome" data-foco="nome" maxlength="24" autocomplete="off" placeholder="Como te chamam?" value="${e(c.nome)}">
+          ${this.crDadoBtn('nome', 'Sortear um nome')}
+        </div></div>
+      <div class="cr-campo"><span class="cr-rot">Gênero</span>
+        <div class="cr-grade cr-g2" id="f-genero" role="group" aria-label="Gênero">${generos}</div></div>
+      <div class="cr-campo"><span class="cr-rot">Aniversário</span>
+        <div class="cr-linha cr-nasc">
+          <select id="f-nasc-dia" data-campo="dia" data-foco="dia" aria-label="Dia">${Array.from({length:ult}, (_, i) =>
+            `<option value="${i + 1}"${c.nasc.dia === i + 1 ? ' selected' : ''}>${i + 1}</option>`).join('')}</select>
+          <span class="cr-de">de</span>
+          <select id="f-nasc-mes" data-campo="mes" data-foco="mes" aria-label="Mês">${MESES_DO_ANO.map((m, i) =>
+            `<option value="${i + 1}"${c.nasc.mes === i + 1 ? ' selected' : ''}>${m}</option>`).join('')}</select>
+        </div>
+        <p class="cr-nota">Todo mundo sai de casa com quinze anos. Se o aniversário cair durante a jornada, você faz dezesseis na estrada.</p></div>
+      <div class="cr-campo"><span class="cr-rot">Cidade natal</span>
+        <div class="cr-grade cr-cidades" id="f-cidade" role="group" aria-label="Cidade natal">${cidades}</div>
+        <p class="cr-nota">${e(natal)}</p></div>`;
+  },
+
+  crSec_jeito(c){
+    const e = s => this.esc(s);
+    const cheio = c.tracos.length >= TRACOS_MAX;
+    const grupos = TRACOS_DA_FICHA.map(g => `<div class="cr-grupo"><span class="cr-grupo-nome">${e(g.grupo)}</span>
+      <div class="cr-chips">${g.tracos.map(par => {
+        const sel = c.tracos.includes(par[0]);
+        return `<button type="button" class="cr-chip${sel ? ' sel' : ''}" data-acao="traco" data-v="${e(par[0])}" data-foco="traco-${e(par[0])}"
+          aria-pressed="${sel}" ${!sel && cheio ? 'disabled' : ''}>${e(maiuscula(tracoNoGenero(par, c.genero)))}</button>`;
+      }).join('')}</div></div>`).join('');
+    const fortes = STATUS_DO_TREINADOR.map(([k, nome, faz]) => `<button type="button" class="cr-op cr-forte${c.forte === k ? ' sel' : ''}"
+        data-acao="forte" data-v="${k}" data-foco="forte-${k}" aria-pressed="${c.forte === k}">
+        <span class="cr-op-nome">${e(nome)} <b class="cr-valor">${c.forte === k ? 2 : 1}</b></span><span class="cr-op-nota">${e(faz)}</span></button>`).join('');
+    return this.crCabeca('O seu jeito', 'O seu jeito é lido pelo jeito de cada Pokémon: tem quem se entenda com você sem esforço, e tem quem não.') + `
+      <div class="cr-campo"><span class="cr-rot">Personalidade <span class="cr-conta">${c.tracos.length} de ${TRACOS_MAX}</span>
+          ${this.crDadoBtn('tracos', 'Sortear dois traços')}</span>
+        ${grupos}
+        <label class="cr-rot cr-rot-menor" for="f-traco-livre">Mais uma palavra sua (opcional)</label>
+        <input id="f-traco-livre" data-campo="tracoLivre" data-foco="tracoLivre" maxlength="30" placeholder="esquentad${c.genero === 'Mulher' ? 'a' : 'o'}, ${c.genero === 'Mulher' ? 'mandona' : 'mandão'}…" value="${e(c.tracoLivre)}">
+      </div>
+      <div class="cr-campo"><span class="cr-rot">No que você é bom</span>
+        <p class="cr-nota cr-nota-cima">Os seis status começam em 1. O que você escolher começa em 2, e cada capítulo fechado dá mais um ponto.</p>
+        <div class="cr-grade cr-g3" role="group" aria-label="No que você é bom">${fortes}</div></div>`;
+  },
+
+  crSec_rumo(c){
+    const e = s => this.esc(s);
+    const metas = METAS.map(m => {
+      const o = OBJETIVOS_DA_FICHA[m.id] || {};
+      return `<button type="button" class="cr-op cr-meta${c.meta === m.id ? ' sel' : ''}" data-acao="meta" data-v="${m.id}" data-foco="meta-${m.id}" aria-pressed="${c.meta === m.id}">
+        <span class="cr-op-nome">${e(maiuscula(generoDaFicha(m.nome, c.genero)))}</span><span class="cr-op-nota">${e(o.nota || '')}</span></button>`;
+    }).join('');
+    const lista = (qual, rotulo, max, nota) => {
+      const g = c[qual], cheio = this.crContaGosto(g) >= max;
+      const chip = (cat, v, texto, estilo) => {
+        const sel = g[cat].includes(v);
+        return `<button type="button" class="cr-chip${cat === 'tipos' ? ' cr-tipo' : ''}${sel ? ' sel' : ''}" ${estilo || ''}
+          data-acao="gosto" data-lista="${qual}" data-cat="${cat}" data-v="${e(String(v))}" data-foco="${qual}-${cat}-${e(String(v))}"
+          aria-pressed="${sel}" ${!sel && cheio ? 'disabled' : ''}>${e(texto)}</button>`;
+      };
+      return `<div class="cr-campo cr-gosto-${qual}"><span class="cr-rot">${e(rotulo)} <span class="cr-conta">${this.crContaGosto(g)} de ${max}</span></span>
+        <p class="cr-nota cr-nota-cima">${e(nota)}</p>
+        <div class="cr-grupo"><span class="cr-grupo-nome">Lugares</span>
+          <div class="cr-chips">${LUGARES_DA_FICHA.map(([k, n]) => chip('lugares', k, n)).join('')}</div></div>
+        <div class="cr-grupo"><span class="cr-grupo-nome">Tipos de Pokémon</span>
+          <div class="cr-chips">${TIPOS_KANTO.map(t => chip('tipos', t, t, `style="--tc:${COR_TIPO[t] || '#888'}"`)).join('')}</div></div>
+        <div class="cr-grupo"><span class="cr-grupo-nome">Um Pokémon em especial</span>
+          <div class="cr-chips">${g.dex.map(n => chip('dex', n, DEX[n].nome)).join('')}
+            <input class="cr-especie" data-campo="especie" data-lista="${qual}" data-foco="especie-${qual}" list="cr-especies"
+              maxlength="14" placeholder="${cheio ? 'Lista cheia' : 'Escreva o nome…'}" ${cheio ? 'disabled' : ''} aria-label="Um Pokémon em especial"></div></div>
+      </div>`;
+    };
+    return this.crCabeca('O que você quer', 'O que te tira de casa, e o que você leva no peito pela estrada.') + `
+      <div class="cr-campo"><span class="cr-rot">Objetivo</span>
+        <div class="cr-grade cr-g2 cr-metas" role="group" aria-label="Objetivo">${metas}</div>
+        <label class="cr-rot cr-rot-menor" for="f-objetivo">Nas suas palavras</label>
+        <textarea id="f-objetivo" data-campo="frase" data-foco="frase" rows="2" maxlength="120" placeholder="Escolha um objetivo, ou escreva o seu.">${e(c.frase)}</textarea>
+        <p class="cr-nota">É a frase que sai da sua boca quando alguém pergunta por que você vai.</p></div>
+      ${lista('gostos', 'Do que você gosta', GOSTOS_MAX, 'Lugar de que você gosta te deixa mais à vontade; Pokémon de que você gosta chega com mais vontade de ficar.')}
+      ${lista('desgostos', 'Do que você não gosta', DESGOSTOS_MAX, 'E o contrário: lugar e Pokémon que te deixam com o pé atrás.')}
+      <datalist id="cr-especies">${DEX_KANTO_IDS.map(id => `<option value="${e(DEX[id].nome)}">`).join('')}</datalist>`;
+  },
+
+  crSec_visual(c){
+    const e = s => this.esc(s);
+    const retratos = RETRATOS_DA_FICHA[c.genero].map(arq => `<button type="button" class="cr-op cr-retrato${c.retrato === arq ? ' sel' : ''}"
+        data-acao="retrato" data-v="${arq}" data-foco="retrato-${arq}" aria-pressed="${c.retrato === arq}" aria-label="Retrato ${arq.replace(/_f$/, '').replace(/_/g, ' ')}">
+        ${this.crRetratoImg(arq)}</button>`).join('')
+      + `<button type="button" class="cr-op cr-retrato cr-sem${!c.retrato ? ' sel' : ''}" data-acao="retrato" data-v="" data-foco="retrato-sem" aria-pressed="${!c.retrato}">
+        <span class="cr-monograma">${e((c.nome.trim() || '?').charAt(0).toUpperCase())}</span><span class="cr-op-nota">Sem foto</span></button>`;
+    const mochilas = MOCHILAS_DA_FICHA.map(k => `<button type="button" class="cr-cor${c.mochila === k ? ' sel' : ''}" data-acao="mochila" data-v="${k}" data-foco="mochila-${k}"
+        aria-pressed="${c.mochila === k}" title="${e(maiuscula(k))}"><i style="background:${CORES_MOCHILA[k]}"></i><span>${e(maiuscula(k))}</span></button>`).join('');
+    const cartoes = Object.entries(CORES_CARTAO).map(([k, cor]) => `<button type="button" class="cartao-cor${c.corCartao === k ? ' sel' : ''}"
+        style="background:${cor[1]}" data-acao="cartao" data-v="${k}" data-foco="cartao-${k}" title="${e(cor[3])}" aria-label="${e(cor[3])}" aria-pressed="${c.corCartao === k}"></button>`).join('');
+    return this.crCabeca('Como você é', 'O que os outros veem quando você chega, e o que eles vão contar de você depois.') + `
+      <div class="cr-campo"><label class="cr-rot" for="f-aparencia">Aparência ${this.crDadoBtn('aparencia', 'Sortear uma aparência')}</label>
+        <textarea id="f-aparencia" data-campo="aparencia" data-foco="aparencia" maxlength="240" placeholder="Altura, cabelo, olhos, cicatriz, o que for.">${e(c.aparencia)}</textarea></div>
+      <div class="cr-campo"><label class="cr-rot" for="f-vestimenta">Roupa ${this.crDadoBtn('vestimenta', 'Sortear uma roupa')}</label>
+        <textarea id="f-vestimenta" data-campo="vestimenta" data-foco="vestimenta" maxlength="160" placeholder="Jaqueta velha de casa, tênis furado, um boné.">${e(c.vestimenta)}</textarea></div>
+      <div class="cr-campo"><span class="cr-rot">Cor da mochila</span>
+        <div class="cr-cores" role="group" aria-label="Cor da mochila">${mochilas}</div>
+        <p class="cr-nota">É a cor da mochila na tela, até você comprar outra bolsa.</p></div>
+      <div class="cr-campo"><span class="cr-rot">Foto do cartão</span>
+        <div class="cr-grade cr-retratos" role="group" aria-label="Foto do cartão">${retratos}</div></div>
+      <div class="cr-campo"><span class="cr-rot">Cor do cartão</span>
+        <div class="cartao-cores cr-cartoes" role="group" aria-label="Cor do cartão">${cartoes}</div></div>`;
+  },
+
+  crSec_casa(c){
+    const e = s => this.esc(s);
+    const parentes = PARENTESCOS_F.map((f, i) => [f, PARENTESCOS_M[i]]).flat().map(q =>
+      `<button type="button" class="cr-chip${c.casaQuem === q ? ' sel' : ''}" data-acao="casaQuem" data-v="${e(q)}" data-foco="casa-${e(q)}" aria-pressed="${c.casaQuem === q}">${e(maiuscula(q))}</button>`).join('');
+    const quemTraz = c.cidade === 'Pallet' ? 'o Professor traz a bandeja até a rua' : 'a perua do laboratório traz a caixa térmica';
+    const inicial = [
+      ['classico', 'Um dos três clássicos', `Bulbasaur, Charmander ou Squirtle, escolhido na hora: ${quemTraz}, com os três fora da Pokébola.`,
+        `<span class="cr-iniciais">${INICIAIS_CLASSICOS.map(d => `<img src="${caminhoSprite(d, 'icone')}" alt="" onerror="this.remove()">`).join('')}</span>`],
+      ['rand', 'O que já estava em casa', 'Um Pokémon que já morava com você, sorteado pela tabela da casa: o que vive na sua cidade ou o que combina com o seu jeito. Vínculo máximo desde o primeiro dia.',
+        `<span class="cr-iniciais"><svg class="cr-bola" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><path d="M2 12h7M15 12h7" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="2"/></svg></span>`]
+    ].map(([k, nome, nota, arte]) => `<button type="button" class="cr-op cr-inicial${c.inicial === k ? ' sel' : ''}" data-acao="inicial" data-v="${k}" data-foco="inicial-${k}" aria-pressed="${c.inicial === k}">
+        ${arte}<span class="cr-op-nome">${e(nome)}</span><span class="cr-op-nota">${e(nota)}</span></button>`).join('');
+    const ritmo = [['fiel', 'Pokérole, do livro', 'Parada de d6 e o HP do livro. Cada golpe pesa.'],
+                   ['longo', 'Combate prolongado', 'O mesmo dado, com o HP de cada espécie em dobro. As lutas duram mais turnos.']]
+      .map(([k, nome, nota]) => `<button type="button" class="cr-op${c.ritmo === k ? ' sel' : ''}" data-acao="ritmo" data-v="${k}" data-foco="ritmo-${k}" aria-pressed="${c.ritmo === k}">
+        <span class="cr-op-nome">${e(nome)}</span><span class="cr-op-nota">${e(nota)}</span></button>`).join('');
+    return this.crCabeca('Quem fica em casa', 'É essa pessoa que te acorda, te empurra pela porta e fica esperando notícia. Você sabe de quem é a voz.') + `
+      <div class="cr-campo"><label class="cr-rot" for="f-casa-nome">Nome</label>
+        <div class="cr-linha">
+          <input id="f-casa-nome" data-campo="casaNome" data-foco="casaNome" maxlength="24" autocomplete="off" placeholder="Em branco, a casa escolhe" value="${e(c.casaNome)}">
+          ${this.crDadoBtn('casaNome', 'Sortear um nome')}
+        </div></div>
+      <div class="cr-campo"><span class="cr-rot">É ${c.casaQuem ? artigoDe(c.casaQuem) : 'sua ou seu'}</span>
+        <div class="cr-chips" role="group" aria-label="Parentesco">${parentes}</div>
+        <p class="cr-nota">${c.casaQuem ? 'Ela assina a sua licença, porque você sai com quinze.' : 'Sem escolher, o parentesco sai do nome, e o que faltar é sorteado.'}</p></div>
+      ${this.crCabeca('Como começa', '')}
+      <div class="cr-campo"><span class="cr-rot">Pokémon inicial</span>
+        <div class="cr-grade cr-g2" role="group" aria-label="Pokémon inicial">${inicial}</div></div>
+      <div class="cr-campo"><span class="cr-rot">Ritmo do combate</span>
+        <div class="cr-grade cr-g2" role="group" aria-label="Ritmo do combate">${ritmo}</div></div>`;
+  },
+
+  crSec_conferir(c){
+    const e = s => this.esc(s);
+    const editar = (i, rot) => `<button type="button" class="cr-editar" data-acao="editar" data-v="${i}">${e(rot)}</button>`;
+    return this.crCabeca('Confira a sua ficha', 'É isso que vai na sua inscrição. Depois de sair de casa, não tem volta.') + `
+      <div class="cr-conferir">${this.crCartao(c, true)}</div>
+      <div class="cr-editar-linha">${this.PASSOS_CRIACAO.slice(0, -1).map(([, nome], i) => editar(i, nome)).join('')}</div>`;
+  },
+
+  /* o cartão de inscrição: ao lado no computador, inteiro na conferência */
+  crPrevia(){
+    const el = document.getElementById('cr-previa');
+    if (el) el.innerHTML = this.crCartao(this._cr, false);
+  },
+  crCartao(c, inteiro){
+    const e = s => this.esc(s);
+    const g = c.genero;
+    const nome = c.nome.trim();
+    const tracos = c.tracos.map(p => tracoNoGenero(this.crPar(p), g)).concat(c.tracoLivre.trim() ? [c.tracoLivre.trim()] : []);
+    const forte = STATUS_DO_TREINADOR.find(s => s[0] === c.forte);
+    const meta = METAS.find(m => m.id === c.meta);
+    const gostos = gostoDaFicha(c.gostos).texto, desgostos = gostoDaFicha(c.desgostos).texto;
+    const casa = c.casaNome.trim() || c.casaQuem
+      ? `${e(c.casaNome.trim() || 'Nome sorteado')}${c.casaQuem ? `, ${artigoDe(c.casaQuem)} ${e(c.casaQuem)}` : ''}` : '<span class="crc-vago">Sorteado na saída</span>';
+    const vago = t => `<span class="crc-vago">${e(t)}</span>`;
+    const linha = (k, v) => `<dt>${e(k)}</dt><dd>${v}</dd>`;
+    const vars = varsCartao(c.corCartao);
+    const estilo = Object.entries(vars).map(([k, v]) => `${k}:${v}`).join(';');
+    const retrato = c.retrato ? this.crRetratoImg(c.retrato, 'crc-sprite')
+      : `<span class="crc-monograma">${e((nome || '?').charAt(0).toUpperCase())}</span>`;
+    return `<div class="crc${inteiro ? ' inteiro' : ''}" style="${estilo}">
+      <div class="crc-topo"><span>Inscrição de treinador</span><span>Liga de Kanto</span></div>
+      <div class="crc-corpo">
+        <div class="crc-retrato">${retrato}</div>
+        <div class="crc-quem">
+          <div class="crc-nome">${nome ? e(nome) : vago('Seu nome')}</div>
+          <div class="crc-sub">${g === 'Mulher' ? 'Treinadora' : 'Treinador'} · ${IDADE_SAIDA} anos · ${e(c.cidade)}</div>
+          <div class="crc-chips">${tracos.length ? tracos.map(t => `<span>${e(maiuscula(t))}</span>`).join('') : vago('O seu jeito')}</div>
+        </div>
+      </div>
+      <dl class="crc-dl">
+        ${linha('Aniversário', e(`${c.nasc.dia} de ${MESES_DO_ANO[c.nasc.mes - 1]}`))}
+        ${linha('No que é bom', forte ? `${e(forte[1])} <b class="mono">2</b>` : vago('—'))}
+        ${linha('Quer', meta ? `${e(maiuscula(generoDaFicha(meta.nome, g)))}${c.frase.trim() ? `<q>${e(c.frase.trim())}</q>` : ''}` : vago('—'))}
+        ${inteiro || gostos ? linha('Gosta de', gostos ? e(gostos) : vago('Nada em especial')) : ''}
+        ${inteiro || desgostos ? linha('Não gosta de', desgostos ? e(desgostos) : vago('Nada em especial')) : ''}
+        ${inteiro ? linha('Aparência', c.aparencia.trim() ? e(c.aparencia.trim()) : vago('Nada que chame atenção')) : ''}
+        ${inteiro ? linha('Roupa', c.vestimenta.trim() ? e(c.vestimenta.trim()) : vago('Roupa comum e um casaco')) : ''}
+        ${c.mochila ? linha('Mochila', `<i class="crc-cor" style="background:${CORES_MOCHILA[c.mochila]}"></i>${e(maiuscula(c.mochila))}`) : ''}
+        ${linha('Em casa', casa)}
+        ${linha('Começa com', c.inicial === 'rand' ? 'O que já estava em casa' : 'Um dos três clássicos')}
+        ${inteiro ? linha('Combate', c.ritmo === 'longo' ? 'Prolongado' : 'Pokérole, do livro') : ''}
+      </dl>
+      <div class="crc-pe"><span>Responsável</span><span class="crc-assina">${c.casaNome.trim() ? e(c.casaNome.trim()) : '&nbsp;'}</span></div>
+    </div>`;
+  },
+
+  /* o que a ficha manda pro Jogo.criar */
   lerCriacao(){
-    const sel = id => { const b = document.querySelector('#'+id+' button.sel'); return b ? b.dataset.v : null; };
-    const v = id => (document.getElementById(id).value || '').trim();
+    const c = this._cr;
+    const tracos = c.tracos.map(p => tracoNoGenero(this.crPar(p), c.genero));
+    const livre = c.tracoLivre.trim();
+    const gostos = gostoDaFicha(c.gostos), desgostos = gostoDaFicha(c.desgostos);
     return {
-      nome:v('f-nome'), genero:sel('f-genero'), aparencia:v('f-aparencia'),
-      personalidade:v('f-personalidade'), vestimenta:v('f-vestimenta'),
-      cidade:document.getElementById('f-cidade').value, objetivo:v('f-objetivo'),
-      gosta:v('f-gosta'), naoGosta:v('f-nao-gosta'),
-      inicial:sel('f-inicial'), ritmo:sel('f-ritmo'),
-      nascimento:{dia:+document.getElementById('f-nasc-dia').value, mes:+document.getElementById('f-nasc-mes').value},
-      casaNome: (v('f-casa-nome') || '').trim(),
-      casaQuem: (v('f-casa-quem') || '').trim()
+      nome:c.nome.trim(), genero:c.genero, aparencia:c.aparencia.trim(), vestimenta:c.vestimenta.trim(),
+      personalidade:juntarComE(tracos.concat(livre ? [livre] : [])),
+      cidade:c.cidade, objetivo:c.frase.trim(), meta:c.meta,
+      gosta:gostos.texto, naoGosta:desgostos.texto, gostos, desgostos,
+      inicial:c.inicial, ritmo:c.ritmo,
+      nascimento:{dia:c.nasc.dia, mes:c.nasc.mes},
+      casaNome:c.casaNome.trim(), casaQuem:c.casaQuem,
+      forte:c.forte, retrato:c.retrato ? 'trainers/' + c.retrato : null,
+      corMochila:c.mochila, corCartao:c.corCartao
     };
   },
 
@@ -3864,7 +4253,7 @@ const UI = {
     const campeao = d.insignias.includes('Campeão de Kanto') || d.flags.campeao_de_kanto;
     const titulo = j.cargo || (campeao ? '{Campeão|Campeã} de Kanto'
       : d.flags.tem_licenca || d.flags.tem_cartao ? '{Treinador registrado|Treinadora registrada}' : '{Treinador|Treinadora} sem registro');
-    const rosto = (typeof Rede !== 'undefined' && Rede.dentro && Rede.dentro(d)) ? Rede.retrato() : null;
+    const rosto = retratoDoJogador(d);
     const dias = d.relogio ? d.relogio.dia : 0;
     const cabeca = `<div class="ficha-capa">
         <span class="ficha-sigla">Ficha do treinador</span>
@@ -3894,11 +4283,20 @@ const UI = {
         const cap = Historia.capitulo(d.capitulo);
         const linha = typeof linhaAtual === 'function' ? linhaAtual(d) : null;
         const casa = typeof casaCompleto === 'function' ? e(casaCompleto()) : '';
+        const forte = STATUS_DO_TREINADOR.find(s => s[0] === j.forte);
+        const mochila = j.corMochila && CORES_MOCHILA[j.corMochila]
+          ? `<i class="ficha-cor" style="background:${CORES_MOCHILA[j.corMochila]}"></i>${M(j.corMochila)}` : '';
         return bloco('Quem você é', dl([
             ['Personalidade', M(j.personalidade || '—')],
+            ['No que é bom', forte ? `${e(forte[1])} <span class="ficha-nota">Começou em 2</span>` : ''],
             ['Objetivo', `${M(j.objetivo || '—')}${m ? `<span class="ficha-nota bloco">Quer dizer: ${e(m.nome)}</span>` : ''}`],
             ['Gosta de', r.gostos.texto ? M(r.gostos.texto) : ''],
             ['Não gosta de', r.desgostos.texto ? M(r.desgostos.texto) : '']
+          ]))
+          + bloco('Como te veem', dl([
+            ['Aparência', j.aparencia ? M(j.aparencia) : ''],
+            ['Roupa', j.vestimenta ? M(j.vestimenta) : ''],
+            ['Mochila', mochila]
           ]))
           + bloco('De onde você vem', dl([
             ['Aniversário', e(textoNascimento(nascimentoDe()))],
@@ -4074,8 +4472,9 @@ const UI = {
       </div>
 
       <div class="cartao-corpo">
-        <div class="cartao-retrato">
-          <span class="silhueta" aria-hidden="true"></span>
+        <div class="cartao-retrato">${retratoDoJogador(d)
+          ? `<img class="cartao-foto" src="${retratoDoJogador(d)}" alt="" onerror="this.remove()">`
+          : '<span class="silhueta" aria-hidden="true"></span>'}
         </div>
         <div class="cartao-dados">
           <div class="cartao-nome">${this.esc(j.nome)}</div>
@@ -4437,7 +4836,7 @@ const UI = {
     if (k === 'passos') return `
       <h3>A primeira hora, passo a passo</h3>
       <ol class="tut-passos">
-        <li><b>Ficha.</b> Nome, gênero, cidade natal, objetivo e do que você gosta e não gosta. O jogo lê o que você escreveu: o objetivo vira o rumo que abre cada capítulo, e lugar ou Pokémon de que você gosta pesa nos dados e na moral.</li>
+        <li><b>Inscrição.</b> Seis passos: quem você é, o seu jeito, o que você quer, a aparência, quem fica em casa e a conferência. O que pesa no jogo é escolha: o jeito mexe em quem te obedece, o seu forte começa em 2, o objetivo vira o rumo que abre cada capítulo, e lugar ou Pokémon de que você gosta pesa nos dados e na moral. O dado ao lado de um campo sorteia uma sugestão, e "Sortear o resto" preenche o que ficou em branco.</li>
         <li><b>O capítulo 1.</b> Você acorda em casa. Leia a cena e toque numa opção — ou escreva o que quer fazer no campo de baixo. Não tem opção certa: tem o que você fez.</li>
         <li><b>O primeiro Pokémon.</b> Os três iniciais saem da Pokébola na sua frente; escolha um e, se quiser, dê um apelido.</li>
         <li><b>A licença.</b> No Centro Pokémon (em Pallet, no laboratório). Com ela, o Centro cura de graça.</li>
@@ -4459,12 +4858,18 @@ const UI = {
       ${L('Escrever em vez de escolher', 'o campo embaixo das opções aceita qualquer coisa')}
       <p class="sussurro">O campo livre lê o que você escreveu: se bate com uma saída que já existe, ele segue por ela; se não bate, o jogo improvisa e isso conta igual.</p>
       <h3>Criar o personagem</h3>
-      ${L('Personalidade', 'texto livre — e ela vale como regra, veja Vínculo')}
+      ${L('Inscrição', 'seis passos: você, seu jeito, o que você quer, aparência, casa e começo, conferência · o dado sorteia a sugestão de um campo · "Sortear o resto" preenche o que está em branco')}
+      ${L('Personalidade', `${TRACOS_MIN} ou ${TRACOS_MAX} traços da lista, mais uma palavra sua se quiser · cada traço é lido nos cinco eixos e pesa como regra, veja Vínculo`)}
+      ${L('No que você é bom', 'um dos seis status começa em 2; os outros, em 1 · Resistência em 2 já começa com HP 32 e Vontade 4')}
+      ${L('Objetivo', 'um dos sete rumos, numa frase sua (ou na sugerida) · a frase sai da sua boca na história, e o rumo abre cada capítulo')}
+      ${L('Gostos', `até ${GOSTOS_MAX} coisas de que você gosta e ${DESGOSTOS_MAX} de que não gosta, entre lugares, tipos de Pokémon e uma espécie · a mesma coisa não fica nas duas listas · o que cada uma faz está em Objetivo e gostos`)}
+      ${L('Aparência e roupa', 'texto livre · é como os outros te descrevem quando precisam')}
+      ${L('Mochila e cartão', 'a cor da mochila na tela (até você comprar outra bolsa) e a do Cartão de Treinador · a foto vai no cartão e na Ficha · nada disso mexe em regra')}
       ${L('Gênero', 'o texto inteiro concorda com ele — narração, tratamento, cargo e título')}
       ${L('Quem fica em casa', 'a voz que te acorda e o primeiro número do PokéNav · o parentesco decide como a história fala dessa pessoa · o que ficar em branco é sorteado combinando nome e parentesco')}
       ${L('Inicial clássico', 'nasceu em Pallet: o Professor entrega na rua, na manhã da saída · fora de Pallet: a perua do laboratório, uma vez por mês')}
       ${L('Pokédex e cartão', 'fora de Pallet, os dois saem do Centro da sua cidade, no cadastro · em Pallet, a Pokédex sai da mão do Professor, no laboratório, e o cartão só no Centro de Viridian, que é o primeiro do caminho')}
-      ${L('Inicial aleatório', 'já morava na sua casa — vínculo máximo desde o primeiro dia · sai da tabela de inicial: 1d6 escolhe a coluna (1–4, o que vive na sua cidade natal; 5–6, o que combina com o jeito que você escreveu) e 1d6 a linha')}
+      ${L('Inicial aleatório', 'já morava na sua casa — vínculo máximo desde o primeiro dia · sai da tabela de inicial: 1d6 escolhe a coluna (1–4, o que vive na sua cidade natal; 5–6, o que combina com o seu jeito) e 1d6 a linha')}
       ${L('Ritmo do combate', 'Pokérole (o HP do livro) ou prolongado (HP base em dobro)')}`;
 
     if (k === 'ficha') return `
@@ -4541,7 +4946,7 @@ const UI = {
         ${L('Afinidade', 'soma ou desconta dessa conta')}
         <p class="sussurro">Moral alta zera a conta sozinha. Além disso, cada natureza tem a sua teimosia própria: tem quem recuse golpe especial, quem hesite em chegar perto, quem ataque antes da ordem e quem erre o alvo de propósito.</p>
         <h3>Os cinco eixos</h3>
-        <p class="sussurro">A personalidade que você escreve na ficha e a natureza de cada Pokémon são lidas nos mesmos cinco eixos. O encontro dos dois dá a afinidade, de −10 a +10, e a convivência amacia o desencontro com o tempo.</p>
+        <p class="sussurro">A personalidade que você escolhe na inscrição e a natureza de cada Pokémon são lidas nos mesmos cinco eixos. O encontro dos dois dá a afinidade, de −10 a +10, e a convivência amacia o desencontro com o tempo.</p>
         ${L('+5 ou mais', 'obedece muito mais fácil · crítico um ponto mais perto · +1 nas perícias')}
         ${L('+2 a +4', 'obedece mais fácil')}
         ${L('−2 a −4', 'obedece pior · −1 nas perícias')}
@@ -4831,14 +5236,14 @@ const UI = {
       <p class="sussurro">O que nos jogos era presente ou troca aparece raro, no lugar da história da espécie. Depois que Johto abre, um quarto dos encontros pode ser de lá, pelo tipo do lugar.</p>
 
       <h3>Objetivo e gostos</h3>
-      <div class="linha"><span class="k">Objetivo</span><span class="v">o jogo lê o que você escreveu e guarda o que entendeu: ser campeão, completar a Pokédex, proteger quem precisa, ter poder e dinheiro, crescer com o time, conhecer Kanto ou voltar pra casa com orgulho · aparece na Ficha</span></div>
+      <div class="linha"><span class="k">Objetivo</span><span class="v">o rumo escolhido na inscrição: ser campeão, completar a Pokédex, proteger quem precisa, ter poder e dinheiro, crescer com o time, conhecer Kanto ou voltar pra casa com orgulho · aparece na Ficha</span></div>
       <div class="linha"><span class="k">Cada capítulo</span><span class="v">abre com uma linha da sua via (como Kanto te vê) e do seu objetivo · quando a via muda no meio, o capítulo diz que mudou</span></div>
       <div class="linha"><span class="k">A sua linha</span><span class="v">o lado em que você está: o posto de maior peso (Patrulha e Polícia são a Lei, o envelope sem timbre é a Rocket, o Laboratório é a Ciência, o Jornal, a Associação de Criadores, a Liga) ou, sem posto, a via (herói, mercenário, foragido)</span></div>
       <div class="linha"><span class="k">Cenas da linha</span><span class="v">na virada de capítulo, quem é do seu lado te acha: no máximo uma cena por capítulo, em ordem, e cada uma lembra o que você escolheu na anterior · mexem em reputação, dinheiro e moral como qualquer escolha</span></div>
       <div class="linha"><span class="k">Trocar de linha</span><span class="v">a linha que você deixou reage uma vez · a nova começa do começo</span></div>
       <div class="linha"><span class="k">No fim</span><span class="v">o epílogo fecha cada linha em que você viveu alguma coisa, pelo que você escolheu nela</span></div>
       <div class="linha"><span class="k">Lugar de que você gosta</span><span class="v">um dado a mais nos testes lá dentro (mar, caverna, montanha, floresta, cidade, torre, calor, campo) · de que não gosta, um a menos</span></div>
-      <div class="linha"><span class="k">Pokémon de que você gosta</span><span class="v">pelo tipo ou pelo nome: chega com +10 de moral · o de que você não gosta, −10</span></div>
+      <div class="linha"><span class="k">Pokémon de que você gosta</span><span class="v">pelo tipo ou pela espécie: chega com +10 de moral · o de que você não gosta, −10</span></div>
 
       <h3>Quem já te conhece</h3>
       <div class="linha"><span class="k">Reencontro</span><span class="v">quem a história registrou e tem opinião 3 ou mais sobre você (pra cima ou pra baixo), ou duas lembranças, te reconhece pelo nome quando aparece num capítulo seguinte · uma vez por capítulo · com a cara que a opinião manda</span></div>
@@ -4961,7 +5366,7 @@ const UI = {
       <p class="sussurro">A tela não fecha sozinha: nada anda até você apertar Continuar.</p>
 
       <h3>Vocês dois</h3>
-      <p class="sussurro">A personalidade que você escreveu na ficha e a natureza de cada Pokémon são lidas nos mesmos cinco eixos: discrição, paciência, coragem, simpatia e cuidado. O encontro dos dois dá a afinidade, de −10 a +10, e a convivência amacia o desencontro com o tempo.</p>
+      <p class="sussurro">A personalidade que você escolheu na inscrição e a natureza de cada Pokémon são lidas nos mesmos cinco eixos: discrição, paciência, coragem, simpatia e cuidado. O encontro dos dois dá a afinidade, de −10 a +10, e a convivência amacia o desencontro com o tempo.</p>
       <div class="linha"><span class="k">+5 ou mais</span><span class="v">obedece muito mais fácil · crítico um ponto mais perto · +1 nas perícias</span></div>
       <div class="linha"><span class="k">+2 a +4</span><span class="v">obedece mais fácil</span></div>
       <div class="linha"><span class="k">−2 a −4</span><span class="v">obedece pior · −1 nas perícias</span></div>

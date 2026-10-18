@@ -104,13 +104,16 @@ const Jogo = {
   criar(){
     const f = UI.lerCriacao();
     const erro = document.getElementById('f-erro');
-    if (!f.nome){ erro.textContent = 'Seu personagem precisa de um nome.'; return; }
-    if (!f.objetivo){ erro.textContent = 'Defina um objetivo — ele aparece na narrativa.'; return; }
+    const falta = msg => { if (erro) erro.textContent = msg; return null; };
+    if (!f.nome) return falta('Seu personagem precisa de um nome.');
+    /* objetivo escolhido e frase apagada: a frase do rumo volta */
+    if (!f.objetivo && f.meta && OBJETIVOS_DA_FICHA[f.meta]) f.objetivo = generoDaFicha(OBJETIVOS_DA_FICHA[f.meta].frase, f.genero);
+    if (!f.objetivo) return falta('Escolha o que você quer: o objetivo aparece na história.');
     /* dia que não existe no mês (31 de abril) vira o último dia dele */
     const ult = [31,28,31,30,31,30,31,31,30,31,30,31][f.nascimento.mes - 1];
     if (f.nascimento.dia > ult) f.nascimento.dia = ult;
     f.idade = IDADE_SAIDA;
-    if (!f.personalidade) f.personalidade = 'reservado';
+    if (!f.personalidade) f.personalidade = f.genero === 'Mulher' ? 'reservada' : 'reservado';
     if (!f.aparencia) f.aparencia = 'nada que chame atenção';
     if (!f.vestimenta) f.vestimenta = 'roupa comum e um casaco';
 

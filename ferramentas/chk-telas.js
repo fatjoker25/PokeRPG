@@ -4,6 +4,8 @@
    Monta um save cheio (time de seis com shiny, PC, cemitério, mochila com
    tudo, TMs, ferramenta quebrada, insígnias, aparelhos, todo lugar
    visitado) e passa por:
+     - a inscrição (a criação de personagem): cada passo e cada opção,
+       nos dois gêneros, até sair de casa;
      - todo lugar do mapa: a tela do lugar e cada afazer da lista dele
        (Centro, loja, casa, ginásio, veteranos, vasculhar, treinar…),
        cada um a partir do mesmo save;
@@ -92,7 +94,8 @@ const SUSPEITO = [
     onde = rotulo;
     await page.waitForTimeout(120);
     const baloes = await page.evaluate(() => {
-      const meu = Estado.j ? Estado.j.nome : null, out = [];
+      /* na inscrição ainda não tem jogo: Estado.dados é null */
+      const meu = Estado.dados && Estado.dados.jogador ? Estado.dados.jogador.nome : null, out = [];
       document.querySelectorAll('#app .fala, #modal .fala').forEach(e => {
         if (e.classList.contains('voce') || e.classList.contains('minha') || e.classList.contains('jogador')) return;
         /* a mesma pessoa de novo, logo em seguida: o rosto fica guardado (.fala-retrato.vazio) de propósito */
@@ -146,6 +149,36 @@ const SUSPEITO = [
   for (const a of await page.evaluate(() => afazeresDoLocal().map(a => a.id).filter(Boolean))){
     await page.evaluate(s => { Batalha.ativo = false; UI.fecharModal && UI.fecharModal(true); Estado.dados = JSON.parse(s); Exploracao.tela(); }, vazio);
     await tentar('começo/viridian/' + a, x => Exploracao.fazer(x), a);
+  }
+
+  /* ---------- a inscrição: cada passo e cada opção, nos dois gêneros, até sair de casa ---------- */
+  for (const g of ['Homem', 'Mulher']){
+    await tentar(`inscrição/${g}`, x => { UI.fecharModal && UI.fecharModal(true); Estado.dados = null; UI.telaCriacao(); UI.crAcao('genero', {v:x}); }, g);
+    for (let i = 1; i < 6; i++)
+      await tentar(`inscrição/${g}/passo ${i + 1}`, x => { UI._cr.alcancado = 5; UI.crAcao('passo', {v:String(x)}); }, i);
+    await tentar(`inscrição/${g}/sorteada`, () => { UI.crAcao('passo', {v:'0'}); UI.crAcao('sortear', {}); });
+    await tentar(`inscrição/${g}/cada opção`, () => {
+      const c = UI._cr;
+      for (const cid of CIDADES) UI.crAcao('cidade', {v:cid});
+      for (const k of Object.keys(OBJETIVOS_DA_FICHA)) UI.crAcao('meta', {v:k});
+      for (const grupo of TRACOS_DA_FICHA) for (const par of grupo.tracos){ UI.crAcao('traco', {v:par[0]}); UI.crAcao('traco', {v:par[0]}); }
+      for (const t of TIPOS_KANTO) UI.crAcao('gosto', {lista:'desgostos', cat:'tipos', v:t});
+      for (const [k] of LUGARES_DA_FICHA) UI.crAcao('gosto', {lista:'gostos', cat:'lugares', v:k});
+      for (const k of MOCHILAS_DA_FICHA) UI.crAcao('mochila', {v:k});
+      for (const r of RETRATOS_DA_FICHA[c.genero]) UI.crAcao('retrato', {v:r});
+      for (const k of Object.keys(CORES_CARTAO)) UI.crAcao('cartao', {v:k});
+      for (const q of PARENTESCOS) UI.crAcao('casaQuem', {v:q});
+      for (const k of STATUS_DO_TREINADOR.map(s => s[0])) UI.crAcao('forte', {v:k});
+      UI.crAcao('inicial', {v:'rand'}); UI.crAcao('ritmo', {v:'longo'});
+      for (const f of ['nome', 'aparencia', 'vestimenta', 'casaNome', 'tracos']) UI.crAcao('dado', {v:f});
+      if (!c.forte) UI.crAcao('forte', {v:'sorte'});
+      UI.crAcao('passo', {v:'5'});
+    });
+    await tentar(`inscrição/${g}/saiu de casa`, () => UI.crAcao('proximo', {}));
+    await tentar(`inscrição/${g}/cartão`, () => { Object.assign(Estado.dados.flags, {tem_pokedex:true, tem_cartao:true}); UI.modalCartao(); });
+    await tentar(`inscrição/${g}/ficha`, () => UI.modalFicha('perfil'));
+    const ok = await page.evaluate(() => !!(Estado.dados && Estado.j && Estado.j.meta && Estado.j.forte && Estado.j.status[Estado.j.forte] === 2));
+    if (!ok){ onde = `inscrição/${g}`; anota('inscrição', 'a ficha não chegou inteira no Estado (meta, forte ou status)'); }
   }
 
   /* ---------- janelas ---------- */

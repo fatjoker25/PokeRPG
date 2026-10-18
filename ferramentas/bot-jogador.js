@@ -45,13 +45,12 @@ const SUSPEITO = [
   await page.waitForTimeout(400);
   await page.locator('button:has-text("Começar"), button:has-text("Nova jornada")').first().click();
   await page.waitForTimeout(200);
+  /* a inscrição: nome, gênero e cidade no primeiro passo; o resto, sorteado */
   await page.fill('#f-nome', 'Íris');
   await page.locator(`#f-genero button[data-v="${GENERO}"]`).click();
-  await page.fill('#f-personalidade', 'teimosa, leal, curiosa').catch(() => {});
-  await page.fill('#f-objetivo', 'Vencer a Liga e ser campeã').catch(() => {});
-  await page.fill('#f-gosta', 'mar, Pokémon de fogo').catch(() => {});
-  await page.fill('#f-nao-gosta', 'escuro, Zubat').catch(() => {});
-  await page.selectOption('#f-cidade', CIDADE).catch(() => {});
+  await page.locator(`#f-cidade button[data-v="${CIDADE}"]`).click().catch(() => {});
+  await page.locator('#cr-sortear').click();
+  await page.waitForTimeout(200);
   await page.locator('button:has-text("Sair de casa")').click();
   await page.waitForTimeout(400);
 

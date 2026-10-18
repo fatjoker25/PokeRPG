@@ -996,6 +996,36 @@ tudo. Campo novo em `Batalha` entra sozinho na foto, desde que seja dado
 Contra treinador a saída é o **Forfeit** (`Batalha.desistir`): derrota,
 multa e moral (`MULTA_FORFEIT_POR_NIVEL`, `MORAL_FORFEIT`).
 
+## A inscrição (criação de personagem)
+A criação é a **ficha de inscrição da Liga** (`UI.telaCriacao`, dados em
+`js/data/inscricao.js`, desenho em `css/criacao.css`): seis passos no
+idioma da abertura — você, seu jeito, o que você quer, aparência, casa e
+começo, conferência —, com o cartão de inscrição se preenchendo ao lado
+(no celular, só na conferência). O estado mora em `UI._cr` até "Sair de
+casa", e `UI.lerCriacao()` entrega pro `Jogo.criar`.
+
+**O que pesa no jogo é escolha, nunca palavra solta.** A ficha antiga era
+texto livre lido por radical, e escrever "ambiciosa" em vez de "teimosa"
+não dava afinidade nenhuma. Hoje:
+- os traços (`TRACOS_DA_FICHA`, 2 ou 3) são todos radicais de
+  `TRACOS_JOGADOR` (afinidade.js), na forma do gênero — traço novo entra
+  com radical, e cada palavra casa com **um** radical só;
+- o objetivo é um dos sete `METAS`, gravado em `j.meta`, com a frase
+  sugerida em `OBJETIVOS_DA_FICHA` (é ela que o capítulo 1 põe na sua boca);
+- gostos e desgostos saem prontos (`gostoDaFicha`: lugar, tipo, espécie),
+  em `j.gostos`/`j.desgostos`; o tipo usa o nome do jogo (`Grama`, nunca
+  "Planta" — esse erro deixou o gosto por grama sem efeito nenhum);
+- o **forte** (`j.forte`) começa em 2; os outros status, em 1;
+- mochila (`j.corMochila`), cartão (`j.corCartao`) e foto (`j.retrato`,
+  rosto de `RETRATOS_DA_FICHA`, no cartão e na Ficha por
+  `retratoDoJogador`) são só aparência.
+
+Aparência e roupa continuam texto livre, com sugestão sorteada (o dado ao
+lado do campo). Save de antes da inscrição continua sendo lido por
+palavra (`rumoDe`, `perfilDoJogador`, `corNaDescricao`). O `chk-telas`
+passa por cada passo e cada opção nos dois gêneros, e o `bot-jogador` sai
+de casa pelo "Sortear o resto".
+
 ## Idade de quem joga
 **Todo mundo sai de casa com quinze anos.** A ficha pede só o
 **aniversário** (dia e mês); o ano é calculado pra dar quinze no dia da

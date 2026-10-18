@@ -117,7 +117,9 @@ const ICONE = {
   itens:'<rect x="5" y="8" width="14" height="13" rx="3"/><path d="M9 8V6a3 3 0 0 1 6 0v2M8 13h8"/>',
   pokedex:'<rect x="5" y="3" width="14" height="18" rx="2"/><circle cx="9" cy="7" r="1.6"/><rect x="8" y="11" width="8" height="6" rx="1"/>',
   pokenav:'<rect x="7" y="3" width="10" height="18" rx="2"/><path d="M10 6h4M11 18h2"/><rect x="9" y="8" width="6" height="7" rx="1"/>',
-  cartao:'<rect x="3" y="6" width="18" height="13" rx="2"/><circle cx="8.5" cy="12" r="2"/><path d="M14 10h5M14 13h4M14 16h3"/>'
+  cartao:'<rect x="3" y="6" width="18" height="13" rx="2"/><circle cx="8.5" cy="12" r="2"/><path d="M14 10h5M14 13h4M14 16h3"/>',
+  /* o dado da ficha de inscrição: sorteia uma sugestão */
+  dado:'<rect x="4" y="4" width="16" height="16" rx="3.5"/><circle cx="8.6" cy="8.6" r=".9" fill="currentColor"/><circle cx="15.4" cy="8.6" r=".9" fill="currentColor"/><circle cx="12" cy="12" r=".9" fill="currentColor"/><circle cx="8.6" cy="15.4" r=".9" fill="currentColor"/><circle cx="15.4" cy="15.4" r=".9" fill="currentColor"/>'
 };
 
 function svgIcone(chave, cls){

@@ -130,7 +130,9 @@ const TRACOS_JOGADOR = {
   pratic:      {cuidado: 1, paciencia:-1},
   inteligente: {cuidado: 1, paciencia: 1},
   melancól:    {paciencia: 1, simpatia:-1},
-  melancol:    {paciencia: 1, simpatia:-1}
+  melancol:    {paciencia: 1, simpatia:-1},
+  /* "brincalhona", da ficha de inscrição (inscricao.js) */
+  brincalhon:  {discricao:-2, paciencia:-1, simpatia: 2}
 };
 
 const EIXOS = ['discricao', 'paciencia', 'coragem', 'simpatia', 'cuidado'];

@@ -60,8 +60,10 @@ const CIDADES = ['Pallet','Viridian','Pewter','Cerulean','Vermilion','Lavender',
    deixar em branco, a casa ganha alguém mesmo assim, porque
    "alguém lá embaixo" não é personagem, é neblina.
    ============================================================ */
-/* Perla não entra: é a vizinha do dezoito, e as duas se falam */
-const NOMES_DE_CASA_F = ['Delia','Alma','Dalva','Elda','Flora','Hilda','Nora','Vera'];
+/* Perla não entra: é a vizinha do dezoito, e as duas se falam. Elda
+   também não: é a técnica de licença da Estação 4, no dezoito e no
+   dezenove, e o crachá dela passa pela sua mão */
+const NOMES_DE_CASA_F = ['Delia','Alma','Dalva','Clara','Flora','Hilda','Nora','Vera'];
 const NOMES_DE_CASA_M = ['Aldo','Bruno','Dino','Marco','Otto','Vito'];
 const NOMES_DE_CASA = NOMES_DE_CASA_F.concat(NOMES_DE_CASA_M);
 const PARENTESCOS_F = ['mãe','avó','tia','irmã mais velha','madrinha'];
@@ -433,8 +435,13 @@ function mochilaAtual(){
     const c = corDaMochila(n);
     if (c){ cor = c; nome = n; achou = true; }
   }
-  /* Sem bolsa comprada: a que você descreveu na ficha ("uma mochila
-     preta", "bolsa verde musgo nas costas") é a que você carrega. */
+  /* Sem bolsa comprada: a que você escolheu na ficha de inscrição, ou,
+     em save de antes dela, a que você descreveu ("uma mochila preta",
+     "bolsa verde musgo nas costas"). */
+  if (!achou && d.jogador && d.jogador.corMochila && CORES_MOCHILA[d.jogador.corMochila]){
+    cor = CORES_MOCHILA[d.jogador.corMochila]; nome = 'Mochila ' + d.jogador.corMochila;
+    return saida();
+  }
   if (!achou && d.jogador){
     const texto = _semAcento([d.jogador.vestimenta, d.jogador.aparencia].filter(Boolean).join(' . '));
     const lida = corNaDescricao(texto);
@@ -519,7 +526,10 @@ const Estado = {
   dados: null,
 
   novo(ficha){
-    const resistencia = 1;
+    /* o forte da ficha de inscrição começa em 2; os outros, em 1 */
+    const status = {forca:1, percepcao:1, intelecto:1, carisma:1, sorte:1, resistencia:1};
+    if (ficha.forte && status[ficha.forte] != null) status[ficha.forte] = 2;
+    const hpMax = 30 + (status.resistencia - 1) * 2;
     this.dados = {
       versao: 1,
       criadoEm: Date.now(),
@@ -534,10 +544,19 @@ const Estado = {
         objetivo: ficha.objetivo,
         gosta: ficha.gosta || '',
         naoGosta: ficha.naoGosta || '',
+        /* o que a ficha de inscrição já escolheu pronto; save sem isso
+           lê o texto (rumoDe) */
+        ...(ficha.meta ? {meta: ficha.meta} : {}),
+        ...(ficha.gostos ? {gostos: ficha.gostos} : {}),
+        ...(ficha.desgostos ? {desgostos: ficha.desgostos} : {}),
+        forte: ficha.forte || null,
+        retrato: ficha.retrato || null,
+        corMochila: ficha.corMochila || null,
+        corCartao: ficha.corCartao || 'azul',
         idade: ficha.idade || 15,
         nascimento: ficha.nascimento || null,
-        hp: 30, hpMax: 30,
-        status: {forca:1, percepcao:1, intelecto:1, carisma:1, sorte:1, resistencia:1},
+        hp: hpMax, hpMax,
+        status,
         pontos: 0,
         dinheiro: 3000,
         cargo: null,
@@ -587,8 +606,14 @@ const Estado = {
   descricaoFisica(){
     const j = this.j;
     const partes = [];
-    if (j.aparencia)  partes.push(j.aparencia);
-    if (j.vestimenta) partes.push(j.vestimenta);
+    /* entra no meio da frase dos outros: sem ponto no fim e sem maiúscula no começo */
+    const sem = s => { const t = String(s || '').trim().replace(/[.\s]+$/, '');
+                       return /^.[a-zà-ú]/.test(t) ? t.charAt(0).toLowerCase() + t.slice(1) : t; };
+    if (j.aparencia)  partes.push(sem(j.aparencia));
+    if (j.vestimenta) partes.push(sem(j.vestimenta));
+    /* a mochila da ficha entra na descrição se a roupa não falou de bolsa */
+    if (j.corMochila && !/mochila|bolsa|sacola|mala|bornal/i.test(partes.join(' ')))
+      partes.push('mochila ' + j.corMochila);
     return partes.join(', ');
   },
   comoTeVeem(){

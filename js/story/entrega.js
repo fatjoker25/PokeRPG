@@ -38,7 +38,7 @@ function escolhasDeInicial(rotulo, vai, extra){
 /* ---------- INICIAL SORTEADO ----------
    Tabela de inicial no espírito das do Pokérole: 1d6 escolhe a
    coluna (1–4, o que vive na sua cidade; 5–6, o que combina com o
-   jeito que você escreveu na ficha) e 1d6 escolhe a linha. Só entra
+   jeito que você escolheu na inscrição) e 1d6 escolhe a linha. Só entra
    primeiro estágio de linha com evolução pela frente; casa que cair
    em espécie fora disso desce pra próxima linha válida. */
 const INICIAL_DA_CIDADE = {

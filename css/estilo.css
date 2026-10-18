@@ -1126,6 +1126,9 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
   width:38px;height:38px;border-radius:50%;background:#8fa6bd;
   box-shadow:0 34px 0 -4px #8fa6bd, 0 30px 0 6px #8fa6bd;
 }
+/* a foto da ficha de inscrição: o rosto de treinador, em pixel, de pé no fundo */
+.cartao-retrato .cartao-foto{position:absolute;left:50%;bottom:4px;transform:translateX(-50%);
+  width:88px;height:88px;image-rendering:pixelated}
 .cartao-retrato .rodape-retrato{
   position:absolute;left:0;right:0;bottom:0;padding:3px 6px;
   font-size:10px;text-align:center;color:#2c3a49;
@@ -1254,6 +1257,8 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
   background:rgba(255,255,255,.18);border:2px solid rgba(255,255,255,.6)
 }
 .ficha-ident{min-width:0}
+.ficha-cor{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:7px;vertical-align:-1px;
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.25), 0 0 0 1px rgba(255,255,255,.25)}
 .ficha-nome{font-size:21px;font-weight:650;line-height:1.1;overflow-wrap:anywhere}
 .ficha-titulo{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;opacity:.86;margin-top:3px}
 .ficha-chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
