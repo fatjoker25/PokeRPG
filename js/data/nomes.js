@@ -119,7 +119,7 @@ const RECUSAM_O_NOME = {
    depois desmentiria. */
 const NOMES_FIXOS = {
   /* a menina da fila da licença, em Viridian: diz o nome quando é ajudada */
-  'a menina do formulário':    'Maren',
+  'a menina do formulário':    'Ida',
   'o capitão do porto':        'Capitão Marlow',
   'a funcionária da guarita':  'Sra. Myrtle',
   'o rapaz do protocolo':      'Tito',
@@ -287,7 +287,7 @@ const NOMES_DA_HISTORIA = new Set([
   'Vesna','Waldo','Wilma','Xavi','Yarrow','Ylva','Yves','Zane','Zelda','Hawthorn',
   'Larch','Silas','Toby','Bertram','Edwin','Garth','Edith','Tansy','Elda',
   /* os nomes fixos daqui de cima */
-  'Marlow','Myrtle','Tito','Pike','Rufo','Lena','Gina',
+  'Ida','Clary','Marlow','Myrtle','Tito','Pike','Rufo','Lena','Gina',
   'Tessa','Rue',
   /* canônicos de Kanto */
   'Brock','Misty','Surge','Erika','Koga','Sabrina','Blaine','Blue','Red','Lance','Giovanni',

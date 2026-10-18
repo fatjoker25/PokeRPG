@@ -1243,8 +1243,9 @@ const Estado = {
          opinião separada: junta na grafia certa */
       const MESMA_PESSOA = {'a Terceira':'A Terceira', 'Mulher da pasta de vinil':'a mulher da pasta',
                             'a mulher da pasta de vinil':'a mulher da pasta',
-                            /* a menina da licença era gravada assim antes de ter nome fixo */
-                            'Maren de Pewter':'Maren',
+                            /* a menina da licença era gravada assim antes de ter nome fixo,
+                               e chamava Maren, como a Maren Kestrel da Liga: virou Ida */
+                            'Maren de Pewter':'a menina do formulário', 'Maren':'a menina do formulário',
                             /* o velho do Staryu: Amos pro cais, Sr. Dane no balão (13 e 14) */
                             'Amos':'Sr. Dane',
                             /* o dono do curral da Rota 17 ganhou nome no 15 */
@@ -1305,6 +1306,14 @@ const Estado = {
         delete d.npcs['Sr. Juniper'];
         (d.nomesSabidos = d.nomesSabidos || {})['a figura de capuz'] = 'Sr. Juniper';
         d.flags.juniper_sem_capuz = true;
+      }
+      /* a menina da licença se chamava Maren, como a Maren Kestrel */
+      if (d.nomesSabidos && d.nomesSabidos['a menina do formulário'] === 'Maren') d.nomesSabidos['a menina do formulário'] = 'Ida';
+      /* o título que o 26 dava tinha outro nome, e contava como insígnia */
+      if (Array.isArray(d.insignias) && d.insignias.includes('Campeão de Kanto')){
+        d.insignias = d.insignias.filter(i => i !== 'Campeão de Kanto');
+        if (!d.insignias.includes('Título de Campeão')) d.insignias.push('Título de Campeão');
+        d.flags.campeao_de_kanto = true;
       }
       /* o parceiro do Ezra passou a ser sorteado: quem já conhecia o
          Pidgey dele continua com o Pidgey */

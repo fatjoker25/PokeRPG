@@ -152,7 +152,7 @@ viridian:[
        'A enfermeira puxa a gaveta, tira o formulário, e a menina chora de novo — de um jeito completamente diferente do de antes.',
        fala('a menina do formulário', 'Eu ia voltar pra Pewter hoje. Eu ia voltar hoje e não tentar de novo.'),
        d=>{ Nomes.apresentar('a menina do formulário');
-            return fala('a menina do formulário', 'Maren. Eu me chamo Maren. Eu vou lembrar da sua cara.'); }
+            return fala('a menina do formulário', 'Ida. Eu me chamo Ida. Eu vou lembrar da sua cara.'); }
      ]},
     {texto:'Pagar a passagem de volta dela, pelo menos.',
      ef:{dinheiro:-800, moral:2, rep:{eixo:'bom',delta:1,motivo:'Pagou a passagem de quem não conseguiu'},

@@ -733,14 +733,18 @@ c25_fim_recusou_o_termo:{
 /* ------------------------------------------------------------
    8. CAP 26 — O QUE TE OFERECEM
    No Planalto te oferecem coisas. Dá pra aceitar, e aceitar é
-   um fim.
+   um fim. A oferta é antes da reunião das catorze, numa sala do
+   segundo andar, e quem oferece é a conselheira da Liga que senta
+   no conselho da Comissão (a do 20).
    ------------------------------------------------------------ */
 enxertarDesfecho(26, {
 
 c26_aceitou_o_posto:{
   texto:[
-    'A sala tem uma mesa comprida, oito cadeiras e uma janela com o vidro trincado remendado com fita.',
-    'Sentadas, quatro pessoas. Uma delas é da Liga, uma é da Comissão, e as outras duas você não consegue classificar, o que provavelmente é o ponto.',
+    'A sala dois fica no segundo andar: mesa comprida, oito cadeiras e uma janela com o vidro trincado remendado com fita.',
+    d=>d.flags.viu_a_liga_na_mesa || d.flags.conselheira_confrontada
+      ? 'Sentadas, quatro pessoas. Uma delas você já viu numa mesa maior, com o mesmo broche: a observadora da Liga no conselho da Comissão. Outra tem o crachá da Comissão, e as outras duas você não consegue classificar, o que provavelmente é o ponto.'
+      : 'Sentadas, quatro pessoas. Uma tem o broche da Liga, outra tem o crachá da Comissão, e as outras duas você não consegue classificar, o que provavelmente é o ponto.',
     fala('a conselheira da Liga', 'Vamos ser diretos, porque {o senhor|a senhora} já perdeu bastante tempo com gente que não foi direta.'),
     'Ela empurra uma pasta fina pela mesa.',
     fala('a conselheira da Liga', 'Coordenação de campo. Cargo novo, criado no mês passado, com dotação orçamentária própria.'),
@@ -770,7 +774,7 @@ c26_quem_criou_o_cargo:{
     fala('o homem sem crachá', 'Da Liga com a Comissão.'),
     'Você olha pra conselheira da Liga, que não desvia.',
     d=>fala(d.jogador.nome, 'A Liga e a Comissão assinam resolução conjunta?'),
-    'Silêncio de uns quatro segundos, e é o silêncio mais informativo da tarde.',
+    'Silêncio de uns quatro segundos, e é o silêncio mais informativo do dia.',
     fala('a conselheira da Liga', 'Desde mil novecentos e sessenta e dois.'),
     'Ela diz isso sem nenhum constrangimento, e é aí que você entende que ela nunca achou que isso fosse segredo.',
     fala('a conselheira da Liga', '{O senhor|A senhora} passou meses procurando uma conspiração e o que existe é um convênio. Está publicado.', 'baixo')
@@ -796,14 +800,14 @@ c26_fim_aceitou:{
   ],
   final:{id:'aceitou_a_coordenacao', titulo:'PARÁGRAFO TERCEIRO', texto:[
     'Você trabalha para eles por nove anos.',
-    'Faz o serviço. Faz bem: é coordenador de campo, visita estação, confere manifesto, assina relatório de manejo. Tem sala, tem telefone, tem uma secretária que se chama Kaede e que faz o melhor café do andar.',
+    'Faz o serviço. Faz bem: é {coordenador|coordenadora} de campo, visita estação, confere manifesto, assina relatório de manejo. Tem sala, tem telefone, tem uma secretária que se chama Clary e que faz o melhor café do andar.',
     'E, por nove anos, você usa o parágrafo terceiro.',
-    'Comunicação dirigida a órgão de controle não é quebra de sigilo. Você manda quatrocentas e onze delas, todas formais, todas protocoladas, todas com número, ao longo de nove anos — pra auditoria, pra controladoria, pro ministério público, pra tudo que a legislação chame de órgão de controle.',
+    'Comunicação dirigida a órgão de controle não é quebra de sigilo. Você manda quatrocentas e onze delas, todas formais, todas protocoladas, todas com número, ao longo de nove anos — pra auditoria, pra controladoria, pra promotoria, pra tudo que a legislação chame de órgão de controle.',
     'As primeiras duzentas não dão em nada.',
     'A de número trezentos e oitenta e nove dá.',
     'A comissão parlamentar, quando é instalada, é instalada com base em quatro comunicações protocoladas por um servidor da própria estrutura, o que retira de todo mundo a possibilidade de chamar aquilo de perseguição externa.',
-    'Você depõe como coordenador de campo, de terno, com crachá, sobre fatos que você conheceu no exercício da função e comunicou tempestivamente.',
-    'É o depoimento mais devastador da CPI inteira e é também o mais chato: quatro horas de número de protocolo.',
+    'Você depõe como {coordenador|coordenadora} de campo, de terno, com crachá, sobre fatos que você conheceu no exercício da função e comunicou tempestivamente.',
+    'É o depoimento mais devastador da comissão inteira e é também o mais chato: quatro horas de número de protocolo.',
     'A Comissão é extinta por lei no ano seguinte.',
     'Você fica sem emprego, e você sabia disso desde o dia em que leu o parágrafo terceiro em pé, numa sala com a janela remendada com fita.'
   ]}
@@ -815,7 +819,7 @@ c26_fim_recusou:{
     fala('a conselheira da Liga', 'Não é uma oferta que se repete.'),
     d=>fala(d.jogador.nome, 'Eu sei.'),
     'Ela fecha a pasta fina.',
-    fala('a conselheira da Liga', '{O senhor|A senhora} entende que, recusando, continua sem acesso a nada, e que tudo que {o senhor|a senhora} tem é papel juntado de forma irregular por um menor de idade.'),
+    fala('a conselheira da Liga', '{O senhor|A senhora} entende que, recusando, continua sem acesso a nada, e que tudo que {o senhor|a senhora} tem é papel juntado de forma irregular por {um menor|uma menor} de idade.'),
     d=>fala(d.jogador.nome, 'Entendo.'),
     fala('a conselheira da Liga', 'E que {o senhor|a senhora} está escolhendo a versão mais difícil de todas.'),
     d=>fala(d.jogador.nome, 'Tô.'),
@@ -824,6 +828,19 @@ c26_fim_recusou:{
     fala('o homem sem crachá', 'Pra constar: eu achei que você ia aceitar.'),
     d=>fala(d.jogador.nome, 'Por quê?'),
     fala('o homem sem crachá', 'Porque eu aceitei.', 'baixo')
+  ],
+  ef:{flag:'recusou_a_sala_dois',
+      registrar:'Recusou, na sala dois, a coordenação de campo com dever de sigilo.'},
+  escolhas:[
+    {texto:'Subir pra sala quatro. A reunião das catorze continua de pé.', vai:'c21_esperou_na_porta'},
+    {texto:'Ir embora do Planalto. Sem reunião nenhuma.', vai:'c26_fim_foi_embora'}
+  ]
+},
+
+c26_fim_foi_embora:{
+  texto:[
+    'No corredor, a escada sobe pra sala quatro e desce pro saguão, e você desce.',
+    'Atravessa o saguão, empurra a porta de vidro e sai pro vento da montanha.'
   ],
   final:{id:'recusou_a_coordenacao', titulo:'A VERSÃO MAIS DIFÍCIL', texto:[
     'Você desce do Planalto Indigo a pé, no fim da tarde, sem cargo, sem acesso, sem crachá e sem plano.',
@@ -835,7 +852,7 @@ c26_fim_recusou:{
     'Leva onze anos.',
     'Não existe um momento de virada, não existe uma manchete, não existe um dia em que tudo muda. Existem onze anos de gente comum guardando papel e passando adiante, até a pilha ficar grande demais pra caber numa gaveta.',
     'A comissão parlamentar de inquérito é instalada numa quarta-feira de setembro.',
-    'Você tem vinte e seis anos e está sentad{o|a} na galeria, no meio do público, sem crachá nenhum.',
+    'Você tem {idade+11} anos e está sentad{o|a} na galeria, no meio do público, sem crachá nenhum.',
     'E quando o relator lê a lista de pessoas que contribuíram com documentação, ele leva dezenove minutos, porque são cento e quarenta e um nomes.',
     'O seu é um deles. É o de número oitenta e três, em ordem alfabética.',
     'É exatamente o tamanho que tinha que ter.'
@@ -843,7 +860,6 @@ c26_fim_recusou:{
 }
 
 }, [
-  {de:'c21_esperou_na_porta', para:'c26_aceitou_o_posto', texto:'Entrar quando chamarem.'},
-  {de:'c21_saguao', para:'c26_aceitou_o_posto', texto:'Subir. Já é quase catorze.'},
-  {de:'c21_refeitorio', para:'c26_aceitou_o_posto', texto:'Subir pra reunião.'}
+  {de:'c21_saguao', para:'c26_aceitou_o_posto', texto:'Atender o recado da recepção: querem você na sala dois, antes da reunião.'},
+  {de:'c21_refeitorio', para:'c26_aceitou_o_posto', texto:'Atender a moça que veio te buscar: sala dois, antes da reunião.'}
 ]);

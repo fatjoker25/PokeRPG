@@ -78,8 +78,9 @@ function rumoDe(d){
   if (!j.gostos) j.gostos = lerGostos(j.gosta || '');
   if (!j.desgostos) j.desgostos = lerGostos(j.naoGosta || '');
   /* save antigo leu "Planta", que não é o nome de tipo nenhum */
+  const TIPO_ANTIGO = {Planta:'Grama'};
   for (const g of [j.gostos, j.desgostos])
-    if (g && g.tipos && g.tipos.includes('Planta')) g.tipos = g.tipos.map(t => t === 'Planta' ? 'Grama' : t);
+    if (g && g.tipos && g.tipos.some(t => TIPO_ANTIGO[t])) g.tipos = g.tipos.map(t => TIPO_ANTIGO[t] || t);
   return {meta:j.meta, gostos:j.gostos, desgostos:j.desgostos};
 }
 

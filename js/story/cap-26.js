@@ -3,7 +3,32 @@
    ------------------------------------------------------------ */
 const C26_ABERTURAS = ['c21_chegada', 'c26_ab_a_van_do_pao', 'c26_ab_a_carona', 'c26_ab_a_parede'];
 function c26_cabe(id, d){ return true; }
-function c26_abertura(d){ return Dados.escolher(C26_ABERTURAS.filter(id => c26_cabe(id, d))); }
+function c26_abertura(d){
+  const id = Dados.escolher(C26_ABERTURAS.filter(id => c26_cabe(id, d)));
+  if (d && d.relogio && d.flags && d.flags.c26_chegada == null){
+    /* a reunião é terça às catorze; a van do pão sobe às onze */
+    Relogio.ateODia(1, id === 'c26_ab_a_van_do_pao' ? 11 : 13);
+    d.flags.c26_chegada = d.relogio.dia;
+  }
+  return id;
+}
+function c26_hora(d){ sincronizarHora(d.relogio); return d.relogio.hora; }
+/* contagem por extenso: insígnia, morte e ocorrência são femininas */
+function c26_fem(n){ return n <= 8 ? c21_ext(n) : String(n); }
+/* A primeira folha sai da reputação e da via na hora em que a
+   Conselheira desliza as folhas, e fica: a reputação que a conversa
+   muda depois não troca a folha que já está na mesa. A segunda folha
+   é sempre o contrato de campo. */
+function c26_oferta(d){
+  if (d.flags.c26_oferta) return d.flags.c26_oferta;
+  const rep = Estado.rep;
+  if (rep.eixo === 'bom' && rep.bom >= 6) return 'elite';
+  if (rep.eixo === 'ruim' && rep.ruim >= 5) return 'acordo';
+  if (Historia.via() === 'pesquisador') return 'pesquisa';
+  return 'instrutor';
+}
+const C26_CARGO = {elite:'Membro da Elite 4', acordo:'{Assessor|Assessora} da Liga',
+                   pesquisa:'{Pesquisador|Pesquisadora} da Liga', instrutor:'{Instrutor|Instrutora} do Planalto'};
 
 /* ============================================================
    CAPÍTULO 26 — O QUE TE OFERECEM
@@ -34,7 +59,7 @@ c26_ab_a_van_do_pao:{
     fala('o entregador de pão', 'O Planalto não contratou ninguém. Eu perguntei na cozinha.', 'baixo')
   ],
   ef:{flag:'o_pao_triplicou',
-      npc:{nome:'o entregador', opiniao:1, viuVoce:'Te deu carona nos últimos duzentos metros da subida.'},
+      npc:{nome:'o entregador de pão', opiniao:1, viuVoce:'Te deu carona nos últimos duzentos metros da subida.'},
       registrar:'A entrega de pão do Planalto triplicou em oito anos sem contratação de pessoal.',
       presagio:'Três vezes mais pão e o mesmo quadro de funcionários. Tem gente morando lá que não está na folha.'},
   escolhas:[
@@ -151,7 +176,7 @@ c21_chegada:{
       if (Estado.rep.eixo==='ruim' && Estado.rep.ruim>=4) return 'A recepcionista digita seu nome, lê alguma coisa na tela, e o sorriso dela muda de categoria.';
       return 'Ninguém te reconhece. Você é só mais {um|uma} com envelope na mão.';
     },
-    'A reunião é às catorze. São treze e dez.'
+    'A reunião é às catorze. Falta uma hora.'
   ],
   ef:{registrar:'Chegou ao Planalto Indigo.'},
   escolhas:[
@@ -185,7 +210,7 @@ c21_parede_dos_campeoes:{
     'A vigésima sétima é de um menino de onze anos. A moldura é a mesma das outras. O nome embaixo é um nome curto.',
     'A última moldura está vazia, com o vidro limpo e o nome em branco, esperando.'
   ],
-  ef:{flag:'viu_a_parede', registrar:'Viu a parede dos campeões: 29 fotos e uma moldura vazia.'},
+  ef:{flag:'viu_a_parede', registrar:'Viu a parede dos campeões: 27 fotos e uma moldura vazia.'},
   escolhas:[
     {texto:'Perguntar na recepção quem é o menino de onze anos.', vai:'c21_o_menino_da_foto'},
     {texto:'Olhar a placa de bronze atrás da escada.', vai:'c21_placa_de_bronze'},
@@ -254,7 +279,7 @@ c21_placa_de_bronze:{
 
 c21_quem_sao_os_41:{
   texto:[
-    d=>{ Nomes.apresentar('a recepcionista do Planalto'); return 'A recepcionista se chama Sra. Ada, trabalha aqui há vinte e seis anos, e responde sem consultar nada.'; },
+    d=>{ Nomes.apresentar('a recepcionista do Planalto'); return 'No crachá da recepcionista, um adesivo de tempo de casa com o número 26 e o nome: SRA. ADA. Ela responde sem consultar nada.'; },
     fala('Sra. Ada', 'Agentes de campo mortos em serviço.'),
     'Ela diz isso do mesmo jeito que diria o horário de funcionamento.',
     d=>fala(d.jogador.nome, 'Quarenta e um?'),
@@ -276,10 +301,12 @@ c21_quem_sao_os_41:{
 c21_os_quatro_novos:{
   texto:[
     'A Sra. Ada para de mexer nos formulários.',
-    '"Dos últimos dois anos."',
+    fala('Sra. Ada', 'Dos últimos dois anos.'),
     'Ela não diz onde. Ela olha para a escada, para cima, na direção da sala em que você tem reunião às catorze.',
-    '"{O senhor|A senhora} vai perguntar lá em cima e eles vão te contar, porque eles contam." Ela volta aos formulários. "Eu só não quero ser eu a contar."',
-    'Você fica com essa frase por todo o resto da tarde.'
+    fala('Sra. Ada', '{O senhor|A senhora} vai perguntar lá em cima e eles vão te contar, porque eles contam.'),
+    'Ela volta aos formulários.',
+    fala('Sra. Ada', 'Eu só não quero ser eu a contar.', 'baixo'),
+    'A frase sobe a escada com você.'
   ],
   ef:{flag:'sabe_dos_quatro_novos', instabilidade:1,
       registrar:'Quatro agentes morreram nos últimos dois anos e ainda não estão na placa.'},
@@ -321,7 +348,7 @@ c21_refeitorio:{
 c21_mesa_da_manutencao:{
   texto:[
     'Eles abrem espaço na mesa sem cerimônia nenhuma.',
-    'O mais velho se chama Sr. Quint e é eletricista do Planalto há dezenove anos.',
+    'O mais velho tem QUINT bordado no macacão e conta, sem ninguém perguntar, que é eletricista do Planalto há dezenove anos.',
     fala('Sr. Quint', '{Você é o de hoje das duas?|Você é a de hoje das duas?}', null, 'Ele aponta o teto com o garfo.'),
     fala('Sr. Quint', 'A sala quatro é a que a gente chama de sala das três cadeiras.'),
     d=>fala(d.jogador.nome, 'Por quê?'),
@@ -357,11 +384,12 @@ c21_quatro_cadeiras:{
 c21_ja_viu_sair:{
   texto:[
     'Ele mastiga devagar antes de responder.',
-    '"Eu vi todo mundo sair de lá, {moço|moça}, porque a sala quatro tem uma tomada que dá defeito e eu subo lá toda semana."',
+    fala('Sr. Quint', 'Eu vi todo mundo sair de lá, {moço|moça}, porque a sala quatro tem uma tomada que dá defeito e eu subo lá toda semana.'),
     'Ele põe o garfo na bandeja.',
-    '"Tem os que saem assinando e os que saem sem assinar, e eu vou te dizer uma coisa que eu reparei em dezenove anos: dá para saber qual é pelo jeito de descer a escada."',
-    '"E qual é o jeito?"',
-    '"Quem assinou desce olhando o papel." Ele levanta a bandeja. "Quem não assinou desce olhando a parede dos campeões."'
+    fala('Sr. Quint', 'Tem os que saem assinando e os que saem sem assinar, e eu vou te dizer uma coisa que eu reparei em dezenove anos: dá para saber qual é pelo jeito de descer a escada.'),
+    d=>fala(d.jogador.nome, 'E qual é o jeito?'),
+    fala('Sr. Quint', 'Quem assinou desce olhando o papel.', null, 'Ele levanta a bandeja.'),
+    fala('Sr. Quint', 'Quem não assinou desce olhando a parede dos campeões.')
   ],
   ef:{flag:'ouviu_o_nicacio', instabilidade:1,
       npc:{nome:'Sr. Quint', opiniao:2, memoria:'Te contou como dá para saber quem assinou pelo jeito de descer a escada.'},
@@ -402,7 +430,7 @@ c21_quem_e_quintino:{
     fala('a moça das licenças', 'E todo mundo prefere que ele esteja lá. Inclusive eu, e eu nem subo.')
   ],
   ef:{flag:'sabe_do_quintino',
-      registrar:'O Sr. Mervin, campeão de 79, senta na borda do poço da arena há doze anos.'},
+      registrar:'O Sr. Mervin, campeão de 49, senta na borda do poço da arena há doze anos.'},
   escolhas:[
     {texto:'Pedir para ver a arena antes da reunião.', vai:'c21_pediu_a_arena'},
     {texto:'Subir para a reunião.', vai:'c21_esperou_na_porta'}
@@ -412,11 +440,12 @@ c21_quem_e_quintino:{
 c21_pediu_a_arena:{
   texto:[
     'A recepcionista olha o relógio da parede.',
-    fala('a recepcionista do Planalto', 'Treze e vinte e cinco. Dá.'),
+    fala('a recepcionista do Planalto', 'Dá tempo, se {o senhor|a senhora} não demorar lá embaixo.'),
     'Ela te dá um crachá de visitante com barbante e aponta a escada de serviço.',
     'A arena da Elite 4 fica dois andares abaixo do saguão e é um poço de pedra com iluminação vinda de cima.',
     'Não tem plateia. Nunca teve. É outra coisa que quem conta a história da Liga deixa de fora.',
-    'E, na borda do poço, com as pernas para dentro, tem um homem de setenta e poucos anos sentado, sozinho, olhando o chão vazio.'
+    'E, na borda do poço, com as pernas para dentro, tem um homem de setenta e poucos anos sentado, sozinho, olhando o chão vazio.',
+    'Na lapela dele, um broche de campeão gasto, com um ano e um nome gravados: 1949, MERVIN.'
   ],
   ef:{flag:'viu_a_arena',
       registrar:'A arena da Elite 4 é um poço de pedra sem plateia.'},
@@ -432,12 +461,13 @@ c21_quintino:{
     'Você senta na borda a uns dois metros dele.',
     'Ele não vira a cabeça e não parece incomodado.',
     'Passam uns quarenta segundos assim.',
-    '"{O senhor|A senhora} é {o|a} das duas horas."',
-    '"Sou."',
-    '"Então {o senhor|a senhora} tem trinta minutos e uma escada." Ele continua olhando o poço. "Pergunta o que quiser. Eu tenho doze anos de tempo livre."'
+    fala('Sr. Mervin', '{O senhor|A senhora} é {o|a} das duas horas.'),
+    d=>fala(d.jogador.nome, 'Sou.'),
+    fala('Sr. Mervin', 'Então {o senhor|a senhora} tem trinta minutos e uma escada.', null, 'Ele continua olhando o poço.'),
+    fala('Sr. Mervin', 'Pergunta o que quiser. Eu tenho doze anos de tempo livre.')
   ],
   ef:{flag:'conheceu_quintino',
-      npc:{nome:'Sr. Mervin', opiniao:1, memoria:'Campeão de 79. Senta na borda do poço há doze anos.'},
+      npc:{nome:'Sr. Mervin', opiniao:1, memoria:'Campeão de 49. Senta na borda do poço há doze anos.'},
       registrar:'Conheceu o Sr. Mervin na borda da arena.'},
   escolhas:[
     {texto:'"O senhor senta aqui por quê?"', vai:'c21_quintino_porque'},
@@ -450,14 +480,15 @@ c21_quintino:{
 c21_quintino_porque:{
   texto:[
     'Ele demora, mas não é hesitação: é uma pessoa que fala devagar porque tem tempo.',
-    '"Porque quando eu subi aqui em quarenta e nove não tinha ninguém sentado na borda."',
+    fala('Sr. Mervin', 'Porque quando eu subi aqui em quarenta e nove não tinha ninguém sentado na borda.'),
     'Ele balança os pés dentro do poço.',
-    '"Eu ganhei, desceram para me cumprimentar, tiraram a foto, e aí todo mundo foi embora e eu fiquei sozinho no poço com o meu time e eu não sabia o que fazer com as mãos."',
-    '"E aí o senhor decidiu sentar aqui."',
-    '"Doze anos depois de me aposentar, sim." Ele ri baixinho. "Eu demorei quase quarenta anos para entender o que tinha faltado. Faltou alguém sentado na borda."'
+    fala('Sr. Mervin', 'Eu ganhei, desceram para me cumprimentar, tiraram a foto, e aí todo mundo foi embora e eu fiquei sozinho no poço com o meu time e eu não sabia o que fazer com as mãos.'),
+    d=>fala(d.jogador.nome, 'E aí o senhor decidiu sentar aqui.'),
+    fala('Sr. Mervin', 'Doze anos depois de me aposentar, sim.', 'riso', 'Ele ri baixinho.'),
+    fala('Sr. Mervin', 'Eu demorei quase quarenta anos para entender o que tinha faltado. Faltou alguém sentado na borda.')
   ],
   ef:{instabilidade:0, moral:2,
-      npc:{nome:'Sr. Mervin', opiniao:2, memoria:'Senta na borda porque em 79 não tinha ninguém sentado na borda para ele.'},
+      npc:{nome:'Sr. Mervin', opiniao:2, memoria:'Senta na borda porque em 49 não tinha ninguém sentado na borda para ele.'},
       registrar:'O Sr. Mervin senta na borda porque ninguém sentou na borda por ele.'},
   escolhas:[
     {texto:'"O que eles vão me oferecer?"', vai:'c21_quintino_oferta'},
@@ -468,11 +499,12 @@ c21_quintino_porque:{
 
 c21_quintino_oferta:{
   texto:[
-    '"Três folhas." Ele responde sem pensar. "Sempre três."',
-    '"O senhor sabe quais?"',
-    '"Eu sei quais eram no meu tempo e eu duvido que tenham inventado uma quarta." Ele conta nos dedos, devagar. "Um cargo aqui dentro. Um contrato lá fora. E a coisa que eles querem de verdade, que vem por último e vem sem folha."',
-    '"Por que sem folha?"',
-    '"Porque a terceira não se assina." Ele finalmente vira a cabeça e olha para você. "A terceira eles contam, e a pessoa vai ou não vai."'
+    fala('Sr. Mervin', 'Três folhas. Sempre três.', null, 'Ele responde sem pensar.'),
+    d=>fala(d.jogador.nome, 'O senhor sabe quais?'),
+    fala('Sr. Mervin', 'Eu sei quais eram no meu tempo e eu duvido que tenham inventado uma quarta.', null, 'Ele conta nos dedos, devagar.'),
+    fala('Sr. Mervin', 'Um cargo aqui dentro. Um contrato lá fora. E a coisa que eles querem de verdade, que vem por último e vem sem folha.'),
+    d=>fala(d.jogador.nome, 'Por que sem folha?'),
+    fala('Sr. Mervin', 'Porque a terceira não se assina. A terceira eles contam, e a pessoa vai ou não vai.', null, 'Ele finalmente vira a cabeça e olha para você.')
   ],
   ef:{flag:'sabe_das_tres_folhas',
       registrar:'Sempre três ofertas. A terceira não tem folha para assinar.'},
@@ -486,11 +518,12 @@ c21_quintino_oferta:{
 c21_quintino_foi:{
   texto:[
     'Ele leva muito tempo para responder.',
-    '"Não."',
+    fala('Sr. Mervin', 'Não.'),
     'Ele olha o poço.',
-    '"Em oitenta e um me falaram de uma coisa em Cinnabar e eu disse que ia pensar, e eu pensei, e eu não fui. E aí fizeram o que fizeram lá, e deu no que deu."',
-    '"O senhor não podia saber."',
-    '"Eu não podia saber e eu não fui." Ele encolhe os ombros devagar. "As duas coisas são verdade e uma não desmancha a outra. {O senhor|A senhora} vai aprender isso hoje, se ainda não aprendeu."'
+    fala('Sr. Mervin', 'Em oitenta e um me falaram de uma coisa em Cinnabar e eu disse que ia pensar, e eu pensei, e eu não fui. E aí fizeram o que fizeram lá, e deu no que deu.'),
+    d=>fala(d.jogador.nome, 'O senhor não podia saber.'),
+    fala('Sr. Mervin', 'Eu não podia saber e eu não fui.', null, 'Ele encolhe os ombros devagar.'),
+    fala('Sr. Mervin', 'As duas coisas são verdade e uma não desmancha a outra. {O senhor|A senhora} aprende isso hoje, se ainda não aprendeu.')
   ],
   ef:{instabilidade:1, moral:-2,
       npc:{nome:'Sr. Mervin', opiniao:3, memoria:'Recusou a terceira oferta em 1981 e nunca se perdoou.'},
@@ -503,15 +536,17 @@ c21_quintino_foi:{
 
 c21_quintino_valeu:{
   texto:[
-    '"Valeu a pena?"',
+    d=>fala(d.jogador.nome, 'Valeu a pena?'),
     'Ele responde rápido, dessa vez.',
-    '"Valeu por quatro meses."',
+    fala('Sr. Mervin', 'Valeu por quatro meses.'),
     'Ele balança os pés.',
-    '"Quatro meses de gente parando na rua e de carta chegando e de convite para inaugurar loja. Depois passou, e eu tinha vinte e três anos e nada para fazer no resto da vida."',
-    '"E o que o senhor fez?"',
-    '"Elite 4 por vinte e dois anos, que é o mesmo trabalho todo dia." Ele coça o joelho. "{O senhor|A senhora} está me perguntando a coisa errada. Me pergunta o que valeu."',
+    fala('Sr. Mervin', 'Quatro meses de gente parando na rua e de carta chegando e de convite para inaugurar loja. Depois passou, e eu tinha vinte e três anos e nada para fazer no resto da vida.'),
+    d=>fala(d.jogador.nome, 'E o que o senhor fez?'),
+    fala('Sr. Mervin', 'Elite 4 por vinte e dois anos, que é o mesmo trabalho todo dia.', null, 'Ele coça o joelho.'),
+    fala('Sr. Mervin', '{O senhor|A senhora} está me perguntando a coisa errada. Me pergunta o que valeu.'),
     'Você pergunta o que valeu.',
-    '"O caminho até aqui." Ele aponta o poço vazio com o queixo. "Isso aqui é a parte que acaba. O caminho é a parte que fica."'
+    fala('Sr. Mervin', 'O caminho até aqui.', null, 'Ele aponta o poço vazio com o queixo.'),
+    fala('Sr. Mervin', 'Isso aqui é a parte que acaba. O caminho é a parte que fica.')
   ],
   ef:{moral:3,
       npc:{nome:'Sr. Mervin', opiniao:3, memoria:'Te disse que o título vale quatro meses e o caminho fica.'},
@@ -526,13 +561,13 @@ c21_quintino_valeu:{
 
 c21_quintino_94:{
   texto:[
-    '"Eu conheci sete dos onze."',
+    fala('Sr. Mervin', 'Eu conheci sete dos onze.'),
     'Ele para de balançar os pés.',
-    '"Era uma equipe de campo boa. A melhor que a Liga já teve, e eu digo isso sabendo o peso da frase."',
-    '"O que aconteceu no norte em dezoito de agosto?"',
-    '"Ninguém sabe." Ele fala isso sem nenhum mistério, com cansaço. "Acharam o acampamento montado. Equipamento no lugar. Comida na panela."',
+    fala('Sr. Mervin', 'Era uma equipe de campo boa. A melhor que a Liga já teve, e eu digo isso sabendo o peso da frase.'),
+    d=>fala(d.jogador.nome, 'O que aconteceu no norte em dezoito de agosto?'),
+    fala('Sr. Mervin', 'Ninguém sabe. Acharam o acampamento montado. Equipamento no lugar. Comida na panela.', null, 'Ele fala isso sem nenhum mistério, com cansaço.'),
     'Ele olha para você.',
-    '"E se {o senhor|a senhora} está perguntando isso hoje, às treze e quarenta, quer dizer que eles vão te contar da quarta equipe lá em cima."'
+    fala('Sr. Mervin', 'E se {o senhor|a senhora} está perguntando isso hoje, com reunião às duas, quer dizer que eles vão te contar da quarta equipe lá em cima.')
   ],
   ef:{flag:['sabe_do_94','sabe_do_acampamento'], instabilidade:1,
       registrar:'Em 18 de agosto de 1994, onze agentes sumiram no norte. Acharam o acampamento montado.'},
@@ -545,11 +580,11 @@ c21_quintino_94:{
 c21_quarta_equipe:{
   texto:[
     'Ele volta a olhar o poço.',
-    '"Em noventa e quatro foram onze e não voltou ninguém. Depois disso a Liga não mandou mais ninguém para lá por quatro anos."',
-    '"E agora?"',
-    '"Agora mandaram três equipes em dois anos, e por isso é que faltam quatro nomes na placa lá de cima."',
+    fala('Sr. Mervin', 'Em noventa e quatro foram onze e não voltou ninguém. Depois disso a Liga não mandou mais ninguém para lá por quatro anos.'),
+    d=>fala(d.jogador.nome, 'E agora?'),
+    fala('Sr. Mervin', 'Agora mandaram três equipes em dois anos, e por isso é que faltam quatro nomes na placa lá de cima.'),
     'Ele bate na pedra do lado dele, duas vezes, com a palma.',
-    '"E agora vão te oferecer a quarta, e {o senhor|a senhora} vai ser uma pessoa só, e isso na cabeça deles é melhor, porque uma pessoa que some é uma pessoa e não uma equipe."'
+    fala('Sr. Mervin', 'E agora vão te oferecer a quarta, e {o senhor|a senhora} vai ser uma pessoa só, e isso na cabeça deles é melhor, porque uma pessoa que some é uma pessoa e não uma equipe.', 'baixo')
   ],
   ef:{flag:['sabe_das_tres_equipes','sabe_dos_quatro_novos'], instabilidade:1, moral:-2,
       npc:{nome:'Sr. Mervin', opiniao:3, memoria:'Te avisou do que iam te oferecer antes de subirem.'},
@@ -580,12 +615,14 @@ c21_pisou_na_arena:{
 c21_esperou_na_porta:{
   texto:[
     'A sala quatro fica no terceiro andar, no fim de um corredor com carpete e três quadros de paisagem.',
-    'Tem uma cadeira do lado de fora, e você senta nela, e é catorze menos oito.',
+    'Tem uma cadeira do lado de fora, e você senta nela, e são catorze menos oito.',
     'Pela porta, você ouve três vozes discutindo uma coisa que não tem nada a ver com você: a data de uma homologação de ginásio que caiu em feriado.',
     'Às catorze em ponto a porta abre e uma mulher de uns quarenta e cinco anos diz o seu nome.',
     'A sala é a mesma de sempre nesses lugares: mesa comprida, quatro cadeiras, três ocupadas.',
+    'Na frente das três, plaquinhas de acrílico viradas pra você: CONS. EDDA THISTLE — OPERAÇÕES. SR. WALDO — FISCALIZAÇÃO. MAREN KESTREL — CAMPO.',
     'E, em cima da mesa, uma pasta com o seu nome.'
   ],
+  ef:{executar:d=>{ if (c26_hora(d) < 14) Relogio.ate(14); }},
   escolhas:[
     {texto:'Sentar.', vai:'c21_pasta'},
     {texto:'Ficar em pé.', vai:'c21_ficou_em_pe'},
@@ -637,7 +674,7 @@ c21_bruna_voltou:{
     fala('Maren Kestrel', 'Eu voltei com cinco pessoas de seis.'),
     fala('Maren Kestrel', 'E eu vou te contar o que aconteceu na hora certa, que é depois, porque se eu contar agora {o senhor|a senhora} vai decidir com o estômago.'),
     'Ela abre o caderno dela numa página em branco.',
-    fala('Maren Kestrel', 'Eu decidi com o estômago em março e eu perdi uma pessoa.')
+    fala('Maren Kestrel', 'Eu decidi com o estômago no ano passado e eu perdi uma pessoa.')
   ],
   ef:{flag:'bruna_vai_contar', instabilidade:1,
       npc:{nome:'Maren Kestrel', opiniao:1, memoria:'Voltou do norte com cinco de seis e vai te contar na hora certa.'},
@@ -651,11 +688,12 @@ c21_bruna_voltou:{
 c21_porque_fiscalizacao:{
   texto:[
     'O Sr. Waldo responde sem esperar a Conselheira.',
-    '"Porque tudo o que for oferecido {ao senhor|à senhora} hoje tem efeito jurídico e alguém tem que responder por isso depois."',
+    fala('Sr. Waldo', 'Porque tudo o que for oferecido {ao senhor|à senhora} hoje tem efeito jurídico e alguém tem que responder por isso depois.'),
     'Ele abre a pasta sanfonada e mostra, sem entregar, uma folha datilografada com seis linhas riscadas a caneta.',
-    '"Isto é a minha discordância por escrito sobre a terceira oferta. Eu protocolei na sexta-feira."',
-    '"E mesmo assim vão me oferecer."',
-    '"E mesmo assim vão te oferecer." Ele fecha a pasta. "Porque eu discordo e não mando, e é assim que tem que ser, e é assim que é ruim."'
+    fala('Sr. Waldo', 'Isto é a minha discordância por escrito sobre a terceira oferta. Eu protocolei na sexta-feira.'),
+    d=>fala(d.jogador.nome, 'E mesmo assim vão me oferecer.'),
+    fala('Sr. Waldo', 'E mesmo assim vão te oferecer.', null, 'Ele fecha a pasta.'),
+    fala('Sr. Waldo', 'Porque eu discordo e não mando, e é assim que tem que ser, e é assim que é ruim.')
   ],
   ef:{flag:['aguiar_discorda'], instabilidade:1,
       npc:{nome:'Sr. Waldo', opiniao:2, memoria:'Protocolou discordância por escrito contra a terceira oferta.'},
@@ -688,11 +726,12 @@ c21_pasta:{
     d=>{
       const d2=Estado.dados;
       const linhas=[];
-      if (d2.insignias.length) linhas.push(d2.insignias.length === 1 ? 'uma insígnia' : `${d2.insignias.length} insígnias`);
-      if (d2.cemiterio.length) linhas.push(d2.cemiterio.length === 1 ? 'uma morte registrada sob sua responsabilidade' : `${d2.cemiterio.length} mortes registradas sob sua responsabilidade`);
+      const ni = c21_ins(d2);
+      if (ni) linhas.push(ni === 1 ? 'uma insígnia' : `${c26_fem(ni)} insígnias`);
+      if (d2.cemiterio.length) linhas.push(d2.cemiterio.length === 1 ? 'uma morte registrada sob sua responsabilidade' : `${c26_fem(d2.cemiterio.length)} mortes registradas sob sua responsabilidade`);
       const presos = Estado.lendariosCapturados();
-      if (presos.length) linhas.push(presos.length === 1 ? 'um lendário em sua posse' : `${presos.length} lendários em sua posse`);
-      if (d2.liga.avisos) linhas.push(d2.liga.avisos === 1 ? 'uma ocorrência no nosso sistema' : `${d2.liga.avisos} ocorrências no nosso sistema`);
+      if (presos.length) linhas.push(presos.length === 1 ? 'um lendário em sua posse' : `${porExtenso(presos.length)} lendários em sua posse`);
+      if (d2.liga.avisos) linhas.push(d2.liga.avisos === 1 ? 'uma ocorrência no nosso sistema' : `${c26_fem(d2.liga.avisos)} ocorrências no nosso sistema`);
       return fala('Conselheira Edda Thistle', linhas.length ? `Vamos ao que consta: ${linhas.join(', ')}.` : 'Consta muito pouco aqui. Isso é raro em alguém que andou tanto.');
     },
     d=>{
@@ -764,7 +803,7 @@ c21_quem_escreveu:{
   ],
   ef:{flag:['a_carta_da_professora'], moral:4, instabilidade:1,
       rep:{eixo:'bom',delta:1,motivo:'Descobriu quem escreveu para a Liga por você'},
-      registrar:'Uma professora de Pallet escreveu à Liga há dois anos pedindo notícia sua. Nunca responderam.'},
+      registrar:d=>`Uma professora de ${d.jogador.cidade} escreveu à Liga dias depois de você sair de casa, pedindo notícia sua. Nunca responderam.`},
   escolhas:[
     {texto:'"Me deixa ler a carta."', vai:'c21_leu_a_carta'},
     {texto:'"Eu respondo. Me dá o endereço."', vai:'c21_vai_responder'},
@@ -778,11 +817,11 @@ c21_leu_a_carta:{
     '**Prezados senhores. Não sei se é aqui que se escreve isto. {Um aluno meu|Uma aluna minha} saiu de casa e não {é fugido|é fugida}, {ele|ela} avisou, e em casa sabem.**',
     '**Eu só queria pedir que, se alguém do serviço dos senhores {encontrar ele|encontrar ela} por aí, {diga para ele|diga para ela} que não precisa voltar com nada. {Ele|Ela} acha que precisa voltar com alguma coisa.**',
     '**Atenciosamente.**',
-    'E embaixo, a assinatura e o nome de uma pessoa que te ensinou a ler.'
+    'E embaixo, a assinatura, e o nome escrito por extenso na mesma letra: Iris Clover. Foi ela que te ensinou a ler.'
   ],
   ef:{flag:['leu_a_carta_da_professora'], moral:6, instabilidade:1,
-      rep:{eixo:'bom',delta:2,motivo:'Leu a carta que alguém escreveu por você há dois anos'},
-      registrar:'A carta dizia: diga para ele que não precisa voltar com nada.'},
+      rep:{eixo:'bom',delta:2,motivo:'Leu a carta que alguém escreveu por você quando você saiu de casa'},
+      registrar:'A carta da professora Iris Clover dizia: diga para {ele|ela} que não precisa voltar com nada.'},
   escolhas:[
     {texto:'Pedir uma cópia.', vai:'c21_copia_da_carta'},
     {texto:'"Eu respondo. Me dá o endereço."', vai:'c21_vai_responder'},
@@ -793,7 +832,8 @@ c21_leu_a_carta:{
 c21_copia_da_carta:{
   texto:[
     'O Sr. Waldo faz a cópia ele mesmo, numa máquina do corredor, e volta com a folha ainda quente e uma segunda folha.',
-    '"A segunda é o protocolo de recebimento, com data e carimbo." Ele entrega as duas. "Se um dia {o senhor|a senhora} quiser provar que ela escreveu, a que vale é essa."',
+    fala('Sr. Waldo', 'A segunda é o protocolo de recebimento, com data e carimbo.', null, 'Ele entrega as duas.'),
+    fala('Sr. Waldo', 'Se um dia {o senhor|a senhora} quiser provar que ela escreveu, a que vale é essa.'),
     'Você dobra as duas juntas e guarda no bolso de dentro, contra o peito, e não é um gesto que você decidiu fazer.'
   ],
   ef:{itens:{'Cópia da carta da professora':1}, moral:2,
@@ -830,7 +870,7 @@ c21_pergunta1:{
     {texto:d=>`"${d.jogador.objetivo}"`, vai:'c21_p1_objetivo', ef:{flag:'respondeu_objetivo'}, cond:d=>!!(d.jogador.objetivo || '').trim()},
     {texto:'"Pra ver até onde eu chegava."', vai:'c21_p1_objetivo', ef:{flag:'respondeu_objetivo'}, cond:d=>!(d.jogador.objetivo || '').trim()},
     {texto:'"Eu já não lembro mais."', vai:'c21_p1_esqueceu',
-     ef:{flag:'esqueceu_objetivo', rep:{eixo:'bom',delta:1,motivo:'Foi honesto sobre ter perdido o rumo'}}},
+     ef:{flag:'esqueceu_objetivo', rep:{eixo:'bom',delta:1,motivo:'Foi honest{o|a} sobre ter perdido o rumo'}}},
     {texto:'"Não é da sua conta."', vai:'c21_p1_recusou', ef:{flag:'recusou_pergunta1'}},
     {texto:'"Pelo mesmo motivo que todo mundo: porque ficar era pior."', vai:'c21_p1_ficar_era_pior'}
   ]
@@ -889,7 +929,7 @@ c21_p1_ficar_era_pior:{
   ],
   ef:{flag:'ficar_era_pior', moral:1,
       npc:{nome:'Maren Kestrel', opiniao:2, memoria:'Deu a mesma resposta que você à primeira pergunta.'},
-      registrar:'Os três da mesa saíram de casa pelo mesmo motivo que você.'},
+      registrar:'Dois dos três da mesa saíram de casa pelo mesmo motivo que você.'},
   escolhas:[{texto:'Segunda pergunta.', vai:'c21_pergunta2'}]
 },
 
@@ -922,9 +962,9 @@ c21_p2_verdade:{
     'Leva quatro minutos e em nenhum momento alguém interrompe, e o pior é que você ouve a própria voz dizendo em voz alta coisas que você só tinha dito para si mesm{o|a} em barraca, no escuro.',
     'Quando termina, a sala fica quieta.',
     'O Sr. Waldo é quem fala.',
-    '"Isso que {o senhor|a senhora} acabou de contar não está na pasta." Ele bate na pasta sanfonada com dois dedos. "E eu não vou pôr."',
-    '"Por quê?"',
-    '"Porque {o senhor|a senhora} contou por vontade e a gente não achou. E se a gente passar a registrar o que as pessoas contam por vontade, elas param de contar."'
+    fala('Sr. Waldo', 'Isso que {o senhor|a senhora} acabou de contar não está na pasta. E eu não vou pôr.', null, 'Ele bate na pasta sanfonada com dois dedos.'),
+    d=>fala(d.jogador.nome, 'Por quê?'),
+    fala('Sr. Waldo', 'Porque {o senhor|a senhora} contou por vontade e a gente não achou. E se a gente passar a registrar o que as pessoas contam por vontade, elas param de contar.')
   ],
   ef:{instabilidade:1, moral:4,
       npc:{nome:'Sr. Waldo', opiniao:3, memoria:'Decidiu não registrar o que você contou por vontade própria.'},
@@ -938,7 +978,7 @@ c21_p2_nada:{
     'A Conselheira Thistle anota.',
     'A Maren Kestrel levanta os olhos e olha para você por uns três segundos, e depois volta ao caderno.',
     fala('Maren Kestrel', 'Eu vou te dizer uma coisa que não é da entrevista.'),
-    fala('Maren Kestrel', 'Eu também respondi nada em março, e eu perdi uma pessoa em abril.'),
+    fala('Maren Kestrel', 'Eu também respondi nada, no ano passado, numa sala igual a esta. Um mês depois eu perdi uma pessoa.'),
     'Ela vira a página.',
     fala('Maren Kestrel', 'Não tem relação de causa. Eu só não gosto de ouvir essa resposta.')
   ],
@@ -1027,7 +1067,7 @@ c21_p3_arrogancia:{
     'O Sr. Waldo escreve uma linha na pasta dele e a linha é curta.',
     'A Conselheira Thistle não reage.',
     'A Maren Kestrel, essa sim, fecha o caderno.',
-    fala('Maren Kestrel', 'O cara que eu perdi em abril disse essa frase na sexta anterior.'),
+    fala('Maren Kestrel', 'O cara que eu perdi disse essa frase na sexta antes de subir.'),
     fala('Maren Kestrel', 'Não estou dizendo que tem relação. Estou dizendo que eu ouvi.'),
     'E aí ela abre o caderno de novo e volta a escrever, e ninguém comenta.'
   ],
@@ -1062,15 +1102,16 @@ c21_ofertas:{
     fala('Conselheira Edda Thistle', 'Certo.', null, 'Ela desliza duas folhas pela mesa e deixa a mão apoiada numa terceira, que não desliza.'),
     fala('Conselheira Edda Thistle', 'Todas são reais. Nenhuma expira hoje.'),
     d=>{
-      const via=Historia.via(); const rep=Estado.rep;
-      if (rep.eixo==='bom' && rep.bom>=6) return fala('Conselheira Edda Thistle', 'A primeira é uma cadeira na Elite 4. A segunda é a diretoria de fiscalização da Liga, quando o Sr. Waldo se aposentar em dois anos.');
-      if (rep.eixo==='ruim' && rep.ruim>=5) return fala('Conselheira Edda Thistle', 'A primeira é um acordo: {o senhor|a senhora} para, a gente arquiva. A segunda é trabalhar para nós fazendo o que {o senhor|a senhora} já faz, só que com cobertura.');
-      if (via==='pesquisador') return fala('Conselheira Edda Thistle', 'A primeira é um cargo de pesquisa com verba própria. A segunda é testemunhar no processo que a Dra. Cordell está montando, com proteção.');
-      return fala('Conselheira Edda Thistle', 'A primeira é um cargo de instrutor aqui no Planalto. A segunda é um contrato de campo.');
+      const o = c26_oferta(d);
+      if (o === 'elite') return fala('Conselheira Edda Thistle', 'A primeira é uma cadeira na Elite 4. A segunda é um contrato de campo.');
+      if (o === 'acordo') return fala('Conselheira Edda Thistle', 'A primeira é um cargo aqui dentro, com um acordo junto: {o senhor|a senhora} para com o que faz lá fora, e o que a gente tem contra {o senhor|a senhora} vai pro arquivo. A segunda é um contrato de campo: {o senhor|a senhora} fazendo o que já faz, só que com cobertura.');
+      if (o === 'pesquisa') return fala('Conselheira Edda Thistle', 'A primeira é um cargo de pesquisa com verba própria. A segunda é um contrato de campo.');
+      return fala('Conselheira Edda Thistle', 'A primeira é um cargo de {instrutor|instrutora} aqui no Planalto. A segunda é um contrato de campo.');
     },
     'Ela tira a mão da terceira folha e a terceira folha continua onde estava, de cabeça para baixo.',
     fala('Conselheira Edda Thistle', 'E a terceira é o norte. Essa não se assina.')
   ],
+  ef:{executar:d=>{ if (!d.flags.c26_oferta) d.flags.c26_oferta = c26_oferta(d); }},
   escolhas:[
     {texto:'Ler as duas folhas antes de qualquer coisa.', vai:'c21_leu_as_folhas'},
     {texto:'Aceitar o cargo formal da Liga.', vai:'c21_cargo'},
@@ -1123,11 +1164,13 @@ c21_quanto_foi:{
 
 c21_mudem_o_contrato:{
   texto:[
-    '"Então mudem o contrato."',
+    d=>fala(d.jogador.nome, 'Então mudem o contrato.'),
     'A Conselheira Thistle olha o Sr. Waldo. O Sr. Waldo olha o teto por uns dois segundos, fazendo uma conta.',
-    '"Dá." Ele volta a olhar a mesa. "Contratação como servidor temporário, prazo determinado, com regime próprio. Leva dezessete dias e passa por três assinaturas, e uma delas é do presidente da Liga."',
-    '"E por que não foi feito nas outras quatro vezes?"',
-    '"Porque ninguém pediu." Ele abre a pasta e começa a escrever. "E porque eu não propus, e isso é meu, e eu vou propor agora."'
+    fala('Sr. Waldo', 'Dá.', null, 'Ele volta a olhar a mesa.'),
+    fala('Sr. Waldo', 'Contratação como servidor temporário, prazo determinado, com regime próprio. Leva dezessete dias e passa por três assinaturas, e uma delas é do presidente da Liga.'),
+    d=>fala(d.jogador.nome, 'E por que não foi feito nas outras quatro vezes?'),
+    fala('Sr. Waldo', 'Porque ninguém pediu.', null, 'Ele abre a pasta e começa a escrever.'),
+    fala('Sr. Waldo', 'E porque eu não propus, e isso é meu, e eu vou propor agora.')
   ],
   ef:{flag:['mudou_o_contrato'],
       rep:{eixo:'bom',delta:3,motivo:'Fez a Liga mudar o vínculo antes de aceitar qualquer coisa'},
@@ -1145,7 +1188,9 @@ c21_quem_teve_antes:{
   texto:[
     d=>fala(d.jogador.nome, 'Quem teve esse cargo antes de mim?'),
     'A Conselheira Thistle consulta uma folha.',
-    fala('Conselheira Edda Thistle', 'Instrutor: quatro pessoas em dez anos. Três pediram transferência e uma continua.'),
+    d=>c26_oferta(d) === 'instrutor'
+      ? fala('Conselheira Edda Thistle', 'Instrutor: quatro pessoas em dez anos. Três pediram transferência e uma continua.')
+      : fala('Conselheira Edda Thistle', 'Esse, ninguém: foi aberto agora. O que tem história aqui dentro é a instrução, por onde passa todo mundo que vai pro campo. Quatro pessoas em dez anos. Três pediram transferência e uma continua.'),
     d=>fala(d.jogador.nome, 'Por que as três pediram transferência?'),
     fala('Conselheira Edda Thistle', 'Porque o instrutor treina quem vai para o campo.', null, 'Sem amaciar.'),
     fala('Conselheira Edda Thistle', 'E quem treina conhece, e quem conhece fica mal quando a pessoa não volta.'),
@@ -1163,13 +1208,14 @@ c21_quem_teve_antes:{
 
 c21_instrutora:{
   texto:[
-    'Ela se chama Sra. Greta Nettle, tem sessenta e sete anos, e recebe você na sala de treino do segundo andar, que é um ginásio comum com colchonete e espelho.',
+    'A sala de treino do segundo andar é um ginásio comum com colchonete e espelho, e na porta tem uma placa de metal: SRA. GRETA NETTLE — INSTRUÇÃO.',
     'Ela está enrolando uma corda quando você entra e continua enrolando enquanto fala.',
-    '"Nove dos onze." Ela diz isso antes de você perguntar. "Eu sei que é essa a pergunta, porque é sempre essa."',
-    '"E a senhora continua treinando."',
-    '"Eu continuo treinando." Ela pendura a corda. "Porque os dois que eu não treinei também não voltaram, e eu passei quatro anos achando que isso significava alguma coisa, e não significa nada."',
+    fala('Sra. Greta Nettle', 'Nove dos onze. Eu sei que é essa a pergunta, porque é sempre essa.', null, 'Ela diz isso antes de você perguntar.'),
+    d=>fala(d.jogador.nome, 'E a senhora continua treinando.'),
+    fala('Sra. Greta Nettle', 'Eu continuo treinando.', null, 'Ela pendura a corda.'),
+    fala('Sra. Greta Nettle', 'Porque os dois que eu não treinei também não voltaram, e eu passei quatro anos achando que isso significava alguma coisa, e não significa nada.'),
     'Ela se vira para você.',
-    '"Agora {o senhor|a senhora} vai me perguntar o que eu ensino, e eu vou responder, e é uma coisa só."'
+    fala('Sra. Greta Nettle', 'Agora {o senhor|a senhora} vai me perguntar o que eu ensino, e eu vou responder, e é uma coisa só.')
   ],
   ef:{flag:'conheceu_iracy',
       npc:{nome:'Sra. Greta Nettle', opiniao:1, memoria:'Instrutora do Planalto há mais de vinte anos. Treinou nove dos onze.'},
@@ -1183,13 +1229,14 @@ c21_instrutora:{
 
 c21_o_que_ela_ensina:{
   texto:[
-    '"Eu ensino a voltar."',
+    fala('Sra. Greta Nettle', 'Eu ensino a voltar.'),
     'Ela pega um colchonete e endireita no canto.',
-    '"Todo mundo que chega aqui já sabe lutar. Ninguém sabe voltar."',
-    '"E como se ensina isso?"',
-    '"Com três coisas, e eu vou te dar de graça porque {o senhor|a senhora} não é {meu aluno|minha aluna} e eu não tenho ninguém para dar." Ela levanta um dedo. "Um: marque a hora de sair. Não o horário, a hora. Escrito. Se passar, volta, mesmo sem ter feito nada."',
-    'Dois dedos. "Dois: nunca desça uma coisa que {o senhor|a senhora} não sabe subir."',
-    'Três. "Três: se der vontade de ficar mais cinco minutos, é a hora de ir embora. Sempre. Sem exceção. Essa é a que mata."'
+    fala('Sra. Greta Nettle', 'Todo mundo que chega aqui já sabe lutar. Ninguém sabe voltar.'),
+    d=>fala(d.jogador.nome, 'E como se ensina isso?'),
+    fala('Sra. Greta Nettle', 'Com três coisas, e eu vou te dar de graça porque {o senhor|a senhora} não é {meu aluno|minha aluna} e eu não tenho ninguém para dar.'),
+    fala('Sra. Greta Nettle', 'Um: marque a hora de sair. Não o horário, a hora. Escrito. Se passar, volta, mesmo sem ter feito nada.', null, 'Ela levanta um dedo.'),
+    fala('Sra. Greta Nettle', 'Dois: nunca desça uma coisa que {o senhor|a senhora} não sabe subir.', null, 'Dois dedos.'),
+    fala('Sra. Greta Nettle', 'Três: se der vontade de ficar mais cinco minutos, é a hora de ir embora. Sempre. Sem exceção. Essa é a que mata.', null, 'Três.')
   ],
   ef:{flag:['aprendeu_a_voltar'], moral:3,
       rep:{eixo:'bom',delta:2,motivo:'Aprendeu as três regras de voltar'},
@@ -1203,13 +1250,13 @@ c21_o_que_ela_ensina:{
 
 c21_iracy_no_seu_lugar:{
   texto:[
-    '"O que a senhora faria no meu lugar?"',
+    d=>fala(d.jogador.nome, 'O que a senhora faria no meu lugar?'),
     'Ela para de arrumar as coisas pela primeira vez.',
-    '"Eu iria."',
+    fala('Sra. Greta Nettle', 'Eu iria.'),
     'Ela senta no banco de madeira encostado no espelho.',
-    '"E eu vou te dizer por que, e não é bonito: porque eu tenho sessenta e sete anos e eu treinei quarenta e um anos de gente para ir, e eu nunca fui."',
+    fala('Sra. Greta Nettle', 'E eu vou te dizer por que, e não é bonito: porque eu tenho sessenta e sete anos e eu treinei quarenta e um anos de gente para ir, e eu nunca fui.'),
     'Ela apoia as mãos nos joelhos.',
-    '"Eu não estou te dando conselho. Eu estou te dizendo o que eu carrego. {O senhor|A senhora} decide o que faz com isso."'
+    fala('Sra. Greta Nettle', 'Eu não estou te dando conselho. Eu estou te dizendo o que eu carrego. {O senhor|A senhora} decide o que faz com isso.', 'baixo')
   ],
   ef:{instabilidade:1, moral:-1,
       npc:{nome:'Sra. Greta Nettle', opiniao:3, memoria:'Treinou 41 anos de gente para ir e nunca foi.'},
@@ -1226,7 +1273,7 @@ c21_cargo:{
     fala('Conselheira Edda Thistle', 'Porque o que {o senhor|a senhora} resolvia sozinh{o|a} lá fora não escalava, e o que a gente faz aqui dentro escala mal, e ninguém achou nada melhor que isso ainda.')
   ],
   ef:{flag:'aceitou_cargo_liga',
-      executar:d=>{ d.jogador.cargo = Estado.rep.eixo==='bom'&&Estado.rep.bom>=6 ? 'Elite 4' : 'Diretoria de Fiscalização da Liga';
+      executar:d=>{ d.jogador.cargo = C26_CARGO[c26_oferta(d)];
         return [{tipo:'insignia', texto:`Cargo assumido: ${d.jogador.cargo}.`}]; },
       rep:{eixo:'bom',delta:2,motivo:'Assumiu um cargo formal na Liga Pokémon'},
       dinheiro:30000,
@@ -1241,7 +1288,7 @@ c21_reabrir_94:{
   texto:[
     d=>fala(d.jogador.nome, 'O meu primeiro ato é reabrir o caso de mil novecentos e noventa e quatro.'),
     'O Sr. Waldo levanta a cabeça devagar.',
-    fala('Sr. Waldo', '{O senhor|A senhora} tem competência para isso a partir de amanhã, e o processo está no arquivo morto do subsolo, caixa vinte e dois.', null, 'Ele fala isso decorado.'),
+    fala('Sr. Waldo', '{O senhor|A senhora} pode pedir a partir de amanhã, como qualquer servidor do quadro. O processo está no arquivo morto do subsolo, caixa vinte e dois.', null, 'Ele fala isso decorado.'),
     fala('Sr. Waldo', 'Eu sei porque eu subi ele quatro vezes em seis anos e ele desceu quatro vezes.'),
     d=>fala(d.jogador.nome, 'Por quê?'),
     fala('Sr. Waldo', 'Porque reabrir custa uma equipe de campo por seis meses, e toda vez que eu pedi, a equipe estava em outro lugar.'),
@@ -1280,13 +1327,15 @@ c21_contrato:{
 
 c21_pediu_a_bruna:{
   texto:[
-    '"Eu quero a Maren Kestrel comigo."',
+    d=>fala(d.jogador.nome, 'Eu quero a Maren Kestrel comigo.'),
     'Ela fecha o caderno antes de qualquer um responder.',
-    '"Não."',
+    fala('Maren Kestrel', 'Não.'),
     'É ela quem responde, e é definitivo, e ela olha para você quando diz.',
-    '"Eu voltei em abril e eu ainda acordo às quatro e vinte todo dia, que é a hora em que eu percebi que a gente era cinco." Ela abre o caderno de novo. "Se eu subir de novo, eu não volto. Eu sei isso do jeito que se sabe o próprio nome."',
+    fala('Maren Kestrel', 'Eu voltei no ano passado e eu ainda acordo às quatro e vinte todo dia, que é a hora em que eu percebi que a gente era cinco.'),
+    'Ela abre o caderno de novo.',
+    fala('Maren Kestrel', 'Se eu subir de novo, eu não volto. Eu sei isso do jeito que se sabe o próprio nome.', 'baixo'),
     'Uma pausa.',
-    '"Mas eu vou te contar tudo. Cada passo. E isso vale mais do que eu ir."'
+    fala('Maren Kestrel', 'Mas eu vou te contar tudo. Cada passo. E isso vale mais do que eu ir.')
   ],
   ef:{flag:['bruna_vai_contar'],
       npc:{nome:'Maren Kestrel', opiniao:3, memoria:'Recusou subir de novo e prometeu te contar cada passo.'},
@@ -1303,8 +1352,8 @@ c21_desafio_elite:{
     'A arena da Elite 4 fica dois andares abaixo e é um poço de pedra com iluminação vinda de cima.',
     'Não tem plateia. Nunca teve. É outra coisa que quem conta a história da Liga deixa de fora.',
     d=>d.flags.conheceu_quintino
-      ? 'E, na borda, com as pernas para dentro, o Sr. Mervin continua sentado, exatamente onde estava às treze e trinta.'
-      : 'Na borda, com as pernas para dentro, tem um homem de setenta e poucos anos sentado sozinho, que ninguém apresenta.'
+      ? 'E, na borda, com as pernas para dentro, o Sr. Mervin continua sentado, exatamente onde estava antes da reunião.'
+      : 'Na borda, com as pernas para dentro, tem um homem de setenta e poucos anos sentado sozinho, que ninguém apresenta. Na lapela, um broche de campeão gasto: 1949, MERVIN.'
   ],
   escolhas:[
     {texto:'Descer e lutar.', vai:'c21_luta_elite'},
@@ -1316,7 +1365,7 @@ c21_desafio_elite:{
 c21_os_quatro_da_elite:{
   texto:[
     'A Conselheira Thistle lista sem consultar nada.',
-    fala('Conselheira Edda Thistle', 'Três das quatro cadeiras estão com substituto desde agosto.', null, 'Sem baixar a voz e sem desculpa nenhuma.'),
+    fala('Conselheira Edda Thistle', 'Três das quatro cadeiras estão com substituto há meses.', null, 'Sem baixar a voz e sem desculpa nenhuma.'),
     fala('Conselheira Edda Thistle', 'Os titulares estão vivos, estão em casa, e não vêm. A Liga não tirou o nome das portas e eu fui voto vencido nisso também.'),
     'Na cadeira da Agatha senta um homem de cinquenta e um anos que entra na sala com refletor e música de palco, e que foi vice-campeão da Conferência Indigo antes de virar isso.',
     'Na cadeira da Lorelei senta uma moça de vinte e poucos que não treina tipo nenhum e sim a ficha do desafiante — a mais nova a sentar numa cadeira da Elite em quarenta anos, e a cadeira não é dela.',
@@ -1351,15 +1400,15 @@ c21_o_da_terceira_equipe:{
 
 c21_a_frase_que_nao_fecha:{
   texto:[
-    '"A gente chegou no vale às onze da manhã de um dia de sol."',
-    'Ele fala devagar, escolhendo.',
-    '"E aí a gente chegou no vale às onze da manhã de um dia de sol."',
+    fala('o lutador da Elite 4', 'A gente chegou no vale às onze da manhã de um dia de sol.', null, 'Ele fala devagar, escolhendo.'),
+    fala('o lutador da Elite 4', 'E aí a gente chegou no vale às onze da manhã de um dia de sol.'),
     'Ele para. Repara que repetiu. Fecha os olhos.',
-    '"Está vendo? É sempre aqui."',
+    fala('o lutador da Elite 4', 'Está vendo? É sempre aqui.', 'baixo'),
     'Ele põe a Pokébola de volta na toalha.',
-    '"Eu me lembro da chegada. Eu me lembro da volta. Eu me lembro de estar com fome na volta e de ter comido uma barra de cereal de morango, e eu odeio morango."',
-    '"E do meio?"',
-    '"Do meio eu me lembro de ter sido perguntado alguma coisa." Ele abre os olhos. "E de ter respondido. E eu daria a minha casa para saber o quê."'
+    fala('o lutador da Elite 4', 'Eu me lembro da chegada. Eu me lembro da volta. Eu me lembro de estar com fome na volta e de ter comido uma barra de cereal de morango, e eu odeio morango.'),
+    d=>fala(d.jogador.nome, 'E do meio?'),
+    fala('o lutador da Elite 4', 'Do meio eu me lembro de ter sido perguntado alguma coisa.', null, 'Ele abre os olhos.'),
+    fala('o lutador da Elite 4', 'E de ter respondido. E eu daria a minha casa para saber o quê.')
   ],
   ef:{flag:['sabe_da_pergunta'], instabilidade:2,
       npc:{nome:'o lutador da Elite 4', opiniao:3, memoria:'Lembra de ter sido perguntado alguma coisa e de ter respondido.'},
@@ -1433,20 +1482,26 @@ c21_venceu_elite:{
     'Você vence quatro times seguidos num poço de pedra sem plateia nenhuma.',
     'Não tem confete, não tem hino, não tem foto imediata.',
     'Tem um homem de setenta e poucos anos sentado na borda do poço que desce a escadinha devagar e aperta a sua mão com as duas dele.',
-    fala('Sr. Mervin', 'Muita gente chega aqui. Quase ninguém chega aqui com o time inteiro de pé e sem ter comprado nenhum deles.'),
+    fala('Sr. Mervin', 'Muita gente chega aqui. Quase ninguém chega aqui sabendo o que custou.'),
     d=>d.cemiterio.length
-      ? fala('Sr. Mervin', `{O senhor|A senhora} perdeu ${d.cemiterio.length === 1 ? 'um' : d.cemiterio.length}. Isso conta. Vai contar para {o senhor|a senhora} por muito tempo, e é bom que conte.`, null, 'Ele olha a lista que trouxeram.')
+      ? fala('Sr. Mervin', `{O senhor|A senhora} perdeu ${porExtenso(d.cemiterio.length)}. Isso conta. Conta para {o senhor|a senhora} por muito tempo, e é bom que conte.`, null, 'Ele olha a lista que trouxeram.')
       : fala('Sr. Mervin', 'E {o senhor|a senhora} não perdeu nenhum. Isso é mais raro que vencer.', null, 'Ele olha a lista que trouxeram.'),
     'Depois ele solta a sua mão e volta a subir a escadinha, devagar, e senta de novo na borda.',
     'E fica lá, olhando, enquanto você fica sozinh{o|a} no meio do poço.',
     'Não é solidão. É a diferença inteira entre quarenta e nove e hoje.'
   ],
-  ef:{flag:'venceu_a_elite',
-      executar:d=>{ d.jogador.cargo='{Campeão|Campeã} de Kanto'; return [{tipo:'insignia', texto:'Você é {Campeão|Campeã} de Kanto.'}]; },
+  ef:{flag:['venceu_a_elite','campeao_de_kanto'],
+      /* o mesmo título de quem vence pela Liga (main.js): conta como
+         título, não como insígnia */
+      executar:d=>{
+        d.jogador.cargo='{Campeão|Campeã} de Kanto';
+        if (!d.insignias.includes('Título de Campeão')) d.insignias.push('Título de Campeão');
+        return [{tipo:'insignia', texto:'Você é {Campeão|Campeã} de Kanto.'}];
+      },
       rep:{eixo:'bom',delta:3,motivo:'Venceu a Elite 4 do Planalto Indigo'},
-      insignia:'Campeão de Kanto', dinheiro:50000,
+      dinheiro:50000,
       curaTime:true,
-      registrar:'Venceu a Elite 4 e tornou-se Campeão de Kanto.'},
+      registrar:'Venceu a Elite 4 e tornou-se {Campeão|Campeã} de Kanto.'},
   escolhas:[
     {texto:'"E o norte?"', vai:'c21_norte_conversa'},
     {texto:'Perguntar da moldura vazia na parede.', vai:'c21_a_moldura'},
@@ -1483,7 +1538,7 @@ c21_sentou_na_borda:{
     'Passam uns quarenta segundos.',
     fala('Sr. Mervin', 'Agora {o senhor|a senhora} entendeu.'),
     d=>fala(d.jogador.nome, 'Entendi.'),
-    'E ficam os dois assim, olhando um poço de pedra vazio, num prédio que fecha às dezoito, numa montanha, enquanto lá embaixo uma van entrega pão para o refeitório do dia seguinte.'
+    'E ficam os dois assim, olhando um poço de pedra vazio, num prédio que fecha às dezoito, numa montanha.'
   ],
   ef:{flag:'sentou_na_borda', moral:4,
       npc:{nome:'Sr. Mervin', opiniao:4, memoria:'Você sentou na borda com ele depois de ganhar.'},
@@ -1496,9 +1551,10 @@ c21_perdeu_elite:{
   texto:[
     'Você perde. Não tem vergonha nisso — perder aqui é o resultado padrão.',
     'Eles curam o seu time, te dão água e te deixam sentar na borda do poço o tempo que você precisar.',
-    '"Volta", diz o Sr. Mervin. "Eu perdi quatro vezes antes de sentar desse lado."',
-    '"Quatro?"',
-    '"Quatro, e a terceira foi feia." Ele coça o joelho. "Na quarta eu mudei uma coisa só e ganhei, e eu vou te contar qual foi se {o senhor|a senhora} quiser ouvir."'
+    fala('Sr. Mervin', 'Volta. Eu perdi quatro vezes antes de sentar desse lado.'),
+    d=>fala(d.jogador.nome, 'Quatro?'),
+    fala('Sr. Mervin', 'Quatro, e a terceira foi feia.', null, 'Ele coça o joelho.'),
+    fala('Sr. Mervin', 'Na quarta eu mudei uma coisa só e ganhei, e eu te conto qual foi se {o senhor|a senhora} quiser ouvir.')
   ],
   ef:{curaTime:true, flag:'perdeu_a_elite', itens:{'Hyper Potion':3}},
   escolhas:[
@@ -1510,13 +1566,14 @@ c21_perdeu_elite:{
 
 c21_o_que_ele_mudou:{
   texto:[
-    '"Eu parei de guardar o melhor para o fim."',
+    fala('Sr. Mervin', 'Eu parei de guardar o melhor para o fim.'),
     'Ele bate na pedra com a palma.',
-    '"Nas três primeiras eu segurava o meu melhor para a última luta, porque é o que a gente faz. E aí eu chegava na última com ele descansado e com o resto do time arrebentado."',
-    '"E na quarta?"',
-    '"Na quarta eu abri com ele." Ele encolhe os ombros. "E o resto do time chegou inteiro no fim, e foi o resto do time que ganhou."',
+    fala('Sr. Mervin', 'Nas três primeiras eu segurava o meu melhor para a última luta, porque é o que a gente faz. E aí eu chegava na última com ele descansado e com o resto do time arrebentado.'),
+    d=>fala(d.jogador.nome, 'E na quarta?'),
+    fala('Sr. Mervin', 'Na quarta eu abri com ele.', null, 'Ele encolhe os ombros.'),
+    fala('Sr. Mervin', 'E o resto do time chegou inteiro no fim, e foi o resto do time que ganhou.'),
     'Ele olha para você.',
-    '"Isso serve para muito mais coisa que luta, e {o senhor|a senhora} vai levar uns dez anos para descobrir onde."'
+    fala('Sr. Mervin', 'Isso serve para muito mais coisa que luta. Eu levei uns dez anos para descobrir onde.')
   ],
   ef:{flag:'conselho_do_quintino', moral:2,
       npc:{nome:'Sr. Mervin', opiniao:3, memoria:'Te contou o que mudou na quarta tentativa.'},
@@ -1534,7 +1591,12 @@ c21_treinou:{
     'Na segunda semana, o Sr. Quint te ensina a consertar uma tomada. Na terceira, você conserta a da sala quatro.',
     'E numa quinta de manhã você desce a escadinha de ferro de novo.'
   ],
-  ef:{executar:d=>{ d.time.forEach(p=>ganharExp(p, 1800)); return [{tipo:'info', texto:'Três semanas de treino no Planalto. O time sobe.'}]; },
+  ef:{executar:d=>{
+        d.time.forEach(p=>ganharExp(p, 1800));
+        /* três semanas vividas no Planalto, e a luta de novo numa quinta de manhã */
+        Relogio.viver(21 * 24); Relogio.ateODia(3, 9);
+        return [{tipo:'info', texto:'Três semanas de treino no Planalto. O time sobe.'}];
+      },
       curaTime:true, flag:'treinou_no_planalto',
       registrar:'Treinou três semanas no Planalto Indigo.'},
   escolhas:[{texto:'Descer e lutar de novo.', vai:'c21_luta_elite'}]
@@ -1565,7 +1627,7 @@ c21_as_tres_equipes:{
   texto:[
     'A Conselheira abre a terceira pasta, que é grossa.',
     fala('Conselheira Edda Thistle', 'Primeira equipe, quatro pessoas, dezoito meses atrás. Voltaram duas, em dois dias. Relatório de três páginas dizendo que não encontraram nada.'),
-    fala('Conselheira Edda Thistle', 'Segunda equipe, seis pessoas, em março.'),
+    fala('Conselheira Edda Thistle', 'Segunda equipe, seis pessoas, há pouco mais de um ano.'),
     'Ela olha a Maren Kestrel, que continua sem levantar a cabeça.',
     fala('Conselheira Edda Thistle', 'Terceira equipe, seis pessoas, há quatro meses. Voltaram seis. Relatório de vinte e duas páginas em que nenhuma frase termina.'),
     d=>fala(d.jogador.nome, 'E o quarto nome da placa?'),
@@ -1609,7 +1671,9 @@ c21_ultima_pagina:{
     'A última página é diferente das outras vinte e uma.',
     'É manuscrita, não datilografada, e tem uma frase só, completa, terminada com ponto final.',
     '**Ele não quis nada de nós.**',
-    'Embaixo, a assinatura e a matrícula, e a matrícula é do homem de mãos grandes que está no vestiário dois andares abaixo alinhando Pokébolas numa toalha.',
+    d=>d.flags.conheceu_o_da_terceira
+      ? 'Embaixo, a assinatura e a matrícula, e a matrícula é do homem de mãos grandes que está no vestiário dois andares abaixo alinhando Pokébolas numa toalha.'
+      : 'Embaixo, a assinatura e a matrícula de alguém que você não conhece.',
     'A Conselheira Thistle olha a página de cabeça para baixo, do outro lado da mesa.',
     fala('Conselheira Edda Thistle', 'Essa é a única frase completa dos três relatórios.'),
     fala('Conselheira Edda Thistle', 'E foi escrita quatro dias depois, em casa, e ele trouxe e entregou no balcão.')
@@ -1626,13 +1690,13 @@ c21_ultima_pagina:{
 c21_quem_ficou:{
   texto:[
     'A Maren Kestrel fecha o caderno e responde ela mesma, porque é dela.',
-    '"Vernon. Quarenta e dois anos, dezenove de serviço, duas filhas."',
+    fala('Maren Kestrel', 'Vernon. Quarenta e dois anos, dezenove de serviço, duas filhas.'),
     'Ela põe as duas mãos na mesa.',
-    '"A gente desceu ao fundo do vale às onze. A gente subiu de volta às quatro e vinte da tarde. E no meio do caminho eu contei e a gente era cinco."',
-    '"E ninguém viu nada?"',
-    '"Ninguém viu nada, ninguém ouviu nada e — e essa é a parte pela qual eu vou responder pelo resto da vida — ninguém sentiu falta."',
+    fala('Maren Kestrel', 'A gente desceu ao fundo do vale às onze. A gente subiu de volta às quatro e vinte da tarde. E no meio do caminho eu contei e a gente era cinco.'),
+    d=>fala(d.jogador.nome, 'E ninguém viu nada?'),
+    fala('Maren Kestrel', 'Ninguém viu nada, ninguém ouviu nada e — e essa é a parte pela qual eu respondo pelo resto da vida — ninguém sentiu falta.', 'baixo'),
     'Ela olha para você.',
-    '"A gente andou uma hora e quarenta sendo cinco e achando que era cinco."'
+    fala('Maren Kestrel', 'A gente andou uma hora e quarenta sendo cinco e achando que era cinco.')
   ],
   ef:{flag:['sabe_do_nogueira'], instabilidade:2, moral:-3,
       npc:{nome:'Maren Kestrel', opiniao:3, memoria:'Andou uma hora e quarenta sem sentir falta de quem faltava.'},
@@ -1689,13 +1753,14 @@ c21_vai_procurar_nogueira:{
 
 c21_o_que_querem:{
   texto:[
-    '"O que vocês querem que eu faça lá?"',
+    d=>fala(d.jogador.nome, 'O que vocês querem que eu faça lá?'),
     'A pergunta cai na mesa e fica.',
     'O Sr. Waldo tira a folha da discordância dele do bolso, desdobra e põe em cima da mesa sem dizer nada, e todo mundo sabe qual é o item.',
     'A Conselheira Thistle leva um tempo comprido.',
-    '"Eu não sei."',
+    fala('Conselheira Edda Thistle', 'Eu não sei.'),
     'Ela não tenta melhorar isso.',
-    '"Eu quero saber se ele é perigoso e eu não sei como se mede isso. Eu quero saber o que ele quer e eu não sei perguntar. E eu quero que alguém volte inteiro, e essa é a única parte em que eu sou competente, e é a parte em que eu já falhei quatro vezes."'
+    fala('Conselheira Edda Thistle', 'Eu quero saber se ele é perigoso e eu não sei como se mede isso. Eu quero saber o que ele quer e eu não sei perguntar.'),
+    fala('Conselheira Edda Thistle', 'E eu quero que alguém volte inteiro, e essa é a única parte em que eu sou competente, e é a parte em que eu já falhei quatro vezes.', 'baixo')
   ],
   ef:{flag:['a_liga_nao_sabe'], instabilidade:1,
       rep:{eixo:'bom',delta:2,motivo:'Fez a Liga admitir que não sabe o que quer'},
@@ -1711,11 +1776,13 @@ c21_o_que_querem:{
 
 c21_so_olhar:{
   texto:[
-    '"Então eu vou sem missão. Eu vou só olhar."',
+    d=>fala(d.jogador.nome, 'Então eu vou sem missão. Eu vou só olhar.'),
     'O Sr. Waldo fecha os olhos e, pela primeira vez na tarde, sorri de verdade.',
-    '"Isso resolve o meu item quatro." Ele já está escrevendo. "Missão de reconhecimento sem objetivo de intervenção. Isso existe na norma, é a classe D, e ninguém usa porque não dá prestígio."',
-    '"E o que muda na prática?"',
-    '"Muda que se {o senhor|a senhora} chegar lá e não fizer nada e voltar, {o senhor|a senhora} cumpriu a missão." Ele levanta os olhos. "E isso, {moço|moça}, é a diferença entre voltar e não voltar em oitenta por cento dos casos que eu vi em trinta e um anos."'
+    fala('Sr. Waldo', 'Isso resolve o meu item quatro.', null, 'Ele já está escrevendo.'),
+    fala('Sr. Waldo', 'Missão de reconhecimento sem objetivo de intervenção. Isso existe na norma, é a classe D, e ninguém usa porque não dá prestígio.'),
+    d=>fala(d.jogador.nome, 'E o que muda na prática?'),
+    fala('Sr. Waldo', 'Muda que se {o senhor|a senhora} chegar lá e não fizer nada e voltar, {o senhor|a senhora} cumpriu a missão.', null, 'Ele levanta os olhos.'),
+    fala('Sr. Waldo', 'E isso, {moço|moça}, é a diferença entre voltar e não voltar em oitenta por cento dos casos que eu vi em trinta e um anos.')
   ],
   ef:{flag:['missao_classe_d'], 
       rep:{eixo:'bom',delta:3,motivo:'Transformou a missão em reconhecimento sem intervenção'},
@@ -1738,6 +1805,7 @@ c21_escrevam_agora:{
     'E, no rodapé, uma linha que a Maren Kestrel pediu para incluir e que ninguém discutiu: a não observância do prazo de retorno não constitui falta.'
   ],
   ef:{flag:['missao_classe_d','tem_a_ordem_escrita'],
+      executar:d=>{ if (c26_hora(d) < 17) Relogio.ate(17); },
       itens:{'Ordem de missão de quatro linhas':1},
       rep:{eixo:'bom',delta:3,motivo:'Ficou uma hora e quarenta esperando eles escreverem'},
       registrar:'A ordem de missão: ir, observar, não intervir, voltar em cinco dias. Atrasar não é falta.'},
@@ -1780,7 +1848,7 @@ c21_aceitou_norte:{
   ],
   ef:{itens:{'Ultra Ball':4,'Master Ball':1,'Hyper Potion':3,'Full Heal':2},
       flag:'liga_aliada', rep:{eixo:'bom',delta:1,motivo:'Aceitou ir ao vale do norte'},
-      npc:{nome:'Conselheira da Liga', opiniao:4, memoria:'Te mandou ao norte com uma Master Ball registrada.'},
+      npc:{nome:'Conselheira Edda Thistle', opiniao:4, memoria:'Te mandou ao norte com uma Master Ball registrada.'},
       curaTime:true,
       registrar:'A Liga te equipou para o norte.'},
   escolhas:[
@@ -1792,13 +1860,14 @@ c21_aceitou_norte:{
 
 c21_despedida:{
   texto:[
-    'Ele está na borda, onde estava às treze e trinta e onde vai estar amanhã.',
-    '"{O senhor|A senhora} vai."',
-    '"Vou."',
+    'Ele está na borda, onde estava antes da reunião e onde está todo dia.',
+    fala('Sr. Mervin', '{O senhor|A senhora} vai.'),
+    d=>fala(d.jogador.nome, 'Vou.'),
     'Ele assente devagar, três vezes, e não olha para você nenhuma vez durante a conversa inteira.',
-    '"Então eu vou te pedir uma coisa e {o senhor|a senhora} pode dizer não."',
+    fala('Sr. Mervin', 'Então eu vou te pedir uma coisa e {o senhor|a senhora} pode dizer não.'),
     'Ele tira do bolso um papel dobrado, velho, amarelado nas dobras, e entrega sem olhar.',
-    '"É o endereço de uma casa em Cinnabar que não existe mais, porque a rua inteira foi embora junto com o laboratório." Ele encolhe os ombros. "Eu carrego desde oitenta e um. Se {o senhor|a senhora} voltar do norte, joga fora por mim. Eu não consigo."'
+    fala('Sr. Mervin', 'É o endereço de uma casa em Cinnabar que não existe mais, porque a rua inteira foi embora junto com o laboratório.', null, 'Ele encolhe os ombros.'),
+    fala('Sr. Mervin', 'Eu carrego desde oitenta e um. Se {o senhor|a senhora} voltar do norte, joga fora por mim. Eu não consigo.', 'baixo')
   ],
   ef:{flag:['carrega_o_papel_do_quintino'], itens:{'Um papel dobrado desde 1981':1}, moral:3,
       npc:{nome:'Sr. Mervin', opiniao:5, memoria:'Te pediu para jogar fora, na volta, um papel que ele carrega desde 1981.'},
@@ -1809,10 +1878,12 @@ c21_despedida:{
 
 c21_recusou_norte:{
   texto:[
-    '"Manda outra equipe."',
-    '"Já mandamos três." Ela não se irrita. "A quarta seria enviar gente sabendo que eles não voltam. Eu não faço isso."',
-    '"E mandar eu, a senhora faz?"',
-    '"Eu não estou te mandando. Eu estou te contando." Ela empurra o mapa pela mesa mesmo assim. "A diferença importa para mim, mesmo que não importe para {o senhor|a senhora}."',
+    d=>fala(d.jogador.nome, 'Manda outra equipe.'),
+    fala('Conselheira Edda Thistle', 'Já mandamos três.', null, 'Ela não se irrita.'),
+    fala('Conselheira Edda Thistle', 'A quarta seria enviar gente sabendo que eles não voltam. Eu não faço isso.'),
+    d=>fala(d.jogador.nome, 'E mandar eu, a senhora faz?'),
+    fala('Conselheira Edda Thistle', 'Eu não estou te mandando. Eu estou te contando.', null, 'Ela empurra o mapa pela mesa mesmo assim.'),
+    fala('Conselheira Edda Thistle', 'A diferença importa para mim, mesmo que não importe para {o senhor|a senhora}.'),
     'O Sr. Waldo olha o mapa em cima da mesa e olha para ela, e não diz nada, e o que ele não diz fica na sala.'
   ],
   ef:{flag:'recusou_norte'},
@@ -1825,13 +1896,13 @@ c21_recusou_norte:{
 
 c21_acabou_de_fazer:{
   texto:[
-    '"A senhora acabou de fazer exatamente o que disse que não faz."',
+    d=>fala(d.jogador.nome, 'A senhora acabou de fazer exatamente o que disse que não faz.'),
     'A sala fica muito quieta.',
     'A Conselheira Thistle olha o mapa em cima da mesa, do lado de lá da linha invisível que separa contar de mandar.',
     'Ela puxa o mapa de volta.',
-    '"{O senhor|A senhora} tem razão."',
+    fala('Conselheira Edda Thistle', '{O senhor|A senhora} tem razão.'),
     'E aí ela faz uma coisa que ninguém naquela mesa esperava: ela guarda o mapa na pasta e fecha.',
-    '"Está encerrado. Se {o senhor|a senhora} quiser ir depois, {o senhor|a senhora} volta aqui e pede, e eu dou. Mas não vai sair desta sala em cima de uma mesa."'
+    fala('Conselheira Edda Thistle', 'Está encerrado. Se {o senhor|a senhora} quiser ir depois, {o senhor|a senhora} volta aqui e pede, e eu dou. Mas não vai sair desta sala em cima de uma mesa.')
   ],
   ef:{flag:['nao_saiu_com_o_mapa'], 
       rep:{eixo:'bom',delta:3,motivo:'Não deixou que te empurrassem um mapa pela mesa'},
@@ -1847,14 +1918,15 @@ c21_fim:{
   texto:[
     'Você desce do Planalto Indigo no fim da tarde.',
     d=>{
-      if (d.jogador.cargo) return `Você desce como ${d.jogador.cargo}, o que é uma frase que a sua versão de {saida} anos saindo de casa não teria acreditado.`;
+      if (Historia.jaAconteceu('c21_venceu_elite')) return 'Você desce como {Campeão|Campeã} de Kanto, uma frase em que você não teria acreditado no dia em que saiu de casa.';
+      if (d.flags.aceitou_cargo_liga || d.flags.contrato_de_campo) return `Você desce como ${d.jogador.cargo}, com papel assinado na mochila e um crachá que ainda não parece seu.`;
       if (d.flags.deixou_o_mapa) return 'Você desce sem nada nas mãos e sem nada assinado, do jeito que subiu.';
       return 'Você desce com um mapa no bolso e coordenadas de um lugar onde três equipes entraram.';
     },
     d=>d.flags.ouviu_o_nicacio
       ? (d.flags.aceitou_cargo_liga || d.flags.contrato_de_campo
          ? 'Na escada, você percebe que está olhando o papel, e lembra do eletricista, e não consegue olhar para outro lugar.'
-         : 'Na escada, você percebe que está olhando a parede dos campeões, e lembra do eletricista, e ri sozinho de um jeito que assusta uma moça que sobe.')
+         : 'Na escada, você percebe que está olhando a parede dos campeões, e lembra do eletricista, e ri sozinh{o|a} de um jeito que assusta uma moça que sobe.')
       : 'Na escada, você cruza com gente subindo, e ninguém olha para você duas vezes.',
     d=>{
       const inst=d.mundo.instabilidade;
@@ -1864,7 +1936,8 @@ c21_fim:{
     },
     'A Rota 10 fica a dois dias daqui.'
   ],
-  fim:true, resumo:'Capítulo 21 concluído — te ofereceram tudo e você escolheu.'
+  ef:{executar:d=>{ if (c26_hora(d) < 17) Relogio.ate(17); }},
+  fim:true, resumo:'Capítulo 26 concluído — te ofereceram tudo e você escolheu.'
 }
 }}
 

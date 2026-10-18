@@ -5271,7 +5271,7 @@ const UI = {
       <div class="linha"><span class="k">Bico</span><span class="v">estiva do cais de Vermilion (5h às 11h, paga por Força) · cassino de Celadon (aposta pela Sorte) · nenhum dos dois pergunta a idade</span></div>
 
       <h3>Relógio e calendário</h3>
-      <div class="linha"><span class="k">Hora</span><span class="v">um minuto de jogo aberto é uma hora em Kanto, e um segundo é um minuto · parado durante a luta e com a janela fora de foco</span></div>
+      <div class="linha"><span class="k">Hora</span><span class="v">um minuto de jogo aberto é uma hora em Kanto, e um segundo é um minuto · parado durante a luta, com a janela fora de foco e nas cenas de capítulo, onde a hora é a que a história conta</span></div>
       <div class="linha"><span class="k">Luz</span><span class="v">o céu do cenário segue o relógio, minuto a minuto: madrugada azul e escura, amanhecer rosado, dia claro, pôr do sol laranja · caverna, vulcão e ginásio não mudam</span></div>
       <div class="linha"><span class="k">Período</span><span class="v">madrugada 0h–5h · manhã 6h–11h · tarde 12h–17h · noite 18h–23h</span></div>
       <div class="linha"><span class="k">Sem Relógio</span><span class="v">você só sabe o período, pelo céu · hora, data e dia da semana não aparecem em lugar nenhum</span></div>

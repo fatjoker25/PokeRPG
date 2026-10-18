@@ -384,7 +384,7 @@ const GINASIOS = [
   comoDestravar:'O ginásio de Viridian ficou fechado dois anos depois que a Equipe Rocket caiu. Blue reabriu com uma regra: sete insígnias, ou nada.',
 
   depois:d=>[
-    'Blue está sentado na borda da arena com o celular na mão, e guarda rápido demais quando você entra.',
+    'Blue está sentado na borda da arena com o PokéNav na mão, e guarda rápido demais quando você entra.',
     fala('Líder Blue', 'Não era nada. Era o meu avô. Ele pergunta de você, sabia? Pergunta mais de você do que de mim.'),
     fala('Líder Blue', 'Oito insígnias. A Rota 23 está te esperando, e ela não espera ninguém por muito tempo. Vai logo.')
   ],

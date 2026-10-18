@@ -1403,7 +1403,7 @@ const Jogo = {
       Estado.darItem('Hyper Potion', 5);
       Estado.darItem('Full Heal', 5);
       const r = Estado.mudarRep('bom', 3, 'Venceu Red e assumiu a cadeira de Campeão de Kanto', {rep:{notorio:true, peso:8}});
-      avisos.push({tipo:'insignia', texto:'Você é o Campeão de Kanto. A cadeira estava vaga há dois anos.'});
+      avisos.push({tipo:'insignia', texto:'Você é {o Campeão|a Campeã} de Kanto. A cadeira estava vaga há dois anos.'});
       avisos.push({tipo:'item', texto:'+80.000 ₽ · Master Ball · 5× Hyper Potion · 5× Full Heal'});
       /* A carta de atualização. Ela é a última coisa que a Liga faz
          por você como desafiante e a primeira que faz como Campeão. */
@@ -1413,10 +1413,10 @@ const Jogo = {
       avisos.push({tipo:'mundo', texto:'Cem registros novos, todos vazios. E a fronteira do norte, que ninguém cruzava sem autorização da Liga, agora é sua para autorizar.'});
       Estado.registrar('Pokédex Nacional liberada: 251 registros. Johto aberto.');
       if (r && r.mudou) avisos.push({tipo:'rep', texto:`Reputação: ${r.de} → ${r.para}`});
-      Estado.registrar('Venceu Red. Tornou-se Campeão de Kanto.');
+      Estado.registrar('Venceu Red. Tornou-se {Campeão|Campeã} de Kanto.');
       Estado.salvar('auto');
       return UI.telaResultadoLiga({
-        titulo:'CAMPEÃO DE KANTO', sub:'Salão do Campeão',
+        titulo:'{CAMPEÃO|CAMPEÃ} DE KANTO', sub:'Salão do Campeão',
         falas: CAMPEAO.vitoria(Estado.dados), avisos, venceu:true, campeao:true
       });
     }

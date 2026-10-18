@@ -866,6 +866,10 @@ cenário) e `--luz-brilho` na raiz; o cenário da página e o da arena
 leem as duas. Caverna, vulcão e quadra não têm céu. Hora que pula
 (acampar, viajar) zera os minutos e repinta a luz na hora.
 
+Na **cena de capítulo** (`d.modo === 'cena'`) o relógio para, como na
+luta: quem anda com a hora ali é a história, pelo `ef.executar`. Sem
+isso, quem lia devagar via o relógio passar da hora que o texto dizia.
+
 Sem o item **Relógio** o jogador só vê o período (manhã, tarde…): o
 `Relogio.texto()` e o `cabecalho()` escondem hora e data. Com ele, dia
 da semana, data e hora. O calendário (`Calendario`, em `mundo.js`)

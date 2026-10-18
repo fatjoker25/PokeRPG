@@ -69,9 +69,12 @@ const Relogio = {
     const horas = dias * 24 + h - r.hora;
     if (horas > 0) this.viver(horas);
   },
-  /* um minuto aberto é uma hora; fora de foco e no meio da luta, para.
-     Entre uma hora e outra o relógio conta os minutos de verdade (um
-     segundo real, um minuto de Kanto), e a luz anda junto com ele. */
+  /* um minuto aberto é uma hora; fora de foco, no meio da luta e na
+     cena de capítulo, para. Na cena quem manda na hora é a história
+     (ef.executar com ate, avancar, viver): lendo devagar, o relógio
+     desmentia o "são catorze menos oito" do texto. Entre uma hora e
+     outra o relógio conta os minutos de verdade (um segundo real, um
+     minuto de Kanto), e a luz anda junto com ele. */
   _marca: 0, _parado: 0,
   iniciar(){
     if (this._t) return;
@@ -79,7 +82,7 @@ const Relogio = {
     const PASSO = 5000;
     this._t = setInterval(() => {
       const d = Estado.dados;
-      const parado = (typeof document !== 'undefined' && document.hidden) || !d || !d.relogio || emLuta();
+      const parado = (typeof document !== 'undefined' && document.hidden) || !d || !d.relogio || emLuta() || d.modo === 'cena';
       /* parado, o relógio não anda: a marca empurra junto */
       if (parado){ this._marca += PASSO; return; }
       if (Date.now() - this._marca >= this.MS_POR_HORA){
