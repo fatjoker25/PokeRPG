@@ -382,7 +382,11 @@ const NPC_DO_CRIME = new Set(['Caçador Roque', 'Otto', 'A Terceira', 'Rook', 'o
 const NPC_NO_MEIO = new Set(['Curador Fabre', 'Auditora Brill', 'Hester Colman', 'Dr. Hollis', 'Dra. Sorrel',
   'Kira', 'Dr. Bramble', 'Diretor Quince', 'Fenna (crachá azul)', 'Mulher de crachá azul', 'a mulher de crachá azul',
   'Conselheira do broche', 'o intermediário', 'Homem da banca', 'Rapaz da fenda', 'o fumante', 'Assessora da Silph',
-  'a advogada do conselho', 'Dra. Pia', 'Sr. Cosmo', 'Contramestre Varo', 'o pai do patrocínio']);
+  'a advogada do conselho', 'Dra. Pia', 'Sr. Cosmo', 'Contramestre Varo', 'o pai do patrocínio',
+  /* a mesa da sala 704, no 20 */
+  'a Presidente', 'a secretária da mesa', 'Sra. Hedda', 'a conselheira da Liga', 'Margot Heath',
+  'o médico do conselho', 'Dr. Senna', 'Dra. Sedge', 'o contador do conselho', 'Sr. Mallow',
+  'o professor do conselho', 'Sr. Tobias Dahl', 'o homem de barba', 'o homem de sapato limpo']);
 function repDaOpiniao(ef){
   const n = ef && ef.npc;
   if (!n || typeof n === 'function') return [];

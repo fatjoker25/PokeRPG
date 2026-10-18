@@ -232,8 +232,11 @@ c19_fim_nao_assinou:{
 
 /* ------------------------------------------------------------
    3. CAP 20 — A CADEIRA VAZIA
-   Na sala 704 tem treze cadeiras e doze ocupadas. Dá pra sentar
-   na décima terceira, e isso é um fim.
+   Na mesa da sala 704 tem treze cadeiras e onze pessoas: a da
+   Dra. Yarrow, com a pasta em cima, e a de representação externa,
+   que ninguém indica. Dá pra sentar na décima terceira, e isso é
+   um fim. Votam a Presidente e os conselheiros; com você na cadeira,
+   são onze votos.
    ------------------------------------------------------------ */
 enxertarDesfecho(20, {
 
@@ -241,19 +244,21 @@ c20_a_cadeira:{
   texto:[
     'A mesa oval tem treze cadeiras e onze pessoas.',
     'Você contou duas vezes porque não acreditou na primeira.',
-    'Uma das vazias tem uma pasta em cima. A outra, a décima terceira, está na ponta oposta à presidente, puxada pra trás uns vinte centímetros, do jeito de cadeira que alguém levantou e não empurrou de volta.',
-    fala('a presidente', 'Aquela é a vaga de representação externa.'),
+    'Uma das vazias tem uma pasta em cima. A outra, a décima terceira, está na ponta oposta à cabeceira, puxada pra trás uns vinte centímetros, do jeito de cadeira que alguém levantou e não empurrou de volta.',
+    fala('a Presidente', 'Aquela é a vaga de representação externa.'),
     'Ela diz isso sem você perguntar, o que quer dizer que ela viu você contando.',
-    fala('a presidente', 'Está vaga há um ano.'),
+    fala('a Presidente', 'Está vaga há quase um ano.'),
     d=>fala(d.jogador.nome, 'Por quê?'),
-    fala('a presidente', 'Porque o regimento diz que ela é preenchida por indicação de entidade da sociedade civil, e nenhuma entidade da sociedade civil indicou ninguém.'),
+    fala('a Presidente', 'Porque o regimento diz que ela é preenchida por indicação de entidade da sociedade civil, e nenhuma entidade da sociedade civil indicou ninguém.'),
     'Ela junta as mãos em cima da pasta.',
-    fala('a presidente', 'Nós publicamos o edital sete vezes. Sete. Está tudo no diário oficial.'),
+    fala('a Presidente', 'Nós publicamos o edital sete vezes. Sete. Está tudo no diário oficial.'),
     'Ninguém na mesa está sorrindo e ninguém está constrangido. É uma informação administrativa e eles a tratam como tal.',
-    fala('a presidente', '{O senhor|A senhora} tem uma entidade que o indique?')
+    fala('a Presidente', '{O senhor|A senhora} tem uma entidade que {o|a} indique?')
   ],
   ef:{flag:'a_cadeira_vaga',
-      registrar:'A 13ª cadeira do conselho está vaga há três anos: representação externa, por indicação de entidade civil.',
+      registrar:'A décima terceira cadeira da mesa está vaga há quase um ano: representação externa, por indicação de entidade civil.',
+      /* quem sobe direto da banca, da farmácia ou do elevador chega com a reunião começada */
+      executar:() => { c20_ateAs(10); },
       presagio:'Sete editais publicados e nenhuma indicação. O buraco na parede sempre esteve aberto.'},
   escolhas:[
     {texto:'"Tenho." — e você tem, e é a coisa mais improvável do dia.', vai:'c20_fim_sentou',
@@ -267,19 +272,19 @@ c20_a_cadeira:{
 c20_o_ultimo_da_cadeira:{
   texto:[
     d=>fala(d.jogador.nome, 'Quem foi o último a sentar aí?'),
-    'A presidente olha pra um homem de uns sessenta anos na metade da mesa, e ele é quem responde.',
-    fala('o conselheiro mais velho', 'Uma senhora de Lavender. Associação de moradores.'),
-    fala('o conselheiro mais velho', 'Ela veio às treze primeiras reuniões. Não faltou uma.'),
+    'A Presidente olha pro homem da calculadora, na metade da mesa, que é o vice, e é ele quem responde.',
+    fala('o contador do conselho', 'Uma senhora de Lavender. Associação de moradores.'),
+    fala('o contador do conselho', 'Ela veio às treze primeiras reuniões. Não faltou uma.'),
     d=>fala(d.jogador.nome, 'E parou de vir por quê?'),
     'Ele mexe na caneta.',
-    fala('o conselheiro mais velho', 'Porque ela votou contra sete vezes e perdeu as sete por dez a um.'),
+    fala('o contador do conselho', 'Porque ela votou contra sete vezes e perdeu as sete por onze a um.'),
     'A sala fica quieta e a quietude não é constrangida: é a quietude de onze pessoas que já pensaram nisso.',
-    fala('o conselheiro mais velho', 'E na décima quarta reunião ela mandou uma carta dizendo que a cadeira dela servia pra fazer parecer que a gente ouvia alguém.'),
-    fala('o conselheiro mais velho', 'A carta está anexa à ata. É pública. Custa oito pokedólares.', 'baixo')
+    fala('o contador do conselho', 'E na décima quarta reunião ela mandou uma carta dizendo que a cadeira dela servia pra fazer parecer que a gente ouvia alguém.'),
+    fala('o contador do conselho', 'A carta está anexa à ata. É pública. Custa oito pokedólares.', 'baixo')
   ],
   ef:{flag:'a_carta_da_senhora_de_lavender',
-      registrar:'A última ocupante da 13ª cadeira votou contra sete vezes, perdeu por 12 a 1 nas sete, e renunciou por carta.',
-      presagio:'Doze a um, sete vezes. A cadeira existe e não muda o placar.'},
+      registrar:'A última ocupante da décima terceira cadeira votou contra sete vezes, perdeu as sete por onze a um, e renunciou por carta.',
+      presagio:'Onze a um, sete vezes. A cadeira existe e não muda o placar.'},
   escolhas:[
     {texto:'"Tenho quem me indique." — sentar mesmo assim.', vai:'c20_fim_sentou',
      cond:d=>!!(d.flags.reika_te_abordou || d.flags.conheceu_a_nishino || d.flags.os_trinta_e_nove_juntos ||
@@ -299,26 +304,26 @@ c20_fim_sentou:{
       return fala(d.jogador.nome, 'Eu tenho quem me indique, e eu trouxe o papel.');
     },
     'Você põe a carta de indicação na mesa oval e ela desliza uns quinze centímetros no verniz.',
-    'A presidente lê. Passa pro conselheiro da esquerda, que lê, que passa adiante.',
+    'A Presidente lê. Passa pro conselheiro da esquerda, que lê, que passa adiante.',
     'A carta dá a volta na mesa inteira, onze pessoas, e leva quatro minutos, e ninguém fala nada nos quatro minutos.',
-    'A presidente é a última a receber de volta.',
-    fala('a presidente', 'Está em ordem.'),
+    'A Presidente é a última a receber de volta.',
+    fala('a Presidente', 'Está em ordem.'),
     'Ela diz isso sem nenhuma emoção e com uma precisão que é a coisa mais assustadora da manhã.',
-    fala('a presidente', 'Secretária, registre em ata a posse do conselheiro de representação externa.'),
+    fala('a Presidente', 'Secretária, registre em ata a posse d{o conselheiro|a conselheira} de representação externa.'),
     'E a cadeira vinte centímetros pra trás é puxada pra frente pela primeira vez em um ano.',
     'Por você.'
   ],
-  final:{id:'sentou_na_cadeira', titulo:'DOZE A UM', texto:[
-    'Você perde a primeira votação por doze a um.',
-    'Perde a segunda por doze a um. A terceira, a quarta, a quinta.',
-    'Na sexta, alguém se abstém, e doze a um vira onze a um com uma abstenção, e você passa a semana inteira pensando nessa abstenção.',
+  final:{id:'sentou_na_cadeira', titulo:'DEZ A UM', texto:[
+    'Você perde a primeira votação por dez a um.',
+    'Perde a segunda por dez a um. A terceira, a quarta, a quinta.',
+    'Na sexta, alguém se abstém, e dez a um vira nove a um com uma abstenção, e você passa a semana inteira pensando nessa abstenção.',
     'Você descobre, nos primeiros seis meses, três coisas que ninguém te contou.',
     'Uma: conselheiro tem direito a vista de processo, e vista de processo é o direito de levar a pasta pra casa por dez dias.',
     'Duas: pedido de vista suspende a votação, e não existe limite de quantas vezes um conselheiro pode pedir vista, porque ninguém imaginou que alguém quisesse.',
     'Três: ata de reunião é pública e custa oito pokedólares, e uma ata em que um conselheiro registra voto em separado, por escrito, com fundamentação, vira documento citável em qualquer processo judicial de Kanto.',
     'Você perde todas as votações por quatro anos.',
     'E em quatro anos você produz cento e nove votos em separado, todos públicos, todos citáveis, todos assinados, e uma advogada em Saffron que você nunca conheceu pessoalmente usa quarenta e um deles numa ação civil pública que suspende o programa continuado por liminar numa quinta-feira de março.',
-    'Você não estava lá. Você estava numa reunião ordinária, perdendo por doze a um.',
+    'Você não estava lá. Você estava numa reunião ordinária, perdendo por dez a um.',
     'A senhora de Lavender estava certa: a cadeira serve pra fazer parecer que eles ouvem alguém.',
     'Ela só não imaginou o que dá pra fazer com uma cadeira que faz parecer.'
   ]}

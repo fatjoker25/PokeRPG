@@ -2128,7 +2128,7 @@ c18_atas:{
 c18_31a:{
   texto:[
     'Página 103. Ata da 31ª reunião ordinária.',
-    '**Deliberação 4: aprovada, por unanimidade, a Fase II do programa de substituição populacional na Rota 21, com meta de liberação de 400 unidades no primeiro semestre.**',
+    '**Deliberação 4: aprovada, por dez votos a um, a Fase II do programa de substituição populacional na Rota 21, com meta de liberação de 400 unidades no primeiro semestre.**',
     'Quatrocentas unidades.',
     'Liberação em ambiente aberto de quatrocentos Pokémon criados pra serem previsíveis, num trecho de litoral de doze quilômetros onde hoje mora outra coisa.',
     'A ata não diz o que acontece com a outra coisa. A ata não precisa dizer: está no Art. 11.'

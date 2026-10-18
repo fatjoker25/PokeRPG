@@ -182,7 +182,14 @@ const NOMES_FIXOS = {
   /* a Rota 23, no 17: os quatro da van. Ela diz o nome quando topa
      testemunhar; o mais velho soletra o dele na lista */
   'a mulher dos quatro':       'Marla Clover',
-  'o mais velho dos quatro':   'Brent Fennel'
+  'o mais velho dos quatro':   'Brent Fennel',
+  /* Saffron, no 20: as plaquinhas de papel da mesa da sala 704 */
+  'o médico do conselho':      'Dr. Senna',
+  'a advogada do conselho':    'Dra. Sedge',
+  'o contador do conselho':    'Sr. Mallow',
+  'o professor do conselho':   'Sr. Tobias Dahl',
+  'a conselheira da Liga':     'Margot Heath',
+  'a secretária da mesa':      'Sra. Hedda'
 };
 
 /* Cargo que fica cargo de propósito, mesmo passando de doze falas: é a

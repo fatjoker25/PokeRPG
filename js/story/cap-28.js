@@ -996,7 +996,7 @@ c23_risco01:{
       registrar:'Contou a Mewtwo sobre a Comissão. Ele é o Risco 01 deles.'},
   escolhas:[
     {texto:'"Eu vim te avisar. Só isso."', vai:'c23_final_risco01'},
-    {texto:'"Eles se reúnem toda segunda às dez. Sala 704."', vai:'c23_final_sala704',
+    {texto:'"Eles se reúnem segunda sim, segunda não, às dez. Sala 704."', vai:'c23_final_sala704',
      cond:d=>!!(d.flags.endereco_presidente||d.flags.falou_no_conselho||d.flags.convite_conselho)},
     {texto:'Mostrar a Unidade 01.', vai:'c23_mostrou_unidade', cond:d=>!!d.flags.tem_a_unidade01},
     {texto:'Voltar atrás. Não contar o resto.', vai:'c23_escolha_final'}
@@ -1056,7 +1056,7 @@ c23_final_sala704:{
   falante:'Mewtwo',
   vozes:['P','N','P'],
   texto:[
-    '"Eles se reúnem toda segunda às dez. Sala 704."',
+    '"Eles se reúnem segunda sim, segunda não, às dez. Sala 704."',
     'Mewtwo repete o número em voz alta, o que ele nunca faz.',
     '"Setecentos e quatro."',
     '"Prédio comercial, dezesseis andares, a sala no fim do corredor. A reunião é aberta. Art. 27: qualquer interessado pode assistir e pedir a palavra."',
