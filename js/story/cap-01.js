@@ -513,8 +513,8 @@ c1_leva_ao_centro:{
     'A sua jornada começou tecnicamente agora, e não foi nada do que você imaginou nos últimos três anos.'
   ],
   ef:{flag:'leva_a_caixa', itens:{'Caixa de ventilador com um Pokémon dentro':1},
-      rep:{eixo:'bom',delta:1,motivo:'Aceitou levar o Pokémon ao Centro Pokémon'},
-      registrar:'Vai levar o Pokémon da Sra. Perla ao Centro Pokémon. A caixa tem que voltar.'},
+      rep:{eixo:'bom',delta:1,motivo:'Aceitou levar o Pokémon da vizinha no dia em que saía de casa'},
+      registrar:d=>`Vai levar o Pokémon da Sra. Perla ${aoPostoDaCidade(d)}. A caixa tem que voltar.`},
   escolhas:[
     {texto:'Entrar e tomar café antes.', vai:'c1_cozinha'},
     {texto:'Trocar de roupa e ir direto.', vai:'c1_saida_pro_centro'}
@@ -1301,7 +1301,9 @@ c1_entregou_a_caixa:{
     d=>fala(cadastra(d), 'Se você mudar de ideia nos próximos dez minutos, ele ainda tá aqui.', 'baixo')
   ],
   ef:{flag:'entregou_a_caixa_no_centro',
-      registrar:'Entregou a caixa da Sra. Perla no Centro. Era o terceiro do mês.'},
+      registrar:d=>`Entregou a caixa da Sra. Perla ${d.jogador.cidade === 'Pallet' ? 'no laboratório' : 'no Centro'}. Era o terceiro do mês.`,
+      /* a caixa fica no balcão, com ele dentro */
+      executar:d=>{ Estado.usarItem('Caixa de ventilador com um Pokémon dentro'); }},
   escolhas:[
     {texto:'Mudar de ideia. Ficar com ele.', vai:'c1_mudou_de_ideia_no_balcao'},
     {texto:'Não mudar. Entrar na fila.', vai:'c1_fila'},
@@ -1400,7 +1402,7 @@ c1_divida_assume:{
   ],
   ef:{itens:{'Great Ball':2,'Super Potion':1},
       rep:{eixo:'bom',delta:1,motivo:'Assumiu uma dívida antiga no dia em que podia simplesmente ir embora'},
-      npc:d=>({nome:vz().nome, opiniao:3, memoria:`Foi honesto sobre ${vz().divida}. Ganhou a caixa de metal.`})},
+      npc:d=>({nome:vz().nome, opiniao:3, memoria:`Foi honest{o|a} sobre ${vz().divida}. Ganhou a caixa de metal.`})},
   escolhas:[
     {texto:'Agradecer e seguir.', vai:'c1_saida_pro_centro'},
     {texto:d=>`Dar uma volta na rua antes de ir ${aoPostoDaCidade(d)}.`, vai:'c1_rua', cond:d=>!d.npcs[vz().nome]}
@@ -1411,7 +1413,7 @@ c1_divida_nega:{
   texto:[
     d=>`${vz().f ? 'A velha' : 'O velho'} te olha por tempo demais. Depois abaixa a cabeça e volta pro que estava fazendo.`,
     d=>fala(vz().nome, 'Tá certo. Vai com cuidado.', 'frio', `${vz().Ele} não levanta a cabeça uma vez sequer.`),
-    d=>`${vz().Ele} não vai esquecer. Gente que faz a mesma coisa na frente de casa há vinte anos não esquece nada — e você vai voltar um dia.`
+    'Gente que faz a mesma coisa na frente de casa há vinte anos não esquece nada.'
   ],
   ef:{rep:{eixo:'ruim',delta:1,motivo:'Negou uma dívida na própria cidade'},
       npc:d=>({nome:vz().nome, opiniao:-3, memoria:`Mentiu sobre ${vz().divida}. ${vz().Ele} sabe.`})},

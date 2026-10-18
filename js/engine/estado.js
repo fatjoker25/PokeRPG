@@ -1249,6 +1249,15 @@ const Estado = {
                             'Amos':'Sr. Dane',
                             /* o dono do curral da Rota 17 ganhou nome no 15 */
                             'Dono do curral':'Sr. Hale'};
+      /* a mulher do elevador do 20 também carrega pasta de vinil, e a
+         grafia dela era a da advogada do 25, que o 25 diz que você não
+         conhece: o elevador fica com ela, a planta com a advogada */
+      const vinil = d.npcs && d.npcs['a mulher da pasta de vinil'];
+      if (vinil && /elevador/.test(String(vinil.viuVoce || '')) && !d.npcs['a mulher do elevador']){
+        d.npcs['a mulher do elevador'] = {nome:'a mulher do elevador', opiniao:(vinil.memorias || []).length ? -1 : (vinil.opiniao || 0), memorias:[], viuVoce:vinil.viuVoce};
+        delete vinil.viuVoce;
+        if (!(vinil.memorias || []).length) delete d.npcs['a mulher da pasta de vinil'];
+      }
       for (const [errado, certo] of Object.entries(MESMA_PESSOA)){
         if (!d.npcs || !d.npcs[errado]) continue;
         const a = d.npcs[errado], b = d.npcs[certo] || {nome:certo, opiniao:0, memorias:[]};
@@ -1257,6 +1266,25 @@ const Estado = {
       }
       for (const [velho, novo] of Object.entries(NPC_NOVO))
         if (d.npcs && d.npcs[velho] && !d.npcs[novo]){ d.npcs[novo] = d.npcs[velho]; d.npcs[novo].nome = novo; delete d.npcs[velho]; }
+      /* a caixa do ventilador entregue no posto da cidade continuava na
+         mochila: ela ficou no balcão, com o Pokémon dentro */
+      if (d.flags && d.flags.entregou_a_caixa_no_centro && d.itens) delete d.itens['Caixa de ventilador com um Pokémon dentro'];
+      /* o vizinho de Vermilion se chamava Sr. Hale, o nome do dono do
+         curral do 15: o que não é do curral vai pro Sr. Marram */
+      const hale = d.npcs && d.npcs['Sr. Hale'];
+      if (hale && d.jogador && d.jogador.cidade === 'Vermilion' && !d.npcs['Sr. Marram']){
+        const mem = hale.memorias || [];
+        const dele = mem.filter(m => !(m && m.cap === 15));
+        if (dele.length === mem.length){ hale.nome = 'Sr. Marram'; d.npcs['Sr. Marram'] = hale; delete d.npcs['Sr. Hale']; }
+        else if (dele.length){ hale.memorias = mem.filter(m => !dele.includes(m)); d.npcs['Sr. Marram'] = {nome:'Sr. Marram', opiniao:1, memorias:dele}; }
+      }
+      /* save que já tinha juntado as duas: sem lembrança nenhuma da
+         advogada, o que sobrou em "a mulher da pasta" é o elevador */
+      const pasta = d.npcs && d.npcs['a mulher da pasta'];
+      if (pasta && d.flags && d.flags.a_terceira_coisa && !d.npcs['a mulher do elevador'] && !(pasta.memorias || []).length){
+        d.npcs['a mulher do elevador'] = Object.assign(pasta, {nome:'a mulher do elevador', viuVoce:pasta.viuVoce || 'Te classificou no elevador e não disse como.'});
+        delete d.npcs['a mulher da pasta'];
+      }
       /* o rival guardou o nome de quando ainda não tinha um */
       if (d.rivais && d.rivais.fuchsia) d.rivais.fuchsia.nome = 'Rory';
       /* o homem da pergunta de Lavender era gravado como o Fabre da

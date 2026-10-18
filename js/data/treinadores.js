@@ -65,6 +65,7 @@ const RETRATO_POR_NOME = {
   'Conselheira Edda Thistle':'trainers/office_worker_f', 'Sra. Cybil':'trainers/office_worker_f',
   'a secretária da colônia':'trainers/office_worker_f', 'a mulher da pasta':'trainers/office_worker_f',
   'a mulher da pasta de vinil':'trainers/office_worker_f', 'Conselheira da Liga':'trainers/office_worker_f',
+  'a mulher do elevador':'trainers/office_worker_f',
   'a conselheira da Liga':'trainers/office_worker_f', 'a mulher do broche da Liga':'trainers/office_worker_f',
   'Sr. Waldo':'trainers/office_worker', 'o homem de camisa social':'trainers/office_worker',
   'Zelador da Torre':'trainers/caretaker',
@@ -307,7 +308,7 @@ const ROSTO_POR_NOME_SOLTO = {
   'A Terceira':'trainers/veteran_f', 'a Terceira':'trainers/veteran_f', 'Thea Larkin':'trainers/worker',
   'o Professor':'trainers/oak',
   'Rico':'trainers/worker', 'Hal':'trainers/worker', 'Maeve Bracken':'trainers/reporter', 'quem te atendeu':'trainers/league_staff',
-  'a assistente do Professor':'trainers/scientist_f', 'a enfermeira de Viridian':'overworld/nurse_joy',
+  'a assistente do Professor':'trainers/scientist_f', 'a assistente nova':'trainers/scientist_f', 'a enfermeira de Viridian':'overworld/nurse_joy',
   'outro dos seis':'trainers/fisherman', 'os pescadores':'trainers/fisherman', 'os três':'trainers/pokefan'
 };
 const ROSTO_POR_PALAVRA = [

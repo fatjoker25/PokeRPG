@@ -428,7 +428,9 @@ c23_outros_nomes:{
     'Você percorre o corredor D procurando nome conhecido e acha mais rápido do que gostaria.',
     d=>d.npcs && d.npcs['Nadia Arden'] ? 'Tem pasta da Nadia Arden, de Lavender, com duas folhas: a licença de 1979 e a de agora.' : '',
     'Tem pasta do Dr. Fuji, com noventa e uma folhas, a mais grossa do corredor.',
-    d=>d.flags.a_enfermeira_voltou_pra_estrada ? 'Tem pasta da enfermeira do Centro da sua cidade, com três folhas, a última datada de poucas semanas atrás: o pedido de exoneração dela.' : '',
+    d=>!d.flags.a_enfermeira_voltou_pra_estrada ? ''
+      : d.jogador.cidade === 'Pallet' ? 'Tem pasta da assistente do laboratório de Pallet, com três folhas, a última a carta de demissão dela.'
+      : 'Tem pasta da enfermeira do Centro da sua cidade, com três folhas, a última o pedido de exoneração dela.',
     'Tem pasta com o nome do Blue, e ele tira do seu alcance antes de você tocar.',
     fala('Blue', 'Essa não.', 'frio'),
     'E, no fim do corredor, uma pasta com uma etiqueta de três letras e nada mais escrito nela.'

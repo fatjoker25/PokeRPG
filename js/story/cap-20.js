@@ -324,16 +324,16 @@ c20_ab_nao_sei_ainda:{
     'Os três olham pra você ao mesmo tempo, e é o homem do saquinho de padaria que fala, com a boca cheia de uma coisa que ele acabou de comer.',
     fala('o homem do saquinho', 'Melhor resposta que eu já ouvi nesse elevador.'),
     'A mulher da pasta de vinil não acha graça. Ela te olha do jeito que se olha um problema de agenda.',
-    fala('a mulher da pasta de vinil', 'Você é jornalista?'),
+    fala('a mulher do elevador', 'Você é jornalista?'),
     c20_eu('Não.'),
-    fala('a mulher da pasta de vinil', 'Estagiári{o|a} de algum escritório?'),
+    fala('a mulher do elevador', 'Estagiári{o|a} de algum escritório?'),
     c20_eu('Não.'),
     'O elevador passa pelo quinto andar. Ninguém fala nada por dois andares, o que num elevador é uma eternidade.',
-    fala('a mulher da pasta de vinil', 'Então você é a terceira coisa.'),
+    fala('a mulher do elevador', 'Então você é a terceira coisa.'),
     'Ela não diz qual é a terceira coisa. A porta abre no sétimo.'
   ],
   ef:{flag:'a_terceira_coisa',
-      npc:{nome:'a mulher da pasta de vinil', opiniao:-1, viuVoce:'Te classificou no elevador e não disse como.'},
+      npc:{nome:'a mulher do elevador', opiniao:-1, viuVoce:'Te classificou no elevador e não disse como.'},
       registrar:'A mulher da pasta de vinil te classificou como "a terceira coisa".',
       presagio:'Ela tem uma lista de três tipos de gente que sobe nesse elevador. Duas ela sabe lidar.'},
   escolhas:[
@@ -2218,7 +2218,8 @@ c20_fim:{
       if (d.flags.sabe_do_risco01 || d.flags.sabe_da_fase3) return 'E em algum lugar de uma ata, numa linha só, existe um item que não foi resolvido hoje: Risco 01, não localizado.';
       return '';
     },
-    'A Liga te mandou uma carta enquanto você estava em Saffron. Papel bom, timbre em relevo.'
+    'A Liga te mandou uma carta enquanto você estava em Saffron. Papel bom, timbre em relevo, a data do Planalto escrita à mão.',
+    'Embaixo dela, no mesmo balcão do Centro, tem um telegrama amarelo com o seu nome: quatro linhas em maiúsculo, uma segunda-feira às dez, uma sala em Saffron, e a palavra COMPARECIMENTO duas vezes. Quem manda, o telegrama não diz.'
   ],
   /* a rádio de Fuchsia e o jornal de Celadon te deixam lá */
   sai:d => d.flags.falou_na_radio ? 'fuchsia' : d.flags.publicou_as_atas ? 'celadon' : null,

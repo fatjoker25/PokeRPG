@@ -338,16 +338,18 @@ c20_fim_sentou:{
 
 /* ------------------------------------------------------------
    4. CAP 21 — NÃO SAIR DE NOVO
-   Você voltou pra casa com oito insígnias. Dá pra não pegar a
-   estrada outra vez, e isso não é desistência: é uma escolha
-   com consequência escrita.
+   Você voltou pra casa com as insígnias que tem. Dá pra não pegar
+   a estrada outra vez, e isso não é desistência: é uma escolha
+   com consequência escrita. Pallet não tem Centro: quem fica e
+   quer trabalho vai pro de Viridian.
    ------------------------------------------------------------ */
+function c21_naSuaCidade(d){ return d.jogador.cidade === 'Pallet' ? 'de Viridian, a uma hora de bicicleta de casa' : 'da sua cidade'; }
 enxertarDesfecho(21, {
 
 c21_ficar_de_vez:{
   texto:[
-    d=>`A mochila está encostada na parede do seu quarto e faz quatro dias que você não mexe nela.`,
-    'Não é preguiça. Você já arrumou e desarrumou ela duas vezes essa semana.',
+    'A mochila está encostada na parede do seu quarto e faz quatro dias que ela não sai dali.',
+    'Não é preguiça. Você já arrumou e desarrumou ela duas vezes.',
     d=>{
       const p = d.time[0];
       return p ? `${nomeExib(p)} dorme no tapete do corredor, que é um lugar que ${pron(p).ele} escolheu sozinh${pron(p).o} no segundo dia e do qual ${pron(p).ele} não saiu mais.`
@@ -361,11 +363,14 @@ c21_ficar_de_vez:{
     'Você fica sentad{o|a} na cama olhando uma mochila encostada numa parede.'
   ],
   ef:{flag:'a_mochila_encostada',
-      registrar:'Faz quatro dias que a mochila está encostada na parede sem ser tocada.'},
+      registrar:'Faz quatro dias que a mochila está encostada na parede do quarto.',
+      /* os quatro dias em casa, vividos */
+      executar:d=>{ for (let i = 0; i < 4; i++) Relogio.amanhaAs(10); }},
   escolhas:[
     {texto:'Desfazer a mochila. Ficar.', vai:'c21_fim_ficou'},
-    {texto:'Desfazer a mochila e procurar trabalho na cidade.', vai:'c21_fim_ficou_trabalhando'},
-    {texto:'Arrumar de novo e sair amanhã.', vai:'c21_a_rua'}
+    {texto:d=>d.jogador.cidade === 'Pallet' ? 'Desfazer a mochila e procurar trabalho em Viridian.' : 'Desfazer a mochila e procurar trabalho na cidade.', vai:'c21_fim_ficou_trabalhando'},
+    {texto:'Arrumar de novo e sair amanhã.', vai:'c21_saida_de_casa',
+     ef:{executar:d=>{ Relogio.amanhaAs(7); }}}
   ]
 },
 
@@ -381,7 +386,11 @@ c21_fim_ficou:{
   final:{id:'ficou_em_casa', titulo:'A CAIXA EM CIMA DO ARMÁRIO', texto:[
     'Você fica.',
     'Não tem drama nisso e não tem alívio: tem a vida que estava acontecendo aqui o tempo todo e que continua acontecendo, e você entra nela no meio, como quem entra num filme começado.',
-    'As oito insígnias ficam na caixa de sapato. Você tira uma vez, no primeiro ano, pra mostrar pra alguém, e depois não tira mais — não por vergonha, por falta de ocasião.',
+    d=>{
+      const n = c21_ins(d);
+      const o = !n ? 'O cartão de treinador fica' : n === 1 ? 'A insígnia fica' : `As ${c21_ext(n)} insígnias ficam`;
+      return `${o} na caixa de sapato. Você tira uma vez, no primeiro ano, pra mostrar pra alguém, e depois não tira mais — não por vergonha, por falta de ocasião.`;
+    },
     d=>{
       const p = d.time[0];
       return p ? `${nomeExib(p)} vive mais dez anos e morre no tapete do corredor, que continuou sendo o lugar ${pron(p).dele}.`
@@ -401,18 +410,18 @@ c21_fim_ficou:{
 c21_fim_ficou_trabalhando:{
   texto:[
     'Você desfaz a mochila de manhã e sai de tarde, e na terceira porta em que você bate tem uma vaga.',
-    'É no Centro Pokémon da cidade: auxiliar de atendimento, turno da noite, salário de auxiliar de atendimento de turno da noite.',
-    'A enfermeira que te contrata tem uns cinquenta anos e te conhece desde criança, e ela faz uma pergunta e só uma:',
-    fala('a enfermeira do Centro', 'Você aguenta ver Pokémon machucado a noite inteira?'),
+    d=>`É no Centro Pokémon ${c21_naSuaCidade(d)}: auxiliar de atendimento, turno da noite, salário de auxiliar de atendimento de turno da noite.`,
+    'Quem te contrata é a enfermeira-chefe, que tem uns cinquenta anos e te conhece desde criança, e ela faz uma pergunta e só uma:',
+    fala('a enfermeira-chefe', 'Você aguenta ver Pokémon machucado a noite inteira?'),
     d=>fala(d.jogador.nome, 'Aguento.'),
-    fala('a enfermeira do Centro', 'Todo mundo fala isso.'),
+    fala('a enfermeira-chefe', 'Todo mundo fala isso.'),
     'Ela te dá um jaleco que é um número maior que o seu.',
-    fala('a enfermeira do Centro', 'Você começa hoje. Eu preciso de alguém hoje.')
+    fala('a enfermeira-chefe', 'Você começa hoje. Eu preciso de alguém hoje.')
   ],
   final:{id:'ficou_no_centro', titulo:'TURNO DA NOITE', texto:[
-    'Você faz o turno da noite do Centro Pokémon da sua cidade por dezenove anos.',
-    'Um Centro de cidade pequena atende umas quarenta pessoas por noite em mês bom. A maioria é bobagem: arranhão, cansaço, um garoto de treze anos que acha que o Rattata dele está morrendo e não está.',
-    'Você é muito bom com os garotos de treze anos. Isso vira a sua fama, na medida em que existe fama nessa profissão.',
+    d=>`Você faz o turno da noite do Centro Pokémon ${d.jogador.cidade === 'Pallet' ? 'de Viridian' : 'da sua cidade'} por dezenove anos.`,
+    'Um Centro de beira de estrada atende umas quarenta pessoas por noite em mês bom. A maioria é bobagem: arranhão, cansaço, um garoto de treze anos que acha que o Rattata dele está morrendo e não está.',
+    'Você é muito {bom|boa} com os garotos de treze anos. Isso vira a sua fama, na medida em que existe fama nessa profissão.',
     'E umas quatro ou cinco vezes por ano chega uma coisa que não é bobagem.',
     'Chega um Pokémon com brinco amarelo de identificação de reserva na orelha, a duzentos quilômetros de qualquer reserva. Chega alguém com a marca de gaiola no pelo. Chega, uma vez, um Seel filhote com metade do peso.',
     'Você anota todas. Ficha, data, procedência declarada e procedência provável.',
@@ -420,7 +429,7 @@ c21_fim_ficou_trabalhando:{
     'A comissão parlamentar pede os arquivos de trinta e um Centros Pokémon de Kanto e recebe de trinta deles a resposta padrão: "registros descartados após cinco anos, conforme norma".',
     'Do trigésimo primeiro chegam quatro caixas.',
     'O relatório final cita o seu Centro cento e doze vezes.',
-    'Você nunca saiu da sua cidade.'
+    d=>d.jogador.cidade === 'Pallet' ? 'Você nunca se mudou de Pallet.' : 'Você nunca saiu da sua cidade.'
   ]}
 }
 

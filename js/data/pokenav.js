@@ -220,7 +220,7 @@ const CONTATOS = [
     rotuloEntrega:'Ligar e contar das seis',
     dica:'Ela quer ver o que você prometeu.',
     pedido:[
-      fala('a enfermeira', 'Eu parei em seis. Eu já te contei isso.'),
+      fala('a enfermeira', 'Eu parei em seis. Isso você já sabe.'),
       fala('a enfermeira', 'O que eu não te contei é que eu fiquei quatro anos achando que seis era o meu teto. Que era o máximo que uma pessoa como eu chegava.'),
       fala('a enfermeira', 'Aí eu vi você entrar naquele balcão com uma cara de quem não sabe nada.', 'baixo'),
       fala('a enfermeira', 'Chega em seis. Só isso. Chega em seis e me liga, que eu preciso saber se o número tem alguma coisa de especial ou se era só eu.')

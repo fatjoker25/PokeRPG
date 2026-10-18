@@ -43,9 +43,9 @@ const VIZINHOS = {
     trabalho:'Você remenda um palmo de rede. Leva doze minutos e fica torto. A rede já estava remendada.',
     sempre:'A rede está estendida e remendada. Ela sempre está remendada.',
     parou:'a rede já tá remendada desde as seis, e antes eu remendava de novo às onze só pra ter o que fazer'},
-  Vermilion:{nome:'Sr. Hale', f:false, trat:'seu Hale', coisa:'bote virado', ferr:'a espátula',
+  Vermilion:{nome:'Sr. Marram', f:false, trat:'seu Marram', coisa:'bote virado', ferr:'a espátula',
     faz:'raspa a tinta de um bote virado de cabeça pra baixo na calçada', fazer:'raspar o bote',
-    divida:'o remo', como:'Você usou de taco de beisebol e ele partiu no meio.',
+    divida:'o remo', como:'Você usou de taco num jogo de rua e ele partiu no meio.',
     preco:'dezoito pokedólares, faz {idade-8} anos', conserto:'eu colei com resina, e ele rema melhor torto',
     trabalho:'Você raspa o casco inteiro. Leva doze minutos. Ele já estava raspado.',
     sempre:'O bote está raspado. Ele sempre está raspado.',
@@ -95,8 +95,10 @@ const VIZINHOS = {
 };
 
 /* O vizinho da sua cidade, com as palavras que mudam com o sexo dele.
-   Guarda o nome escolhido no save: mudar a tabela depois não troca a
-   pessoa de quem você já é devedor. */
+   O nome sai da tabela e é a chave dele em d.npcs: trocar um nome aqui
+   pede conversão em Estado.carregar, senão a pessoa de quem você é
+   devedor some (o de Vermilion era Sr. Hale, o nome do dono do curral
+   do 15, e virou Sr. Marram). */
 function vz(){
   const d = (typeof Estado !== 'undefined' && Estado.dados) || null;
   const cidade = d && d.jogador ? d.jogador.cidade : 'Pallet';

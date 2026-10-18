@@ -15,7 +15,72 @@ function c21_ext(n){ return ['nenhuma','uma','duas','três','quatro','cinco','se
 function c21_insignias(d){ const n = c21_ins(d); return c21_ext(n) + (n > 1 ? ' insígnias' : ' insígnia'); }
 function c21_abertura(d){
   const cand = C21_ABERTURAS.filter(id => c21_cabe(id, d));
-  return Dados.escolher(cand);
+  const id = Dados.escolher(cand);
+  if (d && d.relogio && d.flags && d.flags.c21_chegada == null){
+    /* o ônibus da tarde desce na entrada da cidade às quatro e vinte;
+       quem vem a pé pela estrada velha chega às três e quarenta */
+    Relogio.ate(id === 'c21_ab_de_madrugada' ? 3 : 16);
+    d.flags.c21_chegada = d.relogio.dia;
+    /* a vizinha e o vizinho da rua te conhecem desde sempre: o
+       reconhecimento deles está escrito à mão nas cenas */
+    d.reencontros = d.reencontros || {};
+    for (const nome of [vz().nome, 'Sra. Perla']) d.reencontros[nome] = {cap:d.capitulo, cena:'c21'};
+  }
+  return id;
+}
+
+/* ------------------------------------------------------------
+   A HORA DA RUA. Quem desce do ônibus chega de tarde; quem vem
+   pela estrada velha, de madrugada, e a rua só acorda às seis.
+   ------------------------------------------------------------ */
+function c21_hora(d){ sincronizarHora(d.relogio); return d.relogio.hora; }
+/* o armazém abre às seis e baixa a porta às oito; fora disso, o dono
+   atende na porta do lado, que é a da casa dele */
+function c21_armazem(d){ const h = c21_hora(d); return h >= 6 && h < 20; }
+/* dormir: de noite acorda de manhã; quem chegou de madrugada dorme o
+   resto dela; quem virou a noite na rua dorme de dia */
+function c21_dormir(d){
+  const h = c21_hora(d);
+  if (h >= 12) Relogio.amanhaAs(7);
+  else if (h < 7) Relogio.ate(8);
+  else Relogio.avancar(6);
+}
+
+/* ------------------------------------------------------------
+   O POSTO DA CIDADE. Pallet não tem Centro: quem te cadastrou foi a
+   assistente do Professor, na mesa do lado da porta do laboratório,
+   e é ela quem voltou pra estrada.
+   ------------------------------------------------------------ */
+function c21_pallet(d){ return d.jogador.cidade === 'Pallet'; }
+function c21_nova(d){ return c21_pallet(d) ? 'a assistente nova' : 'a enfermeira nova'; }
+/* como o capítulo 1 guardou a de antes */
+function c21_aDeAntes(d){ return c21_pallet(d) ? 'Assistente do Professor' : 'Enfermeira do Centro'; }
+function c21_maiuscula(s){ return s.charAt(0).toUpperCase() + s.slice(1); }
+/* curar o time no posto; quem chegou de madrugada espera clarear numa cadeira */
+function c21_curar(){
+  return {texto:d=>c21_hora(d) < 6 ? 'Curar o time, esperar clarear numa cadeira e ir pra casa.' : 'Curar o time e ir pra casa.',
+          vai:'c21_dentro_de_casa',
+          ef:{executar:d=>{
+            d.time.forEach(curarTotal); Estado.curarJogador(20);
+            if (c21_hora(d) < 6) Relogio.ate(7);
+            return [{tipo:'cura', texto:'O time voltou inteiro.'}];
+          }}};
+}
+
+/* ------------------------------------------------------------
+   A CAIXA DA SRA. PERLA. No capítulo 1 ela pediu a caixa de volta
+   a quem levou o Pokémon nela ao posto da cidade.
+   ------------------------------------------------------------ */
+const C21_CAIXA = 'Caixa de ventilador com um Pokémon dentro';
+function c21_temACaixa(){ return Estado.contaItem(C21_CAIXA) > 0; }
+
+/* o que sobra pra fazer na rua antes de entrar em casa */
+function c21_volta(){
+  return [
+    {texto:'Ir pra casa.', vai:'c21_dentro_de_casa'},
+    {texto:'Andar a rua inteira primeiro.', vai:'c21_a_rua', cond:d=>!d.flags.viu_o_cartaz},
+    {texto:d=>`Ir ${aoPostoDaCidade(d)} antes.`, vai:'c21_centro_primeiro', cond:d=>!d.flags.a_enfermeira_nova}
+  ];
 }
 
 /* ============================================================
@@ -92,9 +157,11 @@ c21_ab_de_madrugada:{
       registrar:'Chegou em casa às 3h40 da manhã, pela estrada velha, e ficou onze minutos na calçada de frente.'},
   escolhas:[
     {texto:'Bater.', vai:'c21_dentro_de_casa'},
-    {texto:'Não bater. Andar a rua e esperar clarear.', vai:'c21_a_rua'},
+    {texto:'Não bater. Andar a rua e esperar clarear.', vai:'c21_a_rua',
+     ef:{executar:d=>{ if (c21_hora(d) < 6) Relogio.ate(6); }}},
     {texto:'Não bater. Ir embora antes de alguém acordar.', vai:'c21_nao_foi_pra_casa'},
-    {texto:'Ir ao Centro Pokémon e voltar de manhã.', vai:'c21_centro_primeiro'}
+    /* o laboratório de Pallet não abre de madrugada; Centro não fecha */
+    {texto:'Ir ao Centro Pokémon e voltar de manhã.', vai:'c21_centro_primeiro', cond:d=>!c21_pallet(d)}
   ]
 },
 
@@ -117,7 +184,7 @@ c21_ab_ninguem_sabia:{
     {texto:'Ir direto pra casa, sem parar em lugar nenhum.', vai:'c21_dentro_de_casa'},
     {texto:'Andar a rua inteira primeiro, devagar.', vai:'c21_a_rua'},
     {texto:d=>`Passar na porta ${vz().do} ${vz().nome}.`, vai:'c21_ushio', cond:d=>!!d.npcs[vz().nome]},
-    {texto:'Ir ao Centro Pokémon antes de ver gente.', vai:'c21_centro_primeiro'},
+    {texto:d=>`Ir ${aoPostoDaCidade(d)} antes de ver gente.`, vai:'c21_centro_primeiro'},
     {texto:'Ligar pra casa do orelhão da esquina, a trinta metros de casa.', vai:'c21_orelhao', cond:d=>Estado.temPokenav()}
   ]
 },
@@ -134,7 +201,7 @@ c21_chegada_em_casa:{
     },
     d=>fala(nomeCasa(), 'Eu liguei TRÊS VEZES.', 'grita',
             'A voz vem da terceira casa antes mesmo de você ver quem é.'),
-    d=>fala(nomeCasa(), 'Três! E o aparelho é meu, eu sei que ele toca!')
+    d=>fala(nomeCasa(), 'Três! E esse aparelho fui eu que mandei consertar, eu sei que ele toca!')
   ],
   ef:{flag:'voltou_pra_casa', registrar:d=>{ const n = c21_ins(d); return n ? `Voltou para a cidade de onde saiu, com ${c21_ext(n)} insígnia${n > 1 ? 's' : ''}.` : 'Voltou para a cidade de onde saiu.'; }},
   escolhas:[
@@ -142,9 +209,7 @@ c21_chegada_em_casa:{
     {texto:'Andar a rua inteira primeiro, devagar.', vai:'c21_a_rua'},
     {texto:d=>`Passar na porta ${vz().do} ${vz().nome}, que é onde se resolve coisa.`, vai:'c21_ushio',
      cond:d=>!!d.npcs[vz().nome]},
-    {texto:'Ir ao Centro Pokémon antes de ver gente.', vai:'c21_centro_primeiro'},
-    {texto:'Ligar pra casa do orelhão da esquina, mesmo estando a trinta metros.', vai:'c21_orelhao',
-     cond:d=>Estado.temPokenav()},
+    {texto:d=>`Ir ${aoPostoDaCidade(d)} antes de entrar.`, vai:'c21_centro_primeiro'},
     {texto:'Não entrar na sua rua. Comprar o que precisa e pegar a estrada.', vai:'c21_nao_foi_pra_casa'}
   ]
 },
@@ -153,7 +218,10 @@ c21_chegada_em_casa:{
 c21_a_rua:{
   texto:[
     'Você anda a rua inteira com a mochila no ombro, devagar, do jeito que só se anda numa rua que a gente conhece de cor.',
-    'O muro da escola continua devolvendo a Pokébola reto. Tem duas crianças novas jogando, e nenhuma delas sabe quem você é.',
+    d=>{ const h = c21_hora(d);
+         return h >= 7 && h < 19
+           ? 'O muro da escola continua devolvendo a bola reto. Tem duas crianças novas jogando, e nenhuma delas sabe quem você é.'
+           : 'O muro da escola continua lá, com a marca redonda da bola na altura de sempre. A essa hora não tem ninguém jogando.'; },
     'A casa do número oito pintou de azul. A do quatorze não pintou de nada há mais tempo ainda.',
     'E tem uma coisa que você não esperava: tem um cartaz seu no poste.',
     'É pequeno, é impresso em papel comum, tem uma foto ruim da sua licença e a palavra PARABÉNS escrita à mão embaixo.'
@@ -171,9 +239,10 @@ c21_quem_pregou:{
   texto:[
     'Você bate em duas portas e na terceira acha, porque na terceira a pessoa fica vermelha antes de você terminar a pergunta.',
     fala('Sra. Perla', 'Foi eu. Foi eu e eu não peço desculpa.', 'grita'),
-    d=>fala('Sra. Perla', `Eu imprimi vinte. Aqui na rua é tudo meu. Viridian não: lá ${nomeCasa() === 'Sra. Perla' ? 'foi outra pessoa' : nomeCasa()} já tinha mandado o seu por fax, e eu não ia ficar atrás.`),
+    fala('Sra. Perla', 'Eu imprimi vinte. Os da rua são todos meus, e tem nove lá em casa que eu não achei poste pra pregar.'),
     'Vinte cartazes. Ela pagou impressão de vinte cartazes com a sua cara de licença.',
-    d=>d.flags.a_caixa_da_odete
+    /* a caixa do ventilador ela pediu de volta a quem levou */
+    d=>d.flags.leva_a_caixa
       ? fala('Sra. Perla', 'Você trouxe a caixa?', 'baixo', 'Ela muda de assunto porque não aguenta o assunto.')
       : fala('Sra. Perla', 'E não me olha assim. Vai pra casa, que tem gente te esperando.', 'baixo', 'Ela muda de assunto porque não aguenta o assunto.')
   ],
@@ -182,27 +251,50 @@ c21_quem_pregou:{
       rep:{eixo:'bom',delta:2,motivo:'A vizinha imprimiu vinte cartazes com a sua cara', rep:{notorio:true}},
       registrar:'A Sra. Perla imprimiu vinte cartazes e pregou na rua inteira.'},
   escolhas:[
-    {texto:'"Eu trouxe a caixa." (mesmo que não tenha)', vai:'c21_a_caixa_de_volta', cond:d=>!!d.flags.a_caixa_da_odete},
+    {texto:'Devolver a caixa, que veio a estrada inteira na mochila.', vai:'c21_devolveu_a_caixa',
+     cond:d=>!!d.flags.leva_a_caixa && c21_temACaixa()},
+    {texto:'"Eu trouxe a caixa." (mesmo que não tenha)', vai:'c21_a_caixa_de_volta',
+     cond:d=>!!d.flags.leva_a_caixa && !c21_temACaixa() && d.jogador.dinheiro >= 400},
     {texto:'Abraçar ela, que é o que ninguém faz com a dona Perla.', vai:'c21_abracou_odete'},
     {texto:'Ir pra casa antes que fique pior.', vai:'c21_dentro_de_casa'}
   ]
 },
 
+c21_devolveu_a_caixa:{
+  texto:[
+    'Você abre a mochila e tira a caixa de ventilador. Ela fez a estrada inteira com você: tem um canto amassado, uma mancha de água que não sai e a fita do fundo trocada duas vezes.',
+    'E está vazia, e faz tempo. Numa das primeiras noites o Pokémon de dentro roeu um canto, saiu por ele e não voltou. A caixa você continuou carregando, porque a caixa tinha que voltar.',
+    fala('Sra. Perla', 'Vazia.'),
+    fala('Sra. Perla', 'Ele foi embora sozinho?'),
+    d=>fala(d.jogador.nome, 'Numa das primeiras noites. Roeu o canto.'),
+    'Ela vira a caixa na mão até achar o canto roído, e passa o dedo nele.',
+    fala('Sra. Perla', 'Então ele tava bem. Pokémon doente não rói caixa.', 'baixo')
+  ],
+  ef:{moral:4,
+      npc:{nome:'Sra. Perla', opiniao:5, memoria:'Você devolveu a caixa do ventilador depois da estrada inteira. Vazia, mas devolveu.'},
+      registrar:'Devolveu à Sra. Perla a caixa do ventilador. Vazia, mas devolveu.',
+      executar:d=>{ Estado.usarItem(C21_CAIXA); return [{tipo:'item', texto:'Devolveu a caixa do ventilador.'}]; }},
+  escolhas:[
+    {texto:'Abraçar ela, que é o que ninguém faz com a dona Perla.', vai:'c21_abracou_odete'},
+    ...c21_volta()
+  ]
+},
+
 c21_a_caixa_de_volta:{
   texto:[
-    'Você não tem a caixa. Você perdeu a caixa em algum lugar entre Pewter e Cerulean, e você sabe disso há meses.',
-    'Você compra uma caixa de ventilador no armazém por quatrocentos pokedólares, tira a etiqueta, amassa um canto com a mão pra parecer usada, e entrega.',
+    d=>d.flags.entregou_a_caixa_no_centro && !d.flags.ficou_com_o_bicho
+      ? `Você não tem a caixa. Ela ficou ${c21_pallet(d) ? 'na mesa do laboratório' : 'no balcão do Centro'} no dia em que você saiu, com o Pokémon dentro, e ninguém nunca mais falou dela.`
+      : 'Você não tem a caixa. Em algum ponto da estrada ela deixou de estar na mochila, e você não sabe dizer onde.',
+    d=>c21_armazem(d)
+      ? 'Você compra uma caixa de ventilador no armazém por quatrocentos pokedólares, tira a etiqueta, amassa um canto com a mão pra parecer usada, e entrega.'
+      : 'O armazém está de porta baixada. Você bate na porta do lado, que é a do dono, compra uma caixa de ventilador por quatrocentos pokedólares, tira a etiqueta, amassa um canto com a mão pra parecer usada, e entrega.',
     fala('Sra. Perla', 'Essa não é a minha caixa.', 'frio', 'Ela olha por dois segundos.'),
     fala('Sra. Perla', '…mas é melhor que a minha. Obrigada, {menino|menina}.', 'riso')
   ],
   ef:{dinheiro:-400, moral:3,
       npc:{nome:'Sra. Perla', opiniao:2, memoria:'Comprou uma caixa nova pra devolver a que perdeu, e ela percebeu.'},
       registrar:'Comprou uma caixa nova pra devolver à Sra. Perla. Ela percebeu.'},
-  escolhas:[
-    {texto:'Ir pra casa.', vai:'c21_dentro_de_casa'},
-    {texto:'Andar a rua inteira primeiro.', vai:'c21_a_rua', cond:d=>!d.flags.viu_o_cartaz},
-    {texto:'Passar no Centro Pokémon antes.', vai:'c21_centro_primeiro', cond:d=>!d.flags.a_enfermeira_nova}
-  ]
+  escolhas:c21_volta()
 },
 
 c21_abracou_odete:{
@@ -217,11 +309,7 @@ c21_abracou_odete:{
       npc:{nome:'Sra. Perla', opiniao:5, memoria:'Você abraçou ela na calçada. Ela soltou por último.'},
       rep:{eixo:'bom',delta:1,motivo:'Abraçou quem ninguém abraça'},
       registrar:'Abraçou a Sra. Perla na calçada.'},
-  escolhas:[
-    {texto:'Ir pra casa.', vai:'c21_dentro_de_casa'},
-    {texto:'Andar a rua inteira primeiro.', vai:'c21_a_rua', cond:d=>!d.flags.viu_o_cartaz},
-    {texto:'Passar no Centro Pokémon antes.', vai:'c21_centro_primeiro', cond:d=>!d.flags.a_enfermeira_nova}
-  ]
+  escolhas:c21_volta()
 },
 
 c21_tirou_o_cartaz:{
@@ -248,11 +336,7 @@ c21_repos_os_cartazes:{
   ef:{moral:4, limpaFlag:'tirou_os_cartazes',
       rep:{eixo:'bom',delta:1,motivo:'Repôs o que tinha arrancado por vergonha'},
       registrar:'Repôs os cartazes que tinha tirado.'},
-  escolhas:[
-    {texto:'Ir pra casa.', vai:'c21_dentro_de_casa'},
-    {texto:'Andar a rua inteira primeiro.', vai:'c21_a_rua', cond:d=>!d.flags.viu_o_cartaz},
-    {texto:'Passar no Centro Pokémon antes.', vai:'c21_centro_primeiro', cond:d=>!d.flags.a_enfermeira_nova}
-  ]
+  escolhas:c21_volta()
 },
 
 /* ── o vizinho da rua (vizinho.js) ──────────────────────────────────────────── */
@@ -262,15 +346,17 @@ c21_ushio:{
     d=>`${vz().f ? 'A' : 'O'} ${vz().nome} está sentad${vz().o} no degrau, e não em pé com ${vz().ferr}, e é a primeira vez na sua vida que você vê ${vz().ele} sentad${vz().o} no degrau.`,
     d=>fala(vz().nome, 'Demorou.', null, `${vz().Ele} não levanta.`),
     d=>fala(vz().nome, 'Senta aqui. Eu não subo mais em banquinho e você já é grande o suficiente pra isso não ser um problema seu.'),
-    d=>d.flags.divida_pendente
+    /* a dívida que ficou pra depois, ou a que você jurou não lembrar */
+    d=>d.flags.divida_pendente || d.flags.negou_divida
       ? `Você senta, e tem ${vz().divida.replace(/^(a|o) /, m => m === 'a ' ? 'uma ' : 'um ')} entre vocês ${vz().f ? '{dois|duas}' : 'dois'} que ninguém mencionou ainda.`
       : 'Você senta.'
   ],
-  ef:{npc:d=>({nome:vz().nome, opiniao:1, memoria:'Estava sentad' + vz().o + ' no degrau quando você voltou.'}),
+  ef:{npc:d=>{ const n = d.npcs[vz().nome];
+               return {nome:vz().nome, opiniao:n && n.opiniao != null ? n.opiniao : 1, memoria:'Estava sentad' + vz().o + ' no degrau quando você voltou.'}; },
       registrar:d=>`${vz().f ? 'A' : 'O'} ${vz().nome} estava sentad${vz().o} no degrau, e não em pé com ${vz().ferr}.`},
   escolhas:[
     {texto:d=>`Pagar ${vz().divida} agora, com os juros de todos esses anos.`, vai:'c21_pagou_a_janela',
-     cond:d=>!!d.flags.divida_pendente && d.jogador.dinheiro >= 2000},
+     cond:d=>!!(d.flags.divida_pendente || d.flags.negou_divida) && d.jogador.dinheiro >= 2000},
     {texto:d=>`Perguntar por que ${vz().ele} está sentad${vz().o}.`, vai:'c21_por_que_sentado'},
     {texto:'Contar a viagem inteira, do começo.', vai:'c21_contou_tudo'},
     {texto:d=>`Ficar em silêncio junto. ${vz().Ele} não pediu conversa.`, vai:'c21_silencio_no_degrau'}
@@ -355,13 +441,9 @@ c21_prometeu_a_terca:{
     'Mas você fala que está, e você fala sério na hora de falar, e essas duas coisas nem sempre são a mesma.',
     d=>fala(vz().nome, 'Então tá.', null, `${vz().Ele} anota na testa com dois dedos, como sempre.`)
   ],
-  ef:{rep:{eixo:'bom',delta:1,motivo:'Prometeu uma terça-feira comum a um velho'},
+  ef:{rep:{eixo:'bom',delta:1,motivo:'Prometeu uma terça-feira comum a quem não pede nada'},
       registrar:d=>`Prometeu voltar na terça pra ${vz().fazer}.`},
-  escolhas:[
-    {texto:'Ir pra casa.', vai:'c21_dentro_de_casa'},
-    {texto:'Andar a rua inteira primeiro.', vai:'c21_a_rua', cond:d=>!d.flags.viu_o_cartaz},
-    {texto:'Passar no Centro Pokémon antes.', vai:'c21_centro_primeiro', cond:d=>!d.flags.a_enfermeira_nova}
-  ]
+  escolhas:c21_volta()
 },
 
 c21_nao_vai_estar:{
@@ -374,12 +456,8 @@ c21_nao_vai_estar:{
   ef:{moral:2,
       npc:d=>({nome:vz().nome, opiniao:2, memoria:'Você foi honest{o|a} sobre a terça em vez de prometer.'}),
       rep:{eixo:'bom',delta:1,motivo:'Preferiu a verdade à promessa fácil'},
-      registrar:d=>`Foi honesto com ${vz().f ? 'a' : 'o'} ${vz().nome} sobre a terça.`},
-  escolhas:[
-    {texto:'Ir pra casa.', vai:'c21_dentro_de_casa'},
-    {texto:'Andar a rua inteira primeiro.', vai:'c21_a_rua', cond:d=>!d.flags.viu_o_cartaz},
-    {texto:'Passar no Centro Pokémon antes.', vai:'c21_centro_primeiro', cond:d=>!d.flags.a_enfermeira_nova}
-  ]
+      registrar:d=>`Foi honest{o|a} com ${vz().f ? 'a' : 'o'} ${vz().nome} sobre a terça.`},
+  escolhas:c21_volta()
 },
 
 c21_contou_tudo:{
@@ -412,67 +490,69 @@ c21_silencio_no_degrau:{
       registrar:d=>`Ficou vinte minutos sentad{o|a} em silêncio no degrau ${vz().do} ${vz().nome}.`},
   escolhas:[
     {texto:'Levantar e ir pra casa.', vai:'c21_dentro_de_casa'},
-    {texto:'Andar a rua inteira primeiro.', vai:'c21_a_rua', cond:d=>!d.flags.viu_o_cartaz},
-    {texto:'Passar no Centro Pokémon antes.', vai:'c21_centro_primeiro', cond:d=>!d.flags.a_enfermeira_nova}
+    ...c21_volta().slice(1)
   ]
 },
 
 /* ── o centro e o orelhão ──────────────────────────────────── */
 c21_centro_primeiro:{
   texto:[
-    d=>`O posto do Centro Pokémon ${d.jogador.cidade === 'Pallet' ? 'continua funcionando numa sala dos fundos do mercado' : 'abriu um prédio novo de dois andares'}, e a enfermeira do balcão é outra.`,
-    'A de antes foi transferida. A nova tem vinte e poucos anos e uma prancheta igual.',
-    fala('a enfermeira nova', 'Cartão, por favor.'),
+    d=>c21_pallet(d)
+      ? 'O laboratório do Professor é o mesmo, com o mesmo cheiro de papel e de máquina ligada, e a assistente da mesa do lado da porta é outra.'
+      : 'O Centro Pokémon é o mesmo, com o mesmo cheiro de álcool e de cera, e a enfermeira do balcão é outra.',
+    'A de antes não está. A nova tem vinte e poucos anos e uma prancheta igual.',
+    d=>fala(c21_nova(d), 'Cartão, por favor.'),
     d=>c21_ins(d) >= 6 ? 'Você entrega o cartão e ela passa o leitor, e o leitor apita, e ela para.'
                        : 'Você entrega o cartão e ela passa o leitor, e o leitor apita, e ela devolve sem olhar.',
-    d=>c21_ins(d) >= 6 ? fala('a enfermeira nova', c21_ext(c21_ins(d)).replace(/^./, c => c.toUpperCase()) + '.', 'baixo') : '',
-    d=>c21_ins(d) >= 6 ? fala('a enfermeira nova', `Desculpa. É que a gente vê muito cartão e quase nunca vê ${c21_ext(c21_ins(d))}.`)
-                       : fala('a enfermeira nova', 'Pode deixar o time na bandeja.')
+    d=>c21_ins(d) >= 6 ? fala(c21_nova(d), c21_maiuscula(c21_ext(c21_ins(d))) + '.', 'baixo') : '',
+    d=>c21_ins(d) >= 6 ? fala(c21_nova(d), `Desculpa. É que aqui a gente vê muito cartão de quem está saindo, e quase nunca de quem volta com ${c21_ext(c21_ins(d))}.`)
+       : c21_pallet(d) ? fala(c21_nova(d), 'Pode deixar o time na máquina do fundo. Não é de Centro, mas cura igual.')
+                       : fala(c21_nova(d), 'Pode deixar o time na bandeja.')
   ],
   ef:{flag:'a_enfermeira_nova',
-      npc:{nome:'Enfermeira nova', opiniao:2, memoria:'Passou o seu cartão no balcão do Centro da sua cidade.'},
-      registrar:'A enfermeira do balcão é outra. A de antes foi transferida.'},
+      npc:d=>({nome:c21_nova(d), opiniao:2, memoria:c21_pallet(d) ? 'Passou o seu cartão na mesa do laboratório da sua cidade.' : 'Passou o seu cartão no balcão do Centro da sua cidade.'}),
+      registrar:d=>c21_pallet(d) ? 'A assistente da mesa do laboratório é outra.' : 'A enfermeira do balcão do Centro é outra.'},
   escolhas:[
     {texto:'Perguntar pra onde a outra foi.', vai:'c21_pra_onde_ela_foi'},
-    {texto:'Curar o time e ir pra casa.', vai:'c21_dentro_de_casa',
-     ef:{executar:d=>{ d.time.forEach(curarTotal); Estado.curarJogador(20);
-       return [{tipo:'cura', texto:'O time voltou inteiro.'}]; }}}
+    c21_curar()
   ]
 },
 
 c21_pra_onde_ela_foi:{
   texto:[
-    d=>fala(d.jogador.nome, 'A enfermeira que estava aqui antes. Pra onde ela foi?'),
-    fala('a enfermeira nova', 'Voltou pra estrada.', null, 'Ela diz isso como quem repete uma coisa que achou absurda.'),
-    fala('a enfermeira nova', 'Trinta e seis anos, pediu exoneração, tirou licença nova. Disse que faltavam duas.'),
-    'Faltavam duas insígnias. Ela parou em seis, e agora faltavam duas.',
+    d=>fala(d.jogador.nome, c21_pallet(d) ? 'A assistente que ficava aqui antes. Pra onde ela foi?' : 'A enfermeira que estava aqui antes. Pra onde ela foi?'),
+    d=>fala(c21_nova(d), 'Voltou pra estrada.', null, 'Ela diz isso como quem repete uma coisa que achou absurda.'),
+    d=>fala(c21_nova(d), c21_pallet(d) ? 'Trinta e seis anos, pediu demissão do laboratório, tirou licença nova. Disse que faltavam duas.'
+                                       : 'Trinta e seis anos, pediu exoneração, tirou licença nova. Disse que faltavam duas.'),
+    d=>d.flags.historia_da_enfermeira
+      ? 'Faltavam duas insígnias. Ela parou em seis, e agora faltavam duas.'
+      : `Faltavam duas insígnias. Quer dizer que ela tinha seis, guardadas em algum lugar, esse tempo todo atrás ${c21_pallet(d) ? 'daquela mesa' : 'daquele balcão'}.`,
     'Você fica com o cartão na mão por um tempo a mais do que precisava.'
   ],
   ef:{flag:'a_enfermeira_voltou_pra_estrada', moral:5,
-      rep:{eixo:'bom',delta:1,motivo:'Alguém voltou pra estrada depois de conversar com você'},
-      registrar:'A enfermeira do Centro pediu exoneração e voltou pra estrada. Faltavam duas.'},
+      registrar:d=>c21_pallet(d) ? 'A assistente do laboratório pediu demissão e voltou pra estrada. Faltavam duas.'
+                                 : 'A enfermeira do Centro pediu exoneração e voltou pra estrada. Faltavam duas.',
+      /* só pesa pra você se foi com você que ela conversou, no dia em que você saiu */
+      executar:d=>{ if (d.flags.historia_da_enfermeira) Estado.mudarRep('bom', 1, 'Alguém voltou pra estrada depois de conversar com você', {}); }},
   escolhas:[
     {texto:'Pedir o número dela.', vai:'c21_numero_da_enfermeira',
      cond:d=>Estado.temPokenav()},
-    {texto:'Curar o time e ir pra casa.', vai:'c21_dentro_de_casa',
-     ef:{executar:d=>{ d.time.forEach(curarTotal); Estado.curarJogador(20);
-       return [{tipo:'cura', texto:'O time voltou inteiro.'}]; }}}
+    c21_curar()
   ]
 },
 
 c21_numero_da_enfermeira:{
   texto:[
-    'A enfermeira nova olha pros lados, o que é desnecessário porque não tem ninguém, e escreve num papel de receita.',
-    fala('a enfermeira nova', 'Ela deixou isso aqui pro caso de alguém perguntar.'),
-    fala('a enfermeira nova', 'Em seis meses você é a primeira pessoa que perguntou.', 'baixo')
+    d=>`${c21_maiuscula(c21_nova(d))} olha pros lados, o que é desnecessário porque não tem ninguém, e escreve ${c21_pallet(d) ? 'numa folha do bloco do laboratório' : 'num papel de receita'}.`,
+    d=>fala(c21_nova(d), 'Ela deixou isso aqui pro caso de alguém perguntar.'),
+    d=>fala(c21_nova(d), 'Desde que ela foi, você é a primeira pessoa que perguntou.', 'baixo')
   ],
   ef:{flag:'historia_da_enfermeira', moral:3,
-      npc:{nome:'Enfermeira do Centro', opiniao:2, memoria:'Deixou o número no balcão pro caso de alguém perguntar. Você perguntou.'},
+      npc:d=>{ const n = d.npcs[c21_aDeAntes(d)];
+               return {nome:c21_aDeAntes(d), opiniao:Math.max(2, n ? n.opiniao || 0 : 0), memoria:'Deixou o número pro caso de alguém perguntar. Você perguntou.'}; },
       rep:{eixo:'bom',delta:1,motivo:'Perguntou por alguém que ninguém procurou'},
-      registrar:'Pegou o número da enfermeira que voltou pra estrada.'},
-  escolhas:[{texto:'Curar o time e ir pra casa.', vai:'c21_dentro_de_casa',
-     ef:{executar:d=>{ d.time.forEach(curarTotal); Estado.curarJogador(20);
-       return [{tipo:'cura', texto:'O time voltou inteiro.'}]; }}}]
+      registrar:d=>c21_pallet(d) ? 'Pegou o número da assistente que voltou pra estrada.' : 'Pegou o número da enfermeira que voltou pra estrada.'},
+  escolhas:[c21_curar()]
 },
 
 c21_orelhao:{
@@ -490,9 +570,7 @@ c21_orelhao:{
       rep:{eixo:'bom',delta:1,motivo:'Ligou da esquina em vez de chegar de surpresa'},
       registrar:'Ligou pra casa do orelhão da esquina, a trinta metros da porta.'},
   escolhas:[
-    {texto:'Ficar parad{o|a} e deixar {casa:ela|ele} vir.', vai:'c21_dentro_de_casa'},
-    {texto:'Andar a rua inteira primeiro.', vai:'c21_a_rua', cond:d=>!d.flags.viu_o_cartaz},
-    {texto:'Passar no Centro Pokémon antes.', vai:'c21_centro_primeiro', cond:d=>!d.flags.a_enfermeira_nova}
+    {texto:'Ficar parad{o|a} e deixar {casa:ela|ele} vir.', vai:'c21_dentro_de_casa'}
   ]
 },
 
@@ -509,7 +587,7 @@ c21_dentro_de_casa:{
       registrar:'Entrou no próprio quarto depois de meses. Não tinham mexido em nada.'},
   escolhas:[
     {texto:d=>`Mostrar as ${c21_ext(c21_ins(d))} insígnias uma por uma.`, vai:'c21_mostrou_as_oito', cond:d=>c21_ins(d) >= 2},
-    {texto:'Mostrar o telegrama agora, antes de esquentar.', vai:'c21_contou_da_convocacao'},
+    {texto:'Mostrar o telegrama agora, antes de perder a coragem.', vai:'c21_contou_da_convocacao'},
     {texto:'Perguntar o que aconteceu aqui enquanto você não estava.', vai:'c21_o_que_aconteceu_aqui'},
     {texto:'Não falar de nada. Dormir na sua cama, que é o que você veio fazer.', vai:'c21_dormiu_na_cama'}
   ]
@@ -522,7 +600,7 @@ c21_mostrou_as_oito:{
     'Você repete.',
     d=>fala(nomeCasa(), 'Repete de novo. Devagar. Eu quero decorar a ordem.', 'baixo'),
     'Você repete três vezes ao todo, e na terceira {casa:ela|ele} fecha os olhos pra ouvir melhor, e mexe os lábios junto.',
-    '{casa:Ela|Ele} vai contar essa lista pra rua inteira. {casa:Ela|Ele} vai errar a ordem. Ninguém vai corrigir.'
+    'Depois {casa:ela|ele} repete sozinh{casa:a|o}, baixinho, e troca a ordem de duas. Você não corrige.'
   ],
   ef:{moral:8, flag:'mostrou_as_insignias_em_casa',
       rep:{eixo:'bom',delta:2,motivo:'Contou as insígnias em casa, três vezes, devagar'},
@@ -540,6 +618,10 @@ c21_o_que_aconteceu_aqui:{
     d=>fala(nomeCasa(), 'Aqui? Aqui não acontece nada, {menino|menina}.'),
     'E aí {casa:ela|ele} conta, por quarenta minutos, tudo que não aconteceu:',
     d=>fala(nomeCasa(), 'O telhado dos fundos. A conta de luz que veio errada duas vezes. O neto do Sr. Aldous que casou. O Growlithe do quatorze que morreu — aquele velho, você lembra dele.'),
+    /* o Pokémon da caixa, que ficou em casa no capítulo 1 */
+    d=>d.flags.a_caixa_ficou_em_casa
+      ? fala(nomeCasa(), 'E o Pokémon da caixa da Perla achou dono. Um menino da rua de baixo. Eu fiz ele prometer que trazia pra eu ver, e ele traz.')
+      : '',
     d=>fala(nomeCasa(), 'A Perla imprimindo cartaz. Eu falei pra ela não fazer isso. Ela fez vinte.', 'riso'),
     'Não aconteceu nada, e levou quarenta minutos pra contar.'
   ],
@@ -547,7 +629,7 @@ c21_o_que_aconteceu_aqui:{
       rep:{eixo:'bom',delta:2,motivo:'Perguntou o que aconteceu com quem ficou'},
       registrar:'Perguntou o que aconteceu em casa. Levou quarenta minutos de nada.'},
   escolhas:[
-    {texto:'Subir no telhado dos fundos e olhar o que precisa.', vai:'c21_o_telhado'},
+    {texto:'Subir no telhado dos fundos e olhar o que precisa.', vai:'c21_o_telhado', cond:d=>d.jogador.dinheiro >= 600},
     {texto:'Mostrar o telegrama.', vai:'c21_contou_da_convocacao'},
     {texto:'Dormir.', vai:'c21_dormiu_na_cama'}
   ]
@@ -555,15 +637,22 @@ c21_o_que_aconteceu_aqui:{
 
 c21_o_telhado:{
   texto:[
-    'Você sobe no telhado dos fundos às cinco e meia da tarde com uma chave de fenda e nenhuma competência.',
+    d=>{ const h = c21_hora(d);
+         return h < 12 ? 'Você sobe no telhado dos fundos com o dia clareando, uma chave de fenda e nenhuma competência.'
+              : h < 18 ? 'Você sobe no telhado dos fundos com o sol já baixo, uma chave de fenda e nenhuma competência.'
+              : 'Você sobe no telhado dos fundos já de noite, com a lanterna da cozinha na boca, uma chave de fenda e nenhuma competência.'; },
     'São três telhas. Uma rachada, duas fora de posição. Você resolve as duas fora de posição em dez minutos e a rachada não tem como resolver sem telha nova.',
-    'Você desce, vai no armazém, compra três telhas por seiscentos, volta e sobe de novo.',
+    d=>c21_armazem(d)
+      ? 'Você desce, vai no armazém, compra três telhas por seiscentos, volta e sobe de novo.'
+      : 'Você desce e bate na porta do lado do armazém, que é a do dono. Ele te vende três telhas por seiscentos, de chinelo, sem perguntar pra que é a essa hora. Você volta e sobe de novo.',
     d=>fala(nomeCasa(), 'DESCE DAÍ!', 'grita', '{casa:Ela|Ele} grita do quintal, e continua gritando o tempo inteiro, e não sai de lá em nenhum momento.'),
-    'Você desce quando termina. O telhado não vai mais pingar neste inverno.'
+    'Você desce quando termina. As três telhas estão no lugar, e a nova é mais clara que as outras.'
   ],
   ef:{dinheiro:-600, moral:6, flag:'consertou_o_telhado',
       rep:{eixo:'bom',delta:2,motivo:'Consertou o telhado da casa com as insígnias no bolso'},
-      registrar:'Consertou as três telhas do telhado dos fundos.'},
+      registrar:'Consertou as três telhas do telhado dos fundos.',
+      /* de madrugada ninguém sobe em telhado: espera clarear */
+      executar:d=>{ if (c21_hora(d) < 6) Relogio.ate(6); }},
   escolhas:[
     {texto:'Mostrar o telegrama.', vai:'c21_contou_da_convocacao'},
     {texto:'Tomar banho e dormir.', vai:'c21_dormiu_na_cama'}
@@ -591,18 +680,24 @@ c21_contou_da_convocacao:{
 
 c21_acordados_ate_tarde:{
   texto:[
-    'Vocês ficam na cozinha até uma e meia da manhã, com a luz de cima apagada e a do fogão acesa, que é como esta casa conversa depois das onze.',
+    d=>{ const h = c21_hora(d);
+         return h >= 5 && h < 12
+           ? 'Vocês ficam na cozinha até o céu clarear, com a luz de cima apagada e a do fogão acesa, que é como esta casa conversa quando já é tarde.'
+           : 'Vocês ficam na cozinha até uma e meia da manhã, com a luz de cima apagada e a do fogão acesa, que é como esta casa conversa depois das onze.'; },
     'Não falam da convocação de novo. Falam de bobagem: de quando você caiu da bicicleta, do primo que virou treinador em 1989, do nome do Growlithe do quatorze.',
     d=>{
       const p = d.time[0];
       return p ? `${nomeExib(p)} dorme debaixo da mesa a noite inteira e ninguém manda ${pron(p).ele} sair.`
                : 'O relógio da parede continua três minutos adiantado. Ninguém nunca acertou.';
     },
-    'Você vai lembrar desta cozinha depois, em lugares muito piores do que esta cozinha.'
+    'É a melhor hora que você passa sentad{o|a} em meses, e ninguém fez nada nela.'
   ],
   ef:{moral:9, flag:'a_noite_na_cozinha', hp:4,
-      rep:{eixo:'bom',delta:1,motivo:'Ficou acordad{o|a} até uma e meia por conversa de bobagem'},
-      registrar:'Ficou até uma e meia da manhã na cozinha, com a luz do fogão.'},
+      rep:{eixo:'bom',delta:1,motivo:'Ficou acordad{o|a} na cozinha por conversa de bobagem'},
+      /* o registro é de antes do relógio andar: quem chegou de madrugada vira o resto dela */
+      registrar:d=>{ const h = c21_hora(d);
+                     return h >= 1 && h < 6 ? 'Ficou na cozinha até clarear, com a luz do fogão.' : 'Ficou até uma e meia da manhã na cozinha, com a luz do fogão.'; },
+      executar:d=>{ const h = c21_hora(d); Relogio.ate(h >= 1 && h < 6 ? 6 : 1); }},
   escolhas:[{texto:'Dormir.', vai:'c21_dormiu_na_cama'}]
 },
 
@@ -613,37 +708,39 @@ c21_dormiu_na_cama:{
     'Você acorda três vezes e na terceira desiste, pega o cobertor e deita no chão do quarto, do lado da mochila.',
     d=>{
       const p = d.time[0];
-      return p ? `${nomeExib(p)} deita colado em você e adormece em nove segundos, porque pra ${pron(p).ele} o chão é o chão em qualquer lugar do mundo.`
+      return p ? `${nomeExib(p)} deita colad${pron(p).o} em você e adormece em nove segundos, porque pra ${pron(p).ele} o chão é o chão em qualquer lugar do mundo.`
                : 'Você adormece no chão em quatro minutos.';
     },
     'É essa a parte que ninguém te conta: que a estrada entra em você e não sai mais, e que a sua própria cama vira um lugar que você visita.'
   ],
   ef:{hp:8, flag:'dormiu_no_chao_de_casa',
-      registrar:'Não conseguiu dormir na própria cama. Dormiu no chão, do lado da mochila.'},
+      registrar:'Não conseguiu dormir na própria cama. Dormiu no chão, do lado da mochila.',
+      executar:d=>{ c21_dormir(d); }},
   escolhas:[
-    {texto:'Acordar, tomar café e ir pro Planalto.', vai:'c21_saida_de_casa'},
+    {texto:'Acordar, comer alguma coisa e ir pro Planalto.', vai:'c21_saida_de_casa'},
     {texto:'Ficar mais um dia. O Planalto espera.', vai:'c21_mais_um_dia'}
   ]
 },
 
 c21_mais_um_dia:{
   texto:[
-    'Você fica mais um dia. A convocação diz uma data e a data tem folga de três dias, e você usa um.',
+    'Você fica mais um dia. A carta da Liga diz uma data pro Planalto, e a data tem folga de três dias, e você gasta um.',
     'Não acontece nada de especial neste dia. Você conserta o que dá, come o que colocam no prato, anda a rua duas vezes.',
-    'É exatamente por não acontecer nada que você vai lembrar dele.'
+    'É o primeiro dia em meses em que ninguém precisa de você pra nada, e você não sabe muito bem o que fazer com as mãos.'
   ],
   ef:{moral:5, hp:6, flag:'ficou_mais_um_dia',
-      rep:{eixo:'bom',delta:1,motivo:'Gastou um dia de folga da convocação em casa'},
-      registrar:'Gastou um dia da folga da convocação em casa, sem fazer nada.'},
+      rep:{eixo:'bom',delta:1,motivo:'Gastou em casa um dia da folga do Planalto'},
+      registrar:'Gastou em casa um dia da folga que a carta da Liga dava, sem fazer nada.',
+      executar:d=>{ Relogio.amanhaAs(7); }},
   escolhas:[{texto:'No dia seguinte, ir.', vai:'c21_saida_de_casa'}]
 },
 
 c21_saida_de_casa:{
   texto:[
     'A saída é curta, porque segunda saída sempre é curta. A primeira é que é comprida.',
-    d=>fala(nomeCasa(), 'Vai.', null, 'Nada de discurso. Nada de "volta". {casa:Ela|Ele} já disse isso uma vez e não repete.'),
+    d=>fala(nomeCasa(), 'Vai.', null, 'Nada de discurso. Nada de "volta". {casa:Ela|Ele} não é de repetir pedido.'),
     'Na porta, {casa:ela|ele} enfia alguma coisa no bolso de fora da sua mochila, do jeito que {casa:ela|ele} faz, sem avisar o que é.',
-    'Você só vai descobrir depois, na estrada, e é uma foto três por quatro da sua licença — daquelas vinte que a Sra. Perla imprimiu — com uma coisa escrita atrás.',
+    'Você só abre o bolso na saída da cidade, já na estrada. É uma foto três por quatro sua, a mesma da licença, com uma coisa escrita atrás.',
     'Escrito a lápis, na letra que você conhece desde que aprendeu a ler:',
     '**pra você lembrar da cara que você tinha quando saiu**'
   ],
@@ -656,10 +753,14 @@ c21_saida_de_casa:{
 /* ── quem pula tudo ────────────────────────────────────────── */
 c21_nao_foi_pra_casa:{
   texto:[
-    'Você passa pela sua rua sem entrar na sua rua, o que exige um desvio de dois quarteirões e alguma determinação.',
-    'Você compra o que precisa no armazém, de cabeça baixa, e o homem do armazém te reconhece e não fala nada, porque ele entende de cabeça baixa.',
+    d=>d.flags.chegou_de_madrugada
+      ? 'Você atravessa de volta pro escuro entre o quarto e o quinto poste e sai da sua rua pelo mesmo lado por onde entrou.'
+      : 'Você passa pela sua rua sem entrar na sua rua, o que exige um desvio de dois quarteirões e alguma determinação.',
+    d=>c21_armazem(d)
+      ? 'Você compra o que precisa no armazém, de cabeça baixa, e o homem do armazém te reconhece e não fala nada, porque ele entende de cabeça baixa.'
+      : 'O armazém está de porta baixada. A cidade inteira está, menos a luz de uma cozinha que fica pra trás.',
     'E aí você pega a estrada de novo.',
-    'Não tem punição nenhuma nisso. Ninguém te cobra. É só que vai ficar.'
+    'Não tem punição nenhuma nisso. Ninguém te cobra. É só que fica.'
   ],
   ef:{flag:'nao_entrou_na_propria_rua', moral:-5,
       rep:{eixo:'ruim',delta:1,motivo:'Passou pela própria rua sem entrar nela'},
