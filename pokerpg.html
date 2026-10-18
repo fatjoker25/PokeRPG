@@ -109782,6 +109782,10 @@ cl3_final_lei_dura:{
    capítulo 12) e a própria Terceira.
    ============================================================ */
 
+/* o Rook cobre quem já fez a coisa certa escondido com ele: contou
+   dezesseis na cerca, ou levou a cópia da nota e não entregou */
+function rookConfia(d){ return (d.npcs['Rook'] && d.npcs['Rook'].opiniao >= 2) || !!d.flags.cm_rocket_tres; }
+
 /* ── I · A CERCA DE TRÁS (depois do 12) ────────────────────── */
 CAPITULOS.push(
 {
@@ -109797,7 +109801,11 @@ cr1_o_armario:{
     'O armário da rodoviária de Fuchsia tem o número do adesivo e abre com a chave que veio no último envelope.',
     'Dentro, um bilhete datilografado e um boné sem logotipo.',
     '**"SETOR 7, CERCA DE TRÁS. DUAS DA MANHÃ. O ROOK LEVA. VOCÊ CONTA."**',
-    'Contar, pra quem manda o bilhete, é a coisa mais importante que existe. Você aprendeu isso no Centro de Vermilion, contando gente depois das dez.'
+    d => d.flags.ln_rocket_contou
+      ? 'Contar, pra quem manda o bilhete, é a coisa mais importante que existe. Você aprendeu isso num Centro Pokémon, contando gente depois das dez da noite.'
+      : d.flags.ln_rocket_mentiu
+        ? 'Contar, pra quem manda o bilhete, é a coisa mais importante que existe. Você aprendeu isso dizendo onze quando eram três.'
+        : 'Contar, pra quem manda o bilhete, parece ser a coisa mais importante que existe.'
   ],
   ef:{flag:'cm_rocket_1', registrar:'O envelope sem timbre mandou você contar uma carga na cerca de trás do setor 7.'},
   escolhas:[
@@ -109816,7 +109824,8 @@ cr1_a_ligacao:{
     fala('a voz do outro lado', 'Setor 7, cerca de trás, duas da manhã. O Rook leva. Você conta. Contar certo é o serviço.'),
     'Ele desliga antes de você responder, que é o jeito dele de dizer que você não ia recusar.'
   ],
-  ef:{flag:'cm_rocket_1', registrar:'O envelope sem timbre mandou você contar uma carga na cerca de trás do setor 7.'},
+  ef:{flag:'cm_rocket_1', registrar:'O envelope sem timbre mandou você contar uma carga na cerca de trás do setor 7.',
+      executar:() => { caminhoEntre(13, 18, 15); }},
   escolhas:[
     {texto:'Ir pra cerca na hora marcada.', vai:'cr1_o_rook'},
     {texto:'Ir mais cedo e ver o lugar sozinh{o|a}.', vai:'cr1_antes',
@@ -109827,8 +109836,8 @@ cr1_a_ligacao:{
 cr1_o_koga:{
   texto:[
     'Quem atende o telefone do ginásio é a filha do Koga, que ouve sem interromper e repete o horário em voz alta, uma vez.',
-    fala('Filha do Koga', 'Meu pai não vai prender ninguém. Ele não é polícia. Ele vai estar lá, olhando.', 'baixo'),
-    fala('Filha do Koga', 'E vai lembrar de quem ligou.', 'baixo'),
+    fala('a filha do Koga', 'Meu pai não vai prender ninguém. Ele não é polícia. Ele vai estar lá, olhando.', 'baixo'),
+    fala('a filha do Koga', 'E vai lembrar de quem ligou.', 'baixo'),
     'Você desliga e vai pra cerca do mesmo jeito. Se não for, o envelope sabe por quê.'
   ],
   ef:{npc:{nome:'Koga', opiniao:2, memoria:'Você ligou pro ginásio com o horário da cerca de trás do setor 7.'}},
@@ -109845,23 +109854,25 @@ cr1_antes:{
     'Alguém usa esse corte duas ou três vezes por mês. A cerca foi feita pra não deixar sair, e foi aberta pra deixar sair por um preço.'
   ],
   ef:{flag:'cm_rocket_viu_o_corte', itens:{'Meia etiqueta de código':1},
-      registrar:'Na cerca de trás do setor 7 tem um corte de dois metros, disfarçado com arame.'},
+      registrar:'Na cerca de trás do setor 7 tem um corte de dois metros, disfarçado com arame.',
+      executar:() => { caminhoAs(1); }},
   escolhas:[
     {texto:'Esperar o Rook.', vai:'cr1_o_rook'}
   ]
 },
 
 cr1_o_rook:{
-  falante:'o contato da Terceira',
-  vozes:['N','N','P','N'],
   texto:[
-    'O caminhão chega às duas menos dez, de farol apagado, e quem desce dele é o homem que da outra vez contou dezoito mil na sua frente.',
+    d => d.flags.vendeu_a_zona
+      ? 'O caminhão chega às duas menos dez, de farol apagado, e quem desce dele é o homem que da outra vez contou dezoito mil na sua frente, duas vezes.'
+      : 'O caminhão chega às duas menos dez, de farol apagado, e quem desce dele é um homem de jaqueta que olha pra você como quem confere uma lista.',
     d => { Nomes.apresentar('o contato da Terceira'); return 'Por baixo da jaqueta dele, preso do avesso, tem um broche velho com uma letra que ninguém usa mais em Kanto. No bordado do bolso: ROOK.'; },
-    '"Você conta. Eu carrego. Ninguém fala."',
-    '"Conta o quê?"',
-    '"O que passar pelo buraco." Ele ri sem barulho. "O manejo daqui chama de excedente. A gente chama de mercadoria. O Pokémon não chama de nada."'
+    fala('o contato da Terceira', 'Você conta. Eu carrego. Ninguém fala.'),
+    d => fala(d.jogador.nome, 'Conta o quê?'),
+    fala('o contato da Terceira', 'O que passar pelo buraco. O manejo daqui chama de excedente. A gente chama de mercadoria. O Pokémon não chama de nada.', null, 'Ele ri sem barulho.')
   ],
-  ef:{npc:{nome:'Rook', opiniao:0, memoria:'Carregou com você a carga da cerca de trás do setor 7.'}},
+  ef:{npc:{nome:'Rook', opiniao:0, memoria:'Carregou com você a carga da cerca de trás do setor 7.'},
+      executar:() => { caminhoAs(1); }},
   escolhas:[
     {texto:'Ir pro corte da cerca.', vai:'cr1_a_cerca'}
   ]
@@ -109888,7 +109899,7 @@ cr1_contou:{
   texto:[
     'Dezenove. O Rook confere de cabeça e balança a cabeça.',
     'Os homens de macacão pegam um envelope do Rook e voltam pelo buraco empurrando o carrinho vazio, que agora não faz barulho.',
-    'O Kangaskhan filhote chora baixinho na gaiola de cima a estrada inteira até Celadon. Você não sabia que eles choravam.'
+    'O Kangaskhan filhote chora baixinho na gaiola de cima. Você não sabia que eles choravam.'
   ],
   ef:{registrar:'Contou dezenove na cerca de trás. Um deles era um Kangaskhan filhote.'},
   escolhas:[
@@ -109929,10 +109940,11 @@ cr1_a_guarda:{
   texto:[
     'Na estrada de terra que contorna a reserva, um farol de bicicleta aparece de frente e para no meio do caminho.',
     'Uma guarda da reserva, de colete verde, com a mão levantada e a outra no cinto.',
-    d => d.flags.cm_rocket_dedurou ? 'Atrás dela, na sombra de uma árvore, alguém magro de roupa escura que não se mexe nem pra olhar.' : 'Ela está sozinha. Isso é corajoso ou é burro, e com guarda de reserva costuma ser os dois.',
+    d => d.flags.cm_rocket_dedurou ? 'Atrás dela, na sombra de uma árvore, alguém magro de roupa escura que não se mexe nem pra olhar.' : 'Ela está sozinha. Isso é coragem ou é loucura, e com guarda de reserva costuma ser os dois.',
     fala('Guarda da reserva', 'Caminhão sem placa na estrada de serviço às três da manhã. Desce.'),
     fala('o contato da Terceira', 'Resolve.', 'baixo')
   ],
+  ef:{executar:() => { caminhoAs(3); }},
   escolhas:[
     {texto:'Lutar com ela pra passar.', vai:'cr1_luta_guarda',
      ef:{rep:{eixo:'ruim', delta:2, motivo:'Lutou com uma guarda da reserva pra passar com carga roubada'}}},
@@ -109986,7 +109998,8 @@ cr1_entregou:{
     d => d.flags.cm_rocket_dedurou ? 'Às cinco da manhã, um homem magro entra na guarita, assina o formulário embaixo do seu nome e vai embora sem dizer quem é. Você é liberad{o|a} às seis.' : 'Às seis da manhã você é liberad{o|a}, com uma multa e uma ficha.'
   ],
   ef:{flag:'cm_rocket_ficha_na_reserva', dinheiro:-500,
-      npc:{nome:'Guarda da reserva', opiniao:3, memoria:'Você desceu do caminhão e se entregou.'}},
+      npc:{nome:'Guarda da reserva', opiniao:3, memoria:'Você desceu do caminhão e se entregou.'},
+      executar:() => { caminhoAs(6); }},
   escolhas:[
     {texto:'Ligar pra voz do outro lado e dizer o que aconteceu.', vai:'cr1_fim',
      ef:{flag:'cm_rocket_contou_que_caiu', rep:{eixo:'ruim', delta:1, motivo:'Prestou contas à rede depois de cair'}}},
@@ -110053,13 +110066,14 @@ cr2_o_galpao:{
   falante:'A Terceira',
   vozes:['N','N','N'],
   texto:[
-    'A Terceira te recebe no galpão de material de construção, entre um saco de areia e uma pilha de tijolo. Ned, o funcionário, olha pra você pela primeira vez desde que você conhece ele.',
+    'A Terceira te recebe no galpão de material de construção, entre um saco de areia e uma pilha de tijolo. O funcionário dela, o Ned, que não olha pra ninguém, está olhando pra você.',
     '"Você esteve na Estação 4. Eu sei, porque eu sei o nome de todo mundo que entra lá. É pra lá que vai metade do que eu vendo."',
     '"Amanhã sai um lote pelo píer da Rota 21. Com nota. Eu quero alguém meu no barco que saiba ler o que está escrito na nota e o que não está."',
     '"Esse alguém é você."'
   ],
   ef:{flag:'cm_rocket_2', npc:{nome:'A Terceira', opiniao:1, memoria:'Te mandou no barco do lote da Rota 21, pra ler a nota.'},
-      registrar:'A Terceira te mandou no barco que leva um lote dela pra Estação 4, com nota fiscal.'},
+      registrar:'A Terceira te mandou no barco que leva um lote dela pra Estação 4, com nota fiscal.',
+      executar:() => { caminhoEntre(8, 17, 10); }},
   escolhas:[
     {texto:'"Por que eu?"', vai:'cr2_por_que'},
     {texto:'Aceitar.', vai:'cr2_o_pier'},
@@ -110069,12 +110083,10 @@ cr2_o_galpao:{
 },
 
 cr2_por_que:{
-  falante:'A Terceira',
-  vozes:['P','N','N'],
   texto:[
-    '"Por que eu?"',
-    '"Porque você ainda pergunta." Ela acende um cigarro e sopra a fumaça pro lado, longe de você. "Quem pergunta lê nota inteira. Quem não pergunta lê só o total."',
-    '"E porque eu estou com medo, e eu não posso mandar ninguém que saiba disso."',
+    d => fala(d.jogador.nome, 'Por que eu?'),
+    fala('A Terceira', 'Porque você ainda pergunta. Quem pergunta lê nota inteira. Quem não pergunta lê só o total.', null, 'Ela acende um cigarro e sopra a fumaça pro lado, longe de você.'),
+    fala('A Terceira', 'E porque eu estou com medo, e eu não posso mandar ninguém que saiba disso.', 'baixo'),
     'Ned olha pro chão de novo.'
   ],
   ef:{flag:'cm_rocket_ela_tem_medo'},
@@ -110092,7 +110104,7 @@ cr2_recusou:{
     'Ela não fica brava. Fica cansada, o que é pior de ver.',
     '"Então me faz outro favor: não conta pra ninguém que eu pedi."',
     '"Se alguém da Comissão souber que eu quis ler a nota, eu deixo de ser fornecedora e passo a ser problema."',
-    'O Rook te leva até o portão. Na saída, ele te entrega uma folha dobrada.',
+    d => { Nomes.apresentar('o contato da Terceira'); return 'O Rook, o homem dela, te leva até o portão. Na saída, ele te entrega uma folha dobrada.'; },
     fala('o contato da Terceira', 'A nota de amanhã. Cópia. Ela não sabe que eu tirei.', 'baixo')
   ],
   ef:{flag:'cm_rocket_copia_da_nota', itens:{'Cópia da nota do lote':1},
@@ -110104,12 +110116,13 @@ cr2_recusou:{
 
 cr2_o_pier:{
   texto:[
-    'O píer da Rota 21 tem luz hoje: o barco é registrado, pintado e tem nome.',
+    'O píer da Rota 21 está com a luz acesa, e o barco é registrado, pintado e tem nome.',
     'Na prancheta do marinheiro, a nota fiscal: QUARENTA UNIDADES — MATERIAL BIOLÓGICO PARA PESQUISA — DESTINO ESTAÇÃO 4.',
     'Quarenta caixas de transporte, de plástico, com respiro. Você conta as caixas. Depois conta o que tem dentro.',
     'Quarenta e três.'
   ],
-  ef:{flag:'cm_rocket_43', registrar:'O lote da Terceira pra Estação 4 tinha quarenta e três Pokémon numa nota de quarenta.'},
+  ef:{flag:'cm_rocket_43', registrar:'O lote da Terceira pra Estação 4 tinha quarenta e três Pokémon numa nota de quarenta.',
+      executar:() => { Relogio.amanhaAs(9); }},
   escolhas:[
     {texto:'Ler a nota inteira.', vai:'cr2_a_nota'}
   ]
@@ -110120,13 +110133,14 @@ cr2_a_nota:{
     'A nota tem três folhas. A terceira é um anexo técnico com a procedência de cada unidade.',
     'Procedência: "captura de manejo". Mas no rodapé, em letra miúda, uma observação que ninguém escreveu pra ser lida: "inclui recolhimento urbano".',
     'Recolhimento urbano. Pokémon de rua. Pokémon de praça. Pokémon com coleira.',
-    d => d.flags.cm_rocket_43 ? 'Numa das caixas tem um Meowth com uma coleira de vinil, com um nome bordado à mão: TICO.' : 'Na lista, uma linha diz "felino, adulto, coleira presente".'
+    d => d.flags.cm_rocket_43 ? 'Numa das caixas tem um Meowth com uma coleira de vinil, com um nome bordado à mão: TICO.' : 'Na lista, uma linha diz: "Meowth, adulto, coleira presente".'
   ],
   ef:{flag:'cm_rocket_recolhimento_urbano',
       registrar:'A nota do lote da Terceira esconde "recolhimento urbano": Pokémon de rua e com coleira, vendidos como captura de manejo.'},
   escolhas:[
-    {texto:'Fazer a entrega e contar à Terceira o que tem no rodapé.', vai:'cr2_entregou',
+    {texto:'Fazer a entrega e contar à Terceira o que tem no rodapé.', vai:'cr2_entregou', cond:d => !d.flags.cm_rocket_recusou_lote,
      ef:{flag:'cm_rocket_entregou_43', dinheiro:2500, rep:{eixo:'ruim', delta:2, motivo:'Entregou o lote com recolhimento urbano na Estação 4'}}},
+    {texto:'Voltar ao galpão e mostrar o rodapé à Terceira.', vai:'cr2_volta', cond:d => !!d.flags.cm_rocket_recusou_lote},
     {texto:'Tirar do barco os três que não estão na nota. O Meowth da coleira primeiro.', vai:'cr2_tirou_tres', cond:d => !!d.flags.cm_rocket_43,
      ef:{flag:'cm_rocket_tirou_tres', moral:4, rep:{eixo:'bom', delta:2, motivo:'Tirou do barco os três que não estavam na nota'}}},
     {texto:'Fotografar a nota e levar pra polícia.', vai:'cr2_a_policia',
@@ -110173,8 +110187,8 @@ cr2_a_policia:{
   texto:[
     d => d.flags.ln_rocket_duplo ? 'O policial do café, o do número único, atende no primeiro toque e não diz alô.' : 'Na delegacia de Celadon, o plantonista olha a foto, olha você, e pergunta como você conseguiu.',
     'A nota é verdadeira. O rodapé é verdadeiro. E nada disso é crime, porque "recolhimento urbano" está na licença da Estação 4, numa linha que ninguém leu antes de assinar.',
-    'O que é crime é a diferença: três Pokémon que não estão em nota nenhuma.',
-    'Só que o barco já saiu.'
+    d => d.flags.cm_rocket_43 ? 'O que é crime é a diferença: três Pokémon que não estão em nota nenhuma.' : 'O que seria crime é o que não está na nota, e o que não está na nota ninguém contou.',
+    d => d.flags.cm_rocket_43 ? 'Só que o barco já saiu.' : 'E o barco sai amanhã cedo, com a nota em ordem.'
   ],
   ef:{registrar:'"Recolhimento urbano" está na licença da Estação 4. O crime é só a diferença entre a nota e o barco.'},
   escolhas:[
@@ -110193,13 +110207,12 @@ cr2_entregou:{
 },
 
 cr2_volta:{
-  falante:'A Terceira',
-  vozes:['N','N','N'],
   texto:[
-    '"Recolhimento urbano." Ela repete devagar, como quem prova uma comida estragada.',
-    '"Eu vendo excedente de manejo. Eu nunca vendi coleira. Eles botaram coleira na minha nota pra que, no dia em que eu falar, a nota diga que eu vendi."',
-    '"Eu tenho dois caminhos agora. Eu continuo vendendo e eles continuam me usando. Ou eu paro, e eles mandam a nota pra quem quiser ler."',
-    d => d.flags.cm_rocket_tico_em_casa ? 'Ela olha pra você de um jeito diferente. "Você tirou três do barco. Eu soube."' : ''
+    fala('A Terceira', 'Recolhimento urbano.', null, 'Ela repete devagar, como quem prova uma comida estragada.'),
+    fala('A Terceira', 'Eu vendo excedente de manejo. Eu nunca vendi coleira. Eles botaram coleira na minha nota pra que, no dia em que eu falar, a nota diga que eu vendi.'),
+    fala('A Terceira', 'Eu tenho dois caminhos agora. Eu continuo vendendo e eles continuam me usando. Ou eu paro, e eles mandam a nota pra quem quiser ler.'),
+    d => d.flags.cm_rocket_tico_em_casa ? 'Ela olha pra você de um jeito diferente.' : '',
+    d => d.flags.cm_rocket_tico_em_casa ? fala('A Terceira', 'Você tirou três do barco. Eu soube.', 'baixo') : ''
   ],
   escolhas:[
     {texto:'"Para. Eu seguro a nota com você."', vai:'cr2_fim',
@@ -110218,8 +110231,9 @@ cr2_fim:{
   texto:[
     'O galpão fecha às seis. Ned apaga as luzes uma por uma, do fundo pra frente, e não olha pra ninguém de novo.',
     d => d.flags.cm_rocket_quer_subir ? 'Na saída, o Rook está encostado no portão. Ele não diz nada. Ele só fica ali até você passar.' : 'Na saída, o Rook acende o cigarro dele com o da Terceira, que é uma coisa que só se faz com quem se confia.',
-    'Rota 21, quarenta e três numa nota de quarenta. A conta não fecha, e alguém conta com isso.'
+    d => d.flags.cm_rocket_43 ? 'Rota 21, quarenta e três numa nota de quarenta. A conta não fecha, e alguém conta com isso.' : 'Rota 21, quarenta na nota. Ninguém conferiu o barco, e alguém conta com isso.'
   ],
+  ef:{executar:() => { caminhoAs(18); }},
   fim:true, resumo:'A nota fiscal: quarenta unidades no papel, quarenta e três no barco e uma coleira bordada TICO.'
 }
 
@@ -110244,7 +110258,8 @@ cr3_o_subsolo:{
     '"Então eu vou embora hoje. E a rede fica. Rede não vai embora, só muda de quem atende o telefone."',
     '"O Giovanni foi o primeiro. Teve um segundo. Eu sou a terceira. Alguém vai ser o quarto até a meia-noite."'
   ],
-  ef:{flag:'cm_rocket_3', registrar:'A Terceira vai embora. A rede vai ter um quarto até a meia-noite.'},
+  ef:{flag:'cm_rocket_3', registrar:'A Terceira vai embora. A rede vai ter um quarto até a meia-noite.',
+      executar:() => { caminhoEntre(8, 18, 14); }},
   escolhas:[
     {texto:'"Quem?"', vai:'cr3_quem'},
     {texto:'"Eu."', vai:'cr3_eu',
@@ -110253,18 +110268,16 @@ cr3_o_subsolo:{
 },
 
 cr3_quem:{
-  falante:'A Terceira',
-  vozes:['P','N','N','N','N'],
   texto:[
-    '"Quem?"',
-    '"O Rook acha que é ele. Ele carregou tudo por quatro anos e nunca pediu nada, e isso é o que faz gente achar que merece."',
-    d => d.flags.cm_rocket_quer_subir ? '"E você pediu o lugar dele na frente dele. Ele não esqueceu. Ele não esquece nada que dá pra anotar."' : '"E ele gosta de você. Isso complica, porque ele vai querer você do lado dele, e lado é uma coisa que acaba."',
-    '"Eu vou embora às dez. Até lá, é com vocês."',
+    d => fala(d.jogador.nome, 'Quem?'),
+    fala('A Terceira', 'O Rook acha que é ele. Ele carregou tudo por quatro anos e nunca pediu nada, e isso é o que faz gente achar que merece.'),
+    d => fala('A Terceira', d.flags.cm_rocket_quer_subir ? 'E você pediu o lugar dele na frente dele. Ele não esqueceu. Ele não esquece nada que dá pra anotar.' : 'E ele gosta de você. Isso complica, porque ele vai querer você do lado dele, e lado é uma coisa que acaba.'),
+    fala('A Terceira', 'Eu vou embora às dez. Até lá, é com vocês.'),
     /* quem subiu na rede até a sala sem janela conheceu o Corbin (js/story/rede.js) */
     d => !(d.rede && d.rede.provas && d.rede.provas.corbin && d.rede.provas.corbin.conheceu) ? ''
-      : typeof Rede !== 'undefined' && Rede.escalao(d) >= 5
-        ? '"O Corbin não vai disputar. Ele senta do seu lado desde que você subiu e nunca quis a cadeira do meio. Ele só não quer ficar sozinho de novo."'
-        : '"O Corbin não conta. Executivo de antes não quer cadeira. Quer alguém pra conversar."'
+      : fala('A Terceira', typeof Rede !== 'undefined' && Rede.escalao(d) >= 5
+        ? 'O Corbin não vai disputar. Ele senta do seu lado desde que você subiu e nunca quis a cadeira do meio. Ele só não quer ficar sozinho de novo.'
+        : 'O Corbin não conta. Executivo de antes não quer cadeira. Quer alguém pra conversar.', 'baixo')
   ],
   escolhas:[
     {texto:'"Eu."', vai:'cr3_eu',
@@ -110286,13 +110299,19 @@ cr3_eu:{
 },
 
 cr3_o_rook:{
-  falante:'o contato da Terceira',
-  vozes:['N','N','N'],
   texto:[
-    'O Rook está no fim do corredor, sentado na caçamba do caminhão de sempre, com o caderninho aberto.',
-    '"Quatro anos. Dezenove, dezesseis, quarenta e três. Eu anotei tudo. Tudo que essa rede fez tem número no meu caderno."',
-    '"Esse caderno é a rede. Quem tem o caderno atende o telefone."',
-    d => d.npcs['Rook'] && d.npcs['Rook'].opiniao >= 2 ? '"Eu queria que fosse você do meu lado. Mas tem que ser um só na cadeira."' : '"Eu não vou entregar o caderno pra quem não carregou nada."'
+    d => { Nomes.apresentar('o contato da Terceira'); return 'O Rook está no fim do corredor, sentado na caçamba do caminhão de sempre, com o caderninho aberto.'; },
+    d => {
+      const n = [];
+      if (d.flags.cm_rocket_tres) n.push('dezenove que viraram dezesseis');
+      else if (d.flags.cm_rocket_filhote) n.push('dezoito e um filhote no escuro');
+      else if (d.flags.cm_rocket_contou_certo) n.push('dezenove');
+      if (d.flags.cm_rocket_43) n.push('quarenta e três numa nota de quarenta');
+      const numeros = n.length ? n.join(', ') : 'cerca, barco, nota';
+      return fala('o contato da Terceira', `Quatro anos. ${numeros.charAt(0).toUpperCase() + numeros.slice(1)}. Eu anotei tudo. Tudo que essa rede fez tem número no meu caderno.`);
+    },
+    fala('o contato da Terceira', 'Esse caderno é a rede. Quem tem o caderno atende o telefone.'),
+    d => fala('o contato da Terceira', d.npcs['Rook'] && d.npcs['Rook'].opiniao >= 2 ? 'Eu queria que fosse você do meu lado. Mas tem que ser um só na cadeira.' : 'Eu não vou entregar o caderno pra quem não carregou nada.')
   ],
   escolhas:[
     {texto:'Lutar pelo caderno.', vai:'cr3_luta'},
@@ -110305,17 +110324,18 @@ cr3_o_rook:{
 
 cr3_convencer:{
   texto:[
-    d => (d.npcs['Rook'] && d.npcs['Rook'].opiniao >= 2) || d.flags.cm_rocket_tres
-      ? fala('o contato da Terceira', 'Dezesseis.', 'baixo')
+    d => rookConfia(d)
+      ? fala('o contato da Terceira', d.flags.cm_rocket_tres ? 'Dezesseis.' : 'A cópia da nota.', 'baixo')
       : fala('o contato da Terceira', 'Polícia. Você acha que eu carreguei quatro anos pra terminar num depoimento.', 'frio'),
-    d => (d.npcs['Rook'] && d.npcs['Rook'].opiniao >= 2) || d.flags.cm_rocket_tres
-      ? 'Ele fecha o caderno. "Você contou dezesseis na cerca e eu disse dezesseis em Celadon. A gente já mentiu junto uma vez pela coisa certa. Dá pra fazer de novo, do outro lado."'
-      : 'Ele guarda o caderno no bolso de dentro e solta a primeira Pokébola na caçamba.'
+    d => rookConfia(d) ? 'Ele fecha o caderno.' : 'Ele guarda o caderno no bolso de dentro e solta a primeira Pokébola na caçamba.',
+    d => !rookConfia(d) ? '' : fala('o contato da Terceira', d.flags.cm_rocket_tres
+      ? 'Você contou dezesseis na cerca e eu disse dezesseis em Celadon. A gente já mentiu junto uma vez pela coisa certa. Dá pra fazer de novo, do outro lado.'
+      : 'Eu te dei a nota sem ela saber, e você não me entregou. A gente já fez a coisa certa escondido uma vez. Dá pra fazer de novo, de cara.')
   ],
   escolhas:[
-    {texto:'Ir com ele até a delegacia.', vai:'cr3_final_duplo', cond:d => (d.npcs['Rook'] && d.npcs['Rook'].opiniao >= 2) || !!d.flags.cm_rocket_tres,
-     ef:{rep:{eixo:'bom', delta:4, motivo:'Entregou a rede inteira à polícia, com o caderno'}}},
-    {texto:'Lutar.', vai:'cr3_luta', cond:d => !((d.npcs['Rook'] && d.npcs['Rook'].opiniao >= 2) || d.flags.cm_rocket_tres)}
+    {texto:'Ir com ele até a delegacia.', vai:'cr3_final_duplo', cond:rookConfia,
+     ef:{flag:'cm_rocket_rook_junto', rep:{eixo:'bom', delta:4, motivo:'Entregou a rede inteira à polícia, com o caderno'}}},
+    {texto:'Lutar.', vai:'cr3_luta', cond:d => !rookConfia(d)}
   ]
 },
 
@@ -110362,7 +110382,7 @@ cr3_o_caixa:{
   texto:[
     'O caixa da rede é uma mala de lona azul no fundo do depósito, com dinheiro dobrado em maços de mil, preso com elástico.',
     'O Rook te deixa contar a sua parte. Você conta.',
-    fala('o contato da Terceira', 'Você conta bem. Sempre contou.', 'baixo')
+    d => fala('o contato da Terceira', d.flags.cm_rocket_1 ? 'Você conta bem. Sempre contou.' : 'Você conta bem. Devia ter vindo contar comigo antes.', 'baixo')
   ],
   ef:{dinheiro:12000},
   escolhas:[
@@ -110378,7 +110398,7 @@ cr3_seguir:{
     'Às dez, a Terceira sai pelo portão azul com a mala, a pé, e não olha pra trás. Na esquina, ela para e acende um cigarro e aí sim olha, uma vez.',
     'Você pega o ônibus da Liga pro Planalto às oito e quinze do dia seguinte.'
   ],
-  ef:{flag:'cm_rocket_seguiu_planalto'},
+  ef:{flag:'cm_rocket_seguiu_planalto', executar:() => { Relogio.amanhaAs(8); }},
   fim:true, resumo:'A cadeira do primeiro: uma mala, um caderno azul e um quarto até a meia-noite.'
 },
 
@@ -110388,11 +110408,16 @@ cr3_final_quarto:{
     'Do outro lado, uma voz educada, com nota fiscal na voz, pergunta se o fornecimento continua.',
     'Você diz que sim.'
   ],
+  ef:{executar:() => { caminhoAs(23); }},
   final:{id:'rocket_quarto', titulo:'O QUARTO', texto:[
     'O Giovanni foi o primeiro. Teve um segundo, que durou nove meses. A Terceira durou o que durou.',
     'Você dura mais. Você aprendeu com os três: não quer Kanto, não quer ginásio, não quer aparecer. Quer logística.',
     'Em Vermilion, no armário 14, um envelope sem timbre chega todo mês pra alguém que ainda pergunta, e você lê o relatório do que essa pessoa contou.',
-    'De vez em quando você pega o caderno azul, já cheio, e lê os números da cerca de trás. Dezenove. Você não lembra mais do choro do filhote. Isso é o que você ganhou.'
+    d => d.flags.cm_rocket_contou_certo
+      ? 'De vez em quando você pega o caderno azul, já cheio, e lê os números da cerca de trás. Dezenove. Você não lembra mais do choro do filhote. Isso é o que você ganhou.'
+      : d.flags.cm_rocket_tres
+        ? 'De vez em quando você pega o caderno azul, já cheio, e lê os números da cerca de trás. Dezesseis. Você não lembra mais por que eram dezenove. Isso é o que você ganhou.'
+        : 'De vez em quando você pega o caderno azul, já cheio, e lê os números do começo, de antes de você. Você não sente mais nada lendo. Isso é o que você ganhou.'
   ]}
 },
 
@@ -110400,13 +110425,26 @@ cr3_final_duplo:{
   texto:[
     'A delegacia de Celadon recebe o caderno às onze e cinquenta e cinco.',
     d => d.flags.ln_rocket_duplo ? 'O policial do café, o do número único, lê a primeira página em pé e senta pra ler a segunda.' : 'O plantonista lê a primeira página em pé e senta pra ler a segunda.',
-    'O Rook depõe ao seu lado. Ele lê os números do caderno em voz alta, um por um, sem olhar o caderno.'
+    d => d.flags.cm_rocket_rook_junto
+      ? 'O Rook depõe ao seu lado. Ele lê os números do caderno em voz alta, um por um, sem olhar o caderno.'
+      : 'O Rook não vem. O caderno fala por ele, na letra dele, número por número.'
   ],
+  ef:{executar:() => { caminhoAs(23); }},
   final:{id:'rocket_duplo', titulo:'ATÉ O FIM DO DUPLO', texto:[
     'O caderno azul vira três processos: um contra a rede, um contra a Comissão e um contra você, porque você também contou.',
-    'O seu é o menor. O juiz lê o que você fez na cerca de trás e no píer, e as três caixas que saíram do barco.',
+    d => {
+      const desfez = [];
+      if (d.flags.cm_rocket_tres) desfez.push('os três que ficaram pra trás na cerca');
+      if (d.flags.cm_rocket_filhote) desfez.push('o filhote que você soltou na frente de todo mundo');
+      if (d.flags.cm_rocket_tirou_tres) desfez.push('as três caixas que saíram do barco');
+      return desfez.length
+        ? `O seu é o menor. O juiz lê o que você fez, e lê o que você desfez: ${desfez.length > 1 ? desfez.slice(0, -1).join(', ') + ' e ' + desfez[desfez.length - 1] : desfez[0]}.`
+        : 'O seu é o menor. O juiz lê o que você fez, e lê que foi você quem trouxe o caderno.';
+    },
     'A rede não tem um quarto. A Comissão perde o fornecedor e a nota fiscal vira prova pro outro lado.',
-    'Uma senhora de Celadon, que um dia chegou de táxi de chinelo, manda um cartão pro endereço da delegacia, com uma foto de um Meowth dormindo numa almofada. Atrás: "TICO manda lembrança."'
+    d => d.flags.cm_rocket_tico_em_casa
+      ? 'Uma senhora de Celadon, que um dia chegou de táxi de chinelo, manda um cartão pro endereço da delegacia, com uma foto de um Meowth dormindo numa almofada. Atrás: "TICO manda lembrança."'
+      : 'No Centro de Vermilion, o armário 14 fica vazio no começo do mês, e no outro, e no outro.'
   ]}
 },
 
@@ -114224,6 +114262,14 @@ function caminhoAs(h){
   const r = Estado.dados && Estado.dados.relogio; if (!r) return;
   sincronizarHora(r);
   if (r.hora !== h) Relogio.ate(h);
+}
+/* Cena que só diz "de dia" ou "no meio da tarde" pede a janela, não a
+   hora: dentro dela o relógio fica onde está; fora, vai até h. */
+function caminhoEntre(de, ate, h){
+  const r = Estado.dados && Estado.dados.relogio; if (!r) return;
+  sincronizarHora(r);
+  const dentro = de <= ate ? (r.hora >= de && r.hora < ate) : (r.hora >= de || r.hora < ate);
+  if (!dentro) Relogio.ate(h);
 }
 
 /* "Capítulo 12" ou, no desvio, o nome do caminho e a parte dele */
