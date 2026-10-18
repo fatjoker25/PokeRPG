@@ -333,6 +333,12 @@ const Batalha = {
       return {trocaAlvo:true, texto:`${nomeVisivel(p)} é Naughty — usa o golpe do jeito errado, de propósito.`};
     if ((p.natureza === 'Hasty' || p.natureza === 'Lonely') && Dados.chance(15))
       return {outroGolpe:true, texto:`${nomeVisivel(p)} não espera o comando e ataca por conta própria.`};
+    /* a fome chega na luta antes de chegar no vínculo: distrai, e comer resolve */
+    const distrai = souAliado && typeof Fome !== 'undefined' ? Fome.distrai(p) : 0;
+    if (distrai && Dados.chance(distrai))
+      return {recusa:true, texto: Fome.estado(p) === 'faminto'
+        ? `${nomeVisivel(p)} está famint${pron(p).o} e não tem cabeça pra ordem nenhuma.`
+        : `${nomeVisivel(p)} está com fome e se distrai no meio da ordem.`};
     if (desobedienciaBase > 0 && Dados.chance(desobedienciaBase))
       return {recusa:true, texto: (af.grau === 'atrito' || af.grau === 'desencontro')
         ? `${nomeVisivel(p)} olha pra você, demora, e faz outra coisa.`

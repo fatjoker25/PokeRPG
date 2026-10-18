@@ -857,6 +857,8 @@ const Cidade = {
     Mundo.viajar('viridian');
     d.relogio.dia += 1;
     d.relogio.periodo = 'tarde';
+    /* um dia de estrada, com parada pra comer */
+    if (typeof Fome !== 'undefined') Fome.alimentarTime();
     Estado.salvar('auto');
     Exploracao.tela([
       {tipo:'info', texto: d.flags.tem_licenca

@@ -20,6 +20,7 @@ eles acham o `index.html` sozinhos e carregam os scripts na ordem de lá.
 | `chk-caminho.js` | menor caminho da entrada até o fim de cada capítulo, e quanto do capítulo dá pra alcançar de uma entrada só |
 | `sim-estrada.js` | força dos treinadores de estrada, lugar por lugar, com o motor de batalha do jogo |
 | `sim-veteranos.js` | força dos veteranos, dos convites e das três rodadas da Conferência do Planalto Indigo |
+| `sim-moral.js` | moral do time capítulo a capítulo (1 a 20), quanto a história e a fome tiram, quantas Rações o time come e a chance de desobedecer — de quem anda com Ração e de quem nunca compra |
 
 Rodar todos os de Node:
 

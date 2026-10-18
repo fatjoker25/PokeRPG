@@ -139,6 +139,10 @@ body{
 }
 .topo h1{font-size:15px;margin:0;letter-spacing:.04em;font-weight:600}
 .topo .sub{font-size:12px;color:var(--texto-fraco);margin-top:2px}
+/* o time comeu da mochila: sai uma vez, na tela seguinte */
+.topo-aviso{font-size:11.5px;color:var(--texto);margin-top:3px;opacity:.85;animation:topoAviso 6s ease forwards}
+@keyframes topoAviso{0%,80%{opacity:.85}100%{opacity:.45}}
+@media (prefers-reduced-motion: reduce){.topo-aviso{animation:none}}
 .topo-acoes{display:flex;gap:6px;flex-wrap:wrap}
 
 /* ---------- botões ---------- */
@@ -3841,6 +3845,10 @@ body{
 }
 .topo h1{font-size:15px;margin:0;letter-spacing:.04em;font-weight:600}
 .topo .sub{font-size:12px;color:var(--texto-fraco);margin-top:2px}
+/* o time comeu da mochila: sai uma vez, na tela seguinte */
+.topo-aviso{font-size:11.5px;color:var(--texto);margin-top:3px;opacity:.85;animation:topoAviso 6s ease forwards}
+@keyframes topoAviso{0%,80%{opacity:.85}100%{opacity:.45}}
+@media (prefers-reduced-motion: reduce){.topo-aviso{animation:none}}
 .topo-acoes{display:flex;gap:6px;flex-wrap:wrap}
 
 /* ---------- botões ---------- */
@@ -7543,6 +7551,10 @@ body{
 }
 .topo h1{font-size:15px;margin:0;letter-spacing:.04em;font-weight:600}
 .topo .sub{font-size:12px;color:var(--texto-fraco);margin-top:2px}
+/* o time comeu da mochila: sai uma vez, na tela seguinte */
+.topo-aviso{font-size:11.5px;color:var(--texto);margin-top:3px;opacity:.85;animation:topoAviso 6s ease forwards}
+@keyframes topoAviso{0%,80%{opacity:.85}100%{opacity:.45}}
+@media (prefers-reduced-motion: reduce){.topo-aviso{animation:none}}
 .topo-acoes{display:flex;gap:6px;flex-wrap:wrap}
 
 /* ---------- botões ---------- */
@@ -16295,21 +16307,31 @@ function distanciaEntre(de, para){
 
 /* ===== js/engine/fome.js ===== */
 /* ============================================================
-   FOME — o time come, ou o vínculo cobra
+   FOME — o time come, e a Ração é o que garante a refeição
    Cada Pokémon guarda a hora da última refeição (`p.comeu`, em horas
-   corridas do relógio do jogo). O primeiro dia é de graça; dali em
-   diante, a cada doze horas sem comer, a moral cai FOME_MORAL. Quem
-   passou de dois dias está faminto. Come no Centro, em casa, em toda
-   cura completa, com Ração na mão (um) ou alimentando o time (uma
-   Ração dá pra todos) e no acampamento, que gasta uma Ração.
-   Moral baixa é desobediência: a fome chega na luta por ali.
+   corridas do relógio do jogo). Um dia inteiro sem comer não muda nada.
+   Passou de um dia e tem Ração na mochila, o time come sozinho: uma
+   Ração por dia que passou, pra todo mundo, e o topo da tela avisa
+   quanto sobrou (`Fome.avisos`). Sem Ração, a fome chega primeiro na
+   luta: com fome (24 h) ele às vezes se distrai e não faz o que você
+   mandou; faminto (48 h) se distrai mais e começa a perder moral,
+   FOME_MORAL a cada 12 horas, até FOME_TETO por jejum. Comer acaba com
+   tudo isso na hora.
+   Come no Centro, em casa, em toda cura completa, nos dias que a
+   história conta como vividos, quando volta do PC, com Ração na mão
+   (um) ou alimentando o time (uma Ração dá pra todos) e no acampamento.
    ============================================================ */
-const FOME_LIVRE_H = 24;     // um dia sem comer não muda nada
-const FOME_PASSO_H = 12;     // depois disso, a cada meio dia…
-const FOME_MORAL = 4;        // …a moral cai isto
-const FAMINTO_H = 48;
+const FOME_LIVRE_H = 24;      // um dia sem comer não muda nada
+const FAMINTO_H = 48;         // dois dias: faminto
+const FOME_PASSO_H = 12;      // faminto, a cada meio dia…
+const FOME_MORAL = 2;         // …a moral cai isto
+const FOME_TETO = 10;         // e um jejum inteiro não tira mais que isto
+const FOME_DISTRAI = 10;      // % de se distrair na luta, com fome
+const FAMINTO_DISTRAI = 20;   // % de se distrair na luta, faminto
 
 const Fome = {
+  /* o que o topo da próxima tela conta: "o time comeu da mochila" */
+  avisos: [],
   agora(){
     const r = Estado.dados && Estado.dados.relogio;
     return r ? (r.dia || 0) * 24 + (r.hora || 0) : 0;
@@ -16324,20 +16346,50 @@ const Fome = {
     const h = this.horas(p);
     return h >= FAMINTO_H ? 'faminto' : h >= FOME_LIVRE_H ? 'com fome' : null;
   },
+  /* o pior estado do time, pro topo da tela */
+  doTime(){
+    const d = Estado.dados;
+    if (!d || !d.time) return null;
+    const e = d.time.map(p => this.estado(p));
+    return e.includes('faminto') ? 'faminto' : e.includes('com fome') ? 'com fome' : null;
+  },
+  /* % de ele se distrair na luta e não fazer o que você mandou */
+  distrai(p){
+    const e = this.estado(p);
+    return e === 'faminto' ? FAMINTO_DISTRAI : e === 'com fome' ? FOME_DISTRAI : 0;
+  },
   alimentar(p){
     if (!p) return;
     p.comeu = this.agora(); p.fomeCobrada = 0;
   },
   alimentarTime(){ (Estado.dados.time || []).forEach(p => { if (!p.morto) this.alimentar(p); }); },
-  /* chamado sempre que o relógio anda: cobra os meios-dias novos */
+  /* chamado sempre que o relógio anda */
   passar(){
     const d = Estado.dados;
     if (!d || !d.time) return [];
+    const vivos = d.time.filter(p => !p.morto);
+    if (!vivos.length) return [];
+    /* com Ração na mochila, o time come sozinho: uma por dia que passou */
+    const maisFaminto = Math.max(...vivos.map(p => this.horas(p)));
+    const tem = Estado.contaItem('Ração');
+    if (maisFaminto >= FOME_LIVRE_H && tem > 0){
+      const refeicoes = Math.min(tem, Math.floor(maisFaminto / FOME_LIVRE_H));
+      for (let i = 0; i < refeicoes; i++) Estado.usarItem('Ração');
+      this.alimentarTime();
+      vivos.forEach(p => { p.moral = Math.min(100, (p.moral || 0) + 2); });
+      const resta = Estado.contaItem('Ração');
+      this.avisos = [resta
+        ? `O time comeu da mochila. Sobr${resta > 1 ? 'am' : 'a'} ${resta} ${resta > 1 ? 'Rações' : 'Ração'}.`
+        : 'O time comeu a última Ração da mochila.'];
+      if (!resta) Estado.registrar('Acabou a Ração da mochila.');
+      return [];
+    }
+    /* sem Ração, só quem passou de dois dias perde moral, e pouco */
     const caiu = [];
-    d.time.forEach(p => {
-      if (p.morto) return;
+    const maxCobrancas = Math.floor(FOME_TETO / FOME_MORAL);
+    vivos.forEach(p => {
       const h = this.horas(p);
-      const devidos = h < FOME_LIVRE_H ? 0 : Math.floor((h - FOME_LIVRE_H) / FOME_PASSO_H) + 1;
+      const devidos = h < FAMINTO_H ? 0 : Math.min(maxCobrancas, Math.floor((h - FAMINTO_H) / FOME_PASSO_H) + 1);
       const novos = devidos - (p.fomeCobrada || 0);
       if (novos > 0){
         p.moral = Math.max(0, (p.moral || 0) - novos * FOME_MORAL);
@@ -16347,6 +16399,8 @@ const Fome = {
     });
     return caiu;
   },
+  /* o aviso sai uma vez, na próxima tela */
+  tirarAvisos(){ const a = this.avisos; this.avisos = []; return a; },
   /* Alimentar o time: uma Ração serve pra todo mundo */
   daRacaoPraTodos(){
     if (Estado.contaItem('Ração') <= 0) return false;
@@ -17301,7 +17355,7 @@ const ITENS_INFO = {
                   ficha:'+16 HP no treinador · uso único',
                   desc:'Cheio. Você vai esvaziar num lugar em que não tem onde encher.'},
   'Ração':       {tipo:'moral', valor:10, cat:'Vínculo',
-                  ficha:'+10 de moral e mata a fome de um Pokémon · uma só alimenta o time inteiro (+2 de moral) · moral baixa causa desobediência',
+                  ficha:'+10 de moral e mata a fome de um Pokémon · uma só alimenta o time inteiro (+2 de moral) · na mochila, o time come sozinho uma por dia',
                   desc:'Comida boa de verdade. Muda o humor de quem come.'},
 
   /* ─────────── campo ─────────── */
@@ -18076,6 +18130,8 @@ const Estado = {
     if (i < 0) return {ok:false, motivo:'Esse não está no PC.'};
     const p = d.pc.splice(i, 1)[0];
     d.time.push(p);
+    /* quem fica guardado é cuidado: sai do PC alimentado */
+    if (typeof Fome !== 'undefined') Fome.alimentar(p);
     this.registrar(`${nomeExib(p)} voltou do PC para o time.`);
     return {ok:true, pokemon:p};
   },
@@ -19200,6 +19256,12 @@ const Batalha = {
       return {trocaAlvo:true, texto:`${nomeVisivel(p)} é Naughty — usa o golpe do jeito errado, de propósito.`};
     if ((p.natureza === 'Hasty' || p.natureza === 'Lonely') && Dados.chance(15))
       return {outroGolpe:true, texto:`${nomeVisivel(p)} não espera o comando e ataca por conta própria.`};
+    /* a fome chega na luta antes de chegar no vínculo: distrai, e comer resolve */
+    const distrai = souAliado && typeof Fome !== 'undefined' ? Fome.distrai(p) : 0;
+    if (distrai && Dados.chance(distrai))
+      return {recusa:true, texto: Fome.estado(p) === 'faminto'
+        ? `${nomeVisivel(p)} está famint${pron(p).o} e não tem cabeça pra ordem nenhuma.`
+        : `${nomeVisivel(p)} está com fome e se distrai no meio da ordem.`};
     if (desobedienciaBase > 0 && Dados.chance(desobedienciaBase))
       return {recusa:true, texto: (af.grau === 'atrito' || af.grau === 'desencontro')
         ? `${nomeVisivel(p)} olha pra você, demora, e faz outra coisa.`
@@ -20659,6 +20721,18 @@ const NOME_VIA = {
   pesquisador:'alguém que faz perguntas demais'
 };
 
+/* A história pesa na moral, mas não derruba o time sozinha. O que uma
+   cena tira é no máximo MORAL_CENA_TETO, e para em MORAL_PISO_CENA:
+   abaixo disso, só o que acontece com o próprio Pokémon (fome, desistir
+   de luta, o par que vai embora ou morre). O que a cena dá entra inteiro. */
+const MORAL_CENA_TETO = 10;
+const MORAL_PISO_CENA = 30;
+function moralDaCena(atual, delta){
+  if (delta >= 0) return Math.min(100, atual + delta);
+  if (atual <= MORAL_PISO_CENA) return atual;
+  return Math.max(MORAL_PISO_CENA, atual + Math.max(-MORAL_CENA_TETO, delta));
+}
+
 const Historia = {
   capAtual: null,
   cenaAtual: null,
@@ -20865,12 +20939,17 @@ const Historia = {
     }
     if (ef.moral){
       const vivos = Estado.dados.time.filter(p => !p.morto);
-      vivos.forEach(p => { p.moral = Math.max(0, Math.min(100, p.moral + ef.moral)); });
+      /* só fala de quem mudou: quem já estava no piso não te olha diferente de novo */
+      const mudaram = vivos.filter(p => {
+        const antes = p.moral;
+        p.moral = moralDaCena(p.moral, ef.moral);
+        return p.moral !== antes;
+      });
       /* sem ninguém no cinto não tem "time" pra confiar em nada; com um
          só, é ele, pelo nome */
-      if (vivos.length === 1)
-        avisos.push({tipo:'info', texto: ef.moral > 0 ? `${nomeExib(vivos[0])} confia mais em você.` : `${nomeExib(vivos[0])} te olha diferente agora.`});
-      else if (vivos.length)
+      if (mudaram.length === 1)
+        avisos.push({tipo:'info', texto: ef.moral > 0 ? `${nomeExib(mudaram[0])} confia mais em você.` : `${nomeExib(mudaram[0])} te olha diferente agora.`});
+      else if (mudaram.length)
         avisos.push({tipo:'info', texto: ef.moral > 0 ? 'O time confia mais em você.' : 'O time te olha diferente agora.'});
     }
     /* npc pode vir de função: o vizinho da rua muda com a cidade natal */
@@ -20949,6 +21028,8 @@ const Historia = {
     /* o capítulo durou o que durou: a última manhã é uma manhã só, e
        os outros levam um ou dois dias entre uma cena e outra */
     if (d.capitulo > 1) Estado.dados.relogio.dia += Dados.entre(1,2);
+    /* dias que a história conta como vividos: o time passou comendo */
+    if (typeof Fome !== 'undefined') Fome.alimentarTime();
     Estado.salvar('auto');
     return avisos;
   },
@@ -29229,6 +29310,8 @@ const Cidade = {
     Mundo.viajar('viridian');
     d.relogio.dia += 1;
     d.relogio.periodo = 'tarde';
+    /* um dia de estrada, com parada pra comer */
+    if (typeof Fome !== 'undefined') Fome.alimentarTime();
     Estado.salvar('auto');
     Exploracao.tela([
       {tipo:'info', texto: d.flags.tem_licenca
@@ -107954,7 +108037,8 @@ const UI = {
         <h1>${this.esc(d.jogador.nome)} — ${this.esc(rep)}</h1>
         <div class="sub">${d.local && LOCAIS[d.local] ? this.esc(LOCAIS[d.local].nome) : 'Kanto'} ·
           <span class="relogio">${this.esc(Relogio.texto())}</span> ·
-          HP ${d.jogador.hp}/${Estado.hpMaxJogador()} · Vontade ${Estado.vontadeJogador()}/${Estado.vontadeMaxJogador()} · ${fmtDin(d.jogador.dinheiro)} ₽</div>
+          HP ${d.jogador.hp}/${Estado.hpMaxJogador()} · Vontade ${Estado.vontadeJogador()}/${Estado.vontadeMaxJogador()} · ${fmtDin(d.jogador.dinheiro)} ₽${this.racaoNoTopo()}</div>
+        ${typeof Fome !== 'undefined' ? Fome.tirarAvisos().map(a => `<div class="topo-aviso">${this.esc(a)}</div>`).join('') : ''}
       </div>
       <div class="topo-acoes">
         <!-- na luta, time e mochila são da barra de ações: aqui em cima ficam trancados -->
@@ -107966,6 +108050,14 @@ const UI = {
         <button class="btn mini" onclick="UI.modalAjustes()">Ajustes</button>
       </div>
     </div>`;
+  },
+
+  /* quanta Ração tem na mochila e, se o time está com fome, o quanto */
+  racaoNoTopo(){
+    const n = Estado.contaItem('Ração');
+    const fome = typeof Fome !== 'undefined' ? Fome.doTime() : null;
+    return ` · ${n} ${n === 1 ? 'Ração' : 'Rações'}${fome
+      ? ` <span class="time-fome${fome === 'faminto' ? ' grave' : ''}">time ${fome}</span>` : ''}`;
   },
 
   /* ========================================================
@@ -112077,8 +112169,11 @@ const UI = {
       <div class="linha"><span class="k">Afinidade</span><span class="v">soma ou desconta dessa conta</span></div>
       <div class="linha"><span class="k">Par no time</span><span class="v">a chance que sobrar cai pela metade</span></div>
       <div class="linha"><span class="k">Moral do inicial</span><span class="v">chega com 50 de 100 · quem já morava na sua casa chega com 100 · o resto vocês constroem juntos</span></div>
-      <div class="linha"><span class="k">Fome</span><span class="v">o primeiro dia sem comer não muda nada · depois, −4 de moral a cada 12 horas do relógio do jogo · 24 h: com fome · 48 h: faminto</span></div>
-      <div class="linha"><span class="k">Comer</span><span class="v">Centro, casa e toda cura completa alimentam · Ração em toda loja de Kanto, 200 ₽ de base (a cidade mexe no preço) · Ração na mão: um Pokémon, +10 de moral · Alimentar o time (no Seu time): uma Ração pra todos, +2 de moral cada · acampar e treinar gastam uma Ração cada · dias que a história conta como vividos numa cidade ("na sexta seguinte", "no dia seguinte") o time passa comendo</span></div>
+      <div class="linha"><span class="k">Fome</span><span class="v">um dia sem comer não muda nada · passou de um dia com Ração na mochila, o time come sozinho: uma Ração por dia que passou, +2 de moral em cada, e o topo da tela mostra quantas sobram · sem Ração: 24 h, com fome · 48 h, faminto</span></div>
+      <div class="linha"><span class="k">Fome na luta</span><span class="v">com fome, 10% de chance de se distrair e não fazer o que você mandou · faminto, 20% · comer resolve na hora</span></div>
+      <div class="linha"><span class="k">Fome e moral</span><span class="v">só quem está faminto perde moral: −2 a cada 12 horas, no máximo −10 num jejum inteiro</span></div>
+      <div class="linha"><span class="k">Comer</span><span class="v">Centro, casa e toda cura completa alimentam · quem sai do PC sai alimentado · Ração em toda loja de Kanto, 200 ₽ de base (a cidade mexe no preço) · Ração na mão: um Pokémon, +10 de moral · Alimentar o time (no Seu time): uma Ração pra todos, +2 de moral cada · acampar e treinar gastam uma Ração cada · dias que a história conta como vividos ("na sexta seguinte", "no dia seguinte", os dias entre um capítulo e outro) o time passa comendo</span></div>
+      <div class="linha"><span class="k">A história e a moral</span><span class="v">o que uma cena tira do time é no máximo 10 de moral, e cena nenhuma derruba alguém abaixo de 30 · abaixo disso, só o que acontece com o próprio Pokémon: fome, Forfeit, o par solto ou morto · o que a cena dá entra inteiro</span></div>
       <p class="sussurro">Moral alta zera a conta sozinha. Além disso, cada natureza tem a sua própria teimosia em combate — tem quem recuse golpe especial, quem hesite em chegar perto, quem ataque antes da ordem e quem use o golpe errado de propósito. O jogo diz na hora qual natureza fez o quê; a lista inteira você monta jogando.</p>
       <h3>Condições</h3>
       <div class="linha"><span class="k">PAR · paralisado</span><span class="v">−2 de Destreza (precisão e iniciativa)</span></div>

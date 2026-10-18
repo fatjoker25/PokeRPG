@@ -165,7 +165,7 @@ const ITENS_INFO = {
                   ficha:'+16 HP no treinador · uso único',
                   desc:'Cheio. Você vai esvaziar num lugar em que não tem onde encher.'},
   'Ração':       {tipo:'moral', valor:10, cat:'Vínculo',
-                  ficha:'+10 de moral e mata a fome de um Pokémon · uma só alimenta o time inteiro (+2 de moral) · moral baixa causa desobediência',
+                  ficha:'+10 de moral e mata a fome de um Pokémon · uma só alimenta o time inteiro (+2 de moral) · na mochila, o time come sozinho uma por dia',
                   desc:'Comida boa de verdade. Muda o humor de quem come.'},
 
   /* ─────────── campo ─────────── */
@@ -940,6 +940,8 @@ const Estado = {
     if (i < 0) return {ok:false, motivo:'Esse não está no PC.'};
     const p = d.pc.splice(i, 1)[0];
     d.time.push(p);
+    /* quem fica guardado é cuidado: sai do PC alimentado */
+    if (typeof Fome !== 'undefined') Fome.alimentar(p);
     this.registrar(`${nomeExib(p)} voltou do PC para o time.`);
     return {ok:true, pokemon:p};
   },

@@ -280,7 +280,8 @@ const UI = {
         <h1>${this.esc(d.jogador.nome)} — ${this.esc(rep)}</h1>
         <div class="sub">${d.local && LOCAIS[d.local] ? this.esc(LOCAIS[d.local].nome) : 'Kanto'} ·
           <span class="relogio">${this.esc(Relogio.texto())}</span> ·
-          HP ${d.jogador.hp}/${Estado.hpMaxJogador()} · Vontade ${Estado.vontadeJogador()}/${Estado.vontadeMaxJogador()} · ${fmtDin(d.jogador.dinheiro)} ₽</div>
+          HP ${d.jogador.hp}/${Estado.hpMaxJogador()} · Vontade ${Estado.vontadeJogador()}/${Estado.vontadeMaxJogador()} · ${fmtDin(d.jogador.dinheiro)} ₽${this.racaoNoTopo()}</div>
+        ${typeof Fome !== 'undefined' ? Fome.tirarAvisos().map(a => `<div class="topo-aviso">${this.esc(a)}</div>`).join('') : ''}
       </div>
       <div class="topo-acoes">
         <!-- na luta, time e mochila são da barra de ações: aqui em cima ficam trancados -->
@@ -292,6 +293,14 @@ const UI = {
         <button class="btn mini" onclick="UI.modalAjustes()">Ajustes</button>
       </div>
     </div>`;
+  },
+
+  /* quanta Ração tem na mochila e, se o time está com fome, o quanto */
+  racaoNoTopo(){
+    const n = Estado.contaItem('Ração');
+    const fome = typeof Fome !== 'undefined' ? Fome.doTime() : null;
+    return ` · ${n} ${n === 1 ? 'Ração' : 'Rações'}${fome
+      ? ` <span class="time-fome${fome === 'faminto' ? ' grave' : ''}">time ${fome}</span>` : ''}`;
   },
 
   /* ========================================================
@@ -4403,8 +4412,11 @@ const UI = {
       <div class="linha"><span class="k">Afinidade</span><span class="v">soma ou desconta dessa conta</span></div>
       <div class="linha"><span class="k">Par no time</span><span class="v">a chance que sobrar cai pela metade</span></div>
       <div class="linha"><span class="k">Moral do inicial</span><span class="v">chega com 50 de 100 · quem já morava na sua casa chega com 100 · o resto vocês constroem juntos</span></div>
-      <div class="linha"><span class="k">Fome</span><span class="v">o primeiro dia sem comer não muda nada · depois, −4 de moral a cada 12 horas do relógio do jogo · 24 h: com fome · 48 h: faminto</span></div>
-      <div class="linha"><span class="k">Comer</span><span class="v">Centro, casa e toda cura completa alimentam · Ração em toda loja de Kanto, 200 ₽ de base (a cidade mexe no preço) · Ração na mão: um Pokémon, +10 de moral · Alimentar o time (no Seu time): uma Ração pra todos, +2 de moral cada · acampar e treinar gastam uma Ração cada · dias que a história conta como vividos numa cidade ("na sexta seguinte", "no dia seguinte") o time passa comendo</span></div>
+      <div class="linha"><span class="k">Fome</span><span class="v">um dia sem comer não muda nada · passou de um dia com Ração na mochila, o time come sozinho: uma Ração por dia que passou, +2 de moral em cada, e o topo da tela mostra quantas sobram · sem Ração: 24 h, com fome · 48 h, faminto</span></div>
+      <div class="linha"><span class="k">Fome na luta</span><span class="v">com fome, 10% de chance de se distrair e não fazer o que você mandou · faminto, 20% · comer resolve na hora</span></div>
+      <div class="linha"><span class="k">Fome e moral</span><span class="v">só quem está faminto perde moral: −2 a cada 12 horas, no máximo −10 num jejum inteiro</span></div>
+      <div class="linha"><span class="k">Comer</span><span class="v">Centro, casa e toda cura completa alimentam · quem sai do PC sai alimentado · Ração em toda loja de Kanto, 200 ₽ de base (a cidade mexe no preço) · Ração na mão: um Pokémon, +10 de moral · Alimentar o time (no Seu time): uma Ração pra todos, +2 de moral cada · acampar e treinar gastam uma Ração cada · dias que a história conta como vividos ("na sexta seguinte", "no dia seguinte", os dias entre um capítulo e outro) o time passa comendo</span></div>
+      <div class="linha"><span class="k">A história e a moral</span><span class="v">o que uma cena tira do time é no máximo 10 de moral, e cena nenhuma derruba alguém abaixo de 30 · abaixo disso, só o que acontece com o próprio Pokémon: fome, Forfeit, o par solto ou morto · o que a cena dá entra inteiro</span></div>
       <p class="sussurro">Moral alta zera a conta sozinha. Além disso, cada natureza tem a sua própria teimosia em combate — tem quem recuse golpe especial, quem hesite em chegar perto, quem ataque antes da ordem e quem use o golpe errado de propósito. O jogo diz na hora qual natureza fez o quê; a lista inteira você monta jogando.</p>
       <h3>Condições</h3>
       <div class="linha"><span class="k">PAR · paralisado</span><span class="v">−2 de Destreza (precisão e iniciativa)</span></div>

@@ -9,6 +9,18 @@ const NOME_VIA = {
   pesquisador:'alguém que faz perguntas demais'
 };
 
+/* A história pesa na moral, mas não derruba o time sozinha. O que uma
+   cena tira é no máximo MORAL_CENA_TETO, e para em MORAL_PISO_CENA:
+   abaixo disso, só o que acontece com o próprio Pokémon (fome, desistir
+   de luta, o par que vai embora ou morre). O que a cena dá entra inteiro. */
+const MORAL_CENA_TETO = 10;
+const MORAL_PISO_CENA = 30;
+function moralDaCena(atual, delta){
+  if (delta >= 0) return Math.min(100, atual + delta);
+  if (atual <= MORAL_PISO_CENA) return atual;
+  return Math.max(MORAL_PISO_CENA, atual + Math.max(-MORAL_CENA_TETO, delta));
+}
+
 const Historia = {
   capAtual: null,
   cenaAtual: null,
@@ -215,12 +227,17 @@ const Historia = {
     }
     if (ef.moral){
       const vivos = Estado.dados.time.filter(p => !p.morto);
-      vivos.forEach(p => { p.moral = Math.max(0, Math.min(100, p.moral + ef.moral)); });
+      /* só fala de quem mudou: quem já estava no piso não te olha diferente de novo */
+      const mudaram = vivos.filter(p => {
+        const antes = p.moral;
+        p.moral = moralDaCena(p.moral, ef.moral);
+        return p.moral !== antes;
+      });
       /* sem ninguém no cinto não tem "time" pra confiar em nada; com um
          só, é ele, pelo nome */
-      if (vivos.length === 1)
-        avisos.push({tipo:'info', texto: ef.moral > 0 ? `${nomeExib(vivos[0])} confia mais em você.` : `${nomeExib(vivos[0])} te olha diferente agora.`});
-      else if (vivos.length)
+      if (mudaram.length === 1)
+        avisos.push({tipo:'info', texto: ef.moral > 0 ? `${nomeExib(mudaram[0])} confia mais em você.` : `${nomeExib(mudaram[0])} te olha diferente agora.`});
+      else if (mudaram.length)
         avisos.push({tipo:'info', texto: ef.moral > 0 ? 'O time confia mais em você.' : 'O time te olha diferente agora.'});
     }
     /* npc pode vir de função: o vizinho da rua muda com a cidade natal */
@@ -299,6 +316,8 @@ const Historia = {
     /* o capítulo durou o que durou: a última manhã é uma manhã só, e
        os outros levam um ou dois dias entre uma cena e outra */
     if (d.capitulo > 1) Estado.dados.relogio.dia += Dados.entre(1,2);
+    /* dias que a história conta como vividos: o time passou comendo */
+    if (typeof Fome !== 'undefined') Fome.alimentarTime();
     Estado.salvar('auto');
     return avisos;
   },

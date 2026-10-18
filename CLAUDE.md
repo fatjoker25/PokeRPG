@@ -605,6 +605,29 @@ Treino e acampamento gastam Ração; o treino ainda pede
 `TREINO_ESPERA_MIN` minutos reais entre um e outro, porque acampar pula a
 noite do jogo e o treino era por dia do jogo.
 
+**A fome e a moral pesam, mas não atrapalham** — foi pedido assim, depois
+que a medição (relógio de 1 minuto real por hora, −4 de moral a cada 12 h
+de fome e a história tirando até 45 num capítulo) deixou o time perto de
+moral 0 do capítulo 8 ao 12, com uma ordem em cada dez ignorada. Hoje:
+- com Ração na mochila o time **come sozinho** quando o dia passa (uma
+  por dia, `Fome.passar`), e o topo da tela mostra quantas sobram
+  (`racaoNoTopo`) e o aviso da refeição (`Fome.avisos`);
+- sem Ração a fome chega **primeiro na luta** (`Fome.distrai`: 10% com
+  fome, 20% faminto, em `Batalha.vontade`) e só o faminto perde moral,
+  `FOME_MORAL` a cada 12 h até `FOME_TETO` por jejum;
+- pulo de dia que a história conta como vivido **alimenta**: o
+  `fecharCapitulo`, o ônibus da Liga, `Relogio.viver`. Pulo novo de
+  `relogio.dia` escrito à mão chama `Fome.alimentarTime()` junto, senão o
+  primeiro tique do relógio cobra os dias de uma vez;
+- a moral que **a cena tira** passa por `moralDaCena` (em `motor.js`): no
+  máximo `MORAL_CENA_TETO` (10) por cena e nunca abaixo de
+  `MORAL_PISO_CENA` (30). O que a cena dá entra inteiro. Abaixo de 30, só
+  o que acontece com o próprio Pokémon (fome, Forfeit, par solto ou morto).
+`node ferramentas/sim-moral.js` anda os capítulos 1 a 20 com o motor e
+mede a moral por capítulo, de quem anda com Ração e de quem nunca compra:
+hoje a média fica entre 50 e 85, e a desobediência pela moral abaixo de
+2%. Mexeu em fome, em moral de cena ou na conta de desobedecer, roda ali.
+
 ## Trocas
 **Cada pessoa troca uma vez só** (`TROCAS`, em `mercado.js`;
 `Trocas.repete` é sempre falso). Quem tem `alt` (duas versões além da
