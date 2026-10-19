@@ -36,7 +36,8 @@ cc1_a_barraca:{
     fala('a pesquisadora de bota', 'Você tá contando também? Pra quem?'),
     fala('a pesquisadora de bota', 'Eu conto pra quem paga. Esse ano quem paga é a reserva. Ano passado também. E o retrasado.', 'baixo')
   ],
-  ef:{npc:{nome:'Dra. Quill', opiniao:0, memoria:'Encontrou você contando Pokémon na mesma rota que ela, pra outra pessoa.'}},
+  ef:{npc:{nome:'Dra. Quill', opiniao:0, memoria:'Encontrou você contando Pokémon na mesma rota que ela, pra outra pessoa.'},
+      executar:() => { caminhoAs(5); }},
   escolhas:[
     {texto:'"Pro laboratório de Pallet. Pro Professor Oak."', vai:'cc1_o_nome_do_oak'},
     {texto:'"Pra mim mesm{o|a}."', vai:'cc1_o_metodo'},
@@ -76,7 +77,7 @@ cc1_o_numero_dela:{
 cc1_o_metodo:{
   texto:[
     'O transecto que o Professor pediu é chato do jeito que ciência boa é chata: um quilômetro em linha reta, no mesmo horário, contando tudo dos dois lados até dez metros.',
-    'Você escolhe as linhas jogando a moeda no mapa, como ele ensinou, pra ninguém escolher por você.',
+    'Você escolhe as linhas jogando uma moeda no mapa, como ele pediu, pra ninguém escolher por você.',
     'A primeira linha cai no meio de um capinzal seco, longe do rio.'
   ],
   escolhas:[
@@ -98,6 +99,7 @@ cc1_o_tauros:{
     'Ele está deitado no capim no meio da sua linha, e você entra no território dele de cabeça baixa, contando Venonat.',
     'Ele levanta.'
   ],
+  ef:{flag:'cm_ciencia_tauros'},
   batalha:{dex:128, nivel:d => nivelDoCaminho(d, -3), tipo:'selvagem', fuga:true,
            vitoria:'cc1_contou_mal', derrota:'cc1_contou_mal', gameover:'gameover'}
 },
@@ -111,7 +113,8 @@ cc1_contou_bem:{
   ],
   ef:{flag:'cm_ciencia_sete', itens:{'Caderno do censo (sete por km)':1},
       rep:{eixo:'bom', delta:2, motivo:'Contou nove linhas de transecto fora da cerca, com hora e lugar'},
-      registrar:'O seu censo fora da cerca deu sete Pokémon por quilômetro. A planilha da reserva diz quarenta.'},
+      registrar:'O seu censo fora da cerca deu sete Pokémon por quilômetro. A planilha da reserva diz quarenta.',
+      executar:() => { Relogio.viver(48); caminhoAs(18); }},
   escolhas:[
     {texto:'Mostrar pra Dra. Quill antes de mandar.', vai:'cc1_mostrou'},
     {texto:'Mandar direto pro Professor.', vai:'cc1_mandou'}
@@ -121,11 +124,12 @@ cc1_contou_bem:{
 cc1_contou_mal:{
   texto:[
     'Você termina as linhas, mas com buraco: uma hora perdida aqui, uma linha cortada ali, um trecho contado de longe.',
-    'Mesmo assim, o número é baixo. Muito mais baixo que o da planilha.',
+    'Mesmo assim, o número é baixo: uns oito por quilômetro, com os buracos anotados. Muito mais baixo que o da planilha.',
     'O Professor vai perguntar dos buracos. Ele sempre pergunta dos buracos.'
   ],
   ef:{flag:'cm_ciencia_buraco', itens:{'Caderno do censo (com buracos)':1},
-      rep:{eixo:'bom', delta:1, motivo:'Contou as rotas fora da cerca, mesmo com buracos'}},
+      rep:{eixo:'bom', delta:1, motivo:'Contou as rotas fora da cerca, mesmo com buracos'},
+      executar:() => { Relogio.viver(48); caminhoAs(18); }},
   escolhas:[
     {texto:'Mostrar pra Dra. Quill antes de mandar.', vai:'cc1_mostrou'},
     {texto:'Mandar direto pro Professor, com os buracos anotados.', vai:'cc1_mandou',
@@ -135,11 +139,11 @@ cc1_contou_mal:{
 
 cc1_a_metade:{
   texto:[
-    'Meio quilômetro, multiplicado por dois. É mais rápido, e o número que sai é bonito e redondo.',
+    'Meio quilômetro, multiplicado por dois. É mais rápido, e o número que sai é bonito e redondo: dez.',
     'Também é o mesmo erro da planilha, do outro lado: você escolheu onde parar.',
     'Na mensagem pro Professor, você escreve "transecto completo". O teclado não reclama.'
   ],
-  ef:{itens:{'Caderno do censo (estimado)':1}},
+  ef:{itens:{'Caderno do censo (estimado)':1}, executar:() => { Relogio.viver(24); caminhoAs(18); }},
   escolhas:[
     {texto:'Mandar pro Professor.', vai:'cc1_mandou'}
   ]
@@ -151,7 +155,7 @@ cc1_mostrou:{
   texto:[
     'A Dra. Quill lê o seu caderno sentada na porta da barraca, sem pressa, linha por linha.',
     '"Isso aqui me tira o contrato."',
-    '"E é melhor do que o que eu entrego há quatro anos." Ela fecha o caderno. "Eu vou assinar junto, se você deixar. Com o meu nome em cima do seu, eles não conseguem dizer que foi uma criança brincando de contar."'
+    '"E é melhor do que o que eu entrego há três anos." Ela fecha o caderno. "Eu vou assinar junto, se você deixar. Com o meu nome em cima do seu, eles não conseguem dizer que foi uma criança brincando de contar."'
   ],
   ef:{npc:{nome:'Dra. Quill', opiniao:3, memoria:'Você mostrou o seu censo antes de mandar, e ela pediu pra assinar junto.'}},
   escolhas:[
@@ -166,7 +170,9 @@ cc1_mandou:{
   texto:[
     d => d.flags.cm_ciencia_estimou
       ? fala('Professor Oak', 'Número bonito. Redondo. Você andou a linha inteira?')
-      : fala('Professor Oak', 'Sete.', 'baixo'),
+      : d.flags.cm_ciencia_buraco
+        ? fala('Professor Oak', 'Oito, com buraco. Eu fico com oito com buraco antes de quarenta sem.', 'baixo')
+        : fala('Professor Oak', 'Sete.', 'baixo'),
     d => d.flags.cm_ciencia_estimou
       ? 'Ele espera. O PokéNav mostra "digitando" e para, e mostra de novo.'
       : fala('Professor Oak', 'Faz trinta anos que eu desconfio dessa planilha e nunca tive o caderno que você tem agora.'),
@@ -187,9 +193,16 @@ cc1_fim:{
     d => d.flags.cm_ciencia_confessou ? fala('Professor Oak', 'Obrigado por dizer. Agora volta e anda a outra metade. Eu espero.') : '',
     d => d.flags.cm_ciencia_publicar ? fala('Professor Oak', 'Vai pro boletim do laboratório. Ninguém lê o boletim do laboratório. Por enquanto.', 'riso') : '',
     'Na Rota 14, de manhã, o bando de Doduo atravessa a estrada de novo, no mesmo horário, e você anota sem querer.',
-    'Sete por quilômetro. A planilha diz quarenta. A diferença entre os dois números é o que sai de madrugada pelo portão de serviço.'
+    d => d.flags.cm_ciencia_sete
+      ? 'Sete por quilômetro. A planilha diz quarenta. A diferença entre os dois números é o que sai de madrugada pelo portão de serviço.'
+      : d.flags.cm_ciencia_buraco
+        ? 'Oito por quilômetro, com buraco. A planilha diz quarenta. A diferença entre os dois números é o que sai de madrugada pelo portão de serviço.'
+        : 'Dez por quilômetro, redondo. A planilha diz quarenta. A diferença é o que sai de madrugada pelo portão de serviço, e o seu número não é bom o bastante pra medir.'
   ],
-  fim:true, resumo:'A contagem: nove linhas de um quilômetro, sete Pokémon por quilômetro e uma planilha que diz quarenta.'
+  ef:{executar:() => { caminhoAs(7); }},
+  fim:true, resumo:d => d.flags.cm_ciencia_sete
+    ? 'A contagem: nove linhas de um quilômetro, sete Pokémon por quilômetro e uma planilha que diz quarenta.'
+    : 'A contagem: nove linhas de um quilômetro fora da cerca e uma planilha que diz quarenta.'
 }
 
 }
@@ -199,7 +212,7 @@ cc1_fim:{
 {
 num:19.03, titulo:'A Amostra 4', local:'Pallet — o laboratório', ambiente:'campo', nivelArea:56,
 tom:'muito sombrio',
-ancora:{local:'pallet', chamada:'No laboratório de Pallet a luz do fundo está acesa às duas da manhã, e o Professor não costuma ficar até tarde.'},
+ancora:{local:'pallet', chamada:'No laboratório de Pallet a luz do fundo tem ficado acesa até as duas da manhã, e o Professor não costuma ficar até tarde.'},
 entradas:['cc2_o_frasco'],
 inicio: d => 'cc2_o_frasco',
 cenas:{
@@ -211,7 +224,8 @@ cc2_o_frasco:{
     fala('Professor Oak', 'Chegou pelo correio, sem remetente. Alguém de dentro da Estação 4 mandou. Alguém com medo e com bom treinamento, porque está bem conservada.', 'baixo'),
     fala('Professor Oak', 'Eu sou velho pra fazer a análise sozinho a noite inteira. Você não é.')
   ],
-  ef:{flag:'cm_ciencia_2', registrar:'Uma amostra de unidade de viveiro da Estação 4 chegou ao laboratório de Pallet, sem remetente.'},
+  ef:{flag:'cm_ciencia_2', registrar:'Uma amostra de unidade de viveiro da Estação 4 chegou ao laboratório de Pallet, sem remetente.',
+      executar:() => { caminhoAs(2); }},
   escolhas:[
     {texto:'Fazer a análise com ele, a noite inteira.', vai:'cc2_a_analise'},
     {texto:'"Quem mandou?"', vai:'cc2_quem_mandou'}
@@ -245,7 +259,8 @@ cc2_o_resultado:{
   ],
   ef:{flag:'cm_ciencia_dois_anos', itens:{'Caderno de bancada da amostra 4':1},
       rep:{eixo:'bom', delta:2, motivo:'Analisou a amostra 4 e achou o prazo das unidades de viveiro'},
-      registrar:'A amostra 4 mostra que unidade de viveiro não passa dos dois anos: acaba, e a Comissão compra a próxima.'},
+      registrar:'A amostra 4 mostra que unidade de viveiro não passa dos dois anos: acaba, e a Comissão compra a próxima.',
+      executar:() => { caminhoAs(5); }},
   escolhas:[
     {texto:'Decidir o que fazer com isso.', vai:'cc2_o_que_fazer'}
   ]
@@ -258,7 +273,8 @@ cc2_o_resultado_parcial:{
     fala('Professor Oak', 'Pouco é muito, quando é verdade. A gente escreve o pouco.', 'baixo')
   ],
   ef:{flag:'cm_ciencia_pouco', itens:{'Caderno de bancada da amostra 4':1},
-      rep:{eixo:'bom', delta:1, motivo:'Fez a análise da amostra 4 e escreveu só o que dava pra afirmar'}},
+      rep:{eixo:'bom', delta:1, motivo:'Fez a análise da amostra 4 e escreveu só o que dava pra afirmar'},
+      executar:() => { caminhoAs(5); }},
   escolhas:[
     {texto:'Decidir o que fazer com isso.', vai:'cc2_o_que_fazer'}
   ]
@@ -271,6 +287,7 @@ cc2_o_que_fazer:{
     fala('a mulher do envelope', 'O envelope tem uma proposta de financiamento por três anos. O material vem com a gente, claro.'),
     fala('Professor Oak', 'Eu não sei de onde ela ouviu. Eu sei que foi rápido demais.', 'baixo')
   ],
+  ef:{executar:() => { caminhoEntre(7, 12, 9); }},
   escolhas:[
     {texto:'Publicar tudo no boletim do laboratório, hoje, com o seu nome e o dele.', vai:'cc2_publicou',
      ef:{flag:'cm_ciencia_publicou', rep:{eixo:'bom', delta:3, motivo:'Publicou a análise da amostra 4 com o próprio nome'}}},
@@ -287,6 +304,7 @@ cc2_publicou:{
     'Às quatro da tarde, a mulher do envelope volta, sem envelope, com dois homens de colete preto.',
     fala('a mulher do envelope', 'O material é propriedade de pesquisa licenciada. Viemos buscar.', 'frio')
   ],
+  ef:{executar:() => { caminhoAs(16); }},
   batalha:{comissao:'seguranca', nivel:d => nivelDoCaminho(d, 0), tipo:'treinador', treinador:'Recolhedor da Comissão', fuga:false,
            vitoria:'cc2_ficou', derrota:'cc2_levaram', gameover:'gameover'}
 },
@@ -332,7 +350,7 @@ cc2_escondeu:{
     'A amostra vai pra lá, com o caderno de bancada por cima.',
     'A mulher do envelope volta à tarde e encontra o laboratório aberto, o Professor dando aula de capim pra três crianças, e nada na bancada.'
   ],
-  ef:{flag:'cm_ciencia_gaveta'},
+  ef:{flag:'cm_ciencia_gaveta', executar:() => { caminhoEntre(13, 18, 15); }},
   escolhas:[
     {texto:'Fechar o laboratório e dormir.', vai:'cc2_fim'}
   ]
@@ -340,11 +358,15 @@ cc2_escondeu:{
 
 cc2_fim:{
   texto:[
-    'Dois anos. Uma unidade de viveiro acaba aos dois anos, e no papel isso se chama vida útil.',
-    d => d.flags.cm_ciencia_vendeu ? 'O dinheiro da Silph está no seu bolso, e ele pesa menos do que devia.' : 'O caderno de bancada tem três páginas, com a letra de dois dedos do Professor e a sua por cima.',
+    d => d.flags.cm_ciencia_dois_anos
+      ? 'Dois anos. Uma unidade de viveiro acaba aos dois anos, e no papel isso se chama vida útil.'
+      : 'Jovem demais pro tamanho, rápida demais por dentro. No papel, isso deve ter um nome bonito.',
+    d => d.flags.cm_ciencia_vendeu ? 'O dinheiro da Silph está no seu bolso, e ele pesa menos do que devia.' : 'O caderno de bancada tem três páginas, com a letra miúda do Professor e a sua por cima.',
     'Em Pallet, de madrugada, o laboratório apaga a luz do fundo.'
   ],
-  fim:true, resumo:'A amostra 4: um frasco sem remetente, uma noite de bancada e dois anos de vida útil.'
+  fim:true, resumo:d => d.flags.cm_ciencia_dois_anos
+    ? 'A amostra 4: um frasco sem remetente, uma noite de bancada e dois anos de vida útil.'
+    : 'A amostra 4: um frasco sem remetente, uma noite de bancada e uma conclusão pequena, mas verdadeira.'
 }
 
 }
@@ -364,24 +386,39 @@ cc3_a_banca:{
     'O auditório da Liga em Saffron tem duzentas cadeiras e, hoje, quarenta pessoas. Na mesa da banca, três: um professor de Celadon, uma médica de Pokémon de Cinnabar, e o Dr. Hollis, da Estação 4.',
     fala('Professor Oak', 'O Hollis na banca. Isso não é coincidência, é convite.', 'baixo'),
     fala('Professor Oak', 'Hoje é a terceira edição do livro. A primeira eu escrevi sozinho. A segunda eu errei. Esta é sua também.'),
-    d => d.flags.cm_ciencia_sete || d.flags.cm_ciencia_dois_anos ? 'No seu fichário: sete por quilômetro, dois anos de vida útil. Duas coisas que ninguém na mesa quer ouvir.' : 'No seu fichário, o que você conseguiu juntar. É menos do que você queria.'
+    d => d.flags.cm_ciencia_sete && d.flags.cm_ciencia_dois_anos
+      ? 'No seu fichário: sete por quilômetro, dois anos de vida útil. Duas coisas que ninguém na mesa quer ouvir.'
+      : d.flags.cm_ciencia_sete
+        ? 'No seu fichário: sete por quilômetro, contados linha por linha. Uma coisa que ninguém na mesa quer ouvir.'
+        : d.flags.cm_ciencia_dois_anos
+          ? 'No seu fichário: dois anos de vida útil, com o caderno de bancada. Uma coisa que ninguém na mesa quer ouvir.'
+          : 'No seu fichário, o que você conseguiu juntar. É menos do que você queria.'
   ],
-  ef:{flag:'cm_ciencia_3', registrar:'Defendeu dados contra o manejo e o viveiro numa banca da Liga, com o Dr. Hollis na mesa.'},
+  ef:{flag:'cm_ciencia_3', registrar:'Defendeu dados contra o manejo e o viveiro numa banca da Liga, com o Dr. Hollis na mesa.',
+      executar:() => { caminhoEntre(9, 17, 14); }},
   escolhas:[
     {texto:'Apresentar os números, sem adjetivo.', vai:'cc3_os_numeros',
      ef:{rep:{eixo:'bom', delta:1, motivo:'Apresentou os números na banca da Liga sem adjetivo'}}},
-    {texto:'Começar contando do bando de Doduo da Rota 14, do Tauros no capim, da gota na lâmina.', vai:'cc3_a_historia',
+    {texto:d => {
+       const c = [];
+       if (d.flags.cm_ciencia_1) c.push('do bando de Doduo da Rota 14');
+       if (d.flags.cm_ciencia_tauros) c.push('do Tauros no capim');
+       if (d.flags.cm_ciencia_2) c.push('da gota na lâmina');
+       return c.length ? `Começar contando ${c.join(', ')}.` : 'Começar contando o que você viu andando, antes de qualquer número.';
+     }, vai:'cc3_a_historia',
      ef:{rep:{eixo:'bom', delta:1, motivo:'Contou na banca o que os números não contam'}}}
   ]
 },
 
 cc3_os_numeros:{
-  falante:'Dr. Hollis',
-  vozes:['N','N','N'],
   texto:[
     'Você fala doze minutos. Ninguém tosse.',
-    '"Metodologia interessante." O Dr. Hollis folheia o seu fichário. "Amostra de um único observador, sem calibração externa, por três dias."',
-    '"E uma análise laboratorial de uma amostra de origem desconhecida, sem cadeia de custódia. Com todo o respeito: é um caderno de excursão."'
+    fala('Dr. Hollis', 'Metodologia interessante.'),
+    'O Dr. Hollis folheia o seu fichário.',
+    d => fala('Dr. Hollis', d.flags.cm_ciencia_1 ? 'Amostra de um único observador, sem calibração externa, por três dias.' : 'Observação de um único observador, sem calibração externa.'),
+    d => fala('Dr. Hollis', d.flags.cm_ciencia_2
+      ? 'E uma análise laboratorial de uma amostra de origem desconhecida, sem cadeia de custódia. Com todo o respeito: é um caderno de excursão.'
+      : 'Com todo o respeito: é um caderno de excursão.')
   ],
   escolhas:[
     {texto:'Responder ponto por ponto.', vai:'cc3_a_resposta'}
@@ -389,11 +426,11 @@ cc3_os_numeros:{
 },
 
 cc3_a_historia:{
-  falante:'Dr. Hollis',
-  vozes:['N','N'],
   texto:[
     'Você fala do que viu. As quarenta pessoas da plateia param de olhar o relógio.',
-    '"Comovente." O Dr. Hollis não sorri. "Ciência não é comoção. Me mostra o número e eu respeito. Me conta história e eu só lamento."'
+    fala('Dr. Hollis', 'Comovente.'),
+    'O Dr. Hollis não sorri.',
+    fala('Dr. Hollis', 'Ciência não é comoção. Me mostra o número e eu respeito. Me conta história e eu só lamento.', 'frio')
   ],
   escolhas:[
     {texto:'Mostrar o número.', vai:'cc3_a_resposta'}
@@ -408,7 +445,17 @@ cc3_a_resposta:{
 
 cc3_venceu_a_banca:{
   texto:[
-    d => d.flags.cm_ciencia_quill_assinou ? 'Da plateia, uma mulher de bota levanta a mão e diz o próprio nome e o contrato que perdeu. A calibração externa estava sentada na fila oito.' : 'Você responde a calibração com as nove linhas sorteadas na moeda. Responde a custódia com o caderno de bancada, assinado e datado hora por hora.',
+    d => {
+      if (d.flags.cm_ciencia_quill_assinou) return 'Da plateia, uma mulher de bota levanta a mão e diz o próprio nome e o contrato que perdeu. A calibração externa estava sentada na fila oito.';
+      const calibracao = d.flags.cm_ciencia_mentiu
+        ? 'Você responde a calibração com as nove linhas, e só você sabe que metade de cada uma foi estimada.'
+        : d.flags.cm_ciencia_1
+          ? 'Você responde a calibração com as nove linhas sorteadas na moeda.'
+          : 'Você responde a calibração com o método inteiro, escrito, pra quem quiser repetir.';
+      const custodia = (d.flags.cm_ciencia_dois_anos || d.flags.cm_ciencia_pouco)
+        ? ' Responde a custódia com o caderno de bancada, assinado e datado hora por hora.' : '';
+      return calibracao + custodia;
+    },
     'O professor de Celadon pede a palavra e diz que gostaria de ver o protocolo replicado. A médica de Pokémon de Cinnabar diz que ela replica.',
     'O Dr. Hollis fecha o fichário com cuidado, como quem pousa uma prancheta.'
   ],
@@ -454,9 +501,9 @@ cc3_o_hollis:{
 cc3_seguir:{
   texto:[
     fala('Professor Oak', 'Vai. Livro bom é livro que espera o autor voltar com mais coisa.', 'riso'),
-    'O ônibus da Liga pro Planalto sai às oito e quinze. O fichário vai no seu colo a viagem inteira.'
+    'O ônibus da Liga pro Planalto sai às oito e quinze do dia seguinte. O fichário vai no seu colo a viagem inteira.'
   ],
-  ef:{flag:'cm_ciencia_seguiu_planalto'},
+  ef:{flag:'cm_ciencia_seguiu_planalto', executar:() => { Relogio.amanhaAs(8); }},
   fim:true, resumo:'A terceira edição: uma banca, um bebedouro e um homem que estava certo num mundo pior que ele.'
 },
 
@@ -469,7 +516,13 @@ cc3_final_tabela:{
     'Ninguém lê livro de ciência. Mas todo técnico de reserva de Kanto tem um, na estante, e abre quando o chefe pede número.',
     'Em quatro anos, a planilha de manejo da Zona Safári muda o método. Ninguém anuncia. Só muda.',
     'Em Pallet, toda segunda, o Professor te manda uma mensagem longa, sem parágrafo, com um dado que não fecha.',
-    'Você responde com sete voltas de um ninho de Pidgey, ou com nove linhas de um quilômetro. É o que vocês sabem fazer. É o bastante.'
+    d => {
+      const r = [];
+      if (d.flags.ln_ciencia_nota_boa) r.push('sete voltas de um ninho de Pidgey');
+      if (d.flags.cm_ciencia_1) r.push('nove linhas de um quilômetro');
+      if (!r.length) r.push('um caderno de campo, hora por hora');
+      return `Você responde com ${r.join(', ou com ')}. É o que vocês sabem fazer. É o bastante.`;
+    }
   ]}
 },
 
@@ -483,8 +536,8 @@ cc3_final_lacrado:{
   final:{id:'ciencia_lacrado', titulo:'O LABORATÓRIO LACRADO', texto:[
     'Você perde. A multa leva quatro anos pra pagar. O seu nome não pode mais assinar laudo nenhum em Kanto.',
     'O laboratório de Pallet continua aberto, e lá dentro o Professor ensina capim pra criança de sete anos, toda terça.',
-    'Na parede do fundo, ao lado da gaveta de mapas de fundo falso, tem uma foto sua emoldurada, sem legenda.',
-    'Os técnicos que passam pelo laboratório perguntam quem é. Ele diz: "Alguém que contou certo."'
+    d => `Na parede do fundo, ao lado da gaveta de mapas${d.flags.cm_ciencia_gaveta ? ' de fundo falso' : ''}, tem uma foto sua emoldurada, sem legenda.`,
+    'Os técnicos que passam pelo laboratório perguntam quem é. Ele diz que é alguém que contou certo, e não diz mais nada.'
   ]}
 },
 
@@ -494,7 +547,9 @@ cc3_final_campo:{
     'Na rodoviária, compra uma passagem pra Fuchsia. Da rodoviária de Fuchsia, vai a pé até a Rota 13.'
   ],
   final:{id:'ciencia_campo', titulo:'CAMPO', texto:[
-    'A barraca de lona verde da Dra. Quill tem lugar pra dois, e ela não pergunta nada quando você chega.',
+    d => d.npcs['Dra. Quill']
+      ? 'A barraca de lona verde da Dra. Quill tem lugar pra dois, e ela não pergunta nada quando você chega.'
+      : 'No acostamento da Rota 13 tem uma barraca de lona verde com lugar pra dois, e a mulher de bota que mora nela não pergunta nada quando você chega.',
     'Vocês contam. Todo ano, toda linha, jogando a moeda no mapa. Não publicam em lugar nenhum: mandam pra quem pedir, e quase ninguém pede.',
     'Um dia, um técnico novo da reserva aparece na barraca com uma planilha e uma dúvida.',
     'Vocês mostram o caderno. Ele copia à mão, a noite inteira, e vai embora de madrugada sem agradecer, que é o certo: ele não tinha tempo pra isso.'

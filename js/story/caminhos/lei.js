@@ -345,7 +345,7 @@ cl1_fim:{
     fala('o sargento de Viridian', 'Vai dormir. A estrada ainda vai estar aqui.', 'baixo')
   ],
   ef:{executar:() => { caminhoAs(6); }},
-  fim:true, resumo:'A blitz da Rota 18: um baú de manejo sanitário, um delegado de pijama e quatro linhas de observação.'
+  fim:true, resumo:d => `A blitz da Rota 18: um baú de manejo sanitário, ${d.flags.cm_lei_conheceu_crane || d.flags.cm_lei_apreendeu ? 'um delegado de pijama' : 'um sargento de lanterna'} e quatro linhas de observação.`
 }
 
 }
@@ -554,7 +554,9 @@ cl2_fim:{
     d => d.flags.cm_lei_arquivou ? 'No dia seguinte aparece um depósito na sua conta com a descrição "diária de diligência". Você não fez diligência nenhuma que pagasse diária.' : 'Na saída, a escada range no quarto degrau, e em mais nenhum.'
   ],
   ef:{executar:d => { if (d.flags.cm_lei_mandado) caminhoAs(17); else if (d.flags.cm_lei_vazou) caminhoAs(23); }},
-  fim:true, resumo:'O inquérito da Estação 4: uma denúncia sem sobrenome, uma carta que chegou antes e um galpão de dois crachás.'
+  fim:true, resumo:d => d.flags.cm_lei_leu_tudo
+    ? 'O inquérito da Estação 4: uma denúncia sem sobrenome, uma carta que chegou antes e um galpão de dois crachás.'
+    : 'O inquérito da Estação 4: uma denúncia sem sobrenome, um segurança de colete preto e um galpão de dois crachás.'
 }
 
 }

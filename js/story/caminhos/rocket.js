@@ -270,7 +270,7 @@ cr1_fim:{
     },
     'A cerca de trás continua com o corte, disfarçado com arame. Duas ou três vezes por mês.'
   ],
-  fim:true, resumo:'A cerca de trás do setor 7: um corte de dois metros, um caderninho e dezenove números.'
+  fim:true, resumo:d => `A cerca de trás do setor 7: um corte de dois metros, um caderninho e ${d.flags.cm_rocket_tres ? 'dezesseis números que eram dezenove' : d.flags.cm_rocket_filhote ? 'dezoito números e um filhote no escuro' : 'dezenove números'}.`
 }
 
 }
@@ -457,7 +457,9 @@ cr2_fim:{
     d => d.flags.cm_rocket_43 ? 'Rota 21, quarenta e três numa nota de quarenta. A conta não fecha, e alguém conta com isso.' : 'Rota 21, quarenta na nota. Ninguém conferiu o barco, e alguém conta com isso.'
   ],
   ef:{executar:() => { caminhoAs(18); }},
-  fim:true, resumo:'A nota fiscal: quarenta unidades no papel, quarenta e três no barco e uma coleira bordada TICO.'
+  fim:true, resumo:d => d.flags.cm_rocket_43
+    ? 'A nota fiscal: quarenta unidades no papel, quarenta e três no barco e uma coleira bordada TICO.'
+    : 'A nota fiscal: quarenta unidades no papel, um rodapé em letra miúda e um barco que você não viu sair.'
 }
 
 }
