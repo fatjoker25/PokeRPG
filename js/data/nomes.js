@@ -39,11 +39,17 @@ const RECUSAM_O_NOME = {
     fala('a figura de capuz', 'Nome é pra quem precisa ser achado.'),
     fala('a figura de capuz', 'Responde a pergunta. O resto vem depois.', 'baixo')
   ],
-  'a voz da lavanderia': () => [
-    'Ela vira o crachá mais um pouco pro lado do peito, como quem fecha uma porta.',
-    fala('a voz da lavanderia', 'O meu nome está trinta vezes nesse envelope, de caneta azul.', 'baixo'),
-    fala('a voz da lavanderia', 'Uma vez a mais e ele vira de todo mundo. Deixa ele ser só meu mais um pouco.', 'baixo')
-  ],
+  /* de frente, na lavanderia, ela tem o crachá virado e o envelope no
+     colo; no telefone (a ligação do 19.04, a volta do 25.04), nenhum dos dois */
+  'a voz da lavanderia': () => {
+    const d = Estado.dados || {};
+    const deFrente = ['ci2_a_lavanderia', 'ci2_por_que_agora', 'ci2_o_envelope'].includes(d.cena);
+    return [
+      deFrente ? 'Ela vira o crachá mais um pouco pro lado do peito, como quem fecha uma porta.' : 'Ela demora pra responder, como quem fecha uma porta.',
+      fala('a voz da lavanderia', deFrente ? 'O meu nome está trinta vezes nesse envelope, de caneta azul.' : 'O meu nome está trinta vezes num papel que eu assinei, de caneta azul.', 'baixo'),
+      fala('a voz da lavanderia', 'Uma vez a mais e ele vira de todo mundo. Deixa ele ser só meu mais um pouco.', 'baixo')
+    ];
+  },
   'o fumante': () => [
     'Ele leva a mão até o crachá e para no meio do caminho.',
     fala('o fumante', 'O sigilo é sobre espécimes, procedimentos, instalações e pessoas.'),

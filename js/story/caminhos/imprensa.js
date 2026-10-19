@@ -5,6 +5,17 @@
    carrega três câmeras e não confia em nenhuma.
    ============================================================ */
 
+/* O Jornal de Fuchsia sai na segunda e na quinta (o capítulo 12 conta
+   assim): a matéria sai na próxima edição, e o relógio vai até ela. O
+   dia fica na flag, pra cena dizer qual foi. */
+function proximaEdicao(flag){
+  const hoje = Calendario.hoje().semanaIdx, falta = s => ((s - hoje + 7) % 7) || 7;
+  const s = falta(0) < falta(3) ? 0 : 3;
+  Estado.marcar(flag, s);
+  Relogio.ateODia(s, 8, true);
+}
+const diaDaEdicao = (d, flag) => d.flags[flag] === 0 ? 'segunda' : 'quinta';
+
 /* ── I · A CERCA (depois do 12) ────────────────────────────── */
 CAPITULOS.push(
 {
@@ -22,7 +33,8 @@ ci1_a_pauta:{
     fala('a editora do Jornal', 'Eu quero a cerca. Foto, número, gente. E eu quero que você ouça a reserva antes de escrever uma linha. Antes.'),
     'Na mesa do lado, um rapaz magro limpa a lente de uma câmera com a ponta da camiseta, sem levantar os olhos.'
   ],
-  ef:{flag:'cm_imprensa_1', registrar:'A Hazel Moss te deu a pauta da cerca da Zona Safári.'},
+  ef:{flag:'cm_imprensa_1', registrar:'A Hazel Moss te deu a pauta da cerca da Zona Safári.',
+      executar:() => { caminhoAs(18); }},
   escolhas:[
     {texto:'Falar com o rapaz da câmera.', vai:'ci1_o_fotografo'},
     {texto:'Ir direto à assessoria da reserva.', vai:'ci1_a_assessoria'}
@@ -54,7 +66,8 @@ ci1_a_assessoria:{
     fala('a assessora da reserva', 'O portão de serviço? Ah, é só pra caminhão de ração. Não tem nada pra fotografar ali.')
   ],
   ef:{flag:'cm_imprensa_ouviu_reserva', itens:{'Nota oficial da reserva':1},
-      registrar:'A assessoria da reserva disse que o portão de serviço é só pra caminhão de ração.'},
+      registrar:'A assessoria da reserva disse que o portão de serviço é só pra caminhão de ração.',
+      executar:() => { caminhoEntre(8, 18, 9); }},
   escolhas:[
     {texto:'Aceitar a visita guiada e anotar o que não mostram.', vai:'ci1_a_visita'},
     {texto:'Ir ao portão de serviço de madrugada.', vai:'ci1_o_portao'}
@@ -69,7 +82,8 @@ ci1_a_visita:{
     '**"Ração não sai às três da manhã."**'
   ],
   ef:{flag:'cm_imprensa_bilhete_do_guia', itens:{'Bilhete do guia':1},
-      registrar:'Um guia da reserva deixou cair perto de você um bilhete: "Ração não sai às três da manhã."'},
+      registrar:'Um guia da reserva deixou cair perto de você um bilhete: "Ração não sai às três da manhã."',
+      executar:() => { caminhoAs(10); }},
   escolhas:[
     {texto:'Ir ao portão de serviço de madrugada.', vai:'ci1_o_portao'}
   ]
@@ -82,6 +96,7 @@ ci1_o_portao:{
     'A lanterna para em cima de vocês.',
     fala('Vigia do portão', 'Filme. Agora. Ou eu tiro.')
   ],
+  ef:{executar:() => { caminhoAs(3); }},
   escolhas:[
     {texto:'Entregar a câmera de cima, que estava vazia.', vai:'ci1_entregou_a_vazia',
      ef:{flag:'cm_imprensa_enganou', rep:{eixo:'bom', delta:1, motivo:'Salvou as fotos do portão entregando a câmera vazia'}}},
@@ -141,7 +156,13 @@ ci1_a_materia:{
     fala('a editora do Jornal', 'Lê em voz alta pra mim. Se não aguentar ler em voz alta, não aguenta ser publicado.')
   ],
   escolhas:[
-    {texto:'Publicar com a foto, com a nota da reserva e com o bilhete do guia sem o nome dele.', vai:'ci1_fim', cond:d => !!d.flags.cm_imprensa_ouviu_reserva,
+    {texto:d => {
+       const c = [];
+       if (d.flags.cm_imprensa_foto_doze) c.push('com a foto');
+       c.push('com a nota da reserva');
+       if (d.flags.cm_imprensa_bilhete_do_guia) c.push('com o bilhete do guia sem o nome dele');
+       return `Publicar ${c.length > 1 ? c.slice(0, -1).join(', ') + ' e ' + c[c.length - 1] : c[0]}.`;
+     }, vai:'ci1_fim', cond:d => !!d.flags.cm_imprensa_ouviu_reserva,
      ef:{flag:'cm_imprensa_publicou_a_cerca', rep:{eixo:'bom', delta:2, motivo:'Publicou a matéria da cerca ouvindo os dois lados'}}},
     {texto:'Publicar com o que você tem.', vai:'ci1_fim', cond:d => !d.flags.cm_imprensa_ouviu_reserva,
      ef:{flag:'cm_imprensa_publicou_a_cerca', rep:{eixo:'bom', delta:1, motivo:'Publicou a matéria da cerca'}}},
@@ -155,11 +176,12 @@ ci1_fim:{
   texto:[
     d => d.flags.cm_imprensa_vendeu_a_doze
       ? 'O jornal de Celadon publica a foto doze na capa, com uma manchete em que a palavra MASSACRE aparece duas vezes. Ninguém em Fuchsia compra.'
-      : 'O Jornal de Fuchsia sai na quinta, com a cerca na página três. Vende trezentos exemplares a mais que o normal. A Hazel finge que não contou.',
+      : `O Jornal de Fuchsia sai na ${diaDaEdicao(d, 'ci1_edicao_dia')}, com a cerca na página três. Vende trezentos exemplares a mais que o normal. A Hazel finge que não contou.`,
     d => d.flags.cm_imprensa_publicou_a_cerca ? fala('a editora do Jornal', 'Seco. Bom. Agora ninguém pode dizer que não sabia.') : '',
     'Na saída sul de Fuchsia, às três da manhã, o portão de serviço abre como sempre. Agora tem alguém olhando.'
   ],
-  fim:true, resumo:'A cerca: trinta e um quilômetros, uma nota oficial e a foto doze.'
+  ef:{executar:d => { if (!d.flags.cm_imprensa_vendeu_a_doze) proximaEdicao('ci1_edicao_dia'); }},
+  fim:true, resumo:d => `A cerca: trinta e um quilômetros${d.flags.cm_imprensa_ouviu_reserva ? ', uma nota oficial' : ''} e ${d.flags.cm_imprensa_foto_doze ? 'a foto doze' : 'um caderno que o vigia não pensou em pedir'}.`
 }
 
 }
@@ -177,11 +199,16 @@ cenas:{
 ci2_a_ligacao:{
   texto:[
     'O telefone da redação toca às onze da noite e quem atende é a Hazel, que te passa o fone sem dizer quem é.',
-    fala('a voz da lavanderia', 'Eu trabalho na Estação 4. Eu vi a matéria. Eu tenho o que vocês não têm.', 'baixo'),
+    d => fala('a voz da lavanderia', d.flags.cm_imprensa_publicou_a_cerca
+      ? 'Eu trabalho na Estação 4. Eu vi a matéria da cerca. Eu tenho o que vocês não têm.'
+      : d.flags.cm_imprensa_vendeu_a_doze
+        ? 'Eu trabalho na Estação 4. Eu vi a foto do portão, no jornal de Celadon, e sei de onde ela saiu. Eu tenho o que vocês não têm.'
+        : 'Eu trabalho na Estação 4. Eu leio o jornal de vocês. Eu tenho o que vocês não têm.', 'baixo'),
     fala('a voz da lavanderia', 'Amanhã, sete da noite, lavanderia da rua Doze, em Saffron. Máquina seis. Venha sozinh{o|a}.', 'baixo'),
     fala('a editora do Jornal', 'Fonte que pede pra você ir sozinh{o|a} ou tem muito medo ou tem muito plano. Leva o Bastian, de longe.')
   ],
-  ef:{flag:'cm_imprensa_2', registrar:'Alguém da Estação 4 marcou encontro numa lavanderia de Saffron.'},
+  ef:{flag:'cm_imprensa_2', registrar:'Alguém da Estação 4 marcou encontro numa lavanderia de Saffron.',
+      executar:() => { caminhoAs(23); }},
   escolhas:[
     {texto:'Ir sozinh{o|a}, como a fonte pediu.', vai:'ci2_a_lavanderia',
      ef:{flag:'cm_imprensa_foi_so', rep:{eixo:'bom', delta:1, motivo:'Respeitou o pedido da fonte de ir sozinh{o|a}'}}},
@@ -197,6 +224,7 @@ ci2_a_lavanderia:{
     fala('a voz da lavanderia', 'Eu sou do berçário. Eu não vou te dar o meu nome, e você não vai perguntar.', 'baixo'),
     'Ela tira de dentro da sacola de roupa, entre duas camisetas, um envelope pardo.'
   ],
+  ef:{executar:() => { Relogio.amanhaAs(19); }},
   escolhas:[
     {texto:'Abrir o envelope ali.', vai:'ci2_o_envelope'},
     {texto:'Perguntar por que agora.', vai:'ci2_por_que_agora'}
@@ -218,7 +246,7 @@ ci2_por_que_agora:{
 ci2_o_envelope:{
   texto:[
     'Dentro, cópia de trinta folhas de destinação, cada uma com o número da baia, o lote, a palavra "inviável" e uma assinatura.',
-    'Metade das assinaturas é dela. O nome dela está ali, trinta vezes, de caneta azul.',
+    'Todas as assinaturas são dela. O nome dela está ali, trinta vezes, de caneta azul.',
     fala('a voz da lavanderia', 'Se você publicar isso, publica o meu nome junto. Não tem como apagar sem apagar a prova.', 'baixo'),
     'Na televisão sem som, passa propaganda de ração. Pela vitrine da lavanderia, um carro cinza estaciona do outro lado da rua e não desliga o motor.'
   ],
@@ -280,16 +308,22 @@ ci2_levou:{
 
 ci2_a_hazel:{
   texto:[
-    fala('a editora do Jornal', 'Trinta folhas com o nome dela. Se a gente publica, a gente prova. E queima ela.'),
-    fala('a editora do Jornal', 'Se a gente tira o nome, a Comissão diz que é montagem. Se a gente espera, a gente espera o quê?'),
+    d => d.flags.cm_imprensa_perdeu_o_envelope
+      ? fala('a editora do Jornal', 'Onze números de baia, de memória. Sem o papel, a Comissão diz que você inventou. E o nome dela continua lá, trinta vezes, na mão deles.')
+      : fala('a editora do Jornal', 'Trinta folhas com o nome dela. Se a gente publica, a gente prova. E queima ela.'),
+    d => d.flags.cm_imprensa_perdeu_o_envelope
+      ? fala('a editora do Jornal', 'Se a gente publica de memória, a gente arrisca. Se a gente espera, a gente espera o quê?')
+      : fala('a editora do Jornal', 'Se a gente tira o nome, a Comissão diz que é montagem. Se a gente espera, a gente espera o quê?'),
     'Ela tira os óculos da cabeça, pela primeira vez, e põe na mesa.',
     fala('a editora do Jornal', 'A matéria é sua. A decisão também. Eu assino embaixo do que você decidir.', 'baixo')
   ],
   escolhas:[
-    {texto:'Tarjar o nome dela em todas as folhas e publicar as folhas inteiras.', vai:'ci2_fim',
+    {texto:'Tarjar o nome dela em todas as folhas e publicar as folhas inteiras.', vai:'ci2_fim', cond:d => !d.flags.cm_imprensa_perdeu_o_envelope,
      ef:{flag:'cm_imprensa_tarjou', rep:{eixo:'bom', delta:2, motivo:'Protegeu a fonte tarjando o nome dela nas trinta folhas'}}},
-    {texto:'Publicar com o nome, porque prova é prova.', vai:'ci2_fim',
+    {texto:'Publicar com o nome, porque prova é prova.', vai:'ci2_fim', cond:d => !d.flags.cm_imprensa_perdeu_o_envelope,
      ef:{flag:'cm_imprensa_publicou_o_nome', rep:{eixo:'ruim', delta:2, motivo:'Publicou o nome da fonte'}}},
+    {texto:'Publicar os onze números de memória, assinando como testemunha.', vai:'ci2_fim', cond:d => !!d.flags.cm_imprensa_perdeu_o_envelope,
+     ef:{flag:'cm_imprensa_de_memoria', rep:{eixo:'bom', delta:1, motivo:'Publicou de memória o que leu nas folhas da fonte, com o próprio nome'}}},
     {texto:'Segurar a matéria até achar uma segunda fonte.', vai:'ci2_fim',
      ef:{flag:'cm_imprensa_segurou', rep:{eixo:'bom', delta:1, motivo:'Segurou a matéria até ter uma segunda fonte'}}}
   ]
@@ -298,12 +332,15 @@ ci2_a_hazel:{
 ci2_fim:{
   texto:[
     d => {
-      if (d.flags.cm_imprensa_tarjou) return 'A matéria sai na sexta com trinta folhas e trinta tarjas pretas, uma em cada assinatura. A Comissão diz em nota que é montagem. Ninguém acredita na nota.';
-      if (d.flags.cm_imprensa_publicou_o_nome) return 'A matéria sai na sexta com trinta folhas e trinta assinaturas. Na segunda, a mulher do berçário é demitida por justa causa. Na terça, ela muda de cidade com a filha.';
+      const dia = diaDaEdicao(d, 'ci2_edicao_dia');
+      if (d.flags.cm_imprensa_tarjou) return `A matéria sai na ${dia} com trinta folhas e trinta tarjas pretas, uma em cada assinatura. A Comissão diz em nota que é montagem. Ninguém acredita na nota.`;
+      if (d.flags.cm_imprensa_publicou_o_nome) return `A matéria sai na ${dia} com trinta folhas e trinta assinaturas. No dia seguinte, a mulher do berçário é demitida por justa causa. No outro, ela muda de cidade com a filha.`;
+      if (d.flags.cm_imprensa_de_memoria) return `A matéria sai na ${dia} com onze números de baia e a sua assinatura embaixo. A Comissão diz em nota que é invenção. Metade de Fuchsia acredita na nota.`;
       return 'A matéria fica na gaveta da Hazel, numa pasta com o nome da rua Doze.';
     },
     'Em Saffron, a máquina seis da lavanderia da rua Doze volta a funcionar. O papel de QUEBRADA fica colado mais uma semana.'
   ],
+  ef:{executar:d => { if (!d.flags.cm_imprensa_segurou) proximaEdicao('ci2_edicao_dia'); }},
   fim:true, resumo:'A fonte: uma lavanderia, trinta folhas de destinação e um nome escrito trinta vezes de caneta azul.'
 }
 
@@ -314,7 +351,7 @@ ci2_fim:{
 {
 num:25.04, titulo:'Edição Extra', local:'Fuchsia — a gráfica do Jornal', ambiente:'cidade', nivelArea:58,
 tom:'muito sombrio',
-ancora:{local:'fuchsia', chamada:'A gráfica do Jornal de Fuchsia está com a luz acesa às quatro da tarde, e ela só roda de madrugada.'},
+ancora:{local:'fuchsia', chamada:'A gráfica do Jornal de Fuchsia está com a luz acesa de dia, e ela só roda de madrugada.'},
 entradas:['ci3_a_grafica'],
 inicio: d => 'ci3_a_grafica',
 cenas:{
@@ -322,14 +359,21 @@ cenas:{
 ci3_a_grafica:{
   texto:[
     'A gráfica do Jornal fica no fundo da redação, atrás de uma porta de correr, e tem uma rotativa de quarenta anos que a Hazel chama pelo nome de um tio.',
-    fala('a editora do Jornal', 'Depois da audiência de segunda, eu tenho tudo: a cerca, as folhas, a planilha, a sala 704. Edição extra, oito páginas, só isso.'),
+    d => {
+      const t = [];
+      if (d.flags.cm_imprensa_1) t.push('a cerca');
+      if (d.flags.cm_imprensa_tem_as_trinta && !d.flags.cm_imprensa_perdeu_o_envelope) t.push('as folhas');
+      t.push('a planilha', 'a sala 704');
+      return fala('a editora do Jornal', `Depois da audiência de segunda, eu tenho tudo: ${t.join(', ')}. Edição extra, oito páginas, só isso.`);
+    },
     fala('a editora do Jornal', 'E tenho isto.', 'baixo'),
     'Ela mostra uma notificação de cartório: se a edição extra circular, a Comissão processa o Jornal por difamação, num valor que é três vezes o que o Jornal vale.'
   ],
-  ef:{flag:'cm_imprensa_3', registrar:'A Hazel montou a edição extra sobre a Comissão. Se circular, o Jornal é processado.'},
+  ef:{flag:'cm_imprensa_3', registrar:'A Hazel montou a edição extra sobre a Comissão. Se circular, o Jornal é processado.',
+      executar:() => { caminhoEntre(12, 18, 16); }},
   escolhas:[
     {texto:'Revisar as oito páginas, linha por linha, pra não ter erro nenhum.', vai:'ci3_a_revisao'},
-    {texto:'Procurar a fonte do berçário pra ver se ela aguenta.', vai:'ci3_a_fonte',
+    {texto:'Procurar a fonte do berçário pra ver se ela aguenta.', vai:'ci3_a_fonte', cond:d => !!d.flags.cm_imprensa_2,
      ef:{rep:{eixo:'bom', delta:1, motivo:'Foi perguntar à fonte antes de rodar a edição extra'}}}
   ]
 },
@@ -356,7 +400,8 @@ ci3_limpa:{
     'Às onze da noite, as oito páginas estão limpas. Nenhum número sem documento, nenhum nome sem prova.',
     fala('a editora do Jornal', 'Limpa. Eu nunca vi uma edição limpa em vinte anos.', 'baixo')
   ],
-  ef:{flag:'cm_imprensa_limpa', rep:{eixo:'bom', delta:2, motivo:'Revisou a edição extra até não ter erro nenhum'}},
+  ef:{flag:'cm_imprensa_limpa', rep:{eixo:'bom', delta:2, motivo:'Revisou a edição extra até não ter erro nenhum'},
+      executar:() => { caminhoAs(23); }},
   escolhas:[
     {texto:'Rodar.', vai:'ci3_a_noite'}
   ]
@@ -368,7 +413,7 @@ ci3_com_erro:{
     'Você não sabe se tem outro.',
     fala('a editora do Jornal', 'Sempre tem outro. O que importa é se é o que eles vão achar.', 'baixo')
   ],
-  ef:{flag:'cm_imprensa_com_erro'},
+  ef:{flag:'cm_imprensa_com_erro', executar:() => { caminhoAs(23); }},
   escolhas:[
     {texto:'Rodar.', vai:'ci3_a_noite'}
   ]
@@ -381,6 +426,7 @@ ci3_a_noite:{
     fala('o oficial de justiça', 'Liminar. Suspende a circulação.', 'baixo'),
     'Atrás dele, os dois homens de colete já estão com as Pokébolas na mão, olhando pra pilha de jornal.'
   ],
+  ef:{executar:() => { caminhoAs(2); }},
   escolhas:[
     {texto:'Ler a liminar inteira antes de qualquer coisa.', vai:'ci3_a_liminar',
      ef:{rep:{eixo:'bom', delta:1, motivo:'Leu a liminar inteira antes de reagir'}}},
@@ -420,11 +466,13 @@ ci3_recolheram:{
 
 ci3_a_banca:{
   texto:[
+    d => d.flags.cm_imprensa_leu_a_liminar || d.flags.cm_imprensa_metade ? '' : 'A liminar vale pra Fuchsia, e só pra Fuchsia. O Bastian lê isso por cima do seu ombro e vai buscar a caminhonete.',
     'De manhã, numa banca de jornal na esquina da estação de Celadon, a edição extra está pendurada no varal da frente, com prendedor de roupa.',
     'Às oito, já não tem mais nenhuma.',
     fala('a editora do Jornal', 'Agora vem o processo. Agora vem a parte que ninguém fotografa.', 'baixo')
   ],
-  ef:{flag:'cm_imprensa_circulou', rep:{eixo:'bom', delta:2, motivo:'Fez a edição extra circular apesar da liminar'}},
+  ef:{flag:'cm_imprensa_circulou', rep:{eixo:'bom', delta:2, motivo:'Fez a edição extra circular apesar da liminar'},
+      executar:() => { caminhoAs(8); }},
   escolhas:[
     {texto:'Enfrentar o processo com a Hazel, no tribunal, com as oito páginas.', vai:'ci3_o_processo'},
     {texto:'Retirar a matéria em troca de a Comissão retirar o processo. O Jornal sobrevive.', vai:'ci3_final_nao_saiu',
@@ -436,7 +484,7 @@ ci3_a_banca:{
 
 ci3_o_processo:{
   texto:[
-    'O processo dura oito meses. O advogado da Comissão é o Dr. Bramble, de terno cinza claro, que cumprimenta você todo dia no corredor.',
+    d => { Nomes.apresentar('o advogado da Comissão'); return 'O processo dura oito meses. O advogado da Comissão é o Dr. Bramble, de terno cinza claro, que cumprimenta você todo dia no corredor.'; },
     'O juiz lê as oito páginas, e depois lê de novo, procurando o erro.'
   ],
   escolhas:[
@@ -474,14 +522,16 @@ ci3_final_primeira:{
     'A sentença sai na primeira página do Jornal de Fuchsia, com foto da rotativa do tio.',
     'A Comissão não fecha por causa de uma matéria. Ela fecha por causa de cem pequenas coisas que vêm depois, e todas citam a matéria.',
     'Você continua no Jornal. Escreve sobre feira de Pokémon, sobre buraco de rua, sobre a cerca da reserva todo ano no mesmo mês.',
-    'O Bastian ganha um prêmio pela foto doze. Ele vai buscar com as três câmeras no pescoço, e no discurso agradece a câmera do meio.'
+    d => d.flags.cm_imprensa_foto_doze && !d.flags.cm_imprensa_vendeu_a_doze
+      ? 'O Bastian ganha um prêmio pela foto doze. Ele vai buscar com as três câmeras no pescoço, e no discurso agradece a câmera do meio.'
+      : 'O Bastian ganha um prêmio pela foto da edição extra no varal da banca de Celadon, com prendedor de roupa. Ele vai buscar com as três câmeras no pescoço, e no discurso agradece a câmera do meio.'
   ]}
 },
 
 ci3_final_processada:{
   texto:[
     'Procedente em parte. Uma data errada, uma indenização que o Jornal não tem como pagar.',
-    'O Jornal de Fuchsia fecha em março. A rotativa vai pra um ferro-velho de Vermilion.'
+    'O Jornal de Fuchsia fecha no mês seguinte. A rotativa vai pra um ferro-velho de Vermilion.'
   ],
   final:{id:'imprensa_processada', titulo:'PROCESSADA', texto:[
     'O Jornal fechou. O que ele publicou, não.',
@@ -498,9 +548,15 @@ ci3_final_nao_saiu:{
   ],
   final:{id:'imprensa_nao_saiu', titulo:'A MATÉRIA QUE NÃO SAIU', texto:[
     'O Jornal de Fuchsia continua. Publica feira, buraco de rua e o resultado da Liga.',
-    'As quatro mil que circularam em Celadon viram lenda: todo mundo conhece alguém que leu, ninguém tem uma.',
-    'A fonte do berçário, numa lavanderia de Saffron, lê no jornal de domingo que a Comissão ganhou mais uma licença. Ela não liga pra redação.',
-    'Na gaveta da Hazel tem uma pasta com o nome da rua Doze. Ela nunca joga fora. Você também não pede.'
+    'Os exemplares que circularam em Celadon viram lenda: todo mundo conhece alguém que leu, ninguém tem um.',
+    d => !d.flags.cm_imprensa_2
+      ? 'Na Estação 4, alguém do berçário lê no jornal de domingo que a Comissão ganhou mais uma licença, e assina a destinação do dia.'
+      : d.flags.cm_imprensa_publicou_o_nome
+        ? 'A fonte do berçário, numa casa com quintal em outra cidade, lê no jornal de domingo que a Comissão ganhou mais uma licença. Ela não liga pra redação.'
+        : 'A fonte do berçário, numa lavanderia de Saffron, lê no jornal de domingo que a Comissão ganhou mais uma licença. Ela não liga pra redação.',
+    d => d.flags.cm_imprensa_2
+      ? 'Na gaveta da Hazel tem uma pasta com o nome da rua Doze. Ela nunca joga fora. Você também não pede.'
+      : 'Na gaveta da Hazel tem uma pasta com as oito páginas dentro. Ela nunca joga fora. Você também não pede.'
   ]}
 }
 
