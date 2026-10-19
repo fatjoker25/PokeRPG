@@ -109,6 +109,29 @@ if (typeof document !== 'undefined' && document.addEventListener){
 
 /* Os aparelhos moram no bolso de Itens-chave: tocar abre. `item` é o
    nome do ícone (ITEM_SPRITE) e, pro Mapa, o item da mochila. */
+/* Quantos finais e epílogos existem, e onde. A folha de regras, o
+   códice e a tela de final contam daqui, pra o número não envelhecer
+   quando entra final novo (os dos caminhos entraram assim). A caverna
+   do norte é o capítulo 28. */
+function contarFinais(){
+  const F = {total:0, caverna:0, historia:0, capsHistoria:0, caminhos:0,
+             epilogos: typeof EPILOGOS !== 'undefined' ? EPILOGOS.length : 0};
+  for (const c of (typeof CAPITULOS !== 'undefined' ? CAPITULOS : [])){
+    const n = Object.values(c.cenas || {}).filter(x => x.final).length;
+    if (!n) continue;
+    F.total += n;
+    if (c.caminho) F.caminhos += n;
+    else if (c.num === 28) F.caverna += n;
+    else { F.historia += n; F.capsHistoria++; }
+  }
+  F.antes = F.total - F.caverna;
+  return F;
+}
+/* o códice separa final de epílogo; "a jornada continua" não é final
+   (é o fim do que está escrito) e save antigo pode ter guardado */
+function ehEpilogo(f){ return String(f.id || '').indexOf('ep_') === 0 || /^Epílogo/.test(f.titulo); }
+function ehFinalDeVerdade(f){ return !ehEpilogo(f) && f.id !== 'fim'; }
+
 const APARELHOS = [
   {id:'pokedex', nome:'Pokédex', item:'Pokédex', abrir:'UI.modalPokedex()',
    tem:() => !!Estado.dados.flags.tem_pokedex,
@@ -3302,9 +3325,10 @@ const UI = {
   telaFinal(final){
     this.tom('final'); this.limpar();
     const d = Estado.dados;
-    const codice = Estado.registrarFinal(final.id || 'fim', final.titulo);
-    const totalFinais = (typeof CAPITULOS !== 'undefined')
-      ? CAPITULOS.reduce((n,c) => n + Object.values(c.cenas).filter(x=>x.final).length, 0) : 0;
+    /* "a jornada continua" é o fim do que está escrito, não um final */
+    const codice = (final.continua ? Estado.finaisDescobertos() : Estado.registrarFinal(final.id || 'fim', final.titulo))
+      .filter(ehFinalDeVerdade);
+    const totalFinais = contarFinais().total;
     const mortos = d.cemiterio.length
       ? `<h3>Quem não voltou</h3><p class="sussurro">${d.cemiterio.map(p=>this.esc(nomeExib(p))+' — '+this.esc(p.causaMorte)).join('<br>')}</p>` : '';
     const presos = Estado.lendariosCapturados();
@@ -3339,11 +3363,11 @@ const UI = {
         ${codice.map(f=>`<div class="linha longa"><span class="k">${this.esc(f.titulo)}</span><span class="v">${f.titulo===final.titulo?'agora':'✓'}</span></div>`).join('')}
         <p class="sussurro">Escolhas diferentes levam a finais diferentes. A campanha tem ${totalFinais}.</p>
       </div>
-      <div style="margin-top:34px">
-        ${final.continua ? '<button class="btn destaque" onclick="Jogo.continuarPelaEstrada()">Continuar pela estrada</button>' : ''}
-        <button class="btn${final.continua ? '' : ' destaque'}" onclick="Jogo.novo()">Nova jornada</button>
-        <button class="btn" onclick="UI.modalDiario()">Ler o diário completo</button>
-        <button class="btn" onclick="UI.modalRota()">Ver a rota que você percorreu</button>
+      <div id="escolhas" class="escolhas" style="text-align:left;max-width:610px;margin:34px auto 0">
+        ${final.continua ? '<button class="escolha" onclick="Jogo.continuarPelaEstrada()">Continuar pela estrada</button>' : ''}
+        <button class="escolha" onclick="Jogo.novo()">Nova jornada</button>
+        <button class="escolha" onclick="UI.modalDiario()">Ler o diário completo</button>
+        <button class="escolha" onclick="UI.modalRota()">Ver a rota que você percorreu</button>
       </div>
     </div>`);
     this.rolarTopo();
@@ -4715,10 +4739,10 @@ const UI = {
 
   modalFinais(){
     const codice = Estado.finaisDescobertos();
-    const totalFim = CAPITULOS.reduce((n,c)=>n+Object.values(c.cenas).filter(x=>x.final).length,0);
-    const totalEp = (typeof EPILOGOS !== 'undefined') ? EPILOGOS.length : 0;
-    const eps = codice.filter(f => String(f.id||'').indexOf('ep_') === 0 || /^Epílogo/.test(f.titulo));
-    const fins = codice.filter(f => eps.indexOf(f) === -1);
+    const F = contarFinais();
+    const totalFim = F.total, totalEp = F.epilogos;
+    const eps = codice.filter(ehEpilogo);
+    const fins = codice.filter(ehFinalDeVerdade);
     const bloco = (titulo, lista, total, vazio) =>
       `<h3>${titulo} — ${lista.length} de ${total}</h3>` +
       (lista.length ? lista.map(f=>`<div class="linha longa"><span class="k">${this.esc(String(f.titulo).replace(/^Epílogo: /,''))}</span><span class="v">✓</span></div>`).join('')
@@ -5033,8 +5057,8 @@ const UI = {
       <div class="linha"><span class="k">Quem desempata</span><span class="v">crachá fala mais alto que via · via fala mais alto que reputação</span></div>
       <div class="linha"><span class="k">Rodapé</span><span class="v">quem ficou pelo caminho, promessa cumprida, Pokédex, credenciais, lendário no cinto</span></div>
       <div class="linha"><span class="k">Onde a história fecha</span><span class="v">a caverna do norte é um dos nove lugares, não o único</span></div>
-      <p class="sussurro">São 49 finais e 20 epílogos, e os dois se combinam: a mesma cena termina diferente pra quem é Líder de Ginásio, pra quem carrega o envelope sem timbre e pra quem não virou nada. O códice guarda os dois em listas separadas.</p>
-      <p class="sussurro">Trinta e seis finais estão na caverna do norte e treze estão antes dela, espalhados por oito capítulos. Esses treze não são derrota nem desistência: são escolhas escritas, que só aparecem quando o seu caminho pagou por elas, e que encerram a campanha ali com epílogo e tudo. Assinar um contrato, sentar numa cadeira vazia, assumir um ginásio, voltar pra casa e não sair mais — cada um desses é um fim de verdade, e o jogo não avisa antes qual escolha é qual.</p>
+      ${(F => `<p class="sussurro">São ${F.total} finais e ${F.epilogos} epílogos, e os dois se combinam: a mesma cena termina diferente pra quem é Líder de Ginásio, pra quem carrega o envelope sem timbre e pra quem não virou nada. O códice guarda os dois em listas separadas.</p>
+      <p class="sussurro">${F.caverna} finais estão na caverna do norte e ${F.antes} estão antes dela: ${F.historia} espalhados por ${F.capsHistoria} capítulos da história e ${F.caminhos} no terceiro capítulo de cada caminho. Os de antes da caverna não são derrota nem desistência: são escolhas escritas, que só aparecem quando o seu caminho pagou por elas, e que encerram a campanha ali com epílogo e tudo. Assinar um contrato, sentar numa cadeira vazia, assumir um ginásio, voltar pra casa e não sair mais — cada um desses é um fim de verdade, e o jogo não avisa antes qual escolha é qual.</p>`)(contarFinais())}
 
       <h3>O que o crachá muda na história</h3>
       <div class="linha"><span class="k">Opção que só existe com posto</span><span class="v">cais de Vermilion · recepção da Silph · cerca de Fuchsia</span></div>
@@ -5561,8 +5585,8 @@ const UI = {
       <div class="linha"><span class="k">Quem desempata</span><span class="v">crachá fala mais alto que via · via fala mais alto que reputação</span></div>
       <div class="linha"><span class="k">Rodapé</span><span class="v">quem ficou pelo caminho, promessa cumprida, Pokédex, credenciais, lendário no cinto</span></div>
       <div class="linha"><span class="k">Onde a história fecha</span><span class="v">a caverna do norte é um dos nove lugares, não o único</span></div>
-      <p class="sussurro">São 49 finais e 20 epílogos, e os dois se combinam: a mesma cena termina diferente pra quem é Líder de Ginásio, pra quem carrega o envelope sem timbre e pra quem não virou nada. O códice guarda os dois em listas separadas.</p>
-      <p class="sussurro">Trinta e seis finais estão na caverna do norte e treze estão antes dela, espalhados por oito capítulos. Esses treze não são derrota nem desistência: são escolhas escritas, que só aparecem quando o seu caminho pagou por elas, e que encerram a campanha ali com epílogo e tudo. Assinar um contrato, sentar numa cadeira vazia, assumir um ginásio, voltar pra casa e não sair mais — cada um desses é um fim de verdade, e o jogo não avisa antes qual escolha é qual.</p>
+      ${(F => `<p class="sussurro">São ${F.total} finais e ${F.epilogos} epílogos, e os dois se combinam: a mesma cena termina diferente pra quem é Líder de Ginásio, pra quem carrega o envelope sem timbre e pra quem não virou nada. O códice guarda os dois em listas separadas.</p>
+      <p class="sussurro">${F.caverna} finais estão na caverna do norte e ${F.antes} estão antes dela: ${F.historia} espalhados por ${F.capsHistoria} capítulos da história e ${F.caminhos} no terceiro capítulo de cada caminho. Os de antes da caverna não são derrota nem desistência: são escolhas escritas, que só aparecem quando o seu caminho pagou por elas, e que encerram a campanha ali com epílogo e tudo. Assinar um contrato, sentar numa cadeira vazia, assumir um ginásio, voltar pra casa e não sair mais — cada um desses é um fim de verdade, e o jogo não avisa antes qual escolha é qual.</p>`)(contarFinais())}
 
       <h3>O que o crachá muda na história</h3>
       <div class="linha"><span class="k">Opção que só existe com posto</span><span class="v">cais de Vermilion · recepção da Silph · cerca de Fuchsia</span></div>
