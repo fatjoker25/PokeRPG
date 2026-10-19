@@ -114001,6 +114001,7 @@ ca1_fora_da_trilha:{
     'A Tamsin anda olhando pro chão e pro céu ao mesmo tempo, e anota tudo: uma pedra virada, uma pena de Spearow, um galho quebrado na altura do joelho.',
     'No meio da tarde, o mato se abre num barranco, e embaixo do barranco tem um vale.'
   ],
+  ef:{executar:() => { caminhoAs(15); }},
   teste:{status:'percepcao', dificuldade:5, nomeStatus:'Percepção',
          critico:'ca1_o_vale', sucesso:'ca1_o_vale', parcial:'ca1_a_descida', falha:'ca1_a_descida'}
 },
@@ -114069,6 +114070,7 @@ ca1_a_noite:{
     fala('a mulher do mapa', 'Agora vem a pergunta que eu me faço em todo lugar desses. Eu ponho no mapa ou não ponho?'),
     fala('a mulher do mapa', 'Se eu ponho, vem gente. Treinador, turista, manejo. Se eu não ponho, eu sou a única que sabe, e quem guarda segredo sozinha também decide por todo mundo.', 'baixo')
   ],
+  ef:{executar:() => { caminhoAs(21); }},
   escolhas:[
     {texto:'"Não põe. Deixa ele sem nome."', vai:'ca1_fim',
      ef:{flag:'cm_andarilho_sem_mapa', rep:{eixo:'bom', delta:1, motivo:'Pediu pra deixar o vale fora do mapa'},
@@ -114077,16 +114079,17 @@ ca1_a_noite:{
      ef:{flag:'cm_andarilho_mapa_errado', rep:{eixo:'bom', delta:1, motivo:'Inventou um mapa errado pra proteger o vale'},
          npc:{nome:'Tamsin Reed', opiniao:4, memoria:'Você inventou de pôr o vale no mapa no lugar errado. Ela riu a noite inteira.'}}},
     {texto:'"Me vende o lugar. Eu sei quem paga por um vale assim."', vai:'ca1_fim',
-     ef:{flag:'cm_andarilho_vendeu', dinheiro:1500, rep:{eixo:'ruim', delta:3, motivo:'Comprou a localização do vale sem mapa pra revender'},
+     ef:{flag:'cm_andarilho_vendeu', dinheiro:1500, rep:{eixo:'ruim', delta:3, motivo:'Vendeu a localização do vale sem mapa'},
          npc:{nome:'Tamsin Reed', opiniao:-5, memoria:'Você quis comprar a localização do vale pra revender.'}}}
   ]
 },
 
 ca1_fim:{
   texto:[
-    d => d.flags.cm_andarilho_vendeu ? 'Ela te dá o lugar, num papel arrancado do caderno, e vai embora antes do sol nascer, sem se despedir.' : d.flags.cm_andarilho_mapa_errado ? 'No mapa 7, a lápis, a quarenta quilômetros de onde vocês estão, aparece um vale pequeno com o nome VALE DO CANTO. Ele não existe ali. Ele existe aqui.' : 'No mapa 7, a lápis, no lugar onde vocês estão, não tem nada. Branco. Do jeito que ela quer.',
+    d => d.flags.cm_andarilho_vendeu ? 'Ela te dá o lugar, num papel arrancado do caderno, e não aceita o seu dinheiro. Vai embora antes do sol nascer, sem se despedir. Em Fuchsia, o papel vale mil e quinhentos pra um homem de terno que não pergunta como você achou.' : d.flags.cm_andarilho_mapa_errado ? 'No mapa 7, a lápis, a quarenta quilômetros de onde vocês estão, aparece um vale pequeno com o nome VALE DO CANTO. Ele não existe ali. Ele existe aqui.' : 'No mapa 7, a lápis, no lugar onde vocês estão, não tem nada. Branco. Do jeito que ela quer.',
     'De manhã, o barranco tem a sua marca de bota, subindo. Em três chuvas some.'
   ],
+  ef:{executar:() => { caminhoAs(7); }},
   fim:true, resumo:'O mapa errado: um vale fora de tudo, um bando de Jigglypuff cantando e uma pergunta sem resposta.'
 }
 
@@ -114109,7 +114112,7 @@ ca2_a_praia:{
            Nomes.apresentar('a mulher do mapa'); return 'Numa pedra entre as fogueiras, uma mulher de cinquenta anos com um mapa dobrado em dezesseis no colo acena pra você. TAMSIN REED, a lápis, na capa do caderno dela.'; },
     'Na primeira, um velho de chapéu de palha. Na segunda, uma moça de macacão azul rasgado. Na terceira, um menino de dez anos com um Magikarp num balde.'
   ],
-  ef:{flag:'cm_andarilho_2', registrar:'Três fogueiras na praia de pedra da Rota 21.'},
+  ef:{flag:'cm_andarilho_2', registrar:'Três fogueiras na praia de pedra da Rota 21.', executar:() => { caminhoEntre(19, 5, 21); }},
   escolhas:[
     {texto:'Sentar na fogueira do velho.', vai:'ca2_o_velho'},
     {texto:'Sentar na fogueira da moça de macacão.', vai:'ca2_a_moca'},
@@ -114183,6 +114186,7 @@ ca2_a_vila:{
     'Na porta da quarta casa, uma mulher acorda com a batida e abre a porta de camisola, e não diz nada, e abraça a filha com o macacão rasgado e tudo.',
     'Você volta pra fogueira sozinh{o|a}, com a maré subindo.'
   ],
+  ef:{executar:() => { Relogio.avancar(4); }},
   escolhas:[
     {texto:'Voltar.', vai:'ca2_volta'}
   ]
@@ -114225,6 +114229,7 @@ ca2_fim:{
     d => d.npcs['Tamsin Reed'] ? fala('a mulher do mapa', 'Toda história de andarilho é igual: começa numa casa e não termina. É por isso que a gente conta.', 'baixo') : 'Quem ainda está acordado ouve até o fim, e ninguém diz nada, que é o jeito da praia de agradecer.',
     'De manhã, as três fogueiras são três círculos de cinza na pedra. A maré leva o primeiro antes do sol subir.'
   ],
+  ef:{executar:() => { caminhoAs(6); }},
   fim:true, resumo:'As três fogueiras: um velho com um Machamp branco, uma moça de macacão rasgado e um Magikarp chamado Capitão.'
 }
 
@@ -114259,6 +114264,7 @@ ca3_a_estrada:{
     'No terceiro dia, a estrada acaba num muro de pedra caído, e do outro lado do muro tem uma casa sem telhado e uma árvore de Oran no quintal, carregada.',
     fala('a mulher do mapa', 'A casa onde eu nasci.', 'baixo')
   ],
+  ef:{executar:() => { Relogio.viver(48); caminhoAs(14); }},
   escolhas:[
     {texto:'Esperar ela entrar primeiro.', vai:'ca3_a_casa',
      ef:{rep:{eixo:'bom', delta:1, motivo:'Esperou a Tamsin entrar primeiro na casa dela'}}}
@@ -114317,6 +114323,7 @@ ca3_a_decisao:{
     'O sol desce atrás do muro de pedra caído. A árvore de Oran faz sombra comprida no quintal.',
     'Você tem um mapa na cabeça agora, feito de três dias de estrada velha e de tudo que veio antes. Ele também está errado em algum lugar.'
   ],
+  ef:{executar:() => { caminhoAs(18); }},
   escolhas:[
     {texto:'Começar o seu próprio mapa, e seguir andando sozinh{o|a}.', vai:'ca3_final_mapa',
      ef:{rep:{eixo:'bom', delta:1, motivo:'Começou o próprio mapa de Kanto'}}},
@@ -114373,7 +114380,7 @@ ca3_final_junto:{
     'Vocês andam Kanto juntos por anos. Ela desenha, você conta, e à noite nenhum dos dois fala muito.',
     'O mapa 8 tem duas letras: a dela, em lápis duro, e a sua, em lápis mole. Ele é o menos errado de todos.',
     'Quando ela fica velha demais pra estrada, ela fica na casa da Rota 22 e você manda notícia de cada vale que acha.',
-    'Ela responde sempre com a mesma frase, a lápis, no verso: "Deixou em branco?" Você sempre deixou.'
+    'Ela responde sempre com a mesma pergunta, a lápis, no verso: se você deixou em branco. Você sempre deixou.'
   ]}
 }
 
