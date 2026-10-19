@@ -162,7 +162,7 @@ const TROCAS = {
   viridian: [{
     id:'viridian_1',
     quem:'Nilo, o do posto',
-    onde:'atrás do posto de gasolina, com um rádio ligado no jogo',
+    onde:'atrás do posto de gasolina, com um rádio ligado na transmissão da Liga',
     pede:19, da:{dex:52, nivel:[14,18], apelido:'Bigode', natureza:'Jolly'},
     fala:'"Eu preciso de um Rattata. Sério. Meu sogro tem alergia a Meowth e eu tenho um Meowth."',
     depois:'Ele solta o Rattata no quintal e o Rattata some no muro em quatro segundos. Ele não parece incomodado. "Era só pra ele sair de casa mesmo."',
@@ -199,7 +199,7 @@ const TROCAS = {
     onde:'no primeiro andar, entre as velas',
     pede:104, da:{dex:42, nivel:[24,28], apelido:'Sete', natureza:'Quiet'},
     fala:'"Tem um Golbat que mora no sétimo andar e que quer ir embora daqui. Eu não sei explicar como eu sei. Eu sei."\n"E ele quer o quê?"\n"Ele quer um Cubone. Não me pergunta por quê."',
-    depois:'O zelador leva o Cubone pra dentro do terceiro andar e volta sem ele, e não explica, e você decide não perguntar.',
+    depois:meu => `O zelador leva ${pron(meu).o} Cubone pra dentro do terceiro andar e volta sem ${pron(meu).ele}, e não explica, e você decide não perguntar.`,
     memoria:'Trocou um Cubone pelo Golbat do sétimo andar da Torre.'
   }, {
     id:'lavender_2', requer:d=>numInsignias() >= 5, unica:true,
@@ -255,7 +255,7 @@ const TROCAS = {
     pede:67, da:{dex:75, nivel:[30,34], apelido:'Pedregulho', natureza:'Relaxed'},
     trocaEvolui:true,
     fala:'"Esse Graveler rola ladeira abaixo toda vez que eu viro as costas. Eu preciso de braço, não de pedra."\nEla olha o seu cinto antes de olhar a sua cara.\n"Você tem Machoke?"',
-    depois:'Ela põe o Machoke pra carregar o primeiro caixote antes de você guardar a Pokébola. Ele carrega dois, e ela ri pela primeira vez na conversa.',
+    depois:meu => `Ela põe ${pron(meu).o} Machoke pra carregar o primeiro caixote antes de você guardar a Pokébola. ${cap1(pron(meu).o)} Machoke carrega dois, e ela ri pela primeira vez na conversa.`,
     memoria:'Trocou um Graveler pelo seu Machoke na descida da Rota 10.'
   }],
   monte_lua: [{
@@ -345,7 +345,7 @@ const TROCAS = {
     onde:'na Rota 21, esperando a balsa, com uma mala e uma Pokébola',
     pede:77, da:{dex:109, nivel:[28,32], apelido:'Brasa', natureza:'Brave'},
     fala:'"Esse Koffing apareceu na cratera há dois anos e não foi mais embora. Ele dorme na minha lavanderia e a roupa dos hóspedes sai com cheiro de vulcão."',
-    depois:'Ele solta o Ponyta na encosta e o Ponyta fica parado olhando o mar por muito tempo, do jeito de quem nunca viu tanta água junta.',
+    depois:meu => `Ele solta ${pron(meu).o} Ponyta na encosta, e ${pron(meu).o} Ponyta fica parad${pron(meu).o} olhando o mar por muito tempo, do jeito de quem nunca viu tanta água junta.`,
     memoria:'Trocou o Koffing da lavanderia dele pelo seu Ponyta.',
     alt:[
       {da:{dex:58, nivel:[30,34], apelido:'Brasa', natureza:'Brave'},
@@ -365,7 +365,7 @@ const TROCAS = {
     depois:'Ele anota a hora exata em que o Pikachu entra na Pokébola, em quatro cadernos diferentes, porque ele é assim e ninguém nunca conseguiu mudar isso.',
     memoria:'Trocou o Staryu do pesquisador da Rota 25 pelo seu Pikachu.',
     alt:[
-      {da:{dex:35, nivel:[22,26], apelido:'Vírgula', natureza:'Timid'},
+      {da:{dex:35, nivel:[22,26], apelido:'Vírgula', natureza:'Timid', genero:'f'},
        fala:'"Eu estudo Clefairy há seis anos e eu nunca vi um evoluir na minha frente. Nunca."\n"E o Pikachu?"\n"Pikachu eu já vi evoluir. Eu quero uma coisa que eu já entenda, pra poder pensar em outra."',
        memoria:'Trocou a Clefairy do pesquisador da Rota 25 pelo seu Pikachu.'},
       {da:{dex:37, nivel:[22,26], apelido:'Vírgula', natureza:'Timid'},
@@ -396,7 +396,7 @@ const TROCAS = {
     onde:'sentado numa pedra do Caminho da Vitória, sem pressa nenhuma de chegar',
     pede:68, da:{dex:107, nivel:[34,38], apelido:'Terceiro', natureza:'Careful'},
     fala:'"Meu Hitmonchan perdeu três vezes seguidas pro mesmo garoto e decidiu que o problema é ele."\n"E não é?"\n"O problema sou eu. Mas ele não acredita, e eu não consigo mais ensinar quem não acredita em mim."',
-    depois:'O Machamp fica de pé no meio do tatame e o dojo inteiro para pra olhar, e o mestre se curva pra ele, e é a primeira coisa que ele faz naquele tatame em seis anos que não é ensinar.',
+    depois:meu => `${cap1(pron(meu).o)} Machamp fica de pé no meio do tatame e o dojo inteiro para pra olhar, e o mestre se curva pra ${pron(meu).ele}, e é a primeira coisa que ele faz naquele tatame em seis anos que não é ensinar.`,
     memoria:'Trocou o Hitmonchan do dojo de Saffron pelo seu Machamp.',
     alt:[
       {da:{dex:106, nivel:[34,38], apelido:'Terceiro', natureza:'Careful'},
@@ -413,7 +413,7 @@ const TROCAS = {
     onde:'na terceira guarita da Rota 23, no fim do turno dela',
     pede:12, da:{dex:123, nivel:[26,30], apelido:'Foice', natureza:'Adamant'},
     fala:'"Esse Scyther apareceu ferido na trilha em março e a gente tratou, e agora ele não vai embora e não pode ficar."\n"Por que não pode?"\n"Porque isso aqui é posto de guarda, não é casa de ninguém. Inclusive minha."',
-    depois:'Ela solta o Butterfree no meio da clareira e ele sobe em espiral e fica lá em cima um tempo, e ela olha pra cima até doer o pescoço.',
+    depois:'Ela solta o Butterfree no meio da clareira, e o Butterfree sobe em espiral e fica lá em cima um tempo, e ela olha pra cima até doer o pescoço.',
     memoria:'Trocou o Scyther do posto de guarda pelo seu Butterfree.',
     alt:[
       {da:{dex:127, nivel:[26,30], apelido:'Foice', natureza:'Adamant'},
@@ -475,16 +475,19 @@ function contatosDasTrocas(){
         requer:d => Trocas.jaFez(t.id),
         oferece:['prova'],
         prova:{
-          rotulo:'Perguntar como ele está',
+          rotulo:'Perguntar como vai o Pokémon da troca',
           esperaCap:0, limite:99,
           texto:d => {
             const f = (d.trocasFeitas || {})[t.id] || {};
             const dex = f.ultimoDeu || f.deu;
             const esp = DEX[dex] ? DEX[dex].nome : 'Pokémon';
+            /* {ele}, {dele}, {o}: o sexo de quem foi, guardado na troca
+               (save de antes dela fica no masculino, o de "Pokémon") */
+            const gDeu = f.ultimoDeu ? f.ultimoDeuGenero : f.deuGenero;
             /* e sabe o que foi com você: o que ela deu */
             const rec = DEX[f.recebeu || Trocas.efetiva(t).da.dex];
-            return Dados.escolher(COMO_ESTA_O_TROCADO).map(l => fala(nome, l.replace(/\{p\}/g, esp)))
-              .concat(rec ? [fala(nome, Dados.escolher(E_O_QUE_FOI_COM_VOCE).replace(/\{r\}/g, rec.nome))] : []);
+            return Dados.escolher(COMO_ESTA_O_TROCADO).map(l => fala(nome, concordar(l, gDeu).replace(/\{p\}/g, esp)))
+              .concat(rec ? [fala(nome, concordar(Dados.escolher(E_O_QUE_FOI_COM_VOCE), f.recebeuGenero).replace(/\{r\}/g, rec.nome))] : []);
           },
           rep:{eixo:'bom', delta:1, motivo:`Ligou pra saber do Pokémon que trocou com ${nome}`}
         }
@@ -493,24 +496,36 @@ function contatosDasTrocas(){
   }
   return lista;
 }
+/* {p} é o que você deu; {r}, o que veio pra você. {ele}, {dele}, {o}
+   concordam com o sexo de quem a frase fala (concordar, em pokemon.js);
+   {o|a} é você. */
 const COMO_ESTA_O_TROCADO = [
-  ['O {p}? Tá ótimo. Dorme em cima da geladeira e ninguém tem coragem de tirar.', 'Obrigad{o|a} por ligar. Sério.'],
-  ['Ele comeu o almoço do meu irmão hoje. O {p}, não o meu irmão.', 'Tá feliz. Dá pra ver.'],
-  ['O {p} aprendeu a abrir a porta do quintal. Eu ainda não sei como.', 'Tá bem demais.'],
-  ['Levei o {p} no Centro pra um check-up. A enfermeira disse que tá forte.', 'Você cuidou bem dele antes. Ela percebeu.'],
-  ['Ele sente falta de você um pouquinho. Fica olhando a estrada de tarde.', 'Mas brinca o dia inteiro. Fica tranquil{o|a}.'],
-  ['O {p} tá treinando com as crianças da rua. Já ganhou duas lutinhas.', 'Eu fico na torcida, igual criança.']
+  ['Tá ótim{o}, {o} {p}. Dorme em cima da geladeira e ninguém tem coragem de tirar.', 'Obrigad{o|a} por ligar. Sério.'],
+  ['{Ele} comeu o almoço do meu irmão hoje. Tô falando {do} {p}, não do meu irmão.', 'Tá feliz. Dá pra ver.'],
+  ['Sabe {o} {p}? Aprendeu a abrir a porta do quintal. Eu ainda não sei como.', 'Tá bem demais.'],
+  ['Levei {o} {p} no Centro pra um check-up. A enfermeira disse que tá forte.', 'Você cuidou bem {dele} antes. Ela percebeu.'],
+  ['{Ele} sente falta de você um pouquinho. Fica olhando a estrada de tarde.', 'Mas brinca o dia inteiro. Fica tranquil{o|a}.'],
+  ['Tá treinando com as crianças da rua, {o} {p}. Já ganhou duas lutinhas.', 'Eu fico na torcida, igual criança.']
 ];
 
 const E_O_QUE_FOI_COM_VOCE = [
-  'E o {r}? Cuida dele, que ele foi meu antes de ser seu.',
-  'E o {r}, tá comendo direito? Ele era chato pra comer.',
-  'Você ainda tem o {r}? Não precisa responder. Eu só pensei nele hoje.',
-  'Manda um oi pro {r}. Ele não vai entender, mas manda.',
-  'O {r} ainda faz aquilo de dormir de olho aberto? Fazia aqui.'
+  'E {o} {r}? Cuida bem {dele}. Eu cuidei enquanto deu.',
+  'E {o} {r}, tá comendo direito? Aqui {ele} era chat{o} pra comer.',
+  'Você ainda tem {o} {r}? Não precisa responder. Eu só pensei {nele} hoje.',
+  'Manda um oi {pro} {r}. {Ele} não vai entender, mas manda.',
+  'Ainda faz aquilo de dormir de olho aberto, {o} {r}? Fazia aqui.'
 ];
 
 const TROCAS_POR_DIA = 3;
+/* o sexo de quem chega na primeira troca: o que a troca escreveu, senão
+   macho (a fala de quem troca diz "ele"); espécie de um sexo só manda */
+function generoDaTroca(dex, g){
+  const c = chanceDeMacho(dex);
+  if (c === null) return null;
+  if (c === 0) return 'f';
+  if (c === 1) return 'm';
+  return g || 'm';
+}
 const Trocas = {
   /* Uma cidade pode ter mais de uma troca, e uma troca pode estar
      trancada por progresso. daCidade devolve só as que existem hoje. */
@@ -612,7 +627,8 @@ const Trocas = {
     const semTroca = t => {
       const f = (Estado.dados.trocasFeitas || {})[t.id] || {};
       const rec = DEX[f.recebeu || this.efetiva(t).da.dex];
-      return `${t.quem} te vê de longe e levanta a mão. "E o ${rec ? rec.nome : 'meu'}? Cuida bem dele." O que tinha pra trocar já foi com você.`;
+      const pr = pron({genero:f.recebeuGenero || null});
+      return `${t.quem} te vê de longe e levanta a mão. "E ${pr.o} ${rec ? rec.nome : 'meu'}? Cuida bem ${pr.dele}." O que tinha pra trocar já foi com você.`;
     };
 
     if (!abertas.length){
@@ -714,7 +730,8 @@ const Trocas = {
     if (extra){
       extra.pronta = false; extra.dia = d.relogio.dia; extra.deu = meu.dex;
       d.trocasFeitas[t.id].ultimoDeu = meu.dex;
-    } else d.trocasFeitas[t.id] = {cidade:id, deu:meu.dex, recebeu:of.da.dex, dia:d.relogio.dia};
+      d.trocasFeitas[t.id].ultimoDeuGenero = generoDe(meu);
+    } else d.trocasFeitas[t.id] = {cidade:id, deu:meu.dex, deuGenero:generoDe(meu), recebeu:of.da.dex, dia:d.relogio.dia};
 
     /* entra o dele */
     const nivel = Dados.entre(of.da.nivel[0], of.da.nivel[1]);
@@ -724,6 +741,9 @@ const Trocas = {
     const novo = criarPokemon(dexNovo, nivel, {
       natureza: extra ? undefined : of.da.natureza,
       apelido: extra ? null : of.da.apelido,
+      /* quem troca fala do Pokémon dele como "ele": ele chega macho, se a
+         espécie tiver macho, a não ser que a troca diga outra coisa */
+      genero: extra ? undefined : generoDaTroca(dexNovo, of.da.genero),
       moral: 45,
       historia: `Veio de uma troca em ${LOCAIS[id].nome}, com ${t.quem}.`
     });
@@ -731,13 +751,15 @@ const Trocas = {
     Estado.adicionar(novo);
     Estado.lembrarNPC(t.quem, {nome:t.quem, opiniao:3, memoria:of.memoria});
     d.trocasFeitas[t.id].recebeu = dexNovo;
+    d.trocasFeitas[t.id].recebeuGenero = generoDe(novo);
     Estado.registrar(`Trocou ${meu.nome} por ${novo.nome} em ${LOCAIS[id].nome}.`);
     Estado.marcar('ja_trocou');
     Estado.salvar('auto');
 
     const avisos = [
       {tipo:'pokemon', texto:`${nomeExib(novo)} (Nv ${novo.nivel}) entrou para o seu time.`},
-      {tipo:'eco', texto:extra ? `${t.quem} recebe o ${meu.nome} com as duas mãos e fala o nome dele baixinho, como quem decora.` : of.depois}
+      {tipo:'eco', texto:extra ? `${t.quem} recebe ${pron(meu).o} ${meu.nome} com as duas mãos e fala o nome ${pron(meu).dele} baixinho, como quem decora.`
+                                : (typeof of.depois === 'function' ? of.depois(meu) : of.depois)}
     ];
     if (typeof Jogo !== 'undefined' && Jogo.avisarNumeros) Jogo.avisarNumeros(avisos);
     if (virou) avisos.push({tipo:'evolucao', texto:`No segundo em que a Pokébola encostou na sua mão, ${virou} mudou de forma. Ninguém sabe explicar por que a troca faz isso. Todo mundo já viu acontecer.`});

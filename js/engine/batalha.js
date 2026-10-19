@@ -325,12 +325,14 @@ const Batalha = {
     /* com o par no mesmo time, ele briga mais perto de você: metade da recusa */
     if (souAliado && desobedienciaBase > 0 && parDe(p)) desobedienciaBase /= 2;
 
+    /* o jeito aparece no que ele faz; o nome do jeito, só pra quem já leu */
+    const jeito = p.naturezaVista ? ` é ${p.natureza} —` : '';
     if (p.natureza === 'Brave' && g.c === 'esp' && Dados.chance(35))
-      return {recusa:true, texto:`${nomeVisivel(p)} é Brave — recusa o golpe especial. Quer sentir o impacto.`};
+      return {recusa:true, texto:`${nomeVisivel(p)}${jeito} recusa o golpe especial. Quer sentir o impacto.`};
     if (p.natureza === 'Timid' && g.c === 'fis' && Dados.chance(30))
-      return {recusa:true, texto:`${nomeVisivel(p)} é Timid — hesita em chegar perto e não ataca.`};
+      return {recusa:true, texto:`${nomeVisivel(p)}${jeito} hesita em chegar perto e não ataca.`};
     if (p.natureza === 'Naughty' && Dados.chance(18))
-      return {trocaAlvo:true, texto:`${nomeVisivel(p)} é Naughty — usa o golpe do jeito errado, de propósito.`};
+      return {trocaAlvo:true, texto:`${nomeVisivel(p)}${jeito} usa o golpe do jeito errado, de propósito.`};
     if ((p.natureza === 'Hasty' || p.natureza === 'Lonely') && Dados.chance(15))
       return {outroGolpe:true, texto:`${nomeVisivel(p)} não espera o comando e ataca por conta própria.`};
     /* a fome chega na luta antes de chegar no vínculo: distrai, e comer resolve */
@@ -1043,7 +1045,7 @@ const Batalha = {
       this.desfazerMudancas(def, this.estAliado);
       this.aliado = novo;
       this.estAliado = this.novoEstado();
-      this.ev('info', `${nomeVisivel(def)} é arrancado da luta. ${nomeVisivel(novo)} entra no lugar!`);
+      this.ev('info', `${nomeVisivel(def)} é arrancad${pron(def).o} da luta. ${nomeVisivel(novo)} entra no lugar!`);
       if (this.participantes) this.participantes.add(novo.uid);
       this.entrouEmCampo(novo, this.estAliado);
       return;
@@ -1299,7 +1301,7 @@ const Batalha = {
 
     const agirJogador = () => {
       if (!this.ativo || this.aliado.hp <= 0 || this.inimigo.hp <= 0) return;
-      if (this.estAliado.recuou){ this.estAliado.recuou = false; this.ev('status', `${nomeVisivel(this.aliado)} está encolhido e não ataca.`); return; }
+      if (this.estAliado.recuou){ this.estAliado.recuou = false; this.ev('status', `${nomeVisivel(this.aliado)} está encolhid${pron(this.aliado).o} e não ataca.`); return; }
       if (!this.podeAgir(this.aliado, this.estAliado, true, (this.aliado.golpes[acao.indice] || {}).nome)) return;
       this.usarGolpe(this.aliado, this.inimigo, this.estAliado, this.estInimigo, acao.indice, true);
     };

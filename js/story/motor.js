@@ -117,7 +117,7 @@ const Historia = {
     const linhas = [];
     linhas.push(`${j.nome}, ${typeof idadeJogador === 'function' ? idadeJogador() : j.idade} anos, de ${j.cidade}.${j.personalidade ? ' ' + j.personalidade.charAt(0).toUpperCase() + j.personalidade.slice(1).replace(/[.\s]+$/, '') + '.' : ''}`);
     linhas.push(`Reputação: ${Estado.nomeRep()}. HP ${j.hp}/${Estado.hpMaxJogador()}.`);
-    if (d.time.length) linhas.push(`Time: ${d.time.map(p => `${nomeExib(p)} Nv${p.nivel}${p.hp<=0?' (desmaiado)':''}`).join(', ')}.`);
+    if (d.time.length) linhas.push(`Time: ${d.time.map(p => `${nomeExib(p)} Nv${p.nivel}${p.hp<=0?` (desmaiad${pron(p).o})`:''}`).join(', ')}.`);
     if (d.cemiterio.length) linhas.push(`Mortos: ${d.cemiterio.map(p => `${nomeExib(p)} (${p.causaMorte})`).join(', ')}. Isso não some.`);
     const presos = Estado.lendariosCapturados();
     if (presos.length) linhas.push(`Lendários em cativeiro: ${presos.map(l => DEX[l.dex].nome).join(', ')}.`);

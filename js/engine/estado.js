@@ -344,7 +344,7 @@ function evoluiPorTroca(dexId){
 /* Quando o cinto já tem seis, o que chega vai para o PC — e o texto da cena
    precisa dizer isso, senão promete um Pokémon que não está lá. */
 function notaDestino(onde){
-  return onde === 'pc' ? ' O seu cinto já tinha seis: ele foi direto para o PC do Centro Pokémon.' : '';
+  return onde === 'pc' ? ' O seu cinto já tinha seis: foi direto para o PC do Centro Pokémon.' : '';
 }
 function fichaItem(nome){
   const i = ITENS_INFO[nome];

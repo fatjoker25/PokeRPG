@@ -108,7 +108,7 @@ const RETRATO_POR_NOME = {
   'o voluntário sem nome':'trainers/worker', 'Sr. Bram':'trainers/clerk', 'Sra. Tansy':'trainers/madame',
   'o mais velho da mesa':'trainers/rancher',
   'o magro de boné':'trainers/fisherman', 'Sr. Alder':'trainers/owner',
-  'Varian':'trainers/clerk', 'o homem do bar':'trainers/waiter', 'Sra. Myrtle':'trainers/office_worker_f',
+  'Varian':'trainers/clerk', 'o senhor do museu':'trainers/clerk', 'o homem do bar':'trainers/waiter', 'Sra. Myrtle':'trainers/office_worker_f',
   'a mulher do fogo':'trainers/backpacker_f', 'Sr. Berto':'trainers/gentleman', 'Janus':'trainers/doctor',
   'Sr. Yves':'trainers/cabbie', 'Sr. Quint':'trainers/worker', 'a mulher da locadora':'trainers/clerk_f',
   'Lina':'trainers/office_worker_f', 'o gerente':'trainers/clerk_boss', 'a mulher almoçando':'trainers/worker',

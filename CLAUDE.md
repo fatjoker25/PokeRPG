@@ -659,6 +659,13 @@ pontas**: pergunta do que foi com ela (`trocasFeitas[id].deu`) e do que
 foi com você (`.recebeu`, a espécie que chegou, já evoluída se for o caso).
 Passar por ela de novo também: ela pergunta pelo que te deu.
 
+A fala de quem troca chama o Pokémon dela de "ele", então o da primeira
+troca chega macho, se a espécie tiver macho (`generoDaTroca`; troca que
+fala de outro jeito escreve `da.genero`). O que você deu foi seu, e o
+texto concorda com ele: `depois` pode ser função do Pokémon que saiu
+(`meu => …pron(meu)…`), e a ligação do contato resolve `{ele}`, `{o}`,
+`{dele}` pelos sexos guardados na troca (`deuGenero`, `recebeuGenero`).
+
 **Haunter e Kadabra só vêm do Sr. Juniper.** Ele aparece primeiro como
 **a figura de capuz** (rótulo `'a figura de capuz'`, que recusa o nome em
 `RECUSAM_O_NOME`; contato `curador` com `falaComo`), faz as três perguntas
@@ -988,6 +995,12 @@ Sem sexo fica no masculino, que é o gênero da palavra "Pokémon". Selvagem
 que o texto chama de "o bicho" ou "o Rattata" também: concorda com o
 substantivo, não com o sexo.
 
+Quem a cena descreve antes de existir tem o sexo decidido antes: o
+inicial sorteia na escolha (`reservarInicial`), e a lona, o Célio e o
+Professor falam dele por `pronReservado(d)`. Etiqueta de condição
+(`UI.etiquetaStatus(st, p)`) e marca de desmaio concordam com o seu; a
+do adversário fica no masculino do substantivo.
+
 ## Quem já te viu lembra, e o telefone é o PokéNav
 `js/story/reencontros.js` põe, antes da primeira fala de um NPC numa
 cena de capítulo ou num evento, o reconhecimento: pelo seu nome, com a
@@ -1197,7 +1210,10 @@ confere o tamanho.
 
 Serviço novo entra com rosto pra quem fala (`RETRATO_POR_NOME` no fim
 do arquivo, ou classe na luta), nome pra quem se arrisca e `rep` em
-toda escolha que muda alguma coisa. `chk-lutas` roda toda prova e toda
+toda escolha que muda alguma coisa. Serviço leva um período; o que conta
+a noite inteira na porta, a madrugada no canal ou a tarde na fila leva
+o relógio até lá no `ef.executar` do ramo (`Relogio.ate(h)`), e a luta
+perdida também pode (`perdeuEf` na luta). `chk-lutas` roda toda prova e toda
 briga de serviço em cada ramo; `chk-telas` abre cada degrau em cada
 ponto, cada serviço e cada escolha.
 
@@ -1298,3 +1314,9 @@ pode ter `cond` (`Linhas.mostrar` pula a que não vale).
   Nunca aparece asterisco na tela.
 - Presságio (`ef.presagio`) sai em itálico sem aspas em volta: se ele cita uma
   fala, as aspas são dele.
+- Conversa de cidade (`CONVERSAS`, em `lugares.js`) pode ter linha que é
+  função — quem é de lá, quantas insígnias, se o ginásio está fechado — e
+  `{cond, texto}` pro que só vale às vezes. Descoberta começa sempre por
+  texto, que vai pro diário. Morador tem rótulo próprio da cidade: dois
+  "o dono do bar" em lugares diferentes viram a mesma pessoa no dia em
+  que o jogador pergunta o nome de um deles.

@@ -14,15 +14,26 @@ const ABERTURAS_ENTREGA = ['c1e_de_madrugada', 'c1e_quase_perdeu', 'c1e_chuva_na
    da caixa (ou da bandeja do Professor), na manhã da saída. */
 const INICIAIS_CLASSICOS = [1, 4, 7];
 
+/* o sexo sai na escolha, não na Pokébola: a cena fala dele na lona
+   antes de ele entrar no time, e o texto tem que concordar */
 function reservarInicial(d, dex){
-  d.entrega = Object.assign(d.entrega || {}, {dex});
+  d.entrega = Object.assign(d.entrega || {}, {dex, genero:sortearGenero(dex)});
 }
 /* quem nunca chegou a escolher (a bola veio pelo balcão) leva a que o
    laboratório separou */
 function dexReservado(d){
   if (!d.entrega) d.entrega = {};
   if (!d.entrega.dex) d.entrega.dex = Dados.escolher(INICIAIS_CLASSICOS);
+  if (d.entrega.genero === undefined) d.entrega.genero = sortearGenero(d.entrega.dex);
   return d.entrega.dex;
+}
+/* ele/ela, dele/dela de quem ainda está na lona (ou já saiu dela) */
+function pronReservado(d){
+  const uid = d.jogador && d.jogador.inicialUid;
+  const p = uid && (d.time || []).concat(d.pc || []).find(x => x.uid === uid);
+  if (p) return pron(p);
+  dexReservado(d);
+  return pron({genero:d.entrega.genero});
 }
 function especieReservada(d){
   return (DEX[dexReservado(d)] || {}).nome || 'o seu';
@@ -98,6 +109,7 @@ function entregarInicial(d){
   const dex = dexReservado(d);
   const p = criarPokemon(dex, 5, {
     moral: 50,
+    genero: d.entrega.genero,
     historia: `Saiu da caixa térmica do Célio, em ${d.jogador.cidade}, numa manhã de ${typeof Calendario !== 'undefined' ? Calendario.hoje().mesNome : 'março'}.`
   });
   Estado.adicionar(p);
@@ -115,6 +127,7 @@ function entregarDoProfessor(d){
   const dex = dexReservado(d);
   const p = criarPokemon(dex, 5, {
     moral: 50,
+    genero: d.entrega.genero,
     historia: 'Entregue pelo Professor, na rua de Pallet, na manhã em que você saiu de casa.'
   });
   Estado.adicionar(p);
@@ -167,7 +180,7 @@ c1_professor:{
 
 c1_professor_entrega:{
   texto:[
-    d=>`O ${especieReservada(d)} vem andando até o seu pé antes de você terminar de apontar. O Professor recolhe os outros dois e te entrega a Pokébola dele, e tira um caderno do bolso do jaleco pra escrever uma palavra só.`,
+    d=>`${cap1(pronReservado(d).o)} ${especieReservada(d)} vem andando até o seu pé antes de você terminar de apontar. O Professor recolhe os outros dois e te entrega a Pokébola ${pronReservado(d).dele}, e tira um caderno do bolso do jaleco pra escrever uma palavra só.`,
     d=>{ const aposta = INICIAIS_CLASSICOS[String(d.jogador.nome).length % 3];
          return aposta === dexReservado(d)
            ? fala('o Professor', `Eu tinha apostado comigo mesmo que ia ser ${especieReservada(d)}. Eu reparo nessas coisas.`)
@@ -588,11 +601,11 @@ c1e_abre_a_caixa:{
 
 c1e_escolheu:{
   texto:[
-    d=>`O ${especieReservada(d)} percebe antes de você terminar de apontar. Vem até a beira da lona e fica ali, esperando, como se fosse ele que tivesse escolhido.`,
+    d=>`${cap1(pronReservado(d).o)} ${especieReservada(d)} percebe antes de você terminar de apontar. Vem até a beira da lona e fica ali, esperando, como se fosse ${pronReservado(d).ele} que tivesse escolhido.`,
     'Os outros dois voltam pras Pokébolas num raio vermelho, e o Célio guarda as duas na espuma com cuidado, uma em cada fileira.',
     d=>`Ele escreve ${especieReservada(d).toUpperCase()} na coluna vazia do caderno, em letra de forma, e amarra no fecho da Pokébola uma etiqueta com o seu nome e a data de hoje.`,
     fala('Célio', 'Boa escolha. E eu falo isso pra todo mundo, mas hoje é verdade.', 'riso'),
-    fala('Célio', 'Ele vai crescer com você. Cuida dele que ele te leva longe.')
+    d=>{ const e = pronReservado(d); return fala('Célio', `${e.Ele} vai crescer com você. Cuida ${e.dele} que ${e.ele} te leva longe.`); }
   ],
   ef:{flag:'aviso_do_goro'},
   escolhas:[
@@ -609,7 +622,7 @@ c1e_nao_sei_ainda:{
     d=>fala(d.jogador.nome, 'E se eu não souber o que fazer?'),
     'Ele ri de um jeito que enruga o olho inteiro.',
     fala('Célio', 'Ninguém sabe no primeiro dia. Nem eu sabia, e eu já tinha quarenta anos.'),
-    fala('Célio', 'Você aprende junto com ele. É pra isso que vocês são dois.'),
+    d=>fala('Célio', `Você aprende junto com ${pronReservado(d).ele}. É pra isso que vocês são dois.`),
     fala('Célio', 'Pega.')
   ],
   ef:{moral:6, npc:{nome:'Célio', opiniao:3, memoria:'Te disse que ninguém sabe no primeiro dia, e que vocês aprendem juntos.'}},
@@ -714,14 +727,14 @@ c1e_mais_alguma_coisa:{
     'Ele pensa de verdade antes de responder, o que não era obrigado.',
     fala('Célio', 'Três coisas, e nenhuma delas é sobre batalha.'),
     fala('Célio', 'Primeira: licença. Sem licença você não é treinador, você é uma pessoa andando com um Pokémon. Centro Pokémon, balcão, formulário, fila. Faz isso hoje.'),
-    fala('Célio', 'Segunda: ele come de três em três horas nas primeiras semanas e depois estabiliza sozinho. Não force.'),
+    d=>fala('Célio', `Segunda: comida. Ração na mochila, sempre. ${pronReservado(d).Ele} não vai pedir.`),
     'Uma pausa mais longa que as outras.',
     d=>{ const p = d.time[d.time.length-1] || d.time[0], e = p ? pron(p) : {ele:'ele', dele:'dele'}; return fala('Célio', `Terceira: ${e.ele} não sabe que você é nov{o|a} nisso. Pra ${e.ele} você já é a pessoa ${e.dele} desde agorinha, com currículo e tudo.`, 'baixo'); },
-    fala('Célio', 'Então seja. Você vai aprendendo no caminho, e ele vai junto.')
+    d=>fala('Célio', `Então seja. Você vai aprendendo no caminho, e ${pronReservado(d).ele} vai junto.`)
   ],
   ef:{flag:'conselho_do_goro', moral:5,
       npc:{nome:'Célio', opiniao:5, memoria:'Te deu três conselhos e nenhum deles era sobre batalha.'},
-      registrar:'Célio: licença hoje, comida de três em três horas, e ele já acha que você sabe o que está fazendo.'},
+      registrar:d=>`Célio: licença hoje, Ração sempre na mochila, e ${pronReservado(d).ele} já acha que você sabe o que está fazendo.`},
   escolhas:[
     {texto:'"{Obrigado|Obrigada}." De verdade.', vai:'c1e_despedida_goro',
      ef:{rep:{eixo:'bom', delta:2, motivo:'Ouviu até o fim quem não precisava ter falado'}, moral:4}},
@@ -738,7 +751,7 @@ c1e_por_que_fala:{
     fala('Célio', 'Agora é a minha vez de dar. Custa dois minutos por pessoa e eu tenho dois minutos.', 'riso')
   ],
   ef:{moral:6, flag:'historia_de_noventa_e_um',
-      npc:{nome:'Célio', opiniao:6, memoria:'Te contou por que ele fala com todo mundo desde 1991.'}},
+      npc:{nome:'Célio', opiniao:6, memoria:'Te contou do conselho que ganhou na calçada quando saiu de casa, e que agora é a vez dele de dar.'}},
   escolhas:[
     {texto:'"{Obrigado|Obrigada}."', vai:'c1e_despedida_goro',
      ef:{rep:{eixo:'bom', delta:2, motivo:'Agradeceu os dois minutos de quem não devia nada'}}}
@@ -757,7 +770,7 @@ c1e_despedida_goro:{
     'Ele abre a porta do motorista e para antes de entrar.',
     d=>fala('Célio', `Ah. Anota o meu número, vai. Todo mundo que eu entrego tem.`),
     'Ele dita um número de sete dígitos de cor, devagar, do jeito de quem já ditou esse número mil vezes.',
-    d=>fala('Célio', 'Liga contando quando ele evoluir. Eu quero saber.', 'riso')
+    d=>fala('Célio', `Liga contando quando ${pronReservado(d).ele} evoluir. Eu quero saber.`, 'riso')
   ],
   ef:{executar:d => {
         Estado.marcar('numero_do_goro');
@@ -765,8 +778,8 @@ c1e_despedida_goro:{
         return [{tipo:'info', texto:'Número de Célio anotado. Falta um PokéNav pra guardar.'}];
       }},
   escolhas:[
-    {texto:'Voltar pra casa com ele na Pokébola.', vai:'c1_mochila'},
-    {texto:'Voltar pra casa com ele andando do lado.', vai:'c1e_voltou_a_pe',
+    {texto:d=>`Voltar pra casa com ${pronReservado(d).ele} na Pokébola.`, vai:'c1_mochila'},
+    {texto:d=>`Voltar pra casa com ${pronReservado(d).ele} andando do lado.`, vai:'c1e_voltou_a_pe',
      ef:{moral:5, flag:'voltou_a_pe_com_ele'}},
     {texto:'Ficar na praça mais um pouco antes de voltar.', vai:'c1e_ficou_na_praca'}
   ]
@@ -783,7 +796,7 @@ c1e_voltou_a_pe:{
     'Duas pessoas na rua olham. Uma delas você conhece desde sempre e ela não fala nada, só faz que sim com a cabeça.',
     d=>`${d.jogador.cidade} inteira vai saber antes do almoço, e não tem nada que você possa fazer sobre isso.`
   ],
-  ef:{registrar:'Voltou da praça a pé, com ele do lado.'},
+  ef:{registrar:d=>`Voltou da praça a pé, com ${pronReservado(d).ele} do lado.`},
   escolhas:[{texto:'Entrar em casa.', vai:'c1_mochila'}]
 },
 
@@ -796,7 +809,9 @@ c1e_ficou_na_praca:{
       return p ? `${nomeExib(p)} sobe no banco do seu lado sem pedir licença, o que é a primeira coisa que ${pron(p).ele} faz por conta própria.`
                : 'Ele sobe no banco do seu lado sem pedir licença.';
     },
-    'A cidade começa a acordar em volta: a padaria abre, um Growlithe late, alguém arrasta uma cadeira num quintal.',
+    d=>d.flags.quase_perdeu_a_perua
+      ? 'A cidade segue o meio-dia dela em volta: a padaria baixa meia porta pro almoço, um Growlithe late, alguém arrasta uma cadeira num quintal.'
+      : 'A cidade começa a acordar em volta: a padaria abre, um Growlithe late, alguém arrasta uma cadeira num quintal.',
     'Daqui a uma hora você sai daqui e não volta tão cedo. Agora não. Agora é só um banco de praça com duas coisas sentadas nele.'
   ],
   ef:{moral:6, flag:'ficou_no_banco_da_praca'},

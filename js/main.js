@@ -898,7 +898,8 @@ const Jogo = {
   largarCargo(id){
     const c = Cargos.porId(id);
     if (!c) return;
-    if (!confirm(`Largar ${c.nome}? Você perde o que ele te dá.`)) return;
+    /* o diálogo do navegador não passa pelo UI.esc: a marca de gênero se resolve aqui */
+    if (!confirm(concordaJogador(`Largar o posto de ${c.nome}? Você perde o que ele te dá.`))) return;
     Cargos.largar(id);
     Estado.salvar('auto');
     UI.modalCredenciais();
@@ -1581,7 +1582,7 @@ const Jogo = {
     UI.fecharModal();
     this.irPara(destino, [
       {tipo:'item', texto:`Você entregou ${saiu ? nomeExib(saiu) : '?'}.`},
-      {tipo:'pokemon', texto:`Recebeu ${recebido.nome} (Nv ${recebido.nivel}) — moral 35. Ele não te conhece.`}
+      {tipo:'pokemon', texto:`Recebeu ${recebido.nome} (Nv ${recebido.nivel}) — moral 35. ${pron(recebido).Ele} não te conhece.`}
     ]);
   },
 
@@ -1592,7 +1593,7 @@ const Jogo = {
       const preco = Math.round((DEX[p.dex].total * p.nivel) / 6);
       return `<button class="escolha" onclick="Jogo.efetuarVenda('${p.uid}',${preco},'${escolha.vai}')">
         ${UI.esc(nomeExib(p))} — Nv ${p.nivel} · <b>${fmtDin(preco)} ₽</b></button>`;
-    }).join('') + '<p class="sussurro" style="margin-top:12px">Ele vai para a caixa de veludo. Isso é permanente.</p>');
+    }).join('') + '<p class="sussurro" style="margin-top:12px">Quem for vendido vai para a caixa de veludo. Isso é permanente.</p>');
   },
 
   efetuarVenda(uid, preco, destino){

@@ -1608,9 +1608,9 @@ const UI = {
   },
 
   /* PAR, BRN, PSN… a etiqueta dos jogos, com a palavra no título */
-  etiquetaStatus(st){
+  etiquetaStatus(st, p){
     const r = ROTULO_STATUS[st] || [String(st).slice(0, 3).toUpperCase(), st];
-    return `<span class="status-tag st-${this.esc(st)}" data-st="${this.esc(st)}" title="${this.esc(r[1])}">${r[0]}</span>`;
+    return `<span class="status-tag st-${this.esc(st)}" data-st="${this.esc(st)}" title="${this.esc(concordar(r[1], p || null))}">${r[0]}</span>`;
   },
 
   /* A sua vida, quando não sobrou ninguém entre você e o selvagem */
@@ -1685,7 +1685,7 @@ const UI = {
           ${vida}
           <div class="nome"><span>${this.esc(nomeVisivel(p))}${this.shi(p)}</span><span class="nv">Nv ${p.nivel}</span></div>
           ${this.bolasDoLado(meu)}
-          <div class="linha-tipos" style="margin-top:5px">${tipos}${p.status ? this.etiquetaStatus(p.status) : ''}</div>
+          <div class="linha-tipos" style="margin-top:5px">${tipos}${p.status ? this.etiquetaStatus(p.status, meu ? p : null) : ''}</div>
           <div class="marcas-luta">${this.marcasHTML(Batalha.marcas ? Batalha.marcas(meu ? 'aliado' : 'inimigo') : [])}</div>
           ${this.barraHP(p, meu ? true : 'vaga')}
           ${(meu || Batalha.vontadeIA) ? this.linhaVontade(p) : ''}
@@ -2353,7 +2353,7 @@ const UI = {
       const faixa = pct > 50 ? '' : (pct > 22 ? 'medio' : 'baixo');
       return `<button class="time-linha${p.hp <= 0 ? ' caido' : ''}" onclick="${acao(p)}">
         <span class="time-icone">${imgSprite(p, 'icone')}</span>
-        <span class="time-nome">${this.esc(nomeExib(p))}${this.shi(p)}${p.status ? ' ' + this.etiquetaStatus(p.status) : ''}</span>
+        <span class="time-nome">${this.esc(nomeExib(p))}${this.shi(p)}${p.status ? ' ' + this.etiquetaStatus(p.status, p) : ''}</span>
         <span class="time-hp"><span class="barra ${faixa}"><i style="width:${pct}%"></i></span><span class="hp-num">${p.hp}/${p.hpMax}</span></span>
       </button>`;
     }).join('');
@@ -2824,7 +2824,7 @@ const UI = {
           <span class="pc-ficha-nome">${this.esc(nomeExib(p))}${this.shi(p)}</span>
           <span class="pc-ficha-nv">Nv ${p.nivel}</span>
           ${p.morto ? '<span class="pc-tag morto">morto</span>' :
-            p.hp <= 0 ? '<span class="pc-tag caido">desmaiado</span>' : ''}
+            p.hp <= 0 ? `<span class="pc-tag caido">desmaiad${pron(p).o}</span>` : ''}
         </div>
         <div class="pc-tipos">${tipos}${p.naturezaVista ? `<span class="pc-nat">${this.esc(p.natureza)}</span>` : '<span class="pc-nat fraca">temperamento ainda não lido</span>'}</div>
         <div class="pc-medida"><span class="rot">HP</span>
@@ -3469,7 +3469,7 @@ const UI = {
     return `<button class="time-linha${cls}${marca ? ' ativo' : ''}" data-uid="${p.uid}" ${travada ? 'disabled' : `onclick="${onclick}"`}>
       <span class="time-icone">${imgSprite(p, 'icone')}</span>
       <span class="time-nome">${this.esc(nomeExib(p))}${this.shi(p)}${p.segurando ? `<span class="time-segura" title="${this.esc(p.segurando)}">${imgItem(p.segurando)}</span>` : ''}${
-        (() => { const f = typeof Fome !== 'undefined' ? Fome.estado(p) : null; return f ? `<span class="time-fome ${f === 'faminto' ? 'grave' : ''}">${f}</span>` : ''; })()}</span>
+        (() => { const f = typeof Fome !== 'undefined' ? Fome.estado(p) : null; return f ? `<span class="time-fome ${f === 'faminto' ? 'grave' : ''}">${f === 'faminto' ? 'famint' + pron(p).o : f}</span>` : ''; })()}</span>
       <span class="time-hp"><span class="barra ${faixa}"><i style="width:${pct}%"></i></span><span class="hp-num">${marca ? this.esc(marca) + ' · ' : ''}${p.morto ? 'morto' : `${p.hp}/${p.hpMax}`}</span></span>
     </button>`;
   },
@@ -3494,9 +3494,9 @@ const UI = {
         <span class="barra ${faixa}"><i style="width:${pct}%"></i></span>
         <span class="tm-linha2">
           <span class="tm-hp mono">${p.morto ? 'Morto' : `${Math.max(0, p.hp)}/${p.hpMax}`}</span>
-          ${p.status && !p.morto && p.hp > 0 ? this.etiquetaStatus(p.status) : ''}
+          ${p.status && !p.morto && p.hp > 0 ? this.etiquetaStatus(p.status, p) : ''}
           ${p.hp <= 0 && !p.morto ? `<span class="tm-tag">Desmaiad${pron(p).o}</span>` : ''}
-          ${fome ? `<span class="time-fome${fome === 'faminto' ? ' grave' : ''}">${this.esc(maiuscula(fome))}</span>` : ''}
+          ${fome ? `<span class="time-fome${fome === 'faminto' ? ' grave' : ''}">${this.esc(maiuscula(fome === 'faminto' ? 'famint' + pron(p).o : fome))}</span>` : ''}
           ${p.segurando ? `<span class="tm-item" title="${this.esc(p.segurando)}">${imgItem(p.segurando)}</span>` : ''}
         </span>
       </span>
@@ -3699,7 +3699,7 @@ const UI = {
         <span class="sm-tipos">${p.tipos.map(t => this.tipoTag(t)).join('')}</span>
         <span class="sm-chao" aria-hidden="true"></span>
         ${imgSprite(p, 'frente')}
-        ${p.status && !p.morto ? `<span class="sm-condicao">${this.etiquetaStatus(p.status)}</span>` : ''}
+        ${p.status && !p.morto ? `<span class="sm-condicao">${this.etiquetaStatus(p.status, p)}</span>` : ''}
         ${p.morto ? `<span class="sm-luto">${e(maiuscula(p.causaMorte || 'Não voltou'))}</span>` : ''}
       </div>
       ${p.morto ? '' : `<div class="sm-vida">
@@ -5424,6 +5424,7 @@ const UI = {
       <p class="sussurro">Todo Pokémon nasce macho (♂), fêmea (♀) ou sem sexo, na proporção dos jogos, e fica assim pra sempre — evoluir não muda. A ficha da espécie na Pokédex mostra a proporção. Sexo não mexe em atributo nem em jeito: o jeito é a natureza. A história fala dele como ele é, e algumas cenas reparam nisso.</p>
       <div class="linha"><span class="k">Proporção</span><span class="v">meio a meio na maioria · 7♂ pra 1♀ nos iniciais, fósseis, Eevee, Togepi e Snorlax · 3♂ pra 1♀ em Growlithe, Abra, Machop, Elekid, Magby · 1♂ pra 3♀ em Clefairy, Vulpix, Jigglypuff, Snubbull</span></div>
       <div class="linha"><span class="k">Sem sexo</span><span class="v">Magnemite, Voltorb, Staryu, Ditto, Porygon, Unown e os lendários</span></div>
+      <div class="linha"><span class="k">Com história</span><span class="v">quem chega pela mão de alguém que já falou dele (a caixa da vizinha, a primeira troca de cada pessoa) chega com o sexo da fala, se a espécie tiver esse sexo · o inicial ganha o sexo na hora da escolha, na proporção de sempre</span></div>
       <div class="linha"><span class="k">Attract</span><span class="v">só pega em sexo oposto · sem sexo não se apaixona nem apaixona</span></div>
       <div class="linha"><span class="k">Par</span><span class="v">mesma linha de evolução (os dois Nidoran contam como uma) e sexos opostos, no mesmo time · cada um tem um par só</span></div>
       <div class="linha"><span class="k">Par no time</span><span class="v">desobedece metade do que desobedeceria</span></div>
@@ -5614,7 +5615,7 @@ const UI = {
       <div class="linha"><span class="k">Escalões</span><span class="v">${ESCALOES.map(e => this.esc(concordaJogador(e.nome))).join(' · ')}</span></div>
       ${ESCALOES.slice(1).map(e => `<div class="linha"><span class="k">${this.esc(concordaJogador(e.nome))}</span><span class="v">confiança ${e.conf} · capítulo ${e.cap} · vencer a prova · ${fmtDin(e.renda)} ₽ por capítulo · ${Math.round((1 - e.loja) * 100)}% de desconto</span></div>`).join('')}
       <div class="linha"><span class="k">Confiança</span><span class="v">o que a rede viu você fazer na história, mais o que os serviços somam · sabotagem que ela percebe tira; a que ela não percebe não conta</span></div>
-      <div class="linha"><span class="k">Serviço</span><span class="v">no ponto da rede da cidade: Vermilion; Celadon desde ${this.esc(concordaJogador(ESCALOES[1].nome))}; Fuchsia desde ${this.esc(concordaJogador(ESCALOES[2].nome))} · um a cada ${SERVICO_ESPERA_DIAS} dias · cada um uma vez, do degrau dele até o seguinte · feito direito, +1 a +3 de confiança · luta perdida no serviço, −1 e não paga</span></div>
+      <div class="linha"><span class="k">Serviço</span><span class="v">no ponto da rede da cidade: Vermilion; Celadon desde ${this.esc(concordaJogador(ESCALOES[1].nome))}; Fuchsia desde ${this.esc(concordaJogador(ESCALOES[2].nome))} · um a cada ${SERVICO_ESPERA_DIAS} dias · cada um uma vez, do degrau dele até o seguinte · leva um período, ou o tempo que ele conta (a noite inteira na porta, a madrugada no canal, a tarde na fila) · feito direito, +1 a +3 de confiança · luta perdida no serviço, −1 e não paga</span></div>
       <div class="linha"><span class="k">Esconder o que fez</span><span class="v">teste da cena; falhou, a rede percebe</span></div>
       <div class="linha"><span class="k">Prova</span><span class="v">luta contra quem já está no degrau, no ponto dele · time de ${Object.values(PROVAS_DA_REDE).map(x => x.tam).join(', ').replace(/, (\d+)$/, ' e $1')} · nível: o maior entre o lugar + 2 e a média dos seus três mais fortes, mais ${Object.values(PROVAS_DA_REDE).map(x => x.acima).join(', ').replace(/, (\d+)$/, ' e $1')} — o mais forte nesse nível, o resto até 3 abaixo · erra ${ERRO_IA_VETERANO}% e gasta Vontade · paga classe × nível × ${PAGA_PROVA} · perdeu, volta a valer em ${PROVA_ESPERA_DIAS} dia</span></div>
       <div class="linha"><span class="k">Subir</span><span class="v">reputação ruim +1 · um item do degrau na mochila · o nome do degrau no cartão e o salário dele no lugar do anterior</span></div>

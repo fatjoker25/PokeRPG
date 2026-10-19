@@ -1693,7 +1693,7 @@ c4_funcionario:{
   falante:'Varian',
   vozes:['N','N','P','N','N','N'],
   texto:[
-    'O funcionário do museu é também o bilheteiro, o segurança e o faxineiro. Ele se chama Varian e tem cinquenta e poucos anos.',
+    d=>{ Nomes.apresentar('o senhor do museu'); return 'O funcionário do museu é também o bilheteiro, o segurança e o faxineiro. Ele se chama Varian e tem cinquenta e poucos anos.'; },
     'Você pergunta do balde.',
     '"Ah, o balde." Ele nem parece constrangido. "Telhado. Desde uma chuva de abril, seis anos atrás."',
     '"E ninguém conserta?"',

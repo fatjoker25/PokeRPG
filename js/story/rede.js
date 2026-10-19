@@ -182,9 +182,9 @@ const SERVICOS_DA_REDE = [
   escolhas:[
     {texto:'Ficar a tarde inteira e contar direito.',
      teste:{status:'percepcao', dificuldade:6, nomeStatus:'Percepção', eixo:'paciencia'},
-     bom:{conf:1, ef:{dinheiro:500, rep:{eixo:'ruim', delta:1, motivo:'Contou a fila do Centro de Vermilion pra rede'}},
+     bom:{conf:1, ef:{dinheiro:500, rep:{eixo:'ruim', delta:1, motivo:'Contou a fila do Centro de Vermilion pra rede'}, executar:()=>{ Relogio.ate(18); }},
        resultado:['Vinte e três. Você confere duas vezes antes de dizer.', fala('a voz do outro lado', 'Vinte e três. Bate com o nosso.')]},
-     ruim:{conf:0, ef:{dinheiro:200},
+     ruim:{conf:0, ef:{dinheiro:200, executar:()=>{ Relogio.ate(18); }},
        resultado:['Você perde a conta duas vezes e diz dezenove.', fala('a voz do outro lado', 'Dezenove. O nosso diz vinte e três. Da próxima, conta com o dedo.', 'frio')]}},
     {texto:'Dizer um número qualquer e ir almoçar.', conf:-1, ef:{dinheiro:200},
      resultado:['Você diz trinta.', fala('a voz do outro lado', 'Trinta. O nosso diz vinte e três.', 'frio'), 'O dinheiro cai na conta. Menos do que da outra vez.']}
@@ -235,20 +235,20 @@ const SERVICOS_DA_REDE = [
        antes:[fala('Guarda Teague', 'Então vai ser assim. Tá bom.'), 'Ele apoia a lanterna num poste, virada pra vocês dois.'],
        vence:'"Abre a porta agora."', perde:'"Eu volto com mais gente."',
        perdeu:['Teague abre a porta com o seu molho de chaves e anota o que vê num caderninho. Caixas lacradas, furo de ar em cada uma.', 'Na semana seguinte o armazém está vazio e com outro cadeado.']},
-     conf:2, ef:{dinheiro:900, rep:{eixo:'ruim', delta:1, motivo:'Brigou com o guarda do porto na porta de um armazém da rede'}},
+     conf:2, ef:{dinheiro:900, rep:{eixo:'ruim', delta:1, motivo:'Brigou com o guarda do porto na porta de um armazém da rede'}, executar:()=>{ Relogio.ate(7); }},
      resultado:['Teague recolhe a lanterna e vai embora sem pressa, olhando pra trás duas vezes.', 'De manhã alguém troca o cadeado e te paga na porta, em dinheiro dobrado no meio.']},
     {texto:'Dizer que o armazém é de uma transportadora e que a papelada está no escritório.',
      teste:{status:'carisma', dificuldade:7, nomeStatus:'Carisma', eixo:'simpatia'},
-     bom:{conf:2, ef:{dinheiro:900},
+     bom:{conf:2, ef:{dinheiro:900, executar:()=>{ Relogio.ate(7); }},
        resultado:[fala('Guarda Teague', 'Transportadora. Tá. Amanhã eu passo no escritório.'), 'Ele não passa. De manhã, alguém troca o cadeado e te paga na porta.']},
      ruim:{conf:0,
        luta:{classe:'Guarda', nome:'Teague', rosto:'overworld/policial', times:[21, 66, 58], tam:3, acima:-1,
          antes:[fala('Guarda Teague', 'Transportadora de madrugada, com {moço|moça} de preto na porta. Não.'), 'Ele apoia a lanterna num poste.'],
          vence:'"Abre a porta agora."', perde:'"Eu volto com mais gente."',
          perdeu:['Teague abre a porta e anota o que vê. Caixas lacradas, furo de ar em cada uma.', 'Na semana seguinte o armazém está vazio e com outro cadeado.']},
-       ef:{dinheiro:900}, conf:2,
+       ef:{dinheiro:900, executar:()=>{ Relogio.ate(7); }}, conf:2,
        resultado:['Teague vai embora sem a resposta que veio buscar.', 'De manhã alguém troca o cadeado e te paga na porta.']}},
-    {texto:'Sair da frente e deixar ele olhar.', conf:-2, ef:{rep:{eixo:'bom', delta:2, motivo:'Deixou o guarda do porto abrir o armazém da rede'}},
+    {texto:'Sair da frente e deixar ele olhar.', conf:-2, ef:{rep:{eixo:'bom', delta:2, motivo:'Deixou o guarda do porto abrir o armazém da rede'}, executar:()=>{ Relogio.ate(7); }},
      resultado:['Teague abre a porta e fica um tempo parado com a lanterna apontada pra dentro. Caixas lacradas, furo de ar em cada uma, e um barulho baixinho que não é do mar.',
        fala('Guarda Teague', 'Você não estava aqui. Some.', 'baixo'), 'De manhã tem viatura no cais. O armário 14 fica vazio três dias.']}
   ]
@@ -319,9 +319,9 @@ const SERVICOS_DA_REDE = [
      resultado:['O Lark conta o dinheiro na sua frente, como se diz que se faz, e te passa metade.', 'As duas gaiolas sobem num carro de passeio de vidro escuro.']},
     {texto:'Anotar vinte e dois e soltar as duas no pátio de madrugada.',
      teste:{status:'intelecto', dificuldade:7, nomeStatus:'Intelecto', eixo:'discricao'},
-     bom:{conf:0, ef:{moral:3, rep:{eixo:'bom', delta:2, motivo:'Soltou duas gaiolas que não estavam na nota'}},
+     bom:{conf:0, ef:{moral:3, rep:{eixo:'bom', delta:2, motivo:'Soltou duas gaiolas que não estavam na nota'}, executar:()=>{ Relogio.ate(3); }},
        resultado:['Um Growlithe e um Ponyta, os dois de olho grande. Saem pelo portão do pátio sem olhar pra trás.', 'O Lark acha que foi o outro motorista. Os dois não se falam mais.']},
-     ruim:{conf:-3, ef:{moral:3, rep:{eixo:'bom', delta:2, motivo:'Soltou duas gaiolas que não estavam na nota'}},
+     ruim:{conf:-3, ef:{moral:3, rep:{eixo:'bom', delta:2, motivo:'Soltou duas gaiolas que não estavam na nota'}, executar:()=>{ Relogio.ate(3); Relogio.ate(8); }},
        resultado:['As duas saem pelo portão do pátio.', 'De manhã, a câmera do pátio está no caderno da Juno, numa folha dobrada, com a sua hora de entrada.']}}
   ]
 },
@@ -422,17 +422,18 @@ const SERVICOS_DA_REDE = [
      luta:{classe:'Oficial', nome:'Rourke', rosto:'overworld/policial', times:[17, 66, 125, 58], tam:4, acima:1,
        antes:['Você atravessa o cais e para do lado dele.', fala('Oficial Rourke', 'Eu sei o que você é. Senta, que eu também sei o que você vai fazer.'), 'Ele termina o café, joga o copo no lixo e não erra.'],
        vence:'"Cinco da manhã. Você vai estar lá dentro."', perde:'"Vai. Leva as onze. A gente se vê."',
-       perdeu:['De madrugada, a viatura chega antes do caminhão. Você vê de longe, do outro lado da água, as gaiolas saindo uma por uma.']},
+       perdeu:['De madrugada, a viatura chega antes do caminhão. Você vê de longe, do outro lado da água, as gaiolas saindo uma por uma.'],
+       perdeuEf:{executar:()=>{ Relogio.ate(5); }}},
      conf:3, ef:{dinheiro:1800, rep:{eixo:'ruim', delta:2, motivo:'Segurou a polícia até a carga da rede sair do cais'},
-       npc:{nome:'Rourke', opiniao:-4, memoria:'Você segurou ele no cais até o caminhão da rede passar.'}},
+       npc:{nome:'Rourke', opiniao:-4, memoria:'Você segurou ele no cais até o caminhão da rede passar.'}, executar:()=>{ Relogio.ate(6); }},
      resultado:['Às cinco, a polícia abre um armazém vazio, varrido, com cheiro de desinfetante.', 'Rourke fica na porta um tempo, depois olha pro cais, como quem procura alguém.']},
     {texto:'Avisar a rede, mas deixar as gaiolas lá dentro pra polícia achar.',
      teste:{status:'intelecto', dificuldade:8, nomeStatus:'Intelecto', eixo:'discricao'},
-     bom:{conf:1, ef:{moral:3, rep:{eixo:'bom', delta:2, motivo:'Deixou a polícia achar onze gaiolas da rede'}},
+     bom:{conf:1, ef:{moral:3, rep:{eixo:'bom', delta:2, motivo:'Deixou a polícia achar onze gaiolas da rede'}, executar:()=>{ Relogio.ate(6); }},
        resultado:['Você diz pra rede que o caminhão atrasou. Às cinco, a polícia abre o armazém e acha onze gaiolas e ninguém.', 'Na rede, a culpa vai pro motorista. Você não corrige.']},
-     ruim:{conf:-3, ef:{moral:3, rep:{eixo:'bom', delta:2, motivo:'Deixou a polícia achar onze gaiolas da rede'}},
+     ruim:{conf:-3, ef:{moral:3, rep:{eixo:'bom', delta:2, motivo:'Deixou a polícia achar onze gaiolas da rede'}, executar:()=>{ Relogio.ate(7); }},
        resultado:['Às cinco, a polícia acha as onze gaiolas. Às sete, o Mercer te liga.', fala('Mercer', 'O caminhão chegou às seis. Você disse que atrasou.', 'frio')]}},
-    {texto:'Não avisar ninguém.', conf:-4, ef:{moral:4, rep:{eixo:'bom', delta:3, motivo:'Deixou a batida do cais acontecer'}},
+    {texto:'Não avisar ninguém.', conf:-4, ef:{moral:4, rep:{eixo:'bom', delta:3, motivo:'Deixou a batida do cais acontecer'}, executar:()=>{ Relogio.ate(5); }},
      resultado:['Você dorme mal e acorda às cinco com a sirene do outro lado da água.', 'Onze gaiolas, um motorista e uma pessoa de uniforme preto que você conhecia de vista. O armário 14 não abre por uma semana.']}
   ]
 },
@@ -507,9 +508,9 @@ const SERVICOS_DA_REDE = [
      resultado:['Quinlan paga o dobro, sorrindo pela primeira vez, e leva a caixa d\'água no porta-malas.', 'Corbin, quando sabe, só diz "o dobro" e volta a lixar a unha.']},
     {texto:'Dizer que o Dratini morreu de noite, e soltar ele no canal de madrugada.',
      teste:{status:'carisma', dificuldade:8, nomeStatus:'Carisma', eixo:'discricao'},
-     bom:{conf:0, ef:{moral:4, rep:{eixo:'bom', delta:3, motivo:'Soltou no canal um Dratini que a rede ia vender'}},
+     bom:{conf:0, ef:{moral:4, rep:{eixo:'bom', delta:3, motivo:'Soltou no canal um Dratini que a rede ia vender'}, executar:()=>{ Relogio.ate(3); }},
        resultado:['Quinlan põe as luvas de volta e vai embora sem raiva, como quem perde leilão.', 'De madrugada, o Dratini escorrega da caixa pro canal e some sem fazer onda.']},
-     ruim:{conf:-4, ef:{moral:4, rep:{eixo:'bom', delta:3, motivo:'Soltou no canal um Dratini que a rede ia vender'}},
+     ruim:{conf:-4, ef:{moral:4, rep:{eixo:'bom', delta:3, motivo:'Soltou no canal um Dratini que a rede ia vender'}, executar:()=>{ Relogio.ate(3); Relogio.ate(8); }},
        resultado:['O Dratini some no canal.', 'De manhã, Corbin te mostra a foto da câmera do estacionamento, com você e a caixa d\'água. Ele não diz nada. Lixa a unha.']}}
   ]
 },
@@ -929,7 +930,7 @@ const Rede = {
     const s = servicoDaRede(a.id), esc = s.escolhas[a.i];
     const ramo = a.ramo ? esc[a.ramo] : esc;
     if (venceu) return this.fecharServico(s, ramo, a.avisos || []);
-    return this.fecharServico(s, {conf:-1}, a.avisos || [], L.perdeu || []);
+    return this.fecharServico(s, {conf:-1, ef:L.perdeuEf}, a.avisos || [], L.perdeu || []);
   }
 };
 

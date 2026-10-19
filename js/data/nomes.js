@@ -129,6 +129,9 @@ const NOMES_FIXOS = {
   /* a menina da fila da licença, em Viridian: diz o nome quando é ajudada */
   'a menina do formulário':    'Ida',
   'o capitão do porto':        'Capitão Marlow',
+  /* Pewter, no 4: o único funcionário que sobrou no museu diz o nome
+     quando você pergunta do balde; é ele que reclama do telhado */
+  'o senhor do museu':         'Varian',
   'a funcionária da guarita':  'Sra. Myrtle',
   'o rapaz do protocolo':      'Tito',
   'o guarda da primeira':      'Pike',

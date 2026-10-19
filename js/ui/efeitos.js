@@ -77,9 +77,10 @@ function fxGolpe(arq){
   return (typeof SPRITES_EMBUTIDOS !== 'undefined' && SPRITES_EMBUTIDOS[rel]) || rel;
 }
 
+/* a palavra concorda com quem está na condição ({o}: concordar) */
 const ROTULO_STATUS = {
-  paralisia:['PAR', 'paralisado'], queimadura:['BRN', 'queimado'], veneno:['PSN', 'envenenado'],
-  sono:['SLP', 'dormindo'], congelamento:['FRZ', 'congelado']
+  paralisia:['PAR', 'paralisad{o}'], queimadura:['BRN', 'queimad{o}'], veneno:['PSN', 'envenenad{o}'],
+  sono:['SLP', 'dormindo'], congelamento:['FRZ', 'congelad{o}']
 };
 
 const Efeitos = {
@@ -217,7 +218,7 @@ const Efeitos = {
     }
     const num = ficha.querySelector('.hp-num');
     if (num) num.textContent = `${foto.hp} / ${foto.hpMax} HP`;
-    this.pintarStatus(lado, foto.status);
+    this.pintarStatus(lado, foto.status, foto);
     this.pintarMarcas(lado, foto);
   },
   pintarMarcas(lado, foto){
@@ -227,14 +228,16 @@ const Efeitos = {
     const html = UI.marcasHTML(foto.marcas);
     if (onde.innerHTML !== html) onde.innerHTML = html;
   },
-  pintarStatus(lado, st){
+  pintarStatus(lado, st, foto){
     const a = this.arena();
     const onde = a && a.querySelector(`.lutador.${lado} .ficha .linha-tipos`);
     if (!onde) return;
     const velho = onde.querySelector('.status-tag');
     if ((velho ? velho.dataset.st : null) === (st || null)) return;
     if (velho) velho.remove();
-    if (st) onde.insertAdjacentHTML('beforeend', UI.etiquetaStatus(st));
+    /* o sexo só aparece na palavra do seu: o de lá é "o Pokémon" */
+    const meu = foto && Batalha.aliado && Batalha.aliado.uid === foto.uid ? Batalha.aliado : null;
+    if (st) onde.insertAdjacentHTML('beforeend', UI.etiquetaStatus(st, meu));
   },
 
   /* ---------- golpes ----------

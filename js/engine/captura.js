@@ -173,7 +173,7 @@ const Captura = {
     Estado.registrar(`Capturou ${esp.nome} Nv${alvo.nivel} com ${nomeBola}.`);
     if (alvo.shiny){
       Estado.pegouBrilhante(alvo.dex);
-      ev('brilhante', 'E ele é brilhante. Você vai contar essa história mal, porque ninguém conta essa história bem.');
+      ev('brilhante', `E ${pron(alvo).ele} é brilhante. Você vai contar essa história mal, porque ninguém conta essa história bem.`);
     }
 
     if (esp.lendario) this.consequenciasLendario(alvo, eventos);

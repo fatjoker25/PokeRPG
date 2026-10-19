@@ -285,7 +285,7 @@ pewter:[
     'A porta da ala de fósseis tem um aviso à mão numa folha amarelada: FÓSSEIS — REFORMA.',
     'Pela fresta dá pra ver lona azul no chão e uma pilha de balde.',
     fala('o senhor do museu', 'Reforma é força de expressão. A gente tem o dinheiro do telhado e não tem o do andaime.'),
-    fala('o senhor do museu', 'Então quando chove a gente põe balde, e quando para a gente tira balde, e é isso há três anos.')
+    fala('o senhor do museu', 'Então quando chove a gente põe balde, e quando para a gente tira balde, e é isso há seis anos.')
   ],
   escolhas:[
     {texto:'Doar pro telhado.',
