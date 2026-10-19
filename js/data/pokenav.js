@@ -133,7 +133,7 @@ const CONTATOS = [
       const nome = w.onde ? (LOCAIS[w.onde] || {}).nome : null;
       const onde = w.parado ? 'Em Pallet, lavando a perua. Semana de folga, se ninguém ligar.'
         : w.voltando ? 'Na estrada, voltando pra Pallet. Liga de novo que eu tô dirigindo.'
-        : w.hoje ? `Hoje? Hoje eu tô em ${nome}, na praça, até as cinco.`
+        : w.hoje ? ((sincronizarHora(d.relogio), d.relogio.hora) < 17 ? `Hoje? Hoje eu tô em ${nome}, na praça, até as cinco.` : `Hoje eu fiquei em ${nome}, na praça, até as cinco. Agora tô fechando a perua.`)
         : w.proximo ? `Saí de ${nome} faz pouco. Dia ${w.proximo.dia} eu tô em ${(LOCAIS[w.proximo.onde] || {}).nome}.`
         : `Saí de ${nome} faz pouco.`;
       return [

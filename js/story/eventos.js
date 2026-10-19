@@ -5,6 +5,10 @@
    escolha, consequência e memória — e alguns cobram depois.
    ============================================================ */
 
+/* A hora de agora, pra evento que diz a hora: o evento só aparece na
+   janela em que o texto é verdade (o relógio anda fora das cenas). */
+function horaAgora(d){ sincronizarHora(d.relogio); return d.relogio.hora; }
+
 /* Quem já te conhece te reconhece: pela entrega, pelo número ou pela memória. */
 function conheceOCelio(d){
   return !!(d.flags.numero_do_goro || d.flags.recebeu_do_goro || (typeof Estado !== 'undefined' && Estado.temNumero && Estado.temNumero('goro'))
@@ -45,6 +49,7 @@ const EVENTOS_CIDADE = {
 pallet:[
 {
   id:'pal_cachorro_do_quatorze', umaVez:true, peso:3,
+  cond:d=>horaAgora(d) >= 6 && horaAgora(d) < 11,
   titulo:'O Growlithe do quatorze',
   texto:[
     'Tem um Growlithe velho deitado no meio da rua, na parte quente do asfalto, e ele não sai de lá por nada.',
@@ -74,7 +79,8 @@ pallet:[
     {texto:'Comprar um saco de areia no armazém e fazer uma sombra na calçada pra ele.',
      ef:{dinheiro:-300, moral:3, flag:'fez_sombra_pro_growlithe',
          rep:{eixo:'bom',delta:2,motivo:'Resolveu o problema em vez de empurrar o problema'},
-         registrar:'Fez uma sombra na calçada pro Growlithe do quatorze, com lona e areia.'},
+         registrar:'Fez uma sombra na calçada pro Growlithe do quatorze, com lona e areia.',
+         executar:()=>{ Relogio.avancar(3); }},
      resultado:[
        'Você compra lona, areia e barbante, e leva quarenta minutos armando uma sombra torta na calçada, na altura certa.',
        'Ele não vem. Ele fica no asfalto olhando você trabalhar.',
@@ -83,7 +89,7 @@ pallet:[
        fala('a mulher do quatorze', 'ELE FOI SOZINHO!', 'grita', 'Ela grita isso da janela, pra rua inteira, sem se importar com ninguém.')
      ]},
     {texto:'Não é problema seu. Seguir andando.',
-     ef:{},
+     ef:{executar:()=>{ Relogio.ate(11); }},
      resultado:['Você desvia e segue.','Às onze e dez você ouve um caminhão frear muito forte, quatro ruas atrás, e não volta pra ver.']}
   ]
 },
@@ -459,6 +465,7 @@ vermilion:[
 },
 {
   id:'ver_por_do_sol', peso:2,
+  cond:d=>horaAgora(d) >= 17 && horaAgora(d) < 19,
   titulo:'O melhor pôr do sol de Kanto',
   texto:[
     'O homem da guarita do porto está sentado na cadeira de plástico dele, de costas pra cancela, olhando o oeste.',
@@ -469,7 +476,8 @@ vermilion:[
     {texto:'Sentar no chão e olhar junto.',
      ef:{moral:3, hp:2, flag:'viu_o_por_do_sol_de_vermilion',
          rep:{eixo:'bom',delta:1,motivo:'Parou o dia pra ver um pôr do sol com quem convidou'},
-         registrar:'Viu o pôr do sol de Vermilion sentad{o|a} no chão da guarita, com o guarda.'},
+         registrar:'Viu o pôr do sol de Vermilion sentad{o|a} no chão da guarita, com o guarda.',
+         executar:()=>{ if (Estado.dados.relogio.hora < 18) Relogio.ate(18); }},
      resultado:[
        'Vocês dois ficam onze minutos em silêncio absoluto.',
        'O sol entra na água num ângulo que faz o porto inteiro ficar laranja por uns quarenta segundos, inclusive os guindastes, inclusive a ferrugem.',
@@ -897,9 +905,12 @@ fuchsia:[
 },
 {
   id:'fuc_o_onibus_das_quatro', peso:2,
+  cond:d=>horaAgora(d) >= 16 && horaAgora(d) < 18,
   titulo:'O ônibus das quatro',
   texto:[
-    'Às quatro da tarde o ônibus da Zona Safári descarrega quarenta pessoas de chapéu novo, e a cidade aumenta de volume por vinte minutos.',
+    d=>horaAgora(d) === 16
+      ? 'Às quatro da tarde o ônibus da Zona Safári descarrega quarenta pessoas de chapéu novo, e a cidade aumenta de volume por vinte minutos.'
+      : 'O ônibus das quatro da Zona Safári chega atrasado e descarrega quarenta pessoas de chapéu novo, e a cidade aumenta de volume por vinte minutos.',
     'Todos os quarenta compraram o chapéu na entrada. Todos os quarenta estão falando ao mesmo tempo sobre o que viram.',
     'Um deles está calado, no fim da fila, segurando uma Pokébola vazia.'
   ],
@@ -1297,18 +1308,20 @@ const EVENTOS_GERAIS = [
          registrar:'Levou até o Centro Pokémon alguém que estava girando o mapa numa esquina.'},
      resultado:[
        'São quatro quarteirões e vocês conversam o caminho inteiro.',
-       'Ela começou a jornada aos trinta e um anos porque o filho dela começou aos onze e ela ficou com inveja, e ela fala isso rindo e não é inteiramente piada.',
+       'Ela começou a jornada aos trinta e um anos porque o filho dela começou aos quinze e ela ficou com inveja, e ela fala isso rindo e não é inteiramente piada.',
        fala('a pessoa do mapa', 'Todo mundo aqui tem a idade do meu filho. TODO MUNDO.', 'riso'),
        fala('a pessoa do mapa', 'Mas eu tô me divertindo mais do que ele, e eu ligo pra ele todo domingo só pra dizer isso.')
      ]},
     {texto:'Ensinar a ler o mapa de uma vez.',
      ef:{rep:{eixo:'bom',delta:1,motivo:'Ensinou a ler o mapa em vez de levar pela mão'},
-         registrar:'Ensinou alguém a orientar o mapa pelo sol numa esquina qualquer.'},
+         registrar:d=>['manhã','tarde'].includes(d.relogio.periodo) ? 'Ensinou alguém a orientar o mapa pelo sol numa esquina qualquer.' : 'Ensinou alguém a orientar o mapa pela placa acesa do Centro, numa esquina qualquer.'},
      resultado:[
-       'Você mostra como orientar pelo sol, que às três da tarde em Kanto é o mais fácil que tem.',
+       d=>['manhã','tarde'].includes(d.relogio.periodo)
+         ? 'Você mostra como orientar pelo sol, que de dia em Kanto é o mais fácil que tem.'
+         : 'Você mostra como orientar pela placa do Centro, que fica acesa a noite inteira e aparece de qualquer esquina.',
        'Ela vira o mapa uma vez e aponta a direção certa de primeira.',
        fala('a pessoa do mapa', 'Isso é tão simples que eu tô com raiva.'),
-       fala('a pessoa do mapa', 'Onze anos de escola e ninguém nunca me falou do sol.')
+       d=>fala('a pessoa do mapa', ['manhã','tarde'].includes(d.relogio.periodo) ? 'Onze anos de escola e ninguém nunca me falou do sol.' : 'Onze anos de escola e ninguém nunca me falou da placa.')
      ]},
     {texto:'Apontar e seguir.', ef:{},
      resultado:['Você aponta. Ela agradece. Você tem quase certeza de que ela vai errar de novo na próxima esquina.']}
@@ -1322,7 +1335,7 @@ const EVENTOS_GERAIS = [
     'Tem um cartaz novo no poste, impresso em papel comum, ainda sem chuva em cima.',
     'PROCURA-SE. E uma foto ruim de licença, de um garoto de uns quinze anos.',
     'Embaixo: "Saiu de casa em março. A família não está brava. Qualquer informação."',
-    'Março foi há bastante tempo.'
+    d=>Calendario.hoje().mes === 0 ? 'Março é este mês. A família não esperou muito.' : Calendario.hoje().mes === 1 ? 'Março foi no mês passado.' : 'Março foi há bastante tempo.'
   ],
   escolhas:[
     {texto:'Anotar o contato.',
@@ -1781,7 +1794,7 @@ montanha:[
           resultado:[
             'Você grita duas vezes trilha abaixo e espera dois minutos antes de encostar nela.',
             'Sai com um empurrão de ombro e uma alavanca de galho, e o barulho dura mais do que você imaginava.',
-            'Sobra um monte de pedra na trilha que dá pra contornar andando. Era isso, ou ela na cabeça de alguém em março.'
+            'Sobra um monte de pedra na trilha que dá pra contornar andando. Era isso, ou ela na cabeça de alguém na próxima chuva.'
           ]},
      ruim:{ef:{hp:-5, registrar:'Tentou derrubar a pedra solta e ela derrubou você primeiro.'},
            resultado:[
@@ -1804,11 +1817,12 @@ montanha:[
 },
 {
   id:'rot_neblina_alta', peso:2,
+  cond:d=>horaAgora(d) >= 16 && horaAgora(d) < 18,
   titulo:'A neblina que fecha',
   texto:[
     'A neblina sobe o vale em vinte minutos e fecha tudo num branco que come som também: você fala e a sua voz volta errada.',
     'A trilha continua ali, dois metros de cada vez.',
-    'Ainda faltam umas três horas de caminho e falta uma hora e meia pra escurecer.'
+    d=>`Ainda faltam umas três horas de caminho e falta ${horaAgora(d) >= 17 ? 'uma hora e meia' : 'duas horas e meia'} pra escurecer.`
   ],
   escolhas:[
     {texto:'Parar onde está e esperar abrir.',
@@ -1925,7 +1939,8 @@ caverna:[
     {texto:'Agachar e ler.',
      ef:{flag:'leu_o_giz', registrar:'Leu o que estava escrito de giz na parede do túnel.'},
      resultado:[
-       'Diz: "SE VOCÊ TÁ LENDO ISSO VOCÊ TÁ NO CAMINHO CERTO. CONTINUA. — M."',
+       'Diz, em giz:',
+       '**SE VOCÊ TÁ LENDO ISSO VOCÊ TÁ NO CAMINHO CERTO. CONTINUA. — M.**',
        'A letra é de adulto tentando escrever grande.',
        'Três setas adiante tem outra, em giz mais novo, outra letra: "OBRIGADO M".',
        'E mais adiante uma terceira, mais nova ainda: "OBRIGADO M" de novo, outra letra.',
@@ -2075,10 +2090,11 @@ agua:[
 },
 {
   id:'rot_balsa_atrasada', peso:2,
+  cond:d=>horaAgora(d) >= 15 && horaAgora(d) <= 18,
   titulo:'A balsa que não vem',
   texto:[
     'O píer tem nove pessoas esperando e uma placa escrita à mão dizendo que a balsa das duas vai atrasar.',
-    'A placa está lá desde as duas. São quatro e vinte.',
+    d=>`A placa está lá desde as duas. Já passa das ${['três', 'quatro', 'cinco', 'seis'][horaAgora(d) - 15]}.`,
     'Tem um homem de colete que trabalha aqui e que aprendeu a não fazer contato visual com ninguém.'
   ],
   escolhas:[
