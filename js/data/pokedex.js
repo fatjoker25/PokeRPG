@@ -345,14 +345,8 @@ function nivelMinimoDe(dexId){
   return e ? (e.nivelMin || 1) : 1;
 }
 
-/* Taxa de captura derivada: lendários 3, fortões 45, médios 90, comuns 190 */
-Object.values(DEX).forEach(p => {
-  if (p.lendario) p.captura = 3;
-  else if (p.total >= 490) p.captura = 45;
-  else if (p.total >= 400) p.captura = 90;
-  else if (p.total >= 320) p.captura = 150;
-  else p.captura = 220;
-});
+/* Taxa de captura não existe: a captura é a do Pokérole, pelo posto
+   do exemplar (captura.js), e espécie nenhuma é mais fácil que outra. */
 
 /* ============================================================
    O QUE APARECE NO MATO

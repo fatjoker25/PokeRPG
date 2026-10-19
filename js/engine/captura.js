@@ -1,12 +1,12 @@
 /* ============================================================
-   CAPTURA
-   Comuns: Poké/Great/Ultra/Master Ball
-   Lendários: SÓ Ultra Ball e Master Ball. Com a Ultra, é a regra de
-   captura do Pokérole 3.0: o selo da bola (SELO_DA_BOLA, 8 dados na
-   Ultra) + os sucessos de bônus pela condição do alvo, contra os
-   sucessos que o posto dele pede (SUCESSOS_DO_POSTO) — e lendário conta
-   no mínimo como Ás (10). Com HP cheio, nem dá.
-   Mewtwo e Ho-Oh: 1d20 antes de tudo — 1-5 a bola QUEBRA
+   CAPTURA — a regra do Pokérole 3.0, pra todo Pokémon
+   O selo da bola (SELO_DA_BOLA: 4, 6 ou 8 dados, sucesso em 4+) + os
+   sucessos de bônus pela condição do alvo, contra os sucessos que o
+   posto dele pede (SUCESSOS_DO_POSTO). O nível manda, não a espécie.
+   Lendário: só Ultra Ball e Master Ball, e conta no mínimo como Ás
+   (10) — com HP cheio, nem dá. Master Ball fecha sem rolagem.
+   Mewtwo, Lugia, Ho-Oh e Celebi: 2d6 antes de tudo, e sem nenhum
+   sucesso a bola QUEBRA.
    ============================================================ */
 /* Pokérole 3.0, GM Screen: Seal Potency e Catch Difficulty */
 const SELO_DA_BOLA = {'Poké Ball':4, 'Great Ball':6, 'Ultra Ball':8};
@@ -49,11 +49,12 @@ const Captura = {
 
     Estado.usarItem(nomeBola);
 
-    // ---- QUEBRA-BOLAS: Mewtwo e Ho-Oh
+    // ---- QUEBRA-BOLAS: Mewtwo, Lugia, Ho-Oh e Celebi. Dois dados antes
+    //      de tudo: sem nenhum sucesso, a bola racha no ar (1 em 4)
     if (QUEBRA_BOLA.includes(alvo.dex)){
-      const d = Dados.d20('A Pokébola aguenta?');
-      ev('info', `${nomeVisivel(alvo)} é forte demais para uma Pokébola comum suportar. 1d20 = ${d} (1-5 quebra)`);
-      if (d <= 5){
+      const q = Dados.pool(2, 'A Pokébola aguenta?');
+      ev('rolagem', `${nomeVisivel(alvo)} é forte demais para uma Pokébola suportar: 2d6 → ${q.faces.join(', ')} = ${q.suc} sucesso${q.suc === 1 ? '' : 's'} (sem nenhum, ela quebra)`);
+      if (!q.suc){
         ev('perigo', `A esfera racha no ar. Um estalo seco — e ${nomeVisivel(alvo)} está livre, com os olhos em você.`);
         const L = Estado.lend(alvo.dex);
         L.disposicao = 'hostil';
@@ -75,24 +76,35 @@ const Captura = {
       return this.concluir(alvo, nomeBola, eventos);
     }
 
-    // ---- lendário com Ultra Ball: selo contra o posto, como no livro
+    // ---- todo o resto é a regra do Pokérole: o selo da bola contra os
+    //      sucessos que o posto do alvo pede, com bônus pela condição.
+    //      O nível manda, não a espécie; lendário conta no mínimo como Ás
+    const selo = SELO_DA_BOLA[nomeBola] || SELO_DA_BOLA['Poké Ball'];
+    const bonus = this.bonusDaCondicao(alvo, batalha);
+    const posto = esp.lendario ? Math.max(POSTO_MINIMO_LENDARIO, postoDoNivel(alvo.nivel)) : postoDoNivel(alvo.nivel);
+    const pede = SUCESSOS_DO_POSTO[posto];
+    const r = Dados.pool(selo, `Selo da ${nomeBola}`);
+    const total = r.suc + bonus.n;
+    ev('rolagem', `Selo da ${nomeBola}: ${selo}d6 → ${r.faces.join(', ')} = ${r.suc} sucesso${r.suc === 1 ? '' : 's'}`
+      + (bonus.n ? ` + ${bonus.n} (${bonus.porque.join(', ')})` : '')
+      + ` = ${total} · ${nomeVisivel(alvo)} conta como ${POSTOS[posto]}: pede ${pede}`);
+    if (esp.lendario) Estado.marcar('ultra_prende_lendario');
+
+    /* a bola balança uma vez por sucesso que faltava menos: na conta,
+       três e o clique; faltou um, duas e abre; faltaram dois, uma */
+    const falta = Math.max(0, pede - total);
+    const sacudidas = falta === 0 ? 3 : Math.max(0, 3 - falta);
+    if (!esp.lendario){
+      const nomes = ['A Pokébola balança uma vez…', 'Duas vezes…', 'Três vezes…'];
+      for (let i = 0; i < sacudidas; i++) ev('info', nomes[i]);
+    }
+    if (!falta){
+      ev('captura', esp.lendario ? 'Contra tudo que é provável, a Pokébola para de tremer.' : 'CLIQUE.');
+      anima('captura', 3);
+      return this.concluir(alvo, nomeBola, eventos);
+    }
+
     if (esp.lendario){
-      const selo = SELO_DA_BOLA[nomeBola] || 8;
-      const bonus = this.bonusDaCondicao(alvo, batalha);
-      const posto = Math.max(POSTO_MINIMO_LENDARIO, postoDoNivel(alvo.nivel));
-      const pede = SUCESSOS_DO_POSTO[posto];
-      const r = Dados.pool(selo, `Selo da ${nomeBola}`);
-      const total = r.suc + bonus.n;
-      ev('rolagem', `Selo da ${nomeBola}: ${selo}d6 → ${r.faces.join(', ')} = ${r.suc} sucesso${r.suc === 1 ? '' : 's'}`
-        + (bonus.n ? ` + ${bonus.n} (${bonus.porque.join(', ')})` : '')
-        + ` = ${total} · ${nomeVisivel(alvo)} conta como ${POSTOS[posto]}: pede ${pede}`);
-      Estado.marcar('ultra_prende_lendario');
-      if (total >= pede){
-        ev('captura', `Contra tudo que é provável, a Pokébola para de tremer.`);
-        anima('captura', 3);
-        return this.concluir(alvo, nomeBola, eventos);
-      }
-      const falta = pede - total;
       const L = Estado.lend(alvo.dex);
       L.ataquesSofridos++;
       if (L.ataquesSofridos >= 3 && L.disposicao === 'neutro'){
@@ -100,10 +112,9 @@ const Captura = {
         ev('perigo', `${nomeVisivel(alvo)} decorou seu rosto. Agora é pessoal.`);
         Estado.registrar(`${nomeVisivel(alvo)} tornou-se hostil por insistência.`);
       }
-      /* quanto mais perto do que pedia, mais a bola aguenta antes de abrir */
       if (falta <= 2){
         ev('erro', falta === 1 ? 'Ela balança duas vezes, e abre. Faltou pouco.' : 'Ela balança uma vez, e abre.');
-        anima('escapou', falta === 1 ? 2 : 1);
+        anima('escapou', sacudidas);
       } else {
         ev('erro', `${nomeVisivel(alvo)} rompe a Pokébola sem esforço aparente.`);
         /* "rompe sem esforço": entra, e sai antes da primeira chacoalhada */
@@ -112,39 +123,8 @@ const Captura = {
       return {eventos, capturou:false};
     }
 
-    // ---- captura comum (estilo jogos)
-    const bola = ITENS_INFO[nomeBola].mult;
-    const propHP = alvo.hp / alvo.hpMax;
-    let bonusStatus = 1;
-    if (alvo.status === 'sono' || alvo.status === 'congelamento') bonusStatus = 2;
-    else if (alvo.status) bonusStatus = 1.5;
-
-    const taxa = esp.captura;
-    const a = ((3 * alvo.hpMax - 2 * alvo.hp) / (3 * alvo.hpMax)) * taxa * bola * bonusStatus;
-    const chance = Math.min(100, (a / 255) * 100);
-
-    ev('info', `HP em ${Math.round(propHP*100)}%${alvo.status ? ', com '+alvo.status : ''} — chance de captura ≈ ${Math.round(chance)}%`);
-
-    /* A chance mostrada é a de verdade: cada uma das três sacudidas
-       passa com a raiz cúbica dela, e as três juntas dão a chance. Antes
-       cada sacudida usava a chance inteira, e 60% na tela era 22% na mão. */
-    let sacudidas = 0;
-    const porSacudida = Math.pow(chance / 100, 1 / 3);
-    for (let i = 0; i < 3; i++){
-      const d = Dados.rolar(100, 'Sacudida ' + (i+1));
-      if (d <= Math.max(1, Math.round(porSacudida * 100))) sacudidas++;
-      else break;
-    }
-    const nomes = ['A Pokébola balança uma vez…', 'Duas vezes…', 'Três vezes…'];
-    for (let i = 0; i < sacudidas; i++) ev('info', nomes[i]);
-
-    if (sacudidas >= 3){
-      ev('captura', 'CLIQUE.');
-      anima('captura', 3);
-      return this.concluir(alvo, nomeBola, eventos);
-    }
     /* o nome que a tela mostra: espécie não catalogada continua "???" */
-    ev('erro', `${nomeVisivel(alvo)} escapou da Pokébola!`);
+    ev('erro', sacudidas ? `${nomeVisivel(alvo)} escapou da Pokébola!` : `${nomeVisivel(alvo)} sai da Pokébola antes da primeira sacudida.`);
     anima('escapou', sacudidas);
     return {eventos, capturou:false};
   },

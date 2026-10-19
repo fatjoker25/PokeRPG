@@ -2457,7 +2457,7 @@ const UI = {
         <h3 class="cat-item">Contra o seu time</h3>
         <div class="linha"><span class="k">Fraco contra</span><span class="v">${this.esc(this.fraquezas(esp.tipos).join(', ') || '—')}</span></div>
         <div class="linha"><span class="k">Resiste a</span><span class="v">${this.esc(this.resistencias(esp.tipos).join(', ') || '—')}</span></div>
-        <div class="linha"><span class="k">Taxa de captura</span><span class="v">${esp.captura} <span class="fraco">(quanto maior, mais fácil)</span></span></div>
+        <div class="linha"><span class="k">Captura</span><span class="v">pede ${SUCESSOS_DO_POSTO[esp.lendario ? Math.max(POSTO_MINIMO_LENDARIO, postoDoNivel(p.nivel)) : postoDoNivel(p.nivel)]} sucessos</span></div>
       </div>
       <div style="margin-top:12px"><button class="btn destaque" onclick="UI.fecharEscaneamento()">Fechar a Pokédex</button></div>`,
       true, 'pokedex');
@@ -4644,7 +4644,6 @@ const UI = {
 
         <h3 class="cat-item">Ficha</h3>
         <div class="linha"><span class="k">Tipos</span><span class="v">${this.esc(esp.tipos.join(' / '))}</span></div>
-        <div class="linha"><span class="k">Taxa de captura</span><span class="v">${esp.captura} <span class="fraco">(quanto maior, mais fácil)</span></span></div>
         <div class="linha"><span class="k">Sexo</span><span class="v">${this.esc(proporcaoGenero(dex))}</span></div>
         <div class="linha"><span class="k">Evolução</span><span class="v">${esp.evo
           ? this.esc(DEX[esp.evo].nome) + (esp.nivelEvo ? ' — nível ' + esp.nivelEvo
@@ -5123,7 +5122,7 @@ const UI = {
       ${L('Pokémon desmaiado', 'volta no Centro')}
       ${L('Pokémon morto', 'não volta nunca')}
       <h3>Quando o seu cai contra um selvagem</h3>
-      <p class="sussurro">Se o selvagem tem natureza agressiva, rola-se 1d20: com 10 ou mais ele ataca VOCÊ. Dano = Força dele + 2 em d6, e cada sucesso tira 3 do seu HP. As naturezas agressivas estão marcadas na aba Naturezas.</p>
+      <p class="sussurro">Se o selvagem tem natureza agressiva, ele rola o Instinto dele: com um sucesso, ataca VOCÊ. Dano = Força dele + 2 em d6, e cada sucesso tira 3 do seu HP. As naturezas agressivas estão marcadas na aba Naturezas.</p>
       <h3>O que não dá pra desfazer</h3>
       ${L('Salvar', 'automático — não existe voltar atrás')}
       ${L('Nova jornada', 'apaga a atual')}
@@ -5262,9 +5261,12 @@ const UI = {
       <div class="linha"><span class="k">Sunny Day · sol</span><span class="v">5 turnos · Fogo +1 de poder · Água −1 de dano · Solar Beam sem carregar</span></div>
       <div class="linha"><span class="k">Sandstorm · areia</span><span class="v">5 turnos · 1 de dano no fim do turno, menos Pedra, Terrestre e Metálico · Pedra ganha +1 de Instinto</span></div>
       <h3>Captura</h3>
-      <div class="linha"><span class="k">Chance</span><span class="v">(3 × HP máx − 2 × HP) ÷ (3 × HP máx) × taxa da espécie × Pokébola × condição ÷ 255</span></div>
-      <div class="linha"><span class="k">Condição</span><span class="v">dormindo ou congelado ×2 · outra condição ×1,5</span></div>
-      <div class="linha"><span class="k">Sacudidas</span><span class="v">três, cada uma passa com a raiz cúbica da chance: as três juntas dão a chance que aparece no log</span></div>
+      <div class="linha"><span class="k">A regra</span><span class="v">a do Pokérole: o selo da Pokébola (sucesso em 4+) mais os sucessos de bônus, contra os sucessos que o posto do alvo pede · o nível manda, não a espécie</span></div>
+      <div class="linha"><span class="k">Selo</span><span class="v">Poké Ball ${SELO_DA_BOLA['Poké Ball']}d6 · Great Ball ${SELO_DA_BOLA['Great Ball']}d6 · Ultra Ball ${SELO_DA_BOLA['Ultra Ball']}d6 · Master Ball fecha sem rolagem</span></div>
+      <div class="linha"><span class="k">O posto pede</span><span class="v">${POSTOS[0]} (até o nível 9) ${SUCESSOS_DO_POSTO[0]} · ${POSTOS[1]} (10 a 19) ${SUCESSOS_DO_POSTO[1]} · ${POSTOS[2]} (20 a 34) ${SUCESSOS_DO_POSTO[2]} · ${POSTOS[3]} (35 a 49) ${SUCESSOS_DO_POSTO[3]} · ${POSTOS[4]} (50 a 64) ${SUCESSOS_DO_POSTO[4]} · ${POSTOS[5]} pra cima ${SUCESSOS_DO_POSTO[5]}</span></div>
+      <div class="linha"><span class="k">Bônus</span><span class="v">com metade do HP ou menos +1 · com 1 HP +2 (no lugar do +1) · +1 por condição (a de status e a confusão)</span></div>
+      <div class="linha"><span class="k">Sacudidas</span><span class="v">na conta, três e o clique · faltou um sucesso, duas e abre · faltaram dois, uma · mais que isso, ele sai antes da primeira</span></div>
+      <p class="sussurro">A Pokédex mostra, na varredura, quantos sucessos aquele exemplar pede. Nenhuma bola tira mais sucessos do que tem dados: a Poké Ball, com 4, só pega quem pede 6 ou mais se o bônus completar.</p>
       <h3>Centro Pokémon</h3>
       <div class="linha"><span class="k">Lá dentro</span><span class="v">enfermeira, PC, balcão de credenciais, mapa na parede e mural de recados</span></div>
       <div class="linha"><span class="k">Sem licença</span><span class="v">a enfermeira cobra 300 ₽ + 250 por Pokémon ferido · com licença, de graça · sem o dinheiro e com o time todo caído, ela atende e fica com o que você tem</span></div>
@@ -5374,7 +5376,7 @@ const UI = {
       <div class="linha"><span class="k">Entre as rodadas</span><span class="v">dá pra curar o time</span></div>
       <div class="linha"><span class="k">Prêmio</span><span class="v">12.000, 25.000 e 60.000 ₽, com itens · perdendo, 20% do prêmio da rodada · a primeira Conferência vem com uma Master Ball</span></div>
       <h3>Quando o seu Pokémon cai contra um selvagem</h3>
-      <p class="sussurro">Se o selvagem tem natureza agressiva (Naughty, Brave, Adamant, Hasty, Impish, Jolly, Naive, Lonely, Rash), rola-se 1d20: com 10+ ele ataca VOCÊ. Dano = Força dele + 2 em d6, e cada sucesso tira 3 do seu HP, que é HP de gente e não de Pokémon. Naturezas passivas não atacam o treinador. A sua barra de vida aparece na arena enquanto isso durar.</p>
+      <p class="sussurro">Se o selvagem tem natureza agressiva (Naughty, Brave, Adamant, Hasty, Impish, Jolly, Naive, Lonely, Rash), ele rola o Instinto dele: com um sucesso, ataca VOCÊ (quem tem mais Instinto vem mais vezes). Dano = Força dele + 2 em d6, e cada sucesso tira 3 do seu HP, que é HP de gente e não de Pokémon. Naturezas passivas não atacam o treinador. A sua barra de vida aparece na arena enquanto isso durar.</p>
       <h3>Nível, golpes e evolução</h3>
       <div class="linha"><span class="k">Experiência por nocaute</span><span class="v">total de base do vencido × nível dele ÷ 22 · ×1,5 se era de treinador</span></div>
       <div class="linha"><span class="k">Diferença de nível</span><span class="v">× ((2 × nível dele + 10) ÷ (nível dele + o seu + 10))^2,5 · bater em quem é bem mais fraco quase não rende</span></div>
@@ -5436,8 +5438,7 @@ const UI = {
       ${Object.values(Estado.dados.lendarios||{}).some(l=>l.encontros || l.visto) ? `
       <h3>Captura de lendários</h3>
       <div class="linha"><span class="k">Bola</span><span class="v">só Ultra Ball e Master Ball · qualquer outra bate e cai aberta, e gasta${Estado.dados.flags.bola_fraca_em_lendario ? ' — você viu' : ''}</span></div>
-      <div class="linha"><span class="k">Ultra Ball</span><span class="v">a regra de captura do Pokérole: o selo da Pokébola (8d6, sucesso em 4+) mais os sucessos de bônus, contra os sucessos que o posto pede · lendário conta no mínimo como Ás: pede 10 · com o HP cheio, não tem como</span></div>
-      <div class="linha"><span class="k">Bônus</span><span class="v">com metade do HP ou menos +1 · com 1 HP +2 (no lugar do +1) · +1 por condição (a de status e a confusão)</span></div>
+      <div class="linha"><span class="k">Ultra Ball</span><span class="v">a mesma regra da captura comum, com o mesmo bônus · lendário conta no mínimo como Ás: pede 10 · com o HP cheio, não tem como</span></div>
       <div class="linha"><span class="k">Master Ball</span><span class="v">fecha sem rolagem</span></div>
       <div class="linha"><span class="k">Insistir</span><span class="v">cada Pokébola que ele rompe conta · na terceira, quem estava neutro fica hostil</span></div>
       ${Object.values(Estado.dados.lendarios||{}).some(l=>l.quebrouBola) ? '<p class="sussurro">E existem coisas que simplesmente quebram a Pokébola no ar.</p>' : ''}

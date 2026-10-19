@@ -1549,9 +1549,13 @@ const Batalha = {
       this.ev('info', `${nomeVisivel(this.inimigo)} rosna, hostil, mas não avança sobre você. Some no mato.`);
       return this.encerrar('derrota');
     }
-    const d = Dados.d20('O selvagem ataca você?');
-    this.ev('perigo', `${nomeVisivel(this.inimigo)} não recua: agressiv${pron(this.inimigo).o}. 1d20 = ${d} — ataca com 10+`);
-    if (d < 10){
+    /* o Instinto dele decide: um sucesso e ele vem. Quem tem mais
+       instinto (o forte, o de nível alto) vem mais vezes */
+    const nIns = Math.max(1, this.attr(this.inimigo, this.estInimigo, 'ins'));
+    const r = Dados.pool(nIns, 'O selvagem ataca você?');
+    this.ev('perigo', `${nomeVisivel(this.inimigo)} não recua: agressiv${pron(this.inimigo).o}.`);
+    this.ev('rolagem', `Instinto: ${nIns}d6 → ${r.faces.join(', ')} = ${r.suc} sucesso${r.suc === 1 ? '' : 's'} — ataca com 1`);
+    if (!r.suc){
       this.ev('info', `${nomeVisivel(this.inimigo)} te encara por um segundo longo demais… e vai embora.`);
       return this.encerrar('derrota');
     }

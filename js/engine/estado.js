@@ -111,20 +111,20 @@ function artigoDe(parentesco){
 
 const ITENS_INFO = {
   /* ─────────── bolas ─────────── */
-  'Poké Ball':   {tipo:'bola', mult:1, cat:'Captura',
-                  ficha:'Modificador de captura ×1,0 · consumida no arremesso',
+  'Poké Ball':   {tipo:'bola', cat:'Captura',
+                  ficha:'Selo 4 (4d6) · consumida no arremesso',
                   desc:'A Pokébola comum. É o que a Liga entrega e o que todo mundo usa.',
                   sabido:{bola_fraca_em_lendario:'Você já viu uma dessas ricochetear numa coisa grande demais. Não insista.'}},
-  'Great Ball':  {tipo:'bola', mult:1.5, cat:'Captura',
-                  ficha:'Modificador de captura ×1,5 · consumida no arremesso',
+  'Great Ball':  {tipo:'bola', cat:'Captura',
+                  ficha:'Selo 6 (6d6) · consumida no arremesso',
                   desc:'Mais firme que a comum. Custa o triplo e a diferença aparece.',
                   sabido:{bola_fraca_em_lendario:'Firme, mas não o bastante para o que você viu.'}},
-  'Ultra Ball':  {tipo:'bola', mult:2, cat:'Captura',
-                  ficha:'Modificador de captura ×2,0 · consumida no arremesso',
+  'Ultra Ball':  {tipo:'bola', cat:'Captura',
+                  ficha:'Selo 8 (8d6) · consumida no arremesso',
                   desc:'Cara. Quem vende fala dela em voz baixa, como se fosse favor.',
                   sabido:{ultra_prende_lendario:'É a única comprável que já prendeu uma coisa daquelas — e mesmo assim, quase nunca.'}},
-  'Master Ball': {tipo:'bola', mult:255, cat:'Captura',
-                  ficha:'Modificador de captura ×255 · consumida no arremesso',
+  'Master Ball': {tipo:'bola', cat:'Captura',
+                  ficha:'Fecha sem rolagem · consumida no arremesso',
                   desc:'Você não devia ter uma dessas. Quase ninguém devia.',
                   sabido:{master_quase_sempre:'Ela não falha. Você já viu.'}},
 

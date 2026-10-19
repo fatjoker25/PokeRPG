@@ -540,7 +540,11 @@ escrevem continua na escala antiga (4 a 11) e vira sucessos pedidos em
 `Dados.sucessosPedidos` (1 a 5); os graus saem da sobra (um a mais é
 crítico, na conta é sucesso, faltou um é parcial, faltaram dois é
 fracasso), então as cenas não precisaram mudar. A conta escrita sai de
-`Dados.contaDoTeste(r)`. d10 não existe mais pra ninguém.
+`Dados.contaDoTeste(r)`. d4, d10, d20 e d100 não existem mais pra
+ninguém: os últimos foram a captura comum e o selvagem agressivo, que
+hoje rola o Instinto dele e vem pra cima de você com um sucesso (no
+começo do jogo dá os mesmos 55% do d20 antigo; quem tem mais Instinto
+vem mais vezes).
 
 - **Atributos** moram em `p.stats` com as chaves do livro: `for`, `des`,
   `vit`, `esp`, `ins` e `hp`. As chaves dos jogos (`atk`, `def`, `spa`,
@@ -723,13 +727,22 @@ não ronda: a história nunca põe ele na sua frente. O texto da entrada
 repara no sinal (frio, estalo, calor) e na disposição dele; não conta onde
 mais ele anda.
 
-**Captura de lendário é a do Pokérole 3.0** (`captura.js`): só Ultra Ball
-e Master Ball (`BOLAS_DE_LENDARIO`; qualquer outra recusa e gasta). A
-Ultra rola o selo (`SELO_DA_BOLA`, 8d6) + os bônus da condição
-(`bonusDaCondicao`: metade do HP 1, 1 HP 2, 1 por condição) contra os
-sucessos do posto (`SUCESSOS_DO_POSTO`), e lendário conta no mínimo como
-Ás (10). Com HP cheio é impossível de propósito: o pedido foi "bem
-difícil". A Master fecha sem rolagem. A rolagem vai pro log inteira.
+**Captura é a do Pokérole 3.0, pra todo Pokémon** (`captura.js`): o
+selo da bola (`SELO_DA_BOLA`: Poké Ball 4d6, Great 6d6, Ultra 8d6) + os
+bônus da condição (`bonusDaCondicao`: metade do HP 1, 1 HP 2, 1 por
+condição) contra os sucessos que o posto do exemplar pede
+(`SUCESSOS_DO_POSTO`, por `postoDoNivel`). **O nível manda, não a
+espécie**: taxa de captura não existe mais, e a varredura da Pokédex
+mostra quantos sucessos aquele exemplar pede. A fórmula dos jogos com
+três d100 saiu a pedido — "quero o do Pokérole". As sacudidas saem do
+que faltou (na conta, três e o clique; faltou um, duas; faltaram dois,
+uma; mais que isso, nenhuma), e a animação obedece. Lendário: só Ultra
+Ball e Master Ball (`BOLAS_DE_LENDARIO`; qualquer outra recusa e gasta)
+e conta no mínimo como Ás (10); com HP cheio é impossível de propósito,
+o pedido foi "bem difícil". A Master fecha sem rolagem. Quem quebra a
+bola (`QUEBRA_BOLA`: Mewtwo, Lugia, Ho-Oh, Celebi) rola 2d6 antes de
+tudo, e sem sucesso nenhum ela racha no ar (1 em 4). A rolagem vai pro
+log inteira.
 
 ## Ferramenta gasta, e o balcão compra
 `js/engine/desgaste.js`: Machado, Picareta e Lanterna têm `DURABILIDADE` em

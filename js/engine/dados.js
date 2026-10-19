@@ -13,10 +13,10 @@ const Dados = {
     return v;
   },
 
-  d4 (m){ return this.rolar(4, m); },
+  /* o dado do Pokérole é o d6: d4, d10, d20 e d100 eram do sistema
+     antigo e não decidem mais nada (a captura comum e o selvagem
+     agressivo foram os últimos a sair) */
   d6 (m){ return this.rolar(6, m); },
-  d10(m){ return this.rolar(10, m); },
-  d20(m){ return this.rolar(20, m); },
 
   /* POKÉROLE: parada de d6. Cada 4, 5 ou 6 é um sucesso. A parada vai
      inteira pra bandeja numa entrada só, com as faces, senão doze dados
