@@ -1113,6 +1113,15 @@ acompanha, os finais).
   pro 26 (`fim:true`). Final novo conta no códice sozinho.
 - Toda escolha que muda alguma coisa leva `rep`, com motivo. Luta usa
   `nivelDoCaminho(d, extra)`, que acompanha o time, não só a área.
+- A âncora (`ancora.local`) tem que estar ao alcance de quem chega ao
+  desvio: a guarita da Rota 23 pede oito insígnias, então capítulo de
+  caminho antes do 22 não espera no Planalto. O 19.06 esperava lá e
+  prendia quem vive de ginásio com seis; hoje é em Viridian.
+- Capítulo de caminho não sabe o que o jogador viveu nos outros dois:
+  quem trocou de lado chega no II ou no III sem o I. Texto que cita o
+  capítulo anterior do caminho (o Rook da cerca, a foto doze, o lote 12)
+  pergunta pela flag `cm_*` dele, e o `resumo` de encerramento, que o
+  `txt()` resolve, também pode ser função.
 - Os verificadores leem `js/story/caminhos/`; arquivo novo de caminho
   entra no `index.html` antes do `condicionais.js`, e o `caminhos.js`
   depois dele.

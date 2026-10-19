@@ -155,16 +155,19 @@ cg1_fim:{
 
 /* ── II · A REGRA NOVA (depois do 19) ──────────────────────── */
 {
-num:19.06, titulo:'A Regra Nova', local:'Planalto Indigo — a quadra de treino', ambiente:'montanha', nivelArea:56,
+/* na escola de treino de Viridian, não no Planalto: a passagem pro
+   Planalto pede oito insígnias, e quem vive de ginásio chega ao 19 com
+   seis — o desvio prendia a jornada até mais dois ginásios */
+num:19.06, titulo:'A Regra Nova', local:'Viridian — a escola de treino', ambiente:'cidade', nivelArea:56,
 tom:'muito sombrio',
-ancora:{local:'planalto', chamada:'Na quadra de treino do Planalto, a Coordenadora Maple te espera com uma pasta que ela não quer abrir.'},
+ancora:{local:'viridian', chamada:'Na quadra da escola de treino de Viridian, a Coordenadora Maple te espera com uma pasta que ela não quer abrir.'},
 entradas:['cg2_a_pasta'],
 inicio: d => 'cg2_a_pasta',
 cenas:{
 
 cg2_a_pasta:{
   texto:[
-    d => { Nomes.apresentar('a coordenadora da quadra'); return 'A Coordenadora Maple está sentada na arquibancada vazia da quadra de treino, com uma pasta no colo e o apito no pescoço.'; },
+    d => { Nomes.apresentar('a coordenadora da quadra'); return 'A Coordenadora Maple está sentada na arquibancada vazia da quadra da escola de treino, com uma pasta no colo e o apito no pescoço.'; },
     fala('a coordenadora da quadra', 'Programa Primeiro Pokémon. A Comissão propôs à Liga: toda criança de Kanto sem condição de pegar um inicial recebe uma unidade de viveiro, com laudo, de graça.'),
     fala('a coordenadora da quadra', 'De graça. A Liga adora de graça.', 'frio'),
     fala('a coordenadora da quadra', 'Eles querem um teste na quadra antes da votação. Criança da escola de treino contra unidade. Eu preciso de alguém que apite e que diga o que viu.')
@@ -226,7 +229,7 @@ cg2_perdeu:{
     'Na arquibancada, as onze crianças que perderam assistem você perder também, e uma delas para de chorar.',
     fala('a coordenadora da quadra', 'Perder não muda o que você viu. Escreve o que você viu.', 'baixo')
   ],
-  ef:{hp:-1, causa:'A quadra de treino do Planalto'},
+  ef:{hp:-1, causa:'A quadra da escola de treino de Viridian'},
   escolhas:[
     {texto:'Escrever o relatório do teste.', vai:'cg2_o_relatorio'}
   ]
@@ -275,7 +278,7 @@ cg3_o_plenario:{
     fala('a coordenadora da quadra', 'Depois da audiência de segunda, a Comissão precisa disso aprovado mais do que nunca. É o jeito deles de virarem coisa boa no jornal.'),
     fala('a coordenadora da quadra', 'Você tem voz. Eu tenho voto. Usa a sua antes de eu usar o meu.')
   ],
-  ef:{flag:'cm_liga_3', registrar:'O plenário da Liga vota o Programa Primeiro Pokémon.'},
+  ef:{flag:'cm_liga_3', registrar:'O plenário da Liga vota o Programa Primeiro Pokémon.', executar:() => { caminhoAs(9); }},
   escolhas:[
     {texto:'Pedir a palavra.', vai:'cg3_a_palavra'}
   ]
@@ -284,7 +287,10 @@ cg3_o_plenario:{
 cg3_a_palavra:{
   texto:[
     'Você tem cinco minutos no microfone do plenário. O relógio na parede é de ponteiro e anda alto.',
-    d => d.flags.cm_liga_relatorio_inteiro ? 'Você tem o relatório inteiro do teste da quadra, com o Rattata e as onze crianças.' : d.flags.cm_liga_so_o_numero ? 'Você tem o relatório que você assinou: onze de doze. Os conselheiros já citaram o seu nome duas vezes, a favor.' : 'Você tem o que viu numa quadra de escola, numa copa de criança, com um Ledyba de plástico.'
+    d => d.flags.cm_liga_relatorio_inteiro ? 'Você tem o relatório inteiro do teste da quadra, com o Rattata e as onze crianças.'
+      : d.flags.cm_liga_so_o_numero ? 'Você tem o relatório que você assinou: onze de doze. Os conselheiros já citaram o seu nome duas vezes, a favor.'
+      : d.flags.cm_liga_1 ? 'Você tem o que viu numa quadra de escola, numa copa de criança, com um Ledyba de plástico.'
+      : 'Você tem o que viu de ginásio em ginásio, na estrada, e nenhum papel.'
   ],
   teste:{status:'carisma', dificuldade:7, nomeStatus:'Carisma',
          critico:'cg3_convenceu', sucesso:'cg3_convenceu', parcial:'cg3_meio', falha:'cg3_meio'}
@@ -314,7 +320,9 @@ cg3_meio:{
 
 cg3_o_corredor:{
   texto:[
-    'No intervalo, no corredor, um homem de terno claro te espera do lado do bebedouro. Você já viu ele numa arquibancada de escola.',
+    d => d.flags.cm_liga_1
+      ? 'No intervalo, no corredor, um homem de terno claro te espera do lado do bebedouro. Você já viu ele numa arquibancada de escola.'
+      : 'No intervalo, no corredor, um homem de terno claro te espera do lado do bebedouro, com crachá de patrocinador e um menino de doze anos do lado.',
     fala('o pai do patrocínio', 'Eu sou do conselho de patrocinadores da Liga agora. O programa tem um rosto de campanha, e o rosto ainda não foi escolhido.'),
     fala('o pai do patrocínio', 'Alguém jovem, com insígnia, que fale bonito no microfone. Paga bem. Muito bem.')
   ],
@@ -329,7 +337,7 @@ cg3_o_corredor:{
 },
 
 cg3_desafio:{
-  texto:['Ele sorri, tira o paletó de novo, e dessa vez entrega pra um segurança segurar.'],
+  texto:[d => d.flags.cm_liga_1 ? 'Ele sorri, tira o paletó de novo, e dessa vez entrega pra um segurança segurar.' : 'Ele sorri, tira o paletó e entrega pro filho segurar.'],
   batalha:{dex:131, nivel:d => nivelDoCaminho(d, 2), tipo:'treinador', treinador:'o pai do patrocínio', fuga:false, arena:'ginasio',
            timeExtra:[{dex:59, nivel:d => nivelDoCaminho(d, 2)}, {dex:78, nivel:d => nivelDoCaminho(d, 3)}, {dex:149, nivel:d => nivelDoCaminho(d, 4)}],
            vitoria:'cg3_retirou', derrota:'cg3_a_votacao', gameover:'gameover'}
@@ -339,7 +347,7 @@ cg3_retirou:{
   texto:[
     'O Dragonite dele cai no tapete do corredor do plenário e o bebedouro balança.',
     'Ele cumpre. Ele é desse tipo: compra tudo, mas paga o que perde.',
-    fala('o pai do patrocínio', 'Retirado. O meu filho ainda fala daquela menina do Oddish, sabia? Toda semana.', 'baixo')
+    d => fala('o pai do patrocínio', d.flags.cm_liga_1 ? 'Retirado. O meu filho ainda fala daquela menina do Oddish, sabia? Toda semana.' : 'Retirado. Só não conta pro meu filho que eu perdi.', 'baixo')
   ],
   ef:{flag:'cm_liga_retirou_patrocinio', rep:{eixo:'bom', delta:2, motivo:'Venceu o patrocinador e ele retirou o dinheiro do programa'}},
   escolhas:[
@@ -375,14 +383,19 @@ cg3_seguir:{
 
 cg3_final_plenario:{
   texto:[
-    'Você fica. A Coordenadora Maple te apresenta pra cada conselheiro pelo nome, e diz o nome de cada criança da Copa Júnior junto.',
+    d => d.flags.cm_liga_1
+      ? 'Você fica. A Coordenadora Maple te apresenta pra cada conselheiro pelo nome, e diz o nome de cada criança da Copa Júnior junto.'
+      : 'Você fica. A Coordenadora Maple te apresenta pra cada conselheiro pelo nome, e diz junto o nome de cada ginásio que você venceu.',
     'A cadeira que te dão é a de vinil verde mais rasgada do plenário. Você não pede outra.'
   ],
   final:{id:'liga_plenario', titulo:'O PLENÁRIO', texto:[
     'Em cinco anos, a Liga muda três regras: criança escolhe o primeiro Pokémon que pega, não o que recebe; árbitro de torneio júnior não pode ser pago por patrocinador; e todo relatório técnico vem com o que o número não diz.',
     'Nenhuma das três tem o seu nome. Todas três têm a sua letra, em algum rascunho.',
-    'Todo ano você apita a Copa Júnior de Fuchsia. Uma menina de tênis furado, agora com dezesseis, aparece pra ajudar na cartolina do chaveamento.',
-    'O Oddish dela virou Vileplume. O Ledyba de plástico ainda está colado numa das pétalas.'
+    d => !d.flags.cm_liga_1
+      ? 'Todo ano você apita a Copa Júnior de Fuchsia. Toda vez tem uma criança que esquece o nome do próprio Pokémon de nervoso, e você espera ela lembrar.'
+      : d.flags.cm_liga_desclassificou
+        ? 'Todo ano você apita a Copa Júnior de Fuchsia, e procura na arquibancada uma menina de tênis furado com um Oddish. Ela nunca vem.'
+        : 'Todo ano você apita a Copa Júnior de Fuchsia. Uma menina de tênis furado, agora com dezesseis, aparece pra ajudar na cartolina do chaveamento. O Oddish dela virou Vileplume, e o Ledyba de plástico ainda está colado numa das pétalas.'
   ]}
 },
 
@@ -394,14 +407,14 @@ cg3_final_comprada:{
   final:{id:'liga_comprada', titulo:'A LIGA COMPRADA', texto:[
     'O seu rosto aparece em cartaz em todo Centro Pokémon de Kanto, do lado de uma frase: "TODA CRIANÇA MERECE UM PRIMEIRO AMIGO."',
     'O programa distribui quatro mil unidades no primeiro ano. Elas obedecem perfeitamente.',
-    'Você fica conhecid{o|a} em Kanto inteiro, e rico, e convidad{o|a} pra todo evento da Liga.',
+    'Você fica conhecid{o|a} em Kanto inteiro, e {rico|rica}, e convidad{o|a} pra todo evento da Liga.',
     'Numa rota qualquer, um menino com um Eevee de lote te reconhece do cartaz e pede autógrafo. O Eevee olha pra ele esperando ordem. Você assina rápido e vai embora antes de ver se ele manda alguma.'
   ]}
 },
 
 cg3_final_quadra:{
   texto:[
-    'A quadra de terra fica atrás da escola da sua cidade, com duas traves de madeira e um muro onde alguém pintou um Pikachu torto.',
+    'A quadra de terra fica atrás da escola da sua cidade, com as linhas riscadas a cal e um muro onde alguém pintou um Pikachu torto.',
     'No primeiro dia aparecem três crianças. No segundo, nove.'
   ],
   final:{id:'liga_quadra', titulo:'A QUADRA DE TERRA', texto:[
