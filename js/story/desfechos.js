@@ -185,7 +185,7 @@ c19_fim_assinou:{
     'No sexto mês você aprende a ler a planilha de lote. No nono, descobre que a planilha de lote e o livro de entrada não fecham e que ninguém nunca cruzou os dois porque os dois ficam em salas diferentes.',
     'No décimo quarto mês você é promovid{o|a} a conferente, o que te dá acesso às duas salas.',
     'Você não denuncia nada. Você anota. Por três anos e sete meses você anota, num caderno de capa dura que mora dentro do armário quarenta e um, e a cada seis meses você tira uma cópia e manda pelo correio pra um endereço em Saffron que não é o seu.',
-    'Quando a comissão parlamentar finalmente chega à Estação 4, ela chega com mandado e com uma lista de perguntas boas demais pra terem sido escritas por quem nunca esteve lá dentro.',
+    'Quando a junta de inquérito finalmente chega à Estação 4, ela chega com mandado e com uma lista de perguntas boas demais pra terem sido escritas por quem nunca esteve lá dentro.',
     'Você depõe por seis horas. Depois volta a trabalhar, porque a estação não fecha: ela é reestruturada, e reestruturada quer dizer que alguém tem que ficar cuidando das trezentas e onze baias enquanto os advogados discutem.',
     'Você fica. Por mais quatro anos.',
     'Não tem nada de heroico nisso e você nunca vai aparecer em jornal nenhum.',
@@ -214,7 +214,7 @@ c19_fim_nao_assinou:{
     'Você conta essa frase, nos anos seguintes, pra todo mundo que quer ouvir.',
     'Conta numa mesa de bar em Fuchsia, conta num Centro Pokémon em Celadon, conta pra dois repórteres e pra uma auditora e pra um rapaz de vinte e dois anos que você encontra por acaso dois anos depois e que te reconhece do ônibus.',
     'A frase viaja melhor que documento, porque documento precisa de carimbo e frase só precisa de alguém que tenha estado lá.',
-    'Quando a comissão parlamentar é instalada, seis anos depois, o relatório final abre com uma citação que não tem autor identificado e que qualquer pessoa que trabalhou numa estação de manejo reconhece na hora.',
+    'Quando a junta de inquérito é instalada, seis anos depois, o relatório final abre com uma citação que não tem autor identificado e que qualquer pessoa que trabalhou numa estação de manejo reconhece na hora.',
     '"Não é um monstro. É um emprego. É pior."',
     'Você lê isso num jornal, numa cidade qualquer, com o time cansado e nenhuma insígnia a mais.',
     'E você sabe exatamente de quem é a frase, e ela nunca vai saber que você contou.'
@@ -401,7 +401,7 @@ c21_fim_ficou:{
     'E você levanta, e anota a placa, e volta pra cama.',
     'E na manhã seguinte você manda a placa por carta pra um endereço em Saffron, e paga o selo, e não conta pra ninguém.',
     'Você faz isso por quatorze anos.',
-    'Quando a comissão parlamentar finalmente é instalada, uma das provas anexadas ao relatório é uma série de duzentas e sete cartas manuscritas, enviadas de uma cidade pequena, com placas, datas e horários, assinadas com o mesmo nome.',
+    'Quando a junta de inquérito finalmente é instalada, uma das provas anexadas ao relatório é uma série de duzentas e sete cartas manuscritas, enviadas de uma cidade pequena, com placas, datas e horários, assinadas com o mesmo nome.',
     'Ninguém nunca foi te entrevistar.',
     'Ninguém precisou.'
   ]}
@@ -426,7 +426,7 @@ c21_fim_ficou_trabalhando:{
     'Chega um Pokémon com brinco amarelo de identificação de reserva na orelha, a duzentos quilômetros de qualquer reserva. Chega alguém com a marca de gaiola no pelo. Chega, uma vez, um Seel filhote com metade do peso.',
     'Você anota todas. Ficha, data, procedência declarada e procedência provável.',
     'Dezenove anos de fichas.',
-    'A comissão parlamentar pede os arquivos de trinta e um Centros Pokémon de Kanto e recebe de trinta deles a resposta padrão: "registros descartados após cinco anos, conforme norma".',
+    'A junta de inquérito pede os arquivos de trinta e um Centros Pokémon de Kanto e recebe de trinta deles a resposta padrão: "registros descartados após cinco anos, conforme norma".',
     'Do trigésimo primeiro chegam quatro caixas.',
     'O relatório final cita o seu Centro cento e doze vezes.',
     d=>d.jogador.cidade === 'Pallet' ? 'Você nunca se mudou de Pallet.' : 'Você nunca saiu da sua cidade.'
@@ -515,8 +515,8 @@ c23_fim_assumiu:{
     'Você organiza.',
     'Cataloga caixa por caixa, cruza com o que você juntou pelo caminho, e abre requerimento atrás de requerimento — porque titular de ginásio é autoridade da Liga, e autoridade da Liga tem legitimidade pra requerer, e requerimento de autoridade é respondido em quinze dias.',
     'Onze anos de requerimentos de quinze dias.',
-    'Quando a comissão parlamentar é instalada, ela não precisa investigar nada: ela recebe do titular do ginásio de Viridian um índice remissivo de oitocentas e quarenta páginas, com referência cruzada e cópia autenticada de tudo.',
-    'O deputado relator pergunta, na primeira sessão, há quanto tempo você vinha preparando aquilo.',
+    'Quando a junta de inquérito é instalada, ela não precisa investigar nada: ela recebe do titular do ginásio de Viridian um índice remissivo de oitocentas e quarenta páginas, com referência cruzada e cópia autenticada de tudo.',
+    'O relator da junta pergunta, na primeira sessão, há quanto tempo você vinha preparando aquilo.',
     'E você responde que desde o dia em que subiu uma escada atrás de um biombo.'
   ]}
 }
@@ -602,7 +602,7 @@ c24_fim_voltou:{
     'No dia cento e nove, uma repórter sobe e passa a tarde inteira, e no dia cento e doze sai uma matéria de página inteira com uma fotografia de nove pessoas sentadas numa pedra de beira de estrada.',
     'A Liga suspende o controle de acesso da Rota 23 no dia cento e quarenta e um, por "reavaliação de procedimento", numa nota de quatro linhas que não menciona a pedra, a matéria, nem ninguém.',
     'Você nunca chega ao Planalto Indigo. Nunca enfrenta a Elite dos Quatro. Nunca é campeão de nada.',
-    'A sua lista tem trezentos e dezenove nomes de gente que foi barrada sem motivação escrita, e ela é anexada, sete anos depois, à comissão parlamentar, como anexo 14.',
+    'A sua lista tem trezentos e dezenove nomes de gente que foi barrada sem motivação escrita, e ela é anexada, sete anos depois, à junta de inquérito, como anexo 14.',
     'Trezentas e dezenove pessoas.',
     'Você tem o nome de todas.'
   ]}
@@ -805,7 +805,7 @@ c26_fim_aceitou:{
     'Comunicação dirigida a órgão de controle não é quebra de sigilo. Você manda quatrocentas e onze delas, todas formais, todas protocoladas, todas com número, ao longo de nove anos — pra auditoria, pra controladoria, pra promotoria, pra tudo que a legislação chame de órgão de controle.',
     'As primeiras duzentas não dão em nada.',
     'A de número trezentos e oitenta e nove dá.',
-    'A comissão parlamentar, quando é instalada, é instalada com base em quatro comunicações protocoladas por um servidor da própria estrutura, o que retira de todo mundo a possibilidade de chamar aquilo de perseguição externa.',
+    'A junta de inquérito, quando é instalada, é instalada com base em quatro comunicações protocoladas por um servidor da própria estrutura, o que retira de todo mundo a possibilidade de chamar aquilo de perseguição externa.',
     'Você depõe como {coordenador|coordenadora} de campo, de terno, com crachá, sobre fatos que você conheceu no exercício da função e comunicou tempestivamente.',
     'É o depoimento mais devastador da comissão inteira e é também o mais chato: quatro horas de número de protocolo.',
     'A Comissão é extinta por lei no ano seguinte.',
@@ -851,7 +851,7 @@ c26_fim_foi_embora:{
     'Nenhuma dessas pessoas tem poder. Todas elas têm uma cópia de alguma coisa.',
     'Leva onze anos.',
     'Não existe um momento de virada, não existe uma manchete, não existe um dia em que tudo muda. Existem onze anos de gente comum guardando papel e passando adiante, até a pilha ficar grande demais pra caber numa gaveta.',
-    'A comissão parlamentar de inquérito é instalada numa quarta-feira de setembro.',
+    'A junta de inquérito é instalada numa quarta-feira de setembro.',
     'Você tem {idade+11} anos e está sentad{o|a} na galeria, no meio do público, sem crachá nenhum.',
     'E quando o relator lê a lista de pessoas que contribuíram com documentação, ele leva dezenove minutos, porque são cento e quarenta e um nomes.',
     'O seu é um deles. É o de número oitenta e três, em ordem alfabética.',

@@ -5,9 +5,12 @@
    escolha, consequência e memória — e alguns cobram depois.
    ============================================================ */
 
-/* A hora de agora, pra evento que diz a hora: o evento só aparece na
-   janela em que o texto é verdade (o relógio anda fora das cenas). */
+/* A hora de agora, pra evento que diz a hora. Andar e vasculhar passam
+   o período antes de sortear (Mundo.passar), então o evento sai na
+   virada — 6, 12, 18 ou 0 — e conta o que aconteceu no período que você
+   acabou de andar: o das quatro da tarde aparece às 18. */
 function horaAgora(d){ sincronizarHora(d.relogio); return d.relogio.hora; }
+function deDia(d){ const h = horaAgora(d); return h >= 7 && h <= 18; }
 
 /* Quem já te conhece te reconhece: pela entrega, pelo número ou pela memória. */
 function conheceOCelio(d){
@@ -49,7 +52,7 @@ const EVENTOS_CIDADE = {
 pallet:[
 {
   id:'pal_cachorro_do_quatorze', umaVez:true, peso:3,
-  cond:d=>horaAgora(d) >= 6 && horaAgora(d) < 11,
+  cond:d=>horaAgora(d) >= 9 && horaAgora(d) <= 12,
   titulo:'O Growlithe do quatorze',
   texto:[
     'Tem um Growlithe velho deitado no meio da rua, na parte quente do asfalto, e ele não sai de lá por nada.',
@@ -89,7 +92,7 @@ pallet:[
        fala('a mulher do quatorze', 'ELE FOI SOZINHO!', 'grita', 'Ela grita isso da janela, pra rua inteira, sem se importar com ninguém.')
      ]},
     {texto:'Não é problema seu. Seguir andando.',
-     ef:{executar:()=>{ Relogio.ate(11); }},
+     ef:{},
      resultado:['Você desvia e segue.','Às onze e dez você ouve um caminhão frear muito forte, quatro ruas atrás, e não volta pra ver.']}
   ]
 },
@@ -188,7 +191,7 @@ viridian:[
   texto:[
     'Atrás do posto de gasolina tem quatro homens em volta de um carro com o capô aberto e ninguém mexendo em nada.',
     'Tem um Magnemite pairando sobre o motor, parado, com as duas hastes viradas pra bateria.',
-    fala('o dono do carro', 'Ele acha o problema. Ele SEMPRE acha o problema. O que ele não faz é explicar.'),
+    fala('Dino, o dono do carro', 'Ele acha o problema. Ele SEMPRE acha o problema. O que ele não faz é explicar.'),
     fala('Nilo, o do posto', 'Ele tá parado em cima da bateria faz vinte minutos, Dino. Ele já explicou.')
   ],
   escolhas:[
@@ -201,7 +204,7 @@ viridian:[
        'A leitura mostra campo magnético concentrado num ponto só, e o ponto é o terminal negativo.',
        'Terminal solto. Um parafuso.',
        fala('Nilo, o do posto', 'EU FALEI!', 'grita'),
-       fala('o dono do carro', 'Você falou "ele já explicou", Nilo, isso não é falar.'),
+       fala('Dino, o dono do carro', 'Você falou "ele já explicou", Nilo, isso não é falar.'),
        'Eles brigam sobre isso por mais quinze minutos. O carro liga na primeira.'
      ]},
     {texto:'Perguntar de onde veio o Magnemite.',
@@ -219,7 +222,7 @@ viridian:[
      resultado:[
        'Você põe a mão num lugar que está a noventa graus e tira muito rápido.',
        'Os quatro homens acham isso a coisa mais engraçada que aconteceu na semana deles.',
-       fala('o dono do carro', 'Era o terminal, {moço|moça}. Era o terminal desde o começo.', 'riso')
+       fala('Dino, o dono do carro', 'Era o terminal, {moço|moça}. Era o terminal desde o começo.', 'riso')
      ]},
     {texto:'Deixar os quatro resolverem.', ef:{}, resultado:['Você segue. A discussão continua audível por dois quarteirões.']}
   ]
@@ -230,6 +233,7 @@ viridian:[
 pewter:[
 {
   id:'pew_sirene', umaVez:true, peso:3,
+  cond:d=>horaAgora(d) >= 6 && horaAgora(d) <= 12,
   titulo:'A sirene das seis e meia',
   texto:[
     'A sirene da pedreira toca e a cidade inteira muda de ritmo em quinze segundos.',
@@ -268,7 +272,7 @@ pewter:[
      resultado:[
        'O rapaz da pedreira consegue uma cópia da folha do mês passado em quatro minutos, o que quer dizer que ele já tinha pensado nisso.',
        'Linha 41: MACHOKE — EQUIPAMENTO — MANUTENÇÃO TRIMESTRAL.',
-       'Você vai ver essa palavra, manejo ou manutenção, mais umas quarenta vezes nos próximos meses, sempre no mesmo tipo de papel.'
+       'Equipamento. Manutenção trimestral. Escrito do mesmo jeito que a revisão da retroescavadeira, na linha de cima.'
      ]},
     {texto:'Seguir andando com as duzentas pessoas.', ef:{},
      resultado:['Você anda junto com a massa cinza por dois quarteirões e depois vira numa rua lateral, e o barulho todo some de uma vez.']}
@@ -294,7 +298,7 @@ pewter:[
        'Ele conta o dinheiro duas vezes, em silêncio, e na segunda as mãos tremem um pouco.',
        fala('o senhor do museu', 'Isso paga o andaime.'),
        fala('o senhor do museu', 'Isso paga o andaime e sobra pro pedreiro de meio período. {Moço|Moça}.', 'baixo'),
-       'Seis meses depois, numa cidade completamente diferente, você vai ver uma foto de jornal da ala reaberta, e vai ter uma placa pequena com o seu nome escrito errado.'
+       'Ele anota o seu nome num papel, pra placa de agradecimento da ala, e escreve errado. Você não corrige.'
      ]},
     {texto:'Perguntar se dá pra ver mesmo com a reforma.',
      ef:{flag:'viu_os_fosseis',
@@ -309,9 +313,9 @@ pewter:[
     {texto:'Oferecer trabalho braçal: subir na escada e trocar o que dá.',
      ef:{hp:-4, moral:2, flag:'trabalhou_no_museu',
          rep:{eixo:'bom',delta:2,motivo:'Subiu num telhado de museu em vez de doar dinheiro'},
-         registrar:'Passou uma tarde trocando telha no museu de Pewter.'},
+         registrar:'Passou horas trocando telha no museu de Pewter.', executar:()=>{ Mundo.passar(1); }},
      resultado:[
-       'Você passa a tarde inteira numa escada de madeira, trocando as telhas que o senhor do museu aponta lá de baixo.',
+       'Você passa horas numa escada de madeira, trocando as telhas que o senhor do museu aponta lá de baixo.',
        'Vocês trocam dezenove e faltam umas trezentas, e ele insiste em te pagar com um catálogo de 1987 que ninguém nunca comprou.',
        'Você aceita o catálogo.'
      ]},
@@ -392,7 +396,7 @@ cerulean:[
        fala('o pescador da ponte', 'Eu tenho onze potes em casa. Nunca ninguém pediu nenhum.', 'baixo')
      ]},
     {texto:'Subir o rio pra ver de onde vem.',
-     ef:{hp:-3, flag:'subiu_o_rio',
+     ef:{hp:-3, flag:'subiu_o_rio', executar:()=>{ Relogio.avancar(2); },
          rep:{eixo:'bom',delta:2,motivo:'Subiu o rio pra achar a origem em vez de reclamar da margem'},
          registrar:'Subiu o rio de Cerulean. A cor começa depois da curva da Rota 24.'},
      resultado:[
@@ -465,7 +469,7 @@ vermilion:[
 },
 {
   id:'ver_por_do_sol', peso:2,
-  cond:d=>horaAgora(d) >= 17 && horaAgora(d) < 19,
+  cond:d=>horaAgora(d) >= 17 && horaAgora(d) <= 18,
   titulo:'O melhor pôr do sol de Kanto',
   texto:[
     'O homem da guarita do porto está sentado na cadeira de plástico dele, de costas pra cancela, olhando o oeste.',
@@ -510,7 +514,7 @@ lavender:[
   ],
   escolhas:[
     {texto:'Ler o caderno inteiro, do começo.',
-     ef:{hp:-2, flag:'leu_o_caderno_do_abrigo',
+     ef:{hp:-2, flag:'leu_o_caderno_do_abrigo', executar:()=>{ Relogio.avancar(2); },
          rep:{eixo:'bom',delta:2,motivo:'Leu oitenta e três páginas de nomes que ninguém lê'},
          registrar:'Leu as oitenta e três páginas do caderno da porta do abrigo de Lavender.'},
      resultado:[
@@ -594,7 +598,7 @@ lavender:[
          rep:{eixo:'bom',delta:1,motivo:'Quis saber o que os outros responderam antes de responder'},
          registrar:'Perguntou à figura de capuz o que as outras pessoas tinham respondido.'},
      resultado:[
-       fala('a figura de capuz', 'Em dezenove anos: mil e setecentas pessoas.'),
+       fala('a figura de capuz', 'Em nove anos: mil e setecentas pessoas.'),
        fala('a figura de capuz', 'Novecentas e quarenta e uma disseram guardar. Setecentas e cinquenta e nove disseram passar adiante.'),
        d=>fala(d.jogador.nome, 'E qual é a certa?'),
        fala('a figura de capuz', 'Não tem certa. Tem a sua.', null, 'Ele abre o caderno de novo e atravessa a caneta na página.'),
@@ -607,7 +611,7 @@ lavender:[
        'Você não responde. Ele não insiste — ele claramente não insiste desde 1991.',
        fala('a figura de capuz', 'Tudo bem. Eu anoto isso também.'),
        'Ele escreve alguma coisa curta e fecha o caderno.',
-       'Você vai lembrar dessa pergunta em lugares onde ela não tem nada a ver, pelos próximos meses.'
+       'A pergunta fica com você mais tempo do que tinha direito.'
      ]}
   ]
 },
@@ -770,12 +774,12 @@ celadon:[
     {texto:'Pedir pra ver as sete, uma por uma.',
      ef:{rep:{eixo:'bom',delta:1,motivo:'Olhou uma por uma o que ninguém para pra olhar'},
          flag:'viu_as_sete_medalhas',
-         registrar:'Olhou as sete medalhas da vitrine de usados de Celadon. Uma é de natação, estadual, 1994.'},
+         registrar:'Olhou as sete medalhas da vitrine de usados de Celadon. Uma é de natação, regional, 1994.'},
      resultado:[
        'Ele abre a caixa e põe as sete no balcão, e você lê as sete.',
        'Quatro são de escola, de participação, sem nome.',
        'Duas são de ginástica, do mesmo clube, do mesmo ano, e claramente da mesma pessoa.',
-       'A sétima é de natação. Estadual. 1994.',
+       'A sétima é de natação. Regional. 1994.',
        'E tem um nome gravado atrás, em letra pequena, e o sobrenome é Wells.'
      ]},
     {texto:'Comprar a de natação.',
@@ -905,12 +909,10 @@ fuchsia:[
 },
 {
   id:'fuc_o_onibus_das_quatro', peso:2,
-  cond:d=>horaAgora(d) >= 16 && horaAgora(d) < 18,
+  cond:d=>horaAgora(d) >= 16 && horaAgora(d) <= 18,
   titulo:'O ônibus das quatro',
   texto:[
-    d=>horaAgora(d) === 16
-      ? 'Às quatro da tarde o ônibus da Zona Safári descarrega quarenta pessoas de chapéu novo, e a cidade aumenta de volume por vinte minutos.'
-      : 'O ônibus das quatro da Zona Safári chega atrasado e descarrega quarenta pessoas de chapéu novo, e a cidade aumenta de volume por vinte minutos.',
+    'Às quatro da tarde o ônibus da Zona Safári descarrega quarenta pessoas de chapéu novo, e a cidade aumenta de volume por vinte minutos.',
     'Todos os quarenta compraram o chapéu na entrada. Todos os quarenta estão falando ao mesmo tempo sobre o que viram.',
     'Um deles está calado, no fim da fila, segurando uma Pokébola vazia.'
   ],
@@ -1314,14 +1316,14 @@ const EVENTOS_GERAIS = [
      ]},
     {texto:'Ensinar a ler o mapa de uma vez.',
      ef:{rep:{eixo:'bom',delta:1,motivo:'Ensinou a ler o mapa em vez de levar pela mão'},
-         registrar:d=>['manhã','tarde'].includes(d.relogio.periodo) ? 'Ensinou alguém a orientar o mapa pelo sol numa esquina qualquer.' : 'Ensinou alguém a orientar o mapa pela placa acesa do Centro, numa esquina qualquer.'},
+         registrar:d=>deDia(d) ? 'Ensinou alguém a orientar o mapa pelo sol numa esquina qualquer.' : 'Ensinou alguém a orientar o mapa pela placa acesa do Centro, numa esquina qualquer.'},
      resultado:[
-       d=>['manhã','tarde'].includes(d.relogio.periodo)
+       d=>deDia(d)
          ? 'Você mostra como orientar pelo sol, que de dia em Kanto é o mais fácil que tem.'
          : 'Você mostra como orientar pela placa do Centro, que fica acesa a noite inteira e aparece de qualquer esquina.',
        'Ela vira o mapa uma vez e aponta a direção certa de primeira.',
        fala('a pessoa do mapa', 'Isso é tão simples que eu tô com raiva.'),
-       d=>fala('a pessoa do mapa', ['manhã','tarde'].includes(d.relogio.periodo) ? 'Onze anos de escola e ninguém nunca me falou do sol.' : 'Onze anos de escola e ninguém nunca me falou da placa.')
+       d=>fala('a pessoa do mapa', deDia(d) ? 'Onze anos de escola e ninguém nunca me falou do sol.' : 'Onze anos de escola e ninguém nunca me falou da placa.')
      ]},
     {texto:'Apontar e seguir.', ef:{},
      resultado:['Você aponta. Ela agradece. Você tem quase certeza de que ela vai errar de novo na próxima esquina.']}
@@ -1817,12 +1819,12 @@ montanha:[
 },
 {
   id:'rot_neblina_alta', peso:2,
-  cond:d=>horaAgora(d) >= 16 && horaAgora(d) < 18,
+  cond:d=>horaAgora(d) >= 16 && horaAgora(d) <= 18,
   titulo:'A neblina que fecha',
   texto:[
     'A neblina sobe o vale em vinte minutos e fecha tudo num branco que come som também: você fala e a sua voz volta errada.',
     'A trilha continua ali, dois metros de cada vez.',
-    d=>`Ainda faltam umas três horas de caminho e falta ${horaAgora(d) >= 17 ? 'uma hora e meia' : 'duas horas e meia'} pra escurecer.`
+    d=>`Ainda faltam umas três horas de caminho e falta ${horaAgora(d) >= 18 ? 'menos de uma hora' : horaAgora(d) === 17 ? 'uma hora e meia' : 'duas horas e meia'} pra escurecer.`
   ],
   escolhas:[
     {texto:'Parar onde está e esperar abrir.',
@@ -2090,11 +2092,11 @@ agua:[
 },
 {
   id:'rot_balsa_atrasada', peso:2,
-  cond:d=>horaAgora(d) >= 15 && horaAgora(d) <= 18,
+  cond:d=>horaAgora(d) >= 16 && horaAgora(d) <= 18,
   titulo:'A balsa que não vem',
   texto:[
     'O píer tem nove pessoas esperando e uma placa escrita à mão dizendo que a balsa das duas vai atrasar.',
-    d=>`A placa está lá desde as duas. Já passa das ${['três', 'quatro', 'cinco', 'seis'][horaAgora(d) - 15]}.`,
+    d=>horaAgora(d) === 16 ? 'A placa está lá desde as duas. São quatro e vinte.' : 'A placa está lá desde as duas, e a tarde já está no fim.',
     'Tem um homem de colete que trabalha aqui e que aprendeu a não fazer contato visual com ninguém.'
   ],
   escolhas:[

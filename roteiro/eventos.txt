@@ -1,0 +1,1485 @@
+
+### pal_cachorro_do_quatorze  (cidade pallet) — O Growlithe do quatorze
+     Tem um Growlithe velho deitado no meio da rua, na parte quente do asfalto, e ele não sai de lá por nada.
+     Uma mulher tenta empurrar com o pé, sem força nenhuma, do jeito de quem faz isso todo dia e já perdeu.
+   1f      a mulher do quatorze: Ele tem quinze anos. Quinze! Ele não escuta, não vê direito, e escolheu justo o meio da rua.
+   2f      a mulher do quatorze: Passa caminhão de leite às onze. Todo dia às onze.
+     > Pegar ele no colo e levar pra calçada.
+     > Perguntar por que ele insiste naquele lugar.
+     > Comprar um saco de areia no armazém e fazer uma sombra na calçada pra ele.
+     > Não é problema seu. Seguir andando.
+
+### pal_cachorro_do_quatorze > 1
+     Ele pesa muito mais do que parece e cheira a sol.
+     Ele não reage, não se assusta, não faz nada — só fica de queixo apoiado no seu braço o caminho inteiro, que são quatro metros.
+   1f      a mulher do quatorze: Ele vai voltar pro meio da rua em dez minutos.
+   2f      a mulher do quatorze: Mas obrigada. Todo dia alguém tem que fazer isso, e faz três dias que é só eu.
+
+### pal_cachorro_do_quatorze > 2
+   1f      a mulher do quatorze: Ali era onde o carro do meu marido ficava.
+   2f      a mulher do quatorze: Faz dois anos que não tem carro nenhum ali e faz dois anos que ele deita naquele exato lugar.
+     Vocês dois olham o pedaço de asfalto por um tempo.
+   3f      a mulher do quatorze: Me ajuda a tirar ele antes das onze?
+
+### pal_cachorro_do_quatorze > 3
+     Você compra lona, areia e barbante, e leva quarenta minutos armando uma sombra torta na calçada, na altura certa.
+     Ele não vem. Ele fica no asfalto olhando você trabalhar.
+     Você desiste e vai embora.
+     Três horas depois, voltando, ele está deitado embaixo da lona.
+   1f      a mulher do quatorze: ELE FOI SOZINHO!
+
+### pal_cachorro_do_quatorze > 4
+     Você desvia e segue.
+     Às onze e dez você ouve um caminhão frear muito forte, quatro ruas atrás, e não volta pra ver.
+
+### pal_menino_do_muro  (cidade pallet) — O muro do laboratório
+     Tem um menino de uns nove anos chutando bola contra o muro do laboratório, sozinho, com uma concentração absurda.
+     Ele erra. Ele erra de novo. Ele erra sete vezes seguidas e não muda nada no que está fazendo.
+   1f      o menino do muro: Esse muro devolve reto. Quem erra sou eu.
+     > Ensinar a ele o que ele está errando.
+     > Jogar com ele.
+     > Perguntar qual ele vai escolher.
+     > Seguir andando.
+
+### pal_menino_do_muro > 1
+     Você aponta o pé de apoio dele, que está longe demais da bola, e ele muda sem discutir.
+     Ele acerta na primeira. E na segunda. E aí ele acerta doze seguidas e fica sem graça.
+   1f      o menino do muro: Você é treinadora?
+   2f      o menino do muro: Eu vou ser. Eu já sei qual eu vou escolher e tudo.
+
+### pal_menino_do_muro > 2
+     Vocês jogam por quarenta minutos, que é tempo demais, e você perde de doze a nove porque ele conhece aquele muro melhor do que você.
+     Você sai de lá com o joelho ralado e uma sensação estranha de que isso foi importante.
+   1f      o menino do muro: Amanhã de novo?
+     Você não vai estar aqui amanhã, e ele sabe disso, e perguntou assim mesmo.
+
+### pal_menino_do_muro > 3
+   1f      o menino do muro: Eu não vou falar. Se eu falar dá azar.
+     Pausa de dois segundos.
+   2f      o menino do muro: Mas é o do meio.
+     Ele tem nove anos. Faltam seis. Ele já decidiu.
+
+### pal_menino_do_muro > 4
+     Você segue. A bola bate no muro atrás de você mais quatro vezes, e na quarta ele acerta.
+
+### vir_fila_da_licenca  (cidade viridian) — A fila da licença   [dono: a menina do formulário]
+     A fila do balcão do Centro tem nove pessoas e todas têm menos de dezesseis anos, e uma delas está chorando de um jeito discreto e muito constrangido.
+     É uma menina de uns quinze com um formulário na mão e um carimbo vermelho em cima dele.
+   1f      a menina do formulário: Falta assinatura de responsável e eu não tenho responsável.
+   2f      a menina do formulário: Eu vim de Pewter de ônibus. Eu gastei tudo no ônibus.
+     > Contar a ela do formulário alternativo. Tem sempre um formulário.
+     > Pagar a passagem de volta dela, pelo menos.
+     > Oferecer assinar como responsável. Você tem licença.
+     > Não é da sua conta.
+
+### vir_fila_da_licenca > 1   [dono: a menina do formulário]
+     Você conta. Ela não acredita. Você insiste. Ela volta pro balcão.
+     A enfermeira puxa a gaveta, tira o formulário, e a menina chora de novo — de um jeito completamente diferente do de antes.
+   1f      Ida: Eu ia voltar pra Pewter hoje. Eu ia voltar hoje e não tentar de novo.
+   2f      Ida: Ida. Eu me chamo Ida. Eu vou lembrar da sua cara.  ƒ
+     ƒ d=>{ Nomes.apresentar('a menina do formulário'); return fala('a menina do formulário', 'Ida. Eu me chamo Ida. Eu vou lembrar da sua cara.'); }
+
+### vir_fila_da_licenca > 2   [dono: a menina do formulário]
+     Ela aceita o dinheiro e agradece quatro vezes e não olha na sua cara em nenhuma das quatro.
+     Você resolveu o problema errado, e você percebe isso exatamente no segundo em que ela vira as costas.
+
+### vir_fila_da_licenca > 3   [dono: a menina do formulário]
+     A enfermeira olha a sua licença. Olha a sua idade. Olha a idade dela.
+   1f      a enfermeira: Isso não vale, e eu vou carimbar assim mesmo, e se aparecer alguém perguntando eu não sei de nada.
+   2f      Ida: Por que você fez isso?
+     Você não tem uma resposta boa e responde qualquer coisa.
+
+### vir_fila_da_licenca > 4   [dono: a menina do formulário]
+     Você entra na fila atrás dela e olha o chão pelos quatro minutos seguintes.
+
+### vir_o_carro_do_posto  (cidade viridian) — Atrás do posto
+     Atrás do posto de gasolina tem quatro homens em volta de um carro com o capô aberto e ninguém mexendo em nada.
+     Tem um Magnemite pairando sobre o motor, parado, com as duas hastes viradas pra bateria.
+   1f      o dono do carro: Ele acha o problema. Ele SEMPRE acha o problema. O que ele não faz é explicar.
+   2f      Nilo, o do posto: Ele tá parado em cima da bateria faz vinte minutos, Dino. Ele já explicou.
+     > Escanear o Magnemite com a Pokédex pra ver o que ele está medindo.
+     > Perguntar de onde veio o Magnemite.
+     > Pôr a mão no motor e achar você mesm{o|a}.
+     > Deixar os quatro resolverem.
+
+### vir_o_carro_do_posto > 1
+     A leitura mostra campo magnético concentrado num ponto só, e o ponto é o terminal negativo.
+     Terminal solto. Um parafuso.
+   1f      Nilo, o do posto: EU FALEI!
+   2f      o dono do carro: Você falou "ele já explicou", Nilo, isso não é falar.
+     Eles brigam sobre isso por mais quinze minutos. O carro liga na primeira.
+
+### vir_o_carro_do_posto > 2
+   1f      Nilo, o do posto: Ele apareceu. Há uns seis anos.
+   2f      Nilo, o do posto: Veio andando pela estrada da usina, de dia, no meio do sol, parou em cima da bomba dois e ficou.
+   3f      Nilo, o do posto: Nunca mais saiu. E não deixa ninguém encostar em bomba com defeito.
+     A usina abandonada fica a quatro cidades daqui.
+
+### vir_o_carro_do_posto > 3
+     Você põe a mão num lugar que está a noventa graus e tira muito rápido.
+     Os quatro homens acham isso a coisa mais engraçada que aconteceu na semana deles.
+   1f      o dono do carro: Era o terminal, moça. Era o terminal desde o começo.
+
+### vir_o_carro_do_posto > 4
+     Você segue. A discussão continua audível por dois quarteirões.
+
+### pew_sirene  (cidade pewter) — A sirene das seis e meia
+     A sirene da pedreira toca e a cidade inteira muda de ritmo em quinze segundos.
+     Duzentas pessoas saem de um portão ao mesmo tempo, todas cinzas de pó, todas andando na mesma direção e na mesma velocidade.
+     No meio delas tem um Machoke carregando três vigas sozinho, no mesmo passo, sem capacete.
+   1f      o rapaz da pedreira: Ele trabalha desde os quatro anos. Não é maldade, é que ele gosta.
+   2f      o rapaz da pedreira: O problema é que ele não sabe parar, e aqui ninguém manda ele parar porque ninguém quer ser o cara que mandou.
+     > Mandar ele parar.
+     > Perguntar quem é o dono dele.
+     > Anotar o nome da empresa e o número da folha.
+     > Seguir andando com as duzentas pessoas.
+
+### pew_sirene > 1
+     Você chega na frente dele e fala, alto, na frente de duzentas pessoas.
+     Ele para. Ele baixa as três vigas com um cuidado absurdo, uma por uma.
+     E aí ele senta no chão e não levanta mais, e alguém traz água, e alguém traz mais água.
+   1f      o rapaz da pedreira: Doze anos.
+   2f      o rapaz da pedreira: Doze anos que a gente vê isso e ninguém falou nada.
+
+### pew_sirene > 2
+   1f      o rapaz da pedreira: Não tem.
+   2f      o rapaz da pedreira: Ele tá na folha da empresa. Não como funcionário — como equipamento. Linha de baixo, junto com a retroescavadeira.
+     Equipamento não tem hora de parar. Equipamento tem manutenção.
+   3f      o rapaz da pedreira: Eu nunca tinha falado isso em voz alta. Soa pior em voz alta.
+
+### pew_sirene > 3
+     O rapaz da pedreira consegue uma cópia da folha do mês passado em quatro minutos, o que quer dizer que ele já tinha pensado nisso.
+     Linha 41: MACHOKE — EQUIPAMENTO — MANUTENÇÃO TRIMESTRAL.
+     Você vai ver essa palavra, manejo ou manutenção, mais umas quarenta vezes nos próximos meses, sempre no mesmo tipo de papel.
+
+### pew_sirene > 4
+     Você anda junto com a massa cinza por dois quarteirões e depois vira numa rua lateral, e o barulho todo some de uma vez.
+
+### pew_museu_sem_telhado  (cidade pewter) — A sala fechada do museu   [dono: Museu de Pewter]
+     A porta da ala de fósseis tem um aviso à mão numa folha amarelada: FÓSSEIS — REFORMA.
+     Pela fresta dá pra ver lona azul no chão e uma pilha de balde.
+   1f      o senhor do museu: Reforma é força de expressão. A gente tem o dinheiro do telhado e não tem o do andaime.
+   2f      o senhor do museu: Então quando chove a gente põe balde, e quando para a gente tira balde, e é isso há três anos.
+     > Doar pro telhado.
+     > Perguntar se dá pra ver mesmo com a reforma.
+     > Oferecer trabalho braçal: subir na escada e trocar o que dá.
+     > Seguir andando.
+
+### pew_museu_sem_telhado > 1   [dono: Museu de Pewter]
+     Ele conta o dinheiro duas vezes, em silêncio, e na segunda as mãos tremem um pouco.
+   1f      o senhor do museu: Isso paga o andaime.
+   2f      o senhor do museu: Isso paga o andaime e sobra pro pedreiro de meio período. Moça.
+     Seis meses depois, numa cidade completamente diferente, você vai ver uma foto de jornal da ala reaberta, e vai ter uma placa pequena com o seu nome escrito errado.
+
+### pew_museu_sem_telhado > 2   [dono: Museu de Pewter]
+     Ele abre a porta com uma chave que ele tira do bolso, o que quer dizer que ele leva a chave no bolso todo dia.
+     A sala tem onze vitrines e uma delas está vazia, com uma etiqueta e nenhum fóssil.
+   1f      o senhor do museu: Esse foi pra Cinnabar em 1994, pra pesquisa.
+   2f      o senhor do museu: A gente nunca recebeu de volta e nunca recebeu explicação, e a etiqueta eu deixei porque a etiqueta é nossa.
+
+### pew_museu_sem_telhado > 3   [dono: Museu de Pewter]
+     Você passa a tarde inteira numa escada de madeira, trocando as telhas que o senhor do museu aponta lá de baixo.
+     Vocês trocam dezenove e faltam umas trezentas, e ele insiste em te pagar com um catálogo de 1987 que ninguém nunca comprou.
+     Você aceita o catálogo.
+
+### pew_museu_sem_telhado > 4   [dono: Museu de Pewter]
+     Você segue. A folha amarelada do aviso já estava amarelada quando foi escrita.
+
+### cer_ponte_dos_seis  (cidade cerulean) — A fila da ponte   [dono: O sexto da ponte]
+     A ponte norte tem seis garotos em fila, um atrás do outro, desafiando quem passa.
+     O sexto é visivelmente menor que os outros cinco e visivelmente mais novo, e está ali no fim da fila com uma Pokébola só no cinto.
+   1f      o primeiro da ponte: Quem passa enfrenta os seis. É tradição.
+   2f      o sexto da ponte: Eu sou o sexto.
+     > Enfrentar os seis na ordem.
+     > Pedir pra enfrentar o sexto primeiro.
+     > Perguntar quanto eles cobram e se o sexto recebe igual.
+     > Atravessar sem lutar com ninguém.
+
+### cer_ponte_dos_seis > 1   [dono: O sexto da ponte]
+     Cinco combates rápidos e um comprido, e o comprido é o do menor.
+     Ele te dá muito mais trabalho do que os cinco anteriores juntos, porque ele estudou os cinco anteriores a manhã inteira.
+   1f      o sexto da ponte: Eu quase.
+   2f      o primeiro da ponte: Ele quase. Ele nunca tinha chegado perto.
+
+### cer_ponte_dos_seis > 2   [dono: O sexto da ponte]
+     Os cinco protestam. A tradição é a tradição.
+     Você não discute, só fica parada na frente do sexto e espera.
+   1f      o primeiro da ponte: …tá. Uma vez.
+     O sexto luta contra você com o time inteiro dele descansado, pela primeira vez na vida dele, e é um combate completamente diferente do que teria sido no fim da fila.
+   2f      o sexto da ponte: Assim é muito melhor.
+
+### cer_ponte_dos_seis > 3   [dono: O sexto da ponte]
+     Silêncio de cinco garotos.
+   1f      o sexto da ponte: Eu recebo menos porque eu perco mais.
+   2f      o primeiro da ponte: É justo.
+   3f      VOCÊ: Ele perde mais porque ele é sempre o último. Vocês chegam nele cansados.  ƒ
+     Mais silêncio. Bem mais longo.
+     ƒ d=>fala(d.jogador.nome, 'Ele perde mais porque ele é sempre o último. Vocês chegam nele cansados.')
+
+### cer_ponte_dos_seis > 4   [dono: O sexto da ponte]
+     Você passa reto pelos seis. Nenhum deles te impede, porque nenhum deles pode.
+     O sexto é o único que fala alguma coisa, e o que ele fala é "tchau".
+
+### cer_o_rio_mudou_de_cor  (cidade cerulean) — O rio mudou de cor de novo
+     Tem umas vinte pessoas na margem olhando a água, que está de um verde que água de rio não fica.
+     Um pescador enche um pote de vidro e levanta contra a luz.
+   1f      o pescador da ponte: Terceira vez esse mês. Antes era duas por ano.
+   2f      o pescador da ponte: A prefeitura manda um moço que olha, escreve, e vai embora. Depois some por três semanas.
+     > Encher um pote e guardar. Isso é prova.
+     > Subir o rio pra ver de onde vem.
+     > Perguntar o nome do moço da prefeitura.
+     > Olhar junto com os outros vinte e seguir.
+
+### cer_o_rio_mudou_de_cor > 1
+     O pescador te empresta um pote e te ensina a fechar com plástico por cima antes da tampa, que é como se guarda amostra.
+   1f      o pescador da ponte: Escreve a data na tampa. Sempre a data.
+   2f      o pescador da ponte: Eu tenho onze potes em casa. Nunca ninguém pediu nenhum.
+
+### cer_o_rio_mudou_de_cor > 2
+     Você sobe a margem por quase duas horas, cortando mato, e acha o ponto exato onde a água ainda é normal.
+     É depois da curva da Rota 24, e a mudança acontece em menos de trinta metros.
+     Do lado verde tem um cano de concreto de uns quarenta centímetros saindo do barranco, sem placa, sem identificação, com grama alta em volta.
+     Alguém corta essa grama. Dá pra ver que alguém corta essa grama.
+
+### cer_o_rio_mudou_de_cor > 3
+   1f      o pescador da ponte: É sempre o mesmo. Moço novo, camisa de manga curta, prancheta.
+   2f      o pescador da ponte: Da última vez eu perguntei o nome dele e ele falou que não podia dizer.
+   3f      o pescador da ponte: Técnico de prefeitura que não pode dizer o nome, moça. Pensa nisso.
+
+### cer_o_rio_mudou_de_cor > 4
+     Você olha a água verde por uns minutos, junto com vinte pessoas que fazem isso todo mês, e vai embora junto com elas.
+
+### ver_caixa_de_gelo  (cidade vermilion) — A caixa de gelo   [dono: As duas da caixa de gelo]
+     Duas mulheres carregam uma caixa térmica entre as duas, param a cada dez metros e trocam de mão.
+     Elas fazem isso todo dia e a cidade inteira sabe, e ninguém oferece ajuda porque elas já recusaram de todo mundo.
+   1f      a mais velha das duas: A gente não precisa, moça.
+   2f      a mais nova das duas: A gente precisa, mãe.
+     > Pegar uma ponta sem perguntar.
+     > Perguntar o que tem na caixa.
+     > Comprar a caixa inteira pelo preço da cooperativa.
+     > Respeitar a recusa e seguir.
+
+### ver_caixa_de_gelo > 1   [dono: As duas da caixa de gelo]
+     Você pega uma ponta e a mais velha reclama por cento e cinquenta metros e depois para de reclamar.
+     São seiscentos metros até a peixaria e vocês três fazem em uma parada só.
+   1f      a mais velha das duas: Amanhã a gente não precisa.
+   2f      a mais nova das duas: Amanhã é quinta. Quinta é a caixa grande.
+
+### ver_caixa_de_gelo > 2   [dono: As duas da caixa de gelo]
+   1f      a mais nova das duas: O que vem na rede e não passa na balança da cooperativa.
+   2f      a mais nova das duas: Coisa boa, mas fora do tamanho. A cooperativa não compra e manda devolver ao mar.
+   3f      a mais velha das duas: Devolver ao mar coisa morta. É isso que eles mandam.
+   4f      a mais nova das duas: A gente carrega na mão pra vender na peixaria pequena. Dá metade do preço e dá pra comer.
+
+### ver_caixa_de_gelo > 3   [dono: As duas da caixa de gelo]
+     Elas olham o dinheiro. Elas olham uma pra outra.
+   1f      a mais velha das duas: Isso é esmola.
+   2f      VOCÊ: É o preço da cooperativa. Eu paguei o preço.  ƒ
+     A mais velha pega o dinheiro e não agradece, que é exatamente como deve ser numa venda.
+     Você fica com uma caixa térmica de quarenta quilos e nenhum plano, e acaba doando pro Centro Pokémon.
+     ƒ d=>fala(d.jogador.nome, 'É o preço da cooperativa. Eu paguei o preço.')
+
+### ver_caixa_de_gelo > 4   [dono: As duas da caixa de gelo]
+     Você respeita a recusa e segue.
+     Duzentos metros adiante você olha pra trás e elas estão paradas de novo, trocando de mão.
+
+### ver_por_do_sol  (cidade vermilion) — O melhor pôr do sol de Kanto
+     O homem da guarita do porto está sentado na cadeira de plástico dele, de costas pra cancela, olhando o oeste.
+   1f      o homem da guarita: Seis e quarenta. Todo dia seis e quarenta, essa época do ano.
+   2f      o homem da guarita: Trinta e um anos nessa guarita e é a melhor coisa que esse emprego me deu.
+     > Sentar no chão e olhar junto.
+     > Perguntar por que ninguém mais olha.
+     > Seguir. Você tem o que fazer.
+
+### ver_por_do_sol > 1
+     Vocês dois ficam onze minutos em silêncio absoluto.
+     O sol entra na água num ângulo que faz o porto inteiro ficar laranja por uns quarenta segundos, inclusive os guindastes, inclusive a ferrugem.
+     E aí acaba, e o porto volta a ser cinza, e é como se alguém tivesse desligado.
+   1f      o homem da guarita: Amanhã de novo.
+   2f      o homem da guarita: Todo dia. E todo dia tem umas quatro pessoas na cidade inteira olhando.
+
+### ver_por_do_sol > 2
+   1f      o homem da guarita: Porque às seis e quarenta todo mundo tá indo embora, e quem vai embora anda pro leste.
+   2f      o homem da guarita: Pra ver, tem que virar as costas pra casa. Ninguém vira as costas pra casa às seis e quarenta.
+
+### ver_por_do_sol > 3
+     Você segue andando pro leste, como todo mundo.
+     Às suas costas o porto fica laranja por quarenta segundos e você não vê.
+
+### lav_o_caderno_da_porta  (cidade lavender) — O caderno na porta do abrigo   [dono: Sr. Fuji]
+     O abrigo do Sr. Fuji tem um caderno pendurado na porta por um barbante, com uma caneta amarrada junto.
+     As pessoas escrevem o nome de quem deixaram ali. Só o nome. É essa a única regra e ela não está escrita em lugar nenhum.
+     O caderno está na página oitenta e três.
+     A última linha é de hoje de manhã e a letra é de criança.
+     > Ler o caderno inteiro, do começo.
+     > Perguntar ao Sr. Fuji o que acontece com os nomes.
+     > Escrever um nome. Você tem um pra escrever.
+     > Não abrir. Não é seu.
+
+### lav_o_caderno_da_porta > 1   [dono: Sr. Fuji]
+     Leva uma hora e quarenta.
+     São mil e duzentos nomes, mais ou menos, em onze anos. Alguns aparecem duas vezes — o mesmo nome, anos diferentes, letras diferentes.
+     Na página sessenta e um tem um nome riscado e reescrito logo abaixo, mais firme.
+     Na setenta e quatro tem um nome e, do lado, fora da regra, quatro palavras: "ele gostava de sombra".
+     Você fecha o caderno e fica um tempo sem saber o que fazer com as mãos.
+
+### lav_o_caderno_da_porta > 2   [dono: Sr. Fuji]
+   1f      Sr. Fuji: Nada. Não acontece nada com eles.
+   2f      Sr. Fuji: Eu não procuro ninguém com esses nomes e não mando carta pra ninguém.
+   3f      VOCÊ: Então pra que serve?  ƒ
+   4f      Sr. Fuji: Pra existir.
+   5f      Sr. Fuji: Quando alguém deixa um Pokémon aqui, a primeira coisa que some é o nome dele. Em duas semanas ninguém lembra. Esse caderno é onde o nome não some.
+     ƒ d=>fala(d.jogador.nome, 'Então pra que serve?')
+
+### lav_o_caderno_da_porta > 3   [dono: Sr. Fuji]
+     Você escreve um nome na página oitenta e três, embaixo da letra de criança.  ƒ
+     Só o nome. Você quase escreve mais e não escreve.
+     A regra é essa e a regra é boa.
+     O Sr. Fuji vê você escrever da janela e não sai de dentro de casa, e é a coisa mais gentil que ele podia fazer.
+     ƒ d=>{ const m = d.cemiterio[d.cemiterio.length-1]; return m ? `Você escreve ${nomeExib(m)} na página oitenta e três, embaixo da letra de criança.` : 'Você escreve um nome na página oitenta e três, embaixo da letra de criança.'; }
+
+### lav_o_caderno_da_porta > 4   [dono: Sr. Fuji]
+     Você não abre.
+     O caderno balança um pouco no barbante quando você passa, e continua na página oitenta e três.
+
+### lav_a_pergunta_do_curador  (cidade lavender) — A pergunta   [dono: a figura de capuz]
+     Tem alguém sentado num banco de pedra na entrada do abrigo, de capuz puxado até o nariz num dia sem frio, com um caderno de capa dura aberto no colo e uma caneta atravessada na página.
+     Pela voz é um homem velho. Pelas mãos, também. O resto o capuz guarda.
+     Ele não está escrevendo. Ele está esperando.
+   1f      a figura de capuz: Desculpa. Posso te fazer umas perguntas? Três, e nenhuma é sobre nada.
+   2f      a figura de capuz: Eu faço essas perguntas pra quem passa aqui desde 1991. Tenho oitenta e três cadernos.
+   3f      a figura de capuz: A primeira é: quando uma coisa chega na sua mão e não é sua — você guarda, ou você passa adiante?
+     Ele não explica que coisa. Ele não explica por quê. Ele espera, com a caneta atravessada na página, do jeito de quem já esperou muito.
+     > "Eu guardo."
+     > "Eu passo adiante."
+     > Perguntar o que as outras pessoas responderam antes de responder.
+     > Não responder e ir embora.
+
+### lav_a_pergunta_do_curador > 1   [dono: a figura de capuz]
+     Ele escreve a palavra e a data e o seu nome, nessa ordem, em letra pequena.
+   1f      a figura de capuz: Caderno setenta e um, página quatro.
+   2f      a figura de capuz: A segunda.
+
+### lav_a_pergunta_do_curador > 2   [dono: a figura de capuz]
+     Ele escreve a palavra e a data e o seu nome, nessa ordem, em letra pequena.
+   1f      a figura de capuz: Caderno setenta e um, página quatro.
+   2f      a figura de capuz: A segunda.
+
+### lav_a_pergunta_do_curador > 3   [dono: a figura de capuz]
+   1f      a figura de capuz: Em dezenove anos: mil e setecentas pessoas.
+   2f      a figura de capuz: Novecentas e quarenta e uma disseram guardar. Setecentas e cinquenta e nove disseram passar adiante.
+   3f      VOCÊ: E qual é a certa?  ƒ
+   4f      a figura de capuz: Não tem certa. Tem a sua.
+   5f      a figura de capuz: Agora responde.
+     ƒ d=>fala(d.jogador.nome, 'E qual é a certa?')
+
+### lav_a_pergunta_do_curador > 4   [dono: a figura de capuz]
+     Você não responde. Ele não insiste — ele claramente não insiste desde 1991.
+   1f      a figura de capuz: Tudo bem. Eu anoto isso também.
+     Ele escreve alguma coisa curta e fecha o caderno.
+     Você vai lembrar dessa pergunta em lugares onde ela não tem nada a ver, pelos próximos meses.
+
+### lav_juniper_segunda  (cidade lavender) — A segunda pergunta
+     Ele vira a página. A letra da página nova é a mesma da anterior, e a da anterior é a mesma de 1991.
+   1f      a figura de capuz: Você tem uma lembrança ruim. Uma que volta sem ser chamada.
+   2f      a figura de capuz: Se desse pra tirar ela de você, inteira, sem sobrar nada — você deixava tirar?
+     > "Não. Ela é minha."
+     > "Deixava. Pra poder seguir."
+     > "Eu não sei."
+
+### lav_juniper_segunda > 1
+     Ele anota. Uma palavra só, você vê de cabeça pra baixo: "fica".
+   1f      a figura de capuz: A última.
+
+### lav_juniper_segunda > 2
+     Ele anota. Uma palavra só, você vê de cabeça pra baixo: "vai".
+   1f      a figura de capuz: A última.
+
+### lav_juniper_segunda > 3
+     Ele anota mais do que você disse. Bem mais.
+   1f      a figura de capuz: Essa é a resposta mais comum e a mais honesta. A última.
+
+### lav_juniper_terceira  (cidade lavender) — A terceira pergunta
+   1f      a figura de capuz: Alguém que você gosta te pede emprestada a coisa de que você mais gosta.
+   2f      a figura de capuz: Diz que devolve. Você acredita. Só que vai demorar anos, e quando voltar não vai ser do mesmo jeito.
+   3f      a figura de capuz: Você empresta?
+     > "Não empresto."
+     > "Empresto."
+     > "Depende de quem pede."
+
+### lav_juniper_terceira > 1
+     Ele escreve, sublinha uma vez e fecha o caderno, e prende a caneta na espiral.
+   1f      a figura de capuz: Pronto. É só isso.
+   2f      VOCÊ: Isso serve pra quê?  ƒ
+   3f      a figura de capuz: Pra nada. Eu anoto.
+   4f      a figura de capuz: Quando você tiver quatro insígnias, aparece aqui. É só isso.
+     Ele te dá o número antes de você perguntar se ele tem número.
+     ƒ d=>fala(d.jogador.nome, 'Isso serve pra quê?')
+
+### lav_juniper_terceira > 2
+     Ele escreve, sublinha uma vez e fecha o caderno, e prende a caneta na espiral.
+   1f      a figura de capuz: Pronto. É só isso.
+   2f      VOCÊ: Isso serve pra quê?  ƒ
+   3f      a figura de capuz: Pra nada. Eu anoto.
+   4f      a figura de capuz: Quando você tiver quatro insígnias, aparece aqui. É só isso.
+     Ele te dá o número antes de você perguntar se ele tem número.
+     ƒ d=>fala(d.jogador.nome, 'Isso serve pra quê?')
+
+### lav_juniper_terceira > 3
+     Ele escreve "depende" e fica olhando a palavra um tempo, como se ela fosse de outra pessoa.
+   1f      a figura de capuz: Pronto. É só isso.
+   2f      VOCÊ: Isso serve pra quê?  ƒ
+   3f      a figura de capuz: Pra nada. Eu anoto.
+   4f      a figura de capuz: Quando você tiver quatro insígnias, aparece aqui. É só isso.
+     Ele te dá o número antes de você perguntar se ele tem número.
+     ƒ d=>fala(d.jogador.nome, 'Isso serve pra quê?')
+
+### lav_a_cidade_sem_musica  (cidade lavender) — A cidade sem música
+     Você percebe depois de meia hora e depois não consegue mais desperceber.
+     Lavender não tem música em lugar nenhum. Nenhum rádio ligado, nenhuma loja com som, nenhuma buzina com melodia.
+     É uma cidade de umas oitocentas pessoas em silêncio de dia inteiro.
+     > Perguntar na primeira porta por que não tem música.
+     > Cantar. Baixinho, andando, só pra ver o que acontece.
+     > Respeitar o silêncio.
+
+### lav_a_cidade_sem_musica > 1
+   1f      a dona da marcenaria: Ninguém combinou nada.
+   2f      a dona da marcenaria: Em 1982 teve um incêndio na Torre e morreu gente, e naquela semana ninguém ligou rádio.
+   3f      a dona da marcenaria: Aí passou a semana e ninguém ligou de novo. E depois virou uma coisa que a gente é.
+   4f      a dona da marcenaria: Tem gente aqui que nasceu depois de 82 e que acha que cidade é assim em todo lugar.
+
+### lav_a_cidade_sem_musica > 2
+     Você canta baixinho, andando, uma coisa qualquer.
+     Três pessoas olham. Nenhuma reclama. Uma senhora na janela para de varrer e fica ouvindo até você virar a esquina.
+     Na esquina, uma criança de uns sete anos te pergunta o que é aquilo que você estava fazendo com a boca.
+     Você não tem uma boa resposta pra isso.
+
+### lav_a_cidade_sem_musica > 3
+     Você respeita o silêncio e anda em silêncio, como todo mundo aqui.
+     Foi a coisa certa a fazer e mesmo assim não parece.
+
+### cel_sem_lugar_pra_sentar  (cidade celadon) — Sete andares e nenhum banco
+     Tem um senhor de uns setenta anos sentado no chão do corredor do quarto andar do shopping, encostado numa coluna, com duas sacolas do lado.
+   1f      o senhor do corredor: Sete andares de loja e nenhum lugar pra sentar de graça.
+   2f      o senhor do corredor: Tem cadeira na praça de alimentação. Cadeira de quem compra. Eu já comprei o que eu vim comprar.
+     Um segurança olha de longe, decide alguma coisa, e não vem.
+     > Sentar no chão do lado dele.
+     > Comprar um café na praça de alimentação e dar o recibo a ele.
+     > Reclamar na administração do shopping.
+     > Seguir andando.
+
+### cel_sem_lugar_pra_sentar > 1
+     Você senta. O segurança olha de novo e decide de novo não vir, e dessa vez a decisão parece ter custado mais.
+     Vocês dois ficam ali uns vinte minutos falando de nada.
+     Em vinte minutos, mais quatro pessoas sentam no chão do corredor. Nenhuma delas se conhece.
+   1f      o senhor do corredor: Olha isso.
+   2f      o senhor do corredor: Eu sento aqui toda semana há dois anos e nunca aconteceu isso.
+
+### cel_sem_lugar_pra_sentar > 2
+     Você compra o café mais barato e entrega o copo e o recibo.
+     Ele entende na hora o que você fez e não gosta muito, e vai pra praça de alimentação assim mesmo.
+   1f      o senhor do corredor: Obrigado. E eu continuo achando um absurdo.
+   2f      VOCÊ: É um absurdo.  ƒ
+   3f      o senhor do corredor: Ótimo. Então a gente concorda e eu vou sentar.
+     ƒ d=>fala(d.jogador.nome, 'É um absurdo.')
+
+### cel_sem_lugar_pra_sentar > 3
+     A moça da administração anota numa ficha de duas vias e te dá a segunda via, o que já é mais do que você esperava.
+   1f      a moça da administração: É a quarta este ano.
+   2f      a moça da administração: Banco ocupa espaço de vitrine. Você entende que eu entendo você, né? Eu passo oito horas em pé aqui.
+     Ela guarda a primeira via numa pasta que já tem três fichas iguais.
+
+### cel_sem_lugar_pra_sentar > 4
+     Você segue. O senhor continua no chão e o segurança continua decidindo não vir.
+
+### cel_a_vitrine_de_usados  (cidade celadon) — A vitrine de usados
+     O quarto andar do shopping tem uma vitrine de usados no fim do corredor, dessas que ninguém para pra olhar.
+     Relógio sem pulseira. Três câmeras. Uma caixa de medalha escolar, dessas de estante de sala, com sete medalhas dentro e nenhuma etiqueta.
+   1f      o vendedor do quarto andar: Isso aí vem de desocupação de casa. Chega de caminhão, a gente separa o que vende.
+   2f      o vendedor do quarto andar: Medalha não vende. Medalha fica aí porque é bonito e porque eu não tenho coragem de jogar fora.
+     > Pedir pra ver as sete, uma por uma.
+     > Comprar a de natação.
+     > Perguntar de onde veio a caixa.
+     > Seguir pro que você veio fazer.
+
+### cel_a_vitrine_de_usados > 1
+     Ele abre a caixa e põe as sete no balcão, e você lê as sete.
+     Quatro são de escola, de participação, sem nome.
+     Duas são de ginástica, do mesmo clube, do mesmo ano, e claramente da mesma pessoa.
+     A sétima é de natação. Estadual. 1994.
+     E tem um nome gravado atrás, em letra pequena, e o sobrenome é Wells.
+
+### cel_a_vitrine_de_usados > 2
+   1f      o vendedor do quarto andar: Mil e duzentos. E eu tô cobrando caro de propósito.
+   2f      VOCÊ: Por quê?  ƒ
+   3f      o vendedor do quarto andar: Porque em quatro anos você é a primeira pessoa que pediu pra ver uma medalha dessa caixa.
+   4f      o vendedor do quarto andar: Se é caro você desiste e eu fico com ela. Se você paga, é porque você sabe pra onde ela vai.
+     Você paga. Ele embrulha em papel de seda, que ele claramente não usa pra mais nada nessa loja.
+     ƒ d=>fala(d.jogador.nome, 'Por quê?')
+
+### cel_a_vitrine_de_usados > 3
+     Ele puxa um caderno de trás do balcão, corre o dedo e acha em quinze segundos, o que quer dizer que esse caderno é bem feito.
+   1f      o vendedor do quarto andar: Lote 331. Desocupação residencial, 1995.
+   2f      o vendedor do quarto andar: Cidade de origem: Pallet.  ƒ
+     Pallet.  ƒ
+     ƒ d=>fala('o vendedor do quarto andar', `Cidade de origem: ${d.jogador.cidade}.`)
+     ƒ d=>`${d.jogador.cidade}.`
+
+### cel_a_vitrine_de_usados > 4
+     Você segue. A caixa de sete medalhas continua na vitrine, onde está há quatro anos.
+
+### cel_maquina_do_canto  (cidade celadon) — A máquina do canto
+     O saguão do cassino tem quarenta máquinas e uma delas fica no canto, atrás de uma coluna, sem cadeira na frente.
+     Tem uma fila de três pessoas esperando pra usar justamente aquela.
+   1f      o primeiro da fila da máquina: Essa aqui paga. As outras não pagam, essa paga.
+   2f      o primeiro da fila da máquina: Todo mundo sabe. Por isso tem fila.
+     > Ficar olhando a máquina por vinte minutos antes de qualquer coisa.
+     > Contar pra fila o que você viu.
+     > Jogar.
+     > Sair do cassino.
+
+### cel_maquina_do_canto > 1
+     Você conta. Em vinte minutos, quatro pessoas jogam.
+     A máquina paga sete vezes. Sete! Em vinte minutos!
+     Você soma o que ela pagou e soma o que ela comeu, e a conta dá menos do que as outras máquinas do saguão.
+     Ela paga muito mais vezes e muito menos. É por isso que tem fila.
+     Você olha pra aquilo com uma admiração horrível.
+
+### cel_maquina_do_canto > 2
+     Você explica a conta. Duas pessoas ouvem e uma sai da fila.
+   1f      o primeiro da fila da máquina: Eu sei disso.
+   2f      o primeiro da fila da máquina: Eu sei disso há uns dois anos, moça. Eu continuo na fila.
+     Ele não fala mais nada e você não tem o que responder.
+
+### cel_maquina_do_canto > 3
+     Você entra na fila, espera onze minutos, e joga.
+     Ela paga. Ela paga de novo. Ela paga uma terceira vez e você começa a entender por que tem fila.
+     E aí você olha o saldo.
+
+### cel_maquina_do_canto > 4
+     Você sai. Na porta tem um cartaz da própria casa avisando que jogo é entretenimento e não investimento, e o cartaz está torto.
+
+### fuc_a_placa_corrigida  (cidade fuchsia) — O horário de domingo
+     A placa de horários na entrada da reserva é de metal esmaltado e deve ter uns quinze anos.
+     O horário de domingo foi corrigido a caneta, por cima do esmalte, e a correção já está gasta.
+     Embaixo da correção a caneta, tem outra correção a caneta, mais antiga ainda.
+   1f      o porteiro da reserva: Essa placa já foi corrigida quatro vezes. A quinta a gente escreve em papel e cola com fita.
+     > Perguntar por que não trocam a placa.
+     > Perguntar o que MAIS depende dessa assinatura.
+     > Corrigir a placa você mesm{o|a}, com caneta, pela quinta vez.
+     > Entrar na reserva e esquecer a placa.
+
+### fuc_a_placa_corrigida > 1
+   1f      o porteiro da reserva: Porque placa é patrimônio.
+   2f      o porteiro da reserva: Pra trocar precisa de baixa de patrimônio, e baixa de patrimônio precisa de assinatura do diretor de área.
+   3f      o porteiro da reserva: O cargo de diretor de área tá vago desde 1994.
+     Três anos de cargo vago. Uma placa de horário. Quatro correções a caneta.
+
+### fuc_a_placa_corrigida > 2
+     Ele para. Ele olha pra você de um jeito diferente.
+   1f      o porteiro da reserva: Espera aqui.
+     Ele volta em quatro minutos com uma folha datilografada que claramente alguém já tinha preparado antes, e que estava esperando alguém perguntar.
+     Onze itens. Placa de horário é o número nove.
+     O número um é: LAUDO DE ÓBITO DE POKÉMON EM CATIVEIRO — AGUARDANDO ASSINATURA.
+   2f      o porteiro da reserva: Tem coisa esperando desde 95 nessa lista, moça.
+
+### fuc_a_placa_corrigida > 3
+     Você pede a caneta e escreve o horário certo por cima do horário errado por cima do horário errado.
+   1f      o porteiro da reserva: Agora tem cinco.
+   2f      o porteiro da reserva: Daqui a dez anos isso aqui vai ser uma placa de caneta com um pouco de esmalte embaixo.
+
+### fuc_a_placa_corrigida > 4
+     Você entra. A placa continua com quatro correções e o cargo continua vago.
+
+### fuc_o_onibus_das_quatro  (cidade fuchsia) — O ônibus das quatro
+     O ônibus das quatro da Zona Safári chega atrasado e descarrega quarenta pessoas de chapéu novo, e a cidade aumenta de volume por vinte minutos.  ƒ
+     Todos os quarenta compraram o chapéu na entrada. Todos os quarenta estão falando ao mesmo tempo sobre o que viram.
+     Um deles está calado, no fim da fila, segurando uma Pokébola vazia.
+     ƒ d=>horaAgora(d) === 16 ? 'Às quatro da tarde o ônibus da Zona Safári descarrega quarenta pessoas de chapéu novo, e a cidade aumenta de volume por vinte minutos.' : 'O ônibus das quatro da Zona Safári chega atrasado e descarrega quarenta pessoas de chapéu novo, e a cidade aumenta de volume por vinte minutos.'
+     > Falar com o que está calado.
+     > Perguntar aos quarenta o que eles viram.
+     > Deixar os quarenta passarem.
+
+### fuc_o_onibus_das_quatro > 1
+   1f      o homem da Pokébola vazia: Trinta Pokébolas. Trinta.
+   2f      o homem da Pokébola vazia: Eu venho aqui desde 1994. Essa foi a trigésima primeira vez.
+   3f      VOCÊ: E nunca pegou nada?  ƒ
+   4f      o homem da Pokébola vazia: Peguei doze. Todos os doze eu soltei no portão, na saída.
+   5f      o homem da Pokébola vazia: Eu não venho aqui pra levar. Eu venho aqui porque lá dentro eu consigo dormir de olho aberto, se é que você me entende.
+     Você não entende. Você vai entender daqui a uns meses.
+     ƒ d=>fala(d.jogador.nome, 'E nunca pegou nada?')
+
+### fuc_o_onibus_das_quatro > 2
+     Você pergunta e eles respondem TODOS AO MESMO TEMPO, e é impossível e é ótimo.
+     Quarenta pessoas viram quarenta coisas diferentes na mesma reserva no mesmo dia.
+     Três delas juram ter visto a mesma coisa num lugar onde essa coisa não devia estar, e as três discordam sobre o tamanho.
+     Uma delas tem foto. A foto está tremida e não dá pra ver nada e ela vai mostrar essa foto pro resto da vida.
+
+### fuc_o_onibus_das_quatro > 3
+     Você espera os quarenta passarem, o que leva quatro minutos, e a rua fica silenciosa de novo de uma vez só.
+
+### saf_estagiarios_da_escada  (cidade saffron) — A escada do prédio comercial
+     Seis estagiários almoçam sentados na escada do prédio comercial, todos com o mesmo crachá branco, almoçando a mesma comida do mesmo lugar.
+     Eles têm quarenta minutos e usam trinta e dois, porque leva quatro pra descer e quatro pra subir.
+   1f      o estagiário do fim da escada: A gente cronometrou. Na primeira semana a gente cronometrou tudo.
+     > Sentar na escada e almoçar junto.
+     > Perguntar o que eles fazem lá dentro.
+     > Perguntar onde fica a pilha dos que não batem.
+     > Deixar os seis almoçarem em paz.
+
+### saf_estagiarios_da_escada > 1
+     Eles abrem espaço sem perguntar quem você é, o que é a coisa mais Saffron que já aconteceu com você.
+     Em trinta e dois minutos você fica sabendo: qual andar tem o bebedouro que gela, qual elevador não para no sexto, e qual gerente some às quintas.
+   1f      o estagiário do fim da escada: Anota isso aí, que isso vale mais que o salário.
+     Você anota. Você vai usar duas dessas três informações antes do fim do ano.
+
+### saf_estagiarios_da_escada > 2
+   1f      a estagiária do meio: A gente confere número.
+   2f      VOCÊ: Número de quê?  ƒ
+   3f      a estagiária do meio: De protocolo. A gente pega uma pilha de protocolo e confere contra outra pilha de protocolo.
+   4f      a estagiária do meio: Se bate, carimba. Se não bate, separa.
+   5f      VOCÊ: E o que acontece com os que não batem?  ƒ
+     Silêncio de seis estagiários.
+   6f      o estagiário do fim da escada: A gente separa. Isso é o que a gente faz.
+     ƒ d=>fala(d.jogador.nome, 'Número de quê?')
+     ƒ d=>fala(d.jogador.nome, 'E o que acontece com os que não batem?')
+
+### saf_estagiarios_da_escada > 3
+     A estagiária do meio olha pros lados de um jeito que você já viu antes nesta cidade.
+   1f      a estagiária do meio: Sobe.
+   2f      VOCÊ: Sobe pra onde?  ƒ
+   3f      a estagiária do meio: Nono. Toda sexta, em caixa lacrada, e a caixa não volta.
+   4f      a estagiária do meio: Eu tô aqui há sete meses e eu já mandei umas quarenta caixas pro nono andar.
+   5f      o estagiário do fim da escada: Cala a boca, Cida.
+     ƒ d=>fala(d.jogador.nome, 'Sobe pra onde?')
+
+### saf_estagiarios_da_escada > 4
+     Você deixa. Eles têm trinta e dois minutos e você já gastou dois.
+
+### saf_a_mulher_do_nao  (cidade saffron) — Catorze vezes não
+     Tem uma mulher de terno parada na calçada falando no PokéNav, e em quatro minutos ela diz "não" catorze vezes.
+     Cada "não" tem uma entonação diferente. Nenhum deles é igual ao anterior.
+     No décimo quinto ela desliga sem se despedir e fica parada olhando o aparelho.
+     > Perguntar se ela está bem.
+     > Contar os "não" em voz alta quando ela desligar.
+     > Seguir andando.
+
+### saf_a_mulher_do_nao > 1
+     Ela demora quatro segundos pra entender que a pergunta é pra ela.
+   1f      a mulher de terno: O quê?
+   2f      VOCÊ: Se a senhora está bem.  ƒ
+     Ela olha pra você. Olha o crachá dela. Olha o PokéNav.
+   3f      a mulher de terno: Ninguém me pergunta isso nessa cidade há uns quatro anos.
+   4f      a mulher de terno: Eu não tô. Obrigada.
+     E ela vai embora andando rápido, e você acha que fez uma coisa boa e não tem certeza.
+     ƒ d=>fala(d.jogador.nome, 'Se a senhora está bem.')
+
+### saf_a_mulher_do_nao > 2
+   1f      VOCÊ: Catorze.  ƒ
+   2f      a mulher de terno: Catorze o quê?
+   3f      VOCÊ: Catorze "não". Eu contei.  ƒ
+     Ela fica em silêncio dois segundos e aí ri alto, no meio da calçada, de um jeito que claramente não estava no roteiro do dia dela.
+   4f      a mulher de terno: Catorze. Caramba.
+   5f      a mulher de terno: E eu vou ter que dizer mais uns quarenta hoje.
+     ƒ d=>fala(d.jogador.nome, 'Catorze.')
+     ƒ d=>fala(d.jogador.nome, 'Catorze "não". Eu contei.')
+
+### saf_a_mulher_do_nao > 3
+     Você segue. Ela ainda está parada olhando o aparelho quando você vira a esquina.
+
+### cin_a_janela_acesa  (cidade cinnabar) — A janela do laboratório
+     O laboratório de fósseis tem uma janela no térreo onde dá pra ver uma bancada com a luz acesa.
+     A luz está acesa a qualquer hora que você passe — de manhã, à tarde, às duas da madrugada.
+     Ninguém nunca está sentado nela.
+   1f      a moça da vitrine: Aquela luz tá acesa desde antes de eu trabalhar aqui.
+     > Bater na janela.
+     > Perguntar na vitrine quem trabalha ali.
+     > Ficar olhando a bancada por dez minutos, anotando o que tem em cima.
+     > Seguir andando.
+
+### cin_a_janela_acesa > 1
+     Você bate no vidro com dois nós do dedo, duas vezes.
+     Nada acontece por uns quinze segundos.
+     E aí uma pessoa aparece de um canto que você não conseguia ver — de jaleco, de uns sessenta anos, com um caderno na mão.
+     Ela olha pra você através do vidro, sem abrir, sem falar.
+     E aí ela levanta o caderno e mostra uma página escrita, virada pra você.
+   1f      a página do caderno: NÃO FUNCIONA. TENTE A PORTA.
+     A porta fica do outro lado do prédio, e quando você chega nela, a bancada já está vazia de novo.
+
+### cin_a_janela_acesa > 2
+   1f      a moça da vitrine: Aquela bancada era do Fuji, do instituto da ponta leste.
+   2f      a moça da vitrine: Quando fecharam o instituto, em noventa e seis, o laboratório de fósseis ficou com os móveis. E com a luz.
+   3f      VOCÊ: E por que a luz continua acesa?  ƒ
+   4f      a moça da vitrine: Porque ninguém desligou.
+   5f      a moça da vitrine: Não tem mistério nenhum, moça. Ninguém desligou e agora ninguém tem coragem de ser o primeiro.
+     ƒ d=>fala(d.jogador.nome, 'E por que a luz continua acesa?')
+
+### cin_a_janela_acesa > 3
+     Um caderno aberto, virado pra baixo, na página sessenta e um.
+     Uma xícara com alguma coisa seca no fundo.
+     Três frascos vazios e um quarto não.
+     E um formulário em branco, preso a uma prancheta, com o cabeçalho virado pra janela.
+     Você consegue ler o cabeçalho do formulário e é: FORMULÁRIO DE RETIRADA — CADERNO 7.
+
+### cin_a_janela_acesa > 4
+     Você segue. A luz continua acesa atrás de você, e ninguém apaga.
+
+### cin_o_barqueiro_e_o_mar  (cidade cinnabar) — O mar está diferente   [dono: Barqueiro de Cinnabar]
+     O barqueiro está sentado no píer com os pés pra fora, sem barco atracado, olhando a água.
+   1f      o barqueiro: O mar tá diferente.
+     Ele não olha pra você quando fala. Ele fala pro mar.
+   2f      o barqueiro: Não é maré. Eu sei o que é maré. Eu tenho cinquenta e um anos e quarenta deles nessa água.
+     > Sentar no píer e perguntar o que mudou exatamente.
+     > Perguntar se ele contou isso pra alguém.
+     > Pedir a cópia do protocolo.
+     > Ficar olhando a água junto, sem falar nada.
+
+### cin_o_barqueiro_e_o_mar > 1   [dono: Barqueiro de Cinnabar]
+   1f      o barqueiro: A temperatura. Meio grau, talvez menos.
+   2f      o barqueiro: Meio grau não é nada pra ninguém. Pra Magikarp é tudo.
+   3f      o barqueiro: Os Magikarp desceram. Tudo que caçava Magikarp na superfície sumiu. E o que comia esses sumiu atrás.
+   4f      o barqueiro: Em três meses. Três meses, moça.
+     Ele olha pro vulcão. Você olha pro vulcão. Nenhum dos dois fala o que os dois estão pensando.
+
+### cin_o_barqueiro_e_o_mar > 2   [dono: Barqueiro de Cinnabar]
+   1f      o barqueiro: Quatro lugares. Eu escrevi pra quatro lugares.
+   2f      o barqueiro: Prefeitura, capitania, o instituto de Cinnabar e a Liga.
+   3f      VOCÊ: E?  ƒ
+   4f      o barqueiro: A Liga respondeu.
+   5f      a resposta da Liga: PREZADO SENHOR, SUA MANIFESTAÇÃO FOI REGISTRADA SOB O PROTOCOLO ABAIXO E ENCAMINHADA AO ÓRGÃO COMPETENTE.
+   6f      o barqueiro: Isso aqui foi em novembro.  ƒ
+     ƒ d=>fala(d.jogador.nome, 'E?')
+     ƒ ()=>fala('o barqueiro', `Isso aqui foi em ${Calendario.MESES[(Calendario.hoje().mes + 8) % 12]}.`)
+
+### cin_o_barqueiro_e_o_mar > 3   [dono: Barqueiro de Cinnabar]
+     Ele desdobra o papel, alisa na perna da calça, e te entrega sem hesitar meio segundo.
+   1f      o barqueiro: Leva. Eu sei o número de cor.
+   2f      o barqueiro: Eu leio esse papel todo dia de manhã há quatro meses. Eu sei o número de cor.
+     O número do protocolo começa com os mesmos quatro dígitos de outro protocolo que você já viu.
+
+### cin_o_barqueiro_e_o_mar > 4   [dono: Barqueiro de Cinnabar]
+     Vocês dois ficam ali uns vinte minutos e não falam mais nada.
+     A água está exatamente igual a qualquer outra água pra você.
+     Pra ele, não.
+
+### rot_a_perua_no_acostamento  (rota campo) — A perua no acostamento
+     No acostamento, com o pisca-alerta ligado, uma perua velha com o capô aberto. Na lataria, em letra que já foi verde: LABORATÓRIO DE PESQUISA — PALLET.
+     Debaixo do capô, de costas, um homem de camisa de manga curta xinga baixinho uma mangueira.
+     Ele vira quando ouve passo, pronto pra pedir desculpa pelo carro no meio do caminho, e para no meio da frase.
+   1f      Célio: Lia! Da praça, do número anotado. Eu não esqueço quem anota.  ƒ
+   2f      Célio: Ferveu. Sempre ferve nessa subida. Vinte e seis anos de carro e ela ainda não aprendeu.
+     ƒ d=>celioTeReconhece(d)
+     > Ajudar com a mangueira.
+     > Ficar conversando enquanto o motor esfria.
+     > Cumprimentar e seguir.
+
+### rot_a_perua_no_acostamento > 1 (bom)
+     Você segura a lanterna e ele aperta a braçadeira, e depois você aperta e ele segura, e na terceira vez fica.
+   1f      Célio: Ó. Treinadora e mecânica. Vou anotar no caderno.
+     Ele tira duas Potion da caixa de sobras e põe no seu bolso antes de você recusar.
+
+### rot_a_perua_no_acostamento > 1 (ruim)
+     A mangueira escorrega da sua mão e esguicha água quente no chão, por pouco não no seu pé.
+   1f      Célio: Deixa, deixa. Ela só obedece a mim, e mal.
+     Ele termina sozinho em dez minutos e ainda te agradece pela companhia.
+
+### rot_a_perua_no_acostamento > 2
+   1f      Célio: Tô indo pra Viridian. Tem três esperando lá, e um deles eu sei que vai chorar.  ƒ
+     Vocês sentam no meio-fio. Ele pergunta do time pelo nome, um por um, e escuta a resposta inteira de cada.
+   2f      Célio: Gosto quando encontro alguém da volta no meio do caminho. Parece que a estrada é menor.
+     ƒ d=>{ const w = ondeEstaAPerua(); const prox = w.proximo ? (LOCAIS[w.proximo.onde] || {}).nome : 'Pallet'; return fala('Célio', `Tô indo pra ${prox}. Tem três esperando lá, e um deles eu sei que vai chorar.`); }
+
+### rot_a_perua_no_acostamento > 3
+     Ele bate duas vezes na lataria quando você passa, que deve ser o jeito dele de dizer tchau, e volta pra mangueira.
+
+### rot_cerca_caida  (rota campo) — A cerca caída
+     Uns quinze metros de cerca estão no chão, derrubados por peso e não por vento: os mourões saíram inteiros, com terra na ponta.
+     Do outro lado tem pasto, e no pasto tem seis Miltank que claramente já entenderam a oportunidade e estão indo devagar na direção da estrada.
+     Não tem casa à vista. Tem uma caixa de correio a uns duzentos metros, torta, com um nome apagado.
+     > Levantar os mourões e escorar com pedra, do jeito que der.
+     > Ir até a caixa de correio e avisar quem mora ali.
+     > Tocar as Miltank de volta pro pasto antes de qualquer coisa.
+     > Não é sua cerca, não é seu rebanho, não é sua estrada.
+
+### rot_cerca_caida > 1 (bom)
+     Leva quase uma hora e você acaba com as duas mãos em carne viva de segurar arame.
+     Não fica bonito. Fica de pé, que é o que a cerca precisa ser.
+     As seis Miltank param de andar na direção da estrada e voltam a fazer a única coisa que Miltank faz.
+
+### rot_cerca_caida > 1 (ruim)
+     Você levanta dois mourões e o terceiro te ensina que quinze metros de cerca é coisa de duas pessoas.
+     Você fica sentada no chão olhando a cerca meio de pé, que é pior do que cerca caída porque agora parece que alguém tentou.
+
+### rot_cerca_caida > 2
+     A casa fica mais longe do que parecia e quem atende tem uns setenta anos e leva um tempo pra entender o que você está falando.
+   1f      o senhor da casa: Caiu de novo?
+   2f      o senhor da casa: Cai todo ano nessa época. É a terra que encharca.
+     Ele agradece, pega o chapéu e vai andando pra lá com uma marreta, no ritmo de quem tem setenta anos e vinte anos de cerca caindo.
+   3f      o senhor da casa: Obrigado por vir falar. A maioria passa.
+
+### rot_cerca_caida > 3 (bom)
+     Você abre os braços e anda devagar em semicírculo, que é a coisa certa e você não sabe como sabe.
+     As seis voltam. A quinta olha pra você de um jeito que dá pra ler como ingratidão.
+     Você ainda vai ter que resolver a cerca, mas pelo menos não vai ter Miltank na pista.
+
+### rot_cerca_caida > 3 (ruim)
+     A terceira decide que você é o problema e vem na sua direção com a cabeça baixa.
+     Você sai de perto mais rápido do que gostaria de admitir e elas continuam exatamente onde queriam estar.
+
+### rot_cerca_caida > 4
+     Você passa.
+     Uns oitocentos metros adiante você ouve uma buzina longa atrás de você e não olha pra trás.
+
+### rot_bicicleta_quebrada  (rota campo) — Alguém empurrando bicicleta
+     Tem uma pessoa de uns vinte anos empurrando uma bicicleta há tempo suficiente pra ter desistido de ficar brava.
+     A corrente arrebentou e está enrolada no quadro com uma sacola plástica, do jeito que a gente faz quando não quer perder a peça.
+   1f      a moça da bicicleta: Quanto falta pra próxima cidade? Fala rápido, tipo arrancar curativo.
+     > Olhar a corrente. Talvez dê pra emendar.
+     > Empurrar junto até a próxima cidade.
+     > "Falta bastante." E seguir.
+
+### rot_bicicleta_quebrada > 1 (bom)
+     O elo torto sai com uma pedra e um pouco de teimosia, e a corrente volta dois elos mais curta.
+   1f      a moça da bicicleta: Ficou curta.
+   2f      a moça da bicicleta: Curta anda. Quebrada não anda.
+     Ela te enfia dinheiro na mão, sobe na bicicleta e some numa velocidade que não combina com corrente emendada.
+
+### rot_bicicleta_quebrada > 1 (ruim)
+     Você mexe dez minutos e chega à conclusão técnica de que a corrente está quebrada.
+   1f      a moça da bicicleta: É, eu também tinha chegado nessa.
+
+### rot_bicicleta_quebrada > 2
+     Dá quase duas horas, e nas duas horas ela conta a vida inteira dela, incluindo partes que ninguém conta pra estranho.
+   1f      a moça da bicicleta: Eu falo demais quando tô com vergonha de aceitar ajuda.
+   2f      a moça da bicicleta: Você reparou e não falou nada. Isso é de boa pessoa.
+     Na entrada da cidade ela aperta a sua mão com as duas mãos dela e você não pega o nome dela.
+
+### rot_bicicleta_quebrada > 3
+   1f      a moça da bicicleta: Curativo arrancado. Valeu.
+     Ela volta a empurrar. Você segue no seu ritmo, que é mais rápido que o dela, e a distância entre vocês aumenta devagar por uns dez minutos.
+
+### rot_ninho_no_chao  (rota campo) — Um ninho no chão da trilha
+     Tem um ninho no chão, a meio metro da trilha, com três ovos e nenhum adulto por perto.
+     Não é ninho caído — é ninho de espécie que faz ninho no chão mesmo, e você está em cima dele antes de ver.
+     A trilha passa exatamente por ali. Quem vier depois de você não vai ver também.
+     > Marcar a trilha com pedra e galho, pra quem vier desviar.
+     > Ficar de longe e esperar o adulto voltar, pra ter certeza de que tem adulto.
+     > Levar os ovos. Ninguém vai cuidar.
+     > Desviar em silêncio e não mexer em nada.
+
+### rot_ninho_no_chao > 1 (bom)
+     Você leva quarenta minutos montando um desvio de pedra e galho que qualquer um entende sem placa.
+     Fica bom. Fica óbvio. Uma pessoa distraída desvia sem nem perceber que desviou.
+     Três semanas depois, numa conversa de Centro Pokémon a duas cidades daqui, alguém vai reclamar de um desvio idiota na trilha e você não vai falar nada.
+
+### rot_ninho_no_chao > 1 (ruim)
+     Você empilha pedra e atravessa galho e o resultado é uma coisa que parece lixo de acampamento.
+     Você olha aquilo e entende que a primeira pessoa que passar vai chutar tudo pro lado.
+     Você tenta de novo. Fica pior.
+
+### rot_ninho_no_chao > 2 (bom)
+     Cinquenta e cinco minutos.
+     E aí ela volta — pousa a quatro metros, anda o resto, e senta nos ovos sem olhar uma vez pra onde você está.
+     Ela sabia que você estava aí o tempo todo. Ela só estava esperando você provar que ia ficar quieta.
+
+### rot_ninho_no_chao > 2 (ruim)
+     Você aguenta uns dezoito minutos.
+     Squirtle não aguenta nada: mexe, sai do lugar, volta, mexe de novo, e no fim é ela que espanta o que ia voltar.  ƒ
+     Você vai embora sem saber se aqueles ovos têm mãe.
+     ƒ d=>{ const pior = piorNoEixo('paciencia'); return pior.pokemon && pior.valor < 0 ? `${nomeExib(pior.pokemon)} não aguenta nada: mexe, sai do lugar, volta, mexe de novo, e no fim é ${pron(pior.pokemon).ele} que espanta o que ia voltar.` : 'Você mexe o pé, estala um galho, e o que quer que estivesse chegando muda de ideia a uns trinta metros.'; }
+
+### rot_ninho_no_chao > 3
+     Você põe os três na mochila com pano em volta e anda mais quarenta minutos.
+     Aos quarenta e um, tem uma coisa voando em círculo baixo atrás de você, e ela não está indo embora.
+     Ela te acompanha por três quilômetros, no mesmo círculo, na mesma altura, sem atacar uma vez.
+     Você volta. Você volta os três quilômetros e põe os três ovos de volta e ela pousa antes de você terminar de sair.
+     Você não vai contar essa história pra ninguém.
+
+### rot_ninho_no_chao > 4
+     Você dá a volta por fora, a uns seis metros, e não olha pra trás.
+     Foi a coisa mais certa e a menos interessante, e as duas coisas costumam andar juntas.
+
+### rot_o_acampamento_vazio  (rota campo) — Um acampamento sem ninguém
+     Tem uma barraca armada a trinta metros da trilha, fechada, com uma panela apoiada em duas pedras e cinza fria embaixo.
+     A cinza está fria de umas boas horas. A barraca está fechada por dentro ou por fora, não dá pra saber daqui.
+     Não tem ninguém.
+     > Chamar de longe, alto, antes de chegar perto.
+     > Abrir a barraca. Pode ter alguém passando mal.
+     > Deixar um bilhete avisando que passou por aqui, e seguir.
+     > Seguir sem chegar perto.
+
+### rot_o_acampamento_vazio > 1 (bom)
+     Você chama três vezes e na terceira responde uma voz do mato, uns quarenta metros adiante, muito mais calma do que você esperava.
+   1f      a dona da barraca: Tô aqui! Tô no riacho! Não mexe na panela que ela tá quente!
+     A panela está fria há horas. Ela volta em quatro minutos, com um balde, e explica que a panela nunca está quente e que ela fala isso por hábito desde 1991.
+
+### rot_o_acampamento_vazio > 1 (ruim)
+     Você chama três vezes e o mato devolve o seu som e nada mais.
+     Você chama uma quarta, mais alto, e aí sim alguma coisa se mexe — longe, rápido, indo embora.
+     Não era gente.
+
+### rot_o_acampamento_vazio > 2 (bom)
+     Você abre o zíper devagar, falando alto o tempo inteiro, avisando que está abrindo.
+     Está vazia. Saco de dormir enrolado, mochila fechada, um livro com marcador na página cento e nove.
+     Ninguém passando mal. Só alguém que saiu e vai voltar.
+     Você fecha o zíper exatamente como estava e põe uma pedra em cima da aba, pro vento não abrir.
+
+### rot_o_acampamento_vazio > 2 (ruim)
+     Você abre o zíper e ouve, atrás de você, uma pessoa dizendo o seu nome — não o seu, o dela, alto, do jeito que se diz um nome pra avisar que chegou.
+   1f      a dona da barraca: Ô.
+     Ela não grita. Ela não acusa. Ela só fica ali parada com um balde de água na mão esperando você explicar.
+     Você explica. Ela aceita a explicação. Ela continua esperando você ir embora.
+
+### rot_o_acampamento_vazio > 3
+     Você escreve num papel qualquer: a hora, a data, "passei aqui, não mexi em nada", e o seu nome.
+     Prende embaixo da panela.
+     É o tipo de coisa que quem mora na estrada faz e quem mora em cidade acha esquisito.
+
+### rot_o_acampamento_vazio > 4
+     Você segue. A trinta metros, a barraca continua fechada e a cinza continua fria.
+
+### rot_fita_nas_arvores  (rota floresta) — Fita amarrada nas árvores
+     Tem fita plástica amarrada em tronco, na altura do peito, de dez em dez metros, entrando mato adentro.
+     A fita é nova. O laço é bem feito, com duas voltas, do jeito de quem amarra muita coisa.
+     Ela vai pra um lado que a trilha não vai.
+     > Seguir a fita.
+     > Cortar a fita toda e levar.
+     > Anotar onde fica e seguir a trilha.
+
+### rot_fita_nas_arvores > 1 (bom)
+     Duzentos metros depois a fita termina numa clareira pequena com uma gaiola de contenção montada no chão.
+     A gaiola está vazia, armada, e com a isca podre — o que quer dizer que está armada há muito tempo e ninguém veio conferir.
+     Tem uma etiqueta de identificação no canto, plastificada, com um número de licença e nenhum nome.
+     Você desarma. Leva menos de um minuto e é a coisa mais certa que você faz hoje.
+
+### rot_fita_nas_arvores > 1 (ruim)
+     Você perde a fita na sexta árvore, acha de novo, perde na nona e não acha mais.
+     Leva quarenta minutos pra voltar pra trilha e você volta arranhada e sem nada.
+
+### rot_fita_nas_arvores > 2
+     Você tira todas as que alcança e enrola num novelo que cabe no bolso.
+     Pode ser que você tenha estragado o trabalho de um pesquisador. Pode ser que você tenha estragado o trabalho de um caçador.
+     A floresta não vai te contar qual dos dois.
+
+### rot_fita_nas_arvores > 3
+     Você marca no mapa com o dedo sujo e continua andando.
+     É pouco. Mas é mais do que nada, e um dia alguém pergunta.
+
+### rot_arvore_no_caminho  (rota floresta) — A árvore atravessada
+     Uma árvore caiu de través na trilha e não caiu hoje: já tem cogumelo no tronco e já tem trilha nova contornando por baixo.
+     Só que a trilha nova passa rente a um barranco e dá pra ver, pela terra solta, que já escorregou gente ali.
+     Do outro lado tem duas meninas, uma de mochila amarela e outra de mochila verde, parando pra decidir por onde passar.
+     > Passar primeiro e mostrar onde pisar.
+     > Abrir passagem por cima do tronco, com machado de mão e paciência.
+     > Contornar pelo barranco e seguir.
+
+### rot_arvore_no_caminho > 1
+     Você passa devagar, marcando pé por pé, e fala em voz alta onde a terra está firme.
+     As duas passam atrás de você imitando exatamente, o que é ao mesmo tempo bonito e assustador.
+   1f      a menina da mochila amarela: Você é guia?
+   2f      a menina da mochila verde: Não, ela só é grande.
+
+### rot_arvore_no_caminho > 2 (bom)
+     Você não derruba a árvore — ninguém derruba árvore com machado de mão. Você cava um degrau.
+     Leva uma hora e meia e sai um degrau feio, torto e completamente funcional.
+     A trilha do barranco vai deixar de ser usada em uma semana e ninguém nunca vai saber por quê.
+
+### rot_arvore_no_caminho > 2 (ruim)
+     A madeira está mais dura do que parecia e o cabo escapa duas vezes.
+     Na segunda, o cabo acerta o seu joelho e você desiste com a dignidade que sobrou.
+
+### rot_arvore_no_caminho > 3 (bom)
+     Você passa rente, com a mão na raiz, e não escorrega.
+     Atrás de você as duas crianças passam também, agarradas no mesmo lugar em que você agarrou.
+
+### rot_arvore_no_caminho > 3 (ruim)
+     Você escorrega os últimos dois metros de bunda no barro.
+     Ninguém se machuca de verdade. A sua calça, sim.
+
+### rot_a_coisa_no_mato  (rota floresta) — Alguma coisa grande no mato fechado
+     O mato mexe a uns quinze metros da trilha e não é vento.
+     É grande. Dá pra ouvir pelo galho: é uma coisa que empurra galho em vez de passar por baixo dele.
+     E está parada agora, porque parou quando você parou.
+     > Passar devagar, sem olhar diretamente, torcendo pra não ser notado.
+     > Parar completamente e deixar ela decidir.
+     > Chamar. Alto. Ver o que acontece.
+     > Voltar e contornar por fora, mesmo que leve o dobro do tempo.
+
+### rot_a_coisa_no_mato > 1 (bom)
+     Você anda no passo mais lento que o seu corpo aguenta sem cair.  ƒ
+     Quarenta metros assim. O mato não mexe mais.
+     Quando você já está longe o bastante pra olhar pra trás, dá pra ver o mato se fechando de novo devagar, no lugar exato onde ela estava.
+     ƒ d=>{ const m = melhorNoEixo('discricao'); return m.pokemon && m.valor > 0 ? `${nomeExib(m.pokemon)} entende antes de você e para de andar. Vocês dois param juntos, no mesmo segundo, sem combinar.` : 'Você anda no passo mais lento que o seu corpo aguenta sem cair.'; }
+
+### rot_a_coisa_no_mato > 1 (ruim)
+     Squirtle não tem um grama de discrição no corpo: pula, esbarra em três galhos e solta um som que dá pra ouvir de Pewter.  ƒ
+     O mato explode pra frente e você tem meio segundo pra decidir o que fazer com a sua vida.
+     O que sai é grande e passa a um metro de você, correndo pro outro lado, com muito mais medo do que você.
+     Você senta no chão da trilha por uns bons cinco minutos.
+     ƒ d=>{ const pior = piorNoEixo('discricao'); return pior.pokemon && pior.valor < 0 ? `${nomeExib(pior.pokemon)} não tem um grama de discrição no corpo: pula, esbarra em três galhos e solta um som que dá pra ouvir de Pewter.` : 'Você pisa num galho. Um galho só. É sempre um galho só.'; }
+
+### rot_a_coisa_no_mato > 2 (bom)
+     Você para. Completamente. Você para de um jeito que dói nas pernas depois de três minutos.
+     Seis minutos.
+     E aí ela sai — devagar, pela frente, atravessando a trilha a seis metros de você, sem pressa nenhuma.
+     Ela olha pra você no meio da travessia. Não é ameaça e não é curiosidade. É outra coisa, pra qual não tem palavra.
+     E some do outro lado.
+
+### rot_a_coisa_no_mato > 2 (ruim)
+     Você aguenta noventa segundos.
+     No nonagésimo primeiro você muda o peso de pé, e o mato explode pro lado contrário, e acabou.
+     Você nunca vai saber o que era.
+
+### rot_a_coisa_no_mato > 3
+     Você grita.
+     O que acontece é que sai um Pidgeot de uma árvore que você nem sabia que tinha Pidgeot, a três metros da sua cabeça, e você cai sentada.
+     A coisa grande do mato, seja lá o que fosse, foi embora no mesmo segundo pelo barulho.
+     Você fica com um galho enfiado na panturrilha e com a certeza de que isso foi a coisa mais idiota da semana.
+
+### rot_a_coisa_no_mato > 4
+     Leva o dobro do tempo e é chato e você chega com barro até o joelho.
+     E você chega.
+
+### rot_pedra_solta  (rota montanha) — A pedra que vai cair
+     Tem uma pedra do tamanho de uma geladeira meio fora do barranco, em cima do trecho mais estreito da trilha.
+     Ela não vai cair hoje. Mas a terra embaixo dela está seca e rachada, e ela vai cair.
+     Passam umas trinta pessoas por dia aqui, segundo o número que alguém pintou num poste de sinalização em mil novecentos e oitenta e alguma coisa.
+     > Derrubar agora, com o trecho vazio.
+     > Avisar no próximo lugar que tiver gente.
+     > Passar rápido embaixo e não pensar mais nisso.
+
+### rot_pedra_solta > 1 (bom)
+     Você grita duas vezes trilha abaixo e espera dois minutos antes de encostar nela.
+     Sai com um empurrão de ombro e uma alavanca de galho, e o barulho dura mais do que você imaginava.
+     Sobra um monte de pedra na trilha que dá pra contornar andando. Era isso, ou ela na cabeça de alguém na próxima chuva.
+
+### rot_pedra_solta > 1 (ruim)
+     Ela se mexe uns dez centímetros e trava, e os dez centímetros levam junto o chão em que você estava apoiada.
+     Você segura num galho que resolve segurar você de volta, o que é sorte e não competência.
+
+### rot_pedra_solta > 2
+     Você anda mais três horas com isso na cabeça e conta pra primeira pessoa de uniforme que você vê.
+   1f      o guarda da guarita: Qual trecho?
+     Você explica com as mãos porque não sabe o nome do trecho, e ele entende assim mesmo e anota num caderno.
+   2f      o guarda da guarita: Terceira vez esse ano que me falam dessa. Um dia eu vou lá.
+
+### rot_pedra_solta > 3
+     Você passa em quatro passos largos e não olha pra cima.
+     Você vai lembrar dessa pedra em algum momento aleatório daqui a uns dois meses, e vai ser desconfortável.
+
+### rot_neblina_alta  (rota montanha) — A neblina que fecha
+     A neblina sobe o vale em vinte minutos e fecha tudo num branco que come som também: você fala e a sua voz volta errada.
+     A trilha continua ali, dois metros de cada vez.
+     Ainda faltam umas três horas de caminho e falta duas horas e meia pra escurecer.  ƒ
+     ƒ d=>`Ainda faltam umas três horas de caminho e falta ${horaAgora(d) >= 17 ? 'uma hora e meia' : 'duas horas e meia'} pra escurecer.`
+     > Parar onde está e esperar abrir.
+     > Seguir devagar, contando passo e marcando pedra.
+     > Soltar o time e deixar que eles achem o caminho.
+
+### rot_neblina_alta > 1 (bom)
+     Você senta encostada numa pedra, com o time todo fora da Pokébola, e espera.
+     Abre em cinquenta minutos, de uma vez, como cortina.
+     Você perde a luz e ganha a noite mais estrelada que já viu, e dorme ali mesmo sem ter planejado.
+
+### rot_neblina_alta > 1 (ruim)
+     Não abre. Você fica duas horas sentada no frio e escurece do mesmo jeito.
+     Você desce no escuro, devagar, com lanterna, e chega tremendo.
+
+### rot_neblina_alta > 2 (bom)
+     Você conta cento e vinte passos entre marca e marca e empilha três pedras em cada uma.
+     Leva o triplo do tempo e funciona exatamente como devia funcionar.
+     Quando abre, você está trezentos metros adiante e no lugar certo, o que é mais raro do que parece.
+
+### rot_neblina_alta > 2 (ruim)
+     Você anda quarenta minutos e reconhece a própria pilha de pedra.
+     Você andou em círculo, o que todo mundo diz que acontece e ninguém acredita até acontecer.
+
+### rot_neblina_alta > 3 (bom)
+     Squirtle vai na frente e para toda vez que você fica pra trás, o que quer dizer que ela está olhando pra trás o tempo todo.  ƒ
+     Vocês descem juntos. Você não manda nada nesse trecho — você segue.
+     É a primeira vez na jornada que a hierarquia fica invertida por uma hora inteira, e nenhum dos dois lados comenta.
+     ƒ d=>{ const m = melhorNoEixo('simpatia'); return m.pokemon ? `${nomeExib(m.pokemon)} vai na frente e para toda vez que você fica pra trás, o que quer dizer que ${pron(m.pokemon).ele} está olhando pra trás o tempo todo.` : 'Alguém do seu cinto vai na frente e para toda vez que você fica pra trás.'; }
+
+### rot_neblina_alta > 3 (ruim)
+     Eles se espalham. Você passa quinze minutos chamando e recolhendo.
+     Ninguém se perde de verdade, mas todo mundo fica pior do que estava.
+
+### rot_a_pedra_solta  (rota montanha) — A pedra que não devia estar ali
+     Tem uma pedra do tamanho de uma mesa no meio da trilha de montanha, e ela não rolou: ela foi posta.
+     Dá pra ver pela base — tem calço de pedra menor embaixo, feito à mão, pra ela não sair do lugar.
+     Alguém bloqueou essa trilha de propósito. Do outro lado, a trilha continua normal.
+     > Olhar em volta antes de decidir qualquer coisa.
+     > Empurrar a pedra e seguir.
+     > Escrever um aviso na pedra com o que você tiver.
+     > Contornar pelo alto e seguir por fora.
+
+### rot_a_pedra_solta > 1 (bom)
+     Você sobe uns quinze metros pelo lado e olha o trecho de cima.
+     Quarenta metros depois da pedra, a trilha simplesmente não existe mais. Desabou. É um corte limpo de uns oito metros e uma queda que você não quer medir.
+     A pedra não está bloqueando o caminho. A pedra está salvando a vida de quem vier.
+     E quem a pôs ali carregou pedra de calço morro acima pra ela não sair do lugar.
+
+### rot_a_pedra_solta > 1 (ruim)
+     Você olha em volta e vê montanha, que é o que tem em volta de tudo aqui.
+     Não dá pra ver o que tem quarenta metros adiante porque a trilha vira.
+     Você continua sem saber por que a pedra está ali.
+
+### rot_a_pedra_solta > 2
+     Leva vinte minutos, e a lombar reclama no fim.
+     Você anda quarenta metros e a trilha acaba. Acaba mesmo — corte limpo, oito metros de vão, queda longa.
+     Você volta. Você empurra a pedra de volta, que leva outros vinte minutos e dói muito mais.
+     E você fica um tempo sentada ao lado dela pensando na pessoa que carregou calço morro acima pra impedir exatamente o que você acabou de fazer.
+
+### rot_a_pedra_solta > 3
+     Você acha uma pedra de calcário no acostamento e escreve na cara da pedra grande, em letra de forma, do tamanho que dá:
+   1f      a pedra: TRILHA CAIU 40M ADIANTE. NÃO EMPURRE.
+     Quem carregou o calço morro acima resolveu o problema e não resolveu o aviso.
+     Agora tem aviso.
+
+### rot_a_pedra_solta > 4 (bom)
+     Você sobe, atravessa por cima e desce do outro lado em doze minutos, com a mão ralada.
+     Quarenta metros adiante você descobre por que a pedra estava lá e volta pelo mesmo caminho, mais devagar e muito mais humilde.
+
+### rot_a_pedra_solta > 4 (ruim)
+     Você escorrega no terço final e desce três metros de barriga na pedra.
+     Nada quebrado. Tudo ralado.
+     Você contorna por baixo, que era o óbvio, e que você não fez porque parecia menos esperto.
+
+### rot_marca_de_giz  (rota caverna) — Marcas de giz na pedra
+     Tem setas de giz na parede, na altura do joelho, apontando pra frente.
+     Estão apagadas pela umidade, mas dá pra ver que já foram refeitas por cima várias vezes, em gizes de cores diferentes.
+     Na terceira seta tem uma coisa escrita do lado, pequena, e você precisa agachar pra ler.
+     > Agachar e ler.
+     > Refazer as setas apagadas com o que tiver na mochila.
+     > Ignorar e ir pelo que você acha que é o caminho.
+
+### rot_marca_de_giz > 1
+     Diz, em giz:
+     [papel] SE VOCÊ TÁ LENDO ISSO VOCÊ TÁ NO CAMINHO CERTO. CONTINUA. — M.
+     A letra é de adulto tentando escrever grande.
+     Três setas adiante tem outra, em giz mais novo, outra letra: "OBRIGADO M".
+     E mais adiante uma terceira, mais nova ainda: "OBRIGADO M" de novo, outra letra.
+     Você conta onze delas até a saída.
+
+### rot_marca_de_giz > 2
+     Você não tem giz. Você tem uma pedra clara que risca, e ela serve.
+     Você passa por cima de todas as que estão sumindo, e acrescenta duas onde tem bifurcação e não tinha seta.
+     Na última você escreve, porque não resiste: "OBRIGADO M".
+     A sua letra fica horrível e você deixa do jeito que ficou.
+
+### rot_marca_de_giz > 3 (bom)
+     Você acerta.
+     Você sai do outro lado e a última seta de giz está apontando exatamente pra onde você saiu, o que é humilhante de um jeito engraçado.
+
+### rot_marca_de_giz > 3 (ruim)
+     Você anda uma hora, chega num paredão, volta.
+     Na volta você segue as setas em silêncio e não fala disso com ninguém.
+
+### rot_goteira_na_caverna  (rota caverna) — O barulho de água
+     Tem um pingo constante em algum lugar à direita, e ele é o único som do túnel há uns dez minutos.
+     Pingo em caverna quer dizer água, e água em caverna quer dizer que o chão pode não ser chão.
+     A lanterna alcança uns seis metros e o resto é decisão.
+     > Ir ver de onde vem a água.
+     > Marcar onde é e continuar.
+     > Apagar a lanterna um minuto e só escutar.
+
+### rot_goteira_na_caverna > 1 (bom)
+     Vinte metros pra dentro tem uma poça rasa de água limpíssima, filtrada por pedra, com areia branca no fundo.
+     Tem três Zubat pendurados no teto em cima dela, que é o motivo de ninguém usar essa poça.
+     Você enche o cantil em silêncio e sai andando de costas, o que é ridículo e é o certo.
+
+### rot_goteira_na_caverna > 1 (ruim)
+     Você pisa num trecho que parecia pedra e é lama por cima de pedra, e o pé afunda até a canela.
+     Não tem buraco embaixo. Só tem frio, lama e uma bota que vai demorar dois dias pra secar.
+
+### rot_goteira_na_caverna > 2
+     Você risca uma seta na parede com pedra e segue.
+     Se você precisar de água na volta, você sabe onde tem. É pouco, e um dia é tudo.
+
+### rot_goteira_na_caverna > 3
+     Escuro de caverna não é escuro de quarto. É um escuro que tem peso.
+     No primeiro segundo é o pingo. No quinto é a sua própria respiração. No vigésimo é uma coisa arrastando longe, e não é perto o suficiente pra ser problema.
+     Squirtle encosta na sua perna no meio do minuto e fica lá. Ela não gosta disso e ficou mesmo assim.  ƒ
+     Você acende de novo e os seis metros de sempre voltam a ser o mundo inteiro.
+     ƒ d=>{ const p = (Estado.dados.time || []).find(x => !x.morto); return p ? `${nomeExib(p)} encosta na sua perna no meio do minuto e fica lá. ${pron(p).Ele} não gosta disso e ficou mesmo assim.` : 'Você fica sozinh{o|a} no escuro por um minuto inteiro e aguenta.'; }
+
+### rot_a_luz_no_fundo  (rota caverna) — Luz no fundo da galeria
+     Tem uma luz fraca no fundo de uma galeria lateral, daquelas que a trilha marcada não usa.
+     É luz de lampião, amarela, parada. Não é reflexo.
+     Daqui dá pra ouvir alguém falando sozinho, muito baixo, num ritmo que parece contagem.
+     > Ir até lá sem anunciar, pra ver antes de ser visto.
+     > Chamar de longe e esperar ser convidado.
+     > Não é da sua conta. Voltar pra trilha marcada.
+
+### rot_a_luz_no_fundo > 1 (bom)
+     Você chega a uns oito metros e para atrás de uma dobra.
+     É uma mulher de uns sessenta anos, de capacete, com um lampião no chão e a mão espalmada na parede.
+   1f      a geóloga: Quarenta e um. Quarenta e dois. Quarenta e três.
+     Ela está contando camadas. Camada de rocha, uma por uma, com a mão.
+     Quarenta e três camadas é muito tempo. É mais tempo do que qualquer coisa que você já pensou.
+
+### rot_a_luz_no_fundo > 1 (ruim)
+     Squirtle chuta uma pedra do tamanho de um punho num piso de caverna, que é o lugar mais barulhento do mundo pra chutar uma pedra.  ƒ
+     A contagem para.
+   1f      a geóloga: Eu tô aqui há onze horas e você é a quarta pessoa que faz isso.
+   2f      a geóloga: Vem. Vem logo, já que veio.
+     ƒ d=>{ const pior = piorNoEixo('discricao'); return pior.pokemon && pior.valor < 0 ? `${nomeExib(pior.pokemon)} chuta uma pedra do tamanho de um punho num piso de caverna, que é o lugar mais barulhento do mundo pra chutar uma pedra.` : 'Você chuta uma pedra do tamanho de um punho num piso de caverna, que é o lugar mais barulhento do mundo pra chutar uma pedra.'; }
+
+### rot_a_luz_no_fundo > 2
+     Você chama e a contagem para na hora.
+   1f      a geóloga: Vem! Vem e pisa onde eu pisei, que o resto do chão é falso!
+     Você olha o chão. O chão parece chão inteiro.
+     Você pisa exatamente onde ela pisou.
+
+### rot_a_luz_no_fundo > 3
+     Você volta pra trilha marcada.
+     A contagem continua atrás de você por mais uns cem metros, até o som morrer na pedra.
+     Quarenta e quatro. Quarenta e cinco.
+
+### rot_rede_abandonada  (rota agua) — Rede presa na pedra
+     Tem uma rede de náilon presa entre duas pedras, meio submersa, balançando com a corrente.
+     Não é rede de pescador em uso: está rasgada de um lado e coberta de limo do outro, o que quer dizer meses.
+     Tem coisa viva enroscada nela. Duas, na verdade.
+     > Entrar na água e soltar os dois.
+     > Puxar a rede pra fora sem entrar na água.
+     > Seguir. A água é funda e você não sabe nadar direito.
+
+### rot_rede_abandonada > 1 (bom)
+     A água bate no peito e é mais fria do que a superfície prometia.
+     O primeiro sai fácil. O segundo está enroscado no náilon de um jeito que só sai cortando, e você corta com a faca de acampamento com a mão tremendo de frio.
+     Os dois somem sem olhar pra trás, que é como tem que ser.
+     Você puxa a rede inteira pra fora e deixa amontoada na pedra, pesando uns quinze quilos de água.
+
+### rot_rede_abandonada > 1 (ruim)
+     Você enrosca o próprio pé no náilon, e por uns três segundos muito longos você entende exatamente o que os dois estão sentindo.
+     Você se solta. Um dos dois você consegue tirar. O outro não.
+
+### rot_rede_abandonada > 2 (bom)
+     Você engancha com um galho e puxa aos poucos, e os dois se soltam sozinhos no meio do caminho.
+     A rede sai. Fica ali na pedra, feia, e é melhor feia na pedra que invisível na água.
+
+### rot_rede_abandonada > 2 (ruim)
+     A rede rasga no meio e metade dela volta pra água, agora em dois pedaços em vez de um.
+     Você piorou. É possível piorar.
+
+### rot_rede_abandonada > 3
+     Você segue.
+     É uma decisão razoável e você vai pensar nela de novo hoje à noite, o que é o preço das decisões razoáveis.
+
+### rot_balsa_atrasada  (rota agua) — A balsa que não vem
+     O píer tem nove pessoas esperando e uma placa escrita à mão dizendo que a balsa das duas vai atrasar.
+     A placa está lá desde as duas. Já passa das undefined.  ƒ
+     Tem um homem de colete que trabalha aqui e que aprendeu a não fazer contato visual com ninguém.
+     ƒ d=>`A placa está lá desde as duas. Já passa das ${['três', 'quatro', 'cinco', 'seis'][horaAgora(d) - 15]}.`
+     > Esperar junto e puxar conversa com quem espera.
+     > Perguntar ao homem de colete o que está acontecendo de verdade.
+     > Ir procurar o jeito de atravessar a pé.
+
+### rot_balsa_atrasada > 1
+     Em quarenta minutos você aprende: que a balsa atrasa sempre na virada do mês, que o motor é de mil novecentos e oitenta e nove, e que tem um jeito de atravessar a pé que ninguém recomenda e todo mundo já fez.
+   1f      o pescador da fila: Você tá com pressa?
+   2f      o pescador da fila: Se tiver com pressa, atravessa. Se não tiver, senta. Eu sento faz vinte anos.
+     Você senta.
+
+### rot_balsa_atrasada > 2 (bom)
+     Ele demora a responder e responde olhando pro lado.
+   1f      o homem de colete: Ela vem. Ela sempre vem.
+   2f      o homem de colete: O motor esquenta e tem que parar de hora em hora. Faz três anos assim.
+   3f      o homem de colete: Eu escrevo essa placa todo dia e todo dia alguém me xinga por causa dela.
+   4f      o homem de colete: Você é a primeira em umas duas semanas que pergunta em vez de reclamar.
+
+### rot_balsa_atrasada > 2 (ruim)
+   1f      o homem de colete: Tá na placa.
+     E acabou.
+
+### rot_balsa_atrasada > 3 (bom)
+     Trezentos metros rio acima tem uma sequência de pedra chata que dá pra atravessar com água na canela.
+     Tem marca de pé no limo. Muita marca de pé no limo.
+     Você atravessa em seis minutos e vê, do outro lado, as nove pessoas ainda sentadas no píer.
+
+### rot_balsa_atrasada > 3 (ruim)
+     A quarta pedra é mais funda do que as três primeiras.
+     Você volta encharcada da cintura pra baixo e senta no píer, e ninguém comenta, o que é pior.
+
+### rot_a_boia_com_nome  (rota agua) — Uma boia com nome escrito
+     Tem uma boia de plástico laranja encalhada na pedra, dessas de marcar rede, com uma corda cortada de uns dois metros.
+     Tem um nome escrito nela com tinta, em letra de forma, meio gasto.
+     Corda cortada não é corda arrebentada. Alguém cortou.
+     > Procurar o dono do nome no próximo lugar com gente.
+     > Mergulhar pra ver se a rede está aqui embaixo.
+     > Deixar a boia na pedra, virada pra cima, pra quem procurar achar.
+     > Seguir.
+
+### rot_a_boia_com_nome > 1 (bom)
+     Leva duas tardes e quatro perguntas erradas até alguém reconhecer o nome.
+     É um pescador de uns quarenta anos e ele fica olhando a boia por um tempo desconfortável.
+   1f      o dono da boia: Cortaram.
+   2f      o dono da boia: A minha rede tava marcada com quatro dessas. Faz três semanas que eu procuro a rede e não a boia.
+   3f      o dono da boia: Agora eu sei que não foi maré.
+
+### rot_a_boia_com_nome > 1 (ruim)
+     Você pergunta em quatro lugares e o nome não diz nada pra ninguém.
+     Uma pessoa acha que já ouviu. Outra tem certeza de que é de outra cidade. As duas estão sendo educadas.
+     Você fica com a boia.
+
+### rot_a_boia_com_nome > 2 (bom)
+     A água é mais fria do que parece e mais funda do que parece, que é o padrão de toda água.
+     A seis metros, presa numa pedra, tem um pedaço de rede de uns três metros.
+     O corte é limpo. Faca, não pedra. E é recente o bastante pra fibra ainda estar clara na ponta.
+     Você sobe com o pedaço e passa um tempo bom só respirando.
+
+### rot_a_boia_com_nome > 2 (ruim)
+     Você desce, acha a rede em quinze segundos, e se enrola nela em dois.
+     Você sai. Você sai porque tem sorte e não porque soube sair, e você sabe a diferença.
+     Você fica sentada na pedra por vinte minutos e não conta isso pra ninguém nunca.
+
+### rot_a_boia_com_nome > 3
+     Você apoia a boia na pedra mais alta, com o nome pra cima e pra fora.
+     É o que se faz. Quem procura olha pedra alta.
+
+### rot_a_boia_com_nome > 4
+     Você segue. A boia continua encalhada com o nome de alguém virado pra baixo.
+
+### ger_a_perua  (geral) — A perua na praça   [dono: Célio]
+     Tem uma perua velha estacionada de lado na praça, ocupando duas vagas, com o portamalas aberto e uma lona esticada por cima.
+     Na lataria, em letra que já foi verde: LABORATÓRIO DE PESQUISA — PALLET.
+     Um homem de uns cinquenta anos está sentado num banquinho dobrável ao lado do portamalas, com um caderno de capa dura no colo e uma caneta amarrada no caderno com barbante.  ƒ
+     Tem duas pessoas esperando. Uma delas tem uns quinze anos e não consegue ficar parada.  ƒ
+     ƒ d=>conheceOCelio(d) ? 'Célio está sentado no banquinho dobrável de sempre, com o caderno de capa dura no colo. Ele te vê de longe, larga a caneta e levanta do banquinho, coisa que ele não faz pra ninguém da fila.' : 'Um homem de uns cinquenta anos está sentado num banquinho dobrável ao lado do portamalas, com um caderno de capa dura no colo e uma caneta amarrada no caderno com barbante.'
+     ƒ d=>conheceOCelio(d) ? celioTeReconhece(d) : ''
+     ƒ d=>conheceOCelio(d) ? 'Ele aperta a sua mão com as duas mãos, do jeito de quem cumprimenta parente, e só depois volta pro banquinho. Tem duas pessoas esperando.' : 'Tem duas pessoas esperando. Uma delas tem uns quinze anos e não consegue ficar parada.'
+     > Contar como está a jornada.
+     > Ficar pra ver a entrega de hoje.
+     > Ficar olhando a entrega de longe.
+     > Perguntar se ele precisa de ajuda pra carregar.
+     > Perguntar qual foi a entrega mais engraçada do mês.
+     > Anotar o número dele antes de seguir.
+     > Seguir. Não é com você.
+
+### ger_a_perua > 1   [dono: Célio]
+   1f      VOCÊ: Nenhuma insígnia ainda. Mas a gente tá andando.  ƒ
+     Ele anota. No caderno de capa dura, numa página com o seu nome no alto, que já tem outras linhas embaixo.
+   2f      Célio: Eu escrevo de todo mundo que eu conheço na volta. Agora tem mais uma linha sua.  ƒ
+   3f      Célio: Vai lá. Tem gente esperando, e você tem estrada.
+     ƒ d=>{ const n = d.insignias.length; return fala(d.jogador.nome, n ? `${n === 1 ? 'Uma insígnia' : n + ' insígnias'}. E o time tá ${d.time.filter(p => !p.morto).length === 1 ? 'só começando' : 'com ' + d.time.filter(p => !p.morto).length}.` : 'Nenhuma insígnia ainda. Mas a gente tá andando.'); }
+     ƒ d=>{ const p = inicialDoJogador(d); return fala('Célio', p ? `Eu escrevo de todo mundo que eu entrego. ${p.apelido || p.nome} tá aqui desde ${d.jogador.cidade}. Agora tem mais uma linha.` : 'Eu escrevo de todo mundo que eu conheço na volta. Agora tem mais uma linha sua.', 'riso'); }
+
+### ger_a_perua > 2   [dono: Célio]
+     Ele te chama pra ficar do lado do portamalas, como se você fosse da equipe.
+     O de quinze anos assina, pega a Pokébola com as duas mãos e abre ali mesmo.
+   1f      Célio: Você fez essa mesma cara. Eu lembro.
+     Você não lembra de ter feito cara nenhuma. Ele lembra.
+
+### ger_a_perua > 3   [dono: Célio]
+     O menino assina, pega a Pokébola com as duas mãos e abre ali mesmo, sem sair de perto do carro.
+     O que sai da Pokébola olha a praça inteira antes de olhar ele.
+     Você reconhece a cena, e sorri sem perceber.
+   1f      Célio: Essa parte é sempre a melhor.
+
+### ger_a_perua > 4   [dono: Célio]
+   1f      Célio: Precisar eu não preciso. Aceitar eu aceito.  ƒ
+     São quatro caixas e uma delas é pesada de um jeito desproporcional ao tamanho.
+   2f      Célio: Livro. É sempre livro que pesa.
+   3f      Célio: Pega uma Potion ali da caixa de sobra. Não é pagamento, é que eu odeio levar de volta.
+     ƒ d=>conheceOCelio(d) ? fala('Célio', `${d.jogador.nome} carregando caixa do laboratório. Se o Professor visse.`, 'riso') : fala('Célio', 'Precisar eu não preciso. Aceitar eu aceito.', 'riso')
+
+### ger_a_perua > 5   [dono: Célio]
+   1f      Célio: Semana passada, em Pewter.
+     Ele nem precisa pensar.
+   2f      Célio: Um Charmander espirrou fagulha na sobrancelha do menino na hora da foto. O menino achou o máximo. A mãe dele, menos.
+   3f      Célio: Foto saiu ótima, por sinal.
+
+### ger_a_perua > 6   [dono: Célio]
+   1f      Célio: Anota, vai. Todo mundo que eu entrego tem.
+     Ele dita sete dígitos de cor, devagar, do jeito de quem já ditou esse número mil vezes.
+   2f      Célio: Liga contando como vocês estão. Eu gosto de saber.
+
+### ger_a_perua > 7   [dono: Célio]
+     Você passa. Atrás de você alguém abre uma Pokébola e a praça inteira faz aquele barulho pequeno de quando vê.  ƒ
+     ƒ d=>conheceOCelio(d) ? 'Ele levanta a caneta de novo, mais alto que da primeira vez. Atrás de você alguém abre uma Pokébola e a praça inteira faz aquele barulho pequeno de quando vê.' : 'Você passa. Atrás de você alguém abre uma Pokébola e a praça inteira faz aquele barulho pequeno de quando vê.'
+
+### ger_bicho_na_calcada  (geral) — Um Pokémon na calçada
+     Tem um Caterpie parado no meio da calçada, em plena cidade, olhando as pessoas passarem.  ƒ
+     Ninguém para. Todo mundo desvia. Duas pessoas desviam sem olhar, o que quer dizer que ele está ali há tempo suficiente pra virar mobília.
+     ƒ d=>{ const esp = DEX[Dados.escolher(poolSelvagem())]; d._evEsp = esp.nome; return `Tem um ${esp.nome} parado no meio da calçada, em plena cidade, olhando as pessoas passarem.`; }
+     > Agachar e ficar na altura dele.
+     > Perguntar na loja mais próxima se ele é de alguém.
+     > Dar comida.
+     > Desviar, como todo mundo.
+
+### ger_bicho_na_calcada > 1
+     Você agacha. Ele não foge.
+     Vocês dois ficam na altura um do outro por uns quarenta segundos, no meio de uma calçada, enquanto a cidade inteira passa em volta.
+     Uma senhora te pergunta se você está passando mal.
+     Você diz que não e continua agachada.
+
+### ger_bicho_na_calcada > 2
+   1f      a moça da loja: É da rua.
+   2f      a moça da loja: Não é de ninguém e é de todo mundo. A gente dá comida, o médico de Pokémon olha de vez em quando, e ele dorme onde quer.
+   3f      a moça da loja: Se você levar ele eu não vou impedir. Mas ele não vai querer ir.
+
+### ger_bicho_na_calcada > 3
+     Ele come sem pressa, do jeito de quem não está com fome mas não recusa por educação.
+     Quando acaba, ele encosta a cabeça na sua perna por exatamente um segundo e sai andando.
+     Um segundo. Você ficou olhando ele ir embora por bem mais tempo que isso.
+
+### ger_bicho_na_calcada > 4
+     Você desvia. Você olha, o que já é mais do que os outros fizeram, e desvia.
+
+### ger_treinador_perdido  (geral) — Alguém com um mapa
+     Tem uma pessoa de uns trinta anos parada numa esquina com um mapa de Kanto aberto, girando o mapa em vez de girar o corpo.
+   1f      a pessoa do mapa: Desculpa. Desculpa, você é daqui?
+   2f      a pessoa do mapa: Eu preciso chegar no Centro Pokémon e eu já passei nessa esquina três vezes.
+     > Levar até lá.
+     > Ensinar a ler o mapa de uma vez.
+     > Apontar e seguir.
+
+### ger_treinador_perdido > 1
+     São quatro quarteirões e vocês conversam o caminho inteiro.
+     Ela começou a jornada aos trinta e um anos porque o filho dela começou aos quinze e ela ficou com inveja, e ela fala isso rindo e não é inteiramente piada.
+   1f      a pessoa do mapa: Todo mundo aqui tem a idade do meu filho. TODO MUNDO.
+   2f      a pessoa do mapa: Mas eu tô me divertindo mais do que ele, e eu ligo pra ele todo domingo só pra dizer isso.
+
+### ger_treinador_perdido > 2
+     Você mostra como orientar pelo sol, que de dia em Kanto é o mais fácil que tem.  ƒ
+     Ela vira o mapa uma vez e aponta a direção certa de primeira.
+   1f      a pessoa do mapa: Isso é tão simples que eu tô com raiva.
+   2f      a pessoa do mapa: Onze anos de escola e ninguém nunca me falou do sol.  ƒ
+     ƒ d=>['manhã','tarde'].includes(d.relogio.periodo) ? 'Você mostra como orientar pelo sol, que de dia em Kanto é o mais fácil que tem.' : 'Você mostra como orientar pela placa do Centro, que fica acesa a noite inteira e aparece de qualquer esquina.'
+     ƒ d=>fala('a pessoa do mapa', ['manhã','tarde'].includes(d.relogio.periodo) ? 'Onze anos de escola e ninguém nunca me falou do sol.' : 'Onze anos de escola e ninguém nunca me falou da placa.')
+
+### ger_treinador_perdido > 3
+     Você aponta. Ela agradece. Você tem quase certeza de que ela vai errar de novo na próxima esquina.
+
+### ger_cartaz_novo  (geral) — Um cartaz no poste
+     Tem um cartaz novo no poste, impresso em papel comum, ainda sem chuva em cima.
+     PROCURA-SE. E uma foto ruim de licença, de um garoto de uns quinze anos.
+     Embaixo:
+   1?[a 1] o garoto: Saiu de casa em março. A família não está brava. Qualquer informação.
+     Março é este mês. A família não esperou muito.  ƒ
+     ƒ d=>Calendario.hoje().mes === 0 ? 'Março é este mês. A família não esperou muito.' : Calendario.hoje().mes === 1 ? 'Março foi no mês passado.' : 'Março foi há bastante tempo.'
+     > Anotar o contato.
+     > Ligar do orelhão agora mesmo, só pra dizer que viu o cartaz.
+     > Endireitar o cartaz, que está torto, e seguir.
+     > Seguir andando.
+
+### ger_cartaz_novo > 1
+     Você anota o telefone no verso de outra coisa, que é onde você anota tudo.
+     Você olha a foto por mais tempo do que precisava e não reconhece a cara, e mesmo assim guarda.
+     A partir de hoje você vai olhar a cara das pessoas de quinze anos nas cidades por onde passar. Vai ser automático. Você não vai conseguir evitar.
+
+### ger_cartaz_novo > 2
+     Atende no primeiro toque, o que diz muita coisa sobre quem está do lado de lá.
+   1f      a voz do outro lado: Alô? ALÔ?
+   2f      VOCÊ: Eu não vi ele. Desculpa. Eu só vi o cartaz e eu queria avisar que alguém leu.  ƒ
+     Silêncio de uns quatro segundos.
+   3f      a voz do outro lado: Obrigada.
+   4f      a voz do outro lado: Ninguém nunca liga pra dizer isso.
+     ƒ d=>fala(d.jogador.nome, 'Eu não vi ele. Desculpa. Eu só vi o cartaz e eu queria avisar que alguém leu.')
+
+### ger_cartaz_novo > 3
+     Você tira o percevejo, alinha o papel e prega de volta reto.
+     É a menor coisa que se pode fazer e você faz.
+
+### ger_cartaz_novo > 4
+     Você segue. O cartaz continua torto no poste.

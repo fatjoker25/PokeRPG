@@ -1465,7 +1465,7 @@ c5_pasta_pra_ivone:{
     'No fim ela fecha a pasta e põe as duas mãos em cima dela.',
     '"Isso aqui não pode ficar comigo."',
     '"Por quê?"',
-    '"Porque eu sou uma paleontóloga demitida que já foi retirada de uma câmara municipal pela polícia." Ela fala com uma calma horrível. "Se isso aparece na minha mão, a história vira eu."',
+    '"Porque eu sou uma paleontóloga demitida que já foi retirada de uma audiência da prefeitura pela polícia." Ela fala com uma calma horrível. "Se isso aparece na minha mão, a história vira eu."',
     'Ela empurra a pasta de volta.',
     '"Isso tem que chegar em alguém com nome limpo e cargo. E eu não conheço ninguém assim."'
   ],

@@ -2838,7 +2838,7 @@ c18_ela_decide:{
 c18_depois_da_materia:{
   texto:[
     'O que acontece é quase nada, e o quase é a parte que importa.',
-    'A Liga emite uma nota de esclarecimento de quatro linhas. Duas câmaras municipais pedem informações. Um vereador de Celadon protocola um requerimento e depois viaja.',
+    'A Liga emite uma nota de esclarecimento de quatro linhas. Duas prefeituras pedem informações. Um conselheiro da prefeitura de Celadon protocola um requerimento e depois viaja.',
     'A Comissão publica no boletim dela o inteiro teor do estatuto, com um texto de apresentação dizendo que sempre esteve disponível.',
     'E aí, na segunda semana, chegam as cartas.',
     'Onze cartas de leitores. Nove são contra você.'

@@ -89,7 +89,7 @@ const CONTATOS = [
     dica:'A medalha. Ele não vai perguntar de novo.',
     pedido:[
       d=>fala(vz().nome, 'Precisar eu não preciso. Mas tem uma coisa que me incomoda há anos.'),
-      d=>fala(vz().nome, 'A filha do Sr. Wells ganhou uma medalha de natação em 94. Estadual. A cidade inteira foi ver.'),
+      d=>fala(vz().nome, 'A filha do Sr. Wells ganhou uma medalha de natação em 94. Regional. A cidade inteira foi ver.'),
       d=>fala(vz().nome, 'Ela morreu em 95 e o Sr. Wells vendeu tudo que tinha dentro da casa, inclusive a medalha.'),
       d=>fala(vz().nome, 'Ele se arrependeu no mesmo mês. Faz cinco anos que ele procura e ele não sabe procurar.', 'baixo'),
       d=>fala(vz().nome, 'Você anda por aí. Se aparecer, você vai saber que é.')

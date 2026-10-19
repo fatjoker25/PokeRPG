@@ -1,0 +1,1164 @@
+
+### lei · cap 5 · A primeira ronda   [dono: o sargento de Viridian]
+     Na saída da cidade tem um Tauros parado no meio da estrada, de lado, bufando, e uma fila de carroça esperando.
+     Um sargento da patrulha está lá, de braço cruzado, olhando o seu crachá como quem ainda não decidiu se gosta dele. No bolso do uniforme, bordado torto: HOLT.  ƒ
+   1f      Sargento Holt: Sem dono, sem marca, sem pressa. O regulamento manda chamar o controle de Pokémon e esperar.
+   2f      Sargento Holt: O controle leva quatro horas pra chegar. O regulamento não fala nada sobre as quatro horas.
+     ƒ d2 => { Nomes.apresentar('o sargento de Viridian'); return Cargos.tem('guarda_rota') ? `O sargento que te deu o colete está lá, de braço cruzado. No bolso do uniforme, bordado torto: HOLT.` : `Um sargento da patrulha está lá, de braço cruzado, olhando o seu crachá como quem ainda não decidiu se gosta dele. No bolso do uniforme, bordado torto: HOLT.`; }
+     > Esperar o controle com ele, pelo regulamento.
+     > Mandar o seu time abrir caminho devagar e levar o Tauros pro pasto.
+     > Dizer que hoje não dá e seguir viagem.
+
+### lei · A primeira ronda > 1   [dono: o sargento de Viridian]
+     Vocês esperam. O Tauros deita no asfalto na segunda hora e dorme na terceira.
+   1f      Sargento Holt: Chato, né. É isso que é. Quem aguenta o chato é quem fica.
+
+### lei · A primeira ronda > 2   [dono: o sargento de Viridian]
+     Leva vinte minutos e um empurrão de ombro. O Tauros entra no pasto achando que a ideia foi dele.
+   1f      Sargento Holt: Eu não vi nada disso. Vou escrever que resolveu sozinho.
+
+### lei · A primeira ronda > 3   [dono: o sargento de Viridian]
+   1f      Sargento Holt: Vai. Crachá não é corrente.  ƒ
+     Ele não olha pra você de novo enquanto você passa pela fila.
+     ƒ d => fala('o sargento de Viridian', d.flags.cargo_guarda_rota ? `Vai. O colete não é corrente.` : `Vai. Crachá não é corrente.`)
+
+### lei · cap 9 · O relatório   [dono: o sargento de Viridian]
+     O PokéNav apita com uma foto de um formulário de três folhas.
+   1f      Sargento Holt: Briga de treinador na ponte, você estava lá. Testemunha assina.
+     Você lê. Diz que o rapaz que começou a briga "reagiu a uma provocação". Você viu. Não teve provocação.
+     O rapaz é filho do dono da maior criação de Ponyta da região, e isso está escrito numa folha que não devia estar grampeada junto.
+     > Assinar como está.
+     > Riscar a frase e escrever o que você viu.
+     > Assinar e guardar uma foto da página de baixo.
+
+### lei · O relatório > 1   [dono: o sargento de Viridian]
+     Trezentos caem na sua conta no fim do dia, como "diária de testemunha". Ninguém te avisou que existia diária.
+
+### lei · O relatório > 2   [dono: o sargento de Viridian]
+   1f      Sargento Holt: Você riscou.
+   2f      Sargento Holt: Tá. Eu protocolo assim. Vai dar problema, e o problema vai ser meu, e tudo bem.
+
+### lei · O relatório > 3   [dono: o sargento de Viridian]
+     Você assina. A foto fica no fundo da galeria do PokéNav, entre uma de Pidgey e uma de nuvem.
+
+### lei · cap 14 · O posto da rota   [dono: o sargento de Viridian]
+     O sargento te pediu pra segurar a guarita meia hora enquanto ele resolve uma papelada. Na segunda metade da meia hora chega um menino de uns doze anos, sem licença, carregando um Nidoran no colo enrolado numa toalha.  ƒ
+     O Nidoran respira rápido e curto. O Centro mais perto fica depois do posto.
+   1f      Sargento Holt: Sem licença não passa. Isso não sou eu falando, é a placa.
+     ƒ d2 => Cargos.tem('guarda_rota') ? `Você está de plantão na guarita quando chega um menino de uns doze anos, sem licença, carregando um Nidoran no colo enrolado numa toalha.` : `O sargento te pediu pra segurar a guarita meia hora enquanto ele resolve uma papelada. Na segunda metade da meia hora chega um menino de uns doze anos, sem licença, carregando um Nidoran no colo enrolado numa toalha.`
+     > Abrir a cancela e deixar o menino passar correndo.
+     > Segurar o menino e chamar a enfermeira pelo rádio.
+     > Pegar o Nidoran e levar você mesm{o|a} até o Centro.
+
+### lei · O posto da rota > 1   [dono: o sargento de Viridian]
+     Ele passa sem agradecer, que é o certo: não tinha tempo pra isso.
+   1f      Sargento Holt: Eu assino o livro. Se perguntarem, fui eu.
+
+### lei · O posto da rota > 2   [dono: o sargento de Viridian]
+     A enfermeira chega de bicicleta em quinze minutos. O Nidoran aguenta os quinze minutos. O menino não te olha durante nenhum deles.
+
+### lei · O posto da rota > 3   [dono: o sargento de Viridian]
+     Você corre. O posto fica sem ninguém por quarenta minutos, e no livro da guarita esses quarenta minutos ficam em branco.
+
+### lei · cap 18 · O depósito   [dono: o sargento de Viridian]
+     O depósito da polícia de Saffron guarda Pokémon apreendido até alguém decidir o que fazer com eles. O livro de entrada tem onze nomes este mês. A baia tem oito Pokémon.
+   1f      Sargento Holt: Me mandaram conferir. Me mandaram conferir porque acham que fui eu.
+     No livro de saída, três retiradas com a mesma letra e nenhum carimbo.
+     > Conferir o livro com ele, de noite, folha por folha.
+     > Levar o que você sabe direto à delegada.
+     > Ficar fora disso.
+
+### lei · O depósito > 1   [dono: o sargento de Viridian]
+     Às três da manhã vocês têm as três assinaturas lado a lado. Nenhuma é a dele.
+   1f      Sargento Holt: Obrigado. Não pelo que achou. Por ter vindo.
+
+### lei · O depósito > 2   [dono: o sargento de Viridian]
+   1f      Delegada Thorne: Você pulou o seu sargento.
+   2f      Delegada Thorne: Fez certo. Ele ia te mandar fazer isso, e ia ficar com vergonha de mandar.
+
+### lei · O depósito > 3   [dono: o sargento de Viridian]
+   1f      Sargento Holt: Tá. Eu entendo.
+     Ele não entende, e os dois sabem.
+
+### lei · cap 22 · A ordem   [dono: o sargento de Viridian]
+     Chega uma ordem com carimbo azul: desocupar o acampamento de treinadores sem licença que cresceu debaixo da ponte da rota. Até o meio-dia.
+     São vinte e poucas barracas. Tem criança. Tem um Snorlax dormindo atravessado na entrada, que ninguém vai mover até meio-dia nenhum.
+   1f      Sargento Holt: O regulamento diz como. Não diz com que cara.
+     > Cumprir a ordem, devagar, barraca por barraca, ajudando a carregar.
+     > Avisar o acampamento na véspera, e chegar no horário com o lugar já vazio.
+     > Devolver a ordem sem cumprir.
+
+### lei · A ordem > 1   [dono: o sargento de Viridian]
+     Leva até as quatro da tarde. O meio-dia passou e ninguém reclamou, porque todo mundo estava carregando alguma coisa.
+
+### lei · A ordem > 2   [dono: o sargento de Viridian]
+     De manhã só sobrou o Snorlax. Alguém amarrou um bilhete na pata dele: "OBRIGADO, CRACHÁ".  ƒ
+     ƒ d => `De manhã só sobrou o Snorlax. Alguém amarrou um bilhete na pata dele: "OBRIGADO, ${d.flags.cargo_guarda_rota ? 'COLETE' : 'CRACHÁ'}".`
+
+### lei · A ordem > 3   [dono: o sargento de Viridian]
+   1f      Sargento Holt: Isso vai pra sua ficha.
+   2f      Sargento Holt: Vai pra minha também. Eu assino embaixo de você.
+
+### lei · cap 26 · O apito   [dono: o sargento de Viridian]
+     Holt te espera na guarita de Viridian, a primeira, sem colete.
+   1f      Sargento Holt: Trinta e um anos. Me aposentaram ontem, com bolo.
+   2f      Sargento Holt: Ninguém nunca soube direito quem tirou os Pokémon do depósito. Eu fiquei com essa.
+     Ele estende o apito de metal, amassado de um lado.
+     > Aceitar o apito.
+     > Pedir que ele fique com o apito e venha tomar café na guarita de vez em quando.
+
+### lei · O apito > 1   [dono: o sargento de Viridian]
+   1f      Sargento Holt: Não sopra à toa. Ele tem um som só, e todo mundo da patrulha conhece.
+
+### lei · O apito > 2   [dono: o sargento de Viridian]
+     Ele ri pela primeira vez desde que você conhece ele.
+   1f      Sargento Holt: Café de guarita é horrível. Eu venho.
+
+### rocket · cap 8 · O primeiro pedido   [dono: a voz do outro lado]
+     O aparelho que veio no envelope toca. Número nenhum na tela.
+   1f      a voz do outro lado: Nada difícil. Quantas pessoas ficam no Centro daqui depois das dez da noite?
+   2f      a voz do outro lado: Só o número. A gente não pergunta o que você faz com o seu dia.
+     > Contar quantas são.
+     > Dar um número errado de propósito.
+     > Não responder e desligar.
+
+### rocket · O primeiro pedido > 1   [dono: a voz do outro lado]
+   1f      a voz do outro lado: Obrigado.
+     Seiscentos aparecem na sua conta. O extrato diz "reembolso".
+
+### rocket · O primeiro pedido > 2   [dono: a voz do outro lado]
+     Você diz onze. Eram três.
+   1f      a voz do outro lado: Onze. Anotado.
+     O dinheiro cai igual. Isso incomoda mais do que se não caísse.
+
+### rocket · O primeiro pedido > 3   [dono: a voz do outro lado]
+     O aparelho toca de novo um minuto depois. Uma vez só.
+   1f      a voz do outro lado: Silêncio também é resposta. Anotado.
+
+### rocket · cap 12 · A caixa   [dono: a voz do outro lado]
+     Uma caixa de papelão lacrada te espera no guarda-volumes da estação, no seu nome. Leve, mas não vazia.
+     Dentro, alguma coisa muda de lugar quando você levanta.
+   1f      a voz do outro lado: Entrega na saída leste da cidade. Não abre. Abrir não muda o que tem dentro e muda o que a gente acha de você.
+     > Entregar sem abrir.
+     > Abrir. Dentro, um Vulpix de olho tapado com pano. Soltar.
+     > Entregar, mas abrir um furo de ar no papelão antes.
+
+### rocket · A caixa > 1   [dono: a voz do outro lado]
+     Quem recebe é um rapaz de boné que conta o dinheiro na sua frente e não diz nada.
+     A caixa fez um barulho baixinho quando trocou de mão.
+
+### rocket · A caixa > 2   [dono: a voz do outro lado]
+     O Vulpix fica parado meio minuto, cheirando o ar, e depois some no mato sem olhar pra trás.
+     A caixa vazia você entrega assim mesmo. O rapaz de boné olha pra dentro, olha pra você e vai embora sem pagar.
+
+### rocket · A caixa > 3   [dono: a voz do outro lado]
+     Um furo do tamanho de uma moeda, com a ponta da chave. Do lado de dentro, alguma coisa encosta o focinho nele.
+
+### rocket · cap 17 · O lugar à mesa   [dono: a voz do outro lado]
+   1f      a voz do outro lado: Você entrega o que pedem e não pergunta. Isso está ficando raro.
+   2f      a voz do outro lado: Tem um lugar. Uniforme, número, gente que responde a você. Você deixa de ser informante e passa a ser alguém.
+     Pela janela do Centro você vê dois policiais tomando café. Um deles você já viu de colete numa guarita.
+     > Aceitar o lugar.
+     > Aceitar, e atravessar a rua pra falar com os policiais.
+     > Pedir pra sair.
+
+### rocket · O lugar à mesa > 1   [dono: a voz do outro lado]
+   1f      a voz do outro lado: Bem-vinda. Amanhã alguém te entrega o resto.
+     Você desliga e o café dos policiais ainda está fumegando.
+
+### rocket · O lugar à mesa > 2   [dono: a voz do outro lado]
+     O policial ouve sem levantar os olhos do copo.
+   1~[a 1] a voz do outro lado: Continua lá dentro
+     ele diz.
+   2?[a 2] a voz do outro lado: Liga desse número. Só desse.
+
+### rocket · O lugar à mesa > 3   [dono: a voz do outro lado]
+   1f      a voz do outro lado: Ninguém sai. A gente só para de ligar.
+     E para.
+
+### rocket · cap 20 · O armazém   [dono: a voz do outro lado]
+     Te entregam um uniforme preto sem letra nenhuma e uma chave de armazém, perto do porto.
+     Dentro, gaiola em cima de gaiola. Growlithe, Ponyta, um Lapras filhote numa caixa d'água rasa demais.
+   1f      a voz do outro lado: Você vigia até amanhã. Ninguém entra, ninguém sai, nada sai.
+     > Fotografar as gaiolas e mandar pro policial.
+     > Trocar a água do Lapras e vigiar como mandaram.
+     > Abrir a caixa do Lapras e deixar ele ir pelo cais.
+
+### rocket · O armazém > 1   [dono: a voz do outro lado]
+     Doze fotos. O PokéNav mostra "entregue" e depois mais nada a noite inteira.
+
+### rocket · O armazém > 2   [dono: a voz do outro lado]
+     O Lapras te olha a noite inteira por cima da borda da caixa. De manhã, alguém leva todas as gaiolas e te paga na porta.
+
+### rocket · O armazém > 3   [dono: a voz do outro lado]
+     Ele escorrega da plataforma pra água sem barulho nenhum. Lá fora, mais longe do que devia dar pra ouvir, um canto curto.
+
+### rocket · cap 24 · A lista   [dono: a voz do outro lado]
+   1f      a voz do outro lado: Você tem sido correto. Correto é raro.
+   2f      a voz do outro lado: Queremos a lista de contatos do seu PokéNav. Só nome e número. É assim que a gente confia.
+     > Mandar a lista.
+     > Mandar uma lista inventada.
+     > Recusar.
+
+### rocket · A lista > 1   [dono: a voz do outro lado]
+     Você manda. Por uma semana, toda ligação que você recebe começa com um segundo de silêncio a mais.
+
+### rocket · A lista > 2   [dono: a voz do outro lado]
+     Quarenta nomes de rua de Celadon e números que não existem. A voz demora dois dias pra ligar de novo.
+
+### rocket · A lista > 3   [dono: a voz do outro lado]
+   1f      a voz do outro lado: Anotado.
+     Você nunca tinha ouvido essa palavra dela. Ela soa cansada.  ƒ
+     ƒ d => (d.flags.ln_rocket_mentiu || d.flags.ln_rocket_calou) ? `Não é a primeira vez que você ouve essa palavra dela. É a primeira que ela soa cansada.` : `Você nunca tinha ouvido essa palavra dela. Ela soa cansada.`
+
+### rocket · cap 27 · A voz tem rosto   [dono: a voz do outro lado]
+     Uma mulher de casaco cinza se senta na sua frente na lanchonete da estação e pede dois cafés. Você reconhece a voz no "dois".
+   1f      a voz do outro lado: Eu comecei como você. Contando gente no Centro de Vermilion.
+   2f      a voz do outro lado: Vim ver se você vai terminar como eu.
+     > Perguntar por que ela nunca saiu.
+     > Dizer que entregou tudo à polícia e que ela tem dez minutos.
+     > Pedir um lugar mais alto.
+
+### rocket · A voz tem rosto > 1   [dono: a voz do outro lado]
+   1f      a voz do outro lado: Porque ninguém sai. A gente só para de ligar. Eu nunca parei.
+     Ela paga os dois cafés e deixa o dela inteiro.
+
+### rocket · A voz tem rosto > 2   [dono: a voz do outro lado]
+     Ela olha o relógio de parede. Levanta. Na porta, se vira.
+   1f      a voz do outro lado: Dez minutos é mais do que me deram.
+
+### rocket · A voz tem rosto > 3   [dono: a voz do outro lado]
+   1f      a voz do outro lado: Então é assim que termina.
+     Ela empurra o café dela pra você e vai embora.
+
+### ciencia · cap 3 · A primeira nota de campo   [dono: Professor Oak]
+     O PokéNav recebe uma mensagem longa, sem parágrafo, de quem digita com dois dedos.
+   1f      Professor Oak: Preciso de uma nota de campo daí. Qualquer espécie. O que ela come, a que horas sai, com quem anda.
+   2f      Professor Oak: Nota boa é a que outra pessoa consegue repetir. Nota ruim é a que só você entende.
+     > Passar a tarde olhando um ninho de Pidgey e anotar tudo, com hora.
+     > Escrever o que você sentiu vendo o lugar.
+
+### ciencia · A primeira nota de campo > 1   [dono: Professor Oak]
+     Duas páginas. A mãe sai às seis e quarenta, volta às sete e dez, sai de novo. Você anota as sete voltas.
+   1f      Professor Oak: Sete voltas. Isso é ciência. O resto é palpite bem escrito.
+
+### ciencia · A primeira nota de campo > 2   [dono: Professor Oak]
+   1f      Professor Oak: Não serve pra tabela nenhuma.
+   2f      Professor Oak: Guardei assim mesmo. Não conta pra ninguém que eu guardo essas.
+
+### ciencia · cap 8 · A amostra   [dono: Professor Oak]
+     Uma caixinha de vidro chega pela perua do laboratório, com etiqueta: MUDA DE PELE — EKANS OU ARBOK — SE ACHAR.
+     Na beira da trilha você acha: uma pele inteira de Ekans, recém-largada, ainda com o desenho do rosto.
+     Na mesma pedra, um Ekans enrolado no sol, de olho em você.
+     > Esperar ele ir embora e pegar só a pele.
+     > Pegar a pele e vender metade pro colecionador da cidade.
+     > Deixar a pele onde está.
+
+### ciencia · A amostra > 1   [dono: Professor Oak]
+     Ele vai embora em quarenta minutos. Você pega a pele com as duas mãos, como quem segura papel molhado.
+
+### ciencia · A amostra > 2   [dono: Professor Oak]
+     O colecionador paga setecentos sem pechinchar. Pro laboratório vai a metade com a cabeça, que é a que mostra menos.
+
+### ciencia · A amostra > 3   [dono: Professor Oak]
+     O Ekans desenrola, passa por cima da pele velha e vai embora. Fica pra próxima chuva.
+
+### ciencia · cap 14 · O dado que não fecha   [dono: Professor Oak]
+     Nas suas notas tem um Pokémon morando onde o livro do laboratório diz que ele não mora. Três vezes, em três dias.
+     O livro é do Professor. Está na segunda edição.
+     Você tem o lugar das três vezes. A hora você não anotou.
+     > Mandar as notas pro Professor do jeito que estão.
+     > Guardar as notas. Não é hora de envergonhar ninguém.
+
+### ciencia · O dado que não fecha > 1   [dono: Professor Oak]
+   1f      Professor Oak: Errado. Eu estava errado na segunda edição.
+   2f      Professor Oak: Faz trinta anos que ninguém me escreve isso. Obrigado.
+
+### ciencia · O dado que não fecha > 2   [dono: Professor Oak]
+     O caderno vai pro fundo da mochila. Na quarta vez que você vê o Pokémon onde ele não devia estar, você não anota.
+
+### ciencia · cap 18 · O estagiário   [dono: o estagiário do laboratório]
+     O laboratório te manda um estagiário de catorze anos, com caderno novo e caneta de quatro cores.
+   1f      o estagiário do laboratório: O Professor disse que você anota direito e que era pra eu aprender com você.
+     Você lembra que, da primeira vez, escreveu o que sentiu.
+     > Ensinar a anotar hora e lugar antes de qualquer coisa.
+     > Deixar ele olhar sozinho e anotar do jeito dele.
+
+### ciencia · O estagiário > 1   [dono: o estagiário do laboratório]
+     No fim da semana o caderno dele tem uma coluna de hora em cada página, e ele usa as quatro cores pra separar dia, tarde, noite e "não sei".
+
+### ciencia · O estagiário > 2   [dono: o estagiário do laboratório]
+     Ele volta com um desenho de Oddish andando de noite que ninguém no laboratório tinha. Sem hora. Com a lua.
+
+### ciencia · cap 23 · A cor errada   [dono: Professor Oak]
+     No fundo de uma trilha você vê um Pokémon de uma cor que não é a dele. A Pokédex apita duas vezes e escreve: ANOMALIA CROMÁTICA.
+     Ninguém mais viu. O lugar é pequeno, e quem souber vai vir com Pokébola.
+   1f      Professor Oak: Se você souber de alguma coisa rara, me fala primeiro. Primeiro.
+     > Mandar o lugar só pro Professor, com pedido de sigilo.
+     > Não contar pra ninguém. O lugar é dele.
+     > Vender o lugar pra um colecionador.
+
+### ciencia · A cor errada > 1   [dono: Professor Oak]
+   1f      Professor Oak: Sigilo. Eu sei guardar. Guardo coisa sua faz tempo.
+
+### ciencia · A cor errada > 2   [dono: Professor Oak]
+     Você apaga o registro da Pokédex com o dedo, devagar, e anota no caderno só "trilha, de manhã, bonito".
+
+### ciencia · A cor errada > 3   [dono: Professor Oak]
+     Três mil. Uma semana depois a trilha tem placa, guarita e fila.
+
+### ciencia · cap 27 · A terceira edição   [dono: Professor Oak]
+   1f      Professor Oak: Terceira edição do livro. Tem um capítulo inteiro que é seu. Eu quero o seu nome na capa, do lado do meu.
+     Você pensa em todas as páginas de hora e lugar que ele leu sem reclamar.
+     > Aceitar o nome na capa.
+     > Pedir que ponha o nome do seu time nos agradecimentos em vez do seu na capa.
+
+### ciencia · A terceira edição > 1   [dono: Professor Oak]
+   1f      Professor Oak: Ótimo. Agora você vai receber carta de gente dizendo que está errado. É a melhor parte.
+
+### ciencia · A terceira edição > 2   [dono: Professor Oak]
+     Na última página, em letra pequena:  ƒ
+   1?[a 1] Professor Oak: E Squirtle, que viu primeiro.  ƒ
+     ƒ d => { const p = (d.time || [])[0]; return p ? `Na última página, em letra pequena: "E ${nomeExib(p)}, que viu primeiro."` : 'Na última página, em letra pequena: "E ao time, que viu primeiro."'; }
+
+### imprensa · cap 7 · A pauta   [dono: a editora do Jornal]
+     O PokéNav mostra o nome da editora em maiúscula, como ela assina: HAZEL MOSS.  ƒ
+   1f      Hazel Moss: Trezentas palavras sobre o que estiver acontecendo aí. Até amanhã às seis.
+     O que está acontecendo aqui é uma feira de Pokémon de troca na praça, com uma barraca que vende Magikarp "que já evoluiu duas vezes".
+     ƒ d2 => { Nomes.apresentar('a editora do Jornal'); return `O PokéNav mostra o nome da editora em maiúscula, como ela assina: HAZEL MOSS.`; }
+     > Escrever exatamente o que você viu, barraca incluída.
+     > Exagerar um pouco pra vender.
+     > Antes de escrever, conversar com o dono da barraca.
+
+### imprensa · A pauta > 1   [dono: a editora do Jornal]
+   1f      Hazel Moss: Seco. Bom. A barraca já foi fechada, aliás. Isso é jornal.
+
+### imprensa · A pauta > 2   [dono: a editora do Jornal]
+     Sai na página dois com o título "GOLPE DO MAGIKARP DOURADO". O Magikarp não era dourado.
+   1f      Hazel Moss: Vendeu. Não repete.
+
+### imprensa · A pauta > 3   [dono: a editora do Jornal]
+     Ele diz que comprou os Magikarp de um sujeito que garantiu. Mostra o recibo. O recibo vai pra matéria junto.
+
+### imprensa · cap 11 · A fonte   [dono: a editora do Jornal]
+     Alguém deixa um bilhete debaixo da sua porta no Centro: uma criação perto daqui estaria vendendo Pokémon doente como saudável.
+     Sem assinatura. Com endereço.
+   1f      Hazel Moss: Bilhete sem nome é começo, não é matéria.
+     > Ir ao endereço e ver com os próprios olhos.
+     > Publicar a denúncia como chegou.
+     > Levar o bilhete à polícia antes de publicar.
+
+### imprensa · A fonte > 1   [dono: a editora do Jornal]
+     Os Pokémon estão magros e a ração está vencida há três meses. O dono te expulsa com o rodo na mão. Você já tinha visto o bastante.
+
+### imprensa · A fonte > 2   [dono: a editora do Jornal]
+     A matéria sai. No dia seguinte a criação está fechada, e no outro uma criação errada, do mesmo nome, na cidade vizinha, também.
+
+### imprensa · A fonte > 3   [dono: a editora do Jornal]
+     O policial lê, dobra e guarda. "Agradecido", ele diz, de um jeito que quer dizer que você não vai saber o resto.
+
+### imprensa · cap 16 · O pedido   [dono: a filha do criador]
+     Uma moça te espera na porta do Centro. É filha do criador que você foi ver, o do rodo na mão.
+   1f      a filha do criador: Você viu como estava. Eu sei o que você viu. Se sair no jornal, ele perde a casa, e os Pokémon que sobraram vão junto.
+   2f      a filha do criador: Eu tô cuidando deles agora. Pode ir lá ver de novo.
+     > Ir ver. Se estiver como ela diz, segurar a matéria.
+     > Publicar o que você viu. O que aconteceu, aconteceu.
+
+### imprensa · O pedido > 1   [dono: a filha do criador]
+     Os Pokémon estão comendo. A ração é nova. Ela pintou o cercado sozinha, dá pra ver pelos pingos.
+   1f      Hazel Moss: Você segurou a matéria. Tá. Eu também teria. Não conta pra ninguém.  ƒ
+     ƒ d => fala('a editora do Jornal', d.flags.ln_imprensa_publicou_cru ? `Você segurou a segunda parte. Tá. Eu também teria. Não conta pra ninguém.` : `Você segurou a matéria. Tá. Eu também teria. Não conta pra ninguém.`)
+
+### imprensa · O pedido > 2   [dono: a filha do criador]
+     Ela lê no Centro, na sua frente, e dobra o jornal em quatro com muito cuidado antes de ir embora.
+
+### imprensa · cap 19 · O envelope   [dono: a editora do Jornal]
+     Chega um envelope sem timbre: a filha do criador manda uma foto dos Pokémon gordos e do cercado pintado de novo.
+   1f      Hazel Moss: Você segurou a matéria e ganhou uma foto. Às vezes é isso que se ganha.
+     > Pendurar a foto na parede da redação.
+     > Escrever quatro linhas sobre o que mudou desde aquela visita.
+     > Depor a favor do Jornal, com o que você tem.
+     > Deixar o Jornal fechar acordo sem você.
+
+### imprensa · O envelope > 1   [dono: a editora do Jornal]
+     Fica do lado da janela. A editora endireita o quadro toda vez que passa.
+
+### imprensa · O envelope > 2   [dono: a editora do Jornal]
+     Quatro linhas na página seis, sem o nome do pai. A filha do criador recorta e cola na porta da criação.
+
+### imprensa · O envelope > 3   [dono: a editora do Jornal]
+     O juiz pede prova que você não tem. O Jornal fecha acordo e publica a correção na página dois, do tamanho da matéria.  ƒ
+     ƒ d => d.flags.ln_imprensa_foi ? `O juiz arquiva em vinte minutos. O criador não olha pra você na saída.` : `O juiz pede prova que você não tem. O Jornal fecha acordo e publica a correção na página dois, do tamanho da matéria.`
+
+### imprensa · O envelope > 4   [dono: a editora do Jornal]
+     A correção sai na página dois, assinada só pela editora.
+   1f      Hazel Moss: Correção eu assino sozinha. É pra isso que serve editora.
+
+### imprensa · cap 23 · A coluna   [dono: a editora do Jornal]
+   1f      Hazel Moss: Uma coluna toda sexta, com o seu nome em cima. Você escolhe o assunto. Escolhe direito, porque não dá pra trocar.
+     > A estrada: quem anda, quem para, quem não volta.
+     > Os Centros: quem atende, quem espera, o que se ouve no balcão.
+     > Quem ninguém escuta.
+
+### imprensa · A coluna > 1   [dono: a editora do Jornal]
+     Na terceira sexta chega carta de uma treinadora de Lavender dizendo que leu em voz alta pro time.
+
+### imprensa · A coluna > 2   [dono: a editora do Jornal]
+     As enfermeiras de três cidades começam a guardar histórias pra te contar quando você passa.
+
+### imprensa · A coluna > 3   [dono: a editora do Jornal]
+   1f      Hazel Moss: Essa vai dar trabalho.
+   2f      Hazel Moss: Boa.
+
+### imprensa · cap 27 · Do outro lado da entrevista   [dono: a editora do Jornal]
+     Um jornal de Saffron quer fazer uma matéria sobre você. Mandaram um repórter de vinte anos com o gravador ainda na caixa.
+   1f      Hazel Moss: Agora você sabe como é. Seja melhor com ele do que foram com você.
+     > Dar a entrevista e responder tudo.
+     > Mandar ele falar com Ivo primeiro.
+
+### imprensa · Do outro lado da entrevista > 1   [dono: a editora do Jornal]
+     Ele esquece de ligar o gravador nos primeiros dez minutos. Você espera ele perceber e começa de novo.
+
+### imprensa · Do outro lado da entrevista > 2   [dono: a editora do Jornal]
+     A matéria sai com uma foto da porta da sua casa e uma frase de Ivo em destaque. Você nunca vai saber como ele conseguiu essa frase.  ƒ
+     ƒ d => `A matéria sai com uma foto da porta da sua casa e uma frase de ${nomeCasa()} em destaque. Você nunca vai saber como ele conseguiu essa frase.`
+
+### criacao · cap 6 · A visita   [dono: a avaliadora da Associação]
+     A avaliadora chega sem avisar, que é como ela avisa. Na prancheta, presa com elástico: SRA. LINDEN.  ƒ
+   1f      Sra. Linden: Vim ver o time. Não as batalhas, o time: pata, pelo, dente, sono.
+     Ela se agacha na frente de Squirtle e espera. Não estende a mão: deixa Squirtle vir.  ƒ
+     ƒ d2 => { Nomes.apresentar('a avaliadora da Associação'); return `A avaliadora chega sem avisar, que é como ela avisa. Na prancheta, presa com elástico: SRA. LINDEN.`; }
+     ƒ d2 => { const p = (d2.time || [])[0]; return p ? `Ela se agacha na frente de ${nomeExib(p)} e espera. Não estende a mão: deixa ${nomeExib(p)} vir.` : 'Ela se agacha e espera.'; }
+     > Mostrar tudo, inclusive o que você ainda não resolveu.
+     > Mostrar só os que estão bem.
+
+### criacao · A visita > 1   [dono: a avaliadora da Associação]
+   1f      Sra. Linden: Criador bom não é o que não tem problema. É o que me mostra o problema primeiro.
+
+### criacao · A visita > 2   [dono: a avaliadora da Associação]
+     Ela anota alguma coisa e vira a folha antes de você conseguir ler.
+
+### criacao · cap 10 · A ninhada da feira   [dono: a avaliadora da Associação]
+     Na feira, um criador sem selo vende Growlithe filhote em caixa de fruta, cinco por caixa, a preço de Potion.
+     Dois deles estão com o olho remelento.
+   1f      Sra. Linden: Eu não posso fazer nada. Ele não é associado. Você é.
+     > Comprar os dois doentes e levar ao Centro.
+     > Denunciar à Associação, com foto.
+     > Não é problema seu.
+
+### criacao · A ninhada da feira > 1   [dono: a avaliadora da Associação]
+     O Centro trata os dois em uma tarde. Um volta com o criador da feira, que veio buscar com a cara mais lavada do mundo. O outro fica com a enfermeira.
+
+### criacao · A ninhada da feira > 2   [dono: a avaliadora da Associação]
+   1f      Sra. Linden: Com foto vira processo. Sem foto vira conversa. Obrigada pela foto.
+
+### criacao · A ninhada da feira > 3   [dono: a avaliadora da Associação]
+     Você passa pela barraca. Um dos filhotes espirra quando você passa, e você ouve.
+
+### criacao · cap 15 · O selo   [dono: a avaliadora da Associação]
+   1f      Sra. Linden: A Associação quer te dar o selo regional. Eu não indiquei. Também não vetei.
+   2f      Sra. Linden: Com selo, você assina laudo. Laudo vale dinheiro. Tem gente que vai querer comprar a sua assinatura.
+     > Aceitar o selo.
+     > Recusar. Você ainda não sabe o bastante.
+
+### criacao · O selo > 1   [dono: a avaliadora da Associação]
+     O selo é um carimbo de metal pesado que fica numa bolsinha de pano. Você guarda no bolso de dentro da mochila.
+
+### criacao · O selo > 2   [dono: a avaliadora da Associação]
+   1f      Sra. Linden: É a primeira vez que alguém recusa.
+   2f      Sra. Linden: Eu também recusei, da primeira vez.
+
+### criacao · cap 18 · O primeiro laudo   [dono: a avaliadora da Associação]
+     Uma criadora de Celadon pede um laudo seu pra vender uma ninhada de Eevee. Paga bem e manda foto bonita.
+   1f      Sra. Linden: Sem selo, a sua assinatura vale como opinião. Opinião boa vale muito.
+     > Ir até Celadon ver a ninhada antes de assinar.
+     > Assinar pela foto.
+
+### criacao · O primeiro laudo > 1   [dono: a avaliadora da Associação]
+     Os Eevee estão ótimos. A mãe deles também, o que é a parte que ninguém pergunta e que você pergunta.
+
+### criacao · O primeiro laudo > 2   [dono: a avaliadora da Associação]
+     Novecentos. A foto é bonita mesmo.
+
+### criacao · cap 22 · O Growlithe da feira   [dono: a avaliadora da Associação]
+     A feira daquela vez fechou. Ninguém sabe pra onde foram os filhotes.
+   1f      Sra. Linden: A Associação quer escrever uma regra pra feira. Querem que alguém que viu escreva.
+     > Escrever a regra: nenhum Pokémon vendido em caixa de fruta, nunca.
+     > Dizer que regra não resolve, e ir pra feira toda semana.
+
+### criacao · O Growlithe da feira > 1   [dono: a avaliadora da Associação]
+     A regra tem uma linha. Leva quatro reuniões pra ser aprovada exatamente como você escreveu.
+
+### criacao · O Growlithe da feira > 2   [dono: a avaliadora da Associação]
+     Na terceira semana os vendedores já guardam as caixas de fruta quando te veem chegando.
+
+### criacao · cap 26 · A prancheta   [dono: a avaliadora da Associação]
+   1f      Sra. Linden: Vou parar. O joelho não agacha mais na altura de um Pokémon, e avaliadora que não agacha avalia errado.
+     Ela estende a prancheta. O elástico está velho e a prancheta, lisa de tanto uso.
+     > Aceitar a prancheta e o lugar dela.
+     > Recusar e indicar alguém que você viu trabalhar.
+
+### criacao · A prancheta > 1   [dono: a avaliadora da Associação]
+   1f      Sra. Linden: Agacha. Sempre. O resto você aprende.  ƒ
+     ƒ d => fala('a avaliadora da Associação', d.flags.ln_criacao_mostrou ? `Você me mostrou o problema primeiro, lá no começo. Faz isso com todo mundo.` : `Agacha. Sempre. O resto você aprende.`)
+
+### criacao · A prancheta > 2   [dono: a avaliadora da Associação]
+     Ela anota o nome que você deu e sublinha duas vezes.
+
+### liga · cap 20 · A turma da manhã   [dono: a coordenadora da quadra]
+     A coordenadora te espera na quadra de treino, de agasalho da Liga. Na pasta, em letra de máquina: COORDENADORA MAPLE.  ƒ
+   1f      Coordenadora Maple: Doze crianças, dez anos cada, nenhuma com licença ainda. Os pais pagaram a aula. Você dá.
+     Na primeira fila, um menino segura um Caterpie como quem segura um troféu.
+     ƒ d2 => { Nomes.apresentar('a coordenadora da quadra'); return `A coordenadora te espera na quadra de treino, de agasalho da Liga. Na pasta, em letra de máquina: COORDENADORA MAPLE.`; }
+     > Ensinar a cuidar antes de ensinar a lutar.
+     > Dar a aula que os pais pagaram: tática.
+
+### liga · A turma da manhã > 1   [dono: a coordenadora da quadra]
+     A aula é sobre água, sombra e sono. Ninguém luta. O menino da primeira fila aprende a ver se a folha do Caterpie está fresca.
+
+### liga · A turma da manhã > 2   [dono: a coordenadora da quadra]
+     As crianças decoram três combinações de tipo e saem gritando "superefetivo" no estacionamento.
+
+### liga · cap 24 · O desafiante   [dono: a coordenadora da quadra]
+     Um desafiante aparece com um Pokémon que segura um item que não está na lista oficial. Pequeno, escondido na pata.
+   1f      Coordenadora Maple: O patrocinador do torneio é o pai dele. Você é quem confere o equipamento. Confere.
+     > Mandar tirar o item, como manda a regra.
+     > Deixar passar.
+
+### liga · O desafiante > 1   [dono: a coordenadora da quadra]
+     O desafiante tira. Perde na segunda rodada. O pai dele não aplaude ninguém.
+
+### liga · O desafiante > 2   [dono: a coordenadora da quadra]
+     Ele ganha duas rodadas. No fim do dia, um envelope com o logotipo do patrocinador aparece no seu armário.
+
+### liga · cap 27 · A votação   [dono: a coordenadora da quadra]
+     A Liga vota se treinador de dez anos pode sair sozinho em jornada ou só a partir dos doze.
+   1f      Coordenadora Maple: Seu voto vale um. Igual ao meu. Igual ao de todo mundo aqui.
+     Lá fora tem fila de criança com Pokémon no colo, esperando pra ver o resultado.
+     > Votar pelos dez anos, como sempre foi.
+     > Votar pelos doze.
+
+### liga · A votação > 1   [dono: a coordenadora da quadra]
+     Passa por um voto. A fila lá fora grita quando sai a placa.
+
+### liga · A votação > 2   [dono: a coordenadora da quadra]
+     Passa por um voto. A fila lá fora fica em silêncio, e uma menina chora sem barulho.
+
+### liga · cap 28 · O último dia de aula   [dono: a coordenadora da quadra]
+     Na quadra de treino, um menino de licença nova na mão te espera com um Butterfree no ombro.
+     É o menino da primeira fila, da turma da manhã. Ele ainda grita "superefetivo" quando acerta.
+   1f      Coordenadora Maple: Ele pediu pra lutar com você antes de sair em jornada. Só isso.
+     > Lutar a sério.
+     > Deixar ele ganhar.
+
+### liga · O último dia de aula > 1   [dono: a coordenadora da quadra]
+     Ele perde em três turnos e levanta a mão pra apertar a sua antes de recolher o Butterfree.
+
+### liga · O último dia de aula > 2   [dono: a coordenadora da quadra]
+     Ele percebe. Não fala nada. Na saída da quadra ele se vira e diz que da próxima vez você não vai precisar deixar.
+
+### heroi · cap 3 · Quem pede   [dono: a senhora do portão]
+     Uma senhora te para no portão da cidade, porque você tem cara de quem ajuda e porque não tem mais ninguém na rua.
+   1f      a senhora do portão: O meu Meowth subiu na caixa d'água e não desce. Faz dois dias. Eu levo comida, ele não desce.
+     > Subir na caixa d'água.
+     > Mandar o seu Pokémon mais leve subir.
+
+### heroi · Quem pede > 1   [dono: a senhora do portão]
+     O Meowth te arranha duas vezes e desce no seu ombro na terceira. A senhora chora e te dá um pote de doce de leite.
+
+### heroi · Quem pede > 2   [dono: a senhora do portão]
+     Os dois descem juntos. O Meowth fica do lado do seu Pokémon o resto da tarde, como se tivessem combinado.
+
+### heroi · cap 8 · Todo mundo sabe   [dono: o rapaz da mercearia]
+     Na entrada da cidade tem três pessoas esperando por você. Você não conhece nenhuma.
+   1f      o rapaz da mercearia: Falaram que você ajuda. Meu Pidgey sumiu, a escada da dona Rita quebrou e o poço da praça tá com um Psyduck preso.
+     É um dia inteiro de coisa pequena.
+     > Fazer as três coisas.
+     > Escolher uma e dizer não pras outras duas.
+
+### heroi · Todo mundo sabe > 1   [dono: o rapaz da mercearia]
+     Escurece quando você termina. O Pidgey estava no telhado da mercearia o tempo todo.
+
+### heroi · Todo mundo sabe > 2   [dono: o rapaz da mercearia]
+     Você tira o Psyduck do poço. As outras duas pessoas vão embora sem reclamar, o que é pior do que se reclamassem.
+
+### heroi · cap 14 · O menino da fila   [dono: o menino do Caterpie]
+     Um menino te segue por três ruas, com um Caterpie no ombro, tomando coragem.
+   1f      o menino do Caterpie: Eu quero ser igual você. Você pode me dizer como?
+     Você pensa no que você deixou de fazer, e em quem foi embora sem reclamar.
+     > "Faz o que tiver na sua frente. Depois o próximo."
+     > "Não seja igual a mim. Seja melhor."
+
+### heroi · O menino da fila > 1   [dono: o menino do Caterpie]
+     Ele repete em voz alta pra decorar. O Caterpie dele repete junto, do jeito dele.
+
+### heroi · O menino da fila > 2   [dono: o menino do Caterpie]
+     Ele fica sério de repente, como se tivesse recebido uma tarefa. Talvez tenha.
+
+### heroi · cap 18 · O cansaço   [dono: a mulher do mercado]
+     Você chega na cidade com o corpo pesado e o time dormindo no cinto. Na entrada já tem alguém esperando, de novo.
+   1f      a mulher do mercado: Desculpa. Eu sei que você acabou de chegar. É o telhado do mercado, e chove hoje à noite.
+     > Subir no telhado assim mesmo.
+     > Dizer que hoje não, e indicar quem pode ajudar.
+
+### heroi · O cansaço > 1   [dono: a mulher do mercado]
+     Você termina com chuva caindo nas costas. Dorme no chão do mercado, em cima de uma pilha de saco de ração.
+
+### heroi · O cansaço > 2   [dono: a mulher do mercado]
+     Ela não fica brava. Você dorme dez horas, e acorda sem saber se fez certo. Fez.
+
+### heroi · cap 22 · A placa   [dono: o prefeito da vila]
+     A vila quer pregar uma placa com o seu nome na praça. Já mandaram fazer. Só falta você deixar.
+   1f      o prefeito da vila: Você ajudou quando ninguém ajudava. A gente não esquece.
+     > Deixar.
+     > Pedir que a placa tenha o nome do seu time, não o seu.
+
+### heroi · A placa > 1   [dono: o prefeito da vila]
+     A placa é de bronze e a letra é torta. Dois dias depois tem uma flor do lado dela, e ninguém admite ter posto.
+
+### heroi · A placa > 2   [dono: o prefeito da vila]
+     A placa sai com o nome de Squirtle em letra maior que a dos outros. Você não pediu isso. Você também não reclama.  ƒ
+     ƒ d => { const p = (d.time || [])[0]; return p ? `A placa sai com o nome de ${nomeExib(p)} em letra maior que a dos outros. Você não pediu isso. Você também não reclama.` : 'A placa sai com o nome de cada um do time.'; }
+
+### heroi · cap 26 · Quem ajuda quem   [dono: o menino do Caterpie]
+     O seu Pokémon cai num barranco na beira da rota, e você não alcança.
+     Alguém alcança: o menino da fila, uns dedos mais alto, com um Butterfree no ombro. Ele desce pela raiz como quem já fez isso muitas vezes.
+   1f      o menino do Caterpie: Seja melhor. Você que falou. Tô tentando.
+     > Agradecer e deixar ele te ajudar a subir.
+
+### heroi · Quem ajuda quem > 1   [dono: o menino do Caterpie]
+     É estranho ser a de baixo do barranco. É bom também.
+
+### mercenario · cap 3 · O primeiro serviço   [dono: o intermediário]
+     Um homem de chapéu se senta do seu lado no banco do Centro sem pedir licença.
+   1f      o intermediário: Escolta. Um comerciante de Moon Stone precisa atravessar a rota amanhã cedo. Paga bem. Não pergunta.
+     > Aceitar.
+     > Cobrar o dobro.
+
+### mercenario · O primeiro serviço > 1   [dono: o intermediário]
+     O comerciante não fala uma palavra a rota inteira. Paga na saída, em nota nova, contada duas vezes.
+
+### mercenario · O primeiro serviço > 2   [dono: o intermediário]
+   1f      o intermediário: O dobro.
+     Ele paga sem discutir. Isso quer dizer que o primeiro preço já era barato demais.
+
+### mercenario · cap 8 · A cobrança   [dono: o intermediário]
+   1f      o intermediário: Agora é cobrança. Um sujeito deve e não paga.
+     O sujeito é um treinador velho, com um Machoke velho, numa casa sem cortina.
+     > Cobrar. Dívida é dívida.
+     > Voltar e dizer que não achou ninguém.
+
+### mercenario · A cobrança > 1   [dono: o intermediário]
+     Ele paga com as economias de uma lata de biscoito. O Machoke fica olhando pra lata o tempo todo.
+
+### mercenario · A cobrança > 2   [dono: o intermediário]
+   1f      o intermediário: Não achou.
+     Ele anota alguma coisa num caderninho preto que não tinha aparecido até agora.
+
+### mercenario · cap 14 · O preço de verdade   [dono: o intermediário]
+   1f      o intermediário: Tem um serviço grande. Não é escolta, não é cobrança. É ficar parado num lugar, olhando pro outro lado, por uma hora.
+   2f      o intermediário: Paga o que você ganhou até agora, junto.
+     > Aceitar.
+     > Recusar. Tem preço que não é preço.
+
+### mercenario · O preço de verdade > 1   [dono: o intermediário]
+     É uma hora. Do outro lado, alguma coisa acontece num armazém. Você não olha. Era isso que pagaram.
+
+### mercenario · O preço de verdade > 2   [dono: o intermediário]
+   1f      o intermediário: Todo mundo tem preço. O seu é que é diferente.
+     Ele levanta e esquece o chapéu no banco. De propósito, você acha.
+
+### mercenario · cap 18 · O caderninho preto   [dono: o intermediário]
+   1f      o intermediário: Serviço novo. Tem gente que vai querer Moon Stone sem passar pela loja. Você leva.
+     O caderninho preto está aberto na mesa, numa página com o seu nome.
+     > Aceitar o serviço.
+     > Fechar o caderninho e ir embora.
+
+### mercenario · O caderninho preto > 1   [dono: o intermediário]
+     As pedras chegam embrulhadas em jornal velho. Ninguém confere.  ƒ
+     ƒ d => d.flags.ln_merc_mentiu ? fala('o intermediário', `Eu sei. Ele pagou do mesmo jeito, pra mim, no dia seguinte. E pediu pra te agradecer.`) : `As pedras chegam embrulhadas em jornal velho. Ninguém confere.`
+
+### mercenario · O caderninho preto > 2   [dono: o intermediário]
+   1f      o intermediário: Fecha. Eu tenho cópia.
+
+### mercenario · cap 22 · Concorrência   [dono: o intermediário]
+     Tem um mercenário novo na região cobrando metade do seu preço e fazendo o serviço pela metade.
+   1f      o intermediário: Alguém está cobrando metade. O mercado é assim.
+     > Baixar o preço.
+     > Propor sociedade ao novato.
+     > Deixar o serviço ruim dele falar por si.
+
+### mercenario · Concorrência > 1   [dono: o intermediário]
+     Você perde dinheiro por três semanas e o outro desiste na quarta.
+
+### mercenario · Concorrência > 2   [dono: o intermediário]
+     Ele aceita na hora. Tem dezessete anos e um Machop que obedece melhor do que ele.
+
+### mercenario · Concorrência > 3   [dono: o intermediário]
+     Em um mês, os clientes voltam pedindo desculpa. Você cobra o mesmo de antes.
+
+### mercenario · cap 26 · O chapéu   [dono: o intermediário]
+   1f      o intermediário: Vou parar. Comprei uma casa na praia com uma rede e um Slowpoke que veio junto com a casa.
+     Ele empurra o caderninho preto pela mesa.
+   2f      o intermediário: Tem tudo aqui. Quem paga, quanto, e quem não paga.
+     > Ficar com o caderninho.
+     > Queimar o caderninho na frente dele.
+
+### mercenario · O chapéu > 1   [dono: o intermediário]
+     É mais pesado do que parece. Tem nome de gente que você cumprimenta na rua.
+
+### mercenario · O chapéu > 2   [dono: o intermediário]
+     Ele olha o fogo até o fim, tira o chapéu e põe na sua cabeça.  ƒ
+   1f      o intermediário: Fica melhor em você.
+     ƒ d => d.flags.ln_merc_recusou ? `Ele olha o fogo até o fim. Tira o chapéu, igual ao que esqueceu no banco aquela vez, e põe na sua cabeça.` : `Ele olha o fogo até o fim, tira o chapéu e põe na sua cabeça.`
+
+### foragido · cap 3 · A pensão   [dono: a dona da pensão]
+     Na porta da pensão, em tinta azul que já foi azul mais forte: PENSÃO BRIAR — QUARTO E CAFÉ.  ƒ
+   1f      Dona Briar: Não pergunto nome, não pergunto de onde. Pergunto se paga.
+     Atrás dela, na parede, tem um mural de recados. Você conta três papéis com rosto.
+     ƒ d2 => { Nomes.apresentar('a dona da pensão'); return `Na porta da pensão, em tinta azul que já foi azul mais forte: PENSÃO BRIAR — QUARTO E CAFÉ.`; }
+     > Pagar adiantado e não falar mais nada.
+     > Contar a sua história pra ela.
+
+### foragido · A pensão > 1   [dono: a dona da pensão]
+     Ela pega o dinheiro e te entrega uma chave de número rasurado. Ninguém bate na sua porta a noite inteira.
+
+### foragido · A pensão > 2   [dono: a dona da pensão]
+   1f      Dona Briar: Já ouvi pior.
+   2f      Dona Briar: Já ouvi melhor também. Fica. Café é às seis.
+
+### foragido · cap 8 · O papel no poste   [dono: a dona da pensão]
+     Tem um papel com um desenho parecido com você colado no poste da esquina. Parecido o bastante.
+   1f      Dona Briar: Tem papel novo no poste. Não é da minha conta. Só tô falando.
+     > Arrancar o papel.
+     > Deixar. Cortar o cabelo diferente e seguir.
+
+### foragido · O papel no poste > 1   [dono: a dona da pensão]
+     Você arranca e amassa. No dia seguinte tem dois.
+
+### foragido · O papel no poste > 2   [dono: a dona da pensão]
+     Ninguém te olha duas vezes na rua. Isso é bom e é um pouco triste.
+
+### foragido · cap 14 · Quem te reconhece   [dono: o rapaz do cais]
+     No cais, um rapaz te olha, olha o PokéNav dele, olha você de novo.
+   1f      o rapaz do cais: Eu sei quem você é. Eu não falo nada. Mas eu tô sem dinheiro, sabe.
+     > Pagar.
+     > Encarar e dizer que ele pode falar o que quiser.
+
+### foragido · Quem te reconhece > 1   [dono: o rapaz do cais]
+     Ele conta o dinheiro e some no meio da gente. Você vai olhar pra trás em todo cais daqui pra frente.
+
+### foragido · Quem te reconhece > 2   [dono: o rapaz do cais]
+     Ele hesita. Você sobe no barco. Quando o barco solta a corda, ele ainda está no cais, com o PokéNav na mão e sem ligar pra ninguém.
+
+### foragido · cap 18 · A carta na pensão   [dono: a dona da pensão]
+   1f      Dona Briar: Chegou isso. Pro seu nome de verdade, que eu não sabia que era esse.
+     A letra no envelope é de Ivo.  ƒ
+     ƒ d => `A letra no envelope é de ${nomeCasa()}.`
+     > Ler e responder na mesma noite.
+     > Guardar a carta fechada.
+
+### foragido · A carta na pensão > 1   [dono: a dona da pensão]
+     Três páginas. Você não conta onde está. Conta de cada um do time, pelo nome, e pergunta se a porta de casa ainda emperra.  ƒ
+     ƒ d => `Três páginas. Você não conta onde está. Conta de cada um do time, pelo nome, e pergunta se a porta de casa ainda emperra.`
+
+### foragido · A carta na pensão > 2   [dono: a dona da pensão]
+     Ela fica no fundo da mochila, ainda colada, junto do caderno.
+
+### foragido · cap 22 · O guarda que sabe   [dono: o guarda da ponte]
+     Na ponte, um guarda pede a sua licença, lê, olha pra você, lê de novo.
+   1f      o guarda da ponte: Tem um papel com um desenho parecido com você no posto.
+     > Esperar o que ele vai fazer.
+     > Contar a sua versão, inteira.
+
+### foragido · O guarda que sabe > 1   [dono: o guarda da ponte]
+     Ele devolve a licença.
+   1f      o guarda da ponte: O desenho errou o nariz.
+     Você passa.
+
+### foragido · O guarda que sabe > 2   [dono: o guarda da ponte]
+     Ele escuta em pé, sem anotar. No fim, tira o papel do bolso, dobra em quatro e joga no rio.
+
+### foragido · cap 26 · O depoimento   [dono: a dona da pensão]
+     Abre uma chance de você depor e acabar com o papel do poste de uma vez. Precisa ir até Saffron, entrar pela porta da frente e contar tudo.
+   1f      Dona Briar: Eu nunca perguntei a sua história. Agora acho que você devia contar.
+     > Ir a Saffron e depor.
+     > Continuar como está.
+
+### foragido · O depoimento > 1   [dono: a dona da pensão]
+     Leva a manhã inteira. Na saída, o poste da esquina está sem papel nenhum.
+
+### foragido · O depoimento > 2   [dono: a dona da pensão]
+     Você paga mais um mês adiantado na pensão. A dona pega o dinheiro e, dessa vez, não conta.
+
+### lei · cap 18 · O depósito   [dono: o sargento de Viridian]
+     O depósito da polícia de Saffron guarda Pokémon apreendido até alguém decidir o que fazer com eles. O livro de entrada tem onze nomes este mês. A baia tem oito Pokémon.
+   1f      Sargento Holt: Me mandaram conferir. Me mandaram conferir porque acham que fui eu.
+     No livro de saída, três retiradas com a mesma letra e nenhum carimbo.
+     > Conferir o livro com ele, de noite, folha por folha.
+     > Levar o que você sabe direto à delegada.
+     > Ficar fora disso.
+
+### lei · O depósito > 1   [dono: o sargento de Viridian]
+     Às três da manhã vocês têm as três assinaturas lado a lado. Nenhuma é a dele.
+   1f      Sargento Holt: Obrigado. Não pelo que achou. Por ter vindo.
+
+### lei · O depósito > 2   [dono: o sargento de Viridian]
+   1f      Delegada Thorne: Você pulou o seu sargento.
+   2f      Delegada Thorne: Fez certo. Ele ia te mandar fazer isso, e ia ficar com vergonha de mandar.
+
+### lei · O depósito > 3   [dono: o sargento de Viridian]
+   1f      Sargento Holt: Tá. Eu entendo.
+     Ele não entende, e os dois sabem.
+
+### lei · cap 22 · A ordem   [dono: o sargento de Viridian]
+     Chega uma ordem com carimbo azul: desocupar o acampamento de treinadores sem licença que cresceu debaixo da ponte da rota. Até o meio-dia.
+     São vinte e poucas barracas. Tem criança. Tem um Snorlax dormindo atravessado na entrada, que ninguém vai mover até meio-dia nenhum.
+   1f      Sargento Holt: O regulamento diz como. Não diz com que cara.
+     > Cumprir a ordem, devagar, barraca por barraca, ajudando a carregar.
+     > Avisar o acampamento na véspera, e chegar no horário com o lugar já vazio.
+     > Devolver a ordem sem cumprir.
+
+### lei · A ordem > 1   [dono: o sargento de Viridian]
+     Leva até as quatro da tarde. O meio-dia passou e ninguém reclamou, porque todo mundo estava carregando alguma coisa.
+
+### lei · A ordem > 2   [dono: o sargento de Viridian]
+     De manhã só sobrou o Snorlax. Alguém amarrou um bilhete na pata dele: "OBRIGADO, CRACHÁ".  ƒ
+     ƒ d => `De manhã só sobrou o Snorlax. Alguém amarrou um bilhete na pata dele: "OBRIGADO, ${d.flags.cargo_guarda_rota ? 'COLETE' : 'CRACHÁ'}".`
+
+### lei · A ordem > 3   [dono: o sargento de Viridian]
+   1f      Sargento Holt: Isso vai pra sua ficha.
+   2f      Sargento Holt: Vai pra minha também. Eu assino embaixo de você.
+
+### lei · cap 26 · O apito   [dono: o sargento de Viridian]
+     Holt te espera na guarita de Viridian, a primeira, sem colete.
+   1f      Sargento Holt: Trinta e um anos. Me aposentaram ontem, com bolo.
+   2f      Sargento Holt: Ninguém nunca soube direito quem tirou os Pokémon do depósito. Eu fiquei com essa.
+     Ele estende o apito de metal, amassado de um lado.
+     > Aceitar o apito.
+     > Pedir que ele fique com o apito e venha tomar café na guarita de vez em quando.
+
+### lei · O apito > 1   [dono: o sargento de Viridian]
+   1f      Sargento Holt: Não sopra à toa. Ele tem um som só, e todo mundo da patrulha conhece.
+
+### lei · O apito > 2   [dono: o sargento de Viridian]
+     Ele ri pela primeira vez desde que você conhece ele.
+   1f      Sargento Holt: Café de guarita é horrível. Eu venho.
+
+### rocket · cap 20 · O armazém   [dono: a voz do outro lado]
+     Te entregam um uniforme preto sem letra nenhuma e uma chave de armazém, perto do porto.
+     Dentro, gaiola em cima de gaiola. Growlithe, Ponyta, um Lapras filhote numa caixa d'água rasa demais.
+   1f      a voz do outro lado: Você vigia até amanhã. Ninguém entra, ninguém sai, nada sai.
+     > Fotografar as gaiolas e mandar pro policial.
+     > Trocar a água do Lapras e vigiar como mandaram.
+     > Abrir a caixa do Lapras e deixar ele ir pelo cais.
+
+### rocket · O armazém > 1   [dono: a voz do outro lado]
+     Doze fotos. O PokéNav mostra "entregue" e depois mais nada a noite inteira.
+
+### rocket · O armazém > 2   [dono: a voz do outro lado]
+     O Lapras te olha a noite inteira por cima da borda da caixa. De manhã, alguém leva todas as gaiolas e te paga na porta.
+
+### rocket · O armazém > 3   [dono: a voz do outro lado]
+     Ele escorrega da plataforma pra água sem barulho nenhum. Lá fora, mais longe do que devia dar pra ouvir, um canto curto.
+
+### rocket · cap 24 · A lista   [dono: a voz do outro lado]
+   1f      a voz do outro lado: Você tem sido correto. Correto é raro.
+   2f      a voz do outro lado: Queremos a lista de contatos do seu PokéNav. Só nome e número. É assim que a gente confia.
+     > Mandar a lista.
+     > Mandar uma lista inventada.
+     > Recusar.
+
+### rocket · A lista > 1   [dono: a voz do outro lado]
+     Você manda. Por uma semana, toda ligação que você recebe começa com um segundo de silêncio a mais.
+
+### rocket · A lista > 2   [dono: a voz do outro lado]
+     Quarenta nomes de rua de Celadon e números que não existem. A voz demora dois dias pra ligar de novo.
+
+### rocket · A lista > 3   [dono: a voz do outro lado]
+   1f      a voz do outro lado: Anotado.
+     Você nunca tinha ouvido essa palavra dela. Ela soa cansada.  ƒ
+     ƒ d => (d.flags.ln_rocket_mentiu || d.flags.ln_rocket_calou) ? `Não é a primeira vez que você ouve essa palavra dela. É a primeira que ela soa cansada.` : `Você nunca tinha ouvido essa palavra dela. Ela soa cansada.`
+
+### rocket · cap 27 · A voz tem rosto   [dono: a voz do outro lado]
+     Uma mulher de casaco cinza se senta na sua frente na lanchonete da estação e pede dois cafés. Você reconhece a voz no "dois".
+   1f      a voz do outro lado: Eu comecei como você. Contando gente no Centro de Vermilion.
+   2f      a voz do outro lado: Vim ver se você vai terminar como eu.
+     > Perguntar por que ela nunca saiu.
+     > Dizer que entregou tudo à polícia e que ela tem dez minutos.
+     > Pedir um lugar mais alto.
+
+### rocket · A voz tem rosto > 1   [dono: a voz do outro lado]
+   1f      a voz do outro lado: Porque ninguém sai. A gente só para de ligar. Eu nunca parei.
+     Ela paga os dois cafés e deixa o dela inteiro.
+
+### rocket · A voz tem rosto > 2   [dono: a voz do outro lado]
+     Ela olha o relógio de parede. Levanta. Na porta, se vira.
+   1f      a voz do outro lado: Dez minutos é mais do que me deram.
+
+### rocket · A voz tem rosto > 3   [dono: a voz do outro lado]
+   1f      a voz do outro lado: Então é assim que termina.
+     Ela empurra o café dela pra você e vai embora.
+
+### ciencia · cap 18 · O estagiário   [dono: o estagiário do laboratório]
+     O laboratório te manda um estagiário de catorze anos, com caderno novo e caneta de quatro cores.
+   1f      o estagiário do laboratório: O Professor disse que você anota direito e que era pra eu aprender com você.
+     Você lembra que, da primeira vez, escreveu o que sentiu.
+     > Ensinar a anotar hora e lugar antes de qualquer coisa.
+     > Deixar ele olhar sozinho e anotar do jeito dele.
+
+### ciencia · O estagiário > 1   [dono: o estagiário do laboratório]
+     No fim da semana o caderno dele tem uma coluna de hora em cada página, e ele usa as quatro cores pra separar dia, tarde, noite e "não sei".
+
+### ciencia · O estagiário > 2   [dono: o estagiário do laboratório]
+     Ele volta com um desenho de Oddish andando de noite que ninguém no laboratório tinha. Sem hora. Com a lua.
+
+### ciencia · cap 23 · A cor errada   [dono: Professor Oak]
+     No fundo de uma trilha você vê um Pokémon de uma cor que não é a dele. A Pokédex apita duas vezes e escreve: ANOMALIA CROMÁTICA.
+     Ninguém mais viu. O lugar é pequeno, e quem souber vai vir com Pokébola.
+   1f      Professor Oak: Se você souber de alguma coisa rara, me fala primeiro. Primeiro.
+     > Mandar o lugar só pro Professor, com pedido de sigilo.
+     > Não contar pra ninguém. O lugar é dele.
+     > Vender o lugar pra um colecionador.
+
+### ciencia · A cor errada > 1   [dono: Professor Oak]
+   1f      Professor Oak: Sigilo. Eu sei guardar. Guardo coisa sua faz tempo.
+
+### ciencia · A cor errada > 2   [dono: Professor Oak]
+     Você apaga o registro da Pokédex com o dedo, devagar, e anota no caderno só "trilha, de manhã, bonito".
+
+### ciencia · A cor errada > 3   [dono: Professor Oak]
+     Três mil. Uma semana depois a trilha tem placa, guarita e fila.
+
+### ciencia · cap 27 · A terceira edição   [dono: Professor Oak]
+   1f      Professor Oak: Terceira edição do livro. Tem um capítulo inteiro que é seu. Eu quero o seu nome na capa, do lado do meu.
+     Você pensa em todas as páginas de hora e lugar que ele leu sem reclamar.
+     > Aceitar o nome na capa.
+     > Pedir que ponha o nome do seu time nos agradecimentos em vez do seu na capa.
+
+### ciencia · A terceira edição > 1   [dono: Professor Oak]
+   1f      Professor Oak: Ótimo. Agora você vai receber carta de gente dizendo que está errado. É a melhor parte.
+
+### ciencia · A terceira edição > 2   [dono: Professor Oak]
+     Na última página, em letra pequena:  ƒ
+   1?[a 1] Professor Oak: E Squirtle, que viu primeiro.  ƒ
+     ƒ d => { const p = (d.time || [])[0]; return p ? `Na última página, em letra pequena: "E ${nomeExib(p)}, que viu primeiro."` : 'Na última página, em letra pequena: "E ao time, que viu primeiro."'; }
+
+### imprensa · cap 19 · O envelope   [dono: a editora do Jornal]
+     Chega um envelope sem timbre: a filha do criador manda uma foto dos Pokémon gordos e do cercado pintado de novo.
+   1f      Hazel Moss: Você segurou a matéria e ganhou uma foto. Às vezes é isso que se ganha.
+     > Pendurar a foto na parede da redação.
+     > Escrever quatro linhas sobre o que mudou desde aquela visita.
+     > Depor a favor do Jornal, com o que você tem.
+     > Deixar o Jornal fechar acordo sem você.
+
+### imprensa · O envelope > 1   [dono: a editora do Jornal]
+     Fica do lado da janela. A editora endireita o quadro toda vez que passa.
+
+### imprensa · O envelope > 2   [dono: a editora do Jornal]
+     Quatro linhas na página seis, sem o nome do pai. A filha do criador recorta e cola na porta da criação.
+
+### imprensa · O envelope > 3   [dono: a editora do Jornal]
+     O juiz pede prova que você não tem. O Jornal fecha acordo e publica a correção na página dois, do tamanho da matéria.  ƒ
+     ƒ d => d.flags.ln_imprensa_foi ? `O juiz arquiva em vinte minutos. O criador não olha pra você na saída.` : `O juiz pede prova que você não tem. O Jornal fecha acordo e publica a correção na página dois, do tamanho da matéria.`
+
+### imprensa · O envelope > 4   [dono: a editora do Jornal]
+     A correção sai na página dois, assinada só pela editora.
+   1f      Hazel Moss: Correção eu assino sozinha. É pra isso que serve editora.
+
+### imprensa · cap 23 · A coluna   [dono: a editora do Jornal]
+   1f      Hazel Moss: Uma coluna toda sexta, com o seu nome em cima. Você escolhe o assunto. Escolhe direito, porque não dá pra trocar.
+     > A estrada: quem anda, quem para, quem não volta.
+     > Os Centros: quem atende, quem espera, o que se ouve no balcão.
+     > Quem ninguém escuta.
+
+### imprensa · A coluna > 1   [dono: a editora do Jornal]
+     Na terceira sexta chega carta de uma treinadora de Lavender dizendo que leu em voz alta pro time.
+
+### imprensa · A coluna > 2   [dono: a editora do Jornal]
+     As enfermeiras de três cidades começam a guardar histórias pra te contar quando você passa.
+
+### imprensa · A coluna > 3   [dono: a editora do Jornal]
+   1f      Hazel Moss: Essa vai dar trabalho.
+   2f      Hazel Moss: Boa.
+
+### imprensa · cap 27 · Do outro lado da entrevista   [dono: a editora do Jornal]
+     Um jornal de Saffron quer fazer uma matéria sobre você. Mandaram um repórter de vinte anos com o gravador ainda na caixa.
+   1f      Hazel Moss: Agora você sabe como é. Seja melhor com ele do que foram com você.
+     > Dar a entrevista e responder tudo.
+     > Mandar ele falar com Ivo primeiro.
+
+### imprensa · Do outro lado da entrevista > 1   [dono: a editora do Jornal]
+     Ele esquece de ligar o gravador nos primeiros dez minutos. Você espera ele perceber e começa de novo.
+
+### imprensa · Do outro lado da entrevista > 2   [dono: a editora do Jornal]
+     A matéria sai com uma foto da porta da sua casa e uma frase de Ivo em destaque. Você nunca vai saber como ele conseguiu essa frase.  ƒ
+     ƒ d => `A matéria sai com uma foto da porta da sua casa e uma frase de ${nomeCasa()} em destaque. Você nunca vai saber como ele conseguiu essa frase.`
+
+### criacao · cap 18 · O primeiro laudo   [dono: a avaliadora da Associação]
+     Uma criadora de Celadon pede um laudo seu pra vender uma ninhada de Eevee. Paga bem e manda foto bonita.
+   1f      Sra. Linden: Sem selo, a sua assinatura vale como opinião. Opinião boa vale muito.
+     > Ir até Celadon ver a ninhada antes de assinar.
+     > Assinar pela foto.
+
+### criacao · O primeiro laudo > 1   [dono: a avaliadora da Associação]
+     Os Eevee estão ótimos. A mãe deles também, o que é a parte que ninguém pergunta e que você pergunta.
+
+### criacao · O primeiro laudo > 2   [dono: a avaliadora da Associação]
+     Novecentos. A foto é bonita mesmo.
+
+### criacao · cap 22 · O Growlithe da feira   [dono: a avaliadora da Associação]
+     A feira daquela vez fechou. Ninguém sabe pra onde foram os filhotes.
+   1f      Sra. Linden: A Associação quer escrever uma regra pra feira. Querem que alguém que viu escreva.
+     > Escrever a regra: nenhum Pokémon vendido em caixa de fruta, nunca.
+     > Dizer que regra não resolve, e ir pra feira toda semana.
+
+### criacao · O Growlithe da feira > 1   [dono: a avaliadora da Associação]
+     A regra tem uma linha. Leva quatro reuniões pra ser aprovada exatamente como você escreveu.
+
+### criacao · O Growlithe da feira > 2   [dono: a avaliadora da Associação]
+     Na terceira semana os vendedores já guardam as caixas de fruta quando te veem chegando.
+
+### criacao · cap 26 · A prancheta   [dono: a avaliadora da Associação]
+   1f      Sra. Linden: Vou parar. O joelho não agacha mais na altura de um Pokémon, e avaliadora que não agacha avalia errado.
+     Ela estende a prancheta. O elástico está velho e a prancheta, lisa de tanto uso.
+     > Aceitar a prancheta e o lugar dela.
+     > Recusar e indicar alguém que você viu trabalhar.
+
+### criacao · A prancheta > 1   [dono: a avaliadora da Associação]
+   1f      Sra. Linden: Agacha. Sempre. O resto você aprende.  ƒ
+     ƒ d => fala('a avaliadora da Associação', d.flags.ln_criacao_mostrou ? `Você me mostrou o problema primeiro, lá no começo. Faz isso com todo mundo.` : `Agacha. Sempre. O resto você aprende.`)
+
+### criacao · A prancheta > 2   [dono: a avaliadora da Associação]
+     Ela anota o nome que você deu e sublinha duas vezes.
+
+### liga · cap 28 · O último dia de aula   [dono: a coordenadora da quadra]
+     Na quadra de treino, um menino de licença nova na mão te espera com um Butterfree no ombro.
+     É o menino da primeira fila, da turma da manhã. Ele ainda grita "superefetivo" quando acerta.
+   1f      Coordenadora Maple: Ele pediu pra lutar com você antes de sair em jornada. Só isso.
+     > Lutar a sério.
+     > Deixar ele ganhar.
+
+### liga · O último dia de aula > 1   [dono: a coordenadora da quadra]
+     Ele perde em três turnos e levanta a mão pra apertar a sua antes de recolher o Butterfree.
+
+### liga · O último dia de aula > 2   [dono: a coordenadora da quadra]
+     Ele percebe. Não fala nada. Na saída da quadra ele se vira e diz que da próxima vez você não vai precisar deixar.
+
+### heroi · cap 18 · O cansaço   [dono: a mulher do mercado]
+     Você chega na cidade com o corpo pesado e o time dormindo no cinto. Na entrada já tem alguém esperando, de novo.
+   1f      a mulher do mercado: Desculpa. Eu sei que você acabou de chegar. É o telhado do mercado, e chove hoje à noite.
+     > Subir no telhado assim mesmo.
+     > Dizer que hoje não, e indicar quem pode ajudar.
+
+### heroi · O cansaço > 1   [dono: a mulher do mercado]
+     Você termina com chuva caindo nas costas. Dorme no chão do mercado, em cima de uma pilha de saco de ração.
+
+### heroi · O cansaço > 2   [dono: a mulher do mercado]
+     Ela não fica brava. Você dorme dez horas, e acorda sem saber se fez certo. Fez.
+
+### heroi · cap 22 · A placa   [dono: o prefeito da vila]
+     A vila quer pregar uma placa com o seu nome na praça. Já mandaram fazer. Só falta você deixar.
+   1f      o prefeito da vila: Você ajudou quando ninguém ajudava. A gente não esquece.
+     > Deixar.
+     > Pedir que a placa tenha o nome do seu time, não o seu.
+
+### heroi · A placa > 1   [dono: o prefeito da vila]
+     A placa é de bronze e a letra é torta. Dois dias depois tem uma flor do lado dela, e ninguém admite ter posto.
+
+### heroi · A placa > 2   [dono: o prefeito da vila]
+     A placa sai com o nome de Squirtle em letra maior que a dos outros. Você não pediu isso. Você também não reclama.  ƒ
+     ƒ d => { const p = (d.time || [])[0]; return p ? `A placa sai com o nome de ${nomeExib(p)} em letra maior que a dos outros. Você não pediu isso. Você também não reclama.` : 'A placa sai com o nome de cada um do time.'; }
+
+### heroi · cap 26 · Quem ajuda quem   [dono: o menino do Caterpie]
+     O seu Pokémon cai num barranco na beira da rota, e você não alcança.
+     Alguém alcança: o menino da fila, uns dedos mais alto, com um Butterfree no ombro. Ele desce pela raiz como quem já fez isso muitas vezes.
+   1f      o menino do Caterpie: Seja melhor. Você que falou. Tô tentando.
+     > Agradecer e deixar ele te ajudar a subir.
+
+### heroi · Quem ajuda quem > 1   [dono: o menino do Caterpie]
+     É estranho ser a de baixo do barranco. É bom também.
+
+### mercenario · cap 18 · O caderninho preto   [dono: o intermediário]
+   1f      o intermediário: Serviço novo. Tem gente que vai querer Moon Stone sem passar pela loja. Você leva.
+     O caderninho preto está aberto na mesa, numa página com o seu nome.
+     > Aceitar o serviço.
+     > Fechar o caderninho e ir embora.
+
+### mercenario · O caderninho preto > 1   [dono: o intermediário]
+     As pedras chegam embrulhadas em jornal velho. Ninguém confere.  ƒ
+     ƒ d => d.flags.ln_merc_mentiu ? fala('o intermediário', `Eu sei. Ele pagou do mesmo jeito, pra mim, no dia seguinte. E pediu pra te agradecer.`) : `As pedras chegam embrulhadas em jornal velho. Ninguém confere.`
+
+### mercenario · O caderninho preto > 2   [dono: o intermediário]
+   1f      o intermediário: Fecha. Eu tenho cópia.
+
+### mercenario · cap 22 · Concorrência   [dono: o intermediário]
+     Tem um mercenário novo na região cobrando metade do seu preço e fazendo o serviço pela metade.
+   1f      o intermediário: Alguém está cobrando metade. O mercado é assim.
+     > Baixar o preço.
+     > Propor sociedade ao novato.
+     > Deixar o serviço ruim dele falar por si.
+
+### mercenario · Concorrência > 1   [dono: o intermediário]
+     Você perde dinheiro por três semanas e o outro desiste na quarta.
+
+### mercenario · Concorrência > 2   [dono: o intermediário]
+     Ele aceita na hora. Tem dezessete anos e um Machop que obedece melhor do que ele.
+
+### mercenario · Concorrência > 3   [dono: o intermediário]
+     Em um mês, os clientes voltam pedindo desculpa. Você cobra o mesmo de antes.
+
+### mercenario · cap 26 · O chapéu   [dono: o intermediário]
+   1f      o intermediário: Vou parar. Comprei uma casa na praia com uma rede e um Slowpoke que veio junto com a casa.
+     Ele empurra o caderninho preto pela mesa.
+   2f      o intermediário: Tem tudo aqui. Quem paga, quanto, e quem não paga.
+     > Ficar com o caderninho.
+     > Queimar o caderninho na frente dele.
+
+### mercenario · O chapéu > 1   [dono: o intermediário]
+     É mais pesado do que parece. Tem nome de gente que você cumprimenta na rua.
+
+### mercenario · O chapéu > 2   [dono: o intermediário]
+     Ele olha o fogo até o fim, tira o chapéu e põe na sua cabeça.  ƒ
+   1f      o intermediário: Fica melhor em você.
+     ƒ d => d.flags.ln_merc_recusou ? `Ele olha o fogo até o fim. Tira o chapéu, igual ao que esqueceu no banco aquela vez, e põe na sua cabeça.` : `Ele olha o fogo até o fim, tira o chapéu e põe na sua cabeça.`
+
+### foragido · cap 18 · A carta na pensão   [dono: a dona da pensão]
+   1f      Dona Briar: Chegou isso. Pro seu nome de verdade, que eu não sabia que era esse.
+     A letra no envelope é de Ivo.  ƒ
+     ƒ d => `A letra no envelope é de ${nomeCasa()}.`
+     > Ler e responder na mesma noite.
+     > Guardar a carta fechada.
+
+### foragido · A carta na pensão > 1   [dono: a dona da pensão]
+     Três páginas. Você não conta onde está. Conta de cada um do time, pelo nome, e pergunta se a porta de casa ainda emperra.  ƒ
+     ƒ d => `Três páginas. Você não conta onde está. Conta de cada um do time, pelo nome, e pergunta se a porta de casa ainda emperra.`
+
+### foragido · A carta na pensão > 2   [dono: a dona da pensão]
+     Ela fica no fundo da mochila, ainda colada, junto do caderno.
+
+### foragido · cap 22 · O guarda que sabe   [dono: o guarda da ponte]
+     Na ponte, um guarda pede a sua licença, lê, olha pra você, lê de novo.
+   1f      o guarda da ponte: Tem um papel com um desenho parecido com você no posto.
+     > Esperar o que ele vai fazer.
+     > Contar a sua versão, inteira.
+
+### foragido · O guarda que sabe > 1   [dono: o guarda da ponte]
+     Ele devolve a licença.
+   1f      o guarda da ponte: O desenho errou o nariz.
+     Você passa.
+
+### foragido · O guarda que sabe > 2   [dono: o guarda da ponte]
+     Ele escuta em pé, sem anotar. No fim, tira o papel do bolso, dobra em quatro e joga no rio.
+
+### foragido · cap 26 · O depoimento   [dono: a dona da pensão]
+     Abre uma chance de você depor e acabar com o papel do poste de uma vez. Precisa ir até Saffron, entrar pela porta da frente e contar tudo.
+   1f      Dona Briar: Eu nunca perguntei a sua história. Agora acho que você devia contar.
+     > Ir a Saffron e depor.
+     > Continuar como está.
+
+### foragido · O depoimento > 1   [dono: a dona da pensão]
+     Leva a manhã inteira. Na saída, o poste da esquina está sem papel nenhum.
+
+### foragido · O depoimento > 2   [dono: a dona da pensão]
+     Você paga mais um mês adiantado na pensão. A dona pega o dinheiro e, dessa vez, não conta.
