@@ -30,7 +30,7 @@ const JEITOS_DA_CASA = {
       d => fala(nomeCasa(), 'Liga de noite que eu quero contar pra você o que todo mundo mandou dizer.')
     ],
     adeus: [
-      d => fala(nomeCasa(), 'Endireita essa mochila. Treinador desta casa sai de cabeça erguida.'),
+      d => fala(nomeCasa(), 'Endireita essa mochila. {Treinador|Treinadora} desta casa sai de cabeça erguida.'),
       d => fala(nomeCasa(), 'E quando alguém perguntar de onde você é, fala o nome da rua inteiro.', 'riso')
     ]
   },
@@ -40,7 +40,7 @@ const JEITOS_DA_CASA = {
       d => fala(nomeCasa(), 'Senta, senta. Fiz o dobro, porque treinador come o dobro. Li isso numa revista.', 'riso'),
       d => fala(nomeCasa(), 'Se sobrar eu dou pros Pidgey da calha, que eles também vão sentir a sua falta.')
     ],
-    pergunta: d => fala(nomeCasa(), 'E aí, qual é o plano? Campeão até o almoço ou só até o jantar?', 'riso'),
+    pergunta: d => fala(nomeCasa(), 'E aí, qual é o plano? {Campeão|Campeã} até o almoço ou só até o jantar?', 'riso'),
     verdade: [
       d => fala(nomeCasa(), 'Ótimo! Eu também não sabia nada na sua idade e olha que beleza que eu fiquei.', 'riso'),
       d => fala(nomeCasa(), 'Vai descobrindo. E me liga contando as partes engraçadas.')
@@ -160,7 +160,7 @@ const JEITOS_DA_CASA = {
       d => fala(nomeCasa(), 'Tô orgulhos{casa:a|o}. Pronto, falei. Não vou repetir.', 'baixo')
     ],
     adeus: [
-      d => fala(nomeCasa(), 'Liga quando chegar em Viridian. Não precisa falar muito. Fala que chegou.'),
+      d => fala(nomeCasa(), `Liga quando chegar ${d.jogador.cidade === 'Viridian' ? 'na próxima cidade' : 'em Viridian'}. Não precisa falar muito. Fala que chegou.`),
       d => fala(nomeCasa(), 'Vai.', null, 'E fica na porta até você virar a esquina, de braço cruzado, que é como esta casa abraça em público.')
     ]
   },
@@ -183,7 +183,7 @@ const JEITOS_DA_CASA = {
     ligacao: d => fala(nomeCasa(), 'Eu apertei o botão errado umas quatro vezes. A Perla que me ensinou.'),
     aniversario: [
       d => fala(nomeCasa(), 'FELIZ ANIVERSÁRIO! Ai, desculpa, tava no viva-voz. Feliz aniversário.', 'grita'),
-      d => fala(nomeCasa(), 'Eu mandei um presente pelo correio e acho que escrevi o endereço de Pallet errado, então se chegar um pacote estranho em algum lugar, é seu.', 'riso')
+      d => fala(nomeCasa(), 'Eu mandei um presente pelo correio e acho que escrevi o endereço errado, então se chegar um pacote estranho em algum lugar, é seu.', 'riso')
     ],
     adeus: [
       d => fala(nomeCasa(), 'Tem tudo? Tem. Eu acho. Tem a Pokébola? Tem o… tem. Tem tudo.', 'riso'),

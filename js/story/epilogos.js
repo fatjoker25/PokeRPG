@@ -56,7 +56,7 @@ const EPILOGOS = [
     'Você descobre, na terceira semana, que noventa por cento do trabalho não é batalhar. É dizer a alguém de doze anos que o problema não é o time.',
     'Quase nunca é o time.',
     'Você começa a anotar num caderno de capa dura quem passa, quem volta e quanto tempo demora entre as duas coisas. A média é catorze meses.',
-    'Na sua sala tem uma janela que dá pro corredor e não pro vale, e você nunca pediu pra trocar.',
+    'A sua sala no ginásio não tem janela, e você nunca pediu uma. Quem entra ali olha pra você, não pra fora.',
     'De vez em quando alguém chega com uma insígnia sua num cartão e não lembra do seu rosto, e tudo bem. A insígnia é que tinha que ficar.'
   ]
 },
@@ -153,9 +153,9 @@ const EPILOGOS = [
   id:'ep_auxiliar', peso:24, titulo:'CONTINUA MANDANDO',
   requer:d=>Cargos.tem('auxiliar') || Cargos.tem('treinador'),
   texto:[
-    'Você nunca virou nada com nome grande. Ficou treinador, e ficou bem.',
+    'Você nunca virou nada com nome grande. {Ficou treinador|Ficou treinadora}, e ficou bem.',
     'A licença renova todo ano numa fila de balcão, e todo ano a atendente pergunta se mudou alguma coisa no cadastro, e todo ano você diz que não.',
-    'O que mudou fica fora do cadastro: a Pokédex, que continua enchendo devagar; a agenda do aparelho azul, que virou uma lista de gente que atende quando você liga; e o cinto, que é o mesmo de sempre e nunca foi de seis.',
+    d=>`O que mudou fica fora do cadastro: a Pokédex, que continua enchendo devagar; a agenda do aparelho azul, que virou uma lista de gente que atende quando você liga; e o cinto, que é o mesmo de sempre${(d.time || []).filter(p => !p.morto).length >= 6 ? ' e pesa seis Pokébolas' : ' e nunca foi de seis'}.`,
     'Em Kanto tem umas quarenta pessoas que lembram do seu nome por um motivo específico. Nenhuma delas é famosa.',
     'É uma vida pequena e é inteiramente sua, e você não trocaria por nenhuma das outras — o que, tendo visto as outras de perto, é uma informação e não um consolo.'
   ]

@@ -152,6 +152,7 @@ const Aniversario = {
     const d = Estado.dados;
     const h = dataDoJogo(), n = nascimentoDe(d);
     d.aniversarios[h.ano] = true;
+    const primeiroFora = Object.values(d.aniversarios).filter(v => v === true).length <= 1;
     const idade = idadeJogador(d);
     const atrasado = !(h.mes === n.mes && h.dia === n.dia);
     const falas = [];
@@ -159,7 +160,7 @@ const Aniversario = {
       ? `Você só se dá conta no meio do caminho: o seu aniversário passou ${h.dia - n.dia === 1 && h.mes === n.mes ? 'ontem' : 'faz uns dias'}, no meio de tudo. ${cap1(porExtenso(idade))} anos.`
       : Dados.escolher([
           `Você acorda e demora um minuto pra lembrar que dia é hoje. ${cap1(porExtenso(idade))} anos.`,
-          `Hoje você faz ${porExtenso(idade)} anos, longe de casa pela primeira vez num aniversário.`,
+          `Hoje você faz ${porExtenso(idade)} anos, longe de casa${primeiroFora ? ' pela primeira vez num aniversário' : ''}.`,
           `${cap1(porExtenso(idade))} anos. Você conta nos dedos só pra ter certeza, e ninguém está olhando.`]));
 
     /* Comunicação é no PokéNav: com ele, a ligação de casa e as
@@ -240,7 +241,7 @@ function cap1(t){ return t.charAt(0).toUpperCase() + t.slice(1); }
 const PORTAS_DA_IDADE = [
   {id:'estiva', local:'vermilion', titulo:'A estiva do cais',
    quando:() => { const h = Estado.dados.relogio; sincronizarHora(h); return h.hora >= 5 && h.hora <= 11; },
-   foraDeHora:'A estiva contrata às cinco da manhã. Depois disso o cais já está cheio.'},
+   foraDeHora:'A estiva contrata das cinco às onze da manhã. Fora disso o cais já está cheio.'},
   {id:'cassino', local:'celadon', titulo:'O cassino da avenida',
    quando:() => true}
 ];
@@ -266,12 +267,12 @@ const PortasDaIdade = {
     Estado.registrar('Trabalhou um turno na estiva do cais de Vermilion.');
     Estado.salvar('auto');
     Exploracao.tela([
-      {tipo:'info', texto:'O capataz te põe de ajudante, que é como ele chama quem tem {idade} anos e pede serviço às cinco da manhã.'},
+      {tipo:'info', texto:'O capataz te põe de ajudante, que é como ele chama quem tem {idade} anos e aparece pedindo serviço de manhã.'},
       {tipo:'info', texto:{
         critico:'Você carrega no ritmo dos mais velhos desde a primeira hora. No fim do turno o capataz paga e pergunta se você volta amanhã.',
         sucesso:'Seis horas de saco, caixa e corda. O Machamp do cais carrega quatro de cada vez e você carrega uma, e todo mundo acha isso justo.',
         parcial:'Você aguenta o turno, mas pela metade do ritmo. O capataz paga a metade que você aguentou.',
-        falha:'No meio da manhã uma caixa escorrega e você segura com o ombro. Ele paga o que você fez e manda você pra casa.'}[t.grau]},
+        falha:'No meio do turno uma caixa escorrega e você segura com o ombro. Ele paga o que você fez e manda você embora.'}[t.grau]},
       {tipo:'item', texto:`+${fmtDin(paga)} ₽`}
     ]);
   },

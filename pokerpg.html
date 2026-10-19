@@ -28070,6 +28070,11 @@ function rivalDeveAparecer(cap){
 /* ============================================================
    FALAS — mudam com o arco, o placar e o que você fez
    ============================================================ */
+/* Onde o rival te acha: a saída do capítulo pode ser cidade, rota ou
+   caverna, e meio-fio, rua e Centro só existem na cidade. */
+function rivalNaCidade(){ const L = Mundo.atual(); return !!(L && L.tipo === 'cidade'); }
+function rivalComCentro(){ return typeof Exploracao !== 'undefined' && Exploracao.temCentro(Mundo.atual()); }
+
 function falaRival(){
   const d = Estado.dados;
   const r = rival();
@@ -28078,8 +28083,11 @@ function falaRival(){
   const L = [];
 
   if (arco === 'parceiro'){
-    L.push('"EI!" Ezra atravessa a rua correndo e quase é atropelado por uma bicicleta. "Cara, eu vi o teu nome numa parada e eu gritei no meio do Centro Pokémon."');
-    if (d.insignias.length) L.push(`"${d.insignias.filter(i=>i!=='Título de Campeão').length} insígnias. ${d.insignias.length>4?'CARA.':'Já?'}"`);
+    L.push(rivalNaCidade()
+      ? '"EI!" Ezra atravessa a rua correndo e quase é atropelado por uma bicicleta. "Cara, eu vi o teu nome no quadro de um Centro Pokémon e gritei no meio do saguão."'
+      : '"EI!" Ezra vem correndo pelo caminho e quase tropeça na própria mochila. "Cara, eu vi o teu nome no quadro de um Centro Pokémon e gritei no meio do saguão."');
+    const ins = d.insignias.filter(i=>i!=='Título de Campeão').length;
+    if (ins) L.push(`"${ins === 1 ? 'Uma insígnia' : ins + ' insígnias'}. ${ins > 4 ? 'CARA.' : 'Já?'}"`);
     if (d.cemiterio.length) L.push(`Ele fica sério de repente. "Eu soube ${pron(d.cemiterio[0]).do} ${nomeExib(d.cemiterio[0])}." Ele não sabe o que fazer com as mãos. "Desculpa. Eu não sei falar essas coisas."`);
     L.push(placar === 'perdendo'
       ? '"Eu perdi as últimas. Eu sei. Mas eu vim de novo, e eu vou vir de novo depois dessa."'
@@ -28093,7 +28101,7 @@ function falaRival(){
   }
 
   else if (arco === 'ressentido'){
-    L.push('Ezra está encostado num poste e não se mexe quando você passa. Ele espera você notar.');
+    L.push('Ezra está parado no caminho, de braços cruzados, e não se mexe quando você passa. Ele espera você notar.');
     L.push('"Oi." Ele não sorri. "Eu tenho treinado."');
     if (r.derrotas >= 2) L.push(`"${r.derrotas} a ${r.vitorias}. Eu sei de cor, não precisa falar."`);
     L.push('"Não precisa ser simpático. Eu não vim pra isso."');
@@ -28106,12 +28114,14 @@ function falaRival(){
     if (d.flags.trabalha_para_comissao || d.flags.conselheiro_da_comissao) L.push('"Eu li as atas. Tem o teu nome numa delas, numa lista de presença, do lado de gente que assina descarte."');
     if (d.flags.assumiu_a_rede) L.push('"Eu fui em Celadon. Eu vi o portão azul. Eu perguntei de quem era agora e eles falaram o teu nome."');
     if (Estado.rep.eixo==='ruim' && Estado.rep.ruim>=6) L.push(`"Tem gente com medo de você. Gente de verdade, não Pokémon."`);
-    L.push('"A gente se conheceu numa pedra na Rota 1. Eu tava lá desde as seis da manhã e você foi a primeira pessoa que passou."');
+    L.push('"A gente se conheceu numa pedra na Rota 1. Eu tava lá desde as seis da manhã e você foi a primeira pessoa que parou pra falar comigo."');
     L.push('"Eu vou te parar. Eu não sei se eu consigo. Mas alguém tem que estar aqui, e quem te conhece sou eu."');
   }
 
   else { // quebrado
-    L.push('Ezra está sentado no chão do Centro Pokémon, de costas para a porta, e demora pra virar.');
+    L.push(rivalComCentro()
+      ? 'Ezra está sentado no chão do Centro Pokémon, de costas para a porta, e demora pra virar.'
+      : 'Ezra está sentado no chão, encostado na mochila, e demora pra virar.');
     L.push('"Ah. Oi."');
     L.push(`"Eu perdi pra você ${r.derrotas} vezes." Ele diz o número sem drama. "Eu parei de contar como derrota faz um tempo. Agora eu conto como… sei lá. Estatística."`);
     L.push('"Eu vou lutar se você quiser. Eu só não vou fingir que eu acho que dá."');
@@ -28125,7 +28135,7 @@ function falaVitoriaRival(){   // você venceu
   const r = rival();
   const d = Estado.dados;
   if (arco === 'parceiro') return [
-    'Ezra recolhe o time e vem te abraçar antes de recolher, o que é a ordem errada e é muito a cara dele.',
+    'Ezra vem te abraçar antes de recolher o time, o que é a ordem errada e é muito a cara dele.',
     `Ele conta nos dedos, em voz alta: "${r.derrotas + 1} pra você. Eu vou chegar em você um dia. Não hoje. Mas eu vou."`,
     'Ele te dá metade do dinheiro que tem no bolso e não aceita não.'
   ];
@@ -28160,7 +28170,7 @@ function falaDerrotaRival(){   // ele venceu
   if (arco === 'parceiro') return [
     'Ezra ganha e fica genuinamente sem saber como comemorar na sua frente.',
     '"Foi sorte." Ele diz isso e nenhum dos dois acredita. "Foi sorte, cara."',
-    'Ele te acompanha até o Centro Pokémon e paga a sua sopa.'
+    'Ele te acompanha até o Centro mais perto e paga a sua sopa.'
   ];
   if (arco === 'ressentido') return [
     'Ele ganha e não comemora. Fica olhando o chão por um tempo longo.',
@@ -28235,7 +28245,7 @@ const RIVAIS_EXTRA = [
 
   fala:(d, r, arco) => {
     if (arco === 'inspirado') return [
-      'Lior está te esperando na saída da cidade com um caderno novo, de capa dura, e um Kabuto no ombro que não estava lá da outra vez.',
+      `Lior está te esperando ${rivalNaCidade() ? 'na saída da cidade' : 'no meio do caminho'} com um caderno novo, de capa dura, e um Kabuto no ombro que não estava lá da outra vez.`,
       r.encontros === 0
         ? '"Eu larguei a pedreira." Ele ri sozinho. "E depois eu voltei nela. Na velha, a que fechou."'
         : `"${r.derrotas} a ${r.vitorias}." Ele vira o caderno pra você. "Agora tem uma coluna de coisa que eu aprendi. Tá mais cheia que a outra."`,
@@ -28254,7 +28264,7 @@ const RIVAIS_EXTRA = [
       '"Voltei. Meio período." Ele não te olha direito. "Treino de noite, quando dá. Quase nunca dá."',
       '"Luta assim mesmo? Eu trouxe o que eu tenho."'
     ];
-    const L = ['Lior está sentado no meio-fio com um Geodude do lado, e o Geodude está sentado exatamente do mesmo jeito que ele.'];
+    const L = [`Lior está sentado ${rivalNaCidade() ? 'no meio-fio' : 'numa pedra do caminho'} com um Geodude do lado, e o Geodude está sentado exatamente do mesmo jeito que ele.`];
     L.push(r.encontros === 0
       ? '"Eu larguei." Ele diz isso antes de dizer oi. "Eu larguei a pedreira e a minha mãe ficou três semanas sem falar comigo, e eu larguei do mesmo jeito."'
       : `"${r.derrotas} a ${r.vitorias}." Ele fala o placar como quem fala a hora. "Eu anoto num caderno. Eu sei que é ridículo."`);
@@ -28288,7 +28298,7 @@ const RIVAIS_EXTRA = [
     'Ele anota no caderno, e a mão treme um pouco, e não é de cansaço.'
   ] : [
     'Lior ganha, e a primeira coisa que ele faz é olhar em volta pra ver se alguém viu.',
-    'Ninguém viu. Tem só vocês dois numa rua de cidade pequena.',
+    rivalNaCidade() ? 'Ninguém viu. Numa cidade inteira, ninguém olhou pra cá.' : 'Ninguém viu. Tem só vocês dois e o caminho.',
     `"Uma." Ele mostra o caderno pra você, aberto, com a coluna certa. "Uma de ${r.vitorias + 1}. Eu queria que a minha mãe tivesse visto essa."`
   ]
 },
@@ -28357,9 +28367,9 @@ const RIVAIS_EXTRA = [
     '"Combinado é combinado." Ele espera. Depois ri, sem graça. "Brincadeira. Eu não vendo pra você. Pra você não."'
   ] : [
     'Nolan ganha e não comemora na hora — ele leva uns três segundos pra acreditar.',
-    'Aí ele comemora. Muito. Alto. Sozinho, no meio da rua.',
+    `Aí ele comemora. Muito. Alto. Sozinho, no meio ${rivalNaCidade() ? 'da rua' : 'do caminho'}.`,
     '"EU GANHEI DE VOCÊ." Ele aponta pra você e depois pra ele. "EU. DE VOCÊ."',
-    'Ele vai te contar isso toda vez que se encontrarem pelo resto da vida, e você sabe disso agora.'
+    'Ele já está te contando o que acabou de acontecer, como se você não estivesse lá.'
   ]
 },
 {
@@ -28400,9 +28410,9 @@ const RIVAIS_EXTRA = [
     ];
     if (arco === 'quase') return [
       'Ele te reconhece e demora um segundo a mais do que o normal para decidir o que fazer com a cara.',
-      '"Deu certo." Ele diz. "Deu certo com atraso de cinco meses e o médico de Pokémon falou que atrasar teve custo, mas deu."',
+      '"Deu certo." Ele diz. "Deu certo com atraso, e o médico de Pokémon falou que atrasar teve custo, mas deu."',
       'O Rapidash manca. Não muito. O bastante.',
-      `"Eu não sei o que eu te devo." Ele fala isso honesto, sem acusar. "Você me deu cinco. Faltavam treze. Eu passei cinco meses juntando treze."`,
+      '"Eu não sei o que eu te devo." Ele fala isso honesto, sem acusar. "Você me deu cinco. Faltavam treze. Eu passei esse tempo todo juntando treze."',
       '"Então luta comigo e a gente descobre junto."'
     ];
     if (arco === 'companhia') return [
@@ -28502,7 +28512,7 @@ const RIVAIS_EXTRA = [
     ];
     const L = ['Otto não está escondido. Ele está parado no meio do caminho com as mãos vazias, o que é pior do que se estivessem cheias.'];
     L.push(r.encontros === 0
-      ? '"Você me custou dois." Ele não levanta a voz nenhuma vez, nesta nem nas próximas. "Dois que eu tinha pegado com a minha mão."'
+      ? '"Você me custou dois." Ele não levanta a voz nenhuma vez. "Dois que eu tinha pegado com a minha mão."'
       : `"${r.vitorias} a ${r.derrotas}." Ele sabe o placar de cor e você não gosta que ele saiba. "Eu tenho paciência. É o único talento que eu tenho de verdade."`);
     if (d.cemiterio.length) L.push(`"E eu soube do seu." Ele diz isso sem prazer nenhum, o que é o mais desagradável de tudo. "${nomeExib(d.cemiterio[0])}. Então você também perde Pokémon. A gente é mais parecido do que você aceita."`);
     if (Estado.rep.eixo === 'bom' && Estado.rep.bom >= 5) L.push('"Todo mundo fala bem de você agora. Isso facilita a minha vida: quem é conhecido é fácil de achar."');
@@ -28532,7 +28542,7 @@ const RIVAIS_EXTRA = [
     'Ele ganha e não comemora, porque comemorar seria admitir que era uma competição.',
     'Otto se agacha na sua frente, na altura dos seus olhos, e fala baixo.',
     '"A floresta não é sua." Ele se levanta. "Nunca foi."',
-    'Ele abre a sua mochila na sua frente, tira uma coisa qualquer de pouco valor, e leva. É sobre poder fazer isso.'
+    'Ele abre o bolso da frente da sua mochila na sua frente, tira o dinheiro que estava ali, e leva. É sobre poder fazer isso.'
   ]
 }
 ];
@@ -29053,7 +29063,7 @@ const TREINADORES_ESTRADA = [
 {id:'sammy', local:'floresta', classe:'Caçador de Insetos', arq:'bug_catcher', artigo:'um', nome:'Sammy',
  times:[[10,13,10], [11,14,167], [12,15,168,193], [12,15,168,205,214]], reserva:[46,48,165],
  abre:'"Cuidado onde pisa! Tem Weedle aqui. Tem Weedle em todo lugar. Luta comigo que eu te mostro qual é qual."',
- volta:'"Eu tava contando quantos passaram por aqui hoje. Você é o décimo nono. Luta?"',
+ volta:'"Eu tava contando quantos passaram por aqui hoje. Você é {o décimo nono|a décima nona}. Luta?"',
  perde:'"Perder pra quem sabe onde pisa é justo."',
  vence:'"Olha o chão, {moço|moça}. Olha sempre o chão."'},
 {id:'anthony', local:'floresta', classe:'Garoto', arq:'youngster', artigo:'um', nome:'Anthony',
@@ -29178,7 +29188,7 @@ const TREINADORES_ESTRADA = [
  times:[[74,95], [75,95,66], [75,95,67,111], [76,208,68,112,232]], reserva:[27,219],
  abre:'"Sente o cheiro? Tomada queimada. Ninguém sabe de onde vem. Eu parei de me perguntar e comecei a treinar."',
  volta:'"O cheiro continua. Eu também."',
- perde:'"Rapaz. Você tem braço."',
+ perde:'"Caramba. Você tem braço."',
  vence:'"Pedra sobre pedra, {moço|moça}."'},
 {id:'chris', local:'rota9', classe:'Campista', arq:'camper', artigo:'um', nome:'Chris',
  times:[[56,27], [56,28,66], [57,28,67,106], [57,28,68,107,237]], reserva:[236,207],
@@ -29394,7 +29404,7 @@ const TREINADORES_ESTRADA = [
  vence:'"O vento tava do meu lado."'},
 {id:'jaclyn', local:'rota13', classe:'Treinadora Ás', arq:'ace_trainer_f', artigo:'uma', nome:'Jaclyn', dif:2,
  times:[[29,58], [30,58,111], [30,59,112,131], [31,59,112,131,149]], reserva:[148,121,184],
- abre:'"Eu vou pra Fuchsia com sete insígnias e quero chegar com oito. Você é treino. Nada pessoal."',
+ abre:'"Eu vou pra Fuchsia com sete insígnias e quero sair de lá com oito. Você é treino. Nada pessoal."',
  volta:'"Ainda é treino. Agora um pouco pessoal."',
  perde:'"Anotado. Você vai pro caderno."',
  vence:'"Treino bom é treino que rende."',
@@ -29519,7 +29529,7 @@ const TREINADORES_ESTRADA = [
 /* ── Rota 23 ────────────────────────────────────────────── */
 {id:'rolando', local:'rota23', classe:'Treinador Ás', arq:'ace_trainer', artigo:'um', nome:'Rolando', dif:2,
  times:[[58,66,111], [59,67,112], [59,68,112,130], [59,68,112,130,149]], reserva:[248,212,227],
- abre:'"Posto de controle vazio há semanas. Eu fico aqui mesmo assim, de guarda informal. Mostra que você merece passar."',
+ abre:'"Esse posto de controle velho tá vazio há anos. Eu fico nele mesmo assim, de guarda informal. Mostra que você merece passar."',
  volta:'"Mostra de novo."',
  perde:'"Pode passar. De verdade."',
  vence:'"Ainda não. Volta com o time inteiro em pé."',
@@ -29718,7 +29728,7 @@ const CONTATOS = [
       const nome = w.onde ? (LOCAIS[w.onde] || {}).nome : null;
       const onde = w.parado ? 'Em Pallet, lavando a perua. Semana de folga, se ninguém ligar.'
         : w.voltando ? 'Na estrada, voltando pra Pallet. Liga de novo que eu tô dirigindo.'
-        : w.hoje ? ((sincronizarHora(d.relogio), d.relogio.hora) < 17 ? `Hoje? Hoje eu tô em ${nome}, na praça, até as cinco.` : `Hoje eu fiquei em ${nome}, na praça, até as cinco. Agora tô fechando a perua.`)
+        : w.hoje ? ((sincronizarHora(d.relogio), d.relogio.hora) < 12 ? `Hoje? Hoje eu tô em ${nome}, na praça, até o meio-dia.` : `Hoje eu fiquei em ${nome}, na praça, até o meio-dia. Agora tô na estrada.`)
         : w.proximo ? `Saí de ${nome} faz pouco. Dia ${w.proximo.dia} eu tô em ${(LOCAIS[w.proximo.onde] || {}).nome}.`
         : `Saí de ${nome} faz pouco.`;
       return [
@@ -37512,7 +37522,7 @@ const EVENTOS_GERAIS = [
     const quando = DIA_DA_PERUA[Mundo.id()];
     if (!quando) return false;
     sincronizarHora(d.relogio);
-    return Calendario.diaDoMes() === quando && d.relogio.hora >= 6 && d.relogio.hora <= 17;
+    return Calendario.diaDoMes() === quando && d.relogio.hora >= 6 && d.relogio.hora <= 11;
   },
   titulo:'A perua na praça',
   texto:[
@@ -38803,7 +38813,7 @@ const JEITOS_DA_CASA = {
       d => fala(nomeCasa(), 'Liga de noite que eu quero contar pra você o que todo mundo mandou dizer.')
     ],
     adeus: [
-      d => fala(nomeCasa(), 'Endireita essa mochila. Treinador desta casa sai de cabeça erguida.'),
+      d => fala(nomeCasa(), 'Endireita essa mochila. {Treinador|Treinadora} desta casa sai de cabeça erguida.'),
       d => fala(nomeCasa(), 'E quando alguém perguntar de onde você é, fala o nome da rua inteiro.', 'riso')
     ]
   },
@@ -38813,7 +38823,7 @@ const JEITOS_DA_CASA = {
       d => fala(nomeCasa(), 'Senta, senta. Fiz o dobro, porque treinador come o dobro. Li isso numa revista.', 'riso'),
       d => fala(nomeCasa(), 'Se sobrar eu dou pros Pidgey da calha, que eles também vão sentir a sua falta.')
     ],
-    pergunta: d => fala(nomeCasa(), 'E aí, qual é o plano? Campeão até o almoço ou só até o jantar?', 'riso'),
+    pergunta: d => fala(nomeCasa(), 'E aí, qual é o plano? {Campeão|Campeã} até o almoço ou só até o jantar?', 'riso'),
     verdade: [
       d => fala(nomeCasa(), 'Ótimo! Eu também não sabia nada na sua idade e olha que beleza que eu fiquei.', 'riso'),
       d => fala(nomeCasa(), 'Vai descobrindo. E me liga contando as partes engraçadas.')
@@ -38933,7 +38943,7 @@ const JEITOS_DA_CASA = {
       d => fala(nomeCasa(), 'Tô orgulhos{casa:a|o}. Pronto, falei. Não vou repetir.', 'baixo')
     ],
     adeus: [
-      d => fala(nomeCasa(), 'Liga quando chegar em Viridian. Não precisa falar muito. Fala que chegou.'),
+      d => fala(nomeCasa(), `Liga quando chegar ${d.jogador.cidade === 'Viridian' ? 'na próxima cidade' : 'em Viridian'}. Não precisa falar muito. Fala que chegou.`),
       d => fala(nomeCasa(), 'Vai.', null, 'E fica na porta até você virar a esquina, de braço cruzado, que é como esta casa abraça em público.')
     ]
   },
@@ -38956,7 +38966,7 @@ const JEITOS_DA_CASA = {
     ligacao: d => fala(nomeCasa(), 'Eu apertei o botão errado umas quatro vezes. A Perla que me ensinou.'),
     aniversario: [
       d => fala(nomeCasa(), 'FELIZ ANIVERSÁRIO! Ai, desculpa, tava no viva-voz. Feliz aniversário.', 'grita'),
-      d => fala(nomeCasa(), 'Eu mandei um presente pelo correio e acho que escrevi o endereço de Pallet errado, então se chegar um pacote estranho em algum lugar, é seu.', 'riso')
+      d => fala(nomeCasa(), 'Eu mandei um presente pelo correio e acho que escrevi o endereço errado, então se chegar um pacote estranho em algum lugar, é seu.', 'riso')
     ],
     adeus: [
       d => fala(nomeCasa(), 'Tem tudo? Tem. Eu acho. Tem a Pokébola? Tem o… tem. Tem tudo.', 'riso'),
@@ -39618,9 +39628,10 @@ function textoDoAcampamento(ambiente, grau){
    dia não repete.
    ============================================================ */
 
-/* A volta da perua do laboratório: dia do mês em cada cidade.
-   É o que o Célio conta no capítulo 1, e é o que vale no mural,
-   no PokéNav e na praça. */
+/* A volta da perua do laboratório: dia do mês em cada cidade, de
+   manhã, até o meio-dia (o Célio fecha o portamalas ao meio-dia e
+   pega a estrada). É o que ele conta no capítulo 1, e é o que vale no
+   mural, no PokéNav e na praça. */
 const DIA_DA_PERUA = {pallet:1, viridian:2, pewter:4, cerulean:6, vermilion:8,
                       lavender:10, celadon:12, saffron:14, fuchsia:15, cinnabar:16};
 
@@ -39643,8 +39654,8 @@ const AGENDA = [
   /* ── a perua do laboratório: uma por cidade ── */
   ...Object.entries(DIA_DA_PERUA).map(([cidade, n]) => ({
     id:'perua_' + cidade, local:cidade, mural:cidade,
-    quando:() => Calendario.diaDoMes() === n && _entre(6, 17),
-    anuncio:{t:`A perua do Laboratório de Pallet passa aqui todo dia ${n}, das 8h às 17h, na praça. Inscrição feita: traga documento e quem assinou.`,
+    quando:() => Calendario.diaDoMes() === n && _entre(6, 11),
+    anuncio:{t:`A perua do Laboratório de Pallet passa aqui todo dia ${n}, de manhã, na praça, e sai ao meio-dia em ponto. Inscrição feita: traga documento e quem assinou.`,
              nota:'impresso, com o carimbo verde do laboratório e o dia escrito à mão por cima de outro dia riscado'},
     titulo:'A perua do laboratório, na praça',
     fazer(){
@@ -39989,6 +40000,7 @@ const Aniversario = {
     const d = Estado.dados;
     const h = dataDoJogo(), n = nascimentoDe(d);
     d.aniversarios[h.ano] = true;
+    const primeiroFora = Object.values(d.aniversarios).filter(v => v === true).length <= 1;
     const idade = idadeJogador(d);
     const atrasado = !(h.mes === n.mes && h.dia === n.dia);
     const falas = [];
@@ -39996,7 +40008,7 @@ const Aniversario = {
       ? `Você só se dá conta no meio do caminho: o seu aniversário passou ${h.dia - n.dia === 1 && h.mes === n.mes ? 'ontem' : 'faz uns dias'}, no meio de tudo. ${cap1(porExtenso(idade))} anos.`
       : Dados.escolher([
           `Você acorda e demora um minuto pra lembrar que dia é hoje. ${cap1(porExtenso(idade))} anos.`,
-          `Hoje você faz ${porExtenso(idade)} anos, longe de casa pela primeira vez num aniversário.`,
+          `Hoje você faz ${porExtenso(idade)} anos, longe de casa${primeiroFora ? ' pela primeira vez num aniversário' : ''}.`,
           `${cap1(porExtenso(idade))} anos. Você conta nos dedos só pra ter certeza, e ninguém está olhando.`]));
 
     /* Comunicação é no PokéNav: com ele, a ligação de casa e as
@@ -40077,7 +40089,7 @@ function cap1(t){ return t.charAt(0).toUpperCase() + t.slice(1); }
 const PORTAS_DA_IDADE = [
   {id:'estiva', local:'vermilion', titulo:'A estiva do cais',
    quando:() => { const h = Estado.dados.relogio; sincronizarHora(h); return h.hora >= 5 && h.hora <= 11; },
-   foraDeHora:'A estiva contrata às cinco da manhã. Depois disso o cais já está cheio.'},
+   foraDeHora:'A estiva contrata das cinco às onze da manhã. Fora disso o cais já está cheio.'},
   {id:'cassino', local:'celadon', titulo:'O cassino da avenida',
    quando:() => true}
 ];
@@ -40103,12 +40115,12 @@ const PortasDaIdade = {
     Estado.registrar('Trabalhou um turno na estiva do cais de Vermilion.');
     Estado.salvar('auto');
     Exploracao.tela([
-      {tipo:'info', texto:'O capataz te põe de ajudante, que é como ele chama quem tem {idade} anos e pede serviço às cinco da manhã.'},
+      {tipo:'info', texto:'O capataz te põe de ajudante, que é como ele chama quem tem {idade} anos e aparece pedindo serviço de manhã.'},
       {tipo:'info', texto:{
         critico:'Você carrega no ritmo dos mais velhos desde a primeira hora. No fim do turno o capataz paga e pergunta se você volta amanhã.',
         sucesso:'Seis horas de saco, caixa e corda. O Machamp do cais carrega quatro de cada vez e você carrega uma, e todo mundo acha isso justo.',
         parcial:'Você aguenta o turno, mas pela metade do ritmo. O capataz paga a metade que você aguentou.',
-        falha:'No meio da manhã uma caixa escorrega e você segura com o ombro. Ele paga o que você fez e manda você pra casa.'}[t.grau]},
+        falha:'No meio do turno uma caixa escorrega e você segura com o ombro. Ele paga o que você fez e manda você embora.'}[t.grau]},
       {tipo:'item', texto:`+${fmtDin(paga)} ₽`}
     ]);
   },
@@ -115417,7 +115429,7 @@ const EPILOGOS = [
     'Você descobre, na terceira semana, que noventa por cento do trabalho não é batalhar. É dizer a alguém de doze anos que o problema não é o time.',
     'Quase nunca é o time.',
     'Você começa a anotar num caderno de capa dura quem passa, quem volta e quanto tempo demora entre as duas coisas. A média é catorze meses.',
-    'Na sua sala tem uma janela que dá pro corredor e não pro vale, e você nunca pediu pra trocar.',
+    'A sua sala no ginásio não tem janela, e você nunca pediu uma. Quem entra ali olha pra você, não pra fora.',
     'De vez em quando alguém chega com uma insígnia sua num cartão e não lembra do seu rosto, e tudo bem. A insígnia é que tinha que ficar.'
   ]
 },
@@ -115514,9 +115526,9 @@ const EPILOGOS = [
   id:'ep_auxiliar', peso:24, titulo:'CONTINUA MANDANDO',
   requer:d=>Cargos.tem('auxiliar') || Cargos.tem('treinador'),
   texto:[
-    'Você nunca virou nada com nome grande. Ficou treinador, e ficou bem.',
+    'Você nunca virou nada com nome grande. {Ficou treinador|Ficou treinadora}, e ficou bem.',
     'A licença renova todo ano numa fila de balcão, e todo ano a atendente pergunta se mudou alguma coisa no cadastro, e todo ano você diz que não.',
-    'O que mudou fica fora do cadastro: a Pokédex, que continua enchendo devagar; a agenda do aparelho azul, que virou uma lista de gente que atende quando você liga; e o cinto, que é o mesmo de sempre e nunca foi de seis.',
+    d=>`O que mudou fica fora do cadastro: a Pokédex, que continua enchendo devagar; a agenda do aparelho azul, que virou uma lista de gente que atende quando você liga; e o cinto, que é o mesmo de sempre${(d.time || []).filter(p => !p.morto).length >= 6 ? ' e pesa seis Pokébolas' : ' e nunca foi de seis'}.`,
     'Em Kanto tem umas quarenta pessoas que lembram do seu nome por um motivo específico. Nenhuma delas é famosa.',
     'É uma vida pequena e é inteiramente sua, e você não trocaria por nenhuma das outras — o que, tendo visto as outras de perto, é uma informação e não um consolo.'
   ]

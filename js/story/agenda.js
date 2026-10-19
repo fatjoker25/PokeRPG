@@ -7,9 +7,10 @@
    dia não repete.
    ============================================================ */
 
-/* A volta da perua do laboratório: dia do mês em cada cidade.
-   É o que o Célio conta no capítulo 1, e é o que vale no mural,
-   no PokéNav e na praça. */
+/* A volta da perua do laboratório: dia do mês em cada cidade, de
+   manhã, até o meio-dia (o Célio fecha o portamalas ao meio-dia e
+   pega a estrada). É o que ele conta no capítulo 1, e é o que vale no
+   mural, no PokéNav e na praça. */
 const DIA_DA_PERUA = {pallet:1, viridian:2, pewter:4, cerulean:6, vermilion:8,
                       lavender:10, celadon:12, saffron:14, fuchsia:15, cinnabar:16};
 
@@ -32,8 +33,8 @@ const AGENDA = [
   /* ── a perua do laboratório: uma por cidade ── */
   ...Object.entries(DIA_DA_PERUA).map(([cidade, n]) => ({
     id:'perua_' + cidade, local:cidade, mural:cidade,
-    quando:() => Calendario.diaDoMes() === n && _entre(6, 17),
-    anuncio:{t:`A perua do Laboratório de Pallet passa aqui todo dia ${n}, das 8h às 17h, na praça. Inscrição feita: traga documento e quem assinou.`,
+    quando:() => Calendario.diaDoMes() === n && _entre(6, 11),
+    anuncio:{t:`A perua do Laboratório de Pallet passa aqui todo dia ${n}, de manhã, na praça, e sai ao meio-dia em ponto. Inscrição feita: traga documento e quem assinou.`,
              nota:'impresso, com o carimbo verde do laboratório e o dia escrito à mão por cima de outro dia riscado'},
     titulo:'A perua do laboratório, na praça',
     fazer(){

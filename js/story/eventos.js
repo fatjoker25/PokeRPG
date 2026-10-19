@@ -1161,7 +1161,7 @@ const EVENTOS_GERAIS = [
     const quando = DIA_DA_PERUA[Mundo.id()];
     if (!quando) return false;
     sincronizarHora(d.relogio);
-    return Calendario.diaDoMes() === quando && d.relogio.hora >= 6 && d.relogio.hora <= 17;
+    return Calendario.diaDoMes() === quando && d.relogio.hora >= 6 && d.relogio.hora <= 11;
   },
   titulo:'A perua na praça',
   texto:[
