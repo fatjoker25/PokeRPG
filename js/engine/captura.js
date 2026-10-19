@@ -52,9 +52,9 @@ const Captura = {
     // ---- QUEBRA-BOLAS: Mewtwo e Ho-Oh
     if (QUEBRA_BOLA.includes(alvo.dex)){
       const d = Dados.d20('A Pokébola aguenta?');
-      ev('info', `${esp.nome} é forte demais para uma Pokébola comum suportar. 1d20 = ${d} (1-5 quebra)`);
+      ev('info', `${nomeVisivel(alvo)} é forte demais para uma Pokébola comum suportar. 1d20 = ${d} (1-5 quebra)`);
       if (d <= 5){
-        ev('perigo', `A esfera racha no ar. Um estalo seco — e ${esp.nome} está livre, com os olhos em você.`);
+        ev('perigo', `A esfera racha no ar. Um estalo seco — e ${nomeVisivel(alvo)} está livre, com os olhos em você.`);
         const L = Estado.lend(alvo.dex);
         L.disposicao = 'hostil';
         L.quebrouBola = true;
@@ -143,7 +143,8 @@ const Captura = {
       anima('captura', 3);
       return this.concluir(alvo, nomeBola, eventos);
     }
-    ev('erro', `${alvo.nome} escapou da Pokébola!`);
+    /* o nome que a tela mostra: espécie não catalogada continua "???" */
+    ev('erro', `${nomeVisivel(alvo)} escapou da Pokébola!`);
     anima('escapou', sacudidas);
     return {eventos, capturou:false};
   },
@@ -168,7 +169,7 @@ const Captura = {
     alvo.capturadoEm = {cap:Estado.dados.capitulo, bola:nomeBola, dia:Estado.dados.relogio.dia};
     alvo.moral = esp.lendario ? 10 : 40;
     const destino = Estado.adicionar(alvo);
-    ev('captura', `${esp.nome} (Nv ${alvo.nivel}) foi capturado!` + (destino === 'pc' ? ' Foi direto para o PC — seu time está cheio.' : ''));
+    ev('captura', `${esp.nome} (Nv ${alvo.nivel}) foi capturad${pron(alvo).o}!` + (destino === 'pc' ? ' Foi direto para o PC — seu time está cheio.' : ''));
     Estado.registrar(`Capturou ${esp.nome} Nv${alvo.nivel} com ${nomeBola}.`);
     if (alvo.shiny){
       Estado.pegouBrilhante(alvo.dex);

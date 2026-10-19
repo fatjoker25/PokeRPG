@@ -765,6 +765,14 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
    que é o lado que cresce — lista de tipos, lista de golpes. */
 .linha .k{color:var(--texto-fraco);flex:0 0 auto;white-space:nowrap}
 .linha .v{font-family:var(--mono);text-align:right;min-width:0;overflow-wrap:anywhere}
+/* Linha de rótulo comprido (o chaveamento do torneio e da Conferência,
+   os capítulos e as decisões da sua rota): o rótulo quebra e o valor
+   fica inteiro na direita. Com o rótulo sem quebra da linha comum, no
+   celular o "agora" virava uma coluna de letras e o resto saía da tela. */
+.linha.longa{align-items:flex-start}
+.linha.longa .k{white-space:normal;flex:1 1 auto;min-width:0}
+.linha.longa .k .fraco{display:block;margin-top:2px;font-size:12.5px}
+.linha.longa .v{flex:0 0 auto;white-space:nowrap}
 
 .rep-barra{height:8px;background:var(--bg);border:1px solid var(--borda);border-radius:5px;overflow:hidden;margin-top:7px}
 .rep-barra i{display:block;height:100%;transition:width .6s var(--suave);border-radius:4px}
@@ -2886,6 +2894,20 @@ body.com-cenario .topo{
 .nav-conversa .fala .fala-diz,.nav-conversa .fala p{color:#14243a}
 .nav-conversa .fala .fala-quem{color:#1d4f8a}
 .nav-conversa > p{color:#1f3550}
+/* Tom no aparelho: o PokéNav é claro, então o tom vai na borda e no
+   nome, nunca no fundo. Com o fundo escuro do tom (.narrativa .fala.grita
+   ganha de .nav-conversa .fala), a letra escura do aparelho sumia:
+   "Oi! Oi, é você?" virava uma faixa preta. */
+.nav-conversa.narrativa .fala.grita, .nav-conversa.narrativa .fala.baixo,
+.nav-conversa.narrativa .fala.riso, .nav-conversa.narrativa .fala.frio{background:#ffffff}
+.nav-conversa.narrativa .fala.grita{border-color:#e2a9a3;border-left-color:#c0392b}
+.nav-conversa.narrativa .fala.grita .fala-quem{color:#b03a2e}
+.nav-conversa.narrativa .fala.baixo{border-color:#c4d2e2;border-left-color:#8aa0b8}
+.nav-conversa.narrativa .fala.baixo .fala-quem{color:#5a6f88}
+.nav-conversa.narrativa .fala.riso{border-color:#a7d6a9;border-left-color:#3f9a45}
+.nav-conversa.narrativa .fala.riso .fala-quem{color:#2f7d36}
+.nav-conversa.narrativa .fala.frio{border-color:#c4d2e2;border-left-color:#7f96b5}
+.nav-conversa.narrativa .fala.frio .fala-quem{color:#4f6888}
 
 /* mural: de longe os papéis são títulos; clicar chega perto de um */
 button.bilhete{font:inherit;border:0;text-align:left;cursor:pointer;width:100%}
@@ -3250,6 +3272,13 @@ svg.icone{flex:0 0 auto;width:18px;height:18px;vertical-align:-3px}
   background:var(--bg);box-shadow:inset 0 0 0 1px var(--borda-forte);
 }
 .escolha[data-tecla]::before{content:attr(data-tecla)}
+/* Opção solta numa janela (o Centro, "Qual Pokébola?", "Em quem?",
+   "Equipar em quem?"): a mesma linha de menu do resto do jogo, de ponta
+   a ponta e com folga. Sem isto cada botão tinha a largura do próprio
+   texto e encostava no de baixo. */
+.modal-corpo > .escolha{width:100%}
+.modal-corpo > .escolha:not(.com-icone){display:block}
+.modal-corpo > .escolha + .escolha{margin-top:7px}
 .escolha::after{width:auto;right:auto;left:0;background:none;transform:none;
   content:'▶';top:50%;bottom:auto;left:4px;translate:-4px -50%;
   font-size:10px;color:var(--destaque);opacity:0;

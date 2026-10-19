@@ -201,9 +201,11 @@ const UI = {
     </div>` + this.htmlBandeja();
   },
 
-  /* bandeja livre: rolar por rolar, sem efeito nenhum no jogo */
+  /* bandeja livre: rolar por rolar, sem efeito nenhum no jogo. Só d6,
+     o dado do Pokérole: d20, d10 e d4 aqui eram resto do sistema antigo
+     e diziam o contrário da folha de regras. */
   htmlBandeja(){
-    const d = [20,10,6,4].map(f =>
+    const d = [6,6,6].map(f =>
       `<button class="dado d${f} livre" data-faces="${f}" data-v="?"
         title="Girar um d${f}" onclick="UI.girarLivre(this)">
         <span class="face">?</span><span class="rot">d${f}</span>
@@ -220,7 +222,7 @@ const UI = {
     this._tumbar(el, faces, alvo);
   },
   girarLivre(el){
-    const faces = parseInt(el.dataset.faces, 10) || 20;
+    const faces = parseInt(el.dataset.faces, 10) || 6;
     const v = Math.floor(Math.random() * faces) + 1;
     el.dataset.v = v;
     el.classList.toggle('max', v === faces);
@@ -2948,10 +2950,10 @@ const UI = {
       'Um grupo de treinadores acampa na curva e te chama pra comer. Você come. Ninguém pergunta o seu nome e isso é uma gentileza.'
     ];
     const cansaço = [
-      'Chega com o pé doendo de um jeito específico que você vai passar a conhecer bem.',
+      'Chega com o pé doendo num lugar específico do calcanhar, sempre o mesmo.',
       'Chega com poeira até dentro da mochila.',
       'Chega com fome e com aquela irritação de quem andou demais.',
-      'Chega inteiro, o que é mais do que muita gente consegue.'
+      'Chega inteir{o|a}, o que é mais do que muita gente consegue.'
     ];
 
     const linhas = [];
@@ -3020,7 +3022,6 @@ const UI = {
     this.add(this.topo());
     const r = rival();
     const arco = arcoRival();
-    const A = ARCOS_RIVAL[arco];
     const time = timeRival();
     const cor = {parceiro:'var(--bom)', rival:'var(--destaque)', ressentido:'var(--ruim)',
                  perseguidor:'var(--perigo)', quebrado:'var(--texto-fraco)'}[arco];
@@ -3029,7 +3030,7 @@ const UI = {
       <div class="cap-cabecalho" style="border-left-color:${cor}">
         <div class="num">Na estrada</div>
         <div class="tit">${this.esc(r.nome)}</div>
-        <div class="loc" style="color:${cor}">${this.esc(A.nome)} — ${this.esc(A.resumo)}</div>
+        <div class="loc">${this.esc((LOCAIS[Mundo.id()] || {}).nome || 'Kanto')}</div>
       </div>
       <div class="narrativa">${this.narrarMonologo(falaRival(), r.nome)}</div>
       <div class="linha" style="margin-top:14px"><span class="k">Placar entre vocês</span>
@@ -3058,11 +3059,11 @@ const UI = {
       <div class="cap-cabecalho" style="border-left-color:${cor}">
         <div class="num">Na estrada</div>
         <div class="tit">${this.esc(R.nome)}</div>
-        <div class="loc" style="color:${cor}">${this.esc(R.desde)} — ${this.esc(R.origem)}</div>
+        <div class="loc">${this.esc((LOCAIS[Mundo.id()] || {}).nome || 'Kanto')}</div>
       </div>
       <div class="narrativa">${this.narrarMonologo(falaRivalExtra(R), R.nome)}</div>
       <div class="linha" style="margin-top:14px"><span class="k">Placar entre vocês</span>
-        <span class="v">você ${reg.derrotas} × ${reg.vitorias} ${R.nome === 'Nolan' ? 'ele' : 'ele'}</span></div>
+        <span class="v">você ${reg.derrotas} × ${reg.vitorias} ele</span></div>
       <div class="linha"><span class="k">Time dele agora</span>
         <span class="v">${this.esc(time.map(p=>p.nome+' Nv'+p.nivel).join(', '))}</span></div>
       <div id="escolhas" class="escolhas" style="margin-top:20px">
@@ -3187,7 +3188,7 @@ const UI = {
     const chave = t.adversarios.map((a,i) => {
       const est = i < t.rodada ? '✓ vencido' : (i === t.rodada ? 'agora' : 'aguardando');
       const cor = i < t.rodada ? 'var(--bom)' : (i === t.rodada ? 'var(--destaque)' : 'var(--texto-fraco)');
-      return `<div class="linha"><span class="k">${PREMIO_TORNEIO[i].rodada} · ${this.esc(a.nome)}
+      return `<div class="linha longa"><span class="k">${PREMIO_TORNEIO[i].rodada} · ${this.esc(a.nome)}
         <span class="fraco">${a.time.map(p=>p.nome+' Nv'+p.nivel).join(', ')}</span></span>
         <span class="v" style="color:${cor}">${est}</span></div>`;
     }).join('');
@@ -3219,7 +3220,7 @@ const UI = {
       const conhece = Veteranos.registro(id).conheceu;
       const est = i < c.rodada ? '✓ vencido' : (i === c.rodada ? 'agora' : 'aguardando');
       const cor = i < c.rodada ? 'var(--bom)' : (i === c.rodada ? 'var(--destaque)' : 'var(--texto-fraco)');
-      return `<div class="linha"><span class="k">${PREMIO_CONFERENCIA[i].rodada} · ${this.esc(nomeDeLuta(v))}
+      return `<div class="linha longa"><span class="k">${PREMIO_CONFERENCIA[i].rodada} · ${this.esc(nomeDeLuta(v))}
         <span class="fraco">${conhece ? this.esc((LOCAIS[v.local] || {}).nome || '') : 'nunca se viram'}</span></span>
         <span class="v" style="color:${cor}">${est}</span></div>`;
     }).join('');
@@ -3325,7 +3326,7 @@ const UI = {
       </div>
       <div style="text-align:left;max-width:610px;margin:26px auto 0">
         <h3>Finais descobertos — ${codice.length} de ${totalFinais}</h3>
-        ${codice.map(f=>`<div class="linha"><span class="k">${this.esc(f.titulo)}</span><span class="v">${f.titulo===final.titulo?'agora':'✓'}</span></div>`).join('')}
+        ${codice.map(f=>`<div class="linha longa"><span class="k">${this.esc(f.titulo)}</span><span class="v">${f.titulo===final.titulo?'agora':'✓'}</span></div>`).join('')}
         <p class="sussurro">Escolhas diferentes levam a finais diferentes. A campanha tem ${totalFinais}.</p>
       </div>
       <div style="margin-top:34px">
@@ -3632,8 +3633,8 @@ const UI = {
     const esp = DEX[p.dex] || {};
     const num = String(p.dex).padStart(3, '0');
     const t1 = COR_TIPO[p.tipos[0]] || '#8a8f99', t2 = COR_TIPO[p.tipos[1] || p.tipos[0]] || t1;
-    const dl = pares => `<dl class="sm-dl">${pares.filter(x => x && x[1] != null && x[1] !== '')
-      .map(([k, v]) => `<dt>${e(k)}</dt><dd>${v}</dd>`).join('')}</dl>`;
+    const dl = pares => { const l = pares.filter(x => x && x[1] != null && x[1] !== '')
+      .map(([k, v]) => `<dt>${e(k)}</dt><dd>${v}</dd>`).join(''); return l ? `<dl class="sm-dl">${l}</dl>` : ''; };
     const bloco = (titulo, html, nota) => html ? `<section class="sm-bloco">
         <h4>${e(titulo)}${nota ? ` <span class="sm-h-nota">${e(nota)}</span>` : ''}</h4>${html}</section>` : '';
 
@@ -4243,8 +4244,9 @@ const UI = {
     const atual = tem(aba) ? aba : (tem(this._abaFicha) ? this._abaFicha : 'perfil');
     this._abaFicha = atual;
     const e = s => this.esc(s), M = s => this.esc(maiuscula(s));
-    const dl = pares => `<dl class="ficha-dl">${pares.filter(p => p && p[1] != null && p[1] !== '')
-      .map(([k, v]) => `<dt>${e(k)}</dt><dd>${v}</dd>`).join('')}</dl>`;
+    /* sem linha nenhuma, não tem lista: o bloco some, em vez de mostrar o título sozinho */
+    const dl = pares => { const l = pares.filter(p => p && p[1] != null && p[1] !== '')
+      .map(([k, v]) => `<dt>${e(k)}</dt><dd>${v}</dd>`).join(''); return l ? `<dl class="ficha-dl">${l}</dl>` : ''; };
     const bloco = (titulo, html, nota) => html ? `<section class="fi-bloco">
         <h4>${e(titulo)}${nota ? ` <span class="ficha-h-nota">${e(nota)}</span>` : ''}</h4>${html}</section>` : '';
 
@@ -4609,7 +4611,11 @@ const UI = {
         <div class="linha"><span class="k">Taxa de captura</span><span class="v">${esp.captura} <span class="fraco">(quanto maior, mais fácil)</span></span></div>
         <div class="linha"><span class="k">Sexo</span><span class="v">${this.esc(proporcaoGenero(dex))}</span></div>
         <div class="linha"><span class="k">Evolução</span><span class="v">${esp.evo
-          ? this.esc(DEX[esp.evo].nome) + (esp.nivelEvo ? ' — nível ' + esp.nivelEvo : ' — por pedra ou troca')
+          ? this.esc(DEX[esp.evo].nome) + (esp.nivelEvo ? ' — nível ' + esp.nivelEvo
+              /* o jeito, sem dizer qual pedra: isso o jogador descobre */
+              : Object.values(PEDRAS).some(m => m[dex]) ? ' — por pedra'
+              : EVO_TROCA[dex] ? ' — por troca'
+              : ' — por pedra ou troca')
           : 'forma final'}</span></div>
         <div class="linha"><span class="k">Classificação</span><span class="v">${esp.lendario ? 'lendário' : 'comum'}</span></div>
         ${Estado.brilhanteDe(dex) ? `<div class="linha"><span class="k">Anomalia cromática</span><span class="v brilho-v">✦ ${Estado.brilhanteDe(dex) === 'capturado' ? 'exemplar brilhante no seu registro' : 'um exemplar brilhante avistado'}</span></div>` : ''}
@@ -4677,16 +4683,22 @@ const UI = {
 
   modalRota(){
     const d = Estado.dados;
-    const percorridos = CAPITULOS.filter(c => c.num <= d.capitulo);
-    const pulados = Historia.capitulosPulados();
+    /* o que você viveu, na ordem em que viveu: os fechados e o de agora.
+       Pelo número ("todo capítulo até o atual") entravam os dez capítulos
+       de caminho do 12 de uma vez, e nenhum condicional que você viveu.
+       E o que não aconteceu não aparece: quem não passou por um desvio
+       nunca fica sabendo que ele existia (condicionais.js). */
+    const fechados = d.capitulosFechados || [];
+    const percorridos = fechados.concat(fechados.includes(d.capitulo) ? [] : [d.capitulo])
+      .map(n => CAPITULOS.find(c => c.num === n)).filter(Boolean);
+    const rotulo = c => c.caminho ? `${numeroDoCapitulo(c)} — ${c.titulo}` : `${c.num}. ${c.titulo}`;
     this.modal('A sua rota', `
       <div class="linha"><span class="k">Rota narrativa</span><span class="v">${this.esc(NOME_VIA[d.via]||d.via||'neutro')}</span></div>
       <h3>Capítulos vividos</h3>
-      ${percorridos.map(c=>`<div class="linha"><span class="k">${c.num}. ${this.esc(c.titulo)}</span><span class="v">${this.esc(c.tom)}</span></div>`).join('')}
-      ${pulados.length ? '<h3>O que não aconteceu nesta jornada</h3>' + pulados.map(t=>`<div class="linha"><span class="k">${this.esc(t)}</span><span class="v">—</span></div>`).join('') : ''}
+      ${percorridos.map(c=>`<div class="linha longa"><span class="k">${this.esc(rotulo(c))}</span><span class="v">${this.esc(c.tom || '')}</span></div>`).join('')}
       <h3>Decisões que o mundo registrou</h3>
       ${d.reputacao.historico.length
-        ? d.reputacao.historico.slice(-25).map(h=>`<div class="linha"><span class="k">Cap ${h.cap} · ${this.esc(h.motivo)}</span><span class="v" style="color:${h.eixo==='bom'?'var(--bom)':'var(--ruim)'}">${h.eixo} +${h.delta}</span></div>`).join('')
+        ? d.reputacao.historico.slice(-25).map(h=>`<div class="linha longa"><span class="k">Cap ${h.cap} · ${this.esc(h.motivo)}</span><span class="v" style="color:${h.eixo==='bom'?'var(--bom)':'var(--ruim)'}">${h.eixo} +${h.delta}</span></div>`).join('')
         : '<p class="nada">Nada ainda.</p>'}
     `);
   },
@@ -4699,7 +4711,7 @@ const UI = {
     const fins = codice.filter(f => eps.indexOf(f) === -1);
     const bloco = (titulo, lista, total, vazio) =>
       `<h3>${titulo} — ${lista.length} de ${total}</h3>` +
-      (lista.length ? lista.map(f=>`<div class="linha"><span class="k">${this.esc(String(f.titulo).replace(/^Epílogo: /,''))}</span><span class="v">✓</span></div>`).join('')
+      (lista.length ? lista.map(f=>`<div class="linha longa"><span class="k">${this.esc(String(f.titulo).replace(/^Epílogo: /,''))}</span><span class="v">✓</span></div>`).join('')
                     : `<p class="nada">${vazio}</p>`);
     this.modal('Códice de finais',
       bloco('Finais', fins, totalFim, 'Nenhum ainda.') +
@@ -5202,7 +5214,7 @@ const UI = {
       <div class="linha"><span class="k">Foresight</span><span class="v">tira a evasão que subiu · Normal e Lutador passam a acertar Fantasma</span></div>
       <div class="linha"><span class="k">Roar, Whirlwind</span><span class="v">agem por último · em selvagem acabam a luta · em treinador trocam o Pokémon dele</span></div>
       <div class="linha"><span class="k">Teleport</span><span class="v">sai de luta contra selvagem</span></div>
-      <div class="linha"><span class="k">Transform</span><span class="v">vira cópia do outro: tipos, atributos (menos HP), golpes com 5 PP e estágios · desfaz no fim</span></div>
+      <div class="linha"><span class="k">Transform</span><span class="v">vira cópia do outro: tipos, atributos (menos HP), golpes e estágios · desfaz no fim</span></div>
       <div class="linha"><span class="k">Mirror Move · Psych Up · Conversion</span><span class="v">repete o último golpe do outro · copia os estágios dele · vira do tipo de um golpe seu</span></div>
       <div class="linha"><span class="k">Swagger</span><span class="v">Força do outro +2 e confusão</span></div>
       <div class="linha"><span class="k">Sleep Talk · Snore</span><span class="v">só dormindo · Sleep Talk sorteia outro golpe seu · Snore pode fazer encolher (30%)</span></div>
@@ -5387,10 +5399,10 @@ const UI = {
       ${Object.values(Estado.dados.lendarios||{}).some(l=>l.encontros || l.visto) ? `
       <h3>Captura de lendários</h3>
       <div class="linha"><span class="k">Bola</span><span class="v">só Ultra Ball e Master Ball · qualquer outra bate e cai aberta, e gasta${Estado.dados.flags.bola_fraca_em_lendario ? ' — você viu' : ''}</span></div>
-      <div class="linha"><span class="k">Ultra Ball</span><span class="v">a regra de captura do Pokérole: o selo da bola (8d6, sucesso em 4+) mais os sucessos de bônus, contra os sucessos que o posto pede · lendário conta no mínimo como Ás: pede 10 · com o HP cheio, não tem como</span></div>
+      <div class="linha"><span class="k">Ultra Ball</span><span class="v">a regra de captura do Pokérole: o selo da Pokébola (8d6, sucesso em 4+) mais os sucessos de bônus, contra os sucessos que o posto pede · lendário conta no mínimo como Ás: pede 10 · com o HP cheio, não tem como</span></div>
       <div class="linha"><span class="k">Bônus</span><span class="v">com metade do HP ou menos +1 · com 1 HP +2 (no lugar do +1) · +1 por condição (a de status e a confusão)</span></div>
       <div class="linha"><span class="k">Master Ball</span><span class="v">fecha sem rolagem</span></div>
-      <div class="linha"><span class="k">Insistir</span><span class="v">cada bola que ele rompe conta · na terceira, quem estava neutro fica hostil</span></div>
+      <div class="linha"><span class="k">Insistir</span><span class="v">cada Pokébola que ele rompe conta · na terceira, quem estava neutro fica hostil</span></div>
       ${Object.values(Estado.dados.lendarios||{}).some(l=>l.quebrouBola) ? '<p class="sussurro">E existem coisas que simplesmente quebram a Pokébola no ar.</p>' : ''}` : ''}
       <h3>Perícias</h3>
       <p class="sussurro">Parar e olhar vale uma vez por cena: a segunda olhada nunca mostrou nada.</p>

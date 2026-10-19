@@ -6,14 +6,15 @@
 /* A Elite dos Quatro de Kanto é Lorelei, Bruno, Agatha e Lance.
    Há meses três deles não se apresentam (o capítulo 17 conta desde
    quando, pelo calendário). A Liga não tirou os nomes das portas: pôs
-   substitutos embaixo deles. As quatro salas abrem pro poço de pedra
-   da Elite, o mesmo do capítulo 26. */
+   substitutos embaixo deles. As quatro salas ficam num corredor (a
+   ala, como diz o afazer do Planalto); o poço de pedra do capítulo 26
+   é a arena de baixo, outra sala. */
 const ELITE4 = [
 {
   id:'giselle', ordem:1, nome:'Giselle', titular:'Lorelei', tipo:'variado', nivelBase:60,
   especies:[105, 40, 53, 31, 112],   // Marowak, Wigglytuff, Persian, Nidoqueen, Rhydon
   intro:d=>[
-    'No fundo do poço de pedra da Elite, a parede tem quatro portas. A primeira tem uma placa de bronze parafusada na altura dos olhos: LORELEI.',
+    'O corredor da ala tem quatro portas seguidas. A primeira tem uma placa de bronze parafusada na altura dos olhos: LORELEI.',
     'A sala atrás dela não parece sala de batalha. Parece sala de aula: quadro, carteira, projetor desligado.',
     'A mulher na frente tem uns vinte e poucos anos e um caderno aberto com a sua ficha dentro. Ela não é a Lorelei e sabe que você reparou.',
     '"Giselle. Eu me formei em primeiro lugar na Escola Técnica Pokémon, no ano em que a escola ainda existia."',

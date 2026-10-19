@@ -350,7 +350,9 @@ const Historia = {
     try { return !!cap.requer(Estado.dados); } catch(e){ return true; }
   },
 
-  /* Quais capítulos ficaram de fora — usado no epílogo */
+  /* Quais capítulos ficaram de fora. Não vai pra tela no meio da
+     jornada: quem não passou por um desvio nunca fica sabendo que ele
+     existia (condicionais.js). */
   capitulosPulados(){
     return CAPITULOS.filter(c => c.requer && !c.caminho && !this.testaRequisito(c)).map(c => c.titulo);
   },

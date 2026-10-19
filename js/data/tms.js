@@ -146,7 +146,15 @@ function aprendeTM(p, nomeItem){
   for (const t of TM_LISTA){
     const g = GOLPES[t[2]];
     if (!g) continue;
-    const poder = (g.c === 'status' || !g.p) ? '' : ' · poder ' + g.p;
+    /* o poder é o do Pokérole, em dados, como na ficha do golpe da luta
+       (UI.resumoGolpe): "poder 90" era o número dos jogos */
+    const pr = (typeof PR_GOLPE !== 'undefined' && PR_GOLPE[t[2]]) || {};
+    const poder = g.c === 'status' ? ''
+      : pr.fixo ? ' · dano fixo ' + pr.fixo
+      : pr.ohko ? ' · nocaute'
+      : pr.posto ? ' · dados pelo posto'
+      : pr.metade ? ' · metade do HP dele'
+      : ' · poder ' + (pr.p || Math.max(1, Math.round((g.p || 40) / 25)));
     ITENS_INFO[nomeDaTM(t)] = {
       tipo:'tm', cat:'Máquina', golpe:t[2], num:t[1], ger:t[0],
       ficha: 'Ensina ' + t[2] + ' · ' + g.t + ' · ' + CAT[g.c] + poder + ' · some ao ensinar'

@@ -774,6 +774,14 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
    que é o lado que cresce — lista de tipos, lista de golpes. */
 .linha .k{color:var(--texto-fraco);flex:0 0 auto;white-space:nowrap}
 .linha .v{font-family:var(--mono);text-align:right;min-width:0;overflow-wrap:anywhere}
+/* Linha de rótulo comprido (o chaveamento do torneio e da Conferência,
+   os capítulos e as decisões da sua rota): o rótulo quebra e o valor
+   fica inteiro na direita. Com o rótulo sem quebra da linha comum, no
+   celular o "agora" virava uma coluna de letras e o resto saía da tela. */
+.linha.longa{align-items:flex-start}
+.linha.longa .k{white-space:normal;flex:1 1 auto;min-width:0}
+.linha.longa .k .fraco{display:block;margin-top:2px;font-size:12.5px}
+.linha.longa .v{flex:0 0 auto;white-space:nowrap}
 
 .rep-barra{height:8px;background:var(--bg);border:1px solid var(--borda);border-radius:5px;overflow:hidden;margin-top:7px}
 .rep-barra i{display:block;height:100%;transition:width .6s var(--suave);border-radius:4px}
@@ -2895,6 +2903,20 @@ body.com-cenario .topo{
 .nav-conversa .fala .fala-diz,.nav-conversa .fala p{color:#14243a}
 .nav-conversa .fala .fala-quem{color:#1d4f8a}
 .nav-conversa > p{color:#1f3550}
+/* Tom no aparelho: o PokéNav é claro, então o tom vai na borda e no
+   nome, nunca no fundo. Com o fundo escuro do tom (.narrativa .fala.grita
+   ganha de .nav-conversa .fala), a letra escura do aparelho sumia:
+   "Oi! Oi, é você?" virava uma faixa preta. */
+.nav-conversa.narrativa .fala.grita, .nav-conversa.narrativa .fala.baixo,
+.nav-conversa.narrativa .fala.riso, .nav-conversa.narrativa .fala.frio{background:#ffffff}
+.nav-conversa.narrativa .fala.grita{border-color:#e2a9a3;border-left-color:#c0392b}
+.nav-conversa.narrativa .fala.grita .fala-quem{color:#b03a2e}
+.nav-conversa.narrativa .fala.baixo{border-color:#c4d2e2;border-left-color:#8aa0b8}
+.nav-conversa.narrativa .fala.baixo .fala-quem{color:#5a6f88}
+.nav-conversa.narrativa .fala.riso{border-color:#a7d6a9;border-left-color:#3f9a45}
+.nav-conversa.narrativa .fala.riso .fala-quem{color:#2f7d36}
+.nav-conversa.narrativa .fala.frio{border-color:#c4d2e2;border-left-color:#7f96b5}
+.nav-conversa.narrativa .fala.frio .fala-quem{color:#4f6888}
 
 /* mural: de longe os papéis são títulos; clicar chega perto de um */
 button.bilhete{font:inherit;border:0;text-align:left;cursor:pointer;width:100%}
@@ -3259,6 +3281,13 @@ svg.icone{flex:0 0 auto;width:18px;height:18px;vertical-align:-3px}
   background:var(--bg);box-shadow:inset 0 0 0 1px var(--borda-forte);
 }
 .escolha[data-tecla]::before{content:attr(data-tecla)}
+/* Opção solta numa janela (o Centro, "Qual Pokébola?", "Em quem?",
+   "Equipar em quem?"): a mesma linha de menu do resto do jogo, de ponta
+   a ponta e com folga. Sem isto cada botão tinha a largura do próprio
+   texto e encostava no de baixo. */
+.modal-corpo > .escolha{width:100%}
+.modal-corpo > .escolha:not(.com-icone){display:block}
+.modal-corpo > .escolha + .escolha{margin-top:7px}
 .escolha::after{width:auto;right:auto;left:0;background:none;transform:none;
   content:'▶';top:50%;bottom:auto;left:4px;translate:-4px -50%;
   font-size:10px;color:var(--destaque);opacity:0;
@@ -5087,6 +5116,14 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
    que é o lado que cresce — lista de tipos, lista de golpes. */
 .linha .k{color:var(--texto-fraco);flex:0 0 auto;white-space:nowrap}
 .linha .v{font-family:var(--mono);text-align:right;min-width:0;overflow-wrap:anywhere}
+/* Linha de rótulo comprido (o chaveamento do torneio e da Conferência,
+   os capítulos e as decisões da sua rota): o rótulo quebra e o valor
+   fica inteiro na direita. Com o rótulo sem quebra da linha comum, no
+   celular o "agora" virava uma coluna de letras e o resto saía da tela. */
+.linha.longa{align-items:flex-start}
+.linha.longa .k{white-space:normal;flex:1 1 auto;min-width:0}
+.linha.longa .k .fraco{display:block;margin-top:2px;font-size:12.5px}
+.linha.longa .v{flex:0 0 auto;white-space:nowrap}
 
 .rep-barra{height:8px;background:var(--bg);border:1px solid var(--borda);border-radius:5px;overflow:hidden;margin-top:7px}
 .rep-barra i{display:block;height:100%;transition:width .6s var(--suave);border-radius:4px}
@@ -7208,6 +7245,20 @@ body.com-cenario .topo{
 .nav-conversa .fala .fala-diz,.nav-conversa .fala p{color:#14243a}
 .nav-conversa .fala .fala-quem{color:#1d4f8a}
 .nav-conversa > p{color:#1f3550}
+/* Tom no aparelho: o PokéNav é claro, então o tom vai na borda e no
+   nome, nunca no fundo. Com o fundo escuro do tom (.narrativa .fala.grita
+   ganha de .nav-conversa .fala), a letra escura do aparelho sumia:
+   "Oi! Oi, é você?" virava uma faixa preta. */
+.nav-conversa.narrativa .fala.grita, .nav-conversa.narrativa .fala.baixo,
+.nav-conversa.narrativa .fala.riso, .nav-conversa.narrativa .fala.frio{background:#ffffff}
+.nav-conversa.narrativa .fala.grita{border-color:#e2a9a3;border-left-color:#c0392b}
+.nav-conversa.narrativa .fala.grita .fala-quem{color:#b03a2e}
+.nav-conversa.narrativa .fala.baixo{border-color:#c4d2e2;border-left-color:#8aa0b8}
+.nav-conversa.narrativa .fala.baixo .fala-quem{color:#5a6f88}
+.nav-conversa.narrativa .fala.riso{border-color:#a7d6a9;border-left-color:#3f9a45}
+.nav-conversa.narrativa .fala.riso .fala-quem{color:#2f7d36}
+.nav-conversa.narrativa .fala.frio{border-color:#c4d2e2;border-left-color:#7f96b5}
+.nav-conversa.narrativa .fala.frio .fala-quem{color:#4f6888}
 
 /* mural: de longe os papéis são títulos; clicar chega perto de um */
 button.bilhete{font:inherit;border:0;text-align:left;cursor:pointer;width:100%}
@@ -7572,6 +7623,13 @@ svg.icone{flex:0 0 auto;width:18px;height:18px;vertical-align:-3px}
   background:var(--bg);box-shadow:inset 0 0 0 1px var(--borda-forte);
 }
 .escolha[data-tecla]::before{content:attr(data-tecla)}
+/* Opção solta numa janela (o Centro, "Qual Pokébola?", "Em quem?",
+   "Equipar em quem?"): a mesma linha de menu do resto do jogo, de ponta
+   a ponta e com folga. Sem isto cada botão tinha a largura do próprio
+   texto e encostava no de baixo. */
+.modal-corpo > .escolha{width:100%}
+.modal-corpo > .escolha:not(.com-icone){display:block}
+.modal-corpo > .escolha + .escolha{margin-top:7px}
 .escolha::after{width:auto;right:auto;left:0;background:none;transform:none;
   content:'▶';top:50%;bottom:auto;left:4px;translate:-4px -50%;
   font-size:10px;color:var(--destaque);opacity:0;
@@ -9400,6 +9458,14 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
    que é o lado que cresce — lista de tipos, lista de golpes. */
 .linha .k{color:var(--texto-fraco);flex:0 0 auto;white-space:nowrap}
 .linha .v{font-family:var(--mono);text-align:right;min-width:0;overflow-wrap:anywhere}
+/* Linha de rótulo comprido (o chaveamento do torneio e da Conferência,
+   os capítulos e as decisões da sua rota): o rótulo quebra e o valor
+   fica inteiro na direita. Com o rótulo sem quebra da linha comum, no
+   celular o "agora" virava uma coluna de letras e o resto saía da tela. */
+.linha.longa{align-items:flex-start}
+.linha.longa .k{white-space:normal;flex:1 1 auto;min-width:0}
+.linha.longa .k .fraco{display:block;margin-top:2px;font-size:12.5px}
+.linha.longa .v{flex:0 0 auto;white-space:nowrap}
 
 .rep-barra{height:8px;background:var(--bg);border:1px solid var(--borda);border-radius:5px;overflow:hidden;margin-top:7px}
 .rep-barra i{display:block;height:100%;transition:width .6s var(--suave);border-radius:4px}
@@ -11521,6 +11587,20 @@ body.com-cenario .topo{
 .nav-conversa .fala .fala-diz,.nav-conversa .fala p{color:#14243a}
 .nav-conversa .fala .fala-quem{color:#1d4f8a}
 .nav-conversa > p{color:#1f3550}
+/* Tom no aparelho: o PokéNav é claro, então o tom vai na borda e no
+   nome, nunca no fundo. Com o fundo escuro do tom (.narrativa .fala.grita
+   ganha de .nav-conversa .fala), a letra escura do aparelho sumia:
+   "Oi! Oi, é você?" virava uma faixa preta. */
+.nav-conversa.narrativa .fala.grita, .nav-conversa.narrativa .fala.baixo,
+.nav-conversa.narrativa .fala.riso, .nav-conversa.narrativa .fala.frio{background:#ffffff}
+.nav-conversa.narrativa .fala.grita{border-color:#e2a9a3;border-left-color:#c0392b}
+.nav-conversa.narrativa .fala.grita .fala-quem{color:#b03a2e}
+.nav-conversa.narrativa .fala.baixo{border-color:#c4d2e2;border-left-color:#8aa0b8}
+.nav-conversa.narrativa .fala.baixo .fala-quem{color:#5a6f88}
+.nav-conversa.narrativa .fala.riso{border-color:#a7d6a9;border-left-color:#3f9a45}
+.nav-conversa.narrativa .fala.riso .fala-quem{color:#2f7d36}
+.nav-conversa.narrativa .fala.frio{border-color:#c4d2e2;border-left-color:#7f96b5}
+.nav-conversa.narrativa .fala.frio .fala-quem{color:#4f6888}
 
 /* mural: de longe os papéis são títulos; clicar chega perto de um */
 button.bilhete{font:inherit;border:0;text-align:left;cursor:pointer;width:100%}
@@ -11885,6 +11965,13 @@ svg.icone{flex:0 0 auto;width:18px;height:18px;vertical-align:-3px}
   background:var(--bg);box-shadow:inset 0 0 0 1px var(--borda-forte);
 }
 .escolha[data-tecla]::before{content:attr(data-tecla)}
+/* Opção solta numa janela (o Centro, "Qual Pokébola?", "Em quem?",
+   "Equipar em quem?"): a mesma linha de menu do resto do jogo, de ponta
+   a ponta e com folga. Sem isto cada botão tinha a largura do próprio
+   texto e encostava no de baixo. */
+.modal-corpo > .escolha{width:100%}
+.modal-corpo > .escolha:not(.com-icone){display:block}
+.modal-corpo > .escolha + .escolha{margin-top:7px}
 .escolha::after{width:auto;right:auto;left:0;background:none;transform:none;
   content:'▶';top:50%;bottom:auto;left:4px;translate:-4px -50%;
   font-size:10px;color:var(--destaque);opacity:0;
@@ -13713,6 +13800,14 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
    que é o lado que cresce — lista de tipos, lista de golpes. */
 .linha .k{color:var(--texto-fraco);flex:0 0 auto;white-space:nowrap}
 .linha .v{font-family:var(--mono);text-align:right;min-width:0;overflow-wrap:anywhere}
+/* Linha de rótulo comprido (o chaveamento do torneio e da Conferência,
+   os capítulos e as decisões da sua rota): o rótulo quebra e o valor
+   fica inteiro na direita. Com o rótulo sem quebra da linha comum, no
+   celular o "agora" virava uma coluna de letras e o resto saía da tela. */
+.linha.longa{align-items:flex-start}
+.linha.longa .k{white-space:normal;flex:1 1 auto;min-width:0}
+.linha.longa .k .fraco{display:block;margin-top:2px;font-size:12.5px}
+.linha.longa .v{flex:0 0 auto;white-space:nowrap}
 
 .rep-barra{height:8px;background:var(--bg);border:1px solid var(--borda);border-radius:5px;overflow:hidden;margin-top:7px}
 .rep-barra i{display:block;height:100%;transition:width .6s var(--suave);border-radius:4px}
@@ -15834,6 +15929,20 @@ body.com-cenario .topo{
 .nav-conversa .fala .fala-diz,.nav-conversa .fala p{color:#14243a}
 .nav-conversa .fala .fala-quem{color:#1d4f8a}
 .nav-conversa > p{color:#1f3550}
+/* Tom no aparelho: o PokéNav é claro, então o tom vai na borda e no
+   nome, nunca no fundo. Com o fundo escuro do tom (.narrativa .fala.grita
+   ganha de .nav-conversa .fala), a letra escura do aparelho sumia:
+   "Oi! Oi, é você?" virava uma faixa preta. */
+.nav-conversa.narrativa .fala.grita, .nav-conversa.narrativa .fala.baixo,
+.nav-conversa.narrativa .fala.riso, .nav-conversa.narrativa .fala.frio{background:#ffffff}
+.nav-conversa.narrativa .fala.grita{border-color:#e2a9a3;border-left-color:#c0392b}
+.nav-conversa.narrativa .fala.grita .fala-quem{color:#b03a2e}
+.nav-conversa.narrativa .fala.baixo{border-color:#c4d2e2;border-left-color:#8aa0b8}
+.nav-conversa.narrativa .fala.baixo .fala-quem{color:#5a6f88}
+.nav-conversa.narrativa .fala.riso{border-color:#a7d6a9;border-left-color:#3f9a45}
+.nav-conversa.narrativa .fala.riso .fala-quem{color:#2f7d36}
+.nav-conversa.narrativa .fala.frio{border-color:#c4d2e2;border-left-color:#7f96b5}
+.nav-conversa.narrativa .fala.frio .fala-quem{color:#4f6888}
 
 /* mural: de longe os papéis são títulos; clicar chega perto de um */
 button.bilhete{font:inherit;border:0;text-align:left;cursor:pointer;width:100%}
@@ -16198,6 +16307,13 @@ svg.icone{flex:0 0 auto;width:18px;height:18px;vertical-align:-3px}
   background:var(--bg);box-shadow:inset 0 0 0 1px var(--borda-forte);
 }
 .escolha[data-tecla]::before{content:attr(data-tecla)}
+/* Opção solta numa janela (o Centro, "Qual Pokébola?", "Em quem?",
+   "Equipar em quem?"): a mesma linha de menu do resto do jogo, de ponta
+   a ponta e com folga. Sem isto cada botão tinha a largura do próprio
+   texto e encostava no de baixo. */
+.modal-corpo > .escolha{width:100%}
+.modal-corpo > .escolha:not(.com-icone){display:block}
+.modal-corpo > .escolha + .escolha{margin-top:7px}
 .escolha::after{width:auto;right:auto;left:0;background:none;transform:none;
   content:'▶';top:50%;bottom:auto;left:4px;translate:-4px -50%;
   font-size:10px;color:var(--destaque);opacity:0;
@@ -25014,9 +25130,9 @@ const Captura = {
     // ---- QUEBRA-BOLAS: Mewtwo e Ho-Oh
     if (QUEBRA_BOLA.includes(alvo.dex)){
       const d = Dados.d20('A Pokébola aguenta?');
-      ev('info', `${esp.nome} é forte demais para uma Pokébola comum suportar. 1d20 = ${d} (1-5 quebra)`);
+      ev('info', `${nomeVisivel(alvo)} é forte demais para uma Pokébola comum suportar. 1d20 = ${d} (1-5 quebra)`);
       if (d <= 5){
-        ev('perigo', `A esfera racha no ar. Um estalo seco — e ${esp.nome} está livre, com os olhos em você.`);
+        ev('perigo', `A esfera racha no ar. Um estalo seco — e ${nomeVisivel(alvo)} está livre, com os olhos em você.`);
         const L = Estado.lend(alvo.dex);
         L.disposicao = 'hostil';
         L.quebrouBola = true;
@@ -25105,7 +25221,8 @@ const Captura = {
       anima('captura', 3);
       return this.concluir(alvo, nomeBola, eventos);
     }
-    ev('erro', `${alvo.nome} escapou da Pokébola!`);
+    /* o nome que a tela mostra: espécie não catalogada continua "???" */
+    ev('erro', `${nomeVisivel(alvo)} escapou da Pokébola!`);
     anima('escapou', sacudidas);
     return {eventos, capturou:false};
   },
@@ -25130,7 +25247,7 @@ const Captura = {
     alvo.capturadoEm = {cap:Estado.dados.capitulo, bola:nomeBola, dia:Estado.dados.relogio.dia};
     alvo.moral = esp.lendario ? 10 : 40;
     const destino = Estado.adicionar(alvo);
-    ev('captura', `${esp.nome} (Nv ${alvo.nivel}) foi capturado!` + (destino === 'pc' ? ' Foi direto para o PC — seu time está cheio.' : ''));
+    ev('captura', `${esp.nome} (Nv ${alvo.nivel}) foi capturad${pron(alvo).o}!` + (destino === 'pc' ? ' Foi direto para o PC — seu time está cheio.' : ''));
     Estado.registrar(`Capturou ${esp.nome} Nv${alvo.nivel} com ${nomeBola}.`);
     if (alvo.shiny){
       Estado.pegouBrilhante(alvo.dex);
@@ -27442,7 +27559,9 @@ const Historia = {
     try { return !!cap.requer(Estado.dados); } catch(e){ return true; }
   },
 
-  /* Quais capítulos ficaram de fora — usado no epílogo */
+  /* Quais capítulos ficaram de fora. Não vai pra tela no meio da
+     jornada: quem não passou por um desvio nunca fica sabendo que ele
+     existia (condicionais.js). */
   capitulosPulados(){
     return CAPITULOS.filter(c => c.requer && !c.caminho && !this.testaRequisito(c)).map(c => c.titulo);
   },
@@ -31475,14 +31594,15 @@ const Barreiras = {
 /* A Elite dos Quatro de Kanto é Lorelei, Bruno, Agatha e Lance.
    Há meses três deles não se apresentam (o capítulo 17 conta desde
    quando, pelo calendário). A Liga não tirou os nomes das portas: pôs
-   substitutos embaixo deles. As quatro salas abrem pro poço de pedra
-   da Elite, o mesmo do capítulo 26. */
+   substitutos embaixo deles. As quatro salas ficam num corredor (a
+   ala, como diz o afazer do Planalto); o poço de pedra do capítulo 26
+   é a arena de baixo, outra sala. */
 const ELITE4 = [
 {
   id:'giselle', ordem:1, nome:'Giselle', titular:'Lorelei', tipo:'variado', nivelBase:60,
   especies:[105, 40, 53, 31, 112],   // Marowak, Wigglytuff, Persian, Nidoqueen, Rhydon
   intro:d=>[
-    'No fundo do poço de pedra da Elite, a parede tem quatro portas. A primeira tem uma placa de bronze parafusada na altura dos olhos: LORELEI.',
+    'O corredor da ala tem quatro portas seguidas. A primeira tem uma placa de bronze parafusada na altura dos olhos: LORELEI.',
     'A sala atrás dela não parece sala de batalha. Parece sala de aula: quadro, carteira, projetor desligado.',
     'A mulher na frente tem uns vinte e poucos anos e um caderno aberto com a sua ficha dentro. Ela não é a Lorelei e sabe que você reparou.',
     '"Giselle. Eu me formei em primeiro lugar na Escola Técnica Pokémon, no ano em que a escola ainda existia."',
@@ -32612,7 +32732,15 @@ function aprendeTM(p, nomeItem){
   for (const t of TM_LISTA){
     const g = GOLPES[t[2]];
     if (!g) continue;
-    const poder = (g.c === 'status' || !g.p) ? '' : ' · poder ' + g.p;
+    /* o poder é o do Pokérole, em dados, como na ficha do golpe da luta
+       (UI.resumoGolpe): "poder 90" era o número dos jogos */
+    const pr = (typeof PR_GOLPE !== 'undefined' && PR_GOLPE[t[2]]) || {};
+    const poder = g.c === 'status' ? ''
+      : pr.fixo ? ' · dano fixo ' + pr.fixo
+      : pr.ohko ? ' · nocaute'
+      : pr.posto ? ' · dados pelo posto'
+      : pr.metade ? ' · metade do HP dele'
+      : ' · poder ' + (pr.p || Math.max(1, Math.round((g.p || 40) / 25)));
     ITENS_INFO[nomeDaTM(t)] = {
       tipo:'tm', cat:'Máquina', golpe:t[2], num:t[1], ger:t[0],
       ficha: 'Ensina ' + t[2] + ' · ' + g.t + ' · ' + CAT[g.c] + poder + ' · some ao ensinar'
@@ -116218,9 +116346,11 @@ const UI = {
     </div>` + this.htmlBandeja();
   },
 
-  /* bandeja livre: rolar por rolar, sem efeito nenhum no jogo */
+  /* bandeja livre: rolar por rolar, sem efeito nenhum no jogo. Só d6,
+     o dado do Pokérole: d20, d10 e d4 aqui eram resto do sistema antigo
+     e diziam o contrário da folha de regras. */
   htmlBandeja(){
-    const d = [20,10,6,4].map(f =>
+    const d = [6,6,6].map(f =>
       `<button class="dado d${f} livre" data-faces="${f}" data-v="?"
         title="Girar um d${f}" onclick="UI.girarLivre(this)">
         <span class="face">?</span><span class="rot">d${f}</span>
@@ -116237,7 +116367,7 @@ const UI = {
     this._tumbar(el, faces, alvo);
   },
   girarLivre(el){
-    const faces = parseInt(el.dataset.faces, 10) || 20;
+    const faces = parseInt(el.dataset.faces, 10) || 6;
     const v = Math.floor(Math.random() * faces) + 1;
     el.dataset.v = v;
     el.classList.toggle('max', v === faces);
@@ -118965,10 +119095,10 @@ const UI = {
       'Um grupo de treinadores acampa na curva e te chama pra comer. Você come. Ninguém pergunta o seu nome e isso é uma gentileza.'
     ];
     const cansaço = [
-      'Chega com o pé doendo de um jeito específico que você vai passar a conhecer bem.',
+      'Chega com o pé doendo num lugar específico do calcanhar, sempre o mesmo.',
       'Chega com poeira até dentro da mochila.',
       'Chega com fome e com aquela irritação de quem andou demais.',
-      'Chega inteiro, o que é mais do que muita gente consegue.'
+      'Chega inteir{o|a}, o que é mais do que muita gente consegue.'
     ];
 
     const linhas = [];
@@ -119037,7 +119167,6 @@ const UI = {
     this.add(this.topo());
     const r = rival();
     const arco = arcoRival();
-    const A = ARCOS_RIVAL[arco];
     const time = timeRival();
     const cor = {parceiro:'var(--bom)', rival:'var(--destaque)', ressentido:'var(--ruim)',
                  perseguidor:'var(--perigo)', quebrado:'var(--texto-fraco)'}[arco];
@@ -119046,7 +119175,7 @@ const UI = {
       <div class="cap-cabecalho" style="border-left-color:${cor}">
         <div class="num">Na estrada</div>
         <div class="tit">${this.esc(r.nome)}</div>
-        <div class="loc" style="color:${cor}">${this.esc(A.nome)} — ${this.esc(A.resumo)}</div>
+        <div class="loc">${this.esc((LOCAIS[Mundo.id()] || {}).nome || 'Kanto')}</div>
       </div>
       <div class="narrativa">${this.narrarMonologo(falaRival(), r.nome)}</div>
       <div class="linha" style="margin-top:14px"><span class="k">Placar entre vocês</span>
@@ -119075,11 +119204,11 @@ const UI = {
       <div class="cap-cabecalho" style="border-left-color:${cor}">
         <div class="num">Na estrada</div>
         <div class="tit">${this.esc(R.nome)}</div>
-        <div class="loc" style="color:${cor}">${this.esc(R.desde)} — ${this.esc(R.origem)}</div>
+        <div class="loc">${this.esc((LOCAIS[Mundo.id()] || {}).nome || 'Kanto')}</div>
       </div>
       <div class="narrativa">${this.narrarMonologo(falaRivalExtra(R), R.nome)}</div>
       <div class="linha" style="margin-top:14px"><span class="k">Placar entre vocês</span>
-        <span class="v">você ${reg.derrotas} × ${reg.vitorias} ${R.nome === 'Nolan' ? 'ele' : 'ele'}</span></div>
+        <span class="v">você ${reg.derrotas} × ${reg.vitorias} ele</span></div>
       <div class="linha"><span class="k">Time dele agora</span>
         <span class="v">${this.esc(time.map(p=>p.nome+' Nv'+p.nivel).join(', '))}</span></div>
       <div id="escolhas" class="escolhas" style="margin-top:20px">
@@ -119204,7 +119333,7 @@ const UI = {
     const chave = t.adversarios.map((a,i) => {
       const est = i < t.rodada ? '✓ vencido' : (i === t.rodada ? 'agora' : 'aguardando');
       const cor = i < t.rodada ? 'var(--bom)' : (i === t.rodada ? 'var(--destaque)' : 'var(--texto-fraco)');
-      return `<div class="linha"><span class="k">${PREMIO_TORNEIO[i].rodada} · ${this.esc(a.nome)}
+      return `<div class="linha longa"><span class="k">${PREMIO_TORNEIO[i].rodada} · ${this.esc(a.nome)}
         <span class="fraco">${a.time.map(p=>p.nome+' Nv'+p.nivel).join(', ')}</span></span>
         <span class="v" style="color:${cor}">${est}</span></div>`;
     }).join('');
@@ -119236,7 +119365,7 @@ const UI = {
       const conhece = Veteranos.registro(id).conheceu;
       const est = i < c.rodada ? '✓ vencido' : (i === c.rodada ? 'agora' : 'aguardando');
       const cor = i < c.rodada ? 'var(--bom)' : (i === c.rodada ? 'var(--destaque)' : 'var(--texto-fraco)');
-      return `<div class="linha"><span class="k">${PREMIO_CONFERENCIA[i].rodada} · ${this.esc(nomeDeLuta(v))}
+      return `<div class="linha longa"><span class="k">${PREMIO_CONFERENCIA[i].rodada} · ${this.esc(nomeDeLuta(v))}
         <span class="fraco">${conhece ? this.esc((LOCAIS[v.local] || {}).nome || '') : 'nunca se viram'}</span></span>
         <span class="v" style="color:${cor}">${est}</span></div>`;
     }).join('');
@@ -119342,7 +119471,7 @@ const UI = {
       </div>
       <div style="text-align:left;max-width:610px;margin:26px auto 0">
         <h3>Finais descobertos — ${codice.length} de ${totalFinais}</h3>
-        ${codice.map(f=>`<div class="linha"><span class="k">${this.esc(f.titulo)}</span><span class="v">${f.titulo===final.titulo?'agora':'✓'}</span></div>`).join('')}
+        ${codice.map(f=>`<div class="linha longa"><span class="k">${this.esc(f.titulo)}</span><span class="v">${f.titulo===final.titulo?'agora':'✓'}</span></div>`).join('')}
         <p class="sussurro">Escolhas diferentes levam a finais diferentes. A campanha tem ${totalFinais}.</p>
       </div>
       <div style="margin-top:34px">
@@ -119649,8 +119778,8 @@ const UI = {
     const esp = DEX[p.dex] || {};
     const num = String(p.dex).padStart(3, '0');
     const t1 = COR_TIPO[p.tipos[0]] || '#8a8f99', t2 = COR_TIPO[p.tipos[1] || p.tipos[0]] || t1;
-    const dl = pares => `<dl class="sm-dl">${pares.filter(x => x && x[1] != null && x[1] !== '')
-      .map(([k, v]) => `<dt>${e(k)}</dt><dd>${v}</dd>`).join('')}</dl>`;
+    const dl = pares => { const l = pares.filter(x => x && x[1] != null && x[1] !== '')
+      .map(([k, v]) => `<dt>${e(k)}</dt><dd>${v}</dd>`).join(''); return l ? `<dl class="sm-dl">${l}</dl>` : ''; };
     const bloco = (titulo, html, nota) => html ? `<section class="sm-bloco">
         <h4>${e(titulo)}${nota ? ` <span class="sm-h-nota">${e(nota)}</span>` : ''}</h4>${html}</section>` : '';
 
@@ -120260,8 +120389,9 @@ const UI = {
     const atual = tem(aba) ? aba : (tem(this._abaFicha) ? this._abaFicha : 'perfil');
     this._abaFicha = atual;
     const e = s => this.esc(s), M = s => this.esc(maiuscula(s));
-    const dl = pares => `<dl class="ficha-dl">${pares.filter(p => p && p[1] != null && p[1] !== '')
-      .map(([k, v]) => `<dt>${e(k)}</dt><dd>${v}</dd>`).join('')}</dl>`;
+    /* sem linha nenhuma, não tem lista: o bloco some, em vez de mostrar o título sozinho */
+    const dl = pares => { const l = pares.filter(p => p && p[1] != null && p[1] !== '')
+      .map(([k, v]) => `<dt>${e(k)}</dt><dd>${v}</dd>`).join(''); return l ? `<dl class="ficha-dl">${l}</dl>` : ''; };
     const bloco = (titulo, html, nota) => html ? `<section class="fi-bloco">
         <h4>${e(titulo)}${nota ? ` <span class="ficha-h-nota">${e(nota)}</span>` : ''}</h4>${html}</section>` : '';
 
@@ -120626,7 +120756,11 @@ const UI = {
         <div class="linha"><span class="k">Taxa de captura</span><span class="v">${esp.captura} <span class="fraco">(quanto maior, mais fácil)</span></span></div>
         <div class="linha"><span class="k">Sexo</span><span class="v">${this.esc(proporcaoGenero(dex))}</span></div>
         <div class="linha"><span class="k">Evolução</span><span class="v">${esp.evo
-          ? this.esc(DEX[esp.evo].nome) + (esp.nivelEvo ? ' — nível ' + esp.nivelEvo : ' — por pedra ou troca')
+          ? this.esc(DEX[esp.evo].nome) + (esp.nivelEvo ? ' — nível ' + esp.nivelEvo
+              /* o jeito, sem dizer qual pedra: isso o jogador descobre */
+              : Object.values(PEDRAS).some(m => m[dex]) ? ' — por pedra'
+              : EVO_TROCA[dex] ? ' — por troca'
+              : ' — por pedra ou troca')
           : 'forma final'}</span></div>
         <div class="linha"><span class="k">Classificação</span><span class="v">${esp.lendario ? 'lendário' : 'comum'}</span></div>
         ${Estado.brilhanteDe(dex) ? `<div class="linha"><span class="k">Anomalia cromática</span><span class="v brilho-v">✦ ${Estado.brilhanteDe(dex) === 'capturado' ? 'exemplar brilhante no seu registro' : 'um exemplar brilhante avistado'}</span></div>` : ''}
@@ -120694,16 +120828,22 @@ const UI = {
 
   modalRota(){
     const d = Estado.dados;
-    const percorridos = CAPITULOS.filter(c => c.num <= d.capitulo);
-    const pulados = Historia.capitulosPulados();
+    /* o que você viveu, na ordem em que viveu: os fechados e o de agora.
+       Pelo número ("todo capítulo até o atual") entravam os dez capítulos
+       de caminho do 12 de uma vez, e nenhum condicional que você viveu.
+       E o que não aconteceu não aparece: quem não passou por um desvio
+       nunca fica sabendo que ele existia (condicionais.js). */
+    const fechados = d.capitulosFechados || [];
+    const percorridos = fechados.concat(fechados.includes(d.capitulo) ? [] : [d.capitulo])
+      .map(n => CAPITULOS.find(c => c.num === n)).filter(Boolean);
+    const rotulo = c => c.caminho ? `${numeroDoCapitulo(c)} — ${c.titulo}` : `${c.num}. ${c.titulo}`;
     this.modal('A sua rota', `
       <div class="linha"><span class="k">Rota narrativa</span><span class="v">${this.esc(NOME_VIA[d.via]||d.via||'neutro')}</span></div>
       <h3>Capítulos vividos</h3>
-      ${percorridos.map(c=>`<div class="linha"><span class="k">${c.num}. ${this.esc(c.titulo)}</span><span class="v">${this.esc(c.tom)}</span></div>`).join('')}
-      ${pulados.length ? '<h3>O que não aconteceu nesta jornada</h3>' + pulados.map(t=>`<div class="linha"><span class="k">${this.esc(t)}</span><span class="v">—</span></div>`).join('') : ''}
+      ${percorridos.map(c=>`<div class="linha longa"><span class="k">${this.esc(rotulo(c))}</span><span class="v">${this.esc(c.tom || '')}</span></div>`).join('')}
       <h3>Decisões que o mundo registrou</h3>
       ${d.reputacao.historico.length
-        ? d.reputacao.historico.slice(-25).map(h=>`<div class="linha"><span class="k">Cap ${h.cap} · ${this.esc(h.motivo)}</span><span class="v" style="color:${h.eixo==='bom'?'var(--bom)':'var(--ruim)'}">${h.eixo} +${h.delta}</span></div>`).join('')
+        ? d.reputacao.historico.slice(-25).map(h=>`<div class="linha longa"><span class="k">Cap ${h.cap} · ${this.esc(h.motivo)}</span><span class="v" style="color:${h.eixo==='bom'?'var(--bom)':'var(--ruim)'}">${h.eixo} +${h.delta}</span></div>`).join('')
         : '<p class="nada">Nada ainda.</p>'}
     `);
   },
@@ -120716,7 +120856,7 @@ const UI = {
     const fins = codice.filter(f => eps.indexOf(f) === -1);
     const bloco = (titulo, lista, total, vazio) =>
       `<h3>${titulo} — ${lista.length} de ${total}</h3>` +
-      (lista.length ? lista.map(f=>`<div class="linha"><span class="k">${this.esc(String(f.titulo).replace(/^Epílogo: /,''))}</span><span class="v">✓</span></div>`).join('')
+      (lista.length ? lista.map(f=>`<div class="linha longa"><span class="k">${this.esc(String(f.titulo).replace(/^Epílogo: /,''))}</span><span class="v">✓</span></div>`).join('')
                     : `<p class="nada">${vazio}</p>`);
     this.modal('Códice de finais',
       bloco('Finais', fins, totalFim, 'Nenhum ainda.') +
@@ -121219,7 +121359,7 @@ const UI = {
       <div class="linha"><span class="k">Foresight</span><span class="v">tira a evasão que subiu · Normal e Lutador passam a acertar Fantasma</span></div>
       <div class="linha"><span class="k">Roar, Whirlwind</span><span class="v">agem por último · em selvagem acabam a luta · em treinador trocam o Pokémon dele</span></div>
       <div class="linha"><span class="k">Teleport</span><span class="v">sai de luta contra selvagem</span></div>
-      <div class="linha"><span class="k">Transform</span><span class="v">vira cópia do outro: tipos, atributos (menos HP), golpes com 5 PP e estágios · desfaz no fim</span></div>
+      <div class="linha"><span class="k">Transform</span><span class="v">vira cópia do outro: tipos, atributos (menos HP), golpes e estágios · desfaz no fim</span></div>
       <div class="linha"><span class="k">Mirror Move · Psych Up · Conversion</span><span class="v">repete o último golpe do outro · copia os estágios dele · vira do tipo de um golpe seu</span></div>
       <div class="linha"><span class="k">Swagger</span><span class="v">Força do outro +2 e confusão</span></div>
       <div class="linha"><span class="k">Sleep Talk · Snore</span><span class="v">só dormindo · Sleep Talk sorteia outro golpe seu · Snore pode fazer encolher (30%)</span></div>
@@ -121404,10 +121544,10 @@ const UI = {
       ${Object.values(Estado.dados.lendarios||{}).some(l=>l.encontros || l.visto) ? `
       <h3>Captura de lendários</h3>
       <div class="linha"><span class="k">Bola</span><span class="v">só Ultra Ball e Master Ball · qualquer outra bate e cai aberta, e gasta${Estado.dados.flags.bola_fraca_em_lendario ? ' — você viu' : ''}</span></div>
-      <div class="linha"><span class="k">Ultra Ball</span><span class="v">a regra de captura do Pokérole: o selo da bola (8d6, sucesso em 4+) mais os sucessos de bônus, contra os sucessos que o posto pede · lendário conta no mínimo como Ás: pede 10 · com o HP cheio, não tem como</span></div>
+      <div class="linha"><span class="k">Ultra Ball</span><span class="v">a regra de captura do Pokérole: o selo da Pokébola (8d6, sucesso em 4+) mais os sucessos de bônus, contra os sucessos que o posto pede · lendário conta no mínimo como Ás: pede 10 · com o HP cheio, não tem como</span></div>
       <div class="linha"><span class="k">Bônus</span><span class="v">com metade do HP ou menos +1 · com 1 HP +2 (no lugar do +1) · +1 por condição (a de status e a confusão)</span></div>
       <div class="linha"><span class="k">Master Ball</span><span class="v">fecha sem rolagem</span></div>
-      <div class="linha"><span class="k">Insistir</span><span class="v">cada bola que ele rompe conta · na terceira, quem estava neutro fica hostil</span></div>
+      <div class="linha"><span class="k">Insistir</span><span class="v">cada Pokébola que ele rompe conta · na terceira, quem estava neutro fica hostil</span></div>
       ${Object.values(Estado.dados.lendarios||{}).some(l=>l.quebrouBola) ? '<p class="sussurro">E existem coisas que simplesmente quebram a Pokébola no ar.</p>' : ''}` : ''}
       <h3>Perícias</h3>
       <p class="sussurro">Parar e olhar vale uma vez por cena: a segunda olhada nunca mostrou nada.</p>
