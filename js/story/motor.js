@@ -2,7 +2,7 @@
    MOTOR NARRATIVO — resolve cenas, efeitos e progressão
    ============================================================ */
 const NOME_VIA = {
-  neutro:'mais um treinador na estrada',
+  neutro:'mais {um treinador|uma treinadora} na estrada',
   heroi:'alguém que aparece quando as coisas dão errado',
   mercenario:'alguém que se resolve com dinheiro',
   foragido:'um problema com nome e sobrenome',

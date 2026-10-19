@@ -18,7 +18,7 @@ const CHANCE_ERRANTE = 1;
 
 const LENDARIOS_ERRANTES = {
   144:{lugares:['seafoam', 'rota19', 'rota21'], nivel:56,
-       sinal:'O ar esfria de uma vez, e a sua respiração sai branca no meio do dia.'},
+       sinal:'O ar esfria de uma vez, e a sua respiração sai branca como se fosse inverno.'},
   145:{lugares:['usina', 'rota9', 'norte'], nivel:56,
        sinal:'Os pelos do seu braço levantam. Um estalo seco, e o cheiro de chuva sem chuva nenhuma.'},
   146:{lugares:['caminho_vitoria', 'rota23'], nivel:54,

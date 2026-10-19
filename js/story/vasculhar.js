@@ -27,8 +27,8 @@ const ACHADOS_VASCULHAR = {
     {t:'Um Pidgey pousa na cerca a dois metros de você, te olha de lado e decide que você não é problema.', rastro:[16, 17], so:'dia'},
     {t:'No meio do capim alto, um saquinho de Ração aberto pela metade, com marca de dente na ponta.', item:['Ração', 1]},
     {t:'Uma placa de madeira caída, com a seta apontando pro chão. Você endireita. Ninguém vai saber que foi você.'},
-    {t:'Barulho de capim sendo mastigado, de noite, perto demais. Quando você acende a lanterna, só tem o capim.', rastro:[19, 20, 29, 32], so:'noite'},
-    {t:'Uma fileira de formigueiros mexidos, todos do mesmo lado. Alguém cava aqui toda manhã, e cava direito.', rastro:[27, 28]},
+    {t:'Barulho de capim sendo mastigado, de noite, perto demais. Quando você chega perto, só tem o capim.', rastro:[19, 20, 29, 32], so:'noite'},
+    {t:'Uma fileira de montinhos de terra mexidos, todos do mesmo lado. Alguém cava aqui toda manhã, e cava direito.', rastro:[27, 28]},
     {t:'Um frasco de Água Fresca esquecido no muro de pedra, ainda gelado da sombra.', item:['Água Fresca', 1]},
     {t:'Um Rattata atravessa a trilha carregando uma casca de pão maior que ele, e não para pra você.', rastro:[19], so:'dia'},
     {t:'Olhos acesos no capim, baixos, uns dez pares. Quando você dá um passo, apagam todos ao mesmo tempo.', rastro:[19, 20], so:'noite'}
@@ -69,7 +69,7 @@ const ACHADOS_VASCULHAR = {
   caverna:[
     {t:'Uma pedra pendurada no teto — não, um Zubat dormindo de cabeça pra baixo — e mais trinta em volta. Você sai devagar.', rastro:[41, 42]},
     {t:'Uma pedra lisa e redonda que brilha pouquinho quando você cobre com a mão. Fica com você.', item:['Moon Stone', 1], raro:true},
-    {t:'Restos de fogueira e uma Pokébola rachada. Alguém acampou aqui e saiu sem ela.', item:['Poké Ball', 1]},
+    {t:'Restos de fogueira e, no meio da cinza, uma Pokébola fechada e vazia. Alguém acampou aqui e saiu sem ela.', item:['Poké Ball', 1]},
     {t:'Uma trilha de cogumelos na parede úmida, comidos pela metade.', rastro:[46, 47]},
     {t:'Pilha nova dentro de uma lanterna esquecida no chão.', item:['Pilha', 2]},
     {t:'Pingo, pingo, pingo, e um eco que não volta igual. Tem outra galeria do lado de lá da parede.'},
@@ -101,7 +101,7 @@ const ACHADOS_VASCULHAR = {
     {t:'Uma Poké Ball perdida no bueiro, presa na grade. Dá pra puxar com dois dedos.', item:['Poké Ball', 1]},
     {t:'Um Meowth em cima do muro, lambendo a pata, te ignorando de propósito.', rastro:[52]},
     {t:'Na escadaria da praça, alguém esqueceu um frasco de Potion e um lenço dobrado.', item:['Potion', 1]},
-    {t:'Pombos — não, Pidgey — esperando o homem do banco jogar migalha. Ele joga. Eles brigam.', rastro:[16], so:'dia'},
+    {t:'Um bando de Pidgey esperando o homem do banco jogar migalha. Ele joga. Eles brigam.', rastro:[16], so:'dia'},
     {t:'Um Grimer saindo devagar de um bueiro, de noite, cheirando mal, e voltando quando te vê.', rastro:[88], so:'noite'},
     {t:'Uma criança vende pilha usada na calçada, duas por uma moeda, e uma delas ainda funciona.', item:['Pilha', 1], so:'dia'},
     {t:'Um Pokémon de alguém dormindo na porta de uma loja fechada, com coleira e nome bordado. Não é seu problema e você deixa ele dormir.'},
@@ -120,7 +120,7 @@ const ACHADOS_VASCULHAR = {
     {t:'O zumbido aqui dentro muda de tom quando você chega perto da parede norte. Tem alguma coisa grande dormindo do outro lado.'}
   ],
   cemiterio:[
-    {t:'Uma vela apagada na frente de uma lápide pequena, com um Poké Ball de brinquedo do lado.'},
+    {t:'Uma vela apagada na frente de uma lápide pequena, com uma Pokébola de brinquedo do lado.'},
     {t:'Um frio que passa por você na escada, de baixo pra cima, e some.', rastro:[92, 93]},
     {t:'Risada baixinha atrás de uma lápide. Quando você olha, só a lápide.', rastro:[92], so:'noite'},
     {t:'Flor nova em cima de cada lápide do corredor, todas iguais. Alguém vem aqui todo dia.'},
@@ -150,7 +150,7 @@ const ACHADOS_DO_LUGAR = {
   floresta:[
     {t:'Um Pikachu sentado num toco, com as bochechas soltando faísca baixinha, comendo uma fruta com as duas mãos.', rastro:[25], so:'dia'},
     {t:'Um caminho de casulos de Kakuna pendurados no mesmo galho, sete, imóveis. Um deles se mexe quando você passa.', rastro:[14]},
-    {t:'Um caderno de treinador molhado, aberto numa página que diz: "Dia 4. Ainda perdid{o|a}. O Caterpie evoluiu."'}
+    {t:'Um caderno de treinador molhado, aberto numa página que diz: "Dia 4. Ainda sem achar a saída. O Caterpie evoluiu."'}
   ],
   monte_lua:[
     {t:'Pegadas pequenas, redondas, em fila, indo pro fundo da caverna. E uma melodia baixinha vindo de lá.', rastro:[35], so:'noite'},
@@ -198,7 +198,7 @@ const ACHADOS_DO_LUGAR = {
 /* quando você procura no lugar errado: muda com o lugar e com a hora */
 const FALHAS_VASCULHAR = {
   campo:[
-    d => ehNoite() ? 'Você procura no escuro, tropeça em dois cupinzeiros e volta com a calça cheia de carrapicho.' : 'Você procura um período inteiro no capim errado. O sol muda de lado e você nem viu.',
+    d => ehNoite() ? 'Você procura no escuro, tropeça em dois montes de terra e volta com a calça cheia de carrapicho.' : 'Você procura um período inteiro no capim errado. O sol muda de lado e você nem viu.',
     'Você acha uma moeda de muito tempo atrás que não vale mais nada, e guarda assim mesmo.',
     'O vento deita o capim todo pro mesmo lado e esconde qualquer coisa que tivesse ali.'
   ],
@@ -213,7 +213,7 @@ const FALHAS_VASCULHAR = {
     d => ehNoite() ? 'Na montanha, de noite, o melhor que dá pra achar é o caminho de volta. Você acha.' : 'Pedra, pedra, pedra. Uma era bonita. Você deixa onde estava.'
   ],
   caverna:[
-    'A lanterna pisca e você passa mais tempo batendo nela do que olhando em volta.',
+    d => Estado.contaItem('Lanterna') ? 'A lanterna pisca e você passa mais tempo batendo nela do que olhando em volta.' : 'Sem luz, você passa mais tempo tateando parede do que olhando em volta.',
     'Você entra numa galeria que acaba em parede, e outra, e outra. A caverna está de mau humor.',
     'O eco dos seus passos vem de três lados. Você não acha nada e não fica nem um pouco mais calm{o|a}.'
   ],
@@ -225,7 +225,7 @@ const FALHAS_VASCULHAR = {
   cidade:[
     'Você olha atrás de muro, debaixo de banco e dentro de vaso de planta, e uma senhora pergunta se você perdeu alguma coisa.',
     d => ehNoite() ? 'A cidade de noite esconde tudo atrás de porta fechada. Você só acha porta fechada.' : 'Muita gente na rua, muito barulho, e nada que não fosse de ninguém.',
-    'Um vendedor te oferece um mapa da cidade. A cidade não precisa de mapa: são três ruas.'
+    'Um vendedor te oferece um mapa da cidade. Você não compra, e se perde duas ruas depois.'
   ],
   ruina:[
     'Poeira, fio, ferrugem. Você espirra tanto que o que estivesse aqui fugiu.',
@@ -346,7 +346,7 @@ const ACAMPAMENTO = {
     agua:['Você monta a barraca acima da linha da maré, que você descobre olhando onde a areia muda de cor.',
           'O barulho da água vira o barulho de tudo. Em meia hora você nem ouve mais.',
           'O fogo de beira de rio estala com a lenha úmida e solta mais fumaça que calor.'],
-    cidade:['Você estende o saco de dormir no gramado da praça, perto do Centro. O guarda passa, olha e finge que não viu.'],
+    cidade:['Você estende o saco de dormir no gramado da praça. O guarda passa, olha e finge que não viu.'],
     ruina:['Você dorme dentro de uma sala com porta, porque porta é porta, mesmo quebrada.'],
     cemiterio:['Você acampa na escada de fora da torre, onde ainda é do lado de fora.'],
     vulcao:['Você acha um ponto onde o chão não está quente. Leva uma hora pra achar.']

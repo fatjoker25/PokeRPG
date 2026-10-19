@@ -1272,8 +1272,12 @@ const Cidade = {
         falas:g.depois(Estado.dados).filter(Boolean), quem:`Líder ${g.lider}`,
         botoes:[{texto:'Sair do ginásio', acao:'Exploracao.tela()'}]});
     }
+    /* a recusa é o líder falando: balão com rosto, como o resto da
+       conversa de ginásio, e não tarja */
     if (st.estado === 'recusado')
-      return Exploracao.tela([{tipo:'dano', texto:st.fala}]);
+      return UI.telaConversa({num:(LOCAIS[id] || {}).nome, titulo:`Ginásio de ${g.cidade}`, loc:'a porta',
+        falas:[].concat(st.fala).filter(Boolean), quem:`Líder ${g.lider}`, monologo:true,
+        botoes:[{texto:'Sair', acao:'Exploracao.tela()'}]});
     if (st.estado !== 'disponivel')
       return Exploracao.tela([{tipo:'info', texto:st.texto}]);
     Jogo.voltarDeGinasio = 'exploracao';

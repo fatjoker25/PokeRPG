@@ -96,7 +96,7 @@ const GINASIOS = [
   intro:d=>[
     'O ginásio de Cerulean é uma piscina olímpica com uma passarela no meio. A acústica faz tudo ecoar duas vezes.',
     d.flags.salvou_vaporeon
-      ? '"Você é o da Rota 25." Misty já está de pé quando você entra. "A Sibyl chorou aqui na minha porta contando. Eu ia te procurar."'
+      ? '"Você é {o|a} da Rota 25." Misty já está de pé quando você entra. "A Sibyl chorou aqui na minha porta contando. Eu ia te procurar."'
       : d.flags.destruiu_tigelas || d.flags.entregou_envenenador
       ? '"As tigelas." Ela assente devagar. "Foi você. Meus irmãos acham que foi a prefeitura."'
       : '"Regra da casa: o chão é escorregadio e eu não aviso duas vezes."',
@@ -287,7 +287,9 @@ const GINASIOS = [
        e Sabrina recebe quem aparecer. Da terceira em diante a torre de
        vidro está tomada, o ginásio fecha e só reabre depois da Silph. */
     if (numInsignias() >= 3 && d.capitulo < 12 && !d.flags.entrou_no_ginasio_saffron && !d.flags.viu_os_doze && !d.flags.sabrina_aliada)
-      return 'O ginásio está trancado. Um papel na porta: "SUSPENSO POR TEMPO INDETERMINADO — S." A luz interna está acesa. Duas quadras pra cima, tem homem de terno escuro na porta da Silph, e nenhum deles é da Silph.';
+      return ['O ginásio está trancado. Tem um papel colado na porta, escrito à mão:',
+              '**SUSPENSO POR TEMPO INDETERMINADO — S.**',
+              'A luz interna está acesa. Duas quadras pra cima, tem homem de terno escuro na porta da Silph, e nenhum deles é da Silph.'];
     return null;
   },
   comoDestravar:'Sabrina fechou o ginásio por causa do que ela ouve embaixo da Silph. Vá até lá — ou espere o mundo seguir sem você.',
@@ -307,7 +309,7 @@ const GINASIOS = [
       : d.flags.destruiu_o_11
       ? '"Eu ainda ouço." Sabrina abre a porta sem tocar nela. "Mas eu ouvi o que você fez depois, por muito tempo, em muitos lugares. Isso não apaga aquilo. Só me deixa ficar na mesma sala."'
       : d.flags.ivone_tem_o_11 || d.flags.liga_lacrou_o_11
-      ? '"O barulho parou na quinta-feira." Ela te olha com uma intensidade desconfortável. "Você é o motivo. Senta."'
+      ? '"O barulho parou." Ela te olha com uma intensidade desconfortável. "Você é o motivo. Senta."'
       : '"Você pensa alto demais." Ela toca a têmpora. "Eu vou ouvir cada ordem antes de você dar. Isso não é trapaça — é o meu tipo."'
   ],
   vitoria:d=>[
@@ -391,7 +393,8 @@ const GINASIOS = [
 
   intro:d=>[
     'O ginásio de Viridian ficou lacrado por dois anos depois que a Equipe Rocket foi desmontada. Ninguém quis o lugar. Ele tinha cheiro do que tinha sido.',
-    'Hoje está aberto, repintado, e tem uma placa nova na porta que diz só: "SETE INSÍGNIAS."',
+    'Hoje está aberto, repintado, e tem uma placa nova na porta, que diz só isto:',
+    '**SETE INSÍGNIAS.**',
     'O líder tem a sua idade mais três ou quatro anos, jaqueta cara e uma segurança que não é totalmente falsa.',
     '"Blue." Ele não estende a mão. "Antes que você pergunte: sim, aquele Blue. E não, eu não sei onde o Red está."',
     d.flags.sabe_da_terceira
@@ -405,7 +408,7 @@ const GINASIOS = [
     'O último cai e Blue fica olhando a arena por um tempo antes de olhar você.',
     '"Ok." Ele diz só isso por uns cinco segundos. "Ok."',
     'Ele pega a insígnia de uma caixa na parede e te entrega.',
-    '"Eu fui campeão por quatorze minutos." Ele guarda a caixa. "Catorze. Aí o Red entrou pela porta e eu voltei a ser o cara que perdeu."',
+    '"Eu fui campeão por catorze minutos." Ele guarda a caixa. "Catorze. Aí o Red entrou pela porta e eu voltei a ser o cara que perdeu."',
     Estado.rep.eixo==='bom' && Estado.rep.bom>=6
       ? '"Você é melhor do que eu era. Isso não me incomoda mais, o que é a coisa mais adulta que eu consegui aprender em dois anos."'
       : d.via==='foragido' || d.via==='mercenario'
@@ -416,7 +419,7 @@ const GINASIOS = [
     '"O Red nunca falava nada. Essa foi a frase mais longa que eu ouvi dele na vida."'
   ],
   derrota:d=>[
-    'Você perde para seis Pokémon completamente destreinados de fraqueza.',
+    'Você perde para seis Pokémon escolhidos pra não ter fraqueza nenhuma.',
     'Blue não comemora. Ele parece quase irritado.',
     '"Você chegou aqui com sete insígnias e perdeu." Ele chama alguém pra levar seu time ao Centro. "Isso significa que uma delas foi de graça. Descobre qual e volta."'
   ]

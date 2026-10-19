@@ -108,57 +108,60 @@ function moralDeGosto(p){
 }
 
 /* A linha que abre cada capítulo: a sua via e o seu objetivo, no lugar
-   em que você está. Muda quando a via muda. */
+   em que você está. Muda quando a via muda. Linha com {t, cidade:true}
+   só sai na cidade: capítulo que abre em rota ou caverna não tem praça,
+   rua de trás nem fila de Centro. */
 const LINHAS_DA_VIA = {
   heroi:[
-    'Na entrada, alguém aponta você pra outra pessoa e as duas acenam. É o tipo de reconhecimento que não se compra.',
+    'No caminho, alguém aponta você pra outra pessoa e as duas acenam. É o tipo de reconhecimento que não se compra.',
     'Uma criança pergunta se você é {aquele|aquela} que ajudou. Você diz que foi um pouco de sorte. Ela não acredita.',
     'Tem gente que confia em você antes de você abrir a boca. Isso abre porta e pesa no ombro.'
   ],
   mercenario:[
-    'Dois sujeitos encostados no muro medem o seu cinto antes de medir a sua cara. Notícia de quem resolve com dinheiro anda rápido.',
+    {cidade:true, t:'Dois sujeitos encostados no muro medem o seu cinto antes de medir a sua cara. Notícia de quem resolve com dinheiro anda rápido.'},
     'Alguém já sabe o seu preço antes de você dizer. Você não lembra de ter dito.',
     'Te oferecem um serviço antes do bom-dia. É o que a sua fama compra.'
   ],
   foragido:[
-    'Tem uma descrição parecida com a sua num papel colado no poste. Parecida o bastante.',
-    'Você escolhe a rua de trás sem pensar. Já virou hábito.',
+    {cidade:true, t:'Tem uma descrição parecida com a sua num papel colado no poste. Parecida o bastante.'},
+    {cidade:true, t:'Você escolhe a rua de trás sem pensar. Já virou hábito.'},
+    'Você olha pra trás uma vez a cada cem passos, sem contar. Já virou hábito.',
     'Quem te reconhece abaixa os olhos. Quem não te reconhece ainda vai.'
   ],
   pesquisador:[
     'Você anota a hora e o lugar antes de qualquer outra coisa. O caderno já tem mais página escrita do que em branco.',
-    'Alguém da cidade pergunta se você é "{o|a} da Pokédex". Você é.',
+    {cidade:true, t:'Alguém da cidade pergunta se você é "{o|a} da Pokédex". Você é.'},
     'Primeiro você olha o que vive aqui. Depois o resto.'
   ],
   /* as linhas de posto (js/story/linhas.js) */
   lei:[
     'Você repara primeiro na guarita, depois em quem está de pé na esquina sem motivo. O posto ensina a olhar nessa ordem.',
-    'Um guarda da cidade te cumprimenta com dois dedos na aba do boné. Entre gente de patrulha é assim.',
-    'Alguém pergunta onde fica a delegacia. Você sabe, e sabe também qual porta fica aberta de noite.'
+    {cidade:true, t:'Um guarda da cidade te cumprimenta com dois dedos na aba do boné. Entre gente de patrulha é assim.'},
+    {cidade:true, t:'Alguém pergunta onde fica a delegacia. Você sabe, e sabe também qual porta fica aberta de noite.'}
   ],
   rocket:[
     'O aparelho do envelope está no bolso de dentro. Pesa mais do que o tamanho dele.',
-    'Você conta as pessoas no Centro sem querer. Virou costume, e o costume tem dono.',
-    'Na parede da estação tem uma letra R pichada pequena, perto do chão. Você não tinha reparado nessas antes.'
+    'Você conta as pessoas em volta sem querer. Virou costume, e o costume tem dono.',
+    {cidade:true, t:'Num muro da cidade tem uma letra R pichada pequena, perto do chão. Você não tinha reparado nessas antes.'}
   ],
   ciencia:[
     'Você anota a hora e o lugar antes de qualquer outra coisa. O caderno já tem mais página escrita do que em branco.',
-    'Alguém da cidade pergunta se você é "{o|a} da Pokédex". Você é.',
+    {cidade:true, t:'Alguém da cidade pergunta se você é "{o|a} da Pokédex". Você é.'},
     'Primeiro você olha o que vive aqui. Depois o resto.'
   ],
   imprensa:[
     'Você lê a placa da entrada inteira, inclusive a parte pequena. Jornal ensina isso.',
-    'Tem uma banca de jornal na praça, e o Jornal de Fuchsia está pendurado de cabeça pra baixo. Você endireita.',
-    'Alguém conta uma história na fila do Centro e você já está pensando no título.'
+    {cidade:true, t:'Tem uma banca de jornal na praça, e o Jornal de Fuchsia está pendurado de cabeça pra baixo. Você endireita.'},
+    {cidade:true, t:'Alguém conta uma história na fila do Centro e você já está pensando no título.'}
   ],
   criacao:[
-    'Você olha primeiro o pelo, a pata e o olho de cada Pokémon da rua. Depois a cara do dono.',
-    'Tem um cercado na saída da cidade, e você já sabe, de longe, que a água está velha.',
+    {cidade:true, t:'Você olha primeiro o pelo, a pata e o olho de cada Pokémon da rua. Depois a cara do dono.'},
+    {cidade:true, t:'Tem um cercado na saída da cidade, e você já sabe, de longe, que a água está velha.'},
     'Uma criança te mostra o Pokémon dela, e você se agacha antes de olhar. É assim que se olha.'
   ],
   liga:[
     'Duas crianças te reconhecem do agasalho da Liga e param de brincar pra ver você passar.',
-    'Você confere sem querer o que cada treinador da rua leva na pata do Pokémon.',
+    'Você confere sem querer o cinto de cada treinador que passa: quantas Pokébolas, de que cor.',
     'A Liga tem cartaz em toda cidade. Você conhece quem fez a foto.'
   ],
   neutro:[
@@ -187,7 +190,13 @@ function avisosDeRumo(){
   if (d.viaAnterior && d.viaAnterior !== via && !d.flags['viu_virada_' + via]){
     d.flags['viu_virada_' + via] = true;
     out.push({tipo:'info', texto:`O jeito que te olham mudou. Antes você era ${NOME_VIA[d.viaAnterior] || 'outra coisa'}; agora é ${NOME_VIA[via] || via}.`});
-  } else out.push({tipo:'info', texto:Dados.escolher(LINHAS_DA_VIA[chave] || LINHAS_DA_VIA.neutro)});
+  } else {
+    const naCidade = (Mundo.atual() || {}).tipo === 'cidade';
+    const cabe = (LINHAS_DA_VIA[chave] || LINHAS_DA_VIA.neutro)
+      .filter(x => typeof x === 'string' || !x.cidade || naCidade)
+      .map(x => typeof x === 'string' ? x : x.t);
+    out.push({tipo:'info', texto:Dados.escolher(cabe)});
+  }
   const m = LINHAS_DA_META[r.meta];
   if (m) out.push({tipo:'eco', texto:m(d)});
   const g = bonusDeGosto();
