@@ -3269,6 +3269,11 @@ const UI = {
   telaResultadoLiga(o){
     this.limpar();
     this.add(this.topo());
+    /* no meio de uma sequência (sala da Elite, rodada de torneio ou de
+       Conferência) só tem a porta da frente: a ala não deixa sair até
+       vencer os quatro ou perder pra um, e o chaveamento tem a
+       desistência dele */
+    const meio = !!(o.continuar || o.torneio || o.conferencia);
     this.add(`<div class="painel">
       <div class="cap-cabecalho">
         <div class="num">${this.esc(o.sub||'Liga Pokémon')}</div>
@@ -3281,9 +3286,10 @@ const UI = {
         ${o.continuar ? `<button class="escolha" onclick="Jogo.continuarElite()">Abrir a próxima porta</button>` : ''}
         ${o.torneio ? `<button class="escolha" onclick="UI.telaTorneio()">Voltar ao chaveamento</button>` : ''}
         ${o.conferencia ? `<button class="escolha" onclick="UI.telaConferencia()">Voltar ao chaveamento</button>` : ''}
+        ${meio ? '' : `
         ${!o.venceu && Exploracao.temCentro(Mundo.atual()) ? `<button class="escolha" onclick="Jogo.hubCentro()">Passar no Centro</button>` : ''}
         <button class="escolha" onclick="UI.telaLiga()">Voltar à Liga</button>
-        <button class="escolha" onclick="Jogo.voltarDosGinasios()">Continuar a jornada</button>
+        <button class="escolha" onclick="Jogo.voltarDosGinasios()">Continuar a jornada</button>`}
       </div>
     </div>`);
     if (o.avisos && o.avisos.length) this.avisos(o.avisos);

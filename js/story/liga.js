@@ -11,7 +11,7 @@
    é a arena de baixo, outra sala. */
 const ELITE4 = [
 {
-  id:'giselle', ordem:1, nome:'Giselle', titular:'Lorelei', tipo:'variado', nivelBase:60,
+  id:'giselle', ordem:1, nome:'Giselle', titular:'Lorelei', tipo:'variado', nivelBase:60, f:true,
   especies:[105, 40, 53, 31, 112],   // Marowak, Wigglytuff, Persian, Nidoqueen, Rhydon
   intro:d=>[
     'O corredor da ala tem quatro portas seguidas. A primeira tem uma placa de bronze parafusada na altura dos olhos: LORELEI.',
@@ -153,29 +153,29 @@ const RIVAIS_TORNEIO = [
    cond:d=>!!d.npcs['Ezra'] && d.npcs['Ezra'].opiniao < 0},
   {nome:'Caçador Roque', tipos:['Venenoso','Terrestre'], fala:'"Torneio é o único lugar onde eu posso te bater na frente de gente e sair aplaudido."',
    cond:d=>!!d.npcs['Caçador Roque']},
-  {nome:'Fenna, da Silph', tipos:['Elétrico','Psíquico'], fala:'"Eu pedi demissão." Ela dá de ombros. "Sobrou tempo pra treinar."',
+  {nome:'Fenna, da Silph', f:true, tipos:['Elétrico','Psíquico'], fala:'"Eu pedi demissão." Ela dá de ombros. "Sobrou tempo pra treinar."',
    cond:d=>!!d.npcs['Fenna (crachá azul)']},
   {nome:'Guia Orin', tipos:['Inseto','Grama'], fala:'"Eu saí da Zona." Orin está diferente. "Pedi as contas depois de tudo aquilo. Tô aqui."',
    cond:d=>!!d.npcs['Guia Orin']},
   {nome:'Ás do Planalto', tipos:['Dragão','Voador'], fala:'"Eu treino aqui. Literalmente aqui. Boa sorte."'},
-  {nome:'Veterana de Saffron', tipos:['Psíquico','Fantasma'], fala:'"Décimo quarto torneio. Eu não vim ganhar, eu vim continuar vindo."'},
+  {nome:'Veterana de Saffron', f:true, tipos:['Psíquico','Fantasma'], fala:'"Décimo quarto torneio. Eu não vim ganhar, eu vim continuar vindo."'},
   {nome:'Pescador de Fuchsia', tipos:['Água','Gelo'], fala:'"Eu não uso Poké Ball cara e ainda assim eu ganho de gente rica. É o meu hobby."'},
   {nome:'Criador de Pallet', tipos:['Normal','Lutador'], fala:'"Eu crio. Eu não batalho. Mas os meus batalham."'},
   {nome:'Estudante de Cinnabar', tipos:['Fogo','Pedra'], fala:'"O Blaine é meu professor. Ele diz pra nunca subestimar quem chega com a mochila suja."'},
   {nome:'Mochileiro da Rota 3', tipos:['Pedra','Terrestre'], fala:'"Eu durmo no mato há dois anos. Isso conta como treino?"'},
-  {nome:'Enfermeira de folga', tipos:['Normal','Psíquico'], fala:'"Eu curo time a semana inteira. Hoje eu machuco."'}
+  {nome:'Enfermeira de folga', f:true, tipos:['Normal','Psíquico'], fala:'"Eu curo time a semana inteira. Hoje eu machuco."'}
 ];
 
 /* Monta um adversário de torneio com time escalado ao jogador */
 function adversarioTorneio(rival, nivelAlvo){
   // Ezra entra com o time de verdade dele, no arco em que estiver
   if (rival.nome === 'Ezra' && Estado.dados.rival){
-    return {nome:'Ezra', fala: rival.fala, time: timeRival()};
+    return {nome:'Ezra', f:false, fala: rival.fala, time: timeRival()};
   }
   // veterano vencido entra com as linhas do time dele, três Pokémon
   if (rival.veterano && typeof veterano === 'function'){
     const v = veterano(rival.veterano);
-    return {nome: rival.nome, fala: rival.fala, time: timeDeLinhas(v.times, nivelAlvo + 1, 3, v.golpes, 85)};
+    return {nome: rival.nome, f:!!v.f, fala: rival.fala, time: timeDeLinhas(v.times, nivelAlvo + 1, 3, v.golpes, 85)};
   }
   const pool = poolSelvagem().filter(d => {
     const p = DEX[d];
@@ -193,7 +193,7 @@ function adversarioTorneio(rival, nivelAlvo){
     usados.add(dex);
     time.push(criarPokemon(dex, Math.max(5, nivelAlvo + Dados.entre(-2, 2)), {}));
   }
-  return {nome: rival.nome, fala: rival.fala, time};
+  return {nome: rival.nome, f:!!rival.f, fala: rival.fala, time};
 }
 
 function nivelDoJogador(){
@@ -232,7 +232,7 @@ const INSCRICAO_TORNEIO = 2000;
 /* ── disponibilidade ───────────────────────────────────── */
 function statusElite4(){
   const d = Estado.dados;
-  if (d.flags.campeao_de_kanto) return {estado:'concluido', texto:'Você é o Campeão de Kanto'};
+  if (d.flags.campeao_de_kanto) return {estado:'concluido', texto:'Você é {o Campeão|a Campeã} de Kanto'};
   if (numInsignias() < 8) return {estado:'trancado', texto:`Exige as 8 insígnias (você tem ${numInsignias()})`};
   return {estado:'disponivel', texto:'Ala da Elite 4 aberta'};
 }

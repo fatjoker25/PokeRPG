@@ -31616,7 +31616,7 @@ const Barreiras = {
    é a arena de baixo, outra sala. */
 const ELITE4 = [
 {
-  id:'giselle', ordem:1, nome:'Giselle', titular:'Lorelei', tipo:'variado', nivelBase:60,
+  id:'giselle', ordem:1, nome:'Giselle', titular:'Lorelei', tipo:'variado', nivelBase:60, f:true,
   especies:[105, 40, 53, 31, 112],   // Marowak, Wigglytuff, Persian, Nidoqueen, Rhydon
   intro:d=>[
     'O corredor da ala tem quatro portas seguidas. A primeira tem uma placa de bronze parafusada na altura dos olhos: LORELEI.',
@@ -31758,29 +31758,29 @@ const RIVAIS_TORNEIO = [
    cond:d=>!!d.npcs['Ezra'] && d.npcs['Ezra'].opiniao < 0},
   {nome:'Caçador Roque', tipos:['Venenoso','Terrestre'], fala:'"Torneio é o único lugar onde eu posso te bater na frente de gente e sair aplaudido."',
    cond:d=>!!d.npcs['Caçador Roque']},
-  {nome:'Fenna, da Silph', tipos:['Elétrico','Psíquico'], fala:'"Eu pedi demissão." Ela dá de ombros. "Sobrou tempo pra treinar."',
+  {nome:'Fenna, da Silph', f:true, tipos:['Elétrico','Psíquico'], fala:'"Eu pedi demissão." Ela dá de ombros. "Sobrou tempo pra treinar."',
    cond:d=>!!d.npcs['Fenna (crachá azul)']},
   {nome:'Guia Orin', tipos:['Inseto','Grama'], fala:'"Eu saí da Zona." Orin está diferente. "Pedi as contas depois de tudo aquilo. Tô aqui."',
    cond:d=>!!d.npcs['Guia Orin']},
   {nome:'Ás do Planalto', tipos:['Dragão','Voador'], fala:'"Eu treino aqui. Literalmente aqui. Boa sorte."'},
-  {nome:'Veterana de Saffron', tipos:['Psíquico','Fantasma'], fala:'"Décimo quarto torneio. Eu não vim ganhar, eu vim continuar vindo."'},
+  {nome:'Veterana de Saffron', f:true, tipos:['Psíquico','Fantasma'], fala:'"Décimo quarto torneio. Eu não vim ganhar, eu vim continuar vindo."'},
   {nome:'Pescador de Fuchsia', tipos:['Água','Gelo'], fala:'"Eu não uso Poké Ball cara e ainda assim eu ganho de gente rica. É o meu hobby."'},
   {nome:'Criador de Pallet', tipos:['Normal','Lutador'], fala:'"Eu crio. Eu não batalho. Mas os meus batalham."'},
   {nome:'Estudante de Cinnabar', tipos:['Fogo','Pedra'], fala:'"O Blaine é meu professor. Ele diz pra nunca subestimar quem chega com a mochila suja."'},
   {nome:'Mochileiro da Rota 3', tipos:['Pedra','Terrestre'], fala:'"Eu durmo no mato há dois anos. Isso conta como treino?"'},
-  {nome:'Enfermeira de folga', tipos:['Normal','Psíquico'], fala:'"Eu curo time a semana inteira. Hoje eu machuco."'}
+  {nome:'Enfermeira de folga', f:true, tipos:['Normal','Psíquico'], fala:'"Eu curo time a semana inteira. Hoje eu machuco."'}
 ];
 
 /* Monta um adversário de torneio com time escalado ao jogador */
 function adversarioTorneio(rival, nivelAlvo){
   // Ezra entra com o time de verdade dele, no arco em que estiver
   if (rival.nome === 'Ezra' && Estado.dados.rival){
-    return {nome:'Ezra', fala: rival.fala, time: timeRival()};
+    return {nome:'Ezra', f:false, fala: rival.fala, time: timeRival()};
   }
   // veterano vencido entra com as linhas do time dele, três Pokémon
   if (rival.veterano && typeof veterano === 'function'){
     const v = veterano(rival.veterano);
-    return {nome: rival.nome, fala: rival.fala, time: timeDeLinhas(v.times, nivelAlvo + 1, 3, v.golpes, 85)};
+    return {nome: rival.nome, f:!!v.f, fala: rival.fala, time: timeDeLinhas(v.times, nivelAlvo + 1, 3, v.golpes, 85)};
   }
   const pool = poolSelvagem().filter(d => {
     const p = DEX[d];
@@ -31798,7 +31798,7 @@ function adversarioTorneio(rival, nivelAlvo){
     usados.add(dex);
     time.push(criarPokemon(dex, Math.max(5, nivelAlvo + Dados.entre(-2, 2)), {}));
   }
-  return {nome: rival.nome, fala: rival.fala, time};
+  return {nome: rival.nome, f:!!rival.f, fala: rival.fala, time};
 }
 
 function nivelDoJogador(){
@@ -31837,7 +31837,7 @@ const INSCRICAO_TORNEIO = 2000;
 /* ── disponibilidade ───────────────────────────────────── */
 function statusElite4(){
   const d = Estado.dados;
-  if (d.flags.campeao_de_kanto) return {estado:'concluido', texto:'Você é o Campeão de Kanto'};
+  if (d.flags.campeao_de_kanto) return {estado:'concluido', texto:'Você é {o Campeão|a Campeã} de Kanto'};
   if (numInsignias() < 8) return {estado:'trancado', texto:`Exige as 8 insígnias (você tem ${numInsignias()})`};
   return {estado:'disponivel', texto:'Ala da Elite 4 aberta'};
 }
@@ -33895,7 +33895,7 @@ if (typeof CHAMADAS !== 'undefined') VETERANOS.forEach(v => {
 
 /* ── no Torneio Aberto, quem você venceu pode cair no seu chaveamento ── */
 if (typeof RIVAIS_TORNEIO !== 'undefined') VETERANOS.forEach(v => {
-  RIVAIS_TORNEIO.push({nome:nomeDeLuta(v), veterano:v.id, fala:v.torneio, cond:d=>Veteranos.venceu(v.id)});
+  RIVAIS_TORNEIO.push({nome:nomeDeLuta(v), f:!!v.f, veterano:v.id, fala:v.torneio, cond:d=>Veteranos.venceu(v.id)});
 });
 
 /* ============================================================
@@ -33977,6 +33977,8 @@ const Conferencia = {
     if (fim.resultado === 'gameover'){ Jogo.conferenciaAtual = null; return UI.telaGameOver('Você caiu na arena do Planalto, na frente de quatrocentas pessoas.'); }
     const v = veterano(c.adversarios[c.rodada]);
     const pr = PREMIO_CONFERENCIA[c.rodada];
+    /* a última palavra do veterano é balão dele, com rosto */
+    const diz = t => fala(v.nome, String(txt(t) || '').replace(/^["\u201C]|["\u201D]$/g, ''));
     const venceu = fim.resultado === 'vitoria';
     const avisos = [];
     const valor = this.premio(venceu);
@@ -33988,8 +33990,8 @@ const Conferencia = {
       Estado.registrar(`Eliminado da Conferência do Planalto Indigo por ${v.nome} nas ${pr.rodada}.`);
       Estado.salvar('auto');
       return Jogo.resolverPendencias(() => UI.telaResultadoLiga({
-        titulo:'Eliminado', sub:`Conferência do Planalto Indigo · ${pr.rodada}`,
-        falas:[`${nomeDeLuta(v)}: ${txt(v.vence)}`,
+        titulo:'Eliminad{o|a}', sub:`Conferência do Planalto Indigo · ${pr.rodada}`,
+        quem:v.nome, falas:[diz(v.vence),
           'Na Conferência ninguém vaia quem perde. Quem está na arquibancada já perdeu pra todo mundo que está na arena.',
           'A Conferência é todo ano. Eles vão estar aqui.'],
         avisos, venceu:false
@@ -34016,7 +34018,7 @@ const Conferencia = {
       Estado.salvar('auto');
       return Jogo.resolverPendencias(() => UI.telaResultadoLiga({
         titulo:'{CAMPEÃO|CAMPEÃ} DA CONFERÊNCIA', sub:`Conferência do Planalto Indigo · ${d.conferenciasVencidas}º título`,
-        falas:[`${nomeDeLuta(v)}: ${txt(v.perde)}`,
+        quem:v.nome, falas:[diz(v.perde),
           'A arquibancada da Conferência não levanta pra quem ganha. Ela levanta pra quem aguentou as três.',
           'Hoje ela levanta.',
           d.conferenciasVencidas === 1 ? 'No vestiário, alguém escreveu o seu nome a giz na parede, embaixo de outros quarenta e poucos. O de cima é o da Greer, três vezes.' : 'O seu nome na parede do vestiário ganhou mais um risco do lado.'],
@@ -34026,7 +34028,7 @@ const Conferencia = {
     Estado.salvar('auto');
     Jogo.resolverPendencias(() => UI.telaResultadoLiga({
       titulo:`${v.nome} derrotad${v.f ? 'a' : 'o'}`, sub:`Conferência do Planalto Indigo · ${pr.rodada} vencida`,
-      falas:[`${nomeDeLuta(v)}: ${txt(v.perde)}`,
+      quem:v.nome, falas:[diz(v.perde),
         `Próxima: ${PREMIO_CONFERENCIA[c.rodada].rodada}, contra ${nomeDeLuta(veterano(c.adversarios[c.rodada]))}.`,
         'Vinte minutos entre as lutas. Dá pra curar o time.'],
       avisos, venceu:true, conferencia:true
@@ -119566,6 +119568,11 @@ const UI = {
   telaResultadoLiga(o){
     this.limpar();
     this.add(this.topo());
+    /* no meio de uma sequência (sala da Elite, rodada de torneio ou de
+       Conferência) só tem a porta da frente: a ala não deixa sair até
+       vencer os quatro ou perder pra um, e o chaveamento tem a
+       desistência dele */
+    const meio = !!(o.continuar || o.torneio || o.conferencia);
     this.add(`<div class="painel">
       <div class="cap-cabecalho">
         <div class="num">${this.esc(o.sub||'Liga Pokémon')}</div>
@@ -119578,9 +119585,10 @@ const UI = {
         ${o.continuar ? `<button class="escolha" onclick="Jogo.continuarElite()">Abrir a próxima porta</button>` : ''}
         ${o.torneio ? `<button class="escolha" onclick="UI.telaTorneio()">Voltar ao chaveamento</button>` : ''}
         ${o.conferencia ? `<button class="escolha" onclick="UI.telaConferencia()">Voltar ao chaveamento</button>` : ''}
+        ${meio ? '' : `
         ${!o.venceu && Exploracao.temCentro(Mundo.atual()) ? `<button class="escolha" onclick="Jogo.hubCentro()">Passar no Centro</button>` : ''}
         <button class="escolha" onclick="UI.telaLiga()">Voltar à Liga</button>
-        <button class="escolha" onclick="Jogo.voltarDosGinasios()">Continuar a jornada</button>
+        <button class="escolha" onclick="Jogo.voltarDosGinasios()">Continuar a jornada</button>`}
       </div>
     </div>`);
     if (o.avisos && o.avisos.length) this.avisos(o.avisos);
@@ -136736,11 +136744,10 @@ const Jogo = {
     if (acabou) e.campeao = true;
     Estado.salvar('auto');
     UI.telaResultadoLiga({
-      titulo: `${alvo.nome} derrotado`,
+      titulo: `${alvo.nome} derrotad${alvo.f ? 'a' : 'o'}`,
       sub: acabou ? 'A porta do fundo está aberta' : `Elite 4 · ${alvo.ordem} de 4`,
       falas: alvo.vitoria(Estado.dados), quem: alvo.nome,
-      avisos: [{tipo:'info', texto:'Seu time NÃO é curado entre as salas. Use itens se precisar.'}],
-      venceu:true, continuar:true
+      avisos: [], venceu:true, continuar:true
     });
   },
 
@@ -136801,9 +136808,9 @@ const Jogo = {
       Estado.registrar(`Eliminado do torneio por ${adv.nome} nas ${premio.rodada}.`);
       Estado.salvar('auto');
       return UI.telaResultadoLiga({
-        titulo:'Eliminado', sub:`${premio.rodada} · ${adv.nome}`,
+        titulo:'Eliminad{o|a}', sub:`${premio.rodada} · ${adv.nome}`,
         falas:[
-          `${adv.nome} vence e a arena bate palma pelo nome dele, não pelo seu.`,
+          `${adv.nome} vence e a arena bate palma pelo nome ${adv.f ? 'dela' : 'dele'}, não pelo seu.`,
           'Torneio é assim: o chaveamento não tem memória. Amanhã tem outro.',
           'Você recebe a premiação por participação num envelope com o logotipo da Liga e o seu nome escrito errado.'
         ],
@@ -136829,7 +136836,7 @@ const Jogo = {
       Estado.registrar(`Venceu o Torneio Aberto da Liga (${Estado.dados.torneiosVencidos}ª vez).`);
       Estado.salvar('auto');
       return UI.telaResultadoLiga({
-        titulo:'CAMPEÃO DO TORNEIO', sub:`${Estado.dados.torneiosVencidos}º título`,
+        titulo:'{CAMPEÃO|CAMPEÃ} DO TORNEIO', sub:`${Estado.dados.torneiosVencidos}º título`,
         falas:[
           `${adv.nome} aperta a sua mão antes do juiz anunciar, o que é o maior elogio possível.`,
           'A arena do Planalto tem quatrocentos lugares e hoje tinha umas oitenta pessoas. Torneio aberto é assim.',
@@ -136844,7 +136851,7 @@ const Jogo = {
 
     Estado.salvar('auto');
     UI.telaResultadoLiga({
-      titulo:`${adv.nome} derrotado`, sub:`${premio.rodada} vencida`,
+      titulo:`${adv.nome} derrotad${adv.f ? 'a' : 'o'}`, sub:`${premio.rodada} vencida`,
       falas:[
         `${adv.nome} sai da arena sem drama. Torneio tem essa elegância que rota não tem.`,
         `Próxima: ${PREMIO_TORNEIO[t.rodada].rodada}, contra ${t.adversarios[t.rodada].nome}.`,

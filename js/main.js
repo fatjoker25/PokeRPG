@@ -1429,11 +1429,10 @@ const Jogo = {
     if (acabou) e.campeao = true;
     Estado.salvar('auto');
     UI.telaResultadoLiga({
-      titulo: `${alvo.nome} derrotado`,
+      titulo: `${alvo.nome} derrotad${alvo.f ? 'a' : 'o'}`,
       sub: acabou ? 'A porta do fundo está aberta' : `Elite 4 · ${alvo.ordem} de 4`,
       falas: alvo.vitoria(Estado.dados), quem: alvo.nome,
-      avisos: [{tipo:'info', texto:'Seu time NÃO é curado entre as salas. Use itens se precisar.'}],
-      venceu:true, continuar:true
+      avisos: [], venceu:true, continuar:true
     });
   },
 
@@ -1494,9 +1493,9 @@ const Jogo = {
       Estado.registrar(`Eliminado do torneio por ${adv.nome} nas ${premio.rodada}.`);
       Estado.salvar('auto');
       return UI.telaResultadoLiga({
-        titulo:'Eliminado', sub:`${premio.rodada} · ${adv.nome}`,
+        titulo:'Eliminad{o|a}', sub:`${premio.rodada} · ${adv.nome}`,
         falas:[
-          `${adv.nome} vence e a arena bate palma pelo nome dele, não pelo seu.`,
+          `${adv.nome} vence e a arena bate palma pelo nome ${adv.f ? 'dela' : 'dele'}, não pelo seu.`,
           'Torneio é assim: o chaveamento não tem memória. Amanhã tem outro.',
           'Você recebe a premiação por participação num envelope com o logotipo da Liga e o seu nome escrito errado.'
         ],
@@ -1522,7 +1521,7 @@ const Jogo = {
       Estado.registrar(`Venceu o Torneio Aberto da Liga (${Estado.dados.torneiosVencidos}ª vez).`);
       Estado.salvar('auto');
       return UI.telaResultadoLiga({
-        titulo:'CAMPEÃO DO TORNEIO', sub:`${Estado.dados.torneiosVencidos}º título`,
+        titulo:'{CAMPEÃO|CAMPEÃ} DO TORNEIO', sub:`${Estado.dados.torneiosVencidos}º título`,
         falas:[
           `${adv.nome} aperta a sua mão antes do juiz anunciar, o que é o maior elogio possível.`,
           'A arena do Planalto tem quatrocentos lugares e hoje tinha umas oitenta pessoas. Torneio aberto é assim.',
@@ -1537,7 +1536,7 @@ const Jogo = {
 
     Estado.salvar('auto');
     UI.telaResultadoLiga({
-      titulo:`${adv.nome} derrotado`, sub:`${premio.rodada} vencida`,
+      titulo:`${adv.nome} derrotad${adv.f ? 'a' : 'o'}`, sub:`${premio.rodada} vencida`,
       falas:[
         `${adv.nome} sai da arena sem drama. Torneio tem essa elegância que rota não tem.`,
         `Próxima: ${PREMIO_TORNEIO[t.rodada].rodada}, contra ${t.adversarios[t.rodada].nome}.`,

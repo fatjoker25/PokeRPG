@@ -1106,7 +1106,7 @@ if (typeof CHAMADAS !== 'undefined') VETERANOS.forEach(v => {
 
 /* ── no Torneio Aberto, quem você venceu pode cair no seu chaveamento ── */
 if (typeof RIVAIS_TORNEIO !== 'undefined') VETERANOS.forEach(v => {
-  RIVAIS_TORNEIO.push({nome:nomeDeLuta(v), veterano:v.id, fala:v.torneio, cond:d=>Veteranos.venceu(v.id)});
+  RIVAIS_TORNEIO.push({nome:nomeDeLuta(v), f:!!v.f, veterano:v.id, fala:v.torneio, cond:d=>Veteranos.venceu(v.id)});
 });
 
 /* ============================================================
@@ -1188,6 +1188,8 @@ const Conferencia = {
     if (fim.resultado === 'gameover'){ Jogo.conferenciaAtual = null; return UI.telaGameOver('Você caiu na arena do Planalto, na frente de quatrocentas pessoas.'); }
     const v = veterano(c.adversarios[c.rodada]);
     const pr = PREMIO_CONFERENCIA[c.rodada];
+    /* a última palavra do veterano é balão dele, com rosto */
+    const diz = t => fala(v.nome, String(txt(t) || '').replace(/^["\u201C]|["\u201D]$/g, ''));
     const venceu = fim.resultado === 'vitoria';
     const avisos = [];
     const valor = this.premio(venceu);
@@ -1199,8 +1201,8 @@ const Conferencia = {
       Estado.registrar(`Eliminado da Conferência do Planalto Indigo por ${v.nome} nas ${pr.rodada}.`);
       Estado.salvar('auto');
       return Jogo.resolverPendencias(() => UI.telaResultadoLiga({
-        titulo:'Eliminado', sub:`Conferência do Planalto Indigo · ${pr.rodada}`,
-        falas:[`${nomeDeLuta(v)}: ${txt(v.vence)}`,
+        titulo:'Eliminad{o|a}', sub:`Conferência do Planalto Indigo · ${pr.rodada}`,
+        quem:v.nome, falas:[diz(v.vence),
           'Na Conferência ninguém vaia quem perde. Quem está na arquibancada já perdeu pra todo mundo que está na arena.',
           'A Conferência é todo ano. Eles vão estar aqui.'],
         avisos, venceu:false
@@ -1227,7 +1229,7 @@ const Conferencia = {
       Estado.salvar('auto');
       return Jogo.resolverPendencias(() => UI.telaResultadoLiga({
         titulo:'{CAMPEÃO|CAMPEÃ} DA CONFERÊNCIA', sub:`Conferência do Planalto Indigo · ${d.conferenciasVencidas}º título`,
-        falas:[`${nomeDeLuta(v)}: ${txt(v.perde)}`,
+        quem:v.nome, falas:[diz(v.perde),
           'A arquibancada da Conferência não levanta pra quem ganha. Ela levanta pra quem aguentou as três.',
           'Hoje ela levanta.',
           d.conferenciasVencidas === 1 ? 'No vestiário, alguém escreveu o seu nome a giz na parede, embaixo de outros quarenta e poucos. O de cima é o da Greer, três vezes.' : 'O seu nome na parede do vestiário ganhou mais um risco do lado.'],
@@ -1237,7 +1239,7 @@ const Conferencia = {
     Estado.salvar('auto');
     Jogo.resolverPendencias(() => UI.telaResultadoLiga({
       titulo:`${v.nome} derrotad${v.f ? 'a' : 'o'}`, sub:`Conferência do Planalto Indigo · ${pr.rodada} vencida`,
-      falas:[`${nomeDeLuta(v)}: ${txt(v.perde)}`,
+      quem:v.nome, falas:[diz(v.perde),
         `Próxima: ${PREMIO_CONFERENCIA[c.rodada].rodada}, contra ${nomeDeLuta(veterano(c.adversarios[c.rodada]))}.`,
         'Vinte minutos entre as lutas. Dá pra curar o time.'],
       avisos, venceu:true, conferencia:true
