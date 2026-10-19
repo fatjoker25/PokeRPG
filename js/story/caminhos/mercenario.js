@@ -57,6 +57,7 @@ cm1_o_manejo:{
     'No meio da noite, um Nidoking enorme sai do capim e fica entre a equipe e a toca dele. Atrás dele, a fêmea e três filhotes.',
     fala('o chefe do manejo', 'Escolta. É pra isso que a gente paga. Tira ele.')
   ],
+  ef:{executar:() => { caminhoEntre(21, 5, 23); }},
   escolhas:[
     {texto:'Lutar com o Nidoking.', vai:'cm1_o_nidoking',
      ef:{rep:{eixo:'ruim', delta:1, motivo:'Lutou com um Nidoking pra equipe de manejo pegar a toca dele'}}},
@@ -84,11 +85,13 @@ cm1_pegaram_a_toca:{
 },
 
 cm1_parou:{
-  falante:'o chefe do manejo',
-  vozes:['N','N'],
   texto:[
-    'O chefe da equipe olha pra você, olha pro Nidoking, e faz a conta de quanto custa brigar com os dois.',
-    '"Então tá. O contrato é escoltar. Escolta a gente de volta pro portão, que aqui hoje não dá."',
+    d => d.flags.cm_merc_parou
+      ? 'O chefe da equipe olha pra você, olha pro Nidoking, e faz a conta de quanto custa brigar com os dois.'
+      : 'O Nidoking continua de pé na frente da toca, e o seu time não levanta. O chefe da equipe faz a conta de quanto custa brigar com ele sem escolta.',
+    d => fala('o chefe do manejo', d.flags.cm_merc_parou
+      ? 'Então tá. O contrato é escoltar. Escolta a gente de volta pro portão, que aqui hoje não dá.'
+      : 'Escolta que perde não escolta. Leva a gente de volta pro portão, que aqui hoje não dá.'),
     'Ele pede o dinheiro de volta pelo rádio ao intermediário. O intermediário não devolve. Diz que serviço feito é serviço pago, e que a noite foi longa pra todo mundo.'
   ],
   ef:{npc:{nome:'o intermediário', opiniao:1, memoria:'Ficou do seu lado quando você se recusou a caçar.'}},
@@ -104,6 +107,7 @@ cm1_a_soltura:{
     'No meio da estrada de serviço, dois motoqueiros de colete preto aparecem de farol alto e fecham a passagem.',
     fala('Motoqueiro da escolta', 'Caminhão da reserva sem autorização é roubo. Volta.')
   ],
+  ef:{executar:() => { caminhoAs(2); }},
   escolhas:[
     {texto:'Descer e lutar pela passagem.', vai:'cm1_luta_soltura'}
   ]
@@ -146,6 +150,7 @@ cm1_fim:{
     d => d.flags.cm_merc_toca ? 'No capim do setor 7, um Nidoking fica deitado na frente de uma toca vazia até o sol nascer.' : 'Na estrada de serviço, de manhã, ficam marcas de pneu indo e voltando.',
     'O chapéu dele fica no banco da rodoviária. De propósito, você acha.'
   ],
+  ef:{executar:() => { caminhoAs(6); }},
   fim:true, resumo:'A escolta da cerca: quatro mil ou oitocentos, um Nidoking na frente da toca e um velho com hérnia.'
 }
 
@@ -179,8 +184,10 @@ cm2_a_ronda:{
     'A ronda da cerca leva duas horas a pé. Lanterna, rádio e um caderno de ocorrência que ninguém lê.',
     'Na terceira noite, às três da manhã, perto do bloco do alojamento, um vulto de macacão azul passa a mochila por cima da cerca e começa a subir atrás.',
     'É uma moça de uns vinte anos. Ela te vê. Ela não para de subir.',
-    'No rádio, a voz do chefe de turno: "Alguma coisa no setor do alojamento?"'
+    'No rádio, a voz do chefe de turno:',
+    fala('Segurança da Estação 4', 'Alguma coisa no setor do alojamento?')
   ],
+  ef:{executar:() => { Relogio.viver(48); caminhoAs(3); }},
   escolhas:[
     {texto:'"Nada." E olhar pro outro lado.', vai:'cm2_deixou',
      ef:{flag:'cm_merc_deixou', rep:{eixo:'bom', delta:2, motivo:'Deixou uma trabalhadora fugir da Estação 4'}}},
@@ -194,7 +201,8 @@ cm2_a_ronda:{
 cm2_cobrou:{
   texto:[
     'Ela tem cento e vinte pokedólares no bolso do macacão, o salário do mês depois do alojamento.',
-    'Ela te dá os cento e vinte sem discutir, porque não tem tempo pra discutir, e pula pro lado de fora.',
+    'Ela te dá os cento e vinte sem discutir, porque não tem tempo pra discutir, e pula pro lado de fora. Um pedaço do macacão azul fica preso no arame de cima.',
+    d => fala(d.jogador.nome, 'Nada. Só vento.'),
     'Cento e vinte. Você conta. Não muda nada no seu bolso. Muda alguma coisa em outro lugar.'
   ],
   ef:{dinheiro:120},
@@ -211,7 +219,7 @@ cm2_entregou:{
   ],
   ef:{registrar:'Você devolveu ao alojamento uma trabalhadora que fugia da Estação 4.'},
   escolhas:[
-    {texto:'Terminar a semana.', vai:'cm2_fim'}
+    {texto:'Terminar a semana.', vai:'cm2_fim', ef:{dinheiro:3000, executar:() => { Relogio.viver(72); }}}
   ]
 },
 
@@ -219,7 +227,7 @@ cm2_deixou:{
   texto:[
     'Você vira a lanterna pro lado do galpão e conta até trinta.',
     'Quando vira de volta, a cerca está vazia, e tem um pedaço de pano azul preso no arame de cima.',
-    '"Nada", você diz no rádio. "Só vento."'
+    d => fala(d.jogador.nome, 'Nada. Só vento.')
   ],
   escolhas:[
     {texto:'Continuar a ronda.', vai:'cm2_o_chefe'}
@@ -232,6 +240,7 @@ cm2_o_chefe:{
     fala('Segurança da Estação 4', 'Vento não rasga macacão.'),
     fala('Segurança da Estação 4', 'Provisório que deixa sair não fica provisório. Fica de fora. Mas antes, eu quero ver se você vale o que eles iam te pagar.', 'frio')
   ],
+  ef:{executar:() => { caminhoAs(7); }},
   batalha:{comissao:'seguranca', nivel:d => nivelDoCaminho(d, 1), tipo:'treinador', treinador:'Segurança da Estação 4', fuga:false,
            vitoria:'cm2_saiu_pago', derrota:'cm2_saiu_sem', gameover:'gameover'}
 },
@@ -262,9 +271,13 @@ cm2_saiu_sem:{
 
 cm2_fim:{
   texto:[
-    fala('o intermediário', 'Uma semana que durou três noites. Acontece.'),
+    d => d.flags.cm_merc_entregou
+      ? fala('o intermediário', 'Uma semana inteira, e nenhuma ocorrência depois da terceira noite. Pagaram a outra metade no dia certo.')
+      : fala('o intermediário', 'Uma semana que durou três noites. Acontece.'),
     d => d.flags.cm_merc_entregou ? fala('o intermediário', 'Eles gostaram de você. Vão chamar de novo. Isso é bom pro negócio, e eu não vou fingir que acho bom pra você.', 'baixo') : fala('o intermediário', 'Eles não vão chamar de novo. Isso é ruim pro negócio, e eu não vou fingir que acho ruim.', 'baixo'),
-    'Na Rota 21, numa vila de pescadores, alguém de macacão azul rasgado bate numa porta às seis da manhã.'
+    d => d.flags.cm_merc_entregou
+      ? 'Na fila do turno da Estação 4, às seis da manhã, uma moça de macacão azul remendado no ombro espera a vez dela.'
+      : 'Na Rota 21, numa vila de pescadores, alguém de macacão azul rasgado bate numa porta às seis da manhã.'
   ],
   fim:true, resumo:'O contrato da estação: um colete de segunda mão, um crachá provisório e um pano azul no arame.'
 }
@@ -295,12 +308,11 @@ cm3_as_duas_mesas:{
 },
 
 cm3_a_esquerda:{
-  falante:'Dr. Bramble',
-  vozes:['N','N','N'],
   texto:[
-    '"Existe uma testemunha da audiência de segunda que pretende depor de novo, com documentos. Uma funcionária de cartório de Saffron."',
-    '"A Comissão pagaria quarenta mil pra que ela estivesse viajando, de férias, na data do depoimento. Férias longas. Pagas por nós. Ninguém se machuca."',
-    '"Só uma viagem. É a coisa mais limpa que eu já pedi a alguém."'
+    d => { Nomes.apresentar('o advogado da Comissão'); return 'O advogado põe um cartão na mesa, virado pra você, como quem não sabe se você lembra dele: DR. OTIS BRAMBLE.'; },
+    fala('o advogado da Comissão', 'Existe uma testemunha da audiência de segunda que pretende depor de novo, com documentos. Uma funcionária de cartório de Saffron.'),
+    fala('o advogado da Comissão', 'A Comissão pagaria quarenta mil pra que ela estivesse viajando, de férias, na data do depoimento. Metade agora. Férias longas, pagas por nós. Ninguém se machuca.'),
+    fala('o advogado da Comissão', 'Só uma viagem. É a coisa mais limpa que eu já pedi a alguém.')
   ],
   escolhas:[
     {texto:'Ouvir a outra mesa antes.', vai:'cm3_a_direita'},
@@ -314,7 +326,7 @@ cm3_a_direita:{
   vozes:['N','N','N'],
   texto:[
     'A Terceira sopra a fumaça pro lado, longe do seu rosto.',
-    '"A mesma testemunha. Eu pago oito mil pra que ela chegue viva e no horário ao depoimento. Com escolta. Com você."',
+    '"A mesma testemunha. Eu pago oito mil pra que ela chegue viva e no horário ao depoimento, metade agora. Com escolta. Com você."',
     '"Não é bondade. Se ela depõe, a Comissão cai, e a Comissão é a minha coleira. Oito mil é o que eu tenho. Eles têm quarenta. Eu sei."'
   ],
   escolhas:[
@@ -357,8 +369,9 @@ cm3_escolta:{
   texto:[
     'A funcionária de cartório chama Edith, tem cinquenta anos e um Bellsprout num vaso na janela. Ela não pergunta quem te mandou. Ela pega a bolsa.',
     'Às oito da manhã do depoimento, na esquina do fórum de Saffron, um carro cinza fecha a calçada.',
-    d => d.flags.cm_merc_virou ? 'Quem desce é o Dr. Bramble, sem terno, de casaco. Ele não esperava ver você do lado errado da calçada.' : 'Quem desce são dois homens de colete preto.'
+    d => d.flags.cm_merc_virou ? 'Quem desce é o Dr. Bramble, sem terno, de casaco, e atrás dele dois homens de colete preto. Ele não esperava ver você do lado errado da calçada.' : 'Quem desce são dois homens de colete preto.'
   ],
+  ef:{executar:() => { Relogio.amanhaAs(8); }},
   batalha:{comissao:'seguranca', nivel:d => nivelDoCaminho(d, 3), tipo:'treinador', treinador:'Segurança da Estação 4', fuga:false,
            timeExtra:[{dex:94, nivel:d => nivelDoCaminho(d, 3)}],
            vitoria:'cm3_chegou', derrota:'cm3_atrasou', gameover:'gameover'}
@@ -383,7 +396,7 @@ cm3_atrasou:{
     'A Edith senta no banco do corredor com a bolsa no colo e não chora.',
     'Ela diz que volta em dois meses. Ela diz isso como quem já sabe que vão tentar de novo.'
   ],
-  ef:{flag:'cm_merc_iris_remarcou', hp:-2, causa:'A esquina do fórum de Saffron'},
+  ef:{flag:'cm_merc_iris_remarcou', hp:-2, causa:'A esquina do fórum de Saffron', executar:() => { caminhoAs(9); }},
   escolhas:[
     {texto:'Decidir o que fazer com o que sobrou.', vai:'cm3_depois'}
   ]
@@ -395,8 +408,13 @@ cm3_depois:{
     fala('o intermediário', 'Fim de serviço. Você me deve a comissão de praxe. Dez por cento.'),
     fala('o intermediário', 'Ou você pode não pagar, e a gente fica quite de outro jeito.', 'baixo')
   ],
+  ef:{executar:() => { caminhoEntre(19, 4, 21); }},
   escolhas:[
-    {texto:'Pagar os dez por cento e devolver o resto à Terceira. Você fez de graça.', vai:'cm3_final_graca',
+    {texto:d => d.flags.cm_merc_as_duas
+       ? 'Pagar os dez por cento e devolver o resto aos dois lados. Você fez de graça.'
+       : d.flags.cm_merc_terceira
+         ? 'Pagar os dez por cento e devolver o resto à Terceira. Você fez de graça.'
+         : 'Pagar os dez por cento e devolver o resto à Comissão, com recibo. Você fez de graça.', vai:'cm3_final_graca',
      ef:{rep:{eixo:'bom', delta:3, motivo:'Fez o último serviço de graça'}}},
     {texto:'Pagar os dez por cento e seguir pro Planalto.', vai:'cm3_seguir',
      ef:{rep:{eixo:'bom', delta:1, motivo:'Fechou o serviço da testemunha e seguiu viagem'}}}
@@ -408,13 +426,13 @@ cm3_seguir:{
     fala('o intermediário', 'Vai. Se precisar de mim, deixa um chapéu num banco de rodoviária. Eu acho.', 'riso'),
     'O ônibus da Liga pro Planalto sai às oito e quinze, de Vermilion.'
   ],
-  ef:{flag:'cm_merc_seguiu'},
+  ef:{flag:'cm_merc_seguiu', executar:() => { caminhoAs(8); }},
   fim:true, resumo:'O último preço: duas mesas, dois envelopes e uma funcionária de cartório com um Bellsprout na janela.'
 },
 
 cm3_final_preco:{
   texto:[
-    'A Edith viaja. Férias longas, pagas, numa ilha do sul. Ninguém se machuca. O depoimento é arquivado.',
+    'A funcionária de cartório viaja. Férias longas, pagas, numa ilha do sul. Ninguém se machuca. O depoimento é arquivado.',
     'Os outros vinte mil chegam numa terça, sem envelope: direto na sua conta, com a descrição "consultoria".'
   ],
   final:{id:'merc_preco', titulo:'O PREÇO', texto:[
@@ -433,21 +451,24 @@ cm3_final_calote:{
   final:{id:'merc_calote', titulo:'CALOTE', texto:[
     'Vinte e quatro mil, num barco pro sul, com dois lados de Kanto querendo o seu nome.',
     'Você vive bem por um tempo e mal por muito tempo, olhando por cima do ombro em todo porto.',
-    'A Edith depõe sozinha, sem escolta, de ônibus, com a bolsa debaixo do braço. Chega às oito e cinquenta e oito.',
+    'A funcionária de cartório depõe sozinha, sem escolta, de ônibus, com a bolsa debaixo do braço. Chega às oito e cinquenta e oito.',
     'Você lê isso num jornal velho, numa praia, e é a primeira coisa que te faz rir em meses: ela não precisava de você. Nunca precisou.'
   ]}
 },
 
 cm3_final_graca:{
   texto:[
-    'O envelope da Terceira volta pra ela pelo Rook, inteiro, menos os dez por cento do intermediário.',
-    d => d.flags.cm_merc_virou ? 'O envelope do Dr. Bramble você manda pra sede da Comissão, inteiro, com um recibo: "Serviço não prestado."' : 'Você fica sem nada no bolso, e com uma muda de Bellsprout num copinho plástico.'
+    d => d.flags.cm_merc_terceira || d.flags.cm_merc_as_duas ? 'O envelope da Terceira volta pra ela, inteiro, menos os dez por cento do intermediário.' : '',
+    d => d.flags.cm_merc_virou || d.flags.cm_merc_as_duas ? 'O envelope do Dr. Bramble você manda pra sede da Comissão, inteiro, com um recibo: "Serviço não prestado."' : '',
+    d => d.flags.cm_merc_iris_depos ? 'Você fica sem nada no bolso, e com uma muda de Bellsprout num copinho plástico.' : 'Você fica sem nada no bolso.'
   ],
   final:{id:'merc_graca', titulo:'DE GRAÇA', texto:[
     'O intermediário pega os dez por cento, conta, e devolve.',
     'Ele diz que é a primeira vez em trinta anos que ele vê alguém trabalhar de graça no ramo, e que comissão sobre zero é zero.',
     'Você larga o ramo. Ele também, um ano depois, e te manda um cartão de uma cidade pequena sem dizer o nome dela, assinado só com um desenho de chapéu.',
-    'A muda de Bellsprout vira um Weepinbell na janela da sua casa nova. Você não sabe onde você aprendeu a cuidar de planta. Aprendeu.'
+    d => d.flags.cm_merc_iris_depos
+      ? 'A muda de Bellsprout vira um Weepinbell na janela da sua casa nova. Você não sabe onde você aprendeu a cuidar de planta. Aprendeu.'
+      : 'Na janela da sua casa nova tem um Bellsprout num vaso, comprado numa feira porque você lembrou de alguém. Você não sabe onde aprendeu a cuidar de planta. Aprendeu.'
   ]}
 }
 
