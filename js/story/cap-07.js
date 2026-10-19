@@ -1006,7 +1006,7 @@ c7_aviso:{
   escolhas:[
     {texto:'"Não."', vai:'c7_negou', ef:{flag:'negou_podre'}},
     {texto:'"Tenho."', vai:'c7_admitiu',
-     ef:{flag:'admitiu_podre', rep:{eixo:'bom',delta:2,motivo:'Foi honesto sobre si mesmo sem precisar'}}},
+     ef:{flag:'admitiu_podre', rep:{eixo:'bom',delta:2,motivo:'Foi honest{o|a} sobre si mesm{o|a} sem precisar'}}},
     {texto:'"Todo mundo tem."', vai:'c7_todo_mundo_tem'},
     {texto:'Não responder.', vai:'c7_nao_respondeu'}
   ]
@@ -1070,7 +1070,7 @@ c7_todo_mundo_tem:{
       presagio:'Coisa que você conta não apodrece. Tem alguém em Kanto pra quem você ainda pode contar.'},
   escolhas:[
     {texto:'"Tenho, então."', vai:'c7_admitiu',
-     ef:{flag:'admitiu_podre', rep:{eixo:'bom',delta:2,motivo:'Foi honesto sobre si mesmo'}}},
+     ef:{flag:'admitiu_podre', rep:{eixo:'bom',delta:2,motivo:'Foi honest{o|a} sobre si mesm{o|a}'}}},
     {texto:'"Quem escreveu os onze nomes?"', vai:'c7_os_onze', cond:d=>!!d.flags.os_onze_nomes},
     {texto:'Subir.', vai:'c7_torre'},
     {texto:'"O senhor já subiu?"', vai:'c7_ele_subiu'}
@@ -1388,7 +1388,7 @@ c7_copiou_os_onze:{
     'Quando você levanta, o zelador está parado na porta do saguão, olhando, e ele não diz nada e você não diz nada.'
   ],
   ef:{flag:'copiou_os_onze_nomes',
-      rep:{eixo:'bom',delta:2,motivo:'Copiou onze nomes de um mural de giz ajoelhado no chão'},
+      rep:{eixo:'bom',delta:2,motivo:'Copiou onze nomes de um mural de giz ajoelhad{o|a} no chão'},
       registrar:'Copiou os onze nomes do mural no caderno.'},
   escolhas:[
     {texto:'Subir a torre.', vai:'c7_torre'},
@@ -1619,7 +1619,7 @@ c7_subiu_com_zelador:{
   ],
   ef:{flag:'zelador_subiu_junto',
       npc:{nome:'Zelador da Torre', opiniao:6, memoria:'Subiu ao sexto andar com você depois de quatro dias sem subir.'},
-      rep:{eixo:'bom',delta:2,motivo:'Não subiu sozinho quando não precisava'},
+      rep:{eixo:'bom',delta:2,motivo:'Não subiu sozinh{o|a} quando não precisava'},
       presagio:'"Isso é aritmética." Ele já fez essa conta antes, sobre outra pessoa.'},
   escolhas:[
     {texto:'Subir.', vai:'c7_marowak'}
@@ -1716,7 +1716,7 @@ c7_gritou_zelador:{
     '"Ah, não." Ele se ajoelha. "Ah, não, ele tava chamando."',
     'Ele desce de novo pra ligar. Lavender não tem hospital, o mais perto é o de Celadon, mas a cidade tem uma van, e a van leva onze minutos pra chegar na porta da torre.'
   ],
-  ef:{rep:{eixo:'bom',delta:3,motivo:'Chamou ajuda em vez de resolver sozinho'},
+  ef:{rep:{eixo:'bom',delta:3,motivo:'Chamou ajuda em vez de resolver sozinh{o|a}'},
       flag:'chamou_a_van', registrar:'A van de Lavender veio buscar o treinador do sexto andar.'},
   escolhas:[
     {texto:'Descer carregando o Cubone.', vai:'c7_cubone_primeiro'},
@@ -2189,7 +2189,7 @@ c7_sentou_no_circulo:{
     'Talvez seja isso o sétimo andar. Talvez não tenha nada aqui e seja só o único lugar de Kanto onde ninguém te interrompe.'
   ],
   ef:{flag:'sentou_no_setimo', hp:4, moral:10,
-      rep:{eixo:'bom',delta:1,motivo:'Passou quarenta minutos sozinho fazendo as contas'},
+      rep:{eixo:'bom',delta:1,motivo:'Passou quarenta minutos sozinh{o|a} fazendo as contas'},
       presagio:'Talvez não tenha nada aqui. Isso não deixa de ser a coisa mais importante do prédio.'},
   escolhas:[
     {texto:'Deixar alguma coisa sua no centro.', vai:'c7_deixou_no_centro'},

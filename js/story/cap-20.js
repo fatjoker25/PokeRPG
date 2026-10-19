@@ -1051,7 +1051,7 @@ c20_palavra:{
     'A sala fica em silêncio e todo mundo olha para você, e você percebe que passou meses ensaiando o que faria se eles te impedissem e nada do que faria se eles te ouvissem.'
   ],
   ef:{flag:'falou_no_conselho',
-      rep:{eixo:'bom',delta:2,motivo:'Falou no conselho da Comissão e foi ouvido em ata'}},
+      rep:{eixo:'bom',delta:2,motivo:'Falou no conselho da Comissão e foi ouvid{o|a} em ata'}},
   escolhas:[
     {texto:d => c19_temPrancheta() ? 'Pôr a prancheta do galpão 4 na mesa.'
               : c20_temAPlanilha(d) ? 'Mostrar as fotos da planilha do galpão 4.' : 'Mostrar as fotos do galpão 4.',

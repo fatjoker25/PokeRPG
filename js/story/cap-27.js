@@ -1119,7 +1119,7 @@ c22_observou_uma_hora:{
     d=>`${Relogio.tem() ? 'E, aos cinquenta e nove minutos' : 'E, quando a hora acaba'}, você percebe a última coisa: ${c27_aves(d).n === 2 ? 'os dois estão a exatamente a mesma distância da abertura' : 'o posto vazio fica exatamente à mesma distância da abertura que o dele'}.`
   ],
   ef:{flag:['observou_a_guarda'], instabilidade:1,
-      rep:{eixo:'bom',delta:2,motivo:'Passou uma hora deitado na borda antes de descer'},
+      rep:{eixo:'bom',delta:2,motivo:'Passou uma hora deitad{o|a} na borda antes de descer'},
       registrar:'Uma hora de observação: a guarda vigia um ponto, não o vale, e os postos ficam à mesma distância dele.',
       executar:()=>{ Relogio.avancar(1); }},
   escolhas:[

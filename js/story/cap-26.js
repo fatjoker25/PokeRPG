@@ -604,7 +604,7 @@ c21_pisou_na_arena:{
     'E, por quatro ou cinco segundos, você é uma criança de novo, saindo de casa, achando que isto aqui era o ponto de chegada.'
   ],
   ef:{flag:'pisou_na_arena', moral:3,
-      rep:{eixo:'bom',delta:1,motivo:'Desceu ao poço sozinho, sem ninguém para ver'},
+      rep:{eixo:'bom',delta:1,motivo:'Desceu ao poço sozinh{o|a}, sem ninguém para ver'},
       registrar:'Pisou no chão da arena da Elite 4 sozinh{o|a}, antes da reunião.'},
   escolhas:[
     {texto:'Subir para a reunião.', vai:'c21_esperou_na_porta'},

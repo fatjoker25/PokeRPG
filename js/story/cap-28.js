@@ -595,7 +595,7 @@ c23_prometeu_voltar_aqui:{
     'Depois começa a desdobrar a jaqueta.'
   ],
   ef:{flag:['prometeu_voltar_aqui','nogueira_vai_descer'], moral:5,
-      rep:{eixo:'bom',delta:4,motivo:'Prometeu voltar toda semana, e foi levado a sério'},
+      rep:{eixo:'bom',delta:4,motivo:'Prometeu voltar toda semana, e foi levad{o|a} a sério'},
       npc:{nome:'Vernon', opiniao:5, memoria:'Começou a desdobrar a jaqueta quando você prometeu voltar.'},
       registrar:'Prometeu voltar toda semana. O Vernon começou a desdobrar a jaqueta.'},
   escolhas:[
@@ -674,7 +674,7 @@ c23_nao_sei:{
   ],
   ef:{flag:'resposta_nao_sei',
       executar:d=>{ Estado.lend(150).disposicao='neutro'; return [{tipo:'mundo',texto:'Mewtwo aceitou a sua resposta.'}]; },
-      rep:{eixo:'bom',delta:1,motivo:'Foi honesto com Mewtwo'}},
+      rep:{eixo:'bom',delta:1,motivo:'Foi honest{o|a} com Mewtwo'}},
   escolhas:[{texto:'Responder.', vai:'c23_escolha_final'}]
 },
 

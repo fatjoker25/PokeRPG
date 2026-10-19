@@ -249,7 +249,7 @@ c24_contornou:{
     {texto:'Dar o nome.', vai:'c24_deu_o_nome',
      ef:{rep:{eixo:'bom',delta:1,motivo:'Deu o próprio nome quando podia mentir'}}},
     {texto:'Deixar ele escrever "desconhecido".', vai:'c24_desconhecido',
-     ef:{flag:'anotado_como_desconhecido', rep:{eixo:'ruim',delta:1,motivo:'Passou como desconhecido no controle de acesso'}}},
+     ef:{flag:'anotado_como_desconhecido', rep:{eixo:'ruim',delta:1,motivo:'Passou como desconhecid{o|a} no controle de acesso'}}},
     {texto:'Voltar e passar pelas sete, do jeito certo.', vai:'c24_voltou_pra_estrada'}
   ]
 },

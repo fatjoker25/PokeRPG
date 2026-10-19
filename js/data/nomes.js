@@ -124,6 +124,8 @@ const RECUSAM_O_NOME = {
    perguntar antes disso dá o mesmo nome — nunca um sorteado que a cena
    depois desmentiria. */
 const NOMES_FIXOS = {
+  /* a estagiária da escada de Saffron: o colega chama ela pelo nome */
+  'a estagiária do meio':     'Cora',
   /* a menina da fila da licença, em Viridian: diz o nome quando é ajudada */
   'a menina do formulário':    'Ida',
   'o capitão do porto':        'Capitão Marlow',
@@ -280,7 +282,7 @@ function _formal(rotulo){ return /senhora|senhor|velh|dona d|dono d|capit[ãa]o|
    pessoas com o mesmo nome na mesma jornada confunde, e roubar o nome
    de um personagem escrito é pior ainda. */
 const NOMES_DA_HISTORIA = new Set([
-  'Amos','Aldous','Lena','Maude','Brandt','Tolliver','Aske','Ingram','Ebbs','Orme','Fenn','Emory','Poplar','Nell','Rufo','Quint','Mervin','Edda','Waldo','Maren','Maeve','Bracken','Corwin','Ashford','Dunmore','Ivy','Merrick','Ned','Pell','Brill','Cleo','Colman','Harold','Hester','Célio','Cordell','Dane','Dario','Elsa','Enzo','Ezra',
+  'Amos','Aldous','Cora','Lena','Maude','Brandt','Tolliver','Aske','Ingram','Ebbs','Orme','Fenn','Emory','Poplar','Nell','Rufo','Quint','Mervin','Edda','Waldo','Maren','Maeve','Bracken','Corwin','Ashford','Dunmore','Ivy','Merrick','Ned','Pell','Brill','Cleo','Colman','Harold','Hester','Célio','Cordell','Dane','Dario','Elsa','Enzo','Ezra',
   'Fabre','Gus','Hazel','Holt','Ives','Ivo','Laurel','Leo','Lina','Lorca','Milo','Nadia',
   'Nico','Nilo','Nina','Orso','Otto','Perla','Rhea','Rico','Vale','Wren','Alder','Bram',
   'Arden','Hart','Tanner','Tobin','Kieran','Ashby','Burke','Holloway','Ansel',

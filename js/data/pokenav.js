@@ -497,7 +497,7 @@ const CONTATOS = [
     ],
     recompensa:d=>{ Estado.subirStatus('percepcao'); Estado.darItem('Sino Calmante', 1);
       return [{tipo:'rep', texto:'PERCEPÇÃO +1.'}, {tipo:'item', texto:'Recebeu 1× Sino Calmante.'}]; },
-    rep:{eixo:'bom', delta:1, motivo:'Subiu a torre de Lavender calado, porque pediram'},
+    rep:{eixo:'bom', delta:1, motivo:'Subiu a torre de Lavender calad{o|a}, porque pediram'},
     marca:'sabrina_ouviu_a_torre'
   },
   favor:{
@@ -1125,12 +1125,12 @@ const CHAMADAS = [
        fala('Ezra', 'Você é um péssimo amigo e você tem razão.', 'riso')
      ]},
     {texto:'"Três vezes é teimosia. Muda o time."',
-     ef:{rep:{eixo:'bom',delta:1,motivo:'Foi direto com o rival em vez de consolar'},
+     ef:{rep:{eixo:'bom',delta:1,motivo:'Foi diret{o|a} com o rival em vez de consolar'},
          npc:{nome:'Ezra', opiniao:1, memoria:'Você chamou a teimosia dele de teimosia por telefone.'}},
      resultado:[fala('Ezra', 'Valeu. Muito obrigado. Que apoio.', 'frio'),
                 'Ele desliga.','Duas semanas depois ele ganha, com o time trocado, e não te liga pra contar. Você fica sabendo por outra pessoa.']},
     {texto:'Não falar nada e deixar ele falar.',
-     ef:{moral:3, rep:{eixo:'bom',delta:2,motivo:'Ficou calado no telefone enquanto o outro precisava falar'}},
+     ef:{moral:3, rep:{eixo:'bom',delta:2,motivo:'Ficou calad{o|a} no telefone enquanto o outro precisava falar'}},
      resultado:['Ele fala por catorze minutos.',
                 'Você diz "é" quatro vezes e "hum" duas, e não diz mais nada.',
                 fala('Ezra', 'Valeu.', 'baixo'), fala('Ezra', 'Sério.')]}
@@ -1159,7 +1159,7 @@ const CHAMADAS = [
        d=>fala(cadastra(d), 'Não é o caderno de Lavender, é o meu. Eu tenho quarenta e um nomes nele desde 1989 e agora tenho quarenta e dois.', 'baixo')
      ]},
     {texto:'"Eu não quero falar disso."',
-     ef:{rep:{eixo:'bom',delta:1,motivo:'Foi honesto sobre não querer falar'}},
+     ef:{rep:{eixo:'bom',delta:1,motivo:'Foi honest{o|a} sobre não querer falar'}},
      resultado:[d=>fala(cadastra(d), 'Então não fala.'),
                 d=>fala(cadastra(d), 'Eu ligo de novo em duas semanas e a gente fala de outra coisa. Pode ser?')]}
   ]

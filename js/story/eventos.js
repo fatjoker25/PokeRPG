@@ -879,7 +879,7 @@ fuchsia:[
        fala('o porteiro da reserva', 'Porque placa é patrimônio.'),
        fala('o porteiro da reserva', 'Pra trocar precisa de baixa de patrimônio, e baixa de patrimônio precisa de assinatura do diretor de área.'),
        fala('o porteiro da reserva', 'O cargo de diretor de área tá vago desde 1994.', 'frio'),
-       'Três anos de cargo vago. Uma placa de horário. Quatro correções a caneta.'
+       'Seis anos de cargo vago. Uma placa de horário. Quatro correções a caneta.'
      ]},
     {texto:'Perguntar o que MAIS depende dessa assinatura.',
      cond:d=>!!d.flags.sabe_da_placa_da_reserva,
@@ -927,7 +927,7 @@ fuchsia:[
        d=>fala(d.jogador.nome, 'E nunca pegou nada?'),
        fala('o homem da Pokébola vazia', 'Peguei doze. Todos os doze eu soltei no portão, na saída.', 'baixo'),
        fala('o homem da Pokébola vazia', 'Eu não venho aqui pra levar. Eu venho aqui porque lá dentro eu consigo dormir de olho aberto, se é que você me entende.'),
-       'Você não entende. Você vai entender daqui a uns meses.'
+       'Você não entende, e ele não espera que você entenda.'
      ]},
     {texto:'Perguntar aos quarenta o que eles viram.',
      ef:{rep:{eixo:'bom',delta:1,motivo:'Ouviu quarenta pessoas falando ao mesmo tempo'},
@@ -963,7 +963,7 @@ saffron:[
        'Eles abrem espaço sem perguntar quem você é, o que é a coisa mais Saffron que já aconteceu com você.',
        'Em trinta e dois minutos você fica sabendo: qual andar tem o bebedouro que gela, qual elevador não para no sexto, e qual gerente some às quintas.',
        fala('o estagiário do fim da escada', 'Anota isso aí, que isso vale mais que o salário.'),
-       'Você anota. Você vai usar duas dessas três informações antes do fim do ano.'
+       'Você anota. Duas das três parecem úteis; a terceira você guarda por educação.'
      ]},
     {texto:'Perguntar o que eles fazem lá dentro.',
      ef:{flag:'sabe_o_que_os_estagiarios_fazem',
@@ -988,7 +988,7 @@ saffron:[
        d=>fala(d.jogador.nome, 'Sobe pra onde?'),
        fala('a estagiária do meio', 'Nono. Toda sexta, em caixa lacrada, e a caixa não volta.', 'baixo'),
        fala('a estagiária do meio', 'Eu tô aqui há sete meses e eu já mandei umas quarenta caixas pro nono andar.'),
-       fala('o estagiário do fim da escada', 'Cala a boca, Cida.', 'frio')
+       d=>{ Nomes.apresentar('a estagiária do meio'); return fala('o estagiário do fim da escada', 'Cala a boca, Cora.', 'frio'); }
      ]},
     {texto:'Deixar os seis almoçarem em paz.', ef:{},
      resultado:['Você deixa. Eles têm trinta e dois minutos e você já gastou dois.']}
@@ -1055,7 +1055,7 @@ cinnabar:[
        'E aí uma pessoa aparece de um canto que você não conseguia ver — de jaleco, de uns sessenta anos, com um caderno na mão.',
        'Ela olha pra você através do vidro, sem abrir, sem falar.',
        'E aí ela levanta o caderno e mostra uma página escrita, virada pra você.',
-       fala('a página do caderno', 'NÃO FUNCIONA. TENTE A PORTA.', 'frio'),
+       '**NÃO FUNCIONA. TENTE A PORTA.**',
        'A porta fica do outro lado do prédio, e quando você chega nela, a bancada já está vazia de novo.'
      ]},
     {texto:'Perguntar na vitrine quem trabalha ali.',
@@ -1115,7 +1115,7 @@ cinnabar:[
        fala('o barqueiro', 'Prefeitura, capitania, o instituto de Cinnabar e a Liga.'),
        d=>fala(d.jogador.nome, 'E?'),
        fala('o barqueiro', 'A Liga respondeu.', null, 'Ele tira um papel dobrado do bolso da camisa, onde ele claramente carrega há um tempo.'),
-       fala('a resposta da Liga', 'PREZADO SENHOR, SUA MANIFESTAÇÃO FOI REGISTRADA SOB O PROTOCOLO ABAIXO E ENCAMINHADA AO ÓRGÃO COMPETENTE.', 'frio'),
+       '**PREZADO SENHOR, SUA MANIFESTAÇÃO FOI REGISTRADA SOB O PROTOCOLO ABAIXO E ENCAMINHADA AO ÓRGÃO COMPETENTE.**',
        ()=>fala('o barqueiro', `Isso aqui foi em ${Calendario.MESES[(Calendario.hoje().mes + 8) % 12]}.`)
      ]},
     {texto:'Pedir a cópia do protocolo.',
@@ -1129,7 +1129,7 @@ cinnabar:[
        'Ele desdobra o papel, alisa na perna da calça, e te entrega sem hesitar meio segundo.',
        fala('o barqueiro', 'Leva. Eu sei o número de cor.'),
        fala('o barqueiro', 'Eu leio esse papel todo dia de manhã há quatro meses. Eu sei o número de cor.', 'baixo'),
-       'O número do protocolo começa com os mesmos quatro dígitos de outro protocolo que você já viu.'
+       'O número do protocolo é comprido demais pra uma carta só, como número de pilha.'
      ]},
     {texto:'Ficar olhando a água junto, sem falar nada.',
      ef:{moral:2, rep:{eixo:'bom',delta:1,motivo:'Ficou olhando a água junto com quem precisava de companhia'},
@@ -1336,7 +1336,8 @@ const EVENTOS_GERAIS = [
   texto:[
     'Tem um cartaz novo no poste, impresso em papel comum, ainda sem chuva em cima.',
     'PROCURA-SE. E uma foto ruim de licença, de um garoto de uns quinze anos.',
-    'Embaixo: "Saiu de casa em março. A família não está brava. Qualquer informação."',
+    'Embaixo, em letra menor:',
+    '**Saiu de casa em março. A família não está brava. Qualquer informação.**',
     d=>Calendario.hoje().mes === 0 ? 'Março é este mês. A família não esperou muito.' : Calendario.hoje().mes === 1 ? 'Março foi no mês passado.' : 'Março foi há bastante tempo.'
   ],
   escolhas:[
@@ -1347,7 +1348,7 @@ const EVENTOS_GERAIS = [
      resultado:[
        'Você anota o telefone no verso de outra coisa, que é onde você anota tudo.',
        'Você olha a foto por mais tempo do que precisava e não reconhece a cara, e mesmo assim guarda.',
-       'A partir de hoje você vai olhar a cara das pessoas de quinze anos nas cidades por onde passar. Vai ser automático. Você não vai conseguir evitar.'
+       'Na esquina seguinte você já está olhando a cara de quem passa, sem ter decidido olhar.'
      ]},
     {texto:'Ligar do orelhão agora mesmo, só pra dizer que viu o cartaz.',
      cond:d=>Estado.temPokenav(),
@@ -1504,12 +1505,14 @@ campo:[
            ]}},
     {texto:'Empurrar junto até a próxima cidade.',
      ef:{hp:-2, moral:3, rep:{eixo:'bom',delta:2,motivo:'Empurrou bicicleta alheia por quilômetros sem ganhar nada'},
-         flag:'empurrou_a_bicicleta'},
+         flag:'empurrou_a_bicicleta', executar:()=>{ Relogio.avancar(2); }},
      resultado:[
        'Dá quase duas horas, e nas duas horas ela conta a vida inteira dela, incluindo partes que ninguém conta pra estranho.',
        fala('a moça da bicicleta', 'Eu falo demais quando tô com vergonha de aceitar ajuda.'),
        fala('a moça da bicicleta', 'Você reparou e não falou nada. Isso é de boa pessoa.', 'baixo'),
-       'Na entrada da cidade ela aperta a sua mão com as duas mãos dela e você não pega o nome dela.'
+       d=>Nomes.sabe('a moça da bicicleta')
+         ? 'Na entrada da cidade ela aperta a sua mão com as duas mãos dela e diz o nome de novo, como quem confere que você guardou.'
+         : 'Na entrada da cidade ela aperta a sua mão com as duas mãos dela e você não pega o nome dela.'
      ]},
     {texto:'"Falta bastante." E seguir.',
      ef:{},
@@ -1535,7 +1538,7 @@ campo:[
           resultado:[
             'Você leva quarenta minutos montando um desvio de pedra e galho que qualquer um entende sem placa.',
             'Fica bom. Fica óbvio. Uma pessoa distraída desvia sem nem perceber que desviou.',
-            'Três semanas depois, numa conversa de Centro Pokémon a duas cidades daqui, alguém vai reclamar de um desvio idiota na trilha e você não vai falar nada.'
+            'Quem passar vai achar o desvio uma besteira, e vai desviar mesmo assim.'
           ]},
      ruim:{ef:{registrar:'Tentou marcar o desvio do ninho e não ficou claro.'},
            resultado:[
@@ -1571,7 +1574,7 @@ campo:[
        'Aos quarenta e um, tem uma coisa voando em círculo baixo atrás de você, e ela não está indo embora.',
        'Ela te acompanha por três quilômetros, no mesmo círculo, na mesma altura, sem atacar uma vez.',
        'Você volta. Você volta os três quilômetros e põe os três ovos de volta e ela pousa antes de você terminar de sair.',
-       'Você não vai contar essa história pra ninguém.'
+       'Essa história você guarda.'
      ]},
     {texto:'Desviar em silêncio e não mexer em nada.',
      ef:{rep:{eixo:'bom',delta:1,motivo:'Desviou de um ninho sem mexer em nada'}},
@@ -1612,10 +1615,10 @@ campo:[
             'Ninguém passando mal. Só alguém que saiu e vai voltar.',
             'Você fecha o zíper exatamente como estava e põe uma pedra em cima da aba, pro vento não abrir.'
           ]},
-     ruim:{ef:{rep:{eixo:'ruim',delta:1,motivo:'Abriu a barraca de um estranho e foi visto'},
-               registrar:'Foi visto abrindo a barraca de outra pessoa.'},
+     ruim:{ef:{rep:{eixo:'ruim',delta:1,motivo:'Abriu a barraca de um estranho e foi vist{o|a}'},
+               registrar:'Foi vist{o|a} abrindo a barraca de outra pessoa.'},
            resultado:[
-             'Você abre o zíper e ouve, atrás de você, uma pessoa dizendo o seu nome — não o seu, o dela, alto, do jeito que se diz um nome pra avisar que chegou.',
+             'Você abre o zíper e ouve, atrás de você, alguém limpar a garganta alto, do jeito de quem avisa que chegou.',
              fala('a dona da barraca', 'Ô.', 'frio'),
              'Ela não grita. Ela não acusa. Ela só fica ali parada com um balde de água na mão esperando você explicar.',
              'Você explica. Ela aceita a explicação. Ela continua esperando você ir embora.'
@@ -1690,16 +1693,16 @@ floresta:[
        fala('a menina da mochila amarela', 'Você é guia?'),
        fala('a menina da mochila verde', 'Não, {ele|ela} só é grande.', null, 'A outra responde antes de você.')
      ]},
-    {texto:'Abrir passagem por cima do tronco, com machado de mão e paciência.',
+    {texto:'Abrir passagem por cima do tronco, com o machado e paciência.', cond:d=>Campo.cortar().pode,
      teste:{status:'forca', dificuldade:7, nomeStatus:'Força', eixo:'paciencia'},
-     bom:{ef:{hp:-3, rep:{eixo:'bom',delta:2,motivo:'Abriu passagem numa trilha pra quem vier depois'},
-              flag:'abriu_a_trilha', registrar:'Abriu um degrau no tronco caído da floresta.'},
+     bom:{ef:{hp:-3, desgaste:'Machado', rep:{eixo:'bom',delta:2,motivo:'Abriu passagem numa trilha pra quem vier depois'},
+              flag:'abriu_a_trilha', registrar:'Abriu um degrau no tronco caído da floresta.', executar:()=>{ Relogio.avancar(2); }},
           resultado:[
-            'Você não derruba a árvore — ninguém derruba árvore com machado de mão. Você cava um degrau.',
+            'Você não derruba a árvore — ninguém derruba árvore com machado de mochila. Você cava um degrau.',
             'Leva uma hora e meia e sai um degrau feio, torto e completamente funcional.',
-            'A trilha do barranco vai deixar de ser usada em uma semana e ninguém nunca vai saber por quê.'
+            'Degrau assim ninguém agradece: quem vem depois usa sem pensar, e é pra isso que ele serve.'
           ]},
-     ruim:{ef:{hp:-4, registrar:'Tentou abrir o tronco caído e só se machucou.'},
+     ruim:{ef:{hp:-4, desgaste:'Machado', registrar:'Tentou abrir o tronco caído e só se machucou.'},
            resultado:['A madeira está mais dura do que parecia e o cabo escapa duas vezes.','Na segunda, o cabo acerta o seu joelho e você desiste com a dignidade que sobrou.']}},
     {texto:'Contornar pelo barranco e seguir.',
      teste:{status:'forca', dificuldade:5, nomeStatus:'Força', eixo:'coragem'},
@@ -1717,10 +1720,10 @@ floresta:[
     'E está parada agora, porque parou quando você parou.'
   ],
   escolhas:[
-    {texto:'Passar devagar, sem olhar diretamente, torcendo pra não ser notado.',
+    {texto:'Passar devagar, sem olhar diretamente, torcendo pra não ser notad{o|a}.',
      teste:{status:'percepcao', dificuldade:7, nomeStatus:'Percepção', eixo:'discricao'},
      bom:{ef:{flag:'passou_sem_ser_notado', rep:{eixo:'bom',delta:1,motivo:'Atravessou o mato fechado sem chamar atenção'},
-              registrar:'Passou devagar pelo que estava no mato e não foi notado.'},
+              registrar:'Passou devagar pelo que estava no mato e não foi notad{o|a}.'},
           resultado:[
             d=>{
               const m = melhorNoEixo('discricao');
@@ -1732,7 +1735,7 @@ floresta:[
             'Quando você já está longe o bastante pra olhar pra trás, dá pra ver o mato se fechando de novo devagar, no lugar exato onde ela estava.'
           ]},
      ruim:{ef:{hp:-2, flag:'foi_notado_no_mato',
-               registrar:'Foi notado pelo que estava no mato fechado.'},
+               registrar:'Foi notad{o|a} pelo que estava no mato fechado.'},
            resultado:[
              d=>{
                const pior = piorNoEixo('discricao');
@@ -1746,7 +1749,7 @@ floresta:[
            ]}},
     {texto:'Parar completamente e deixar ela decidir.',
      teste:{status:'resistencia', dificuldade:6, nomeStatus:'Resistência', eixo:'paciencia'},
-     bom:{ef:{moral:3, rep:{eixo:'bom',delta:2,motivo:'Ficou parado até o Pokémon decidir'},
+     bom:{ef:{moral:3, rep:{eixo:'bom',delta:2,motivo:'Ficou parad{o|a} até o Pokémon decidir'},
               flag:'deixou_ela_decidir', registrar:'Ficou parad{o|a} no mato fechado até o Pokémon decidir o que fazer.'},
           resultado:[
             'Você para. Completamente. Você para de um jeito que dói nas pernas depois de três minutos.',
@@ -1759,7 +1762,7 @@ floresta:[
            resultado:[
              'Você aguenta noventa segundos.',
              'No nonagésimo primeiro você muda o peso de pé, e o mato explode pro lado contrário, e acabou.',
-             'Você nunca vai saber o que era.'
+             'E você não sabe o que era.'
            ]}},
     {texto:'Chamar. Alto. Ver o que acontece.',
      ef:{hp:-3, flag:'chamou_no_mato',
@@ -1814,7 +1817,7 @@ montanha:[
      ]},
     {texto:'Passar rápido embaixo e não pensar mais nisso.',
      ef:{registrar:'Passou por baixo da pedra solta e seguiu.'},
-     resultado:['Você passa em quatro passos largos e não olha pra cima.','Você vai lembrar dessa pedra em algum momento aleatório daqui a uns dois meses, e vai ser desconfortável.']}
+     resultado:['Você passa em quatro passos largos e não olha pra cima.','A pedra fica na sua cabeça mais tempo do que devia.']}
   ]
 },
 {
@@ -1830,13 +1833,13 @@ montanha:[
     {texto:'Parar onde está e esperar abrir.',
      teste:{status:'resistencia', dificuldade:5, nomeStatus:'Resistência', eixo:'paciencia'},
      bom:{ef:{hp:-1, moral:3, flag:'esperou_a_neblina',
-              rep:{eixo:'bom',delta:1,motivo:'Parou na neblina em vez de insistir'}},
+              rep:{eixo:'bom',delta:1,motivo:'Parou na neblina em vez de insistir'}, executar:()=>{ Relogio.ate(6); }},
           resultado:[
             'Você senta encostad{o|a} numa pedra, com o time todo fora da Pokébola, e espera.',
             'Abre em cinquenta minutos, de uma vez, como cortina.',
             'Você perde a luz e ganha a noite mais estrelada que já viu, e dorme ali mesmo sem ter planejado.'
           ]},
-     ruim:{ef:{hp:-4, registrar:'Esperou a neblina passar e pegou frio.'},
+     ruim:{ef:{hp:-4, registrar:'Esperou a neblina passar e pegou frio.', executar:()=>{ Relogio.avancar(3); }},
            resultado:['Não abre. Você fica duas horas sentad{o|a} no frio e escurece do mesmo jeito.','Você desce no escuro, devagar, com lanterna, e chega tremendo.']}},
     {texto:'Seguir devagar, contando passo e marcando pedra.',
      teste:{status:'intelecto', dificuldade:7, nomeStatus:'Intelecto', eixo:'cuidado'},
@@ -1864,7 +1867,7 @@ montanha:[
                 : 'Alguém do seu cinto vai na frente e para toda vez que você fica pra trás.';
             },
             'Vocês descem juntos. Você não manda nada nesse trecho — você segue.',
-            'É a primeira vez na jornada que a hierarquia fica invertida por uma hora inteira, e nenhum dos dois lados comenta.'
+            'Por uma hora inteira a hierarquia fica invertida, e nenhum dos dois lados comenta.'
           ]},
      ruim:{ef:{hp:-3, moral:-2, registrar:'Soltou o time na neblina e ficou pior.'},
            resultado:['Eles se espalham. Você passa quinze minutos chamando e recolhendo.','Ninguém se perde de verdade, mas todo mundo fica pior do que estava.']}}
@@ -1911,7 +1914,7 @@ montanha:[
          flag:'escreveu_na_pedra', registrar:'Escreveu na pedra da trilha: TRILHA CAIU 40M ADIANTE.'},
      resultado:[
        'Você acha uma pedra de calcário no acostamento e escreve na cara da pedra grande, em letra de forma, do tamanho que dá:',
-       fala('a pedra', 'TRILHA CAIU 40M ADIANTE. NÃO EMPURRE.', 'frio'),
+       '**TRILHA CAIU 40M ADIANTE. NÃO EMPURRE.**',
        'Quem carregou o calço morro acima resolveu o problema e não resolveu o aviso.',
        'Agora tem aviso.'
      ]},
@@ -2014,9 +2017,9 @@ caverna:[
     'Daqui dá pra ouvir alguém falando sozinho, muito baixo, num ritmo que parece contagem.'
   ],
   escolhas:[
-    {texto:'Ir até lá sem anunciar, pra ver antes de ser visto.',
+    {texto:'Ir até lá sem anunciar, pra ver antes de ser vist{o|a}.',
      teste:{status:'percepcao', dificuldade:7, nomeStatus:'Percepção', eixo:'discricao'},
-     bom:{ef:{flag:'viu_o_do_lampiao', rep:{eixo:'bom',delta:1,motivo:'Chegou perto sem ser notado'},
+     bom:{ef:{flag:'viu_o_do_lampiao', rep:{eixo:'bom',delta:1,motivo:'Chegou perto sem ser notad{o|a}'},
               registrar:'Na galeria lateral tinha um geólogo contando camadas de parede em voz alta.'},
           resultado:[
             'Você chega a uns oito metros e para atrás de uma dobra.',
@@ -2025,7 +2028,7 @@ caverna:[
             'Ela está contando camadas. Camada de rocha, uma por uma, com a mão.',
             'Quarenta e três camadas é muito tempo. É mais tempo do que qualquer coisa que você já pensou.'
           ]},
-     ruim:{ef:{registrar:'Tentou chegar perto do lampião sem ser notado e foi notado.'},
+     ruim:{ef:{registrar:'Tentou chegar perto do lampião sem ser notad{o|a} e foi notad{o|a}.'},
            resultado:[
              d=>{
                const pior = piorNoEixo('discricao');
@@ -2037,10 +2040,10 @@ caverna:[
              fala('a geóloga', 'Eu tô aqui há onze horas e você é a quarta pessoa que faz isso.', 'frio'),
              fala('a geóloga', 'Vem. Vem logo, já que veio.')
            ]}},
-    {texto:'Chamar de longe e esperar ser convidado.',
+    {texto:'Chamar de longe e esperar ser convidad{o|a}.',
      ef:{moral:1, flag:'chamou_na_galeria',
          rep:{eixo:'bom',delta:1,motivo:'Anunciou antes de entrar numa galeria com gente dentro'},
-         registrar:'Chamou de longe na galeria lateral e foi convidado a entrar.'},
+         registrar:'Chamou de longe na galeria lateral e foi convidad{o|a} a entrar.'},
      resultado:[
        'Você chama e a contagem para na hora.',
        fala('a geóloga', 'Vem! Vem e pisa onde eu pisei, que o resto do chão é falso!'),
@@ -2087,7 +2090,7 @@ agua:[
            resultado:['A rede rasga no meio e metade dela volta pra água, agora em dois pedaços em vez de um.','Você piorou. É possível piorar.']}},
     {texto:'Seguir. A água é funda e você não sabe nadar direito.',
      ef:{},
-     resultado:['Você segue.','É uma decisão razoável e você vai pensar nela de novo hoje à noite, o que é o preço das decisões razoáveis.']}
+     resultado:['Você segue.','É uma decisão razoável, e a rede continua lá atrás, presa no mesmo galho. Decisão razoável não deixa de pesar por ser razoável.']}
   ]
 },
 {
@@ -2124,7 +2127,7 @@ agua:[
            resultado:[fala('o homem de colete', 'Tá na placa.'), 'E acabou.']}},
     {texto:'Ir procurar o jeito de atravessar a pé.',
      teste:{status:'intelecto', dificuldade:7, nomeStatus:'Intelecto', eixo:'coragem'},
-     bom:{ef:{flag:'atravessou_a_pe', rep:{eixo:'bom',delta:1,motivo:'Achou sozinho o caminho que a cidade toda finge não usar'},
+     bom:{ef:{flag:'atravessou_a_pe', rep:{eixo:'bom',delta:1,motivo:'Achou sozinh{o|a} o caminho que a cidade toda finge não usar'},
               registrar:'Atravessou a pé pela pedra, a trezentos metros do píer.'},
           resultado:[
             'Trezentos metros rio acima tem uma sequência de pedra chata que dá pra atravessar com água na canela.',
@@ -2147,9 +2150,10 @@ agua:[
     {texto:'Procurar o dono do nome no próximo lugar com gente.',
      teste:{status:'carisma', dificuldade:6, nomeStatus:'Carisma', eixo:'simpatia'},
      bom:{ef:{moral:2, rep:{eixo:'bom',delta:2,motivo:'Devolveu uma boia com nome ao dono do nome'},
-              flag:'devolveu_a_boia', registrar:'Devolveu a boia de rede ao dono. A corda tinha sido cortada.'},
+              flag:'devolveu_a_boia', registrar:'Devolveu a boia de rede ao dono. A corda tinha sido cortada.',
+              executar:()=>{ Relogio.avancar(3); }},
           resultado:[
-            'Leva duas tardes e quatro perguntas erradas até alguém reconhecer o nome.',
+            'Leva umas horas e quatro perguntas erradas até alguém reconhecer o nome.',
             'É um pescador de uns quarenta anos e ele fica olhando a boia por um tempo desconfortável.',
             fala('o dono da boia', 'Cortaram.'),
             fala('o dono da boia', 'A minha rede tava marcada com quatro dessas. Faz três semanas que eu procuro a rede e não a boia.', 'baixo'),
@@ -2182,7 +2186,7 @@ agua:[
      ef:{rep:{eixo:'bom',delta:1,motivo:'Deixou a boia à vista em vez de levar'},
          registrar:'Deixou a boia com nome bem à vista na pedra.'},
      resultado:['Você apoia a boia na pedra mais alta, com o nome pra cima e pra fora.','É o que se faz. Quem procura olha pedra alta.']},
-    {texto:'Seguir.', ef:{}, resultado:['Você segue. A boia continua encalhada com o nome de alguém virado pra baixo.']}
+    {texto:'Seguir.', ef:{}, resultado:['Você segue. A boia fica onde estava, na pedra baixa, com o nome de alguém ficando mais gasto.']}
   ]
 }
 ]

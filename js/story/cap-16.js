@@ -1837,7 +1837,7 @@ c16_ficou_parado:{
     'Depois ele te olha.'
   ],
   ef:{flag:['ficou_parado_hooh','entendeu_o_ritual'],
-      rep:{eixo:'bom',delta:5,motivo:'Ficou parado e viu o ritual inteiro'},
+      rep:{eixo:'bom',delta:5,motivo:'Ficou parad{o|a} e viu o ritual inteiro'},
       moral:15, instabilidade:1,
       registrar:'Ho-Oh encosta o bico nas três depressões, uma por uma, quarenta segundos em cada.',
       presagio:d=>d.flags.achou_a_praia ? 'Três lugares vazios aqui. Três lugares gastos numa praia de pedra, em Kanto.'
@@ -1964,7 +1964,7 @@ c16_ajoelhou:{
   ],
   ef:{flag:'ajoelhou_hooh',
       executar:d=>{ const L = Estado.lend(250); if (L && L.disposicao !== 'hostil') L.disposicao = 'passivo'; return []; },
-      rep:{eixo:'bom',delta:3,motivo:'Ajoelhou e foi corrigido'},
+      rep:{eixo:'bom',delta:3,motivo:'Ajoelhou e foi corrigid{o|a}'},
       moral:10,
       registrar:'Ajoelhou diante de Ho-Oh, e ele devolveu o gesto.'},
   escolhas:[
@@ -2132,7 +2132,7 @@ c16_insistiu:{
   ef:{flag:['equipe_devolveu_a_pena','pena_devolvida'],
       perdeItens:{'Pena Arco-Íris':1},
       npc:c16_npc('Chefe da expedição', 6, 'Pegou a pena da sua mão, subiu trinta metros e devolveu a pena ao círculo.'),
-      rep:{eixo:'bom',delta:4,motivo:'Errou e foi corrigido por quem você tentou convencer'},
+      rep:{eixo:'bom',delta:4,motivo:'Errou e foi corrigid{o|a} por quem você tentou convencer'},
       moral:10, instabilidade:-1,
       registrar:'A chefe da expedição devolveu a pena ao círculo com as próprias mãos.',
       presagio:'"Se eu não fizer, alguém pior faz." Você acabou de dizer a frase que constrói tudo isso.'},

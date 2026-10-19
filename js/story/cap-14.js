@@ -1168,7 +1168,7 @@ c14_nao_e_culpa:{
   ],
   ef:{flag:'blaine_te_ensinou',
       npc:c14_npc('Blaine', 6, 'Te ensinou que "não é culpa sua" encerra o assunto, e pediu que você perguntasse das caixas.'),
-      rep:{eixo:'bom',delta:2,motivo:'Aceitou ser corrigido'}},
+      rep:{eixo:'bom',delta:2,motivo:'Aceitou ser corrigid{o|a}'}},
   escolhas:[
     {texto:'"O que tem nas cinco caixas?"', vai:'c14_as_cinco_caixas', cond:c14_nova('c14_as_cinco_caixas'), ef:C14_ANTES_DAS_CAIXAS},
     {texto:'"A gente pode parar isso."', vai:'c14_pode_parar', cond:c14_nova('c14_pode_parar')},

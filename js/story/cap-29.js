@@ -490,7 +490,7 @@ c29_abriu_as_que_deu:{
     'Mas onze é onze.'
   ],
   ef:{flag:'abriu_onze', moral:4,
-      rep:{eixo:'bom', delta:2, motivo:'Abriu onze gaiolas e saiu antes de ser visto.'},
+      rep:{eixo:'bom', delta:2, motivo:'Abriu onze gaiolas e saiu antes de ser vist{o|a}.'},
       registrar:'Abriu onze das 31 gaiolas do galpão do portão verde.'},
   escolhas:[
     {texto:'Sair de Cerulean.', vai:'c29_fim'}
@@ -507,7 +507,7 @@ c29_fechou_a_porta:{
     'Trinta e uma gaiolas não têm três anos.'
   ],
   ef:{flag:'fechou_a_tranca', moral:-3,
-      registrar:'Fechou a tranca do galpão e saiu sem ser visto.',
+      registrar:'Fechou a tranca do galpão e saiu sem ser vist{o|a}.',
       presagio:'A conta certa e a conta possível não são a mesma conta, e você escolheu uma.'},
   escolhas:[
     {texto:'Sair de Cerulean.', vai:'c29_fim'}

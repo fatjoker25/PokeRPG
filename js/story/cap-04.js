@@ -2043,7 +2043,7 @@ c4_fenda_espera:{
   escolhas:[
     {texto:'Descer e encarar.', vai:'c4_encarou'},
     {texto:'Esperar ele sair e seguir ele.', vai:'c4_seguiu_rapaz'},
-    {texto:'Ir embora agora, sem ser visto.', vai:'c4_fenda_saiu'},
+    {texto:'Ir embora agora, sem ser vist{o|a}.', vai:'c4_fenda_saiu'},
     {texto:'Gritar da pedra, sem descer.', vai:'c4_gritou_pedra'}
   ]
 },

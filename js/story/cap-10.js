@@ -1834,7 +1834,7 @@ c10_falou_com_zapdos:{
        'Você fica com essa resposta na mão sem saber o que fazer com ela.'
   ],
   ef:{flag:['perguntou_no_galpao','sabe_que_nao_estao_presos'],
-      rep:{eixo:'bom',delta:3,motivo:'Perguntou em vez de decidir sozinho'},
+      rep:{eixo:'bom',delta:3,motivo:'Perguntou em vez de decidir sozinh{o|a}'},
       moral:-5,
       registrar:'Perguntou se estavam presos. Quarenta se aproximaram dela em resposta.',
       presagio:'Eles responderam. A partir daqui, tudo que você fizer aqui você faz sabendo.'},

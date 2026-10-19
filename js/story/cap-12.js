@@ -1217,7 +1217,7 @@ c12_ficou_pra_tras:{
   ],
   ef:{flag:['quase_viu_o_setor7','nico_te_salvou'],
       npc:{nome:'Guia Orin', opiniao:3, memoria:'Correu setecentos metros para te puxar de trás de uma moita antes do plantão te ver.'},
-      registrar:'O guia Orin te impediu de ser visto pelo plantão do setor 7.',
+      registrar:'O guia Orin te impediu de ser vist{o|a} pelo plantão do setor 7.',
       presagio:'Ele correu. Ele não gritou, não chamou ninguém, não te entregou. Ele correu.'},
   escolhas:[
     {texto:'"O que tem ali?"', vai:'c12_nico'},

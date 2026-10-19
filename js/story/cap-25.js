@@ -536,7 +536,7 @@ c25_deixou_falarem:{
     fala('a mulher de crachá azul', 'A gente não precisa do que você sabe. A gente precisa que alguém de fora tenha sabido.', 'frio')
   ],
   ef:{flag:'eles_sabiam_de_tudo', moral:-4,
-      rep:{eixo:'bom',delta:1,motivo:'Ficou quarenta minutos calado e ouviu tudo'},
+      rep:{eixo:'bom',delta:1,motivo:'Ficou quarenta minutos calad{o|a} e ouviu tudo'},
       registrar:'Eles sabiam de tudo antes de você. Precisavam que alguém de fora soubesse.'},
   escolhas:[
     {texto:'Pôr tudo em cima da mesa mesmo assim.', vai:'c25_pos_tudo_na_mesa'},

@@ -310,7 +310,7 @@ c23_leu_em_voz_alta:{
   ],
   ef:{flag:'leu_o_verso_da_segunda_pagina', moral:-3,
       npc:{nome:'Blue', opiniao:3, memoria:'Ouviu você ler em voz alta o que o titular anterior escreveu a lápis no verso.'},
-      rep:{eixo:'bom',delta:2,motivo:'Leu em voz alta uma coisa que era mais fácil ler calado', rep:{notorio:true}},
+      rep:{eixo:'bom',delta:2,motivo:'Leu em voz alta uma coisa que era mais fácil ler calad{o|a}', rep:{notorio:true}},
       registrar:'No verso da segunda página: "eu assinei porque eu achei que ia conseguir controlar".'},
   escolhas:[{texto:'Ir pro corredor D.', vai:'c23_procurou_o_proprio_nome'}]
 },

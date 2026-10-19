@@ -1966,7 +1966,7 @@ c8_entrou_visto:{
     'Você corre. Ele não corre atrás — só anota, mentalmente, que tem alguém a bordo que não devia estar.',
     'A partir de agora tem gente procurando você neste navio, e o navio tem nove andares e você não conhece nenhum deles.'
   ],
-  ef:{flag:['clandestino','procurado_no_navio'], rep:{eixo:'ruim',delta:1,motivo:'Entrou clandestino e foi visto'}},
+  ef:{flag:['clandestino','procurado_no_navio'], rep:{eixo:'ruim',delta:1,motivo:'Entrou clandestin{o|a} e foi vist{o|a}'}},
   escolhas:[
     {texto:'Subir para o salão e se misturar.', vai:'c8_bordo'},
     {texto:'Ficar no porão, longe de gente.', vai:'c8_porao'},
@@ -3763,7 +3763,7 @@ c8_levou_testemunha:{
     '"Por que tem uma cadeira na porta do banheiro?" pergunta o homem de pijama.',
     'E é a pergunta mais banal do mundo, feita por um senhor de sessenta anos que quer voltar a dormir, e é a primeira coisa naquele corredor que tem peso.'
   ],
-  ef:{flag:'a_testemunha', rep:{eixo:'bom',delta:3,motivo:'Trouxe uma testemunha em vez de bater na porta sozinho'},
+  ef:{flag:'a_testemunha', rep:{eixo:'bom',delta:3,motivo:'Trouxe uma testemunha em vez de bater na porta sozinh{o|a}'},
       npc:{nome:'Vizinho do 38', opiniao:3, memoria:'Foi de pijama até a porta do 40 com você, e fez a pergunta certa.'},
       registrar:'Um vizinho testemunhou a cadeira na maçaneta do camarote 40.',
       presagio:'Sozinh{o|a} você é {um garoto surtado|uma garota surtada}. Com um senhor de pijama você é um relato.'},

@@ -1835,7 +1835,7 @@ c15_viu_sem_ser_visto:{
   ],
   ef:{flag:['viu_os_tres','sabe_dos_tres','caes_olham_cinnabar'],
       executar:d=>{ GRUPO_CAES.forEach(x=>Estado.lend(x).encontros++); return []; },
-      rep:{eixo:'bom',delta:3,motivo:'Ficou escondido e cronometrou'},
+      rep:{eixo:'bom',delta:3,motivo:'Ficou escondid{o|a} e cronometrou'},
       registrar:'Os três param todos no mesmo ponto e olham pro sul por dezenove minutos.',
       presagio:'Dezenove minutos, parados, olhando.'},
   escolhas:[

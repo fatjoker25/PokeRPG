@@ -1149,7 +1149,7 @@ c13_esperou_na_camara:{
         return [];
       },
       npc:{nome:'Tobin', opiniao:1, memoria:'Te encontrou sentado na cadeira dele, dentro da câmara fria, e perguntou se você era da Liga.'},
-      rep:{eixo:'bom',delta:2,motivo:'Esperou sentado em vez de levar embora'},
+      rep:{eixo:'bom',delta:2,motivo:'Esperou sentad{o|a} em vez de levar embora'},
       registrar:'Tobin, mestre do Estrela do Sul, cuida do Articuno ferido há dezenove semanas.',
       presagio:'"Ainda bem." Ele tem medo da Liga, não de você.'},
   escolhas:[
@@ -2660,7 +2660,7 @@ c13_buscar_ajuda:{
        : 'E a parte mais difícil é técnica: achar, num galpão da cidade, onde alguém escondeu uma coisa que ninguém sabia que existia.',
     'Quando acaba, tem gente chorando no gelo e ninguém se envergonha disso, e o Sr. Dane é o único que não chora e o único que não tira o olho do horizonte.'
   ],
-  ef:{rep:{eixo:'bom',delta:5,motivo:'Mobilizou gente em vez de tentar sozinho'},
+  ef:{rep:{eixo:'bom',delta:5,motivo:'Mobilizou gente em vez de tentar sozinh{o|a}'},
       flag:['devolveu_o_filhote','mobilizou_gente'], instabilidade:-2, moral:20,
       executar:d=>{
         Relogio.viver(84); c13_viuArticuno(d);

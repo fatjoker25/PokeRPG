@@ -235,7 +235,7 @@ c3_ficou_parado:{
     'Quando você volta a respirar direito, percebe que está com a mão no cinto desde o começo, sem ter percebido que levou.'
   ],
   ef:{flag:'foi_contornado',
-      rep:{eixo:'bom',delta:1,motivo:'Ficou parado quando parar era mais difícil que correr'}},
+      rep:{eixo:'bom',delta:1,motivo:'Ficou parad{o|a} quando parar era mais difícil que correr'}},
   escolhas:[
     {texto:'Seguir na direção em que a pessoa foi.', vai:'c3_som'},
     {texto:'Ir atrás das pegadas de Ezra.', vai:'c3_correu_atras'}

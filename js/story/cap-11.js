@@ -1774,7 +1774,7 @@ c11_imprensa_no_balcao:{
     'A segunda vez que uma pessoa repete a mesma frase palavra por palavra é a resposta de verdade.'
   ],
   ef:{flag:['sabe_da_sala_vazia','silph_nao_comenta'],
-      rep:{eixo:'bom', delta:1, motivo:'Fez a pergunta oficial no balcão em vez de entrar escondido'},
+      rep:{eixo:'bom', delta:1, motivo:'Fez a pergunta oficial no balcão em vez de entrar escondid{o|a}'},
       npc:{nome:'Assessora da Silph', opiniao:-1, memoria:'Repetiu a mesma frase duas vezes pra você, palavra por palavra.'},
       registrar:'A assessoria da Silph repetiu a mesma frase duas vezes sobre o 7º andar.',
       presagio:'Frase repetida palavra por palavra é frase decorada, e frase decorada foi escrita por alguém.'},
