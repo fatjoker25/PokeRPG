@@ -17,12 +17,13 @@ cenas:{
 
 ch1_a_fumaca:{
   texto:[
-    'A fumaça é amarela porque o capim está seco desde abril. O vento empurra pro lado de três casas de sítio e de um curral de Miltank.',
+    'A fumaça é amarela porque o capim está seco há semanas. O vento empurra pro lado de três casas de sítio e de um curral de Miltank.',
     d => { Nomes.apresentar('a brigadista de Fuchsia'); return 'Na estrada, uma caminhonete-pipa velha e uma mulher de capacete amarelo com o nome pintado à mão na lateral: CALDER.'; },
     fala('a brigadista de Fuchsia', 'Somos quatro brigadistas pra seis quilômetros de fogo. Quem tem Pokémon de água, vem. Quem não tem, carrega mangueira.'),
     fala('a brigadista de Fuchsia', 'Você é {o|a} que ajuda. Todo mundo de Fuchsia falou. Vem.')
   ],
-  ef:{flag:'cm_heroi_1', registrar:'Um incêndio no capim da borda da reserva, na Rota 15, ameaça três sítios.'},
+  ef:{flag:'cm_heroi_1', registrar:'Um incêndio no capim da borda da reserva, na Rota 15, ameaça três sítios.',
+      executar:() => { caminhoEntre(8, 14, 11); }},
   escolhas:[
     {texto:'Ir pra linha de fogo com a brigada.', vai:'ch1_a_linha'},
     {texto:'Ir direto pros sítios tirar as famílias.', vai:'ch1_os_sitios',
@@ -37,6 +38,7 @@ ch1_a_linha:{
     d => { const p = (d.time || []).find(x => !x.morto); return p ? `${nomeExib(p)} trabalha do seu lado sem parar, e quando o fogo pula a faixa é ${pron(p).ele} que vê primeiro.` : 'Quando o fogo pula a faixa, quem vê primeiro é a brigadista.'; },
     fala('a brigadista de Fuchsia', 'Pulou! Recua tudo pra estrada!', 'grita')
   ],
+  ef:{executar:() => { caminhoAs(15); }},
   escolhas:[
     {texto:'Recuar pra estrada, como ela mandou.', vai:'ch1_os_sitios',
      ef:{rep:{eixo:'bom', delta:1, motivo:'Segurou a linha de fogo com a brigada'}}},
@@ -77,7 +79,7 @@ ch1_os_sitios:{
   texto:[
     'No primeiro sítio, um casal de velhos já está na estrada com uma mala e um Snorlax que não quer sair do quintal.',
     'No segundo, ninguém. No terceiro, uma menina de oito anos chorando na porteira, porque o Ponyta dela se soltou e correu pro lado do fogo.',
-    'Do lado da cerca da reserva, um Rapidash selvagem corre em pânico de um lado pro outro, com a crina pegando fogo e os olhos brancos.'
+    'Do lado da cerca da reserva, um Rapidash selvagem corre em pânico de um lado pro outro, com a crina de fogo alta demais, soltando faísca no capim seco.'
   ],
   escolhas:[
     {texto:'Ir atrás do Ponyta da menina.', vai:'ch1_o_ponyta'},
@@ -93,7 +95,7 @@ ch1_o_rapidash:{
 
 ch1_acalmou:{
   texto:[
-    'O Rapidash cai de lado no capim queimado, cansado, e deixa você jogar água na crina.',
+    'O Rapidash cai de lado no capim queimado, cansado, e a crina dele baixa até virar só brilho.',
     'Quando ele levanta, ele vai pro lado certo, pra longe do fogo. Atrás dele, como quem segue o grande, vai o Ponyta da menina.',
     'A menina corre pra porteira gritando um nome que você não entende.'
   ],
@@ -124,9 +126,10 @@ ch1_a_causa:{
     fala('a brigadista de Fuchsia', 'Hoje o vento virou.', 'baixo')
   ],
   ef:{flag:'cm_heroi_queima_de_limpeza', itens:{'Lata de querosene da origem':1},
-      registrar:'O incêndio da Rota 15 começou numa queima de limpeza do manejo, do lado de dentro da cerca.'},
+      registrar:'O incêndio da Rota 15 começou numa queima de limpeza do manejo, do lado de dentro da cerca.',
+      executar:() => { caminhoEntre(19, 6, 21); }},
   escolhas:[
-    {texto:'Levar a lata ao Koga, que é conselheiro da reserva.', vai:'ch1_fim', cond:d => !!d.npcs['Koga'] || !!d.flags.achou_ginasio_fuchsia,
+    {texto:'Levar a lata ao Koga.', vai:'ch1_fim', cond:d => !!d.npcs['Koga'] || !!d.flags.achou_ginasio_fuchsia,
      ef:{flag:'cm_heroi_lata_koga', rep:{eixo:'bom', delta:2, motivo:'Levou ao Koga a prova da queima de limpeza'},
          npc:{nome:'Koga', opiniao:2, memoria:'Você trouxe a lata de querosene da origem do incêndio da Rota 15.'}}},
     {texto:'Deixar a lata com a brigadista, pro laudo dela.', vai:'ch1_fim',
@@ -139,10 +142,11 @@ ch1_a_causa:{
 
 ch1_fim:{
   texto:[
-    'Na manhã seguinte, a menina do Ponyta aparece na estrada com um pote de doce de leite e um desenho de você com o cabelo em pé, em cima de um Rapidash de giz de cera.',
+    d => `Na manhã seguinte, a menina do Ponyta aparece na estrada com um pote de doce de leite e um desenho de você com o cabelo em pé, ${d.flags.cm_heroi_rapidash ? 'em cima de um Rapidash' : 'do lado de um Ponyta'} de giz de cera.`,
     fala('a brigadista de Fuchsia', 'Isso aí é o salário de brigadista. Doce e desenho. Tem gente que acha pouco.', 'riso'),
     'Seis quilômetros de capim preto. Três sítios em pé.'
   ],
+  ef:{executar:() => { caminhoAs(8); }},
   fim:true, resumo:'O fogo no capim: seis quilômetros pretos, três sítios em pé e uma lata de querosene do lado de dentro da cerca.'
 }
 
@@ -193,9 +197,10 @@ ch2_a_estacao:{
     'Às seis da tarde, a troca de turno: vinte homens e mulheres de macacão azul atravessam o pátio sem falar, de cabeça baixa, como quem está muito cansado ou muito vigiado.',
     'Um deles, de boné, olha pra você um segundo a mais.'
   ],
+  ef:{executar:() => { caminhoAs(18); }},
   escolhas:[
-    {texto:'Chamar "Dale!" alto, do lado de fora da cerca.', vai:'ch2_chamou',
-     ef:{rep:{eixo:'bom', delta:1, motivo:'Chamou pelo nome um trabalhador da Estação 4'}}},
+    {texto:d => d.flags.cm_heroi_3_14 ? 'Chamar "Dale!" alto, do lado de fora da cerca.' : 'Chamar o rapaz de boné, alto, do lado de fora da cerca.', vai:'ch2_chamou',
+     ef:{rep:{eixo:'bom', delta:1, motivo:'Chamou por cima da cerca um trabalhador da Estação 4'}}},
     {texto:'Esperar a noite e achar o bloco 3, quarto 14.', vai:'ch2_o_quarto', cond:d => !!d.flags.cm_heroi_3_14}
   ]
 },
@@ -214,17 +219,19 @@ ch2_chamou:{
 
 ch2_o_quarto:{
   texto:[
-    'O bloco 3 tem uma janela de banheiro sem grade, do lado do muro. O quarto 14 tem quatro camas e cinco homens.',
-    'O rapaz de boné é o Dale. Ele te reconhece da foto que a mãe mostra pra todo mundo, porque ela mostrou pra ele também, numa carta que chegou aberta.',
+    d => d.flags.cm_heroi_3_14 ? '' : 'Na troca de turno, o rapaz de boné entrou no bloco 3 e acendeu a luz da quarta janela do primeiro andar. É por ela que você conta.',
+    'O bloco 3 tem uma janela de banheiro sem grade, do lado do muro. Na porta do quarto, um 14 pintado à mão. Dentro, quatro camas e cinco homens.',
+    'O rapaz de boné é o Dale. Você diz que a mãe dele espera no píer, e ele senta na cama.',
     fala('Dale', 'A gente não pode sair. A gente deve o alojamento. O alojamento custa o salário, e o que sobra é a comida, e a comida é da cantina deles.', 'baixo'),
     fala('Dale', 'Quem sai antes do contrato paga multa. A multa é o salário de um ano. Ninguém tem.', 'baixo')
   ],
   ef:{flag:'cm_heroi_achou_davi', registrar:'Os rapazes da vila estão presos no alojamento da Estação 4 por dívida de alojamento e multa de contrato.',
+      executar:() => { caminhoAs(23); },
       npc:{nome:'Dale', opiniao:3, memoria:'Você entrou pela janela do banheiro do bloco 3 pra achar ele.'}},
   escolhas:[
     {texto:'Tirar os cinco hoje, pela janela, e enfrentar quem aparecer.', vai:'ch2_a_fuga',
      ef:{rep:{eixo:'bom', delta:2, motivo:'Tirou cinco trabalhadores do alojamento da Estação 4 de noite'}}},
-    {texto:'Fotografar o contrato e o quarto e levar pra fora, pra polícia do trabalho.', vai:'ch2_as_fotos',
+    {texto:'Fotografar o contrato e o quarto e levar pra fora, pra fiscalização do trabalho.', vai:'ch2_as_fotos',
      ef:{rep:{eixo:'bom', delta:1, motivo:'Juntou prova do alojamento da Estação 4 antes de agir'}}},
     {texto:'Pagar a multa de um, o Dale, com o seu dinheiro.', vai:'ch2_pagou', cond:d => d.jogador.dinheiro >= 6000,
      ef:{flag:'cm_heroi_pagou_multa', dinheiro:-6000, rep:{eixo:'bom', delta:2, motivo:'Pagou do bolso a multa de contrato de um rapaz da Estação 4'}}}
@@ -247,7 +254,8 @@ ch2_sairam:{
     'No píer, a mãe do Dale está esperando. Ela não sabe que vocês vêm. Ela espera todo dia na hora do barco, e hoje o barco veio.'
   ],
   ef:{flag:'cm_heroi_trouxe_os_cinco', rep:{eixo:'bom', delta:3, motivo:'Trouxe de volta os cinco rapazes da vila de pescadores'},
-      registrar:'Os cinco rapazes da vila de pescadores voltaram pra casa de barco, de noite.'},
+      registrar:'Os cinco rapazes da vila de pescadores voltaram pra casa de barco, de noite.',
+      executar:() => { caminhoAs(2); }},
   escolhas:[
     {texto:'Ficar pra ver.', vai:'ch2_fim'}
   ]
@@ -269,7 +277,7 @@ ch2_as_fotos:{
   texto:[
     'O contrato tem dezoito cláusulas. A cláusula 9 proíbe telefone. A 14 diz que o alojamento é descontado em folha. A 17 diz a multa.',
     'Você fotografa tudo, e fotografa o quarto: quatro camas, cinco homens, um ventilador sem hélice.',
-    'Na delegacia do trabalho de Saffron, o fiscal lê as fotos e marca uma visita surpresa pra daqui a três semanas.',
+    'Na fiscalização do trabalho, em Saffron, o fiscal lê as fotos e marca uma visita surpresa pra daqui a três semanas.',
     'Três semanas é muito tempo pra um quarto de quatro camas e cinco homens.'
   ],
   ef:{flag:'cm_heroi_fiscal', itens:{'Fotos do contrato da Estação 4':1}},
@@ -284,7 +292,7 @@ ch2_pagou:{
     'O Dale sai pela portaria às oito da manhã, com uma mochila e o boné na mão.',
     'Os outros quatro ficam olhando da janela do bloco 3.'
   ],
-  ef:{npc:{nome:'Dale', opiniao:6, memoria:'Você pagou a multa dele com o seu dinheiro.'}},
+  ef:{npc:{nome:'Dale', opiniao:6, memoria:'Você pagou a multa dele com o seu dinheiro.'}, executar:() => { caminhoAs(8); }},
   escolhas:[
     {texto:'Levar ele pro píer.', vai:'ch2_fim'}
   ]
@@ -292,7 +300,11 @@ ch2_pagou:{
 
 ch2_fim:{
   texto:[
-    d => d.flags.cm_heroi_trouxe_os_cinco ? 'Na vila de pescadores, naquele domingo, o telefone público toca cinco vezes, e não é ninguém: são os cinco ligando uns pros outros, de casa em casa, só porque podem.' : d.flags.cm_heroi_pagou_multa ? 'O Dale volta pro barco da mãe. No domingo seguinte ele vai à Estação 4 de visita, do lado de fora da cerca, e grita o nome de cada um dos quatro.' : 'A mãe do Dale ouve tudo de pé, segurando a foto. "Ele tá vivo", ela repete, como quem conta. "Ele tá vivo."',
+    d => d.flags.cm_heroi_trouxe_os_cinco ? 'Na vila de pescadores, naquele domingo, o telefone público toca cinco vezes, e não é ninguém: são os cinco ligando uns pros outros, de casa em casa, só porque podem.'
+      : d.flags.cm_heroi_pagou_multa ? 'O Dale volta pro barco da mãe. No domingo seguinte ele vai à Estação 4 de visita, do lado de fora da cerca, e grita o nome de cada um dos quatro.'
+      : 'A mãe do Dale ouve tudo de pé, segurando a foto.',
+    d => d.flags.cm_heroi_trouxe_os_cinco || d.flags.cm_heroi_pagou_multa ? '' : fala('a mãe do píer', 'Ele tá vivo.', 'baixo', 'Ela repete, como quem conta.'),
+    d => d.flags.cm_heroi_trouxe_os_cinco || d.flags.cm_heroi_pagou_multa ? '' : fala('a mãe do píer', 'Ele tá vivo.', 'baixo'),
     'A cerca alta da Estação 4 fica do outro lado da água, com a luz do alojamento acesa a noite inteira.'
   ],
   fim:true, resumo:'Os que sumiram: um envelope vazio com um número a lápis, um quarto de quatro camas e cinco homens.'
@@ -313,9 +325,11 @@ cenas:{
 ch3_o_palanque:{
   texto:[
     'Depois da audiência de segunda, o seu nome saiu em três jornais. A prefeitura de Saffron montou um palanque na praça da estação pra te dar uma medalha.',
-    'Na fila da frente: o prefeito, um conselheiro da Liga, e um homem de terno cinza claro que você já viu num corredor de fórum.',
+    d => Nomes.sabe('o advogado da Comissão')
+      ? 'Na fila da frente: o prefeito, um conselheiro da Liga e o Dr. Bramble, de terno cinza claro, que já sabe o seu nome.'
+      : 'Na fila da frente: o prefeito, um conselheiro da Liga e um homem de terno cinza claro que ninguém apresenta.',
     'Atrás da grade, umas trezentas pessoas. Muita criança com Pokémon no colo.',
-    d => d.flags.ln_heroi_conselho || d.flags.ln_heroi_melhor ? 'Na grade, de boné, um menino com um Butterfree no ombro acena com as duas mãos. Era um Caterpie da última vez.' : 'Na grade, uma senhora segura um pote de doce de leite e um Meowth que não quer ficar no colo.'
+    d => d.flags.ln_heroi_conselho || d.flags.ln_heroi_melhor ? 'Na grade, de boné, um menino com um Butterfree no ombro acena com as duas mãos. Era um Caterpie da última vez.' : 'Na grade, uma senhora segura um pote de doce de leite, e do lado dela um menino de boné, com um Butterfree no ombro, acena com as duas mãos.'
   ],
   ef:{flag:'cm_heroi_3', registrar:'Saffron montou um palanque pra te dar uma medalha depois da audiência.'},
   escolhas:[
@@ -340,7 +354,7 @@ ch3_a_medalha:{
     'O prefeito põe a medalha no seu pescoço. É pesada e tem o brasão de Saffron.',
     'O homem de terno cinza claro pede a palavra e anuncia, no microfone, que a Comissão de Gestão de Risco tem orgulho de patrocinar a homenagem.',
     'O microfone volta pra você. Trezentas pessoas esperam.',
-    fala('Dr. Bramble', 'Um herói de Kanto é bom pra todo mundo. Inclusive pra quem estava do outro lado. Fala bonito.', 'baixo')
+    fala('o advogado da Comissão', 'Um herói de Kanto é bom pra todo mundo. Inclusive pra quem estava do outro lado. Fala bonito.', 'baixo')
   ],
   escolhas:[
     {texto:'Agradecer e falar da Comissão, no microfone, com nome e número.', vai:'ch3_o_microfone',
@@ -354,8 +368,17 @@ ch3_a_medalha:{
 
 ch3_o_microfone:{
   texto:[
-    'Você fala do capim queimado, do quarto de quatro camas e cinco homens, do que você viu. Trezentas pessoas param de mexer no PokéNav.',
-    'O Dr. Bramble sobe no palanque no meio da sua frase e tenta pegar o microfone, educadamente.',
+    d => {
+      const viu = [];
+      if (d.flags.cm_heroi_1) viu.push('do capim queimado');
+      if (d.flags.cm_heroi_achou_davi) viu.push('do quarto de quatro camas e cinco homens');
+      else if (d.flags.cm_heroi_2) viu.push('dos cinco rapazes que pararam de ligar');
+      viu.push('do que você viu');
+      return `Você fala ${viu.join(', ')}. Trezentas pessoas param de mexer no PokéNav.`;
+    },
+    d => Nomes.sabe('o advogado da Comissão')
+      ? 'O Dr. Bramble sobe no palanque no meio da sua frase e tenta pegar o microfone, educadamente.'
+      : 'O homem de terno cinza claro sobe no palanque no meio da sua frase e tenta pegar o microfone, educadamente.',
     'Atrás dele, dois homens de colete preto se aproximam da escada do palanque.'
   ],
   batalha:{comissao:'seguranca', nivel:d => nivelDoCaminho(d, 3), tipo:'treinador', treinador:'Segurança da Estação 4', fuga:false,
@@ -367,7 +390,7 @@ ch3_terminou_a_frase:{
   texto:[
     'As unidades caem no palco de madeira. O microfone ainda está ligado na sua mão.',
     'Você termina a frase. A praça inteira ouve.',
-    'Quem aplaude primeiro é a mãe de um pescador da Rota 21, na terceira fila, de pé.'
+    d => d.flags.cm_heroi_2 ? 'Quem aplaude primeiro é a mãe de um pescador da Rota 21, na terceira fila, de pé.' : 'Quem aplaude primeiro é a senhora do doce de leite, na grade, de pé.'
   ],
   ef:{flag:'cm_heroi_falou_tudo', rep:{eixo:'bom', delta:2, motivo:'Terminou a frase no palanque'}},
   escolhas:[
@@ -411,7 +434,9 @@ ch3_devolveu:{
 
 ch3_depois:{
   texto:[
-    'Na saída da praça, a brigadista Calder te espera encostada na caminhonete-pipa, de capacete na mão.',
+    d => { Nomes.apresentar('a brigadista de Fuchsia'); return d.flags.cm_heroi_1
+      ? 'Na saída da praça, a brigadista Calder te espera encostada na caminhonete-pipa, de capacete na mão.'
+      : 'Na saída da praça, uma mulher te espera encostada numa caminhonete-pipa velha, com um capacete amarelo na mão e um nome pintado à mão na lateral dele: CALDER.'; },
     fala('a brigadista de Fuchsia', 'Agora todo mundo sabe o seu nome. Isso é bom pra quem precisa de ajuda e é ruim pra você.'),
     fala('a brigadista de Fuchsia', 'Herói de palanque dura um ano. Brigadista dura a vida. Escolhe.', 'baixo')
   ],
@@ -429,10 +454,10 @@ ch3_depois:{
 
 ch3_seguir:{
   texto:[
-    fala('a brigadista de Fuchsia', 'Vai. Se pegar fogo no caminho, você sabe onde é a linha.', 'riso'),
+    d => fala('a brigadista de Fuchsia', d.flags.cm_heroi_1 ? 'Vai. Se pegar fogo no caminho, você sabe onde é a linha.' : 'Vai. Se pegar fogo no caminho, cava uma faixa na frente dele e torce pro vento.', 'riso'),
     'O ônibus da Liga pro Planalto sai às oito e quinze. Alguém deixou um pote de doce de leite no seu assento.'
   ],
-  ef:{flag:'cm_heroi_seguiu'},
+  ef:{flag:'cm_heroi_seguiu', executar:() => { caminhoAs(8); }},
   fim:true, resumo:'Quem ajuda quem: um palanque, uma medalha pesada e um microfone que alguém tentou desligar.'
 },
 
@@ -445,7 +470,9 @@ ch3_final_simbolo:{
     'Ser símbolo é ser usado. Você aprende a escolher por quem.',
     'A Comissão tenta três vezes pôr o seu rosto num cartaz deles. As três vezes você vai a público dizer que não. As três vezes funciona.',
     'Você quase não ajuda mais ninguém com as próprias mãos. Você manda gente. É mais gente ajudada e é menos você, e você nunca decide se isso é bom.',
-    'Na sua mesa tem um desenho de giz de cera, de uma menina de Fuchsia, de você em cima de um Rapidash. Você olha ele toda vez que dá uma entrevista.'
+    d => d.flags.cm_heroi_ponyta
+      ? `Na sua mesa tem um desenho de giz de cera, de uma menina da Rota 15, de você ${d.flags.cm_heroi_rapidash ? 'em cima de um Rapidash' : 'do lado de um Ponyta'}. Você olha ele toda vez que dá uma entrevista.`
+      : 'Na sua mesa tem um desenho de giz de cera que uma criança te deu numa praça, de você com o cabelo em pé. Você olha ele toda vez que dá uma entrevista.'
   ]}
 },
 
@@ -457,7 +484,11 @@ ch3_final_ninguem:{
   final:{id:'heroi_ninguem', titulo:'NINGUÉM', texto:[
     'Você vira brigadista em Fuchsia. Capacete amarelo com o nome pintado à mão na lateral.',
     'Às vezes você tira um Meowth de uma caixa d\'água, às vezes você segura uma linha de fogo de seis quilômetros. Ninguém escreve sobre nenhuma das duas.',
-    'Uma vez por ano, numa vila de pescadores da Rota 21, cinco rapazes te mandam um cartão pelo correio, sem saber o seu endereço, endereçado só a "quem ajuda, Fuchsia". Chega.',
+    d => d.flags.cm_heroi_trouxe_os_cinco
+      ? 'Uma vez por ano, numa vila de pescadores da Rota 21, cinco rapazes te mandam um cartão pelo correio, sem saber o seu endereço, endereçado só a "quem ajuda, Fuchsia". Chega.'
+      : d.flags.cm_heroi_2
+        ? 'Uma vez por ano, a mãe de um pescador da Rota 21 te manda um cartão pelo correio, sem saber o seu endereço, endereçado só a "quem ajuda, Fuchsia". Chega.'
+        : 'Uma vez por ano chega um cartão pelo correio, sem remetente, endereçado só a "quem ajuda, Fuchsia". Chega.',
     'Ser ninguém é o jeito mais difícil de ser herói. É também o único em que ninguém te usa.'
   ]}
 },
@@ -468,7 +499,7 @@ ch3_final_proximo:{
     fala('a mãe do menino', 'Ele vai. Ele ia de qualquer jeito. Prefiro que vá com alguém.', 'baixo')
   ],
   final:{id:'heroi_proximo', titulo:'O PRÓXIMO', texto:[
-    'Você ensina o que aprendeu: faz o que tiver na frente, depois o próximo. Água, sombra, sono. Linha de fogo. Janela de banheiro sem grade.',
+    d => `Você ensina o que aprendeu: faz o que tiver na frente, depois o próximo. Água, sombra, sono.${d.flags.cm_heroi_1 ? ' Linha de fogo.' : ''}${d.flags.cm_heroi_achou_davi ? ' Janela de banheiro sem grade.' : ''}`,
     'Em dois anos, ele ajuda mais gente do que você ajudou. Em três, ele tem um menino do lado dele, com um Caterpie no ombro.',
     'Ninguém lembra mais de você em Kanto. Lembram dele.',
     'É isso que você queria. Você descobre que era isso que você queria no dia em que ele te liga, de longe, e diz: "eu fiz o que tinha na frente."'
