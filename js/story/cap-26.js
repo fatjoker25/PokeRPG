@@ -404,13 +404,13 @@ c21_o_que_acontece_em_cima:{
     fala('a moça das licenças', 'Em cima? Reunião, principalmente.', null, 'Ela pensa.'),
     fala('a moça das licenças', 'Quarta é comitê de calendário. Quinta de manhã é homologação de ginásio. Sexta ninguém sobe.'),
     d=>fala(d.jogador.nome, 'E a Elite 4?'),
-    fala('a moça das licenças', 'A Elite 4 treina de manhã, das seis às nove, e depois vai embora.', null, 'Ela volta ao livro.'),
+    fala('a moça das licenças', 'A Elite 4 treina de manhã, das seis às nove. Depois cada um fica na sua sala até o último desafiante, e vai pra casa.', null, 'Ela volta ao livro.'),
     fala('a moça das licenças', 'Eles não moram aqui. Isso é a primeira coisa que decepciona todo mundo que chega.'),
     'Ela vira uma página.',
     fala('a moça das licenças', 'O senhor Mervin mora. Mas ele tem setenta e três anos e não tem mais para onde ir.')
   ],
   ef:{flag:'sabe_do_quintino',
-      registrar:'A Elite 4 treina das seis às nove e vai embora. Só o Sr. Mervin mora no Planalto.'},
+      registrar:'A Elite 4 treina das seis às nove e vai pra casa no fim do dia. Só o Sr. Mervin mora no Planalto.'},
   escolhas:[
     {texto:'"Quem é o senhor Mervin?"', vai:'c21_quem_e_quintino'},
     {texto:'Subir para a reunião.', vai:'c21_esperou_na_porta'},

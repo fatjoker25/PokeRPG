@@ -31473,14 +31473,16 @@ const Barreiras = {
    ============================================================ */
 
 /* A Elite dos Quatro de Kanto é Lorelei, Bruno, Agatha e Lance.
-   Desde agosto, três deles não se apresentam. A Liga não tirou os
-   nomes das portas: pôs substitutos embaixo deles. */
+   Há meses três deles não se apresentam (o capítulo 17 conta desde
+   quando, pelo calendário). A Liga não tirou os nomes das portas: pôs
+   substitutos embaixo deles. As quatro salas abrem pro poço de pedra
+   da Elite, o mesmo do capítulo 26. */
 const ELITE4 = [
 {
   id:'giselle', ordem:1, nome:'Giselle', titular:'Lorelei', tipo:'variado', nivelBase:60,
   especies:[105, 40, 53, 31, 112],   // Marowak, Wigglytuff, Persian, Nidoqueen, Rhydon
   intro:d=>[
-    'A primeira porta da ala tem uma placa de bronze parafusada na altura dos olhos: LORELEI.',
+    'No fundo do poço de pedra da Elite, a parede tem quatro portas. A primeira tem uma placa de bronze parafusada na altura dos olhos: LORELEI.',
     'A sala atrás dela não parece sala de batalha. Parece sala de aula: quadro, carteira, projetor desligado.',
     'A mulher na frente tem uns vinte e poucos anos e um caderno aberto com a sua ficha dentro. Ela não é a Lorelei e sabe que você reparou.',
     '"Giselle. Eu me formei em primeiro lugar na Escola Técnica Pokémon, no ano em que a escola ainda existia."',
@@ -31505,7 +31507,7 @@ const ELITE4 = [
     '"A.J." Ele nem estende a mão. "Noventa e oito vitórias seguidas antes de eu fazer dezesseis anos. Depois disso eu parei de contar, porque contar vira vaidade."',
     '"Eu treinei do jeito errado quando era moleque. Muita gente me disse isso e todas elas tinham razão." Ele se alonga sem pressa.',
     '"Eu mudei o método. Não mudei o resultado."',
-    '"E antes que {o senhor|a senhora} pergunte: o Bruno treinou nesta sala por dezenove anos e eu treino aqui há cinco meses. Eu varro o chão dele toda manhã e eu não me acho ele."',
+    '"E antes que {o senhor|a senhora} pergunte: o Bruno treinou nesta sala por dezenove anos e eu treino aqui desde que ele parou de vir. Eu varro o chão dele toda manhã e eu não me acho ele."',
     d=>d.cemiterio.length ? `"E eu sei o que aconteceu com ${nomeExib(d.cemiterio[0])}." Ele fala isso sem acusação nenhuma, o que é pior. "Eu também perdi um. Continua doendo depois de doze anos. É pra doer."` : '',
     d=>d.flags.sabe_da_pergunta
       ? '"E {o senhor|a senhora} já sabe do vale." Ele se alonga do mesmo jeito, sem mudar nada na voz. "Aqui dentro a gente não fala disso. Aqui dentro é chão de terra e é batalha, e por quarenta minutos eu consigo não pensar naquilo. Deixa eu ter os quarenta minutos."'
@@ -31542,7 +31544,7 @@ const ELITE4 = [
   intro:d=>[
     'A quarta porta diz LANCE, e é a única da ala que está aberta.',
     'A sala é alta, de pedra escura, com fogo em quatro bacias de metal que alguém acende todo dia de manhã e apaga todo dia à noite.',
-    'O homem de capa está em pé no centro, e está em pé no centro desde as oito da manhã, como esteve ontem e anteontem.',
+    'O homem de capa está em pé no centro, como esteve ontem e anteontem.',
     '"Lance." Ele estende a mão, e a mão é firme e seca. "Da Elite dos Quatro. O que sobrou dela."',
     '"Eu não vou falar dos outros três e eu peço que {o senhor|a senhora} também não fale. Eles têm motivo, e motivo de gente cansada não é assunto de desafiante."',
     d=>d.flags.liga_aliada || d.flags.sabe_do_norte
@@ -31553,7 +31555,7 @@ const ELITE4 = [
   vitoria:d=>[
     'O Dragonite cai de joelhos primeiro e só depois de lado, o que é a coisa mais parecida com respeito que um Dragonite faz.',
     'Lance recolhe os cinco sem pressa nenhuma e fica um tempo comprido de costas para você.',
-    '"Em cinco meses {o senhor|a senhora} é {o primeiro|a primeira} que chega aqui." Ele finalmente se vira. "E o primeiro que passa."',
+    '"Desde que os outros três pararam de vir, {o senhor|a senhora} é {o primeiro|a primeira} que chega aqui." Ele finalmente se vira. "E {o primeiro|a primeira} que passa."',
     'Ele vai até a parede do fundo e aperta um botão que você não tinha visto, e o que você achou que fosse parede começa a abrir.',
     '"A cadeira do Campeão está vaga no papel faz dois anos." Ele segura a porta. "No papel."',
     '"Boa sorte. E, quando {o senhor|a senhora} sair de lá, seja lá como for, eu vou estar aqui amanhã às oito."'
@@ -31570,17 +31572,17 @@ const CAMPEAO = {
     'A sala atrás da última porta não é uma arena. É um salão vazio, sem iluminação de arena, com uma claraboia.',
     'Tem uma pessoa em pé no centro. Boné, jaqueta, mochila. Aparenta uns dezoito anos.',
     'Ele não se apresenta. Não fala. Não estende a mão.',
-    'Ele solta a primeira Pokébola, e é um Pikachu de nível oitenta e alguma coisa.',
+    `Ele solta a primeira Pokébola, e é um Pikachu de nível ${porExtenso(CAMPEAO.nivelBase)}.`,
     d.flags.leu_caderno || d.flags.viu_os_doze
       ? `Você quer perguntar mil coisas. Sobre Mewtwo, sobre as aves${d.flags.sabe_do_red_no_mirante ? ', sobre o banco do mirante' : ''}. Ele olha pra você de um jeito que fecha todas as perguntas antes delas saírem.`
       : 'Você entende quem é antes de qualquer confirmação, porque só existe uma pessoa em Kanto que entraria num salão desses e não diria nada.',
     'Red não fala. Red nunca falou.'
   ],
   vitoria:d=>[
-    'O Pikachu é o último a cair, e cai encostado na perna dele.',
+    'O último dele cai, e o Pikachu, que caiu primeiro, sai sozinho da Pokébola pra encostar na perna dele.',
     'Red se agacha, coloca a mão na cabeça do Pikachu, e fica assim um tempo.',
     'Depois se levanta, olha você, e faz a única coisa que ele faz: assente uma vez.',
-    'Ele sobe a escada do poço e sai pela porta do corredor, e ninguém no Planalto Indigo o vê passar, porque ninguém no Planalto Indigo estava esperando que ele estivesse lá.',
+    'Ele sai pela porta do fundo do salão, e ninguém no Planalto Indigo o vê passar, porque ninguém no Planalto Indigo estava esperando que ele estivesse lá.',
     d.flags.sabe_do_norte || d.flags.liga_aliada
       ? 'Na porta, antes de sumir, ele para. Sem virar, ele levanta a mão e aponta para o norte.\nDepois vai embora.'
       : 'Você fica sozinh{o|a} num salão vazio com uma claraboia, como campeão de Kanto, sem ninguém pra contar.',
@@ -31592,12 +31594,17 @@ const CAMPEAO = {
     'Ela trava por quatro segundos, reinicia sozinha, e quando volta a barra de progresso embaixo não termina mais no cento e cinquenta e um.',
     'Uma auxiliar da Liga entra no salão com uma pasta e não olha pro chão nem pro teto, só pra você.',
     '"A Liga libera o registro nacional pra quem senta na cadeira." Ela entrega a pasta aberta na página certa. "São cem entradas novas. Todas vazias."',
-    '"E a fronteira do norte?" — porque é o que você pergunta, e ela já estava esperando.',
-    '"A fronteira do norte pede autorização da Liga." Ela fecha a pasta. "{O senhor|A senhora} é a Liga agora. Autoriza quando quiser."'
+    /* do norte, só pergunta quem já ouviu falar dele */
+    d.flags.sabe_do_norte || d.flags.liga_aliada || d.flags.sabe_do_norte_antes
+      ? '"E a fronteira do norte?" — porque é o que você pergunta, e ela já estava esperando.'
+      : 'Ela fica parada um segundo a mais, como quem tem mais uma coisa pra dizer.',
+    d.flags.sabe_do_norte || d.flags.liga_aliada || d.flags.sabe_do_norte_antes
+      ? '"A fronteira do norte pede autorização da Liga." Ela fecha a pasta. "{O senhor|A senhora} é a Liga agora. Autoriza quando quiser."'
+      : '"E tem a fronteira do norte, que ninguém cruza sem autorização da Liga." Ela fecha a pasta. "{O senhor|A senhora} é a Liga agora. Autoriza quando quiser."'
   ],
   derrota:d=>[
-    'Você perde. Não tem vergonha nisso: você perdeu para a pessoa que derrubou a Equipe Rocket sozinha aos onze anos.',
-    'Red cura o seu time — ele mesmo, um por um, com itens da própria mochila — e depois senta no chão do salão até você conseguir levantar.',
+    'Você perde. Não tem vergonha nisso: você perdeu para a pessoa que derrubou a Equipe Rocket sozinha aos dezesseis anos.',
+    'Red se agacha do lado de cada um do seu time, um por um, e olha sem pressa, como quem confere se ficou tudo inteiro. Depois senta no chão do salão até você conseguir levantar.',
     'Quando você levanta, ele aponta a porta por onde você entrou.',
     'Não é expulsão. É "volta".'
   ]
@@ -31610,21 +31617,21 @@ const CAMPEAO = {
 const RIVAIS_TORNEIO = [
   {nome:'Ezra', tipos:['Normal','Voador'], fala:'"A GENTE TÁ NO MESMO CHAVEAMENTO! Cara! Isso é tipo o destino!"',
    cond:d=>!!d.npcs['Ezra'] && d.npcs['Ezra'].opiniao >= 0},
-  {nome:'Ezra', tipos:['Normal','Voador'], fala:'"Não sorri pra mim." Ezra não aperta a sua mão. "Eu treinei oito meses pra isso."',
+  {nome:'Ezra', tipos:['Normal','Voador'], fala:'"Não sorri pra mim." Ezra não aperta a sua mão. "Eu treinei pra isso todo dia desde que saí de casa."',
    cond:d=>!!d.npcs['Ezra'] && d.npcs['Ezra'].opiniao < 0},
   {nome:'Caçador Roque', tipos:['Venenoso','Terrestre'], fala:'"Torneio é o único lugar onde eu posso te bater na frente de gente e sair aplaudido."',
    cond:d=>!!d.npcs['Caçador Roque']},
   {nome:'Fenna, da Silph', tipos:['Elétrico','Psíquico'], fala:'"Eu pedi demissão." Ela dá de ombros. "Sobrou tempo pra treinar."',
    cond:d=>!!d.npcs['Fenna (crachá azul)']},
-  {nome:'Guia Orin', tipos:['Inseto','Grama'], fala:'"Eu saí da Zona." Orin está diferente. "Eu testemunhei. Perdi o emprego. Tô aqui."',
+  {nome:'Guia Orin', tipos:['Inseto','Grama'], fala:'"Eu saí da Zona." Orin está diferente. "Pedi as contas depois de tudo aquilo. Tô aqui."',
    cond:d=>!!d.npcs['Guia Orin']},
   {nome:'Ás do Planalto', tipos:['Dragão','Voador'], fala:'"Eu treino aqui. Literalmente aqui. Boa sorte."'},
   {nome:'Veterana de Saffron', tipos:['Psíquico','Fantasma'], fala:'"Décimo quarto torneio. Eu não vim ganhar, eu vim continuar vindo."'},
   {nome:'Pescador de Fuchsia', tipos:['Água','Gelo'], fala:'"Eu não uso Poké Ball cara e ainda assim eu ganho de gente rica. É o meu hobby."'},
   {nome:'Criador de Pallet', tipos:['Normal','Lutador'], fala:'"Eu crio. Eu não batalho. Mas os meus batalham."'},
-  {nome:'Estudante de Cinnabar', tipos:['Fogo','Pedra'], fala:'"O Blaine é meu professor. Ele disse pra eu não te subestimar."'},
+  {nome:'Estudante de Cinnabar', tipos:['Fogo','Pedra'], fala:'"O Blaine é meu professor. Ele diz pra nunca subestimar quem chega com a mochila suja."'},
   {nome:'Mochileiro da Rota 3', tipos:['Pedra','Terrestre'], fala:'"Eu durmo no mato há dois anos. Isso conta como treino?"'},
-  {nome:'Enfermeira de folga', tipos:['Normal','Psíquico'], fala:'"Eu curo o seu time toda semana. Hoje eu machuco."'}
+  {nome:'Enfermeira de folga', tipos:['Normal','Psíquico'], fala:'"Eu curo time a semana inteira. Hoje eu machuco."'}
 ];
 
 /* Monta um adversário de torneio com time escalado ao jogador */
@@ -99757,13 +99764,13 @@ c21_o_que_acontece_em_cima:{
     fala('a moça das licenças', 'Em cima? Reunião, principalmente.', null, 'Ela pensa.'),
     fala('a moça das licenças', 'Quarta é comitê de calendário. Quinta de manhã é homologação de ginásio. Sexta ninguém sobe.'),
     d=>fala(d.jogador.nome, 'E a Elite 4?'),
-    fala('a moça das licenças', 'A Elite 4 treina de manhã, das seis às nove, e depois vai embora.', null, 'Ela volta ao livro.'),
+    fala('a moça das licenças', 'A Elite 4 treina de manhã, das seis às nove. Depois cada um fica na sua sala até o último desafiante, e vai pra casa.', null, 'Ela volta ao livro.'),
     fala('a moça das licenças', 'Eles não moram aqui. Isso é a primeira coisa que decepciona todo mundo que chega.'),
     'Ela vira uma página.',
     fala('a moça das licenças', 'O senhor Mervin mora. Mas ele tem setenta e três anos e não tem mais para onde ir.')
   ],
   ef:{flag:'sabe_do_quintino',
-      registrar:'A Elite 4 treina das seis às nove e vai embora. Só o Sr. Mervin mora no Planalto.'},
+      registrar:'A Elite 4 treina das seis às nove e vai pra casa no fim do dia. Só o Sr. Mervin mora no Planalto.'},
   escolhas:[
     {texto:'"Quem é o senhor Mervin?"', vai:'c21_quem_e_quintino'},
     {texto:'Subir para a reunião.', vai:'c21_esperou_na_porta'},
