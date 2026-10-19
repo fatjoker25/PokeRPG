@@ -20731,46 +20731,52 @@ const Campo = {
    deles só depois de sentar na cadeira.
 
    `veta` é quem não pode andar junto: crachá da Liga e crachá
-   da Rocket não cabem no mesmo bolso.
+   da Rocket não cabem no mesmo bolso. `guardar` é o botão de saída
+   da tela do posto: o que a cena te entregou (licença, colete,
+   distintivo); sem ele, só "Seguir".
    ============================================================ */
 const CARGOS = [
 {
-  id:'treinador', falante:'a atendente', nome:'{Treinador licenciado|Treinadora licenciada}', orgao:'Liga Pokémon', peso:1, cap:1,
+  id:'treinador', falante:'a atendente das credenciais', nome:'{Treinador licenciado|Treinadora licenciada}', orgao:'Liga Pokémon', peso:1, cap:1,
   onde:'centro', lugar:'Centro Pokémon',
+  guardar:'Guardar a licença e seguir.',
   pede:[{t:'Pedir no balcão de qualquer Centro', ok:d=>true}],
   requer:d=>!!d.flags.tem_licenca,
   resumo:'A licença anual. Sem ela você é uma pessoa andando com um Pokémon.',
   beneficios:{centro:true},
-  fala:['A licença é uma folha plastificada com a sua foto ruim e um número de oito dígitos.',
-        '"Atendimento sem custo em qualquer Centro de Kanto", diz a atendente, batendo o carimbo. "É o que ela serve, e é bastante."']
+  fala:['A licença é uma folha plastificada com a sua foto ruim e um número de oito dígitos. A atendente do balcão de credenciais digita o número, confere a foto com a sua cara e bate o carimbo.',
+        d => fala('a atendente das credenciais', 'Atendimento sem custo em qualquer Centro de Kanto. É pra isso que ela serve, e é bastante.')]
 },
 {
-  id:'auxiliar', nome:'Auxiliar de campo', orgao:'Laboratório de Pallet', peso:1, cap:2,
+  id:'auxiliar', falante:'a assistente do Professor', nome:'Auxiliar de campo', orgao:'Laboratório de Pallet', peso:1, cap:2,
   onde:'pallet', lugar:'Laboratório do Professor',
+  guardar:'Guardar o crachá e seguir.',
   pede:[{t:'20 espécies catalogadas', ok:d=>Estado.contagemDex().catalogados >= 20}],
   requer:d=>Estado.contagemDex().catalogados >= 20,
   resumo:'Quem anda com a Pokédex ligada e manda o que vê de volta.',
   beneficios:{loja:0.92, status:'percepcao'},
-  fala:['O crachá chega pelo correio da perua, dentro de um envelope pardo com o seu nome escrito à mão.',
-        '"Vinte espécies", diz o bilhete junto. "Continua mandando. — Oak."',
-        'Tem um desconto de convênio que funciona em qualquer loja de Kanto e que ninguém nunca explicou direito.']
+  fala:['A assistente do Professor tira um crachá de uma gaveta cheia de crachás iguais e escreve o seu nome nele à mão. Preso no crachá, um bilhete com a letra do Professor:',
+        '**VINTE ESPÉCIES. CONTINUA MANDANDO. — OAK**',
+        d => fala('a assistente do Professor', 'Vem com um desconto de convênio que funciona em qualquer loja de Kanto. Ninguém nunca me explicou direito, então eu também não vou explicar.')]
 },
 {
   id:'guarda_rota', falante:'o sargento', nome:'Guarda de rota', orgao:'Patrulha de Kanto', peso:2, cap:5,
   onde:'viridian', lugar:'Posto da Patrulha de Kanto',
+  guardar:'Vestir o colete e seguir.',
   pede:[{t:'2 insígnias', ok:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 2}, {t:'reputação boa: Familiar ou mais', ok:d=>d.reputacao.eixo === 'bom' && d.reputacao.bom >= 2}],
   requer:d=>d.reputacao.eixo === 'bom' && d.reputacao.bom >= 2
          && d.insignias.filter(i=>i!=='Título de Campeão').length >= 2,
   veta:['rocket'],
   resumo:'Voluntário fardado de meio período. Abre guarita e fecha mato.',
   beneficios:{renda:500, guarita:true},
-  fala:['Não é emprego. É um colete refletivo, um apito e um número de registro.',
-        '"O colete não te dá autoridade nenhuma", explica o sargento, entregando o colete. "Ele dá passagem. As duas coisas se parecem e não são a mesma."',
-        'Quinhentos por capítulo, pago em dinheiro, sem recibo.']
+  fala:['Não é emprego. É um colete refletivo, um apito e um número de registro. O sargento entrega o colete dobrado.',
+        d => fala('o sargento', 'O colete não te dá autoridade nenhuma. Ele dá passagem. As duas coisas se parecem e não são a mesma.'),
+        'Quinhentos pagos em dinheiro, sem recibo, sempre que o sargento lembra.']
 },
 {
   id:'policial', falante:'a delegada', nome:'Policial de Kanto', orgao:'Polícia de Kanto', peso:3, cap:6,
   onde:'saffron', lugar:'Delegacia de Saffron',
+  guardar:'Guardar o distintivo e seguir.',
   pede:[{t:'3 insígnias', ok:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 3},
         {t:'reputação boa: Reconhecido ou mais', ok:d=>d.reputacao.eixo === 'bom' && d.reputacao.bom >= 3},
         {t:'alguém da polícia que te conheça: ter sido Guarda de rota', ok:d=>Cargos.tem('guarda_rota')}],
@@ -20779,9 +20785,9 @@ const CARGOS = [
   resumo:'Distintivo, apito e uma ronda por semana. Quem chama a polícia agora pode estar chamando você.',
   beneficios:{renda:800, centro:true, guarita:true, status:'forca'},
   fala:['A delegacia de Saffron tem um balcão comprido e um Growlithe dormindo atrás dele, em cima de um tapete com o brasão da polícia.',
-        d => { Nomes.apresentar('a delegada'); return 'Na mesa do fundo, uma placa virada pra quem entra: DELEGADA MARA THORNE.'; },
-        '"O sargento de Viridian falou de você", diz a delegada, já carimbando. "Ele não fala bem de ninguém. Falou de você."',
-        '"Distintivo não é licença pra brigar. É licença pra chegar primeiro."']
+        d => { Nomes.apresentar('a delegada'); return 'Na mesa do fundo, uma placa virada pra quem entra: DELEGADA MARA THORNE. Ela já está carimbando.'; },
+        d => fala('a delegada', 'O sargento de Viridian falou de você. Ele não fala bem de ninguém. Falou de você.'),
+        d => fala('a delegada', 'Distintivo não é licença pra brigar. É licença pra chegar primeiro.')]
 },
 {
   id:'criador', falante:'a avaliadora', nome:'{Criador registrado|Criadora registrada}', orgao:'Associação de Criadores', peso:2, cap:6,
@@ -20791,29 +20797,32 @@ const CARGOS = [
   resumo:'Quem é avaliado pelo time que leva, não pelo que ganha.',
   beneficios:{loja:0.95, moral:3},
   fala:['A avaliação dura quarenta minutos e nenhum deles é sobre batalha.',
-        '"Eu olho pata, pelagem, peso e o jeito que ele olha pra você quando você não está olhando", diz a avaliadora.',
-        '"Passou. E não é todo mundo que passa, então não faz essa cara de quem já sabia."']
+        d => fala('a avaliadora', 'Eu olho pata, pelagem, peso e o jeito que ele olha pra você quando você não está olhando.'),
+        d => fala('a avaliadora', 'Passou. E não é todo mundo que passa, então não faz essa cara de quem já sabia.')]
 },
 {
   id:'reporter', falante:'a editora', nome:'Repórter {credenciado|credenciada}', orgao:'Jornal de Fuchsia', peso:2, cap:7,
   onde:'fuchsia', lugar:'Redação do Jornal de Fuchsia',
+  guardar:'Guardar o crachá e seguir.',
   pede:[{t:'40 descobertas pelo mapa', ok:d=>Object.keys(d.descobertas || {}).length >= 40}],
   requer:d=>Object.keys(d.descobertas || {}).length >= 40,
   resumo:'Crachá de imprensa. Entra onde tem fila e sai com o nome anotado.',
   beneficios:{renda:400, status:'intelecto', fila:true},
-  fala:['"Você anda mais que meus repórteres e vê mais que meus repórteres", diz a editora, sem levantar os olhos.',
-        '"Isso aqui não te dá razão. Te dá acesso. O que você faz com acesso é problema seu e vira problema meu."',
+  fala:['A editora não levanta os olhos da mesa.',
+        d => fala('a editora', 'Você anda mais que meus repórteres e vê mais que meus repórteres.'),
+        d => fala('a editora', 'Isso aqui não te dá razão. Te dá acesso. O que você faz com acesso é problema seu e vira problema meu.'),
         'O crachá é de papel laminado e vence em um ano.']
 },
 {
   /* o posto sobe de degrau na rede (js/story/rede.js): o nome que vai
      pro cartão, o peso, a renda e o desconto saem do escalão */
-  id:'rocket', falante:'a voz do outro lado', orgao:'sem timbre', cap:8,
+  id:'rocket', orgao:'sem timbre', cap:8,
   /* "Não tem crachá": não abre portão nem balcão (Cargos.doCracha) */
   semCracha:true,
   get nome(){ return typeof Rede !== 'undefined' ? Rede.nomeDoPosto() : 'Informante'; },
   get peso(){ return typeof Rede !== 'undefined' ? Rede.atual().peso : 3; },
-  onde:'vermilion', lugar:'Armários do porto',
+  onde:'vermilion', lugar:'Armários do Centro',
+  guardar:'Fechar o armário e seguir.',
   pede:[{t:'reputação ruim: Indesejado ou pior', ok:d=>d.reputacao.eixo === 'ruim' && d.reputacao.ruim >= 3},
         {t:'a rede nunca ter parado de te ligar', ok:d=>!d.flags.largou_rocket}],
   /* ninguém sai: quem largou o envelope não recebe outro */
@@ -20822,13 +20831,15 @@ const CARGOS = [
   resumo:'Ninguém assina nada. O dinheiro chega e as perguntas não.',
   get beneficios(){ return typeof Rede !== 'undefined' ? Rede.beneficios() : {renda:1200, loja:0.75, repRuim:1}; },
   fala:['Não tem crachá, não tem contrato e não tem aperto de mão.',
-        'Tem um envelope no armário 14 do Centro de Vermilion toda vez que vira o mês, e tem uma lista de coisas que você não pergunta.',
-        '"Você já fez de graça", diz a voz do outro lado. "A gente só está formalizando o que já era."'],
+        'A porta do armário 14, do lado do bebedouro, está só encostada. Dentro tem um envelope pardo sem timbre, com dinheiro e um bilhete datilografado.',
+        '**VOCÊ JÁ FEZ DE GRAÇA. A GENTE SÓ ESTÁ FORMALIZANDO O QUE JÁ ERA.**',
+        'Vai ter um envelope ali toda vez que virar o mês, e uma lista de coisas que você não pergunta.'],
   aviso:'Enquanto você carregar isso, a sua reputação piora sozinha todo capítulo.'
 },
 {
   id:'investigador', falante:'a auditora', nome:'{Investigador|Investigadora} de campo', orgao:'Auditoria da Liga', peso:3, cap:10,
   onde:'saffron', lugar:'Auditoria da Liga',
+  guardar:'Guardar a credencial e seguir.',
   pede:[{t:'4 insígnias', ok:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 4}, {t:'reputação boa: Respeitado ou mais', ok:d=>d.reputacao.eixo === 'bom' && d.reputacao.bom >= 4}],
   requer:d=>d.reputacao.eixo === 'bom' && d.reputacao.bom >= 4
          && d.insignias.filter(i=>i!=='Título de Campeão').length >= 4,
@@ -20836,8 +20847,8 @@ const CARGOS = [
   resumo:'Quem entra nos lugares e depois escreve o que viu.',
   beneficios:{renda:900, centro:true, status:'carisma', guarita:true},
   fala:['A credencial é azul-escura e tem um número de processo em vez de cargo.',
-        '"Você não manda em ninguém", avisa a auditora. "Você pergunta, e a diferença entre perguntar com crachá e perguntar sem é a única coisa que eu te dou."',
-        '"Use com vergonha. Quem usa sem vergonha eu cancelo em seis meses."']
+        d => fala('a auditora', 'Você não manda em ninguém. Você pergunta, e a diferença entre perguntar com crachá e perguntar sem é a única coisa que eu te dou.'),
+        d => fala('a auditora', 'Use com vergonha. Quem usa sem vergonha eu cancelo em seis meses.')]
 },
 {
   id:'pesquisador', falante:'Professor Oak', nome:'{Pesquisador associado|Pesquisadora associada}', orgao:'Laboratório de Pallet', peso:3, cap:12,
@@ -20846,47 +20857,52 @@ const CARGOS = [
   requer:d=>Estado.contagemDex().catalogados >= 90,
   resumo:'Noventa espécies andando. Ninguém faz isso de carro.',
   beneficios:{loja:0.85, status:'intelecto', renda:600},
-  fala:['"Noventa", diz o Professor no telefone, e dá pra ouvir ele conferindo a lista com o dedo.',
-        '"Eu tenho gente de jaleco que faz sessenta em dez anos. Você fez noventa andando, comendo mal e dormindo em acostamento."',
-        '"Então eu vou pedir uma bolsa pra você e ela vai ser pequena, porque bolsa é sempre pequena."']
+  fala:[d => fala('Professor Oak', 'Noventa.'),
+        'O Professor confere a lista com o dedo, linha por linha, antes de falar de novo.',
+        d => fala('Professor Oak', 'Eu tenho gente de jaleco que faz sessenta em dez anos. Você fez noventa andando, comendo mal e dormindo em acostamento.'),
+        d => fala('Professor Oak', 'Então eu vou pedir uma bolsa pra você, e ela vai ser pequena, porque bolsa é sempre pequena.')]
 },
 {
-  id:'comissao', falante:'a secretária', nome:'{Perito|Perita} da Comissão', orgao:'Comissão de Gestão de Risco', peso:4, cap:16,
+  id:'comissao', falante:'a secretária da Comissão', nome:'{Perito|Perita} da Comissão', orgao:'Comissão de Gestão de Risco', peso:4, cap:16,
   onde:'saffron', lugar:'Comissão de Gestão de Risco',
+  guardar:'Guardar a pasta e seguir.',
   pede:[{t:'6 insígnias', ok:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 6}, {t:'ser conhecid{o|a} como herói ou como pesquisador', ok:d=>['heroi','pesquisador'].includes(d.via || 'neutro')}],
   requer:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 6
          && ['heroi','pesquisador'].includes(d.via || 'neutro'),
   veta:['rocket'],
   resumo:'Assento na sala onde a regra é escrita. Sem voto, mas com ata.',
   beneficios:{renda:1500, centro:true, guarita:true},
-  fala:['"Perito não vota", explica a secretária, já entregando a pasta. "Perito fala antes da votação."',
-        '"Na prática, quem fala antes da votação decide a votação em oito de dez casos. Na prática."',
+  fala:['A secretária da Comissão já está entregando a pasta.',
+        d => fala('a secretária da Comissão', 'Perito não vota. Perito fala antes da votação.'),
+        d => fala('a secretária da Comissão', 'Na prática, quem fala antes da votação decide a votação em oito de dez casos. Na prática.'),
         'A pasta tem trinta e uma páginas e a primeira é um termo de sigilo.']
 },
 {
   id:'instrutor', falante:'o coordenador', nome:'{Instrutor|Instrutora} do Planalto', orgao:'Liga Pokémon', peso:4, cap:20,
   onde:'planalto', lugar:'Sala dos instrutores',
+  guardar:'Guardar o crachá e seguir.',
   pede:[{t:'8 insígnias', ok:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 8}],
   requer:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 8,
   veta:['rocket'],
   resumo:'Ensina quem chega. Salário, sala e um crachá que abre tudo do Planalto.',
   beneficios:{renda:2000, centro:true, semEspera:true, moral:2},
   fala:['A sala é pequena, tem janela pro corredor e não pro vale, e é sua.',
-        '"Você vai receber gente que apanhou em oito ginásios e acha que o problema é o time", diz o coordenador.',
-        '"Quase nunca é o time."']
+        d => fala('o coordenador', 'Você vai receber gente que apanhou em oito ginásios e acha que o problema é o time.'),
+        d => fala('o coordenador', 'Quase nunca é o time.')]
 },
 {
-  id:'lider', falante:'a conselheira', nome:'Líder de ginásio', orgao:'Liga Pokémon', peso:5, cap:24,
+  id:'lider', falante:'a conselheira da Liga', nome:'Líder de ginásio', orgao:'Liga Pokémon', peso:5, cap:24,
   onde:'planalto', lugar:'Secretaria da Liga',
+  guardar:'Assinar e seguir.',
   pede:[{t:'8 insígnias', ok:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 8}, {t:'reputação boa: Famoso ou mais', ok:d=>d.reputacao.eixo === 'bom' && d.reputacao.bom >= 5}],
   requer:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 8
          && d.reputacao.eixo === 'bom' && d.reputacao.bom >= 5,
   veta:['rocket'],
   resumo:'Uma cidade, uma porta e uma insígnia que passa a ser sua de dar.',
   beneficios:{renda:3000, centro:true, loja:0.9, semEspera:true},
-  fala:['O convite chega num papel timbrado que pesa mais que papel devia pesar.',
-        '"Ginásio não é prêmio por ser forte", diz a conselheira. "É um posto de trabalho com horário fixo e uma criança chorando na sua sala toda quinta."',
-        '"Pensa bem. E depois assina, porque a gente precisa."']
+  fala:['O convite está em cima da mesa, num papel timbrado que pesa mais que papel devia pesar.',
+        d => fala('a conselheira da Liga', 'Ginásio não é prêmio por ser forte. É um posto de trabalho com horário fixo e uma criança chorando na sua sala toda quinta.'),
+        d => fala('a conselheira da Liga', 'Pensa bem. E depois assina, porque a gente precisa.')]
 },
 {
   id:'elite', falante:'quem estava na porta antes de você', nome:'Elite dos Quatro', orgao:'Planalto Indigo', peso:5, cap:27,
@@ -20897,7 +20913,7 @@ const CARGOS = [
   resumo:'Uma das quatro portas. Você passa a ser a parede de alguém.',
   beneficios:{renda:5000, centro:true, semEspera:true},
   fala:['Os quatro nomes estão nas portas desde sempre e um deles agora é o seu, impresso na mesma fonte dos outros três.',
-        '"A parte difícil não é ganhar", diz quem estava na porta antes de você. "É ganhar de gente que treinou um ano pra te enfrentar e ver a cara delas depois."']
+        d => fala('quem estava na porta antes de você', 'A parte difícil não é ganhar. É ganhar de gente que treinou um ano pra te enfrentar e ver a cara delas depois.')]
 },
 {
   id:'professor', falante:'Professor Oak', nome:'{Professor|Professora} de Kanto', orgao:'rede de laboratórios', peso:5, cap:27,
@@ -20907,9 +20923,10 @@ const CARGOS = [
   veta:['rocket'],
   resumo:'A cadeira que entrega Pokébola pra quem está saindo de casa.',
   beneficios:{renda:4000, loja:0.8, centro:true},
-  fala:['"Cento e quarenta", diz o Professor, e não completa a frase por uns bons cinco segundos.',
-        '"Eu levei trinta e um anos. Você levou uma jornada."',
-        '"Tem uma cadeira aqui que não é minha, é do cargo, e o cargo precisa de gente que ainda ande."']
+  fala:[d => fala('Professor Oak', 'Cento e quarenta.'),
+        'O Professor não completa a frase por uns bons cinco segundos.',
+        d => fala('Professor Oak', 'Eu levei trinta e um anos. Você levou uma jornada.'),
+        d => fala('Professor Oak', 'Tem uma cadeira aqui que não é minha, é do cargo, e o cargo precisa de gente que ainda ande.')]
 },
 {
   id:'conselheiro', falante:'a conselheira mais velha', nome:'{Conselheiro|Conselheira} de Kanto', orgao:'Conselho Regional', peso:5, cap:28,
@@ -20921,8 +20938,8 @@ const CARGOS = [
   resumo:'Onde a regra é escrita. Não é o lugar mais forte de Kanto, é o mais lento.',
   beneficios:{renda:2500, centro:true, loja:0.9, lei:true},
   fala:['A cadeira é de madeira, desconfortável de propósito, e tem uma plaquinha de latão com o nome de quem sentou antes.',
-        '"Aqui dentro nada acontece em menos de dois anos", avisa a conselheira mais velha.',
-        '"E quando acontece, acontece pra todo mundo de uma vez. É esse o troco pela lentidão."']
+        d => fala('a conselheira mais velha', 'Aqui dentro nada acontece em menos de dois anos.'),
+        d => fala('a conselheira mais velha', 'E quando acontece, acontece pra todo mundo de uma vez. É esse o troco pela lentidão.')]
 }
 ];
 
@@ -35694,17 +35711,32 @@ const MURAIS = {
   ]
 };
 
-/* O Centro todo dia é o mesmo Centro, mas a noite não é a mesma noite. */
+/* O Centro todo dia é o mesmo Centro, mas a noite não é a mesma noite.
+   De noite você dorme lá; de dia espera o time voltar, e a frase não
+   pode amanhecer às duas da tarde. */
 const FRASES_DO_CENTRO = [
   'A enfermeira leva o time pra dentro e devolve tudo certo em vinte minutos. Você dorme num quarto com seis camas e cinco desconhecidos.',
   'O Chansey do balcão empurra o carrinho com as Pokébolas pra dentro e volta cantarolando. De manhã está todo mundo inteiro.',
   'A enfermeira chama o seu time pelo nome, um por um, na hora de devolver. Ela leu a ficha enquanto você dormia.',
   'O beliche de cima range a noite inteira. O time não ouve nada: dorme no tratamento e acorda novo.',
-  'Tem chá de graça no saguão às dez da noite e alguém de outra cidade quer saber de onde você é. Você conta. Dorme tarde e bem.',
-  'A máquina faz o tlin-tlin de sempre, seis vezes. A enfermeira sorri do jeito que só quem ouve esse som o dia inteiro sorri.',
+  'Tem chá de graça no saguão e alguém de outra cidade quer saber de onde você é. Você conta. Dorme tarde e bem.',
   'Você dorme no sofá do saguão porque os quartos lotaram. O time volta curado e você volta com o pescoço torto.',
   'De manhã a enfermeira entrega o cinto com as Pokébolas polidas. Ela poliu. Ninguém pediu.'
 ];
+const FRASES_DO_CENTRO_DE_DIA = [
+  'A enfermeira leva o time pra dentro e devolve tudo certo em vinte minutos. Você passa os vinte minutos olhando a máquina de bebida do saguão sem comprar nada.',
+  'O Chansey do balcão empurra o carrinho com as Pokébolas pra dentro e volta cantarolando. Você cochila numa cadeira do saguão até chamarem o seu nome.',
+  'A enfermeira chama o seu time pelo nome, um por um, na hora de devolver. Ela leu a ficha enquanto você esperava.',
+  'A máquina faz o tlin-tlin de sempre, uma vez pra cada Pokébola. A enfermeira sorri do jeito que só quem ouve esse som o dia inteiro sorri.',
+  'A enfermeira entrega o cinto com as Pokébolas polidas. Ela poliu. Ninguém pediu.',
+  'Alguém de outra cidade, na cadeira do lado, quer saber de onde você é. Você conta, e quando termina de contar o time já está no balcão.'
+];
+
+/* Dormir até o sol, como no acampamento: acorda às seis. */
+function dormirAteASeis(){
+  const r = Estado.dados.relogio;
+  Mundo.passarHoras(r.hora >= 18 ? 30 - r.hora : 6 - r.hora);
+}
 
 /* o que se compra uma vez só: ferramenta que não gasta, mapa (mochila
    entra pelo tipo 'bolsa') */
@@ -35723,7 +35755,7 @@ const Cidade = {
     const cargos = (typeof Cargos !== 'undefined')
       ? `<button class="escolha com-icone" onclick="UI.fecharModal(true);UI.modalCredenciais()">${ic('credenciais')}<span>Balcão de credenciais</span></button>` : '';
     UI.modal(`Centro Pokémon de ${L.nome}`, `
-      <button class="escolha com-icone" onclick="UI.fecharModal(true);Cidade.atenderAqui()">${ic('dormir')}<span>Deixar o time com a enfermeira e dormir</span></button>
+      <button class="escolha com-icone" onclick="UI.fecharModal(true);Cidade.atenderAqui()">${ic(this.dormeNoCentro() ? 'dormir' : 'centro')}<span>Deixar o time com a enfermeira${this.dormeNoCentro() ? ' e dormir' : ''}</span></button>
       <button class="escolha com-icone" onclick="UI.fecharModal(true);UI.modalPC()">${ic('pc')}<span>PC do saguão${d.pc.length ? ` (${d.pc.length})` : ''}</span></button>
       ${cargos}
       <button class="escolha com-icone" onclick="UI.fecharModal(true);Exploracao.mapa('parede')">${ic('mapa')}<span>Mapa da parede</span></button>
@@ -35749,13 +35781,27 @@ const Cidade = {
     setTimeout(() => this.centro(), 50);
   },
 
+  /* No meio de uma cena de capítulo quem anda com a hora é a história,
+     e o balcão não mexe no relógio. Capítulo já fechado (o encerramento,
+     o rival na saída) não segura mais o relógio. */
+  naCena(){
+    const d = Estado.dados;
+    return d.modo === 'cena' && !(d.capitulosFechados || []).includes(d.capitulo);
+  },
+  /* De noite o balcão é cama: você dorme lá e acorda às seis. */
+  dormeNoCentro(){ return !this.naCena() && ehNoite(); },
+
   /* Cura o time e devolve o que aconteceu. Quem chama decide a tela:
      o mapa da cidade, ou a cena do capítulo, que continua depois. */
   atender(){
-    Mundo.passar(1);
     const d = Estado.dados;
-    /* a cura do balcão, com a musiquinha do Centro */
+    const noite = this.dormeNoCentro();
+    const amanhece = noite ? [{tipo:'info', texto:'Amanhece.'}] : [];
+    /* a cura do balcão, com a musiquinha do Centro; o tempo anda antes,
+       pra o time acordar alimentado */
     const curar = () => {
+      if (noite) dormirAteASeis();
+      else if (!this.naCena()) Mundo.passar(1);
       d.time.forEach(curarTotal);
       Estado.curarJogador(10);
       Estado.recuperarVontadeJogador();
@@ -35781,7 +35827,7 @@ const Cidade = {
           {tipo:'info', texto:'A enfermeira olha o seu cinto, depois a sua cara, e pergunta o número da sua licença.'},
           {tipo:'dano', texto:`Você não tem número nenhum, nem os ${fmtDin(preco)} ₽. Ela olha o cinto de novo, com ninguém de pé, e pega o que você tem: ${fmtDin(tinha)} ₽.`},
           {tipo:'cura', texto:'O time volta inteiro. Ela não te olha na saída.'},
-          {tipo:'info', texto:'Amanhece.'}, ...pac
+          ...amanhece, ...pac
         ];
       }
       if (Estado.j.dinheiro < preco){
@@ -35798,15 +35844,15 @@ const Cidade = {
         {tipo:'info', texto:'A enfermeira olha o seu cinto, depois a sua cara, e pergunta o número da sua licença.'},
         {tipo:'dano', texto:`Você não tem número nenhum. Ela atende do mesmo jeito — e cobra ${fmtDin(preco)} ₽, porque sem licença você é cliente e não treinador.`},
         {tipo:'cura', texto:'O time volta inteiro. Ela não te olha na saída.'},
-        {tipo:'info', texto:'Amanhece.'}, ...pac
+        ...amanhece, ...pac
       ];
     }
     curar();
     const pac = this.retirarPacotes();
     Estado.salvar('auto');
     return [
-      {tipo:'cura', texto:Dados.escolher(FRASES_DO_CENTRO)},
-      {tipo:'info', texto:'Amanhece.'}, ...pac
+      {tipo:'cura', texto:Dados.escolher(noite ? FRASES_DO_CENTRO : FRASES_DO_CENTRO_DE_DIA)},
+      ...amanhece, ...pac
     ];
   },
   atenderAqui(){
@@ -35830,10 +35876,13 @@ const Cidade = {
       <button class="escolha" onclick="Cidade.mural()">Voltar ao mural</button>`, false, 'centro');
   },
 
-  /* Em casa: cama, comida e quem ficou. Cura como o Centro, de graça. */
+  /* Em casa: cama, comida e quem ficou. Cura como o Centro, de graça,
+     e demora como ele: de noite você dorme e acorda às seis, de dia o
+     time descansa na sala e o dia anda um período. */
   casa(){
     const d = Estado.dados;
-    Mundo.passar(2);
+    const noite = ehNoite();
+    if (noite) dormirAteASeis(); else Mundo.passar(1);
     d.time.forEach(curarTotal);
     Estado.curarJogador(30);
     Estado.recuperarVontadeJogador();
@@ -35848,10 +35897,11 @@ const Cidade = {
     ];
     const av = [
       {tipo:'cura', texto:Dados.escolher(frases)},
-      {tipo:'cura', texto:'O time dorme espalhado pela sala. De manhã está todo mundo inteiro.'},
+      {tipo:'cura', texto: noite ? 'O time dorme espalhado pela sala. De manhã está todo mundo inteiro.'
+                                 : 'O time se espalha pela sala e apaga. Quando acorda, está todo mundo inteiro.'},
       ...this.retirarPacotes()
     ];
-    Estado.registrar(`Passou a noite em casa, em ${d.jogador.cidade}.`);
+    Estado.registrar(noite ? `Passou a noite em casa, em ${d.jogador.cidade}.` : `Passou em casa, em ${d.jogador.cidade}, e o time descansou.`);
     Estado.salvar('auto');
     Exploracao.tela(av);
   },
@@ -36073,6 +36123,108 @@ const Cidade = {
     this._compra = null;
     Estado.salvar('auto');
     this.loja(this._andar || 0, this._qual || undefined, 'vender');
+  },
+
+  /* ------------------------------------------------------------
+     DOAÇÃO — o único lugar em que dinheiro vira outra coisa.
+     Cada causa é uma ponta solta que a história já deixou: a lona
+     no telhado do museu de Pewter, o abrigo do Sr. Fuji em Lavender,
+     e a linha do caderno do Célio que ninguém foi buscar. Só aparece
+     pra quem conhece a causa, e só rende reputação.
+     ------------------------------------------------------------ */
+  causas(){
+    const d = Estado.dados;
+    const id = Mundo.id();
+    return [
+      {id:'museu', cidade:'pewter', valor:12000,
+       nome:'O telhado do museu de Pewter',
+       linha:'Lona de noventa e quatro, relatório numa gaveta, e uma moça que cuida daquilo sozinha.',
+       requer:d=>!!d.flags.sabe_da_lona_do_museu,
+       /* quem nunca ouviu o nome dela ouve agora, antes do resto */
+       antes:d=>{ d.flags.cordell_na_doacao = !d.flags.cordell_disse_nome; d.flags.cordell_disse_nome = true; },
+       rep:3, marca:'pagou_o_telhado',
+       texto:[
+         'Você entrega o dinheiro no balcão do museu, pra moça que cuida daquilo sozinha. Ela não entende da primeira vez que você fala.',
+         d=>d.flags.cordell_na_doacao ? 'Ela diz o nome antes de entender o resto, por costume: Ivy Cordell, paleontóloga.' : '',
+         fala('Dra. Cordell', 'Doação pra quê?'),
+         d=>fala(d.jogador.nome, 'Pro telhado.'),
+         'Ela olha o valor escrito no recibo e senta, que é uma coisa que ela faz sem perceber.',
+         fala('Dra. Cordell', 'Eu escrevi vinte e duas cartas.'),
+         d=>fala(d.jogador.nome, 'Vinte e duas?'),
+         fala('Dra. Cordell', 'Vinte e duas. E a coisa se resolve porque {um moleque|uma moleca} de {idade} anos passou aqui e tinha dinheiro no bolso.', 'baixo'),
+         fala('Dra. Cordell', 'Não é crítica a você. É que eu vou ter que pensar nisso por uns dois anos.'),
+         'Antes de você chegar na porta ela já está procurando o número de um telhadista no caderno.'
+       ]},
+      {id:'abrigo', cidade:'lavender', valor:6000,
+       nome:'O abrigo de Lavender',
+       linha:'Um caderno de nomes pendurado na porta por um barbante, e as contas de um lugar que vive de quem deixa e não volta.',
+       requer:d=>!!(d.visitados || {}).lavender,
+       rep:2, marca:'pagou_o_abrigo',
+       texto:[
+         'Não tem placa, não tem recibo e não tem ninguém pra agradecer: você deixa o envelope com quem abre a porta, que é o próprio Sr. Fuji.',
+         fala('Sr. Fuji', 'Você sabe que isso não devolve ninguém, né.'),
+         d=>fala(d.jogador.nome, 'Sei.'),
+         fala('Sr. Fuji', 'Tá bom. Só queria ter certeza de que você sabia.', 'baixo'),
+         'Ele guarda o envelope no bolso de dentro do casaco, sem contar, e volta pro que estava fazendo.'
+       ]},
+      /* é uma ligação: acontece no PokéNav, com o número dele gravado */
+      {id:'bolsa', cidade:'*', valor:8000, ligacao:'goro',
+       nome:'Uma linha do caderno',
+       linha:'Pagar a inscrição de quem não pode pagar. Você não escolhe quem, e nunca fica sabendo.',
+       requer:d=>Estado.temPokenav() && Estado.temNumero('goro'),
+       rep:3, marca:'pagou_uma_bola',
+       texto:[
+         'Você liga pro Célio e leva três minutos pra explicar o que quer fazer, porque não existe um nome pra isso.',
+         fala('Célio', 'Você quer pagar o pedido de quem?'),
+         d=>fala(d.jogador.nome, 'De quem não puder pagar. Qualquer um.'),
+         'Do outro lado tem um silêncio longo e um barulho de caneta batendo em caderno.',
+         fala('Célio', 'Eu tenho onze cidades e uma lista de gente que queria muito e não tinha como pagar a inscrição.'),
+         fala('Célio', 'Deixa no balcão do Centro, com o meu nome no envelope. Eu pego na volta.'),
+         fala('Célio', 'Eu sei exatamente pra quem eu vou ligar primeiro.', 'riso'),
+         fala('Célio', 'E não, eu não vou te dizer o nome. Você não vai ficar sabendo, e é melhor assim.')
+       ]}
+    ].filter(c => (c.cidade === '*' || c.cidade === id) && !d.flags[c.marca]
+                  && (!c.requer || c.requer(d)));
+  },
+
+  doar(){
+    const causas = this.causas();
+    if (!causas.length)
+      return UI.modal('Doação', '<p class="nada">Nada aqui precisa do seu dinheiro hoje.</p>', false, 'credencial');
+    const linhas = causas.map(c => {
+      const caro = Estado.j.dinheiro < c.valor;
+      return `<div class="cargo ${caro ? 'fechado' : 'aberto'}">
+        <div class="cargo-topo"><span class="cargo-nome">${UI.esc(c.nome)}</span>
+          <span class="cargo-peso mono">${fmtDin(c.valor)} ₽</span></div>
+        <div class="cargo-resumo">${UI.esc(c.linha)}</div>
+        ${caro ? `<div class="cargo-motivo">Você tem ${fmtDin(Estado.j.dinheiro)} ₽.</div>`
+               : `<button class="btn destaque" onclick="Cidade.doarPara('${c.id}')">Pagar</button>`}
+      </div>`;
+    }).join('');
+    UI.modal('Doação', linhas, false, 'credencial');
+  },
+
+  doarPara(idCausa){
+    const c = this.causas().find(x => x.id === idCausa);
+    if (!c || Estado.j.dinheiro < c.valor) return;
+    const d = Estado.dados;
+    Estado.j.dinheiro -= c.valor;
+    if (c.antes) c.antes(d);
+    Estado.marcar(c.marca);
+    /* doação é notícia: passa por cima do teto do capítulo, e por isso
+       vai em ef.rep.notorio, que é onde mudarRep procura */
+    const r = Estado.mudarRep('bom', c.rep, 'Pagou do próprio bolso ' + c.nome.charAt(0).toLowerCase() + c.nome.slice(1),
+                              {rep:{notorio:true}});
+    Estado.registrar(`Pagou ${fmtDin(c.valor)} ₽ por: ${c.nome}.`);
+    Estado.salvar('auto');
+    const avisos = [{tipo:'item', texto:`−${fmtDin(c.valor)} ₽.`}];
+    if (r && r.mudou) avisos.push({tipo:'rep', texto:`Reputação: ${r.de} → ${r.para}`});
+    if (c.ligacao){
+      UI.fecharModal(true);
+      UI.atualizarTopo();
+      return UI.telaLigacao(contatoPorId(c.ligacao), c.texto, avisos);
+    }
+    UI.telaDoacao(c, avisos);
   },
 
   /* comprar pergunta antes, e pergunta quantos: um toque errado na lista
@@ -119053,8 +119205,8 @@ const UI = {
       <h3>Pontos de progressão</h3>
       <p class="sussurro">Você tem <b id="pts">${j.pontos}</b> <span id="pts-p">${j.pontos === 1 ? 'ponto' : 'pontos'}</span>. Máximo de +1 por status neste capítulo.</p>
       <div id="status-lista" class="fs-tabela">${linhas}</div>
-      <div style="margin-top:22px">
-        <button class="btn destaque" id="btn-seguir" onclick="Jogo.voltarAoMundo()">Voltar para a estrada</button>
+      <div id="escolhas" class="escolhas" style="margin-top:22px">
+        <button class="escolha" id="btn-seguir" onclick="Jogo.voltarAoMundo()">Voltar para a estrada</button>
       </div>
     </div>`);
     if (avisosMundo && avisosMundo.length) this.avisos(avisosMundo.map(t => ({tipo:'mundo', texto:t})));
@@ -119148,7 +119300,7 @@ const UI = {
       <div class="narrativa">${this.narrarMonologo(falas, g.lider)}</div>
       <div id="avisos" class="avisos"></div>
       <div id="escolhas" class="escolhas" style="margin-top:20px">
-        ${!venceu ? `<button class="escolha" onclick="Jogo.hubCentro()">Curar o time e tentar de novo</button>` : ''}
+        ${!venceu && Exploracao.temCentro(Mundo.atual()) ? `<button class="escolha" onclick="Jogo.hubCentro()">Passar no Centro e tentar de novo</button>` : ''}
         <button class="escolha" onclick="Jogo.voltarDosGinasios()">Continuar a jornada</button>
       </div>
     </div>`);
@@ -119159,9 +119311,9 @@ const UI = {
   /* ========================================================
      O RIVAL
      ======================================================== */
-  telaRival(){
+  telaRival(avisos){
     const enc = Jogo.encontroRival || {tipo:'teo'};
-    if (enc.tipo === 'extra') return this.telaRivalExtra(enc.id);
+    if (enc.tipo === 'extra') return this.telaRivalExtra(enc.id, avisos);
 
     this.limpar();
     this.add(this.topo());
@@ -119178,6 +119330,7 @@ const UI = {
         <div class="loc">${this.esc((LOCAIS[Mundo.id()] || {}).nome || 'Kanto')}</div>
       </div>
       <div class="narrativa">${this.narrarMonologo(falaRival(), r.nome)}</div>
+      <div id="avisos" class="avisos"></div>
       <div class="linha" style="margin-top:14px"><span class="k">Placar entre vocês</span>
         <span class="v">você ${r.derrotas} × ${r.vitorias} ele</span></div>
       <div class="linha"><span class="k">Time dele agora</span>
@@ -119185,14 +119338,15 @@ const UI = {
       <div id="escolhas" class="escolhas" style="margin-top:20px">
         <button class="escolha" onclick="Jogo.lutarRival()">Lutar.</button>
         <button class="escolha" onclick="Jogo.evitarRival()">Passar por ele sem parar.</button>
-        <button class="escolha" onclick="Jogo.hubCentro()">Curar o time antes.</button>
+        ${Exploracao.temCentro(Mundo.atual()) ? `<button class="escolha" onclick="Jogo.hubCentro('rival')">Passar no Centro antes.</button>` : ''}
       </div>
     </div>`);
+    if (avisos && avisos.length) this.avisos(avisos);
     this.rolarTopo();
   },
 
   /* Os rivais que você conquistou pelo caminho */
-  telaRivalExtra(id){
+  telaRivalExtra(id, avisos){
     this.limpar();
     this.add(this.topo());
     const R = defRival(id);
@@ -119207,6 +119361,7 @@ const UI = {
         <div class="loc">${this.esc((LOCAIS[Mundo.id()] || {}).nome || 'Kanto')}</div>
       </div>
       <div class="narrativa">${this.narrarMonologo(falaRivalExtra(R), R.nome)}</div>
+      <div id="avisos" class="avisos"></div>
       <div class="linha" style="margin-top:14px"><span class="k">Placar entre vocês</span>
         <span class="v">você ${reg.derrotas} × ${reg.vitorias} ele</span></div>
       <div class="linha"><span class="k">Time dele agora</span>
@@ -119214,9 +119369,10 @@ const UI = {
       <div id="escolhas" class="escolhas" style="margin-top:20px">
         <button class="escolha" onclick="Jogo.lutarRival()">Lutar.</button>
         <button class="escolha" onclick="Jogo.evitarRival()">Passar por ele sem parar.</button>
-        <button class="escolha" onclick="Jogo.hubCentro()">Curar o time antes.</button>
+        ${Exploracao.temCentro(Mundo.atual()) ? `<button class="escolha" onclick="Jogo.hubCentro('rival')">Passar no Centro antes.</button>` : ''}
       </div>
     </div>`);
+    if (avisos && avisos.length) this.avisos(avisos);
     this.rolarTopo();
   },
 
@@ -119275,7 +119431,7 @@ const UI = {
       <div class="cap-cabecalho">
         <div class="num">Planalto Indigo</div>
         <div class="tit">Liga Pokémon</div>
-        <div class="loc">${d.insignias.filter(i=>i!=='Título de Campeão').length} de 8 insígnias${d.flags.campeao_de_kanto ? ' · Campeão de Kanto' : ''}</div>
+        <div class="loc">${d.insignias.filter(i=>i!=='Título de Campeão').length} de 8 insígnias${d.flags.campeao_de_kanto ? ' · ' + this.esc('{Campeão|Campeã} de Kanto') : ''}</div>
       </div>
 
       <div class="grade">
@@ -119283,7 +119439,7 @@ const UI = {
           <div class="t"><span>Elite 4</span><span class="fraco">${e4.estado==='concluido'?'✓':''}</span></div>
           <div class="fraco" style="margin-bottom:8px">Quatro salas seguidas, sem Centro Pokémon entre elas. O que estiver na sua mochila é tudo o que você tem.</div>
           ${membros}
-          <div class="linha"><span class="k">Campeão</span><span class="v">${d.flags.campeao_de_kanto ? 'você' : 'cadeira vaga há 2 anos'}</span></div>
+          <div class="linha"><span class="k">Campeão</span><span class="v">${d.flags.campeao_de_kanto ? 'você' : 'vaga'}</span></div>
           <div class="rodape">
             <span class="fraco">${this.esc(e4.texto)}</span>
             ${e4.estado==='disponivel' ? `<button class="btn destaque mini" onclick="Jogo.iniciarElite4()">Entrar na ala</button>` : ''}
@@ -119317,9 +119473,9 @@ const UI = {
         </div>`; })() : ''}
       </div>
 
-      <div style="margin-top:20px">
-        <button class="btn" onclick="Jogo.voltarDosGinasios()">Voltar</button>
-        <button class="btn" onclick="Jogo.hubCentro()">Curar o time</button>
+      <div id="escolhas" class="escolhas" style="margin-top:20px">
+        <button class="escolha" onclick="Jogo.voltarDosGinasios()">Voltar</button>
+        ${Exploracao.temCentro(Mundo.atual()) ? `<button class="escolha" onclick="Jogo.hubCentro()">Passar no Centro</button>` : ''}
       </div>
     </div>`);
     this.rolarTopo();
@@ -119422,7 +119578,7 @@ const UI = {
         ${o.continuar ? `<button class="escolha" onclick="Jogo.continuarElite()">Abrir a próxima porta</button>` : ''}
         ${o.torneio ? `<button class="escolha" onclick="UI.telaTorneio()">Voltar ao chaveamento</button>` : ''}
         ${o.conferencia ? `<button class="escolha" onclick="UI.telaConferencia()">Voltar ao chaveamento</button>` : ''}
-        ${!o.venceu ? `<button class="escolha" onclick="Jogo.hubCentro()">Curar o time</button>` : ''}
+        ${!o.venceu && Exploracao.temCentro(Mundo.atual()) ? `<button class="escolha" onclick="Jogo.hubCentro()">Passar no Centro</button>` : ''}
         <button class="escolha" onclick="UI.telaLiga()">Voltar à Liga</button>
         <button class="escolha" onclick="Jogo.voltarDosGinasios()">Continuar a jornada</button>
       </div>
@@ -120918,8 +121074,6 @@ const UI = {
 
   telaDoacao(c, avisos){
     this.fecharModal(true);   // o balcão fica por cima da tela se não fechar
-    this.npcDaCena = null; this.minhasFalasDaCena = null;
-    this.falanteDaCena = null; this.vozesDaCena = null;
     this.limpar();
     this.add(this.topo());
     this.add(`<div class="painel">
@@ -120940,9 +121094,9 @@ const UI = {
 
   telaCargo(c, avisos){
     this.fecharModal(true);   // o balcão fica por cima da tela se não fechar
-    this.npcDaCena = null; this.minhasFalasDaCena = null;
-    this.falanteDaCena = c.falante || null; this.vozesDaCena = c.vozes || null;
     this.limpar();
+    /* o falante vem depois do limpar(), que zera o da tela anterior */
+    this.falanteDaCena = c.falante || null; this.vozesDaCena = c.vozes || null;
     this.add(this.topo());
     this.add(`<div class="painel">
       <div class="cap-cabecalho">
@@ -120953,7 +121107,7 @@ const UI = {
       <div class="narrativa">${this.narrar(c.fala || [])}</div>
       <div id="avisos" class="avisos"></div>
       <div class="escolhas" style="margin-top:16px">
-        <button class="escolha" onclick="Exploracao.tela()">Guardar o crachá e seguir.</button>
+        <button class="escolha" onclick="Exploracao.tela()">${this.esc(c.guardar || 'Seguir.')}</button>
       </div>
     </div>`);
     if (avisos && avisos.length) this.avisos(avisos);
@@ -121182,12 +121336,12 @@ const UI = {
       <div class="linha"><span class="k">Doação</span><span class="v">aparece na cidade quando existe uma causa que você conhece</span></div>
       <div class="linha"><span class="k">O que rende</span><span class="v">reputação notória — nada material, nunca</span></div>
       <div class="linha"><span class="k">Uma vez cada</span><span class="v">causa paga não volta a pedir</span></div>
-      <p class="sussurro">As causas são pontas soltas que a história deixou e que você só vê depois de ter passado por elas. Quem nunca entrou no museu de Pewter não sabe que tem uma lona no telhado desde 2015.</p>
+      <p class="sussurro">As causas são pontas soltas que a história deixou e que você só vê depois de ter passado por elas. Quem nunca ouviu falar do museu de Pewter não sabe que tem uma lona no telhado desde noventa e quatro.</p>
 
       <h3>Cargos</h3>
       <div class="linha"><span class="k">O que dá</span><span class="v">renda por capítulo · desconto de loja · Centro sem custo · passagem · status</span></div>
       <div class="linha"><span class="k">Salário</span><span class="v">o maior entre os seus postos, não a soma</span></div>
-      <div class="linha"><span class="k">Onde se assume</span><span class="v">no lugar de cada um: licença de treinador no balcão do Centro · Auxiliar, Pesquisador e Professor no laboratório de Pallet · Guarda de rota no posto da Patrulha, em Viridian · Criador na Associação, em Cerulean · Repórter na redação, em Fuchsia · Policial na delegacia, Investigador na Auditoria e Perito na Comissão, em Saffron · Conselheiro na prefeitura de Celadon · Instrutor, Líder e Elite no Planalto · o envelope sem timbre, nos armários do porto de Vermilion</span></div>
+      <div class="linha"><span class="k">Onde se assume</span><span class="v">no lugar de cada um: licença de treinador no balcão do Centro · Auxiliar, Pesquisador e Professor no laboratório de Pallet · Guarda de rota no posto da Patrulha, em Viridian · Criador na Associação, em Cerulean · Repórter na redação, em Fuchsia · Policial na delegacia, Investigador na Auditoria e Perito na Comissão, em Saffron · Conselheiro na prefeitura de Celadon · Instrutor, Líder e Elite no Planalto · o envelope sem timbre, nos armários do Centro de Vermilion</span></div>
       <div class="linha"><span class="k">O que cada um pede</span><span class="v">a lista aparece no lugar, com ✓ no que você já tem e ✗ no que falta</span></div>
       <div class="linha"><span class="k">Policial de Kanto</span><span class="v">3 insígnias · reputação boa Reconhecido ou mais · ter sido Guarda de rota · 800 ₽ por capítulo, Centro sem custo, passagem e Força +1</span></div>
       <p class="sussurro">Quinze postos, de licença de treinador a conselheiro regional. Cada um pede uma coisa diferente — espécies catalogadas, insígnias, reputação, o time que você leva — e alguns só existem depois de muita estrada. Quem carrega o envelope sem timbre não recebe crachá da Liga, e vice-versa; e esse envelope piora a sua reputação sozinho, todo capítulo.</p>
@@ -121379,7 +121533,9 @@ const UI = {
       <h3>Centro Pokémon</h3>
       <div class="linha"><span class="k">Lá dentro</span><span class="v">enfermeira, PC, balcão de credenciais, mapa na parede e mural de recados</span></div>
       <div class="linha"><span class="k">Sem licença</span><span class="v">a enfermeira cobra 300 ₽ + 250 por Pokémon ferido · com licença, de graça · sem o dinheiro e com o time todo caído, ela atende e fica com o que você tem</span></div>
-      <div class="linha"><span class="k">No meio de um capítulo</span><span class="v">se ele acontece numa cidade com Centro, dá pra passar lá e voltar pro mesmo ponto da história</span></div>
+      <div class="linha"><span class="k">Quanto demora</span><span class="v">de noite você dorme lá e acorda às seis · de dia espera o time voltar, e o dia anda um período · em casa, o mesmo, de graça</span></div>
+      <div class="linha"><span class="k">No meio de um capítulo</span><span class="v">se ele acontece numa cidade com Centro, dá pra passar lá e voltar pro mesmo ponto da história · ali quem anda com a hora é a história, e o balcão não mexe no relógio</span></div>
+      <div class="linha"><span class="k">Atalho pro balcão</span><span class="v">a derrota no ginásio e na Liga, e o rival que te para na saída do capítulo, têm o botão pro Centro da cidade · onde não tem Centro, não tem botão · o rival espera você voltar</span></div>
       <div class="linha"><span class="k">Achado andando</span><span class="v">loja, ginásio, quem quer trocar e o Relembrador de Golpes: nada disso tem placa, você acha andando pela cidade</span></div>
       <h3>Quem aparece onde</h3>
       <div class="linha"><span class="k">Espécie</span><span class="v">cada lugar do mapa tem a sua lista, com o comum e o raro · a de FireRed/LeafGreen, em quase tudo</span></div>
@@ -121701,12 +121857,12 @@ const UI = {
       <div class="linha"><span class="k">Doação</span><span class="v">aparece na cidade quando existe uma causa que você conhece</span></div>
       <div class="linha"><span class="k">O que rende</span><span class="v">reputação notória — nada material, nunca</span></div>
       <div class="linha"><span class="k">Uma vez cada</span><span class="v">causa paga não volta a pedir</span></div>
-      <p class="sussurro">As causas são pontas soltas que a história deixou e que você só vê depois de ter passado por elas. Quem nunca entrou no museu de Pewter não sabe que tem uma lona no telhado desde 2015.</p>
+      <p class="sussurro">As causas são pontas soltas que a história deixou e que você só vê depois de ter passado por elas. Quem nunca ouviu falar do museu de Pewter não sabe que tem uma lona no telhado desde noventa e quatro.</p>
 
       <h3>Cargos</h3>
       <div class="linha"><span class="k">O que dá</span><span class="v">renda por capítulo · desconto de loja · Centro sem custo · passagem · status</span></div>
       <div class="linha"><span class="k">Salário</span><span class="v">o maior entre os seus postos, não a soma</span></div>
-      <div class="linha"><span class="k">Onde se assume</span><span class="v">no lugar de cada um: licença de treinador no balcão do Centro · Auxiliar, Pesquisador e Professor no laboratório de Pallet · Guarda de rota no posto da Patrulha, em Viridian · Criador na Associação, em Cerulean · Repórter na redação, em Fuchsia · Policial na delegacia, Investigador na Auditoria e Perito na Comissão, em Saffron · Conselheiro na prefeitura de Celadon · Instrutor, Líder e Elite no Planalto · o envelope sem timbre, nos armários do porto de Vermilion</span></div>
+      <div class="linha"><span class="k">Onde se assume</span><span class="v">no lugar de cada um: licença de treinador no balcão do Centro · Auxiliar, Pesquisador e Professor no laboratório de Pallet · Guarda de rota no posto da Patrulha, em Viridian · Criador na Associação, em Cerulean · Repórter na redação, em Fuchsia · Policial na delegacia, Investigador na Auditoria e Perito na Comissão, em Saffron · Conselheiro na prefeitura de Celadon · Instrutor, Líder e Elite no Planalto · o envelope sem timbre, nos armários do Centro de Vermilion</span></div>
       <div class="linha"><span class="k">O que cada um pede</span><span class="v">a lista aparece no lugar, com ✓ no que você já tem e ✗ no que falta</span></div>
       <div class="linha"><span class="k">Policial de Kanto</span><span class="v">3 insígnias · reputação boa Reconhecido ou mais · ter sido Guarda de rota · 800 ₽ por capítulo, Centro sem custo, passagem e Força +1</span></div>
       <p class="sussurro">Quinze postos, de licença de treinador a conselheiro regional. Cada um pede uma coisa diferente — espécies catalogadas, insígnias, reputação, o time que você leva — e alguns só existem depois de muita estrada. Quem carrega o envelope sem timbre não recebe crachá da Liga, e vice-versa; e esse envelope piora a sua reputação sozinho, todo capítulo.</p>
@@ -136063,14 +136219,15 @@ const Jogo = {
   },
 
   /* ---------- HUB ---------- */
-  hubCentro(){
-    Estado.dados.time.forEach(curarTotal);
-    Estado.curarJogador(8);
-    Estado.recuperarVontadeJogador();
-    Mundo.passar(2);
+  /* O atalho pro balcão das telas que têm o botão (derrota no ginásio e
+     na Liga, o rival na saída do capítulo). É o Centro da cidade onde
+     você está, com a licença, a conta e a hora dele (Cidade.atender);
+     onde não tem Centro o botão não aparece. O rival espera: a tela
+     volta pra ele. */
+  hubCentro(depois){
+    const av = Cidade.atender();
     Estado.salvar('auto');
-    /* volta pro lugar onde você está — a tela "Parada" não existe mais */
-    const av = [{tipo:'cura', texto:'O time sai do balcão inteiro. Você dorme numa cama de verdade e acorda melhor.'}];
+    if (depois === 'rival') return UI.telaRival(av);
     if (Estado.dados.modo === 'cena' && Historia.cenaAtual) return UI.telaCena(Historia.cenaAtual, av);
     Exploracao.tela(av);
   },

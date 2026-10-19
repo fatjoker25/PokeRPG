@@ -16,7 +16,11 @@
        lugar nele;
      - toda loja, comprando e vendendo;
      - a rede: cada degrau em cada ponto, cada serviço e cada escolha
-       dele, e a chegada de cada prova.
+       dele, e a chegada de cada prova;
+     - a tela de cada posto assumido e cada causa de doação paga (a do
+       caderno do Célio é ligação, no PokéNav);
+     - o rival que te para na saída do capítulo, numa cidade com Centro
+       e numa rota sem, e a volta do balcão pra ele.
 
    Texto quebrado é o mesmo que o bot-jogador procura: marca de gênero
    sem resolver, "undefined", "NaN", "[object", HTML vazando. E todo
@@ -246,6 +250,31 @@ const SUSPEITO = [
   /* o cartão e a folha de regras com o nome do degrau */
   await naRede(3, 'celadon');
   await tentar('rede/cartão', () => UI.modalCartao());
+
+  /* ---------- postos e doações ---------- */
+  for (const id of await page.evaluate(() => CARGOS.map(c => c.id))){
+    await restaurar();
+    await tentar('posto/' + id, x => UI.telaCargo(Cargos.porId(x), []), id);
+  }
+  for (const [causa, local] of [['museu', 'pewter'], ['abrigo', 'lavender'], ['bolsa', 'celadon']]){
+    await restaurar();
+    await tentar('doação/' + causa, ([c, l]) => {
+      const d = Estado.dados;
+      d.local = l; d.flags.sabe_da_lona_do_museu = true;
+      Mundo.descobrir('andou_' + l); Estado.registrarNumero('goro');
+      Exploracao.tela(); Exploracao.fazer('doar'); Cidade.doarPara(c);
+    }, [causa, local]);
+  }
+
+  /* ---------- o rival na saída do capítulo ---------- */
+  for (const local of ['celadon', 'rota12']){
+    await restaurar();
+    await tentar('rival/' + local, x => {
+      Estado.dados.local = x; Estado.dados.npcs['Ezra'] = {nome:'Ezra', opiniao:2, memorias:[]};
+      Jogo.encontroRival = {tipo:'teo', nome:'Ezra'}; UI.telaRival();
+    }, local);
+  }
+  await tentar('rival/celadon/centro', () => { Estado.dados.local = 'celadon'; Jogo.hubCentro('rival'); });
 
   /* ---------- lugares e afazeres ---------- */
   for (const id of await page.evaluate(() => Object.keys(LOCAIS))){

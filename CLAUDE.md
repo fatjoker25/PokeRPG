@@ -93,12 +93,23 @@ mochila com TM e ferramenta quebrada, todo lugar visitado) e um do começo
 (um Pokémon, mochila vazia), abre toda janela — os cinco bolsos, time,
 sumário, Pokédex e as 251 fichas, PokéNav e cada contato, cartão, ficha,
 diário, rota, finais, credenciais, PC, ajustes, regras, tutorial e mapa —,
-toda loja comprando e vendendo, e todo lugar do mapa com cada afazer da
+toda loja comprando e vendendo, a tela de cada posto e de cada doação, o
+rival na saída do capítulo, e todo lugar do mapa com cada afazer da
 lista dele, e acusa erro de JavaScript e texto quebrado (`undefined`,
 `NaN`, `null`, marca sem resolver, HTML vazando). Janela nova ou afazer
 novo passa por ali. Texto que entra numa janela montada à mão, sem
 `UI.esc`, não resolve a marca de gênero: a folha de regras já mostrou
 `sentad{o|a}` assim.
+
+Tela que monta conversa (`telaCargo`, `telaDoacao`, as do rival) chama
+`UI.limpar()` **antes** de pôr o falante: o `limpar` zera
+`falanteDaCena`, e o posto já saiu com metade das falas no balão do
+jogador e a outra metade sem dono. Fala de posto e de doação vai por
+`fala()`, nunca aspa solta. E o atalho pro Centro dessas telas
+(`Jogo.hubCentro`) é o balcão da cidade (`Cidade.atender`), com licença,
+conta e hora: só aparece onde tem Centro. O balcão dorme até as seis de
+noite, anda um período de dia e não mexe no relógio no meio de uma cena
+de capítulo; a casa, o mesmo.
 
 ## Nada do mundo real
 O mundo é o de Pokémon, e nele **não existe bicho de verdade**: nada de

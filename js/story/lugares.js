@@ -687,17 +687,32 @@ const MURAIS = {
   ]
 };
 
-/* O Centro todo dia é o mesmo Centro, mas a noite não é a mesma noite. */
+/* O Centro todo dia é o mesmo Centro, mas a noite não é a mesma noite.
+   De noite você dorme lá; de dia espera o time voltar, e a frase não
+   pode amanhecer às duas da tarde. */
 const FRASES_DO_CENTRO = [
   'A enfermeira leva o time pra dentro e devolve tudo certo em vinte minutos. Você dorme num quarto com seis camas e cinco desconhecidos.',
   'O Chansey do balcão empurra o carrinho com as Pokébolas pra dentro e volta cantarolando. De manhã está todo mundo inteiro.',
   'A enfermeira chama o seu time pelo nome, um por um, na hora de devolver. Ela leu a ficha enquanto você dormia.',
   'O beliche de cima range a noite inteira. O time não ouve nada: dorme no tratamento e acorda novo.',
-  'Tem chá de graça no saguão às dez da noite e alguém de outra cidade quer saber de onde você é. Você conta. Dorme tarde e bem.',
-  'A máquina faz o tlin-tlin de sempre, seis vezes. A enfermeira sorri do jeito que só quem ouve esse som o dia inteiro sorri.',
+  'Tem chá de graça no saguão e alguém de outra cidade quer saber de onde você é. Você conta. Dorme tarde e bem.',
   'Você dorme no sofá do saguão porque os quartos lotaram. O time volta curado e você volta com o pescoço torto.',
   'De manhã a enfermeira entrega o cinto com as Pokébolas polidas. Ela poliu. Ninguém pediu.'
 ];
+const FRASES_DO_CENTRO_DE_DIA = [
+  'A enfermeira leva o time pra dentro e devolve tudo certo em vinte minutos. Você passa os vinte minutos olhando a máquina de bebida do saguão sem comprar nada.',
+  'O Chansey do balcão empurra o carrinho com as Pokébolas pra dentro e volta cantarolando. Você cochila numa cadeira do saguão até chamarem o seu nome.',
+  'A enfermeira chama o seu time pelo nome, um por um, na hora de devolver. Ela leu a ficha enquanto você esperava.',
+  'A máquina faz o tlin-tlin de sempre, uma vez pra cada Pokébola. A enfermeira sorri do jeito que só quem ouve esse som o dia inteiro sorri.',
+  'A enfermeira entrega o cinto com as Pokébolas polidas. Ela poliu. Ninguém pediu.',
+  'Alguém de outra cidade, na cadeira do lado, quer saber de onde você é. Você conta, e quando termina de contar o time já está no balcão.'
+];
+
+/* Dormir até o sol, como no acampamento: acorda às seis. */
+function dormirAteASeis(){
+  const r = Estado.dados.relogio;
+  Mundo.passarHoras(r.hora >= 18 ? 30 - r.hora : 6 - r.hora);
+}
 
 /* o que se compra uma vez só: ferramenta que não gasta, mapa (mochila
    entra pelo tipo 'bolsa') */
@@ -716,7 +731,7 @@ const Cidade = {
     const cargos = (typeof Cargos !== 'undefined')
       ? `<button class="escolha com-icone" onclick="UI.fecharModal(true);UI.modalCredenciais()">${ic('credenciais')}<span>Balcão de credenciais</span></button>` : '';
     UI.modal(`Centro Pokémon de ${L.nome}`, `
-      <button class="escolha com-icone" onclick="UI.fecharModal(true);Cidade.atenderAqui()">${ic('dormir')}<span>Deixar o time com a enfermeira e dormir</span></button>
+      <button class="escolha com-icone" onclick="UI.fecharModal(true);Cidade.atenderAqui()">${ic(this.dormeNoCentro() ? 'dormir' : 'centro')}<span>Deixar o time com a enfermeira${this.dormeNoCentro() ? ' e dormir' : ''}</span></button>
       <button class="escolha com-icone" onclick="UI.fecharModal(true);UI.modalPC()">${ic('pc')}<span>PC do saguão${d.pc.length ? ` (${d.pc.length})` : ''}</span></button>
       ${cargos}
       <button class="escolha com-icone" onclick="UI.fecharModal(true);Exploracao.mapa('parede')">${ic('mapa')}<span>Mapa da parede</span></button>
@@ -742,13 +757,27 @@ const Cidade = {
     setTimeout(() => this.centro(), 50);
   },
 
+  /* No meio de uma cena de capítulo quem anda com a hora é a história,
+     e o balcão não mexe no relógio. Capítulo já fechado (o encerramento,
+     o rival na saída) não segura mais o relógio. */
+  naCena(){
+    const d = Estado.dados;
+    return d.modo === 'cena' && !(d.capitulosFechados || []).includes(d.capitulo);
+  },
+  /* De noite o balcão é cama: você dorme lá e acorda às seis. */
+  dormeNoCentro(){ return !this.naCena() && ehNoite(); },
+
   /* Cura o time e devolve o que aconteceu. Quem chama decide a tela:
      o mapa da cidade, ou a cena do capítulo, que continua depois. */
   atender(){
-    Mundo.passar(1);
     const d = Estado.dados;
-    /* a cura do balcão, com a musiquinha do Centro */
+    const noite = this.dormeNoCentro();
+    const amanhece = noite ? [{tipo:'info', texto:'Amanhece.'}] : [];
+    /* a cura do balcão, com a musiquinha do Centro; o tempo anda antes,
+       pra o time acordar alimentado */
     const curar = () => {
+      if (noite) dormirAteASeis();
+      else if (!this.naCena()) Mundo.passar(1);
       d.time.forEach(curarTotal);
       Estado.curarJogador(10);
       Estado.recuperarVontadeJogador();
@@ -774,7 +803,7 @@ const Cidade = {
           {tipo:'info', texto:'A enfermeira olha o seu cinto, depois a sua cara, e pergunta o número da sua licença.'},
           {tipo:'dano', texto:`Você não tem número nenhum, nem os ${fmtDin(preco)} ₽. Ela olha o cinto de novo, com ninguém de pé, e pega o que você tem: ${fmtDin(tinha)} ₽.`},
           {tipo:'cura', texto:'O time volta inteiro. Ela não te olha na saída.'},
-          {tipo:'info', texto:'Amanhece.'}, ...pac
+          ...amanhece, ...pac
         ];
       }
       if (Estado.j.dinheiro < preco){
@@ -791,15 +820,15 @@ const Cidade = {
         {tipo:'info', texto:'A enfermeira olha o seu cinto, depois a sua cara, e pergunta o número da sua licença.'},
         {tipo:'dano', texto:`Você não tem número nenhum. Ela atende do mesmo jeito — e cobra ${fmtDin(preco)} ₽, porque sem licença você é cliente e não treinador.`},
         {tipo:'cura', texto:'O time volta inteiro. Ela não te olha na saída.'},
-        {tipo:'info', texto:'Amanhece.'}, ...pac
+        ...amanhece, ...pac
       ];
     }
     curar();
     const pac = this.retirarPacotes();
     Estado.salvar('auto');
     return [
-      {tipo:'cura', texto:Dados.escolher(FRASES_DO_CENTRO)},
-      {tipo:'info', texto:'Amanhece.'}, ...pac
+      {tipo:'cura', texto:Dados.escolher(noite ? FRASES_DO_CENTRO : FRASES_DO_CENTRO_DE_DIA)},
+      ...amanhece, ...pac
     ];
   },
   atenderAqui(){
@@ -823,10 +852,13 @@ const Cidade = {
       <button class="escolha" onclick="Cidade.mural()">Voltar ao mural</button>`, false, 'centro');
   },
 
-  /* Em casa: cama, comida e quem ficou. Cura como o Centro, de graça. */
+  /* Em casa: cama, comida e quem ficou. Cura como o Centro, de graça,
+     e demora como ele: de noite você dorme e acorda às seis, de dia o
+     time descansa na sala e o dia anda um período. */
   casa(){
     const d = Estado.dados;
-    Mundo.passar(2);
+    const noite = ehNoite();
+    if (noite) dormirAteASeis(); else Mundo.passar(1);
     d.time.forEach(curarTotal);
     Estado.curarJogador(30);
     Estado.recuperarVontadeJogador();
@@ -841,10 +873,11 @@ const Cidade = {
     ];
     const av = [
       {tipo:'cura', texto:Dados.escolher(frases)},
-      {tipo:'cura', texto:'O time dorme espalhado pela sala. De manhã está todo mundo inteiro.'},
+      {tipo:'cura', texto: noite ? 'O time dorme espalhado pela sala. De manhã está todo mundo inteiro.'
+                                 : 'O time se espalha pela sala e apaga. Quando acorda, está todo mundo inteiro.'},
       ...this.retirarPacotes()
     ];
-    Estado.registrar(`Passou a noite em casa, em ${d.jogador.cidade}.`);
+    Estado.registrar(noite ? `Passou a noite em casa, em ${d.jogador.cidade}.` : `Passou em casa, em ${d.jogador.cidade}, e o time descansou.`);
     Estado.salvar('auto');
     Exploracao.tela(av);
   },
@@ -1066,6 +1099,108 @@ const Cidade = {
     this._compra = null;
     Estado.salvar('auto');
     this.loja(this._andar || 0, this._qual || undefined, 'vender');
+  },
+
+  /* ------------------------------------------------------------
+     DOAÇÃO — o único lugar em que dinheiro vira outra coisa.
+     Cada causa é uma ponta solta que a história já deixou: a lona
+     no telhado do museu de Pewter, o abrigo do Sr. Fuji em Lavender,
+     e a linha do caderno do Célio que ninguém foi buscar. Só aparece
+     pra quem conhece a causa, e só rende reputação.
+     ------------------------------------------------------------ */
+  causas(){
+    const d = Estado.dados;
+    const id = Mundo.id();
+    return [
+      {id:'museu', cidade:'pewter', valor:12000,
+       nome:'O telhado do museu de Pewter',
+       linha:'Lona de noventa e quatro, relatório numa gaveta, e uma moça que cuida daquilo sozinha.',
+       requer:d=>!!d.flags.sabe_da_lona_do_museu,
+       /* quem nunca ouviu o nome dela ouve agora, antes do resto */
+       antes:d=>{ d.flags.cordell_na_doacao = !d.flags.cordell_disse_nome; d.flags.cordell_disse_nome = true; },
+       rep:3, marca:'pagou_o_telhado',
+       texto:[
+         'Você entrega o dinheiro no balcão do museu, pra moça que cuida daquilo sozinha. Ela não entende da primeira vez que você fala.',
+         d=>d.flags.cordell_na_doacao ? 'Ela diz o nome antes de entender o resto, por costume: Ivy Cordell, paleontóloga.' : '',
+         fala('Dra. Cordell', 'Doação pra quê?'),
+         d=>fala(d.jogador.nome, 'Pro telhado.'),
+         'Ela olha o valor escrito no recibo e senta, que é uma coisa que ela faz sem perceber.',
+         fala('Dra. Cordell', 'Eu escrevi vinte e duas cartas.'),
+         d=>fala(d.jogador.nome, 'Vinte e duas?'),
+         fala('Dra. Cordell', 'Vinte e duas. E a coisa se resolve porque {um moleque|uma moleca} de {idade} anos passou aqui e tinha dinheiro no bolso.', 'baixo'),
+         fala('Dra. Cordell', 'Não é crítica a você. É que eu vou ter que pensar nisso por uns dois anos.'),
+         'Antes de você chegar na porta ela já está procurando o número de um telhadista no caderno.'
+       ]},
+      {id:'abrigo', cidade:'lavender', valor:6000,
+       nome:'O abrigo de Lavender',
+       linha:'Um caderno de nomes pendurado na porta por um barbante, e as contas de um lugar que vive de quem deixa e não volta.',
+       requer:d=>!!(d.visitados || {}).lavender,
+       rep:2, marca:'pagou_o_abrigo',
+       texto:[
+         'Não tem placa, não tem recibo e não tem ninguém pra agradecer: você deixa o envelope com quem abre a porta, que é o próprio Sr. Fuji.',
+         fala('Sr. Fuji', 'Você sabe que isso não devolve ninguém, né.'),
+         d=>fala(d.jogador.nome, 'Sei.'),
+         fala('Sr. Fuji', 'Tá bom. Só queria ter certeza de que você sabia.', 'baixo'),
+         'Ele guarda o envelope no bolso de dentro do casaco, sem contar, e volta pro que estava fazendo.'
+       ]},
+      /* é uma ligação: acontece no PokéNav, com o número dele gravado */
+      {id:'bolsa', cidade:'*', valor:8000, ligacao:'goro',
+       nome:'Uma linha do caderno',
+       linha:'Pagar a inscrição de quem não pode pagar. Você não escolhe quem, e nunca fica sabendo.',
+       requer:d=>Estado.temPokenav() && Estado.temNumero('goro'),
+       rep:3, marca:'pagou_uma_bola',
+       texto:[
+         'Você liga pro Célio e leva três minutos pra explicar o que quer fazer, porque não existe um nome pra isso.',
+         fala('Célio', 'Você quer pagar o pedido de quem?'),
+         d=>fala(d.jogador.nome, 'De quem não puder pagar. Qualquer um.'),
+         'Do outro lado tem um silêncio longo e um barulho de caneta batendo em caderno.',
+         fala('Célio', 'Eu tenho onze cidades e uma lista de gente que queria muito e não tinha como pagar a inscrição.'),
+         fala('Célio', 'Deixa no balcão do Centro, com o meu nome no envelope. Eu pego na volta.'),
+         fala('Célio', 'Eu sei exatamente pra quem eu vou ligar primeiro.', 'riso'),
+         fala('Célio', 'E não, eu não vou te dizer o nome. Você não vai ficar sabendo, e é melhor assim.')
+       ]}
+    ].filter(c => (c.cidade === '*' || c.cidade === id) && !d.flags[c.marca]
+                  && (!c.requer || c.requer(d)));
+  },
+
+  doar(){
+    const causas = this.causas();
+    if (!causas.length)
+      return UI.modal('Doação', '<p class="nada">Nada aqui precisa do seu dinheiro hoje.</p>', false, 'credencial');
+    const linhas = causas.map(c => {
+      const caro = Estado.j.dinheiro < c.valor;
+      return `<div class="cargo ${caro ? 'fechado' : 'aberto'}">
+        <div class="cargo-topo"><span class="cargo-nome">${UI.esc(c.nome)}</span>
+          <span class="cargo-peso mono">${fmtDin(c.valor)} ₽</span></div>
+        <div class="cargo-resumo">${UI.esc(c.linha)}</div>
+        ${caro ? `<div class="cargo-motivo">Você tem ${fmtDin(Estado.j.dinheiro)} ₽.</div>`
+               : `<button class="btn destaque" onclick="Cidade.doarPara('${c.id}')">Pagar</button>`}
+      </div>`;
+    }).join('');
+    UI.modal('Doação', linhas, false, 'credencial');
+  },
+
+  doarPara(idCausa){
+    const c = this.causas().find(x => x.id === idCausa);
+    if (!c || Estado.j.dinheiro < c.valor) return;
+    const d = Estado.dados;
+    Estado.j.dinheiro -= c.valor;
+    if (c.antes) c.antes(d);
+    Estado.marcar(c.marca);
+    /* doação é notícia: passa por cima do teto do capítulo, e por isso
+       vai em ef.rep.notorio, que é onde mudarRep procura */
+    const r = Estado.mudarRep('bom', c.rep, 'Pagou do próprio bolso ' + c.nome.charAt(0).toLowerCase() + c.nome.slice(1),
+                              {rep:{notorio:true}});
+    Estado.registrar(`Pagou ${fmtDin(c.valor)} ₽ por: ${c.nome}.`);
+    Estado.salvar('auto');
+    const avisos = [{tipo:'item', texto:`−${fmtDin(c.valor)} ₽.`}];
+    if (r && r.mudou) avisos.push({tipo:'rep', texto:`Reputação: ${r.de} → ${r.para}`});
+    if (c.ligacao){
+      UI.fecharModal(true);
+      UI.atualizarTopo();
+      return UI.telaLigacao(contatoPorId(c.ligacao), c.texto, avisos);
+    }
+    UI.telaDoacao(c, avisos);
   },
 
   /* comprar pergunta antes, e pergunta quantos: um toque errado na lista

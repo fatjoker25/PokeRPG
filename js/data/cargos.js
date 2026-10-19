@@ -7,46 +7,52 @@
    deles só depois de sentar na cadeira.
 
    `veta` é quem não pode andar junto: crachá da Liga e crachá
-   da Rocket não cabem no mesmo bolso.
+   da Rocket não cabem no mesmo bolso. `guardar` é o botão de saída
+   da tela do posto: o que a cena te entregou (licença, colete,
+   distintivo); sem ele, só "Seguir".
    ============================================================ */
 const CARGOS = [
 {
-  id:'treinador', falante:'a atendente', nome:'{Treinador licenciado|Treinadora licenciada}', orgao:'Liga Pokémon', peso:1, cap:1,
+  id:'treinador', falante:'a atendente das credenciais', nome:'{Treinador licenciado|Treinadora licenciada}', orgao:'Liga Pokémon', peso:1, cap:1,
   onde:'centro', lugar:'Centro Pokémon',
+  guardar:'Guardar a licença e seguir.',
   pede:[{t:'Pedir no balcão de qualquer Centro', ok:d=>true}],
   requer:d=>!!d.flags.tem_licenca,
   resumo:'A licença anual. Sem ela você é uma pessoa andando com um Pokémon.',
   beneficios:{centro:true},
-  fala:['A licença é uma folha plastificada com a sua foto ruim e um número de oito dígitos.',
-        '"Atendimento sem custo em qualquer Centro de Kanto", diz a atendente, batendo o carimbo. "É o que ela serve, e é bastante."']
+  fala:['A licença é uma folha plastificada com a sua foto ruim e um número de oito dígitos. A atendente do balcão de credenciais digita o número, confere a foto com a sua cara e bate o carimbo.',
+        d => fala('a atendente das credenciais', 'Atendimento sem custo em qualquer Centro de Kanto. É pra isso que ela serve, e é bastante.')]
 },
 {
-  id:'auxiliar', nome:'Auxiliar de campo', orgao:'Laboratório de Pallet', peso:1, cap:2,
+  id:'auxiliar', falante:'a assistente do Professor', nome:'Auxiliar de campo', orgao:'Laboratório de Pallet', peso:1, cap:2,
   onde:'pallet', lugar:'Laboratório do Professor',
+  guardar:'Guardar o crachá e seguir.',
   pede:[{t:'20 espécies catalogadas', ok:d=>Estado.contagemDex().catalogados >= 20}],
   requer:d=>Estado.contagemDex().catalogados >= 20,
   resumo:'Quem anda com a Pokédex ligada e manda o que vê de volta.',
   beneficios:{loja:0.92, status:'percepcao'},
-  fala:['O crachá chega pelo correio da perua, dentro de um envelope pardo com o seu nome escrito à mão.',
-        '"Vinte espécies", diz o bilhete junto. "Continua mandando. — Oak."',
-        'Tem um desconto de convênio que funciona em qualquer loja de Kanto e que ninguém nunca explicou direito.']
+  fala:['A assistente do Professor tira um crachá de uma gaveta cheia de crachás iguais e escreve o seu nome nele à mão. Preso no crachá, um bilhete com a letra do Professor:',
+        '**VINTE ESPÉCIES. CONTINUA MANDANDO. — OAK**',
+        d => fala('a assistente do Professor', 'Vem com um desconto de convênio que funciona em qualquer loja de Kanto. Ninguém nunca me explicou direito, então eu também não vou explicar.')]
 },
 {
   id:'guarda_rota', falante:'o sargento', nome:'Guarda de rota', orgao:'Patrulha de Kanto', peso:2, cap:5,
   onde:'viridian', lugar:'Posto da Patrulha de Kanto',
+  guardar:'Vestir o colete e seguir.',
   pede:[{t:'2 insígnias', ok:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 2}, {t:'reputação boa: Familiar ou mais', ok:d=>d.reputacao.eixo === 'bom' && d.reputacao.bom >= 2}],
   requer:d=>d.reputacao.eixo === 'bom' && d.reputacao.bom >= 2
          && d.insignias.filter(i=>i!=='Título de Campeão').length >= 2,
   veta:['rocket'],
   resumo:'Voluntário fardado de meio período. Abre guarita e fecha mato.',
   beneficios:{renda:500, guarita:true},
-  fala:['Não é emprego. É um colete refletivo, um apito e um número de registro.',
-        '"O colete não te dá autoridade nenhuma", explica o sargento, entregando o colete. "Ele dá passagem. As duas coisas se parecem e não são a mesma."',
-        'Quinhentos por capítulo, pago em dinheiro, sem recibo.']
+  fala:['Não é emprego. É um colete refletivo, um apito e um número de registro. O sargento entrega o colete dobrado.',
+        d => fala('o sargento', 'O colete não te dá autoridade nenhuma. Ele dá passagem. As duas coisas se parecem e não são a mesma.'),
+        'Quinhentos pagos em dinheiro, sem recibo, sempre que o sargento lembra.']
 },
 {
   id:'policial', falante:'a delegada', nome:'Policial de Kanto', orgao:'Polícia de Kanto', peso:3, cap:6,
   onde:'saffron', lugar:'Delegacia de Saffron',
+  guardar:'Guardar o distintivo e seguir.',
   pede:[{t:'3 insígnias', ok:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 3},
         {t:'reputação boa: Reconhecido ou mais', ok:d=>d.reputacao.eixo === 'bom' && d.reputacao.bom >= 3},
         {t:'alguém da polícia que te conheça: ter sido Guarda de rota', ok:d=>Cargos.tem('guarda_rota')}],
@@ -55,9 +61,9 @@ const CARGOS = [
   resumo:'Distintivo, apito e uma ronda por semana. Quem chama a polícia agora pode estar chamando você.',
   beneficios:{renda:800, centro:true, guarita:true, status:'forca'},
   fala:['A delegacia de Saffron tem um balcão comprido e um Growlithe dormindo atrás dele, em cima de um tapete com o brasão da polícia.',
-        d => { Nomes.apresentar('a delegada'); return 'Na mesa do fundo, uma placa virada pra quem entra: DELEGADA MARA THORNE.'; },
-        '"O sargento de Viridian falou de você", diz a delegada, já carimbando. "Ele não fala bem de ninguém. Falou de você."',
-        '"Distintivo não é licença pra brigar. É licença pra chegar primeiro."']
+        d => { Nomes.apresentar('a delegada'); return 'Na mesa do fundo, uma placa virada pra quem entra: DELEGADA MARA THORNE. Ela já está carimbando.'; },
+        d => fala('a delegada', 'O sargento de Viridian falou de você. Ele não fala bem de ninguém. Falou de você.'),
+        d => fala('a delegada', 'Distintivo não é licença pra brigar. É licença pra chegar primeiro.')]
 },
 {
   id:'criador', falante:'a avaliadora', nome:'{Criador registrado|Criadora registrada}', orgao:'Associação de Criadores', peso:2, cap:6,
@@ -67,29 +73,32 @@ const CARGOS = [
   resumo:'Quem é avaliado pelo time que leva, não pelo que ganha.',
   beneficios:{loja:0.95, moral:3},
   fala:['A avaliação dura quarenta minutos e nenhum deles é sobre batalha.',
-        '"Eu olho pata, pelagem, peso e o jeito que ele olha pra você quando você não está olhando", diz a avaliadora.',
-        '"Passou. E não é todo mundo que passa, então não faz essa cara de quem já sabia."']
+        d => fala('a avaliadora', 'Eu olho pata, pelagem, peso e o jeito que ele olha pra você quando você não está olhando.'),
+        d => fala('a avaliadora', 'Passou. E não é todo mundo que passa, então não faz essa cara de quem já sabia.')]
 },
 {
   id:'reporter', falante:'a editora', nome:'Repórter {credenciado|credenciada}', orgao:'Jornal de Fuchsia', peso:2, cap:7,
   onde:'fuchsia', lugar:'Redação do Jornal de Fuchsia',
+  guardar:'Guardar o crachá e seguir.',
   pede:[{t:'40 descobertas pelo mapa', ok:d=>Object.keys(d.descobertas || {}).length >= 40}],
   requer:d=>Object.keys(d.descobertas || {}).length >= 40,
   resumo:'Crachá de imprensa. Entra onde tem fila e sai com o nome anotado.',
   beneficios:{renda:400, status:'intelecto', fila:true},
-  fala:['"Você anda mais que meus repórteres e vê mais que meus repórteres", diz a editora, sem levantar os olhos.',
-        '"Isso aqui não te dá razão. Te dá acesso. O que você faz com acesso é problema seu e vira problema meu."',
+  fala:['A editora não levanta os olhos da mesa.',
+        d => fala('a editora', 'Você anda mais que meus repórteres e vê mais que meus repórteres.'),
+        d => fala('a editora', 'Isso aqui não te dá razão. Te dá acesso. O que você faz com acesso é problema seu e vira problema meu.'),
         'O crachá é de papel laminado e vence em um ano.']
 },
 {
   /* o posto sobe de degrau na rede (js/story/rede.js): o nome que vai
      pro cartão, o peso, a renda e o desconto saem do escalão */
-  id:'rocket', falante:'a voz do outro lado', orgao:'sem timbre', cap:8,
+  id:'rocket', orgao:'sem timbre', cap:8,
   /* "Não tem crachá": não abre portão nem balcão (Cargos.doCracha) */
   semCracha:true,
   get nome(){ return typeof Rede !== 'undefined' ? Rede.nomeDoPosto() : 'Informante'; },
   get peso(){ return typeof Rede !== 'undefined' ? Rede.atual().peso : 3; },
-  onde:'vermilion', lugar:'Armários do porto',
+  onde:'vermilion', lugar:'Armários do Centro',
+  guardar:'Fechar o armário e seguir.',
   pede:[{t:'reputação ruim: Indesejado ou pior', ok:d=>d.reputacao.eixo === 'ruim' && d.reputacao.ruim >= 3},
         {t:'a rede nunca ter parado de te ligar', ok:d=>!d.flags.largou_rocket}],
   /* ninguém sai: quem largou o envelope não recebe outro */
@@ -98,13 +107,15 @@ const CARGOS = [
   resumo:'Ninguém assina nada. O dinheiro chega e as perguntas não.',
   get beneficios(){ return typeof Rede !== 'undefined' ? Rede.beneficios() : {renda:1200, loja:0.75, repRuim:1}; },
   fala:['Não tem crachá, não tem contrato e não tem aperto de mão.',
-        'Tem um envelope no armário 14 do Centro de Vermilion toda vez que vira o mês, e tem uma lista de coisas que você não pergunta.',
-        '"Você já fez de graça", diz a voz do outro lado. "A gente só está formalizando o que já era."'],
+        'A porta do armário 14, do lado do bebedouro, está só encostada. Dentro tem um envelope pardo sem timbre, com dinheiro e um bilhete datilografado.',
+        '**VOCÊ JÁ FEZ DE GRAÇA. A GENTE SÓ ESTÁ FORMALIZANDO O QUE JÁ ERA.**',
+        'Vai ter um envelope ali toda vez que virar o mês, e uma lista de coisas que você não pergunta.'],
   aviso:'Enquanto você carregar isso, a sua reputação piora sozinha todo capítulo.'
 },
 {
   id:'investigador', falante:'a auditora', nome:'{Investigador|Investigadora} de campo', orgao:'Auditoria da Liga', peso:3, cap:10,
   onde:'saffron', lugar:'Auditoria da Liga',
+  guardar:'Guardar a credencial e seguir.',
   pede:[{t:'4 insígnias', ok:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 4}, {t:'reputação boa: Respeitado ou mais', ok:d=>d.reputacao.eixo === 'bom' && d.reputacao.bom >= 4}],
   requer:d=>d.reputacao.eixo === 'bom' && d.reputacao.bom >= 4
          && d.insignias.filter(i=>i!=='Título de Campeão').length >= 4,
@@ -112,8 +123,8 @@ const CARGOS = [
   resumo:'Quem entra nos lugares e depois escreve o que viu.',
   beneficios:{renda:900, centro:true, status:'carisma', guarita:true},
   fala:['A credencial é azul-escura e tem um número de processo em vez de cargo.',
-        '"Você não manda em ninguém", avisa a auditora. "Você pergunta, e a diferença entre perguntar com crachá e perguntar sem é a única coisa que eu te dou."',
-        '"Use com vergonha. Quem usa sem vergonha eu cancelo em seis meses."']
+        d => fala('a auditora', 'Você não manda em ninguém. Você pergunta, e a diferença entre perguntar com crachá e perguntar sem é a única coisa que eu te dou.'),
+        d => fala('a auditora', 'Use com vergonha. Quem usa sem vergonha eu cancelo em seis meses.')]
 },
 {
   id:'pesquisador', falante:'Professor Oak', nome:'{Pesquisador associado|Pesquisadora associada}', orgao:'Laboratório de Pallet', peso:3, cap:12,
@@ -122,47 +133,52 @@ const CARGOS = [
   requer:d=>Estado.contagemDex().catalogados >= 90,
   resumo:'Noventa espécies andando. Ninguém faz isso de carro.',
   beneficios:{loja:0.85, status:'intelecto', renda:600},
-  fala:['"Noventa", diz o Professor no telefone, e dá pra ouvir ele conferindo a lista com o dedo.',
-        '"Eu tenho gente de jaleco que faz sessenta em dez anos. Você fez noventa andando, comendo mal e dormindo em acostamento."',
-        '"Então eu vou pedir uma bolsa pra você e ela vai ser pequena, porque bolsa é sempre pequena."']
+  fala:[d => fala('Professor Oak', 'Noventa.'),
+        'O Professor confere a lista com o dedo, linha por linha, antes de falar de novo.',
+        d => fala('Professor Oak', 'Eu tenho gente de jaleco que faz sessenta em dez anos. Você fez noventa andando, comendo mal e dormindo em acostamento.'),
+        d => fala('Professor Oak', 'Então eu vou pedir uma bolsa pra você, e ela vai ser pequena, porque bolsa é sempre pequena.')]
 },
 {
-  id:'comissao', falante:'a secretária', nome:'{Perito|Perita} da Comissão', orgao:'Comissão de Gestão de Risco', peso:4, cap:16,
+  id:'comissao', falante:'a secretária da Comissão', nome:'{Perito|Perita} da Comissão', orgao:'Comissão de Gestão de Risco', peso:4, cap:16,
   onde:'saffron', lugar:'Comissão de Gestão de Risco',
+  guardar:'Guardar a pasta e seguir.',
   pede:[{t:'6 insígnias', ok:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 6}, {t:'ser conhecid{o|a} como herói ou como pesquisador', ok:d=>['heroi','pesquisador'].includes(d.via || 'neutro')}],
   requer:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 6
          && ['heroi','pesquisador'].includes(d.via || 'neutro'),
   veta:['rocket'],
   resumo:'Assento na sala onde a regra é escrita. Sem voto, mas com ata.',
   beneficios:{renda:1500, centro:true, guarita:true},
-  fala:['"Perito não vota", explica a secretária, já entregando a pasta. "Perito fala antes da votação."',
-        '"Na prática, quem fala antes da votação decide a votação em oito de dez casos. Na prática."',
+  fala:['A secretária da Comissão já está entregando a pasta.',
+        d => fala('a secretária da Comissão', 'Perito não vota. Perito fala antes da votação.'),
+        d => fala('a secretária da Comissão', 'Na prática, quem fala antes da votação decide a votação em oito de dez casos. Na prática.'),
         'A pasta tem trinta e uma páginas e a primeira é um termo de sigilo.']
 },
 {
   id:'instrutor', falante:'o coordenador', nome:'{Instrutor|Instrutora} do Planalto', orgao:'Liga Pokémon', peso:4, cap:20,
   onde:'planalto', lugar:'Sala dos instrutores',
+  guardar:'Guardar o crachá e seguir.',
   pede:[{t:'8 insígnias', ok:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 8}],
   requer:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 8,
   veta:['rocket'],
   resumo:'Ensina quem chega. Salário, sala e um crachá que abre tudo do Planalto.',
   beneficios:{renda:2000, centro:true, semEspera:true, moral:2},
   fala:['A sala é pequena, tem janela pro corredor e não pro vale, e é sua.',
-        '"Você vai receber gente que apanhou em oito ginásios e acha que o problema é o time", diz o coordenador.',
-        '"Quase nunca é o time."']
+        d => fala('o coordenador', 'Você vai receber gente que apanhou em oito ginásios e acha que o problema é o time.'),
+        d => fala('o coordenador', 'Quase nunca é o time.')]
 },
 {
-  id:'lider', falante:'a conselheira', nome:'Líder de ginásio', orgao:'Liga Pokémon', peso:5, cap:24,
+  id:'lider', falante:'a conselheira da Liga', nome:'Líder de ginásio', orgao:'Liga Pokémon', peso:5, cap:24,
   onde:'planalto', lugar:'Secretaria da Liga',
+  guardar:'Assinar e seguir.',
   pede:[{t:'8 insígnias', ok:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 8}, {t:'reputação boa: Famoso ou mais', ok:d=>d.reputacao.eixo === 'bom' && d.reputacao.bom >= 5}],
   requer:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 8
          && d.reputacao.eixo === 'bom' && d.reputacao.bom >= 5,
   veta:['rocket'],
   resumo:'Uma cidade, uma porta e uma insígnia que passa a ser sua de dar.',
   beneficios:{renda:3000, centro:true, loja:0.9, semEspera:true},
-  fala:['O convite chega num papel timbrado que pesa mais que papel devia pesar.',
-        '"Ginásio não é prêmio por ser forte", diz a conselheira. "É um posto de trabalho com horário fixo e uma criança chorando na sua sala toda quinta."',
-        '"Pensa bem. E depois assina, porque a gente precisa."']
+  fala:['O convite está em cima da mesa, num papel timbrado que pesa mais que papel devia pesar.',
+        d => fala('a conselheira da Liga', 'Ginásio não é prêmio por ser forte. É um posto de trabalho com horário fixo e uma criança chorando na sua sala toda quinta.'),
+        d => fala('a conselheira da Liga', 'Pensa bem. E depois assina, porque a gente precisa.')]
 },
 {
   id:'elite', falante:'quem estava na porta antes de você', nome:'Elite dos Quatro', orgao:'Planalto Indigo', peso:5, cap:27,
@@ -173,7 +189,7 @@ const CARGOS = [
   resumo:'Uma das quatro portas. Você passa a ser a parede de alguém.',
   beneficios:{renda:5000, centro:true, semEspera:true},
   fala:['Os quatro nomes estão nas portas desde sempre e um deles agora é o seu, impresso na mesma fonte dos outros três.',
-        '"A parte difícil não é ganhar", diz quem estava na porta antes de você. "É ganhar de gente que treinou um ano pra te enfrentar e ver a cara delas depois."']
+        d => fala('quem estava na porta antes de você', 'A parte difícil não é ganhar. É ganhar de gente que treinou um ano pra te enfrentar e ver a cara delas depois.')]
 },
 {
   id:'professor', falante:'Professor Oak', nome:'{Professor|Professora} de Kanto', orgao:'rede de laboratórios', peso:5, cap:27,
@@ -183,9 +199,10 @@ const CARGOS = [
   veta:['rocket'],
   resumo:'A cadeira que entrega Pokébola pra quem está saindo de casa.',
   beneficios:{renda:4000, loja:0.8, centro:true},
-  fala:['"Cento e quarenta", diz o Professor, e não completa a frase por uns bons cinco segundos.',
-        '"Eu levei trinta e um anos. Você levou uma jornada."',
-        '"Tem uma cadeira aqui que não é minha, é do cargo, e o cargo precisa de gente que ainda ande."']
+  fala:[d => fala('Professor Oak', 'Cento e quarenta.'),
+        'O Professor não completa a frase por uns bons cinco segundos.',
+        d => fala('Professor Oak', 'Eu levei trinta e um anos. Você levou uma jornada.'),
+        d => fala('Professor Oak', 'Tem uma cadeira aqui que não é minha, é do cargo, e o cargo precisa de gente que ainda ande.')]
 },
 {
   id:'conselheiro', falante:'a conselheira mais velha', nome:'{Conselheiro|Conselheira} de Kanto', orgao:'Conselho Regional', peso:5, cap:28,
@@ -197,8 +214,8 @@ const CARGOS = [
   resumo:'Onde a regra é escrita. Não é o lugar mais forte de Kanto, é o mais lento.',
   beneficios:{renda:2500, centro:true, loja:0.9, lei:true},
   fala:['A cadeira é de madeira, desconfortável de propósito, e tem uma plaquinha de latão com o nome de quem sentou antes.',
-        '"Aqui dentro nada acontece em menos de dois anos", avisa a conselheira mais velha.',
-        '"E quando acontece, acontece pra todo mundo de uma vez. É esse o troco pela lentidão."']
+        d => fala('a conselheira mais velha', 'Aqui dentro nada acontece em menos de dois anos.'),
+        d => fala('a conselheira mais velha', 'E quando acontece, acontece pra todo mundo de uma vez. É esse o troco pela lentidão.')]
 }
 ];
 

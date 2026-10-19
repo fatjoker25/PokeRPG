@@ -912,14 +912,15 @@ const Jogo = {
   },
 
   /* ---------- HUB ---------- */
-  hubCentro(){
-    Estado.dados.time.forEach(curarTotal);
-    Estado.curarJogador(8);
-    Estado.recuperarVontadeJogador();
-    Mundo.passar(2);
+  /* O atalho pro balcão das telas que têm o botão (derrota no ginásio e
+     na Liga, o rival na saída do capítulo). É o Centro da cidade onde
+     você está, com a licença, a conta e a hora dele (Cidade.atender);
+     onde não tem Centro o botão não aparece. O rival espera: a tela
+     volta pra ele. */
+  hubCentro(depois){
+    const av = Cidade.atender();
     Estado.salvar('auto');
-    /* volta pro lugar onde você está — a tela "Parada" não existe mais */
-    const av = [{tipo:'cura', texto:'O time sai do balcão inteiro. Você dorme numa cama de verdade e acorda melhor.'}];
+    if (depois === 'rival') return UI.telaRival(av);
     if (Estado.dados.modo === 'cena' && Historia.cenaAtual) return UI.telaCena(Historia.cenaAtual, av);
     Exploracao.tela(av);
   },

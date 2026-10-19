@@ -2908,8 +2908,8 @@ const UI = {
       <h3>Pontos de progressão</h3>
       <p class="sussurro">Você tem <b id="pts">${j.pontos}</b> <span id="pts-p">${j.pontos === 1 ? 'ponto' : 'pontos'}</span>. Máximo de +1 por status neste capítulo.</p>
       <div id="status-lista" class="fs-tabela">${linhas}</div>
-      <div style="margin-top:22px">
-        <button class="btn destaque" id="btn-seguir" onclick="Jogo.voltarAoMundo()">Voltar para a estrada</button>
+      <div id="escolhas" class="escolhas" style="margin-top:22px">
+        <button class="escolha" id="btn-seguir" onclick="Jogo.voltarAoMundo()">Voltar para a estrada</button>
       </div>
     </div>`);
     if (avisosMundo && avisosMundo.length) this.avisos(avisosMundo.map(t => ({tipo:'mundo', texto:t})));
@@ -3003,7 +3003,7 @@ const UI = {
       <div class="narrativa">${this.narrarMonologo(falas, g.lider)}</div>
       <div id="avisos" class="avisos"></div>
       <div id="escolhas" class="escolhas" style="margin-top:20px">
-        ${!venceu ? `<button class="escolha" onclick="Jogo.hubCentro()">Curar o time e tentar de novo</button>` : ''}
+        ${!venceu && Exploracao.temCentro(Mundo.atual()) ? `<button class="escolha" onclick="Jogo.hubCentro()">Passar no Centro e tentar de novo</button>` : ''}
         <button class="escolha" onclick="Jogo.voltarDosGinasios()">Continuar a jornada</button>
       </div>
     </div>`);
@@ -3014,9 +3014,9 @@ const UI = {
   /* ========================================================
      O RIVAL
      ======================================================== */
-  telaRival(){
+  telaRival(avisos){
     const enc = Jogo.encontroRival || {tipo:'teo'};
-    if (enc.tipo === 'extra') return this.telaRivalExtra(enc.id);
+    if (enc.tipo === 'extra') return this.telaRivalExtra(enc.id, avisos);
 
     this.limpar();
     this.add(this.topo());
@@ -3033,6 +3033,7 @@ const UI = {
         <div class="loc">${this.esc((LOCAIS[Mundo.id()] || {}).nome || 'Kanto')}</div>
       </div>
       <div class="narrativa">${this.narrarMonologo(falaRival(), r.nome)}</div>
+      <div id="avisos" class="avisos"></div>
       <div class="linha" style="margin-top:14px"><span class="k">Placar entre vocês</span>
         <span class="v">você ${r.derrotas} × ${r.vitorias} ele</span></div>
       <div class="linha"><span class="k">Time dele agora</span>
@@ -3040,14 +3041,15 @@ const UI = {
       <div id="escolhas" class="escolhas" style="margin-top:20px">
         <button class="escolha" onclick="Jogo.lutarRival()">Lutar.</button>
         <button class="escolha" onclick="Jogo.evitarRival()">Passar por ele sem parar.</button>
-        <button class="escolha" onclick="Jogo.hubCentro()">Curar o time antes.</button>
+        ${Exploracao.temCentro(Mundo.atual()) ? `<button class="escolha" onclick="Jogo.hubCentro('rival')">Passar no Centro antes.</button>` : ''}
       </div>
     </div>`);
+    if (avisos && avisos.length) this.avisos(avisos);
     this.rolarTopo();
   },
 
   /* Os rivais que você conquistou pelo caminho */
-  telaRivalExtra(id){
+  telaRivalExtra(id, avisos){
     this.limpar();
     this.add(this.topo());
     const R = defRival(id);
@@ -3062,6 +3064,7 @@ const UI = {
         <div class="loc">${this.esc((LOCAIS[Mundo.id()] || {}).nome || 'Kanto')}</div>
       </div>
       <div class="narrativa">${this.narrarMonologo(falaRivalExtra(R), R.nome)}</div>
+      <div id="avisos" class="avisos"></div>
       <div class="linha" style="margin-top:14px"><span class="k">Placar entre vocês</span>
         <span class="v">você ${reg.derrotas} × ${reg.vitorias} ele</span></div>
       <div class="linha"><span class="k">Time dele agora</span>
@@ -3069,9 +3072,10 @@ const UI = {
       <div id="escolhas" class="escolhas" style="margin-top:20px">
         <button class="escolha" onclick="Jogo.lutarRival()">Lutar.</button>
         <button class="escolha" onclick="Jogo.evitarRival()">Passar por ele sem parar.</button>
-        <button class="escolha" onclick="Jogo.hubCentro()">Curar o time antes.</button>
+        ${Exploracao.temCentro(Mundo.atual()) ? `<button class="escolha" onclick="Jogo.hubCentro('rival')">Passar no Centro antes.</button>` : ''}
       </div>
     </div>`);
+    if (avisos && avisos.length) this.avisos(avisos);
     this.rolarTopo();
   },
 
@@ -3130,7 +3134,7 @@ const UI = {
       <div class="cap-cabecalho">
         <div class="num">Planalto Indigo</div>
         <div class="tit">Liga Pokémon</div>
-        <div class="loc">${d.insignias.filter(i=>i!=='Título de Campeão').length} de 8 insígnias${d.flags.campeao_de_kanto ? ' · Campeão de Kanto' : ''}</div>
+        <div class="loc">${d.insignias.filter(i=>i!=='Título de Campeão').length} de 8 insígnias${d.flags.campeao_de_kanto ? ' · ' + this.esc('{Campeão|Campeã} de Kanto') : ''}</div>
       </div>
 
       <div class="grade">
@@ -3138,7 +3142,7 @@ const UI = {
           <div class="t"><span>Elite 4</span><span class="fraco">${e4.estado==='concluido'?'✓':''}</span></div>
           <div class="fraco" style="margin-bottom:8px">Quatro salas seguidas, sem Centro Pokémon entre elas. O que estiver na sua mochila é tudo o que você tem.</div>
           ${membros}
-          <div class="linha"><span class="k">Campeão</span><span class="v">${d.flags.campeao_de_kanto ? 'você' : 'cadeira vaga há 2 anos'}</span></div>
+          <div class="linha"><span class="k">Campeão</span><span class="v">${d.flags.campeao_de_kanto ? 'você' : 'vaga'}</span></div>
           <div class="rodape">
             <span class="fraco">${this.esc(e4.texto)}</span>
             ${e4.estado==='disponivel' ? `<button class="btn destaque mini" onclick="Jogo.iniciarElite4()">Entrar na ala</button>` : ''}
@@ -3172,9 +3176,9 @@ const UI = {
         </div>`; })() : ''}
       </div>
 
-      <div style="margin-top:20px">
-        <button class="btn" onclick="Jogo.voltarDosGinasios()">Voltar</button>
-        <button class="btn" onclick="Jogo.hubCentro()">Curar o time</button>
+      <div id="escolhas" class="escolhas" style="margin-top:20px">
+        <button class="escolha" onclick="Jogo.voltarDosGinasios()">Voltar</button>
+        ${Exploracao.temCentro(Mundo.atual()) ? `<button class="escolha" onclick="Jogo.hubCentro()">Passar no Centro</button>` : ''}
       </div>
     </div>`);
     this.rolarTopo();
@@ -3277,7 +3281,7 @@ const UI = {
         ${o.continuar ? `<button class="escolha" onclick="Jogo.continuarElite()">Abrir a próxima porta</button>` : ''}
         ${o.torneio ? `<button class="escolha" onclick="UI.telaTorneio()">Voltar ao chaveamento</button>` : ''}
         ${o.conferencia ? `<button class="escolha" onclick="UI.telaConferencia()">Voltar ao chaveamento</button>` : ''}
-        ${!o.venceu ? `<button class="escolha" onclick="Jogo.hubCentro()">Curar o time</button>` : ''}
+        ${!o.venceu && Exploracao.temCentro(Mundo.atual()) ? `<button class="escolha" onclick="Jogo.hubCentro()">Passar no Centro</button>` : ''}
         <button class="escolha" onclick="UI.telaLiga()">Voltar à Liga</button>
         <button class="escolha" onclick="Jogo.voltarDosGinasios()">Continuar a jornada</button>
       </div>
@@ -4773,8 +4777,6 @@ const UI = {
 
   telaDoacao(c, avisos){
     this.fecharModal(true);   // o balcão fica por cima da tela se não fechar
-    this.npcDaCena = null; this.minhasFalasDaCena = null;
-    this.falanteDaCena = null; this.vozesDaCena = null;
     this.limpar();
     this.add(this.topo());
     this.add(`<div class="painel">
@@ -4795,9 +4797,9 @@ const UI = {
 
   telaCargo(c, avisos){
     this.fecharModal(true);   // o balcão fica por cima da tela se não fechar
-    this.npcDaCena = null; this.minhasFalasDaCena = null;
-    this.falanteDaCena = c.falante || null; this.vozesDaCena = c.vozes || null;
     this.limpar();
+    /* o falante vem depois do limpar(), que zera o da tela anterior */
+    this.falanteDaCena = c.falante || null; this.vozesDaCena = c.vozes || null;
     this.add(this.topo());
     this.add(`<div class="painel">
       <div class="cap-cabecalho">
@@ -4808,7 +4810,7 @@ const UI = {
       <div class="narrativa">${this.narrar(c.fala || [])}</div>
       <div id="avisos" class="avisos"></div>
       <div class="escolhas" style="margin-top:16px">
-        <button class="escolha" onclick="Exploracao.tela()">Guardar o crachá e seguir.</button>
+        <button class="escolha" onclick="Exploracao.tela()">${this.esc(c.guardar || 'Seguir.')}</button>
       </div>
     </div>`);
     if (avisos && avisos.length) this.avisos(avisos);
@@ -5037,12 +5039,12 @@ const UI = {
       <div class="linha"><span class="k">Doação</span><span class="v">aparece na cidade quando existe uma causa que você conhece</span></div>
       <div class="linha"><span class="k">O que rende</span><span class="v">reputação notória — nada material, nunca</span></div>
       <div class="linha"><span class="k">Uma vez cada</span><span class="v">causa paga não volta a pedir</span></div>
-      <p class="sussurro">As causas são pontas soltas que a história deixou e que você só vê depois de ter passado por elas. Quem nunca entrou no museu de Pewter não sabe que tem uma lona no telhado desde 2015.</p>
+      <p class="sussurro">As causas são pontas soltas que a história deixou e que você só vê depois de ter passado por elas. Quem nunca ouviu falar do museu de Pewter não sabe que tem uma lona no telhado desde noventa e quatro.</p>
 
       <h3>Cargos</h3>
       <div class="linha"><span class="k">O que dá</span><span class="v">renda por capítulo · desconto de loja · Centro sem custo · passagem · status</span></div>
       <div class="linha"><span class="k">Salário</span><span class="v">o maior entre os seus postos, não a soma</span></div>
-      <div class="linha"><span class="k">Onde se assume</span><span class="v">no lugar de cada um: licença de treinador no balcão do Centro · Auxiliar, Pesquisador e Professor no laboratório de Pallet · Guarda de rota no posto da Patrulha, em Viridian · Criador na Associação, em Cerulean · Repórter na redação, em Fuchsia · Policial na delegacia, Investigador na Auditoria e Perito na Comissão, em Saffron · Conselheiro na prefeitura de Celadon · Instrutor, Líder e Elite no Planalto · o envelope sem timbre, nos armários do porto de Vermilion</span></div>
+      <div class="linha"><span class="k">Onde se assume</span><span class="v">no lugar de cada um: licença de treinador no balcão do Centro · Auxiliar, Pesquisador e Professor no laboratório de Pallet · Guarda de rota no posto da Patrulha, em Viridian · Criador na Associação, em Cerulean · Repórter na redação, em Fuchsia · Policial na delegacia, Investigador na Auditoria e Perito na Comissão, em Saffron · Conselheiro na prefeitura de Celadon · Instrutor, Líder e Elite no Planalto · o envelope sem timbre, nos armários do Centro de Vermilion</span></div>
       <div class="linha"><span class="k">O que cada um pede</span><span class="v">a lista aparece no lugar, com ✓ no que você já tem e ✗ no que falta</span></div>
       <div class="linha"><span class="k">Policial de Kanto</span><span class="v">3 insígnias · reputação boa Reconhecido ou mais · ter sido Guarda de rota · 800 ₽ por capítulo, Centro sem custo, passagem e Força +1</span></div>
       <p class="sussurro">Quinze postos, de licença de treinador a conselheiro regional. Cada um pede uma coisa diferente — espécies catalogadas, insígnias, reputação, o time que você leva — e alguns só existem depois de muita estrada. Quem carrega o envelope sem timbre não recebe crachá da Liga, e vice-versa; e esse envelope piora a sua reputação sozinho, todo capítulo.</p>
@@ -5234,7 +5236,9 @@ const UI = {
       <h3>Centro Pokémon</h3>
       <div class="linha"><span class="k">Lá dentro</span><span class="v">enfermeira, PC, balcão de credenciais, mapa na parede e mural de recados</span></div>
       <div class="linha"><span class="k">Sem licença</span><span class="v">a enfermeira cobra 300 ₽ + 250 por Pokémon ferido · com licença, de graça · sem o dinheiro e com o time todo caído, ela atende e fica com o que você tem</span></div>
-      <div class="linha"><span class="k">No meio de um capítulo</span><span class="v">se ele acontece numa cidade com Centro, dá pra passar lá e voltar pro mesmo ponto da história</span></div>
+      <div class="linha"><span class="k">Quanto demora</span><span class="v">de noite você dorme lá e acorda às seis · de dia espera o time voltar, e o dia anda um período · em casa, o mesmo, de graça</span></div>
+      <div class="linha"><span class="k">No meio de um capítulo</span><span class="v">se ele acontece numa cidade com Centro, dá pra passar lá e voltar pro mesmo ponto da história · ali quem anda com a hora é a história, e o balcão não mexe no relógio</span></div>
+      <div class="linha"><span class="k">Atalho pro balcão</span><span class="v">a derrota no ginásio e na Liga, e o rival que te para na saída do capítulo, têm o botão pro Centro da cidade · onde não tem Centro, não tem botão · o rival espera você voltar</span></div>
       <div class="linha"><span class="k">Achado andando</span><span class="v">loja, ginásio, quem quer trocar e o Relembrador de Golpes: nada disso tem placa, você acha andando pela cidade</span></div>
       <h3>Quem aparece onde</h3>
       <div class="linha"><span class="k">Espécie</span><span class="v">cada lugar do mapa tem a sua lista, com o comum e o raro · a de FireRed/LeafGreen, em quase tudo</span></div>
@@ -5556,12 +5560,12 @@ const UI = {
       <div class="linha"><span class="k">Doação</span><span class="v">aparece na cidade quando existe uma causa que você conhece</span></div>
       <div class="linha"><span class="k">O que rende</span><span class="v">reputação notória — nada material, nunca</span></div>
       <div class="linha"><span class="k">Uma vez cada</span><span class="v">causa paga não volta a pedir</span></div>
-      <p class="sussurro">As causas são pontas soltas que a história deixou e que você só vê depois de ter passado por elas. Quem nunca entrou no museu de Pewter não sabe que tem uma lona no telhado desde 2015.</p>
+      <p class="sussurro">As causas são pontas soltas que a história deixou e que você só vê depois de ter passado por elas. Quem nunca ouviu falar do museu de Pewter não sabe que tem uma lona no telhado desde noventa e quatro.</p>
 
       <h3>Cargos</h3>
       <div class="linha"><span class="k">O que dá</span><span class="v">renda por capítulo · desconto de loja · Centro sem custo · passagem · status</span></div>
       <div class="linha"><span class="k">Salário</span><span class="v">o maior entre os seus postos, não a soma</span></div>
-      <div class="linha"><span class="k">Onde se assume</span><span class="v">no lugar de cada um: licença de treinador no balcão do Centro · Auxiliar, Pesquisador e Professor no laboratório de Pallet · Guarda de rota no posto da Patrulha, em Viridian · Criador na Associação, em Cerulean · Repórter na redação, em Fuchsia · Policial na delegacia, Investigador na Auditoria e Perito na Comissão, em Saffron · Conselheiro na prefeitura de Celadon · Instrutor, Líder e Elite no Planalto · o envelope sem timbre, nos armários do porto de Vermilion</span></div>
+      <div class="linha"><span class="k">Onde se assume</span><span class="v">no lugar de cada um: licença de treinador no balcão do Centro · Auxiliar, Pesquisador e Professor no laboratório de Pallet · Guarda de rota no posto da Patrulha, em Viridian · Criador na Associação, em Cerulean · Repórter na redação, em Fuchsia · Policial na delegacia, Investigador na Auditoria e Perito na Comissão, em Saffron · Conselheiro na prefeitura de Celadon · Instrutor, Líder e Elite no Planalto · o envelope sem timbre, nos armários do Centro de Vermilion</span></div>
       <div class="linha"><span class="k">O que cada um pede</span><span class="v">a lista aparece no lugar, com ✓ no que você já tem e ✗ no que falta</span></div>
       <div class="linha"><span class="k">Policial de Kanto</span><span class="v">3 insígnias · reputação boa Reconhecido ou mais · ter sido Guarda de rota · 800 ₽ por capítulo, Centro sem custo, passagem e Força +1</span></div>
       <p class="sussurro">Quinze postos, de licença de treinador a conselheiro regional. Cada um pede uma coisa diferente — espécies catalogadas, insígnias, reputação, o time que você leva — e alguns só existem depois de muita estrada. Quem carrega o envelope sem timbre não recebe crachá da Liga, e vice-versa; e esse envelope piora a sua reputação sozinho, todo capítulo.</p>
