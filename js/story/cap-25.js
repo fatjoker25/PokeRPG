@@ -317,7 +317,7 @@ c25_avisou_o_blue:{
   ],
   ef:{flag:'entrou_com_advogada', moral:4,
       npc:{nome:'Blue', opiniao:4, memoria:'Você avisou ele do direito à defesa. Ele ia entrar sozinho.'},
-      rep:{eixo:'bom',delta:3,motivo:'Dividiu um direito que ninguém tinha contado', rep:{notorio:true}},
+      rep:{eixo:'bom',delta:3,motivo:'Dividiu um direito que ninguém tinha contado', notorio:true},
       registrar:'Avisou o Blue do direito à defesa. Os dois entraram com advogada.'},
   escolhas:[{texto:'Entrar na sala.', vai:'c25_com_advogada'}]
 },
@@ -499,7 +499,7 @@ c25_decima_segunda:{
   ],
   ef:{flag:'nao_existe_consequencia', moral:-3,
       npc:{nome:'a conselheira da Liga', opiniao:3, memoria:'Largou a caneta na ata ao admitir que não existe consequência nenhuma.'},
-      rep:{eixo:'bom',delta:2,motivo:'Fez a pergunta que fez alguém largar a caneta', rep:{notorio:true}},
+      rep:{eixo:'bom',delta:2,motivo:'Fez a pergunta que fez alguém largar a caneta', notorio:true},
       registrar:'Onze ausências e nenhuma consequência. A conselheira largou a caneta.'},
   escolhas:[
     {texto:'Pôr tudo que você tem em cima da mesa.', vai:'c25_pos_tudo_na_mesa'},
@@ -602,7 +602,7 @@ c25_pos_tudo_na_mesa:{
     fala('a mulher de crachá azul', 'Tem três coisas aí que eu não tinha.')
   ],
   ef:{flag:'pos_tudo_na_mesa', moral:5,
-      rep:{eixo:'bom',delta:4,motivo:'Pôs tudo que juntou em cima da mesa comprida', rep:{notorio:true, peso:2}},
+      rep:{eixo:'bom',delta:4,motivo:'Pôs tudo que juntou em cima da mesa comprida', notorio:true, peso:2},
       registrar:'Pôs tudo em cima da mesa. Três coisas eles não tinham.'},
   escolhas:[
     {texto:'Exigir cópia carimbada de tudo antes de sair.', vai:'c25_exigiu_copia'},
@@ -624,7 +624,7 @@ c25_exigiu_copia:{
   ],
   ef:{flag:'tem_copia_carimbada', moral:4,
       itens:{'Cópia carimbada de tudo, com protocolo':1},
-      rep:{eixo:'bom',delta:3,motivo:'Esperou uma hora e dez pela cópia carimbada', rep:{notorio:true}},
+      rep:{eixo:'bom',delta:3,motivo:'Esperou uma hora e dez pela cópia carimbada', notorio:true},
       registrar:'Saiu da audiência com cópia carimbada e protocolo de tudo.'},
   escolhas:[{texto:'Perguntar o que eles vão fazer com isso.', vai:'c25_o_que_vao_fazer'}]
 },
@@ -676,7 +676,7 @@ c25_exigiu_voto:{
     'E aí ela olha pra você, e é a primeira vez que ela olha pra você nesta sala, e o olhar dura mais do que devia.'
   ],
   ef:{flag:'a_cadeira_de_conselheiro', moral:5,
-      rep:{eixo:'bom',delta:3,motivo:'Exigiu voto numa sala onde ninguém exige nada', rep:{notorio:true}},
+      rep:{eixo:'bom',delta:3,motivo:'Exigiu voto numa sala onde ninguém exige nada', notorio:true},
       npc:{nome:'a conselheira da Liga', opiniao:4, memoria:'Te contou que a cadeira de conselheiro extraordinário é do Campeão de Kanto.'},
       registrar:'A cadeira de conselheiro extraordinário da Liga é do Campeão, e está vaga há dois anos.'},
   escolhas:[
@@ -725,7 +725,7 @@ c25_empurrou_de_volta:{
     fala('a mulher de crachá azul', 'Então tá. Pergunta você. Pergunta você o que você quiser, e eu respondo, e aí a gente vê.')
   ],
   ef:{flag:'inverteu_a_mesa', moral:4,
-      rep:{eixo:'bom',delta:3,motivo:'Devolveu o papel sem ler e virou a mesa', rep:{notorio:true}},
+      rep:{eixo:'bom',delta:3,motivo:'Devolveu o papel sem ler e virou a mesa', notorio:true},
       registrar:'Empurrou a folha de volta sem ler. Ela ofereceu responder o que você perguntasse.'},
   escolhas:[
     {texto:'Perguntar de quem é a cadeira vazia.', vai:'c25_a_cadeira_vazia'},

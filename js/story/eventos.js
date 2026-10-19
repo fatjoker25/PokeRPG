@@ -291,7 +291,7 @@ pewter:[
     {texto:'Doar pro telhado.',
      cond:d=>d.jogador.dinheiro >= 3000,
      ef:{dinheiro:-3000, flag:'doou_pro_museu',
-         rep:{eixo:'bom',delta:2,motivo:'Doou pro telhado de um museu que ninguém visita', rep:{notorio:true}},
+         rep:{eixo:'bom',delta:2,motivo:'Doou pro telhado de um museu que ninguém visita', notorio:true},
          npc:{nome:'Museu de Pewter', opiniao:4, memoria:'Doou três mil pro telhado da ala de fósseis.'},
          registrar:'Doou três mil pro telhado da ala de fósseis do museu de Pewter.'},
      resultado:[
@@ -348,7 +348,7 @@ cerulean:[
      ]},
     {texto:'Pedir pra enfrentar o sexto primeiro.',
      ef:{moral:4, flag:'enfrentou_o_sexto_primeiro',
-         rep:{eixo:'bom',delta:2,motivo:'Inverteu uma fila pra alguém ter chance de ser o primeiro', rep:{notorio:true}},
+         rep:{eixo:'bom',delta:2,motivo:'Inverteu uma fila pra alguém ter chance de ser o primeiro', notorio:true},
          npc:{nome:'O sexto da ponte', opiniao:5, memoria:'Você pediu pra enfrentar ele primeiro, quando ele era sempre o último.'},
          registrar:'Pediu pra enfrentar o sexto da ponte primeiro. Ele nunca tinha sido primeiro.'},
      resultado:[
@@ -539,7 +539,7 @@ lavender:[
     {texto:'Escrever um nome. Você tem um pra escrever.',
      cond:d=>d.cemiterio.length > 0,
      ef:{moral:4, flag:'escreveu_no_caderno',
-         rep:{eixo:'bom',delta:2,motivo:'Escreveu no caderno da porta do abrigo', rep:{notorio:true}},
+         rep:{eixo:'bom',delta:2,motivo:'Escreveu no caderno da porta do abrigo', notorio:true},
          registrar:'Escreveu um nome no caderno da porta do abrigo de Lavender.'},
      resultado:[
        d=>{
@@ -885,7 +885,7 @@ fuchsia:[
      cond:d=>!!d.flags.sabe_da_placa_da_reserva,
      ef:{itens:{'Lista do que depende do diretor de área':1},
          flag:'lista_do_diretor_de_area',
-         rep:{eixo:'bom',delta:3,motivo:'Puxou o fio de uma placa de horário até uma lista inteira', rep:{notorio:true}},
+         rep:{eixo:'bom',delta:3,motivo:'Puxou o fio de uma placa de horário até uma lista inteira', notorio:true},
          registrar:'O cargo vago de diretor de área trava onze coisas na reserva, incluindo laudo de óbito de Pokémon.'},
      resultado:[
        'Ele para. Ele olha pra você de um jeito diferente.',
@@ -980,7 +980,7 @@ saffron:[
     {texto:'Perguntar onde fica a pilha dos que não batem.',
      cond:d=>!!d.flags.sabe_o_que_os_estagiarios_fazem,
      ef:{flag:'a_pilha_dos_que_nao_batem',
-         rep:{eixo:'bom',delta:3,motivo:'Perguntou onde ficava a pilha que ninguém queria mencionar', rep:{notorio:true}},
+         rep:{eixo:'bom',delta:3,motivo:'Perguntou onde ficava a pilha que ninguém queria mencionar', notorio:true},
          registrar:'A pilha dos protocolos que não batem sobe pro nono andar toda sexta, em caixa lacrada.'},
      resultado:[
        'A estagiária do meio olha pros lados de um jeito que você já viu antes nesta cidade.',
@@ -1122,7 +1122,7 @@ cinnabar:[
      cond:d=>!!d.flags.ninguem_ouviu_o_barqueiro,
      ef:{itens:{'Protocolo da manifestação do barqueiro':1},
          flag:'tem_o_protocolo_do_barqueiro',
-         rep:{eixo:'bom',delta:2,motivo:'Pediu o papel que ninguém tinha pedido', rep:{notorio:true}},
+         rep:{eixo:'bom',delta:2,motivo:'Pediu o papel que ninguém tinha pedido', notorio:true},
          npc:{nome:'Barqueiro de Cinnabar', opiniao:4, memoria:'Você foi a primeira pessoa a pedir o protocolo dele.'},
          registrar:'Pegou o protocolo da manifestação do barqueiro de Cinnabar sobre a temperatura da água.'},
      resultado:[

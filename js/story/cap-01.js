@@ -749,7 +749,7 @@ c1_discurso:{
     'E aí a Sra. Perla começa a chorar de um jeito absolutamente desproporcional, e a partir daí ninguém mais consegue levar a manhã a sério.'
   ],
   ef:{moral:6, flag:'fez_discurso',
-      rep:{eixo:'bom',delta:2,motivo:'Falou o que queria na frente da rua inteira', rep:{notorio:true}},
+      rep:{eixo:'bom',delta:2,motivo:'Falou o que queria na frente da rua inteira', notorio:true},
       registrar:'Fez um discurso na própria cozinha, às sete da manhã.'},
   escolhas:[
     {texto:'Terminar o café e ir.', vai:'c1_despedida'},
@@ -1011,7 +1011,7 @@ c1_agradeceu_a_rua:{
     'Ninguém nessa rua vai esquecer isso, e é exatamente por causa de vinte minutos que as pessoas lembram da gente.'
   ],
   ef:{moral:4,
-      rep:{eixo:'bom',delta:2,motivo:'Agradeceu um por um, com a estrada esperando', rep:{notorio:true}},
+      rep:{eixo:'bom',delta:2,motivo:'Agradeceu um por um, com a estrada esperando', notorio:true},
       registrar:'Agradeceu cada pessoa da rua antes de ir embora.'},
   escolhas:[
     {texto:'Ir pra casa tomar café.', vai:'c1_cozinha'},
@@ -1030,7 +1030,7 @@ c1_a_crianca_de_nove:{
     'Ela vai contar essa história por anos. Ela vai contar errado, cada vez mais bonita, e ninguém vai corrigir.'
   ],
   ef:{moral:5, flag:'a_crianca_que_achou',
-      rep:{eixo:'bom',delta:2,motivo:'Devolveu o crédito a quem tinha achado', rep:{notorio:true}},
+      rep:{eixo:'bom',delta:2,motivo:'Devolveu o crédito a quem tinha achado', notorio:true},
       registrar:'Voltou pra dizer à criança de nove anos que foi ela que achou.'},
   escolhas:[
     {texto:'Ir pra casa.', vai:'c1_cozinha'},
@@ -1282,7 +1282,7 @@ c1_varreu_no_lugar:{
   ],
   ef:{moral:6, flag:'varreu_a_calcada_do_ushio', limpaFlag:'divida_pendente',
       npc:d=>({nome:vz().nome, opiniao:5, memoria:`Pagou ${vz().divida} com doze minutos de ${vz().fazer} no dia em que saiu de casa.`}),
-      rep:{eixo:'bom',delta:2,motivo:'Pagou uma dívida de dinheiro com doze minutos de trabalho', rep:{notorio:true}},
+      rep:{eixo:'bom',delta:2,motivo:'Pagou uma dívida de dinheiro com doze minutos de trabalho', notorio:true},
       registrar:d=>`Pagou ${vz().divida} fazendo o serviço ${vz().do} ${vz().nome}.`},
   escolhas:[
     {texto:d=>`Seguir para ${oPostoDaCidade(d)}.`, vai:'c1_saida_pro_centro'},

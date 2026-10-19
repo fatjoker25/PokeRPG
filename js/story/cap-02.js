@@ -251,7 +251,7 @@ c2_recado_da_sua_cidade:{
     'Você mal começou a estrada e já tem cartaz numa cidade que não é a sua.'
   ],
   ef:{flag:'achou_o_proprio_cartaz_em_viridian', moral:6,
-      rep:{eixo:'bom',delta:2,motivo:'Alguém mandou pregar o seu nome numa cidade que não é a sua', rep:{notorio:true}},
+      rep:{eixo:'bom',delta:2,motivo:'Alguém mandou pregar o seu nome numa cidade que não é a sua', notorio:true},
       registrar:'Achou o próprio cartaz na terceira camada do mural de Viridian.'},
   escolhas:[
     {texto:'Deixar onde está.', vai:'c2_pergunta_floresta'},

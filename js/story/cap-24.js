@@ -340,7 +340,7 @@ c24_exigiu_o_visor:{
   ef:{flag:'viu_o_visor', moral:-2,
       itens:{'Anotação: ACOMP. ATIVO — 704 — NÍVEL 2':1},
       npc:{nome:'o guarda da terceira', opiniao:2, memoria:'Virou o visor dez graus pra você ver. Tem filho.'},
-      rep:{eixo:'bom',delta:2,motivo:'Insistiu até ver o que estava escrito sobre você', rep:{notorio:true}},
+      rep:{eixo:'bom',delta:2,motivo:'Insistiu até ver o que estava escrito sobre você', notorio:true},
       registrar:'ACOMP. ATIVO — ORIGEM 704 — NÍVEL 2 — REVISÃO TRIMESTRAL.'},
   escolhas:[
     {texto:'Agradecer sem chamar atenção e seguir.', vai:'c24_a_quinta'},
@@ -432,7 +432,7 @@ c24_bateu_no_vidro:{
   ],
   ef:{flag:'bateu_no_vidro_do_carro', moral:3,
       npc:{nome:'a mulher de crachá azul', opiniao:2, memoria:'Você bateu no vidro do carro dela. Ninguém nunca tinha batido.'},
-      rep:{eixo:'bom',delta:3,motivo:'Bateu no vidro do carro que estava te esperando', rep:{notorio:true}},
+      rep:{eixo:'bom',delta:3,motivo:'Bateu no vidro do carro que estava te esperando', notorio:true},
       registrar:'Bateu no vidro do carro preto. Ela disse que ninguém nunca tinha batido.'},
   escolhas:[{texto:'Seguir para a sexta e a sétima.', vai:'c24_chegou_no_planalto'}]
 },
@@ -461,7 +461,7 @@ c24_esperou:{
   ],
   ef:{flag:'esperou_o_carro', moral:4, executar:d=>{ Relogio.avancar(1); },
       npc:{nome:'a mulher de crachá azul', opiniao:3, memoria:'Sentou numa pedra e esperou cinquenta e dois minutos até ela abrir o vidro.'},
-      rep:{eixo:'bom',delta:3,motivo:'Sentou numa pedra e ganhou no tempo', rep:{notorio:true}},
+      rep:{eixo:'bom',delta:3,motivo:'Sentou numa pedra e ganhou no tempo', notorio:true},
       registrar:'Esperou cinquenta e dois minutos sentad{o|a} numa pedra até o vidro descer.'},
   escolhas:[{texto:'Subir a estrada.', vai:'c24_chegou_no_planalto'}]
 },

@@ -310,7 +310,7 @@ c23_leu_em_voz_alta:{
   ],
   ef:{flag:'leu_o_verso_da_segunda_pagina', moral:-3,
       npc:{nome:'Blue', opiniao:3, memoria:'Ouviu você ler em voz alta o que o titular anterior escreveu a lápis no verso.'},
-      rep:{eixo:'bom',delta:2,motivo:'Leu em voz alta uma coisa que era mais fácil ler calad{o|a}', rep:{notorio:true}},
+      rep:{eixo:'bom',delta:2,motivo:'Leu em voz alta uma coisa que era mais fácil ler calad{o|a}', notorio:true},
       registrar:'No verso da segunda página: "eu assinei porque eu achei que ia conseguir controlar".'},
   escolhas:[{texto:'Ir pro corredor D.', vai:'c23_procurou_o_proprio_nome'}]
 },
@@ -434,7 +434,7 @@ c23_folha_dez:{
   ],
   ef:{flag:'leu_a_folha_dezenove', moral:-4,
       itens:{'Folha 19 — recomendação de convocação':1},
-      rep:{eixo:'bom',delta:2,motivo:'Leu a pasta que fizeram sobre você até a última folha', rep:{notorio:true}},
+      rep:{eixo:'bom',delta:2,motivo:'Leu a pasta que fizeram sobre você até a última folha', notorio:true},
       registrar:'Folha 19: "convocar. Já sabe demais para ser ignorado e ainda pouco para ser perigoso."'},
   escolhas:[
     {texto:'Levar a pasta inteira.', vai:'c23_levou_a_pasta'},
@@ -478,7 +478,7 @@ c23_a_pasta_de_tres_letras:{
   ],
   ef:{flag:'sabe_onde_o_red_esta', moral:-2,
       npc:{nome:'Blue', opiniao:4, memoria:'Descobriu com você que o Red está acima da Rota 10. Ele já tinha subido duas vezes.'},
-      rep:{eixo:'bom',delta:2,motivo:'Abriu a pasta que ninguém abriu', rep:{notorio:true}},
+      rep:{eixo:'bom',delta:2,motivo:'Abriu a pasta que ninguém abriu', notorio:true},
       registrar:'A pasta RED: última localização acima da Rota 10. "Ele não está perdido."'},
   escolhas:[
     {texto:'"Então a gente sobe uma terceira vez."', vai:'c23_terceira_vez'},
@@ -499,7 +499,7 @@ c23_terceira_vez:{
   ],
   ef:{flag:'combinou_de_subir_com_blue', moral:6,
       npc:{nome:'Blue', opiniao:6, memoria:'Combinou de subir a montanha com você depois da convocação.'},
-      rep:{eixo:'bom',delta:3,motivo:'Se ofereceu para subir uma montanha por uma busca que não era sua', rep:{notorio:true}},
+      rep:{eixo:'bom',delta:3,motivo:'Se ofereceu para subir uma montanha por uma busca que não era sua', notorio:true},
       registrar:'Combinou com Blue de subir acima da Rota 10 depois da convocação.'},
   escolhas:[{texto:'Descer a escada.', vai:'c23_desceu'}]
 },

@@ -240,7 +240,7 @@ c22_pagou_do_bolso:{
     'Sai de lá mais pobre e completamente {seu|sua}.'
   ],
   ef:{dinheiro:-2000, flag:'pagou_a_propria_inscricao', moral:4,
-      rep:{eixo:'bom',delta:2,motivo:'Pagou do bolso o que já estava pago, pra não dever a ninguém', rep:{notorio:true}},
+      rep:{eixo:'bom',delta:2,motivo:'Pagou do bolso o que já estava pago, pra não dever a ninguém', notorio:true},
       npc:{nome:'a supervisora', opiniao:3, memoria:'Pagou a própria inscrição num torneio que já estava pago.'},
       registrar:'Pagou a própria inscrição pra não dever nada a quem pagou antes.'},
   escolhas:[{texto:'Entrar na arena.', vai:'c22_aceitou'}]
@@ -310,7 +310,7 @@ c22_aceitou:{
     fala('o locutor da arena', 'CHAVE QUATRO NA FINAL!', 'grita', 'A torre de som chia na palavra FINAL e a arquibancada acha graça.')
   ],
   ef:{flag:'chegou_na_final_do_aberto', moral:5,
-      rep:{eixo:'bom',delta:2,motivo:'Chegou à final do torneio aberto do Planalto', rep:{notorio:true}},
+      rep:{eixo:'bom',delta:2,motivo:'Chegou à final do torneio aberto do Planalto', notorio:true},
       registrar:'Chegou à final do torneio aberto.',
       executar:d=>{ Relogio.avancar(5); }},
   escolhas:[
@@ -394,7 +394,7 @@ c22_venceu_a_final:{
   ef:{dinheiro:18000, flag:'venceu_o_aberto', moral:6,
       itens:{'Taça com o ano errado':1},
       npc:{nome:'Nadia Arden', opiniao:5, memoria:'Perdeu a final do aberto pra você e pediu o seu número.'},
-      rep:{eixo:'bom',delta:3,motivo:'Venceu o torneio aberto do Planalto', rep:{notorio:true, peso:2}},
+      rep:{eixo:'bom',delta:3,motivo:'Venceu o torneio aberto do Planalto', notorio:true, peso:2},
       registrar:'Venceu o torneio aberto do Planalto Indigo.'},
   escolhas:[
     {texto:'Dar o número e pegar o dela.', vai:'c22_trocou_numero',

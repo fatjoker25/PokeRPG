@@ -1226,6 +1226,14 @@ Comissão, o comércio cinzento — em `NPC_NO_MEIO` (não conta sozinho).
 NPC novo de um desses dois lados entra na lista; cena que precisa de outro
 peso escreve `rep` própria, e aí a regra não soma por cima.
 
+Ato que vira notícia (doação, depoimento, coisa feita na frente da
+cidade inteira) escreve `notorio:true` **dentro** do `rep` da cena:
+`rep:{eixo, delta, motivo, notorio:true}`, com `peso` do lado se
+precisar. Nunca um `rep` dentro do outro — aninhado, o `mudarRep` não
+lê, e trinta cenas ficaram assim sem ninguém ver: valiam como ato comum
+e gastavam o teto do capítulo. Notícia vale 1,5× e passa por cima do
+teto, como ginásio e Liga.
+
 ## O Pico do Ezra
 O parceiro do Ezra é sorteado pela tabela do inicial aleatório da casa
 (`sortearPicoDoEzra`, em `rival.js`) e é o ás do time dele. Texto que fala

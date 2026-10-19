@@ -36706,7 +36706,7 @@ pewter:[
     {texto:'Doar pro telhado.',
      cond:d=>d.jogador.dinheiro >= 3000,
      ef:{dinheiro:-3000, flag:'doou_pro_museu',
-         rep:{eixo:'bom',delta:2,motivo:'Doou pro telhado de um museu que ninguém visita', rep:{notorio:true}},
+         rep:{eixo:'bom',delta:2,motivo:'Doou pro telhado de um museu que ninguém visita', notorio:true},
          npc:{nome:'Museu de Pewter', opiniao:4, memoria:'Doou três mil pro telhado da ala de fósseis.'},
          registrar:'Doou três mil pro telhado da ala de fósseis do museu de Pewter.'},
      resultado:[
@@ -36763,7 +36763,7 @@ cerulean:[
      ]},
     {texto:'Pedir pra enfrentar o sexto primeiro.',
      ef:{moral:4, flag:'enfrentou_o_sexto_primeiro',
-         rep:{eixo:'bom',delta:2,motivo:'Inverteu uma fila pra alguém ter chance de ser o primeiro', rep:{notorio:true}},
+         rep:{eixo:'bom',delta:2,motivo:'Inverteu uma fila pra alguém ter chance de ser o primeiro', notorio:true},
          npc:{nome:'O sexto da ponte', opiniao:5, memoria:'Você pediu pra enfrentar ele primeiro, quando ele era sempre o último.'},
          registrar:'Pediu pra enfrentar o sexto da ponte primeiro. Ele nunca tinha sido primeiro.'},
      resultado:[
@@ -36954,7 +36954,7 @@ lavender:[
     {texto:'Escrever um nome. Você tem um pra escrever.',
      cond:d=>d.cemiterio.length > 0,
      ef:{moral:4, flag:'escreveu_no_caderno',
-         rep:{eixo:'bom',delta:2,motivo:'Escreveu no caderno da porta do abrigo', rep:{notorio:true}},
+         rep:{eixo:'bom',delta:2,motivo:'Escreveu no caderno da porta do abrigo', notorio:true},
          registrar:'Escreveu um nome no caderno da porta do abrigo de Lavender.'},
      resultado:[
        d=>{
@@ -37300,7 +37300,7 @@ fuchsia:[
      cond:d=>!!d.flags.sabe_da_placa_da_reserva,
      ef:{itens:{'Lista do que depende do diretor de área':1},
          flag:'lista_do_diretor_de_area',
-         rep:{eixo:'bom',delta:3,motivo:'Puxou o fio de uma placa de horário até uma lista inteira', rep:{notorio:true}},
+         rep:{eixo:'bom',delta:3,motivo:'Puxou o fio de uma placa de horário até uma lista inteira', notorio:true},
          registrar:'O cargo vago de diretor de área trava onze coisas na reserva, incluindo laudo de óbito de Pokémon.'},
      resultado:[
        'Ele para. Ele olha pra você de um jeito diferente.',
@@ -37395,7 +37395,7 @@ saffron:[
     {texto:'Perguntar onde fica a pilha dos que não batem.',
      cond:d=>!!d.flags.sabe_o_que_os_estagiarios_fazem,
      ef:{flag:'a_pilha_dos_que_nao_batem',
-         rep:{eixo:'bom',delta:3,motivo:'Perguntou onde ficava a pilha que ninguém queria mencionar', rep:{notorio:true}},
+         rep:{eixo:'bom',delta:3,motivo:'Perguntou onde ficava a pilha que ninguém queria mencionar', notorio:true},
          registrar:'A pilha dos protocolos que não batem sobe pro nono andar toda sexta, em caixa lacrada.'},
      resultado:[
        'A estagiária do meio olha pros lados de um jeito que você já viu antes nesta cidade.',
@@ -37537,7 +37537,7 @@ cinnabar:[
      cond:d=>!!d.flags.ninguem_ouviu_o_barqueiro,
      ef:{itens:{'Protocolo da manifestação do barqueiro':1},
          flag:'tem_o_protocolo_do_barqueiro',
-         rep:{eixo:'bom',delta:2,motivo:'Pediu o papel que ninguém tinha pedido', rep:{notorio:true}},
+         rep:{eixo:'bom',delta:2,motivo:'Pediu o papel que ninguém tinha pedido', notorio:true},
          npc:{nome:'Barqueiro de Cinnabar', opiniao:4, memoria:'Você foi a primeira pessoa a pedir o protocolo dele.'},
          registrar:'Pegou o protocolo da manifestação do barqueiro de Cinnabar sobre a temperatura da água.'},
      resultado:[
@@ -42562,7 +42562,7 @@ c1_discurso:{
     'E aí a Sra. Perla começa a chorar de um jeito absolutamente desproporcional, e a partir daí ninguém mais consegue levar a manhã a sério.'
   ],
   ef:{moral:6, flag:'fez_discurso',
-      rep:{eixo:'bom',delta:2,motivo:'Falou o que queria na frente da rua inteira', rep:{notorio:true}},
+      rep:{eixo:'bom',delta:2,motivo:'Falou o que queria na frente da rua inteira', notorio:true},
       registrar:'Fez um discurso na própria cozinha, às sete da manhã.'},
   escolhas:[
     {texto:'Terminar o café e ir.', vai:'c1_despedida'},
@@ -42824,7 +42824,7 @@ c1_agradeceu_a_rua:{
     'Ninguém nessa rua vai esquecer isso, e é exatamente por causa de vinte minutos que as pessoas lembram da gente.'
   ],
   ef:{moral:4,
-      rep:{eixo:'bom',delta:2,motivo:'Agradeceu um por um, com a estrada esperando', rep:{notorio:true}},
+      rep:{eixo:'bom',delta:2,motivo:'Agradeceu um por um, com a estrada esperando', notorio:true},
       registrar:'Agradeceu cada pessoa da rua antes de ir embora.'},
   escolhas:[
     {texto:'Ir pra casa tomar café.', vai:'c1_cozinha'},
@@ -42843,7 +42843,7 @@ c1_a_crianca_de_nove:{
     'Ela vai contar essa história por anos. Ela vai contar errado, cada vez mais bonita, e ninguém vai corrigir.'
   ],
   ef:{moral:5, flag:'a_crianca_que_achou',
-      rep:{eixo:'bom',delta:2,motivo:'Devolveu o crédito a quem tinha achado', rep:{notorio:true}},
+      rep:{eixo:'bom',delta:2,motivo:'Devolveu o crédito a quem tinha achado', notorio:true},
       registrar:'Voltou pra dizer à criança de nove anos que foi ela que achou.'},
   escolhas:[
     {texto:'Ir pra casa.', vai:'c1_cozinha'},
@@ -43095,7 +43095,7 @@ c1_varreu_no_lugar:{
   ],
   ef:{moral:6, flag:'varreu_a_calcada_do_ushio', limpaFlag:'divida_pendente',
       npc:d=>({nome:vz().nome, opiniao:5, memoria:`Pagou ${vz().divida} com doze minutos de ${vz().fazer} no dia em que saiu de casa.`}),
-      rep:{eixo:'bom',delta:2,motivo:'Pagou uma dívida de dinheiro com doze minutos de trabalho', rep:{notorio:true}},
+      rep:{eixo:'bom',delta:2,motivo:'Pagou uma dívida de dinheiro com doze minutos de trabalho', notorio:true},
       registrar:d=>`Pagou ${vz().divida} fazendo o serviço ${vz().do} ${vz().nome}.`},
   escolhas:[
     {texto:d=>`Seguir para ${oPostoDaCidade(d)}.`, vai:'c1_saida_pro_centro'},
@@ -43943,7 +43943,7 @@ c2_recado_da_sua_cidade:{
     'Você mal começou a estrada e já tem cartaz numa cidade que não é a sua.'
   ],
   ef:{flag:'achou_o_proprio_cartaz_em_viridian', moral:6,
-      rep:{eixo:'bom',delta:2,motivo:'Alguém mandou pregar o seu nome numa cidade que não é a sua', rep:{notorio:true}},
+      rep:{eixo:'bom',delta:2,motivo:'Alguém mandou pregar o seu nome numa cidade que não é a sua', notorio:true},
       registrar:'Achou o próprio cartaz na terceira camada do mural de Viridian.'},
   escolhas:[
     {texto:'Deixar onde está.', vai:'c2_pergunta_floresta'},
@@ -96830,7 +96830,7 @@ c21_quem_pregou:{
   ],
   ef:{moral:6,
       npc:{nome:'Sra. Perla', opiniao:4, memoria:'Imprimiu vinte cartazes com a sua cara e pregou na rua inteira.'},
-      rep:{eixo:'bom',delta:2,motivo:'A vizinha imprimiu vinte cartazes com a sua cara', rep:{notorio:true}},
+      rep:{eixo:'bom',delta:2,motivo:'A vizinha imprimiu vinte cartazes com a sua cara', notorio:true},
       registrar:'A Sra. Perla imprimiu vinte cartazes e pregou na rua inteira.'},
   escolhas:[
     {texto:'Devolver a caixa, que veio a estrada inteira na mochila.', vai:'c21_devolveu_a_caixa',
@@ -96956,7 +96956,7 @@ c21_pagou_a_janela:{
   ],
   ef:{limpaFlag:'divida_pendente', moral:5,
       npc:d=>({nome:vz().nome, opiniao:5, memoria:`Você voltou pra pagar ${vz().divida}. ${vz().Ele} nunca quis o dinheiro.`}),
-      rep:{eixo:'bom',delta:2,motivo:'Voltou anos depois para pagar uma dívida de criança', rep:{notorio:true}},
+      rep:{eixo:'bom',delta:2,motivo:'Voltou anos depois para pagar uma dívida de criança', notorio:true},
       registrar:d=>`Voltou para pagar ${vz().divida}. ${vz().Ele} não aceitou o dinheiro.`},
   escolhas:[
     {texto:'Insistir. Deixar o dinheiro mesmo assim.', vai:'c21_insistiu_ushio', cond:d=>d.jogador.dinheiro>=2000},
@@ -97006,7 +97006,7 @@ c21_varreu_a_calcada:{
   ],
   ef:{moral:6, flag:'varreu_a_calcada_do_ushio',
       npc:d=>({nome:vz().nome, opiniao:6, memoria:`Você fez o serviço ${vz().dele} e ${vz().ele} pediu pra terça que vem.`}),
-      rep:{eixo:'bom',delta:3,motivo:'Fez o serviço de gente velha da rua com as insígnias no bolso', rep:{notorio:true}},
+      rep:{eixo:'bom',delta:3,motivo:'Fez o serviço de gente velha da rua com as insígnias no bolso', notorio:true},
       registrar:d=>`Fez o serviço ${vz().do} ${vz().nome}. ${vz().Ele} pediu pra terça que vem.`},
   escolhas:[
     {texto:'"Eu estou." Prometer a terça.', vai:'c21_prometeu_a_terca',
@@ -97599,7 +97599,7 @@ c22_pagou_do_bolso:{
     'Sai de lá mais pobre e completamente {seu|sua}.'
   ],
   ef:{dinheiro:-2000, flag:'pagou_a_propria_inscricao', moral:4,
-      rep:{eixo:'bom',delta:2,motivo:'Pagou do bolso o que já estava pago, pra não dever a ninguém', rep:{notorio:true}},
+      rep:{eixo:'bom',delta:2,motivo:'Pagou do bolso o que já estava pago, pra não dever a ninguém', notorio:true},
       npc:{nome:'a supervisora', opiniao:3, memoria:'Pagou a própria inscrição num torneio que já estava pago.'},
       registrar:'Pagou a própria inscrição pra não dever nada a quem pagou antes.'},
   escolhas:[{texto:'Entrar na arena.', vai:'c22_aceitou'}]
@@ -97669,7 +97669,7 @@ c22_aceitou:{
     fala('o locutor da arena', 'CHAVE QUATRO NA FINAL!', 'grita', 'A torre de som chia na palavra FINAL e a arquibancada acha graça.')
   ],
   ef:{flag:'chegou_na_final_do_aberto', moral:5,
-      rep:{eixo:'bom',delta:2,motivo:'Chegou à final do torneio aberto do Planalto', rep:{notorio:true}},
+      rep:{eixo:'bom',delta:2,motivo:'Chegou à final do torneio aberto do Planalto', notorio:true},
       registrar:'Chegou à final do torneio aberto.',
       executar:d=>{ Relogio.avancar(5); }},
   escolhas:[
@@ -97753,7 +97753,7 @@ c22_venceu_a_final:{
   ef:{dinheiro:18000, flag:'venceu_o_aberto', moral:6,
       itens:{'Taça com o ano errado':1},
       npc:{nome:'Nadia Arden', opiniao:5, memoria:'Perdeu a final do aberto pra você e pediu o seu número.'},
-      rep:{eixo:'bom',delta:3,motivo:'Venceu o torneio aberto do Planalto', rep:{notorio:true, peso:2}},
+      rep:{eixo:'bom',delta:3,motivo:'Venceu o torneio aberto do Planalto', notorio:true, peso:2},
       registrar:'Venceu o torneio aberto do Planalto Indigo.'},
   escolhas:[
     {texto:'Dar o número e pegar o dela.', vai:'c22_trocou_numero',
@@ -98136,7 +98136,7 @@ c23_leu_em_voz_alta:{
   ],
   ef:{flag:'leu_o_verso_da_segunda_pagina', moral:-3,
       npc:{nome:'Blue', opiniao:3, memoria:'Ouviu você ler em voz alta o que o titular anterior escreveu a lápis no verso.'},
-      rep:{eixo:'bom',delta:2,motivo:'Leu em voz alta uma coisa que era mais fácil ler calad{o|a}', rep:{notorio:true}},
+      rep:{eixo:'bom',delta:2,motivo:'Leu em voz alta uma coisa que era mais fácil ler calad{o|a}', notorio:true},
       registrar:'No verso da segunda página: "eu assinei porque eu achei que ia conseguir controlar".'},
   escolhas:[{texto:'Ir pro corredor D.', vai:'c23_procurou_o_proprio_nome'}]
 },
@@ -98260,7 +98260,7 @@ c23_folha_dez:{
   ],
   ef:{flag:'leu_a_folha_dezenove', moral:-4,
       itens:{'Folha 19 — recomendação de convocação':1},
-      rep:{eixo:'bom',delta:2,motivo:'Leu a pasta que fizeram sobre você até a última folha', rep:{notorio:true}},
+      rep:{eixo:'bom',delta:2,motivo:'Leu a pasta que fizeram sobre você até a última folha', notorio:true},
       registrar:'Folha 19: "convocar. Já sabe demais para ser ignorado e ainda pouco para ser perigoso."'},
   escolhas:[
     {texto:'Levar a pasta inteira.', vai:'c23_levou_a_pasta'},
@@ -98304,7 +98304,7 @@ c23_a_pasta_de_tres_letras:{
   ],
   ef:{flag:'sabe_onde_o_red_esta', moral:-2,
       npc:{nome:'Blue', opiniao:4, memoria:'Descobriu com você que o Red está acima da Rota 10. Ele já tinha subido duas vezes.'},
-      rep:{eixo:'bom',delta:2,motivo:'Abriu a pasta que ninguém abriu', rep:{notorio:true}},
+      rep:{eixo:'bom',delta:2,motivo:'Abriu a pasta que ninguém abriu', notorio:true},
       registrar:'A pasta RED: última localização acima da Rota 10. "Ele não está perdido."'},
   escolhas:[
     {texto:'"Então a gente sobe uma terceira vez."', vai:'c23_terceira_vez'},
@@ -98325,7 +98325,7 @@ c23_terceira_vez:{
   ],
   ef:{flag:'combinou_de_subir_com_blue', moral:6,
       npc:{nome:'Blue', opiniao:6, memoria:'Combinou de subir a montanha com você depois da convocação.'},
-      rep:{eixo:'bom',delta:3,motivo:'Se ofereceu para subir uma montanha por uma busca que não era sua', rep:{notorio:true}},
+      rep:{eixo:'bom',delta:3,motivo:'Se ofereceu para subir uma montanha por uma busca que não era sua', notorio:true},
       registrar:'Combinou com Blue de subir acima da Rota 10 depois da convocação.'},
   escolhas:[{texto:'Descer a escada.', vai:'c23_desceu'}]
 },
@@ -98804,7 +98804,7 @@ c24_exigiu_o_visor:{
   ef:{flag:'viu_o_visor', moral:-2,
       itens:{'Anotação: ACOMP. ATIVO — 704 — NÍVEL 2':1},
       npc:{nome:'o guarda da terceira', opiniao:2, memoria:'Virou o visor dez graus pra você ver. Tem filho.'},
-      rep:{eixo:'bom',delta:2,motivo:'Insistiu até ver o que estava escrito sobre você', rep:{notorio:true}},
+      rep:{eixo:'bom',delta:2,motivo:'Insistiu até ver o que estava escrito sobre você', notorio:true},
       registrar:'ACOMP. ATIVO — ORIGEM 704 — NÍVEL 2 — REVISÃO TRIMESTRAL.'},
   escolhas:[
     {texto:'Agradecer sem chamar atenção e seguir.', vai:'c24_a_quinta'},
@@ -98896,7 +98896,7 @@ c24_bateu_no_vidro:{
   ],
   ef:{flag:'bateu_no_vidro_do_carro', moral:3,
       npc:{nome:'a mulher de crachá azul', opiniao:2, memoria:'Você bateu no vidro do carro dela. Ninguém nunca tinha batido.'},
-      rep:{eixo:'bom',delta:3,motivo:'Bateu no vidro do carro que estava te esperando', rep:{notorio:true}},
+      rep:{eixo:'bom',delta:3,motivo:'Bateu no vidro do carro que estava te esperando', notorio:true},
       registrar:'Bateu no vidro do carro preto. Ela disse que ninguém nunca tinha batido.'},
   escolhas:[{texto:'Seguir para a sexta e a sétima.', vai:'c24_chegou_no_planalto'}]
 },
@@ -98925,7 +98925,7 @@ c24_esperou:{
   ],
   ef:{flag:'esperou_o_carro', moral:4, executar:d=>{ Relogio.avancar(1); },
       npc:{nome:'a mulher de crachá azul', opiniao:3, memoria:'Sentou numa pedra e esperou cinquenta e dois minutos até ela abrir o vidro.'},
-      rep:{eixo:'bom',delta:3,motivo:'Sentou numa pedra e ganhou no tempo', rep:{notorio:true}},
+      rep:{eixo:'bom',delta:3,motivo:'Sentou numa pedra e ganhou no tempo', notorio:true},
       registrar:'Esperou cinquenta e dois minutos sentad{o|a} numa pedra até o vidro descer.'},
   escolhas:[{texto:'Subir a estrada.', vai:'c24_chegou_no_planalto'}]
 },
@@ -99282,7 +99282,7 @@ c25_avisou_o_blue:{
   ],
   ef:{flag:'entrou_com_advogada', moral:4,
       npc:{nome:'Blue', opiniao:4, memoria:'Você avisou ele do direito à defesa. Ele ia entrar sozinho.'},
-      rep:{eixo:'bom',delta:3,motivo:'Dividiu um direito que ninguém tinha contado', rep:{notorio:true}},
+      rep:{eixo:'bom',delta:3,motivo:'Dividiu um direito que ninguém tinha contado', notorio:true},
       registrar:'Avisou o Blue do direito à defesa. Os dois entraram com advogada.'},
   escolhas:[{texto:'Entrar na sala.', vai:'c25_com_advogada'}]
 },
@@ -99464,7 +99464,7 @@ c25_decima_segunda:{
   ],
   ef:{flag:'nao_existe_consequencia', moral:-3,
       npc:{nome:'a conselheira da Liga', opiniao:3, memoria:'Largou a caneta na ata ao admitir que não existe consequência nenhuma.'},
-      rep:{eixo:'bom',delta:2,motivo:'Fez a pergunta que fez alguém largar a caneta', rep:{notorio:true}},
+      rep:{eixo:'bom',delta:2,motivo:'Fez a pergunta que fez alguém largar a caneta', notorio:true},
       registrar:'Onze ausências e nenhuma consequência. A conselheira largou a caneta.'},
   escolhas:[
     {texto:'Pôr tudo que você tem em cima da mesa.', vai:'c25_pos_tudo_na_mesa'},
@@ -99567,7 +99567,7 @@ c25_pos_tudo_na_mesa:{
     fala('a mulher de crachá azul', 'Tem três coisas aí que eu não tinha.')
   ],
   ef:{flag:'pos_tudo_na_mesa', moral:5,
-      rep:{eixo:'bom',delta:4,motivo:'Pôs tudo que juntou em cima da mesa comprida', rep:{notorio:true, peso:2}},
+      rep:{eixo:'bom',delta:4,motivo:'Pôs tudo que juntou em cima da mesa comprida', notorio:true, peso:2},
       registrar:'Pôs tudo em cima da mesa. Três coisas eles não tinham.'},
   escolhas:[
     {texto:'Exigir cópia carimbada de tudo antes de sair.', vai:'c25_exigiu_copia'},
@@ -99589,7 +99589,7 @@ c25_exigiu_copia:{
   ],
   ef:{flag:'tem_copia_carimbada', moral:4,
       itens:{'Cópia carimbada de tudo, com protocolo':1},
-      rep:{eixo:'bom',delta:3,motivo:'Esperou uma hora e dez pela cópia carimbada', rep:{notorio:true}},
+      rep:{eixo:'bom',delta:3,motivo:'Esperou uma hora e dez pela cópia carimbada', notorio:true},
       registrar:'Saiu da audiência com cópia carimbada e protocolo de tudo.'},
   escolhas:[{texto:'Perguntar o que eles vão fazer com isso.', vai:'c25_o_que_vao_fazer'}]
 },
@@ -99641,7 +99641,7 @@ c25_exigiu_voto:{
     'E aí ela olha pra você, e é a primeira vez que ela olha pra você nesta sala, e o olhar dura mais do que devia.'
   ],
   ef:{flag:'a_cadeira_de_conselheiro', moral:5,
-      rep:{eixo:'bom',delta:3,motivo:'Exigiu voto numa sala onde ninguém exige nada', rep:{notorio:true}},
+      rep:{eixo:'bom',delta:3,motivo:'Exigiu voto numa sala onde ninguém exige nada', notorio:true},
       npc:{nome:'a conselheira da Liga', opiniao:4, memoria:'Te contou que a cadeira de conselheiro extraordinário é do Campeão de Kanto.'},
       registrar:'A cadeira de conselheiro extraordinário da Liga é do Campeão, e está vaga há dois anos.'},
   escolhas:[
@@ -99690,7 +99690,7 @@ c25_empurrou_de_volta:{
     fala('a mulher de crachá azul', 'Então tá. Pergunta você. Pergunta você o que você quiser, e eu respondo, e aí a gente vê.')
   ],
   ef:{flag:'inverteu_a_mesa', moral:4,
-      rep:{eixo:'bom',delta:3,motivo:'Devolveu o papel sem ler e virou a mesa', rep:{notorio:true}},
+      rep:{eixo:'bom',delta:3,motivo:'Devolveu o papel sem ler e virou a mesa', notorio:true},
       registrar:'Empurrou a folha de volta sem ler. Ela ofereceu responder o que você perguntasse.'},
   escolhas:[
     {texto:'Perguntar de quem é a cadeira vazia.', vai:'c25_a_cadeira_vazia'},
@@ -121889,15 +121889,16 @@ const UI = {
       <div class="linha"><span class="k">Resistência</span><span class="v">HP máximo · aguentar o golpe que sobra pra você · dormir no chão</span></div>
       <h3>Reputação</h3>
       <div class="linha"><span class="k">Como sobe</span><span class="v">por pontos, não por ato</span></div>
-      <div class="linha"><span class="k">Ato pequeno</span><span class="v">1 ponto — precisa de oito para o primeiro degrau</span></div>
+      <div class="linha"><span class="k">Tamanho do ato</span><span class="v">o pequeno vale 1 ponto, e o maior cresce rápido: 3, 6, 10, 15 · o primeiro degrau pede ${LIMIARES_REP[1]} pontos, o segundo ${LIMIARES_REP[2]}, o terceiro ${LIMIARES_REP[3]}</span></div>
       <div class="linha"><span class="k">Diante de quem manda</span><span class="v">vale o dobro</span></div>
       <div class="linha"><span class="k">Ginásio, Liga, conselho</span><span class="v">vale muito mais e não tem teto</span></div>
+      <div class="linha"><span class="k">O que vira notícia</span><span class="v">doação, depoimento, coisa feita na frente da cidade inteira · vale uma vez e meia e também não tem teto</span></div>
       <div class="linha"><span class="k">Teto por capítulo</span><span class="v">o que passa dele conta por 15%</span></div>
       <div class="linha"><span class="k">O mesmo feito</span><span class="v">conta uma vez por capítulo</span></div>
       <div class="linha"><span class="k">Quem muda de opinião</span><span class="v">escolha que muda em 2 ou mais a opinião de alguém conta 1 ponto mesmo sem ser notícia: gente comum que sai melhor conta pro lado bom, a que sai pior pro ruim · com gente do crime é o contrário · quem trabalha pra Comissão ou fica no meio não entra · uma vez por pessoa e por lado em cada capítulo</span></div>
       <div class="linha"><span class="k">Líder que recusa</span><span class="v">Misty volta a aceitar o desafio com reputação Boa 4, Erika com Boa 5, Sabrina com Boa 6</span></div>
       <div class="linha"><span class="k">Saffron</span><span class="v">com menos de 3 insígnias, Sabrina recebe quem aparecer · da terceira em diante, a Silph é tomada e o ginásio fecha até a Silph (capítulo 11) se resolver</span></div>
-      <p class="sussurro">Consertar a calha da vizinha é uma coisa boa e não é notícia. Reputação é o que Kanto conta sobre você, então só muda de degrau o que foi grande o bastante para ser contado — ou o que aconteceu na frente de quem conta. Cada capítulo tem um teto: fazer tudo o que dá num capítulo rende mais que fazer metade, mas não rende o dobro, porque Kanto só fala de você na medida em que te viu. Ginásio e Liga passam por cima do teto — isso é notícia em qualquer altura. Os dois eixos se pagam: enquanto você deve de um lado, o que você faz do outro serve primeiro para quitar.</p>
+      <p class="sussurro">Consertar a calha da vizinha é uma coisa boa e não é notícia. Reputação é o que Kanto conta sobre você, então só muda de degrau o que foi grande o bastante para ser contado — ou o que aconteceu na frente de quem conta. Cada capítulo tem um teto: fazer tudo o que dá num capítulo rende mais que fazer metade, mas não rende o dobro, porque Kanto só fala de você na medida em que te viu. Ginásio, Liga e o que a cidade inteira viu passam por cima do teto — isso é notícia em qualquer altura. Os dois eixos se pagam: enquanto você deve de um lado, o que você faz do outro serve primeiro para quitar.</p>
 
       <h3>O que você sabe</h3>
       <div class="linha"><span class="k">Espécie não catalogada</span><span class="v">aparece como ???</span></div>

@@ -248,7 +248,7 @@ c21_quem_pregou:{
   ],
   ef:{moral:6,
       npc:{nome:'Sra. Perla', opiniao:4, memoria:'Imprimiu vinte cartazes com a sua cara e pregou na rua inteira.'},
-      rep:{eixo:'bom',delta:2,motivo:'A vizinha imprimiu vinte cartazes com a sua cara', rep:{notorio:true}},
+      rep:{eixo:'bom',delta:2,motivo:'A vizinha imprimiu vinte cartazes com a sua cara', notorio:true},
       registrar:'A Sra. Perla imprimiu vinte cartazes e pregou na rua inteira.'},
   escolhas:[
     {texto:'Devolver a caixa, que veio a estrada inteira na mochila.', vai:'c21_devolveu_a_caixa',
@@ -374,7 +374,7 @@ c21_pagou_a_janela:{
   ],
   ef:{limpaFlag:'divida_pendente', moral:5,
       npc:d=>({nome:vz().nome, opiniao:5, memoria:`Você voltou pra pagar ${vz().divida}. ${vz().Ele} nunca quis o dinheiro.`}),
-      rep:{eixo:'bom',delta:2,motivo:'Voltou anos depois para pagar uma dívida de criança', rep:{notorio:true}},
+      rep:{eixo:'bom',delta:2,motivo:'Voltou anos depois para pagar uma dívida de criança', notorio:true},
       registrar:d=>`Voltou para pagar ${vz().divida}. ${vz().Ele} não aceitou o dinheiro.`},
   escolhas:[
     {texto:'Insistir. Deixar o dinheiro mesmo assim.', vai:'c21_insistiu_ushio', cond:d=>d.jogador.dinheiro>=2000},
@@ -424,7 +424,7 @@ c21_varreu_a_calcada:{
   ],
   ef:{moral:6, flag:'varreu_a_calcada_do_ushio',
       npc:d=>({nome:vz().nome, opiniao:6, memoria:`Você fez o serviço ${vz().dele} e ${vz().ele} pediu pra terça que vem.`}),
-      rep:{eixo:'bom',delta:3,motivo:'Fez o serviço de gente velha da rua com as insígnias no bolso', rep:{notorio:true}},
+      rep:{eixo:'bom',delta:3,motivo:'Fez o serviço de gente velha da rua com as insígnias no bolso', notorio:true},
       registrar:d=>`Fez o serviço ${vz().do} ${vz().nome}. ${vz().Ele} pediu pra terça que vem.`},
   escolhas:[
     {texto:'"Eu estou." Prometer a terça.', vai:'c21_prometeu_a_terca',
