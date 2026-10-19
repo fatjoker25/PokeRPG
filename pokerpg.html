@@ -111630,8 +111630,8 @@ cn1_a_perua:{
   texto:[
     'A perua da Associação de Criadores está encostada na cerca, com a porta de trás aberta e três caixas de transporte vazias forradas com toalha.',
     d => { Nomes.apresentar('a tratadora da Associação'); return 'Sentada no para-choque, de macacão manchado de ração até o cotovelo, uma moça de cabelo preso com caneta. No bolso do macacão, bordado: MINA BRAY — ABRIGO.'; },
-    fala('a tratadora da Associação', 'Três filhotes de Nidoran do lado de fora da cerca, sozinhos, faz dois dias. A mãe saiu no manejo de terça.'),
-    fala('a tratadora da Associação', 'A Associação não pode receber Pokémon de reserva sem papel da reserva. E a reserva diz que nenhum Nidoran saiu de lá terça.', 'baixo')
+    d => fala('a tratadora da Associação', `Três filhotes de Nidoran do lado de fora da cerca, sozinhos, faz dois dias. A mãe saiu no manejo de ${Calendario.de(d.relogio.dia - 2).semana}.`),
+    d => fala('a tratadora da Associação', `A Associação não pode receber Pokémon de reserva sem papel da reserva. E a reserva diz que nenhum Nidoran saiu de lá ${Calendario.de(d.relogio.dia - 2).semana}.`, 'baixo')
   ],
   ef:{flag:'cm_criacao_1', registrar:'Três filhotes de Nidoran ficaram órfãos do lado de fora da cerca da reserva depois do manejo.'},
   escolhas:[
@@ -111642,6 +111642,7 @@ cn1_a_perua:{
 },
 
 cn1_a_linden:{
+  ef:{flag:'cm_criacao_ligou_linden'},
   texto:[
     d => { Nomes.apresentar('a avaliadora da Associação'); return 'A Sra. Linden atende com barulho de cerca de criação atrás. Ela ouve a história inteira sem interromper.'; },
     fala('a avaliadora da Associação', 'O regulamento diz: sem papel, não entra no abrigo. Eu escrevi esse regulamento. Pra impedir gente de despejar ninhada lá.'),
@@ -111657,7 +111658,7 @@ cn1_os_filhotes:{
   texto:[
     'Os filhotes estão num buraco de Diglett abandonado, debaixo da cerca, do lado de fora. Três, encolhidos um no outro, com o chifrinho ainda mole.',
     'Do outro lado da estrada, um homem de chapéu de palha e saco de juta está agachado, olhando o mesmo buraco.',
-    fala('Caçador de filhote', 'Cheguei primeiro, criador. Filhote de reserva dá trezentos cada na feira de Celadon.'),
+    fala('Caçador de filhote', 'Cheguei primeiro, {criador|criadora}. Filhote de reserva dá trezentos cada na feira de Celadon.'),
     fala('Caçador de filhote', 'Sem mãe, sem papel, sem dono. É de quem pegar.')
   ],
   escolhas:[
@@ -111728,7 +111729,9 @@ cn1_ficou_com_um:{
 cn1_abrigo:{
   texto:[
     'O abrigo da Associação, em Cerulean, tem quarenta baias e uma lista na parede com o nome de cada Pokémon que passou ali.',
-    'A Mina escreve os nomes à caneta, na hora: Tuca, Lume, e o terceiro, se tiver, Dois.',
+    d => d.flags.cm_criacao_levou_um
+      ? 'A Mina escreve os nomes à caneta, na hora: Tuca e Lume. Na linha de baixo ela começa um terceiro nome, e risca.'
+      : 'A Mina escreve os nomes à caneta, na hora: Tuca, Lume e Dois.',
     fala('a tratadora da Associação', 'Sem nome ninguém adota. Com nome, é alguém.', 'baixo')
   ],
   ef:{npc:{nome:'Mina Bray', opiniao:4, memoria:'Você assinou pelos filhotes órfãos e ela deu nome aos três.'}},
@@ -111752,7 +111755,10 @@ cn1_devolveu:{
 cn1_fim:{
   texto:[
     'A perua da Associação vai embora com o pisca-alerta ainda ligado, porque a Mina esquece de desligar.',
-    fala('a avaliadora da Associação', 'Eu vou mudar o regulamento. Vai levar um ano. Escreve o que aconteceu hoje, que eu preciso do caso.', 'baixo'),
+    d => d.flags.cm_criacao_ligou_linden ? 'O PokéNav apita. É a Sra. Linden, de novo.' : '',
+    d => d.flags.cm_criacao_ligou_linden
+      ? fala('a avaliadora da Associação', 'Eu vou mudar o regulamento. Vai levar um ano. Escreve o que aconteceu hoje, que eu preciso do caso.', 'baixo')
+      : fala('a tratadora da Associação', 'Eu vou contar pra Sra. Linden. Ela escreveu o regulamento; ela que reescreva. Escreve o que aconteceu hoje, que ela vai precisar do caso.', 'baixo'),
     'Na cerca, o buraco debaixo da tela continua lá. Buraco de cerca é a única coisa que a reserva não maneja.'
   ],
   fim:true, resumo:'Os órfãos do manejo: um buraco debaixo da cerca, um caçador com saco de juta e um regulamento que vai mudar.'
@@ -111777,7 +111783,8 @@ cn2_o_envelope:{
     d => d.flags.ln_criacao_selo ? 'Você tem o selo regional. O carimbo de metal pesado está no bolso de dentro da mochila. É por isso que te escolheram.' : 'Você não tem o selo regional. Mesmo assim, te escolheram. Alguém achou que você assinaria mais fácil do que a Sra. Linden.',
     'Distribuição a treinadores iniciantes. O primeiro Pokémon de uma criança.'
   ],
-  ef:{flag:'cm_criacao_2', registrar:'A Comissão pediu seu laudo pra distribuir unidades de viveiro como primeiro Pokémon de treinador iniciante.'},
+  ef:{flag:'cm_criacao_2', registrar:'A Comissão pediu seu laudo pra distribuir unidades de viveiro como primeiro Pokémon de treinador iniciante.',
+      executar:() => { caminhoEntre(8, 13, 9); }},
   escolhas:[
     {texto:'Entrar e avaliar as unidades com honestidade.', vai:'cn2_o_bercario'},
     {texto:'Ligar pra Sra. Linden antes.', vai:'cn2_a_linden'}
@@ -111799,7 +111806,7 @@ cn2_o_bercario:{
   texto:[
     'O berçário da Estação 4 é limpo como hospital e quieto como hospital.',
     'O lote 12 tem vinte unidades jovens: Eevee, Pidgey, Rattata. Pelagem perfeita, peso perfeito, olho limpo.',
-    'Você faz o que a Sra. Linden te ensinou: se agacha e espera eles se aproximarem.',
+    'Você faz o que todo criador faz primeiro: se agacha e espera eles se aproximarem.',
     'Eles não se aproximam. Eles também não se afastam. Eles ficam olhando pro técnico na porta, esperando ordem.'
   ],
   escolhas:[
@@ -111812,10 +111819,10 @@ cn2_o_bercario:{
 cn2_a_tarde:{
   texto:[
     'Quatro horas. Nenhuma unidade brinca. Nenhuma disputa comida. Nenhuma dorme encostada em outra.',
-    'Às três da tarde, um Pidgey da baia oito cai da poleira e fica no chão. Os outros não olham.',
+    'Às três da tarde, um Pidgey da baia oito cai do poleiro e fica no chão. Os outros não olham.',
     'Você anota tudo, com hora, do jeito que se anota uma criação.'
   ],
-  ef:{flag:'cm_criacao_observou', itens:{'Notas do berçário (lote 12)':1}},
+  ef:{flag:'cm_criacao_observou', itens:{'Notas do berçário (lote 12)':1}, executar:() => { caminhoAs(17); }},
   escolhas:[
     {texto:'Pedir pra ver uma unidade lutar.', vai:'cn2_a_demonstracao'},
     {texto:'Escrever o laudo.', vai:'cn2_o_laudo'}
@@ -111824,17 +111831,29 @@ cn2_a_tarde:{
 
 cn2_a_demonstracao:{
   texto:[
-    'O técnico chama o colega do galpão do lado, que traz as unidades de demonstração dele.',
+    'O técnico vai até o galpão do lado e volta com as unidades de demonstração.',
     fala('Técnico do berçário', 'Pra atestar aptidão, você luta com elas. Elas obedecem perfeitamente. É o ponto de venda.')
   ],
   batalha:{comissao:'tecnico', nivel:d => nivelDoCaminho(d, -2), tipo:'treinador', treinador:'Técnico do berçário', fuga:true,
-           vitoria:'cn2_viu_lutar', derrota:'cn2_viu_lutar', gameover:'gameover'}
+           vitoria:'cn2_viu_lutar', derrota:'cn2_viu_mandar', gameover:'gameover'}
 },
 
 cn2_viu_lutar:{
   texto:[
     'Elas lutam bem. Obedecem na hora. Nenhuma hesita.',
     'E quando caem, nenhuma tenta levantar. Elas ficam deitadas, esperando ordem pra levantar, como se cair fosse uma ordem também.',
+    'Um Pokémon de criança precisa levantar sozinho às vezes. Às vezes a criança não está lá pra mandar.'
+  ],
+  ef:{flag:'cm_criacao_viu_lutar', registrar:'As unidades de viveiro não tentam levantar sozinhas. Esperam ordem até pra isso.'},
+  escolhas:[
+    {texto:'Escrever o laudo.', vai:'cn2_o_laudo'}
+  ]
+},
+
+cn2_viu_mandar:{
+  texto:[
+    'Elas lutam bem. Obedecem na hora. Nenhuma hesita, e o seu último cai antes de qualquer uma delas.',
+    'Pra recolher, o técnico manda as unidades deitarem, e elas deitam. Ele atende o telefone e esquece de mandar levantar. Elas ficam.',
     'Um Pokémon de criança precisa levantar sozinho às vezes. Às vezes a criança não está lá pra mandar.'
   ],
   ef:{flag:'cm_criacao_viu_lutar', registrar:'As unidades de viveiro não tentam levantar sozinhas. Esperam ordem até pra isso.'},
@@ -111862,9 +111881,9 @@ cn2_o_laudo:{
 
 cn2_assinou:{
   texto:[
-    'Você assina. O carimbo faz o barulho de sempre.',
+    d => d.flags.ln_criacao_selo ? 'Você assina. O carimbo faz o barulho de sempre.' : 'Você assina. Sem selo, a sua assinatura é só a sua letra, e pra eles basta.',
     'O técnico guarda o laudo numa pasta e te dá o envelope, com um aperto de mão seco.',
-    'Na baia oito, o Pidgey que caiu da poleira continua no chão.'
+    d => d.flags.cm_criacao_observou ? 'Na baia oito, o Pidgey que caiu do poleiro continua no chão.' : 'Na baia oito, um Pidgey está no chão, embaixo do poleiro, e os outros não olham.'
   ],
   ef:{npc:{nome:'Sra. Linden', opiniao:-4, memoria:'Você assinou o laudo das unidades como aptas pra criança.'}},
   escolhas:[
@@ -111902,7 +111921,7 @@ cn2_fim:{
     d => d.flags.cm_criacao_assinou ? 'Em dois meses, a primeira criança de Kanto recebe um Eevee de lote como primeiro Pokémon, com laudo assinado. O seu.' : d.flags.cm_criacao_ressalva ? 'O laudo com a ressalva vai pra um arquivo da Comissão e trava a distribuição do lote 12 por quatro meses.' : 'O lote 12 é avaliado por outro criador, que assina sem observação.',
     'Na estrada, a sua mão ainda tem o cheiro do berçário: limpo como hospital.'
   ],
-  fim:true, resumo:'O laudo: vinte unidades perfeitas, uma poleira e quatro linhas de observação.'
+  fim:true, resumo:d => `O laudo: vinte unidades perfeitas, ${d.flags.cm_criacao_observou ? 'um poleiro' : 'uma demonstração'} e quatro linhas de observação.`
 }
 
 }
@@ -111912,7 +111931,7 @@ cn2_fim:{
 {
 num:25.05, titulo:'O Selo', local:'Cerulean — a Associação de Criadores', ambiente:'agua', nivelArea:58,
 tom:'muito sombrio',
-ancora:{local:'cerulean', chamada:'Na Associação de Criadores de Cerulean tem assembleia hoje, e a pauta colada na porta tem o seu nome no item três.'},
+ancora:{local:'cerulean', chamada:'Na Associação de Criadores de Cerulean tem assembleia hoje, e a pauta colada na porta tem três itens.'},
 entradas:['cn3_a_assembleia'],
 inicio: d => 'cn3_a_assembleia',
 cenas:{
@@ -111920,9 +111939,11 @@ cenas:{
 cn3_a_assembleia:{
   texto:[
     'A assembleia da Associação acontece no galpão do abrigo, com cadeira de plástico e criador de bota de borracha.',
-    'Item um: preço da ração. Item dois: o regulamento novo de órfão. Item três: o laudo do lote 12.',
+    d => d.flags.cm_criacao_2 ? 'Item um: preço da ração. Item dois: o regulamento novo de órfão. Item três: o laudo do lote 12, com o seu nome do lado.' : 'Item um: preço da ração. Item dois: o regulamento novo de órfão. Item três: unidade de viveiro.',
     fala('a avaliadora da Associação', 'Depois da audiência de segunda, a Comissão vai pedir à Associação que reconheça unidade de viveiro como criação legítima. Se a gente reconhecer, todo criador de Kanto vira fornecedor deles.'),
-    d => d.flags.cm_criacao_assinou ? 'Na terceira fila, alguém olha pra você e fala baixinho com quem está do lado.' : 'Na terceira fila, a Mina Bray, de macacão, acena pra você com a caneta do cabelo.'
+    d => d.flags.cm_criacao_assinou ? 'Na terceira fila, alguém olha pra você e fala baixinho com quem está do lado.'
+      : Nomes.sabe('a tratadora da Associação') ? 'Na terceira fila, a Mina Bray, de macacão, acena pra você com a caneta do cabelo.'
+      : 'Na terceira fila, uma moça de macacão, com uma caneta prendendo o cabelo, olha pra você como quem já ouviu falar.'
   ],
   ef:{flag:'cm_criacao_3', registrar:'A Associação de Criadores vota se reconhece unidade de viveiro como criação legítima.'},
   escolhas:[
@@ -111934,7 +111955,10 @@ cn3_a_assembleia:{
 cn3_a_palavra:{
   texto:[
     'Você fala do que viu. Não do que acha: do que viu.',
-    d => d.flags.cm_criacao_viu_lutar ? 'Das unidades que caem e esperam ordem pra levantar.' : d.flags.cm_criacao_observou ? 'Do Pidgey da baia oito, que caiu da poleira e ninguém olhou.' : 'Dos filhotes órfãos debaixo da cerca e do caçador com saco de juta.',
+    d => d.flags.cm_criacao_viu_lutar ? 'Das unidades que caem e esperam ordem pra levantar.'
+      : d.flags.cm_criacao_observou ? 'Do Pidgey da baia oito, que caiu do poleiro e ninguém olhou.'
+      : d.flags.cm_criacao_1 ? 'Dos filhotes órfãos debaixo da cerca e do caçador com saco de juta.'
+      : 'Do que todo criador ali já viu: Pokémon que não se aproxima de ninguém e não foge de ninguém.',
     d => d.flags.cm_criacao_assinou ? 'E fala do laudo que você assinou. Na frente de todo mundo. Sem desculpa.' : '',
     'O galpão fica em silêncio. Um criador velho, de bota, tira o chapéu.'
   ],
@@ -111990,17 +112014,20 @@ cn3_ficou:{
 
 cn3_a_decisao:{
   texto:[
-    'Depois da assembleia, no estacionamento, a Sra. Linden e a Mina te esperam do lado da perua.',
+    d => d.flags.cm_criacao_mina_nova
+      ? 'Depois da assembleia, no estacionamento, a Sra. Linden te espera do lado da perua, com a moça de macacão. No bolso do macacão, bordado: MINA BRAY — ABRIGO.'
+      : 'Depois da assembleia, no estacionamento, a Sra. Linden e a Mina te esperam do lado da perua.',
     fala('a avaliadora da Associação', 'A Associação disse não hoje. Daqui a um ano, com outro presidente, pode dizer sim.'),
     fala('a tratadora da Associação', 'Tem um terreno em Cerulean, depois da segunda ponte, que ninguém quer. Dá um criadouro aberto. Sem cerca de três metros. Pra quem sai de lote, de manejo, de buraco.', 'baixo'),
     d => d.flags.cm_criacao_assinou ? fala('a avaliadora da Associação', 'E tem o seu laudo. Ele ainda vale. Você decide se continua valendo.', 'frio') : ''
   ],
+  ef:{executar:d => { if (!Nomes.sabe('a tratadora da Associação')) d.flags.cm_criacao_mina_nova = true; Nomes.apresentar('a tratadora da Associação'); }},
   escolhas:[
     {texto:'Fazer o criadouro aberto com elas.', vai:'cn3_final_criadouro', cond:d => !d.flags.cm_criacao_assinou,
      ef:{rep:{eixo:'bom', delta:3, motivo:'Fundou o criadouro aberto com a Associação'}}},
     {texto:'Ficar do lado de quem paga laudo. A Comissão tem mais futuro que a Associação.', vai:'cn3_final_laudo',
      ef:{rep:{eixo:'ruim', delta:4, motivo:'Virou certificador da Comissão'}}},
-    {texto:'Largar a Associação e o selo, e soltar no mato quem não tem pra onde ir.', vai:'cn3_final_mato',
+    {texto:d => d.flags.ln_criacao_selo ? 'Largar a Associação e o selo, e soltar no mato quem não tem pra onde ir.' : 'Largar a Associação e soltar no mato quem não tem pra onde ir.', vai:'cn3_final_mato',
      ef:{rep:{eixo:'bom', delta:1, motivo:'Largou a Associação e soltou quem não tinha pra onde ir'}}},
     {texto:'Retirar o seu laudo em público e fazer o criadouro com elas.', vai:'cn3_final_criadouro', cond:d => !!d.flags.cm_criacao_assinou,
      ef:{rep:{eixo:'bom', delta:3, motivo:'Retirou o laudo em público e fundou o criadouro aberto'}}},
@@ -112014,7 +112041,7 @@ cn3_seguir:{
     fala('a tratadora da Associação', 'Vai. O terreno não vai a lugar nenhum. Ninguém quer ele.', 'riso'),
     'O ônibus da Liga pro Planalto sai às oito e quinze. Você ainda tem cheiro de ração no casaco.'
   ],
-  ef:{flag:'cm_criacao_seguiu_planalto'},
+  ef:{flag:'cm_criacao_seguiu_planalto', executar:() => { caminhoAs(8); }},
   fim:true, resumo:'O selo: uma assembleia de cadeira de plástico, um voto de mão levantada e um terreno que ninguém quer.'
 },
 
@@ -112026,15 +112053,15 @@ cn3_final_criadouro:{
   final:{id:'criacao_criadouro', titulo:'O CRIADOURO ABERTO', texto:[
     'Em um ano, o criadouro tem duzentos Pokémon e nenhuma cerca de três metros. Tem órfão de manejo, tem unidade de lote que alguém soltou na estrada, tem Pokémon velho de treinador velho.',
     'A Mina escreve o nome de cada um na parede, à caneta. A parede acaba e ela começa na outra.',
-    'As unidades de viveiro aprendem a levantar sozinhas. Levam meses. Um Eevee do lote 12 levanta pela primeira vez numa terça de chuva, e a Mina chora tanto que a Sra. Linden tem que segurar a prancheta.',
+    d => `As unidades de viveiro aprendem a levantar sozinhas. Levam meses. Um Eevee ${d.flags.cm_criacao_2 ? 'do lote 12' : 'de lote'} levanta pela primeira vez numa terça de chuva, e a Mina chora tanto que a Sra. Linden tem que segurar a prancheta.`,
     'Criança de Cerulean vem buscar primeiro Pokémon no criadouro. Leva o que escolhe ela, não o que você escolhe.'
   ]}
 },
 
 cn3_final_laudo:{
   texto:[
-    'O seu carimbo passa a assinar quarenta laudos por mês. A Comissão paga em dia, com nota.',
-    'A Sra. Linden te expulsa da Associação numa assembleia que você não vai.'
+    d => d.flags.ln_criacao_selo ? 'O seu carimbo passa a assinar quarenta laudos por mês. A Comissão paga em dia, com nota.' : 'A sua assinatura passa a valer quarenta laudos por mês. A Comissão arranja o carimbo e paga em dia, com nota.',
+    'A Sra. Linden te expulsa da Associação numa assembleia em que você não aparece.'
   ],
   final:{id:'criacao_laudo', titulo:'O LAUDO ASSINADO', texto:[
     'Em dois anos, um em cada três treinadores iniciantes de Kanto começa a jornada com uma unidade de lote, e o laudo de cada uma tem a sua assinatura.',
@@ -112046,7 +112073,7 @@ cn3_final_laudo:{
 
 cn3_final_mato:{
   texto:[
-    'O selo regional vai pro fundo do rio de Cerulean, de cima da segunda ponte, num arco bonito.',
+    d => d.flags.ln_criacao_selo ? 'O selo regional vai pro fundo do rio de Cerulean, de cima da segunda ponte, num arco bonito.' : 'A carteirinha da Associação vai pro rio de Cerulean, de cima da segunda ponte, e demora pra afundar.',
     'Você passa um mês levando de perua, de rota em rota, quem não tinha pra onde ir, e abrindo a porta onde tem mato e não tem cerca.'
   ],
   final:{id:'criacao_mato', titulo:'DE VOLTA AO MATO', texto:[
