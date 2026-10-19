@@ -5316,7 +5316,7 @@ const UI = {
       <div class="linha"><span class="k">Perder</span><span class="v">não custa dinheiro · ele continua lá</span></div>
       <div class="linha"><span class="k">Lutar de novo no lugar</span><span class="v">depois da primeira vitória, só pelo gosto: não paga dinheiro · a revanche que paga é a do PokéNav</span></div>
       <div class="linha"><span class="k">Depois de vencer</span><span class="v">dá o número do PokéNav · revanche com time de 6 e +2 níveis · três dias depois ele pode ligar com um convite</span></div>
-      <div class="linha"><span class="k">Convite</span><span class="v">aceito na chamada, vira um lugar pra ir no mapa · uma luta, um treino ou outra coisa · perdendo a luta, o convite continua de pé</span></div>
+      <div class="linha"><span class="k">Convite</span><span class="v">aceito na chamada, vira um lugar pra ir no mapa · quem marcou dia e hora te espera nela, e ir até o convite leva o relógio até lá · uma luta, um treino ou outra coisa · perdendo a luta, o convite continua de pé</span></div>
       <div class="linha"><span class="k">Torneio Aberto</span><span class="v">veterano que você venceu pode cair no seu chaveamento, com 3 Pokémon</span></div>
 
       <h3>Conferência do Planalto Indigo</h3>

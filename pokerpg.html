@@ -29559,7 +29559,9 @@ const CONTATOS = [
     rotulo:'Contar como ele está',
     esperaCap:3,
     texto:d=>{
-      const p = (d.time || []).find(x => x.dex === d.jogador.inicialDex) || d.time[0];
+      /* "o Pokémon" é o que ele entregou: o inicial, vivo, no time ou no PC */
+      const j = d.jogador || {};
+      const p = (j.inicialUid || j.inicialDex) ? inicialDoJogador(d) : (d.time || [])[0];
       if (!p) return [
         fala('Célio', 'E o Pokémon?'),
         'Você demora pra responder e a demora responde por você.',
@@ -29568,7 +29570,7 @@ const CONTATOS = [
       ];
       return [
         fala('Célio', 'E o Pokémon?'),
-        d=>`Você conta: ${nomeExib(p)}, nível ${p.nivel}, e conta uma coisa específica que ele faz e que ninguém pediu pra ele fazer.`,
+        d=>`Você conta: ${nomeExib(p)}, nível ${p.nivel}, e conta uma coisa específica que ${pron(p).ele} faz e que ninguém pediu pra ${pron(p).ele} fazer.`,
         fala('Célio', 'Eu anotei numa caderneta que eu tenho aqui, e não é a de trabalho.'),
         fala('Célio', 'Essa é a minha. Eu anoto o que volta.', 'baixo')
       ];
@@ -29687,7 +29689,9 @@ const CONTATOS = [
     entregue:[
       fala('Brock', 'Fala o nome e o nível.'),
       'Você fala. Do outro lado dá pra ouvir ele largando alguma coisa pesada em cima de uma bancada.',
-      fala('Brock', 'Vinte e cinco. E tá com você desde quando?'),
+      d=>{ const p = (d.time||[]).filter(p => !p.morto && (p.tipos||[]).some(t => t==='Pedra' || t==='Terrestre') && p.nivel >= 25)
+             .sort((a, b) => b.nivel - a.nivel)[0];
+           return fala('Brock', p ? `Nível ${p.nivel}. E tá com você desde quando?` : 'E tá com você desde quando?'); },
       'Você responde. Ele não comenta.',
       fala('Brock', 'Eu criei nove irmãos. Você aprende a ver quando uma coisa foi feita com tempo ou comprada pronta.', 'baixo'),
       fala('Brock', 'Essa foi feita com tempo. Tá anotado aqui do meu lado.')
@@ -29739,7 +29743,10 @@ const CONTATOS = [
     rotulo:'Contar quantas você tem agora',
     texto:d=>{
       const n = d.insignias.filter(i=>i!=='Título de Campeão').length;
-      return n >= 7
+      return n >= 8
+        ? [fala('Misty', 'Oito. Você passou pelo Blue.', null, 'Dá pra ouvir ela sorrindo contra a vontade.'),
+           fala('Misty', 'Agora é o Planalto. Me liga de lá, que eu quero ouvir da sua boca.')]
+        : n === 7
         ? [fala('Misty', 'Sete. Tá bom, tá bom.', null, 'Dá pra ouvir ela sorrindo contra a vontade.'),
            fala('Misty', 'Quando você perder pro Blue, me liga. Eu quero ouvir isso da sua boca.')]
         : [fala('Misty', `${n}? Eu tenho oito e mais um ginásio, mas parabéns.`, 'riso'),
@@ -29895,7 +29902,8 @@ const CONTATOS = [
       fala('Sabrina', 'Fica o tempo que você aguentar. Depois me liga de lá mesmo.'),
       fala('Sabrina', 'Eu não vou te dizer o que você vai ouvir. Se eu disser, você ouve o que eu falei.')
     ],
-    objetivo:d=>!!d.visitados.lavender,
+    /* "me liga de lá mesmo": a entrega é de dentro de Lavender */
+    objetivo:d=>Mundo.id() === 'lavender',
     entregue:[
       fala('Sabrina', 'Está ligando de lá.', 'frio', 'Não é pergunta.'),
       'Você fica quiet{o|a}. Ela também. O telefone sustenta os dois silêncios sem reclamar.',
@@ -29938,8 +29946,8 @@ const CONTATOS = [
       fala('Blaine', 'Oitenta?'),
       'Você confirma. Ele pede pra você ler cinco de cabeça, sem olhar. Você lê.',
       fala('Blaine', 'Não é decoreba, é convivência. Dá pra ouvir a diferença.'),
-      fala('Blaine', 'Eu parei em setenta e nove porque eu quis provar uma coisa e queimei uma ilha inteira provando.', 'baixo'),
-      fala('Blaine', 'Você fez andando. Isso responde a pergunta que eu te fiz no ginásio, aliás.')
+      fala('Blaine', 'Eu parei em setenta e nove porque passei trinta anos provando coisa dentro de laboratório, em vez de andar.', 'baixo'),
+      fala('Blaine', 'Você fez andando. Isso responde a pergunta.')
     ],
     recompensa:d=>{ Estado.darItem('Pedra do Fogo', 1); Estado.darItem('Ultra Ball', 2);
       return [{tipo:'item', texto:'Recebeu 1× Pedra do Fogo e 2× Ultra Ball.'}]; },
@@ -30006,12 +30014,17 @@ const CONTATOS = [
   prova:{
     rotulo:'Perguntar como vai a segunda',
     esperaCap:2,
-    texto:d=>[
+    /* a de Pewter ela conta uma vez só: aqui ou na ligação dela */
+    texto:d=>Chamadas.jaAtendeu('cha_nadia_segunda') ? [
+      fala('Nadia', 'Duas. A de Pewter você já sabe como foi.', 'riso'),
+      fala('Nadia', 'Agora é Cerulean. Eu tô indo devagar, mas tô indo.')
+    ] : [
       fala('Nadia', 'Duas! Eu tenho duas agora!', 'grita'),
       fala('Nadia', 'A de Pewter eu levei três tentativas. Três. E na terceira eu chorei na frente do Brock.', 'riso'),
       fala('Nadia', 'Ele fingiu que não viu. Eu vou ser grata a esse homem pelo resto da vida.')
     ],
-    rep:{eixo:'bom', delta:1, motivo:'Acompanhou a segunda licença de alguém'}
+    rep:{eixo:'bom', delta:1, motivo:'Acompanhou a segunda licença de alguém'},
+    marca:'nadia_contou_da_segunda'
   }
 },
 
@@ -30030,7 +30043,7 @@ const CONTATOS = [
     dica:'Ele espera você em Lavender.',
     pedido:[
       fala('a figura de capuz', 'Eu não anotei pra nada. Eu anoto tudo.'),
-      fala('a figura de capuz', 'Eu tenho oitenta e três cadernos de capa dura com resposta de gente que passou por aqui em dezenove anos.'),
+      fala('a figura de capuz', 'Eu tenho oitenta e três cadernos de capa dura com resposta de gente que passou por aqui em nove anos.'),
       fala('a figura de capuz', 'Quando você tiver quatro insígnias, aparece. Lavender, o abrigo, qualquer hora.'),
       d=>fala(d.jogador.nome, 'Pra quê?'),
       fala('a figura de capuz', 'Pra eu te devolver uma coisa que não é minha.', 'baixo'),
@@ -30072,8 +30085,8 @@ const CONTATOS = [
       Estado.marcar(guarda ? 'ganhou_do_curador_guardando' : 'ganhou_do_curador_passando');
       return [{tipo:'pokemon', texto:`${nomeExib(p)} (Nv ${p.nivel}) saiu da Pokébola.${notaDestino(onde)}`},
               {tipo:'eco', texto: guarda
-                ? 'Ele não vai mudar de forma sozinho. Coisa que fica, fica como está.'
-                : 'A linha dele só se completa passando por outra mão. Você vai ter que decidir isso um dia.'}];
+                ? 'Coisa que fica, fica como está.'
+                : 'Tem coisa que só se completa passando por outra mão.'}];
     },
     rep:{eixo:'bom', delta:2, motivo:'Voltou em Lavender porque tinha prometido, sem saber pra quê'},
     marca:'o_curador_entregou'
@@ -30336,11 +30349,12 @@ const CONTATOS = [
     ],
     objetivo:d=>Estado.contagemDex().catalogados >= 60,
     entregue:[
-      d=>fala(d.jogador.nome, `Sessenta e ${Math.max(0, Estado.contagemDex().catalogados - 60)}.`),
+      d=>{ const n = Estado.contagemDex().catalogados; return fala(d.jogador.nome, n === 60 ? 'Sessenta.' : `${n}.`); },
       fala('Ezra', 'Mentira.'),
       d=>fala(d.jogador.nome, 'Confere no seu aparelho. A Liga sincroniza.'),
       'Você ouve ele digitando. Você ouve ele parando de digitar.',
-      fala('Ezra', 'Você tá em sessenta e eu tô em quarenta e três.'),
+      d=>{ const n = Estado.contagemDex().catalogados;
+           return fala('Ezra', n === 60 ? 'Você tá em sessenta e eu tô em quarenta e três.' : `Você tá em ${n} e eu tô em quarenta e três.`); },
       fala('Ezra', 'Isso é a melhor coisa que aconteceu comigo esse mês e eu odeio isso.', 'riso'),
       fala('Ezra', 'Agora eu tenho de quem correr atrás. Você não faz ideia do que isso vale.')
     ],
@@ -30356,7 +30370,7 @@ const CONTATOS = [
       const meu = d.npcs['Ezra'] || {};
       return (meu.opiniao||0) >= 2
         ? [fala('Ezra', `${n} já? Cara.`, null, 'Ele não esconde que ficou feliz, e detesta não ter escondido.'),
-           fala('Ezra', 'Eu tô em quatro. Eu vou te alcançar. Tô avisando com antecedência.')]
+           fala('Ezra', 'Eu vou te alcançar. Tô avisando com antecedência.')]
         : [fala('Ezra', `${n}. Legal.`, 'frio'),
            fala('Ezra', 'Eu não liguei pra você. Você que ligou pra mim.')];
     },
@@ -30531,13 +30545,13 @@ const CHAMADAS = [
        'Vocês passam vinte minutos no telefone falando de ordem de troca e de um golpe que ele insiste em manter.',
        fala('Ezra', 'Você acha que eu devia tirar o Leer?'),
        d=>fala(d.jogador.nome, 'Eu acho que você devia tirar o Leer desde Pewter.'),
-       fala('Ezra', 'Você é um péssimo amigo e você tem razão.', 'riso')
+       fala('Ezra', 'Você é {um péssimo amigo|uma péssima amiga} e você tem razão.', 'riso')
      ]},
     {texto:'"Três vezes é teimosia. Muda o time."',
      ef:{rep:{eixo:'bom',delta:1,motivo:'Foi diret{o|a} com o rival em vez de consolar'},
          npc:{nome:'Ezra', opiniao:1, memoria:'Você chamou a teimosia dele de teimosia por telefone.'}},
      resultado:[fala('Ezra', 'Valeu. Muito obrigado. Que apoio.', 'frio'),
-                'Ele desliga.','Duas semanas depois ele ganha, com o time trocado, e não te liga pra contar. Você fica sabendo por outra pessoa.']},
+                'Ele desliga antes de você conseguir dizer que não era deboche.']},
     {texto:'Não falar nada e deixar ele falar.',
      ef:{moral:3, rep:{eixo:'bom',delta:2,motivo:'Ficou calad{o|a} no telefone enquanto o outro precisava falar'}},
      resultado:['Ele fala por catorze minutos.',
@@ -30593,7 +30607,7 @@ const CHAMADAS = [
          flag:'sabe_dos_que_mudaram'},
      resultado:[
        fala('a figura de capuz', 'Onze pessoas voltaram pra mudar.'),
-       fala('a figura de capuz', 'Em dezenove anos, onze. Todas as onze mudaram a primeira, de "guardar" pra "passar adiante".'),
+       fala('a figura de capuz', 'Em nove anos, onze. Todas as onze mudaram a primeira, de "guardar" pra "passar adiante".'),
        fala('a figura de capuz', 'Nenhuma foi no sentido contrário. Nenhuma, nunca.', 'frio'),
        fala('a figura de capuz', 'Eu não sei o que fazer com essa informação e eu penso nela todo dia.')
      ]},
@@ -30656,14 +30670,14 @@ const CHAMADAS = [
      resultado:[fala('Sr. Juniper', 'Também é uma resposta. Eu anoto.')]},
     {texto:'"Por que eu?"',
      ef:{npc:{nome:'a figura de capuz', opiniao:1, memoria:'Você perguntou por que ele escolheu você.'}},
-     resultado:[fala('Sr. Juniper', 'Porque você respondeu as três. Em dezenove anos, menos de cem responderam as três.'),
+     resultado:[fala('Sr. Juniper', 'Porque você respondeu as três. Em nove anos, menos de cem responderam as três.'),
                 fala('Sr. Juniper', 'E porque você voltou.', 'baixo')]}
   ]
 },
 {
   id:'cha_nadia_segunda',
   de:'nadia',
-  cond:d=>Estado.temNumero('nadia'),
+  cond:d=>Estado.temNumero('nadia') && !d.flags.nadia_contou_da_segunda,
   peso:2,
   falas:d=>[
     fala('Nadia', 'É a Nadia! Da arena! Eu consegui ligar!', 'grita'),
@@ -32754,7 +32768,7 @@ const VETERANOS = [
   },
   convite:{
     local:'rota24', titulo:'Treinar com Morgan no descampado do fim da rota',
-    sub:'Seis e meia da manhã, antes do sol.',
+    sub:'Seis e meia da manhã, antes do sol.', hora:{h:6}, dura:9,
     cena:[
       'Morgan já está lá, de tênis molhado de orvalho, com um caderno e um cronômetro.',
       fala('Morgan', 'Nada de luta. Hoje é repetição. Seu time faz a mesma coisa cem vezes até fazer sem pensar.'),
@@ -32817,7 +32831,7 @@ const VETERANOS = [
   },
   convite:{
     local:'rota12', titulo:'Encontrar Rhoda no píer, ao amanhecer',
-    sub:'O barco azul sem nome no casco.',
+    sub:'O barco azul sem nome no casco.', hora:{h:6}, dura:5,
     cena:[
       'O barco azul está atracado no píer com o gerador ligado. Tem Magikarp boiando de barriga pra cima em volta do casco inteiro.',
       'Rhoda chega mancando, de capa, e para do seu lado sem dizer nada.',
@@ -32867,7 +32881,7 @@ const VETERANOS = [
   torneio:'"Eu não vim pelo torneio. Eu vim porque tinha barulho demais em Lavender hoje."',
   chamada:{
     falas:[
-      fala('Odessa', 'Odessa. Na lua nova a cidade faz vigília na base da Torre, com vela.'),
+      fala('Odessa', 'Odessa. Toda sexta, depois do anoitecer, a cidade faz vigília na base da Torre, com vela.'),
       fala('Odessa', 'Não é pra ninguém em especial. É pra todos que não têm quem acenda.'),
       d=>d.cemiterio.length
         ? fala('Odessa', `E eu sei que você tem alguém pra acender. ${nomeExib(d.cemiterio[0])}. Eu não sei como eu sei.`, 'baixo')
@@ -32880,7 +32894,7 @@ const VETERANOS = [
   },
   convite:{
     local:'lavender', titulo:'Ir à vigília na base da Torre',
-    sub:'Depois do anoitecer. Odessa guardou uma vela.',
+    sub:'Sexta, depois do anoitecer. Odessa guardou uma vela.', hora:{dia:4, h:19}, dura:10,
     cena:[
       'Tem umas quarenta pessoas na base da Torre, cada uma com uma vela, e ninguém fala mais alto que o vento.',
       'Odessa te entrega a vela acesa sem dizer nada e volta pro lugar dela.',
@@ -32941,10 +32955,10 @@ const VETERANOS = [
   },
   convite:{
     local:'celadon', titulo:'Ir com Corinne ao jantar da coleção',
-    sub:'Sábado, sete da noite, roupa limpa.',
+    sub:'Sábado, sete da noite, roupa limpa.', hora:{dia:5, h:19},
     cena:[
       'O salão de festas tem quarenta vitrines iluminadas por baixo, e em cada uma tem um Pokémon parado olhando o vidro.',
-      'O anfitrião usa terno de veludo em pleno verão e apresenta cada vitrine com o preço pago.',
+      'O anfitrião usa terno de veludo num salão abafado e apresenta cada vitrine com o preço pago.',
       fala('Colecionador Everett', 'Esse aqui veio de Johto. Treze mil. Não faz nada, e é isso que eu gosto nele.'),
       fala('Corinne', 'Everett, abre as vitrines.'),
       fala('Colecionador Everett', 'Corinne, querida, você veio pro jantar ou pra me dar lição?'),
@@ -33004,7 +33018,7 @@ const VETERANOS = [
   },
   convite:{
     local:'saffron', titulo:'Ir ao exame de faixa no salão de Conrad',
-    sub:'Oito da manhã. Sapato na porta.',
+    sub:'Sábado, oito da manhã. Sapato na porta.', hora:{dia:5, h:8},
     cena:[
       'Tem vinte alunos sentados em volta do tatame, de pernas cruzadas, em silêncio.',
       'A aluna é uma moça de uns dezenove anos, de cabelo raspado dos lados, com as mãos enfaixadas até o cotovelo.',
@@ -33063,7 +33077,7 @@ const VETERANOS = [
   },
   convite:{
     local:'rota16', titulo:'Esperar a turma do racha com Quinn, à meia-noite',
-    sub:'Moto vermelha. Ele acha isso importante.',
+    sub:'Moto vermelha. Ele acha isso importante.', hora:{h:0},
     cena:[
       'À meia-noite o barulho vem antes da luz. São sete motos, e a da frente é vermelha.',
       'Quinn se levanta do banco de fita e fica no meio da pista, de braço cruzado. As sete param.',
@@ -33122,7 +33136,7 @@ const VETERANOS = [
   },
   convite:{
     local:'rota13', titulo:'Esperar os caçadores com Talia, no terceiro poste',
-    sub:'Antes do sol. Onze laços na trilha.',
+    sub:'Antes do sol. Onze laços na trilha.', hora:{h:5},
     cena:[
       'Talia já desarmou nove laços quando você chega. Os outros dois ela deixou armados, de propósito, de isca.',
       'O caçador chega com um saco de lona nas costas e para quando vê o chapéu.',
@@ -33345,7 +33359,7 @@ const VETERANOS = [
   },
   convite:{
     local:'planalto', titulo:'Lutar a exibição com Greer na arena central',
-    sub:'Arquibancada cheia. Ela vem mais forte.',
+    sub:'Sábado. Arquibancada cheia. Ela vem mais forte.', hora:{dia:5, h:16},
     cena:[
       'A arena central tem quatrocentos lugares e hoje tem quatrocentas pessoas, e mais umas cinquenta de pé no corredor.',
       'Greer entra pelo túnel do outro lado sem acenar pra ninguém.',
@@ -33542,10 +33556,19 @@ const Veteranos = {
   },
 
   /* ── convite: o que a chamada marcou ── */
+  /* Quem marcou dia e hora ("sábado, sete da noite") te espera nela:
+     ir até o convite leva o relógio até lá, como a cena que diz a hora.
+     Já na hora, o relógio fica onde está. */
+  irNaHora(c){
+    if (!c || !c.hora) return;
+    if (c.hora.dia != null) Relogio.ateODia(c.hora.dia, c.hora.h);
+    else Relogio.ate(c.hora.h);
+  },
   abrirConvite(id){
     const v = veterano(id);
     if (!v || !v.convite) return Exploracao.tela();
     const c = v.convite;
+    this.irNaHora(c);
     UI.telaConversa({
       num:(LOCAIS[c.local] || {}).nome, titulo:v.nome, loc:'convite',
       falas:c.cena,
@@ -33563,7 +33586,8 @@ const Veteranos = {
     if (c.luta || c.selvagem){
       const meu = Estado.primeiroApto();
       if (!meu) return UI.modal(v.nome, '<p class="nada">Nenhum Pokémon em pé. Cure o time antes.</p>');
-      Mundo.passar(1);
+      /* convite com hora marcada já gastou o tempo de chegar lá */
+      if (!c.hora) Mundo.passar(1);
       if (c.selvagem){
         const nv = Math.min(85, Math.max((LOCAIS[c.local] || {}).nivel || 30, nivelDeReferencia()) + (c.selvagem.acima || 0));
         const p = criarPokemon(c.selvagem.dex, nv, {moral:40});
@@ -33592,6 +33616,8 @@ const Veteranos = {
   fecharConvite(v, avisos){
     const r = this.registro(v.id);
     r.conviteFeito = true;
+    /* o fim que conta horas ("a manhã inteira", "até a última vela") passa o relógio */
+    if (v.convite.dura) Relogio.avancar(v.convite.dura);
     let extra = [];
     try { extra = v.convite.recompensa(Estado.dados) || []; } catch(e){ extra = []; }
     Estado.registrar(`${v.convite.titulo}.`);
@@ -38787,7 +38813,7 @@ const LINHAS_DA_VIA = {
   ],
   /* as linhas de posto (js/story/linhas.js) */
   lei:[
-    'Você repara primeiro na guarita, depois em quem está de pé na esquina sem motivo. O colete ensina a olhar nessa ordem.',
+    'Você repara primeiro na guarita, depois em quem está de pé na esquina sem motivo. O posto ensina a olhar nessa ordem.',
     'Um guarda da cidade te cumprimenta com dois dedos na aba do boné. Entre gente de patrulha é assim.',
     'Alguém pergunta onde fica a delegacia. Você sabe, e sabe também qual porta fica aberta de noite.'
   ],
@@ -40292,7 +40318,7 @@ rocket:[
     {texto:`Aceitar, e atravessar a rua pra falar com os policiais.`,
      ef:{flag:['ln_rocket_dentro', 'ln_rocket_duplo'], rep:{eixo:'bom', delta:2, motivo:'Começou a passar informação pra polícia de dentro'},
          executar:d => typeof Rede !== 'undefined' ? Rede.promoverPelaVoz() : []},
-     resultado:[`O policial ouve sem levantar os olhos do copo.`, `"Continua lá dentro", ele diz. "Liga desse número. Só desse."`]},
+     resultado:[`O policial ouve sem levantar os olhos do copo.`, fala('o policial do café', `Continua lá dentro.`, 'baixo'), fala('o policial do café', `Liga desse número. Só desse.`)]},
     {texto:`Pedir pra sair.`,
      ef:{flag:'ln_rocket_pediu_saida', executar:d => { if (typeof Cargos !== 'undefined' && Cargos.tem('rocket')) Cargos.largar('rocket'); return [{tipo:'info', texto:'O aparelho do envelope para de funcionar no dia seguinte.'}]; }},
      resultado:[fala('a voz do outro lado', `Ninguém sai. A gente só para de ligar.`, 'frio'), `E para.`]}
@@ -40395,7 +40421,7 @@ imprensa:[
      resultado:[`A matéria sai. No dia seguinte a criação está fechada, e no outro uma criação errada, do mesmo nome, na cidade vizinha, também.`]},
     {texto:`Levar o bilhete à polícia antes de publicar.`,
      ef:{flag:'ln_imprensa_policia'},
-     resultado:[`O policial lê, dobra e guarda. "Agradecido", ele diz, de um jeito que quer dizer que você não vai saber o resto.`]}
+     resultado:[`O policial lê, dobra e guarda.`, fala('o policial do plantão', `Agradecido.`), `Do jeito que ele diz, quer dizer que você não vai saber o resto.`]}
   ]
 },
 {
@@ -40487,7 +40513,7 @@ liga:[
   cap:20, titulo:'A turma da manhã', quem:'a coordenadora da quadra',
   texto:d => [
     d2 => { Nomes.apresentar('a coordenadora da quadra'); return `A coordenadora te espera na quadra de treino, de agasalho da Liga. Na pasta, em letra de máquina: COORDENADORA MAPLE.`; },
-    fala('a coordenadora da quadra', `Doze crianças, dez anos cada, nenhuma com licença ainda. Os pais pagaram a aula. Você dá.`),
+    fala('a coordenadora da quadra', `Doze alunos, catorze anos cada, nenhum com licença ainda. Os pais pagaram a aula. Você dá.`),
     `Na primeira fila, um menino segura um Caterpie como quem segura um troféu.`
   ],
   escolhas:[
@@ -40496,7 +40522,7 @@ liga:[
      resultado:[`A aula é sobre água, sombra e sono. Ninguém luta. O menino da primeira fila aprende a ver se a folha do Caterpie está fresca.`]},
     {texto:`Dar a aula que os pais pagaram: tática.`,
      ef:{flag:'ln_liga_tatica', dinheiro:500},
-     resultado:[`As crianças decoram três combinações de tipo e saem gritando "superefetivo" no estacionamento.`]}
+     resultado:[`A turma decora três combinações de tipo e sai gritando "superefetivo" no estacionamento.`]}
   ]
 },
 {
@@ -40517,16 +40543,16 @@ liga:[
 {
   cap:27, titulo:'A votação', quem:'a coordenadora da quadra',
   texto:d => [
-    `A Liga vota se treinador de dez anos pode sair sozinho em jornada ou só a partir dos doze.`,
-    fala('a coordenadora da quadra', d.flags.ln_liga_cuidar ? `Você deu aula pra doze crianças de dez anos. Você sabe o que elas aguentam e o que não aguentam. Seu voto vale.` : `Seu voto vale um. Igual ao meu. Igual ao de todo mundo aqui.`),
-    `Lá fora tem fila de criança com Pokémon no colo, esperando pra ver o resultado.`
+    `A Liga vota se a jornada continua começando aos quinze ou passa a começar aos dezesseis.`,
+    fala('a coordenadora da quadra', d.flags.ln_liga_cuidar ? `Você deu aula pra doze alunos de catorze anos. Você sabe o que eles aguentam e o que não aguentam. Seu voto vale.` : `Seu voto vale um. Igual ao meu. Igual ao de todo mundo aqui.`),
+    `Lá fora tem uma fila de garotada com Pokémon no colo, esperando pra ver o resultado.`
   ],
   escolhas:[
-    {texto:`Votar pelos dez anos, como sempre foi.`,
-     ef:{flag:'ln_liga_dez', rep:{eixo:'bom', delta:1, motivo:'Votou pela jornada aos dez anos'}},
+    {texto:`Votar pelos quinze, como sempre foi.`,
+     ef:{flag:'ln_liga_quinze', rep:{eixo:'bom', delta:1, motivo:'Votou pela jornada aos quinze, como sempre foi'}},
      resultado:[`Passa por um voto. A fila lá fora grita quando sai a placa.`]},
-    {texto:`Votar pelos doze.`,
-     ef:{flag:'ln_liga_doze', rep:{eixo:'bom', delta:1, motivo:'Votou pela jornada aos doze anos'}},
+    {texto:`Votar pelos dezesseis.`,
+     ef:{flag:'ln_liga_dezesseis', rep:{eixo:'bom', delta:1, motivo:'Votou pela jornada aos dezesseis'}},
      resultado:[`Passa por um voto. A fila lá fora fica em silêncio, e uma menina chora sem barulho.`]}
   ]
 }
@@ -40676,7 +40702,7 @@ foragido:[
   escolhas:[
     {texto:`Pagar.`,
      ef:{flag:'ln_foragido_pagou_silencio', dinheiro:-600},
-     resultado:[`Ele conta o dinheiro e some no meio da gente. Você vai olhar pra trás em todo cais daqui pra frente.`]},
+     resultado:[`Ele conta o dinheiro e some no meio da gente. Você fica olhando o lugar onde ele estava muito depois de não ter mais ninguém lá.`]},
     {texto:`Encarar e dizer que ele pode falar o que quiser.`,
      ef:{flag:'ln_foragido_encarou', rep:{eixo:'bom', delta:1, motivo:'Não pagou pra ninguém ficar quieto'}},
      resultado:[`Ele hesita. Você sobe no barco. Quando o barco solta a corda, ele ainda está no cais, com o PokéNav na mão e sem ligar pra ninguém.`]}
@@ -40705,7 +40731,7 @@ lei:[
   escolhas:[
     {texto:`Conferir o livro com ele, de noite, folha por folha.`,
      ef:{flag:'ln_lei_investigou', rep:{eixo:'bom', delta:2, motivo:'Passou a noite conferindo o livro do depósito com quem estava sob suspeita'}},
-     resultado:[`Às três da manhã vocês têm as três assinaturas lado a lado. Nenhuma é a dele.`,
+     resultado:[`Leva a noite inteira, folha por folha. No fim vocês têm as três assinaturas lado a lado. Nenhuma é a dele.`,
        fala('o sargento de Viridian', `Obrigado. Não pelo que achou. Por ter vindo.`)]},
     {texto:`Levar o que você sabe direto à delegada.`,
      ef:{flag:'ln_lei_delegada', rep:{eixo:'bom', delta:1, motivo:'Levou à delegada o que viu no depósito'}},
@@ -40725,10 +40751,10 @@ lei:[
   escolhas:[
     {texto:`Cumprir a ordem, devagar, barraca por barraca, ajudando a carregar.`,
      ef:{flag:'ln_lei_cumpriu', rep:{eixo:'bom', delta:1, motivo:'Cumpriu uma ordem dura com as mãos ocupadas ajudando'}},
-     resultado:[`Leva até as quatro da tarde. O meio-dia passou e ninguém reclamou, porque todo mundo estava carregando alguma coisa.`]},
+     resultado:[`Leva quatro horas a mais do que a ordem dava. O meio-dia passa e ninguém reclama, porque todo mundo está carregando alguma coisa.`]},
     {texto:`Avisar o acampamento na véspera, e chegar no horário com o lugar já vazio.`,
      ef:{flag:'ln_lei_avisou', rep:{eixo:'bom', delta:2, motivo:'Avisou antes de cumprir a ordem'}},
-     resultado:[d => `De manhã só sobrou o Snorlax. Alguém amarrou um bilhete na pata dele: "OBRIGADO, ${d.flags.cargo_guarda_rota ? 'COLETE' : 'CRACHÁ'}".`]},
+     resultado:[d => `Na hora marcada só sobrou o Snorlax. Alguém amarrou um bilhete na pata dele: "OBRIGADO, ${d.flags.cargo_guarda_rota ? 'COLETE' : 'CRACHÁ'}".`]},
     {texto:`Devolver a ordem sem cumprir.`,
      ef:{flag:'ln_lei_recusou_ordem', rep:{eixo:'ruim', delta:1, motivo:'Recusou uma ordem com carimbo azul'}},
      resultado:[fala('o sargento de Viridian', `Isso vai pra sua ficha.`), fala('o sargento de Viridian', `Vai pra minha também. Eu assino embaixo de você.`, 'baixo')]}
@@ -40784,7 +40810,7 @@ rocket:[
   texto:d => [
     d.flags.ln_rocket_lapras || d.flags.ln_rocket_soltou
       ? fala('a voz do outro lado', `Coisas somem quando você está de turno. A gente reparou.`, 'frio')
-      : fala('a voz do outro lado', `Você tem sido correto. Correto é raro.`),
+      : fala('a voz do outro lado', `Você tem sido {correto|correta}. Correto é raro.`),
     fala('a voz do outro lado', `Queremos a lista de contatos do seu PokéNav. Só nome e número. É assim que a gente confia.`)
   ],
   escolhas:[
@@ -40863,8 +40889,12 @@ ciencia:[
   cap:27, titulo:'A terceira edição', quem:'Professor Oak',
   texto:d => [
     fala('Professor Oak', `Terceira edição do livro. Tem um capítulo inteiro que é seu. Eu quero o seu nome na capa, do lado do meu.`),
-    d.flags.ln_ciencia_vendeu || d.flags.ln_ciencia_anomalia_vendeu
-      ? `Você pensa na metade da pele de Ekans que foi pro colecionador. Ou na trilha com fila. Ele não sabe. Ou sabe e não diz.`
+    d.flags.ln_ciencia_vendeu && d.flags.ln_ciencia_anomalia_vendeu
+      ? `Você pensa na metade da pele de Ekans que foi pro colecionador, e na trilha com fila. Ele não sabe. Ou sabe e não diz.`
+      : d.flags.ln_ciencia_vendeu
+      ? `Você pensa na metade da pele de Ekans que foi pro colecionador. Ele não sabe. Ou sabe e não diz.`
+      : d.flags.ln_ciencia_anomalia_vendeu
+      ? `Você pensa na trilha que ganhou placa, guarita e fila. Ele não sabe. Ou sabe e não diz.`
       : `Você pensa em todas as páginas de hora e lugar que ele leu sem reclamar.`
   ],
   escolhas:[
@@ -40873,7 +40903,13 @@ ciencia:[
      resultado:[fala('Professor Oak', `Ótimo. Agora você vai receber carta de gente dizendo que está errado. É a melhor parte.`, 'riso')]},
     {texto:`Pedir que ponha o nome do seu time nos agradecimentos em vez do seu na capa.`,
      ef:{flag:'ln_ciencia_agradecimentos', moral:3},
-     resultado:[d => { const p = (d.time || [])[0]; return p ? `Na última página, em letra pequena: "E ${nomeExib(p)}, que viu primeiro."` : 'Na última página, em letra pequena: "E ao time, que viu primeiro."'; }]}
+     resultado:[`Na última página, em letra pequena:`,
+       d => {
+         const nomes = (d.time || []).filter(p => !p.morto).map(nomeExib);
+         if (!nomes.length) return `**E ao time, que viu primeiro.**`;
+         const lista = nomes.length > 1 ? `${nomes.slice(0, -1).join(', ')} e ${nomes[nomes.length - 1]}` : nomes[0];
+         return `**E ${lista}, que ${nomes.length > 1 ? 'viram' : 'viu'} primeiro.**`;
+       }]}
   ]
 }
 ],
@@ -40938,7 +40974,7 @@ imprensa:[
      resultado:[`Ele esquece de ligar o gravador nos primeiros dez minutos. Você espera ele perceber e começa de novo.`]},
     {texto:d => `Mandar ele falar com ${nomeCasa()} primeiro.`,
      ef:{flag:'ln_imprensa_mandou_casa', moral:2},
-     resultado:[d => `A matéria sai com uma foto da porta da sua casa e uma frase de ${nomeCasa()} em destaque. Você nunca vai saber como ele conseguiu essa frase.`]}
+     resultado:[d => `A matéria sai com uma foto da porta da sua casa e uma frase de ${nomeCasa()} em destaque. Você não faz ideia de como ele arrancou essa frase.`]}
   ]
 }
 ],
@@ -41001,7 +41037,7 @@ liga:[
     d.flags.ln_liga_cuidar
       ? `É o menino da primeira fila, da turma da manhã. Ele ainda vê se a folha está fresca antes de deixar o Butterfree comer.`
       : `É o menino da primeira fila, da turma da manhã. Ele ainda grita "superefetivo" quando acerta.`,
-    d.flags.ln_liga_doze ? `A licença dele saiu na semana antes da votação. Por pouco.` : null,
+    d.flags.ln_liga_dezesseis ? `A licença dele saiu na semana antes da votação. Por pouco.` : null,
     fala('a coordenadora da quadra', `Ele pediu pra lutar com você antes de sair em jornada. Só isso.`)
   ],
   escolhas:[
@@ -41119,7 +41155,9 @@ foragido:[
 {
   cap:18, titulo:'A carta na pensão', quem:'a dona da pensão',
   texto:d => [
-    fala('a dona da pensão', `Chegou isso. Pro seu nome de verdade, que eu não sabia que era esse.`),
+    fala('a dona da pensão', d.flags.ln_foragido_contou
+      ? `Chegou isso. No nome que você me disse junto com a história. Eu achava que o nome era inventado.`
+      : `Chegou isso. Pro seu nome de verdade, que eu não sabia que era esse.`),
     d => `A letra no envelope é de ${nomeCasa()}.`
   ],
   escolhas:[
@@ -41178,7 +41216,8 @@ function rodapeDaLinha(d){
     else L.push('O crachá ficou numa gaveta, virado pra baixo, e você sabe exatamente qual.');
   }
   if (viveu('rocket')){
-    if (f.ln_rocket_denunciou || f.ln_rocket_foto) L.push('Tem um armazém no porto de Vermilion com o portão soldado. Quem soldou sabe quem mandou as fotos.');
+    if (f.ln_rocket_foto) L.push('Tem um armazém no porto de Vermilion com o portão soldado. Quem soldou sabe quem mandou as fotos.');
+    else if (f.ln_rocket_denunciou) L.push('Tem um armazém no porto de Vermilion com o portão soldado. Quem soldou sabe quem contou à polícia.');
     else if (f.ln_rocket_subiu || f.ln_rocket_dentro) L.push('O aparelho do envelope ainda toca às vezes. Você ainda atende.');
     else L.push('Um número sem nome continua salvo no seu PokéNav. Você nunca apagou e nunca ligou.');
   }
@@ -41219,7 +41258,8 @@ const VIRADAS_DE_LINHA = {
       : fala('o sargento de Viridian', `Você sabe onde fica a guarita. Se precisar, sabe.`, 'baixo')]},
   rocket:{quem:'a voz do outro lado', texto:d => [
     `O aparelho do envelope acende uma última vez, sem tocar.`,
-    `Na tela, uma frase: "O NÚMERO CONTINUA O MESMO."`]},
+    `Na tela, uma frase só:`,
+    `**O NÚMERO CONTINUA O MESMO.**`]},
   ciencia:{quem:'Professor Oak', texto:d => [
     `Chega uma carta do laboratório, escrita à mão.`,
     fala('Professor Oak', `Laboratório não é prisão. A porta é de vidro justamente pra dar pra ver de fora quando a pessoa quiser voltar.`)]},
@@ -121286,7 +121326,7 @@ const UI = {
       <div class="linha"><span class="k">Perder</span><span class="v">não custa dinheiro · ele continua lá</span></div>
       <div class="linha"><span class="k">Lutar de novo no lugar</span><span class="v">depois da primeira vitória, só pelo gosto: não paga dinheiro · a revanche que paga é a do PokéNav</span></div>
       <div class="linha"><span class="k">Depois de vencer</span><span class="v">dá o número do PokéNav · revanche com time de 6 e +2 níveis · três dias depois ele pode ligar com um convite</span></div>
-      <div class="linha"><span class="k">Convite</span><span class="v">aceito na chamada, vira um lugar pra ir no mapa · uma luta, um treino ou outra coisa · perdendo a luta, o convite continua de pé</span></div>
+      <div class="linha"><span class="k">Convite</span><span class="v">aceito na chamada, vira um lugar pra ir no mapa · quem marcou dia e hora te espera nela, e ir até o convite leva o relógio até lá · uma luta, um treino ou outra coisa · perdendo a luta, o convite continua de pé</span></div>
       <div class="linha"><span class="k">Torneio Aberto</span><span class="v">veterano que você venceu pode cair no seu chaveamento, com 3 Pokémon</span></div>
 
       <h3>Conferência do Planalto Indigo</h3>

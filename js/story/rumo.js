@@ -132,7 +132,7 @@ const LINHAS_DA_VIA = {
   ],
   /* as linhas de posto (js/story/linhas.js) */
   lei:[
-    'Você repara primeiro na guarita, depois em quem está de pé na esquina sem motivo. O colete ensina a olhar nessa ordem.',
+    'Você repara primeiro na guarita, depois em quem está de pé na esquina sem motivo. O posto ensina a olhar nessa ordem.',
     'Um guarda da cidade te cumprimenta com dois dedos na aba do boné. Entre gente de patrulha é assim.',
     'Alguém pergunta onde fica a delegacia. Você sabe, e sabe também qual porta fica aberta de noite.'
   ],

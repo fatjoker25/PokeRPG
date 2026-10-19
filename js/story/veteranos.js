@@ -131,7 +131,7 @@ const VETERANOS = [
   },
   convite:{
     local:'rota24', titulo:'Treinar com Morgan no descampado do fim da rota',
-    sub:'Seis e meia da manhã, antes do sol.',
+    sub:'Seis e meia da manhã, antes do sol.', hora:{h:6}, dura:9,
     cena:[
       'Morgan já está lá, de tênis molhado de orvalho, com um caderno e um cronômetro.',
       fala('Morgan', 'Nada de luta. Hoje é repetição. Seu time faz a mesma coisa cem vezes até fazer sem pensar.'),
@@ -194,7 +194,7 @@ const VETERANOS = [
   },
   convite:{
     local:'rota12', titulo:'Encontrar Rhoda no píer, ao amanhecer',
-    sub:'O barco azul sem nome no casco.',
+    sub:'O barco azul sem nome no casco.', hora:{h:6}, dura:5,
     cena:[
       'O barco azul está atracado no píer com o gerador ligado. Tem Magikarp boiando de barriga pra cima em volta do casco inteiro.',
       'Rhoda chega mancando, de capa, e para do seu lado sem dizer nada.',
@@ -244,7 +244,7 @@ const VETERANOS = [
   torneio:'"Eu não vim pelo torneio. Eu vim porque tinha barulho demais em Lavender hoje."',
   chamada:{
     falas:[
-      fala('Odessa', 'Odessa. Na lua nova a cidade faz vigília na base da Torre, com vela.'),
+      fala('Odessa', 'Odessa. Toda sexta, depois do anoitecer, a cidade faz vigília na base da Torre, com vela.'),
       fala('Odessa', 'Não é pra ninguém em especial. É pra todos que não têm quem acenda.'),
       d=>d.cemiterio.length
         ? fala('Odessa', `E eu sei que você tem alguém pra acender. ${nomeExib(d.cemiterio[0])}. Eu não sei como eu sei.`, 'baixo')
@@ -257,7 +257,7 @@ const VETERANOS = [
   },
   convite:{
     local:'lavender', titulo:'Ir à vigília na base da Torre',
-    sub:'Depois do anoitecer. Odessa guardou uma vela.',
+    sub:'Sexta, depois do anoitecer. Odessa guardou uma vela.', hora:{dia:4, h:19}, dura:10,
     cena:[
       'Tem umas quarenta pessoas na base da Torre, cada uma com uma vela, e ninguém fala mais alto que o vento.',
       'Odessa te entrega a vela acesa sem dizer nada e volta pro lugar dela.',
@@ -318,10 +318,10 @@ const VETERANOS = [
   },
   convite:{
     local:'celadon', titulo:'Ir com Corinne ao jantar da coleção',
-    sub:'Sábado, sete da noite, roupa limpa.',
+    sub:'Sábado, sete da noite, roupa limpa.', hora:{dia:5, h:19},
     cena:[
       'O salão de festas tem quarenta vitrines iluminadas por baixo, e em cada uma tem um Pokémon parado olhando o vidro.',
-      'O anfitrião usa terno de veludo em pleno verão e apresenta cada vitrine com o preço pago.',
+      'O anfitrião usa terno de veludo num salão abafado e apresenta cada vitrine com o preço pago.',
       fala('Colecionador Everett', 'Esse aqui veio de Johto. Treze mil. Não faz nada, e é isso que eu gosto nele.'),
       fala('Corinne', 'Everett, abre as vitrines.'),
       fala('Colecionador Everett', 'Corinne, querida, você veio pro jantar ou pra me dar lição?'),
@@ -381,7 +381,7 @@ const VETERANOS = [
   },
   convite:{
     local:'saffron', titulo:'Ir ao exame de faixa no salão de Conrad',
-    sub:'Oito da manhã. Sapato na porta.',
+    sub:'Sábado, oito da manhã. Sapato na porta.', hora:{dia:5, h:8},
     cena:[
       'Tem vinte alunos sentados em volta do tatame, de pernas cruzadas, em silêncio.',
       'A aluna é uma moça de uns dezenove anos, de cabelo raspado dos lados, com as mãos enfaixadas até o cotovelo.',
@@ -440,7 +440,7 @@ const VETERANOS = [
   },
   convite:{
     local:'rota16', titulo:'Esperar a turma do racha com Quinn, à meia-noite',
-    sub:'Moto vermelha. Ele acha isso importante.',
+    sub:'Moto vermelha. Ele acha isso importante.', hora:{h:0},
     cena:[
       'À meia-noite o barulho vem antes da luz. São sete motos, e a da frente é vermelha.',
       'Quinn se levanta do banco de fita e fica no meio da pista, de braço cruzado. As sete param.',
@@ -499,7 +499,7 @@ const VETERANOS = [
   },
   convite:{
     local:'rota13', titulo:'Esperar os caçadores com Talia, no terceiro poste',
-    sub:'Antes do sol. Onze laços na trilha.',
+    sub:'Antes do sol. Onze laços na trilha.', hora:{h:5},
     cena:[
       'Talia já desarmou nove laços quando você chega. Os outros dois ela deixou armados, de propósito, de isca.',
       'O caçador chega com um saco de lona nas costas e para quando vê o chapéu.',
@@ -722,7 +722,7 @@ const VETERANOS = [
   },
   convite:{
     local:'planalto', titulo:'Lutar a exibição com Greer na arena central',
-    sub:'Arquibancada cheia. Ela vem mais forte.',
+    sub:'Sábado. Arquibancada cheia. Ela vem mais forte.', hora:{dia:5, h:16},
     cena:[
       'A arena central tem quatrocentos lugares e hoje tem quatrocentas pessoas, e mais umas cinquenta de pé no corredor.',
       'Greer entra pelo túnel do outro lado sem acenar pra ninguém.',
@@ -919,10 +919,19 @@ const Veteranos = {
   },
 
   /* ── convite: o que a chamada marcou ── */
+  /* Quem marcou dia e hora ("sábado, sete da noite") te espera nela:
+     ir até o convite leva o relógio até lá, como a cena que diz a hora.
+     Já na hora, o relógio fica onde está. */
+  irNaHora(c){
+    if (!c || !c.hora) return;
+    if (c.hora.dia != null) Relogio.ateODia(c.hora.dia, c.hora.h);
+    else Relogio.ate(c.hora.h);
+  },
   abrirConvite(id){
     const v = veterano(id);
     if (!v || !v.convite) return Exploracao.tela();
     const c = v.convite;
+    this.irNaHora(c);
     UI.telaConversa({
       num:(LOCAIS[c.local] || {}).nome, titulo:v.nome, loc:'convite',
       falas:c.cena,
@@ -940,7 +949,8 @@ const Veteranos = {
     if (c.luta || c.selvagem){
       const meu = Estado.primeiroApto();
       if (!meu) return UI.modal(v.nome, '<p class="nada">Nenhum Pokémon em pé. Cure o time antes.</p>');
-      Mundo.passar(1);
+      /* convite com hora marcada já gastou o tempo de chegar lá */
+      if (!c.hora) Mundo.passar(1);
       if (c.selvagem){
         const nv = Math.min(85, Math.max((LOCAIS[c.local] || {}).nivel || 30, nivelDeReferencia()) + (c.selvagem.acima || 0));
         const p = criarPokemon(c.selvagem.dex, nv, {moral:40});
@@ -969,6 +979,8 @@ const Veteranos = {
   fecharConvite(v, avisos){
     const r = this.registro(v.id);
     r.conviteFeito = true;
+    /* o fim que conta horas ("a manhã inteira", "até a última vela") passa o relógio */
+    if (v.convite.dura) Relogio.avancar(v.convite.dura);
     let extra = [];
     try { extra = v.convite.recompensa(Estado.dados) || []; } catch(e){ extra = []; }
     Estado.registrar(`${v.convite.titulo}.`);

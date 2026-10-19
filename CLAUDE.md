@@ -938,7 +938,11 @@ o `finalizarBatalha` olha ele antes de tudo. O convite nasce da chamada
 `convite_vt_<id>` e aparece como lugar pra ir no mapa até ser cumprido;
 perder a luta do convite não apaga o convite. Veterano novo precisa de
 `premio` com uma TM (a folha de regras promete isso), de `convite` e,
-se for à Conferência, de `conferencia:true`. A final da Conferência é sempre quem tem
+se for à Conferência, de `conferencia:true`. Convite cuja chamada
+marca dia e hora ("sábado, sete da noite") leva `hora:{dia, h}` — abrir
+o convite leva o relógio até lá (`Veteranos.irNaHora`) — e, se o fim
+conta horas ("a manhã inteira"), `dura`. Fato que o relógio não conta
+(lua nova) não entra na chamada. A final da Conferência é sempre quem tem
 `final:true`.
 
 `node ferramentas/sim-veteranos.js` mede cada um de passagem (lugar + 2),
