@@ -197,7 +197,7 @@ const SAIDA = path.resolve(process.argv[2] || path.join(raiz, 'roteiro'));
     /* ---- PokéNav ---- */
     for (const ch of CHAMADAS){
       const ct = (typeof contatoPorId === 'function') && contatoPorId(ch.de);
-      const dono = ct && (ct.falaComo || textoContato(ct, 'nome'));
+      const dono = ct && (falaComoDe(ct) || textoContato(ct, 'nome'));
       bloco('pokenav', `${ch.id}  (de ${ch.de})`, lista(ch.falas), {dono}, (ch.escolhas || []).map(e => `     > ${txt(e.texto)}`));
       (ch.escolhas || []).forEach((e, i) => { if (e.resultado) bloco('pokenav', `${ch.id} > ${i + 1}`, lista(e.resultado), {dono}); });
     }

@@ -27,7 +27,7 @@ function c22_quemSabe(){
   const tem = Estado.contatosNaAgenda().map(c => c.id);
   const c = contatoPorId(C22_QUEM_SABE.find(id => tem.includes(id)) || '');
   if (!c) return null;
-  return c.falaComo || (typeof c.nome === 'function' ? c.nome(Estado.dados) : c.nome);
+  return falaComoDe(c) || (typeof c.nome === 'function' ? c.nome(Estado.dados) : c.nome);
 }
 /* quanto tempo de estrada, pela boca de quem está nela */
 function c22_tempoDeEstrada(d){

@@ -29616,10 +29616,14 @@ const CONTATOS = [
   }
 },
 {
-  id:'enfermeira', tipo:'figura', nome:'Enfermeira do Centro', papel:'seis insígnias, e parou', cidade:'Viridian',
+  /* quem te contou das seis insígnias foi quem te cadastrou, na sua
+     cidade: a enfermeira do Centro, ou em Pallet, que não tem Centro, a
+     assistente do Professor (cadastra, no capítulo 1) */
+  id:'enfermeira', tipo:'figura', nome:d=>d.jogador.cidade === 'Pallet' ? 'Assistente do Professor' : 'Enfermeira do Centro',
+  papel:'seis insígnias, e parou', cidade:d=>d.jogador.cidade,
   /* como ela aparece no balão das cenas: é por aqui que o PokéNav
      descobre que o jogador já perguntou o nome dela */
-  falaComo:'a enfermeira',
+  falaComo:d=>cadastra(d),
   requer:d=>!!d.flags.historia_da_enfermeira,
   oferece:['favor','missao'],
   missao:{
@@ -29627,10 +29631,10 @@ const CONTATOS = [
     rotuloEntrega:'Ligar e contar das seis',
     dica:'Ela quer ver o que você prometeu.',
     pedido:[
-      fala('a enfermeira', 'Eu parei em seis. Isso você já sabe.'),
-      fala('a enfermeira', 'O que eu não te contei é que eu fiquei quatro anos achando que seis era o meu teto. Que era o máximo que uma pessoa como eu chegava.'),
-      fala('a enfermeira', 'Aí eu vi você entrar naquele balcão com uma cara de quem não sabe nada.', 'baixo'),
-      fala('a enfermeira', 'Chega em seis. Só isso. Chega em seis e me liga, que eu preciso saber se o número tem alguma coisa de especial ou se era só eu.')
+      d=>fala(cadastra(d), 'Eu parei em seis. Isso você já sabe.'),
+      d=>fala(cadastra(d), 'O que eu não te contei é que eu fiquei quatro anos achando que seis era o meu teto. Que era o máximo que uma pessoa como eu chegava.'),
+      d=>fala(cadastra(d), 'Aí eu vi você entrar naquele balcão com uma cara de quem não sabe nada.', 'baixo'),
+      d=>fala(cadastra(d), 'Chega em seis. Só isso. Chega em seis e me liga, que eu preciso saber se o número tem alguma coisa de especial ou se era só eu.')
     ],
     objetivo:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 6,
     entregue:[
@@ -29639,10 +29643,10 @@ const CONTATOS = [
         return fala(d.jogador.nome, n > 6 ? `${n}. Eu passei de seis faz um tempo.` : 'Seis.');
       },
       'Ela não fala nada por um tempo tão longo que você acha que a ligação caiu.',
-      fala('a enfermeira', 'E aí? Tem alguma coisa de especial no seis?'),
+      d=>fala(cadastra(d), 'E aí? Tem alguma coisa de especial no seis?'),
       d=>fala(d.jogador.nome, 'Não. É só um número.'),
-      fala('a enfermeira', 'É só um número.', 'baixo'),
-      fala('a enfermeira', 'Trinta e seis anos, e é só um número. Obrigada. Eu falo sério: obrigada.')
+      d=>fala(cadastra(d), 'É só um número.', 'baixo'),
+      d=>fala(cadastra(d), 'Trinta e seis anos, e é só um número. Obrigada. Eu falo sério: obrigada.')
     ],
     recompensa:d=>{ Estado.darItem('Hyper Potion', 2); Estado.darItem('Revive', 2);
       return [{tipo:'item', texto:'Chegou pelo malote: 2× Hyper Potion e 2× Revive.'}]; },
@@ -29653,8 +29657,8 @@ const CONTATOS = [
     rotulo:'Pedir o que ela mandaria comprar',
     limite:99, esperaCap:2,
     texto:d=>[
-      fala('a enfermeira', 'Potion. Eu falei. Eu SEMPRE falo.', 'riso'),
-      fala('a enfermeira', 'Vou mandar pelo malote do Centro daqui. Chega em qualquer cidade, é o mesmo sistema.')
+      d=>fala(cadastra(d), 'Potion. Eu falei. Eu SEMPRE falo.', 'riso'),
+      d=>fala(cadastra(d), d.jogador.cidade === 'Pallet' ? 'Vou mandar pelo malote do laboratório. Chega em qualquer cidade, é o mesmo dos Centros.' : 'Vou mandar pelo malote do Centro daqui. Chega em qualquer cidade, é o mesmo sistema.')
     ],
     efeito:d=>{ Estado.darItem('Potion', 3); Estado.darItem('Revive', 1);
       return [{tipo:'item', texto:'Recebeu 3× Potion e 1× Revive pelo malote.'}]; }
@@ -30433,11 +30437,16 @@ function textoContato(c, campo){
     /* o contato pode ser gravado por uma função ("Enfermeira do Centro")
        e falar nas cenas por outro rótulo ("a enfermeira"): falaComo liga
        os dois, senão a agenda nunca fica sabendo do nome. */
-    if (c.falaComo && Nomes.sabe(c.falaComo)) return Nomes.nomeDe(c.falaComo);
+    const fc = falaComoDe(c);
+    if (fc && Nomes.sabe(fc)) return Nomes.nomeDe(fc);
     return Nomes.comoChamar(t);
   }
   return t;
 }
+
+/* o rótulo com que o contato fala nas cenas: texto, ou função de quem
+   muda com a ficha (a enfermeira que em Pallet é a assistente) */
+function falaComoDe(c){ return c && (typeof c.falaComo === 'function' ? c.falaComo(Estado.dados) : c.falaComo); }
 
 /* ============================================================
    CHAMADAS RECEBIDAS — o telefone toca sozinho
@@ -30540,11 +30549,11 @@ const CHAMADAS = [
   cond:d=>Estado.temNumero('enfermeira') && d.cemiterio.length > 0,
   peso:3,
   falas:d=>[
-    fala('a enfermeira', 'Eu soube.'),
-    fala('a enfermeira', 'A gente fica sabendo. Centro Pokémon fala com Centro Pokémon.', 'baixo'),
+    d=>fala(cadastra(d), 'Eu soube.'),
+    d=>fala(cadastra(d), d.jogador.cidade === 'Pallet' ? 'A gente fica sabendo. Todo Centro de Kanto manda lista pro laboratório.' : 'A gente fica sabendo. Centro Pokémon fala com Centro Pokémon.', 'baixo'),
     d=>{
       const m = d.cemiterio[d.cemiterio.length-1];
-      return fala('a enfermeira', `Eu não vou falar que eu sinto muito, porque todo mundo já falou. Eu vou perguntar o nome ${pron(m).dele}.`);
+      return fala(cadastra(d), `Eu não vou falar que eu sinto muito, porque todo mundo já falou. Eu vou perguntar o nome ${pron(m).dele}.`);
     }
   ],
   escolhas:[
@@ -30553,13 +30562,13 @@ const CHAMADAS = [
      resultado:[
        d=>{ const m = d.cemiterio[d.cemiterio.length-1]; return m ? fala(d.jogador.nome, nomeExib(m) + '.') : ''; },
        'Você ouve ela escrevendo.',
-       fala('a enfermeira', 'Anotado. Eu tenho um caderno.'),
-       fala('a enfermeira', 'Não é o caderno de Lavender, é o meu. Eu tenho quarenta e um nomes nele desde 1989 e agora tenho quarenta e dois.', 'baixo')
+       d=>fala(cadastra(d), 'Anotado. Eu tenho um caderno.'),
+       d=>fala(cadastra(d), 'Não é o caderno de Lavender, é o meu. Eu tenho quarenta e um nomes nele desde 1989 e agora tenho quarenta e dois.', 'baixo')
      ]},
     {texto:'"Eu não quero falar disso."',
      ef:{rep:{eixo:'bom',delta:1,motivo:'Foi honesto sobre não querer falar'}},
-     resultado:[fala('a enfermeira', 'Então não fala.'),
-                fala('a enfermeira', 'Eu ligo de novo em duas semanas e a gente fala de outra coisa. Pode ser?')]}
+     resultado:[d=>fala(cadastra(d), 'Então não fala.'),
+                d=>fala(cadastra(d), 'Eu ligo de novo em duas semanas e a gente fala de outra coisa. Pode ser?')]}
   ]
 },
 {
@@ -42571,7 +42580,7 @@ c1_rua:{
       return `${d.jogador.cidade} ${tarde ? 'depois do almoço' : 'de manhã cedo'} é pequena de um jeito bom. Poucas ruas, um mercado que abre tarde, gente que sabe o seu nome porque viu você aprender a andar.`;
     },
     d=>d.flags.recebeu_do_goro ? 'O sol já está alto e a rua cheira a asfalto quente.' : 'O ar está frio de um jeito que não vai durar mais de uma hora.',
-    d=>`${vz().velho} ${vz().faz}, como faz há vinte anos. ${vz().Ferr} para no meio do movimento quando você passa.`,
+    d=>`${vz().velho} ${vz().faz}, como faz há vinte anos. ${vz().Ferr} para no meio do movimento quando você passa, e ${vz().ele} endireita o corpo com a mão no joelho.`,
     d=>fala(vz().nome, 'Ei. Ei! Você.', null, `${vz().Ferr} aponta pra você. Não tem hostilidade nenhuma no gesto.`),
     d=>fala(vz().nome, 'Você me deve uma.')
   ],
@@ -96909,7 +96918,7 @@ function c22_quemSabe(){
   const tem = Estado.contatosNaAgenda().map(c => c.id);
   const c = contatoPorId(C22_QUEM_SABE.find(id => tem.includes(id)) || '');
   if (!c) return null;
-  return c.falaComo || (typeof c.nome === 'function' ? c.nome(Estado.dados) : c.nome);
+  return falaComoDe(c) || (typeof c.nome === 'function' ? c.nome(Estado.dados) : c.nome);
 }
 /* quanto tempo de estrada, pela boca de quem está nela */
 function c22_tempoDeEstrada(d){

@@ -57,7 +57,7 @@ const r=await p.evaluate(()=>{
     for(const e of (c.escolhas||[])) if(e.resultado) varre(lista(e.resultado), onde+'>', c.quem, c.falante, null);
   }
   /* ligações do PokéNav */
-  for(const ch of CHAMADAS){ const ct=(typeof contatoPorId==='function')&&contatoPorId(ch.de); const dono=ct&&(ct.falaComo||textoContato(ct,'nome'));
+  for(const ch of CHAMADAS){ const ct=(typeof contatoPorId==='function')&&contatoPorId(ch.de); const dono=ct&&(falaComoDe(ct)||textoContato(ct,'nome'));
     const onde='nav/'+ch.id; varre(lista(ch.falas), onde, dono, null, null);
     for(const e of (ch.escolhas||[])) if(e.resultado) varre(lista(e.resultado), onde+'>', dono, null, null);
   }

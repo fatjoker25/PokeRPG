@@ -1235,7 +1235,7 @@ c1_rua:{
       return `${d.jogador.cidade} ${tarde ? 'depois do almoço' : 'de manhã cedo'} é pequena de um jeito bom. Poucas ruas, um mercado que abre tarde, gente que sabe o seu nome porque viu você aprender a andar.`;
     },
     d=>d.flags.recebeu_do_goro ? 'O sol já está alto e a rua cheira a asfalto quente.' : 'O ar está frio de um jeito que não vai durar mais de uma hora.',
-    d=>`${vz().velho} ${vz().faz}, como faz há vinte anos. ${vz().Ferr} para no meio do movimento quando você passa.`,
+    d=>`${vz().velho} ${vz().faz}, como faz há vinte anos. ${vz().Ferr} para no meio do movimento quando você passa, e ${vz().ele} endireita o corpo com a mão no joelho.`,
     d=>fala(vz().nome, 'Ei. Ei! Você.', null, `${vz().Ferr} aponta pra você. Não tem hostilidade nenhuma no gesto.`),
     d=>fala(vz().nome, 'Você me deve uma.')
   ],
