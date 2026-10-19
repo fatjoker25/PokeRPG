@@ -3381,7 +3381,9 @@ const UI = {
     this.tom('final'); this.limpar();
     document.body.classList.add('na-abertura');
     const d = Estado.dados;
-    const cap = typeof numeroDoCapitulo === 'function' ? numeroDoCapitulo(Historia.capitulo(d.capitulo)) : 'Capítulo ' + d.capitulo;
+    /* antes do capítulo 1 começar não tem capítulo: conta como o primeiro */
+    const cap = (typeof numeroDoCapitulo === 'function' && numeroDoCapitulo(Historia.capitulo(d.capitulo)))
+      || 'Capítulo ' + Math.max(1, d.capitulo || 0);
     const nIns = (d.insignias || []).filter(i => i !== 'Título de Campeão' && i !== 'Campeão de Kanto').length;
     const dias = (d.relogio || {}).dia || 1;
     const quadro = (k, v) => `<div class="tf-quadro"><span class="tf-v">${this.esc(String(v))}</span><span class="tf-k">${this.esc(k)}</span></div>`;
