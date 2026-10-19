@@ -17,13 +17,16 @@ cenas:{
 
 cf1_o_papel:{
   texto:[
-    'O papel no poste é novo, com cola ainda brilhando. O desenho é melhor que o do último: acertaram o nariz.',
+    d => d.flags.ln_foragido_arrancou || d.flags.ln_foragido_mudou
+      ? 'O papel no poste é novo, com cola ainda brilhando. O desenho é melhor que o do último: acertaram o nariz.'
+      : 'O papel no poste é novo, com cola ainda brilhando. O desenho é bom. Acertaram até o nariz.',
     '**"PROCURA-SE PARA ESCLARECIMENTOS. FICHA DA LIGA. QUALQUER INFORMAÇÃO, CENTRO POKÉMON MAIS PRÓXIMO."**',
     'A ponte da Rota 15 é o único caminho pra fora de Fuchsia sem passar pela estação. Hoje tem uma guarita da Patrulha no meio dela, com farol.',
     d => { Nomes.apresentar('a dona da pensão'); return 'O PokéNav vibra com uma mensagem curta da Dona Briar:'; },
     '**"Não atravessa a ponte. Espera o Corwin no ponto de ônibus velho. Ele cobra caro e não erra."**'
   ],
-  ef:{flag:'cm_foragido_1', registrar:'A Patrulha pôs uma guarita na ponte da Rota 15. O seu desenho está nos postes.'},
+  ef:{flag:'cm_foragido_1', registrar:'A Patrulha pôs uma guarita na ponte da Rota 15. O seu desenho está nos postes.',
+      executar:() => { caminhoEntre(19, 5, 21); }},
   escolhas:[
     {texto:'Esperar o Corwin no ponto de ônibus velho.', vai:'cf1_o_corwin'},
     {texto:'Atravessar a ponte de cabeça erguida, com documento.', vai:'cf1_a_ponte',
@@ -34,12 +37,11 @@ cf1_o_papel:{
 },
 
 cf1_o_corwin:{
-  falante:'o atravessador',
-  vozes:['N','N','N'],
   texto:[
     'O ponto de ônibus velho não tem ônibus faz dez anos. O Corwin chega a pé, de casaco comprido, com um Hoothoot no ombro que gira a cabeça pra todo lado.',
-    d => { Nomes.apresentar('o atravessador'); return '"Corwin." Ele não estende a mão. "A Briar mandou. Quinhentos pra atravessar. Por baixo da ponte, pelo leito seco do rio."'; },
-    '"Tem mais duas pessoas hoje. Uma menina e um velho. Atravesso os três juntos ou nenhum."'
+    d => { Nomes.apresentar('o atravessador'); return fala('o atravessador', 'Corwin.', null, 'Ele não estende a mão.'); },
+    fala('o atravessador', 'A Briar mandou. Quinhentos pra atravessar. Por baixo da ponte, pelo leito seco do rio.'),
+    fala('o atravessador', 'Tem mais duas pessoas hoje. Uma menina e um velho. O velho pagou; a menina não tem. Atravesso os três juntos ou nenhum.')
   ],
   ef:{npc:{nome:'Corwin', opiniao:0, memoria:'Te atravessou por baixo da ponte da Rota 15.'}},
   escolhas:[
@@ -47,7 +49,7 @@ cf1_o_corwin:{
      ef:{dinheiro:-500, flag:'cm_foragido_pagou_corwin'}},
     {texto:'Pagar os quinhentos e mais quinhentos pela menina, que não tem.', vai:'cf1_o_leito', cond:d => d.jogador.dinheiro >= 1000,
      ef:{dinheiro:-1000, flag:['cm_foragido_pagou_corwin','cm_foragido_pagou_menina'], rep:{eixo:'bom', delta:2, motivo:'Pagou a travessia de uma menina que não tinha'}}},
-    {texto:'Não tem dinheiro. Tentar a ponte.', vai:'cf1_a_ponte'}
+    {texto:'Não pagar. Tentar a ponte.', vai:'cf1_a_ponte'}
   ]
 },
 
@@ -100,7 +102,7 @@ cf1_a_ponte:{
 cf1_entregou:{
   texto:[
     'Na guarita da ponte tem uma cadeira de plástico e uma garrafa térmica de café. O guarda te serve uma xícara enquanto liga pro Centro mais próximo.',
-    'A ficha da Liga, quando chega, é de três folhas. "Esclarecimentos sobre atividade em Celadon." Não é mandado. É conversa.',
+    'A ficha da Liga, quando chega, é de três folhas e um título só: ESCLARECIMENTOS SOBRE ATIVIDADE EM CELADON. Não é mandado. É conversa.',
     'Você esclarece por quatro horas, numa sala do Centro de Fuchsia, com uma atendente que digita devagar. No fim, ela carimba "aguardando".',
     fala('a atendente do Centro de Fuchsia', 'Pode ir. Não sai de Kanto. E tira esse desenho do poste, que tá assustando as crianças.', 'riso')
   ],
@@ -112,9 +114,13 @@ cf1_entregou:{
 
 cf1_passaram:{
   texto:[
-    'Do outro lado do rio, na estrada de terra que vai pro norte, vocês param pra respirar.',
-    'A menina do Nidoran agradece com um aceno e some pro lado do mato. O velho senta numa pedra e diz que daqui ele vai sozinho, devagar.',
-    d => d.flags.cm_foragido_corwin_ficou ? 'O Corwin não aparece. Uma hora depois, o Hoothoot dele pousa no seu ombro, sozinho, e fica.' : fala('o atravessador', 'Atravessei. Não atravesso de novo esse mês. A ponte tá quente.')
+    d => d.flags.cm_foragido_atravessou_de_cara
+      ? 'Do outro lado da ponte, na estrada de terra que vai pro norte, você para pra respirar quando o farol da guarita some na curva.'
+      : 'Do outro lado do rio, na estrada de terra que vai pro norte, vocês param pra respirar.',
+    d => d.flags.cm_foragido_atravessou_de_cara ? '' : 'A menina do Nidoran agradece com um aceno e some pro lado do mato. O velho senta numa pedra e diz que daqui ele vai sozinho, devagar.',
+    d => d.flags.cm_foragido_atravessou_de_cara ? ''
+      : d.flags.cm_foragido_corwin_ficou ? 'O Corwin não aparece. Uma hora depois, o Hoothoot dele pousa no seu ombro, sozinho, e fica.'
+      : fala('o atravessador', 'Atravessei. Não atravesso de novo esse mês. A ponte tá quente.')
   ],
   ef:{rep:{eixo:'ruim', delta:1, motivo:'Fugiu da Patrulha pela Rota 15'}},
   escolhas:[
@@ -148,7 +154,8 @@ cf2_a_pensao:{
     fala('a dona da pensão', 'Tem uma moça no porão desde ontem. Veio da estação da Rota 21, a de cerca alta. Trouxe um Pokémon que não é dela, dentro de uma mochila.'),
     fala('a dona da pensão', 'Eu não pergunto. Mas eu vi o Pokémon. Ele não pisca.', 'baixo')
   ],
-  ef:{flag:'cm_foragido_2', registrar:'Uma técnica fugida da Estação 4 se escondeu no porão da Pensão Briar com uma unidade de viveiro.'},
+  ef:{flag:'cm_foragido_2', registrar:'Uma técnica fugida da Estação 4 se escondeu no porão da Pensão Briar com uma unidade de viveiro.',
+      executar:() => { caminhoAs(6); }},
   escolhas:[
     {texto:'Descer ao porão.', vai:'cf2_o_porao'}
   ]
@@ -186,9 +193,10 @@ cf2_a_noite:{
     fala('a dona da pensão', 'Eu disse que não pergunto nome. Eles disseram que eles perguntam.', 'baixo'),
     'Lá em cima, alguém bate na porta da frente três vezes, com o nó do dedo.'
   ],
+  ef:{executar:() => { caminhoAs(23); }},
   escolhas:[
     {texto:'Subir e enfrentar os dois na porta.', vai:'cf2_a_porta',
-     ef:{rep:{eixo:'bom', delta:1, motivo:'Subiu pra enfrentar a Comissão na porta da pensão'}}},
+     ef:{flag:'cm_foragido_viu_a_prancheta', rep:{eixo:'bom', delta:1, motivo:'Subiu pra enfrentar a Comissão na porta da pensão'}}},
     {texto:'Tirar a técnica e o Eevee pela janela do porão, que dá pro cemitério.', vai:'cf2_o_cemiterio',
      ef:{rep:{eixo:'bom', delta:1, motivo:'Tirou a técnica fugida pela janela do porão'}}}
   ]
@@ -218,11 +226,16 @@ cf2_a_porta:{
 cf2_salvou:{
   texto:[
     'As unidades caem e esperam ordem. Eles recolhem e vão embora, e o de prancheta anota a placa da pensão.',
-    'De madrugada, o Corwin aparece na porta dos fundos, de casaco comprido, pra levar a técnica e o Eevee pro norte.',
+    d => d.flags.cm_foragido_corwin_novo
+      ? 'De madrugada, um homem de casaco comprido aparece na porta dos fundos pra levar a técnica e o Eevee pro norte. A Dona Briar chama ele de Corwin.'
+      : d.flags.cm_foragido_corwin_ficou
+        ? 'De madrugada, o Corwin aparece na porta dos fundos, de casaco comprido, mais magro do que na ponte, pra levar a técnica e o Eevee pro norte. O Hoothoot no seu ombro reconhece ele antes de você.'
+        : 'De madrugada, o Corwin aparece na porta dos fundos, de casaco comprido, pra levar a técnica e o Eevee pro norte.',
     'Antes de ir, ela põe o Eevee no chão e diz "vem". Ele demora. E vem.'
   ],
   ef:{flag:'cm_foragido_salvou_a_tecnica', rep:{eixo:'bom', delta:2, motivo:'Protegeu uma técnica fugida e uma unidade de viveiro na Pensão Briar'},
-      npc:{nome:'Dona Briar', opiniao:4, memoria:'Você protegeu a porta da pensão contra dois de colete preto.'}},
+      npc:{nome:'Dona Briar', opiniao:4, memoria:'Você protegeu a porta da pensão contra dois de colete preto.'},
+      executar:d => { if (!Nomes.sabe('o atravessador')) d.flags.cm_foragido_corwin_novo = true; Nomes.apresentar('o atravessador'); }},
   escolhas:[
     {texto:'Ver eles irem.', vai:'cf2_fim'}
   ]
@@ -246,6 +259,7 @@ cf2_fim:{
     fala('a dona da pensão', 'Café às seis. Como sempre.', 'baixo'),
     'Lavender não tem música. Na pensão, às seis, tem barulho de xícara, que é quase.'
   ],
+  ef:{executar:() => { caminhoAs(6); }},
   fim:true, resumo:'O porão da pensão: um colchão no chão, um Eevee que não pisca e dois coletes pretos na porta.'
 }
 
@@ -271,27 +285,31 @@ cf3_a_carta:{
   ef:{flag:'cm_foragido_3', registrar:'A ficha da Liga virou mandado de condução. Quinze dias pra se apresentar.'},
   escolhas:[
     {texto:'Juntar tudo o que você sabe antes de decidir.', vai:'cf3_o_que_tem'},
-    {texto:'Ligar pro Corwin.', vai:'cf3_o_corwin'}
+    {texto:'Ligar pro Corwin.', vai:'cf3_o_corwin', cond:d => Nomes.sabe('o atravessador')},
+    {texto:'Decidir.', vai:'cf3_a_decisao', cond:d => !Nomes.sabe('o atravessador')}
   ]
 },
 
 cf3_o_que_tem:{
   texto:[
     'Em cima da mesa da cozinha, você espalha o que juntou na estrada: papel, foto, nota, o que a memória guarda.',
-    d => d.flags.cm_foragido_salvou_a_tecnica ? 'Um crachá da Estação 4 cortado ao meio com tesoura.' : 'O pelo de um Eevee, que você guardou num envelope sem saber por quê.',
+    d => d.flags.cm_foragido_salvou_a_tecnica ? 'Um crachá da Estação 4 cortado ao meio com tesoura.'
+      : d.flags.cm_foragido_levaram_a_tecnica ? 'O pelo de um Eevee, que você guardou num envelope sem saber por quê.'
+      : d.flags.cm_foragido_1 ? 'Um desenho seu, arrancado de um poste da Rota 15, com o nariz certo.'
+      : 'A cópia da sua ficha da Liga, com o seu nome em letra de máquina.',
     'Não é processo. É uma vida de quem viu coisa demais pra quem tem ficha.',
     fala('a dona da pensão', 'Quem se entrega com documento não se entrega. Depõe.', 'baixo')
   ],
   ef:{flag:'cm_foragido_juntou', rep:{eixo:'bom', delta:1, motivo:'Juntou o que sabia antes de decidir o próprio destino'}},
   escolhas:[
-    {texto:'Ligar pro Corwin.', vai:'cf3_o_corwin'},
+    {texto:'Ligar pro Corwin.', vai:'cf3_o_corwin', cond:d => Nomes.sabe('o atravessador')},
     {texto:'Decidir.', vai:'cf3_a_decisao'}
   ]
 },
 
 cf3_o_corwin:{
   texto:[
-    d => d.flags.cm_foragido_corwin_ficou ? 'O Corwin atende. Ele saiu da guarita da ponte depois de dois meses. O Hoothoot dele ainda está com você.' : 'O Corwin atende no terceiro toque.',
+    d => d.flags.cm_foragido_corwin_ficou ? 'O Corwin atende. Ele ficou dois meses preso depois da noite da ponte. O Hoothoot dele ainda está com você.' : 'O Corwin atende no terceiro toque.',
     fala('o atravessador', 'Eu atravesso você pro sul, de barco, pra uma ilha que não tem Centro Pokémon nem Liga. Dois mil. É a última que eu faço.', 'baixo'),
     fala('o atravessador', 'Ou você fica, e eu fico também, e a gente vê.', 'baixo')
   ],
@@ -306,6 +324,7 @@ cf3_a_decisao:{
     'Não é a Liga. A Liga manda carta. Quem estaciona de ré na frente de pensão é quem não quer que você chegue no dia quinze.',
     fala('a dona da pensão', 'Comissão. Eles não querem você na Liga. Na Liga você fala.', 'frio')
   ],
+  ef:{executar:() => { caminhoEntre(23, 5, 1); }},
   escolhas:[
     {texto:'Sair pela frente e enfrentar o carro.', vai:'cf3_o_carro'},
     {texto:'Sair pelos fundos, pelo cemitério.', vai:'cf3_os_fundos'}
@@ -315,13 +334,13 @@ cf3_a_decisao:{
 cf3_os_fundos:{
   texto:[
     'O cemitério de Lavender de madrugada é o lugar mais quieto de Kanto. A Torre ao fundo tem uma janela acesa no último andar, como sempre.',
-    'No portão de trás, ninguém dessa vez. Eles não pensaram duas vezes na mesma janela.'
+    d => d.flags.cm_foragido_2 ? 'No portão de trás, ninguém dessa vez. Eles não pensaram duas vezes na mesma janela.' : 'No portão de trás, ninguém.'
   ],
   ef:{flag:'cm_foragido_fundos'},
   escolhas:[
     {texto:'Ir pro Centro de Lavender e se apresentar à Liga.', vai:'cf3_final_rendicao',
      ef:{rep:{eixo:'bom', delta:3, motivo:'Se apresentou voluntariamente à Liga, com o que sabia'}}},
-    {texto:'Ir pro cais encontrar o Corwin.', vai:'cf3_final_estrada',
+    {texto:d => Nomes.sabe('o atravessador') ? 'Ir pro cais encontrar o Corwin.' : 'Ir pro cais procurar um barco que saia sem luz.', vai:'cf3_final_estrada',
      ef:{rep:{eixo:'ruim', delta:1, motivo:'Fugiu de Kanto de barco'}}},
     {texto:'Voltar pra pensão de manhã e ficar. Alguém tem que abrir a porta pra próxima.', vai:'cf3_final_pensao',
      ef:{rep:{eixo:'bom', delta:2, motivo:'Ficou na Pensão Briar pra esconder quem precisa'}}},
@@ -331,7 +350,7 @@ cf3_os_fundos:{
 },
 
 cf3_o_carro:{
-  texto:['Do carro preto descem dois. Um deles você já viu numa porta de pensão, com prancheta.'],
+  texto:[d => d.flags.cm_foragido_viu_a_prancheta ? 'Do carro preto descem dois. Um deles você já viu numa porta de pensão, com prancheta.' : 'Do carro preto descem dois, de colete preto, sem pressa nenhuma.'],
   batalha:{comissao:'seguranca', nivel:d => nivelDoCaminho(d, 3), tipo:'treinador', treinador:'Segurança da Estação 4', fuga:false,
            timeExtra:[{dex:94, nivel:d => nivelDoCaminho(d, 3)}],
            vitoria:'cf3_venceu_o_carro', derrota:'cf3_os_fundos', gameover:'gameover'}
@@ -347,7 +366,7 @@ cf3_venceu_o_carro:{
   escolhas:[
     {texto:'Ir pro Centro de Lavender e se apresentar à Liga.', vai:'cf3_final_rendicao',
      ef:{rep:{eixo:'bom', delta:3, motivo:'Se apresentou voluntariamente à Liga, com o que sabia'}}},
-    {texto:'Ir pro cais encontrar o Corwin.', vai:'cf3_final_estrada',
+    {texto:d => Nomes.sabe('o atravessador') ? 'Ir pro cais encontrar o Corwin.' : 'Ir pro cais procurar um barco que saia sem luz.', vai:'cf3_final_estrada',
      ef:{rep:{eixo:'ruim', delta:1, motivo:'Fugiu de Kanto de barco'}}},
     {texto:'Ficar na pensão. Alguém tem que abrir a porta pra próxima.', vai:'cf3_final_pensao',
      ef:{rep:{eixo:'bom', delta:2, motivo:'Ficou na Pensão Briar pra esconder quem precisa'}}},
@@ -361,14 +380,14 @@ cf3_seguir:{
     fala('a dona da pensão', 'Vai. O quarto fica. Eu não alugo.', 'baixo'),
     'O ônibus da Liga pro Planalto sai às oito e quinze. Você compra a passagem com o nome que está no seu documento, porque esconder já cansou.'
   ],
-  ef:{flag:'cm_foragido_seguiu'},
+  ef:{flag:'cm_foragido_seguiu', executar:() => { caminhoAs(8); }},
   fim:true, resumo:'Rendição ou estrada: uma carta da Liga num endereço que não é seu e um carro estacionado de ré.'
 },
 
 cf3_final_rendicao:{
   texto:[
     'No Centro de Lavender, a atendente lê a carta da Liga, olha pra você, e liga a chaleira antes de ligar pra Liga.',
-    'O depoimento dura dois dias. Você conta tudo: Celadon, a rede, a ponte, o porão.'
+    d => `O depoimento dura dois dias. Você conta tudo: Celadon${d.flags.cm_foragido_1 ? ', a ponte' : ''}${d.flags.cm_foragido_2 ? ', o porão' : ''}, o carro estacionado de ré.`
   ],
   final:{id:'foragido_rendicao', titulo:'RENDIÇÃO', texto:[
     'A medida é a mais leve que existe: licença suspensa por um ano e serviço comunitário num abrigo de Pokémon em Cerulean.',
@@ -380,7 +399,9 @@ cf3_final_rendicao:{
 
 cf3_final_estrada:{
   texto:[
-    d => d.flags.cm_foragido_corwin_ficou ? 'No cais, o Corwin está de casaco comprido, sem Hoothoot. Você devolve o Hoothoot. Ele não aceita: diz que o Hoothoot escolheu.' : 'No cais, o Corwin está de casaco comprido, com o Hoothoot no ombro girando a cabeça.',
+    d => d.flags.cm_foragido_corwin_ficou ? 'No cais, o Corwin está de casaco comprido, sem Hoothoot. Você devolve o Hoothoot. Ele não aceita: diz que o Hoothoot escolheu.'
+      : Nomes.sabe('o atravessador') ? 'No cais, o Corwin está de casaco comprido, com o Hoothoot no ombro girando a cabeça.'
+      : 'No cais, um homem de casaco comprido, com um Hoothoot no ombro, cobra dois mil e não pergunta o seu nome. A Dona Briar já tinha ligado pra ele.',
     'O barco é baixo e não tem nome. Sai às quatro da manhã, sem luz, pro sul.'
   ],
   final:{id:'foragido_estrada', titulo:'A ESTRADA', texto:[
