@@ -773,6 +773,16 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
 .linha.longa .k{white-space:normal;flex:1 1 auto;min-width:0}
 .linha.longa .k .fraco{display:block;margin-top:2px;font-size:12.5px}
 .linha.longa .v{flex:0 0 auto;white-space:nowrap}
+/* A folha de regras e a apostila: a conta é frase, não número. O nome
+   fica numa coluna e a conta encosta à esquerda, em fonte de ler: mono
+   alinhado à direita só serve pra número curto, e em três linhas a
+   conta ficava em zigue-zague. No celular, o nome vai em cima. */
+.modal.regras .linha, .modal.tutorial .linha{display:grid;grid-template-columns:minmax(8em, 28%) 1fr;gap:2px 16px;align-items:baseline}
+.modal.regras .linha .k, .modal.tutorial .linha .k{white-space:normal}
+.modal.regras .linha .v, .modal.tutorial .linha .v{font-family:inherit;text-align:left;white-space:normal}
+@media (max-width:560px){
+  .modal.regras .linha, .modal.tutorial .linha{grid-template-columns:1fr}
+}
 
 .rep-barra{height:8px;background:var(--bg);border:1px solid var(--borda);border-radius:5px;overflow:hidden;margin-top:7px}
 .rep-barra i{display:block;height:100%;transition:width .6s var(--suave);border-radius:4px}

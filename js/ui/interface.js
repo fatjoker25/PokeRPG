@@ -5439,12 +5439,12 @@ const UI = {
       <div class="linha"><span class="k">Insistir</span><span class="v">cada Pokébola que ele rompe conta · na terceira, quem estava neutro fica hostil</span></div>
       ${Object.values(Estado.dados.lendarios||{}).some(l=>l.quebrouBola) ? '<p class="sussurro">E existem coisas que simplesmente quebram a Pokébola no ar.</p>' : ''}
       <h3>Lendário no cinto</h3>
-      <div class="linha longa"><span class="k">Alguém viu</span><span class="v">${this.esc('seis vezes em dez, e sempre pra quem já é {Famoso|Famosa} ou {Temido|Temida} · quem era {Respeitado|Respeitada} ou mais vira notícia boa,')} o resto vira notícia ruim, e as duas andam muito · a Liga conversa na primeira vez, manda devolver na segunda e emite ordem de detenção na terceira</span></div>
-      <div class="linha longa"><span class="k">Ninguém viu</span><span class="v">a reputação espera · dois capítulos depois alguém fala, e aí conta</span></div>
-      <div class="linha longa"><span class="k">Enquanto estiver preso</span><span class="v">a cada dois capítulos a reputação piora e Kanto fica mais instável · com a moral abaixo de 30 ele pode romper a Pokébola numa virada de capítulo e sumir, hostil</span></div>
-      <div class="linha longa"><span class="k">O grupo dele</span><span class="v">preso um do trio lendário ou das três aves, os outros do grupo passam a caçar você · o grupo inteiro preso quebra o clima de Kanto</span></div>
-      <div class="linha longa"><span class="k">Soltar</span><span class="v">ele vai embora sem atacar · Kanto acalma um pouco · os do grupo param de caçar</span></div>
-      <div class="linha longa"><span class="k">Kanto instável</span><span class="v">o número da aba Mundo, na Ficha · sobe com lendário preso e com o que se descobre no norte, e muda o que o norte faz com você</span></div>` : ''}
+      <div class="linha"><span class="k">Alguém viu</span><span class="v">${this.esc('seis vezes em dez, e sempre pra quem já é {Famoso|Famosa} ou {Temido|Temida} · quem era {Respeitado|Respeitada} ou mais vira notícia boa,')} o resto vira notícia ruim, e as duas andam muito · a Liga conversa na primeira vez, manda devolver na segunda e emite ordem de detenção na terceira</span></div>
+      <div class="linha"><span class="k">Ninguém viu</span><span class="v">a reputação espera · dois capítulos depois alguém fala, e aí conta</span></div>
+      <div class="linha"><span class="k">Enquanto estiver preso</span><span class="v">a cada dois capítulos a reputação piora e Kanto fica mais instável · com a moral abaixo de 30 ele pode romper a Pokébola numa virada de capítulo e sumir, hostil</span></div>
+      <div class="linha"><span class="k">O grupo dele</span><span class="v">preso um do trio lendário ou das três aves, os outros do grupo passam a caçar você · o grupo inteiro preso quebra o clima de Kanto</span></div>
+      <div class="linha"><span class="k">Soltar</span><span class="v">ele vai embora sem atacar · Kanto acalma um pouco · os do grupo param de caçar</span></div>
+      <div class="linha"><span class="k">Kanto instável</span><span class="v">o número da aba Mundo, na Ficha · sobe com lendário preso e com o que se descobre no norte, e muda o que o norte faz com você</span></div>` : ''}
       <h3>Perícias</h3>
       <p class="sussurro">Parar e olhar vale uma vez por cena: a segunda olhada nunca mostrou nada.</p>
       <p class="sussurro">Parada de d6: status + 2 de perícia + o cinto, sucesso em 4+, contra os sucessos que a cena pede. Um a mais é crítico, na conta é sucesso, faltou um é parcial, faltaram dois é fracasso. Toda rolagem aparece na bandeja de dados, inclusive as que o jogo faz sozinho.</p>
@@ -5641,7 +5641,7 @@ const UI = {
       <p class="sussurro">Trocar devolve o anterior à mochila. O efeito de cada um está escrito na ficha técnica do item, em letra de máquina.</p>
 
       <h3>Dados</h3>
-      <p class="sussurro">Toda rolagem do combate aparece na tela como dado de verdade, com o motivo embaixo. Dá pra clicar em qualquer um pra ver ele girar de novo — o resultado não muda, já está registrado. A bandeja embaixo é só pra girar por girar: não afeta nada.</p>`);
+      <p class="sussurro">Toda rolagem do combate aparece na tela como dado de verdade, com o motivo embaixo. Dá pra clicar em qualquer um pra ver ele girar de novo — o resultado não muda, já está registrado. A bandeja embaixo é só pra girar por girar: não afeta nada.</p>`, false, 'regras');
   }
 };
 
