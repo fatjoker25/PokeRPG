@@ -3325,7 +3325,7 @@ const UI = {
       <hr style="border:none;border-top:1px solid var(--borda);margin:32px 0">
       <div style="text-align:left;max-width:610px;margin:0 auto">
         <h3>Como você terminou</h3>
-        <div class="linha"><span class="k">Reputação final</span><span class="v">${this.esc(Estado.nomeRep())} (${d.reputacao.eixo})</span></div>
+        <div class="linha"><span class="k">Reputação final</span><span class="v">${this.esc(Estado.nomeRep())}</span></div>
         <div class="linha"><span class="k">Insígnias</span><span class="v">${d.insignias.length}</span></div>
         <div class="linha"><span class="k">Time</span><span class="v">${d.time.length} Pokémon</span></div>
         <div class="linha"><span class="k">Mortes permanentes</span><span class="v">${d.cemiterio.length}</span></div>
@@ -4502,7 +4502,7 @@ const UI = {
       </div>
 
       <div class="cartao-rep">
-        <div class="cartao-linha"><span class="k">Reputação</span><span class="v">${this.esc(nivel.nome)} · ${eixo} ${val}/8</span></div>
+        <div class="cartao-linha"><span class="k">Reputação</span><span class="v">${this.esc(nivel.nome)} · ${eixo === 'bom' ? 'boa' : 'má'} · ${val} de 8</span></div>
         <div class="rep-barra ${eixo}"><i style="width:${Math.round(prog.atual*100)}%"></i></div>
         <div class="rep-nota">${prog.prox
           ? `${prog.pontos} ponto${prog.pontos === 1 ? '' : 's'} · faltam ${prog.falta} para o próximo degrau`
@@ -4708,7 +4708,7 @@ const UI = {
       ${percorridos.map(c=>`<div class="linha longa"><span class="k">${this.esc(rotulo(c))}</span><span class="v">${this.esc(c.tom || '')}</span></div>`).join('')}
       <h3>Decisões que o mundo registrou</h3>
       ${d.reputacao.historico.length
-        ? d.reputacao.historico.slice(-25).map(h=>`<div class="linha longa"><span class="k">Cap ${h.cap} · ${this.esc(h.motivo)}</span><span class="v" style="color:${h.eixo==='bom'?'var(--bom)':'var(--ruim)'}">${h.eixo} +${h.delta}</span></div>`).join('')
+        ? d.reputacao.historico.slice(-25).map(h=>`<div class="linha longa"><span class="k">Cap ${h.cap} · ${this.esc(h.motivo)}</span><span class="v" style="color:${h.eixo==='bom'?'var(--bom)':'var(--ruim)'}">${h.eixo === 'bom' ? 'boa' : 'má'} +${h.delta}</span></div>`).join('')
         : '<p class="nada">Nada ainda.</p>'}
     `);
   },
@@ -5052,7 +5052,7 @@ const UI = {
       <div class="linha"><span class="k">Salário</span><span class="v">o maior entre os seus postos, não a soma</span></div>
       <div class="linha"><span class="k">Onde se assume</span><span class="v">no lugar de cada um: licença de treinador no balcão do Centro · Auxiliar, Pesquisador e Professor no laboratório de Pallet · Guarda de rota no posto da Patrulha, em Viridian · Criador na Associação, em Cerulean · Repórter na redação, em Fuchsia · Policial na delegacia, Investigador na Auditoria e Perito na Comissão, em Saffron · Conselheiro na prefeitura de Celadon · Instrutor, Líder e Elite no Planalto · o envelope sem timbre, nos armários do Centro de Vermilion</span></div>
       <div class="linha"><span class="k">O que cada um pede</span><span class="v">a lista aparece no lugar, com ✓ no que você já tem e ✗ no que falta</span></div>
-      <div class="linha"><span class="k">Policial de Kanto</span><span class="v">3 insígnias · reputação boa Reconhecido ou mais · ter sido Guarda de rota · 800 ₽ por capítulo, Centro sem custo, passagem e Força +1</span></div>
+      <div class="linha"><span class="k">Policial de Kanto</span><span class="v">${this.esc('3 insígnias · reputação boa {Reconhecido|Reconhecida} ou mais · ter sido Guarda de rota · 800 ₽ por capítulo, Centro sem custo, passagem e Força +1')}</span></div>
       <p class="sussurro">Quinze postos, de licença de treinador a conselheiro regional. Cada um pede uma coisa diferente — espécies catalogadas, insígnias, reputação, o time que você leva — e alguns só existem depois de muita estrada. Quem carrega o envelope sem timbre não recebe crachá da Liga, e vice-versa; e esse envelope piora a sua reputação sozinho, todo capítulo.</p>
 
       <h3>Estrada e tempo</h3>
@@ -5413,7 +5413,14 @@ const UI = {
       <div class="linha"><span class="k">Bônus</span><span class="v">com metade do HP ou menos +1 · com 1 HP +2 (no lugar do +1) · +1 por condição (a de status e a confusão)</span></div>
       <div class="linha"><span class="k">Master Ball</span><span class="v">fecha sem rolagem</span></div>
       <div class="linha"><span class="k">Insistir</span><span class="v">cada Pokébola que ele rompe conta · na terceira, quem estava neutro fica hostil</span></div>
-      ${Object.values(Estado.dados.lendarios||{}).some(l=>l.quebrouBola) ? '<p class="sussurro">E existem coisas que simplesmente quebram a Pokébola no ar.</p>' : ''}` : ''}
+      ${Object.values(Estado.dados.lendarios||{}).some(l=>l.quebrouBola) ? '<p class="sussurro">E existem coisas que simplesmente quebram a Pokébola no ar.</p>' : ''}
+      <h3>Lendário no cinto</h3>
+      <div class="linha longa"><span class="k">Alguém viu</span><span class="v">${this.esc('seis vezes em dez, e sempre pra quem já é {Famoso|Famosa} ou {Temido|Temida} · quem era {Respeitado|Respeitada} ou mais vira notícia boa,')} o resto vira notícia ruim, e as duas andam muito · a Liga conversa na primeira vez, manda devolver na segunda e emite ordem de detenção na terceira</span></div>
+      <div class="linha longa"><span class="k">Ninguém viu</span><span class="v">a reputação espera · dois capítulos depois alguém fala, e aí conta</span></div>
+      <div class="linha longa"><span class="k">Enquanto estiver preso</span><span class="v">a cada dois capítulos a reputação piora e Kanto fica mais instável · com a moral abaixo de 30 ele pode romper a Pokébola numa virada de capítulo e sumir, hostil</span></div>
+      <div class="linha longa"><span class="k">O grupo dele</span><span class="v">preso um do trio lendário ou das três aves, os outros do grupo passam a caçar você · o grupo inteiro preso quebra o clima de Kanto</span></div>
+      <div class="linha longa"><span class="k">Soltar</span><span class="v">ele vai embora sem atacar · Kanto acalma um pouco · os do grupo param de caçar</span></div>
+      <div class="linha longa"><span class="k">Kanto instável</span><span class="v">o número da aba Mundo, na Ficha · sobe com lendário preso e com o que se descobre no norte, e muda o que o norte faz com você</span></div>` : ''}
       <h3>Perícias</h3>
       <p class="sussurro">Parar e olhar vale uma vez por cena: a segunda olhada nunca mostrou nada.</p>
       <p class="sussurro">Parada de d6: status + 2 de perícia + o cinto, sucesso em 4+, contra os sucessos que a cena pede. Um a mais é crítico, na conta é sucesso, faltou um é parcial, faltaram dois é fracasso. Toda rolagem aparece na bandeja de dados, inclusive as que o jogo faz sozinho.</p>
@@ -5573,7 +5580,7 @@ const UI = {
       <div class="linha"><span class="k">Salário</span><span class="v">o maior entre os seus postos, não a soma</span></div>
       <div class="linha"><span class="k">Onde se assume</span><span class="v">no lugar de cada um: licença de treinador no balcão do Centro · Auxiliar, Pesquisador e Professor no laboratório de Pallet · Guarda de rota no posto da Patrulha, em Viridian · Criador na Associação, em Cerulean · Repórter na redação, em Fuchsia · Policial na delegacia, Investigador na Auditoria e Perito na Comissão, em Saffron · Conselheiro na prefeitura de Celadon · Instrutor, Líder e Elite no Planalto · o envelope sem timbre, nos armários do Centro de Vermilion</span></div>
       <div class="linha"><span class="k">O que cada um pede</span><span class="v">a lista aparece no lugar, com ✓ no que você já tem e ✗ no que falta</span></div>
-      <div class="linha"><span class="k">Policial de Kanto</span><span class="v">3 insígnias · reputação boa Reconhecido ou mais · ter sido Guarda de rota · 800 ₽ por capítulo, Centro sem custo, passagem e Força +1</span></div>
+      <div class="linha"><span class="k">Policial de Kanto</span><span class="v">${this.esc('3 insígnias · reputação boa {Reconhecido|Reconhecida} ou mais · ter sido Guarda de rota · 800 ₽ por capítulo, Centro sem custo, passagem e Força +1')}</span></div>
       <p class="sussurro">Quinze postos, de licença de treinador a conselheiro regional. Cada um pede uma coisa diferente — espécies catalogadas, insígnias, reputação, o time que você leva — e alguns só existem depois de muita estrada. Quem carrega o envelope sem timbre não recebe crachá da Liga, e vice-versa; e esse envelope piora a sua reputação sozinho, todo capítulo.</p>
 
       <h3>A rede</h3>

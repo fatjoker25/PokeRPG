@@ -54,7 +54,7 @@ const CARGOS = [
   onde:'saffron', lugar:'Delegacia de Saffron',
   guardar:'Guardar o distintivo e seguir.',
   pede:[{t:'3 insígnias', ok:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 3},
-        {t:'reputação boa: Reconhecido ou mais', ok:d=>d.reputacao.eixo === 'bom' && d.reputacao.bom >= 3},
+        {t:'reputação boa: {Reconhecido|Reconhecida} ou mais', ok:d=>d.reputacao.eixo === 'bom' && d.reputacao.bom >= 3},
         {t:'alguém da polícia que te conheça: ter sido Guarda de rota', ok:d=>Cargos.tem('guarda_rota')}],
   requer:d=>true,
   veta:['rocket'],
@@ -99,7 +99,7 @@ const CARGOS = [
   get peso(){ return typeof Rede !== 'undefined' ? Rede.atual().peso : 3; },
   onde:'vermilion', lugar:'Armários do Centro',
   guardar:'Fechar o armário e seguir.',
-  pede:[{t:'reputação ruim: Indesejado ou pior', ok:d=>d.reputacao.eixo === 'ruim' && d.reputacao.ruim >= 3},
+  pede:[{t:'reputação ruim: {Indesejado|Indesejada} ou pior', ok:d=>d.reputacao.eixo === 'ruim' && d.reputacao.ruim >= 3},
         {t:'a rede nunca ter parado de te ligar', ok:d=>!d.flags.largou_rocket}],
   /* ninguém sai: quem largou o envelope não recebe outro */
   requer:d=>d.reputacao.eixo === 'ruim' && d.reputacao.ruim >= 3 && !d.flags.largou_rocket,
@@ -116,7 +116,7 @@ const CARGOS = [
   id:'investigador', falante:'a auditora', nome:'{Investigador|Investigadora} de campo', orgao:'Auditoria da Liga', peso:3, cap:10,
   onde:'saffron', lugar:'Auditoria da Liga',
   guardar:'Guardar a credencial e seguir.',
-  pede:[{t:'4 insígnias', ok:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 4}, {t:'reputação boa: Respeitado ou mais', ok:d=>d.reputacao.eixo === 'bom' && d.reputacao.bom >= 4}],
+  pede:[{t:'4 insígnias', ok:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 4}, {t:'reputação boa: {Respeitado|Respeitada} ou mais', ok:d=>d.reputacao.eixo === 'bom' && d.reputacao.bom >= 4}],
   requer:d=>d.reputacao.eixo === 'bom' && d.reputacao.bom >= 4
          && d.insignias.filter(i=>i!=='Título de Campeão').length >= 4,
   veta:['rocket'],
@@ -170,7 +170,7 @@ const CARGOS = [
   id:'lider', falante:'a conselheira da Liga', nome:'Líder de ginásio', orgao:'Liga Pokémon', peso:5, cap:24,
   onde:'planalto', lugar:'Secretaria da Liga',
   guardar:'Assinar e seguir.',
-  pede:[{t:'8 insígnias', ok:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 8}, {t:'reputação boa: Famoso ou mais', ok:d=>d.reputacao.eixo === 'bom' && d.reputacao.bom >= 5}],
+  pede:[{t:'8 insígnias', ok:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 8}, {t:'reputação boa: {Famoso|Famosa} ou mais', ok:d=>d.reputacao.eixo === 'bom' && d.reputacao.bom >= 5}],
   requer:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 8
          && d.reputacao.eixo === 'bom' && d.reputacao.bom >= 5,
   veta:['rocket'],
@@ -207,7 +207,7 @@ const CARGOS = [
 {
   id:'conselheiro', falante:'a conselheira mais velha', nome:'{Conselheiro|Conselheira} de Kanto', orgao:'Conselho Regional', peso:5, cap:28,
   onde:'celadon', lugar:'Prefeitura de Celadon',
-  pede:[{t:'Campeão de Kanto ou oito insígnias', ok:d=>!!d.flags.campeao_de_kanto || !!d.flags.oito_insignias}, {t:'reputação boa: Admirado ou mais', ok:d=>d.reputacao.eixo === 'bom' && d.reputacao.bom >= 6}],
+  pede:[{t:'{Campeão|Campeã} de Kanto ou oito insígnias', ok:d=>!!d.flags.campeao_de_kanto || !!d.flags.oito_insignias}, {t:'reputação boa: {Admirado|Admirada} ou mais', ok:d=>d.reputacao.eixo === 'bom' && d.reputacao.bom >= 6}],
   requer:d=>d.reputacao.eixo === 'bom' && d.reputacao.bom >= 6
          && (!!d.flags.campeao_de_kanto || !!d.flags.oito_insignias),
   veta:['rocket'],

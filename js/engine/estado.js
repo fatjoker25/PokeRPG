@@ -2,23 +2,23 @@
    ESTADO — o mundo lembra de tudo
    ============================================================ */
 const NIVEIS_BOM = [
-  {n:1, nome:'Desconhecido', ef:'Ninguém te conhece.'},
+  {n:1, nome:'Desconhecid{o|a}', ef:'Ninguém te conhece.'},
   {n:2, nome:'Familiar',     ef:'Sua cidade te reconhece. Pequenas cortesias.'},
-  {n:3, nome:'Reconhecido',  ef:'Descontos, informação de graça, selvagens menos agressivos por perto.'},
-  {n:4, nome:'Respeitado',   ef:'NPCs te ouvem antes de agir. Lojas te priorizam.'},
-  {n:5, nome:'Famoso',       ef:'Seu nome corre em várias cidades. Convites e rivais.'},
-  {n:6, nome:'Admirado',     ef:'Favores sem cobrança. A Liga te consulta. Selvagens fracos fogem de você.'},
+  {n:3, nome:'Reconhecid{o|a}',  ef:'Descontos, informação de graça, selvagens menos agressivos por perto.'},
+  {n:4, nome:'Respeitad{o|a}',   ef:'NPCs te ouvem antes de agir. Lojas te priorizam.'},
+  {n:5, nome:'Famos{o|a}',       ef:'Seu nome corre em várias cidades. Convites e rivais.'},
+  {n:6, nome:'Admirad{o|a}',     ef:'Favores sem cobrança. A Liga te consulta. Selvagens fracos fogem de você.'},
   {n:7, nome:'Ídolo Regional', ef:'Cidades te recebem com festa. Cargos oferecidos sem pedir.'},
-  {n:8, nome:'Lendário',     ef:'Kanto inteira sabe seu nome. A Liga te trata como autoridade.'}
+  {n:8, nome:'Lendári{o|a}',     ef:'Kanto inteira sabe seu nome. A Liga te trata como autoridade.'}
 ];
 const NIVEIS_RUIM = [
-  {n:1, nome:'Desconhecido', ef:'Ninguém te conhece.'},
-  {n:2, nome:'Suspeito',     ef:'Olhares desconfiados. Lojistas te observam.'},
-  {n:3, nome:'Indesejado',   ef:'NPCs evitam te abordar. Atendimento a contragosto.'},
-  {n:4, nome:'Temido',       ef:'Vozes baixam quando você entra. Selvagens atacam primeiro.'},
-  {n:5, nome:'Notório',      ef:'NPCs fogem. A Liga manda oficiais "conversar".'},
-  {n:6, nome:'Proscrito',    ef:'Banido de cidades. Recompensa por informações sobre você.'},
-  {n:7, nome:'Caçado',       ef:'Ordem de detenção ativa. Treinadores da Liga autorizados a te capturar.'},
+  {n:1, nome:'Desconhecid{o|a}', ef:'Ninguém te conhece.'},
+  {n:2, nome:'Suspeit{o|a}',     ef:'Olhares desconfiados. Lojistas te observam.'},
+  {n:3, nome:'Indesejad{o|a}',   ef:'NPCs evitam te abordar. Atendimento a contragosto.'},
+  {n:4, nome:'Temid{o|a}',       ef:'Vozes baixam quando você entra. Selvagens atacam primeiro.'},
+  {n:5, nome:'Notóri{o|a}',      ef:'NPCs fogem. A Liga manda oficiais "conversar".'},
+  {n:6, nome:'Proscrit{o|a}',    ef:'Banido de cidades. Recompensa por informações sobre você.'},
+  {n:7, nome:'Caçad{o|a}',       ef:'Ordem de detenção ativa. Treinadores da Liga autorizados a te capturar.'},
   {n:8, nome:'Monstro Lendário', ef:'Seu nome é terror. A Elite 4 é mobilizada contra você.'}
 ];
 

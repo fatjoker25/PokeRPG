@@ -20778,7 +20778,7 @@ const CARGOS = [
   onde:'saffron', lugar:'Delegacia de Saffron',
   guardar:'Guardar o distintivo e seguir.',
   pede:[{t:'3 insígnias', ok:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 3},
-        {t:'reputação boa: Reconhecido ou mais', ok:d=>d.reputacao.eixo === 'bom' && d.reputacao.bom >= 3},
+        {t:'reputação boa: {Reconhecido|Reconhecida} ou mais', ok:d=>d.reputacao.eixo === 'bom' && d.reputacao.bom >= 3},
         {t:'alguém da polícia que te conheça: ter sido Guarda de rota', ok:d=>Cargos.tem('guarda_rota')}],
   requer:d=>true,
   veta:['rocket'],
@@ -20823,7 +20823,7 @@ const CARGOS = [
   get peso(){ return typeof Rede !== 'undefined' ? Rede.atual().peso : 3; },
   onde:'vermilion', lugar:'Armários do Centro',
   guardar:'Fechar o armário e seguir.',
-  pede:[{t:'reputação ruim: Indesejado ou pior', ok:d=>d.reputacao.eixo === 'ruim' && d.reputacao.ruim >= 3},
+  pede:[{t:'reputação ruim: {Indesejado|Indesejada} ou pior', ok:d=>d.reputacao.eixo === 'ruim' && d.reputacao.ruim >= 3},
         {t:'a rede nunca ter parado de te ligar', ok:d=>!d.flags.largou_rocket}],
   /* ninguém sai: quem largou o envelope não recebe outro */
   requer:d=>d.reputacao.eixo === 'ruim' && d.reputacao.ruim >= 3 && !d.flags.largou_rocket,
@@ -20840,7 +20840,7 @@ const CARGOS = [
   id:'investigador', falante:'a auditora', nome:'{Investigador|Investigadora} de campo', orgao:'Auditoria da Liga', peso:3, cap:10,
   onde:'saffron', lugar:'Auditoria da Liga',
   guardar:'Guardar a credencial e seguir.',
-  pede:[{t:'4 insígnias', ok:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 4}, {t:'reputação boa: Respeitado ou mais', ok:d=>d.reputacao.eixo === 'bom' && d.reputacao.bom >= 4}],
+  pede:[{t:'4 insígnias', ok:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 4}, {t:'reputação boa: {Respeitado|Respeitada} ou mais', ok:d=>d.reputacao.eixo === 'bom' && d.reputacao.bom >= 4}],
   requer:d=>d.reputacao.eixo === 'bom' && d.reputacao.bom >= 4
          && d.insignias.filter(i=>i!=='Título de Campeão').length >= 4,
   veta:['rocket'],
@@ -20894,7 +20894,7 @@ const CARGOS = [
   id:'lider', falante:'a conselheira da Liga', nome:'Líder de ginásio', orgao:'Liga Pokémon', peso:5, cap:24,
   onde:'planalto', lugar:'Secretaria da Liga',
   guardar:'Assinar e seguir.',
-  pede:[{t:'8 insígnias', ok:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 8}, {t:'reputação boa: Famoso ou mais', ok:d=>d.reputacao.eixo === 'bom' && d.reputacao.bom >= 5}],
+  pede:[{t:'8 insígnias', ok:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 8}, {t:'reputação boa: {Famoso|Famosa} ou mais', ok:d=>d.reputacao.eixo === 'bom' && d.reputacao.bom >= 5}],
   requer:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 8
          && d.reputacao.eixo === 'bom' && d.reputacao.bom >= 5,
   veta:['rocket'],
@@ -20931,7 +20931,7 @@ const CARGOS = [
 {
   id:'conselheiro', falante:'a conselheira mais velha', nome:'{Conselheiro|Conselheira} de Kanto', orgao:'Conselho Regional', peso:5, cap:28,
   onde:'celadon', lugar:'Prefeitura de Celadon',
-  pede:[{t:'Campeão de Kanto ou oito insígnias', ok:d=>!!d.flags.campeao_de_kanto || !!d.flags.oito_insignias}, {t:'reputação boa: Admirado ou mais', ok:d=>d.reputacao.eixo === 'bom' && d.reputacao.bom >= 6}],
+  pede:[{t:'{Campeão|Campeã} de Kanto ou oito insígnias', ok:d=>!!d.flags.campeao_de_kanto || !!d.flags.oito_insignias}, {t:'reputação boa: {Admirado|Admirada} ou mais', ok:d=>d.reputacao.eixo === 'bom' && d.reputacao.bom >= 6}],
   requer:d=>d.reputacao.eixo === 'bom' && d.reputacao.bom >= 6
          && (!!d.flags.campeao_de_kanto || !!d.flags.oito_insignias),
   veta:['rocket'],
@@ -23630,23 +23630,23 @@ function evoluiPorNivel(de, para){
    ESTADO — o mundo lembra de tudo
    ============================================================ */
 const NIVEIS_BOM = [
-  {n:1, nome:'Desconhecido', ef:'Ninguém te conhece.'},
+  {n:1, nome:'Desconhecid{o|a}', ef:'Ninguém te conhece.'},
   {n:2, nome:'Familiar',     ef:'Sua cidade te reconhece. Pequenas cortesias.'},
-  {n:3, nome:'Reconhecido',  ef:'Descontos, informação de graça, selvagens menos agressivos por perto.'},
-  {n:4, nome:'Respeitado',   ef:'NPCs te ouvem antes de agir. Lojas te priorizam.'},
-  {n:5, nome:'Famoso',       ef:'Seu nome corre em várias cidades. Convites e rivais.'},
-  {n:6, nome:'Admirado',     ef:'Favores sem cobrança. A Liga te consulta. Selvagens fracos fogem de você.'},
+  {n:3, nome:'Reconhecid{o|a}',  ef:'Descontos, informação de graça, selvagens menos agressivos por perto.'},
+  {n:4, nome:'Respeitad{o|a}',   ef:'NPCs te ouvem antes de agir. Lojas te priorizam.'},
+  {n:5, nome:'Famos{o|a}',       ef:'Seu nome corre em várias cidades. Convites e rivais.'},
+  {n:6, nome:'Admirad{o|a}',     ef:'Favores sem cobrança. A Liga te consulta. Selvagens fracos fogem de você.'},
   {n:7, nome:'Ídolo Regional', ef:'Cidades te recebem com festa. Cargos oferecidos sem pedir.'},
-  {n:8, nome:'Lendário',     ef:'Kanto inteira sabe seu nome. A Liga te trata como autoridade.'}
+  {n:8, nome:'Lendári{o|a}',     ef:'Kanto inteira sabe seu nome. A Liga te trata como autoridade.'}
 ];
 const NIVEIS_RUIM = [
-  {n:1, nome:'Desconhecido', ef:'Ninguém te conhece.'},
-  {n:2, nome:'Suspeito',     ef:'Olhares desconfiados. Lojistas te observam.'},
-  {n:3, nome:'Indesejado',   ef:'NPCs evitam te abordar. Atendimento a contragosto.'},
-  {n:4, nome:'Temido',       ef:'Vozes baixam quando você entra. Selvagens atacam primeiro.'},
-  {n:5, nome:'Notório',      ef:'NPCs fogem. A Liga manda oficiais "conversar".'},
-  {n:6, nome:'Proscrito',    ef:'Banido de cidades. Recompensa por informações sobre você.'},
-  {n:7, nome:'Caçado',       ef:'Ordem de detenção ativa. Treinadores da Liga autorizados a te capturar.'},
+  {n:1, nome:'Desconhecid{o|a}', ef:'Ninguém te conhece.'},
+  {n:2, nome:'Suspeit{o|a}',     ef:'Olhares desconfiados. Lojistas te observam.'},
+  {n:3, nome:'Indesejad{o|a}',   ef:'NPCs evitam te abordar. Atendimento a contragosto.'},
+  {n:4, nome:'Temid{o|a}',       ef:'Vozes baixam quando você entra. Selvagens atacam primeiro.'},
+  {n:5, nome:'Notóri{o|a}',      ef:'NPCs fogem. A Liga manda oficiais "conversar".'},
+  {n:6, nome:'Proscrit{o|a}',    ef:'Banido de cidades. Recompensa por informações sobre você.'},
+  {n:7, nome:'Caçad{o|a}',       ef:'Ordem de detenção ativa. Treinadores da Liga autorizados a te capturar.'},
   {n:8, nome:'Monstro Lendário', ef:'Seu nome é terror. A Elite 4 é mobilizada contra você.'}
 ];
 
@@ -27342,7 +27342,7 @@ const Historia = {
     const d = Estado.dados, j = d.jogador;
     const linhas = [];
     linhas.push(`${j.nome}, ${typeof idadeJogador === 'function' ? idadeJogador() : j.idade} anos, de ${j.cidade}.${j.personalidade ? ' ' + j.personalidade.charAt(0).toUpperCase() + j.personalidade.slice(1).replace(/[.\s]+$/, '') + '.' : ''}`);
-    linhas.push(`Reputação: ${Estado.nomeRep()} (eixo ${d.reputacao.eixo}). HP ${j.hp}/${Estado.hpMaxJogador()}.`);
+    linhas.push(`Reputação: ${Estado.nomeRep()}. HP ${j.hp}/${Estado.hpMaxJogador()}.`);
     if (d.time.length) linhas.push(`Time: ${d.time.map(p => `${nomeExib(p)} Nv${p.nivel}${p.hp<=0?' (desmaiado)':''}`).join(', ')}.`);
     if (d.cemiterio.length) linhas.push(`Mortos: ${d.cemiterio.map(p => `${nomeExib(p)} (${p.causaMorte})`).join(', ')}. Isso não some.`);
     const presos = Estado.lendariosCapturados();
@@ -119624,7 +119624,7 @@ const UI = {
       <hr style="border:none;border-top:1px solid var(--borda);margin:32px 0">
       <div style="text-align:left;max-width:610px;margin:0 auto">
         <h3>Como você terminou</h3>
-        <div class="linha"><span class="k">Reputação final</span><span class="v">${this.esc(Estado.nomeRep())} (${d.reputacao.eixo})</span></div>
+        <div class="linha"><span class="k">Reputação final</span><span class="v">${this.esc(Estado.nomeRep())}</span></div>
         <div class="linha"><span class="k">Insígnias</span><span class="v">${d.insignias.length}</span></div>
         <div class="linha"><span class="k">Time</span><span class="v">${d.time.length} Pokémon</span></div>
         <div class="linha"><span class="k">Mortes permanentes</span><span class="v">${d.cemiterio.length}</span></div>
@@ -120801,7 +120801,7 @@ const UI = {
       </div>
 
       <div class="cartao-rep">
-        <div class="cartao-linha"><span class="k">Reputação</span><span class="v">${this.esc(nivel.nome)} · ${eixo} ${val}/8</span></div>
+        <div class="cartao-linha"><span class="k">Reputação</span><span class="v">${this.esc(nivel.nome)} · ${eixo === 'bom' ? 'boa' : 'má'} · ${val} de 8</span></div>
         <div class="rep-barra ${eixo}"><i style="width:${Math.round(prog.atual*100)}%"></i></div>
         <div class="rep-nota">${prog.prox
           ? `${prog.pontos} ponto${prog.pontos === 1 ? '' : 's'} · faltam ${prog.falta} para o próximo degrau`
@@ -121007,7 +121007,7 @@ const UI = {
       ${percorridos.map(c=>`<div class="linha longa"><span class="k">${this.esc(rotulo(c))}</span><span class="v">${this.esc(c.tom || '')}</span></div>`).join('')}
       <h3>Decisões que o mundo registrou</h3>
       ${d.reputacao.historico.length
-        ? d.reputacao.historico.slice(-25).map(h=>`<div class="linha longa"><span class="k">Cap ${h.cap} · ${this.esc(h.motivo)}</span><span class="v" style="color:${h.eixo==='bom'?'var(--bom)':'var(--ruim)'}">${h.eixo} +${h.delta}</span></div>`).join('')
+        ? d.reputacao.historico.slice(-25).map(h=>`<div class="linha longa"><span class="k">Cap ${h.cap} · ${this.esc(h.motivo)}</span><span class="v" style="color:${h.eixo==='bom'?'var(--bom)':'var(--ruim)'}">${h.eixo === 'bom' ? 'boa' : 'má'} +${h.delta}</span></div>`).join('')
         : '<p class="nada">Nada ainda.</p>'}
     `);
   },
@@ -121351,7 +121351,7 @@ const UI = {
       <div class="linha"><span class="k">Salário</span><span class="v">o maior entre os seus postos, não a soma</span></div>
       <div class="linha"><span class="k">Onde se assume</span><span class="v">no lugar de cada um: licença de treinador no balcão do Centro · Auxiliar, Pesquisador e Professor no laboratório de Pallet · Guarda de rota no posto da Patrulha, em Viridian · Criador na Associação, em Cerulean · Repórter na redação, em Fuchsia · Policial na delegacia, Investigador na Auditoria e Perito na Comissão, em Saffron · Conselheiro na prefeitura de Celadon · Instrutor, Líder e Elite no Planalto · o envelope sem timbre, nos armários do Centro de Vermilion</span></div>
       <div class="linha"><span class="k">O que cada um pede</span><span class="v">a lista aparece no lugar, com ✓ no que você já tem e ✗ no que falta</span></div>
-      <div class="linha"><span class="k">Policial de Kanto</span><span class="v">3 insígnias · reputação boa Reconhecido ou mais · ter sido Guarda de rota · 800 ₽ por capítulo, Centro sem custo, passagem e Força +1</span></div>
+      <div class="linha"><span class="k">Policial de Kanto</span><span class="v">${this.esc('3 insígnias · reputação boa {Reconhecido|Reconhecida} ou mais · ter sido Guarda de rota · 800 ₽ por capítulo, Centro sem custo, passagem e Força +1')}</span></div>
       <p class="sussurro">Quinze postos, de licença de treinador a conselheiro regional. Cada um pede uma coisa diferente — espécies catalogadas, insígnias, reputação, o time que você leva — e alguns só existem depois de muita estrada. Quem carrega o envelope sem timbre não recebe crachá da Liga, e vice-versa; e esse envelope piora a sua reputação sozinho, todo capítulo.</p>
 
       <h3>Estrada e tempo</h3>
@@ -121712,7 +121712,14 @@ const UI = {
       <div class="linha"><span class="k">Bônus</span><span class="v">com metade do HP ou menos +1 · com 1 HP +2 (no lugar do +1) · +1 por condição (a de status e a confusão)</span></div>
       <div class="linha"><span class="k">Master Ball</span><span class="v">fecha sem rolagem</span></div>
       <div class="linha"><span class="k">Insistir</span><span class="v">cada Pokébola que ele rompe conta · na terceira, quem estava neutro fica hostil</span></div>
-      ${Object.values(Estado.dados.lendarios||{}).some(l=>l.quebrouBola) ? '<p class="sussurro">E existem coisas que simplesmente quebram a Pokébola no ar.</p>' : ''}` : ''}
+      ${Object.values(Estado.dados.lendarios||{}).some(l=>l.quebrouBola) ? '<p class="sussurro">E existem coisas que simplesmente quebram a Pokébola no ar.</p>' : ''}
+      <h3>Lendário no cinto</h3>
+      <div class="linha longa"><span class="k">Alguém viu</span><span class="v">${this.esc('seis vezes em dez, e sempre pra quem já é {Famoso|Famosa} ou {Temido|Temida} · quem era {Respeitado|Respeitada} ou mais vira notícia boa,')} o resto vira notícia ruim, e as duas andam muito · a Liga conversa na primeira vez, manda devolver na segunda e emite ordem de detenção na terceira</span></div>
+      <div class="linha longa"><span class="k">Ninguém viu</span><span class="v">a reputação espera · dois capítulos depois alguém fala, e aí conta</span></div>
+      <div class="linha longa"><span class="k">Enquanto estiver preso</span><span class="v">a cada dois capítulos a reputação piora e Kanto fica mais instável · com a moral abaixo de 30 ele pode romper a Pokébola numa virada de capítulo e sumir, hostil</span></div>
+      <div class="linha longa"><span class="k">O grupo dele</span><span class="v">preso um do trio lendário ou das três aves, os outros do grupo passam a caçar você · o grupo inteiro preso quebra o clima de Kanto</span></div>
+      <div class="linha longa"><span class="k">Soltar</span><span class="v">ele vai embora sem atacar · Kanto acalma um pouco · os do grupo param de caçar</span></div>
+      <div class="linha longa"><span class="k">Kanto instável</span><span class="v">o número da aba Mundo, na Ficha · sobe com lendário preso e com o que se descobre no norte, e muda o que o norte faz com você</span></div>` : ''}
       <h3>Perícias</h3>
       <p class="sussurro">Parar e olhar vale uma vez por cena: a segunda olhada nunca mostrou nada.</p>
       <p class="sussurro">Parada de d6: status + 2 de perícia + o cinto, sucesso em 4+, contra os sucessos que a cena pede. Um a mais é crítico, na conta é sucesso, faltou um é parcial, faltaram dois é fracasso. Toda rolagem aparece na bandeja de dados, inclusive as que o jogo faz sozinho.</p>
@@ -121872,7 +121879,7 @@ const UI = {
       <div class="linha"><span class="k">Salário</span><span class="v">o maior entre os seus postos, não a soma</span></div>
       <div class="linha"><span class="k">Onde se assume</span><span class="v">no lugar de cada um: licença de treinador no balcão do Centro · Auxiliar, Pesquisador e Professor no laboratório de Pallet · Guarda de rota no posto da Patrulha, em Viridian · Criador na Associação, em Cerulean · Repórter na redação, em Fuchsia · Policial na delegacia, Investigador na Auditoria e Perito na Comissão, em Saffron · Conselheiro na prefeitura de Celadon · Instrutor, Líder e Elite no Planalto · o envelope sem timbre, nos armários do Centro de Vermilion</span></div>
       <div class="linha"><span class="k">O que cada um pede</span><span class="v">a lista aparece no lugar, com ✓ no que você já tem e ✗ no que falta</span></div>
-      <div class="linha"><span class="k">Policial de Kanto</span><span class="v">3 insígnias · reputação boa Reconhecido ou mais · ter sido Guarda de rota · 800 ₽ por capítulo, Centro sem custo, passagem e Força +1</span></div>
+      <div class="linha"><span class="k">Policial de Kanto</span><span class="v">${this.esc('3 insígnias · reputação boa {Reconhecido|Reconhecida} ou mais · ter sido Guarda de rota · 800 ₽ por capítulo, Centro sem custo, passagem e Força +1')}</span></div>
       <p class="sussurro">Quinze postos, de licença de treinador a conselheiro regional. Cada um pede uma coisa diferente — espécies catalogadas, insígnias, reputação, o time que você leva — e alguns só existem depois de muita estrada. Quem carrega o envelope sem timbre não recebe crachá da Liga, e vice-versa; e esse envelope piora a sua reputação sozinho, todo capítulo.</p>
 
       <h3>A rede</h3>
