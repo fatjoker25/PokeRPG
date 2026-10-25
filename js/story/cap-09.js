@@ -2553,7 +2553,7 @@ c9_via_foragido:{
   vozes:['P','N','P','N','N','N','N','N'],
   texto:[
     '"Me dá tudo. Eu quero o lugar."',
-    'O cassino continua barulhento em volta de vocês dois — máquina, ficha, alguém ganhando pouco e comemorando muito.',
+    'O cassino continua barulhento em volta de {vocês dois|vocês duas} — máquina, ficha, alguém ganhando pouco e comemorando muito.',
     'Ela não pisca.',
     '"Você tem {idade} anos."',
     '"E você tem uma rede que sobreviveu à queda da Rocket porque é pequena. Pequena demais pra uma pessoa só defender."',

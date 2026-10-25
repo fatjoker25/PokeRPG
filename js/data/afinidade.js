@@ -229,6 +229,8 @@ const FRASE_AFINIDADE = {
 function linhaDeAfinidade(p){
   const a = afinidadeCom(p);
   if (!a.conhecido || a.grau === 'neutro') return null;
+  /* "vocês duas" só quando você e o Pokémon são as duas */
+  if (a.grau === 'atrito' && generoDe(p) === 'f') return '{Vocês dois|Vocês duas} não se entendem.';
   return FRASE_AFINIDADE[a.grau];
 }
 

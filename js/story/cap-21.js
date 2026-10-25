@@ -106,7 +106,7 @@ c21_ab_a_faixa:{
     'Tem umas quarenta pessoas embaixo da faixa. Quarenta, numa cidade desse tamanho, é muita gente.',
     d=>{
       const p = d.time[0];
-      return p ? `${nomeExib(p)} desce do ônibus atrás de você e trava, porque quarenta pessoas gritando ao mesmo tempo é uma coisa que nenhum dos dois estava esperando.`
+      return p ? `${nomeExib(p)} desce do ônibus atrás de você e trava, porque quarenta pessoas gritando ao mesmo tempo é uma coisa que ${generoDe(p) === 'f' ? '{nenhum dos dois|nenhuma das duas}' : 'nenhum dos dois'} estava esperando.`
                : 'Você desce do ônibus e trava, porque quarenta pessoas gritando ao mesmo tempo é uma coisa que você não estava esperando.';
     },
     d=>fala(nomeCasa(), 'Eu falei que era hoje! EU FALEI!', 'grita'),

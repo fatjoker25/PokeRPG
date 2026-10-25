@@ -76,7 +76,7 @@ pallet:[
      resultado:[
        fala('a mulher do quatorze', 'Ali era onde o carro do meu marido ficava.'),
        fala('a mulher do quatorze', 'Faz dois anos que não tem carro nenhum ali e faz dois anos que ele deita naquele exato lugar.', 'baixo'),
-       'Vocês dois olham o pedaço de asfalto por um tempo.',
+       '{Vocês dois|Vocês duas} olham o pedaço de asfalto por um tempo.',
        fala('a mulher do quatorze', 'Me ajuda a tirar ele antes das onze?')
      ]},
     {texto:'Comprar um saco de areia no armazém e fazer uma sombra na calçada pra ele.',
@@ -1728,7 +1728,7 @@ floresta:[
             d=>{
               const m = melhorNoEixo('discricao');
               return m.pokemon && m.valor > 0
-                ? `${nomeExib(m.pokemon)} entende antes de você e para de andar. Vocês dois param juntos, no mesmo segundo, sem combinar.`
+                ? `${nomeExib(m.pokemon)} entende antes de você e para de andar. ${generoDe(m.pokemon) === 'f' ? '{Vocês dois param juntos|Vocês duas param juntas}' : 'Vocês dois param juntos'}, no mesmo segundo, sem combinar.`
                 : 'Você anda no passo mais lento que o seu corpo aguenta sem cair.';
             },
             'Quarenta metros assim. O mato não mexe mais.',
@@ -1866,7 +1866,7 @@ montanha:[
                 ? `${nomeExib(m.pokemon)} vai na frente e para toda vez que você fica pra trás, o que quer dizer que ${pron(m.pokemon).ele} está olhando pra trás o tempo todo.`
                 : 'Alguém do seu cinto vai na frente e para toda vez que você fica pra trás.';
             },
-            'Vocês descem juntos. Você não manda nada nesse trecho — você segue.',
+            d=>`Vocês descem ${(d.time || []).length && d.time.every(p => generoDe(p) === 'f') ? '{juntos|juntas}' : 'juntos'}. Você não manda nada nesse trecho — você segue.`,
             'Por uma hora inteira a hierarquia fica invertida, e nenhum dos dois lados comenta.'
           ]},
      ruim:{ef:{hp:-3, moral:-2, registrar:'Soltou o time na neblina e ficou pior.'},

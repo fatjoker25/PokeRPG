@@ -336,7 +336,7 @@ c4_recusou_pastel:{
     '"Longe."',
     '"Uns dias."',
     '"Uns dias", ela repete, e no jeito que ela repete cabe uma cidade inteira que ela nunca vai ver.',
-    'Vocês ficam quietos. Passa um caminhão de caçamba. Passa um casal discutindo baixo.',
+    'Vocês ficam {quietos|quietas}. Passa um caminhão de caçamba. Passa um casal discutindo baixo.',
     'Você fica sentad{o|a} um tempo ouvindo a detonação distante, e depois a fome te lembra que você tomou uma decisão estúpida.',
     '"Tem mais," ela diz, sem olhar. "Eu comprei três."'
   ],

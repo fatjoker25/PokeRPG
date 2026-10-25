@@ -308,7 +308,7 @@ ca3_o_marco:{
 ca3_a_estrada:{
   texto:[
     'A estrada velha do oeste é de pedra, de antes da Liga, com marco a cada légua. Ninguém usa desde que abriram a estrada nova.',
-    'Vocês andam três dias. Ela desenha, você conta Pokémon, e à noite nenhum dos dois fala muito.',
+    'Vocês andam três dias. Ela desenha, você conta Pokémon, e à noite {nenhum dos dois|nenhuma das duas} fala muito.',
     'No terceiro dia, a estrada acaba num muro de pedra caído, e do outro lado do muro tem uma casa sem telhado e uma árvore de Oran no quintal, carregada.',
     fala('a mulher do mapa', 'A casa onde eu nasci.', 'baixo')
   ],
@@ -425,7 +425,7 @@ ca3_final_junto:{
     'No dia em que acaba, ela abre o mapa 7 na mesa nova da cozinha e desenha, a lápis, uma estrela em cima da casa.'
   ],
   final:{id:'andarilho_junto', titulo:'QUEM ANDA JUNTO', texto:[
-    'Vocês andam Kanto juntos por anos. Ela desenha, você conta, e à noite nenhum dos dois fala muito.',
+    'Vocês andam Kanto {juntos|juntas} por anos. Ela desenha, você conta, e à noite {nenhum dos dois|nenhuma das duas} fala muito.',
     'O mapa 8 tem duas letras: a dela, em lápis duro, e a sua, em lápis mole. Ele é o menos errado de todos.',
     'Quando ela fica velha demais pra estrada, ela fica na casa da Rota 22 e você manda notícia de cada vale que acha.',
     'Ela responde sempre com a mesma pergunta, a lápis, no verso: se você deixou em branco. Você sempre deixou.'

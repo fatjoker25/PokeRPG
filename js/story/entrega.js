@@ -190,7 +190,7 @@ c1_professor_entrega:{
          return p ? `${nomeExib(p)} olha primeiro pra ele, depois pra você, e fica olhando pra você.`
                   : 'A Pokébola pesa menos do que parecia.'; },
     d=>{ const p = (d.time || []).slice(-1)[0];
-         return fala('o Professor', `${p ? pron(p).Ele : 'Ele'} gostou de você. Dá pra ver. O resto vocês descobrem juntos.`, 'riso'); },
+         return fala('o Professor', `${p ? pron(p).Ele : 'Ele'} gostou de você. Dá pra ver. O resto vocês descobrem ${p && generoDe(p) === 'f' ? '{juntos|juntas}' : 'juntos'}.`, 'riso'); },
     'Ele volta pro laboratório com a bandeja e as duas que sobraram, sem se despedir, do jeito de quem vai estar lá quando você voltar.'
   ],
   ef:{executar:d => entregarDoProfessor(d)},
@@ -622,10 +622,10 @@ c1e_nao_sei_ainda:{
     d=>fala(d.jogador.nome, 'E se eu não souber o que fazer?'),
     'Ele ri de um jeito que enruga o olho inteiro.',
     fala('Célio', 'Ninguém sabe no primeiro dia. Nem eu sabia, e eu já tinha quarenta anos.'),
-    d=>fala('Célio', `Você aprende junto com ${pronReservado(d).ele}. É pra isso que vocês são dois.`),
+    d=>fala('Célio', `Você aprende junto com ${pronReservado(d).ele}. É pra isso que vocês são ${pronReservado(d).ele === 'ela' ? '{dois|duas}' : 'dois'}.`),
     fala('Célio', 'Pega.')
   ],
-  ef:{moral:6, npc:{nome:'Célio', opiniao:3, memoria:'Te disse que ninguém sabe no primeiro dia, e que vocês aprendem juntos.'}},
+  ef:{moral:6, npc:{nome:'Célio', opiniao:3, memoria:'Te disse que ninguém sabe no primeiro dia, e que você aprende junto com o seu Pokémon.'}},
   escolhas:[{texto:'Pegar a Pokébola.', vai:'c1e_recebeu'}]
 },
 

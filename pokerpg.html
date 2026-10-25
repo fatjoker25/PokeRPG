@@ -25870,6 +25870,8 @@ const FRASE_AFINIDADE = {
 function linhaDeAfinidade(p){
   const a = afinidadeCom(p);
   if (!a.conhecido || a.grau === 'neutro') return null;
+  /* "vocês duas" só quando você e o Pokémon são as duas */
+  if (a.grau === 'atrito' && generoDe(p) === 'f') return '{Vocês dois|Vocês duas} não se entendem.';
   return FRASE_AFINIDADE[a.grau];
 }
 
@@ -42161,7 +42163,7 @@ pallet:[
      resultado:[
        fala('a mulher do quatorze', 'Ali era onde o carro do meu marido ficava.'),
        fala('a mulher do quatorze', 'Faz dois anos que não tem carro nenhum ali e faz dois anos que ele deita naquele exato lugar.', 'baixo'),
-       'Vocês dois olham o pedaço de asfalto por um tempo.',
+       '{Vocês dois|Vocês duas} olham o pedaço de asfalto por um tempo.',
        fala('a mulher do quatorze', 'Me ajuda a tirar ele antes das onze?')
      ]},
     {texto:'Comprar um saco de areia no armazém e fazer uma sombra na calçada pra ele.',
@@ -43813,7 +43815,7 @@ floresta:[
             d=>{
               const m = melhorNoEixo('discricao');
               return m.pokemon && m.valor > 0
-                ? `${nomeExib(m.pokemon)} entende antes de você e para de andar. Vocês dois param juntos, no mesmo segundo, sem combinar.`
+                ? `${nomeExib(m.pokemon)} entende antes de você e para de andar. ${generoDe(m.pokemon) === 'f' ? '{Vocês dois param juntos|Vocês duas param juntas}' : 'Vocês dois param juntos'}, no mesmo segundo, sem combinar.`
                 : 'Você anda no passo mais lento que o seu corpo aguenta sem cair.';
             },
             'Quarenta metros assim. O mato não mexe mais.',
@@ -43951,7 +43953,7 @@ montanha:[
                 ? `${nomeExib(m.pokemon)} vai na frente e para toda vez que você fica pra trás, o que quer dizer que ${pron(m.pokemon).ele} está olhando pra trás o tempo todo.`
                 : 'Alguém do seu cinto vai na frente e para toda vez que você fica pra trás.';
             },
-            'Vocês descem juntos. Você não manda nada nesse trecho — você segue.',
+            d=>`Vocês descem ${(d.time || []).length && d.time.every(p => generoDe(p) === 'f') ? '{juntos|juntas}' : 'juntos'}. Você não manda nada nesse trecho — você segue.`,
             'Por uma hora inteira a hierarquia fica invertida, e nenhum dos dois lados comenta.'
           ]},
      ruim:{ef:{hp:-3, moral:-2, registrar:'Soltou o time na neblina e ficou pior.'},
@@ -49815,7 +49817,7 @@ c2_arrancou_dnv:{
   ],
   ef:{flag:'aliou_a_atendente',
       rep:{eixo:'bom',delta:2,motivo:'Insistiu numa coisa pequena até virar coisa de duas pessoas'},
-      npc:{nome:'Atendente de Viridian', opiniao:5, memoria:'Vocês dois enfrentaram um cartaz de cortiça por meia hora. Ela não esqueceu.'}},
+      npc:{nome:'Atendente de Viridian', opiniao:5, memoria:'{Vocês dois|Vocês duas} enfrentaram um cartaz de cortiça por meia hora. Ela não esqueceu.'}},
   escolhas:[{texto:'Ir ver o garoto na escada.', vai:'c2_teo'}]
 },
 
@@ -51632,7 +51634,7 @@ c4_recusou_pastel:{
     '"Longe."',
     '"Uns dias."',
     '"Uns dias", ela repete, e no jeito que ela repete cabe uma cidade inteira que ela nunca vai ver.',
-    'Vocês ficam quietos. Passa um caminhão de caçamba. Passa um casal discutindo baixo.',
+    'Vocês ficam {quietos|quietas}. Passa um caminhão de caçamba. Passa um casal discutindo baixo.',
     'Você fica sentad{o|a} um tempo ouvindo a detonação distante, e depois a fome te lembra que você tomou uma decisão estúpida.',
     '"Tem mais," ela diz, sem olhar. "Eu comprei três."'
   ],
@@ -68756,7 +68758,7 @@ c9_via_foragido:{
   vozes:['P','N','P','N','N','N','N','N'],
   texto:[
     '"Me dá tudo. Eu quero o lugar."',
-    'O cassino continua barulhento em volta de vocês dois — máquina, ficha, alguém ganhando pouco e comemorando muito.',
+    'O cassino continua barulhento em volta de {vocês dois|vocês duas} — máquina, ficha, alguém ganhando pouco e comemorando muito.',
     'Ela não pisca.',
     '"Você tem {idade} anos."',
     '"E você tem uma rede que sobreviveu à queda da Rocket porque é pequena. Pequena demais pra uma pessoa só defender."',
@@ -102418,7 +102420,7 @@ c21_ab_a_faixa:{
     'Tem umas quarenta pessoas embaixo da faixa. Quarenta, numa cidade desse tamanho, é muita gente.',
     d=>{
       const p = d.time[0];
-      return p ? `${nomeExib(p)} desce do ônibus atrás de você e trava, porque quarenta pessoas gritando ao mesmo tempo é uma coisa que nenhum dos dois estava esperando.`
+      return p ? `${nomeExib(p)} desce do ônibus atrás de você e trava, porque quarenta pessoas gritando ao mesmo tempo é uma coisa que ${generoDe(p) === 'f' ? '{nenhum dos dois|nenhuma das duas}' : 'nenhum dos dois'} estava esperando.`
                : 'Você desce do ônibus e trava, porque quarenta pessoas gritando ao mesmo tempo é uma coisa que você não estava esperando.';
     },
     d=>fala(nomeCasa(), 'Eu falei que era hoje! EU FALEI!', 'grita'),
@@ -113696,7 +113698,7 @@ c1_professor_entrega:{
          return p ? `${nomeExib(p)} olha primeiro pra ele, depois pra você, e fica olhando pra você.`
                   : 'A Pokébola pesa menos do que parecia.'; },
     d=>{ const p = (d.time || []).slice(-1)[0];
-         return fala('o Professor', `${p ? pron(p).Ele : 'Ele'} gostou de você. Dá pra ver. O resto vocês descobrem juntos.`, 'riso'); },
+         return fala('o Professor', `${p ? pron(p).Ele : 'Ele'} gostou de você. Dá pra ver. O resto vocês descobrem ${p && generoDe(p) === 'f' ? '{juntos|juntas}' : 'juntos'}.`, 'riso'); },
     'Ele volta pro laboratório com a bandeja e as duas que sobraram, sem se despedir, do jeito de quem vai estar lá quando você voltar.'
   ],
   ef:{executar:d => entregarDoProfessor(d)},
@@ -114128,10 +114130,10 @@ c1e_nao_sei_ainda:{
     d=>fala(d.jogador.nome, 'E se eu não souber o que fazer?'),
     'Ele ri de um jeito que enruga o olho inteiro.',
     fala('Célio', 'Ninguém sabe no primeiro dia. Nem eu sabia, e eu já tinha quarenta anos.'),
-    d=>fala('Célio', `Você aprende junto com ${pronReservado(d).ele}. É pra isso que vocês são dois.`),
+    d=>fala('Célio', `Você aprende junto com ${pronReservado(d).ele}. É pra isso que vocês são ${pronReservado(d).ele === 'ela' ? '{dois|duas}' : 'dois'}.`),
     fala('Célio', 'Pega.')
   ],
-  ef:{moral:6, npc:{nome:'Célio', opiniao:3, memoria:'Te disse que ninguém sabe no primeiro dia, e que vocês aprendem juntos.'}},
+  ef:{moral:6, npc:{nome:'Célio', opiniao:3, memoria:'Te disse que ninguém sabe no primeiro dia, e que você aprende junto com o seu Pokémon.'}},
   escolhas:[{texto:'Pegar a Pokébola.', vai:'c1e_recebeu'}]
 },
 
@@ -120485,7 +120487,7 @@ ca3_o_marco:{
 ca3_a_estrada:{
   texto:[
     'A estrada velha do oeste é de pedra, de antes da Liga, com marco a cada légua. Ninguém usa desde que abriram a estrada nova.',
-    'Vocês andam três dias. Ela desenha, você conta Pokémon, e à noite nenhum dos dois fala muito.',
+    'Vocês andam três dias. Ela desenha, você conta Pokémon, e à noite {nenhum dos dois|nenhuma das duas} fala muito.',
     'No terceiro dia, a estrada acaba num muro de pedra caído, e do outro lado do muro tem uma casa sem telhado e uma árvore de Oran no quintal, carregada.',
     fala('a mulher do mapa', 'A casa onde eu nasci.', 'baixo')
   ],
@@ -120602,7 +120604,7 @@ ca3_final_junto:{
     'No dia em que acaba, ela abre o mapa 7 na mesa nova da cozinha e desenha, a lápis, uma estrela em cima da casa.'
   ],
   final:{id:'andarilho_junto', titulo:'QUEM ANDA JUNTO', texto:[
-    'Vocês andam Kanto juntos por anos. Ela desenha, você conta, e à noite nenhum dos dois fala muito.',
+    'Vocês andam Kanto {juntos|juntas} por anos. Ela desenha, você conta, e à noite {nenhum dos dois|nenhuma das duas} fala muito.',
     'O mapa 8 tem duas letras: a dela, em lápis duro, e a sua, em lápis mole. Ele é o menos errado de todos.',
     'Quando ela fica velha demais pra estrada, ela fica na casa da Rota 22 e você manda notícia de cada vale que acha.',
     'Ela responde sempre com a mesma pergunta, a lápis, no verso: se você deixou em branco. Você sempre deixou.'
@@ -125989,7 +125991,7 @@ const UI = {
       vinculo: () => {
         const moral = Math.max(0, Math.min(100, p.moral || 0));
         const palavra = moral >= 90 ? 'Inseparável' : moral >= 70 ? 'Confia em você' : moral >= 50 ? 'Pegando confiança'
-                      : moral >= 30 ? 'Desconfiado' : 'Distante';
+                      : moral >= 30 ? 'Desconfiad' + pron(p).o : 'Distante';
         const af = typeof linhaDeAfinidade === 'function' ? linhaDeAfinidade(p) : null;
         const fome = noTime && !p.morto && typeof Fome !== 'undefined' ? Fome.estado(p) : null;
         const par = noTime && typeof parDe === 'function' ? parDe(p) : null;

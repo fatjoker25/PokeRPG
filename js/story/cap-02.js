@@ -393,7 +393,7 @@ c2_arrancou_dnv:{
   ],
   ef:{flag:'aliou_a_atendente',
       rep:{eixo:'bom',delta:2,motivo:'Insistiu numa coisa pequena até virar coisa de duas pessoas'},
-      npc:{nome:'Atendente de Viridian', opiniao:5, memoria:'Vocês dois enfrentaram um cartaz de cortiça por meia hora. Ela não esqueceu.'}},
+      npc:{nome:'Atendente de Viridian', opiniao:5, memoria:'{Vocês dois|Vocês duas} enfrentaram um cartaz de cortiça por meia hora. Ela não esqueceu.'}},
   escolhas:[{texto:'Ir ver o garoto na escada.', vai:'c2_teo'}]
 },
 

@@ -3827,7 +3827,7 @@ const UI = {
       vinculo: () => {
         const moral = Math.max(0, Math.min(100, p.moral || 0));
         const palavra = moral >= 90 ? 'Inseparável' : moral >= 70 ? 'Confia em você' : moral >= 50 ? 'Pegando confiança'
-                      : moral >= 30 ? 'Desconfiado' : 'Distante';
+                      : moral >= 30 ? 'Desconfiad' + pron(p).o : 'Distante';
         const af = typeof linhaDeAfinidade === 'function' ? linhaDeAfinidade(p) : null;
         const fome = noTime && !p.morto && typeof Fome !== 'undefined' ? Fome.estado(p) : null;
         const par = noTime && typeof parDe === 'function' ? parDe(p) : null;
