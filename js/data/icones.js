@@ -118,6 +118,19 @@ const ICONE = {
   pokedex:'<rect x="5" y="3" width="14" height="18" rx="2"/><circle cx="9" cy="7" r="1.6"/><rect x="8" y="11" width="8" height="6" rx="1"/>',
   pokenav:'<rect x="7" y="3" width="10" height="18" rx="2"/><path d="M10 6h4M11 18h2"/><rect x="9" y="8" width="6" height="7" rx="1"/>',
   cartao:'<rect x="3" y="6" width="18" height="13" rx="2"/><circle cx="8.5" cy="12" r="2"/><path d="M14 10h5M14 13h4M14 16h3"/>',
+  /* os comandos da luta: o time é a Pokébola, fugir é correr, o
+     Forfeit é a bandeira branca e a Vontade é a chama */
+  bola:'<circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h5.4M15.1 12h5.4"/><circle cx="12" cy="12" r="3.1"/>',
+  correr:'<circle cx="15" cy="4.6" r="1.7"/><path d="M13.6 7.6L11 13M7.6 9.8l4.2-1.8 3.4 2.6 2.8-.4M11 13l3.4 2.6-.6 4.6M11 13l-2.1 3.6-3.6.6M2.5 9.5h3M2 13h2.5"/>',
+  bandeira:'<path d="M6 21V3.5"/><path d="M6 4.6c3-1.7 5.5 1.7 8.5 0s4-1 4-1v8.2s-1-.6-4 1-5.5-1.7-8.5 0"/>',
+  chama:'<path d="M12 21c-3.9 0-6.5-2.6-6.5-6.2 0-3.3 2.4-5 3.6-7.6.9 1.6 1.4 2.8 1.4 4 1.4-1.2 2.3-3.4 2.1-6.2 3.4 2.3 5.9 5.8 5.9 9.8 0 3.6-2.6 6.2-6.5 6.2z"/><path d="M12 21c-1.6 0-2.8-1.1-2.8-2.7 0-1.6 1.3-2.5 2.2-3.9.9 1.4 3.4 2.3 3.4 3.9 0 1.6-1.2 2.7-2.8 2.7z"/>',
+  /* o alto da tela: onde, que horas, dinheiro, Ração, diário e ajustes */
+  alfinete:'<path d="M12 21s-6.5-6.2-6.5-11a6.5 6.5 0 0 1 13 0c0 4.8-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.4"/>',
+  relogio:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
+  moeda:'<circle cx="12" cy="12" r="8.5"/><path d="M14.8 9.2c-.6-.9-1.6-1.4-2.8-1.4-1.6 0-2.8.9-2.8 2.1 0 2.9 5.8 1.4 5.8 4.3 0 1.2-1.2 2.1-2.9 2.1-1.3 0-2.4-.6-3-1.5M12 6.2v1.6M12 16.3v1.6"/>',
+  tigela:'<path d="M3.5 11h17a8.5 8.5 0 0 1-17 0z"/><path d="M8 8.5c1-1 2.5-1.5 4-1.5s3 .5 4 1.5"/>',
+  diario:'<path d="M12 6.5c-2-1.5-5-2-8-1.5v14c3-.5 6 0 8 1.5 2-1.5 5-2 8-1.5V5c-3-.5-6 0-8 1.5z"/><path d="M12 6.5V20.5"/>',
+  engrenagem:'<circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="6.6"/><path d="M12 2.6v2.8M12 18.6v2.8M2.6 12h2.8M18.6 12h2.8M5.4 5.4l2 2M16.6 16.6l2 2M5.4 18.6l2-2M16.6 7.4l2-2"/>',
   /* o dado da ficha de inscrição: sorteia uma sugestão */
   dado:'<rect x="4" y="4" width="16" height="16" rx="3.5"/><circle cx="8.6" cy="8.6" r=".9" fill="currentColor"/><circle cx="15.4" cy="8.6" r=".9" fill="currentColor"/><circle cx="12" cy="12" r=".9" fill="currentColor"/><circle cx="8.6" cy="15.4" r=".9" fill="currentColor"/><circle cx="15.4" cy="15.4" r=".9" fill="currentColor"/>'
 };

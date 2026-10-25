@@ -328,24 +328,45 @@ const UI = {
     if (typeof Som !== 'undefined') setTimeout(() => Som.aplicarMusica(), 0);
     if (!d) return '';
     const rep = Estado.nomeRep();
-    const cap = Historia.capitulo(d.capitulo);
+    /* O alto da tela é o HUD dos jogos de hoje: quem você é (rosto,
+       nome, título), o que você carrega (lugar, hora, HP, Vontade,
+       dinheiro, Ração) e os cinco botões de menu, cada um com o seu
+       desenho. No celular os botões ficam só com o desenho. */
+    const rosto = typeof retratoDoJogador === 'function' ? retratoDoJogador(d) : null;
+    const hp = d.jogador.hp, hpMax = Estado.hpMaxJogador();
+    const pctHP = Math.max(0, Math.min(100, Math.round(hp / hpMax * 100)));
+    const corHP = pctHP > 50 ? '' : (pctHP > 22 ? ' medio' : ' baixo');
+    const chip = (cls, icone, conteudo, titulo) =>
+      `<span class="topo-chip ${cls}"${titulo ? ` title="${this.esc(titulo)}"` : ''}>${svgIcone(icone, 'topo-ic')}${conteudo}</span>`;
+    const botao = (icone, rot, attrs, extra) =>
+      `<button class="btn mini topo-bt${extra || ''}" ${attrs} aria-label="${rot}">${svgIcone(icone, 'topo-ic')}<span class="topo-rot">${rot}</span>`;
+    const numeros = Estado.temPokenav() ? Estado.numerosDisponiveis().length : 0;
     return `<div class="topo">
-      <div>
-        <h1>${this.esc(d.jogador.nome)} — ${this.esc(rep)}</h1>
-        <div class="sub">${d.local && LOCAIS[d.local] ? this.esc(LOCAIS[d.local].nome) : 'Kanto'} ·
-          <span class="relogio">${this.esc(maiuscula(Relogio.texto()))}</span> ·
-          HP ${d.jogador.hp}/${Estado.hpMaxJogador()} · Vontade ${Estado.vontadeJogador()}/${Estado.vontadeMaxJogador()} · ${fmtDin(d.jogador.dinheiro)} ₽${this.racaoNoTopo()}</div>
-        ${typeof Fome !== 'undefined' ? Fome.tirarAvisos().map(a => `<div class="topo-aviso">${this.esc(a)}</div>`).join('') : ''}
+      <div class="topo-quem">
+        <span class="topo-rosto${rosto ? '' : ' vazio'}" aria-hidden="true">${rosto
+          ? `<img src="${rosto}" alt="" onerror="this.parentNode.classList.add('vazio');this.remove()">` : ''}<b>${this.esc((d.jogador.nome || '?').slice(0, 1).toUpperCase())}</b></span>
+        <div class="topo-id">
+          <h1>${this.esc(d.jogador.nome)}<span class="topo-traco"> — </span><span class="topo-rep">${this.esc(rep)}</span></h1>
+        </div>
+      </div>
+      <div class="topo-info">
+        ${chip('lugar', 'alfinete', d.local && LOCAIS[d.local] ? this.esc(LOCAIS[d.local].nome) : 'Kanto')}
+        ${chip('hora', 'relogio', `<span class="relogio">${this.esc(maiuscula(Relogio.texto()))}</span>`)}
+        ${chip('hp' + corHP, 'doar', `HP ${hp}/${hpMax}<i class="topo-barra" aria-hidden="true"><b style="width:${pctHP}%"></b></i>`, 'Sua vida')}
+        ${chip('vontade', 'chama', `Vontade ${Estado.vontadeJogador()}/${Estado.vontadeMaxJogador()}`, 'Sua Vontade')}
+        ${chip('grana', 'moeda', `${fmtDin(d.jogador.dinheiro)} ₽`, 'Dinheiro')}
+        ${this.racaoNoTopo()}
       </div>
       <div class="topo-acoes">
         <!-- na luta, time e mochila são da barra de ações: aqui em cima ficam trancados -->
-        <button class="btn mini" ${emLuta() ? 'disabled title="Na luta, o time é pela barra de ações"' : 'onclick="UI.modalTime()"'}>Time</button>
-        <button class="btn mini${Estado.temPokenav() && Estado.numerosDisponiveis().length ? ' pisca' : ''}" ${emLuta() ? 'disabled title="Na luta, a mochila é pela barra de ações"' : 'onclick="UI.modalItens()"'}>Mochila${
-          Estado.temPokenav() && Estado.numerosDisponiveis().length ? ' <b>' + Estado.numerosDisponiveis().length + '</b>' : ''}</button>
-        <button class="btn mini" onclick="UI.modalFicha()">Ficha</button>
-        <button class="btn mini" onclick="UI.modalDiario()">Diário</button>
-        <button class="btn mini" onclick="UI.modalAjustes()">Ajustes</button>
+        ${botao('bola', 'Time', emLuta() ? 'disabled title="Na luta, o time é pela barra de ações"' : 'title="Time" onclick="UI.modalTime()"')}</button>
+        ${botao('itens', 'Mochila', emLuta() ? 'disabled title="Na luta, a mochila é pela barra de ações"' : 'title="Mochila" onclick="UI.modalItens()"', numeros ? ' pisca' : '')}${
+          numeros ? '<b class="topo-conta">' + numeros + '</b>' : ''}</button>
+        ${botao('cartao', 'Ficha', 'title="Ficha" onclick="UI.modalFicha()"')}</button>
+        ${botao('diario', 'Diário', 'title="Diário" onclick="UI.modalDiario()"')}</button>
+        ${botao('engrenagem', 'Ajustes', 'title="Ajustes" onclick="UI.modalAjustes()"')}</button>
       </div>
+      ${typeof Fome !== 'undefined' ? Fome.tirarAvisos().map(a => `<div class="topo-aviso">${this.esc(a)}</div>`).join('') : ''}
     </div>`;
   },
 
@@ -353,8 +374,8 @@ const UI = {
   racaoNoTopo(){
     const n = Estado.contaItem('Ração');
     const fome = typeof Fome !== 'undefined' ? Fome.doTime() : null;
-    return ` · ${n} ${n === 1 ? 'Ração' : 'Rações'}${fome
-      ? ` <span class="time-fome${fome === 'faminto' ? ' grave' : ''}">Time ${fome}</span>` : ''}`;
+    return `<span class="topo-chip racao" title="Ração na mochila">${svgIcone('tigela', 'topo-ic')}${n} ${n === 1 ? 'Ração' : 'Rações'}${fome
+      ? ` <span class="time-fome${fome === 'faminto' ? ' grave' : ''}">Time ${fome}</span>` : ''}</span>`;
   },
 
   /* ========================================================
@@ -1487,8 +1508,8 @@ const UI = {
     this.limpar();
     this.add(this.topo());
     /* Tudo numa tela só: a introdução entra no topo do log (em vez de
-       um painel a mais em cima da arena), e no computador o log e as
-       ações ficam lado a lado, com a bandeja embaixo do log. */
+       um painel a mais em cima da arena), e no computador o log ocupa a
+       coluna da esquerda, com as ações e a bandeja de dados na direita. */
     const intro = (introLinhas || []).map(t => `<div class="l intro">${this.esc(txt(t))}</div>`).join('');
     this.add(`<div class="painel painel-batalha">
       <div class="arena" id="arena"></div>
@@ -1607,6 +1628,20 @@ const UI = {
     return (lista || []).map(m => `<span class="marca-luta ${this.esc(m.c)}">${this.esc(m.t)}</span>`).join('');
   },
 
+  /* A parte de conferir da ficha da luta (natureza, atributos, item)
+     abre num toque, e continua aberta quando a arena se redesenha no
+     turno seguinte e na luta seguinte. */
+  alternarFicha(lado){
+    this._fichaAberta = this._fichaAberta || {};
+    const aberta = !this._fichaAberta[lado];
+    this._fichaAberta[lado] = aberta;
+    const f = document.querySelector(`#arena .lutador.${lado} .ficha`);
+    if (!f) return;
+    f.classList.toggle('aberta', aberta);
+    const b = f.querySelector('.ficha-abre');
+    if (b){ b.setAttribute('aria-expanded', aberta ? 'true' : 'false'); b.title = aberta ? 'Guardar' : 'Ver natureza, atributos e item'; }
+  },
+
   /* PAR, BRN, PSN… a etiqueta dos jogos, com a palavra no título */
   etiquetaStatus(st, p){
     const r = ROTULO_STATUS[st] || [String(st).slice(0, 3).toUpperCase(), st];
@@ -1679,26 +1714,43 @@ const UI = {
       const caido = p.hp <= 0 ? ' caido' : '';
       /* o capturado está na bola: a ficha fica, o corpo não volta */
       const preso = (!meu && p.capturadoEm) ? ' capturado' : '';
+      /* A ficha flutua sobre o cenário, como nos jogos: o que se lê de
+         relance (nome, nível, condição, tipo, HP, Vontade) fica à vista;
+         o que se confere (natureza, atributos, item) abre num toque,
+         senão as duas fichas tapam os dois Pokémon. */
+      const pct = Math.max(0, p.hp / p.hpMax * 100);
+      const corHP = pct > 50 ? '' : (pct > 22 ? 'medio' : 'baixo');
+      const aberta = this._fichaAberta && this._fichaAberta[cls];
       return `<div class="lutador ${cls}${fixo}${entrando}${caido}${preso}">
-        <div class="arte">${fundo}${arte}${Batalha.clima ? `<div class="clima-camada clima-${Batalha.clima.tipo}" aria-hidden="true"></div>` : ''}</div>
-        <div class="ficha">
+        <div class="arte">${fundo}${arte}</div>
+        <div class="ficha${aberta ? ' aberta' : ''}">
           ${vida}
-          <div class="nome"><span>${this.esc(nomeVisivel(p))}${this.shi(p)}</span><span class="nv">Nv ${p.nivel}</span></div>
-          ${this.bolasDoLado(meu)}
-          <div class="linha-tipos" style="margin-top:5px">${tipos}${p.status ? this.etiquetaStatus(p.status, meu ? p : null) : ''}</div>
-          <div class="marcas-luta">${this.marcasHTML(Batalha.marcas ? Batalha.marcas(meu ? 'aliado' : 'inimigo') : [])}</div>
-          ${this.barraHP(p, meu ? true : 'vaga')}
-          ${(meu || Batalha.vontadeIA) ? this.linhaVontade(p) : ''}
-          <div class="meta">${nat}</div>
-          <div class="meta">${ficha}</div>
-          ${seg}
+          <div class="ficha-hud">
+            <div class="nome"><span class="nm">${this.esc(nomeVisivel(p))}${this.shi(p)}</span><span class="nv">Nv <b>${p.nivel}</b></span></div>
+            ${this.bolasDoLado(meu)}
+            <div class="linha-tipos">${tipos}${p.status ? this.etiquetaStatus(p.status, meu ? p : null) : ''}</div>
+            <div class="marcas-luta">${this.marcasHTML(Batalha.marcas ? Batalha.marcas(meu ? 'aliado' : 'inimigo') : [])}</div>
+            <div class="hp-linha"><span class="hp-rot" aria-hidden="true">HP</span><div class="barra ${corHP}"><i style="width:${pct}%"></i></div></div>
+            ${meu ? this.barraExp(p) : ''}
+            ${(meu || Batalha.vontadeIA) ? this.linhaVontade(p) : ''}
+            <div class="hp-num">${p.hp} / ${p.hpMax} HP</div>
+          </div>
+          <div class="ficha-mais" id="ficha-mais-${cls}">
+            <div class="meta">${nat}</div>
+            <div class="meta">${ficha}</div>
+            ${seg}
+          </div>
+          <button class="ficha-abre" aria-expanded="${aberta ? 'true' : 'false'}" aria-controls="ficha-mais-${cls}"
+            title="${aberta ? 'Guardar' : 'Ver natureza, atributos e item'}" onclick="UI.alternarFicha('${cls}')"><span aria-hidden="true"></span></button>
         </div>
       </div>`;
     };
     const el = document.getElementById('arena');
     /* a tela já mudou (a luta acabou no meio da encenação): nada a pintar */
     if (!el) return null;
-    el.innerHTML = card(a,'aliado',true) + card(i,'inimigo',false);
+    /* o clima cobre o cenário inteiro, por cima dos dois e por baixo das fichas */
+    const clima = Batalha.clima ? `<div class="clima-camada clima-${Batalha.clima.tipo}" aria-hidden="true"></div>` : '';
+    el.innerHTML = card(a,'aliado',true) + card(i,'inimigo',false) + clima;
     this._arenaUltima = {A:kA, I:kI};
     /* arte nova: quem está de pé volta a respirar */
     if (typeof AnimadorSprite !== 'undefined') AnimadorSprite.montar();
@@ -2252,31 +2304,26 @@ const UI = {
     const a = Batalha.aliado;
     const vivos = d.time.filter(p => estaVivo(p) && p.uid !== a.uid).length;
 
-    /* botão é o nome do que ele faz, sem legenda embaixo */
-    const bt = (cls, rot, nota, acao, off) =>
+    /* Os comandos dos jogos de hoje: quatro grandes, cada um na sua
+       cor e com o seu desenho, e os dois do Pokérole menores embaixo.
+       O botão é o nome do que ele faz, sem legenda. */
+    const bt = (cls, icone, rot, acao, off) =>
       `<button class="mb-btn ${cls}" ${off ? 'disabled' : ''} ${off ? '' : 'onclick="' + acao + '"'}>
-        <span class="rot">${rot}</span></button>`;
-
-    const vontade = bt('vontade', 'Vontade', '', 'UI.menuVontade()', vontadeDe(a) <= 0);
-    const dex = d.flags.tem_pokedex
-      ? `<div class="mb-linha">${vontade}${bt('dex', 'Pokédex',
-          '',
-          "Jogo.acaoBatalha({tipo:'pokedex'})")}</div>`
-      : `<div class="mb-linha centro">${vontade}</div>`;
+        ${svgIcone(icone, 'mb-icone')}<span class="rot">${rot}</span></button>`;
 
     c.appendChild(this.el(`<div class="menu-batalha">
-      <div class="mb-linha">
-        ${bt('lutar', 'Lutar', `golpes de ${this.esc(nomeExib(a))}`, 'UI.abrirGolpes()')}
-        ${bt('bag', 'Mochila', '', 'UI.menuBag()', !Object.values(d.itens).some(q => q > 0))}
-      </div>
-      <div class="mb-linha">
-        ${bt('time', 'Time', vivos ? `${vivos} em pé no banco` : 'ninguém mais em pé', 'UI.menuTroca()', !vivos)}
+      <div class="mb-grade">
+        ${bt('lutar', 'lutar', 'Lutar', 'UI.abrirGolpes()')}
+        ${bt('bag', 'itens', 'Mochila', 'UI.menuBag()', !Object.values(d.itens).some(q => q > 0))}
+        ${bt('time', 'bola', 'Time', 'UI.menuTroca()', !vivos)}
         ${Batalha.tipo === 'treinador'
-          ? bt('desistir', 'Forfeit', '', 'UI.confirmarForfeit()')
-          : bt('fugir', 'Fugir', Batalha.fuga ? 'Destreza + Atletismo' : 'daqui não se foge',
-             "Jogo.acaoBatalha({tipo:'fugir'})", !Batalha.fuga)}
+          ? bt('desistir', 'bandeira', 'Forfeit', 'UI.confirmarForfeit()')
+          : bt('fugir', 'correr', 'Fugir', "Jogo.acaoBatalha({tipo:'fugir'})", !Batalha.fuga)}
       </div>
-      ${dex}
+      <div class="mb-extra">
+        ${bt('vontade', 'chama', 'Vontade', 'UI.menuVontade()', vontadeDe(a) <= 0)}
+        ${d.flags.tem_pokedex ? bt('dex', 'pokedex', 'Pokédex', "Jogo.acaoBatalha({tipo:'pokedex'})") : ''}
+      </div>
     </div>`));
   },
 
@@ -2311,10 +2358,13 @@ const UI = {
       const G = GOLPES[g.nome];
       // a dica de eficácia só existe se você souber contra o que está lutando
       const ef = conhecido ? eficacia(G.t, Batalha.inimigo.tipos) : 1;
-      const marca = !conhecido ? '' : ef === 0 ? ' (imune)' : ef >= 2 ? ' ✦' : ef <= 0.5 ? ' ·' : '';
+      /* o aviso dos jogos de hoje, no canto do botão */
+      const marca = !conhecido ? '' : ef === 0 ? '<span class="g-ef nada">sem efeito</span>'
+        : ef >= 2 ? '<span class="g-ef super">super eficaz</span>' : ef <= 0.5 ? '<span class="g-ef pouco">pouco eficaz</span>' : '';
       const travado = Batalha.estAliado && Batalha.estAliado.desabilitado && Batalha.estAliado.desabilitado.nome === g.nome;
-      grade.appendChild(this.el(`<button class="golpe-btn${travado ? ' travado' : ''}" ${travado ?'disabled':''} title="${travado ? 'Desabilitado' : ''}" onclick="UI.modoBatalha='menu';Jogo.acaoBatalha({tipo:'golpe',indice:${i}})">
-        <span>${this.esc(g.nome)}${marca}<br><span class="pd">${G.t} · ${G.c==='status'?'status · ':''}${this.esc(this.resumoGolpe(g.nome))}</span></span></button>`));
+      /* o golpe na cor do tipo, como nos jogos de hoje */
+      grade.appendChild(this.el(`<button class="golpe-btn${travado ? ' travado' : ''}" style="--tc:${COR_TIPO[G.t] || '#8a8f99'}" ${travado ?'disabled':''} title="${travado ? 'Desabilitado' : ''}" onclick="UI.modoBatalha='menu';Jogo.acaoBatalha({tipo:'golpe',indice:${i}})">
+        <span class="g-tipo">${this.esc(G.t)}</span><span class="g-nome">${this.esc(g.nome)}</span>${marca}<span class="pd">${G.c==='status'?'status · ':''}${this.esc(this.resumoGolpe(g.nome))}</span></button>`));
     });
     c.appendChild(grade);
     c.appendChild(this.el(`<div class="mb-linha centro">
@@ -4942,7 +4992,7 @@ const UI = {
       ${L('Os dados', 'parada de d6 · cada 4, 5 ou 6 é um sucesso')}
       ${L('Precisão', 'atributo + perícia · 1 sucesso acerta · dor e precisão baixa tiram')}
       ${L('Dano', 'Força ou Especial + poder + 1 de STAB − Vitalidade ou Instinto · sucesso = 1 de dano')}
-      ${L('Tipo', '+1 por fraqueza · −1 por resistência · imune não sofre')}
+      ${L('Tipo', '+1 por fraqueza · −1 por resistência · imune não sofre · conhecendo o tipo do outro lado, o botão do golpe avisa')}
       ${L('Crítico', 'sobra de 3 sucessos na precisão (mais no posto alto) → +2 dados')}
       ${L('Ordem', 'prioridade · depois 1d6 + Destreza + Alerta')}
       ${L('Fuga', 'Destreza + Atletismo contra os do selvagem')}
@@ -5150,7 +5200,7 @@ const UI = {
       <div class="linha"><span class="k">Crítico</span><span class="v">3 sucessos além do necessário no Iniciante e no Novato · +1 por posto do Regular pra cima · crítico alto e Focus Energy tiram 1 · +2 dados de dano</span></div>
       <div class="linha"><span class="k">Dano</span><span class="v">Força (físico) ou Especial + poder do golpe + 1 de STAB − Vitalidade (físico) ou Instinto (especial) · cada sucesso é 1 de dano</span></div>
       <div class="linha"><span class="k">Zero sucesso</span><span class="v">1 de dano, e só</span></div>
-      <div class="linha"><span class="k">Tipo</span><span class="v">+1 por fraqueza · −1 por resistência · imune não sofre nada · golpe que acerta tira pelo menos 1</span></div>
+      <div class="linha"><span class="k">Tipo</span><span class="v">+1 por fraqueza · −1 por resistência · imune não sofre nada · golpe que acerta tira pelo menos 1 · com o tipo do outro lado conhecido, o botão do golpe avisa: super eficaz, pouco eficaz ou sem efeito</span></div>
       <div class="linha"><span class="k">Ação dupla e tripla</span><span class="v">Double Kick, Triple Kick… cada acerto rola a sua parada</span></div>
       <div class="linha"><span class="k">Ações sucessivas</span><span class="v">Fury Attack, Pin Missile… 1 acerto e mais 1 por sucesso sobrando na precisão, até 5</span></div>
       <div class="linha"><span class="k">Pelo posto</span><span class="v">Seismic Toss, Night Shade, Psywave: 1, 2, 4, 6, 8 ou 10 dados pelo posto, ignorando a defesa</span></div>

@@ -208,7 +208,9 @@ const Efeitos = {
     if (!a || !foto) return;
     const ficha = a.querySelector(`.lutador.${lado} .ficha`);
     if (!ficha) return;
-    const barra = ficha.querySelector('.barra'), i = barra && barra.querySelector('i');
+    /* a barra do Pokémon, não a sua vida (que mora na mesma ficha
+       quando o selvagem vem pra cima de você) */
+    const barra = ficha.querySelector('.hp-linha .barra'), i = barra && barra.querySelector('i');
     const pct = Math.max(0, (foto.hp / foto.hpMax) * 100);
     if (i){
       if (!suave){ i.style.transition = 'none'; i.style.width = pct + '%'; void i.offsetWidth; i.style.transition = ''; }
@@ -216,7 +218,7 @@ const Efeitos = {
       barra.classList.toggle('medio', pct <= 50 && pct > 22);
       barra.classList.toggle('baixo', pct <= 22);
     }
-    const num = ficha.querySelector('.hp-num');
+    const num = ficha.querySelector('.ficha-hud .hp-num');
     if (num) num.textContent = `${foto.hp} / ${foto.hpMax} HP`;
     this.pintarStatus(lado, foto.status, foto);
     this.pintarMarcas(lado, foto);
@@ -509,17 +511,15 @@ const Efeitos = {
     if (st === 'sono') return this.anel(lado, COR_EFEITO.sono);
   },
 
-  /* chuva ou areia por cima de cada lutador (a ficha fica limpa), entrando
-     e saindo devagar. Dentro da moldura de cada um porque no celular a
-     arena empilha e cada lutador tem o próprio cenário. */
+  /* chuva ou areia pelo cenário inteiro, por cima dos dois lutadores e
+     por baixo das fichas (que ficam limpas), entrando e saindo devagar */
   pintarClima(tipo){
     const a = this.arena();
     if (!a) return;
-    a.querySelectorAll('.lutador .arte').forEach(arte => {
-      const velha = arte.querySelector('.clima-camada');
-      if (velha){ velha.classList.add('saindo'); setTimeout(() => velha.remove(), 450); }
-      if (tipo) arte.insertAdjacentHTML('beforeend', `<div class="clima-camada clima-${tipo} chegando" aria-hidden="true"></div>`);
+    a.querySelectorAll(':scope > .clima-camada').forEach(velha => {
+      velha.classList.add('saindo'); setTimeout(() => velha.remove(), 450);
     });
+    if (tipo) a.insertAdjacentHTML('beforeend', `<div class="clima-camada clima-${tipo} chegando" aria-hidden="true"></div>`);
   },
 
   /* ---------- o turno inteiro ---------- */
@@ -683,10 +683,8 @@ const Efeitos = {
     /* 1 — parábola de quem joga até a base */
     let x0, y0;
     if (aliado){
-      /* do canto de baixo à esquerda da moldura dele: no celular a
-         arena empilha, e o pé da arena inteira é o quadro do outro */
-      const L = lut.getBoundingClientRect();
-      x0 = L.left - A.left + 4; y0 = Math.min(A.height, L.bottom - A.top) - TAM - 4;
+      /* do canto de baixo à esquerda da cena, de onde você está */
+      x0 = 4; y0 = A.height - TAM - 4;
     }
     else {
       const tr = arena.querySelector('.lutador.inimigo .treinador-fundo');

@@ -178,8 +178,8 @@ const AnimadorSprite = {
   },
 
   /* ======================== ATTACK_PHYSICAL ========================
-     Avança acelerando na direção do outro (uns 18% do caminho, até 40
-     px; 18 px no celular), achata no impacto e volta freando. A Promise resolve NO
+     Avança acelerando na direção do outro (uns 18% do caminho, até 48
+     px), achata no impacto e volta freando. A Promise resolve NO
      IMPACTO — é quando o golpe acerta e o efeito tem que aparecer; a
      volta segue sozinha, e `.volta` é a Promise dela. */
   ataqueFisico(lado, alvoLado){
@@ -190,9 +190,7 @@ const AnimadorSprite = {
     let dx = 0, dy = 0;
     if (t && u){
       const vx = u.cx - t.cx, vy = u.cy - t.cy, d = Math.hypot(vx, vy) || 1;
-      /* empilhado (celular) o outro está embaixo, do outro lado da
-         ficha: avanço curto, senão o corpo passa por cima do cartão */
-      const passo = Math.min(Math.abs(vy) > Math.abs(vx) ? 18 : 40, d * .18);
+      const passo = Math.min(48, d * .18);
       dx = vx / d * passo; dy = vy / d * passo;
     }
     this.marcar(lado, ESTADOS_SPRITE.ATTACK_PHYSICAL);

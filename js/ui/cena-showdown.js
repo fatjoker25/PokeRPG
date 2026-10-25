@@ -8,9 +8,10 @@
    do Showdown levadas pras posições reais dos nossos lutadores.
 
    O mapa é uma semelhança pelos dois pontos que as duas cenas
-   têm: o centro do seu Pokémon e o centro do de lá. No computador
-   isso é quase só escala; no celular, empilhado, gira — e o efeito
-   continua indo de um bicho pro outro.
+   têm: o centro do seu Pokémon e o centro do de lá. Como a nossa
+   cena é montada como a do Showdown (o seu embaixo à esquerda, o de
+   lá mais alto à direita), no computador e no celular isso é quase
+   só escala.
    ============================================================ */
 const CenaShowdown = {
   /* onde os dois lutadores ficam na cena do Showdown (pos() de z=0 e z=200) */
@@ -213,31 +214,21 @@ const CenaShowdown = {
       promessas.push(Efeitos.tocar(img, quadros, T, {easing:'linear', fill:'both'}));
     }
 
-    /* fundo: pinta só o cenário, atrás dos lutadores e nunca por cima das
-       fichas de HP. No computador é uma faixa só, do alto da arena até o
-       topo das fichas; no celular, empilhado, vai dentro da moldura de
-       cada lutador, como a camada de clima. */
-    const artes = [...A.querySelectorAll('.lutador .arte')];
-    const [ra, rb] = artes.map(x => x.getBoundingClientRect());
-    const empilhado = ra && rb && (ra.bottom <= rb.top + 4 || rb.bottom <= ra.top + 4);
-    const RA = A.getBoundingClientRect();
-    const topoFichas = Math.min(...[...A.querySelectorAll('.lutador .ficha')].map(x => x.getBoundingClientRect().top), RA.bottom);
+    /* fundo: pinta o cenário inteiro, atrás dos lutadores. As fichas de
+       HP flutuam por cima de tudo (z-index no CSS), então ele nunca as
+       cobre, no computador e no celular. */
     for (const f of reg.fundos){
       let bg = String(f.bg).replace(/url\((['"]?)https?:\/\/[^)'"]*\/([\w-]+\.(?:jpg|png))\1\)/g,
         (m, q, arq) => `url("${fxShowdown(arq)}")`);
       if (/^url\(/.test(bg)) bg += ' center / cover';
-      const onde = empilhado ? artes : [A];
       const a0 = f.atraso * vel, dur = Math.max(f.dur, 500) * vel;
       const o = (t) => Math.min(1, t / T);
-      for (const pai of onde){
-        const d = document.createElement('div');
-        d.className = 'sd-fundo'; d.style.background = bg;
-        if (!empilhado) d.style.height = Math.max(40, topoFichas - RA.top - 6) + 'px';
-        pai.insertBefore(d, pai.firstChild); lixo.push(d);
-        promessas.push(Efeitos.tocar(d, [
-          {opacity:0, offset:0}, {opacity:0, offset:o(a0)}, {opacity:f.op, offset:o(a0 + 250 * vel)},
-          {opacity:f.op, offset:o(a0 + dur - 250 * vel)}, {opacity:0, offset:o(a0 + dur)}, {opacity:0, offset:1}], T, {easing:'linear', fill:'both'}));
-      }
+      const d = document.createElement('div');
+      d.className = 'sd-fundo'; d.style.background = bg;
+      A.insertBefore(d, A.firstChild); lixo.push(d);
+      promessas.push(Efeitos.tocar(d, [
+        {opacity:0, offset:0}, {opacity:0, offset:o(a0)}, {opacity:f.op, offset:o(a0 + 250 * vel)},
+        {opacity:f.op, offset:o(a0 + dur - 250 * vel)}, {opacity:0, offset:o(a0 + dur)}, {opacity:0, offset:1}], T, {easing:'linear', fill:'both'}));
     }
 
     /* lutadores: deslocamento e escala relativos ao lugar de descanso */
@@ -273,9 +264,10 @@ const CenaShowdown = {
       promessas.push(Efeitos.tocar(el, quadros, T, {easing:'linear'}));
     }
 
-    /* quem ataca passa por cima de tudo enquanto a cena dura: no celular
-       ele atravessa o cartão do outro, e por baixo sumiria */
-    const luta = Efeitos.sprite(lado) && Efeitos.sprite(lado).closest('.lutador');
+    /* quem ataca passa por cima do outro enquanto a cena dura: o pulo
+       do Tackle e o rastro do Quick Attack atravessam o bicho de lá, e
+       por baixo sumiriam. As fichas continuam por cima dos dois. */
+    const luta = Efeitos.sprite(lado) && Efeitos.sprite(lado).closest('.arte');
     if (luta) luta.style.zIndex = 4;
     return Promise.all(promessas).then(() => { lixo.forEach(x => x.remove()); if (luta) luta.style.zIndex = ''; });
   }

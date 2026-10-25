@@ -175,8 +175,9 @@ Nove ambientes, nove cenários, cinco arenas. O mapa das duas coisas está em
   na quadra (`Arenas.ehQuadra`); luta marcada em arena passa `arena:'ginasio'`.
 
 A quadra é a única arena sem imagem — fundo de ginásio livre não existe pra
-baixar — então ela é pintada em CSS: arquibancada, refletor, linha de fundo
-e círculo do meio.
+baixar — então ela é pintada em CSS: arquibancada com a fileira de luzes e a
+torcida, refletor, e as linhas da quadra em perspectiva (um SVG embutido no
+próprio CSS: o retângulo que afina pro fundo, o meio e o círculo).
 
 Três armadilhas que já aconteceram aqui:
 
@@ -186,20 +187,34 @@ Três armadilhas que já aconteceram aqui:
 - **Enquadramento único não serve pras nove.** O mar da praia está no alto da
   imagem e a lava do vulcão no pé dela; cada ambiente tem o seu `--ar-foco` no
   CSS. Cenário novo entra com o foco junto.
-- **No celular a arena empilha.** Faixa única deixa o segundo lutador no
-  escuro, e esticar a mesma imagem numa caixa alta amplia demais. Empilhado,
-  cada lutador carrega o próprio cenário atrás de si.
+- **A arena empilhada do celular saiu.** Ela existia porque a faixa única
+  deixava o segundo lutador no escuro e esticar a imagem numa caixa alta
+  ampliava demais. Hoje a cena é uma só em toda largura, no formato dos
+  jogos: a imagem cobre a arena inteira, e no celular a cena é a mesma,
+  menor (290 px de altura), com os dois lado a lado. Caixa larga não
+  amplia a imagem: a de 753×500 cabe quase inteira.
 
-Os dois lutadores ficam **espelhados** na cena: cada um centrado na sua
-metade, à mesma distância da borda de fora e do meio. O que os diferencia
-é a profundidade — o de lá pousa mais alto no quadro e menor, o seu mais
-baixo e maior. Se os dois pousassem na mesma linha, um deles estaria
-flutuando sobre o chão que a imagem desenha.
+Os dois lutadores ficam **na diagonal**, como no Showdown, pra qual os
+cenários foram desenhados: o seu embaixo à esquerda, maior (está mais perto
+de quem olha), o de lá mais alto à direita, menor. Quem manda são as
+variáveis da `.arena`, por largura de tela: `--cena-alt`, `--arte-eu` e
+`--arte-ele` (o quadro de cada um), `--x-eu`/`--x-ele` (o meio de cada um)
+e `--pe-eu`/`--pe-ele` (a altura do pé). Se os dois pousassem na mesma
+linha, um deles estaria flutuando sobre o chão que a imagem desenha.
 
-Duas coisas andam junto com isso e já quebraram: **a base tem que subir
-com o sprite** (sombra descolada do pé é bicho flutuando), e **no celular
-o recuo não se aplica** — empilhado não existe chão compartilhado, cada
-lutador tem a sua moldura e os dois pousam no pé dela.
+Cada `.arte` é uma caixa do tamanho do quadro do sprite, posta na cena
+pelo pé: a borda de baixo é o chão, e **a base (a sombra) mora ali**, no
+`::after` da própria caixa — sombra descolada do pé é bicho flutuando, e
+foi assim que já quebrou. O `.lutador` não desenha nada
+(`display:contents`): arte e ficha são camadas da cena, e as classes dele
+(`fixo`, `caido`, `capturado`, `por-entrar`) continuam valendo pros
+filhos. Medir o `.lutador` com `getBoundingClientRect` dá zero; quem
+precisa de posição mede a `.arte`, o sprite ou a `.arena`.
+
+As camadas, de baixo pra cima: cenário (0), fundo de golpe do Showdown
+(1), os dois Pokémon (2; quem ataca sobe pra 4 durante a cena), clima e a
+bola do arremesso (5; a bola entra depois e fica por cima), efeitos de
+golpe (6) e as fichas de HP (8), que nada cobre.
 
 O **fundo do site** sai da **cor do jogo** que quem joga escolhe nos Ajustes
 (`CORES_MOLDURA` em `interface.js`, `data-moldura` em `estilo.css`): cada
@@ -261,11 +276,11 @@ foram **medidos** pelo canvas nas 251 espécies, não chutados:
   vistas, então sem puxar pra baixo o bicho flutua acima da própria
   sombra;
 - ela ocupa **53% do quadro**, contra 62% da antiga de frente e 76%
-  da antiga de costas, então sai menor na tela sem ter encolhido. Todo
-  tamanho já vem multiplicado por essa diferença: **1,18x na frente,
-  1,44x nas costas**. O lutador aliado fica maior que o inimigo de
-  propósito, o que também acerta a perspectiva — é ele que está mais
-  perto de quem olha.
+  da antiga de costas, então sai menor na tela sem ter encolhido. Por
+  isso o quadro da arena é grande: 192 px o seu e 160 px o de lá no
+  computador (2x e 1,67x a arte de 96), 128 e 104 no celular. O
+  lutador aliado fica maior que o inimigo de propósito, o que também
+  acerta a perspectiva — é ele que está mais perto de quem olha.
 
 Trocar de conjunto de arte é mexer em **quatro telas**, não só na
 batalha: combate, ficha da Pokédex, varredura da Pokédex e PC. O
@@ -396,12 +411,14 @@ Web Animations. Quatro coisas que já morderam aqui:
   sprite — pela distância, os efeitos saíam enormes e o pulo do Tackle
   saía pelo teto da arena. A altura ainda é limitada pelo céu que a
   arena tem acima do bicho de lá;
-- **fundo** (céu escuro do Thunder, roxo do Psychic) cobre só o cenário,
-  nunca as fichas de HP; empilhado, vai dentro da moldura de cada um;
+- **fundo** (céu escuro do Thunder, roxo do Psychic) cobre a cena
+  inteira por baixo dos dois Pokémon (`.arena > .sd-fundo`); as fichas
+  de HP flutuam por cima dele pela camada, nunca por conta;
 - **cópia de sprite** (rastro do Quick Attack) leva o `filter` do sprite:
   sem isso a silhueta vira bicho colorido e entrega a espécie;
-- **quem ataca fica por cima** durante a cena, senão no celular ele passa
-  por trás do cartão do outro.
+- **quem ataca fica por cima** do outro durante a cena (a `.arte` dele
+  sobe de camada), senão o pulo do Tackle e o rastro do Quick Attack
+  passam por trás do bicho de lá.
 
 Golpe que o Showdown deixa vazio (Earthquake, Reflect, Substitute…) cai na
 animação nossa, em `Efeitos.golpe`: imagens de efeito do Showdown em
@@ -472,9 +489,9 @@ Golpe que acaba a luta (Roar, Whirlwind, Teleport) chama `encerrar` no
 meio do turno: o resto do turno tem que parar ali (`!this.ativo`).
 
 Clima (Rain Dance, Sandstorm) mora em `Batalha.clima` e dura cinco turnos;
-o evento que muda o clima leva `clima` e a camada é pintada **dentro da
-moldura de cada lutador**, nunca por cima da arena inteira — por cima, ela
-cobria as fichas de HP.
+o evento que muda o clima leva `clima` e a camada é **uma só, pela cena
+inteira** (`.arena > .clima-camada`, camada 5): por cima dos dois Pokémon e
+por baixo das fichas de HP, que ficam limpas.
 
 Gritos: `sons/gritos/{dex}.ogg`, versão legacy da PokeAPI (~6 KB cada);
 o `build.py` embute junto com os sprites.
@@ -1301,9 +1318,43 @@ botão da abertura. O save automático é apagado ali.
 - `js/ui/interface.js` — todas as telas e modais; `js/ui/efeitos.js` — o
   turno encenado, a abertura e a entrada do seu Pokémon.
 
+## A interface é a dos jogos de hoje
+O pedido foi "deixar no formato de hoje o gráfico", e o modelo é o dos
+jogos de Switch (Sword/Shield, Scarlet/Violet) levado pra arte de pixel
+que o projeto tem:
+
+- **Letra**: a interface (fichas da luta, comandos, topo, placas) é
+  Jost, embutida em `css/fonte-jogo.css` (OFL, em `fontes/`), pela
+  variável `--letra-hud`. O texto da história continua na fonte do
+  sistema, que é a de ler. Nada de fonte de pixel fora do título.
+- **Topo** (`UI.topo`): HUD em duas linhas — rosto, nome e título de
+  quem joga com os cinco botões de menu (cada um com o desenho de
+  `icones.js`; no celular só o desenho, com `aria-label`), e embaixo os
+  chips do que se carrega (lugar, hora, HP com barrinha, Vontade,
+  dinheiro, Ração). No celular os chips andam numa linha de arrastar. O
+  `.relogio` continua lá dentro pro `UI.pintarRelogio`.
+- **Placa do lugar**: o `.cap-cabecalho` é o letreiro de área — a arte
+  do lugar (a mesma do fundo da página, pela `--cenario-lugar` que o
+  `UI.pintarCenario` põe no body, na luz da hora) com a etiqueta, o
+  título grande e o lugar por cima.
+- **Luta**: cena grande; as fichas de HP **flutuam** nos cantos livres
+  (a do de lá em cima à esquerda, a sua embaixo à direita), cápsula
+  escura com a faixa da cor do lado. Em cima o que se lê de relance —
+  nome, nível, condição, tipo, time, HP, Vontade; a parte de conferir
+  (natureza, atributos, item, `.ficha-mais`) abre num toque na alça
+  (`UI.alternarFicha`), e fica aberta entre turnos e lutas. Comandos
+  grandes na cor dos jogos (Lutar vermelho, Mochila âmbar, Time verde,
+  Fugir azul, Forfeit cinza) e os do Pokérole menores (Vontade roxa,
+  Pokédex na cor da tela dela). Golpe na cor do tipo, com a aba do tipo
+  e, quando o tipo do outro lado é conhecido, o aviso de eficácia
+  (super eficaz, pouco eficaz, sem efeito) — que está na folha de regras.
+  No computador a caixa de mensagem ocupa a coluna da esquerda e a
+  bandeja de dados mora embaixo dos comandos; no celular, mensagem,
+  comandos e bandeja, nessa ordem.
+
 ## A caixa de diálogo e o menu
 Tela de história (capítulo, linha, cidade: todo painel com
-`.cap-cabecalho`) lê numa **coluna só** de 48rem, cabeçalho, texto,
+`.cap-cabecalho`) lê numa **coluna só** de 48rem, placa, texto,
 opções e campo livre com as mesmas bordas. O balão é a caixa de diálogo
 dos jogos: o rosto fica **fora** do `.fala-quem`, à esquerda, numa
 moldura na cor da pessoa (`.fala.com-rosto`, grade de duas colunas), e

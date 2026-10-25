@@ -26,6 +26,7 @@ HTML, CSS e JavaScript puro, sem dependências nem servidor.
 - Cenários de batalha, rostos de treinador, efeitos e animações de golpe e músicas de batalha: [Pokémon Showdown](https://play.pokemonshowdown.com) (animações do cliente sob CC0 e MIT). Os rostos da rede (`sprites_nds/npcs/trainers/rede_*.png`) são os de recruta e executivo de HG/SS de lá, com a letra do peito apagada.
 - Regras de jogo: Pokérole (Pokérole Project), com dados do Pokerole-Data, mantido pela comunidade.
 - Fonte do título: Press Start 2P, de CodeMan38 (SIL Open Font License 1.1, em `fontes/`).
+- Fonte da interface (fichas da luta, comandos, topo e cabeçalhos): Jost, de The Jost Project Authors / indestructible type* (SIL Open Font License 1.1, em `fontes/`).
 - Ícones em SVG, efeitos sonoros e trilha calma: feitos no próprio projeto.
 
 Pokémon é marca da Nintendo, Game Freak e Creatures Inc. Este é um projeto de fã, sem fim comercial.
