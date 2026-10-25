@@ -71,7 +71,9 @@ function c21_curar(){
    A CAIXA DA SRA. PERLA. No capítulo 1 ela pediu a caixa de volta
    a quem levou o Pokémon nela ao posto da cidade.
    ------------------------------------------------------------ */
-const C21_CAIXA = 'Caixa de ventilador com um Pokémon dentro';
+/* a caixa da Sra. Perla, que esvazia numa das primeiras noites
+   (esvaziarCaixaDaPerla, no capítulo 1) */
+const C21_CAIXA = 'Caixa de ventilador com um canto roído';
 function c21_temACaixa(){ return Estado.contaItem(C21_CAIXA) > 0; }
 
 /* o que sobra pra fazer na rua antes de entrar em casa */
@@ -238,6 +240,7 @@ c21_a_rua:{
 c21_quem_pregou:{
   texto:[
     'Você bate em duas portas e na terceira acha, porque na terceira a pessoa fica vermelha antes de você terminar a pergunta.',
+    'É a Sra. Perla, do número dezoito, a vizinha que fala com a rua inteira por cima do muro.',
     fala('Sra. Perla', 'Foi eu. Foi eu e eu não peço desculpa.', 'grita'),
     fala('Sra. Perla', 'Eu imprimi vinte. Os da rua são todos meus, e tem nove lá em casa que eu não achei poste pra pregar.'),
     'Vinte cartazes. Ela pagou impressão de vinte cartazes com a sua cara de licença.',
@@ -622,7 +625,7 @@ c21_o_que_aconteceu_aqui:{
     d=>d.flags.a_caixa_ficou_em_casa
       ? fala(nomeCasa(), 'E o Pokémon da caixa da Perla achou dono. Um menino da rua de baixo. Eu fiz ele prometer que trazia pra eu ver, e ele traz.')
       : '',
-    d=>fala(nomeCasa(), 'A Perla imprimindo cartaz. Eu falei pra ela não fazer isso. Ela fez vinte.', 'riso'),
+    d=>fala(nomeCasa(), 'A Perla, a vizinha do dezoito, imprimindo cartaz com a sua cara. Eu falei pra ela não fazer isso. Ela fez vinte.', 'riso'),
     'Não aconteceu nada, e levou quarenta minutos pra contar.'
   ],
   ef:{moral:7, flag:'perguntou_o_que_aconteceu_em_casa',

@@ -1274,6 +1274,13 @@ const Estado = {
       /* a caixa do ventilador entregue no posto da cidade continuava na
          mochila: ela ficou no balcão, com o Pokémon dentro */
       if (d.flags && d.flags.entregou_a_caixa_no_centro && d.itens) delete d.itens['Caixa de ventilador com um Pokémon dentro'];
+      /* e quem saiu de casa com ela e já passou do primeiro capítulo carrega
+         a caixa vazia: o Pokémon roeu um canto numa das primeiras noites
+         (esvaziarCaixaDaPerla) */
+      if (d.capitulo >= 2 && d.itens && d.itens['Caixa de ventilador com um Pokémon dentro']){
+        d.itens['Caixa de ventilador com um canto roído'] = (d.itens['Caixa de ventilador com um canto roído'] || 0) + d.itens['Caixa de ventilador com um Pokémon dentro'];
+        delete d.itens['Caixa de ventilador com um Pokémon dentro'];
+      }
       /* o vizinho de Vermilion se chamava Sr. Hale, o nome do dono do
          curral do 15: o que não é do curral vai pro Sr. Marram */
       const hale = d.npcs && d.npcs['Sr. Hale'];

@@ -880,6 +880,9 @@ const Jogo = {
     /* Nada de repetir nome, reputação e time na abertura de cada capítulo:
        isso já está no topo da tela, na Ficha e no Time. A cena abre na cena. */
     const abertura = (typeof avisosDeRumo === 'function' ? avisosDeRumo() : []).concat(daCredencial);
+    /* a caixa da Sra. Perla, pra quem saiu com ela: esvazia numa das primeiras noites */
+    const caixa = typeof esvaziarCaixaDaPerla === 'function' ? esvaziarCaixaDaPerla(Estado.dados) : null;
+    if (caixa) abertura.push(caixa);
     /* quem é do seu lado te acha na virada (js/story/linhas.js) */
     /* o capítulo de caminho já é a cena da sua linha: não chama outra por cima */
     if (typeof Linhas !== 'undefined' && !(Historia.capAtual && Historia.capAtual.caminho) && Linhas.talvez(cena, abertura)) return;

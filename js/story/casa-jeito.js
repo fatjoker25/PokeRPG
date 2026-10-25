@@ -180,7 +180,7 @@ const JEITOS_DA_CASA = {
       d => fala(nomeCasa(), 'Vai fundo. Você puxou isso de alguém, e não foi de mim.')
     ],
     mentira: d => fala(nomeCasa(), 'Que bom, porque eu não sei nem onde deixei a chave.', 'riso'),
-    ligacao: d => fala(nomeCasa(), 'Eu apertei o botão errado umas quatro vezes. A Perla que me ensinou.'),
+    ligacao: d => fala(nomeCasa(), 'Eu apertei o botão errado umas quatro vezes. Foi a Perla, a vizinha do dezoito, que me ensinou.'),
     aniversario: [
       d => fala(nomeCasa(), 'FELIZ ANIVERSÁRIO! Ai, desculpa, tava no viva-voz. Feliz aniversário.', 'grita'),
       d => fala(nomeCasa(), 'Eu mandei um presente pelo correio e acho que escrevi o endereço errado, então se chegar um pacote estranho em algum lugar, é seu.', 'riso')

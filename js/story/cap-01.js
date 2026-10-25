@@ -11,6 +11,37 @@ function oPostoDaCidade(d){ return d.jogador.cidade === 'Pallet' ? 'o laboratór
 function cadastra(d){ return (d || Estado.dados).jogador.cidade === 'Pallet' ? 'a assistente do Professor' : 'a enfermeira'; }
 function Cadastra(d){ const c = cadastra(d); return c.charAt(0).toUpperCase() + c.slice(1); }
 function aoPostoDaCidade(d){ return d.jogador.cidade === 'Pallet' ? 'ao laboratório do Professor' : 'ao Centro Pokémon'; }
+/* A placa da saída da cidade diz o nome da SUA cidade: a cena da placa
+   dizia PALLET pra quem nasceu em qualquer lugar. */
+function placaDaCidade(d){ return String(d.jogador.cidade || 'Pallet').toUpperCase(); }
+/* "vocês dois", você e o seu Pokémon: só vira "vocês duas" quando os
+   dois lados são mulher. A marca {dois|duas} resolve o seu lado; o do
+   Pokémon, aqui. */
+function c1_vocesDois(d, M){
+  const v = M ? 'Vocês' : 'vocês', p = (d.time || [])[0];
+  return p && generoDe(p) === 'f' ? `{${v} dois|${v} duas}` : `${v} dois`;
+}
+/* o mesmo, você e quem ficou em casa */
+function c1_vocesDaCasa(M){
+  const v = M ? 'Vocês' : 'vocês';
+  return casaEhMulher() ? `{${v} dois|${v} duas}` : `${v} dois`;
+}
+
+/* A caixa da Sra. Perla. Quem sai de casa com ela e não entrega no posto
+   da cidade carrega um Pokémon de debaixo de carro dentro de uma caixa de
+   ventilador, e numa das primeiras noites ele rói um canto e vai embora.
+   A caixa fica: ela tem que voltar, e o capítulo 21 cobra. Sem isso a
+   mochila dizia "com um Pokémon dentro" a jornada inteira, e o 21 contava
+   que ele tinha ido embora no começo. */
+const CAIXA_DA_PERLA = 'Caixa de ventilador com um Pokémon dentro';
+const CAIXA_VAZIA_DA_PERLA = 'Caixa de ventilador com um canto roído';
+function esvaziarCaixaDaPerla(d){
+  if (!d || d.capitulo < 2 || !Estado.contaItem(CAIXA_DA_PERLA)) return null;
+  Estado.usarItem(CAIXA_DA_PERLA);
+  Estado.darItem(CAIXA_VAZIA_DA_PERLA, 1);
+  Estado.registrar('Numa das primeiras noites, o Pokémon da caixa da Sra. Perla roeu um canto e foi embora. A caixa ficou.');
+  return {tipo:'info', texto:'Numa das primeiras noites fora de casa, o Pokémon da caixa da Sra. Perla roeu um canto do papelão e foi embora sem barulho nenhum. A caixa ficou com você: ela tem que voltar.'};
+}
 /* A mesma manhã, começando de seis jeitos. O jogo sorteia um
    por partida, então duas jornadas nunca abrem igual. */
 const ABERTURAS_C1 = ['c1_acorda','c1_chuva','c1_dormiu_demais','c1_nao_dormiu','c1_no_telhado',
@@ -71,6 +102,13 @@ num:1, titulo:'A Última Manhã', local:d=>d.jogador.cidade, ambiente:'campo', n
 tom:'leve',
 entradas: ABERTURAS_C1,
 inicio: () => Dados.escolher(ABERTURAS_C1),
+/* Acordou tarde: quem ficou em casa já saiu pro trabalho e deixou o
+   bilhete na mesa ("eu não ia aguentar a porta"). Toda escolha que
+   desce pra cozinha cai na cozinha vazia, senão a pessoa que foi
+   trabalhar aparecia sentada à mesa e se despedia na porta. */
+desvios:{
+  c1_cozinha:{se: d => !!d.flags.dormiu_demais && d.cena !== 'c1_cozinha', vai:'c1_cozinha_vazia'}
+},
 cenas:{
 
 c1_acorda:{
@@ -174,7 +212,9 @@ c1_dormiu_demais:{
     'Lá embaixo não tem barulho de panela, nem rádio, nem ninguém. A casa está do tamanho errado.',
     'Na mesa da cozinha, um prato com um pano por cima e um papel dobrado ao lado.'
   ],
-  ef:{flag:'dormiu_demais', registrar:'Acordou às 9h40 do dia de sair de casa. A casa estava vazia.'},
+  ef:{flag:'dormiu_demais', registrar:'Acordou às 9h40 do dia de sair de casa. A casa estava vazia.',
+      /* o texto diz nove e quarenta: o relógio vai até lá */
+      executar:d=>{ Relogio.ate(9); }},
   escolhas:[
     {texto:'Ler o papel.', vai:'c1_o_papel'},
     {texto:'Comer primeiro. O papel não vai embora.', vai:'c1_comeu_frio'},
@@ -185,7 +225,7 @@ c1_dormiu_demais:{
 
 c1_o_papel:{
   texto:[
-    'É meia folha de caderno, escrita com a letra que você conhece desde que aprendeu a ler.',
+    d=>`É meia folha de caderno, na letra de ${nomeCasa()}: a letra que você conhece desde que aprendeu a ler.`,
     '**Eu não te acordei de propósito. Dormir era a única coisa que eu ainda podia te dar hoje.**',
     '**O café está embaixo do pano. Tem mais no armário de cima — o de cima mesmo, não o que você sempre abre.**',
     '**E não volta por obrigação. Volta quando der vontade. É diferente, e é melhor.**',
@@ -228,6 +268,22 @@ c1_guardou_bilhete:{
       registrar:'Guardou o bilhete no bolso de dentro.'},
   escolhas:[
     {texto:'Comer o que ficou embaixo do pano.', vai:'c1_comeu_frio'},
+    {texto:'Sair.', vai:'c1_rua'}
+  ]
+},
+
+/* quem acordou tarde desce pra cá (desvios, no topo do capítulo) */
+c1_cozinha_vazia:{
+  texto:[
+    d=>`A cozinha continua vazia. ${nomeCasa()} saiu pro trabalho antes de você acordar, e a casa ficou com o barulho da geladeira e do relógio da parede.`,
+    d=>Historia.jaAconteceu('c1_comeu_frio')
+      ? 'O prato que você lavou está no escorredor, do jeito que você deixou.'
+      : 'O prato com o pano por cima continua na mesa, esperando.',
+    d=>Historia.jaAconteceu('c1_o_papel') ? '' : 'Do lado do prato, o papel dobrado.'
+  ],
+  escolhas:[
+    {texto:'Ler o papel.', vai:'c1_o_papel', cond:d=>!Historia.jaAconteceu('c1_o_papel')},
+    {texto:'Comer o que está embaixo do pano.', vai:'c1_comeu_frio', cond:d=>!Historia.jaAconteceu('c1_comeu_frio')},
     {texto:'Sair.', vai:'c1_rua'}
   ]
 },
@@ -348,7 +404,7 @@ c1_foi_sem_despedir:{
     'É mais fácil. É muito mais fácil, e é por isso que tanta gente faz assim.',
     d=>{
       const p = d.time[0];
-      return p ? `${nomeExib(p)} olha pra trás por vocês dois, três vezes, e na terceira você puxa ${pron(p).ele} pelo ombro sem falar nada.`
+      return p ? `${nomeExib(p)} olha pra trás por ${c1_vocesDois(d)}, três vezes, e na terceira você puxa ${pron(p).ele} pelo ombro sem falar nada.`
                : 'Você olha pra trás uma vez, na placa, e depois não olha mais.';
     },
     'Você vai carregar essa manhã por muito tempo, e não do jeito bonito.',
@@ -426,7 +482,7 @@ c1_gritou_de_cima:{
     d=>fala(d.jogador.nome, 'JÁ VOU!', 'grita'),
     'Lá embaixo, a resposta demora dois segundos.',
     d=>fala(nomeCasa(), 'EU NÃO PERGUNTEI NADA!', 'grita'),
-    'Vocês dois estão gritando de andares diferentes de uma casa de dois andares, sobre uma coisa que ninguém perguntou, no último dia.',
+    d=>`${c1_vocesDaCasa(true)} estão gritando de andares diferentes de uma casa de dois andares, sobre uma coisa que ninguém perguntou, no último dia.`,
     'É exatamente assim que esta casa funciona, e você vai sentir falta disso de um jeito que não dá pra explicar pra ninguém.'
   ],
   ef:{moral:3, rep:{eixo:'bom',delta:1,motivo:'Gritou de volta, que é como esta casa conversa'},
@@ -624,7 +680,7 @@ c1_estrelas:{
     'Você fica ali até o céu começar a clarear, e quando a luz volta — às seis e vinte, de uma vez, com a cidade inteira acendendo junto — é quase uma pena.'
   ],
   ef:{moral:4, flag:'viu_o_ceu_sem_poste',
-      registrar:'Viu o céu de Pallet sem um poste aceso.'},
+      registrar:d=>`Viu o céu de ${d.jogador.cidade} sem um poste aceso.`},
   escolhas:[
     {texto:'Descer para a cozinha.', vai:'c1_cozinha'},
     {texto:'Olhar o quarto uma última vez.', vai:'c1_quarto'},
@@ -719,7 +775,7 @@ c1_bolso_de_dentro:{
 c1_festa:{
   texto:[
     'Tem gente demais na sua casa às sete da manhã e você não foi consultad{o|a} sobre isso.',
-    'São sete pessoas na cozinha de quatro lugares: três vizinhos, dois primos que você vê uma vez por ano, a Sra. Perla e alguém que você tem quase certeza de que mora na outra rua.',
+    'São sete pessoas na cozinha de quatro lugares: três vizinhos, dois primos que você vê uma vez por ano, a Sra. Perla do número dezoito, de casaco por cima da camisola, e alguém que você tem quase certeza de que mora na outra rua.',
     'Tem bolo. Tem bolo às sete da manhã, e o bolo tem o seu nome escrito errado de glacê.',
     d=>fala(nomeCasa(), 'Eu falei pra não fazer nada. Eu falei. Quatro vezes.', 'baixo',
             '{casa:Ela|Ele} fala isso ao seu lado, sem tirar o sorriso da cara, e está claramente muito feliz.'),
@@ -865,8 +921,8 @@ c1_ele_sumiu:{
 c1_procura_pijama:{
   texto:[
     'Você sai de pijama e de chinelo às seis e quarenta e cinco e percorre a rua inteira chamando, sem se importar com janela nenhuma.',
-    'Duas janelas abrem. Uma fecha de novo. A outra é a Sra. Perla, que olha você de cima a baixo e entra sem dizer nada — e volta um minuto depois, de casaco, pra procurar junto.',
-    'Vocês dois acham {pk:ele|ela} em onze minutos, na saída da cidade, {pk:sentado|sentada} exatamente em cima da placa que diz PALLET, olhando a estrada.',
+    'Duas janelas abrem. Uma fecha de novo. A outra é a da Sra. Perla, a vizinha do número dezoito, que olha você de cima a baixo e entra sem dizer nada — e volta um minuto depois, de casaco, pra procurar junto.',
+    d=>`{Vocês dois|Vocês duas} acham {pk:ele|ela} em onze minutos, na saída da cidade, {pk:sentado|sentada} exatamente em cima da placa que diz ${placaDaCidade(d)}, olhando a estrada.`,
     '{pk:Ele|Ela} não fugiu. {pk:Ele|Ela} foi esperar por você no lugar certo.'
   ],
   ef:{moral:8, flag:'ele_estava_na_placa',
@@ -892,7 +948,7 @@ c1_onde_ele_iria:{
 c1_achou_na_placa:{
   texto:[
     'Você sai andando direto, sem chamar, sem olhar pros lados, porque você já sabe.',
-    '{pk:Ele está sentado|Ela está sentada} em cima da placa da saída da cidade, de costas pra Pallet, olhando a estrada que sobe.',
+    d=>`{pk:Ele está sentado|Ela está sentada} em cima da placa da saída da cidade, de costas pra ${d.jogador.cidade}, olhando a estrada que sobe.`,
     '{pk:Ele|Ela} não se assusta quando você chega. {pk:Ele|Ela} olha pra você, olha pra estrada, e olha pra você de novo.',
     'A pergunta é tão clara que quase dá pra ouvir.'
   ],
@@ -906,11 +962,11 @@ c1_achou_na_placa:{
 },
 c1_sentou_na_placa:{
   texto:[
-    'Você senta em cima da placa, de pijama, às sete da manhã, com a cidade inteira acordando atrás de vocês dois.',
+    d=>`Você senta em cima da placa, de pijama, às sete da manhã, com a cidade inteira acordando atrás de ${c1_vocesDois(d)}.`,
     'A estrada sobe e some numa curva a uns quinhentos metros. Depois da curva pode ter qualquer coisa. É isso que faz ela ser uma estrada e não um quintal.',
     'Vocês ficam ali até dar sete e meia.',
     'Depois vocês voltam pra casa, porque ainda tem café, ainda tem despedida, e ainda tem uma mochila no chão do quarto.',
-    'Mas agora vocês dois já sabem como é sentar naquela placa, e isso não vai embora.'
+    d=>`Mas agora ${c1_vocesDois(d)} já sabem como é sentar naquela placa, e isso não vai embora.`
   ],
   ef:{moral:6, flag:'sentou_na_placa',
       registrar:'Sentou na placa da saída da cidade antes de sair de verdade.'},
@@ -1188,7 +1244,7 @@ c1_objetivo:{
 c1_silencio_mesa:{
   texto:[
     'Você não responde. Continua comendo.',
-    'Ninguém insiste. A cozinha faz barulho de cozinha por mais uns quatro minutos e isso é suficiente pros dois.',
+    d=>`Ninguém insiste. A cozinha faz barulho de cozinha por mais uns quatro minutos e isso é suficiente ${casaEhMulher() ? '{pros dois|pras duas}' : 'pros dois'}.`,
     'Tem conversa que é melhor não ter, e tem gente que sabe disso — e é uma sorte enorme morar com gente que sabe disso.'
   ],
   escolhas:[
@@ -1462,10 +1518,14 @@ c1_saida_pro_centro:{
       ? 'Pallet não tem Centro Pokémon. O cadastro de treinador se faz numa mesa do lado da porta do laboratório do Professor, três manhãs por semana. Hoje é uma delas.'
       : d.flags.recebeu_do_goro
         ? `No Centro Pokémon de ${d.jogador.cidade}, a fila de depois do almoço já começou. É meio-dia e meia.`
-        : `O Centro Pokémon de ${d.jogador.cidade} abre às sete. São sete e vinte.`,
+        : d.flags.dormiu_demais
+          ? `O Centro Pokémon de ${d.jogador.cidade} abre às sete. Já passa das dez.`
+          : `O Centro Pokémon de ${d.jogador.cidade} abre às sete. São sete e vinte.`,
     'Tem uma fila de três pessoas e todas as três têm a sua idade.'
   ],
-  ef:{registrar:'Foi ao Centro Pokémon fazer o cadastro de treinador.'},
+  ef:{registrar:'Foi ao Centro Pokémon fazer o cadastro de treinador.',
+      /* quem acordou às nove e quarenta chega depois das dez */
+      executar:d=>{ if (d.flags.dormiu_demais && !d.flags.recebeu_do_goro && d.relogio.hora < 10) Relogio.ate(10); }},
   escolhas:[
     {texto:'Entrar na fila.', vai:'c1_fila'},
     {texto:'Ir embora sem cadastro. Papel é problema de quem tem medo.', vai:'c1_sem_cadastro'},
@@ -1541,7 +1601,7 @@ c1_fila:{
       : fala(cadastra(d), 'Tudo certo. Nenhum registro anterior, nenhum chip de criador, nenhuma restrição.'),
     d=>(d.flags.recebeu_do_goro || d.flags.recebeu_do_professor)
       ? fala(cadastra(d), d.flags.recebeu_do_goro ? 'Veio na perua hoje, né? O Célio ainda tá na praça?' : 'Saiu da mão do Professor hoje, né?', null, 'Ela levanta os olhos da prancheta pela primeira vez.')
-      : fala(cadastra(d), 'Ele é de casa mesmo, né?', null, 'Ela levanta os olhos da prancheta pela primeira vez.')
+      : fala(cadastra(d), `${(d.time[0] && pron(d.time[0]).Ele) || 'Ele'} é de casa mesmo, né?`, null, 'Ela levanta os olhos da prancheta pela primeira vez.')
   ],
   escolhas:[
     {texto:d=>(d.flags.recebeu_do_goro || d.flags.recebeu_do_professor) ? '"Veio. Faz uma hora que é meu."' : '"É. Desde antes de eu lembrar."', vai:'c1_registro',
@@ -1780,12 +1840,12 @@ c1_fim_venceu:{
       const b = C1.briga(d), p = C1.meu(d), ele = p ? pron(p).ele : 'ele';
       if (b.turnos && b.turnos <= 2) return 'Você repassa na cabeça o que mandou fazer e não lembra de ter decidido nada. Saiu.';
       if (b.hpAliado >= 0.7) return `Metade do que deu certo foi ordem sua. A outra metade foi ${ele}, que não esperou a ordem.`;
-      if (b.hpAliado < 0.3) return 'Você fica agachad{o|a} até a respiração dos dois acertar o mesmo ritmo.';
+      if (b.hpAliado < 0.3) return `Você fica agachad{o|a} até a respiração ${p && generoDe(p) === 'f' ? '{dos dois|das duas}' : 'dos dois'} acertar o mesmo ritmo.`;
       return `Você conta o que mandou e o que ${ele} levou, e a conta não fecha tão a seu favor quanto parecia enquanto acontecia.`;
     },
     d=>C1.estrada(d)
   ],
-  fim:true, resumo:'A primeira briga no capim, e vocês dois saíram andando.'
+  fim:true, resumo:d=>`A primeira briga no capim, e ${c1_vocesDois(d)} saíram andando.`
 },
 
 c1_fim_pegou:{

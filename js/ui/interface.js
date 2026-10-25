@@ -2735,7 +2735,7 @@ const UI = {
 
     const ROTULO = {
       revanche:'Chamar para uma revanche',
-      favor:(c.favor && c.favor.rotulo) || 'Pedir um favor',
+      favor:(c.favor && (typeof c.favor.rotulo === 'function' ? c.favor.rotulo(Estado.dados) : c.favor.rotulo)) || 'Pedir um favor',
       missao:(() => {
         const f = Estado.faseDaMissao(c.id);
         if (f === 'entregar') return (c.missao && c.missao.rotuloEntrega) || 'Ligar e dizer que está feito';

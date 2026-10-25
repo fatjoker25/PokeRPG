@@ -199,11 +199,16 @@ const CONTATOS = [
     rep:{eixo:'bom', delta:1, motivo:'Foi até o cais de Vermilion olhar uma coisa que não era sua'},
     marca:'odete_soube_do_cais'
   },
+  /* a caixa só existe pra quem saiu de casa com ela (leva_a_caixa):
+     quem conheceu a Sra. Perla na festa ou na procura não tem caixa
+     nenhuma pra perguntar */
   favor:{
-    rotulo:'Perguntar da caixa',
+    rotulo:d=>d.flags.leva_a_caixa ? 'Perguntar da caixa' : 'Perguntar se ela precisa de alguma coisa',
     limite:99, esperaCap:3,
     texto:d=>[
-      fala('Sra. Perla', 'A caixa? A caixa eu quero de volta, mas já desencanei.', 'riso'),
+      d.flags.leva_a_caixa
+        ? fala('Sra. Perla', 'A caixa? A caixa eu quero de volta, mas já desencanei.', 'riso')
+        : fala('Sra. Perla', 'Se eu preciso de alguma coisa? Eu preciso que você coma direito. O resto eu me viro.', 'riso'),
       fala('Sra. Perla', 'Olha, eu separei umas coisas aqui que estavam no armário e que não servem pra mim. Passa um dia.')
     ],
     efeito:d=>{ Estado.darItem('Super Potion', 2); Estado.darItem('Great Ball', 1);
