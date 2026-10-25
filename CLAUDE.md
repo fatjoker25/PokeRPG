@@ -1325,8 +1325,11 @@ que o projeto tem:
 
 - **Letra**: a interface (fichas da luta, comandos, topo, placas) é
   Jost, embutida em `css/fonte-jogo.css` (OFL, em `fontes/`), pela
-  variável `--letra-hud`. O texto da história continua na fonte do
-  sistema, que é a de ler. Nada de fonte de pixel fora do título.
+  variável `--letra-hud`. O menu do lugar (portas, o que fazer, para
+  onde ir) e a ação de cena que não é frase (encarar, rolar, encerrar)
+  também. O texto da história continua na fonte do sistema, que é a de
+  ler, e a opção de cena que é frase vai junto com ele. Nada de fonte
+  de pixel fora do título.
 - **Topo** (`UI.topo`): HUD em duas linhas — rosto, nome e título de
   quem joga com os cinco botões de menu (cada um com o desenho de
   `icones.js`; no celular só o desenho, com `aria-label`), e embaixo os
@@ -1369,6 +1372,44 @@ marcador). A cidade conta "O que fazer" e "Para onde ir" juntos. Tecla
 não age com modal aberto nem dentro de campo de texto. Opção que é fala
 sua (começa com aspas) ganha `.diz` e sai em itálico; opção de linha
 pode ter `cond` (`Linhas.mostrar` pula a que não vale).
+
+A linha de opção tem o jeito dos comandos da luta: espessura embaixo
+(afunda quando aperta), brilho na diagonal, a tecla numa bolinha de
+botão de controle e a seta à direita. A cor dela é `--ac`: dourada na
+história, a da coisa no resto. Na janela (Centro, "Qual Pokébola?") não
+tem tecla, e quem abre a linha é o desenho, numa pastilha da cor dele
+(`svg.icone` filho direto de `.escolha.com-icone`). Ação de cena que
+não é frase ganha classe e desenho: `.luta` (Encarar, vermelho do
+Lutar), `.teste` (rolar, ciano), `.vontade` (roxo), `.fim` (encerrar,
+dourado), `.olhar`; as de serviço (`.utilitaria`, `.discreta`) ficam
+tracejadas, um tom abaixo. Detalhe de uma opção vai em `<small>` dentro
+de `.esc-rot` (`.esc-det` embaixo do nome; sem classe, etiqueta em
+cima), motivo de porta fechada em `.esc-trava`, e custo numa etiqueta
+`.esc-custo`.
+
+A tela do lugar (`Exploracao.tela`) tem quatro seções com cabeçalho no
+idioma do HUD (`h3.sec-*`: losango e linha na cor da seção — história
+dourada, porta vermelha, ação verde, caminho azul). A descrição encosta
+embaixo da placa como legenda (`.descricao-lugar`), com "como o lugar
+te recebe" no rodapé. **Porta** é botão na cor da casa, como o ícone do
+mapa dos jogos (Centro vermelho, loja azul, ginásio dourado, casa
+verde): a cor sai do desenho, em `COR_DO_ICONE` (`icones.js`), e porta
+nova com desenho novo entra lá com cor. As portas enchem a linha
+(`--cols`: três numa, quatro em duas de duas), nenhuma sobra pela
+metade. **O que fazer** é menu em letra de placa (`.escolha.menu`), e o
+que vem depois de " — " no título vira a etiqueta de custo ("1 Ração").
+**Para onde ir** é placa de estrada: a seta aponta pra onde o vizinho
+fica no mapa (`Exploracao.rumo`, pelas quadras de `MAPA_GRADE`, em oito
+rumos), e o rumo vai escrito ("Ir para · leste"); lugar novo sem quadra
+fica sem seta. O capítulo que espera aqui é a missão dourada
+(`.escolha.chamado`), com a exclamação pulsando e o número do capítulo.
+
+Botão que entra animado entra com `animation-fill-mode` **backwards**,
+nunca `both`. O `both` segura o último quadro, e animação manda mais
+que regra: o hover não subia, o apertar não afundava, a opção fechada
+não apagava, o aviso flutuante (`.recado`) não esmaecia ao sair e os
+comandos desligados da luta ficavam inteiros. Foi medido com
+`getComputedStyle`: o `transform` do hover saía matriz identidade.
 
 ## Convenções de texto
 - Fala de NPC: `fala(quem, diz, tom, nota)`. Tons válidos: `grita`, `baixo`, `riso`,

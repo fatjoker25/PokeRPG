@@ -422,47 +422,7 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
   .narrativa .fala.voce{margin-left:auto;margin-right:9px}
 }
 
-.escolhas{display:flex;flex-direction:column;gap:6px;margin-top:14px}
-.escolha{
-  text-align:left;
-  background:linear-gradient(180deg, var(--bg-2), color-mix(in srgb, var(--bg-2) 86%, #000));
-  border:1px solid var(--borda);color:var(--texto);
-  padding:9px 14px 9px 34px;border-radius:var(--raio-sm);line-height:1.42;
-  position:relative;overflow:hidden;
-  animation:surge .35s var(--suave) both;
-}
-.escolhas .escolha:nth-child(1){animation-delay:.02s}
-.escolhas .escolha:nth-child(2){animation-delay:.07s}
-.escolhas .escolha:nth-child(3){animation-delay:.12s}
-.escolhas .escolha:nth-child(4){animation-delay:.17s}
-.escolhas .escolha:nth-child(n+5){animation-delay:.22s}
-/* barra de acento que cresce da esquerda */
-.escolha::after{
-  content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
-  background:var(--destaque);transform:scaleY(0);transform-origin:center;
-  transition:transform .25s var(--mola);
-}
-.escolha::before{
-  content:'';position:absolute;left:12px;top:50%;transform:translateY(-50%);
-  width:10px;height:10px;border-radius:50%;
-  background:linear-gradient(180deg, var(--borda-forte) 0 45%, var(--bg) 45% 55%, var(--texto-tenue) 55% 100%);
-  box-shadow:0 0 0 1.2px var(--borda-forte);
-  transition:transform .25s var(--mola), background .25s var(--suave), box-shadow .25s var(--suave);
-}
-.escolha:hover{
-  border-color:var(--borda-forte);
-  background:linear-gradient(180deg, var(--painel-2), var(--painel));
-  transform:translateX(3px);
-  box-shadow:0 8px 20px -12px rgba(0,0,0,.7);
-}
-.escolha:hover::before{
-  background:linear-gradient(180deg, var(--perigo) 0 45%, #1a1a20 45% 55%, #f2f4f8 55% 100%);
-  box-shadow:0 0 0 1.2px #1a1a20, 0 0 10px -2px var(--destaque-sombra);
-  transform:translateY(-50%) translateX(2px) scale(1.15);
-}
-.escolha:hover::after{transform:scaleY(1)}
-.escolha:active{transform:translateX(1px) scale(.995)}
-.escolha:focus-visible{outline:none;border-color:var(--destaque);box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(--destaque-sombra)}
+/* opções: o menu está em "CAIXA DE DIÁLOGO, OPÇÕES E COLUNA DE LEITURA" */
 
 /* ---------- avisos / consequências ---------- */
 .avisos{margin-top:18px;display:flex;flex-direction:column;gap:7px}
@@ -933,7 +893,7 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
              inset 0 1px 0 rgba(255,255,255,.3);
   text-shadow:0 1px 2px rgba(0,0,0,.4);
   transition:transform .12s var(--suave), box-shadow .12s var(--suave), filter .15s var(--suave);
-  animation:surge .3s var(--suave) both;
+  animation:surge .3s var(--suave) backwards;
 }
 /* o brilho que corre na diagonal, como no menu dos jogos */
 .mb-btn::before{
@@ -999,7 +959,7 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
   box-shadow:0 4px 0 color-mix(in srgb, var(--tc) 35%, #000), 0 12px 18px -12px rgba(0,0,0,.9),
              inset 0 1px 0 rgba(255,255,255,.2);
   transition:transform .12s var(--suave), box-shadow .12s var(--suave), filter .15s var(--suave);
-  animation:surge .3s var(--suave) both;
+  animation:surge .3s var(--suave) backwards;
 }
 .golpe-btn .g-tipo{
   grid-area:tipo;align-self:stretch;display:grid;place-items:center;min-width:74px;padding:0 9px;
@@ -1031,7 +991,7 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
   background:linear-gradient(180deg, var(--bg-2), color-mix(in srgb, var(--bg-2) 86%, #000));
   border:1px solid var(--borda);border-radius:var(--raio-sm);padding:10px 12px;font-size:13px;
   transition:transform .2s var(--mola), border-color .2s var(--suave), box-shadow .22s var(--suave);
-  animation:surge .35s var(--suave) both;
+  animation:surge .35s var(--suave) backwards;
 }
 .carta:hover{transform:translateY(-2px);border-color:var(--borda-forte);box-shadow:0 10px 24px -14px rgba(0,0,0,.8)}
 .carta.morto{opacity:.5;border-style:dashed;border-color:var(--perigo)}
@@ -2532,21 +2492,59 @@ h3.cat-item{
 
 /* ============================================================
    PORTAS — os lugares da cidade, que não são "o que fazer"
+   Botão na cor da casa, como o ícone do mapa dos jogos de hoje: o
+   Centro vermelho, a loja azul, o ginásio dourado, a sua casa verde.
+   O desenho numa moeda da cor cheia, o nome em letra de placa, e as
+   portas enchem a linha (--cols vem da conta de quantas são: nenhuma
+   sobra pela metade com a casa vazia do lado).
    ============================================================ */
-/* dois por linha, igual à barra de ação do combate */
-.portas{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:6px}
+.portas{--cols:2;display:flex;flex-wrap:wrap;gap:10px;margin-bottom:4px}
 .porta{
-  display:flex;flex-direction:column;gap:2px;text-align:left;
-  padding:10px 12px;border:1px solid var(--borda);border-radius:6px;
-  background:color-mix(in srgb, var(--destaque) 5%, var(--bg-2));
-  color:var(--texto);cursor:pointer;font-family:inherit;
-  transition:border-color .15s,background .15s,transform .1s;
+  --ac:#8d97bd;
+  flex:1 1 calc((100% - (var(--cols) - 1) * 10px) / var(--cols));min-width:0;
+  position:relative;overflow:hidden;
+  display:flex;align-items:center;gap:12px;
+  min-height:64px;padding:10px 34px 10px 11px;border-radius:15px;text-align:left;
+  font-family:var(--letra-hud, var(--fonte));color:#fff;cursor:pointer;
+  background:
+    linear-gradient(112deg, transparent 0 62%, rgba(255,255,255,.07) 62% 73%, transparent 73%),
+    linear-gradient(180deg, color-mix(in srgb, var(--ac) 34%, var(--painel-2)), color-mix(in srgb, var(--ac) 14%, var(--bg)));
+  border:1px solid color-mix(in srgb, var(--ac) 55%, transparent);
+  box-shadow:0 4px 0 color-mix(in srgb, var(--ac) 30%, #05070f), 0 14px 22px -16px rgba(0,0,0,.95),
+             inset 0 1px 0 rgba(255,255,255,.14);
+  text-shadow:0 1px 2px rgba(0,0,0,.5);
+  transition:transform .14s var(--suave), box-shadow .14s var(--suave), filter .15s var(--suave), border-color .15s var(--suave);
+  animation:surge .35s var(--suave) backwards;
 }
-.porta:hover{border-color:var(--destaque);background:color-mix(in srgb, var(--destaque) 11%, var(--bg-2))}
-.porta:active{transform:translateY(1px)}
-.porta-nome{font-size:13.5px;font-weight:600;letter-spacing:.01em}
-.porta-sub{font-size:11.5px;color:var(--texto-fraco);line-height:1.4}
-@media (max-width:620px){ .portas{grid-template-columns:1fr} }
+.portas .porta:nth-child(2){animation-delay:.05s}
+.portas .porta:nth-child(3){animation-delay:.1s}
+.portas .porta:nth-child(n+4){animation-delay:.15s}
+.porta > svg.icone{
+  width:40px;height:40px;padding:8px;flex:0 0 auto;border-radius:50%;stroke-width:2;color:#fff;
+  background:radial-gradient(circle at 50% 30%, color-mix(in srgb, var(--ac) 65%, #fff), var(--ac) 58%, color-mix(in srgb, var(--ac) 70%, #000));
+  box-shadow:0 0 0 2px rgba(255,255,255,.16), 0 4px 10px -4px rgba(0,0,0,.85);
+}
+.porta-nome{flex:1 1 auto;min-width:0;font-size:15px;font-weight:600;line-height:1.2;letter-spacing:.01em}
+.porta-nome small{display:block;margin-top:3px;font:400 12.5px/1.3 var(--fonte);letter-spacing:0;color:rgba(255,255,255,.78)}
+.porta::after{
+  content:'';position:absolute;right:15px;top:50%;width:8px;height:8px;margin-top:-4px;
+  border-top:2px solid currentColor;border-right:2px solid currentColor;transform:rotate(45deg);
+  opacity:.5;transition:transform .22s var(--mola), opacity .18s var(--suave);
+}
+.porta:hover{filter:brightness(1.1) saturate(1.05);transform:translateY(-2px);border-color:color-mix(in srgb, var(--ac) 80%, #fff)}
+.porta:hover::after{opacity:1;transform:translateX(3px) rotate(45deg)}
+.porta:active{transform:translateY(3px);
+  box-shadow:0 1px 0 color-mix(in srgb, var(--ac) 30%, #05070f), inset 0 1px 0 rgba(255,255,255,.1)}
+.porta:focus-visible{outline:2px solid #fff;outline-offset:2px}
+@media (max-width:620px){
+  .portas{gap:8px}
+  .porta{flex-basis:calc((100% - (min(var(--cols), 2) - 1) * 8px) / min(var(--cols), 2));
+    min-height:58px;padding:9px 26px 9px 9px;gap:10px;border-radius:13px}
+  .porta > svg.icone{width:34px;height:34px;padding:7px}
+  .porta-nome{font-size:14px}
+  .porta-nome small{font-size:11.5px}
+  .porta::after{right:11px;width:7px;height:7px;margin-top:-3.5px}
+}
 
 /* fala que continua a anterior: sem repetir o nome, colada na de cima */
 .narrativa .fala.segue{margin-top:-8px;border-top-left-radius:2px}
@@ -2563,15 +2561,6 @@ h3.cat-item{
   margin-top:10px;padding-left:11px;border-left:2px solid var(--destaque);
   color:var(--texto-fraco);font-style:italic;
 }
-
-/* Ação avulsa que não é trilha da história: perguntar o nome de quem
-   está falando. Fica mais apagada que uma escolha de verdade porque
-   não muda o rumo — muda só como o jogo chama a pessoa. */
-.escolha.discreta{
-  opacity:.72;
-  font-style:italic;
-}
-.escolha.discreta:hover{ opacity:1; }
 
 /* Capacidade de campo que o time ainda não tem. */
 .linha .v.nao{ opacity:.55; font-style:italic; }
@@ -2719,7 +2708,7 @@ h3.cat-item{
   z-index:60;display:flex;flex-direction:column;gap:6px;align-items:center;pointer-events:none;width:min(92vw,460px)}
 .recado{background:var(--bg-2);border:1px solid var(--borda-forte);color:var(--texto);border-radius:10px;
   padding:9px 14px;font-size:13.5px;box-shadow:0 8px 24px -10px rgba(0,0,0,.6);
-  animation:surge .3s var(--suave) both;transition:opacity .45s, transform .45s}
+  animation:surge .3s var(--suave) backwards;transition:opacity .45s, transform .45s}
 .recado.golpeNovo{border-color:color-mix(in srgb, var(--bom) 60%, var(--borda))}
 .recado.saindo{opacity:0;transform:translateY(6px)}
 
@@ -3018,9 +3007,6 @@ h3.com-mapa{display:flex;align-items:center;justify-content:space-between;gap:8p
 .barra-exp i{display:block;height:100%;background:linear-gradient(90deg,#2f6fd6,#5fb4ff);transition:width .6s var(--suave)}
 .barra-exp.vaga{visibility:hidden}
 .lutador .ficha .barra + .barra-exp{margin-top:2px}
-/* atalho que não é escolha da história: fica mais apagado */
-.escolha.utilitaria{border-style:dashed;opacity:.8;font-size:.95em}
-.escolha.utilitaria:hover{opacity:1}
 
 /* mural de recados do Centro: cortiça e papel preso com percevejo */
 .mural{
@@ -3112,9 +3098,6 @@ body.com-cenario .topo{
 }
 @media (prefers-reduced-motion: reduce){ body.com-cenario::before{animation:none} }
 
-/* porta que existe mas ainda não abre: aparece, diz o que falta, não clica */
-.escolha:disabled{opacity:.55;cursor:not-allowed;filter:saturate(.6)}
-.escolha:disabled:hover{transform:none}
 
 /* ligação feita: a conversa acontece dentro da ficha do PokéNav */
 .nav-conversa{margin:10px 0 6px;max-height:52vh;overflow:auto;font-size:14px}
@@ -3347,9 +3330,6 @@ html[data-moldura="grafite"], body[data-moldura="grafite"]{
 
 /* ícones desenhados (js/data/icones.js) */
 svg.icone{flex:0 0 auto;width:18px;height:18px;vertical-align:-3px}
-.escolha.com-icone{display:flex;align-items:center;gap:10px;text-align:left}
-.porta{flex-direction:row;align-items:center;gap:10px}
-.porta .porta-icone{width:24px;height:24px;opacity:.9}
 .abas-mochila .aba{display:inline-flex;align-items:center;gap:5px}
 .abas-mochila .aba svg.icone{width:15px;height:15px}
 
@@ -3441,6 +3421,9 @@ svg.icone{flex:0 0 auto;width:18px;height:18px;vertical-align:-3px}
     var(--cenario-lugar, linear-gradient(135deg, var(--painel-2), var(--bg)));
   background-blend-mode:normal, normal, multiply, normal;
   background-size:cover;background-position:center 10%;background-repeat:no-repeat;
+  /* as camadas escuras cobrem a borda também: sem isso a última fileira
+     da arte aparecia crua, numa linha clara embaixo da placa */
+  background-origin:border-box;
   image-rendering:pixelated;
   box-shadow:0 18px 34px -24px rgba(0,0,0,.95), inset 0 1px 0 rgba(255,255,255,.08);
 }
@@ -3518,70 +3501,256 @@ svg.icone{flex:0 0 auto;width:18px;height:18px;vertical-align:-3px}
 /* narração curta entre falas fica presa à conversa, não solta */
 .narrativa p.entre-falas{margin:-2px 0 10px 77px;font-size:13.5px}
 
-/* ---------- opções ---------- */
-/* Menu dos jogos: cada opção numerada pela tecla que a escolhe (1 a 9),
-   e o cursor ▶ aparece em quem está na mira do mouse ou do teclado. */
-.escolhas{gap:7px;margin-top:18px}
+/* ---------- seções da tela de história ----------
+   O cabeçalho de seção no idioma do HUD: letra de placa, um losango
+   na cor da seção e a linha que corre até a borda. As cores são as dos
+   comandos da luta — história dourada, porta vermelha, ação verde,
+   caminho azul. */
+.painel:has(> .cap-cabecalho) > h3{
+  display:flex;align-items:center;gap:10px;margin-block:24px 11px;
+  font-family:var(--letra-hud, var(--fonte));font-size:12px;font-weight:700;letter-spacing:.16em;
+  color:var(--texto-fraco);
+}
+.painel:has(> .cap-cabecalho) > h3::before{
+  content:'';flex:0 0 auto;width:8px;height:8px;border-radius:2px;transform:rotate(45deg);
+  background:var(--sec, var(--destaque));box-shadow:0 0 10px -1px var(--sec, var(--destaque));
+}
+.painel:has(> .cap-cabecalho) > h3::after{
+  content:'';flex:1 1 auto;height:1px;order:1;
+  background:linear-gradient(90deg, color-mix(in srgb, var(--sec, var(--destaque)) 45%, var(--borda)), transparent);
+}
+.painel:has(> .cap-cabecalho) > h3 > *{order:2}
+h3.sec-aqui{--sec:var(--destaque)}
+h3.sec-portas{--sec:#ef5350}
+h3.sec-fazer{--sec:#4cc38a}
+h3.sec-ir{--sec:#5aa7ff}
+
+/* ---------- a placa do lugar ganha legenda ----------
+   Na tela do mapa a descrição encosta embaixo da placa, na mesma
+   moldura, e "como o lugar te recebe" vira o rodapé dela. */
+.cap-cabecalho:has(+ .descricao-lugar){margin-bottom:0;border-bottom-left-radius:0;border-bottom-right-radius:0;border-bottom-color:transparent}
+.narrativa.descricao-lugar{
+  margin-block:0 4px;padding:15px 20px 3px;overflow:hidden;
+  border:1px solid rgba(255,255,255,.1);border-top:0;border-radius:0 0 16px 16px;
+  background:linear-gradient(180deg, rgba(5,8,22,.6), color-mix(in srgb, var(--bg) 55%, transparent));
+  box-shadow:0 18px 34px -24px rgba(0,0,0,.95);
+}
+.narrativa.descricao-lugar:has(> .recepcao:last-child){padding-bottom:0}
+.narrativa.descricao-lugar p.recepcao{
+  display:flex;gap:9px;align-items:baseline;
+  margin:4px -20px 0;padding:10px 20px 12px;border-left:0;border-top:1px solid rgba(255,255,255,.08);
+  background:rgba(0,0,0,.2);color:var(--texto-fraco);font-size:14.5px;
+}
+.narrativa.descricao-lugar p.recepcao::before{
+  content:'';flex:0 0 auto;width:7px;height:7px;border-radius:50%;transform:translateY(-1px);
+  background:var(--destaque);box-shadow:0 0 8px var(--destaque-sombra);
+}
+
+/* ---------- opções ----------
+   O menu dos jogos de hoje. Toda opção é uma linha com espessura
+   embaixo, que afunda quando aperta (como os comandos da luta), e o
+   brilho na diagonal. Na tela, a tecla que escolhe fica numa bolinha
+   de botão de controle à esquerda (Teclas numera de 1 a 9); na janela,
+   que não tem tecla, quem abre a linha é o desenho. A cor da linha
+   (--ac) é a da coisa: dourada na história, a da ação no lugar.
+   A entrada é "backwards", nunca "both": animação que segura o último
+   quadro manda no transform e na opacidade, e aí o hover não subia
+   e a opção fechada não apagava. */
+.escolhas{display:flex;flex-direction:column;gap:9px;margin-top:18px}
 .escolha{
-  padding:11px 16px 11px 54px;border-radius:10px;font-size:15px;line-height:1.45;
-  background:linear-gradient(180deg, color-mix(in srgb, var(--painel-2) 70%, var(--bg-2)), var(--bg-2));
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
+  --ac:var(--destaque);
+  position:relative;overflow:hidden;
+  display:block;text-align:left;color:var(--texto);
+  min-height:50px;padding:12px 40px 12px 16px;
+  border-radius:14px;font-size:15px;line-height:1.45;
+  background:
+    linear-gradient(112deg, transparent 0 66%, rgba(255,255,255,.035) 66% 77%, transparent 77%),
+    linear-gradient(180deg, color-mix(in srgb, var(--painel-2) 72%, var(--borda)), var(--bg-2));
+  border:1px solid color-mix(in srgb, var(--borda-forte) 72%, transparent);
+  box-shadow:0 3px 0 color-mix(in srgb, var(--bg) 50%, #000), 0 12px 20px -16px rgba(0,0,0,.95),
+             inset 0 1px 0 rgba(255,255,255,.07);
+  transition:transform .14s var(--suave), box-shadow .14s var(--suave),
+             border-color .2s var(--suave), background .2s var(--suave), color .2s var(--suave);
+  animation:surge .35s var(--suave) backwards;
 }
-.escolha::before{
-  content:'•';
-  left:18px;width:24px;height:24px;border-radius:7px;
+.escolhas .escolha:nth-child(1){animation-delay:.02s}
+.escolhas .escolha:nth-child(2){animation-delay:.07s}
+.escolhas .escolha:nth-child(3){animation-delay:.12s}
+.escolhas .escolha:nth-child(4){animation-delay:.17s}
+.escolhas .escolha:nth-child(n+5){animation-delay:.22s}
+/* a seta da direita, que anda quando a linha está na mira */
+.escolha::after{
+  content:'';position:absolute;right:17px;top:50%;width:8px;height:8px;margin-top:-4px;
+  border-top:2px solid currentColor;border-right:2px solid currentColor;transform:rotate(45deg);
+  opacity:.32;transition:transform .22s var(--mola), opacity .18s var(--suave), color .18s var(--suave);
+}
+/* a tecla: bolinha de botão de controle */
+#app .escolhas > .escolha{padding-left:54px}
+#app .escolhas > .escolha::before{
+  content:'';position:absolute;left:14px;top:50%;width:26px;height:26px;margin-top:-13px;border-radius:50%;
   display:grid;place-items:center;
-  font:700 12px/1 var(--mono);color:var(--texto-fraco);
-  background:var(--bg);box-shadow:inset 0 0 0 1px var(--borda-forte);
+  font:700 12.5px/1 var(--letra-hud, var(--fonte));color:var(--texto);
+  background:radial-gradient(circle at 50% 28%, var(--borda-forte), var(--bg) 80%);
+  box-shadow:inset 0 0 0 1.5px color-mix(in srgb, var(--texto-fraco) 50%, transparent), 0 2px 0 rgba(0,0,0,.5);
+  transition:background .18s var(--suave), color .18s var(--suave), box-shadow .18s var(--suave);
 }
-.escolha[data-tecla]::before{content:attr(data-tecla)}
+#app .escolhas > .escolha[data-tecla]::before{content:attr(data-tecla)}
+/* fechada não tem tecla: a casa da bolinha fica, vazia */
+#app .escolhas > .escolha:disabled::before{visibility:hidden}
+.escolha:hover:not(:disabled), .escolha:focus-visible{
+  border-color:color-mix(in srgb, var(--ac) 65%, transparent);
+  background:
+    linear-gradient(112deg, transparent 0 66%, rgba(255,255,255,.06) 66% 77%, transparent 77%),
+    linear-gradient(180deg, color-mix(in srgb, var(--ac) 15%, var(--painel-2)), color-mix(in srgb, var(--ac) 6%, var(--bg-2)));
+  transform:translateY(-1px);
+  box-shadow:0 4px 0 color-mix(in srgb, var(--ac) 28%, #05070f), 0 14px 26px -16px color-mix(in srgb, var(--ac) 55%, transparent),
+             inset 0 1px 0 rgba(255,255,255,.1);
+}
+.escolha:focus-visible{outline:2px solid color-mix(in srgb, var(--ac) 80%, #fff);outline-offset:2px}
+#app .escolhas > .escolha:hover:not(:disabled)::before, #app .escolhas > .escolha:focus-visible::before{
+  background:var(--ac);color:#15120a;
+  box-shadow:0 0 0 2px color-mix(in srgb, var(--ac) 35%, transparent), 0 0 14px -2px var(--ac);
+}
+.escolha:hover:not(:disabled)::after, .escolha:focus-visible::after{opacity:1;color:var(--ac);transform:translateX(3px) rotate(45deg)}
+.escolha:active:not(:disabled){
+  transform:translateY(2px);
+  box-shadow:0 1px 0 color-mix(in srgb, var(--ac) 28%, #05070f), inset 0 1px 0 rgba(255,255,255,.06);
+}
+/* porta que existe mas ainda não abre: aparece, diz o que falta, não clica */
+.escolha:disabled{opacity:.62;cursor:not-allowed;filter:saturate(.55);box-shadow:none}
+.escolha:disabled::after{display:none}
+/* fala escolhida entre aspas lê como fala */
+.escolha.diz{font-style:italic}
+.escolha .pd{color:var(--texto-fraco);font-size:.88em}
 /* Opção solta numa janela (o Centro, "Qual Pokébola?", "Em quem?",
    "Equipar em quem?"): a mesma linha de menu do resto do jogo, de ponta
    a ponta e com folga. Sem isto cada botão tinha a largura do próprio
    texto e encostava no de baixo. */
 .modal-corpo > .escolha{width:100%}
-.modal-corpo > .escolha:not(.com-icone){display:block}
-.modal-corpo > .escolha + .escolha{margin-top:7px}
-.escolha::after{width:auto;right:auto;left:0;background:none;transform:none;
-  content:'▶';top:50%;bottom:auto;left:4px;translate:-4px -50%;
-  font-size:10px;color:var(--destaque);opacity:0;
-  transition:opacity .18s var(--suave), translate .25s var(--mola);
+.modal-corpo > .escolha + .escolha{margin-top:8px}
+
+/* com desenho: o desenho numa pastilha da cor dele, à esquerda do texto */
+.escolha.com-icone{display:flex;align-items:center;gap:12px}
+.escolha > svg.icone{
+  width:34px;height:34px;padding:7px;flex:0 0 auto;border-radius:11px;stroke-width:2;
+  color:color-mix(in srgb, var(--ac) 70%, #fff);
+  background:color-mix(in srgb, var(--ac) 20%, rgba(0,0,0,.25));
+  box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--ac) 45%, transparent);
+  transition:background .18s var(--suave), color .18s var(--suave);
 }
-.escolha:hover, .escolha:focus-visible{
-  border-color:color-mix(in srgb, var(--destaque) 55%, var(--borda-forte));
-  background:linear-gradient(180deg, color-mix(in srgb, var(--destaque) 8%, var(--painel-2)), var(--painel));
-  transform:translateX(4px);
+.escolha:hover:not(:disabled) > svg.icone, .escolha:focus-visible > svg.icone{
+  color:#fff;background:color-mix(in srgb, var(--ac) 55%, rgba(0,0,0,.2));
 }
-.escolha:hover::before, .escolha:focus-visible::before{
-  background:var(--destaque);color:#1b1500;box-shadow:0 0 12px -3px var(--destaque-sombra);
-  transform:translateY(-50%);
+.esc-rot{flex:1 1 auto;min-width:0}
+.esc-rot small{
+  display:block;margin-bottom:2px;
+  font:700 10.5px/1.3 var(--letra-hud, var(--fonte));letter-spacing:.14em;text-transform:uppercase;color:var(--texto-fraco);
 }
-.escolha:hover::after, .escolha:focus-visible::after{opacity:1;translate:2px -50%;transform:none}
-/* fala escolhida entre aspas lê como fala */
-.escolha.diz{font-style:italic}
-/* as opções de serviço (balcão, perguntar o nome) ficam um tom abaixo */
+.esc-rot small.esc-det{
+  margin:3px 0 0;font:500 12.5px/1.35 var(--fonte);letter-spacing:0;text-transform:none;
+}
+.esc-trava{display:block;margin-top:3px;font:400 12.5px/1.4 var(--fonte);letter-spacing:0;color:var(--texto-fraco)}
+.esc-custo{
+  flex:0 0 auto;display:inline-flex;align-items:center;gap:5px;margin-left:auto;
+  padding:4px 10px 4px 8px;border-radius:999px;white-space:nowrap;
+  font:600 12px/1.2 var(--letra-hud, var(--fonte));letter-spacing:.02em;color:var(--texto-fraco);
+  background:rgba(0,0,0,.24);box-shadow:inset 0 0 0 1px var(--borda);
+}
+.esc-custo svg.icone{width:15px;height:15px;color:var(--ac);stroke-width:2}
+
+/* o menu do lugar: comando, não frase, então na letra de placa */
+.escolha.menu{
+  min-height:56px;padding-block:9px;
+  font-family:var(--letra-hud, var(--fonte));font-size:16px;font-weight:600;letter-spacing:.005em;
+}
+/* a placa de estrada: pra que lado, e o nome do lugar grande */
+.escolha.caminho .esc-rot b{display:block;font-size:17px;font-weight:700;line-height:1.15}
+.escolha.caminho > svg.icone{border-radius:50%}
+.escolha.caminho:disabled > svg.icone{border-radius:11px}
+
+/* O capítulo que espera aqui: a missão da história, em dourado, com a
+   marca de exclamação pulsando como a do mapa dos jogos. O gancho é
+   texto de história, então volta pra letra de ler. */
+.escolha.chamado{
+  --ac:var(--destaque);
+  min-height:70px;padding-block:12px;
+  border-color:color-mix(in srgb, var(--destaque) 55%, transparent);
+  background:
+    linear-gradient(112deg, transparent 0 62%, rgba(255,255,255,.07) 62% 74%, transparent 74%),
+    radial-gradient(130% 160% at 0% 50%, color-mix(in srgb, var(--destaque) 20%, transparent), transparent 62%),
+    linear-gradient(180deg, color-mix(in srgb, var(--destaque) 12%, var(--painel-2)), var(--bg-2));
+  box-shadow:0 4px 0 color-mix(in srgb, var(--destaque) 32%, #05070f), 0 0 30px -12px var(--destaque-sombra),
+             inset 0 1px 0 rgba(255,255,255,.12);
+}
+.escolha.chamado > svg.icone{
+  width:40px;height:40px;padding:8px;border-radius:50%;stroke-width:2.8;color:#1b1500;
+  background:radial-gradient(circle at 50% 30%, color-mix(in srgb, var(--destaque) 62%, #fff), var(--destaque) 58%, var(--destaque-esc));
+  box-shadow:0 0 0 3px color-mix(in srgb, var(--destaque) 25%, transparent), 0 0 18px -2px var(--destaque-sombra);
+  animation:chamado 2.4s ease-in-out infinite;
+}
+.escolha.chamado:hover:not(:disabled) > svg.icone{color:#1b1500;background:radial-gradient(circle at 50% 30%, #fff, var(--destaque) 62%)}
+.escolha.chamado .esc-rot{font-size:15px;line-height:1.45}
+.escolha.chamado .esc-rot small{color:var(--destaque)}
+.escolha.chamado:disabled > svg.icone{animation:none;color:var(--texto);background:var(--borda-forte);box-shadow:none}
+@keyframes chamado{
+  0%,100%{box-shadow:0 0 0 3px color-mix(in srgb, var(--destaque) 25%, transparent), 0 0 18px -2px var(--destaque-sombra)}
+  50%{box-shadow:0 0 0 7px color-mix(in srgb, var(--destaque) 10%, transparent), 0 0 26px 0 var(--destaque-sombra)}
+}
+
+/* as ações da cena que não são frase: encarar (o vermelho do Lutar),
+   rolar o teste (o ciano da Pokédex), rolar com Vontade (o roxo dela)
+   e encerrar o capítulo (dourado). Já entram tingidas. */
+.escolha.luta{--ac:#ef5350}
+.escolha.teste{--ac:#4dd0e1}
+.escolha.vontade{--ac:#a77bff}
+.escolha.fim{--ac:var(--destaque)}
+.escolha.luta, .escolha.teste, .escolha.vontade, .escolha.fim{
+  min-height:56px;font-family:var(--letra-hud, var(--fonte));font-size:16px;font-weight:600;
+  border-color:color-mix(in srgb, var(--ac) 50%, transparent);
+  background:
+    linear-gradient(112deg, transparent 0 66%, rgba(255,255,255,.05) 66% 77%, transparent 77%),
+    linear-gradient(180deg, color-mix(in srgb, var(--ac) 18%, var(--painel-2)), color-mix(in srgb, var(--ac) 6%, var(--bg-2)));
+  box-shadow:0 3px 0 color-mix(in srgb, var(--ac) 26%, #05070f), 0 12px 20px -16px rgba(0,0,0,.95),
+             inset 0 1px 0 rgba(255,255,255,.1);
+}
+.escolha.olhar{--ac:#90caf9}
+/* as de serviço (o balcão do Centro, perguntar o nome) ficam um tom
+   abaixo: não mudam o rumo da história */
 .escolha.utilitaria, .escolha.discreta{
-  font-size:13.5px;color:var(--texto-fraco);
-  background:transparent;border-style:dashed;
+  min-height:44px;font-size:14px;color:var(--texto-fraco);
+  background:transparent;border-style:dashed;box-shadow:none;
 }
-.escolha.utilitaria:hover, .escolha.discreta:hover{color:var(--texto)}
-.escolha.perigo{border-color:color-mix(in srgb, var(--perigo) 45%, var(--borda))}
-.escolha.perigo:hover{border-color:var(--perigo);background:color-mix(in srgb, var(--perigo) 10%, var(--bg-2))}
-.escolha.perigo:hover::before{background:var(--perigo);color:#fff}
+.escolha.utilitaria > svg.icone, .escolha.discreta > svg.icone{width:28px;height:28px;padding:5px;border-radius:9px}
+.escolha.utilitaria:hover:not(:disabled), .escolha.discreta:hover:not(:disabled){color:var(--texto)}
+.escolha.perigo{--ac:var(--perigo);border-color:color-mix(in srgb, var(--perigo) 45%, var(--borda))}
 
 /* ---------- campo livre ---------- */
 .acao-livre{
-  margin-top:20px;border-style:solid;border-color:var(--borda);
-  background:linear-gradient(180deg, color-mix(in srgb, var(--bg) 70%, transparent), var(--bg-2));
+  margin-top:20px;padding:14px 16px 15px;border-radius:14px;
+  border:1px solid color-mix(in srgb, var(--borda-forte) 60%, transparent);
+  background:linear-gradient(180deg, color-mix(in srgb, var(--bg) 72%, transparent), var(--bg-2));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
 }
-.acao-livre label{display:flex;align-items:center;gap:8px;font-weight:600;font-size:11px;letter-spacing:.12em}
+.acao-livre label{
+  display:flex;align-items:center;gap:8px;margin-bottom:9px;
+  font-family:var(--letra-hud, var(--fonte));font-weight:700;font-size:11px;letter-spacing:.16em;
+}
 .acao-livre label::before{
   content:'';width:14px;height:14px;flex:0 0 auto;background:var(--texto-fraco);
   -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 20h4L19 9l-4-4L4 16z'/%3E%3Cpath d='M14 6l4 4'/%3E%3C/svg%3E") center/contain no-repeat;
           mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 20h4L19 9l-4-4L4 16z'/%3E%3Cpath d='M14 6l4 4'/%3E%3C/svg%3E") center/contain no-repeat;
 }
-.linha-acao input{border-radius:9px;padding:11px 14px}
+.linha-acao input{
+  border-radius:11px;padding:12px 14px;
+  background:rgba(0,0,0,.28);box-shadow:inset 0 2px 6px rgba(0,0,0,.35);
+}
 .linha-acao input::placeholder{color:var(--texto-tenue)}
+.linha-acao .btn.destaque{
+  border-radius:11px;padding-inline:20px;
+  font-family:var(--letra-hud, var(--fonte));font-size:15px;font-weight:700;letter-spacing:.02em;
+  box-shadow:0 3px 0 var(--destaque-esc), 0 8px 16px -10px var(--destaque-sombra);
+}
+.linha-acao .btn.destaque:active{transform:translateY(2px);box-shadow:0 1px 0 var(--destaque-esc)}
 
 /* ---------- avisos: o que a escolha mudou ---------- */
 .avisos:not(:empty){margin-top:16px}
@@ -3595,8 +3764,18 @@ svg.icone{flex:0 0 auto;width:18px;height:18px;vertical-align:-3px}
   .narrativa .fala.com-rosto{grid-template-columns:48px minmax(0,1fr);column-gap:10px}
   .narrativa .fala-retrato{width:48px;height:48px;border-radius:8px}
   .narrativa p.entre-falas{margin-left:14px}
-  .escolha{padding:10px 12px 10px 46px;font-size:14.5px}
-  .escolha::before{left:15px;width:22px;height:22px}
+  .escolha{font-size:14.5px;padding-right:34px}
+  #app .escolhas > .escolha{padding-left:46px}
+  #app .escolhas > .escolha::before{left:11px;width:24px;height:24px;margin-top:-12px;font-size:12px}
+  .escolha::after{right:13px;width:7px;height:7px;margin-top:-3.5px}
+  .escolha.com-icone{gap:10px}
+  .escolha > svg.icone{width:31px;height:31px;padding:6px;border-radius:10px}
+  .escolha.menu, .escolha.luta, .escolha.teste, .escolha.vontade, .escolha.fim{font-size:15px;min-height:52px}
+  .escolha.caminho .esc-rot b{font-size:16px}
+  .escolha.chamado > svg.icone{width:36px;height:36px;padding:7px}
+  .narrativa.descricao-lugar{padding:13px 14px 2px}
+  .narrativa.descricao-lugar p.recepcao{margin-inline:-14px;padding-inline:14px}
+  .painel:has(> .cap-cabecalho) > h3{margin-block:20px 10px}
 }
 
 /* ============================================================
@@ -5037,47 +5216,7 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
   .narrativa .fala.voce{margin-left:auto;margin-right:9px}
 }
 
-.escolhas{display:flex;flex-direction:column;gap:6px;margin-top:14px}
-.escolha{
-  text-align:left;
-  background:linear-gradient(180deg, var(--bg-2), color-mix(in srgb, var(--bg-2) 86%, #000));
-  border:1px solid var(--borda);color:var(--texto);
-  padding:9px 14px 9px 34px;border-radius:var(--raio-sm);line-height:1.42;
-  position:relative;overflow:hidden;
-  animation:surge .35s var(--suave) both;
-}
-.escolhas .escolha:nth-child(1){animation-delay:.02s}
-.escolhas .escolha:nth-child(2){animation-delay:.07s}
-.escolhas .escolha:nth-child(3){animation-delay:.12s}
-.escolhas .escolha:nth-child(4){animation-delay:.17s}
-.escolhas .escolha:nth-child(n+5){animation-delay:.22s}
-/* barra de acento que cresce da esquerda */
-.escolha::after{
-  content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
-  background:var(--destaque);transform:scaleY(0);transform-origin:center;
-  transition:transform .25s var(--mola);
-}
-.escolha::before{
-  content:'';position:absolute;left:12px;top:50%;transform:translateY(-50%);
-  width:10px;height:10px;border-radius:50%;
-  background:linear-gradient(180deg, var(--borda-forte) 0 45%, var(--bg) 45% 55%, var(--texto-tenue) 55% 100%);
-  box-shadow:0 0 0 1.2px var(--borda-forte);
-  transition:transform .25s var(--mola), background .25s var(--suave), box-shadow .25s var(--suave);
-}
-.escolha:hover{
-  border-color:var(--borda-forte);
-  background:linear-gradient(180deg, var(--painel-2), var(--painel));
-  transform:translateX(3px);
-  box-shadow:0 8px 20px -12px rgba(0,0,0,.7);
-}
-.escolha:hover::before{
-  background:linear-gradient(180deg, var(--perigo) 0 45%, #1a1a20 45% 55%, #f2f4f8 55% 100%);
-  box-shadow:0 0 0 1.2px #1a1a20, 0 0 10px -2px var(--destaque-sombra);
-  transform:translateY(-50%) translateX(2px) scale(1.15);
-}
-.escolha:hover::after{transform:scaleY(1)}
-.escolha:active{transform:translateX(1px) scale(.995)}
-.escolha:focus-visible{outline:none;border-color:var(--destaque);box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(--destaque-sombra)}
+/* opções: o menu está em "CAIXA DE DIÁLOGO, OPÇÕES E COLUNA DE LEITURA" */
 
 /* ---------- avisos / consequências ---------- */
 .avisos{margin-top:18px;display:flex;flex-direction:column;gap:7px}
@@ -5548,7 +5687,7 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
              inset 0 1px 0 rgba(255,255,255,.3);
   text-shadow:0 1px 2px rgba(0,0,0,.4);
   transition:transform .12s var(--suave), box-shadow .12s var(--suave), filter .15s var(--suave);
-  animation:surge .3s var(--suave) both;
+  animation:surge .3s var(--suave) backwards;
 }
 /* o brilho que corre na diagonal, como no menu dos jogos */
 .mb-btn::before{
@@ -5614,7 +5753,7 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
   box-shadow:0 4px 0 color-mix(in srgb, var(--tc) 35%, #000), 0 12px 18px -12px rgba(0,0,0,.9),
              inset 0 1px 0 rgba(255,255,255,.2);
   transition:transform .12s var(--suave), box-shadow .12s var(--suave), filter .15s var(--suave);
-  animation:surge .3s var(--suave) both;
+  animation:surge .3s var(--suave) backwards;
 }
 .golpe-btn .g-tipo{
   grid-area:tipo;align-self:stretch;display:grid;place-items:center;min-width:74px;padding:0 9px;
@@ -5646,7 +5785,7 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
   background:linear-gradient(180deg, var(--bg-2), color-mix(in srgb, var(--bg-2) 86%, #000));
   border:1px solid var(--borda);border-radius:var(--raio-sm);padding:10px 12px;font-size:13px;
   transition:transform .2s var(--mola), border-color .2s var(--suave), box-shadow .22s var(--suave);
-  animation:surge .35s var(--suave) both;
+  animation:surge .35s var(--suave) backwards;
 }
 .carta:hover{transform:translateY(-2px);border-color:var(--borda-forte);box-shadow:0 10px 24px -14px rgba(0,0,0,.8)}
 .carta.morto{opacity:.5;border-style:dashed;border-color:var(--perigo)}
@@ -7147,21 +7286,59 @@ h3.cat-item{
 
 /* ============================================================
    PORTAS — os lugares da cidade, que não são "o que fazer"
+   Botão na cor da casa, como o ícone do mapa dos jogos de hoje: o
+   Centro vermelho, a loja azul, o ginásio dourado, a sua casa verde.
+   O desenho numa moeda da cor cheia, o nome em letra de placa, e as
+   portas enchem a linha (--cols vem da conta de quantas são: nenhuma
+   sobra pela metade com a casa vazia do lado).
    ============================================================ */
-/* dois por linha, igual à barra de ação do combate */
-.portas{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:6px}
+.portas{--cols:2;display:flex;flex-wrap:wrap;gap:10px;margin-bottom:4px}
 .porta{
-  display:flex;flex-direction:column;gap:2px;text-align:left;
-  padding:10px 12px;border:1px solid var(--borda);border-radius:6px;
-  background:color-mix(in srgb, var(--destaque) 5%, var(--bg-2));
-  color:var(--texto);cursor:pointer;font-family:inherit;
-  transition:border-color .15s,background .15s,transform .1s;
+  --ac:#8d97bd;
+  flex:1 1 calc((100% - (var(--cols) - 1) * 10px) / var(--cols));min-width:0;
+  position:relative;overflow:hidden;
+  display:flex;align-items:center;gap:12px;
+  min-height:64px;padding:10px 34px 10px 11px;border-radius:15px;text-align:left;
+  font-family:var(--letra-hud, var(--fonte));color:#fff;cursor:pointer;
+  background:
+    linear-gradient(112deg, transparent 0 62%, rgba(255,255,255,.07) 62% 73%, transparent 73%),
+    linear-gradient(180deg, color-mix(in srgb, var(--ac) 34%, var(--painel-2)), color-mix(in srgb, var(--ac) 14%, var(--bg)));
+  border:1px solid color-mix(in srgb, var(--ac) 55%, transparent);
+  box-shadow:0 4px 0 color-mix(in srgb, var(--ac) 30%, #05070f), 0 14px 22px -16px rgba(0,0,0,.95),
+             inset 0 1px 0 rgba(255,255,255,.14);
+  text-shadow:0 1px 2px rgba(0,0,0,.5);
+  transition:transform .14s var(--suave), box-shadow .14s var(--suave), filter .15s var(--suave), border-color .15s var(--suave);
+  animation:surge .35s var(--suave) backwards;
 }
-.porta:hover{border-color:var(--destaque);background:color-mix(in srgb, var(--destaque) 11%, var(--bg-2))}
-.porta:active{transform:translateY(1px)}
-.porta-nome{font-size:13.5px;font-weight:600;letter-spacing:.01em}
-.porta-sub{font-size:11.5px;color:var(--texto-fraco);line-height:1.4}
-@media (max-width:620px){ .portas{grid-template-columns:1fr} }
+.portas .porta:nth-child(2){animation-delay:.05s}
+.portas .porta:nth-child(3){animation-delay:.1s}
+.portas .porta:nth-child(n+4){animation-delay:.15s}
+.porta > svg.icone{
+  width:40px;height:40px;padding:8px;flex:0 0 auto;border-radius:50%;stroke-width:2;color:#fff;
+  background:radial-gradient(circle at 50% 30%, color-mix(in srgb, var(--ac) 65%, #fff), var(--ac) 58%, color-mix(in srgb, var(--ac) 70%, #000));
+  box-shadow:0 0 0 2px rgba(255,255,255,.16), 0 4px 10px -4px rgba(0,0,0,.85);
+}
+.porta-nome{flex:1 1 auto;min-width:0;font-size:15px;font-weight:600;line-height:1.2;letter-spacing:.01em}
+.porta-nome small{display:block;margin-top:3px;font:400 12.5px/1.3 var(--fonte);letter-spacing:0;color:rgba(255,255,255,.78)}
+.porta::after{
+  content:'';position:absolute;right:15px;top:50%;width:8px;height:8px;margin-top:-4px;
+  border-top:2px solid currentColor;border-right:2px solid currentColor;transform:rotate(45deg);
+  opacity:.5;transition:transform .22s var(--mola), opacity .18s var(--suave);
+}
+.porta:hover{filter:brightness(1.1) saturate(1.05);transform:translateY(-2px);border-color:color-mix(in srgb, var(--ac) 80%, #fff)}
+.porta:hover::after{opacity:1;transform:translateX(3px) rotate(45deg)}
+.porta:active{transform:translateY(3px);
+  box-shadow:0 1px 0 color-mix(in srgb, var(--ac) 30%, #05070f), inset 0 1px 0 rgba(255,255,255,.1)}
+.porta:focus-visible{outline:2px solid #fff;outline-offset:2px}
+@media (max-width:620px){
+  .portas{gap:8px}
+  .porta{flex-basis:calc((100% - (min(var(--cols), 2) - 1) * 8px) / min(var(--cols), 2));
+    min-height:58px;padding:9px 26px 9px 9px;gap:10px;border-radius:13px}
+  .porta > svg.icone{width:34px;height:34px;padding:7px}
+  .porta-nome{font-size:14px}
+  .porta-nome small{font-size:11.5px}
+  .porta::after{right:11px;width:7px;height:7px;margin-top:-3.5px}
+}
 
 /* fala que continua a anterior: sem repetir o nome, colada na de cima */
 .narrativa .fala.segue{margin-top:-8px;border-top-left-radius:2px}
@@ -7178,15 +7355,6 @@ h3.cat-item{
   margin-top:10px;padding-left:11px;border-left:2px solid var(--destaque);
   color:var(--texto-fraco);font-style:italic;
 }
-
-/* Ação avulsa que não é trilha da história: perguntar o nome de quem
-   está falando. Fica mais apagada que uma escolha de verdade porque
-   não muda o rumo — muda só como o jogo chama a pessoa. */
-.escolha.discreta{
-  opacity:.72;
-  font-style:italic;
-}
-.escolha.discreta:hover{ opacity:1; }
 
 /* Capacidade de campo que o time ainda não tem. */
 .linha .v.nao{ opacity:.55; font-style:italic; }
@@ -7334,7 +7502,7 @@ h3.cat-item{
   z-index:60;display:flex;flex-direction:column;gap:6px;align-items:center;pointer-events:none;width:min(92vw,460px)}
 .recado{background:var(--bg-2);border:1px solid var(--borda-forte);color:var(--texto);border-radius:10px;
   padding:9px 14px;font-size:13.5px;box-shadow:0 8px 24px -10px rgba(0,0,0,.6);
-  animation:surge .3s var(--suave) both;transition:opacity .45s, transform .45s}
+  animation:surge .3s var(--suave) backwards;transition:opacity .45s, transform .45s}
 .recado.golpeNovo{border-color:color-mix(in srgb, var(--bom) 60%, var(--borda))}
 .recado.saindo{opacity:0;transform:translateY(6px)}
 
@@ -7633,9 +7801,6 @@ h3.com-mapa{display:flex;align-items:center;justify-content:space-between;gap:8p
 .barra-exp i{display:block;height:100%;background:linear-gradient(90deg,#2f6fd6,#5fb4ff);transition:width .6s var(--suave)}
 .barra-exp.vaga{visibility:hidden}
 .lutador .ficha .barra + .barra-exp{margin-top:2px}
-/* atalho que não é escolha da história: fica mais apagado */
-.escolha.utilitaria{border-style:dashed;opacity:.8;font-size:.95em}
-.escolha.utilitaria:hover{opacity:1}
 
 /* mural de recados do Centro: cortiça e papel preso com percevejo */
 .mural{
@@ -7727,9 +7892,6 @@ body.com-cenario .topo{
 }
 @media (prefers-reduced-motion: reduce){ body.com-cenario::before{animation:none} }
 
-/* porta que existe mas ainda não abre: aparece, diz o que falta, não clica */
-.escolha:disabled{opacity:.55;cursor:not-allowed;filter:saturate(.6)}
-.escolha:disabled:hover{transform:none}
 
 /* ligação feita: a conversa acontece dentro da ficha do PokéNav */
 .nav-conversa{margin:10px 0 6px;max-height:52vh;overflow:auto;font-size:14px}
@@ -7962,9 +8124,6 @@ html[data-moldura="grafite"], body[data-moldura="grafite"]{
 
 /* ícones desenhados (js/data/icones.js) */
 svg.icone{flex:0 0 auto;width:18px;height:18px;vertical-align:-3px}
-.escolha.com-icone{display:flex;align-items:center;gap:10px;text-align:left}
-.porta{flex-direction:row;align-items:center;gap:10px}
-.porta .porta-icone{width:24px;height:24px;opacity:.9}
 .abas-mochila .aba{display:inline-flex;align-items:center;gap:5px}
 .abas-mochila .aba svg.icone{width:15px;height:15px}
 
@@ -8056,6 +8215,9 @@ svg.icone{flex:0 0 auto;width:18px;height:18px;vertical-align:-3px}
     var(--cenario-lugar, linear-gradient(135deg, var(--painel-2), var(--bg)));
   background-blend-mode:normal, normal, multiply, normal;
   background-size:cover;background-position:center 10%;background-repeat:no-repeat;
+  /* as camadas escuras cobrem a borda também: sem isso a última fileira
+     da arte aparecia crua, numa linha clara embaixo da placa */
+  background-origin:border-box;
   image-rendering:pixelated;
   box-shadow:0 18px 34px -24px rgba(0,0,0,.95), inset 0 1px 0 rgba(255,255,255,.08);
 }
@@ -8133,70 +8295,256 @@ svg.icone{flex:0 0 auto;width:18px;height:18px;vertical-align:-3px}
 /* narração curta entre falas fica presa à conversa, não solta */
 .narrativa p.entre-falas{margin:-2px 0 10px 77px;font-size:13.5px}
 
-/* ---------- opções ---------- */
-/* Menu dos jogos: cada opção numerada pela tecla que a escolhe (1 a 9),
-   e o cursor ▶ aparece em quem está na mira do mouse ou do teclado. */
-.escolhas{gap:7px;margin-top:18px}
+/* ---------- seções da tela de história ----------
+   O cabeçalho de seção no idioma do HUD: letra de placa, um losango
+   na cor da seção e a linha que corre até a borda. As cores são as dos
+   comandos da luta — história dourada, porta vermelha, ação verde,
+   caminho azul. */
+.painel:has(> .cap-cabecalho) > h3{
+  display:flex;align-items:center;gap:10px;margin-block:24px 11px;
+  font-family:var(--letra-hud, var(--fonte));font-size:12px;font-weight:700;letter-spacing:.16em;
+  color:var(--texto-fraco);
+}
+.painel:has(> .cap-cabecalho) > h3::before{
+  content:'';flex:0 0 auto;width:8px;height:8px;border-radius:2px;transform:rotate(45deg);
+  background:var(--sec, var(--destaque));box-shadow:0 0 10px -1px var(--sec, var(--destaque));
+}
+.painel:has(> .cap-cabecalho) > h3::after{
+  content:'';flex:1 1 auto;height:1px;order:1;
+  background:linear-gradient(90deg, color-mix(in srgb, var(--sec, var(--destaque)) 45%, var(--borda)), transparent);
+}
+.painel:has(> .cap-cabecalho) > h3 > *{order:2}
+h3.sec-aqui{--sec:var(--destaque)}
+h3.sec-portas{--sec:#ef5350}
+h3.sec-fazer{--sec:#4cc38a}
+h3.sec-ir{--sec:#5aa7ff}
+
+/* ---------- a placa do lugar ganha legenda ----------
+   Na tela do mapa a descrição encosta embaixo da placa, na mesma
+   moldura, e "como o lugar te recebe" vira o rodapé dela. */
+.cap-cabecalho:has(+ .descricao-lugar){margin-bottom:0;border-bottom-left-radius:0;border-bottom-right-radius:0;border-bottom-color:transparent}
+.narrativa.descricao-lugar{
+  margin-block:0 4px;padding:15px 20px 3px;overflow:hidden;
+  border:1px solid rgba(255,255,255,.1);border-top:0;border-radius:0 0 16px 16px;
+  background:linear-gradient(180deg, rgba(5,8,22,.6), color-mix(in srgb, var(--bg) 55%, transparent));
+  box-shadow:0 18px 34px -24px rgba(0,0,0,.95);
+}
+.narrativa.descricao-lugar:has(> .recepcao:last-child){padding-bottom:0}
+.narrativa.descricao-lugar p.recepcao{
+  display:flex;gap:9px;align-items:baseline;
+  margin:4px -20px 0;padding:10px 20px 12px;border-left:0;border-top:1px solid rgba(255,255,255,.08);
+  background:rgba(0,0,0,.2);color:var(--texto-fraco);font-size:14.5px;
+}
+.narrativa.descricao-lugar p.recepcao::before{
+  content:'';flex:0 0 auto;width:7px;height:7px;border-radius:50%;transform:translateY(-1px);
+  background:var(--destaque);box-shadow:0 0 8px var(--destaque-sombra);
+}
+
+/* ---------- opções ----------
+   O menu dos jogos de hoje. Toda opção é uma linha com espessura
+   embaixo, que afunda quando aperta (como os comandos da luta), e o
+   brilho na diagonal. Na tela, a tecla que escolhe fica numa bolinha
+   de botão de controle à esquerda (Teclas numera de 1 a 9); na janela,
+   que não tem tecla, quem abre a linha é o desenho. A cor da linha
+   (--ac) é a da coisa: dourada na história, a da ação no lugar.
+   A entrada é "backwards", nunca "both": animação que segura o último
+   quadro manda no transform e na opacidade, e aí o hover não subia
+   e a opção fechada não apagava. */
+.escolhas{display:flex;flex-direction:column;gap:9px;margin-top:18px}
 .escolha{
-  padding:11px 16px 11px 54px;border-radius:10px;font-size:15px;line-height:1.45;
-  background:linear-gradient(180deg, color-mix(in srgb, var(--painel-2) 70%, var(--bg-2)), var(--bg-2));
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
+  --ac:var(--destaque);
+  position:relative;overflow:hidden;
+  display:block;text-align:left;color:var(--texto);
+  min-height:50px;padding:12px 40px 12px 16px;
+  border-radius:14px;font-size:15px;line-height:1.45;
+  background:
+    linear-gradient(112deg, transparent 0 66%, rgba(255,255,255,.035) 66% 77%, transparent 77%),
+    linear-gradient(180deg, color-mix(in srgb, var(--painel-2) 72%, var(--borda)), var(--bg-2));
+  border:1px solid color-mix(in srgb, var(--borda-forte) 72%, transparent);
+  box-shadow:0 3px 0 color-mix(in srgb, var(--bg) 50%, #000), 0 12px 20px -16px rgba(0,0,0,.95),
+             inset 0 1px 0 rgba(255,255,255,.07);
+  transition:transform .14s var(--suave), box-shadow .14s var(--suave),
+             border-color .2s var(--suave), background .2s var(--suave), color .2s var(--suave);
+  animation:surge .35s var(--suave) backwards;
 }
-.escolha::before{
-  content:'•';
-  left:18px;width:24px;height:24px;border-radius:7px;
+.escolhas .escolha:nth-child(1){animation-delay:.02s}
+.escolhas .escolha:nth-child(2){animation-delay:.07s}
+.escolhas .escolha:nth-child(3){animation-delay:.12s}
+.escolhas .escolha:nth-child(4){animation-delay:.17s}
+.escolhas .escolha:nth-child(n+5){animation-delay:.22s}
+/* a seta da direita, que anda quando a linha está na mira */
+.escolha::after{
+  content:'';position:absolute;right:17px;top:50%;width:8px;height:8px;margin-top:-4px;
+  border-top:2px solid currentColor;border-right:2px solid currentColor;transform:rotate(45deg);
+  opacity:.32;transition:transform .22s var(--mola), opacity .18s var(--suave), color .18s var(--suave);
+}
+/* a tecla: bolinha de botão de controle */
+#app .escolhas > .escolha{padding-left:54px}
+#app .escolhas > .escolha::before{
+  content:'';position:absolute;left:14px;top:50%;width:26px;height:26px;margin-top:-13px;border-radius:50%;
   display:grid;place-items:center;
-  font:700 12px/1 var(--mono);color:var(--texto-fraco);
-  background:var(--bg);box-shadow:inset 0 0 0 1px var(--borda-forte);
+  font:700 12.5px/1 var(--letra-hud, var(--fonte));color:var(--texto);
+  background:radial-gradient(circle at 50% 28%, var(--borda-forte), var(--bg) 80%);
+  box-shadow:inset 0 0 0 1.5px color-mix(in srgb, var(--texto-fraco) 50%, transparent), 0 2px 0 rgba(0,0,0,.5);
+  transition:background .18s var(--suave), color .18s var(--suave), box-shadow .18s var(--suave);
 }
-.escolha[data-tecla]::before{content:attr(data-tecla)}
+#app .escolhas > .escolha[data-tecla]::before{content:attr(data-tecla)}
+/* fechada não tem tecla: a casa da bolinha fica, vazia */
+#app .escolhas > .escolha:disabled::before{visibility:hidden}
+.escolha:hover:not(:disabled), .escolha:focus-visible{
+  border-color:color-mix(in srgb, var(--ac) 65%, transparent);
+  background:
+    linear-gradient(112deg, transparent 0 66%, rgba(255,255,255,.06) 66% 77%, transparent 77%),
+    linear-gradient(180deg, color-mix(in srgb, var(--ac) 15%, var(--painel-2)), color-mix(in srgb, var(--ac) 6%, var(--bg-2)));
+  transform:translateY(-1px);
+  box-shadow:0 4px 0 color-mix(in srgb, var(--ac) 28%, #05070f), 0 14px 26px -16px color-mix(in srgb, var(--ac) 55%, transparent),
+             inset 0 1px 0 rgba(255,255,255,.1);
+}
+.escolha:focus-visible{outline:2px solid color-mix(in srgb, var(--ac) 80%, #fff);outline-offset:2px}
+#app .escolhas > .escolha:hover:not(:disabled)::before, #app .escolhas > .escolha:focus-visible::before{
+  background:var(--ac);color:#15120a;
+  box-shadow:0 0 0 2px color-mix(in srgb, var(--ac) 35%, transparent), 0 0 14px -2px var(--ac);
+}
+.escolha:hover:not(:disabled)::after, .escolha:focus-visible::after{opacity:1;color:var(--ac);transform:translateX(3px) rotate(45deg)}
+.escolha:active:not(:disabled){
+  transform:translateY(2px);
+  box-shadow:0 1px 0 color-mix(in srgb, var(--ac) 28%, #05070f), inset 0 1px 0 rgba(255,255,255,.06);
+}
+/* porta que existe mas ainda não abre: aparece, diz o que falta, não clica */
+.escolha:disabled{opacity:.62;cursor:not-allowed;filter:saturate(.55);box-shadow:none}
+.escolha:disabled::after{display:none}
+/* fala escolhida entre aspas lê como fala */
+.escolha.diz{font-style:italic}
+.escolha .pd{color:var(--texto-fraco);font-size:.88em}
 /* Opção solta numa janela (o Centro, "Qual Pokébola?", "Em quem?",
    "Equipar em quem?"): a mesma linha de menu do resto do jogo, de ponta
    a ponta e com folga. Sem isto cada botão tinha a largura do próprio
    texto e encostava no de baixo. */
 .modal-corpo > .escolha{width:100%}
-.modal-corpo > .escolha:not(.com-icone){display:block}
-.modal-corpo > .escolha + .escolha{margin-top:7px}
-.escolha::after{width:auto;right:auto;left:0;background:none;transform:none;
-  content:'▶';top:50%;bottom:auto;left:4px;translate:-4px -50%;
-  font-size:10px;color:var(--destaque);opacity:0;
-  transition:opacity .18s var(--suave), translate .25s var(--mola);
+.modal-corpo > .escolha + .escolha{margin-top:8px}
+
+/* com desenho: o desenho numa pastilha da cor dele, à esquerda do texto */
+.escolha.com-icone{display:flex;align-items:center;gap:12px}
+.escolha > svg.icone{
+  width:34px;height:34px;padding:7px;flex:0 0 auto;border-radius:11px;stroke-width:2;
+  color:color-mix(in srgb, var(--ac) 70%, #fff);
+  background:color-mix(in srgb, var(--ac) 20%, rgba(0,0,0,.25));
+  box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--ac) 45%, transparent);
+  transition:background .18s var(--suave), color .18s var(--suave);
 }
-.escolha:hover, .escolha:focus-visible{
-  border-color:color-mix(in srgb, var(--destaque) 55%, var(--borda-forte));
-  background:linear-gradient(180deg, color-mix(in srgb, var(--destaque) 8%, var(--painel-2)), var(--painel));
-  transform:translateX(4px);
+.escolha:hover:not(:disabled) > svg.icone, .escolha:focus-visible > svg.icone{
+  color:#fff;background:color-mix(in srgb, var(--ac) 55%, rgba(0,0,0,.2));
 }
-.escolha:hover::before, .escolha:focus-visible::before{
-  background:var(--destaque);color:#1b1500;box-shadow:0 0 12px -3px var(--destaque-sombra);
-  transform:translateY(-50%);
+.esc-rot{flex:1 1 auto;min-width:0}
+.esc-rot small{
+  display:block;margin-bottom:2px;
+  font:700 10.5px/1.3 var(--letra-hud, var(--fonte));letter-spacing:.14em;text-transform:uppercase;color:var(--texto-fraco);
 }
-.escolha:hover::after, .escolha:focus-visible::after{opacity:1;translate:2px -50%;transform:none}
-/* fala escolhida entre aspas lê como fala */
-.escolha.diz{font-style:italic}
-/* as opções de serviço (balcão, perguntar o nome) ficam um tom abaixo */
+.esc-rot small.esc-det{
+  margin:3px 0 0;font:500 12.5px/1.35 var(--fonte);letter-spacing:0;text-transform:none;
+}
+.esc-trava{display:block;margin-top:3px;font:400 12.5px/1.4 var(--fonte);letter-spacing:0;color:var(--texto-fraco)}
+.esc-custo{
+  flex:0 0 auto;display:inline-flex;align-items:center;gap:5px;margin-left:auto;
+  padding:4px 10px 4px 8px;border-radius:999px;white-space:nowrap;
+  font:600 12px/1.2 var(--letra-hud, var(--fonte));letter-spacing:.02em;color:var(--texto-fraco);
+  background:rgba(0,0,0,.24);box-shadow:inset 0 0 0 1px var(--borda);
+}
+.esc-custo svg.icone{width:15px;height:15px;color:var(--ac);stroke-width:2}
+
+/* o menu do lugar: comando, não frase, então na letra de placa */
+.escolha.menu{
+  min-height:56px;padding-block:9px;
+  font-family:var(--letra-hud, var(--fonte));font-size:16px;font-weight:600;letter-spacing:.005em;
+}
+/* a placa de estrada: pra que lado, e o nome do lugar grande */
+.escolha.caminho .esc-rot b{display:block;font-size:17px;font-weight:700;line-height:1.15}
+.escolha.caminho > svg.icone{border-radius:50%}
+.escolha.caminho:disabled > svg.icone{border-radius:11px}
+
+/* O capítulo que espera aqui: a missão da história, em dourado, com a
+   marca de exclamação pulsando como a do mapa dos jogos. O gancho é
+   texto de história, então volta pra letra de ler. */
+.escolha.chamado{
+  --ac:var(--destaque);
+  min-height:70px;padding-block:12px;
+  border-color:color-mix(in srgb, var(--destaque) 55%, transparent);
+  background:
+    linear-gradient(112deg, transparent 0 62%, rgba(255,255,255,.07) 62% 74%, transparent 74%),
+    radial-gradient(130% 160% at 0% 50%, color-mix(in srgb, var(--destaque) 20%, transparent), transparent 62%),
+    linear-gradient(180deg, color-mix(in srgb, var(--destaque) 12%, var(--painel-2)), var(--bg-2));
+  box-shadow:0 4px 0 color-mix(in srgb, var(--destaque) 32%, #05070f), 0 0 30px -12px var(--destaque-sombra),
+             inset 0 1px 0 rgba(255,255,255,.12);
+}
+.escolha.chamado > svg.icone{
+  width:40px;height:40px;padding:8px;border-radius:50%;stroke-width:2.8;color:#1b1500;
+  background:radial-gradient(circle at 50% 30%, color-mix(in srgb, var(--destaque) 62%, #fff), var(--destaque) 58%, var(--destaque-esc));
+  box-shadow:0 0 0 3px color-mix(in srgb, var(--destaque) 25%, transparent), 0 0 18px -2px var(--destaque-sombra);
+  animation:chamado 2.4s ease-in-out infinite;
+}
+.escolha.chamado:hover:not(:disabled) > svg.icone{color:#1b1500;background:radial-gradient(circle at 50% 30%, #fff, var(--destaque) 62%)}
+.escolha.chamado .esc-rot{font-size:15px;line-height:1.45}
+.escolha.chamado .esc-rot small{color:var(--destaque)}
+.escolha.chamado:disabled > svg.icone{animation:none;color:var(--texto);background:var(--borda-forte);box-shadow:none}
+@keyframes chamado{
+  0%,100%{box-shadow:0 0 0 3px color-mix(in srgb, var(--destaque) 25%, transparent), 0 0 18px -2px var(--destaque-sombra)}
+  50%{box-shadow:0 0 0 7px color-mix(in srgb, var(--destaque) 10%, transparent), 0 0 26px 0 var(--destaque-sombra)}
+}
+
+/* as ações da cena que não são frase: encarar (o vermelho do Lutar),
+   rolar o teste (o ciano da Pokédex), rolar com Vontade (o roxo dela)
+   e encerrar o capítulo (dourado). Já entram tingidas. */
+.escolha.luta{--ac:#ef5350}
+.escolha.teste{--ac:#4dd0e1}
+.escolha.vontade{--ac:#a77bff}
+.escolha.fim{--ac:var(--destaque)}
+.escolha.luta, .escolha.teste, .escolha.vontade, .escolha.fim{
+  min-height:56px;font-family:var(--letra-hud, var(--fonte));font-size:16px;font-weight:600;
+  border-color:color-mix(in srgb, var(--ac) 50%, transparent);
+  background:
+    linear-gradient(112deg, transparent 0 66%, rgba(255,255,255,.05) 66% 77%, transparent 77%),
+    linear-gradient(180deg, color-mix(in srgb, var(--ac) 18%, var(--painel-2)), color-mix(in srgb, var(--ac) 6%, var(--bg-2)));
+  box-shadow:0 3px 0 color-mix(in srgb, var(--ac) 26%, #05070f), 0 12px 20px -16px rgba(0,0,0,.95),
+             inset 0 1px 0 rgba(255,255,255,.1);
+}
+.escolha.olhar{--ac:#90caf9}
+/* as de serviço (o balcão do Centro, perguntar o nome) ficam um tom
+   abaixo: não mudam o rumo da história */
 .escolha.utilitaria, .escolha.discreta{
-  font-size:13.5px;color:var(--texto-fraco);
-  background:transparent;border-style:dashed;
+  min-height:44px;font-size:14px;color:var(--texto-fraco);
+  background:transparent;border-style:dashed;box-shadow:none;
 }
-.escolha.utilitaria:hover, .escolha.discreta:hover{color:var(--texto)}
-.escolha.perigo{border-color:color-mix(in srgb, var(--perigo) 45%, var(--borda))}
-.escolha.perigo:hover{border-color:var(--perigo);background:color-mix(in srgb, var(--perigo) 10%, var(--bg-2))}
-.escolha.perigo:hover::before{background:var(--perigo);color:#fff}
+.escolha.utilitaria > svg.icone, .escolha.discreta > svg.icone{width:28px;height:28px;padding:5px;border-radius:9px}
+.escolha.utilitaria:hover:not(:disabled), .escolha.discreta:hover:not(:disabled){color:var(--texto)}
+.escolha.perigo{--ac:var(--perigo);border-color:color-mix(in srgb, var(--perigo) 45%, var(--borda))}
 
 /* ---------- campo livre ---------- */
 .acao-livre{
-  margin-top:20px;border-style:solid;border-color:var(--borda);
-  background:linear-gradient(180deg, color-mix(in srgb, var(--bg) 70%, transparent), var(--bg-2));
+  margin-top:20px;padding:14px 16px 15px;border-radius:14px;
+  border:1px solid color-mix(in srgb, var(--borda-forte) 60%, transparent);
+  background:linear-gradient(180deg, color-mix(in srgb, var(--bg) 72%, transparent), var(--bg-2));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
 }
-.acao-livre label{display:flex;align-items:center;gap:8px;font-weight:600;font-size:11px;letter-spacing:.12em}
+.acao-livre label{
+  display:flex;align-items:center;gap:8px;margin-bottom:9px;
+  font-family:var(--letra-hud, var(--fonte));font-weight:700;font-size:11px;letter-spacing:.16em;
+}
 .acao-livre label::before{
   content:'';width:14px;height:14px;flex:0 0 auto;background:var(--texto-fraco);
   -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 20h4L19 9l-4-4L4 16z'/%3E%3Cpath d='M14 6l4 4'/%3E%3C/svg%3E") center/contain no-repeat;
           mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 20h4L19 9l-4-4L4 16z'/%3E%3Cpath d='M14 6l4 4'/%3E%3C/svg%3E") center/contain no-repeat;
 }
-.linha-acao input{border-radius:9px;padding:11px 14px}
+.linha-acao input{
+  border-radius:11px;padding:12px 14px;
+  background:rgba(0,0,0,.28);box-shadow:inset 0 2px 6px rgba(0,0,0,.35);
+}
 .linha-acao input::placeholder{color:var(--texto-tenue)}
+.linha-acao .btn.destaque{
+  border-radius:11px;padding-inline:20px;
+  font-family:var(--letra-hud, var(--fonte));font-size:15px;font-weight:700;letter-spacing:.02em;
+  box-shadow:0 3px 0 var(--destaque-esc), 0 8px 16px -10px var(--destaque-sombra);
+}
+.linha-acao .btn.destaque:active{transform:translateY(2px);box-shadow:0 1px 0 var(--destaque-esc)}
 
 /* ---------- avisos: o que a escolha mudou ---------- */
 .avisos:not(:empty){margin-top:16px}
@@ -8210,8 +8558,18 @@ svg.icone{flex:0 0 auto;width:18px;height:18px;vertical-align:-3px}
   .narrativa .fala.com-rosto{grid-template-columns:48px minmax(0,1fr);column-gap:10px}
   .narrativa .fala-retrato{width:48px;height:48px;border-radius:8px}
   .narrativa p.entre-falas{margin-left:14px}
-  .escolha{padding:10px 12px 10px 46px;font-size:14.5px}
-  .escolha::before{left:15px;width:22px;height:22px}
+  .escolha{font-size:14.5px;padding-right:34px}
+  #app .escolhas > .escolha{padding-left:46px}
+  #app .escolhas > .escolha::before{left:11px;width:24px;height:24px;margin-top:-12px;font-size:12px}
+  .escolha::after{right:13px;width:7px;height:7px;margin-top:-3.5px}
+  .escolha.com-icone{gap:10px}
+  .escolha > svg.icone{width:31px;height:31px;padding:6px;border-radius:10px}
+  .escolha.menu, .escolha.luta, .escolha.teste, .escolha.vontade, .escolha.fim{font-size:15px;min-height:52px}
+  .escolha.caminho .esc-rot b{font-size:16px}
+  .escolha.chamado > svg.icone{width:36px;height:36px;padding:7px}
+  .narrativa.descricao-lugar{padding:13px 14px 2px}
+  .narrativa.descricao-lugar p.recepcao{margin-inline:-14px;padding-inline:14px}
+  .painel:has(> .cap-cabecalho) > h3{margin-block:20px 10px}
 }
 
 /* ============================================================
@@ -9652,47 +10010,7 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
   .narrativa .fala.voce{margin-left:auto;margin-right:9px}
 }
 
-.escolhas{display:flex;flex-direction:column;gap:6px;margin-top:14px}
-.escolha{
-  text-align:left;
-  background:linear-gradient(180deg, var(--bg-2), color-mix(in srgb, var(--bg-2) 86%, #000));
-  border:1px solid var(--borda);color:var(--texto);
-  padding:9px 14px 9px 34px;border-radius:var(--raio-sm);line-height:1.42;
-  position:relative;overflow:hidden;
-  animation:surge .35s var(--suave) both;
-}
-.escolhas .escolha:nth-child(1){animation-delay:.02s}
-.escolhas .escolha:nth-child(2){animation-delay:.07s}
-.escolhas .escolha:nth-child(3){animation-delay:.12s}
-.escolhas .escolha:nth-child(4){animation-delay:.17s}
-.escolhas .escolha:nth-child(n+5){animation-delay:.22s}
-/* barra de acento que cresce da esquerda */
-.escolha::after{
-  content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
-  background:var(--destaque);transform:scaleY(0);transform-origin:center;
-  transition:transform .25s var(--mola);
-}
-.escolha::before{
-  content:'';position:absolute;left:12px;top:50%;transform:translateY(-50%);
-  width:10px;height:10px;border-radius:50%;
-  background:linear-gradient(180deg, var(--borda-forte) 0 45%, var(--bg) 45% 55%, var(--texto-tenue) 55% 100%);
-  box-shadow:0 0 0 1.2px var(--borda-forte);
-  transition:transform .25s var(--mola), background .25s var(--suave), box-shadow .25s var(--suave);
-}
-.escolha:hover{
-  border-color:var(--borda-forte);
-  background:linear-gradient(180deg, var(--painel-2), var(--painel));
-  transform:translateX(3px);
-  box-shadow:0 8px 20px -12px rgba(0,0,0,.7);
-}
-.escolha:hover::before{
-  background:linear-gradient(180deg, var(--perigo) 0 45%, #1a1a20 45% 55%, #f2f4f8 55% 100%);
-  box-shadow:0 0 0 1.2px #1a1a20, 0 0 10px -2px var(--destaque-sombra);
-  transform:translateY(-50%) translateX(2px) scale(1.15);
-}
-.escolha:hover::after{transform:scaleY(1)}
-.escolha:active{transform:translateX(1px) scale(.995)}
-.escolha:focus-visible{outline:none;border-color:var(--destaque);box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(--destaque-sombra)}
+/* opções: o menu está em "CAIXA DE DIÁLOGO, OPÇÕES E COLUNA DE LEITURA" */
 
 /* ---------- avisos / consequências ---------- */
 .avisos{margin-top:18px;display:flex;flex-direction:column;gap:7px}
@@ -10163,7 +10481,7 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
              inset 0 1px 0 rgba(255,255,255,.3);
   text-shadow:0 1px 2px rgba(0,0,0,.4);
   transition:transform .12s var(--suave), box-shadow .12s var(--suave), filter .15s var(--suave);
-  animation:surge .3s var(--suave) both;
+  animation:surge .3s var(--suave) backwards;
 }
 /* o brilho que corre na diagonal, como no menu dos jogos */
 .mb-btn::before{
@@ -10229,7 +10547,7 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
   box-shadow:0 4px 0 color-mix(in srgb, var(--tc) 35%, #000), 0 12px 18px -12px rgba(0,0,0,.9),
              inset 0 1px 0 rgba(255,255,255,.2);
   transition:transform .12s var(--suave), box-shadow .12s var(--suave), filter .15s var(--suave);
-  animation:surge .3s var(--suave) both;
+  animation:surge .3s var(--suave) backwards;
 }
 .golpe-btn .g-tipo{
   grid-area:tipo;align-self:stretch;display:grid;place-items:center;min-width:74px;padding:0 9px;
@@ -10261,7 +10579,7 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
   background:linear-gradient(180deg, var(--bg-2), color-mix(in srgb, var(--bg-2) 86%, #000));
   border:1px solid var(--borda);border-radius:var(--raio-sm);padding:10px 12px;font-size:13px;
   transition:transform .2s var(--mola), border-color .2s var(--suave), box-shadow .22s var(--suave);
-  animation:surge .35s var(--suave) both;
+  animation:surge .35s var(--suave) backwards;
 }
 .carta:hover{transform:translateY(-2px);border-color:var(--borda-forte);box-shadow:0 10px 24px -14px rgba(0,0,0,.8)}
 .carta.morto{opacity:.5;border-style:dashed;border-color:var(--perigo)}
@@ -11762,21 +12080,59 @@ h3.cat-item{
 
 /* ============================================================
    PORTAS — os lugares da cidade, que não são "o que fazer"
+   Botão na cor da casa, como o ícone do mapa dos jogos de hoje: o
+   Centro vermelho, a loja azul, o ginásio dourado, a sua casa verde.
+   O desenho numa moeda da cor cheia, o nome em letra de placa, e as
+   portas enchem a linha (--cols vem da conta de quantas são: nenhuma
+   sobra pela metade com a casa vazia do lado).
    ============================================================ */
-/* dois por linha, igual à barra de ação do combate */
-.portas{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:6px}
+.portas{--cols:2;display:flex;flex-wrap:wrap;gap:10px;margin-bottom:4px}
 .porta{
-  display:flex;flex-direction:column;gap:2px;text-align:left;
-  padding:10px 12px;border:1px solid var(--borda);border-radius:6px;
-  background:color-mix(in srgb, var(--destaque) 5%, var(--bg-2));
-  color:var(--texto);cursor:pointer;font-family:inherit;
-  transition:border-color .15s,background .15s,transform .1s;
+  --ac:#8d97bd;
+  flex:1 1 calc((100% - (var(--cols) - 1) * 10px) / var(--cols));min-width:0;
+  position:relative;overflow:hidden;
+  display:flex;align-items:center;gap:12px;
+  min-height:64px;padding:10px 34px 10px 11px;border-radius:15px;text-align:left;
+  font-family:var(--letra-hud, var(--fonte));color:#fff;cursor:pointer;
+  background:
+    linear-gradient(112deg, transparent 0 62%, rgba(255,255,255,.07) 62% 73%, transparent 73%),
+    linear-gradient(180deg, color-mix(in srgb, var(--ac) 34%, var(--painel-2)), color-mix(in srgb, var(--ac) 14%, var(--bg)));
+  border:1px solid color-mix(in srgb, var(--ac) 55%, transparent);
+  box-shadow:0 4px 0 color-mix(in srgb, var(--ac) 30%, #05070f), 0 14px 22px -16px rgba(0,0,0,.95),
+             inset 0 1px 0 rgba(255,255,255,.14);
+  text-shadow:0 1px 2px rgba(0,0,0,.5);
+  transition:transform .14s var(--suave), box-shadow .14s var(--suave), filter .15s var(--suave), border-color .15s var(--suave);
+  animation:surge .35s var(--suave) backwards;
 }
-.porta:hover{border-color:var(--destaque);background:color-mix(in srgb, var(--destaque) 11%, var(--bg-2))}
-.porta:active{transform:translateY(1px)}
-.porta-nome{font-size:13.5px;font-weight:600;letter-spacing:.01em}
-.porta-sub{font-size:11.5px;color:var(--texto-fraco);line-height:1.4}
-@media (max-width:620px){ .portas{grid-template-columns:1fr} }
+.portas .porta:nth-child(2){animation-delay:.05s}
+.portas .porta:nth-child(3){animation-delay:.1s}
+.portas .porta:nth-child(n+4){animation-delay:.15s}
+.porta > svg.icone{
+  width:40px;height:40px;padding:8px;flex:0 0 auto;border-radius:50%;stroke-width:2;color:#fff;
+  background:radial-gradient(circle at 50% 30%, color-mix(in srgb, var(--ac) 65%, #fff), var(--ac) 58%, color-mix(in srgb, var(--ac) 70%, #000));
+  box-shadow:0 0 0 2px rgba(255,255,255,.16), 0 4px 10px -4px rgba(0,0,0,.85);
+}
+.porta-nome{flex:1 1 auto;min-width:0;font-size:15px;font-weight:600;line-height:1.2;letter-spacing:.01em}
+.porta-nome small{display:block;margin-top:3px;font:400 12.5px/1.3 var(--fonte);letter-spacing:0;color:rgba(255,255,255,.78)}
+.porta::after{
+  content:'';position:absolute;right:15px;top:50%;width:8px;height:8px;margin-top:-4px;
+  border-top:2px solid currentColor;border-right:2px solid currentColor;transform:rotate(45deg);
+  opacity:.5;transition:transform .22s var(--mola), opacity .18s var(--suave);
+}
+.porta:hover{filter:brightness(1.1) saturate(1.05);transform:translateY(-2px);border-color:color-mix(in srgb, var(--ac) 80%, #fff)}
+.porta:hover::after{opacity:1;transform:translateX(3px) rotate(45deg)}
+.porta:active{transform:translateY(3px);
+  box-shadow:0 1px 0 color-mix(in srgb, var(--ac) 30%, #05070f), inset 0 1px 0 rgba(255,255,255,.1)}
+.porta:focus-visible{outline:2px solid #fff;outline-offset:2px}
+@media (max-width:620px){
+  .portas{gap:8px}
+  .porta{flex-basis:calc((100% - (min(var(--cols), 2) - 1) * 8px) / min(var(--cols), 2));
+    min-height:58px;padding:9px 26px 9px 9px;gap:10px;border-radius:13px}
+  .porta > svg.icone{width:34px;height:34px;padding:7px}
+  .porta-nome{font-size:14px}
+  .porta-nome small{font-size:11.5px}
+  .porta::after{right:11px;width:7px;height:7px;margin-top:-3.5px}
+}
 
 /* fala que continua a anterior: sem repetir o nome, colada na de cima */
 .narrativa .fala.segue{margin-top:-8px;border-top-left-radius:2px}
@@ -11793,15 +12149,6 @@ h3.cat-item{
   margin-top:10px;padding-left:11px;border-left:2px solid var(--destaque);
   color:var(--texto-fraco);font-style:italic;
 }
-
-/* Ação avulsa que não é trilha da história: perguntar o nome de quem
-   está falando. Fica mais apagada que uma escolha de verdade porque
-   não muda o rumo — muda só como o jogo chama a pessoa. */
-.escolha.discreta{
-  opacity:.72;
-  font-style:italic;
-}
-.escolha.discreta:hover{ opacity:1; }
 
 /* Capacidade de campo que o time ainda não tem. */
 .linha .v.nao{ opacity:.55; font-style:italic; }
@@ -11949,7 +12296,7 @@ h3.cat-item{
   z-index:60;display:flex;flex-direction:column;gap:6px;align-items:center;pointer-events:none;width:min(92vw,460px)}
 .recado{background:var(--bg-2);border:1px solid var(--borda-forte);color:var(--texto);border-radius:10px;
   padding:9px 14px;font-size:13.5px;box-shadow:0 8px 24px -10px rgba(0,0,0,.6);
-  animation:surge .3s var(--suave) both;transition:opacity .45s, transform .45s}
+  animation:surge .3s var(--suave) backwards;transition:opacity .45s, transform .45s}
 .recado.golpeNovo{border-color:color-mix(in srgb, var(--bom) 60%, var(--borda))}
 .recado.saindo{opacity:0;transform:translateY(6px)}
 
@@ -12248,9 +12595,6 @@ h3.com-mapa{display:flex;align-items:center;justify-content:space-between;gap:8p
 .barra-exp i{display:block;height:100%;background:linear-gradient(90deg,#2f6fd6,#5fb4ff);transition:width .6s var(--suave)}
 .barra-exp.vaga{visibility:hidden}
 .lutador .ficha .barra + .barra-exp{margin-top:2px}
-/* atalho que não é escolha da história: fica mais apagado */
-.escolha.utilitaria{border-style:dashed;opacity:.8;font-size:.95em}
-.escolha.utilitaria:hover{opacity:1}
 
 /* mural de recados do Centro: cortiça e papel preso com percevejo */
 .mural{
@@ -12342,9 +12686,6 @@ body.com-cenario .topo{
 }
 @media (prefers-reduced-motion: reduce){ body.com-cenario::before{animation:none} }
 
-/* porta que existe mas ainda não abre: aparece, diz o que falta, não clica */
-.escolha:disabled{opacity:.55;cursor:not-allowed;filter:saturate(.6)}
-.escolha:disabled:hover{transform:none}
 
 /* ligação feita: a conversa acontece dentro da ficha do PokéNav */
 .nav-conversa{margin:10px 0 6px;max-height:52vh;overflow:auto;font-size:14px}
@@ -12577,9 +12918,6 @@ html[data-moldura="grafite"], body[data-moldura="grafite"]{
 
 /* ícones desenhados (js/data/icones.js) */
 svg.icone{flex:0 0 auto;width:18px;height:18px;vertical-align:-3px}
-.escolha.com-icone{display:flex;align-items:center;gap:10px;text-align:left}
-.porta{flex-direction:row;align-items:center;gap:10px}
-.porta .porta-icone{width:24px;height:24px;opacity:.9}
 .abas-mochila .aba{display:inline-flex;align-items:center;gap:5px}
 .abas-mochila .aba svg.icone{width:15px;height:15px}
 
@@ -12671,6 +13009,9 @@ svg.icone{flex:0 0 auto;width:18px;height:18px;vertical-align:-3px}
     var(--cenario-lugar, linear-gradient(135deg, var(--painel-2), var(--bg)));
   background-blend-mode:normal, normal, multiply, normal;
   background-size:cover;background-position:center 10%;background-repeat:no-repeat;
+  /* as camadas escuras cobrem a borda também: sem isso a última fileira
+     da arte aparecia crua, numa linha clara embaixo da placa */
+  background-origin:border-box;
   image-rendering:pixelated;
   box-shadow:0 18px 34px -24px rgba(0,0,0,.95), inset 0 1px 0 rgba(255,255,255,.08);
 }
@@ -12748,70 +13089,256 @@ svg.icone{flex:0 0 auto;width:18px;height:18px;vertical-align:-3px}
 /* narração curta entre falas fica presa à conversa, não solta */
 .narrativa p.entre-falas{margin:-2px 0 10px 77px;font-size:13.5px}
 
-/* ---------- opções ---------- */
-/* Menu dos jogos: cada opção numerada pela tecla que a escolhe (1 a 9),
-   e o cursor ▶ aparece em quem está na mira do mouse ou do teclado. */
-.escolhas{gap:7px;margin-top:18px}
+/* ---------- seções da tela de história ----------
+   O cabeçalho de seção no idioma do HUD: letra de placa, um losango
+   na cor da seção e a linha que corre até a borda. As cores são as dos
+   comandos da luta — história dourada, porta vermelha, ação verde,
+   caminho azul. */
+.painel:has(> .cap-cabecalho) > h3{
+  display:flex;align-items:center;gap:10px;margin-block:24px 11px;
+  font-family:var(--letra-hud, var(--fonte));font-size:12px;font-weight:700;letter-spacing:.16em;
+  color:var(--texto-fraco);
+}
+.painel:has(> .cap-cabecalho) > h3::before{
+  content:'';flex:0 0 auto;width:8px;height:8px;border-radius:2px;transform:rotate(45deg);
+  background:var(--sec, var(--destaque));box-shadow:0 0 10px -1px var(--sec, var(--destaque));
+}
+.painel:has(> .cap-cabecalho) > h3::after{
+  content:'';flex:1 1 auto;height:1px;order:1;
+  background:linear-gradient(90deg, color-mix(in srgb, var(--sec, var(--destaque)) 45%, var(--borda)), transparent);
+}
+.painel:has(> .cap-cabecalho) > h3 > *{order:2}
+h3.sec-aqui{--sec:var(--destaque)}
+h3.sec-portas{--sec:#ef5350}
+h3.sec-fazer{--sec:#4cc38a}
+h3.sec-ir{--sec:#5aa7ff}
+
+/* ---------- a placa do lugar ganha legenda ----------
+   Na tela do mapa a descrição encosta embaixo da placa, na mesma
+   moldura, e "como o lugar te recebe" vira o rodapé dela. */
+.cap-cabecalho:has(+ .descricao-lugar){margin-bottom:0;border-bottom-left-radius:0;border-bottom-right-radius:0;border-bottom-color:transparent}
+.narrativa.descricao-lugar{
+  margin-block:0 4px;padding:15px 20px 3px;overflow:hidden;
+  border:1px solid rgba(255,255,255,.1);border-top:0;border-radius:0 0 16px 16px;
+  background:linear-gradient(180deg, rgba(5,8,22,.6), color-mix(in srgb, var(--bg) 55%, transparent));
+  box-shadow:0 18px 34px -24px rgba(0,0,0,.95);
+}
+.narrativa.descricao-lugar:has(> .recepcao:last-child){padding-bottom:0}
+.narrativa.descricao-lugar p.recepcao{
+  display:flex;gap:9px;align-items:baseline;
+  margin:4px -20px 0;padding:10px 20px 12px;border-left:0;border-top:1px solid rgba(255,255,255,.08);
+  background:rgba(0,0,0,.2);color:var(--texto-fraco);font-size:14.5px;
+}
+.narrativa.descricao-lugar p.recepcao::before{
+  content:'';flex:0 0 auto;width:7px;height:7px;border-radius:50%;transform:translateY(-1px);
+  background:var(--destaque);box-shadow:0 0 8px var(--destaque-sombra);
+}
+
+/* ---------- opções ----------
+   O menu dos jogos de hoje. Toda opção é uma linha com espessura
+   embaixo, que afunda quando aperta (como os comandos da luta), e o
+   brilho na diagonal. Na tela, a tecla que escolhe fica numa bolinha
+   de botão de controle à esquerda (Teclas numera de 1 a 9); na janela,
+   que não tem tecla, quem abre a linha é o desenho. A cor da linha
+   (--ac) é a da coisa: dourada na história, a da ação no lugar.
+   A entrada é "backwards", nunca "both": animação que segura o último
+   quadro manda no transform e na opacidade, e aí o hover não subia
+   e a opção fechada não apagava. */
+.escolhas{display:flex;flex-direction:column;gap:9px;margin-top:18px}
 .escolha{
-  padding:11px 16px 11px 54px;border-radius:10px;font-size:15px;line-height:1.45;
-  background:linear-gradient(180deg, color-mix(in srgb, var(--painel-2) 70%, var(--bg-2)), var(--bg-2));
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
+  --ac:var(--destaque);
+  position:relative;overflow:hidden;
+  display:block;text-align:left;color:var(--texto);
+  min-height:50px;padding:12px 40px 12px 16px;
+  border-radius:14px;font-size:15px;line-height:1.45;
+  background:
+    linear-gradient(112deg, transparent 0 66%, rgba(255,255,255,.035) 66% 77%, transparent 77%),
+    linear-gradient(180deg, color-mix(in srgb, var(--painel-2) 72%, var(--borda)), var(--bg-2));
+  border:1px solid color-mix(in srgb, var(--borda-forte) 72%, transparent);
+  box-shadow:0 3px 0 color-mix(in srgb, var(--bg) 50%, #000), 0 12px 20px -16px rgba(0,0,0,.95),
+             inset 0 1px 0 rgba(255,255,255,.07);
+  transition:transform .14s var(--suave), box-shadow .14s var(--suave),
+             border-color .2s var(--suave), background .2s var(--suave), color .2s var(--suave);
+  animation:surge .35s var(--suave) backwards;
 }
-.escolha::before{
-  content:'•';
-  left:18px;width:24px;height:24px;border-radius:7px;
+.escolhas .escolha:nth-child(1){animation-delay:.02s}
+.escolhas .escolha:nth-child(2){animation-delay:.07s}
+.escolhas .escolha:nth-child(3){animation-delay:.12s}
+.escolhas .escolha:nth-child(4){animation-delay:.17s}
+.escolhas .escolha:nth-child(n+5){animation-delay:.22s}
+/* a seta da direita, que anda quando a linha está na mira */
+.escolha::after{
+  content:'';position:absolute;right:17px;top:50%;width:8px;height:8px;margin-top:-4px;
+  border-top:2px solid currentColor;border-right:2px solid currentColor;transform:rotate(45deg);
+  opacity:.32;transition:transform .22s var(--mola), opacity .18s var(--suave), color .18s var(--suave);
+}
+/* a tecla: bolinha de botão de controle */
+#app .escolhas > .escolha{padding-left:54px}
+#app .escolhas > .escolha::before{
+  content:'';position:absolute;left:14px;top:50%;width:26px;height:26px;margin-top:-13px;border-radius:50%;
   display:grid;place-items:center;
-  font:700 12px/1 var(--mono);color:var(--texto-fraco);
-  background:var(--bg);box-shadow:inset 0 0 0 1px var(--borda-forte);
+  font:700 12.5px/1 var(--letra-hud, var(--fonte));color:var(--texto);
+  background:radial-gradient(circle at 50% 28%, var(--borda-forte), var(--bg) 80%);
+  box-shadow:inset 0 0 0 1.5px color-mix(in srgb, var(--texto-fraco) 50%, transparent), 0 2px 0 rgba(0,0,0,.5);
+  transition:background .18s var(--suave), color .18s var(--suave), box-shadow .18s var(--suave);
 }
-.escolha[data-tecla]::before{content:attr(data-tecla)}
+#app .escolhas > .escolha[data-tecla]::before{content:attr(data-tecla)}
+/* fechada não tem tecla: a casa da bolinha fica, vazia */
+#app .escolhas > .escolha:disabled::before{visibility:hidden}
+.escolha:hover:not(:disabled), .escolha:focus-visible{
+  border-color:color-mix(in srgb, var(--ac) 65%, transparent);
+  background:
+    linear-gradient(112deg, transparent 0 66%, rgba(255,255,255,.06) 66% 77%, transparent 77%),
+    linear-gradient(180deg, color-mix(in srgb, var(--ac) 15%, var(--painel-2)), color-mix(in srgb, var(--ac) 6%, var(--bg-2)));
+  transform:translateY(-1px);
+  box-shadow:0 4px 0 color-mix(in srgb, var(--ac) 28%, #05070f), 0 14px 26px -16px color-mix(in srgb, var(--ac) 55%, transparent),
+             inset 0 1px 0 rgba(255,255,255,.1);
+}
+.escolha:focus-visible{outline:2px solid color-mix(in srgb, var(--ac) 80%, #fff);outline-offset:2px}
+#app .escolhas > .escolha:hover:not(:disabled)::before, #app .escolhas > .escolha:focus-visible::before{
+  background:var(--ac);color:#15120a;
+  box-shadow:0 0 0 2px color-mix(in srgb, var(--ac) 35%, transparent), 0 0 14px -2px var(--ac);
+}
+.escolha:hover:not(:disabled)::after, .escolha:focus-visible::after{opacity:1;color:var(--ac);transform:translateX(3px) rotate(45deg)}
+.escolha:active:not(:disabled){
+  transform:translateY(2px);
+  box-shadow:0 1px 0 color-mix(in srgb, var(--ac) 28%, #05070f), inset 0 1px 0 rgba(255,255,255,.06);
+}
+/* porta que existe mas ainda não abre: aparece, diz o que falta, não clica */
+.escolha:disabled{opacity:.62;cursor:not-allowed;filter:saturate(.55);box-shadow:none}
+.escolha:disabled::after{display:none}
+/* fala escolhida entre aspas lê como fala */
+.escolha.diz{font-style:italic}
+.escolha .pd{color:var(--texto-fraco);font-size:.88em}
 /* Opção solta numa janela (o Centro, "Qual Pokébola?", "Em quem?",
    "Equipar em quem?"): a mesma linha de menu do resto do jogo, de ponta
    a ponta e com folga. Sem isto cada botão tinha a largura do próprio
    texto e encostava no de baixo. */
 .modal-corpo > .escolha{width:100%}
-.modal-corpo > .escolha:not(.com-icone){display:block}
-.modal-corpo > .escolha + .escolha{margin-top:7px}
-.escolha::after{width:auto;right:auto;left:0;background:none;transform:none;
-  content:'▶';top:50%;bottom:auto;left:4px;translate:-4px -50%;
-  font-size:10px;color:var(--destaque);opacity:0;
-  transition:opacity .18s var(--suave), translate .25s var(--mola);
+.modal-corpo > .escolha + .escolha{margin-top:8px}
+
+/* com desenho: o desenho numa pastilha da cor dele, à esquerda do texto */
+.escolha.com-icone{display:flex;align-items:center;gap:12px}
+.escolha > svg.icone{
+  width:34px;height:34px;padding:7px;flex:0 0 auto;border-radius:11px;stroke-width:2;
+  color:color-mix(in srgb, var(--ac) 70%, #fff);
+  background:color-mix(in srgb, var(--ac) 20%, rgba(0,0,0,.25));
+  box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--ac) 45%, transparent);
+  transition:background .18s var(--suave), color .18s var(--suave);
 }
-.escolha:hover, .escolha:focus-visible{
-  border-color:color-mix(in srgb, var(--destaque) 55%, var(--borda-forte));
-  background:linear-gradient(180deg, color-mix(in srgb, var(--destaque) 8%, var(--painel-2)), var(--painel));
-  transform:translateX(4px);
+.escolha:hover:not(:disabled) > svg.icone, .escolha:focus-visible > svg.icone{
+  color:#fff;background:color-mix(in srgb, var(--ac) 55%, rgba(0,0,0,.2));
 }
-.escolha:hover::before, .escolha:focus-visible::before{
-  background:var(--destaque);color:#1b1500;box-shadow:0 0 12px -3px var(--destaque-sombra);
-  transform:translateY(-50%);
+.esc-rot{flex:1 1 auto;min-width:0}
+.esc-rot small{
+  display:block;margin-bottom:2px;
+  font:700 10.5px/1.3 var(--letra-hud, var(--fonte));letter-spacing:.14em;text-transform:uppercase;color:var(--texto-fraco);
 }
-.escolha:hover::after, .escolha:focus-visible::after{opacity:1;translate:2px -50%;transform:none}
-/* fala escolhida entre aspas lê como fala */
-.escolha.diz{font-style:italic}
-/* as opções de serviço (balcão, perguntar o nome) ficam um tom abaixo */
+.esc-rot small.esc-det{
+  margin:3px 0 0;font:500 12.5px/1.35 var(--fonte);letter-spacing:0;text-transform:none;
+}
+.esc-trava{display:block;margin-top:3px;font:400 12.5px/1.4 var(--fonte);letter-spacing:0;color:var(--texto-fraco)}
+.esc-custo{
+  flex:0 0 auto;display:inline-flex;align-items:center;gap:5px;margin-left:auto;
+  padding:4px 10px 4px 8px;border-radius:999px;white-space:nowrap;
+  font:600 12px/1.2 var(--letra-hud, var(--fonte));letter-spacing:.02em;color:var(--texto-fraco);
+  background:rgba(0,0,0,.24);box-shadow:inset 0 0 0 1px var(--borda);
+}
+.esc-custo svg.icone{width:15px;height:15px;color:var(--ac);stroke-width:2}
+
+/* o menu do lugar: comando, não frase, então na letra de placa */
+.escolha.menu{
+  min-height:56px;padding-block:9px;
+  font-family:var(--letra-hud, var(--fonte));font-size:16px;font-weight:600;letter-spacing:.005em;
+}
+/* a placa de estrada: pra que lado, e o nome do lugar grande */
+.escolha.caminho .esc-rot b{display:block;font-size:17px;font-weight:700;line-height:1.15}
+.escolha.caminho > svg.icone{border-radius:50%}
+.escolha.caminho:disabled > svg.icone{border-radius:11px}
+
+/* O capítulo que espera aqui: a missão da história, em dourado, com a
+   marca de exclamação pulsando como a do mapa dos jogos. O gancho é
+   texto de história, então volta pra letra de ler. */
+.escolha.chamado{
+  --ac:var(--destaque);
+  min-height:70px;padding-block:12px;
+  border-color:color-mix(in srgb, var(--destaque) 55%, transparent);
+  background:
+    linear-gradient(112deg, transparent 0 62%, rgba(255,255,255,.07) 62% 74%, transparent 74%),
+    radial-gradient(130% 160% at 0% 50%, color-mix(in srgb, var(--destaque) 20%, transparent), transparent 62%),
+    linear-gradient(180deg, color-mix(in srgb, var(--destaque) 12%, var(--painel-2)), var(--bg-2));
+  box-shadow:0 4px 0 color-mix(in srgb, var(--destaque) 32%, #05070f), 0 0 30px -12px var(--destaque-sombra),
+             inset 0 1px 0 rgba(255,255,255,.12);
+}
+.escolha.chamado > svg.icone{
+  width:40px;height:40px;padding:8px;border-radius:50%;stroke-width:2.8;color:#1b1500;
+  background:radial-gradient(circle at 50% 30%, color-mix(in srgb, var(--destaque) 62%, #fff), var(--destaque) 58%, var(--destaque-esc));
+  box-shadow:0 0 0 3px color-mix(in srgb, var(--destaque) 25%, transparent), 0 0 18px -2px var(--destaque-sombra);
+  animation:chamado 2.4s ease-in-out infinite;
+}
+.escolha.chamado:hover:not(:disabled) > svg.icone{color:#1b1500;background:radial-gradient(circle at 50% 30%, #fff, var(--destaque) 62%)}
+.escolha.chamado .esc-rot{font-size:15px;line-height:1.45}
+.escolha.chamado .esc-rot small{color:var(--destaque)}
+.escolha.chamado:disabled > svg.icone{animation:none;color:var(--texto);background:var(--borda-forte);box-shadow:none}
+@keyframes chamado{
+  0%,100%{box-shadow:0 0 0 3px color-mix(in srgb, var(--destaque) 25%, transparent), 0 0 18px -2px var(--destaque-sombra)}
+  50%{box-shadow:0 0 0 7px color-mix(in srgb, var(--destaque) 10%, transparent), 0 0 26px 0 var(--destaque-sombra)}
+}
+
+/* as ações da cena que não são frase: encarar (o vermelho do Lutar),
+   rolar o teste (o ciano da Pokédex), rolar com Vontade (o roxo dela)
+   e encerrar o capítulo (dourado). Já entram tingidas. */
+.escolha.luta{--ac:#ef5350}
+.escolha.teste{--ac:#4dd0e1}
+.escolha.vontade{--ac:#a77bff}
+.escolha.fim{--ac:var(--destaque)}
+.escolha.luta, .escolha.teste, .escolha.vontade, .escolha.fim{
+  min-height:56px;font-family:var(--letra-hud, var(--fonte));font-size:16px;font-weight:600;
+  border-color:color-mix(in srgb, var(--ac) 50%, transparent);
+  background:
+    linear-gradient(112deg, transparent 0 66%, rgba(255,255,255,.05) 66% 77%, transparent 77%),
+    linear-gradient(180deg, color-mix(in srgb, var(--ac) 18%, var(--painel-2)), color-mix(in srgb, var(--ac) 6%, var(--bg-2)));
+  box-shadow:0 3px 0 color-mix(in srgb, var(--ac) 26%, #05070f), 0 12px 20px -16px rgba(0,0,0,.95),
+             inset 0 1px 0 rgba(255,255,255,.1);
+}
+.escolha.olhar{--ac:#90caf9}
+/* as de serviço (o balcão do Centro, perguntar o nome) ficam um tom
+   abaixo: não mudam o rumo da história */
 .escolha.utilitaria, .escolha.discreta{
-  font-size:13.5px;color:var(--texto-fraco);
-  background:transparent;border-style:dashed;
+  min-height:44px;font-size:14px;color:var(--texto-fraco);
+  background:transparent;border-style:dashed;box-shadow:none;
 }
-.escolha.utilitaria:hover, .escolha.discreta:hover{color:var(--texto)}
-.escolha.perigo{border-color:color-mix(in srgb, var(--perigo) 45%, var(--borda))}
-.escolha.perigo:hover{border-color:var(--perigo);background:color-mix(in srgb, var(--perigo) 10%, var(--bg-2))}
-.escolha.perigo:hover::before{background:var(--perigo);color:#fff}
+.escolha.utilitaria > svg.icone, .escolha.discreta > svg.icone{width:28px;height:28px;padding:5px;border-radius:9px}
+.escolha.utilitaria:hover:not(:disabled), .escolha.discreta:hover:not(:disabled){color:var(--texto)}
+.escolha.perigo{--ac:var(--perigo);border-color:color-mix(in srgb, var(--perigo) 45%, var(--borda))}
 
 /* ---------- campo livre ---------- */
 .acao-livre{
-  margin-top:20px;border-style:solid;border-color:var(--borda);
-  background:linear-gradient(180deg, color-mix(in srgb, var(--bg) 70%, transparent), var(--bg-2));
+  margin-top:20px;padding:14px 16px 15px;border-radius:14px;
+  border:1px solid color-mix(in srgb, var(--borda-forte) 60%, transparent);
+  background:linear-gradient(180deg, color-mix(in srgb, var(--bg) 72%, transparent), var(--bg-2));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
 }
-.acao-livre label{display:flex;align-items:center;gap:8px;font-weight:600;font-size:11px;letter-spacing:.12em}
+.acao-livre label{
+  display:flex;align-items:center;gap:8px;margin-bottom:9px;
+  font-family:var(--letra-hud, var(--fonte));font-weight:700;font-size:11px;letter-spacing:.16em;
+}
 .acao-livre label::before{
   content:'';width:14px;height:14px;flex:0 0 auto;background:var(--texto-fraco);
   -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 20h4L19 9l-4-4L4 16z'/%3E%3Cpath d='M14 6l4 4'/%3E%3C/svg%3E") center/contain no-repeat;
           mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 20h4L19 9l-4-4L4 16z'/%3E%3Cpath d='M14 6l4 4'/%3E%3C/svg%3E") center/contain no-repeat;
 }
-.linha-acao input{border-radius:9px;padding:11px 14px}
+.linha-acao input{
+  border-radius:11px;padding:12px 14px;
+  background:rgba(0,0,0,.28);box-shadow:inset 0 2px 6px rgba(0,0,0,.35);
+}
 .linha-acao input::placeholder{color:var(--texto-tenue)}
+.linha-acao .btn.destaque{
+  border-radius:11px;padding-inline:20px;
+  font-family:var(--letra-hud, var(--fonte));font-size:15px;font-weight:700;letter-spacing:.02em;
+  box-shadow:0 3px 0 var(--destaque-esc), 0 8px 16px -10px var(--destaque-sombra);
+}
+.linha-acao .btn.destaque:active{transform:translateY(2px);box-shadow:0 1px 0 var(--destaque-esc)}
 
 /* ---------- avisos: o que a escolha mudou ---------- */
 .avisos:not(:empty){margin-top:16px}
@@ -12825,8 +13352,18 @@ svg.icone{flex:0 0 auto;width:18px;height:18px;vertical-align:-3px}
   .narrativa .fala.com-rosto{grid-template-columns:48px minmax(0,1fr);column-gap:10px}
   .narrativa .fala-retrato{width:48px;height:48px;border-radius:8px}
   .narrativa p.entre-falas{margin-left:14px}
-  .escolha{padding:10px 12px 10px 46px;font-size:14.5px}
-  .escolha::before{left:15px;width:22px;height:22px}
+  .escolha{font-size:14.5px;padding-right:34px}
+  #app .escolhas > .escolha{padding-left:46px}
+  #app .escolhas > .escolha::before{left:11px;width:24px;height:24px;margin-top:-12px;font-size:12px}
+  .escolha::after{right:13px;width:7px;height:7px;margin-top:-3.5px}
+  .escolha.com-icone{gap:10px}
+  .escolha > svg.icone{width:31px;height:31px;padding:6px;border-radius:10px}
+  .escolha.menu, .escolha.luta, .escolha.teste, .escolha.vontade, .escolha.fim{font-size:15px;min-height:52px}
+  .escolha.caminho .esc-rot b{font-size:16px}
+  .escolha.chamado > svg.icone{width:36px;height:36px;padding:7px}
+  .narrativa.descricao-lugar{padding:13px 14px 2px}
+  .narrativa.descricao-lugar p.recepcao{margin-inline:-14px;padding-inline:14px}
+  .painel:has(> .cap-cabecalho) > h3{margin-block:20px 10px}
 }
 
 /* ============================================================
@@ -14267,47 +14804,7 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
   .narrativa .fala.voce{margin-left:auto;margin-right:9px}
 }
 
-.escolhas{display:flex;flex-direction:column;gap:6px;margin-top:14px}
-.escolha{
-  text-align:left;
-  background:linear-gradient(180deg, var(--bg-2), color-mix(in srgb, var(--bg-2) 86%, #000));
-  border:1px solid var(--borda);color:var(--texto);
-  padding:9px 14px 9px 34px;border-radius:var(--raio-sm);line-height:1.42;
-  position:relative;overflow:hidden;
-  animation:surge .35s var(--suave) both;
-}
-.escolhas .escolha:nth-child(1){animation-delay:.02s}
-.escolhas .escolha:nth-child(2){animation-delay:.07s}
-.escolhas .escolha:nth-child(3){animation-delay:.12s}
-.escolhas .escolha:nth-child(4){animation-delay:.17s}
-.escolhas .escolha:nth-child(n+5){animation-delay:.22s}
-/* barra de acento que cresce da esquerda */
-.escolha::after{
-  content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
-  background:var(--destaque);transform:scaleY(0);transform-origin:center;
-  transition:transform .25s var(--mola);
-}
-.escolha::before{
-  content:'';position:absolute;left:12px;top:50%;transform:translateY(-50%);
-  width:10px;height:10px;border-radius:50%;
-  background:linear-gradient(180deg, var(--borda-forte) 0 45%, var(--bg) 45% 55%, var(--texto-tenue) 55% 100%);
-  box-shadow:0 0 0 1.2px var(--borda-forte);
-  transition:transform .25s var(--mola), background .25s var(--suave), box-shadow .25s var(--suave);
-}
-.escolha:hover{
-  border-color:var(--borda-forte);
-  background:linear-gradient(180deg, var(--painel-2), var(--painel));
-  transform:translateX(3px);
-  box-shadow:0 8px 20px -12px rgba(0,0,0,.7);
-}
-.escolha:hover::before{
-  background:linear-gradient(180deg, var(--perigo) 0 45%, #1a1a20 45% 55%, #f2f4f8 55% 100%);
-  box-shadow:0 0 0 1.2px #1a1a20, 0 0 10px -2px var(--destaque-sombra);
-  transform:translateY(-50%) translateX(2px) scale(1.15);
-}
-.escolha:hover::after{transform:scaleY(1)}
-.escolha:active{transform:translateX(1px) scale(.995)}
-.escolha:focus-visible{outline:none;border-color:var(--destaque);box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(--destaque-sombra)}
+/* opções: o menu está em "CAIXA DE DIÁLOGO, OPÇÕES E COLUNA DE LEITURA" */
 
 /* ---------- avisos / consequências ---------- */
 .avisos{margin-top:18px;display:flex;flex-direction:column;gap:7px}
@@ -14778,7 +15275,7 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
              inset 0 1px 0 rgba(255,255,255,.3);
   text-shadow:0 1px 2px rgba(0,0,0,.4);
   transition:transform .12s var(--suave), box-shadow .12s var(--suave), filter .15s var(--suave);
-  animation:surge .3s var(--suave) both;
+  animation:surge .3s var(--suave) backwards;
 }
 /* o brilho que corre na diagonal, como no menu dos jogos */
 .mb-btn::before{
@@ -14844,7 +15341,7 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
   box-shadow:0 4px 0 color-mix(in srgb, var(--tc) 35%, #000), 0 12px 18px -12px rgba(0,0,0,.9),
              inset 0 1px 0 rgba(255,255,255,.2);
   transition:transform .12s var(--suave), box-shadow .12s var(--suave), filter .15s var(--suave);
-  animation:surge .3s var(--suave) both;
+  animation:surge .3s var(--suave) backwards;
 }
 .golpe-btn .g-tipo{
   grid-area:tipo;align-self:stretch;display:grid;place-items:center;min-width:74px;padding:0 9px;
@@ -14876,7 +15373,7 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
   background:linear-gradient(180deg, var(--bg-2), color-mix(in srgb, var(--bg-2) 86%, #000));
   border:1px solid var(--borda);border-radius:var(--raio-sm);padding:10px 12px;font-size:13px;
   transition:transform .2s var(--mola), border-color .2s var(--suave), box-shadow .22s var(--suave);
-  animation:surge .35s var(--suave) both;
+  animation:surge .35s var(--suave) backwards;
 }
 .carta:hover{transform:translateY(-2px);border-color:var(--borda-forte);box-shadow:0 10px 24px -14px rgba(0,0,0,.8)}
 .carta.morto{opacity:.5;border-style:dashed;border-color:var(--perigo)}
@@ -16377,21 +16874,59 @@ h3.cat-item{
 
 /* ============================================================
    PORTAS — os lugares da cidade, que não são "o que fazer"
+   Botão na cor da casa, como o ícone do mapa dos jogos de hoje: o
+   Centro vermelho, a loja azul, o ginásio dourado, a sua casa verde.
+   O desenho numa moeda da cor cheia, o nome em letra de placa, e as
+   portas enchem a linha (--cols vem da conta de quantas são: nenhuma
+   sobra pela metade com a casa vazia do lado).
    ============================================================ */
-/* dois por linha, igual à barra de ação do combate */
-.portas{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:6px}
+.portas{--cols:2;display:flex;flex-wrap:wrap;gap:10px;margin-bottom:4px}
 .porta{
-  display:flex;flex-direction:column;gap:2px;text-align:left;
-  padding:10px 12px;border:1px solid var(--borda);border-radius:6px;
-  background:color-mix(in srgb, var(--destaque) 5%, var(--bg-2));
-  color:var(--texto);cursor:pointer;font-family:inherit;
-  transition:border-color .15s,background .15s,transform .1s;
+  --ac:#8d97bd;
+  flex:1 1 calc((100% - (var(--cols) - 1) * 10px) / var(--cols));min-width:0;
+  position:relative;overflow:hidden;
+  display:flex;align-items:center;gap:12px;
+  min-height:64px;padding:10px 34px 10px 11px;border-radius:15px;text-align:left;
+  font-family:var(--letra-hud, var(--fonte));color:#fff;cursor:pointer;
+  background:
+    linear-gradient(112deg, transparent 0 62%, rgba(255,255,255,.07) 62% 73%, transparent 73%),
+    linear-gradient(180deg, color-mix(in srgb, var(--ac) 34%, var(--painel-2)), color-mix(in srgb, var(--ac) 14%, var(--bg)));
+  border:1px solid color-mix(in srgb, var(--ac) 55%, transparent);
+  box-shadow:0 4px 0 color-mix(in srgb, var(--ac) 30%, #05070f), 0 14px 22px -16px rgba(0,0,0,.95),
+             inset 0 1px 0 rgba(255,255,255,.14);
+  text-shadow:0 1px 2px rgba(0,0,0,.5);
+  transition:transform .14s var(--suave), box-shadow .14s var(--suave), filter .15s var(--suave), border-color .15s var(--suave);
+  animation:surge .35s var(--suave) backwards;
 }
-.porta:hover{border-color:var(--destaque);background:color-mix(in srgb, var(--destaque) 11%, var(--bg-2))}
-.porta:active{transform:translateY(1px)}
-.porta-nome{font-size:13.5px;font-weight:600;letter-spacing:.01em}
-.porta-sub{font-size:11.5px;color:var(--texto-fraco);line-height:1.4}
-@media (max-width:620px){ .portas{grid-template-columns:1fr} }
+.portas .porta:nth-child(2){animation-delay:.05s}
+.portas .porta:nth-child(3){animation-delay:.1s}
+.portas .porta:nth-child(n+4){animation-delay:.15s}
+.porta > svg.icone{
+  width:40px;height:40px;padding:8px;flex:0 0 auto;border-radius:50%;stroke-width:2;color:#fff;
+  background:radial-gradient(circle at 50% 30%, color-mix(in srgb, var(--ac) 65%, #fff), var(--ac) 58%, color-mix(in srgb, var(--ac) 70%, #000));
+  box-shadow:0 0 0 2px rgba(255,255,255,.16), 0 4px 10px -4px rgba(0,0,0,.85);
+}
+.porta-nome{flex:1 1 auto;min-width:0;font-size:15px;font-weight:600;line-height:1.2;letter-spacing:.01em}
+.porta-nome small{display:block;margin-top:3px;font:400 12.5px/1.3 var(--fonte);letter-spacing:0;color:rgba(255,255,255,.78)}
+.porta::after{
+  content:'';position:absolute;right:15px;top:50%;width:8px;height:8px;margin-top:-4px;
+  border-top:2px solid currentColor;border-right:2px solid currentColor;transform:rotate(45deg);
+  opacity:.5;transition:transform .22s var(--mola), opacity .18s var(--suave);
+}
+.porta:hover{filter:brightness(1.1) saturate(1.05);transform:translateY(-2px);border-color:color-mix(in srgb, var(--ac) 80%, #fff)}
+.porta:hover::after{opacity:1;transform:translateX(3px) rotate(45deg)}
+.porta:active{transform:translateY(3px);
+  box-shadow:0 1px 0 color-mix(in srgb, var(--ac) 30%, #05070f), inset 0 1px 0 rgba(255,255,255,.1)}
+.porta:focus-visible{outline:2px solid #fff;outline-offset:2px}
+@media (max-width:620px){
+  .portas{gap:8px}
+  .porta{flex-basis:calc((100% - (min(var(--cols), 2) - 1) * 8px) / min(var(--cols), 2));
+    min-height:58px;padding:9px 26px 9px 9px;gap:10px;border-radius:13px}
+  .porta > svg.icone{width:34px;height:34px;padding:7px}
+  .porta-nome{font-size:14px}
+  .porta-nome small{font-size:11.5px}
+  .porta::after{right:11px;width:7px;height:7px;margin-top:-3.5px}
+}
 
 /* fala que continua a anterior: sem repetir o nome, colada na de cima */
 .narrativa .fala.segue{margin-top:-8px;border-top-left-radius:2px}
@@ -16408,15 +16943,6 @@ h3.cat-item{
   margin-top:10px;padding-left:11px;border-left:2px solid var(--destaque);
   color:var(--texto-fraco);font-style:italic;
 }
-
-/* Ação avulsa que não é trilha da história: perguntar o nome de quem
-   está falando. Fica mais apagada que uma escolha de verdade porque
-   não muda o rumo — muda só como o jogo chama a pessoa. */
-.escolha.discreta{
-  opacity:.72;
-  font-style:italic;
-}
-.escolha.discreta:hover{ opacity:1; }
 
 /* Capacidade de campo que o time ainda não tem. */
 .linha .v.nao{ opacity:.55; font-style:italic; }
@@ -16564,7 +17090,7 @@ h3.cat-item{
   z-index:60;display:flex;flex-direction:column;gap:6px;align-items:center;pointer-events:none;width:min(92vw,460px)}
 .recado{background:var(--bg-2);border:1px solid var(--borda-forte);color:var(--texto);border-radius:10px;
   padding:9px 14px;font-size:13.5px;box-shadow:0 8px 24px -10px rgba(0,0,0,.6);
-  animation:surge .3s var(--suave) both;transition:opacity .45s, transform .45s}
+  animation:surge .3s var(--suave) backwards;transition:opacity .45s, transform .45s}
 .recado.golpeNovo{border-color:color-mix(in srgb, var(--bom) 60%, var(--borda))}
 .recado.saindo{opacity:0;transform:translateY(6px)}
 
@@ -16863,9 +17389,6 @@ h3.com-mapa{display:flex;align-items:center;justify-content:space-between;gap:8p
 .barra-exp i{display:block;height:100%;background:linear-gradient(90deg,#2f6fd6,#5fb4ff);transition:width .6s var(--suave)}
 .barra-exp.vaga{visibility:hidden}
 .lutador .ficha .barra + .barra-exp{margin-top:2px}
-/* atalho que não é escolha da história: fica mais apagado */
-.escolha.utilitaria{border-style:dashed;opacity:.8;font-size:.95em}
-.escolha.utilitaria:hover{opacity:1}
 
 /* mural de recados do Centro: cortiça e papel preso com percevejo */
 .mural{
@@ -16957,9 +17480,6 @@ body.com-cenario .topo{
 }
 @media (prefers-reduced-motion: reduce){ body.com-cenario::before{animation:none} }
 
-/* porta que existe mas ainda não abre: aparece, diz o que falta, não clica */
-.escolha:disabled{opacity:.55;cursor:not-allowed;filter:saturate(.6)}
-.escolha:disabled:hover{transform:none}
 
 /* ligação feita: a conversa acontece dentro da ficha do PokéNav */
 .nav-conversa{margin:10px 0 6px;max-height:52vh;overflow:auto;font-size:14px}
@@ -17192,9 +17712,6 @@ html[data-moldura="grafite"], body[data-moldura="grafite"]{
 
 /* ícones desenhados (js/data/icones.js) */
 svg.icone{flex:0 0 auto;width:18px;height:18px;vertical-align:-3px}
-.escolha.com-icone{display:flex;align-items:center;gap:10px;text-align:left}
-.porta{flex-direction:row;align-items:center;gap:10px}
-.porta .porta-icone{width:24px;height:24px;opacity:.9}
 .abas-mochila .aba{display:inline-flex;align-items:center;gap:5px}
 .abas-mochila .aba svg.icone{width:15px;height:15px}
 
@@ -17286,6 +17803,9 @@ svg.icone{flex:0 0 auto;width:18px;height:18px;vertical-align:-3px}
     var(--cenario-lugar, linear-gradient(135deg, var(--painel-2), var(--bg)));
   background-blend-mode:normal, normal, multiply, normal;
   background-size:cover;background-position:center 10%;background-repeat:no-repeat;
+  /* as camadas escuras cobrem a borda também: sem isso a última fileira
+     da arte aparecia crua, numa linha clara embaixo da placa */
+  background-origin:border-box;
   image-rendering:pixelated;
   box-shadow:0 18px 34px -24px rgba(0,0,0,.95), inset 0 1px 0 rgba(255,255,255,.08);
 }
@@ -17363,70 +17883,256 @@ svg.icone{flex:0 0 auto;width:18px;height:18px;vertical-align:-3px}
 /* narração curta entre falas fica presa à conversa, não solta */
 .narrativa p.entre-falas{margin:-2px 0 10px 77px;font-size:13.5px}
 
-/* ---------- opções ---------- */
-/* Menu dos jogos: cada opção numerada pela tecla que a escolhe (1 a 9),
-   e o cursor ▶ aparece em quem está na mira do mouse ou do teclado. */
-.escolhas{gap:7px;margin-top:18px}
+/* ---------- seções da tela de história ----------
+   O cabeçalho de seção no idioma do HUD: letra de placa, um losango
+   na cor da seção e a linha que corre até a borda. As cores são as dos
+   comandos da luta — história dourada, porta vermelha, ação verde,
+   caminho azul. */
+.painel:has(> .cap-cabecalho) > h3{
+  display:flex;align-items:center;gap:10px;margin-block:24px 11px;
+  font-family:var(--letra-hud, var(--fonte));font-size:12px;font-weight:700;letter-spacing:.16em;
+  color:var(--texto-fraco);
+}
+.painel:has(> .cap-cabecalho) > h3::before{
+  content:'';flex:0 0 auto;width:8px;height:8px;border-radius:2px;transform:rotate(45deg);
+  background:var(--sec, var(--destaque));box-shadow:0 0 10px -1px var(--sec, var(--destaque));
+}
+.painel:has(> .cap-cabecalho) > h3::after{
+  content:'';flex:1 1 auto;height:1px;order:1;
+  background:linear-gradient(90deg, color-mix(in srgb, var(--sec, var(--destaque)) 45%, var(--borda)), transparent);
+}
+.painel:has(> .cap-cabecalho) > h3 > *{order:2}
+h3.sec-aqui{--sec:var(--destaque)}
+h3.sec-portas{--sec:#ef5350}
+h3.sec-fazer{--sec:#4cc38a}
+h3.sec-ir{--sec:#5aa7ff}
+
+/* ---------- a placa do lugar ganha legenda ----------
+   Na tela do mapa a descrição encosta embaixo da placa, na mesma
+   moldura, e "como o lugar te recebe" vira o rodapé dela. */
+.cap-cabecalho:has(+ .descricao-lugar){margin-bottom:0;border-bottom-left-radius:0;border-bottom-right-radius:0;border-bottom-color:transparent}
+.narrativa.descricao-lugar{
+  margin-block:0 4px;padding:15px 20px 3px;overflow:hidden;
+  border:1px solid rgba(255,255,255,.1);border-top:0;border-radius:0 0 16px 16px;
+  background:linear-gradient(180deg, rgba(5,8,22,.6), color-mix(in srgb, var(--bg) 55%, transparent));
+  box-shadow:0 18px 34px -24px rgba(0,0,0,.95);
+}
+.narrativa.descricao-lugar:has(> .recepcao:last-child){padding-bottom:0}
+.narrativa.descricao-lugar p.recepcao{
+  display:flex;gap:9px;align-items:baseline;
+  margin:4px -20px 0;padding:10px 20px 12px;border-left:0;border-top:1px solid rgba(255,255,255,.08);
+  background:rgba(0,0,0,.2);color:var(--texto-fraco);font-size:14.5px;
+}
+.narrativa.descricao-lugar p.recepcao::before{
+  content:'';flex:0 0 auto;width:7px;height:7px;border-radius:50%;transform:translateY(-1px);
+  background:var(--destaque);box-shadow:0 0 8px var(--destaque-sombra);
+}
+
+/* ---------- opções ----------
+   O menu dos jogos de hoje. Toda opção é uma linha com espessura
+   embaixo, que afunda quando aperta (como os comandos da luta), e o
+   brilho na diagonal. Na tela, a tecla que escolhe fica numa bolinha
+   de botão de controle à esquerda (Teclas numera de 1 a 9); na janela,
+   que não tem tecla, quem abre a linha é o desenho. A cor da linha
+   (--ac) é a da coisa: dourada na história, a da ação no lugar.
+   A entrada é "backwards", nunca "both": animação que segura o último
+   quadro manda no transform e na opacidade, e aí o hover não subia
+   e a opção fechada não apagava. */
+.escolhas{display:flex;flex-direction:column;gap:9px;margin-top:18px}
 .escolha{
-  padding:11px 16px 11px 54px;border-radius:10px;font-size:15px;line-height:1.45;
-  background:linear-gradient(180deg, color-mix(in srgb, var(--painel-2) 70%, var(--bg-2)), var(--bg-2));
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
+  --ac:var(--destaque);
+  position:relative;overflow:hidden;
+  display:block;text-align:left;color:var(--texto);
+  min-height:50px;padding:12px 40px 12px 16px;
+  border-radius:14px;font-size:15px;line-height:1.45;
+  background:
+    linear-gradient(112deg, transparent 0 66%, rgba(255,255,255,.035) 66% 77%, transparent 77%),
+    linear-gradient(180deg, color-mix(in srgb, var(--painel-2) 72%, var(--borda)), var(--bg-2));
+  border:1px solid color-mix(in srgb, var(--borda-forte) 72%, transparent);
+  box-shadow:0 3px 0 color-mix(in srgb, var(--bg) 50%, #000), 0 12px 20px -16px rgba(0,0,0,.95),
+             inset 0 1px 0 rgba(255,255,255,.07);
+  transition:transform .14s var(--suave), box-shadow .14s var(--suave),
+             border-color .2s var(--suave), background .2s var(--suave), color .2s var(--suave);
+  animation:surge .35s var(--suave) backwards;
 }
-.escolha::before{
-  content:'•';
-  left:18px;width:24px;height:24px;border-radius:7px;
+.escolhas .escolha:nth-child(1){animation-delay:.02s}
+.escolhas .escolha:nth-child(2){animation-delay:.07s}
+.escolhas .escolha:nth-child(3){animation-delay:.12s}
+.escolhas .escolha:nth-child(4){animation-delay:.17s}
+.escolhas .escolha:nth-child(n+5){animation-delay:.22s}
+/* a seta da direita, que anda quando a linha está na mira */
+.escolha::after{
+  content:'';position:absolute;right:17px;top:50%;width:8px;height:8px;margin-top:-4px;
+  border-top:2px solid currentColor;border-right:2px solid currentColor;transform:rotate(45deg);
+  opacity:.32;transition:transform .22s var(--mola), opacity .18s var(--suave), color .18s var(--suave);
+}
+/* a tecla: bolinha de botão de controle */
+#app .escolhas > .escolha{padding-left:54px}
+#app .escolhas > .escolha::before{
+  content:'';position:absolute;left:14px;top:50%;width:26px;height:26px;margin-top:-13px;border-radius:50%;
   display:grid;place-items:center;
-  font:700 12px/1 var(--mono);color:var(--texto-fraco);
-  background:var(--bg);box-shadow:inset 0 0 0 1px var(--borda-forte);
+  font:700 12.5px/1 var(--letra-hud, var(--fonte));color:var(--texto);
+  background:radial-gradient(circle at 50% 28%, var(--borda-forte), var(--bg) 80%);
+  box-shadow:inset 0 0 0 1.5px color-mix(in srgb, var(--texto-fraco) 50%, transparent), 0 2px 0 rgba(0,0,0,.5);
+  transition:background .18s var(--suave), color .18s var(--suave), box-shadow .18s var(--suave);
 }
-.escolha[data-tecla]::before{content:attr(data-tecla)}
+#app .escolhas > .escolha[data-tecla]::before{content:attr(data-tecla)}
+/* fechada não tem tecla: a casa da bolinha fica, vazia */
+#app .escolhas > .escolha:disabled::before{visibility:hidden}
+.escolha:hover:not(:disabled), .escolha:focus-visible{
+  border-color:color-mix(in srgb, var(--ac) 65%, transparent);
+  background:
+    linear-gradient(112deg, transparent 0 66%, rgba(255,255,255,.06) 66% 77%, transparent 77%),
+    linear-gradient(180deg, color-mix(in srgb, var(--ac) 15%, var(--painel-2)), color-mix(in srgb, var(--ac) 6%, var(--bg-2)));
+  transform:translateY(-1px);
+  box-shadow:0 4px 0 color-mix(in srgb, var(--ac) 28%, #05070f), 0 14px 26px -16px color-mix(in srgb, var(--ac) 55%, transparent),
+             inset 0 1px 0 rgba(255,255,255,.1);
+}
+.escolha:focus-visible{outline:2px solid color-mix(in srgb, var(--ac) 80%, #fff);outline-offset:2px}
+#app .escolhas > .escolha:hover:not(:disabled)::before, #app .escolhas > .escolha:focus-visible::before{
+  background:var(--ac);color:#15120a;
+  box-shadow:0 0 0 2px color-mix(in srgb, var(--ac) 35%, transparent), 0 0 14px -2px var(--ac);
+}
+.escolha:hover:not(:disabled)::after, .escolha:focus-visible::after{opacity:1;color:var(--ac);transform:translateX(3px) rotate(45deg)}
+.escolha:active:not(:disabled){
+  transform:translateY(2px);
+  box-shadow:0 1px 0 color-mix(in srgb, var(--ac) 28%, #05070f), inset 0 1px 0 rgba(255,255,255,.06);
+}
+/* porta que existe mas ainda não abre: aparece, diz o que falta, não clica */
+.escolha:disabled{opacity:.62;cursor:not-allowed;filter:saturate(.55);box-shadow:none}
+.escolha:disabled::after{display:none}
+/* fala escolhida entre aspas lê como fala */
+.escolha.diz{font-style:italic}
+.escolha .pd{color:var(--texto-fraco);font-size:.88em}
 /* Opção solta numa janela (o Centro, "Qual Pokébola?", "Em quem?",
    "Equipar em quem?"): a mesma linha de menu do resto do jogo, de ponta
    a ponta e com folga. Sem isto cada botão tinha a largura do próprio
    texto e encostava no de baixo. */
 .modal-corpo > .escolha{width:100%}
-.modal-corpo > .escolha:not(.com-icone){display:block}
-.modal-corpo > .escolha + .escolha{margin-top:7px}
-.escolha::after{width:auto;right:auto;left:0;background:none;transform:none;
-  content:'▶';top:50%;bottom:auto;left:4px;translate:-4px -50%;
-  font-size:10px;color:var(--destaque);opacity:0;
-  transition:opacity .18s var(--suave), translate .25s var(--mola);
+.modal-corpo > .escolha + .escolha{margin-top:8px}
+
+/* com desenho: o desenho numa pastilha da cor dele, à esquerda do texto */
+.escolha.com-icone{display:flex;align-items:center;gap:12px}
+.escolha > svg.icone{
+  width:34px;height:34px;padding:7px;flex:0 0 auto;border-radius:11px;stroke-width:2;
+  color:color-mix(in srgb, var(--ac) 70%, #fff);
+  background:color-mix(in srgb, var(--ac) 20%, rgba(0,0,0,.25));
+  box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--ac) 45%, transparent);
+  transition:background .18s var(--suave), color .18s var(--suave);
 }
-.escolha:hover, .escolha:focus-visible{
-  border-color:color-mix(in srgb, var(--destaque) 55%, var(--borda-forte));
-  background:linear-gradient(180deg, color-mix(in srgb, var(--destaque) 8%, var(--painel-2)), var(--painel));
-  transform:translateX(4px);
+.escolha:hover:not(:disabled) > svg.icone, .escolha:focus-visible > svg.icone{
+  color:#fff;background:color-mix(in srgb, var(--ac) 55%, rgba(0,0,0,.2));
 }
-.escolha:hover::before, .escolha:focus-visible::before{
-  background:var(--destaque);color:#1b1500;box-shadow:0 0 12px -3px var(--destaque-sombra);
-  transform:translateY(-50%);
+.esc-rot{flex:1 1 auto;min-width:0}
+.esc-rot small{
+  display:block;margin-bottom:2px;
+  font:700 10.5px/1.3 var(--letra-hud, var(--fonte));letter-spacing:.14em;text-transform:uppercase;color:var(--texto-fraco);
 }
-.escolha:hover::after, .escolha:focus-visible::after{opacity:1;translate:2px -50%;transform:none}
-/* fala escolhida entre aspas lê como fala */
-.escolha.diz{font-style:italic}
-/* as opções de serviço (balcão, perguntar o nome) ficam um tom abaixo */
+.esc-rot small.esc-det{
+  margin:3px 0 0;font:500 12.5px/1.35 var(--fonte);letter-spacing:0;text-transform:none;
+}
+.esc-trava{display:block;margin-top:3px;font:400 12.5px/1.4 var(--fonte);letter-spacing:0;color:var(--texto-fraco)}
+.esc-custo{
+  flex:0 0 auto;display:inline-flex;align-items:center;gap:5px;margin-left:auto;
+  padding:4px 10px 4px 8px;border-radius:999px;white-space:nowrap;
+  font:600 12px/1.2 var(--letra-hud, var(--fonte));letter-spacing:.02em;color:var(--texto-fraco);
+  background:rgba(0,0,0,.24);box-shadow:inset 0 0 0 1px var(--borda);
+}
+.esc-custo svg.icone{width:15px;height:15px;color:var(--ac);stroke-width:2}
+
+/* o menu do lugar: comando, não frase, então na letra de placa */
+.escolha.menu{
+  min-height:56px;padding-block:9px;
+  font-family:var(--letra-hud, var(--fonte));font-size:16px;font-weight:600;letter-spacing:.005em;
+}
+/* a placa de estrada: pra que lado, e o nome do lugar grande */
+.escolha.caminho .esc-rot b{display:block;font-size:17px;font-weight:700;line-height:1.15}
+.escolha.caminho > svg.icone{border-radius:50%}
+.escolha.caminho:disabled > svg.icone{border-radius:11px}
+
+/* O capítulo que espera aqui: a missão da história, em dourado, com a
+   marca de exclamação pulsando como a do mapa dos jogos. O gancho é
+   texto de história, então volta pra letra de ler. */
+.escolha.chamado{
+  --ac:var(--destaque);
+  min-height:70px;padding-block:12px;
+  border-color:color-mix(in srgb, var(--destaque) 55%, transparent);
+  background:
+    linear-gradient(112deg, transparent 0 62%, rgba(255,255,255,.07) 62% 74%, transparent 74%),
+    radial-gradient(130% 160% at 0% 50%, color-mix(in srgb, var(--destaque) 20%, transparent), transparent 62%),
+    linear-gradient(180deg, color-mix(in srgb, var(--destaque) 12%, var(--painel-2)), var(--bg-2));
+  box-shadow:0 4px 0 color-mix(in srgb, var(--destaque) 32%, #05070f), 0 0 30px -12px var(--destaque-sombra),
+             inset 0 1px 0 rgba(255,255,255,.12);
+}
+.escolha.chamado > svg.icone{
+  width:40px;height:40px;padding:8px;border-radius:50%;stroke-width:2.8;color:#1b1500;
+  background:radial-gradient(circle at 50% 30%, color-mix(in srgb, var(--destaque) 62%, #fff), var(--destaque) 58%, var(--destaque-esc));
+  box-shadow:0 0 0 3px color-mix(in srgb, var(--destaque) 25%, transparent), 0 0 18px -2px var(--destaque-sombra);
+  animation:chamado 2.4s ease-in-out infinite;
+}
+.escolha.chamado:hover:not(:disabled) > svg.icone{color:#1b1500;background:radial-gradient(circle at 50% 30%, #fff, var(--destaque) 62%)}
+.escolha.chamado .esc-rot{font-size:15px;line-height:1.45}
+.escolha.chamado .esc-rot small{color:var(--destaque)}
+.escolha.chamado:disabled > svg.icone{animation:none;color:var(--texto);background:var(--borda-forte);box-shadow:none}
+@keyframes chamado{
+  0%,100%{box-shadow:0 0 0 3px color-mix(in srgb, var(--destaque) 25%, transparent), 0 0 18px -2px var(--destaque-sombra)}
+  50%{box-shadow:0 0 0 7px color-mix(in srgb, var(--destaque) 10%, transparent), 0 0 26px 0 var(--destaque-sombra)}
+}
+
+/* as ações da cena que não são frase: encarar (o vermelho do Lutar),
+   rolar o teste (o ciano da Pokédex), rolar com Vontade (o roxo dela)
+   e encerrar o capítulo (dourado). Já entram tingidas. */
+.escolha.luta{--ac:#ef5350}
+.escolha.teste{--ac:#4dd0e1}
+.escolha.vontade{--ac:#a77bff}
+.escolha.fim{--ac:var(--destaque)}
+.escolha.luta, .escolha.teste, .escolha.vontade, .escolha.fim{
+  min-height:56px;font-family:var(--letra-hud, var(--fonte));font-size:16px;font-weight:600;
+  border-color:color-mix(in srgb, var(--ac) 50%, transparent);
+  background:
+    linear-gradient(112deg, transparent 0 66%, rgba(255,255,255,.05) 66% 77%, transparent 77%),
+    linear-gradient(180deg, color-mix(in srgb, var(--ac) 18%, var(--painel-2)), color-mix(in srgb, var(--ac) 6%, var(--bg-2)));
+  box-shadow:0 3px 0 color-mix(in srgb, var(--ac) 26%, #05070f), 0 12px 20px -16px rgba(0,0,0,.95),
+             inset 0 1px 0 rgba(255,255,255,.1);
+}
+.escolha.olhar{--ac:#90caf9}
+/* as de serviço (o balcão do Centro, perguntar o nome) ficam um tom
+   abaixo: não mudam o rumo da história */
 .escolha.utilitaria, .escolha.discreta{
-  font-size:13.5px;color:var(--texto-fraco);
-  background:transparent;border-style:dashed;
+  min-height:44px;font-size:14px;color:var(--texto-fraco);
+  background:transparent;border-style:dashed;box-shadow:none;
 }
-.escolha.utilitaria:hover, .escolha.discreta:hover{color:var(--texto)}
-.escolha.perigo{border-color:color-mix(in srgb, var(--perigo) 45%, var(--borda))}
-.escolha.perigo:hover{border-color:var(--perigo);background:color-mix(in srgb, var(--perigo) 10%, var(--bg-2))}
-.escolha.perigo:hover::before{background:var(--perigo);color:#fff}
+.escolha.utilitaria > svg.icone, .escolha.discreta > svg.icone{width:28px;height:28px;padding:5px;border-radius:9px}
+.escolha.utilitaria:hover:not(:disabled), .escolha.discreta:hover:not(:disabled){color:var(--texto)}
+.escolha.perigo{--ac:var(--perigo);border-color:color-mix(in srgb, var(--perigo) 45%, var(--borda))}
 
 /* ---------- campo livre ---------- */
 .acao-livre{
-  margin-top:20px;border-style:solid;border-color:var(--borda);
-  background:linear-gradient(180deg, color-mix(in srgb, var(--bg) 70%, transparent), var(--bg-2));
+  margin-top:20px;padding:14px 16px 15px;border-radius:14px;
+  border:1px solid color-mix(in srgb, var(--borda-forte) 60%, transparent);
+  background:linear-gradient(180deg, color-mix(in srgb, var(--bg) 72%, transparent), var(--bg-2));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
 }
-.acao-livre label{display:flex;align-items:center;gap:8px;font-weight:600;font-size:11px;letter-spacing:.12em}
+.acao-livre label{
+  display:flex;align-items:center;gap:8px;margin-bottom:9px;
+  font-family:var(--letra-hud, var(--fonte));font-weight:700;font-size:11px;letter-spacing:.16em;
+}
 .acao-livre label::before{
   content:'';width:14px;height:14px;flex:0 0 auto;background:var(--texto-fraco);
   -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 20h4L19 9l-4-4L4 16z'/%3E%3Cpath d='M14 6l4 4'/%3E%3C/svg%3E") center/contain no-repeat;
           mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 20h4L19 9l-4-4L4 16z'/%3E%3Cpath d='M14 6l4 4'/%3E%3C/svg%3E") center/contain no-repeat;
 }
-.linha-acao input{border-radius:9px;padding:11px 14px}
+.linha-acao input{
+  border-radius:11px;padding:12px 14px;
+  background:rgba(0,0,0,.28);box-shadow:inset 0 2px 6px rgba(0,0,0,.35);
+}
 .linha-acao input::placeholder{color:var(--texto-tenue)}
+.linha-acao .btn.destaque{
+  border-radius:11px;padding-inline:20px;
+  font-family:var(--letra-hud, var(--fonte));font-size:15px;font-weight:700;letter-spacing:.02em;
+  box-shadow:0 3px 0 var(--destaque-esc), 0 8px 16px -10px var(--destaque-sombra);
+}
+.linha-acao .btn.destaque:active{transform:translateY(2px);box-shadow:0 1px 0 var(--destaque-esc)}
 
 /* ---------- avisos: o que a escolha mudou ---------- */
 .avisos:not(:empty){margin-top:16px}
@@ -17440,8 +18146,18 @@ svg.icone{flex:0 0 auto;width:18px;height:18px;vertical-align:-3px}
   .narrativa .fala.com-rosto{grid-template-columns:48px minmax(0,1fr);column-gap:10px}
   .narrativa .fala-retrato{width:48px;height:48px;border-radius:8px}
   .narrativa p.entre-falas{margin-left:14px}
-  .escolha{padding:10px 12px 10px 46px;font-size:14.5px}
-  .escolha::before{left:15px;width:22px;height:22px}
+  .escolha{font-size:14.5px;padding-right:34px}
+  #app .escolhas > .escolha{padding-left:46px}
+  #app .escolhas > .escolha::before{left:11px;width:24px;height:24px;margin-top:-12px;font-size:12px}
+  .escolha::after{right:13px;width:7px;height:7px;margin-top:-3.5px}
+  .escolha.com-icone{gap:10px}
+  .escolha > svg.icone{width:31px;height:31px;padding:6px;border-radius:10px}
+  .escolha.menu, .escolha.luta, .escolha.teste, .escolha.vontade, .escolha.fim{font-size:15px;min-height:52px}
+  .escolha.caminho .esc-rot b{font-size:16px}
+  .escolha.chamado > svg.icone{width:36px;height:36px;padding:7px}
+  .narrativa.descricao-lugar{padding:13px 14px 2px}
+  .narrativa.descricao-lugar p.recepcao{margin-inline:-14px;padding-inline:14px}
+  .painel:has(> .cap-cabecalho) > h3{margin-block:20px 10px}
 }
 
 /* ============================================================
@@ -18882,47 +19598,7 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
   .narrativa .fala.voce{margin-left:auto;margin-right:9px}
 }
 
-.escolhas{display:flex;flex-direction:column;gap:6px;margin-top:14px}
-.escolha{
-  text-align:left;
-  background:linear-gradient(180deg, var(--bg-2), color-mix(in srgb, var(--bg-2) 86%, #000));
-  border:1px solid var(--borda);color:var(--texto);
-  padding:9px 14px 9px 34px;border-radius:var(--raio-sm);line-height:1.42;
-  position:relative;overflow:hidden;
-  animation:surge .35s var(--suave) both;
-}
-.escolhas .escolha:nth-child(1){animation-delay:.02s}
-.escolhas .escolha:nth-child(2){animation-delay:.07s}
-.escolhas .escolha:nth-child(3){animation-delay:.12s}
-.escolhas .escolha:nth-child(4){animation-delay:.17s}
-.escolhas .escolha:nth-child(n+5){animation-delay:.22s}
-/* barra de acento que cresce da esquerda */
-.escolha::after{
-  content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
-  background:var(--destaque);transform:scaleY(0);transform-origin:center;
-  transition:transform .25s var(--mola);
-}
-.escolha::before{
-  content:'';position:absolute;left:12px;top:50%;transform:translateY(-50%);
-  width:10px;height:10px;border-radius:50%;
-  background:linear-gradient(180deg, var(--borda-forte) 0 45%, var(--bg) 45% 55%, var(--texto-tenue) 55% 100%);
-  box-shadow:0 0 0 1.2px var(--borda-forte);
-  transition:transform .25s var(--mola), background .25s var(--suave), box-shadow .25s var(--suave);
-}
-.escolha:hover{
-  border-color:var(--borda-forte);
-  background:linear-gradient(180deg, var(--painel-2), var(--painel));
-  transform:translateX(3px);
-  box-shadow:0 8px 20px -12px rgba(0,0,0,.7);
-}
-.escolha:hover::before{
-  background:linear-gradient(180deg, var(--perigo) 0 45%, #1a1a20 45% 55%, #f2f4f8 55% 100%);
-  box-shadow:0 0 0 1.2px #1a1a20, 0 0 10px -2px var(--destaque-sombra);
-  transform:translateY(-50%) translateX(2px) scale(1.15);
-}
-.escolha:hover::after{transform:scaleY(1)}
-.escolha:active{transform:translateX(1px) scale(.995)}
-.escolha:focus-visible{outline:none;border-color:var(--destaque);box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(--destaque-sombra)}
+/* opções: o menu está em "CAIXA DE DIÁLOGO, OPÇÕES E COLUNA DE LEITURA" */
 
 /* ---------- avisos / consequências ---------- */
 .avisos{margin-top:18px;display:flex;flex-direction:column;gap:7px}
@@ -19393,7 +20069,7 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
              inset 0 1px 0 rgba(255,255,255,.3);
   text-shadow:0 1px 2px rgba(0,0,0,.4);
   transition:transform .12s var(--suave), box-shadow .12s var(--suave), filter .15s var(--suave);
-  animation:surge .3s var(--suave) both;
+  animation:surge .3s var(--suave) backwards;
 }
 /* o brilho que corre na diagonal, como no menu dos jogos */
 .mb-btn::before{
@@ -19459,7 +20135,7 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
   box-shadow:0 4px 0 color-mix(in srgb, var(--tc) 35%, #000), 0 12px 18px -12px rgba(0,0,0,.9),
              inset 0 1px 0 rgba(255,255,255,.2);
   transition:transform .12s var(--suave), box-shadow .12s var(--suave), filter .15s var(--suave);
-  animation:surge .3s var(--suave) both;
+  animation:surge .3s var(--suave) backwards;
 }
 .golpe-btn .g-tipo{
   grid-area:tipo;align-self:stretch;display:grid;place-items:center;min-width:74px;padding:0 9px;
@@ -19491,7 +20167,7 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
   background:linear-gradient(180deg, var(--bg-2), color-mix(in srgb, var(--bg-2) 86%, #000));
   border:1px solid var(--borda);border-radius:var(--raio-sm);padding:10px 12px;font-size:13px;
   transition:transform .2s var(--mola), border-color .2s var(--suave), box-shadow .22s var(--suave);
-  animation:surge .35s var(--suave) both;
+  animation:surge .35s var(--suave) backwards;
 }
 .carta:hover{transform:translateY(-2px);border-color:var(--borda-forte);box-shadow:0 10px 24px -14px rgba(0,0,0,.8)}
 .carta.morto{opacity:.5;border-style:dashed;border-color:var(--perigo)}
@@ -20992,21 +21668,59 @@ h3.cat-item{
 
 /* ============================================================
    PORTAS — os lugares da cidade, que não são "o que fazer"
+   Botão na cor da casa, como o ícone do mapa dos jogos de hoje: o
+   Centro vermelho, a loja azul, o ginásio dourado, a sua casa verde.
+   O desenho numa moeda da cor cheia, o nome em letra de placa, e as
+   portas enchem a linha (--cols vem da conta de quantas são: nenhuma
+   sobra pela metade com a casa vazia do lado).
    ============================================================ */
-/* dois por linha, igual à barra de ação do combate */
-.portas{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:6px}
+.portas{--cols:2;display:flex;flex-wrap:wrap;gap:10px;margin-bottom:4px}
 .porta{
-  display:flex;flex-direction:column;gap:2px;text-align:left;
-  padding:10px 12px;border:1px solid var(--borda);border-radius:6px;
-  background:color-mix(in srgb, var(--destaque) 5%, var(--bg-2));
-  color:var(--texto);cursor:pointer;font-family:inherit;
-  transition:border-color .15s,background .15s,transform .1s;
+  --ac:#8d97bd;
+  flex:1 1 calc((100% - (var(--cols) - 1) * 10px) / var(--cols));min-width:0;
+  position:relative;overflow:hidden;
+  display:flex;align-items:center;gap:12px;
+  min-height:64px;padding:10px 34px 10px 11px;border-radius:15px;text-align:left;
+  font-family:var(--letra-hud, var(--fonte));color:#fff;cursor:pointer;
+  background:
+    linear-gradient(112deg, transparent 0 62%, rgba(255,255,255,.07) 62% 73%, transparent 73%),
+    linear-gradient(180deg, color-mix(in srgb, var(--ac) 34%, var(--painel-2)), color-mix(in srgb, var(--ac) 14%, var(--bg)));
+  border:1px solid color-mix(in srgb, var(--ac) 55%, transparent);
+  box-shadow:0 4px 0 color-mix(in srgb, var(--ac) 30%, #05070f), 0 14px 22px -16px rgba(0,0,0,.95),
+             inset 0 1px 0 rgba(255,255,255,.14);
+  text-shadow:0 1px 2px rgba(0,0,0,.5);
+  transition:transform .14s var(--suave), box-shadow .14s var(--suave), filter .15s var(--suave), border-color .15s var(--suave);
+  animation:surge .35s var(--suave) backwards;
 }
-.porta:hover{border-color:var(--destaque);background:color-mix(in srgb, var(--destaque) 11%, var(--bg-2))}
-.porta:active{transform:translateY(1px)}
-.porta-nome{font-size:13.5px;font-weight:600;letter-spacing:.01em}
-.porta-sub{font-size:11.5px;color:var(--texto-fraco);line-height:1.4}
-@media (max-width:620px){ .portas{grid-template-columns:1fr} }
+.portas .porta:nth-child(2){animation-delay:.05s}
+.portas .porta:nth-child(3){animation-delay:.1s}
+.portas .porta:nth-child(n+4){animation-delay:.15s}
+.porta > svg.icone{
+  width:40px;height:40px;padding:8px;flex:0 0 auto;border-radius:50%;stroke-width:2;color:#fff;
+  background:radial-gradient(circle at 50% 30%, color-mix(in srgb, var(--ac) 65%, #fff), var(--ac) 58%, color-mix(in srgb, var(--ac) 70%, #000));
+  box-shadow:0 0 0 2px rgba(255,255,255,.16), 0 4px 10px -4px rgba(0,0,0,.85);
+}
+.porta-nome{flex:1 1 auto;min-width:0;font-size:15px;font-weight:600;line-height:1.2;letter-spacing:.01em}
+.porta-nome small{display:block;margin-top:3px;font:400 12.5px/1.3 var(--fonte);letter-spacing:0;color:rgba(255,255,255,.78)}
+.porta::after{
+  content:'';position:absolute;right:15px;top:50%;width:8px;height:8px;margin-top:-4px;
+  border-top:2px solid currentColor;border-right:2px solid currentColor;transform:rotate(45deg);
+  opacity:.5;transition:transform .22s var(--mola), opacity .18s var(--suave);
+}
+.porta:hover{filter:brightness(1.1) saturate(1.05);transform:translateY(-2px);border-color:color-mix(in srgb, var(--ac) 80%, #fff)}
+.porta:hover::after{opacity:1;transform:translateX(3px) rotate(45deg)}
+.porta:active{transform:translateY(3px);
+  box-shadow:0 1px 0 color-mix(in srgb, var(--ac) 30%, #05070f), inset 0 1px 0 rgba(255,255,255,.1)}
+.porta:focus-visible{outline:2px solid #fff;outline-offset:2px}
+@media (max-width:620px){
+  .portas{gap:8px}
+  .porta{flex-basis:calc((100% - (min(var(--cols), 2) - 1) * 8px) / min(var(--cols), 2));
+    min-height:58px;padding:9px 26px 9px 9px;gap:10px;border-radius:13px}
+  .porta > svg.icone{width:34px;height:34px;padding:7px}
+  .porta-nome{font-size:14px}
+  .porta-nome small{font-size:11.5px}
+  .porta::after{right:11px;width:7px;height:7px;margin-top:-3.5px}
+}
 
 /* fala que continua a anterior: sem repetir o nome, colada na de cima */
 .narrativa .fala.segue{margin-top:-8px;border-top-left-radius:2px}
@@ -21023,15 +21737,6 @@ h3.cat-item{
   margin-top:10px;padding-left:11px;border-left:2px solid var(--destaque);
   color:var(--texto-fraco);font-style:italic;
 }
-
-/* Ação avulsa que não é trilha da história: perguntar o nome de quem
-   está falando. Fica mais apagada que uma escolha de verdade porque
-   não muda o rumo — muda só como o jogo chama a pessoa. */
-.escolha.discreta{
-  opacity:.72;
-  font-style:italic;
-}
-.escolha.discreta:hover{ opacity:1; }
 
 /* Capacidade de campo que o time ainda não tem. */
 .linha .v.nao{ opacity:.55; font-style:italic; }
@@ -21179,7 +21884,7 @@ h3.cat-item{
   z-index:60;display:flex;flex-direction:column;gap:6px;align-items:center;pointer-events:none;width:min(92vw,460px)}
 .recado{background:var(--bg-2);border:1px solid var(--borda-forte);color:var(--texto);border-radius:10px;
   padding:9px 14px;font-size:13.5px;box-shadow:0 8px 24px -10px rgba(0,0,0,.6);
-  animation:surge .3s var(--suave) both;transition:opacity .45s, transform .45s}
+  animation:surge .3s var(--suave) backwards;transition:opacity .45s, transform .45s}
 .recado.golpeNovo{border-color:color-mix(in srgb, var(--bom) 60%, var(--borda))}
 .recado.saindo{opacity:0;transform:translateY(6px)}
 
@@ -21478,9 +22183,6 @@ h3.com-mapa{display:flex;align-items:center;justify-content:space-between;gap:8p
 .barra-exp i{display:block;height:100%;background:linear-gradient(90deg,#2f6fd6,#5fb4ff);transition:width .6s var(--suave)}
 .barra-exp.vaga{visibility:hidden}
 .lutador .ficha .barra + .barra-exp{margin-top:2px}
-/* atalho que não é escolha da história: fica mais apagado */
-.escolha.utilitaria{border-style:dashed;opacity:.8;font-size:.95em}
-.escolha.utilitaria:hover{opacity:1}
 
 /* mural de recados do Centro: cortiça e papel preso com percevejo */
 .mural{
@@ -21572,9 +22274,6 @@ body.com-cenario .topo{
 }
 @media (prefers-reduced-motion: reduce){ body.com-cenario::before{animation:none} }
 
-/* porta que existe mas ainda não abre: aparece, diz o que falta, não clica */
-.escolha:disabled{opacity:.55;cursor:not-allowed;filter:saturate(.6)}
-.escolha:disabled:hover{transform:none}
 
 /* ligação feita: a conversa acontece dentro da ficha do PokéNav */
 .nav-conversa{margin:10px 0 6px;max-height:52vh;overflow:auto;font-size:14px}
@@ -21807,9 +22506,6 @@ html[data-moldura="grafite"], body[data-moldura="grafite"]{
 
 /* ícones desenhados (js/data/icones.js) */
 svg.icone{flex:0 0 auto;width:18px;height:18px;vertical-align:-3px}
-.escolha.com-icone{display:flex;align-items:center;gap:10px;text-align:left}
-.porta{flex-direction:row;align-items:center;gap:10px}
-.porta .porta-icone{width:24px;height:24px;opacity:.9}
 .abas-mochila .aba{display:inline-flex;align-items:center;gap:5px}
 .abas-mochila .aba svg.icone{width:15px;height:15px}
 
@@ -21901,6 +22597,9 @@ svg.icone{flex:0 0 auto;width:18px;height:18px;vertical-align:-3px}
     var(--cenario-lugar, linear-gradient(135deg, var(--painel-2), var(--bg)));
   background-blend-mode:normal, normal, multiply, normal;
   background-size:cover;background-position:center 10%;background-repeat:no-repeat;
+  /* as camadas escuras cobrem a borda também: sem isso a última fileira
+     da arte aparecia crua, numa linha clara embaixo da placa */
+  background-origin:border-box;
   image-rendering:pixelated;
   box-shadow:0 18px 34px -24px rgba(0,0,0,.95), inset 0 1px 0 rgba(255,255,255,.08);
 }
@@ -21978,70 +22677,256 @@ svg.icone{flex:0 0 auto;width:18px;height:18px;vertical-align:-3px}
 /* narração curta entre falas fica presa à conversa, não solta */
 .narrativa p.entre-falas{margin:-2px 0 10px 77px;font-size:13.5px}
 
-/* ---------- opções ---------- */
-/* Menu dos jogos: cada opção numerada pela tecla que a escolhe (1 a 9),
-   e o cursor ▶ aparece em quem está na mira do mouse ou do teclado. */
-.escolhas{gap:7px;margin-top:18px}
+/* ---------- seções da tela de história ----------
+   O cabeçalho de seção no idioma do HUD: letra de placa, um losango
+   na cor da seção e a linha que corre até a borda. As cores são as dos
+   comandos da luta — história dourada, porta vermelha, ação verde,
+   caminho azul. */
+.painel:has(> .cap-cabecalho) > h3{
+  display:flex;align-items:center;gap:10px;margin-block:24px 11px;
+  font-family:var(--letra-hud, var(--fonte));font-size:12px;font-weight:700;letter-spacing:.16em;
+  color:var(--texto-fraco);
+}
+.painel:has(> .cap-cabecalho) > h3::before{
+  content:'';flex:0 0 auto;width:8px;height:8px;border-radius:2px;transform:rotate(45deg);
+  background:var(--sec, var(--destaque));box-shadow:0 0 10px -1px var(--sec, var(--destaque));
+}
+.painel:has(> .cap-cabecalho) > h3::after{
+  content:'';flex:1 1 auto;height:1px;order:1;
+  background:linear-gradient(90deg, color-mix(in srgb, var(--sec, var(--destaque)) 45%, var(--borda)), transparent);
+}
+.painel:has(> .cap-cabecalho) > h3 > *{order:2}
+h3.sec-aqui{--sec:var(--destaque)}
+h3.sec-portas{--sec:#ef5350}
+h3.sec-fazer{--sec:#4cc38a}
+h3.sec-ir{--sec:#5aa7ff}
+
+/* ---------- a placa do lugar ganha legenda ----------
+   Na tela do mapa a descrição encosta embaixo da placa, na mesma
+   moldura, e "como o lugar te recebe" vira o rodapé dela. */
+.cap-cabecalho:has(+ .descricao-lugar){margin-bottom:0;border-bottom-left-radius:0;border-bottom-right-radius:0;border-bottom-color:transparent}
+.narrativa.descricao-lugar{
+  margin-block:0 4px;padding:15px 20px 3px;overflow:hidden;
+  border:1px solid rgba(255,255,255,.1);border-top:0;border-radius:0 0 16px 16px;
+  background:linear-gradient(180deg, rgba(5,8,22,.6), color-mix(in srgb, var(--bg) 55%, transparent));
+  box-shadow:0 18px 34px -24px rgba(0,0,0,.95);
+}
+.narrativa.descricao-lugar:has(> .recepcao:last-child){padding-bottom:0}
+.narrativa.descricao-lugar p.recepcao{
+  display:flex;gap:9px;align-items:baseline;
+  margin:4px -20px 0;padding:10px 20px 12px;border-left:0;border-top:1px solid rgba(255,255,255,.08);
+  background:rgba(0,0,0,.2);color:var(--texto-fraco);font-size:14.5px;
+}
+.narrativa.descricao-lugar p.recepcao::before{
+  content:'';flex:0 0 auto;width:7px;height:7px;border-radius:50%;transform:translateY(-1px);
+  background:var(--destaque);box-shadow:0 0 8px var(--destaque-sombra);
+}
+
+/* ---------- opções ----------
+   O menu dos jogos de hoje. Toda opção é uma linha com espessura
+   embaixo, que afunda quando aperta (como os comandos da luta), e o
+   brilho na diagonal. Na tela, a tecla que escolhe fica numa bolinha
+   de botão de controle à esquerda (Teclas numera de 1 a 9); na janela,
+   que não tem tecla, quem abre a linha é o desenho. A cor da linha
+   (--ac) é a da coisa: dourada na história, a da ação no lugar.
+   A entrada é "backwards", nunca "both": animação que segura o último
+   quadro manda no transform e na opacidade, e aí o hover não subia
+   e a opção fechada não apagava. */
+.escolhas{display:flex;flex-direction:column;gap:9px;margin-top:18px}
 .escolha{
-  padding:11px 16px 11px 54px;border-radius:10px;font-size:15px;line-height:1.45;
-  background:linear-gradient(180deg, color-mix(in srgb, var(--painel-2) 70%, var(--bg-2)), var(--bg-2));
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
+  --ac:var(--destaque);
+  position:relative;overflow:hidden;
+  display:block;text-align:left;color:var(--texto);
+  min-height:50px;padding:12px 40px 12px 16px;
+  border-radius:14px;font-size:15px;line-height:1.45;
+  background:
+    linear-gradient(112deg, transparent 0 66%, rgba(255,255,255,.035) 66% 77%, transparent 77%),
+    linear-gradient(180deg, color-mix(in srgb, var(--painel-2) 72%, var(--borda)), var(--bg-2));
+  border:1px solid color-mix(in srgb, var(--borda-forte) 72%, transparent);
+  box-shadow:0 3px 0 color-mix(in srgb, var(--bg) 50%, #000), 0 12px 20px -16px rgba(0,0,0,.95),
+             inset 0 1px 0 rgba(255,255,255,.07);
+  transition:transform .14s var(--suave), box-shadow .14s var(--suave),
+             border-color .2s var(--suave), background .2s var(--suave), color .2s var(--suave);
+  animation:surge .35s var(--suave) backwards;
 }
-.escolha::before{
-  content:'•';
-  left:18px;width:24px;height:24px;border-radius:7px;
+.escolhas .escolha:nth-child(1){animation-delay:.02s}
+.escolhas .escolha:nth-child(2){animation-delay:.07s}
+.escolhas .escolha:nth-child(3){animation-delay:.12s}
+.escolhas .escolha:nth-child(4){animation-delay:.17s}
+.escolhas .escolha:nth-child(n+5){animation-delay:.22s}
+/* a seta da direita, que anda quando a linha está na mira */
+.escolha::after{
+  content:'';position:absolute;right:17px;top:50%;width:8px;height:8px;margin-top:-4px;
+  border-top:2px solid currentColor;border-right:2px solid currentColor;transform:rotate(45deg);
+  opacity:.32;transition:transform .22s var(--mola), opacity .18s var(--suave), color .18s var(--suave);
+}
+/* a tecla: bolinha de botão de controle */
+#app .escolhas > .escolha{padding-left:54px}
+#app .escolhas > .escolha::before{
+  content:'';position:absolute;left:14px;top:50%;width:26px;height:26px;margin-top:-13px;border-radius:50%;
   display:grid;place-items:center;
-  font:700 12px/1 var(--mono);color:var(--texto-fraco);
-  background:var(--bg);box-shadow:inset 0 0 0 1px var(--borda-forte);
+  font:700 12.5px/1 var(--letra-hud, var(--fonte));color:var(--texto);
+  background:radial-gradient(circle at 50% 28%, var(--borda-forte), var(--bg) 80%);
+  box-shadow:inset 0 0 0 1.5px color-mix(in srgb, var(--texto-fraco) 50%, transparent), 0 2px 0 rgba(0,0,0,.5);
+  transition:background .18s var(--suave), color .18s var(--suave), box-shadow .18s var(--suave);
 }
-.escolha[data-tecla]::before{content:attr(data-tecla)}
+#app .escolhas > .escolha[data-tecla]::before{content:attr(data-tecla)}
+/* fechada não tem tecla: a casa da bolinha fica, vazia */
+#app .escolhas > .escolha:disabled::before{visibility:hidden}
+.escolha:hover:not(:disabled), .escolha:focus-visible{
+  border-color:color-mix(in srgb, var(--ac) 65%, transparent);
+  background:
+    linear-gradient(112deg, transparent 0 66%, rgba(255,255,255,.06) 66% 77%, transparent 77%),
+    linear-gradient(180deg, color-mix(in srgb, var(--ac) 15%, var(--painel-2)), color-mix(in srgb, var(--ac) 6%, var(--bg-2)));
+  transform:translateY(-1px);
+  box-shadow:0 4px 0 color-mix(in srgb, var(--ac) 28%, #05070f), 0 14px 26px -16px color-mix(in srgb, var(--ac) 55%, transparent),
+             inset 0 1px 0 rgba(255,255,255,.1);
+}
+.escolha:focus-visible{outline:2px solid color-mix(in srgb, var(--ac) 80%, #fff);outline-offset:2px}
+#app .escolhas > .escolha:hover:not(:disabled)::before, #app .escolhas > .escolha:focus-visible::before{
+  background:var(--ac);color:#15120a;
+  box-shadow:0 0 0 2px color-mix(in srgb, var(--ac) 35%, transparent), 0 0 14px -2px var(--ac);
+}
+.escolha:hover:not(:disabled)::after, .escolha:focus-visible::after{opacity:1;color:var(--ac);transform:translateX(3px) rotate(45deg)}
+.escolha:active:not(:disabled){
+  transform:translateY(2px);
+  box-shadow:0 1px 0 color-mix(in srgb, var(--ac) 28%, #05070f), inset 0 1px 0 rgba(255,255,255,.06);
+}
+/* porta que existe mas ainda não abre: aparece, diz o que falta, não clica */
+.escolha:disabled{opacity:.62;cursor:not-allowed;filter:saturate(.55);box-shadow:none}
+.escolha:disabled::after{display:none}
+/* fala escolhida entre aspas lê como fala */
+.escolha.diz{font-style:italic}
+.escolha .pd{color:var(--texto-fraco);font-size:.88em}
 /* Opção solta numa janela (o Centro, "Qual Pokébola?", "Em quem?",
    "Equipar em quem?"): a mesma linha de menu do resto do jogo, de ponta
    a ponta e com folga. Sem isto cada botão tinha a largura do próprio
    texto e encostava no de baixo. */
 .modal-corpo > .escolha{width:100%}
-.modal-corpo > .escolha:not(.com-icone){display:block}
-.modal-corpo > .escolha + .escolha{margin-top:7px}
-.escolha::after{width:auto;right:auto;left:0;background:none;transform:none;
-  content:'▶';top:50%;bottom:auto;left:4px;translate:-4px -50%;
-  font-size:10px;color:var(--destaque);opacity:0;
-  transition:opacity .18s var(--suave), translate .25s var(--mola);
+.modal-corpo > .escolha + .escolha{margin-top:8px}
+
+/* com desenho: o desenho numa pastilha da cor dele, à esquerda do texto */
+.escolha.com-icone{display:flex;align-items:center;gap:12px}
+.escolha > svg.icone{
+  width:34px;height:34px;padding:7px;flex:0 0 auto;border-radius:11px;stroke-width:2;
+  color:color-mix(in srgb, var(--ac) 70%, #fff);
+  background:color-mix(in srgb, var(--ac) 20%, rgba(0,0,0,.25));
+  box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--ac) 45%, transparent);
+  transition:background .18s var(--suave), color .18s var(--suave);
 }
-.escolha:hover, .escolha:focus-visible{
-  border-color:color-mix(in srgb, var(--destaque) 55%, var(--borda-forte));
-  background:linear-gradient(180deg, color-mix(in srgb, var(--destaque) 8%, var(--painel-2)), var(--painel));
-  transform:translateX(4px);
+.escolha:hover:not(:disabled) > svg.icone, .escolha:focus-visible > svg.icone{
+  color:#fff;background:color-mix(in srgb, var(--ac) 55%, rgba(0,0,0,.2));
 }
-.escolha:hover::before, .escolha:focus-visible::before{
-  background:var(--destaque);color:#1b1500;box-shadow:0 0 12px -3px var(--destaque-sombra);
-  transform:translateY(-50%);
+.esc-rot{flex:1 1 auto;min-width:0}
+.esc-rot small{
+  display:block;margin-bottom:2px;
+  font:700 10.5px/1.3 var(--letra-hud, var(--fonte));letter-spacing:.14em;text-transform:uppercase;color:var(--texto-fraco);
 }
-.escolha:hover::after, .escolha:focus-visible::after{opacity:1;translate:2px -50%;transform:none}
-/* fala escolhida entre aspas lê como fala */
-.escolha.diz{font-style:italic}
-/* as opções de serviço (balcão, perguntar o nome) ficam um tom abaixo */
+.esc-rot small.esc-det{
+  margin:3px 0 0;font:500 12.5px/1.35 var(--fonte);letter-spacing:0;text-transform:none;
+}
+.esc-trava{display:block;margin-top:3px;font:400 12.5px/1.4 var(--fonte);letter-spacing:0;color:var(--texto-fraco)}
+.esc-custo{
+  flex:0 0 auto;display:inline-flex;align-items:center;gap:5px;margin-left:auto;
+  padding:4px 10px 4px 8px;border-radius:999px;white-space:nowrap;
+  font:600 12px/1.2 var(--letra-hud, var(--fonte));letter-spacing:.02em;color:var(--texto-fraco);
+  background:rgba(0,0,0,.24);box-shadow:inset 0 0 0 1px var(--borda);
+}
+.esc-custo svg.icone{width:15px;height:15px;color:var(--ac);stroke-width:2}
+
+/* o menu do lugar: comando, não frase, então na letra de placa */
+.escolha.menu{
+  min-height:56px;padding-block:9px;
+  font-family:var(--letra-hud, var(--fonte));font-size:16px;font-weight:600;letter-spacing:.005em;
+}
+/* a placa de estrada: pra que lado, e o nome do lugar grande */
+.escolha.caminho .esc-rot b{display:block;font-size:17px;font-weight:700;line-height:1.15}
+.escolha.caminho > svg.icone{border-radius:50%}
+.escolha.caminho:disabled > svg.icone{border-radius:11px}
+
+/* O capítulo que espera aqui: a missão da história, em dourado, com a
+   marca de exclamação pulsando como a do mapa dos jogos. O gancho é
+   texto de história, então volta pra letra de ler. */
+.escolha.chamado{
+  --ac:var(--destaque);
+  min-height:70px;padding-block:12px;
+  border-color:color-mix(in srgb, var(--destaque) 55%, transparent);
+  background:
+    linear-gradient(112deg, transparent 0 62%, rgba(255,255,255,.07) 62% 74%, transparent 74%),
+    radial-gradient(130% 160% at 0% 50%, color-mix(in srgb, var(--destaque) 20%, transparent), transparent 62%),
+    linear-gradient(180deg, color-mix(in srgb, var(--destaque) 12%, var(--painel-2)), var(--bg-2));
+  box-shadow:0 4px 0 color-mix(in srgb, var(--destaque) 32%, #05070f), 0 0 30px -12px var(--destaque-sombra),
+             inset 0 1px 0 rgba(255,255,255,.12);
+}
+.escolha.chamado > svg.icone{
+  width:40px;height:40px;padding:8px;border-radius:50%;stroke-width:2.8;color:#1b1500;
+  background:radial-gradient(circle at 50% 30%, color-mix(in srgb, var(--destaque) 62%, #fff), var(--destaque) 58%, var(--destaque-esc));
+  box-shadow:0 0 0 3px color-mix(in srgb, var(--destaque) 25%, transparent), 0 0 18px -2px var(--destaque-sombra);
+  animation:chamado 2.4s ease-in-out infinite;
+}
+.escolha.chamado:hover:not(:disabled) > svg.icone{color:#1b1500;background:radial-gradient(circle at 50% 30%, #fff, var(--destaque) 62%)}
+.escolha.chamado .esc-rot{font-size:15px;line-height:1.45}
+.escolha.chamado .esc-rot small{color:var(--destaque)}
+.escolha.chamado:disabled > svg.icone{animation:none;color:var(--texto);background:var(--borda-forte);box-shadow:none}
+@keyframes chamado{
+  0%,100%{box-shadow:0 0 0 3px color-mix(in srgb, var(--destaque) 25%, transparent), 0 0 18px -2px var(--destaque-sombra)}
+  50%{box-shadow:0 0 0 7px color-mix(in srgb, var(--destaque) 10%, transparent), 0 0 26px 0 var(--destaque-sombra)}
+}
+
+/* as ações da cena que não são frase: encarar (o vermelho do Lutar),
+   rolar o teste (o ciano da Pokédex), rolar com Vontade (o roxo dela)
+   e encerrar o capítulo (dourado). Já entram tingidas. */
+.escolha.luta{--ac:#ef5350}
+.escolha.teste{--ac:#4dd0e1}
+.escolha.vontade{--ac:#a77bff}
+.escolha.fim{--ac:var(--destaque)}
+.escolha.luta, .escolha.teste, .escolha.vontade, .escolha.fim{
+  min-height:56px;font-family:var(--letra-hud, var(--fonte));font-size:16px;font-weight:600;
+  border-color:color-mix(in srgb, var(--ac) 50%, transparent);
+  background:
+    linear-gradient(112deg, transparent 0 66%, rgba(255,255,255,.05) 66% 77%, transparent 77%),
+    linear-gradient(180deg, color-mix(in srgb, var(--ac) 18%, var(--painel-2)), color-mix(in srgb, var(--ac) 6%, var(--bg-2)));
+  box-shadow:0 3px 0 color-mix(in srgb, var(--ac) 26%, #05070f), 0 12px 20px -16px rgba(0,0,0,.95),
+             inset 0 1px 0 rgba(255,255,255,.1);
+}
+.escolha.olhar{--ac:#90caf9}
+/* as de serviço (o balcão do Centro, perguntar o nome) ficam um tom
+   abaixo: não mudam o rumo da história */
 .escolha.utilitaria, .escolha.discreta{
-  font-size:13.5px;color:var(--texto-fraco);
-  background:transparent;border-style:dashed;
+  min-height:44px;font-size:14px;color:var(--texto-fraco);
+  background:transparent;border-style:dashed;box-shadow:none;
 }
-.escolha.utilitaria:hover, .escolha.discreta:hover{color:var(--texto)}
-.escolha.perigo{border-color:color-mix(in srgb, var(--perigo) 45%, var(--borda))}
-.escolha.perigo:hover{border-color:var(--perigo);background:color-mix(in srgb, var(--perigo) 10%, var(--bg-2))}
-.escolha.perigo:hover::before{background:var(--perigo);color:#fff}
+.escolha.utilitaria > svg.icone, .escolha.discreta > svg.icone{width:28px;height:28px;padding:5px;border-radius:9px}
+.escolha.utilitaria:hover:not(:disabled), .escolha.discreta:hover:not(:disabled){color:var(--texto)}
+.escolha.perigo{--ac:var(--perigo);border-color:color-mix(in srgb, var(--perigo) 45%, var(--borda))}
 
 /* ---------- campo livre ---------- */
 .acao-livre{
-  margin-top:20px;border-style:solid;border-color:var(--borda);
-  background:linear-gradient(180deg, color-mix(in srgb, var(--bg) 70%, transparent), var(--bg-2));
+  margin-top:20px;padding:14px 16px 15px;border-radius:14px;
+  border:1px solid color-mix(in srgb, var(--borda-forte) 60%, transparent);
+  background:linear-gradient(180deg, color-mix(in srgb, var(--bg) 72%, transparent), var(--bg-2));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
 }
-.acao-livre label{display:flex;align-items:center;gap:8px;font-weight:600;font-size:11px;letter-spacing:.12em}
+.acao-livre label{
+  display:flex;align-items:center;gap:8px;margin-bottom:9px;
+  font-family:var(--letra-hud, var(--fonte));font-weight:700;font-size:11px;letter-spacing:.16em;
+}
 .acao-livre label::before{
   content:'';width:14px;height:14px;flex:0 0 auto;background:var(--texto-fraco);
   -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 20h4L19 9l-4-4L4 16z'/%3E%3Cpath d='M14 6l4 4'/%3E%3C/svg%3E") center/contain no-repeat;
           mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 20h4L19 9l-4-4L4 16z'/%3E%3Cpath d='M14 6l4 4'/%3E%3C/svg%3E") center/contain no-repeat;
 }
-.linha-acao input{border-radius:9px;padding:11px 14px}
+.linha-acao input{
+  border-radius:11px;padding:12px 14px;
+  background:rgba(0,0,0,.28);box-shadow:inset 0 2px 6px rgba(0,0,0,.35);
+}
 .linha-acao input::placeholder{color:var(--texto-tenue)}
+.linha-acao .btn.destaque{
+  border-radius:11px;padding-inline:20px;
+  font-family:var(--letra-hud, var(--fonte));font-size:15px;font-weight:700;letter-spacing:.02em;
+  box-shadow:0 3px 0 var(--destaque-esc), 0 8px 16px -10px var(--destaque-sombra);
+}
+.linha-acao .btn.destaque:active{transform:translateY(2px);box-shadow:0 1px 0 var(--destaque-esc)}
 
 /* ---------- avisos: o que a escolha mudou ---------- */
 .avisos:not(:empty){margin-top:16px}
@@ -22055,8 +22940,18 @@ svg.icone{flex:0 0 auto;width:18px;height:18px;vertical-align:-3px}
   .narrativa .fala.com-rosto{grid-template-columns:48px minmax(0,1fr);column-gap:10px}
   .narrativa .fala-retrato{width:48px;height:48px;border-radius:8px}
   .narrativa p.entre-falas{margin-left:14px}
-  .escolha{padding:10px 12px 10px 46px;font-size:14.5px}
-  .escolha::before{left:15px;width:22px;height:22px}
+  .escolha{font-size:14.5px;padding-right:34px}
+  #app .escolhas > .escolha{padding-left:46px}
+  #app .escolhas > .escolha::before{left:11px;width:24px;height:24px;margin-top:-12px;font-size:12px}
+  .escolha::after{right:13px;width:7px;height:7px;margin-top:-3.5px}
+  .escolha.com-icone{gap:10px}
+  .escolha > svg.icone{width:31px;height:31px;padding:6px;border-radius:10px}
+  .escolha.menu, .escolha.luta, .escolha.teste, .escolha.vontade, .escolha.fim{font-size:15px;min-height:52px}
+  .escolha.caminho .esc-rot b{font-size:16px}
+  .escolha.chamado > svg.icone{width:36px;height:36px;padding:7px}
+  .narrativa.descricao-lugar{padding:13px 14px 2px}
+  .narrativa.descricao-lugar p.recepcao{margin-inline:-14px;padding-inline:14px}
+  .painel:has(> .cap-cabecalho) > h3{margin-block:20px 10px}
 }
 
 /* ============================================================
@@ -25458,14 +26353,40 @@ const ICONE = {
   diario:'<path d="M12 6.5c-2-1.5-5-2-8-1.5v14c3-.5 6 0 8 1.5 2-1.5 5-2 8-1.5V5c-3-.5-6 0-8 1.5z"/><path d="M12 6.5V20.5"/>',
   engrenagem:'<circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="6.6"/><path d="M12 2.6v2.8M12 18.6v2.8M2.6 12h2.8M18.6 12h2.8M5.4 5.4l2 2M16.6 16.6l2 2M5.4 18.6l2-2M16.6 7.4l2-2"/>',
   /* o dado da ficha de inscrição: sorteia uma sugestão */
-  dado:'<rect x="4" y="4" width="16" height="16" rx="3.5"/><circle cx="8.6" cy="8.6" r=".9" fill="currentColor"/><circle cx="15.4" cy="8.6" r=".9" fill="currentColor"/><circle cx="12" cy="12" r=".9" fill="currentColor"/><circle cx="8.6" cy="15.4" r=".9" fill="currentColor"/><circle cx="15.4" cy="15.4" r=".9" fill="currentColor"/>'
+  dado:'<rect x="4" y="4" width="16" height="16" rx="3.5"/><circle cx="8.6" cy="8.6" r=".9" fill="currentColor"/><circle cx="15.4" cy="8.6" r=".9" fill="currentColor"/><circle cx="12" cy="12" r=".9" fill="currentColor"/><circle cx="8.6" cy="15.4" r=".9" fill="currentColor"/><circle cx="15.4" cy="15.4" r=".9" fill="currentColor"/>',
+  /* o menu da história: a placa de estrada (a seta gira pro lado em
+     que o lugar fica no mapa), parar e olhar, o capítulo que espera
+     aqui e perguntar o nome de quem fala */
+  seta:'<path d="M4.5 12h14M13 6.5l5.5 5.5-5.5 5.5"/>',
+  olho:'<path d="M2.5 12s3.5-6.5 9.5-6.5 9.5 6.5 9.5 6.5-3.5 6.5-9.5 6.5S2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.8"/>',
+  exclama:'<path d="M12 4.5v10"/><circle cx="12" cy="19" r="1.1" fill="currentColor"/>',
+  pergunta:'<path d="M4 5h16v11H10l-4 3.5V16H4z"/><path d="M10.2 8.6a1.9 1.9 0 1 1 2.6 1.8c-.5.2-.8.6-.8 1.1v.4"/><circle cx="12" cy="13.6" r=".7" fill="currentColor"/>'
 };
 
-function svgIcone(chave, cls){
+/* A cor de cada desenho no menu: a porta na cor da casa, como o
+   ícone do mapa dos jogos de hoje (Centro vermelho, loja azul, ginásio
+   dourado, a sua casa verde), e a ação na cor do que ela é. Quem lê é
+   o CSS, pela variável --ac; desenho sem cor fica na cor da linha. */
+const COR_DO_ICONE = {
+  centro:'#ef5350', loja:'#3d8bfd', ginasio:'#e8b923', casa:'#43b581', laboratorio:'#26c6da',
+  onibus:'#2bb3a3', doar:'#f06292', relembrar:'#9575cd', liga:'#b18cf0', torneio:'#ff8a3d',
+  credenciais:'#7e8ce0', rede:'#c2414f', porta:'#8d97bd', ferragem:'#d4893b',
+  procurar:'#4caf50', vasculhar:'#f0b429', andar:'#4fc3f7', conversar:'#f48fb1', treinar:'#ff7043',
+  pescar:'#42a5f5', acampar:'#c49a6c', esperar:'#90a4ae', lutar:'#ef5350', troca:'#26a69a',
+  agenda:'#ffca28', convite:'#ffb74d', revanche:'#ff7043', trancado:'#7d88a8',
+  mural:'#ffb74d', pc:'#4dd0e1', mapa:'#66bb6a', dormir:'#7986cb', diario:'#e8b923',
+  seta:'#5aa7ff', olho:'#90caf9', pergunta:'#9fa8da', dado:'#4dd0e1', chama:'#a77bff', tigela:'#d9a35b'
+};
+
+/* estilo: mais alguma coisa inline (a seta da placa gira por ele) */
+function svgIcone(chave, cls, estilo){
   const c = ICONE[chave];
   if (!c) return '';
-  return `<svg class="icone${cls ? ' ' + cls : ''}" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${c}</svg>`;
+  const cor = COR_DO_ICONE[chave];
+  const st = [cor ? '--ac:' + cor : '', estilo || ''].filter(Boolean).join(';');
+  return `<svg class="icone${cls ? ' ' + cls : ''}" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"${st ? ` style="${st}"` : ''}>${c}</svg>`;
 }
+function corDoIcone(chave){ return COR_DO_ICONE[chave] || ''; }
 
 /* o ícone de cada coisa da lista de um lugar, pelo id do afazer */
 function iconeDoAfazer(a){
@@ -123580,14 +124501,14 @@ const UI = {
     const c = document.getElementById('escolhas');
     if (!c) return;
 
-    if (cena.batalha){ c.appendChild(this.el(`<button class="escolha" onclick="Jogo.iniciarBatalhaDaCena()">Encarar.</button>`)); return; }
+    if (cena.batalha){ c.appendChild(this.el(`<button class="escolha luta com-icone" onclick="Jogo.iniciarBatalhaDaCena()">${svgIcone('lutar')}<span class="esc-rot">Encarar.</span></button>`)); return; }
     if (cena.teste){
       const t = cena.teste;
       const nDados = Estado.j.status[t.status] + Dados.PERICIA_BASE, pede = Dados.sucessosPedidos(t.dificuldade);
-      c.appendChild(this.el(`<button class="escolha" onclick="Jogo.rolarTeste()">Rolar ${this.esc(t.nomeStatus||t.status)} — ${nDados}d6, pede ${pede} sucesso${pede === 1 ? '' : 's'} (4+)</button>`));
+      c.appendChild(this.el(`<button class="escolha teste com-icone" onclick="Jogo.rolarTeste()">${svgIcone('dado')}<span class="esc-rot">Rolar ${this.esc(t.nomeStatus||t.status)}<small class="esc-det">${nDados}d6, pede ${pede} sucesso${pede === 1 ? '' : 's'} (4+)</small></span></button>`));
       /* Forçar o destino, do lado do treinador: 1 de Vontade, um sucesso a mais */
       if (Estado.vontadeJogador() > 0)
-        c.appendChild(this.el(`<button class="escolha" onclick="Jogo.rolarTeste(true)">Rolar gastando 1 de Vontade — ${nDados}d6 e um sucesso garantido</button>`));
+        c.appendChild(this.el(`<button class="escolha vontade com-icone" onclick="Jogo.rolarTeste(true)">${svgIcone('chama')}<span class="esc-rot">Rolar gastando 1 de Vontade<small class="esc-det">${nDados}d6 e um sucesso garantido</small></span></button>`));
       return;
     }
     if (cena.sacrificio){
@@ -123603,8 +124524,8 @@ const UI = {
       }
       return;
     }
-    if (cena.final){ c.appendChild(this.el(`<button class="escolha" onclick="Jogo.mostrarFinal()">…</button>`)); return; }
-    if (cena.fim){ c.appendChild(this.el(`<button class="escolha" onclick="Jogo.fecharCapitulo()">Encerrar o capítulo.</button>`)); return; }
+    if (cena.final){ c.appendChild(this.el(`<button class="escolha fim" onclick="Jogo.mostrarFinal()">…</button>`)); return; }
+    if (cena.fim){ c.appendChild(this.el(`<button class="escolha fim com-icone" onclick="Jogo.fecharCapitulo()">${svgIcone('diario')}<span class="esc-rot">Encerrar o capítulo.</span></button>`)); return; }
 
     /* Primeiro com o filtro de "já fiz isso e não deu nada"; se isso
        apagar a cena inteira, mostra tudo — ninguém fica preso. */
@@ -123622,13 +124543,13 @@ const UI = {
        largar a história — cura, PC, mapa — e voltar pro mesmo ponto. */
     const aqui = Mundo.atual();
     if (Estado.dados.capitulo > 1 && aqui && aqui.tipo === 'cidade' && (aqui.lugares || []).includes('centro'))
-      c.appendChild(this.el(`<button class="escolha utilitaria" onclick="Cidade.centro()">Ir ao balcão do Centro Pokémon e voltar</button>`));
+      c.appendChild(this.el(`<button class="escolha utilitaria com-icone" onclick="Cidade.centro()">${svgIcone('centro')}<span class="esc-rot">Ir ao balcão do Centro Pokémon e voltar</span></button>`));
 
     /* Parar e olhar vale uma vez por cena: a segunda olhada nunca
        mostrou nada e virava um botão que convidava a clicar à toa. */
     if (visiveis.length && visiveis.length < 4 && !Historia.jaOlhou(id)){
-      c.appendChild(this.el(`<button class="escolha" onclick="Jogo.observarCena()">
-        Parar e olhar mais um pouco antes de decidir.</button>`));
+      c.appendChild(this.el(`<button class="escolha olhar com-icone" onclick="Jogo.observarCena()">
+        ${svgIcone('olho')}<span class="esc-rot">Parar e olhar mais um pouco antes de decidir.</span></button>`));
     }
 
     /* Quase todo mundo neste jogo é chamado pela função. Quando tem
@@ -123638,8 +124559,8 @@ const UI = {
       if (anon.length){
         const quem = anon[0];
         const ela = /^(a|as|uma)\s/i.test(quem);
-        c.appendChild(this.el(`<button class="escolha discreta" onclick="Jogo.perguntarNome(${JSON.stringify(quem).replace(/"/g,'&quot;')})">
-          Perguntar como ${ela ? 'ela' : 'ele'} se chama.</button>`));
+        c.appendChild(this.el(`<button class="escolha discreta com-icone" onclick="Jogo.perguntarNome(${JSON.stringify(quem).replace(/"/g,'&quot;')})">
+          ${svgIcone('pergunta')}<span class="esc-rot">Perguntar como ${ela ? 'ela' : 'ele'} se chama.</span></button>`));
       }
     }
 
@@ -140616,23 +141537,38 @@ const Exploracao = {
     const travaArco = arco ? travaDoCapitulo(arco.num) : null;
 
     /* Lugar e ação não são a mesma coisa e não merecem o mesmo botão:
-       lugar é porta que você abre, ação é tempo que você gasta. */
+       lugar é porta que você abre (na cor da casa), ação é tempo que
+       você gasta (linha de menu, com o custo numa etiqueta). */
     const todos = afazeresDoLocal();
-    const lugares = todos.filter(a => a.lugar).map(a =>
-      `<button class="porta" onclick="Exploracao.fazer('${a.id}')">
-        ${svgIcone(iconeDoAfazer(a), 'porta-icone')}<span class="porta-nome">${UI.esc(a.titulo)}</span></button>`).join('');
-    const afazeres = todos.filter(a => !a.lugar).map(a =>
-      `<button class="escolha com-icone" onclick="Exploracao.fazer('${a.id}')">
-        ${svgIcone(iconeDoAfazer(a))}<span>${UI.esc(a.titulo)}</span></button>`).join('');
+    const cor = ic => { const c = corDoIcone(ic); return c ? ` style="--ac:${c}"` : ''; };
+    const portas = todos.filter(a => a.lugar);
+    const lugares = portas.map(a => {
+      const ic = iconeDoAfazer(a);
+      /* "Rodoviária — ônibus da Liga pra Viridian": o nome na placa, o resto embaixo */
+      const [nome, mais] = String(a.titulo).split(' — ');
+      return `<button class="porta"${cor(ic)} onclick="Exploracao.fazer('${a.id}')">
+        ${svgIcone(ic, 'porta-icone')}<span class="porta-nome">${UI.esc(nome)}${mais ? `<small>${UI.esc(mais)}</small>` : ''}</span></button>`;
+    }).join('');
+    /* as portas enchem a linha: três numa, quatro em duas de duas */
+    const colunas = portas.length <= 3 ? Math.max(1, portas.length) : portas.length === 4 ? 2 : 3;
+    const afazeres = todos.filter(a => !a.lugar).map(a => {
+      const ic = iconeDoAfazer(a);
+      const [rot, custo] = String(a.titulo).split(' — ');
+      return `<button class="escolha menu com-icone"${cor(ic)} onclick="Exploracao.fazer('${a.id}')">
+        ${svgIcone(ic)}<span class="esc-rot">${UI.esc(rot)}</span>${
+          custo ? `<span class="esc-custo">${/Ração/.test(custo) ? svgIcone('tigela') : ''}${UI.esc(custo)}</span>` : ''}</button>`;
+    }).join('');
 
     const vizinhos = Mundo.vizinhos().map(id => {
       const v = LOCAIS[id];
       const conhecido = Mundo.visitado(id);
       /* passagem que cobra insígnia aparece fechada, dizendo o que falta */
       const trava = travaDaPassagem(Mundo.id(), id);
-      return `<button class="escolha" ${trava ? 'disabled' : `onclick="Exploracao.viajar('${id}')"`}>
-        ${conhecido ? 'Ir para ' + UI.esc(v.nome) : 'Seguir o caminho — ' + UI.esc(v.nome)}${
-          trava ? `<br><span class="pd">${UI.esc(textoTrava(trava))}</span>` : ''}</button>`;
+      const rumo = this.rumo(Mundo.id(), id);
+      const seta = trava ? svgIcone('trancado') : svgIcone('seta', null, rumo ? `rotate:${rumo.graus}deg` : '');
+      return `<button class="escolha menu caminho com-icone" ${trava ? 'disabled' : `onclick="Exploracao.viajar('${id}')"`}>
+        ${seta}<span class="esc-rot"><small>${conhecido ? 'Ir para' : 'Seguir o caminho'}${rumo ? ' · ' + rumo.nome : ''}</small><b>${UI.esc(v.nome)}</b>${
+          trava ? `<span class="esc-trava">${UI.esc(textoTrava(trava))}</span>` : ''}</span></button>`;
     }).join('');
 
     UI.add(`<div class="painel">
@@ -140642,24 +141578,25 @@ const Exploracao = {
         <div class="loc">${UI.esc(L.tipo === 'cidade' ? (L.porte||'cidade') : (L.tipo==='rota'?'rota':'lugar'))}${
           L.tipo !== 'cidade' && L.nivel ? ' · posto ' + UI.esc(nomePosto(L.nivel)) : ''}</div>
       </div>
-      <div class="narrativa">${(L.desc||[]).map(t=>`<p>${UI.esc(txt(t))}</p>`).join('')}${
+      <div class="narrativa descricao-lugar">${(L.desc||[]).map(t=>`<p>${UI.esc(txt(t))}</p>`).join('')}${
         (() => { const r = (typeof comoOlugarTeRecebe === 'function') ? comoOlugarTeRecebe() : null;
                  return r ? `<p class="recepcao">${UI.esc(r)}</p>` : ''; })()}</div>
       <div id="avisos" class="avisos"></div>
 
-      ${arco ? `<h3>Aqui</h3>
+      ${arco ? `<h3 class="sec sec-aqui">Aqui</h3>
         <div id="escolhas" class="escolhas">
-          <button class="escolha" style="border-color:var(--destaque)" ${travaArco ? 'disabled' : 'onclick="Exploracao.entrarNoArco()"'}>
-            ${UI.esc(arco.chamada)}${travaArco ? `<br><span class="pd">${UI.esc(textoTrava(travaArco))}</span>` : ''}</button>
+          <button class="escolha chamado com-icone" ${travaArco ? 'disabled' : 'onclick="Exploracao.entrarNoArco()"'}>
+            ${svgIcone(travaArco ? 'trancado' : 'exclama')}<span class="esc-rot"><small>${UI.esc(typeof numeroDoCapitulo === 'function' ? numeroDoCapitulo(arco.cap) : 'Capítulo ' + arco.num)}</small>${
+              UI.esc(arco.chamada)}${travaArco ? `<span class="esc-trava">${UI.esc(textoTrava(travaArco))}</span>` : ''}</span></button>
         </div>` : ''}
 
-      ${lugares ? `<h3>Onde entrar</h3>
-        <div class="portas">${lugares}</div>` : ''}
+      ${lugares ? `<h3 class="sec sec-portas">Onde entrar</h3>
+        <div class="portas" style="--cols:${colunas}">${lugares}</div>` : ''}
 
-      <h3>O que fazer</h3>
+      <h3 class="sec sec-fazer">O que fazer</h3>
       <div class="escolhas">${afazeres}</div>
 
-      <h3 class="com-mapa">Para onde ir
+      <h3 class="sec sec-ir com-mapa">Para onde ir
         ${!Estado.contaItem('Mapa de Kanto') && this.temCentro(L)
           ? `<button class="btn mini abre-mapa" onclick="Exploracao.mapa('parede')">${imgItem('Mapa de Kanto')}Mapa do Centro</button>` : ''}</h3>
       <div class="escolhas">${vizinhos}</div>
@@ -140691,6 +141628,16 @@ const Exploracao = {
   },
   /* uma quadra = 12 unidades do desenho */
   _q(g){ return [g[0] * 12 + 10, g[1] * 12 + 10]; },
+  /* Pra que lado fica o vizinho, no mesmo mapa que a parede do Centro
+     mostra: a placa de "Para onde ir" aponta pra lá. Oito rumos, de 45
+     em 45 graus; 0 é leste e o y do mapa cresce pro sul. */
+  RUMOS: ['leste', 'sudeste', 'sul', 'sudoeste', 'oeste', 'noroeste', 'norte', 'nordeste'],
+  rumo(de, para){
+    const a = this.MAPA_GRADE[de], b = this.MAPA_GRADE[para];
+    if (!a || !b || (a[0] === b[0] && a[1] === b[1])) return null;
+    const i = ((Math.round(Math.atan2(b[1] - a[1], b[0] - a[0]) / (Math.PI / 4)) % 8) + 8) % 8;
+    return {graus:i * 45, nome:this.RUMOS[i]};
+  },
   get POS_MAPA(){
     if (!this._pos){ this._pos = {}; for (const [id, g] of Object.entries(this.MAPA_GRADE)) this._pos[id] = this._q(g); }
     return this._pos;

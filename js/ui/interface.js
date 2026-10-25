@@ -1416,14 +1416,14 @@ const UI = {
     const c = document.getElementById('escolhas');
     if (!c) return;
 
-    if (cena.batalha){ c.appendChild(this.el(`<button class="escolha" onclick="Jogo.iniciarBatalhaDaCena()">Encarar.</button>`)); return; }
+    if (cena.batalha){ c.appendChild(this.el(`<button class="escolha luta com-icone" onclick="Jogo.iniciarBatalhaDaCena()">${svgIcone('lutar')}<span class="esc-rot">Encarar.</span></button>`)); return; }
     if (cena.teste){
       const t = cena.teste;
       const nDados = Estado.j.status[t.status] + Dados.PERICIA_BASE, pede = Dados.sucessosPedidos(t.dificuldade);
-      c.appendChild(this.el(`<button class="escolha" onclick="Jogo.rolarTeste()">Rolar ${this.esc(t.nomeStatus||t.status)} — ${nDados}d6, pede ${pede} sucesso${pede === 1 ? '' : 's'} (4+)</button>`));
+      c.appendChild(this.el(`<button class="escolha teste com-icone" onclick="Jogo.rolarTeste()">${svgIcone('dado')}<span class="esc-rot">Rolar ${this.esc(t.nomeStatus||t.status)}<small class="esc-det">${nDados}d6, pede ${pede} sucesso${pede === 1 ? '' : 's'} (4+)</small></span></button>`));
       /* Forçar o destino, do lado do treinador: 1 de Vontade, um sucesso a mais */
       if (Estado.vontadeJogador() > 0)
-        c.appendChild(this.el(`<button class="escolha" onclick="Jogo.rolarTeste(true)">Rolar gastando 1 de Vontade — ${nDados}d6 e um sucesso garantido</button>`));
+        c.appendChild(this.el(`<button class="escolha vontade com-icone" onclick="Jogo.rolarTeste(true)">${svgIcone('chama')}<span class="esc-rot">Rolar gastando 1 de Vontade<small class="esc-det">${nDados}d6 e um sucesso garantido</small></span></button>`));
       return;
     }
     if (cena.sacrificio){
@@ -1439,8 +1439,8 @@ const UI = {
       }
       return;
     }
-    if (cena.final){ c.appendChild(this.el(`<button class="escolha" onclick="Jogo.mostrarFinal()">…</button>`)); return; }
-    if (cena.fim){ c.appendChild(this.el(`<button class="escolha" onclick="Jogo.fecharCapitulo()">Encerrar o capítulo.</button>`)); return; }
+    if (cena.final){ c.appendChild(this.el(`<button class="escolha fim" onclick="Jogo.mostrarFinal()">…</button>`)); return; }
+    if (cena.fim){ c.appendChild(this.el(`<button class="escolha fim com-icone" onclick="Jogo.fecharCapitulo()">${svgIcone('diario')}<span class="esc-rot">Encerrar o capítulo.</span></button>`)); return; }
 
     /* Primeiro com o filtro de "já fiz isso e não deu nada"; se isso
        apagar a cena inteira, mostra tudo — ninguém fica preso. */
@@ -1458,13 +1458,13 @@ const UI = {
        largar a história — cura, PC, mapa — e voltar pro mesmo ponto. */
     const aqui = Mundo.atual();
     if (Estado.dados.capitulo > 1 && aqui && aqui.tipo === 'cidade' && (aqui.lugares || []).includes('centro'))
-      c.appendChild(this.el(`<button class="escolha utilitaria" onclick="Cidade.centro()">Ir ao balcão do Centro Pokémon e voltar</button>`));
+      c.appendChild(this.el(`<button class="escolha utilitaria com-icone" onclick="Cidade.centro()">${svgIcone('centro')}<span class="esc-rot">Ir ao balcão do Centro Pokémon e voltar</span></button>`));
 
     /* Parar e olhar vale uma vez por cena: a segunda olhada nunca
        mostrou nada e virava um botão que convidava a clicar à toa. */
     if (visiveis.length && visiveis.length < 4 && !Historia.jaOlhou(id)){
-      c.appendChild(this.el(`<button class="escolha" onclick="Jogo.observarCena()">
-        Parar e olhar mais um pouco antes de decidir.</button>`));
+      c.appendChild(this.el(`<button class="escolha olhar com-icone" onclick="Jogo.observarCena()">
+        ${svgIcone('olho')}<span class="esc-rot">Parar e olhar mais um pouco antes de decidir.</span></button>`));
     }
 
     /* Quase todo mundo neste jogo é chamado pela função. Quando tem
@@ -1474,8 +1474,8 @@ const UI = {
       if (anon.length){
         const quem = anon[0];
         const ela = /^(a|as|uma)\s/i.test(quem);
-        c.appendChild(this.el(`<button class="escolha discreta" onclick="Jogo.perguntarNome(${JSON.stringify(quem).replace(/"/g,'&quot;')})">
-          Perguntar como ${ela ? 'ela' : 'ele'} se chama.</button>`));
+        c.appendChild(this.el(`<button class="escolha discreta com-icone" onclick="Jogo.perguntarNome(${JSON.stringify(quem).replace(/"/g,'&quot;')})">
+          ${svgIcone('pergunta')}<span class="esc-rot">Perguntar como ${ela ? 'ela' : 'ele'} se chama.</span></button>`));
       }
     }
 

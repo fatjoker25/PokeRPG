@@ -132,14 +132,40 @@ const ICONE = {
   diario:'<path d="M12 6.5c-2-1.5-5-2-8-1.5v14c3-.5 6 0 8 1.5 2-1.5 5-2 8-1.5V5c-3-.5-6 0-8 1.5z"/><path d="M12 6.5V20.5"/>',
   engrenagem:'<circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="6.6"/><path d="M12 2.6v2.8M12 18.6v2.8M2.6 12h2.8M18.6 12h2.8M5.4 5.4l2 2M16.6 16.6l2 2M5.4 18.6l2-2M16.6 7.4l2-2"/>',
   /* o dado da ficha de inscrição: sorteia uma sugestão */
-  dado:'<rect x="4" y="4" width="16" height="16" rx="3.5"/><circle cx="8.6" cy="8.6" r=".9" fill="currentColor"/><circle cx="15.4" cy="8.6" r=".9" fill="currentColor"/><circle cx="12" cy="12" r=".9" fill="currentColor"/><circle cx="8.6" cy="15.4" r=".9" fill="currentColor"/><circle cx="15.4" cy="15.4" r=".9" fill="currentColor"/>'
+  dado:'<rect x="4" y="4" width="16" height="16" rx="3.5"/><circle cx="8.6" cy="8.6" r=".9" fill="currentColor"/><circle cx="15.4" cy="8.6" r=".9" fill="currentColor"/><circle cx="12" cy="12" r=".9" fill="currentColor"/><circle cx="8.6" cy="15.4" r=".9" fill="currentColor"/><circle cx="15.4" cy="15.4" r=".9" fill="currentColor"/>',
+  /* o menu da história: a placa de estrada (a seta gira pro lado em
+     que o lugar fica no mapa), parar e olhar, o capítulo que espera
+     aqui e perguntar o nome de quem fala */
+  seta:'<path d="M4.5 12h14M13 6.5l5.5 5.5-5.5 5.5"/>',
+  olho:'<path d="M2.5 12s3.5-6.5 9.5-6.5 9.5 6.5 9.5 6.5-3.5 6.5-9.5 6.5S2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.8"/>',
+  exclama:'<path d="M12 4.5v10"/><circle cx="12" cy="19" r="1.1" fill="currentColor"/>',
+  pergunta:'<path d="M4 5h16v11H10l-4 3.5V16H4z"/><path d="M10.2 8.6a1.9 1.9 0 1 1 2.6 1.8c-.5.2-.8.6-.8 1.1v.4"/><circle cx="12" cy="13.6" r=".7" fill="currentColor"/>'
 };
 
-function svgIcone(chave, cls){
+/* A cor de cada desenho no menu: a porta na cor da casa, como o
+   ícone do mapa dos jogos de hoje (Centro vermelho, loja azul, ginásio
+   dourado, a sua casa verde), e a ação na cor do que ela é. Quem lê é
+   o CSS, pela variável --ac; desenho sem cor fica na cor da linha. */
+const COR_DO_ICONE = {
+  centro:'#ef5350', loja:'#3d8bfd', ginasio:'#e8b923', casa:'#43b581', laboratorio:'#26c6da',
+  onibus:'#2bb3a3', doar:'#f06292', relembrar:'#9575cd', liga:'#b18cf0', torneio:'#ff8a3d',
+  credenciais:'#7e8ce0', rede:'#c2414f', porta:'#8d97bd', ferragem:'#d4893b',
+  procurar:'#4caf50', vasculhar:'#f0b429', andar:'#4fc3f7', conversar:'#f48fb1', treinar:'#ff7043',
+  pescar:'#42a5f5', acampar:'#c49a6c', esperar:'#90a4ae', lutar:'#ef5350', troca:'#26a69a',
+  agenda:'#ffca28', convite:'#ffb74d', revanche:'#ff7043', trancado:'#7d88a8',
+  mural:'#ffb74d', pc:'#4dd0e1', mapa:'#66bb6a', dormir:'#7986cb', diario:'#e8b923',
+  seta:'#5aa7ff', olho:'#90caf9', pergunta:'#9fa8da', dado:'#4dd0e1', chama:'#a77bff', tigela:'#d9a35b'
+};
+
+/* estilo: mais alguma coisa inline (a seta da placa gira por ele) */
+function svgIcone(chave, cls, estilo){
   const c = ICONE[chave];
   if (!c) return '';
-  return `<svg class="icone${cls ? ' ' + cls : ''}" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${c}</svg>`;
+  const cor = COR_DO_ICONE[chave];
+  const st = [cor ? '--ac:' + cor : '', estilo || ''].filter(Boolean).join(';');
+  return `<svg class="icone${cls ? ' ' + cls : ''}" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"${st ? ` style="${st}"` : ''}>${c}</svg>`;
 }
+function corDoIcone(chave){ return COR_DO_ICONE[chave] || ''; }
 
 /* o ícone de cada coisa da lista de um lugar, pelo id do afazer */
 function iconeDoAfazer(a){

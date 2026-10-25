@@ -26,23 +26,38 @@ const Exploracao = {
     const travaArco = arco ? travaDoCapitulo(arco.num) : null;
 
     /* Lugar e ação não são a mesma coisa e não merecem o mesmo botão:
-       lugar é porta que você abre, ação é tempo que você gasta. */
+       lugar é porta que você abre (na cor da casa), ação é tempo que
+       você gasta (linha de menu, com o custo numa etiqueta). */
     const todos = afazeresDoLocal();
-    const lugares = todos.filter(a => a.lugar).map(a =>
-      `<button class="porta" onclick="Exploracao.fazer('${a.id}')">
-        ${svgIcone(iconeDoAfazer(a), 'porta-icone')}<span class="porta-nome">${UI.esc(a.titulo)}</span></button>`).join('');
-    const afazeres = todos.filter(a => !a.lugar).map(a =>
-      `<button class="escolha com-icone" onclick="Exploracao.fazer('${a.id}')">
-        ${svgIcone(iconeDoAfazer(a))}<span>${UI.esc(a.titulo)}</span></button>`).join('');
+    const cor = ic => { const c = corDoIcone(ic); return c ? ` style="--ac:${c}"` : ''; };
+    const portas = todos.filter(a => a.lugar);
+    const lugares = portas.map(a => {
+      const ic = iconeDoAfazer(a);
+      /* "Rodoviária — ônibus da Liga pra Viridian": o nome na placa, o resto embaixo */
+      const [nome, mais] = String(a.titulo).split(' — ');
+      return `<button class="porta"${cor(ic)} onclick="Exploracao.fazer('${a.id}')">
+        ${svgIcone(ic, 'porta-icone')}<span class="porta-nome">${UI.esc(nome)}${mais ? `<small>${UI.esc(mais)}</small>` : ''}</span></button>`;
+    }).join('');
+    /* as portas enchem a linha: três numa, quatro em duas de duas */
+    const colunas = portas.length <= 3 ? Math.max(1, portas.length) : portas.length === 4 ? 2 : 3;
+    const afazeres = todos.filter(a => !a.lugar).map(a => {
+      const ic = iconeDoAfazer(a);
+      const [rot, custo] = String(a.titulo).split(' — ');
+      return `<button class="escolha menu com-icone"${cor(ic)} onclick="Exploracao.fazer('${a.id}')">
+        ${svgIcone(ic)}<span class="esc-rot">${UI.esc(rot)}</span>${
+          custo ? `<span class="esc-custo">${/Ração/.test(custo) ? svgIcone('tigela') : ''}${UI.esc(custo)}</span>` : ''}</button>`;
+    }).join('');
 
     const vizinhos = Mundo.vizinhos().map(id => {
       const v = LOCAIS[id];
       const conhecido = Mundo.visitado(id);
       /* passagem que cobra insígnia aparece fechada, dizendo o que falta */
       const trava = travaDaPassagem(Mundo.id(), id);
-      return `<button class="escolha" ${trava ? 'disabled' : `onclick="Exploracao.viajar('${id}')"`}>
-        ${conhecido ? 'Ir para ' + UI.esc(v.nome) : 'Seguir o caminho — ' + UI.esc(v.nome)}${
-          trava ? `<br><span class="pd">${UI.esc(textoTrava(trava))}</span>` : ''}</button>`;
+      const rumo = this.rumo(Mundo.id(), id);
+      const seta = trava ? svgIcone('trancado') : svgIcone('seta', null, rumo ? `rotate:${rumo.graus}deg` : '');
+      return `<button class="escolha menu caminho com-icone" ${trava ? 'disabled' : `onclick="Exploracao.viajar('${id}')"`}>
+        ${seta}<span class="esc-rot"><small>${conhecido ? 'Ir para' : 'Seguir o caminho'}${rumo ? ' · ' + rumo.nome : ''}</small><b>${UI.esc(v.nome)}</b>${
+          trava ? `<span class="esc-trava">${UI.esc(textoTrava(trava))}</span>` : ''}</span></button>`;
     }).join('');
 
     UI.add(`<div class="painel">
@@ -52,24 +67,25 @@ const Exploracao = {
         <div class="loc">${UI.esc(L.tipo === 'cidade' ? (L.porte||'cidade') : (L.tipo==='rota'?'rota':'lugar'))}${
           L.tipo !== 'cidade' && L.nivel ? ' · posto ' + UI.esc(nomePosto(L.nivel)) : ''}</div>
       </div>
-      <div class="narrativa">${(L.desc||[]).map(t=>`<p>${UI.esc(txt(t))}</p>`).join('')}${
+      <div class="narrativa descricao-lugar">${(L.desc||[]).map(t=>`<p>${UI.esc(txt(t))}</p>`).join('')}${
         (() => { const r = (typeof comoOlugarTeRecebe === 'function') ? comoOlugarTeRecebe() : null;
                  return r ? `<p class="recepcao">${UI.esc(r)}</p>` : ''; })()}</div>
       <div id="avisos" class="avisos"></div>
 
-      ${arco ? `<h3>Aqui</h3>
+      ${arco ? `<h3 class="sec sec-aqui">Aqui</h3>
         <div id="escolhas" class="escolhas">
-          <button class="escolha" style="border-color:var(--destaque)" ${travaArco ? 'disabled' : 'onclick="Exploracao.entrarNoArco()"'}>
-            ${UI.esc(arco.chamada)}${travaArco ? `<br><span class="pd">${UI.esc(textoTrava(travaArco))}</span>` : ''}</button>
+          <button class="escolha chamado com-icone" ${travaArco ? 'disabled' : 'onclick="Exploracao.entrarNoArco()"'}>
+            ${svgIcone(travaArco ? 'trancado' : 'exclama')}<span class="esc-rot"><small>${UI.esc(typeof numeroDoCapitulo === 'function' ? numeroDoCapitulo(arco.cap) : 'Capítulo ' + arco.num)}</small>${
+              UI.esc(arco.chamada)}${travaArco ? `<span class="esc-trava">${UI.esc(textoTrava(travaArco))}</span>` : ''}</span></button>
         </div>` : ''}
 
-      ${lugares ? `<h3>Onde entrar</h3>
-        <div class="portas">${lugares}</div>` : ''}
+      ${lugares ? `<h3 class="sec sec-portas">Onde entrar</h3>
+        <div class="portas" style="--cols:${colunas}">${lugares}</div>` : ''}
 
-      <h3>O que fazer</h3>
+      <h3 class="sec sec-fazer">O que fazer</h3>
       <div class="escolhas">${afazeres}</div>
 
-      <h3 class="com-mapa">Para onde ir
+      <h3 class="sec sec-ir com-mapa">Para onde ir
         ${!Estado.contaItem('Mapa de Kanto') && this.temCentro(L)
           ? `<button class="btn mini abre-mapa" onclick="Exploracao.mapa('parede')">${imgItem('Mapa de Kanto')}Mapa do Centro</button>` : ''}</h3>
       <div class="escolhas">${vizinhos}</div>
@@ -101,6 +117,16 @@ const Exploracao = {
   },
   /* uma quadra = 12 unidades do desenho */
   _q(g){ return [g[0] * 12 + 10, g[1] * 12 + 10]; },
+  /* Pra que lado fica o vizinho, no mesmo mapa que a parede do Centro
+     mostra: a placa de "Para onde ir" aponta pra lá. Oito rumos, de 45
+     em 45 graus; 0 é leste e o y do mapa cresce pro sul. */
+  RUMOS: ['leste', 'sudeste', 'sul', 'sudoeste', 'oeste', 'noroeste', 'norte', 'nordeste'],
+  rumo(de, para){
+    const a = this.MAPA_GRADE[de], b = this.MAPA_GRADE[para];
+    if (!a || !b || (a[0] === b[0] && a[1] === b[1])) return null;
+    const i = ((Math.round(Math.atan2(b[1] - a[1], b[0] - a[0]) / (Math.PI / 4)) % 8) + 8) % 8;
+    return {graus:i * 45, nome:this.RUMOS[i]};
+  },
   get POS_MAPA(){
     if (!this._pos){ this._pos = {}; for (const [id, g] of Object.entries(this.MAPA_GRADE)) this._pos[id] = this._q(g); }
     return this._pos;
