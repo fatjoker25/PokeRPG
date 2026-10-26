@@ -2717,50 +2717,117 @@ h3.cat-item{
 .recado.saindo{opacity:0;transform:translateY(6px)}
 
 /* ============================================================
-   EVOLUÇÃO — aura azul, estilo do anime
-   Tela pequena, fundo azul-noite. O vulto é um clone da arte sem a
-   classe .sprite: branco por dentro, halo azul por fora.
+   EVOLUÇÃO — a tela inteira, com a aura azul do anime
+   O palco toma a tela, na cor dos tipos de quem evolui (o fundo da
+   forma nova acende por cima no fim). Embaixo, a caixa de diálogo
+   dos jogos com a frase e os botões B (parar) e A (continuar). O
+   vulto é um clone da arte sem a classe .sprite: branco por dentro,
+   halo azul por fora.
    ============================================================ */
+.modal-fundo.fundo-evolucao{padding:0;background:#03050c}
 .modal.evolucao{
-  max-width:420px;padding:18px 18px 16px;text-align:center;
-  background:radial-gradient(120% 90% at 50% 38%, #10254a 0%, #0a1731 55%, #070f22 100%);
-  border-color:#24457d;color:#e6efff;
+  width:100%;height:100%;max-width:none;max-height:none;padding:0;border:0;border-radius:0;
+  background:#070f22;color:#e6efff;overflow:hidden;
+  animation:fundoEntra .45s var(--suave) both;
 }
-.modal.evolucao .modal-corpo{padding:0}
-.evo{display:flex;flex-direction:column;align-items:center;gap:12px}
-.evo-palco{position:relative;width:220px;height:200px;max-width:100%;overflow:hidden;border-radius:14px}
+.modal.evolucao .modal-corpo{padding:0;height:100%}
+.evo{position:relative;height:100%;display:flex;flex-direction:column}
+.evo-palco{position:relative;flex:1 1 auto;min-height:0;overflow:hidden}
+.evo-fundo{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 60% 48% at 50% 46%, color-mix(in srgb, var(--t1) 55%, #ffffff 15%), transparent 72%),
+    radial-gradient(ellipse 120% 70% at 50% 108%, color-mix(in srgb, var(--t2) 45%, #000) 0%, transparent 60%),
+    linear-gradient(160deg, color-mix(in srgb, var(--t1) 48%, #050a1a), color-mix(in srgb, var(--t2) 40%, #050a1a) 70%, #04060d);
+  transition:opacity 1.2s var(--suave), filter 1.2s var(--suave);
+}
+.evo-fundo.novo{opacity:0}
+.evo.pronto .evo-fundo.novo{opacity:1}
+/* enquanto evolui, o tipo apaga e o azul da aura manda */
+.evo.evoluindo .evo-fundo{filter:saturate(.35) brightness(.55)}
+/* centrada pela propriedade translate, não pelo transform: a animação
+   da aura mexe no transform (a escala), e o commitStyles do fim gravava
+   a escala por cima do centro — a aura saía torta pra baixo e pra direita */
 .evo-aura{
-  position:absolute;inset:-20%;opacity:0;pointer-events:none;
-  background:radial-gradient(circle at 50% 55%,
-    rgba(210,236,255,.95) 0%, rgba(120,190,255,.75) 18%, rgba(60,130,255,.45) 36%,
-    rgba(40,90,220,.18) 55%, transparent 70%);
-  filter:blur(2px);
+  position:absolute;left:50%;top:46%;width:min(92vmin, 760px);aspect-ratio:1;translate:-50% -50%;
+  opacity:0;pointer-events:none;border-radius:50%;
+  background:radial-gradient(circle at 50% 50%,
+    rgba(210,236,255,.95) 0%, rgba(120,190,255,.75) 16%, rgba(60,130,255,.45) 32%,
+    rgba(40,90,220,.18) 50%, transparent 68%);
+  filter:blur(3px);
 }
 .evo.evoluindo .evo-aura{animation:evoPulso 1.1s ease-in-out infinite}
-@keyframes evoPulso{0%,100%{filter:blur(2px) brightness(1)}50%{filter:blur(4px) brightness(1.35)}}
+@keyframes evoPulso{0%,100%{filter:blur(3px) brightness(1)}50%{filter:blur(6px) brightness(1.35)}}
 .evo-bolhas{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .6s}
 .evo.evoluindo .evo-bolhas{opacity:1}
 .evo-bolha{
-  position:absolute;bottom:-8px;width:5px;height:5px;border-radius:50%;
-  background:#bfe3ff;box-shadow:0 0 8px 2px rgba(110,180,255,.9);
-  animation:evoSobe 2.6s linear infinite;
+  position:absolute;bottom:-10px;width:6px;height:6px;border-radius:50%;
+  background:#bfe3ff;box-shadow:0 0 10px 3px rgba(110,180,255,.9);
+  /* backwards: na espera do atraso a bolha fica no quadro 0, apagada;
+     sem isso o brilho dela aparecia como uma fila de pontos no pé do palco */
+  animation:evoSobe 2.8s linear infinite backwards;
 }
 @keyframes evoSobe{
   0%{transform:translateY(0) scale(.6);opacity:0}
   15%{opacity:1}
-  100%{transform:translateY(-215px) scale(1.1);opacity:0}
+  100%{transform:translateY(-70vh) scale(1.15);opacity:0}
 }
+/* o chão: a sombra do Pokémon no meio do palco */
+.evo-chao{
+  position:absolute;left:50%;top:calc(46% + var(--evo-arte) * .36);width:calc(var(--evo-arte) * .8);height:calc(var(--evo-arte) * .16);
+  transform:translateX(-50%);border-radius:50%;
+  background:radial-gradient(ellipse at center, rgba(0,0,0,.45), rgba(0,0,0,.15) 60%, transparent 72%);
+}
+.evo{--evo-arte:min(42vmin, 340px)}
 .evo-cor,.evo-vulto{
-  position:absolute;left:50%;top:50%;width:150px;height:150px;transform:translate(-50%,-48%);
+  position:absolute;left:50%;top:46%;width:var(--evo-arte);height:var(--evo-arte);transform:translate(-50%,-50%);
   object-fit:contain;image-rendering:pixelated;image-rendering:crisp-edges;
 }
 .evo-cor.novo{opacity:0}
-.evo-vulto{opacity:0;filter:brightness(0) invert(1) drop-shadow(0 0 6px #9fd4ff) drop-shadow(0 0 14px #3f8cff)}
+.evo-vulto{opacity:0;filter:brightness(0) invert(1) drop-shadow(0 0 8px #9fd4ff) drop-shadow(0 0 20px #3f8cff)}
 .evo-clarao{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none}
-.evo-texto{margin:0;font-size:15px;min-height:1.5em;color:#e6efff}
-.evo-texto b{color:#fff}
-.evo.pronto .evo-cor.novo{filter:drop-shadow(0 0 10px rgba(140,200,255,.55))}
-.evo-botoes{display:flex;gap:10px;justify-content:center}
+.evo.pronto .evo-cor.novo{filter:drop-shadow(0 0 14px rgba(255,255,255,.45))}
+/* a caixa de diálogo */
+.evo-caixa{
+  flex:0 0 auto;position:relative;z-index:2;margin:0 auto calc(16px + env(safe-area-inset-bottom, 0px));
+  width:min(760px, calc(100% - 32px));
+  display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  padding:16px 18px;border-radius:16px;
+  background:linear-gradient(180deg, rgba(14,20,44,.94), rgba(8,12,28,.96));
+  border:2px solid rgba(160,190,255,.35);
+  box-shadow:0 18px 40px -20px rgba(0,0,0,.95), inset 0 1px 0 rgba(255,255,255,.08);
+}
+.evo-texto{margin:0;flex:1 1 260px;font-size:18px;line-height:1.45;color:#e6efff;text-align:left}
+.evo-texto b{color:#fff;font-family:var(--letra-hud, var(--fonte));font-weight:700}
+.evo-botoes{display:flex;gap:10px;justify-content:flex-end;flex:0 0 auto}
+.evo-btn{
+  display:inline-flex;align-items:center;gap:9px;padding:9px 16px 9px 9px;border-radius:999px;
+  font:700 15px/1 var(--letra-hud, var(--fonte));color:#fff;cursor:pointer;
+  background:linear-gradient(180deg, #2c3557, #1b2240);border:1px solid rgba(160,190,255,.35);
+  box-shadow:0 3px 0 #0b0f22, 0 10px 18px -12px rgba(0,0,0,.9);
+  transition:transform .12s var(--suave), box-shadow .12s var(--suave), filter .15s var(--suave);
+}
+/* o display do botão passava por cima do atributo hidden, e o Parar e o
+   Continuar ficavam os dois na tela o tempo todo */
+.evo-btn[hidden]{display:none}
+.evo-btn:hover{filter:brightness(1.12)}
+.evo-btn:active{transform:translateY(2px);box-shadow:0 1px 0 #0b0f22}
+.evo-btn:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.evo-tecla{
+  width:26px;height:26px;border-radius:50%;display:grid;place-items:center;
+  font:800 13px/1 var(--letra-hud, var(--fonte));color:#fff;box-shadow:inset 0 -2px 0 rgba(0,0,0,.3);
+}
+.evo-btn.b .evo-tecla{background:#d9413a}
+.evo-btn.a .evo-tecla{background:#2f9c55}
+.evo-btn.a{background:linear-gradient(180deg, #2f9c55, #22773f);border-color:#7fe0a2;box-shadow:0 3px 0 #0e3a1d, 0 10px 18px -12px rgba(0,0,0,.9)}
+.evo-btn.a .evo-tecla{background:rgba(0,0,0,.25)}
+@media (max-width:560px){
+  .evo{--evo-arte:min(62vw, 260px)}
+  .evo-caixa{padding:13px 14px;gap:12px}
+  .evo-texto{font-size:16px;flex-basis:100%}
+  .evo-botoes{width:100%}
+  .evo-btn{flex:1 1 auto;justify-content:center}
+}
 @media(prefers-reduced-motion:reduce){
   .evo.evoluindo .evo-aura,.evo-bolha{animation:none}
 }
@@ -8075,50 +8142,117 @@ h3.cat-item{
 .recado.saindo{opacity:0;transform:translateY(6px)}
 
 /* ============================================================
-   EVOLUÇÃO — aura azul, estilo do anime
-   Tela pequena, fundo azul-noite. O vulto é um clone da arte sem a
-   classe .sprite: branco por dentro, halo azul por fora.
+   EVOLUÇÃO — a tela inteira, com a aura azul do anime
+   O palco toma a tela, na cor dos tipos de quem evolui (o fundo da
+   forma nova acende por cima no fim). Embaixo, a caixa de diálogo
+   dos jogos com a frase e os botões B (parar) e A (continuar). O
+   vulto é um clone da arte sem a classe .sprite: branco por dentro,
+   halo azul por fora.
    ============================================================ */
+.modal-fundo.fundo-evolucao{padding:0;background:#03050c}
 .modal.evolucao{
-  max-width:420px;padding:18px 18px 16px;text-align:center;
-  background:radial-gradient(120% 90% at 50% 38%, #10254a 0%, #0a1731 55%, #070f22 100%);
-  border-color:#24457d;color:#e6efff;
+  width:100%;height:100%;max-width:none;max-height:none;padding:0;border:0;border-radius:0;
+  background:#070f22;color:#e6efff;overflow:hidden;
+  animation:fundoEntra .45s var(--suave) both;
 }
-.modal.evolucao .modal-corpo{padding:0}
-.evo{display:flex;flex-direction:column;align-items:center;gap:12px}
-.evo-palco{position:relative;width:220px;height:200px;max-width:100%;overflow:hidden;border-radius:14px}
+.modal.evolucao .modal-corpo{padding:0;height:100%}
+.evo{position:relative;height:100%;display:flex;flex-direction:column}
+.evo-palco{position:relative;flex:1 1 auto;min-height:0;overflow:hidden}
+.evo-fundo{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 60% 48% at 50% 46%, color-mix(in srgb, var(--t1) 55%, #ffffff 15%), transparent 72%),
+    radial-gradient(ellipse 120% 70% at 50% 108%, color-mix(in srgb, var(--t2) 45%, #000) 0%, transparent 60%),
+    linear-gradient(160deg, color-mix(in srgb, var(--t1) 48%, #050a1a), color-mix(in srgb, var(--t2) 40%, #050a1a) 70%, #04060d);
+  transition:opacity 1.2s var(--suave), filter 1.2s var(--suave);
+}
+.evo-fundo.novo{opacity:0}
+.evo.pronto .evo-fundo.novo{opacity:1}
+/* enquanto evolui, o tipo apaga e o azul da aura manda */
+.evo.evoluindo .evo-fundo{filter:saturate(.35) brightness(.55)}
+/* centrada pela propriedade translate, não pelo transform: a animação
+   da aura mexe no transform (a escala), e o commitStyles do fim gravava
+   a escala por cima do centro — a aura saía torta pra baixo e pra direita */
 .evo-aura{
-  position:absolute;inset:-20%;opacity:0;pointer-events:none;
-  background:radial-gradient(circle at 50% 55%,
-    rgba(210,236,255,.95) 0%, rgba(120,190,255,.75) 18%, rgba(60,130,255,.45) 36%,
-    rgba(40,90,220,.18) 55%, transparent 70%);
-  filter:blur(2px);
+  position:absolute;left:50%;top:46%;width:min(92vmin, 760px);aspect-ratio:1;translate:-50% -50%;
+  opacity:0;pointer-events:none;border-radius:50%;
+  background:radial-gradient(circle at 50% 50%,
+    rgba(210,236,255,.95) 0%, rgba(120,190,255,.75) 16%, rgba(60,130,255,.45) 32%,
+    rgba(40,90,220,.18) 50%, transparent 68%);
+  filter:blur(3px);
 }
 .evo.evoluindo .evo-aura{animation:evoPulso 1.1s ease-in-out infinite}
-@keyframes evoPulso{0%,100%{filter:blur(2px) brightness(1)}50%{filter:blur(4px) brightness(1.35)}}
+@keyframes evoPulso{0%,100%{filter:blur(3px) brightness(1)}50%{filter:blur(6px) brightness(1.35)}}
 .evo-bolhas{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .6s}
 .evo.evoluindo .evo-bolhas{opacity:1}
 .evo-bolha{
-  position:absolute;bottom:-8px;width:5px;height:5px;border-radius:50%;
-  background:#bfe3ff;box-shadow:0 0 8px 2px rgba(110,180,255,.9);
-  animation:evoSobe 2.6s linear infinite;
+  position:absolute;bottom:-10px;width:6px;height:6px;border-radius:50%;
+  background:#bfe3ff;box-shadow:0 0 10px 3px rgba(110,180,255,.9);
+  /* backwards: na espera do atraso a bolha fica no quadro 0, apagada;
+     sem isso o brilho dela aparecia como uma fila de pontos no pé do palco */
+  animation:evoSobe 2.8s linear infinite backwards;
 }
 @keyframes evoSobe{
   0%{transform:translateY(0) scale(.6);opacity:0}
   15%{opacity:1}
-  100%{transform:translateY(-215px) scale(1.1);opacity:0}
+  100%{transform:translateY(-70vh) scale(1.15);opacity:0}
 }
+/* o chão: a sombra do Pokémon no meio do palco */
+.evo-chao{
+  position:absolute;left:50%;top:calc(46% + var(--evo-arte) * .36);width:calc(var(--evo-arte) * .8);height:calc(var(--evo-arte) * .16);
+  transform:translateX(-50%);border-radius:50%;
+  background:radial-gradient(ellipse at center, rgba(0,0,0,.45), rgba(0,0,0,.15) 60%, transparent 72%);
+}
+.evo{--evo-arte:min(42vmin, 340px)}
 .evo-cor,.evo-vulto{
-  position:absolute;left:50%;top:50%;width:150px;height:150px;transform:translate(-50%,-48%);
+  position:absolute;left:50%;top:46%;width:var(--evo-arte);height:var(--evo-arte);transform:translate(-50%,-50%);
   object-fit:contain;image-rendering:pixelated;image-rendering:crisp-edges;
 }
 .evo-cor.novo{opacity:0}
-.evo-vulto{opacity:0;filter:brightness(0) invert(1) drop-shadow(0 0 6px #9fd4ff) drop-shadow(0 0 14px #3f8cff)}
+.evo-vulto{opacity:0;filter:brightness(0) invert(1) drop-shadow(0 0 8px #9fd4ff) drop-shadow(0 0 20px #3f8cff)}
 .evo-clarao{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none}
-.evo-texto{margin:0;font-size:15px;min-height:1.5em;color:#e6efff}
-.evo-texto b{color:#fff}
-.evo.pronto .evo-cor.novo{filter:drop-shadow(0 0 10px rgba(140,200,255,.55))}
-.evo-botoes{display:flex;gap:10px;justify-content:center}
+.evo.pronto .evo-cor.novo{filter:drop-shadow(0 0 14px rgba(255,255,255,.45))}
+/* a caixa de diálogo */
+.evo-caixa{
+  flex:0 0 auto;position:relative;z-index:2;margin:0 auto calc(16px + env(safe-area-inset-bottom, 0px));
+  width:min(760px, calc(100% - 32px));
+  display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  padding:16px 18px;border-radius:16px;
+  background:linear-gradient(180deg, rgba(14,20,44,.94), rgba(8,12,28,.96));
+  border:2px solid rgba(160,190,255,.35);
+  box-shadow:0 18px 40px -20px rgba(0,0,0,.95), inset 0 1px 0 rgba(255,255,255,.08);
+}
+.evo-texto{margin:0;flex:1 1 260px;font-size:18px;line-height:1.45;color:#e6efff;text-align:left}
+.evo-texto b{color:#fff;font-family:var(--letra-hud, var(--fonte));font-weight:700}
+.evo-botoes{display:flex;gap:10px;justify-content:flex-end;flex:0 0 auto}
+.evo-btn{
+  display:inline-flex;align-items:center;gap:9px;padding:9px 16px 9px 9px;border-radius:999px;
+  font:700 15px/1 var(--letra-hud, var(--fonte));color:#fff;cursor:pointer;
+  background:linear-gradient(180deg, #2c3557, #1b2240);border:1px solid rgba(160,190,255,.35);
+  box-shadow:0 3px 0 #0b0f22, 0 10px 18px -12px rgba(0,0,0,.9);
+  transition:transform .12s var(--suave), box-shadow .12s var(--suave), filter .15s var(--suave);
+}
+/* o display do botão passava por cima do atributo hidden, e o Parar e o
+   Continuar ficavam os dois na tela o tempo todo */
+.evo-btn[hidden]{display:none}
+.evo-btn:hover{filter:brightness(1.12)}
+.evo-btn:active{transform:translateY(2px);box-shadow:0 1px 0 #0b0f22}
+.evo-btn:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.evo-tecla{
+  width:26px;height:26px;border-radius:50%;display:grid;place-items:center;
+  font:800 13px/1 var(--letra-hud, var(--fonte));color:#fff;box-shadow:inset 0 -2px 0 rgba(0,0,0,.3);
+}
+.evo-btn.b .evo-tecla{background:#d9413a}
+.evo-btn.a .evo-tecla{background:#2f9c55}
+.evo-btn.a{background:linear-gradient(180deg, #2f9c55, #22773f);border-color:#7fe0a2;box-shadow:0 3px 0 #0e3a1d, 0 10px 18px -12px rgba(0,0,0,.9)}
+.evo-btn.a .evo-tecla{background:rgba(0,0,0,.25)}
+@media (max-width:560px){
+  .evo{--evo-arte:min(62vw, 260px)}
+  .evo-caixa{padding:13px 14px;gap:12px}
+  .evo-texto{font-size:16px;flex-basis:100%}
+  .evo-botoes{width:100%}
+  .evo-btn{flex:1 1 auto;justify-content:center}
+}
 @media(prefers-reduced-motion:reduce){
   .evo.evoluindo .evo-aura,.evo-bolha{animation:none}
 }
@@ -13433,50 +13567,117 @@ h3.cat-item{
 .recado.saindo{opacity:0;transform:translateY(6px)}
 
 /* ============================================================
-   EVOLUÇÃO — aura azul, estilo do anime
-   Tela pequena, fundo azul-noite. O vulto é um clone da arte sem a
-   classe .sprite: branco por dentro, halo azul por fora.
+   EVOLUÇÃO — a tela inteira, com a aura azul do anime
+   O palco toma a tela, na cor dos tipos de quem evolui (o fundo da
+   forma nova acende por cima no fim). Embaixo, a caixa de diálogo
+   dos jogos com a frase e os botões B (parar) e A (continuar). O
+   vulto é um clone da arte sem a classe .sprite: branco por dentro,
+   halo azul por fora.
    ============================================================ */
+.modal-fundo.fundo-evolucao{padding:0;background:#03050c}
 .modal.evolucao{
-  max-width:420px;padding:18px 18px 16px;text-align:center;
-  background:radial-gradient(120% 90% at 50% 38%, #10254a 0%, #0a1731 55%, #070f22 100%);
-  border-color:#24457d;color:#e6efff;
+  width:100%;height:100%;max-width:none;max-height:none;padding:0;border:0;border-radius:0;
+  background:#070f22;color:#e6efff;overflow:hidden;
+  animation:fundoEntra .45s var(--suave) both;
 }
-.modal.evolucao .modal-corpo{padding:0}
-.evo{display:flex;flex-direction:column;align-items:center;gap:12px}
-.evo-palco{position:relative;width:220px;height:200px;max-width:100%;overflow:hidden;border-radius:14px}
+.modal.evolucao .modal-corpo{padding:0;height:100%}
+.evo{position:relative;height:100%;display:flex;flex-direction:column}
+.evo-palco{position:relative;flex:1 1 auto;min-height:0;overflow:hidden}
+.evo-fundo{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 60% 48% at 50% 46%, color-mix(in srgb, var(--t1) 55%, #ffffff 15%), transparent 72%),
+    radial-gradient(ellipse 120% 70% at 50% 108%, color-mix(in srgb, var(--t2) 45%, #000) 0%, transparent 60%),
+    linear-gradient(160deg, color-mix(in srgb, var(--t1) 48%, #050a1a), color-mix(in srgb, var(--t2) 40%, #050a1a) 70%, #04060d);
+  transition:opacity 1.2s var(--suave), filter 1.2s var(--suave);
+}
+.evo-fundo.novo{opacity:0}
+.evo.pronto .evo-fundo.novo{opacity:1}
+/* enquanto evolui, o tipo apaga e o azul da aura manda */
+.evo.evoluindo .evo-fundo{filter:saturate(.35) brightness(.55)}
+/* centrada pela propriedade translate, não pelo transform: a animação
+   da aura mexe no transform (a escala), e o commitStyles do fim gravava
+   a escala por cima do centro — a aura saía torta pra baixo e pra direita */
 .evo-aura{
-  position:absolute;inset:-20%;opacity:0;pointer-events:none;
-  background:radial-gradient(circle at 50% 55%,
-    rgba(210,236,255,.95) 0%, rgba(120,190,255,.75) 18%, rgba(60,130,255,.45) 36%,
-    rgba(40,90,220,.18) 55%, transparent 70%);
-  filter:blur(2px);
+  position:absolute;left:50%;top:46%;width:min(92vmin, 760px);aspect-ratio:1;translate:-50% -50%;
+  opacity:0;pointer-events:none;border-radius:50%;
+  background:radial-gradient(circle at 50% 50%,
+    rgba(210,236,255,.95) 0%, rgba(120,190,255,.75) 16%, rgba(60,130,255,.45) 32%,
+    rgba(40,90,220,.18) 50%, transparent 68%);
+  filter:blur(3px);
 }
 .evo.evoluindo .evo-aura{animation:evoPulso 1.1s ease-in-out infinite}
-@keyframes evoPulso{0%,100%{filter:blur(2px) brightness(1)}50%{filter:blur(4px) brightness(1.35)}}
+@keyframes evoPulso{0%,100%{filter:blur(3px) brightness(1)}50%{filter:blur(6px) brightness(1.35)}}
 .evo-bolhas{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .6s}
 .evo.evoluindo .evo-bolhas{opacity:1}
 .evo-bolha{
-  position:absolute;bottom:-8px;width:5px;height:5px;border-radius:50%;
-  background:#bfe3ff;box-shadow:0 0 8px 2px rgba(110,180,255,.9);
-  animation:evoSobe 2.6s linear infinite;
+  position:absolute;bottom:-10px;width:6px;height:6px;border-radius:50%;
+  background:#bfe3ff;box-shadow:0 0 10px 3px rgba(110,180,255,.9);
+  /* backwards: na espera do atraso a bolha fica no quadro 0, apagada;
+     sem isso o brilho dela aparecia como uma fila de pontos no pé do palco */
+  animation:evoSobe 2.8s linear infinite backwards;
 }
 @keyframes evoSobe{
   0%{transform:translateY(0) scale(.6);opacity:0}
   15%{opacity:1}
-  100%{transform:translateY(-215px) scale(1.1);opacity:0}
+  100%{transform:translateY(-70vh) scale(1.15);opacity:0}
 }
+/* o chão: a sombra do Pokémon no meio do palco */
+.evo-chao{
+  position:absolute;left:50%;top:calc(46% + var(--evo-arte) * .36);width:calc(var(--evo-arte) * .8);height:calc(var(--evo-arte) * .16);
+  transform:translateX(-50%);border-radius:50%;
+  background:radial-gradient(ellipse at center, rgba(0,0,0,.45), rgba(0,0,0,.15) 60%, transparent 72%);
+}
+.evo{--evo-arte:min(42vmin, 340px)}
 .evo-cor,.evo-vulto{
-  position:absolute;left:50%;top:50%;width:150px;height:150px;transform:translate(-50%,-48%);
+  position:absolute;left:50%;top:46%;width:var(--evo-arte);height:var(--evo-arte);transform:translate(-50%,-50%);
   object-fit:contain;image-rendering:pixelated;image-rendering:crisp-edges;
 }
 .evo-cor.novo{opacity:0}
-.evo-vulto{opacity:0;filter:brightness(0) invert(1) drop-shadow(0 0 6px #9fd4ff) drop-shadow(0 0 14px #3f8cff)}
+.evo-vulto{opacity:0;filter:brightness(0) invert(1) drop-shadow(0 0 8px #9fd4ff) drop-shadow(0 0 20px #3f8cff)}
 .evo-clarao{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none}
-.evo-texto{margin:0;font-size:15px;min-height:1.5em;color:#e6efff}
-.evo-texto b{color:#fff}
-.evo.pronto .evo-cor.novo{filter:drop-shadow(0 0 10px rgba(140,200,255,.55))}
-.evo-botoes{display:flex;gap:10px;justify-content:center}
+.evo.pronto .evo-cor.novo{filter:drop-shadow(0 0 14px rgba(255,255,255,.45))}
+/* a caixa de diálogo */
+.evo-caixa{
+  flex:0 0 auto;position:relative;z-index:2;margin:0 auto calc(16px + env(safe-area-inset-bottom, 0px));
+  width:min(760px, calc(100% - 32px));
+  display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  padding:16px 18px;border-radius:16px;
+  background:linear-gradient(180deg, rgba(14,20,44,.94), rgba(8,12,28,.96));
+  border:2px solid rgba(160,190,255,.35);
+  box-shadow:0 18px 40px -20px rgba(0,0,0,.95), inset 0 1px 0 rgba(255,255,255,.08);
+}
+.evo-texto{margin:0;flex:1 1 260px;font-size:18px;line-height:1.45;color:#e6efff;text-align:left}
+.evo-texto b{color:#fff;font-family:var(--letra-hud, var(--fonte));font-weight:700}
+.evo-botoes{display:flex;gap:10px;justify-content:flex-end;flex:0 0 auto}
+.evo-btn{
+  display:inline-flex;align-items:center;gap:9px;padding:9px 16px 9px 9px;border-radius:999px;
+  font:700 15px/1 var(--letra-hud, var(--fonte));color:#fff;cursor:pointer;
+  background:linear-gradient(180deg, #2c3557, #1b2240);border:1px solid rgba(160,190,255,.35);
+  box-shadow:0 3px 0 #0b0f22, 0 10px 18px -12px rgba(0,0,0,.9);
+  transition:transform .12s var(--suave), box-shadow .12s var(--suave), filter .15s var(--suave);
+}
+/* o display do botão passava por cima do atributo hidden, e o Parar e o
+   Continuar ficavam os dois na tela o tempo todo */
+.evo-btn[hidden]{display:none}
+.evo-btn:hover{filter:brightness(1.12)}
+.evo-btn:active{transform:translateY(2px);box-shadow:0 1px 0 #0b0f22}
+.evo-btn:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.evo-tecla{
+  width:26px;height:26px;border-radius:50%;display:grid;place-items:center;
+  font:800 13px/1 var(--letra-hud, var(--fonte));color:#fff;box-shadow:inset 0 -2px 0 rgba(0,0,0,.3);
+}
+.evo-btn.b .evo-tecla{background:#d9413a}
+.evo-btn.a .evo-tecla{background:#2f9c55}
+.evo-btn.a{background:linear-gradient(180deg, #2f9c55, #22773f);border-color:#7fe0a2;box-shadow:0 3px 0 #0e3a1d, 0 10px 18px -12px rgba(0,0,0,.9)}
+.evo-btn.a .evo-tecla{background:rgba(0,0,0,.25)}
+@media (max-width:560px){
+  .evo{--evo-arte:min(62vw, 260px)}
+  .evo-caixa{padding:13px 14px;gap:12px}
+  .evo-texto{font-size:16px;flex-basis:100%}
+  .evo-botoes{width:100%}
+  .evo-btn{flex:1 1 auto;justify-content:center}
+}
 @media(prefers-reduced-motion:reduce){
   .evo.evoluindo .evo-aura,.evo-bolha{animation:none}
 }
@@ -18791,50 +18992,117 @@ h3.cat-item{
 .recado.saindo{opacity:0;transform:translateY(6px)}
 
 /* ============================================================
-   EVOLUÇÃO — aura azul, estilo do anime
-   Tela pequena, fundo azul-noite. O vulto é um clone da arte sem a
-   classe .sprite: branco por dentro, halo azul por fora.
+   EVOLUÇÃO — a tela inteira, com a aura azul do anime
+   O palco toma a tela, na cor dos tipos de quem evolui (o fundo da
+   forma nova acende por cima no fim). Embaixo, a caixa de diálogo
+   dos jogos com a frase e os botões B (parar) e A (continuar). O
+   vulto é um clone da arte sem a classe .sprite: branco por dentro,
+   halo azul por fora.
    ============================================================ */
+.modal-fundo.fundo-evolucao{padding:0;background:#03050c}
 .modal.evolucao{
-  max-width:420px;padding:18px 18px 16px;text-align:center;
-  background:radial-gradient(120% 90% at 50% 38%, #10254a 0%, #0a1731 55%, #070f22 100%);
-  border-color:#24457d;color:#e6efff;
+  width:100%;height:100%;max-width:none;max-height:none;padding:0;border:0;border-radius:0;
+  background:#070f22;color:#e6efff;overflow:hidden;
+  animation:fundoEntra .45s var(--suave) both;
 }
-.modal.evolucao .modal-corpo{padding:0}
-.evo{display:flex;flex-direction:column;align-items:center;gap:12px}
-.evo-palco{position:relative;width:220px;height:200px;max-width:100%;overflow:hidden;border-radius:14px}
+.modal.evolucao .modal-corpo{padding:0;height:100%}
+.evo{position:relative;height:100%;display:flex;flex-direction:column}
+.evo-palco{position:relative;flex:1 1 auto;min-height:0;overflow:hidden}
+.evo-fundo{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 60% 48% at 50% 46%, color-mix(in srgb, var(--t1) 55%, #ffffff 15%), transparent 72%),
+    radial-gradient(ellipse 120% 70% at 50% 108%, color-mix(in srgb, var(--t2) 45%, #000) 0%, transparent 60%),
+    linear-gradient(160deg, color-mix(in srgb, var(--t1) 48%, #050a1a), color-mix(in srgb, var(--t2) 40%, #050a1a) 70%, #04060d);
+  transition:opacity 1.2s var(--suave), filter 1.2s var(--suave);
+}
+.evo-fundo.novo{opacity:0}
+.evo.pronto .evo-fundo.novo{opacity:1}
+/* enquanto evolui, o tipo apaga e o azul da aura manda */
+.evo.evoluindo .evo-fundo{filter:saturate(.35) brightness(.55)}
+/* centrada pela propriedade translate, não pelo transform: a animação
+   da aura mexe no transform (a escala), e o commitStyles do fim gravava
+   a escala por cima do centro — a aura saía torta pra baixo e pra direita */
 .evo-aura{
-  position:absolute;inset:-20%;opacity:0;pointer-events:none;
-  background:radial-gradient(circle at 50% 55%,
-    rgba(210,236,255,.95) 0%, rgba(120,190,255,.75) 18%, rgba(60,130,255,.45) 36%,
-    rgba(40,90,220,.18) 55%, transparent 70%);
-  filter:blur(2px);
+  position:absolute;left:50%;top:46%;width:min(92vmin, 760px);aspect-ratio:1;translate:-50% -50%;
+  opacity:0;pointer-events:none;border-radius:50%;
+  background:radial-gradient(circle at 50% 50%,
+    rgba(210,236,255,.95) 0%, rgba(120,190,255,.75) 16%, rgba(60,130,255,.45) 32%,
+    rgba(40,90,220,.18) 50%, transparent 68%);
+  filter:blur(3px);
 }
 .evo.evoluindo .evo-aura{animation:evoPulso 1.1s ease-in-out infinite}
-@keyframes evoPulso{0%,100%{filter:blur(2px) brightness(1)}50%{filter:blur(4px) brightness(1.35)}}
+@keyframes evoPulso{0%,100%{filter:blur(3px) brightness(1)}50%{filter:blur(6px) brightness(1.35)}}
 .evo-bolhas{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .6s}
 .evo.evoluindo .evo-bolhas{opacity:1}
 .evo-bolha{
-  position:absolute;bottom:-8px;width:5px;height:5px;border-radius:50%;
-  background:#bfe3ff;box-shadow:0 0 8px 2px rgba(110,180,255,.9);
-  animation:evoSobe 2.6s linear infinite;
+  position:absolute;bottom:-10px;width:6px;height:6px;border-radius:50%;
+  background:#bfe3ff;box-shadow:0 0 10px 3px rgba(110,180,255,.9);
+  /* backwards: na espera do atraso a bolha fica no quadro 0, apagada;
+     sem isso o brilho dela aparecia como uma fila de pontos no pé do palco */
+  animation:evoSobe 2.8s linear infinite backwards;
 }
 @keyframes evoSobe{
   0%{transform:translateY(0) scale(.6);opacity:0}
   15%{opacity:1}
-  100%{transform:translateY(-215px) scale(1.1);opacity:0}
+  100%{transform:translateY(-70vh) scale(1.15);opacity:0}
 }
+/* o chão: a sombra do Pokémon no meio do palco */
+.evo-chao{
+  position:absolute;left:50%;top:calc(46% + var(--evo-arte) * .36);width:calc(var(--evo-arte) * .8);height:calc(var(--evo-arte) * .16);
+  transform:translateX(-50%);border-radius:50%;
+  background:radial-gradient(ellipse at center, rgba(0,0,0,.45), rgba(0,0,0,.15) 60%, transparent 72%);
+}
+.evo{--evo-arte:min(42vmin, 340px)}
 .evo-cor,.evo-vulto{
-  position:absolute;left:50%;top:50%;width:150px;height:150px;transform:translate(-50%,-48%);
+  position:absolute;left:50%;top:46%;width:var(--evo-arte);height:var(--evo-arte);transform:translate(-50%,-50%);
   object-fit:contain;image-rendering:pixelated;image-rendering:crisp-edges;
 }
 .evo-cor.novo{opacity:0}
-.evo-vulto{opacity:0;filter:brightness(0) invert(1) drop-shadow(0 0 6px #9fd4ff) drop-shadow(0 0 14px #3f8cff)}
+.evo-vulto{opacity:0;filter:brightness(0) invert(1) drop-shadow(0 0 8px #9fd4ff) drop-shadow(0 0 20px #3f8cff)}
 .evo-clarao{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none}
-.evo-texto{margin:0;font-size:15px;min-height:1.5em;color:#e6efff}
-.evo-texto b{color:#fff}
-.evo.pronto .evo-cor.novo{filter:drop-shadow(0 0 10px rgba(140,200,255,.55))}
-.evo-botoes{display:flex;gap:10px;justify-content:center}
+.evo.pronto .evo-cor.novo{filter:drop-shadow(0 0 14px rgba(255,255,255,.45))}
+/* a caixa de diálogo */
+.evo-caixa{
+  flex:0 0 auto;position:relative;z-index:2;margin:0 auto calc(16px + env(safe-area-inset-bottom, 0px));
+  width:min(760px, calc(100% - 32px));
+  display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  padding:16px 18px;border-radius:16px;
+  background:linear-gradient(180deg, rgba(14,20,44,.94), rgba(8,12,28,.96));
+  border:2px solid rgba(160,190,255,.35);
+  box-shadow:0 18px 40px -20px rgba(0,0,0,.95), inset 0 1px 0 rgba(255,255,255,.08);
+}
+.evo-texto{margin:0;flex:1 1 260px;font-size:18px;line-height:1.45;color:#e6efff;text-align:left}
+.evo-texto b{color:#fff;font-family:var(--letra-hud, var(--fonte));font-weight:700}
+.evo-botoes{display:flex;gap:10px;justify-content:flex-end;flex:0 0 auto}
+.evo-btn{
+  display:inline-flex;align-items:center;gap:9px;padding:9px 16px 9px 9px;border-radius:999px;
+  font:700 15px/1 var(--letra-hud, var(--fonte));color:#fff;cursor:pointer;
+  background:linear-gradient(180deg, #2c3557, #1b2240);border:1px solid rgba(160,190,255,.35);
+  box-shadow:0 3px 0 #0b0f22, 0 10px 18px -12px rgba(0,0,0,.9);
+  transition:transform .12s var(--suave), box-shadow .12s var(--suave), filter .15s var(--suave);
+}
+/* o display do botão passava por cima do atributo hidden, e o Parar e o
+   Continuar ficavam os dois na tela o tempo todo */
+.evo-btn[hidden]{display:none}
+.evo-btn:hover{filter:brightness(1.12)}
+.evo-btn:active{transform:translateY(2px);box-shadow:0 1px 0 #0b0f22}
+.evo-btn:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.evo-tecla{
+  width:26px;height:26px;border-radius:50%;display:grid;place-items:center;
+  font:800 13px/1 var(--letra-hud, var(--fonte));color:#fff;box-shadow:inset 0 -2px 0 rgba(0,0,0,.3);
+}
+.evo-btn.b .evo-tecla{background:#d9413a}
+.evo-btn.a .evo-tecla{background:#2f9c55}
+.evo-btn.a{background:linear-gradient(180deg, #2f9c55, #22773f);border-color:#7fe0a2;box-shadow:0 3px 0 #0e3a1d, 0 10px 18px -12px rgba(0,0,0,.9)}
+.evo-btn.a .evo-tecla{background:rgba(0,0,0,.25)}
+@media (max-width:560px){
+  .evo{--evo-arte:min(62vw, 260px)}
+  .evo-caixa{padding:13px 14px;gap:12px}
+  .evo-texto{font-size:16px;flex-basis:100%}
+  .evo-botoes{width:100%}
+  .evo-btn{flex:1 1 auto;justify-content:center}
+}
 @media(prefers-reduced-motion:reduce){
   .evo.evoluindo .evo-aura,.evo-bolha{animation:none}
 }
@@ -24149,50 +24417,117 @@ h3.cat-item{
 .recado.saindo{opacity:0;transform:translateY(6px)}
 
 /* ============================================================
-   EVOLUÇÃO — aura azul, estilo do anime
-   Tela pequena, fundo azul-noite. O vulto é um clone da arte sem a
-   classe .sprite: branco por dentro, halo azul por fora.
+   EVOLUÇÃO — a tela inteira, com a aura azul do anime
+   O palco toma a tela, na cor dos tipos de quem evolui (o fundo da
+   forma nova acende por cima no fim). Embaixo, a caixa de diálogo
+   dos jogos com a frase e os botões B (parar) e A (continuar). O
+   vulto é um clone da arte sem a classe .sprite: branco por dentro,
+   halo azul por fora.
    ============================================================ */
+.modal-fundo.fundo-evolucao{padding:0;background:#03050c}
 .modal.evolucao{
-  max-width:420px;padding:18px 18px 16px;text-align:center;
-  background:radial-gradient(120% 90% at 50% 38%, #10254a 0%, #0a1731 55%, #070f22 100%);
-  border-color:#24457d;color:#e6efff;
+  width:100%;height:100%;max-width:none;max-height:none;padding:0;border:0;border-radius:0;
+  background:#070f22;color:#e6efff;overflow:hidden;
+  animation:fundoEntra .45s var(--suave) both;
 }
-.modal.evolucao .modal-corpo{padding:0}
-.evo{display:flex;flex-direction:column;align-items:center;gap:12px}
-.evo-palco{position:relative;width:220px;height:200px;max-width:100%;overflow:hidden;border-radius:14px}
+.modal.evolucao .modal-corpo{padding:0;height:100%}
+.evo{position:relative;height:100%;display:flex;flex-direction:column}
+.evo-palco{position:relative;flex:1 1 auto;min-height:0;overflow:hidden}
+.evo-fundo{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 60% 48% at 50% 46%, color-mix(in srgb, var(--t1) 55%, #ffffff 15%), transparent 72%),
+    radial-gradient(ellipse 120% 70% at 50% 108%, color-mix(in srgb, var(--t2) 45%, #000) 0%, transparent 60%),
+    linear-gradient(160deg, color-mix(in srgb, var(--t1) 48%, #050a1a), color-mix(in srgb, var(--t2) 40%, #050a1a) 70%, #04060d);
+  transition:opacity 1.2s var(--suave), filter 1.2s var(--suave);
+}
+.evo-fundo.novo{opacity:0}
+.evo.pronto .evo-fundo.novo{opacity:1}
+/* enquanto evolui, o tipo apaga e o azul da aura manda */
+.evo.evoluindo .evo-fundo{filter:saturate(.35) brightness(.55)}
+/* centrada pela propriedade translate, não pelo transform: a animação
+   da aura mexe no transform (a escala), e o commitStyles do fim gravava
+   a escala por cima do centro — a aura saía torta pra baixo e pra direita */
 .evo-aura{
-  position:absolute;inset:-20%;opacity:0;pointer-events:none;
-  background:radial-gradient(circle at 50% 55%,
-    rgba(210,236,255,.95) 0%, rgba(120,190,255,.75) 18%, rgba(60,130,255,.45) 36%,
-    rgba(40,90,220,.18) 55%, transparent 70%);
-  filter:blur(2px);
+  position:absolute;left:50%;top:46%;width:min(92vmin, 760px);aspect-ratio:1;translate:-50% -50%;
+  opacity:0;pointer-events:none;border-radius:50%;
+  background:radial-gradient(circle at 50% 50%,
+    rgba(210,236,255,.95) 0%, rgba(120,190,255,.75) 16%, rgba(60,130,255,.45) 32%,
+    rgba(40,90,220,.18) 50%, transparent 68%);
+  filter:blur(3px);
 }
 .evo.evoluindo .evo-aura{animation:evoPulso 1.1s ease-in-out infinite}
-@keyframes evoPulso{0%,100%{filter:blur(2px) brightness(1)}50%{filter:blur(4px) brightness(1.35)}}
+@keyframes evoPulso{0%,100%{filter:blur(3px) brightness(1)}50%{filter:blur(6px) brightness(1.35)}}
 .evo-bolhas{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .6s}
 .evo.evoluindo .evo-bolhas{opacity:1}
 .evo-bolha{
-  position:absolute;bottom:-8px;width:5px;height:5px;border-radius:50%;
-  background:#bfe3ff;box-shadow:0 0 8px 2px rgba(110,180,255,.9);
-  animation:evoSobe 2.6s linear infinite;
+  position:absolute;bottom:-10px;width:6px;height:6px;border-radius:50%;
+  background:#bfe3ff;box-shadow:0 0 10px 3px rgba(110,180,255,.9);
+  /* backwards: na espera do atraso a bolha fica no quadro 0, apagada;
+     sem isso o brilho dela aparecia como uma fila de pontos no pé do palco */
+  animation:evoSobe 2.8s linear infinite backwards;
 }
 @keyframes evoSobe{
   0%{transform:translateY(0) scale(.6);opacity:0}
   15%{opacity:1}
-  100%{transform:translateY(-215px) scale(1.1);opacity:0}
+  100%{transform:translateY(-70vh) scale(1.15);opacity:0}
 }
+/* o chão: a sombra do Pokémon no meio do palco */
+.evo-chao{
+  position:absolute;left:50%;top:calc(46% + var(--evo-arte) * .36);width:calc(var(--evo-arte) * .8);height:calc(var(--evo-arte) * .16);
+  transform:translateX(-50%);border-radius:50%;
+  background:radial-gradient(ellipse at center, rgba(0,0,0,.45), rgba(0,0,0,.15) 60%, transparent 72%);
+}
+.evo{--evo-arte:min(42vmin, 340px)}
 .evo-cor,.evo-vulto{
-  position:absolute;left:50%;top:50%;width:150px;height:150px;transform:translate(-50%,-48%);
+  position:absolute;left:50%;top:46%;width:var(--evo-arte);height:var(--evo-arte);transform:translate(-50%,-50%);
   object-fit:contain;image-rendering:pixelated;image-rendering:crisp-edges;
 }
 .evo-cor.novo{opacity:0}
-.evo-vulto{opacity:0;filter:brightness(0) invert(1) drop-shadow(0 0 6px #9fd4ff) drop-shadow(0 0 14px #3f8cff)}
+.evo-vulto{opacity:0;filter:brightness(0) invert(1) drop-shadow(0 0 8px #9fd4ff) drop-shadow(0 0 20px #3f8cff)}
 .evo-clarao{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none}
-.evo-texto{margin:0;font-size:15px;min-height:1.5em;color:#e6efff}
-.evo-texto b{color:#fff}
-.evo.pronto .evo-cor.novo{filter:drop-shadow(0 0 10px rgba(140,200,255,.55))}
-.evo-botoes{display:flex;gap:10px;justify-content:center}
+.evo.pronto .evo-cor.novo{filter:drop-shadow(0 0 14px rgba(255,255,255,.45))}
+/* a caixa de diálogo */
+.evo-caixa{
+  flex:0 0 auto;position:relative;z-index:2;margin:0 auto calc(16px + env(safe-area-inset-bottom, 0px));
+  width:min(760px, calc(100% - 32px));
+  display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  padding:16px 18px;border-radius:16px;
+  background:linear-gradient(180deg, rgba(14,20,44,.94), rgba(8,12,28,.96));
+  border:2px solid rgba(160,190,255,.35);
+  box-shadow:0 18px 40px -20px rgba(0,0,0,.95), inset 0 1px 0 rgba(255,255,255,.08);
+}
+.evo-texto{margin:0;flex:1 1 260px;font-size:18px;line-height:1.45;color:#e6efff;text-align:left}
+.evo-texto b{color:#fff;font-family:var(--letra-hud, var(--fonte));font-weight:700}
+.evo-botoes{display:flex;gap:10px;justify-content:flex-end;flex:0 0 auto}
+.evo-btn{
+  display:inline-flex;align-items:center;gap:9px;padding:9px 16px 9px 9px;border-radius:999px;
+  font:700 15px/1 var(--letra-hud, var(--fonte));color:#fff;cursor:pointer;
+  background:linear-gradient(180deg, #2c3557, #1b2240);border:1px solid rgba(160,190,255,.35);
+  box-shadow:0 3px 0 #0b0f22, 0 10px 18px -12px rgba(0,0,0,.9);
+  transition:transform .12s var(--suave), box-shadow .12s var(--suave), filter .15s var(--suave);
+}
+/* o display do botão passava por cima do atributo hidden, e o Parar e o
+   Continuar ficavam os dois na tela o tempo todo */
+.evo-btn[hidden]{display:none}
+.evo-btn:hover{filter:brightness(1.12)}
+.evo-btn:active{transform:translateY(2px);box-shadow:0 1px 0 #0b0f22}
+.evo-btn:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.evo-tecla{
+  width:26px;height:26px;border-radius:50%;display:grid;place-items:center;
+  font:800 13px/1 var(--letra-hud, var(--fonte));color:#fff;box-shadow:inset 0 -2px 0 rgba(0,0,0,.3);
+}
+.evo-btn.b .evo-tecla{background:#d9413a}
+.evo-btn.a .evo-tecla{background:#2f9c55}
+.evo-btn.a{background:linear-gradient(180deg, #2f9c55, #22773f);border-color:#7fe0a2;box-shadow:0 3px 0 #0e3a1d, 0 10px 18px -12px rgba(0,0,0,.9)}
+.evo-btn.a .evo-tecla{background:rgba(0,0,0,.25)}
+@media (max-width:560px){
+  .evo{--evo-arte:min(62vw, 260px)}
+  .evo-caixa{padding:13px 14px;gap:12px}
+  .evo-texto{font-size:16px;flex-basis:100%}
+  .evo-botoes{width:100%}
+  .evo-btn{flex:1 1 auto;justify-content:center}
+}
 @media(prefers-reduced-motion:reduce){
   .evo.evoluindo .evo-aura,.evo-bolha{animation:none}
 }
@@ -128091,34 +128426,44 @@ const UI = {
   },
 
   /* ========================================================
-     EVOLUÇÃO — a tela pequena, com a aura azul do anime
-     O Pokémon vira um vulto azul-claro, pisca entre a forma velha e
-     a nova cada vez mais rápido, clarão, e a forma nova aparece. Dá
-     pra parar no meio — como apertar B —, e aí ele tenta de novo no
-     próximo nível. Os vultos são clones sem a classe .sprite: o
-     filter deles é o do vulto, não o estado de silhueta da Pokédex.
+     EVOLUÇÃO — a tela inteira, com a aura azul do anime
+     O palco toma a tela, na cor dos tipos de quem está evoluindo (e
+     passa pra cor da forma nova no fim). O Pokémon vira um vulto
+     azul-claro, pisca entre a forma velha e a nova cada vez mais
+     rápido, clarão, e a forma nova aparece grande. A frase sai na
+     caixa de diálogo, embaixo, como nos jogos. Dá pra parar no meio
+     — o botão B —, e aí ele tenta de novo no próximo nível. Os vultos
+     são clones sem a classe .sprite: o filter deles é o do vulto,
+     não o estado de silhueta da Pokédex.
      ======================================================== */
   telaEvolucao(p, destino, aoFim){
     const antigo = nomeExib(p);
     const novoNome = DEX[destino].nome;
     const srcVelho = caminhoSprite(p.dex, 'frente', p.shiny);
     const srcNovo  = caminhoSprite(destino, 'frente', p.shiny);
-    const bolhas = Array.from({length:16}, (_, i) =>
-      `<span class="evo-bolha" style="left:${(i*37)%100}%;animation-delay:${(i*0.23).toFixed(2)}s;animation-duration:${(2.2+(i%5)*0.35).toFixed(2)}s"></span>`).join('');
+    const bolhas = Array.from({length:24}, (_, i) =>
+      `<span class="evo-bolha" style="left:${(i*37)%100}%;animation-delay:${(i*0.23).toFixed(2)}s;animation-duration:${(2.4+(i%5)*0.4).toFixed(2)}s"></span>`).join('');
+    /* o fundo na cor dos tipos: o da forma velha, e o da nova por cima, apagado até o fim */
+    const cores = dex => { const t = (DEX[dex] || {}).tipos || []; const a = COR_TIPO[t[0]] || '#6890f0'; return `--t1:${a};--t2:${COR_TIPO[t[1]] || a}`; };
     this.modal('', `<div class="evo">
       <div class="evo-palco">
+        <div class="evo-fundo velho" style="${cores(p.dex)}"></div>
+        <div class="evo-fundo novo" style="${cores(destino)}"></div>
         <div class="evo-aura"></div>
         <div class="evo-bolhas">${bolhas}</div>
+        <div class="evo-chao"></div>
         <img class="evo-cor velho" src="${srcVelho}" alt="">
         <img class="evo-cor novo"  src="${srcNovo}"  alt="">
         <img class="evo-vulto velho" src="${srcVelho}" alt="">
         <img class="evo-vulto novo"  src="${srcNovo}"  alt="">
         <div class="evo-clarao"></div>
       </div>
-      <p class="evo-texto">O quê? <b>${this.esc(antigo)}</b> está evoluindo!</p>
-      <div class="evo-botoes">
-        <button class="btn" id="evo-parar">Parar</button>
-        <button class="btn destaque" id="evo-seguir" hidden>Continuar</button>
+      <div class="evo-caixa">
+        <p class="evo-texto">O quê? <b>${this.esc(antigo)}</b> está evoluindo!</p>
+        <div class="evo-botoes">
+          <button class="evo-btn b" id="evo-parar"><span class="evo-tecla">B</span>Parar</button>
+          <button class="evo-btn a" id="evo-seguir" hidden><span class="evo-tecla">A</span>Continuar</button>
+        </div>
       </div>
     </div>`, true, 'evolucao');
 
@@ -128131,6 +128476,12 @@ const UI = {
     const reduzido = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
     let parou = false, evoluiu = false;
     parar.onclick = () => { parou = true; };
+    /* o B do controle: B ou Esc param, enquanto dá pra parar */
+    const tecla = ev => {
+      if (!document.body.contains(M)) return document.removeEventListener('keydown', tecla);
+      if (/^(b|B|Escape)$/.test(ev.key) && !parar.hidden){ ev.preventDefault(); parou = true; }
+    };
+    document.addEventListener('keydown', tecla);
     /* A animação grava o quadro final no style e se desfaz. Com fill
        'forwards' ela ficava segurando a opacidade, e o mostrar() de
        depois não escondia mais nada: o vulto velho nunca saía da tela
@@ -128147,7 +128498,7 @@ const UI = {
       parar.hidden = true;
       seguir.hidden = false;
       seguir.focus();
-      seguir.onclick = () => { this.fecharModal(true); aoFim(evoluiu); };
+      seguir.onclick = () => { document.removeEventListener('keydown', tecla); this.fecharModal(true); aoFim(evoluiu); };
     };
     const desistir = async () => {
       mostrar(vN, false);
@@ -128161,6 +128512,7 @@ const UI = {
 
     if (reduzido){
       mostrar(cV, false); mostrar(cN, true);
+      M.querySelector('.evo').classList.add('pronto');
       texto.innerHTML = `Parabéns! <b>${this.esc(antigo)}</b> evoluiu para <b>${this.esc(novoNome)}</b>!`;
       terminar(true);
       return;

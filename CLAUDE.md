@@ -1459,6 +1459,17 @@ não apagava, o aviso flutuante (`.recado`) não esmaecia ao sair e os
 comandos desligados da luta ficavam inteiros. Foi medido com
 `getComputedStyle`: o `transform` do hover saía matriz identidade.
 
+A **evolução** (`UI.telaEvolucao`) toma a tela inteira: o palco na cor
+dos tipos de quem evolui (`--t1`/`--t2` de `COR_TIPO`; o fundo da forma
+nova acende por cima no fim), a aura azul e as bolhas do anime, e
+embaixo a caixa de diálogo dos jogos com **B Parar** (o B e o Esc também
+param) e **A Continuar**. Duas coisas que já morderam ali: botão com
+`display` próprio precisa de `[hidden]{display:none}`, senão o atributo
+não esconde e os dois ficam na tela; e quem a animação escala pelo
+`transform` se centra pela propriedade `translate`, porque o
+`commitStyles` do fim grava o `transform` por cima do centro. O
+`bot-jogador` segue pelo `#evo-seguir:visible`.
+
 ## Convenções de texto
 - Fala de NPC: `fala(quem, diz, tom, nota)`. Tons válidos: `grita`, `baixo`, `riso`,
   `frio`. Frase inteira entre aspas numa linha de narração também vira balão sozinha.

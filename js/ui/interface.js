@@ -2177,34 +2177,44 @@ const UI = {
   },
 
   /* ========================================================
-     EVOLUÇÃO — a tela pequena, com a aura azul do anime
-     O Pokémon vira um vulto azul-claro, pisca entre a forma velha e
-     a nova cada vez mais rápido, clarão, e a forma nova aparece. Dá
-     pra parar no meio — como apertar B —, e aí ele tenta de novo no
-     próximo nível. Os vultos são clones sem a classe .sprite: o
-     filter deles é o do vulto, não o estado de silhueta da Pokédex.
+     EVOLUÇÃO — a tela inteira, com a aura azul do anime
+     O palco toma a tela, na cor dos tipos de quem está evoluindo (e
+     passa pra cor da forma nova no fim). O Pokémon vira um vulto
+     azul-claro, pisca entre a forma velha e a nova cada vez mais
+     rápido, clarão, e a forma nova aparece grande. A frase sai na
+     caixa de diálogo, embaixo, como nos jogos. Dá pra parar no meio
+     — o botão B —, e aí ele tenta de novo no próximo nível. Os vultos
+     são clones sem a classe .sprite: o filter deles é o do vulto,
+     não o estado de silhueta da Pokédex.
      ======================================================== */
   telaEvolucao(p, destino, aoFim){
     const antigo = nomeExib(p);
     const novoNome = DEX[destino].nome;
     const srcVelho = caminhoSprite(p.dex, 'frente', p.shiny);
     const srcNovo  = caminhoSprite(destino, 'frente', p.shiny);
-    const bolhas = Array.from({length:16}, (_, i) =>
-      `<span class="evo-bolha" style="left:${(i*37)%100}%;animation-delay:${(i*0.23).toFixed(2)}s;animation-duration:${(2.2+(i%5)*0.35).toFixed(2)}s"></span>`).join('');
+    const bolhas = Array.from({length:24}, (_, i) =>
+      `<span class="evo-bolha" style="left:${(i*37)%100}%;animation-delay:${(i*0.23).toFixed(2)}s;animation-duration:${(2.4+(i%5)*0.4).toFixed(2)}s"></span>`).join('');
+    /* o fundo na cor dos tipos: o da forma velha, e o da nova por cima, apagado até o fim */
+    const cores = dex => { const t = (DEX[dex] || {}).tipos || []; const a = COR_TIPO[t[0]] || '#6890f0'; return `--t1:${a};--t2:${COR_TIPO[t[1]] || a}`; };
     this.modal('', `<div class="evo">
       <div class="evo-palco">
+        <div class="evo-fundo velho" style="${cores(p.dex)}"></div>
+        <div class="evo-fundo novo" style="${cores(destino)}"></div>
         <div class="evo-aura"></div>
         <div class="evo-bolhas">${bolhas}</div>
+        <div class="evo-chao"></div>
         <img class="evo-cor velho" src="${srcVelho}" alt="">
         <img class="evo-cor novo"  src="${srcNovo}"  alt="">
         <img class="evo-vulto velho" src="${srcVelho}" alt="">
         <img class="evo-vulto novo"  src="${srcNovo}"  alt="">
         <div class="evo-clarao"></div>
       </div>
-      <p class="evo-texto">O quê? <b>${this.esc(antigo)}</b> está evoluindo!</p>
-      <div class="evo-botoes">
-        <button class="btn" id="evo-parar">Parar</button>
-        <button class="btn destaque" id="evo-seguir" hidden>Continuar</button>
+      <div class="evo-caixa">
+        <p class="evo-texto">O quê? <b>${this.esc(antigo)}</b> está evoluindo!</p>
+        <div class="evo-botoes">
+          <button class="evo-btn b" id="evo-parar"><span class="evo-tecla">B</span>Parar</button>
+          <button class="evo-btn a" id="evo-seguir" hidden><span class="evo-tecla">A</span>Continuar</button>
+        </div>
       </div>
     </div>`, true, 'evolucao');
 
@@ -2217,6 +2227,12 @@ const UI = {
     const reduzido = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
     let parou = false, evoluiu = false;
     parar.onclick = () => { parou = true; };
+    /* o B do controle: B ou Esc param, enquanto dá pra parar */
+    const tecla = ev => {
+      if (!document.body.contains(M)) return document.removeEventListener('keydown', tecla);
+      if (/^(b|B|Escape)$/.test(ev.key) && !parar.hidden){ ev.preventDefault(); parou = true; }
+    };
+    document.addEventListener('keydown', tecla);
     /* A animação grava o quadro final no style e se desfaz. Com fill
        'forwards' ela ficava segurando a opacidade, e o mostrar() de
        depois não escondia mais nada: o vulto velho nunca saía da tela
@@ -2233,7 +2249,7 @@ const UI = {
       parar.hidden = true;
       seguir.hidden = false;
       seguir.focus();
-      seguir.onclick = () => { this.fecharModal(true); aoFim(evoluiu); };
+      seguir.onclick = () => { document.removeEventListener('keydown', tecla); this.fecharModal(true); aoFim(evoluiu); };
     };
     const desistir = async () => {
       mostrar(vN, false);
@@ -2247,6 +2263,7 @@ const UI = {
 
     if (reduzido){
       mostrar(cV, false); mostrar(cN, true);
+      M.querySelector('.evo').classList.add('pronto');
       texto.innerHTML = `Parabéns! <b>${this.esc(antigo)}</b> evoluiu para <b>${this.esc(novoNome)}</b>!`;
       terminar(true);
       return;
