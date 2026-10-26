@@ -279,6 +279,34 @@ const SUSPEITO = [
   }
   await tentar('rival/celadon/centro', () => { Estado.dados.local = 'celadon'; Jogo.hubCentro('rival'); });
 
+  /* os rivais extras em cada arco: a estreia na cidade, a volta depois
+     de passar reto (na água, onde a Diana chega de Lapras) e o placar
+     na rota, com o resultado da luta pros dois lados e a Ficha */
+  const extras = await page.evaluate(() => RIVAIS_EXTRA.map(R => [R.id, Object.keys(R.arcos || {padrao:1})]));
+  for (const [id, arcos] of extras) for (const arco of arcos)
+    for (const [local, enc, evitou] of [['celadon', 0, 0], ['seafoam', 0, 1], ['rota8', 3, 0]]){
+      await restaurar();
+      await tentar(`rival/${id}/${arco}/${local}${evitou ? '/passou' : ''}`, ([id, arco, local, enc, evitou]) => {
+        const R = defRival(id);
+        Estado.dados.local = local;
+        registroRivais()[id] = {id, nome:R.nome, vitorias:enc ? 2 : 0, derrotas:enc ? 1 : 0, encontros:enc,
+                                ultimoCap:0, desdeCap:9, evitou, apresentado:!!(enc || evitou)};
+        const orig = arcoRivalExtra;
+        arcoRivalExtra = () => arco;
+        try {
+          /* as três telas uma depois da outra: o que cada uma desenhou
+             volta pro fim do #app, pra ser olhado junto com a Ficha */
+          const app = () => document.getElementById('app').innerHTML;
+          Jogo.encontroRival = {tipo:'extra', id, nome:R.nome}; UI.telaRival();
+          const telas = [app()];
+          UI.telaResultadoRival(true, [], id); telas.push(app());
+          UI.telaResultadoRival(false, [], id); telas.push(app());
+          UI.modalFicha('jornada');
+          telas.forEach(t => document.getElementById('app').insertAdjacentHTML('beforeend', t));
+        } finally { arcoRivalExtra = orig; }
+      }, [id, arco, local, enc, evitou]);
+    }
+
   /* ---------- o chaveamento do torneio e da Conferência, e o menu de Pokébola ---------- */
   for (const rodada of [0, 1, 2]){
     await restaurar();

@@ -3333,18 +3333,19 @@ const UI = {
 
   /* O placar e o time de quem te para na estrada: o placar como o de
      uma luta (você à esquerda), e o time em ícones, com o nível embaixo
-     de cada um, como na tela de morte. Os rivais são todos homens: o
-     texto diz "ele". */
-  quadroDoRival(voce, ele, time){
+     de cada um, como na tela de morte. O lado de lá é "ele" ou, com a
+     Diana (f), "ela". */
+  quadroDoRival(voce, ele, time, f){
+    const quem = f ? 'ela' : 'ele';
     return `<div class="rival-quadro">
-      <div class="rq-placar" aria-label="Placar: você ${voce}, ele ${ele}">
+      <div class="rq-placar" aria-label="Placar: você ${voce}, ${quem} ${ele}">
         <span class="rq-lado"><small>Você</small><b>${voce}</b></span>
         <span class="rq-x">×</span>
-        <span class="rq-lado"><small>Ele</small><b>${ele}</b></span>
+        <span class="rq-lado"><small>${f ? 'Ela' : 'Ele'}</small><b>${ele}</b></span>
       </div>
       <div class="rq-time">
-        <span class="rq-k">Time dele agora</span>
-        <div class="rq-icones">${time.map(p => `<span class="rq-pk" title="${this.esc(p.nome)} Nv ${p.nivel}">${imgSprite(p, 'icone')}<small>${this.esc(p.nome)}</small><b>Nv ${p.nivel}</b></span>`).join('')}</div>
+        <span class="rq-k">Time d${quem} agora</span>
+        <div class="rq-icones" style="--n:${time.length <= 4 ? time.length : 3}">${time.map(p => `<span class="rq-pk" title="${this.esc(p.nome)} Nv ${p.nivel}">${imgSprite(p, 'icone')}<small>${this.esc(p.nome)}</small><b>Nv ${p.nivel}</b></span>`).join('')}</div>
       </div>
     </div>`;
   },
@@ -3366,10 +3367,10 @@ const UI = {
       </div>
       <div class="narrativa">${this.narrarMonologo(falaRivalExtra(R), R.nome)}</div>
       <div id="avisos" class="avisos"></div>
-      ${this.quadroDoRival(reg.derrotas, reg.vitorias, time)}
+      ${this.quadroDoRival(reg.derrotas, reg.vitorias, time, R.f)}
       <div id="escolhas" class="escolhas" style="margin-top:20px">
         <button class="escolha" onclick="Jogo.lutarRival()">Lutar.</button>
-        <button class="escolha" onclick="Jogo.evitarRival()">Passar por ele sem parar.</button>
+        <button class="escolha" onclick="Jogo.evitarRival()">Passar por ${proRival(R)} sem parar.</button>
         ${Exploracao.temCentro(Mundo.atual()) ? `<button class="escolha" onclick="Jogo.hubCentro('rival')">Passar no Centro antes.</button>` : ''}
       </div>
     </div>`);
@@ -3389,9 +3390,9 @@ const UI = {
       : (venceu ? falaVitoriaRival() : falaDerrotaRival()));
     this.add(`<div class="painel">
       <div class="cap-cabecalho"${extra ? ` style="border-left-color:${extra.cor || 'var(--destaque)'}"` : ''}>
-        <div class="num">${venceu ? 'Você venceu' : 'Ele venceu'}</div>
+        <div class="num">${venceu ? 'Você venceu' : (extra && extra.f ? 'Ela venceu' : 'Ele venceu')}</div>
         <div class="tit">${this.esc(nome)}</div>
-        <div class="loc">Placar: você ${reg.derrotas} × ${reg.vitorias} ele</div>
+        <div class="loc">Placar: você ${reg.derrotas} × ${reg.vitorias} ${extra ? proRival(extra) : 'ele'}</div>
       </div>
       <div class="narrativa">${this.narrarMonologo(falas, nome)}</div>
       <div id="avisos" class="avisos"></div>
@@ -4741,8 +4742,8 @@ const UI = {
         const extras = (typeof rivaisConquistados === 'function' && rivaisConquistados().length)
           ? rivaisConquistados().map(({def, reg}) => `<div class="ficha-rival">
               <div class="fr-nome">${e(def.nome)} <span class="ficha-nota">${M(defArcoExtra(def).nome)}</span></div>
-              <p class="ficha-texto">${M(def.desde)} · ${e(defArcoExtra(def).resumo || def.origem)}</p>
-              ${dl([['Placar', `<span class="mono">Você ${reg.derrotas} × ${reg.vitorias} ele</span>`]])}
+              <p class="ficha-texto">${M(reg.desde || def.desde)} · ${e(defArcoExtra(def).resumo || def.origem)}</p>
+              ${dl([['Placar', `<span class="mono">Você ${reg.derrotas} × ${reg.vitorias} ${proRival(def)}</span>`]])}
             </div>`).join('') : '';
         return bloco('Reputação', rep)
           + bloco('Insígnias', insignias, `${ins.length} de 8${campeao ? ' · Campeão de Kanto' : ''}`)
@@ -5649,6 +5650,8 @@ const UI = {
       <div class="linha"><span class="k">Nolan</span><span class="v">Orgulhoso · Esperança (ajudou com a carta da mãe, ou opinião 8+) · Vendedor (lado Rocket, Mercenário ou Foragido, ou reputação ruim 3+; +2)</span></div>
       <div class="linha"><span class="k">Rory</span><span class="v">pelo que você fez no corredor do Anne: Devedor (deu o prêmio) · Quase (deu cinco mil) · Companhia (perdeu e ficou com ele) · Ressentido (o resto; time venenoso, +3)</span></div>
       <div class="linha"><span class="k">Otto</span><span class="v">Caçador · Colega (lado Rocket, Mercenário ou Foragido; +4) · Cansado (opinião acima de −3, ou reputação boa 6+; larga a rede, +1)</span></div>
+      <div class="linha"><span class="k">Diana</span><span class="v">não vem de escolha sua: ela é que escolhe, e se apresenta na estrada · o time já está na forma final, e ninguém abaixo do nível em que a forma chega nos jogos (o Rhydon, 42) · o Rhydon sai por último · Desafio (+1) · Respeito (perdeu 2+ e mais do que ganhou; +2) · Desdém (ganhou 2+ sem perder nenhuma, ou opinião −2 ou menos; +0) · Contra (lado Rocket, Mercenário ou Foragido, ou reputação ruim 4+; +2)</span></div>
+      <div class="linha"><span class="k">Passagem dividida</span><span class="v">o Ezra tem preferência · quando dois rivais esperam na mesma saída de capítulo, a primeira aparição de quem ainda não se apresentou vai na frente, e depois quem você viu há mais tempo</span></div>
 
       <h3>Idade e aniversário</h3>
       <div class="linha"><span class="k">Idade</span><span class="v">todo mundo sai de casa com 15 anos · a ficha pede só o dia e o mês do aniversário · se ele cai durante a jornada, você faz 16 na estrada · aparece na Ficha e no Cartão de Treinador</span></div>

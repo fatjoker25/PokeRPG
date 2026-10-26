@@ -1223,7 +1223,8 @@ const Jogo = {
     const R = enc.tipo === 'extra' ? defRival(enc.id) : null;
     const nome = R ? R.nome : 'Ezra';
     const meu = Estado.primeiroApto();
-    if (!meu) return UI.modal(nome, '<p class="nada">Nenhum Pokémon em pé. Ele espera — mas cure o time antes.</p>');
+    if (!meu) return UI.modal(nome, `<p class="nada">Nenhum Pokémon em pé. ${R && R.f ? 'Ela' : 'Ele'} espera — mas cure o time antes.</p>`);
+    if (R) apresentarRival(R);
     const time = R ? timeRivalExtra(R) : timeRival();
     this.rivalAtual = R ? {extra:R.id} : {arco: arcoRival()};
     this.cenaBatalha = null; this.ginasioAtual = null; this.eliteAtual = null; this.torneioAtual = null;
@@ -1276,7 +1277,7 @@ const Jogo = {
     this.rivalAtual = null;
     const R = defRival(id);
     if (fim.resultado === 'gameover')
-      return UI.telaGameOver(`Você caiu numa batalha contra ${R.nome}, que virou seu rival por causa de uma escolha sua.`);
+      return UI.telaGameOver(R.gameover || `Você caiu numa batalha contra ${R.nome}, que virou seu rival por causa de uma escolha sua.`);
 
     const venceu = fim.resultado === 'vitoria';
     const falas = this.falasRival || (venceu ? falaVitoriaRivalExtra(R) : falaDerrotaRivalExtra(R));
@@ -1287,7 +1288,9 @@ const Jogo = {
     const op = npc ? npc.opiniao : 0;
 
     if (venceu){
-      Estado.lembrarNPC(R.npc, {memoria:`Perdeu para você de novo. ${R.nome} continua vindo.`});
+      const reg = registroRival(id) || {derrotas:0};
+      Estado.lembrarNPC(R.npc, {memoria: reg.derrotas > 1
+        ? `Perdeu para você de novo. ${R.nome} continua vindo.` : 'Perdeu para você na estrada.'});
       ganharExp(Estado.primeiroApto() || Estado.dados.time[0], 380);
       if (id === 'vasco'){
         Estado.lembrarNPC(R.npc, {opiniao: op - 1, memoria:'Perdeu de novo e não pareceu se importar com isso.'});
@@ -1318,9 +1321,10 @@ const Jogo = {
     if (enc.tipo === 'extra'){
       const R = defRival(enc.id);
       const reg = registroRival(enc.id);
-      if (reg) reg.ultimoCap = cap;
+      apresentarRival(R);
+      if (reg){ reg.ultimoCap = cap; reg.evitou = (reg.evitou || 0) + 1; }
       const npc = Estado.dados.npcs[R.npc];
-      Estado.lembrarNPC(R.npc, {opiniao:(npc?npc.opiniao:0)-1, memoria:'Você passou por ele sem parar.'});
+      Estado.lembrarNPC(R.npc, {opiniao:(npc?npc.opiniao:0)-1, memoria:`Você passou por ${proRival(R)} sem parar.`});
       Estado.registrar(`Evitou o encontro com ${R.nome}.`);
     } else {
       const r = rival();

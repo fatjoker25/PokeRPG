@@ -1317,6 +1317,39 @@ do bicho usa a marca `{pico}` (a espécie de agora, resolvida em
 `concordaJogador`), nunca "Pidgey" escrito à mão, e o jeito dele (criado
 em casa, olha pro Ezra antes de cada golpe) serve a qualquer espécie.
 
+## Os rivais extras e a Diana
+Os rivais que não são o Ezra moram em `RIVAIS_EXTRA` (`js/story/rival.js`):
+nascem de uma escolha sua (`gatilho`, lido no fim de cada capítulo por
+`conquistarRivais`) e te param na saída dos capítulos de `caps`. O Ezra
+tem preferência; quando dois extras dividem a passagem, a estreia de
+quem ainda não se apresentou vai na frente, e depois quem você viu há
+mais tempo (`rivalDeveAparecer`).
+
+A **Diana** é a exceção: não nasce de escolha sua, ela escolhe você.
+Entra no registro depois de Celadon (`gatilho` no capítulo 9), mas é
+`silencioso:true` — nada de "virou seu rival", nada no diário, fora da
+Ficha — até te parar na estrada pela primeira vez (`apresentarRival`,
+que guarda onde foi em `reg.desde`; `rivalConhecido` diz se ela já se
+apresentou). `estreia:true` põe essa primeira vez na frente do Otto no
+10. O time é o Rhydon (o ás, `aceFixo`, o primeiro dela), Lapras,
+Flareon, Dodrio, Electabuzz e Hitmonlee, sempre na forma final
+(`formasFixas`); o `criarPokemon` ainda segura o nível mínimo da forma,
+e o Rhydon nunca sai abaixo do 42 (está na folha de regras). Rival
+mulher leva `f:true`: tela, placar, Ficha, diário e a memória dela dizem
+"ela" (`proRival`, `quadroDoRival(…, f)`). O texto dela olha onde
+está: a estreia em Celadon é na saída da avenida, na água ela chega de
+Lapras, e a fala que promete "eu te digo por quê" só volta se a estreia
+foi luta. Rosto: `trainers/diana` (a Cooltrainer de HG/SS do acervo do
+Showdown — jaqueta vermelha, rabo de cavalo, em posição de luta); faixa:
+`bw2-kanto-gym-leader`, que nenhum ginásio pegou.
+
+A força foi medida com `node ferramentas/sim-rivais.js` (cada rival
+extra em cada passagem, jogador ingênuo na área do capítulo): a Diana
+fica entre 50% e 63% até o 18 e entre 34% e 48% do 24 em diante — mais
+difícil que líder, que é a ideia. Rival novo passa por ali, pelo
+`chk-lutas` (cada arco, nas duas fichas) e pelo `chk-telas` (a estreia,
+a volta depois de passar reto, o placar e o resultado).
+
 ## Quem ficou em casa e onde a jornada começa
 A pessoa de casa tem um **jeito** sorteado uma vez e guardado na ficha
 (`jeitoDaCasa`, em `js/story/casa-jeito.js`): orgulho, brincalhão,

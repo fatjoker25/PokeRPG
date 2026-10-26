@@ -4943,8 +4943,10 @@ button.item-linha.aparelho{
 @media (max-width:520px){
   .rival-quadro{grid-template-columns:1fr}
   .rq-placar{border-right:0;border-bottom:1px solid var(--borda);padding:0 0 10px;justify-content:center}
-  .rq-icones{display:grid;grid-template-columns:repeat(3, minmax(0, 1fr))}
-  .rq-pk{min-width:0}
+  /* até quatro numa linha só; cinco e seis em linhas de três, a de
+     baixo centrada: ninguém sobra sozinho num canto */
+  .rq-icones{justify-content:center}
+  .rq-pk{min-width:0;max-width:92px;flex:0 0 calc((100% - 6px * (var(--n, 3) - 1)) / var(--n, 3))}
 }
 
 /* Credenciais: o nome em letra de placa e os benefícios em etiquetas */

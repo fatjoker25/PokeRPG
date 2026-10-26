@@ -29,6 +29,7 @@ const RETRATO_POR_NOME = {
   /* rival e rivais de estrada */
   'Ezra':'trainers/lucas', 'Otto':'trainers/roughneck', 'Caçador Roque':'trainers/roughneck', 'o caçador mais novo':'trainers/roughneck',
   'Lior':'trainers/camper', 'Nolan':'trainers/sailor', 'Rory':'trainers/ninjaboy', 'o garoto de Fuchsia':'trainers/ninjaboy',
+  'Diana':'trainers/diana',
   'Garoto de Fuchsia':'trainers/ninjaboy', 'Menino do cais':'trainers/sailor',
   'Nadia':'trainers/veteran_f', 'Nadia Arden':'trainers/veteran_f',
   /* torneio */
@@ -264,7 +265,7 @@ const PAGA_POR_CLASSE = {
   'gym_leaders':99, 'elite':99,
   'trainers/youngster':15, 'trainers/lass':15, 'trainers/bug_catcher':10, 'trainers/hiker':35,
   'trainers/team_rocket_grunt_m':30, 'trainers/team_rocket_grunt_f':30, 'trainers/rival':35, 'trainers/lucas':35,
-  'trainers/ace_trainer':35, 'trainers/ace_trainer_f':35, 'trainers/worker':50,
+  'trainers/ace_trainer':35, 'trainers/ace_trainer_f':35, 'trainers/diana':35, 'trainers/worker':50,
   'trainers/scientist':50, 'trainers/scientist_f':50, 'trainers/office_worker_f':70,
   'trainers/veteran_f':70, 'trainers/roughneck':90, 'trainers/sailor':30, 'trainers/gentleman':70,
   'trainers/camper':20, 'trainers/pokemon_breeder':40, 'trainers/psychic_f':10,

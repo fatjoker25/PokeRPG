@@ -195,13 +195,16 @@ function rivalDeveAparecer(cap){
   const d = Estado.dados;
   if (d.npcs['Ezra'] && rival().ultimoCap !== cap && CAPS_RIVAL.includes(cap))
     return {tipo:'teo', nome:'Ezra'};
-  for (const R of RIVAIS_EXTRA){
-    if (!R.caps.includes(cap)) continue;
-    const reg = registroRival(R.id);
-    if (!reg || reg.ultimoCap === cap) continue;
-    return {tipo:'extra', id:R.id, nome:R.nome};
-  }
-  return null;
+  /* Quem divide a passagem: a estreia passa na frente (a Diana se
+     apresenta saindo de Celadon), depois quem você viu há mais tempo;
+     empate fica com a ordem da lista. */
+  const prontos = RIVAIS_EXTRA.map((R, i) => ({R, i, reg:registroRival(R.id)}))
+    .filter(x => x.R.caps.includes(cap) && x.reg && x.reg.ultimoCap !== cap);
+  if (!prontos.length) return null;
+  const estreia = x => x.R.estreia && !rivalConhecido(x.R, x.reg) ? 0 : 1;
+  prontos.sort((a, b) => estreia(a) - estreia(b) || (a.reg.ultimoCap || 0) - (b.reg.ultimoCap || 0) || a.i - b.i);
+  const R = prontos[0].R;
+  return {tipo:'extra', id:R.id, nome:R.nome};
 }
 
 /* ============================================================
@@ -681,6 +684,155 @@ const RIVAIS_EXTRA = [
     '"A floresta não é sua." Ele se levanta. "Nunca foi."',
     'Ele abre o bolso da frente da sua mochila na sua frente, tira o dinheiro que estava ali, e leva. É sobre poder fazer isso.'
   ]
+},
+{
+  /* ============================================================
+     DIANA — a mulher do Rhydon
+     Não nasce de escolha sua: ela escolhe você. Aparece pela primeira
+     vez na saída de Celadon, depois do capítulo 9, sentada nas costas
+     do Rhydon deitado no meio da rua, e daí em diante te para quando
+     dá. Forte, direta, desafia por esporte e guarda o placar. O time é
+     inteiro de forma final (formasFixas), acima do seu nível, e o ás é
+     sempre o Rhydon, o primeiro dela.
+     ============================================================ */
+  id:'diana', nome:'Diana', npc:'Diana', desde:'Celadon', caps:[10, 14, 18, 24, 27],
+  f:true,               // ela: "Ela venceu", "Passar por ela", "Time dela"
+  estreia:true,         // a primeira vez passa na frente de quem divide a passagem
+  silencioso:true,      // não vira rival no fim do capítulo: apresenta-se em pessoa
+  formasFixas:true,     // o time dela já é o que é, em qualquer nível
+  aceFixo:true,
+  origem:'A mulher do Rhydon. Ela escolheu você, e não disse por quê.',
+  gatilho:d => d.capitulo >= 9,
+  nascimento:'',
+  pool:[131, 136, 85, 125, 106],             // Lapras, Flareon, Dodrio, Electabuzz, Hitmonlee
+  ace:112, nivelExtra:1, moral:85,          // o Rhydon é o primeiro dela
+  cor:'#e0533f',
+  gameover:'Você caiu numa luta contra a Diana, que te parou no caminho pra ver do que você era feit{o|a}.',
+
+  /* o lado errado faz dela oposição; perder pra você mais do que ganha
+     faz respeito; ganhar sempre, ou ser ignorada, faz desdém */
+  arco:(d, r) => {
+    if (ladoEscuro(d) || repRuim(4)) return 'contra';
+    if (r.derrotas >= 2 && r.derrotas > r.vitorias) return 'respeito';
+    if ((r.vitorias >= 2 && r.derrotas === 0) || opiniaoRival(defRival('diana'), d) <= -2) return 'desdem';
+    return 'desafio';
+  },
+  arcos:{
+    desafio:{nome:'Desafio', resumo:'Te para no caminho pra ver do que você é feit{o|a}.'},
+    respeito:{nome:'Respeito', resumo:'Perdeu pra você e treinou com o placar escrito na parede.',
+      nivelExtra:2, moral:95},
+    desdem:{nome:'Desdém', resumo:'Achou que você fosse outra coisa, e ainda espera estar errada.',
+      nivelExtra:0, moral:80},
+    contra:{nome:'Contra', resumo:'Ouviu o que você anda fazendo e se pôs no caminho.',
+      nivelExtra:2, moral:85}
+  },
+
+  fala:(d, r, arco) => {
+    const aqui = Mundo.id(), naRua = rivalNaCidade();
+    const naAgua = (Mundo.atual() || {}).ambiente === 'agua';
+    const ins = (d.insignias || []).filter(i => i !== 'Título de Campeão').length;
+    /* a primeira vez: a apresentação, logo depois de Celadon */
+    if (r.encontros === 0 && !r.evitou){
+      const L = [
+        aqui === 'celadon'
+          ? 'Onde a avenida de Celadon vira estrada, um Rhydon está deitado atravessado no asfalto, como se a saída da cidade fosse dele. Tem uma mulher sentada nas costas dele, de braços cruzados.'
+          : naRua
+            ? 'Na saída da cidade, um Rhydon está deitado atravessado na rua, como se a rua fosse dele. Tem uma mulher sentada nas costas dele, de braços cruzados.'
+            : 'Um Rhydon está deitado atravessado no caminho, como se o caminho fosse dele. Tem uma mulher sentada nas costas dele, de braços cruzados.',
+        'O Rhydon levanta a cabeça quando você chega perto. Ela não.',
+        fala('Diana', ins ? 'Você. Com as insígnias no cinto.' : 'Você. Cinto vazio, e anda como se não estivesse.'),
+        'Ela escorrega pelo flanco do Rhydon e cai de pé. É alta, de jaqueta vermelha e rabo de cavalo apertado, e vem até você sem pressa nenhuma, do jeito de quem nunca precisou de pressa.',
+        fala('Diana', 'Diana. O seu eu já sei: está no quadro do Centro, com o de todo mundo que tem licença.'),
+        aqui === 'celadon'
+          ? fala('Diana', 'Eu passei a semana em Celadon vendo treinador comprar Pokémon pronto no balcão e chamar aquilo de time.')
+          : fala('Diana', 'Eu ando por Kanto vendo treinador comprar Pokémon pronto no balcão e chamar aquilo de time.'),
+        fala('Diana', 'Eu quero ver se o seu é seu.')
+      ];
+      if (arco === 'contra') L.push(fala('Diana', 'E eu ouvi falar de você. Do jeito errado.', 'frio'));
+      L.push(fala('Diana', 'O Rhydon foi o meu primeiro. Chegou Rhyhorn, do tamanho de uma mala, e já com essa teimosia.'),
+             'O Rhydon bufa. O chão em volta do pé dele racha um pouco, como se concordasse.',
+             fala('Diana', 'Uma luta. Se você perder, eu te digo por quê. Se ganhar, eu descubro sozinha.'));
+      return L;
+    }
+    if (r.encontros === 0) return [
+      naAgua
+        ? 'Diana chega pela água, de pé nas costas de um Lapras, e pula pra terra antes de ele encostar.'
+        : 'O Rhydon está deitado atravessado no caminho de novo, e Diana está de pé do lado dele, de braços cruzados.',
+      fala('Diana', 'Da outra vez você passou reto.'),
+      fala('Diana', 'Eu não guardo rancor. Eu guardo o placar, e o seu ainda está em branco.', 'frio'),
+      fala('Diana', 'Vem.')
+    ];
+    if (arco === 'respeito') return [
+      naAgua
+        ? 'Diana chega pela água, de pé nas costas de um Lapras, e levanta a mão quando te vê: um gesto curto, de quem não acena pra ninguém.'
+        : 'Diana te vê de longe e levanta a mão, um gesto curto, de quem não acena pra ninguém.',
+      fala('Diana', `${r.derrotas} pra você.`, null, 'Ela não esconde o número.'),
+      fala('Diana', 'Eu treinei o Rhydon com isso escrito na parede do quarto.'),
+      fala('Diana', 'Não pega leve comigo. Se você pegar leve, eu vou perceber e vou ficar ofendida.'),
+      fala('Diana', 'Vem.')
+    ];
+    if (arco === 'desdem') return [
+      'Diana está sentada nas costas do Rhydon e não desce quando você chega.',
+      r.vitorias >= 2 && r.derrotas === 0
+        ? fala('Diana', `${r.vitorias} a 0. Eu achei que você fosse outra coisa.`)
+        : fala('Diana', 'Você passou por mim fingindo que não viu. Eu vi.'),
+      fala('Diana', 'Me prova que eu errei. Ou não prova, e eu paro de perder tempo com você.')
+    ];
+    if (arco === 'contra') return [
+      'Diana está no meio do caminho, de braços cruzados, e o Rhydon está de pé do lado dela. Não deitado: de pé.',
+      fala('Diana', 'Eu ouvi o que você anda fazendo.', 'frio', 'Ela não diz o quê.'),
+      fala('Diana', 'Treinador forte do lado errado é o pior problema que Kanto tem.'),
+      fala('Diana', 'Então eu vou estar no caminho. Toda vez.')
+    ];
+    const L = [naAgua
+      ? 'Diana chega pela água, de pé nas costas de um Lapras, e pula pra terra antes de ele encostar.'
+      : naRua
+        ? 'Diana está sentada nas costas do Rhydon, deitado no meio da calçada como se a calçada fosse dele.'
+        : 'Diana está sentada nas costas do Rhydon, deitado atravessado no caminho como se o caminho fosse dele.'];
+    L.push(fala('Diana', `${r.vitorias} pra mim, ${r.derrotas} pra você.`, null, 'Ela diz o placar como quem diz o preço de alguma coisa.'));
+    if (ins >= 6) L.push(fala('Diana', `${ins} insígnias, e ainda anda de cabeça baixa. Levanta isso.`));
+    L.push(fala('Diana', 'Vem.'));
+    return L;
+  },
+  vitoria:(d, r, arco) => arco === 'respeito' ? [
+    'O Rhydon cai, e Diana ri — curto, de verdade.',
+    fala('Diana', 'Isso. Isso foi bom.', 'riso'),
+    fala('Diana', 'Não fica {convencido|convencida}.')
+  ] : arco === 'desdem' ? [
+    'O Rhydon cai, e ela fica olhando ele no chão um tempo comprido.',
+    fala('Diana', 'Tá.', null, 'Ela recolhe o Rhydon.'),
+    fala('Diana', 'Eu errei. Eu odeio errar. Na próxima, quem erra é você.')
+  ] : arco === 'contra' ? [
+    'O Rhydon cai, e Diana não se mexe.',
+    fala('Diana', 'Ganhar não te faz cert{o|a}. Só te faz difícil.', 'frio')
+  ] : [
+    'O Rhydon dobra os joelhos, e o chão treme um pouco quando ele encosta.',
+    'Diana recolhe o Rhydon sem tirar os olhos de você.',
+    fala('Diana', 'Agora eu sei.', null, 'Ela fecha a mão em volta da Pokébola.'),
+    fala('Diana', 'E agora você me deve outra.'),
+    'Ela vai embora antes de você responder.'
+  ],
+  derrota:(d, r, arco) => arco === 'respeito' ? [
+    'Ela ganha e não comemora.',
+    fala('Diana', 'Hoje foi meu. Amanhã pode ser seu.'),
+    fala('Diana', 'Não me faz esperar muito.', 'baixo')
+  ] : arco === 'desdem' ? [
+    'Ela ganha e já está subindo nas costas do Rhydon de novo.',
+    fala('Diana', 'Treina.', 'frio', 'É tudo o que ela diz.')
+  ] : arco === 'contra' ? [
+    'Ela ganha e se agacha na sua frente, na altura dos seus olhos.',
+    fala('Diana', 'Toda vez que você estiver indo pro lugar errado, eu vou estar no meio.', 'baixo'),
+    'Ela se levanta. O Rhydon passa do seu lado devagar, perto o bastante pra você sentir o calor da pedra.'
+  ] : r.encontros === 0 && !r.evitou ? [
+    'O seu último cai, e Diana já está recolhendo o Rhydon antes de você chegar perto do seu.',
+    fala('Diana', 'Eu disse que te dizia por quê.'),
+    fala('Diana', 'Você hesita antes de cada ordem. O seu Pokémon sente, e espera junto com você.'),
+    fala('Diana', 'Para de pedir licença pra lutar.')
+  ] : [
+    'O seu último cai. Diana recolhe o Rhydon e fica um tempo olhando pro seu time, um por um.',
+    fala('Diana', 'Melhorou. Não o bastante.'),
+    fala('Diana', 'Ainda tem um segundo entre a sua ordem e o golpe. Esse segundo é meu.')
+  ]
 }
 ];
 
@@ -706,15 +858,36 @@ function conquistarRivais(){
     if (!virou) continue;
     reg[R.id] = {id:R.id, nome:R.nome, vitorias:0, derrotas:0, encontros:0,
                  ultimoCap:0, desdeCap:d.capitulo};
+    /* quem é silencioso não vira rival no fim do capítulo: aparece
+       na estrada e se apresenta (apresentarRival) */
+    if (R.silencioso) continue;
     Estado.registrar(`Novo rival: ${R.nome}. ${R.origem}`);
     avisos.push({tipo:'rival', texto:`${R.nome} virou seu rival. ${R.nascimento}`});
   }
   return avisos;
 }
 
+/* Já te parou na estrada? O rival silencioso só existe pra você
+   depois da primeira vez, lutando ou passando reto. */
+function rivalConhecido(R, reg){
+  if (!reg) return false;
+  return !R.silencioso || !!(reg.apresentado || reg.encontros > 0 || reg.evitou);
+}
+/* A primeira vez de quem é silencioso: vai pro diário, com o lugar */
+function apresentarRival(R){
+  const reg = registroRival(R.id);
+  if (!R.silencioso || !reg || reg.apresentado) return;
+  reg.apresentado = true;
+  const onde = (LOCAIS[Mundo.id()] || {}).nome;
+  if (onde) reg.desde = onde;
+  Estado.registrar(`${R.f ? 'Nova rival' : 'Novo rival'}: ${R.nome}${onde ? `, em ${onde}` : ''}. ${R.origem}`);
+}
+/* ele ou ela, pra tela e pro diário */
+function proRival(R){ return R && R.f ? 'ela' : 'ele'; }
+
 function rivaisConquistados(){
   const reg = registroRivais();
-  return RIVAIS_EXTRA.filter(R => reg[R.id]).map(R => ({def:R, reg:reg[R.id]}));
+  return RIVAIS_EXTRA.filter(R => rivalConhecido(R, reg[R.id])).map(R => ({def:R, reg:reg[R.id]}));
 }
 
 /* ---------- time e arco de um rival extra ---------- */
@@ -753,15 +926,18 @@ function timeRivalExtra(R){
      num rival cujo time inteiro está no Nv9. E ninguém leva dois
      do mesmo bicho só porque duas formas colapsaram no mesmo estágio. */
   const nvAce = nivel + 2;
-  const usados = new Set([R.aceFixo ? R.ace : formaAteONivel(R.ace, nvAce)]);
+  /* quem tem formasFixas (a Diana) luta com o time que é dele, em
+     qualquer nível: a linha não volta pra trás */
+  const forma = (dex, nv) => R.formasFixas ? dex : formaAteONivel(dex, nv);
+  const usados = new Set([R.aceFixo ? R.ace : forma(R.ace, nvAce)]);
   for (let i = 0; i < R.pool.length && time.length < qtd - 1; i++){
     const nv = Math.max(5, nivel - 2 + time.length);
-    const dex = formaAteONivel(R.pool[i], nv);
+    const dex = forma(R.pool[i], nv);
     if (usados.has(dex)) continue;
     usados.add(dex);
     time.push(criarPokemon(dex, nv, {moral:R.moral || 70}));
   }
-  time.push(criarPokemon(R.aceFixo ? R.ace : formaAteONivel(R.ace, nvAce), nvAce, {moral:R.moral || 70}));
+  time.push(criarPokemon(R.aceFixo ? R.ace : forma(R.ace, nvAce), nvAce, {moral:R.moral || 70}));
   return time;
 }
 
@@ -786,6 +962,6 @@ function registrarResultadoRivalExtra(id, venceuJogador){
   if (venceuJogador) reg.derrotas++; else reg.vitorias++;
   const R = defRival(id);
   if (R) reg.arco = arcoRivalExtra(R);
-  Estado.registrar(`Encontro com ${R ? R.nome : id}: ${venceuJogador ? 'você venceu' : 'ele venceu'}. Placar ${reg.derrotas}×${reg.vitorias}.`);
+  Estado.registrar(`Encontro com ${R ? R.nome : id}: ${venceuJogador ? 'você venceu' : proRival(R) + ' venceu'}. Placar ${reg.derrotas}×${reg.vitorias}.`);
   return reg;
 }

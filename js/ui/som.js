@@ -64,8 +64,10 @@ const LUTAS_DO_VILAO = {'5:c5_luta_trio':'bw2-homika-dogars', '5:c5_ataque':'bw2
    pedreira: o do rival de Hoenn, o de quem treina na raça. Nolan, do
    cais: o de Alola, o garoto do mar que ri de tudo. Rory, de Fuchsia, que
    voltou a treinar por causa de um Rapidash: o de Hugh, que também luta
-   por um Pokémon que não é só dele. Otto, o caçador: o de Sinnoh, rápido e na espreita. */
-const FAIXA_DO_RIVAL = {ezra:'bw-rival', ezra_parceiro:'xy-rival', nilo:'oras-rival', tunico:'sm-rival', fuchsia:'bw2-rival', vasco:'dpp-rival'};
+   por um Pokémon que não é só dele. Otto, o caçador: o de Sinnoh, rápido e na espreita.
+   Diana, que te para pra ver do que você é feito: o de líder de Kanto de
+   Black 2/White 2, o do desafio, que nenhum ginásio daqui ficou. */
+const FAIXA_DO_RIVAL = {ezra:'bw-rival', ezra_parceiro:'xy-rival', nilo:'oras-rival', tunico:'sm-rival', fuchsia:'bw2-rival', vasco:'dpp-rival', diana:'bw2-kanto-gym-leader'};
 
 /* ---------- as faixas do Showdown e o que cada uma é ----------
    laco: os pontos de volta que o próprio Showdown usa (ms), pra emendar
@@ -292,6 +294,7 @@ const Som = {
       if (/\bEzra\b/.test(t)) return 'faixa:' + FAIXA_DO_RIVAL.ezra;
       if (/\bLior\b/.test(t)) return 'faixa:' + FAIXA_DO_RIVAL.nilo;
       if (/\bNolan\b/.test(t)) return 'faixa:' + FAIXA_DO_RIVAL.tunico;
+      if (/\bDiana\b/.test(t)) return 'faixa:' + FAIXA_DO_RIVAL.diana;
     }
     if (J.eliteAtual || J.torneioAtual || J.conferenciaAtual) return 'elite';
     if (J.ginasioAtual) return 'lider:' + J.ginasioAtual.id;
