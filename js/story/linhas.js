@@ -1202,11 +1202,11 @@ const Linhas = {
       if (cena) UI.telaCena(cena, avisos);
       this.depois = null;
       const nome = (typeof Nomes !== 'undefined' && Nomes.comoChamar) ? Nomes.comoChamar(c.quem) : c.quem;
-      const opcoes = (c.escolhas || []).map((o, i) => o.cond && !o.cond(d) ? '' : `<button class="btn" onclick="Linhas.escolher(${i})">${UI.esc(txt(o.texto))}</button>`).join('');
+      const opcoes = (c.escolhas || []).map((o, i) => o.cond && !o.cond(d) ? '' : UI.navResposta(txt(o.texto), `Linhas.escolher(${i})`)).join('');
       setTimeout(() => UI.navTela(null, nome ? nome.charAt(0).toUpperCase() + nome.slice(1) : 'Número sem nome', NOME_DA_LINHA[c.linha] || 'chamada', `
         <div class="nav-conversa narrativa">${UI.narrar(falas, c.quem)}</div>
         <div id="avisos-nav" class="avisos"></div>
-        <div class="nav-servicos nav-respostas">${opcoes || '<button class="btn" onclick="Linhas.seguir()">Guardar o aparelho</button>'}</div>`, true), 80);
+        <div class="nav-respostas">${opcoes || UI.navFim('Guardar o aparelho', 'Linhas.seguir()')}</div>`, true, null, c.quem), 80);
       return;
     }
     UI.limpar();
@@ -1238,7 +1238,9 @@ const Linhas = {
       const conv = ficha && ficha.querySelector('.nav-conversa');
       if (conv){
         conv.insertAdjacentHTML('beforeend', `<p class="nav-resposta">${UI.esc(txt(o.texto))}</p>` + UI.narrar(o.resultado || [], c.quem));
-        ficha.querySelector('.nav-respostas').innerHTML = '<button class="btn" onclick="Linhas.seguir()">Guardar o aparelho</button>';
+        ficha.querySelector('.nav-respostas').innerHTML = UI.navFim('Guardar o aparelho', 'Linhas.seguir()');
+        UI.navEmLinha();
+        UI.navRolarPara(conv, conv.querySelector('.nav-resposta:last-of-type'));
         if (avisos.length) UI.avisos(avisos, 'avisos-nav');
         return;
       }

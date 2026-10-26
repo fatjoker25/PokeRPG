@@ -1048,6 +1048,30 @@ aniversário e cena de linha que começa no aparelho ("O PokéNav apita…",
 `Linhas.ehLigacao`). Abre por cima da tela, que não muda; guardar o
 aparelho só fecha e repinta o topo. Nada de ligação em `UI.limpar()`.
 
+O aparelho (`UI.modalNav`) tem a barra de volta na carcaça e a tela
+de cristal embaixo (`.nav-tela`), com altura de aparelho: a agenda e a
+ficha rolam por dentro. A **agenda** vai em ordem de nome, como a de um
+telefone (`navChave`: sem artigo, sem acento; a casa fica em cima), com
+letra separando e busca quando passa de oito — e continua sem descrever
+ninguém (`textoContato` só dá o papel da casa). Número que te deram e
+você não gravou é **uma faixa só** (`details.nav-novos`, com "Gravar os
+N"); com um número só, ele já vem pronto pra gravar. A ficha tem um
+serviço por linha de menu (`.nav-acao`, desenho na pastilha), o motivo
+da porta fechada embaixo, e a missão cumprida e não contada acende um
+ponto na agenda. Na **ligação** (`navTela` marca `.em-linha`) a agenda
+sai de cena: quem liga em cima, com o rosto (o de cena de linha sai do
+rótulo, como no balão), a conversa no meio e as respostas
+(`navResposta`) presas embaixo, como num aplicativo de mensagem;
+desligar (`navFim`) é o fone vermelho. Atender **continua a conversa na
+mesma tela** (a sua resposta entra como `.nav-resposta`, a mensagem que
+sai, e `navEmLinha` para o toque); não atender apaga, porque a conversa
+não aconteceu. No celular é uma tela de cada vez: a agenda, e a ficha
+por cima com "‹ Agenda" (`.vendo-ficha`, quando um contato foi
+escolhido). Os balões da história são escuros: na tela clara do
+aparelho eles são refeitos com seletor mais forte (`.modal.nav
+.nav-conversa .fala…`), senão a sua fala e a fala sem dono saíam faixa
+preta com letra preta.
+
 ## A luta não acaba no recarregar
 `Estado.salvar` chama `LutaSalva.anotar` (`js/engine/luta-salva.js`): com
 luta ativa, ou com resultado esperando o Continuar (`Jogo.fimPendente`),

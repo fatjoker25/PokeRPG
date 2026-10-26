@@ -2287,11 +2287,19 @@ h3.cat-item{
 .btn.mini.pisca b.topo-conta{color:#1b1500}
 @keyframes navPisca{0%,100%{box-shadow:none}50%{box-shadow:0 0 10px -2px var(--destaque)}}
 
+/* O aparelho: a barra de volta pra mochila fica na carcaça azul, e a
+   tela de cristal (.nav-tela) embaixo dela, com a altura de um
+   aparelho de verdade: a agenda e a ficha rolam por dentro, a página
+   não. Na ligação (.em-linha) a agenda sai de cena e a conversa toma a
+   tela; no celular (.vendo-ficha) é uma tela de cada vez. */
 .modal.nav{
   --nav-caixa:#2f4f7a; --nav-caixa-esc:#1a2f4c; --nav-caixa-clara:#5a83b8;
   --nav-tela:#e7f3ff; --nav-tela-2:#cfe5fa; --nav-linha:#a6c8e8;
   --nav-txt:#12293f; --nav-txt-2:#42688c; --nav-realce:#0f6fb8;
-  max-width:720px;
+  --nav-cartao:#b9d0e8;
+  max-width:880px;max-height:calc(100dvh - 36px);
+  display:flex;flex-direction:column;overflow:hidden;
+  padding:14px 14px 12px;border-radius:22px;
   border:3px solid var(--nav-caixa-esc);
   background:linear-gradient(180deg, var(--nav-caixa-clara), var(--nav-caixa) 32%, var(--nav-caixa-esc));
   box-shadow:var(--sombra-alta), inset 0 1px 0 rgba(255,255,255,.35);
@@ -2301,99 +2309,313 @@ h3.cat-item{
   from{opacity:0;transform:perspective(900px) rotateX(-38deg) translateY(-12px)}
   to{opacity:1;transform:none}
 }
-.modal.nav .modal-corpo{
-  background:linear-gradient(180deg, #f4faff, var(--nav-tela) 40%, var(--nav-tela-2));
-  border:2px solid var(--nav-caixa-esc);border-radius:8px;padding:0;
-  color:var(--nav-txt);overflow:hidden;
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.8), inset 0 8px 18px -14px rgba(18,41,63,.8);
-}
+.modal.nav .modal-corpo{flex:1 1 auto;min-height:0;display:flex;flex-direction:column}
+.modal.nav .volta-mochila{margin:0 0 10px;flex:0 0 auto}
+.modal.nav .modal-pe{flex:0 0 auto;margin-top:10px}
 .modal.nav .modal-pe .btn{background:var(--nav-caixa-esc);border-color:var(--nav-caixa-clara);color:#dceaf8}
 .modal.nav .modal-pe .btn:hover:not(:disabled){background:var(--nav-caixa);color:#fff}
+.nav-tela{
+  flex:1 1 700px;min-height:0;display:flex;flex-direction:column;overflow:hidden;
+  background:linear-gradient(180deg, #f4faff, var(--nav-tela) 40%, var(--nav-tela-2));
+  border:2px solid var(--nav-caixa-esc);border-radius:12px;color:var(--nav-txt);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.8), inset 0 8px 18px -14px rgba(18,41,63,.8);
+  font-family:var(--letra-hud, var(--fonte));
+}
 
+/* a barra de estado da tela */
 .nav-topo{
-  display:flex;align-items:center;gap:9px;padding:7px 12px;
-  background:var(--nav-caixa-esc);color:#dceaf8;
-  font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;
+  flex:0 0 auto;display:flex;align-items:center;gap:9px;padding:8px 14px;
+  background:linear-gradient(180deg, #24476f, var(--nav-caixa-esc));color:#dceaf8;
+  font:700 11.5px/1.2 var(--letra-hud, var(--fonte));letter-spacing:.16em;text-transform:uppercase;
 }
 .nav-marca{flex:1}
-.nav-sinal{color:#9fc4e6;letter-spacing:.05em}
+.nav-sinal{color:#9fc4e6;letter-spacing:.03em;font-weight:500;text-transform:none;font-variant-numeric:tabular-nums}
+.modal.nav.em-linha .nav-sinal{display:none}
 .nav-antena{
   width:7px;height:7px;border-radius:50%;background:#7fd8ff;flex:0 0 auto;
   box-shadow:0 0 6px #7fd8ff;animation:navSinal 2.4s ease-in-out infinite;
 }
 @keyframes navSinal{0%,100%{opacity:1}55%{opacity:.35}}
+.modal.nav.chamando .nav-antena{background:#6ee59a;box-shadow:0 0 7px #6ee59a;animation:navToca .5s steps(2, jump-none) 6}
+@keyframes navToca{0%{opacity:1}100%{opacity:.2}}
 
-.nav-novos{padding:9px 12px;background:rgba(15,111,184,.08);border-bottom:1px solid var(--nav-linha)}
-.nav-gravar{
-  display:flex;align-items:center;gap:9px;width:100%;margin-top:5px;
-  padding:6px 9px;border:1px dashed var(--nav-realce);border-radius:5px;
-  background:rgba(255,255,255,.7);color:var(--nav-txt);font:inherit;font-size:12.5px;
-  cursor:pointer;text-align:left;
+/* números que te deram e você não gravou: uma faixa só, que abre */
+.nav-novos{flex:0 0 auto;border-bottom:1px solid var(--nav-linha);
+  background:linear-gradient(180deg, rgba(224,163,58,.18), rgba(224,163,58,.07))}
+.nav-novos-cab{
+  display:flex;align-items:center;gap:10px;padding:9px 14px;list-style:none;
+  font:600 13px/1.3 var(--letra-hud, var(--fonte));color:#6b4a10;
 }
-.nav-gravar:hover{background:#fff;border-style:solid}
-.nav-gravar span:first-child{font-weight:600}
-.nav-gravar b{margin-left:auto;color:var(--nav-realce);font-size:11px;
-  text-transform:uppercase;letter-spacing:.09em}
+details.nav-novos > summary{cursor:pointer;user-select:none}
+details.nav-novos > summary::-webkit-details-marker{display:none}
+details.nav-novos > summary:hover{background:rgba(224,163,58,.12)}
+details.nav-novos > summary:focus-visible{outline:2px solid var(--nav-realce);outline-offset:-2px;box-shadow:none}
+.nav-novos-conta{
+  min-width:22px;height:22px;padding:0 6px;border-radius:999px;flex:0 0 auto;
+  display:grid;place-items:center;background:#e0a33a;color:#fff;
+  font:800 12px/1 var(--letra-hud, var(--fonte));box-shadow:0 2px 0 #a8741a;
+}
+.nav-novos-ver{
+  margin-left:auto;width:8px;height:8px;flex:0 0 auto;
+  border-right:2px solid currentColor;border-bottom:2px solid currentColor;
+  transform:rotate(45deg) translate(-2px,-2px);transition:transform .2s var(--suave);
+}
+details.nav-novos[open] .nav-novos-ver{transform:rotate(225deg) translate(-2px,-2px)}
+.nav-novos-lista{display:flex;flex-direction:column;gap:6px;padding:0 12px 12px;max-height:min(240px, 30vh);overflow-y:auto}
+.nav-novo{
+  display:flex;align-items:center;gap:10px;padding:6px 8px;border-radius:11px;
+  background:rgba(255,255,255,.8);border:1px dashed #d8b46a;
+}
+.nav-novos.um .nav-novo{margin:0 12px 10px}
+.nav-gravar,.nav-gravar-todos{
+  flex:0 0 auto;margin-left:auto;padding:7px 15px;border-radius:999px;
+  border:1px solid #b9821f;background:linear-gradient(180deg, #f3c062, #d9982c);color:#3d2a06;
+  font:700 12.5px/1 var(--letra-hud, var(--fonte));box-shadow:0 2px 0 #a8741a;
+}
+.nav-gravar:hover,.nav-gravar-todos:hover{filter:brightness(1.06)}
+.nav-gravar:active,.nav-gravar-todos:active{transform:translateY(2px);box-shadow:0 0 0 #a8741a}
+.nav-gravar-todos{align-self:flex-end;margin-top:2px}
 
-.nav-colunas{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr)}
-.nav-lista{padding:10px 11px;border-right:1px solid var(--nav-linha);min-width:0;
-  max-height:330px;overflow-y:auto}
-.nav-titulo{
-  font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;
-  color:var(--nav-txt-2);margin-bottom:7px;border-bottom:1px solid var(--nav-linha);padding-bottom:4px;
+/* a agenda e a ficha, lado a lado */
+.nav-colunas{flex:1 1 auto;min-height:0;display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);grid-template-rows:minmax(0,1fr)}
+.nav-lista{min-height:0;overflow-y:auto;padding:10px 10px 14px;
+  border-right:1px solid var(--nav-linha);background:rgba(255,255,255,.28);overscroll-behavior:contain}
+.nav-busca{
+  display:flex;align-items:center;gap:8px;height:38px;margin:0 0 8px;padding:0 11px;
+  border-radius:11px;background:#fff;border:1px solid var(--nav-cartao);
 }
+.nav-busca:focus-within{border-color:var(--nav-realce);box-shadow:0 0 0 3px rgba(15,111,184,.18)}
+.nav-busca svg.icone{width:16px;height:16px;flex:0 0 auto;color:var(--nav-txt-2)}
+.nav-busca input{flex:1;min-width:0;height:100%;border:0;outline:0;background:none;padding:0;
+  font:500 14px/1 var(--letra-hud, var(--fonte));color:var(--nav-txt)}
+.nav-busca input::placeholder{color:#7d98b6}
+.nav-busca-vazia{margin:14px 6px;font:400 13px/1.4 var(--fonte);color:var(--nav-txt-2);text-align:center}
+.nav-letra{
+  display:flex;align-items:center;gap:8px;margin:10px 4px 4px;
+  font:700 11px/1 var(--letra-hud, var(--fonte));letter-spacing:.14em;text-transform:uppercase;color:var(--nav-txt-2);
+}
+.nav-letra::after{content:'';flex:1;height:1px;background:color-mix(in srgb, var(--nav-linha) 70%, transparent)}
+.nav-lista > .nav-letra:first-child,.nav-busca + .nav-busca-vazia + .nav-letra{margin-top:0}
 .nav-contato{
-  display:flex;align-items:center;gap:8px;width:100%;margin-bottom:4px;
-  padding:6px 8px;border:1px solid transparent;border-radius:5px;
-  background:rgba(255,255,255,.55);color:var(--nav-txt);font:inherit;
-  cursor:pointer;text-align:left;
+  display:flex;align-items:center;gap:10px;width:100%;margin:0 0 3px;
+  padding:7px 9px;border:1px solid transparent;border-radius:11px;
+  background:transparent;color:var(--nav-txt);text-align:left;cursor:pointer;
+  font-family:var(--letra-hud, var(--fonte));
 }
-.nav-contato:hover{background:#fff;border-color:var(--nav-linha)}
+.nav-contato:hover{background:rgba(255,255,255,.75);border-color:rgba(166,200,232,.6)}
 .nav-contato.sel{background:#fff;border-color:var(--nav-realce);
-  box-shadow:0 0 0 1px var(--nav-realce) inset}
+  box-shadow:0 0 0 1px var(--nav-realce) inset, 0 6px 12px -10px rgba(18,41,63,.7)}
+.nav-contato:focus-visible{outline:2px solid var(--nav-realce);outline-offset:1px;box-shadow:none}
+.nav-contato[hidden],.nav-letra[hidden]{display:none}
+.nav-linha-txt{display:flex;flex-direction:column;min-width:0;flex:1}
+.nav-nome{font-size:14.5px;font-weight:600;line-height:1.25;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.nav-papel{font:400 12px/1.35 var(--fonte);color:var(--nav-txt-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.nav-ponto{width:10px;height:10px;flex:0 0 auto;border-radius:50%;background:#e0a33a;
+  box-shadow:0 0 0 3px rgba(224,163,58,.22)}
+.nav-vazio{color:var(--nav-txt-2);font:400 13px/1.5 var(--fonte);text-align:center;padding:24px 8px}
+
+/* o rosto na bolinha */
 .nav-inicial{
-  flex:0 0 auto;width:26px;height:26px;border-radius:50%;
+  flex:0 0 auto;width:36px;height:36px;border-radius:50%;
   display:flex;align-items:center;justify-content:center;
-  font-weight:700;font-size:13px;color:#fff;background:var(--nav-txt-2);
+  font:700 15px/1 var(--letra-hud, var(--fonte));color:#fff;background:var(--nav-txt-2);
 }
 .nav-inicial.treinador{background:#c0392b}
 .nav-inicial.figura{background:#2f7d5c}
-.nav-inicial.grande{width:40px;height:40px;font-size:19px}
+.nav-inicial svg.icone{width:55%;height:55%;color:#fff}
 /* rosto de treinador (80×80) recortado no círculo: o busto fica no alto do quadro */
-.nav-inicial.com-rosto{background:#e8eef6;overflow:hidden;box-shadow:0 0 0 1.5px var(--nav-linha) inset}
-.nav-inicial.com-rosto{position:relative}
+.nav-inicial.com-rosto{position:relative;overflow:hidden;background:#e8eef6;box-shadow:0 0 0 1.5px var(--nav-linha) inset}
 .nav-inicial.com-rosto img{position:absolute;max-width:none;width:210%;height:auto;left:-55%;top:-12%;image-rendering:pixelated}
-.nav-inicial.grande.com-rosto{width:48px;height:48px}
-.nav-linha-txt{display:flex;flex-direction:column;min-width:0;flex:1}
-.nav-nome{font-size:13px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.nav-papel{font-size:11px;color:var(--nav-txt-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.nav-cidade{font-family:var(--mono);font-size:10px;color:var(--nav-txt-2);flex:0 0 auto}
+.nav-inicial.grande{width:64px;height:64px;font-size:26px}
 
-.nav-ficha{padding:11px 13px;min-width:0}
-.nav-ficha-cab{display:flex;align-items:center;gap:10px;margin-bottom:7px}
+/* a ficha de quem está selecionado */
+.nav-ficha{min-height:0;min-width:0;overflow-y:auto;padding:16px 18px 18px;overscroll-behavior:contain}
+.nav-volta{display:none}
+.nav-ficha-cab{display:flex;align-items:center;gap:14px;margin-bottom:16px}
 .nav-ficha-cab > span:last-child{display:flex;flex-direction:column;min-width:0}
-.nav-ficha-nome{font-size:16px;font-weight:650}
-.nav-ficha-papel{font-size:11.5px;color:var(--nav-txt-2)}
-.nav-desde{font-size:12px;font-style:italic;color:var(--nav-txt-2);line-height:1.45;
-  padding-bottom:9px;margin-bottom:9px;border-bottom:1px solid var(--nav-linha)}
-.nav-servicos{display:flex;flex-direction:column;gap:9px}
-.nav-servico{display:flex;flex-direction:column;gap:3px}
-.nav-servico .btn{
-  background:var(--nav-realce);border-color:var(--nav-caixa-esc);color:#fff;
-  padding:6px 12px;font-size:12.5px;align-self:flex-start;
+.nav-ficha-nome{font:700 20px/1.15 var(--letra-hud, var(--fonte))}
+.nav-ficha-papel{font:500 13px/1.35 var(--letra-hud, var(--fonte));color:var(--nav-txt-2);margin-top:2px}
+.nav-ficha-meta{font:400 12.5px/1.4 var(--fonte);color:var(--nav-txt-2);margin-top:3px}
+.nav-titulo{
+  display:flex;align-items:center;gap:8px;margin:0 0 9px;
+  font:700 11px/1 var(--letra-hud, var(--fonte));letter-spacing:.15em;text-transform:uppercase;color:var(--nav-txt-2);
 }
-.nav-servico .btn:hover:not(:disabled){background:var(--nav-caixa-esc)}
-.nav-servico .btn:disabled{background:rgba(255,255,255,.6);color:var(--nav-txt-2);border-color:var(--nav-linha)}
-.nav-nota{font-size:11.5px;color:var(--nav-txt-2);line-height:1.4}
-.nav-hist{display:flex;gap:6px;flex-wrap:wrap;margin-top:11px;
-  padding-top:8px;border-top:1px dashed var(--nav-linha)}
-.nav-hist span{font-family:var(--mono);font-size:10px;color:var(--nav-txt-2);
-  padding:1px 6px;border:1px solid var(--nav-linha);border-radius:3px}
-.nav-vazio{color:var(--nav-txt-2);font-size:12.5px;text-align:center;padding:20px 8px;line-height:1.5}
-.nav-vazio span{font-size:11.5px;opacity:.75}
+.nav-titulo::before{content:'';width:7px;height:7px;transform:rotate(45deg);background:var(--nav-realce);flex:0 0 auto}
+.nav-titulo::after{content:'';flex:1;height:1px;background:var(--nav-linha)}
+.nav-acoes{display:flex;flex-direction:column;gap:9px;margin-bottom:18px}
+.nav-nota{font:400 12.5px/1.45 var(--fonte);color:var(--nav-txt-2)}
+.nav-hist{display:flex;gap:6px;flex-wrap:wrap}
+.nav-hist span{
+  font:600 11.5px/1 var(--letra-hud, var(--fonte));padding:5px 10px;border-radius:999px;
+  background:rgba(15,111,184,.07);border:1px solid var(--nav-linha);color:var(--nav-txt-2);
+}
+
+/* linha de menu do aparelho: serviço da ficha e resposta de ligação */
+.nav-acao{
+  --ac:var(--nav-realce);
+  position:relative;display:flex;align-items:center;gap:11px;width:100%;
+  padding:8px 34px 8px 8px;border-radius:13px;text-align:left;cursor:pointer;
+  font:600 14px/1.3 var(--letra-hud, var(--fonte));color:var(--nav-txt);
+  background:linear-gradient(180deg, #fff, #f1f7fe);
+  border:1px solid var(--nav-cartao);
+  box-shadow:0 3px 0 #b3cbe4, 0 10px 16px -14px rgba(18,41,63,.7);
+}
+.nav-acao > svg.icone{
+  width:32px;height:32px;padding:7px;flex:0 0 auto;border-radius:50%;color:#fff;stroke-width:2.1;
+  background:radial-gradient(circle at 50% 30%, color-mix(in srgb, var(--ac) 62%, #fff), var(--ac) 60%, color-mix(in srgb, var(--ac) 72%, #000));
+  box-shadow:0 2px 6px -3px rgba(18,41,63,.8);
+}
+.nav-acao::after{
+  content:'';position:absolute;right:14px;top:50%;width:7px;height:7px;margin-top:-3.5px;
+  border-top:2px solid currentColor;border-right:2px solid currentColor;transform:rotate(45deg);
+  opacity:.4;transition:transform .2s var(--mola), opacity .18s var(--suave);
+}
+.nav-acao:hover:not(:disabled){border-color:var(--nav-realce);transform:translateY(-1px)}
+.nav-acao:hover:not(:disabled)::after{opacity:.9;transform:translateX(2px) rotate(45deg)}
+.nav-acao:active:not(:disabled){transform:translateY(2px);box-shadow:0 1px 0 #b3cbe4}
+.nav-acao:focus-visible{outline:2px solid var(--nav-realce);outline-offset:2px;box-shadow:0 3px 0 #b3cbe4}
+.nav-acao:disabled{cursor:default;background:rgba(255,255,255,.45);border-style:dashed;box-shadow:none;color:var(--nav-txt-2)}
+.nav-acao:disabled::after{display:none}
+.nav-acao:disabled > svg.icone{background:#a9bdd2;box-shadow:none}
+.na-rot{flex:1 1 auto;min-width:0}
+.na-trava{display:block;margin-top:2px;font:400 12px/1.4 var(--fonte);color:var(--nav-txt-2)}
+.nav-acao.diz .na-rot{font:italic 500 14.5px/1.4 var(--fonte)}
+.nav-acao.recusar{color:#8e2a20}
+.nav-acao.recusar > svg.icone{transform:rotate(135deg)}
+.nav-acao.pronta{border-color:#e0a33a;box-shadow:0 3px 0 #e8c37a, 0 0 0 3px rgba(224,163,58,.18)}
+
+/* a ligação: quem está do outro lado em cima, a conversa no meio,
+   as respostas presas embaixo */
+.modal.nav.em-linha .nav-lista,.modal.nav.em-linha .nav-novos{display:none}
+.modal.nav.em-linha .nav-colunas{grid-template-columns:minmax(0,1fr)}
+.modal.nav.em-linha .nav-ficha{display:flex;flex-direction:column;overflow:hidden;padding:0}
+.nav-ligacao-cab{
+  flex:0 0 auto;display:flex;align-items:center;gap:14px;padding:14px 18px;
+  border-bottom:1px solid var(--nav-linha);
+  background:linear-gradient(180deg, rgba(255,255,255,.85), rgba(255,255,255,.4));
+}
+.nav-ligacao-cab .nav-inicial.grande{width:58px;height:58px}
+.nav-ligacao-quem{display:flex;flex-direction:column;align-items:flex-start;min-width:0}
+.nav-ligacao-nome{font:700 20px/1.15 var(--letra-hud, var(--fonte));overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.nav-ligacao-estado{
+  display:inline-flex;align-items:center;gap:7px;margin-top:5px;padding:3px 11px 3px 9px;border-radius:999px;
+  font:600 12px/1.3 var(--letra-hud, var(--fonte));letter-spacing:.02em;
+  color:#1f8a4c;background:rgba(47,156,85,.13);
+}
+.nav-ligacao-estado::before{content:'';width:8px;height:8px;border-radius:50%;background:currentColor;flex:0 0 auto}
+.nav-ligacao-estado.tocando::before{animation:navPulso 1s ease-in-out infinite}
+.nav-ligacao-estado.perdida{color:#b03a2e;background:rgba(192,57,43,.12)}
+.nav-ligacao-estado.mensagens{color:var(--nav-realce);background:rgba(15,111,184,.12)}
+@keyframes navPulso{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.7)}}
+.modal.nav.tocando .nav-ligacao-cab .nav-inicial{animation:navAnel 1.3s ease-out infinite}
+@keyframes navAnel{
+  0%{box-shadow:0 0 0 1.5px var(--nav-linha) inset, 0 0 0 0 rgba(47,156,85,.55)}
+  100%{box-shadow:0 0 0 1.5px var(--nav-linha) inset, 0 0 0 15px rgba(47,156,85,0)}
+}
+.modal.nav.em-linha .nav-conversa{
+  flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;margin:0;
+  padding:14px max(18px, calc((100% - 700px) / 2)) 10px;
+}
+.modal.nav.em-linha #avisos-nav{flex:0 0 auto;max-height:32%;overflow-y:auto;margin:0;
+  padding:0 max(18px, calc((100% - 700px) / 2))}
+.modal.nav.em-linha #avisos-nav:empty{display:none}
+.nav-respostas{display:flex;flex-direction:column;gap:8px}
+.modal.nav.em-linha .nav-respostas{
+  flex:0 0 auto;max-height:45%;overflow-y:auto;
+  padding:11px max(14px, calc((100% - 700px) / 2)) 13px;
+  border-top:1px solid var(--nav-linha);background:rgba(255,255,255,.45);
+}
+/* o fim: desligar (vermelho, o fone virado) ou guardar o aparelho */
+.nav-fim{
+  align-self:center;display:inline-flex;align-items:center;gap:9px;
+  padding:7px 20px 7px 7px;border-radius:999px;cursor:pointer;
+  font:700 14px/1 var(--letra-hud, var(--fonte));color:#fff;
+  background:linear-gradient(180deg, var(--nav-caixa-clara), var(--nav-caixa));
+  border:1px solid var(--nav-caixa-esc);box-shadow:0 3px 0 var(--nav-caixa-esc);
+}
+.nav-fim > svg.icone{width:30px;height:30px;padding:6px;border-radius:50%;background:rgba(255,255,255,.2);stroke-width:2.1}
+.nav-fim:hover{filter:brightness(1.08)}
+.nav-fim:active{transform:translateY(2px);box-shadow:0 1px 0 var(--nav-caixa-esc)}
+.nav-fim:focus-visible{outline:2px solid var(--nav-realce);outline-offset:2px;box-shadow:0 3px 0 var(--nav-caixa-esc)}
+.nav-fim.desligar{background:linear-gradient(180deg, #e0564e, #c0392b);border-color:#8e2a20;box-shadow:0 3px 0 #7a2018}
+.nav-fim.desligar > svg.icone{transform:rotate(135deg)}
+
+/* a conversa na tela clara do aparelho: o balão é branco, o tom vai na
+   borda e no nome, e o rosto na moldura clara. Com o fundo escuro do
+   balão da história, a letra escura do aparelho sumia: "Oi! Oi, é você?"
+   virava uma faixa preta, e a sua fala e a fala sem dono também. */
+.modal.nav .nav-conversa{font-family:var(--fonte);font-size:14.5px;color:var(--nav-txt);position:relative}
+.modal.nav .nav-conversa > p{color:#1f3550}
+.modal.nav .nav-conversa .fala{
+  background:#fff;border:1px solid color-mix(in srgb, var(--cor-balao) 40%, var(--nav-cartao));
+  box-shadow:0 2px 0 rgba(18,41,63,.06), 0 8px 16px -14px rgba(18,41,63,.6);
+}
+.modal.nav .nav-conversa .fala .fala-diz,.modal.nav .nav-conversa .fala p{color:#14243a;font-size:15px}
+.modal.nav .nav-conversa .fala-quem{color:color-mix(in srgb, var(--cor-balao) 55%, #0d1b2a);
+  background:color-mix(in srgb, var(--cor-balao) 18%, #fff)}
+.modal.nav .nav-conversa .fala-retrato{
+  background:
+    radial-gradient(120% 90% at 50% 100%, color-mix(in srgb, var(--cor-balao) 34%, transparent), transparent 70%),
+    color-mix(in srgb, var(--cor-balao) 10%, #eef5fc);
+  box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--cor-balao) 45%, transparent);
+}
+.modal.nav .nav-conversa .fala-retrato.vazio{background:none;box-shadow:none}
+.modal.nav .nav-conversa .fala-nota{color:var(--nav-txt-2)}
+.modal.nav .nav-conversa .fala.voce{background:#ecf8f0;border-color:#9fd3ad}
+.modal.nav .nav-conversa .fala.voce .fala-quem{color:#2b7a3d;background:rgba(63,154,69,.14)}
+.modal.nav .nav-conversa .fala.anonima{background:#f6f9fd;border-style:dashed}
+.modal.nav .nav-conversa .fala.grita{border-color:#e2a9a3}
+.modal.nav .nav-conversa .fala.grita .fala-quem{color:#b03a2e;background:rgba(192,57,43,.1)}
+.modal.nav .nav-conversa .fala.baixo{border-color:#c4d2e2}
+.modal.nav .nav-conversa .fala.baixo .fala-diz{color:#3c5470}
+.modal.nav .nav-conversa .fala.riso{border-color:#a7d6a9}
+.modal.nav .nav-conversa .fala.frio{border-color:#c4d2e2}
+.modal.nav .nav-conversa p.entre-falas{color:var(--nav-txt-2)}
+.modal.nav .nav-conversa p.escrito{color:#2c4a68;background:rgba(15,111,184,.06);border-left-color:var(--nav-linha)}
+/* a sua resposta: a mensagem que sai, do outro lado, na cor do seu balão */
+.modal.nav .nav-conversa .nav-resposta{
+  width:fit-content;max-width:min(60ch, 86%);margin:14px 0 14px auto;padding:8px 14px;
+  border-radius:15px 15px 4px 15px;color:#fff;font-size:14.5px;line-height:1.45;
+  background:linear-gradient(180deg, #34a35c, #258449);box-shadow:0 2px 0 rgba(14,58,29,.35);
+}
+/* o que chega depois da resposta entra logo: o atraso da história
+   (nth-child) fazia a resposta esperar quase um segundo pra aparecer */
+.modal.nav .nav-conversa .nav-resposta{animation-delay:0s}
+.modal.nav .nav-conversa .nav-resposta ~ p,.modal.nav .nav-conversa .nav-resposta ~ .fala{animation-delay:.3s}
+/* no PokéNav o aviso fica na tela clara do aparelho */
+.modal.nav .aviso .av-txt{color:color-mix(in srgb, currentColor 45%, var(--nav-txt))}
+.modal.nav .aviso[class]{background:rgba(255,255,255,.72)}
+
 @media (max-width:640px){
-  .nav-colunas{grid-template-columns:1fr}
-  .nav-lista{border-right:none;border-bottom:1px solid var(--nav-linha);max-height:200px}
+  .modal-fundo.fundo-nav{padding:8px}
+  .modal.nav{max-height:calc(100dvh - 16px);padding:10px 10px 8px;border-radius:18px}
+  .modal.nav .volta-mochila{margin-bottom:8px}
+  .modal.nav .modal-pe{margin-top:8px}
+  .nav-tela{flex-basis:100dvh}
+  .nav-colunas{grid-template-columns:minmax(0,1fr)}
+  /* uma tela de cada vez: a agenda, ou a ficha por cima dela */
+  .modal.nav:not(.vendo-ficha):not(.em-linha) .nav-ficha{display:none}
+  .modal.nav.vendo-ficha:not(.em-linha) .nav-lista,.modal.nav.vendo-ficha:not(.em-linha) .nav-novos{display:none}
+  .nav-lista{border-right:0}
+  .nav-volta{
+    display:inline-flex;align-items:center;gap:4px;margin:0 0 12px;padding:5px 12px 5px 8px;border-radius:999px;
+    border:1px solid var(--nav-linha);background:rgba(255,255,255,.7);color:var(--nav-realce);cursor:pointer;
+    font:700 13px/1 var(--letra-hud, var(--fonte));
+  }
+  .nav-volta::before{content:'‹';font-size:18px;line-height:.8}
+  .nav-ficha{padding:12px 14px 16px}
+  .nav-ficha-cab .nav-inicial.grande{width:56px;height:56px}
+  .nav-ligacao-cab{padding:11px 14px;gap:12px}
+  .nav-ligacao-cab .nav-inicial.grande{width:50px;height:50px}
+  .nav-ligacao-nome{font-size:18px}
+  .modal.nav.em-linha .nav-conversa{padding:12px 12px 8px}
+  .modal.nav.em-linha #avisos-nav{padding:0 12px}
+  .modal.nav.em-linha .nav-respostas{padding:9px 10px 11px}
+}
+@media (prefers-reduced-motion: reduce){
+  .nav-antena,.modal.nav.chamando .nav-antena,.nav-ligacao-estado.tocando::before,
+  .modal.nav.tocando .nav-ligacao-cab .nav-inicial{animation:none}
 }
 
 /* linha de resultado de teste num evento */
@@ -3161,28 +3383,6 @@ body.com-cenario .topo{
 @media (prefers-reduced-motion: reduce){ body.com-cenario::before{animation:none} }
 
 
-/* ligação feita: a conversa acontece dentro da ficha do PokéNav */
-.nav-conversa{margin:10px 0 6px;max-height:52vh;overflow:auto;font-size:14px}
-.nav-conversa .fala{margin:8px 0}
-.nav-conversa .fala{background:#ffffff;border-color:#a9c4e2;box-shadow:none}
-.nav-conversa .fala .fala-diz,.nav-conversa .fala p{color:#14243a}
-.nav-conversa .fala .fala-quem{color:#1d4f8a}
-.nav-conversa > p{color:#1f3550}
-/* Tom no aparelho: o PokéNav é claro, então o tom vai na borda e no
-   nome, nunca no fundo. Com o fundo escuro do tom (.narrativa .fala.grita
-   ganha de .nav-conversa .fala), a letra escura do aparelho sumia:
-   "Oi! Oi, é você?" virava uma faixa preta. */
-.nav-conversa.narrativa .fala.grita, .nav-conversa.narrativa .fala.baixo,
-.nav-conversa.narrativa .fala.riso, .nav-conversa.narrativa .fala.frio{background:#ffffff}
-.nav-conversa.narrativa .fala.grita{border-color:#e2a9a3;border-left-color:#c0392b}
-.nav-conversa.narrativa .fala.grita .fala-quem{color:#b03a2e}
-.nav-conversa.narrativa .fala.baixo{border-color:#c4d2e2;border-left-color:#8aa0b8}
-.nav-conversa.narrativa .fala.baixo .fala-quem{color:#5a6f88}
-.nav-conversa.narrativa .fala.riso{border-color:#a7d6a9;border-left-color:#3f9a45}
-.nav-conversa.narrativa .fala.riso .fala-quem{color:#2f7d36}
-.nav-conversa.narrativa .fala.frio{border-color:#c4d2e2;border-left-color:#7f96b5}
-.nav-conversa.narrativa .fala.frio .fala-quem{color:#4f6888}
-
 /* mural: de longe os papéis são títulos; clicar chega perto de um */
 button.bilhete{font:inherit;border:0;text-align:left;cursor:pointer;width:100%}
 button.bilhete.fechado p{font-size:12.5px;opacity:.85}
@@ -3324,15 +3524,6 @@ html[data-moldura="grafite"], body[data-moldura="grafite"]{
 .data-nasc select{width:100%}
 #f-nasc-idade{margin-top:6px}
 #f-nasc-idade.erro-campo{color:var(--ruim)}
-
-/* comunicação dentro do PokéNav: chamada recebida, respostas e mensagens */
-.modal.nav.chamando .nav-antena{animation:navToca .5s steps(2, jump-none) 6}
-@keyframes navToca{0%{opacity:1}100%{opacity:.2}}
-.nav-respostas{display:flex;flex-direction:column;align-items:stretch;gap:8px}
-.nav-respostas .btn{text-align:left;white-space:normal}
-.nav-respostas .btn.recusar{opacity:.8}
-.nav-conversa .nav-resposta{margin:12px 0 6px;padding:6px 10px;border-left:3px solid var(--destaque);
-  color:var(--texto);font-style:italic;background:rgba(255,255,255,.04);border-radius:0 6px 6px 0}
 
 /* Pokédex e Cartão: o aparelho cabe na tela e fecha só no X */
 .modal.so-x{position:relative;max-height:calc(100dvh - 24px);overflow:hidden;display:flex;flex-direction:column;padding-top:16px}
@@ -4723,9 +4914,6 @@ button.item-linha.aparelho{
 .aviso.moral{color:#f48fb1}
 .aviso.perde{color:var(--perigo)}
 .aviso.perigo .av-txt, .aviso.gameover .av-txt{font-weight:650}
-/* no PokéNav o aviso fica na tela clara do aparelho */
-.modal.nav .aviso .av-txt{color:color-mix(in srgb, currentColor 45%, var(--nav-txt))}
-.modal.nav .aviso[class]{background:rgba(255,255,255,.72)}
 
 /* O rival: o placar como o de uma luta e o time em ícones */
 .rival-quadro{

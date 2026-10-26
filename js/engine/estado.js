@@ -880,7 +880,7 @@ const Estado = {
     if (!(c.oferece||[]).includes(servico)) return {ok:false, motivo:'Não é pra isso que se liga pra essa pessoa.'};
     if (servico === 'missao'){
       const fase = this.faseDaMissao(id);
-      if (fase === 'feita')   return {ok:false, motivo:'Já está resolvido. Ele não vai pedir de novo.'};
+      if (fase === 'feita')   return {ok:false, motivo:'Feito e contado. Não vem outro pedido.'};
       if (fase === 'fazendo') return {ok:false, motivo: (c.missao && c.missao.dica) || 'Ainda não. Você sabe o que falta.'};
       return {ok:true, fase};
     }

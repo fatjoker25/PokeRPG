@@ -2622,24 +2622,73 @@ const UI = {
 
   /* Toda comunicação acontece dentro do PokéNav, por cima do que
      estava na tela: a tela de baixo não muda, e desligar devolve pra
-     ela. `navTela` é a moldura: o aparelho aberto, a agenda do lado e
-     a conversa no lugar da ficha. */
-  navTela(contato, nome, papel, corpo, chamando, selo){
+     ela. `navTela` é a moldura da ligação: o aparelho em linha (a
+     agenda sai de cena e a conversa toma a tela), quem está do outro
+     lado em cima, a conversa no meio e as respostas presas embaixo,
+     como num aplicativo de mensagem. */
+  navTela(contato, nome, papel, corpo, chamando, selo, rotulo){
     this.modalNav(contato && Estado.temNumero(contato.id) ? contato.id : undefined);
     const m = document.getElementById('modal');
     const ficha = m && m.querySelector('#nav-ficha');
     if (!ficha) return null;
-    if (chamando) m.querySelector('.modal').classList.add('chamando');
+    const caixa = m.querySelector('.modal');
+    caixa.classList.add('em-linha');
+    caixa.classList.remove('vendo-ficha');
+    const estado = /mensage/.test(papel) ? 'mensagens' : chamando ? 'tocando' : /não atendida/.test(papel) ? 'perdida' : 'linha';
+    if (chamando) caixa.classList.add('chamando');
+    caixa.classList.toggle('tocando', estado === 'tocando');
+    const marca = caixa.querySelector('.nav-marca');
+    if (marca) marca.textContent = {mensagens:'Mensagens', tocando:'Chamada', perdida:'Chamada perdida', linha:'Em linha'}[estado];
+    /* quem liga de fora da agenda (cena de linha) tem o mesmo rosto do
+       balão, pelo rótulo; o selo é o desenho de quem não é gente (as
+       mensagens do aniversário) */
+    let rosto;
+    if (contato) rosto = this.navRosto(contato, true);
+    else {
+      const chave = rotulo || nome;
+      const r = !selo && chave && typeof retratoDe === 'function'
+        ? (retratoDe(chave) || (typeof rostoGenerico === 'function' ? rostoGenerico(chave) : null)) : null;
+      rosto = r ? `<span class="nav-inicial grande figura com-rosto"><img src="${r}" alt="" onerror="this.parentNode.classList.remove('com-rosto');this.remove()"></span>`
+                : `<span class="nav-inicial grande figura">${selo || this.esc((this.navChave(nome).charAt(0) || '?').toUpperCase())}</span>`;
+    }
     ficha.innerHTML = `
-      <div class="nav-ficha-cab">
-        ${contato ? this.navRosto(contato, true) : `<span class="nav-inicial grande figura">${selo || '?'}</span>`}
-        <span>
-          <span class="nav-ficha-nome">${this.esc(nome)}</span>
-          <span class="nav-ficha-papel">${this.esc(papel)}</span>
+      <div class="nav-ligacao-cab">
+        ${rosto}
+        <span class="nav-ligacao-quem">
+          <span class="nav-ligacao-nome">${this.esc(nome)}</span>
+          <span class="nav-ligacao-estado ${estado}">${this.esc(papel)}</span>
         </span>
       </div>${corpo}`;
     ficha.scrollTop = 0;
     return ficha;
+  },
+
+  /* resposta de ligação: linha de menu do aparelho. A fala sua (entre
+     aspas) sai em itálico, como no menu da história. */
+  navResposta(texto, acao, cls){
+    const t = String(texto || '');
+    const diz = /^["“]/.test(t) ? ' diz' : '';
+    const ic = cls === 'recusar' ? 'telefone' : diz ? 'conversar' : 'seta';
+    return `<button class="nav-acao${diz}${cls ? ' ' + cls : ''}" onclick="${acao}">${svgIcone(ic, '', cls === 'recusar' ? '--ac:#d9413a' : '')}<span class="na-rot">${this.esc(t)}</span></button>`;
+  },
+  /* o fim da ligação: desligar (volta pra ficha de quem é) ou guardar o aparelho */
+  navFim(rotulo, acao, desligar){
+    return `<button class="nav-fim${desligar ? ' desligar' : ''}" onclick="${acao}">${svgIcone(desligar ? 'telefone' : 'pokenav')}<span>${this.esc(rotulo)}</span></button>`;
+  },
+  /* atendeu: o aparelho para de tocar e a ligação fica em linha */
+  navEmLinha(){
+    const caixa = document.querySelector('#modal .modal.nav');
+    if (!caixa) return;
+    caixa.classList.remove('chamando', 'tocando');
+    const est = caixa.querySelector('.nav-ligacao-estado');
+    if (est && !est.classList.contains('mensagens')){ est.className = 'nav-ligacao-estado linha'; est.textContent = 'em linha'; }
+    const marca = caixa.querySelector('.nav-marca');
+    if (marca) marca.textContent = 'Em linha';
+  },
+  /* rola a conversa até o que acabou de chegar, sem mexer na página */
+  navRolarPara(conv, el){
+    if (!conv || !el) return;
+    try { conv.scrollTo({top:Math.max(0, el.offsetTop - 8), behavior:'smooth'}); } catch(e){ conv.scrollTop = el.offsetTop; }
   },
 
   /* O telefone tocando: você atende ou não, e não atender custa. */
@@ -2651,26 +2700,43 @@ const UI = {
     const opcoes = (c.escolhas || []).map((o, i) => ({o, i}))
       .filter(({o}) => { try { return !o.cond || o.cond(Estado.dados); } catch(e){ return false; } });
     const nome = contato ? textoContato(contato,'nome') : 'Número desconhecido';
-    this.navTela(contato, nome, 'chamada recebida', `
+    const ficha = this.navTela(contato, nome, 'chamada recebida', `
       <div class="nav-conversa narrativa">${this.narrar(falas, contato ? nome : null)}</div>
       <div id="avisos-nav" class="avisos"></div>
-      <div class="nav-servicos nav-respostas">
-        ${opcoes.map(({o, i}) => `<button class="btn" onclick="Jogo.responderChamada('${c.id}',${i})">${this.esc(txt(o.texto))}</button>`).join('')}
-        <button class="btn recusar" onclick="Jogo.recusarChamada('${c.id}')">Não atender.</button>
+      <div class="nav-respostas">
+        ${opcoes.map(({o, i}) => this.navResposta(txt(o.texto), `Jogo.responderChamada('${c.id}',${i})`)).join('')}
+        ${this.navResposta('Não atender.', `Jogo.recusarChamada('${c.id}')`, 'recusar')}
       </div>`, true);
+    if (ficha) ficha.dataset.chamada = c.id;
   },
 
   telaResultadoChamada(r){
     const contato = contatoPorId(r.chamada.de);
     const nome = contato ? textoContato(contato,'nome') : '';
-    this.navTela(contato, nome, r.recusou ? 'não atendida' : 'em linha', `
-      <div class="nav-conversa narrativa">${r.recusou
-        ? this.narrar(['O aparelho toca oito vezes e para.',
-            'Você olha o nome na tela o tempo inteiro e não atende, o que é diferente de não ouvir.',
-            'Não vai ligar de novo hoje.'])
-        : this.narrar(r.esc.resultado || [], contato ? nome : null)}</div>
-      <div id="avisos-nav" class="avisos"></div>
-      <div class="nav-servicos"><button class="btn" onclick="Jogo.voltarDaLigacao()">Guardar o aparelho</button></div>`);
+    const fim = `<div class="nav-respostas">${this.navFim('Guardar o aparelho', 'Jogo.voltarDaLigacao()')}</div>`;
+    /* atendeu, e a chamada ainda está aberta: a conversa continua na
+       mesma tela, com a sua resposta e o que veio depois embaixo do que
+       já tinha sido dito. Não atender apaga a conversa: ela não aconteceu. */
+    const m = document.getElementById('modal');
+    const ficha = m && m.querySelector('#nav-ficha');
+    const conv = !r.recusou && ficha && ficha.dataset.chamada === r.chamada.id && ficha.querySelector('.nav-conversa');
+    if (conv){
+      this.navEmLinha();
+      conv.insertAdjacentHTML('beforeend', `<p class="nav-resposta">${this.esc(txt(r.esc.texto))}</p>`
+        + this.narrar(r.esc.resultado || [], contato ? nome : null));
+      const resp = ficha.querySelector('.nav-respostas');
+      if (resp) resp.outerHTML = fim;
+      this.navRolarPara(conv, conv.querySelector('.nav-resposta:last-of-type'));
+    } else {
+      this.navTela(contato, nome, r.recusou ? 'não atendida' : 'em linha', `
+        <div class="nav-conversa narrativa">${r.recusou
+          ? this.narrar(['O aparelho toca oito vezes e para.',
+              'Você olha o nome na tela o tempo inteiro e não atende, o que é diferente de não ouvir.',
+              'Não vai ligar de novo hoje.'])
+          : `<p class="nav-resposta">${this.esc(txt(r.esc.texto))}</p>` + this.narrar(r.esc.resultado || [], contato ? nome : null)}</div>
+        <div id="avisos-nav" class="avisos"></div>
+        ${fim}`);
+    }
     if (r.avisos && r.avisos.length) this.avisos(r.avisos, 'avisos-nav');
   },
 
@@ -2681,7 +2747,7 @@ const UI = {
     this.navTela(null, titulo, 'mensagens', `
       <div class="nav-conversa narrativa">${this.narrar(falas)}</div>
       <div id="avisos-nav" class="avisos"></div>
-      <div class="nav-servicos"><button class="btn" onclick="Jogo.voltarDaLigacao()">Guardar o aparelho</button></div>`, true, '✉');
+      <div class="nav-respostas">${this.navFim('Guardar o aparelho', 'Jogo.voltarDaLigacao()')}</div>`, true, svgIcone('convite'));
     if (avisos && avisos.length) this.avisos(avisos, 'avisos-nav');
   },
 
@@ -2698,77 +2764,139 @@ const UI = {
      contato. Nada do texto que você estava lendo se perde. */
   telaLigacao(c, falas, avisos){
     if (!c) return;
-    this.modalNav(c.id);
-    const m = document.getElementById('modal');
-    const ficha = m && m.querySelector('#nav-ficha');
-    if (!ficha) return;
-    ficha.innerHTML = `
-      <div class="nav-ficha-cab">
-        ${this.navRosto(c, true)}
-        <span>
-          <span class="nav-ficha-nome">${this.esc(textoContato(c,'nome'))}</span>
-          <span class="nav-ficha-papel">em linha</span>
-        </span>
-      </div>
-      <div class="nav-conversa narrativa">${this.narrarMonologo(falas || [], textoContato(c,'nome'))}</div>
+    const nome = textoContato(c,'nome');
+    this.navTela(c, nome, 'em linha', `
+      <div class="nav-conversa narrativa">${this.narrarMonologo(falas || [], nome)}</div>
       <div id="avisos-nav" class="avisos"></div>
-      <div class="nav-servicos"><button class="btn" onclick="UI.modalNav('${c.id}')">Desligar</button></div>`;
+      <div class="nav-respostas">${this.navFim('Desligar', `UI.modalNav('${c.id}')`, true)}</div>`);
     if (avisos && avisos.length) this.avisos(avisos, 'avisos-nav');
-    ficha.scrollTop = 0;
   },
 
   /* ========================================================
      POKÉNAV — a agenda de quem te atende
-     Aparelho azul de tampa, tela de cristal. Lista de contatos
-     à esquerda, ficha de quem você selecionou à direita, e um
-     botão por serviço: revanche, favor, missão, dar notícia.
+     Aparelho azul de tampa, tela de cristal. A agenda em ordem de
+     nome, como a de um telefone (a casa fica em cima), com busca
+     quando passa de oito; a ficha de quem você selecionou do lado,
+     com uma linha por serviço: revanche, favor, missão, dar notícia.
+     No celular é uma tela de cada vez: a agenda, e a ficha por cima
+     dela com o caminho de volta (`vendo-ficha`).
      ======================================================== */
   navSel: null,
+  navNovosAberto: false,
+
+  /* a chave de ordem e de busca: sem artigo na frente e sem acento */
+  navChave(t){
+    return String(t || '').normalize('NFD').replace(/[̀-ͯ]/g, '')
+      .replace(/^(o|a|os|as|um|uma)\s+/i, '').toLowerCase();
+  },
 
   modalNav(sel){
-    const d = Estado.dados;
     if (!Estado.temPokenav()) return;
-    if (sel !== undefined) this.navSel = sel;
-    const agenda = Estado.contatosNaAgenda();
+    const escolheu = sel !== undefined;
+    if (escolheu) this.navSel = sel;
+    const nomeDe = c => textoContato(c, 'nome') || '';
+    const agenda = Estado.contatosNaAgenda().slice().sort((a, b) =>
+      a.id === 'casa' ? -1 : b.id === 'casa' ? 1 : this.navChave(nomeDe(a)).localeCompare(this.navChave(nomeDe(b)), 'pt-BR'));
     const novos = Estado.numerosDisponiveis();
     if (this.navSel && !agenda.some(c=>c.id===this.navSel)) this.navSel = null;
     if (!this.navSel && agenda.length) this.navSel = agenda[0].id;
+    const muitos = agenda.length > 8;
 
     const linha = c => {
-      const reg = Estado.nav().contatos[c.id] || {};
-      return `<button class="nav-contato${c.id===this.navSel?' sel':''}" onclick="UI.modalNav('${c.id}')">
+      const nome = nomeDe(c);
+      const sub = [textoContato(c,'papel'), textoContato(c,'cidade')].filter(Boolean).join(' · ');
+      /* missão cumprida e ainda não contada: um ponto, como mensagem não lida */
+      const pronta = c.missao && Estado.faseDaMissao(c.id) === 'entregar';
+      return `<button class="nav-contato${c.id===this.navSel?' sel':''}" data-busca="${this.esc(this.navChave(nome + ' ' + (textoContato(c,'cidade') || '')))}" onclick="UI.modalNav('${c.id}')">
         ${this.navRosto(c)}
         <span class="nav-linha-txt">
-          <span class="nav-nome">${this.esc(textoContato(c,'nome'))}</span>
-          <span class="nav-papel">${this.esc(textoContato(c,'papel'))}</span>
+          <span class="nav-nome">${this.esc(nome)}</span>
+          ${sub ? `<span class="nav-papel">${this.esc(sub)}</span>` : ''}
         </span>
-        <span class="nav-cidade">${this.esc(textoContato(c,'cidade') || '')}</span>
+        ${pronta ? '<span class="nav-ponto" title="Tem o que contar"></span>' : ''}
       </button>`;
     };
+    let lista = '', letra = null;
+    for (const c of agenda){
+      if (muitos){
+        const l = c.id === 'casa' ? 'Casa' : (this.navChave(nomeDe(c)).charAt(0) || '#').toUpperCase();
+        if (l !== letra){ letra = l; lista += `<div class="nav-letra">${this.esc(l)}</div>`; }
+      }
+      lista += linha(c);
+    }
 
-    const pendentes = novos.length ? `
-      <div class="nav-novos">
-        <div class="nav-titulo">Números que te deram e você não gravou</div>
-        ${novos.map(c => `<button class="nav-gravar" onclick="UI.navGravar('${c.id}')">
-          <span>${this.esc(textoContato(c,'nome'))}</span>
-          <span class="nav-papel">${this.esc(textoContato(c,'papel'))}</span>
-          <b>gravar</b></button>`).join('')}
-      </div>` : '';
+    /* número que te deram e você não gravou: um só vem pronto pra gravar;
+       vários ficam numa faixa que abre */
+    const novo = c => `<div class="nav-novo">
+        ${this.navRosto(c)}
+        <span class="nav-linha-txt">
+          <span class="nav-nome">${this.esc(nomeDe(c))}</span>
+          ${textoContato(c,'cidade') ? `<span class="nav-papel">${this.esc(textoContato(c,'cidade'))}</span>` : ''}
+        </span>
+        <button class="nav-gravar" onclick="UI.navGravar('${c.id}')">Gravar</button>
+      </div>`;
+    const pendentes = !novos.length ? '' : novos.length === 1 ? `
+      <div class="nav-novos um">
+        <div class="nav-novos-cab"><span class="nav-novos-conta">1</span>número que te deram e você não gravou</div>
+        ${novo(novos[0])}
+      </div>` : `
+      <details class="nav-novos"${this.navNovosAberto ? ' open' : ''} ontoggle="UI.navNovosAberto = this.open">
+        <summary class="nav-novos-cab"><span class="nav-novos-conta">${novos.length}</span>números que te deram e você não gravou<span class="nav-novos-ver" aria-hidden="true"></span></summary>
+        <div class="nav-novos-lista">
+          ${novos.map(novo).join('')}
+          <button class="nav-gravar-todos" onclick="UI.navGravarTodos()">Gravar os ${novos.length}</button>
+        </div>
+      </details>`;
 
-    this.modal('', this.abasMochila('nav') + `
+    this.modal('', this.abasMochila('nav') + `<div class="nav-tela">
       <div class="nav-topo">
         <span class="nav-antena"></span>
-        <span class="nav-marca">POKÉNAV</span>
+        <span class="nav-marca">Agenda</span>
         <span class="nav-sinal">${agenda.length} contato${agenda.length===1?'':'s'}</span>
       </div>
       ${pendentes}
       <div class="nav-colunas">
         <div class="nav-lista">
-          <div class="nav-titulo">Agenda</div>
-          ${agenda.length ? agenda.map(linha).join('') : '<div class="nav-vazio">Nenhum número ainda.</div>'}
+          ${muitos ? `<label class="nav-busca">${svgIcone('vasculhar')}<input id="nav-busca" type="search" placeholder="Procurar na agenda" autocomplete="off" aria-label="Procurar na agenda" oninput="UI.navFiltrar(this.value)"></label>
+          <p class="nav-busca-vazia" hidden>Ninguém com esse nome na agenda.</p>` : ''}
+          ${agenda.length ? lista : '<div class="nav-vazio">Nenhum número ainda.</div>'}
         </div>
         <div class="nav-ficha" id="nav-ficha">${this.navFicha()}</div>
-      </div>`, false, 'nav');
+      </div>
+    </div>`, false, 'nav');
+    const caixa = document.querySelector('#modal .modal.nav');
+    if (caixa && escolheu) caixa.classList.add('vendo-ficha');
+  },
+
+  /* a busca da agenda filtra na tela, sem redesenhar */
+  navFiltrar(q){
+    const caixa = document.querySelector('#modal .modal.nav');
+    if (!caixa) return;
+    const t = this.navChave(q).trim();
+    const lista = caixa.querySelector('.nav-lista');
+    lista.querySelectorAll('.nav-contato').forEach(b => { b.hidden = !!t && !b.dataset.busca.includes(t); });
+    let cab = null, algum = false;
+    const fecha = () => { if (cab) cab.hidden = !algum; };
+    for (const el of lista.children){
+      if (el.classList.contains('nav-letra')){ fecha(); cab = el; algum = false; }
+      else if (el.classList.contains('nav-contato') && !el.hidden) algum = true;
+    }
+    fecha();
+    const vazia = lista.querySelector('.nav-busca-vazia');
+    if (vazia) vazia.hidden = !!lista.querySelector('.nav-contato:not([hidden])');
+  },
+  /* no celular, a ficha volta pra agenda */
+  navVoltarLista(){
+    const caixa = document.querySelector('#modal .modal.nav');
+    if (caixa) caixa.classList.remove('vendo-ficha');
+  },
+
+  /* o número do capítulo como o jogador lê: "capítulo 8", ou o do caminho */
+  navCapitulo(n){
+    if (n == null) return '';
+    if (Number.isInteger(n)) return `capítulo ${n}`;
+    const cap = (typeof CAPITULOS !== 'undefined') ? CAPITULOS.find(c => c.num === n) : null;
+    return cap && typeof numeroDoCapitulo === 'function' ? numeroDoCapitulo(cap) : `capítulo ${Math.floor(n)}`;
   },
 
   navFicha(){
@@ -2788,44 +2916,65 @@ const UI = {
       })(),
       prova:(c.prova && c.prova.rotulo) || 'Dar notícia'
     };
-    const botoes = (c.oferece||[]).map(serv => {
+    /* o desenho de cada serviço, na pastilha da cor dele */
+    const ICONE = {revanche:['revanche'], favor:['doar'], missao:['bandeira', '--ac:#4fc3f7'], prova:['conversar']};
+    const acoes = (c.oferece||[]).map(serv => {
       const r = emLuta() ? {ok:false, motivo:'No meio da luta não dá pra ligar.'} : Estado.podeLigar(c.id, serv);
-      return `<div class="nav-servico">
-        <button class="btn" ${r.ok ? `onclick="UI.navLigar('${c.id}','${serv}')"` : 'disabled'}>${this.esc(ROTULO[serv]||serv)}</button>
-        ${r.ok ? '' : `<span class="nav-nota">${this.esc(r.motivo)}</span>`}
-      </div>`;
+      const [ic, est] = ICONE[serv] || ['telefone'];
+      const pronta = r.ok && serv === 'missao' && r.fase === 'entregar';
+      return `<button class="nav-acao${pronta ? ' pronta' : ''}" ${r.ok ? `onclick="UI.navLigar('${c.id}','${serv}')"` : 'disabled'}>
+        ${svgIcone(ic, '', est)}
+        <span class="na-rot">${this.esc(ROTULO[serv]||serv)}${r.ok ? '' : `<small class="na-trava">${this.esc(r.motivo)}</small>`}</span>
+      </button>`;
     }).join('');
 
+    const SERVICO = {revanche:'revanche', favor:'favor', missao:'missão', prova:'notícia'};
     const hist = (Estado.nav().ligacoes||[]).filter(l => l.id === c.id).slice(-3).reverse();
+    const papel = textoContato(c,'papel');
+    const meta = [textoContato(c,'cidade'), reg.desdeCap >= 1 ? `na agenda desde o ${this.navCapitulo(reg.desdeCap)}` : ''].filter(Boolean);
 
     return `
+      <button class="nav-volta" onclick="UI.navVoltarLista()">Agenda</button>
       <div class="nav-ficha-cab">
         ${this.navRosto(c, true)}
         <span>
           <span class="nav-ficha-nome">${this.esc(textoContato(c,'nome'))}</span>
-          <span class="nav-ficha-papel">${this.esc(textoContato(c,'papel'))}</span>
+          ${papel ? `<span class="nav-ficha-papel">${this.esc(papel)}</span>` : ''}
+          ${meta.length ? `<span class="nav-ficha-meta">${this.esc(meta.join(' · '))}</span>` : ''}
         </span>
       </div>
-      <div class="nav-servicos">${botoes || '<span class="nav-nota">Nada a pedir agora.</span>'}</div>
-      ${hist.length ? `<div class="nav-hist">${hist.map(l =>
-        `<span>cap ${l.cap} · ${this.esc(l.servico)}</span>`).join('')}</div>` : ''}`;
+      <div class="nav-titulo">Ligar</div>
+      <div class="nav-acoes">${acoes || '<span class="nav-nota">Nada a pedir agora.</span>'}</div>
+      ${hist.length ? `<div class="nav-titulo">Últimas ligações</div>
+      <div class="nav-hist">${hist.map(l =>
+        `<span>${this.esc(this.navCapitulo(l.cap))} · ${this.esc(SERVICO[l.servico] || l.servico)}</span>`).join('')}</div>` : ''}`;
   },
 
   /* o rosto de quem está na agenda, quando o jogo tem um; sem rosto,
      a inicial do nome na bolinha colorida */
   navRosto(c, grande){
-    const nome = textoContato(c, 'nome');
+    const nome = textoContato(c, 'nome') || '?';
     const r = (typeof retratoDe === 'function') ? (retratoDe(nome) || retratoDe(c.nome && typeof c.nome === 'string' ? c.nome : '')) : null;
     const cls = `nav-inicial${grande ? ' grande' : ''} ${c.tipo === 'treinador' ? 'treinador' : 'figura'}`;
+    /* a inicial é a do nome, não a do artigo: "O menino do balde" é M */
+    const ini = this.esc((this.navChave(nome).charAt(0) || '?').toUpperCase());
     return r
-      ? `<span class="${cls} com-rosto"><img src="${r}" alt="" onerror="this.parentNode.classList.remove('com-rosto');this.replaceWith(document.createTextNode('${this.esc(nome.slice(0,1))}'))"></span>`
-      : `<span class="${cls}">${this.esc(nome.slice(0,1))}</span>`;
+      ? `<span class="${cls} com-rosto"><img src="${r}" alt="" onerror="this.parentNode.classList.remove('com-rosto');this.replaceWith(document.createTextNode('${ini}'))"></span>`
+      : `<span class="${cls}">${ini}</span>`;
   },
 
+  /* gravar um número: a agenda continua na tela, com a faixa como estava */
   navGravar(id){
     Estado.registrarNumero(id);
     Estado.salvar('auto');
     this.modalNav(id);
+    this.navVoltarLista();
+  },
+  navGravarTodos(){
+    Estado.numerosDisponiveis().forEach(c => Estado.registrarNumero(c.id));
+    Estado.salvar('auto');
+    this.navNovosAberto = false;
+    this.modalNav();
   },
   navLigar(id, servico){
     this.fecharModal(true);

@@ -117,6 +117,7 @@ const ICONE = {
   itens:'<rect x="5" y="8" width="14" height="13" rx="3"/><path d="M9 8V6a3 3 0 0 1 6 0v2M8 13h8"/>',
   pokedex:'<rect x="5" y="3" width="14" height="18" rx="2"/><circle cx="9" cy="7" r="1.6"/><rect x="8" y="11" width="8" height="6" rx="1"/>',
   pokenav:'<rect x="7" y="3" width="10" height="18" rx="2"/><path d="M10 6h4M11 18h2"/><rect x="9" y="8" width="6" height="7" rx="1"/>',
+  telefone:'<path d="M7.2 3.5H5.4c-1 0-1.9.9-1.8 1.9.6 7.6 6.6 13.6 14.2 14.2 1 .1 1.9-.8 1.9-1.8v-1.8c0-.7-.5-1.3-1.2-1.5l-2.6-.6c-.6-.1-1.2.1-1.5.6l-.8 1.1c-2.4-1.1-4.3-3-5.4-5.4l1.1-.8c.5-.4.7-1 .6-1.5l-.6-2.6c-.2-.7-.8-1.2-1.5-1.2z"/>',
   cartao:'<rect x="3" y="6" width="18" height="13" rx="2"/><circle cx="8.5" cy="12" r="2"/><path d="M14 10h5M14 13h4M14 16h3"/>',
   /* os comandos da luta: o time é a Pokébola, fugir é correr, o
      Forfeit é a bandeira branca e a Vontade é a chama */
@@ -162,7 +163,7 @@ const COR_DO_ICONE = {
   pescar:'#42a5f5', acampar:'#c49a6c', esperar:'#90a4ae', lutar:'#ef5350', troca:'#26a69a',
   agenda:'#ffca28', convite:'#ffb74d', revanche:'#ff7043', trancado:'#7d88a8',
   mural:'#ffb74d', pc:'#4dd0e1', mapa:'#66bb6a', dormir:'#7986cb', diario:'#e8b923',
-  bola:'#4cc38a', pokedex:'#ef5350', itens:'#d9a35b',
+  bola:'#4cc38a', pokedex:'#ef5350', itens:'#d9a35b', telefone:'#43b581',
   seta:'#5aa7ff', olho:'#90caf9', pergunta:'#8c9eff', dado:'#4dd0e1', chama:'#a77bff', tigela:'#d9a35b'
 };
 
