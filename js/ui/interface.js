@@ -1149,7 +1149,9 @@ const UI = {
   /* Alguém novo entra em cena ("sai um rapaz de uns dezoito anos") e é
      ELE quem fala, não quem estava conversando com você antes. Nesses
      casos o balão fica sem nome: melhor sem nome do que com o errado. */
-  _ALGUEM_NOVO: /\b(um|uma)\s+(rapaz|mo[çc]o|mo[çc]a|senhor|senhora|garoto|garota|menino|menina|homem|mulher|cara|sujeito|velho|velha|guarda|policial|atendente|funcion[áa]ri[oa]|vendedor|vendedora|enfermeir[oa]|m[ée]dic[oa]|motorista|pescador|treinador|treinadora|crian[çc]a|adolescente|estudante|senhorinha|sujeita)\b/i,
+  /* comparação não é gente entrando: "ele parece um cara que calculou",
+     "como uma criança", "feito um velho" */
+  _ALGUEM_NOVO: /(?<!\b(?:parece|parecia|parecem|pareceu|como|feito|tipo|nem|igual\s+a|que\s+nem)\s)\b(um|uma)\s+(rapaz|mo[çc]o|mo[çc]a|senhor|senhora|garoto|garota|menino|menina|homem|mulher|cara|sujeito|velho|velha|guarda|policial|atendente|funcion[áa]ri[oa]|vendedor|vendedora|enfermeir[oa]|m[ée]dic[oa]|motorista|pescador|treinador|treinadora|crian[çc]a|adolescente|estudante|senhorinha|sujeita)\b/i,
 
   /* A cena apresenta alguém ("sai um rapaz de uns dezoito anos")? Então
      é ELE quem fala, e o nome dele é a descrição que a própria cena deu. */

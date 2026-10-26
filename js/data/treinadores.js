@@ -27,10 +27,10 @@ const RETRATO_POR_NOME = {
   /* substitutos da Elite: a classe de treinador que os jogos dariam */
   'Giselle':'trainers/ace_trainer_f', 'A.J.':'trainers/veteran_gen7', 'Mandi':'trainers/harlequin',
   /* rival e rivais de estrada */
-  'Ezra':'trainers/lucas', 'Otto':'trainers/roughneck', 'Caçador Roque':'trainers/roughneck', 'o caçador mais novo':'trainers/roughneck',
-  'Lior':'trainers/worker_gen7', 'Nolan':'trainers/nolan', 'Rory':'trainers/ninjaboy', 'o garoto de Fuchsia':'trainers/ninjaboy',
+  'Ezra':'trainers/lucas', 'Otto':'trainers/otto', 'Caçador Roque':'trainers/otto', 'o caçador mais novo':'trainers/roughneck',
+  'Lior':'trainers/worker_gen7', 'Nolan':'trainers/nolan', 'Rory':'trainers/rory', 'o garoto de Fuchsia':'trainers/rory',
   'Diana':'trainers/diana',
-  'Garoto de Fuchsia':'trainers/ninjaboy', 'Menino do cais':'trainers/nolan',
+  'Garoto de Fuchsia':'trainers/rory', 'Menino do cais':'trainers/nolan',
   'Nadia':'trainers/veteran_f', 'Nadia Arden':'trainers/veteran_f',
   /* torneio */
   'Fenna, da Silph':'trainers/scientist_f', 'Guia Orin':'trainers/pokemon_ranger',
@@ -333,7 +333,8 @@ const PAGA_POR_CLASSE = {
   'trainers/officeworkerf_gen9':70, 'trainers/richboy_gen6':70, 'trainers/expert_gen6':70,
   'trainers/nolan':30, 'trainers/worker_gen7':20, 'trainers/pr_rich_f':80,
   'trainers/blackbelt_gen7':25, 'trainers/dragontamer_gen6':40, 'trainers/hiker_gen4':35,
-  'trainers/acetrainer_gen6':35, 'trainers/veteran_gen7':35, 'trainers/harlequin':10
+  'trainers/acetrainer_gen6':35, 'trainers/veteran_gen7':35, 'trainers/harlequin':10,
+  'trainers/rory':15, 'trainers/otto':90
 };
 const PAGA_PADRAO = 20;
 function pagaPorNivel(nome){
