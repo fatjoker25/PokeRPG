@@ -1335,8 +1335,8 @@ apresentou). `estreia:true` põe essa primeira vez na frente do Otto no
 Flareon, Dodrio, Electabuzz e Hitmonlee, sempre na forma final
 (`formasFixas`); o `criarPokemon` ainda segura o nível mínimo da forma,
 e o Rhydon nunca sai abaixo do 42 (está na folha de regras). Rival
-mulher leva `f:true`: tela, placar, Ficha, diário e a memória dela dizem
-"ela" (`proRival`, `quadroDoRival(…, f)`). O texto dela olha onde
+mulher leva `f:true`: tela, resultado, Ficha, diário e a memória dela
+dizem "ela" (`proRival`). O texto dela olha onde
 está: a estreia em Celadon é na saída da avenida, na água ela chega de
 Lapras, e a fala que promete "eu te digo por quê" só volta se a estreia
 foi luta. Rosto: `trainers/diana` (a Cooltrainer de HG/SS do acervo do
@@ -1527,13 +1527,15 @@ BRUNO…), quem senta atrás (rosto, tipo, níveis) só pra quem já sabe,
 e o carimbo no pé da porta já atravessada (`elite_passou_<id>`, marcado
 no `resultadoElite`; pra quem é Campeão, todas). Embaixo, o Salão do
 Campeão; Torneio e Conferência com os prêmios em etiquetas. Entrar é
-pelo menu numerado, com a porta fechada dizendo o que falta. O placar
-e o time do **rival** são quadro (`quadroDoRival`): o placar como o de
-uma luta e o time em ícones. O **chaveamento** do torneio e da
-Conferência (`chaveamentoHTML`) são as três lutas em quadros ligados
-por um trilho — vencida verde, a de agora acesa, a de depois apagada —,
-com rosto, time em ícones (na Conferência a bola fica fechada: ninguém
-mostra o time antes da arena) e o prêmio da rodada. Na **Pokédex**, a casa tem duas linhas
+pelo menu numerado, com a porta fechada dizendo o que falta.
+**Placar e prévia de time não aparecem em lugar nenhum** — foi pedido
+assim: o rival te para sem quadro (o placar é coisa que ele diz, se
+quiser), o resultado mostra o lugar, a Ficha e o diário não contam, e
+o time de quem você enfrenta só se vê na arena. O **chaveamento** do
+torneio e da Conferência (`chaveamentoHTML`) são as três lutas em
+quadros ligados por um trilho — vencida verde, a de agora acesa, a de
+depois apagada —, com rosto, a bola fechada de cada Pokémon (quantos,
+nunca quais) e o prêmio da rodada. Na **Pokédex**, a casa tem duas linhas
 (número e marca em cima, nome embaixo): na mesma linha, a etiqueta
 "visto" cortava o nome. E `.linha .v` (a conta das linhas de valor) é
 letra do HUD; só a Pokédex e o PC guardam a letra de tela deles.

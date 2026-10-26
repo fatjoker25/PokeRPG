@@ -3313,7 +3313,6 @@ const UI = {
     this.add(this.topo());
     const r = rival();
     const arco = arcoRival();
-    const time = timeRival();
     const cor = {parceiro:'var(--bom)', rival:'var(--destaque)', ressentido:'var(--ruim)',
                  perseguidor:'var(--perigo)', quebrado:'var(--texto-fraco)'}[arco];
 
@@ -3325,7 +3324,6 @@ const UI = {
       </div>
       <div class="narrativa">${this.narrarMonologo(falaRival(), r.nome)}</div>
       <div id="avisos" class="avisos"></div>
-      ${this.quadroDoRival(r.derrotas, r.vitorias, time)}
       <div id="escolhas" class="escolhas" style="margin-top:20px">
         <button class="escolha" onclick="Jogo.lutarRival()">Lutar.</button>
         <button class="escolha" onclick="Jogo.evitarRival()">Passar por ele sem parar.</button>
@@ -3336,32 +3334,11 @@ const UI = {
     this.rolarTopo();
   },
 
-  /* O placar e o time de quem te para na estrada: o placar como o de
-     uma luta (você à esquerda), e o time em ícones, com o nível embaixo
-     de cada um, como na tela de morte. O lado de lá é "ele" ou, com a
-     Diana (f), "ela". */
-  quadroDoRival(voce, ele, time, f){
-    const quem = f ? 'ela' : 'ele';
-    return `<div class="rival-quadro">
-      <div class="rq-placar" aria-label="Placar: você ${voce}, ${quem} ${ele}">
-        <span class="rq-lado"><small>Você</small><b>${voce}</b></span>
-        <span class="rq-x">×</span>
-        <span class="rq-lado"><small>${f ? 'Ela' : 'Ele'}</small><b>${ele}</b></span>
-      </div>
-      <div class="rq-time">
-        <span class="rq-k">Time d${quem} agora</span>
-        <div class="rq-icones" style="--n:${time.length <= 4 ? time.length : 3}">${time.map(p => `<span class="rq-pk" title="${this.esc(p.nome)} Nv ${p.nivel}">${imgSprite(p, 'icone')}<small>${this.esc(p.nome)}</small><b>Nv ${p.nivel}</b></span>`).join('')}</div>
-      </div>
-    </div>`;
-  },
-
   /* Os rivais que você conquistou pelo caminho */
   telaRivalExtra(id, avisos){
     this.limpar();
     this.add(this.topo());
     const R = defRival(id);
-    const reg = registroRival(id) || {vitorias:0, derrotas:0, encontros:0};
-    const time = timeRivalExtra(R);
     const cor = R.cor || 'var(--destaque)';
 
     this.add(`<div class="painel">
@@ -3372,7 +3349,6 @@ const UI = {
       </div>
       <div class="narrativa">${this.narrarMonologo(falaRivalExtra(R), R.nome)}</div>
       <div id="avisos" class="avisos"></div>
-      ${this.quadroDoRival(reg.derrotas, reg.vitorias, time, R.f)}
       <div id="escolhas" class="escolhas" style="margin-top:20px">
         <button class="escolha" onclick="Jogo.lutarRival()">Lutar.</button>
         <button class="escolha" onclick="Jogo.evitarRival()">Passar por ${proRival(R)} sem parar.</button>
@@ -3387,7 +3363,6 @@ const UI = {
     this.limpar();
     this.add(this.topo());
     const extra = idExtra ? defRival(idExtra) : null;
-    const reg = extra ? (registroRival(idExtra) || {vitorias:0, derrotas:0}) : rival();
     const nome = extra ? extra.nome : rival().nome;
     /* quem chama calcula as falas antes do placar mudar */
     const falas = falasProntas || (extra
@@ -3397,7 +3372,7 @@ const UI = {
       <div class="cap-cabecalho"${extra ? ` style="border-left-color:${extra.cor || 'var(--destaque)'}"` : ''}>
         <div class="num">${venceu ? 'Você venceu' : (extra && extra.f ? 'Ela venceu' : 'Ele venceu')}</div>
         <div class="tit">${this.esc(nome)}</div>
-        <div class="loc">Placar: você ${reg.derrotas} × ${reg.vitorias} ${extra ? proRival(extra) : 'ele'}</div>
+        <div class="loc">${this.esc((LOCAIS[Mundo.id()] || {}).nome || 'Kanto')}</div>
       </div>
       <div class="narrativa">${this.narrarMonologo(falas, nome)}</div>
       <div id="avisos" class="avisos"></div>
@@ -3510,16 +3485,15 @@ const UI = {
   },
 
   /* O chaveamento do torneio e da Conferência: três lutas até o troféu,
-     uma em cada quadro — quem está nela (rosto e nome), o time em
-     ícones (na Conferência ninguém mostra antes: a bola fica fechada),
+     uma em cada quadro — quem está nela (rosto e nome), quantos ela
+     leva (a bola fica fechada: ninguém mostra o time antes da arena),
      o prêmio da rodada, e onde você está no caminho. */
   chaveamentoHTML(rodadas, atual){
     return `<ol class="chave">${rodadas.map((r, i) => {
       const est = i < atual ? 'vencida' : i === atual ? 'agora' : 'depois';
       const selo = {vencida:'Vencida', agora:'Agora', depois:'Depois'}[est];
-      const time = r.time
-        ? r.time.map(p => `<span class="chave-pk">${imgSprite(p, 'icone')}</span>`).join('')
-        : Array.from({length:r.tam || 3}, () => '<span class="chave-pk fechado"></span>').join('');
+      const qtd = r.time ? r.time.length : (r.tam || 3);
+      const time = Array.from({length:qtd}, () => '<span class="chave-pk fechado"></span>').join('');
       const itens = Object.entries(r.premio.itens || {}).map(([n, q]) =>
         `<span class="chave-item" title="${this.esc(n)}">${imgItem(n)}<b>${q}×</b></span>`).join('');
       return `<li class="chave-rodada ${est}">
@@ -3527,7 +3501,7 @@ const UI = {
         <div class="chave-rosto">${r.rosto ? `<img src="${r.rosto}" alt="" onerror="this.remove()">` : ''}</div>
         <div class="chave-quem">${this.esc(r.nome)}</div>
         ${r.sub ? `<div class="chave-sub">${this.esc(r.sub)}</div>` : ''}
-        <div class="chave-time" role="img" aria-label="${r.time ? 'time de ' + r.time.length : 'time que só aparece na arena'}">${time}</div>
+        <div class="chave-time" role="img" aria-label="${qtd} Pokémon, que só aparecem na arena">${time}</div>
         <div class="chave-premio"><span class="chave-din">${svgIcone('moeda')}${fmtDin(r.premio.dinheiro)} ₽</span>${itens}</div>
       </li>`;
     }).join('')}</ol>`;
@@ -3546,7 +3520,7 @@ const UI = {
     this.add(this.topo());
     const t = Jogo.torneioAtual;
     if (!t) return this.telaLiga();
-    /* o torneio é aberto: o time de cada um está no quadro de anúncios */
+    /* o torneio é aberto: o quadro de anúncios diz o nível de cada um, não o time */
     const faixa = time => {
       const n = time.map(p => p.nivel), a = Math.min(...n), b = Math.max(...n);
       return a === b ? `Nv ${a}` : `Nv ${a}–${b}`;
@@ -4740,15 +4714,13 @@ const UI = {
             return `<div class="ficha-rival">
               <div class="fr-nome">${e(d.rival.nome)} <span class="ficha-nota">${M(a.nome)}</span></div>
               <p class="ficha-texto">${M(a.resumo)}</p>
-              ${dl([['Placar', `<span class="mono">Você ${d.rival.derrotas} × ${d.rival.vitorias} ele</span>`],
-                    ['Parceiro dele', `${d.flags.sabe_do_pico ? 'Pico · ' : ''}${e(especieDoPico())}`]])}
+              ${dl([['Parceiro dele', `${d.flags.sabe_do_pico ? 'Pico · ' : ''}${e(especieDoPico())}`]])}
             </div>`;
           })() : '';
         const extras = (typeof rivaisConquistados === 'function' && rivaisConquistados().length)
           ? rivaisConquistados().map(({def, reg}) => `<div class="ficha-rival">
               <div class="fr-nome">${e(def.nome)} <span class="ficha-nota">${M(defArcoExtra(def).nome)}</span></div>
               <p class="ficha-texto">${M(reg.desde || def.desde)} · ${e(defArcoExtra(def).resumo || def.origem)}</p>
-              ${dl([['Placar', `<span class="mono">Você ${reg.derrotas} × ${reg.vitorias} ${proRival(def)}</span>`]])}
             </div>`).join('') : '';
         return bloco('Reputação', rep)
           + bloco('Insígnias', insignias, `${ins.length} de 8${campeao ? ' · Campeão de Kanto' : ''}`)

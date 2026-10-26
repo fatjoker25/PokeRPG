@@ -342,7 +342,7 @@ function registrarResultadoRival(venceuJogador){
   r.ultimoCap = Estado.dados.capitulo;
   if (venceuJogador) r.derrotas++; else r.vitorias++;
   r.arco = arcoRival();
-  Estado.registrar(`Encontro com Ezra (${ARCOS_RIVAL[r.arco].nome}): ${venceuJogador ? 'você venceu' : 'ele venceu'}. Placar ${r.derrotas}×${r.vitorias}.`);
+  Estado.registrar(`Encontro com Ezra (${ARCOS_RIVAL[r.arco].nome}): ${venceuJogador ? 'você venceu' : 'ele venceu'}.`);
   return r;
 }
 
@@ -965,6 +965,6 @@ function registrarResultadoRivalExtra(id, venceuJogador){
   if (venceuJogador) reg.derrotas++; else reg.vitorias++;
   const R = defRival(id);
   if (R) reg.arco = arcoRivalExtra(R);
-  Estado.registrar(`Encontro com ${R ? R.nome : id}: ${venceuJogador ? 'você venceu' : proRival(R) + ' venceu'}. Placar ${reg.derrotas}×${reg.vitorias}.`);
+  Estado.registrar(`Encontro com ${R ? R.nome : id}: ${venceuJogador ? 'você venceu' : proRival(R) + ' venceu'}.`);
   return reg;
 }

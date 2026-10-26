@@ -1258,7 +1258,7 @@ const Jogo = {
         Estado.lembrarNPC('Ezra', {opiniao:(npc?npc.opiniao:0)-1, memoria:'Tentou te parar e perdeu. Ajoelhou no chão e pediu para você parar.'});
         avisos.push({tipo:'dano', texto:'Ele pediu para você parar. Você venceu a batalha.'});
       } else {
-        Estado.lembrarNPC('Ezra', {memoria:`Perdeu para você de novo. Placar ${rival().derrotas}×${rival().vitorias}.`});
+        Estado.lembrarNPC('Ezra', {memoria:'Perdeu para você de novo.'});
       }
       const evs = ganharExp(Estado.primeiroApto() || Estado.dados.time[0], 400);
     } else {
@@ -1297,8 +1297,7 @@ const Jogo = {
         avisos.push({tipo:'dano', texto:'Ele vai voltar. Ele disse isso de um jeito que não é ameaça e é pior.'});
       }
     } else {
-      const reg = registroRival(id) || {derrotas:0, vitorias:0};
-      Estado.lembrarNPC(R.npc, {opiniao: op + 1, memoria:`Te venceu. Placar ${reg.derrotas}×${reg.vitorias}.`});
+      Estado.lembrarNPC(R.npc, {opiniao: op + 1, memoria:'Te venceu na estrada.'});
       const perda = perdaRivalExtra(id);
       Estado.j.dinheiro = Math.max(0, Estado.j.dinheiro - perda);
       avisos.push({tipo:'item', texto:`−${fmtDin(perda)} ₽`});
