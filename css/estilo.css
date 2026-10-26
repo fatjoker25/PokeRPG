@@ -4528,3 +4528,97 @@ button.item-linha.aparelho{
 .modal.tutorial .tut-nat.agressiva{border-left-color:var(--perigo)}
 .modal.tutorial .tut-nat-nome{font-family:var(--letra-hud, var(--fonte));font-size:14px;font-weight:700}
 .modal.tutorial .tut-nat-stat{font-family:var(--fonte);font-size:12.5px}
+
+/* ============================================================
+   TIME, SUMÁRIO, CARTÃO E FICHA NA LETRA DO HUD
+   A estrutura das quatro já era a dos jogos; faltava a letra. Número
+   (nível, HP, XP, atributo, a conta do golpe, dinheiro, registro) sai
+   em Jost com algarismo de largura fixa, como na ficha de HP da luta,
+   e não mais em mono; nome, aba e rótulo, em Jost. O texto de ler (a
+   história do Pokémon, a memória de quem lembra, o objetivo) continua
+   na fonte do sistema. O cabeçalho de seção ganha o losango: no
+   sumário na cor do tipo do Pokémon, na ficha na cor do cartão.
+   ============================================================ */
+:is(.modal.time, .modal.sumario, .modal.cartao, .modal.ficha) .mono{
+  font-family:var(--letra-hud, var(--fonte));font-variant-numeric:tabular-nums;letter-spacing:.01em;
+}
+
+/* o time: a moeda no título, a conta num chip, o cartão com espessura */
+.tm-topo{align-items:center}
+.tm-titulo{display:flex;align-items:center;gap:12px;font-family:var(--letra-hud, var(--fonte));font-size:22px;font-weight:700}
+.tm-titulo svg.janela-icone{
+  width:38px;height:38px;padding:8px;flex:0 0 auto;border-radius:50%;stroke-width:2;color:#fff;
+  background:radial-gradient(circle at 50% 30%, color-mix(in srgb, var(--ac, var(--destaque)) 62%, #fff), var(--ac, var(--destaque)) 58%, color-mix(in srgb, var(--ac, var(--destaque)) 68%, #000));
+  box-shadow:0 0 0 2px rgba(255,255,255,.14), 0 4px 12px -4px rgba(0,0,0,.85);
+}
+.tm-conta{
+  font-family:var(--letra-hud, var(--fonte));font-size:12.5px;font-weight:600;font-variant-numeric:tabular-nums;
+  padding:4px 11px;border-radius:999px;background:rgba(0,0,0,.24);box-shadow:inset 0 0 0 1px var(--borda);
+}
+.tm-carta{
+  box-shadow:0 3px 0 color-mix(in srgb, var(--bg) 50%, #000), 0 12px 20px -16px rgba(0,0,0,.9), inset 0 1px 0 rgba(255,255,255,.06);
+}
+.tm-carta:active:not(.vaga){transform:translateY(2px);box-shadow:0 1px 0 color-mix(in srgb, var(--bg) 50%, #000)}
+.tm-carta.vaga{box-shadow:none;font-family:var(--letra-hud, var(--fonte));font-weight:600}
+.tm-nome{font-family:var(--letra-hud, var(--fonte));font-size:15.5px;font-weight:700}
+.tm-nv{font-family:var(--letra-hud, var(--fonte));font-size:13px;font-weight:600;font-variant-numeric:tabular-nums}
+.tm-hp{font-size:12.5px;font-weight:600;color:var(--texto)}
+.tm-selo, .tm-tag{font-family:var(--letra-hud, var(--fonte))}
+.tm-tag{font-weight:600}
+.tm-comida{font-family:var(--letra-hud, var(--fonte));font-size:14px}
+.tm-racao b{font-variant-numeric:tabular-nums}
+.tm-comida .btn.mini{font-family:var(--letra-hud, var(--fonte));font-weight:600;border-radius:9px}
+.tm-cemiterio summary{font-family:var(--letra-hud, var(--fonte));font-size:13px;font-weight:600}
+.tm-cem b{font-family:var(--letra-hud, var(--fonte))}
+.tm-acoes{gap:8px}
+.tm-acoes-cab .tm-nome{font-size:19px}
+
+/* o sumário */
+.sm-nome{font-family:var(--letra-hud, var(--fonte));font-size:21px;font-weight:700}
+.sm-nv{font-family:var(--letra-hud, var(--fonte));font-size:14px;font-weight:600;font-variant-numeric:tabular-nums}
+.sm-num{font-family:var(--letra-hud, var(--fonte));font-weight:700;letter-spacing:.04em}
+.sm-vida .k{font-family:var(--letra-hud, var(--fonte))}
+.sm-vida .v{font-family:var(--letra-hud, var(--fonte));font-size:12.5px;font-weight:600;font-variant-numeric:tabular-nums}
+.sm-aba{font-family:var(--letra-hud, var(--fonte));font-size:14px;font-weight:600}
+.sm-bloco h4{font-family:var(--letra-hud, var(--fonte));font-size:11.5px;align-items:center}
+.sm-bloco h4::before, .fi-bloco h4::before{
+  content:'';flex:0 0 auto;width:7px;height:7px;border-radius:2px;transform:rotate(45deg);
+  background:var(--marca-h4);box-shadow:0 0 8px -1px var(--marca-h4);
+}
+.sm-bloco h4{--marca-h4:var(--t1, var(--destaque))}
+.sm-dl dt{font-family:var(--letra-hud, var(--fonte));font-weight:600}
+.sa-nome{font-family:var(--letra-hud, var(--fonte));font-size:14.5px}
+.sa-valor{font-family:var(--letra-hud, var(--fonte));font-size:14px;font-weight:700;font-variant-numeric:tabular-nums}
+.sa-teto{font-family:var(--letra-hud, var(--fonte));font-variant-numeric:tabular-nums}
+.sm-medidor .k, .sm-medidor .v{font-family:var(--letra-hud, var(--fonte))}
+.sm-medidor .v{font-weight:600;font-variant-numeric:tabular-nums}
+.sm-golpe .gn{font-family:var(--letra-hud, var(--fonte));font-size:15.5px;font-weight:700}
+.sm-golpe .gcat{font-family:var(--letra-hud, var(--fonte));font-weight:600}
+.sm-golpe .gl dt{font-family:var(--letra-hud, var(--fonte));font-weight:600}
+.sm-golpe .gl dd{font-family:var(--letra-hud, var(--fonte));font-size:13px;font-weight:500;font-variant-numeric:tabular-nums}
+.sm-moral-cab{font-family:var(--letra-hud, var(--fonte))}
+.sm-moral-cab b{font-weight:700}
+
+/* o cartão e a ficha: a cara de aparelho fica, a letra é a do HUD */
+.cartao-sigla, .cartao-id, .cartao-nome, .cartao-titulo, .cartao-sub,
+.cartao-linha .k, .cartao-linha .v, .insignia-slot .rot, .insignia-slot .cid,
+.modal.cartao .rep-nota, .modal.cartao .btn, .modal.ficha .btn{font-family:var(--letra-hud, var(--fonte))}
+.cartao-nome{font-size:24px;font-weight:700}
+.cartao-id{font-weight:600;font-variant-numeric:tabular-nums}
+.cartao-linha .k{font-weight:600}
+.cartao-linha .v{font-size:14px;font-weight:500;font-variant-numeric:tabular-nums}
+.cartao-linha.grana .v{font-size:19px;font-weight:700}
+.modal.cartao .rep-nota{font-size:11px;letter-spacing:.02em}
+.insignia-slot.oculta .cid{font-family:var(--letra-hud, var(--fonte))}
+.ficha-sigla, .ficha-id, .ficha-nome, .ficha-titulo, .ficha-chips span, .ficha-aba,
+.fi-bloco h4, .ficha-dl dt, .fr-nome{font-family:var(--letra-hud, var(--fonte))}
+.ficha-nome{font-size:23px;font-weight:700}
+.ficha-id{font-weight:600;font-variant-numeric:tabular-nums}
+.ficha-aba{font-size:13.5px;font-weight:600}
+.fi-bloco h4{font-size:11.5px;align-items:center;--marca-h4:var(--cart, var(--destaque))}
+.ficha-dl dt{font-weight:600}
+.fr-nome{font-weight:700}
+/* a tabela de status (a mesma na ficha e no fim de capítulo) */
+.fs-nome{font-family:var(--letra-hud, var(--fonte));font-size:14.5px}
+.fs-valor{font-family:var(--letra-hud, var(--fonte));font-size:14px;font-weight:700;font-variant-numeric:tabular-nums}
+.fs-parada{font-family:var(--letra-hud, var(--fonte));font-weight:600}

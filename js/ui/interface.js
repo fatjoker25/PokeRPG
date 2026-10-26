@@ -136,7 +136,7 @@ function ehFinalDeVerdade(f){ return !ehEpilogo(f) && f.id !== 'fim'; }
    dele) e as janelas de ler, que ganham a folha do HUD: seção com
    losango, a conta em linhas agrupadas, o exemplo num cartão. */
 const ICONE_DA_JANELA = {regras:'dado', tutorial:'pergunta', ajustes:'engrenagem', rota:'mapa',
-  diario:'diario', finais:'liga', credencial:'credenciais', centro:'centro'};
+  diario:'diario', finais:'liga', credencial:'credenciais', centro:'centro', time:'bola'};
 const JANELAS_DE_LER = new Set(['regras', 'tutorial', 'ajustes', 'rota', 'diario', 'finais']);
 
 const APARELHOS = [
@@ -3592,7 +3592,7 @@ const UI = {
         </button>`).join('')}</div>
       </details>` : '';
     this.modal('', `<div class="tm-topo">
-        <span class="tm-titulo">Seu time</span>
+        <span class="tm-titulo">${svgIcone('bola', 'janela-icone')}Seu time</span>
         <span class="tm-conta">${d.time.length} de 6${d.pc.length ? ` · ${d.pc.length} no PC` : ''}</span>
       </div>` + aviso + grade + comida + cem, false, 'time');
   },
@@ -3620,6 +3620,10 @@ const UI = {
     if (!p) return this.modalTime();
     const temEquipavel = Object.entries(d.itens).some(([n, q]) => q > 0 && (ITENS_INFO[n] || {}).tipo === 'equipar');
     const pct = p.hpMax ? Math.max(0, Math.min(100, Math.round(p.hp / p.hpMax * 100))) : 0;
+    const opcao = (ic, attr, rot, estilo) => {
+      const c = corDoIcone(ic);
+      return `<button class="escolha menu com-icone"${c ? ` style="--ac:${c}"` : ''} ${attr}>${svgIcone(ic, null, estilo)}<span class="esc-rot">${rot}</span></button>`;
+    };
     this.modal('', `<div class="tm-acoes-cab">
         <span class="tm-icone">${imgSprite(p, 'icone')}</span>
         <span class="tm-corpo">
@@ -3628,13 +3632,13 @@ const UI = {
         </span>
       </div>
       <div class="tm-acoes">
-        <button class="escolha" onclick="UI.sumario('${uid}')">Sumário</button>
-        ${d.time.length > 1 ? `<button class="escolha" onclick="UI.modalTime('${uid}')">Trocar de lugar</button>` : ''}
-        ${i > 0 && !p.morto ? `<button class="escolha" onclick="UI.trocarNoTime('${uid}','${d.time[0].uid}')">Pôr na frente</button>` : ''}
+        ${opcao('pokedex', `onclick="UI.sumario('${uid}')"`, 'Sumário')}
+        ${d.time.length > 1 ? opcao('troca', `onclick="UI.modalTime('${uid}')"`, 'Trocar de lugar') : ''}
+        ${i > 0 && !p.morto ? opcao('seta', `onclick="UI.trocarNoTime('${uid}','${d.time[0].uid}')"`, 'Pôr na frente', 'rotate:-90deg') : ''}
         ${p.morto ? '' : (p.segurando
-          ? `<button class="escolha" onclick="UI.tirarItem('${uid}')">Retirar ${this.esc(p.segurando)}</button>`
-          : `<button class="escolha" ${temEquipavel ? `onclick="UI.menuEquipar('${uid}')"` : 'disabled'}>Dar item pra segurar</button>`)}
-        <button class="escolha" onclick="UI.modalTime()">Voltar</button>
+          ? opcao('itens', `onclick="UI.tirarItem('${uid}')"`, `Retirar ${this.esc(p.segurando)}`)
+          : opcao('itens', temEquipavel ? `onclick="UI.menuEquipar('${uid}')"` : 'disabled', 'Dar item pra segurar'))}
+        <button class="escolha utilitaria" onclick="UI.modalTime()">Voltar</button>
       </div>`, true, 'time');
   },
 

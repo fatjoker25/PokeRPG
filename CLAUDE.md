@@ -1421,6 +1421,15 @@ de agora com a linha do tempo. O fim da jornada (`telaFinal`) usa a
 mesma folha e põe os números em quadros. Janela nova de ler entra nas
 duas listas.
 
+Time, Sumário, Cartão e Ficha têm estrutura própria (o cartão e a ficha
+com a cara de aparelho, na cor do cartão), mas a letra é a do HUD:
+número (nível, HP, XP, atributo, a conta do golpe, dinheiro, registro)
+em Jost com algarismo de largura fixa, como na ficha de HP da luta —
+dentro dessas quatro janelas `.mono` vira Jost —, nome, aba e rótulo
+também, e o cabeçalho de seção com o losango (no sumário na cor do tipo
+do Pokémon, `--t1`; na ficha na cor do cartão). O que fazer com um
+Pokémon do time é menu com desenho, como o do lugar.
+
 Botão que entra animado entra com `animation-fill-mode` **backwards**,
 nunca `both`. O `both` segura o último quadro, e animação manda mais
 que regra: o hover não subia, o apertar não afundava, a opção fechada
