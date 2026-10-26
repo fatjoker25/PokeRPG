@@ -137,7 +137,7 @@ function ehFinalDeVerdade(f){ return !ehEpilogo(f) && f.id !== 'fim'; }
    losango, a conta em linhas agrupadas, o exemplo num cartão. */
 const ICONE_DA_JANELA = {regras:'dado', tutorial:'pergunta', ajustes:'engrenagem', rota:'mapa',
   diario:'diario', finais:'liga', credencial:'credenciais', centro:'centro', time:'bola'};
-const JANELAS_DE_LER = new Set(['regras', 'tutorial', 'ajustes', 'rota', 'diario', 'finais']);
+const JANELAS_DE_LER = new Set(['regras', 'tutorial', 'ajustes', 'rota', 'diario', 'finais', 'credencial']);
 
 const APARELHOS = [
   {id:'pokedex', nome:'Pokédex', item:'Pokédex', abrir:'UI.modalPokedex()',
@@ -1415,8 +1415,26 @@ const UI = {
         c.appendChild(this.el(`<div class="eco">${this.esc(txt(a.texto))}</div>`));
         return;
       }
-      c.appendChild(this.el(`<div class="aviso ${this.esc(a.tipo||'info')}">${this.esc(txt(a.texto))}</div>`));
+      const t = String(txt(a.texto) ?? '');
+      /* o que sai do bolso ou da moral lê como perda; a moral é o coração */
+      const perde = /^[−-]\s?[\d.]+\s?₽|^Perdeu\s|te olha diferente/.test(t);
+      const moral = /confia mais em você|te olha diferente/.test(t);
+      c.appendChild(this.el(`<div class="aviso ${this.esc(a.tipo||'info')}${perde ? ' perde' : ''}${moral ? ' moral' : ''}"><span class="av-ic">${this.iconeDoAviso(a, t)}</span><span class="av-txt">${this.esc(t)}</span></div>`));
     });
+  },
+
+  /* O desenho de cada aviso, como a caixa de "você recebeu" dos jogos:
+     a moeda no dinheiro, o próprio item no que você ganhou ou perdeu, o
+     coração na moral, e um desenho por tipo no resto. */
+  iconeDoAviso(a, t){
+    if (/₽/.test(t)) return svgIcone('moeda');
+    const m = /^(?:Recebeu|Perdeu)\s+\d+×\s+(.+?)\.?$/.exec(t);
+    if (m && typeof caminhoItem === 'function' && caminhoItem(m[1])) return imgItem(m[1]);
+    if (/confia mais em você|te olha diferente/.test(t)) return svgIcone('doar');
+    const POR_TIPO = {item:'itens', rep:'liga', cura:'cura', dano:'alerta', perigo:'alerta', gameover:'alerta',
+      morte:'luto', pokemon:'bola', insignia:'ginasio', mundo:'mundo', liga:'liga', natureza:'olho',
+      pokedex:'pokedex', evolucao:'brilho', rival:'lutar'};
+    return svgIcone(POR_TIPO[a.tipo] || 'info');
   },
 
   montarAcoes(cena){
@@ -3115,10 +3133,7 @@ const UI = {
       </div>
       <div class="narrativa">${this.narrarMonologo(falaRival(), r.nome)}</div>
       <div id="avisos" class="avisos"></div>
-      <div class="linha" style="margin-top:14px"><span class="k">Placar entre vocês</span>
-        <span class="v">você ${r.derrotas} × ${r.vitorias} ele</span></div>
-      <div class="linha"><span class="k">Time dele agora</span>
-        <span class="v">${this.esc(time.map(p=>p.nome+' Nv'+p.nivel).join(', '))}</span></div>
+      ${this.quadroDoRival(r.derrotas, r.vitorias, time)}
       <div id="escolhas" class="escolhas" style="margin-top:20px">
         <button class="escolha" onclick="Jogo.lutarRival()">Lutar.</button>
         <button class="escolha" onclick="Jogo.evitarRival()">Passar por ele sem parar.</button>
@@ -3127,6 +3142,24 @@ const UI = {
     </div>`);
     if (avisos && avisos.length) this.avisos(avisos);
     this.rolarTopo();
+  },
+
+  /* O placar e o time de quem te para na estrada: o placar como o de
+     uma luta (você à esquerda), e o time em ícones, com o nível embaixo
+     de cada um, como na tela de morte. Os rivais são todos homens: o
+     texto diz "ele". */
+  quadroDoRival(voce, ele, time){
+    return `<div class="rival-quadro">
+      <div class="rq-placar" aria-label="Placar: você ${voce}, ele ${ele}">
+        <span class="rq-lado"><small>Você</small><b>${voce}</b></span>
+        <span class="rq-x">×</span>
+        <span class="rq-lado"><small>Ele</small><b>${ele}</b></span>
+      </div>
+      <div class="rq-time">
+        <span class="rq-k">Time dele agora</span>
+        <div class="rq-icones">${time.map(p => `<span class="rq-pk" title="${this.esc(p.nome)} Nv ${p.nivel}">${imgSprite(p, 'icone')}<small>${this.esc(p.nome)}</small><b>Nv ${p.nivel}</b></span>`).join('')}</div>
+      </div>
+    </div>`;
   },
 
   /* Os rivais que você conquistou pelo caminho */
@@ -3146,10 +3179,7 @@ const UI = {
       </div>
       <div class="narrativa">${this.narrarMonologo(falaRivalExtra(R), R.nome)}</div>
       <div id="avisos" class="avisos"></div>
-      <div class="linha" style="margin-top:14px"><span class="k">Placar entre vocês</span>
-        <span class="v">você ${reg.derrotas} × ${reg.vitorias} ele</span></div>
-      <div class="linha"><span class="k">Time dele agora</span>
-        <span class="v">${this.esc(time.map(p=>p.nome+' Nv'+p.nivel).join(', '))}</span></div>
+      ${this.quadroDoRival(reg.derrotas, reg.vitorias, time)}
       <div id="escolhas" class="escolhas" style="margin-top:20px">
         <button class="escolha" onclick="Jogo.lutarRival()">Lutar.</button>
         <button class="escolha" onclick="Jogo.evitarRival()">Passar por ele sem parar.</button>
@@ -3194,73 +3224,94 @@ const UI = {
     this.add(this.topo());
     const d = Estado.dados;
     const e4 = statusElite4(), tor = statusTorneio();
+    const campeao = !!d.flags.campeao_de_kanto;
     /* Quem são os quatro é coisa que você descobre chegando lá, ou
        ouvindo da Conselheira no capítulo 21. Com o cinto vazio, o
        Planalto Indigo é só um nome e quatro portas. */
     const nInsig = d.insignias.filter(i => i !== 'Título de Campeão').length;
-    const sabeQuemSao = !!d.flags.sabe_da_elite || nInsig >= 8 || !!d.flags.campeao_de_kanto;
+    const sabeQuemSao = !!d.flags.sabe_da_elite || nInsig >= 8 || campeao;
+    const din = v => `${v.toLocaleString('pt-BR')} ₽`;
 
-    const membros = sabeQuemSao
-      ? ELITE4.map(m => {
-          const substituto = m.titular && m.titular !== m.nome;
-          return `<div class="linha"><span class="k">${m.ordem}. ${this.esc(m.nome)}
-            <span class="fraco">· ${this.esc(m.tipo)}${substituto ? ' · na cadeira de ' + this.esc(m.titular) : ''}</span></span>
-           <span class="v">Nv ${m.nivelBase}–${m.nivelBase + m.especies.length + 1}</span></div>`;
-        }).join('')
-      : ELITE4.map(m => `<div class="linha"><span class="k">${m.ordem}. <span class="fraco">${this.esc(m.titular)}</span></span>
-           <span class="v fraco">—</span></div>`).join('') +
-        `<p class="sussurro" style="margin:8px 0 0">Os quatro nomes estão nas portas desde sempre. Quem senta atrás de cada uma hoje é outra conversa, e não é conversa que se tenha daqui.</p>`;
+    /* As quatro portas do corredor, cada uma com a placa de bronze do
+       nome que está nela desde sempre. Quem senta atrás só aparece pra
+       quem já sabe; a porta que você já atravessou ganha o carimbo. */
+    const portas = ELITE4.map(m => {
+      const passou = campeao || !!d.flags['elite_passou_' + m.id];
+      const rosto = sabeQuemSao && typeof retratoDe === 'function' ? retratoDe(m.nome) : null;
+      const outro = m.titular && m.titular !== m.nome;
+      const tipo = m.tipo === 'variado' ? '<span class="tipo-tag lp-variado">variado</span>' : this.tipoTag(m.tipo);
+      return `<div class="liga-porta${passou ? ' passou' : ''}${sabeQuemSao ? '' : ' fechada'}">
+        <span class="lp-ordem">${m.ordem}ª porta</span>
+        <span class="lp-placa">${this.esc(String(m.titular || m.nome).toUpperCase())}</span>
+        <span class="lp-rosto">${rosto ? `<img src="${rosto}" alt="" onerror="this.remove()">` : '<b aria-hidden="true">?</b>'}</span>
+        ${sabeQuemSao ? `<span class="lp-quem">${this.esc(m.nome)}</span>
+          <span class="lp-info">${tipo}<span class="lp-nv">Nv ${m.nivelBase}–${m.nivelBase + m.especies.length + 1}</span></span>
+          ${outro ? `<span class="lp-cadeira">na cadeira de ${this.esc(m.titular)}</span>` : ''}`
+          : '<span class="lp-quem lp-fraco">Quem senta aqui?</span>'}
+        ${passou ? `<span class="lp-selo">${campeao ? 'Vencida' : 'Você já passou'}</span>` : ''}
+      </div>`;
+    }).join('');
+    const eu = campeao ? retratoDoJogador(d) : null;
+    const salao = `<div class="liga-salao${campeao ? ' seu' : ''}">
+      <span class="ls-rosto">${eu ? `<img src="${eu}" alt="" onerror="this.remove()">` : `<b aria-hidden="true">${campeao ? '★' : '?'}</b>`}</span>
+      <span class="ls-corpo">
+        <span class="ls-placa">Salão do Campeão</span>
+        <span class="ls-quem">${campeao ? this.esc('{Campeão|Campeã} de Kanto: você') : 'A cadeira está vaga'}</span>
+      </span>
+      ${campeao ? svgIcone('liga', 'ls-estrela') : ''}
+    </div>`;
 
-    this.add(`<div class="painel">
+    /* os prêmios, um por etiqueta */
+    const premios = (lista, extra) => `<div class="liga-premios">${['Quartas', 'Semifinal', 'Final'].map((r, i) =>
+      `<span class="lpr"><small>${r}</small><b>${din(lista[i].dinheiro)}</b></span>`).join('')}${extra || ''}</div>`;
+    const torneio = `<div class="liga-evento torneio">
+        <p class="sussurro">Chaveamento de oito, três rodadas, o ano inteiro. Qualquer um entra — e os adversários saem da sua própria história.</p>
+        ${premios(PREMIO_TORNEIO, `<span class="lpr"><small>Adversários</small><b>~Nv ${nivelDoJogador()}</b></span>`)}
+        ${d.torneiosVencidos ? `<span class="liga-titulos">${svgIcone('torneio')}${this.esc(d.torneiosVencidos + '× {campeão|campeã}')}</span>` : ''}
+      </div>`;
+    const co = campeao ? statusConferencia() : null;
+    const conferencia = campeao ? `<h3 class="sec sec-conf">Conferência do Planalto Indigo</h3>
+      <div class="liga-evento conf">
+        <p class="sussurro">Três rodadas, times inteiros, e ninguém do outro lado com menos estrada que você.</p>
+        ${premios(PREMIO_CONFERENCIA)}
+        ${d.conferenciasVencidas ? `<span class="liga-titulos">${svgIcone('liga')}${this.esc(d.conferenciasVencidas + '× {campeão|campeã}')}</span>` : ''}
+      </div>` : '';
+
+    /* o que dá pra fazer aqui, no menu de sempre: a porta fechada
+       aparece e diz o que falta, como no resto do mapa */
+    const fechada = (ic, rot, motivo) => `<button class="escolha menu com-icone" disabled>${svgIcone(ic)}<span class="esc-rot">${rot}<span class="esc-trava">${this.esc(motivo)}</span></span></button>`;
+    const acoes = [
+      e4.estado === 'disponivel'
+        ? `<button class="escolha chamado com-icone" onclick="Jogo.iniciarElite4()">${svgIcone('liga')}<span class="esc-rot"><small>Elite dos Quatro</small>Entrar na ala</span></button>`
+        : e4.estado === 'trancado' ? fechada('trancado', 'Entrar na ala da Elite', e4.texto) : '',
+      tor.estado === 'disponivel'
+        ? `<button class="escolha menu com-icone" style="--ac:${corDoIcone('torneio')}" onclick="Jogo.iniciarTorneio()">${svgIcone('torneio')}<span class="esc-rot">Inscrever-se no Torneio Aberto</span><span class="esc-custo">${din(INSCRICAO_TORNEIO)}</span></button>`
+        : fechada('torneio', 'Inscrever-se no Torneio Aberto', tor.texto),
+      co ? (co.estado === 'disponivel'
+        ? `<button class="escolha menu com-icone" style="--ac:#7fb2ff" onclick="Conferencia.iniciar()">${svgIcone('liga')}<span class="esc-rot">Inscrever-se na Conferência</span><span class="esc-custo">${d.flags.conferencia_paga ? 'paga' : din(INSCRICAO_CONFERENCIA)}</span></button>`
+        : fechada('liga', 'Inscrever-se na Conferência', co.texto)) : '',
+      Exploracao.temCentro(Mundo.atual()) ? `<button class="escolha utilitaria com-icone" onclick="Jogo.hubCentro()">${svgIcone('centro')}<span class="esc-rot">Passar no Centro</span></button>` : '',
+      `<button class="escolha utilitaria com-icone" onclick="Jogo.voltarDosGinasios()">${svgIcone('seta', null, 'rotate:180deg')}<span class="esc-rot">Voltar</span></button>`
+    ].join('');
+
+    this.add(`<div class="painel liga">
       <div class="cap-cabecalho">
         <div class="num">Planalto Indigo</div>
         <div class="tit">Liga Pokémon</div>
-        <div class="loc">${d.insignias.filter(i=>i!=='Título de Campeão').length} de 8 insígnias${d.flags.campeao_de_kanto ? ' · ' + this.esc('{Campeão|Campeã} de Kanto') : ''}</div>
+        <div class="loc">${nInsig} de 8 insígnias${campeao ? ' · ' + this.esc('{Campeão|Campeã} de Kanto') : ''}</div>
       </div>
 
-      <div class="grade">
-        <div class="carta ginasio">
-          <div class="t"><span>Elite 4</span><span class="fraco">${e4.estado==='concluido'?'✓':''}</span></div>
-          <div class="fraco" style="margin-bottom:8px">Quatro salas seguidas, sem Centro Pokémon entre elas. O que estiver na sua mochila é tudo o que você tem.</div>
-          ${membros}
-          <div class="linha"><span class="k">Campeão</span><span class="v">${d.flags.campeao_de_kanto ? 'você' : 'vaga'}</span></div>
-          <div class="rodape">
-            <span class="fraco">${this.esc(e4.texto)}</span>
-            ${e4.estado==='disponivel' ? `<button class="btn destaque mini" onclick="Jogo.iniciarElite4()">Entrar na ala</button>` : ''}
-          </div>
-        </div>
+      <h3 class="sec sec-elite">A ala da Elite</h3>
+      <p class="sussurro">Quatro salas seguidas, sem Centro Pokémon entre elas. O que estiver na sua mochila é tudo o que você tem.</p>
+      <div class="liga-portas">${portas}</div>
+      ${sabeQuemSao ? '' : '<p class="sussurro">Os quatro nomes estão nas portas desde sempre. Quem senta atrás de cada uma hoje é outra conversa, e não é conversa que se tenha daqui.</p>'}
+      ${salao}
 
-        <div class="carta ginasio">
-          <div class="t"><span>Torneio Aberto</span><span class="fraco">${d.torneiosVencidos ? d.torneiosVencidos+'× campeão' : ''}</span></div>
-          <div class="fraco" style="margin-bottom:8px">Chaveamento de oito, três rodadas, o ano inteiro. Qualquer um entra — e os adversários saem da sua própria história.</div>
-          <div class="linha"><span class="k">Quartas</span><span class="v">${PREMIO_TORNEIO[0].dinheiro.toLocaleString('pt-BR')} ₽</span></div>
-          <div class="linha"><span class="k">Semifinal</span><span class="v">${PREMIO_TORNEIO[1].dinheiro.toLocaleString('pt-BR')} ₽</span></div>
-          <div class="linha"><span class="k">Final</span><span class="v">${PREMIO_TORNEIO[2].dinheiro.toLocaleString('pt-BR')} ₽</span></div>
-          <div class="linha"><span class="k">Nível dos adversários</span><span class="v">~${nivelDoJogador()}</span></div>
-          <div class="rodape">
-            <span class="fraco">${this.esc(tor.texto)}</span>
-            ${tor.estado==='disponivel' ? `<button class="btn destaque mini" onclick="Jogo.iniciarTorneio()">Inscrever-se</button>` : ''}
-          </div>
-        </div>
-        ${d.flags.campeao_de_kanto ? (() => {
-          const co = statusConferencia();
-          return `<div class="carta ginasio">
-          <div class="t"><span>Conferência do Planalto Indigo</span><span class="fraco">${d.conferenciasVencidas ? this.esc(d.conferenciasVencidas + '× {campeão|campeã}') : ''}</span></div>
-          <div class="fraco" style="margin-bottom:8px">Três rodadas, times inteiros, e ninguém do outro lado com menos estrada que você.</div>
-          <div class="linha"><span class="k">Quartas</span><span class="v">${PREMIO_CONFERENCIA[0].dinheiro.toLocaleString('pt-BR')} ₽</span></div>
-          <div class="linha"><span class="k">Semifinal</span><span class="v">${PREMIO_CONFERENCIA[1].dinheiro.toLocaleString('pt-BR')} ₽</span></div>
-          <div class="linha"><span class="k">Final</span><span class="v">${PREMIO_CONFERENCIA[2].dinheiro.toLocaleString('pt-BR')} ₽</span></div>
-          <div class="rodape">
-            <span class="fraco">${this.esc(co.texto)}</span>
-            ${co.estado==='disponivel' ? `<button class="btn destaque mini" onclick="Conferencia.iniciar()">Inscrever-se</button>` : ''}
-          </div>
-        </div>`; })() : ''}
-      </div>
+      <h3 class="sec sec-torneio">Torneio Aberto</h3>
+      ${torneio}
+      ${conferencia}
 
-      <div id="escolhas" class="escolhas" style="margin-top:20px">
-        <button class="escolha" onclick="Jogo.voltarDosGinasios()">Voltar</button>
-        ${Exploracao.temCentro(Mundo.atual()) ? `<button class="escolha" onclick="Jogo.hubCentro()">Passar no Centro</button>` : ''}
-      </div>
+      <div id="escolhas" class="escolhas">${acoes}</div>
     </div>`);
     this.rolarTopo();
   },
@@ -4652,12 +4703,14 @@ const UI = {
       const est = bri ? ` brilho${bri === 'capturado' ? ' pego' : ''}` : '';
       const sel = bri ? '<span class="dex-brilho">✦</span>' : '';
       const arte = d => imgSpriteDex(dex, 'icone', {oculto:!d, classe:'dex-icone'});
+      /* número e marca em cima, o nome embaixo com a largura inteira:
+         na mesma linha, a etiqueta "visto" cortava o nome ("Sands…") */
+      const texto = (nome, marca) => `<span class="dex-txt"><span class="dex-l1"><span class="n">${num}</span>${sel}${marca || ''}</span><span class="nm">${nome}</span></span>`;
       if (cat) return `<button class="dex-cela cat${est}" onclick="UI.dexEntrada(${dex})">
-        ${arte(true)}<span class="n">${num}</span><span class="nm">${this.esc(esp.nome)}</span>${sel}</button>`;
+        ${arte(true)}${texto(this.esc(esp.nome))}</button>`;
       if (vis) return `<button class="dex-cela vis${est}" onclick="UI.dexEntrada(${dex})">
-        ${arte(false)}<span class="n">${num}</span><span class="nm">${this.esc(esp.nome)}</span>${sel}
-        <span class="marca">visto</span></button>`;
-      return `<span class="dex-cela vazia"><span class="n">${num}</span><span class="nm">???</span></span>`;
+        ${arte(false)}${texto(this.esc(esp.nome), '<span class="marca">visto</span>')}</button>`;
+      return `<span class="dex-cela vazia">${texto('???')}</span>`;
     }).join('');
 
     const faixas = nacional
@@ -4853,7 +4906,7 @@ const UI = {
       if (b.semEspera) L.push('revanche sem espera de capítulo');
       if (b.lei) L.push('voz onde a regra é escrita');
       if (b.repRuim) L.push(`reputação piora ${b.repRuim} por capítulo`);
-      return L.join(' · ') || '—';
+      return L;
     };
 
     const cartao = (x, acao) => `<div class="cargo ${x.tem ? 'meu' : (x.ok ? 'aberto' : 'fechado')}">
@@ -4863,7 +4916,7 @@ const UI = {
         <span class="cargo-peso">${'●'.repeat(x.cargo.peso)}${'○'.repeat(5 - x.cargo.peso)}</span>
       </div>
       <div class="cargo-resumo">${this.esc(x.cargo.resumo)}</div>
-      <div class="cargo-ben mono">${this.esc(ben(x.cargo.beneficios || {}))}</div>
+      <div class="cargo-ben">${(l => l.length ? l.map(b => `<span>${this.esc(b)}</span>`).join('') : '<span>—</span>')(ben(x.cargo.beneficios || {}))}</div>
       ${x.cargo.aviso ? `<div class="cargo-aviso">${this.esc(x.cargo.aviso)}</div>` : ''}
       ${acao}
     </div>`;

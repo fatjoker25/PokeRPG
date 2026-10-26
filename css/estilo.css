@@ -4622,3 +4622,193 @@ button.item-linha.aparelho{
 .fs-nome{font-family:var(--letra-hud, var(--fonte));font-size:14.5px}
 .fs-valor{font-family:var(--letra-hud, var(--fonte));font-size:14px;font-weight:700;font-variant-numeric:tabular-nums}
 .fs-parada{font-family:var(--letra-hud, var(--fonte));font-weight:600}
+
+/* ============================================================
+   AJUSTES DA REVISÃO GRÁFICA
+   ============================================================ */
+/* Pokédex: o número e a marca em cima, o nome embaixo com a largura
+   inteira. Com tudo na mesma linha, a etiqueta "visto" comia o nome
+   de quem você só viu ("Sands…", "Nidori…"; no celular, "Iv…"). */
+.dex-cela .dex-txt{display:flex;flex-direction:column;flex:1 1 auto;min-width:0;line-height:1.25}
+.dex-cela .dex-l1{display:flex;align-items:center;gap:5px;min-width:0}
+.dex-cela .dex-txt .nm{flex:0 0 auto;font-size:13px}
+.dex-cela .marca{margin-left:auto;background:none;padding:0;font-size:8.5px}
+.dex-cela.vazia .dex-txt .nm{font-size:12px}
+
+/* Avisos: o desenho numa pastilha da cor do tipo, e o texto puxado
+   pra cor de ler. ".aviso[class]" pesa mais que as cores por tipo de
+   cima, que pintavam só a borda da esquerda. */
+.aviso[class]{
+  display:flex;align-items:center;gap:11px;padding:7px 13px 7px 7px;border-radius:12px;
+  border:1px solid color-mix(in srgb, currentColor 26%, transparent);
+  background:linear-gradient(90deg, color-mix(in srgb, currentColor 12%, var(--bg-2)), color-mix(in srgb, currentColor 3%, transparent) 85%);
+  font-size:14px;line-height:1.45;
+}
+.aviso .av-ic{
+  flex:0 0 auto;width:32px;height:32px;border-radius:10px;display:grid;place-items:center;
+  background:color-mix(in srgb, currentColor 20%, rgba(0,0,0,.28));
+  box-shadow:inset 0 0 0 1px color-mix(in srgb, currentColor 42%, transparent);
+}
+.aviso .av-ic svg.icone{width:18px;height:18px;stroke-width:2}
+.aviso .av-ic .item-icone{width:28px;height:28px;margin:0}
+.aviso .av-txt{flex:1 1 auto;min-width:0;color:color-mix(in srgb, currentColor 32%, var(--texto))}
+.aviso.mundo .av-txt{font-style:italic}
+.aviso.moral{color:#f48fb1}
+.aviso.perde{color:var(--perigo)}
+.aviso.perigo .av-txt, .aviso.gameover .av-txt{font-weight:650}
+/* no PokéNav o aviso fica na tela clara do aparelho */
+.modal.nav .aviso .av-txt{color:color-mix(in srgb, currentColor 45%, var(--nav-txt))}
+.modal.nav .aviso[class]{background:rgba(255,255,255,.72)}
+
+/* O rival: o placar como o de uma luta e o time em ícones */
+.rival-quadro{
+  display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:stretch;margin-top:16px;
+  padding:12px 14px;border-radius:14px;border:1px solid color-mix(in srgb, var(--borda-forte) 70%, transparent);
+  background:linear-gradient(180deg, color-mix(in srgb, var(--painel-2) 70%, var(--borda)), var(--bg-2));
+  box-shadow:0 3px 0 color-mix(in srgb, var(--bg) 50%, #000);
+}
+.rq-placar{display:flex;align-items:center;gap:10px;padding:4px 14px 4px 4px;border-right:1px solid var(--borda)}
+.rq-lado{display:flex;flex-direction:column;align-items:center;gap:1px;min-width:42px}
+.rq-lado small{font:700 10px/1.2 var(--letra-hud, var(--fonte));letter-spacing:.14em;text-transform:uppercase;color:var(--texto-fraco)}
+.rq-lado b{font:700 30px/1 var(--letra-hud, var(--fonte));font-variant-numeric:tabular-nums}
+.rq-lado:first-child b{color:var(--bom)}
+.rq-lado:last-child b{color:var(--perigo)}
+.rq-x{font:600 18px/1 var(--letra-hud, var(--fonte));color:var(--texto-tenue)}
+.rq-time{display:flex;flex-direction:column;gap:7px;min-width:0}
+.rq-k{font:700 10.5px/1.2 var(--letra-hud, var(--fonte));letter-spacing:.14em;text-transform:uppercase;color:var(--texto-fraco)}
+.rq-icones{display:flex;flex-wrap:wrap;gap:6px}
+.rq-pk{
+  display:flex;flex-direction:column;align-items:center;gap:0;min-width:64px;padding:4px 6px 5px;border-radius:10px;
+  background:rgba(0,0,0,.22);box-shadow:inset 0 0 0 1px var(--borda);
+}
+.rq-pk .sprite{width:40px;height:40px;object-fit:contain;image-rendering:pixelated}
+.rq-pk small{font:600 11px/1.2 var(--letra-hud, var(--fonte));max-width:76px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rq-pk b{font:600 10.5px/1.2 var(--letra-hud, var(--fonte));color:var(--texto-fraco);font-variant-numeric:tabular-nums}
+@media (max-width:520px){
+  .rival-quadro{grid-template-columns:1fr}
+  .rq-placar{border-right:0;border-bottom:1px solid var(--borda);padding:0 0 10px;justify-content:center}
+  .rq-icones{display:grid;grid-template-columns:repeat(3, minmax(0, 1fr))}
+  .rq-pk{min-width:0}
+}
+
+/* Credenciais: o nome em letra de placa e os benefícios em etiquetas */
+.cargo-nome{font-family:var(--letra-hud, var(--fonte));font-size:15px}
+.cargo-orgao, .cargo-peso{font-family:var(--letra-hud, var(--fonte))}
+.cargo-ben{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:9px}
+.cargo-ben span{
+  padding:3px 9px;border-radius:999px;font:600 11.5px/1.35 var(--letra-hud, var(--fonte));
+  color:var(--texto);background:rgba(0,0,0,.24);box-shadow:inset 0 0 0 1px var(--borda);
+}
+.cargo .btn{font-family:var(--letra-hud, var(--fonte));font-weight:600;border-radius:10px}
+
+/* A letra que sobrou do jogo antigo: a conta das linhas de valor, a
+   linha de efeito dos itens, o ×N, o dinheiro da mochila e a nota da
+   reputação saem na letra do HUD com algarismo de largura fixa. A
+   Pokédex e o PC continuam com a letra de tela de aparelho deles. */
+.linha .v, .item-linha .ficha, .item-linha .qtd, .mochila-topo .grana, .rep-nota, .fn-op{
+  font-family:var(--letra-hud, var(--fonte));font-variant-numeric:tabular-nums;
+}
+.linha .v{font-weight:500}
+.item-linha .ficha{font-size:12.5px;font-weight:500;letter-spacing:0}
+.item-linha .qtd{font-weight:700}
+.modal.pokedex .linha .v, .modal.pc .linha .v{font-family:var(--mono);font-weight:400}
+
+/* ============================================================
+   A LIGA POKÉMON — o corredor das quatro portas
+   Cada porta é madeira escura com a placa de bronze do nome que está
+   nela desde sempre (LORELEI, BRUNO, AGATHA, LANCE). Quem senta atrás
+   aparece em baixo, com o rosto, o tipo e os níveis, só pra quem já
+   sabe; a porta atravessada ganha o carimbo. O Salão do Campeão é a
+   placa dourada larga embaixo das quatro. Torneio e Conferência são
+   o texto e os prêmios em etiquetas, e entrar é pelo menu de sempre.
+   ============================================================ */
+h3.sec-elite{--sec:var(--liga, #a884d4)}
+h3.sec-torneio{--sec:#ff8a3d}
+h3.sec-conf{--sec:#7fb2ff}
+.painel.liga .sussurro{font-style:normal;font-size:14px;color:color-mix(in srgb, var(--texto) 78%, var(--texto-fraco));margin:0 0 12px}
+.liga-portas{display:grid;grid-template-columns:repeat(4, minmax(0, 1fr));gap:10px;margin-bottom:12px}
+.liga-porta{
+  position:relative;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;
+  padding:12px 10px 14px;border-radius:14px 14px 8px 8px;min-height:208px;
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.28) 0 6%, transparent 6% 94%, rgba(0,0,0,.28) 94%),
+    repeating-linear-gradient(90deg, rgba(255,255,255,.025) 0 2px, transparent 2px 9px),
+    linear-gradient(180deg, #4a3427, #2f2019 70%, #241812);
+  border:1px solid #5d4434;
+  box-shadow:0 4px 0 #120c09, 0 16px 24px -18px rgba(0,0,0,.95), inset 0 1px 0 rgba(255,255,255,.08);
+}
+/* a maçaneta */
+.liga-porta::after{
+  content:'';position:absolute;right:10px;top:52%;width:7px;height:7px;border-radius:50%;
+  background:radial-gradient(circle at 35% 35%, #fff2c4, #c9a24b 60%, #7d5f22);box-shadow:0 1px 2px rgba(0,0,0,.6);
+}
+.lp-ordem{font:700 10px/1.2 var(--letra-hud, var(--fonte));letter-spacing:.16em;text-transform:uppercase;color:#cdb79f}
+.lp-placa{
+  width:100%;padding:5px 4px;border-radius:4px;
+  font:700 13px/1.1 var(--letra-hud, var(--fonte));letter-spacing:.16em;color:#3a2a10;
+  background:linear-gradient(180deg, #f5dc8e, #d9b25a 55%, #b48a35);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.6), 0 2px 4px rgba(0,0,0,.5);
+  text-shadow:0 1px 0 rgba(255,255,255,.45);
+}
+.lp-rosto{
+  width:64px;height:64px;border-radius:50%;display:grid;place-items:center;overflow:hidden;margin-top:4px;
+  background:radial-gradient(circle at 50% 35%, rgba(255,255,255,.14), rgba(0,0,0,.35) 75%);
+  box-shadow:inset 0 0 0 2px rgba(201,162,75,.45);
+}
+.lp-rosto img{width:64px;height:64px;object-fit:contain;object-position:50% 100%;image-rendering:pixelated}
+.lp-rosto b{font:700 26px/1 var(--letra-hud, var(--fonte));color:rgba(255,255,255,.35)}
+.lp-quem{font:700 15px/1.2 var(--letra-hud, var(--fonte));color:#fff}
+.lp-quem.lp-fraco{font-weight:500;font-size:13px;color:#bba48c}
+.lp-info{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:5px}
+.lp-info .tipo-tag{margin:0;font-family:var(--letra-hud, var(--fonte));font-weight:700}
+.lp-variado{background:linear-gradient(90deg, #a8a878, #6890f0, #f08030) !important}
+.lp-nv{font:600 12px/1.2 var(--letra-hud, var(--fonte));color:#e7d8c6;font-variant-numeric:tabular-nums}
+.lp-cadeira{font-size:11.5px;font-style:italic;color:#bba48c;line-height:1.3}
+/* o carimbo vai no pé da porta: em cima, cobria a placa do nome */
+.lp-selo{
+  margin-top:auto;padding:3px 10px 3px 8px;border-radius:999px;
+  font:800 10.5px/1.3 var(--letra-hud, var(--fonte));letter-spacing:.08em;text-transform:uppercase;
+  color:#0f3a1d;background:#5fd38a;box-shadow:0 2px 6px -2px rgba(0,0,0,.6), inset 0 0 0 1px rgba(255,255,255,.35);
+}
+.lp-selo::before{content:'✓ '}
+.liga-porta.passou{border-color:#4f8a5f}
+.liga-porta.fechada .lp-rosto{box-shadow:inset 0 0 0 2px rgba(201,162,75,.25)}
+.liga-salao{
+  display:flex;align-items:center;gap:14px;padding:12px 16px;border-radius:14px;margin-bottom:6px;
+  background:linear-gradient(135deg, color-mix(in srgb, #ffd700 20%, var(--painel-2)), color-mix(in srgb, #ffd700 5%, var(--bg-2)));
+  border:1px solid color-mix(in srgb, #ffd700 45%, transparent);
+  box-shadow:0 4px 0 color-mix(in srgb, #ffd700 18%, #05070f), 0 0 30px -16px #ffd700;
+}
+.ls-rosto{
+  width:58px;height:58px;flex:0 0 auto;border-radius:50%;display:grid;place-items:center;overflow:hidden;
+  background:radial-gradient(circle at 50% 35%, rgba(255,240,180,.25), rgba(0,0,0,.35) 75%);box-shadow:inset 0 0 0 2px rgba(255,215,0,.5);
+}
+.ls-rosto img{width:58px;height:58px;object-fit:contain;object-position:50% 100%;image-rendering:pixelated}
+.ls-rosto b{font:700 24px/1 var(--letra-hud, var(--fonte));color:#ffd700}
+.ls-corpo{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1 1 auto}
+.ls-placa{font:700 11px/1.2 var(--letra-hud, var(--fonte));letter-spacing:.18em;text-transform:uppercase;color:#ffd700}
+.ls-quem{font:700 17px/1.25 var(--letra-hud, var(--fonte))}
+.liga-salao:not(.seu) .ls-quem{font-weight:500;color:var(--texto-fraco)}
+.ls-estrela{width:30px;height:30px;color:#ffd700;flex:0 0 auto}
+.liga-evento{display:flex;flex-direction:column;gap:10px}
+.liga-evento .sussurro{margin:0}
+.liga-premios{display:flex;flex-wrap:wrap;gap:8px}
+.lpr{
+  display:flex;flex-direction:column;gap:1px;padding:8px 14px;border-radius:12px;min-width:104px;flex:1 1 104px;
+  background:color-mix(in srgb, var(--bg) 40%, transparent);border:1px solid color-mix(in srgb, var(--borda) 85%, transparent);
+}
+.lpr small{font:700 10px/1.2 var(--letra-hud, var(--fonte));letter-spacing:.14em;text-transform:uppercase;color:var(--texto-fraco)}
+.lpr b{font:700 17px/1.25 var(--letra-hud, var(--fonte));font-variant-numeric:tabular-nums}
+.liga-evento.torneio .lpr b{color:#ffb070}
+.liga-evento.conf .lpr b{color:#a9cbff}
+.liga-titulos{
+  align-self:flex-start;display:inline-flex;align-items:center;gap:7px;padding:4px 12px 4px 8px;border-radius:999px;
+  font:700 12.5px/1.2 var(--letra-hud, var(--fonte));background:rgba(0,0,0,.25);box-shadow:inset 0 0 0 1px var(--borda);
+}
+.liga-titulos svg.icone{width:16px;height:16px;color:#ffd700}
+.painel.liga > .escolhas{margin-top:22px}
+@media (max-width:620px){
+  .liga-portas{grid-template-columns:repeat(2, minmax(0, 1fr))}
+  .liga-porta{min-height:0}
+  .lpr{min-width:0;flex-basis:calc(50% - 4px)}
+}

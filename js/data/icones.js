@@ -139,7 +139,15 @@ const ICONE = {
   seta:'<path d="M4.5 12h14M13 6.5l5.5 5.5-5.5 5.5"/>',
   olho:'<path d="M2.5 12s3.5-6.5 9.5-6.5 9.5 6.5 9.5 6.5-3.5 6.5-9.5 6.5S2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.8"/>',
   exclama:'<path d="M12 4.5v10"/><circle cx="12" cy="19" r="1.1" fill="currentColor"/>',
-  pergunta:'<path d="M4 5h16v11H10l-4 3.5V16H4z"/><path d="M10.2 8.6a1.9 1.9 0 1 1 2.6 1.8c-.5.2-.8.6-.8 1.1v.4"/><circle cx="12" cy="13.6" r=".7" fill="currentColor"/>'
+  pergunta:'<path d="M4 5h16v11H10l-4 3.5V16H4z"/><path d="M10.2 8.6a1.9 1.9 0 1 1 2.6 1.8c-.5.2-.8.6-.8 1.1v.4"/><circle cx="12" cy="13.6" r=".7" fill="currentColor"/>',
+  /* os avisos do que a escolha mudou: cura, alerta, luto (a vela da
+     vigília da Torre), o mundo, uma nota e o brilho da evolução */
+  cura:'<rect x="4" y="4" width="16" height="16" rx="4.5"/><path d="M12 8v8M8 12h8"/>',
+  alerta:'<path d="M12 3.8L21.2 19.8H2.8z"/><path d="M12 10v4.6"/><circle cx="12" cy="17.1" r=".95" fill="currentColor"/>',
+  luto:'<path d="M8.5 21h7M10 21V11.5h4V21"/><path d="M12 11.5V9.4"/><path d="M12 9c-1.4-1-1.4-2.7 0-4.3 1.4 1.6 1.4 3.3 0 4.3z"/>',
+  mundo:'<circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.5 2.4 3.7 5.2 3.7 8.5s-1.2 6.1-3.7 8.5c-2.5-2.4-3.7-5.2-3.7-8.5s1.2-6.1 3.7-8.5z"/>',
+  info:'<circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.4"/><circle cx="12" cy="7.9" r=".95" fill="currentColor"/>',
+  brilho:'<path d="M11 3.5c.6 4.3 1.9 5.6 6.2 6.2-4.3.6-5.6 1.9-6.2 6.2-.6-4.3-1.9-5.6-6.2-6.2 4.3-.6 5.6-1.9 6.2-6.2z"/><path d="M18 14.6c.3 1.7.8 2.2 2.5 2.5-1.7.3-2.2.8-2.5 2.5-.3-1.7-.8-2.2-2.5-2.5 1.7-.3 2.2-.8 2.5-2.5z"/>'
 };
 
 /* A cor de cada desenho no menu: a porta na cor da casa, como o

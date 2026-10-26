@@ -1429,6 +1429,8 @@ const Jogo = {
     // próximo membro da Elite 4
     e.indice++;
     Estado.registrar(`Venceu ${alvo.nome} na Elite 4.`);
+    /* a porta ganha o carimbo na tela da Liga, mesmo que a ala recomece */
+    Estado.marcar('elite_passou_' + alvo.id);
     const acabou = e.indice >= ELITE4.length;
     if (acabou) e.campeao = true;
     Estado.salvar('auto');

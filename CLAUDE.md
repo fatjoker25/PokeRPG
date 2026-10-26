@@ -1430,6 +1430,28 @@ também, e o cabeçalho de seção com o losango (no sumário na cor do tipo
 do Pokémon, `--t1`; na ficha na cor do cartão). O que fazer com um
 Pokémon do time é menu com desenho, como o do lugar.
 
+**Aviso** (o que a escolha mudou, `UI.avisos`) é a caixa de "você
+recebeu" dos jogos: o desenho numa pastilha da cor do tipo
+(`iconeDoAviso`) — a moeda no que tem ₽, o próprio item em "Recebeu
+N× X"/"Perdeu N× X", o coração na moral, um desenho por tipo no resto
+— e o texto puxado pra cor de ler. Dinheiro que sai, item perdido e
+moral que cai ganham `.perde` (vermelho), a moral `.moral` (rosa).
+Tipo novo de aviso entra no `POR_TIPO`. No PokéNav o aviso fica na
+tela clara do aparelho.
+
+A **Liga** (`telaLiga`) é o corredor das quatro portas: madeira, a
+placa de bronze com o nome que está nela desde sempre (LORELEI,
+BRUNO…), quem senta atrás (rosto, tipo, níveis) só pra quem já sabe,
+e o carimbo no pé da porta já atravessada (`elite_passou_<id>`, marcado
+no `resultadoElite`; pra quem é Campeão, todas). Embaixo, o Salão do
+Campeão; Torneio e Conferência com os prêmios em etiquetas. Entrar é
+pelo menu numerado, com a porta fechada dizendo o que falta. O placar
+e o time do **rival** são quadro (`quadroDoRival`): o placar como o de
+uma luta e o time em ícones. Na **Pokédex**, a casa tem duas linhas
+(número e marca em cima, nome embaixo): na mesma linha, a etiqueta
+"visto" cortava o nome. E `.linha .v` (a conta das linhas de valor) é
+letra do HUD; só a Pokédex e o PC guardam a letra de tela deles.
+
 Botão que entra animado entra com `animation-fill-mode` **backwards**,
 nunca `both`. O `both` segura o último quadro, e animação manda mais
 que regra: o hover não subia, o apertar não afundava, a opção fechada
