@@ -481,6 +481,21 @@ encapuzado, e o rosto dela é pixel art nossa, no mesmo 80×80, gerada
 por `python3 ferramentas/desenhar-capuz.py` (capa, sombra no lugar do
 rosto, as mãos no caderno e a barra sumindo em névoa).
 
+**O rosto sai da descrição, não da classe.** Quem carrega cena tem o
+rosto que o texto pede — idade, ofício, roupa e sexo —, e ninguém divide
+rosto com quem não é parecido com ele. O acervo é o do Showdown inteiro
+(todas as gerações e o Smogon Sprite Project, com o nome do arquivo de
+lá: `gentleman_gen7`, `madame_gen6`) e quatro do PokeRogue (`pr_*`).
+Pessoa nova lê a cena antes de escolher: o Célio tem uns cinquenta anos e
+não é o entregador de boné; a Elsa tem treze e não é funcionária de
+escritório; a cozinheira do Anne é mulher, e o `cook` é homem. Os
+oficiais da Liga andam de cinza (`policeman_gen7` pelo cargo, a mulher
+pelo `league_staff_f`); o de azul (`overworld/policial`) é polícia de
+cidade. Arquivo novo que vem de luta entra em `PAGA_POR_CLASSE` com o que
+o antigo pagava, e o veterano muda pelo `arq`. O de GBC (Polished Crystal)
+foi olhado e ficou de fora: no balão, entre os de Black/White, parece
+outro jogo.
+
 Golpe de status que faz outra coisa além de mexer em número tem
 `ef.acao` e mora em `Batalha.acaoEspecial` (Protect, Substitute, Reflect,
 Leech Seed, Transform, Roar…). Estado que o golpe deixa fica no `est` do

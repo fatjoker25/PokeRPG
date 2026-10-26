@@ -1434,11 +1434,11 @@ const EVENTOS_GERAIS = [
          registrar:'Ligou pra família do cartaz só pra avisar que alguém tinha lido.'},
      resultado:[
        'Atende no primeiro toque, o que diz muita coisa sobre quem está do lado de lá.',
-       fala('a voz do outro lado', 'Alô? ALÔ?', 'grita'),
+       fala('a mulher que atende', 'Alô? ALÔ?', 'grita'),
        d=>fala(d.jogador.nome, 'Eu não vi ele. Desculpa. Eu só vi o cartaz e eu queria avisar que alguém leu.'),
        'Silêncio de uns quatro segundos.',
-       fala('a voz do outro lado', 'Obrigada.', 'baixo'),
-       fala('a voz do outro lado', 'Ninguém nunca liga pra dizer isso.')
+       fala('a mulher que atende', 'Obrigada.', 'baixo'),
+       fala('a mulher que atende', 'Ninguém nunca liga pra dizer isso.')
      ]},
     {texto:'Endireitar o cartaz, que está torto, e seguir.',
      ef:{rep:{eixo:'bom',delta:1,motivo:'Endireitou o cartaz de procura-se de outra pessoa'},

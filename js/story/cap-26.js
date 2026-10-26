@@ -1386,6 +1386,7 @@ c21_o_da_terceira_equipe:{
   texto:[
     'Ele está no vestiário da arena, sentado num banco de madeira, com as Pokébolas alinhadas na frente dele em cima de uma toalha.',
     'Tem uns quarenta anos e mãos grandes, e não se levanta quando você entra.',
+    d => { Nomes.apresentar('o lutador da Elite 4'); return 'Enrolado na ponta da toalha, do lado das Pokébolas, tem um chicote de couro que ninguém usa mais. No cabo, gravado a canivete: A.J.'; },
     fala('o lutador da Elite 4', 'Eu sei quem é {o senhor|a senhora}.'),
     d=>fala(d.jogador.nome, 'E o senhor esteve lá.'),
     'Ele pega uma das Pokébolas e gira devagar entre os dedos.',

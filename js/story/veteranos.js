@@ -34,7 +34,7 @@ const TAM_VETERANO = [3, 3, 4, 4, 5, 5, 6, 6, 6];
 const VETERANOS = [
 {
   id:'harlan', local:'monte_lua', insignias:1, conferencia:true,
-  classe:'Montanhista', arq:'hiker', artigo:'um', nome:'Harlan',
+  classe:'Montanhista', arq:'hiker_gen4', artigo:'um', nome:'Harlan',
   porta:{titulo:'Seguir a luz de lanterna que vem do fundo da caverna',
          sub:'Alguém acampa lá embaixo, onde a trilha marcada acaba.'},
   onde:'no fundo da caverna',
@@ -96,7 +96,7 @@ const VETERANOS = [
 },
 {
   id:'morgan', local:'cerulean', insignias:2, conferencia:false,
-  classe:'Treinador Ás', arq:'ace_trainer', artigo:'um', nome:'Morgan',
+  classe:'Treinador Ás', arq:'acetrainer_gen6', artigo:'um', nome:'Morgan',
   porta:{titulo:'Ver quem treina sozinho debaixo da ponte velha',
          sub:'Seis Pokébolas enfileiradas na beira do rio, e ninguém em volta.'},
   onde:'debaixo da ponte velha',
@@ -283,7 +283,7 @@ const VETERANOS = [
 },
 {
   id:'corinne', local:'celadon', insignias:4, conferencia:false, f:true,
-  classe:'Dama', arq:'lady', artigo:'uma', nome:'Corinne',
+  classe:'Dama', arq:'pr_rich_f', artigo:'uma', nome:'Corinne',
   porta:{titulo:'Aceitar o convite para o chá no jardim do terraço',
          sub:'Um cartão de papel grosso, deixado no balcão do Centro com o seu nome.'},
   onde:'no jardim do terraço',
@@ -346,7 +346,7 @@ const VETERANOS = [
 },
 {
   id:'conrad', local:'saffron', insignias:5, conferencia:true,
-  classe:'Faixa-Preta', arq:'black_belt', artigo:'um', nome:'Conrad',
+  classe:'Faixa-Preta', arq:'blackbelt_gen7', artigo:'um', nome:'Conrad',
   porta:{titulo:'Entrar no salão de luta da rua de trás',
          sub:'A porta está aberta e dá pra ouvir alguém contando golpe em voz alta.'},
   onde:'no salão de luta da rua de trás',
@@ -416,7 +416,7 @@ const VETERANOS = [
     'O posto da Ciclovia fica aberto a noite inteira, e a noite inteira tem moto parada em fila na frente dele.',
     'Quem manda na fila é um homem grisalho de jaqueta de lona remendada, sentado no banco de fita da moto mais velha.',
     fala('Quinn', 'Quinn. Eu rodo essa Ciclovia desde que ela era estrada de terra.'),
-    fala('Quinn', 'A turma aqui acha que eu sou chefe. Eu não sou chefe de ninguém. Eu só sou a que ninguém ganhou ainda.'),
+    fala('Quinn', 'A turma aqui acha que eu sou chefe. Eu não sou chefe de ninguém. Eu só sou o que ninguém ganhou ainda.'),
     fala('Quinn', 'Quer tentar? A turma vai assistir. A turma sempre assiste.')
   ],
   volta:[fala('Quinn', 'A turma apostou em você dessa vez. Metade dela.'), fala('Quinn', 'Vamos ver quem perde dinheiro.')],
@@ -638,7 +638,7 @@ const VETERANOS = [
 },
 {
   id:'lorne', local:'caminho_vitoria', insignias:8, conferencia:true,
-  classe:'Domador de Dragões', arq:'dragon_tamer', artigo:'um', nome:'Lorne',
+  classe:'Domador de Dragões', arq:'dragontamer_gen6', artigo:'um', nome:'Lorne',
   porta:{titulo:'Ir até a fogueira no salão alto do Caminho',
          sub:'Tem fogo aceso num lugar onde não entra vento.'},
   onde:'no salão alto do Caminho',

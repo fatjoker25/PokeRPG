@@ -199,7 +199,10 @@ const NOMES_FIXOS = {
   'o contador do conselho':    'Sr. Mallow',
   'o professor do conselho':   'Sr. Tobias Dahl',
   'a conselheira da Liga':     'Margot Heath',
-  'a secretária da mesa':      'Sra. Hedda'
+  'a secretária da mesa':      'Sra. Hedda',
+  /* o Planalto, no 26: o da terceira equipe é quem senta na cadeira do
+     Bruno; o cabo do chicote, na toalha do vestiário, tem as iniciais */
+  'o lutador da Elite 4':      'A.J.'
 };
 
 /* Cargo que fica cargo de propósito, mesmo passando de doze falas: é a
