@@ -368,7 +368,7 @@ const VISITAS_DOS_TITULARES = [
        fala('Lorelei', 'Esperando quem?'),
        d=>d.flags.achou_o_filhote || d.flags.viu_o_segundo_articuno
          ? fala(d.jogador.nome, 'Um filhote, com a asa quebrada. Ele estava numa câmara fria da fábrica de gelo, aqui em Fuchsia.')
-         : fala(d.jogador.nome, 'Um filhote. Eu vi a cama dele na parede da caverna, vazia.'),
+         : fala(d.jogador.nome, 'Um filhote. Eu vi o ninho dele, escavado na parede da caverna, vazio.'),
        d=>d.flags.prometeu_a_articuno ? fala(d.jogador.nome, 'Eu prometi trazer. E não trouxe.') : '',
        'Ela fica olhando o gelo um tempo comprido, com a régua parada na mão.',
        fala('Lorelei', 'Dezenove semanas medindo espessura.', 'baixo'),

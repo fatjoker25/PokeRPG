@@ -1034,7 +1034,7 @@ c13_seguiu_ate_a_fabrica:{
     'Os dois descem. O de quarenta abre o cadeado novo; o Tobin entra primeiro, com a caixa térmica, sem olhar pra trás.',
     'Você espera o portão encostar e entra atrás.',
     'Dentro é escuro e frio de verdade, e o compressor martela no fundo. A porta da câmara fria está aberta e sai luz amarela dela.',
-    'Da porta dá pra ver: uma cama de rede de pesca dobrada no chão, e em cima dela um Articuno pequeno, com a asa esquerda enfaixada, levantando a cabeça pro homem que chega.',
+    'Da porta dá pra ver: um ninho de rede de pesca dobrada no chão, e em cima dele um Articuno pequeno, com a asa esquerda enfaixada, levantando a cabeça pro homem que chega.',
     'Você pisa num pedaço de rede velha e ela faz barulho.',
     'Os dois viram.',
     'Ninguém grita. O Tobin põe a caixa térmica no chão, devagar, e fala com a voz de quem já esperou isso acontecer todo dia por dezenove semanas:',
@@ -1084,7 +1084,7 @@ c13_camara_fria:{
   texto:[
     'A trava de alavanca faz um estalo que ecoa no galpão inteiro.',
     'A câmara fria é um cubo de três por três com prateleira de aço nas paredes e uma lâmpada amarela no teto.',
-    'E no chão, sobre uma cama improvisada de rede de pesca dobrada muitas vezes, tem um Articuno.',
+    'E no chão, sobre um ninho improvisado de rede de pesca dobrada muitas vezes, tem um Articuno.',
     'Pequeno. Menor do que devia. Com a asa esquerda enfaixada com atadura de Pokémon grande e esparadrapo.',
     'Ele está vivo. Ele levanta a cabeça quando a porta abre.',
     'E tem dois baldes ao lado dele, um com água e outro com ração marinha, e uma cadeira de plástico encostada na parede, virada pra ele.',
@@ -1104,13 +1104,13 @@ c13_camara_fria:{
   ]
 },
 
-/* a câmara fria de novo: ele continua ali, ou a cama ficou vazia */
+/* a câmara fria de novo: ele continua ali, ou o ninho ficou vazio */
 c13_camara_de_novo:{
   repetivel:true,
   texto:[
     d=>c13_comVoce(d) || d.flags.devolveu_o_filhote
-      ? 'A câmara fria está vazia. A cama de rede de pesca continua dobrada no chão, com o formato dele ainda marcado.'
-      : 'A câmara fria está como sempre: a lâmpada amarela, os dois baldes, a cadeira de plástico virada pra cama de rede.',
+      ? 'A câmara fria está vazia. O ninho de rede de pesca continua dobrado no chão, com o formato dele ainda marcado.'
+      : 'A câmara fria está como sempre: a lâmpada amarela, os dois baldes, a cadeira de plástico virada pro ninho de rede.',
     d=>c13_comVoce(d) || d.flags.devolveu_o_filhote ? '' : 'O Articuno pequeno levanta a cabeça quando a porta abre, e baixa de novo quando vê quem é.'
   ],
   escolhas:[
@@ -1335,7 +1335,7 @@ c13_ele_sabe:{
     '"Oito mil pra escrever “origem indeterminada”."',
     '"E você sabe a origem."',
     d=>c13_naCamara(d)
-      ? '"Eu sei a origem, e a origem tá aqui, nessa cama de rede, comendo ração marinha que eu compro com o dinheiro que eu não tenho."'
+      ? '"Eu sei a origem, e a origem tá aqui, nesse ninho de rede, comendo ração marinha que eu compro com o dinheiro que eu não tenho."'
       : '"Eu sei a origem, e a origem tá num galpão a seiscentos metros daqui comendo ração marinha que eu compro com o dinheiro que eu não tenho."',
     d=>c13_naCamara(d) ? 'Ele encosta a cabeça na prateleira de aço.' : 'Ele encosta a cabeça na poltrona.',
     '"Trezentas e onze famílias, {moço|moça}. Trezentas e onze. Eu conheço o nome de quase todo mundo."',
@@ -1369,7 +1369,7 @@ c13_goro_leva:{
     'Ele acende a luz da câmara fria e abre a porta de isolamento com a alavanca, e faz isso do jeito de quem faz isso há dezenove semanas: sem pressa, com o corpo já sabendo onde ficar.',
     'E fala, pra dentro da câmara, antes de entrar, em voz normal:',
     '"Ô. Cheguei."',
-    'E lá dentro, na cama de rede de pesca dobrada, o Articuno pequeno levanta a cabeça.'
+    'E lá dentro, no ninho de rede de pesca dobrada, o Articuno pequeno levanta a cabeça.'
   ],
   ef:{flag:['achou_o_filhote','viu_o_segundo_articuno','entrou_na_fabrica'],
       executar:()=>{ Estado.marcar('c13_na_camara'); return []; },
@@ -1395,7 +1395,7 @@ c13_aguenta:{
     '"Eu trouxe ele de lá num bote de apoio, então ele aguentou uma vez."',
     d=>`"Em ${c13_queda(d).mes}."`,
     d=>`"Em ${c13_queda(d).mes}, com a asa sangrando e uma hora e meia de mar. Hoje ele tá melhor de tudo menos da asa."`,
-    'Ele olha pra cama de rede.',
+    'Ele olha pro ninho de rede.',
     d=>`"Mas hoje o mar tá dois graus e em ${c13_queda(d).mes} tava dezenove."`,
     'Ele encosta a mão na parede da câmara fria.',
     '"Eu botei ele aqui a quatro graus porque eu achei que ele gostava de frio."',
@@ -2428,7 +2428,7 @@ c13_observar_articuno:{
     'Você segue a linha do olhar dele.',
     'Do outro lado da câmara, a uns trinta metros, na parede, tem um vazio.',
     'Um vazio do formato exato de um Articuno pequeno, escavado no gelo, com as bordas lisas.',
-    'Como uma cama.',
+    'Como um ninho.',
     'Ele está olhando pra um lugar onde tinha alguém e não tem mais.'
   ],
   ef:{flag:['viu_o_vazio','sabe_do_segundo'],
@@ -2436,7 +2436,7 @@ c13_observar_articuno:{
       rep:{eixo:'bom',delta:3,motivo:'Esperou uma hora e dez até ver'},
       moral:-12,
       registrar:'Há um vazio escavado na parede, do formato de um Articuno pequeno. Ele está olhando para lá.',
-      presagio:'Ele escavou uma cama e a cama está vazia. Ele está esperando devolverem.'},
+      presagio:'Ele escavou um ninho e o ninho está vazio. Ele está esperando devolverem.'},
   escolhas:[
     {texto:'Ir até o vazio.', vai:'c13_o_vazio'},
     {texto:'Falar com ele em voz alta.', vai:'c13_perguntou_articuno', cond:c13_nova('c13_perguntou_articuno')},
@@ -2451,7 +2451,7 @@ c13_o_vazio:{
     'De perto é pior.',
     'Não é buraco. É trabalho: as bordas foram alisadas, tem uma reentrância no fundo do formato de uma cabeça, e no chão do nicho tem um forro.',
     'Um forro de algas secas e penas azuis, arrumado.',
-    'Alguém fez uma cama de algas dentro de uma parede de gelo e alisou as bordas com o bico, e o forro está intacto, e nunca foi usado.',
+    'Alguém fez um ninho de algas dentro de uma parede de gelo e alisou as bordas com o bico, e o forro está intacto, e nunca foi usado.',
     'E na beirada do nicho, no gelo, tem uma marca.',
     'Uma marca comprida, de uns quarenta centímetros, com três sulcos paralelos, repetida dezenas de vezes, sobreposta, gasta.',
     'É garra.',
@@ -2461,8 +2461,8 @@ c13_o_vazio:{
   ef:{flag:['viu_a_cama','sabe_do_segundo'],
       rep:{eixo:'bom',delta:3,motivo:'Foi olhar de perto a coisa que doía olhar de perto'},
       moral:-15, instabilidade:1,
-      registrar:'Há uma cama de algas e penas escavada na parede, nunca usada, com marcas de garra na beirada.',
-      presagio:'Ele preparou a cama antes. Ele preparou a cama pra quando devolverem.'},
+      registrar:'Há um ninho de algas e penas escavado na parede, nunca usado, com marcas de garra na beirada.',
+      presagio:'Ele preparou o ninho antes. Ele preparou o ninho pra quando devolverem.'},
   escolhas:[
     {texto:'Falar com ele em voz alta.', vai:'c13_perguntou_articuno', cond:c13_nova('c13_perguntou_articuno')},
     {texto:'Chegar perto devagar.', vai:'c13_perto', cond:c13_nova('c13_perto')},
@@ -2685,7 +2685,7 @@ c13_os_tres:{
   vozes:['N'],
   texto:[
     'Vocês vão os três. Quatro, contando quem está na caixa.',
-    d=>`O Articuno pequeno viaja num caixote de gelo forrado com a rede dobrada que era a cama dele, com gelo picado por baixo, porque o Tobin descobriu em ${c13_mes(d, 3)} que ele fica mais calmo com frio.`,
+    d=>`O Articuno pequeno viaja num caixote de gelo forrado com a rede dobrada que era o ninho dele, com gelo picado por baixo, porque o Tobin descobriu em ${c13_mes(d, 3)} que ele fica mais calmo com frio.`,
     'Saem às cinco da manhã.',
     'O barco tem doze pés e agora tem quatro ocupantes e a borda livre é de vinte centímetros, e o Sr. Dane vai a meia força, e a travessia leva quase quatro horas, e nenhum dos dois velhos reclama de nada.',
     'O Tobin não fala nas primeiras três horas.',
@@ -3056,7 +3056,7 @@ c13_capturou_articuno:{
     'Colunas de séculos caem. A água volta com força de maré represada por dezenove semanas, por baixo, pelos lados, por cima.',
     'E do outro lado da câmara, na parede que está se partindo, tem um vazio escavado, do formato de um Articuno pequeno, com um forro de algas secas e penas azuis arrumado no fundo.',
     d=>c13_jaViuOVazio(d) ? 'Você já tinha visto. Agora você vê a parede cair em cima dele.' : 'Você só vê durante um segundo e meio, quando a parede cede.',
-    d=>c13_jaViuOVazio(d) ? 'E a cama vazia some debaixo da água.' : 'E você não entende o que era.',
+    d=>c13_jaViuOVazio(d) ? 'E o ninho vazio some debaixo da água.' : 'E você não entende o que era.',
     d=>c13_jaViuOVazio(d) ? 'E quem ia dormir nela não está aqui pra ver.' : 'E a única pessoa que podia te explicar está na sua mão.'
   ],
   ef:{instabilidade:3, flag:['capturou_articuno','c13_caverna_caiu'],
@@ -3216,7 +3216,7 @@ c13_contou_pro_ryuzo_o_que_fez:{
   texto:[
     'Você conta.',
     d=>c13_jaViuOVazio(d)
-      ? 'Que tinha um segundo, menor, e uma cama escavada na parede, e que você jogou a Pokébola, e que a caverna caiu por isso.'
+      ? 'Que tinha um segundo, menor, e um ninho escavado na parede, e que você jogou a Pokébola, e que a caverna caiu por isso.'
       : 'Que tinha um vazio escavado na parede, do tamanho de um Articuno pequeno, e que você jogou a Pokébola, e que a caverna caiu por isso.',
     'Ele ouve inteiro com a mão no cabo do leme e o olho no horizonte.',
     'E no fim ele fala uma coisa que você não estava preparad{o|a} pra ouvir:',
@@ -3247,7 +3247,7 @@ c13_saiu_articuno:{
     'Você sai da câmara e refaz os cento e setenta metros de volta.',
     'Na saída, o ar de fora parece quente, o que é absurdo, porque está fazendo dois graus e ventando.',
     d=>d.flags.viu_a_cama || d.flags.sabe_do_segundo
-       ? 'Você sabe o que tem lá dentro. Você sabe exatamente o que tem lá dentro — uma cama de algas nunca usada e uma marca de garra gasta na beirada — e está indo embora.'
+       ? 'Você sabe o que tem lá dentro. Você sabe exatamente o que tem lá dentro — um ninho de algas nunca usado e uma marca de garra gasta na beirada — e está indo embora.'
        : 'Você não sabe o que viu. Sabe que viu, e que era grande, e que estava esperando alguma coisa.',
     'Sr. Dane não pergunta nada.',
     'Ele te vê chegando, olha a sua cara, e começa a soltar a amarra sem falar.'
