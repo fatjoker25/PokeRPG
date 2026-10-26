@@ -269,7 +269,7 @@ const TROCAS = {
   }],
   rota11: [{
     id:'rota11_1',
-    quem:'Nolan ou outro menino do cais',
+    quem:'o menino do balde',
     onde:'sentado no barranco da Rota 11, com um balde e uma vara curta',
     pede:98, da:{dex:90, nivel:[22,26], apelido:'Tampa', natureza:'Impish'},
     fala:'"Eu acho Shellder demais e Krabby quase nunca. Você troca? É troca de igual, eu não tô querendo levar vantagem."',
@@ -628,7 +628,7 @@ const Trocas = {
       const f = (Estado.dados.trocasFeitas || {})[t.id] || {};
       const rec = DEX[f.recebeu || this.efetiva(t).da.dex];
       const pr = pron({genero:f.recebeuGenero || null});
-      return `${t.quem} te vê de longe e levanta a mão. "E ${pr.o} ${rec ? rec.nome : 'meu'}? Cuida bem ${pr.dele}." O que tinha pra trocar já foi com você.`;
+      return `${cap1(t.quem)} te vê de longe e levanta a mão. "E ${pr.o} ${rec ? rec.nome : 'meu'}? Cuida bem ${pr.dele}." O que tinha pra trocar já foi com você.`;
     };
 
     if (!abertas.length){
@@ -758,7 +758,7 @@ const Trocas = {
 
     const avisos = [
       {tipo:'pokemon', texto:`${nomeExib(novo)} (Nv ${novo.nivel}) entrou para o seu time.`},
-      {tipo:'eco', texto:extra ? `${t.quem} recebe ${pron(meu).o} ${meu.nome} com as duas mãos e fala o nome ${pron(meu).dele} baixinho, como quem decora.`
+      {tipo:'eco', texto:extra ? `${cap1(t.quem)} recebe ${pron(meu).o} ${meu.nome} com as duas mãos e fala o nome ${pron(meu).dele} baixinho, como quem decora.`
                                 : (typeof of.depois === 'function' ? of.depois(meu) : of.depois)}
     ];
     if (typeof Jogo !== 'undefined' && Jogo.avisarNumeros) Jogo.avisarNumeros(avisos);

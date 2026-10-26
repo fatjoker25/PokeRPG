@@ -1239,7 +1239,11 @@ const Estado = {
                         'Sr. Holt':'Sr. Larch', 'Secretária da Colônia Z-14':'a secretária da colônia',
                         'Maeve Corwin':'Maeve Bracken', 'o bibliotecário':'Sr. Pell',
                         'Sra. Hazel':'Sra. Tansy', 'o homem do zoológico':'o mais velho da mesa',
-                        'a atendente da junta':'a atendente do registro'};
+                        'a atendente da junta':'a atendente do registro',
+                        /* a troca da Rota 11 era de "Nolan ou outro menino do
+                           cais", anotação que foi parar no balão e no PokéNav;
+                           o Nolan pega Krabby toda semana, então é outro menino */
+                        'Nolan ou outro menino do cais':'o menino do balde'};
       /* a mesma pessoa gravada com duas grafias virava duas pessoas, com
          opinião separada: junta na grafia certa */
       const MESMA_PESSOA = {'a Terceira':'A Terceira', 'Mulher da pasta de vinil':'a mulher da pasta',
@@ -1271,6 +1275,8 @@ const Estado = {
       }
       for (const [velho, novo] of Object.entries(NPC_NOVO))
         if (d.npcs && d.npcs[velho] && !d.npcs[novo]){ d.npcs[novo] = d.npcs[velho]; d.npcs[novo].nome = novo; delete d.npcs[velho]; }
+      for (const p of [...(d.time || []), ...(d.pc || []), ...(d.cemiterio || [])])
+        if (p && typeof p.historia === 'string') p.historia = p.historia.replace('com Nolan ou outro menino do cais', 'com o menino do balde');
       /* a caixa do ventilador entregue no posto da cidade continuava na
          mochila: ela ficou no balcão, com o Pokémon dentro */
       if (d.flags && d.flags.entregou_a_caixa_no_centro && d.itens) delete d.itens['Caixa de ventilador com um Pokémon dentro'];
