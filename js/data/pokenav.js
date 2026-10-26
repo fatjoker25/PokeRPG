@@ -628,7 +628,10 @@ const CONTATOS = [
   /* ============================================================
      O CURADOR — ele pergunta uma coisa sobre você e some
      A resposta decide o que ele te manda meses depois. Ele nunca
-     fala em Pokémon, nem na pergunta, nem na entrega.
+     fala em Pokémon, nem na pergunta, nem na entrega. De capuz, ele é
+     aparição: a linha chia e acaba sem desligar, ele está na sala antes
+     de você e a cadeira fica vazia depois. Não diz há quanto tempo faz
+     isso nem pra quantos: quem conta o resto é a ligação do nome.
      ============================================================ */
   id:'curador', tipo:'figura', nome:'Figura de capuz', falaComo:'a figura de capuz', papel:'curador de coisa que ninguém guarda', cidade:'Lavender',
   requer:d=>!!d.flags.a_pergunta_do_curador,
@@ -636,24 +639,25 @@ const CONTATOS = [
   missao:{
     rotulo:'Perguntar por que ele anotou aquilo',
     rotuloEntrega:'Ligar e dizer que você chegou em Lavender',
-    dica:'Ele espera você em Lavender.',
+    dica:'Quatro insígnias. Depois, Lavender.',
     pedido:[
-      fala('a figura de capuz', 'Eu não anotei pra nada. Eu anoto tudo.'),
-      fala('a figura de capuz', 'Eu tenho oitenta e três cadernos de capa dura com resposta de gente que passou por aqui em nove anos.'),
-      fala('a figura de capuz', 'Quando você tiver quatro insígnias, aparece. Lavender, o abrigo, qualquer hora.'),
+      'A linha chia antes de alguém atender. Ninguém diz alô.',
+      fala('a figura de capuz', 'Eu não anotei pra nada. Eu anoto.'),
+      fala('a figura de capuz', 'Quatro insígnias. Depois, o abrigo de Lavender.'),
       d=>fala(d.jogador.nome, 'Pra quê?'),
       fala('a figura de capuz', 'Pra eu te devolver uma coisa que não é minha.', 'baixo'),
-      fala('a figura de capuz', 'Não pergunta o que é. Se eu falar, estraga.')
+      fala('a figura de capuz', 'Não pergunta o que é. Se eu falar, estraga.'),
+      'A ligação não cai. Ela acaba, do jeito que a neblina acaba: você olha e já não tem ninguém do outro lado.'
     ],
     objetivo:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 4,
     entregue:d=>{
       /* as três respostas de meses atrás decidem o que chega */
       const guarda = indoleDoJuniper(d) === 'guarda';
       return [
-        'O abrigo do Sr. Fuji tem uma sala nos fundos que você nunca tinha visto, com oitenta e três cadernos de capa dura numa estante feita à mão.',
-        'Ele está lá, de capuz, de costas pra porta. Não tira o capuz pra te receber, e você entende que não vai tirar.',
-        fala('a figura de capuz', 'Caderno setenta e um, página quatro.', null, 'Ele acha em onze segundos.'),
-        fala('a figura de capuz', 'Eu te fiz três perguntas. Eu não li as respostas uma por uma: eu li pra que lado elas caíam.'),
+        'No fundo do abrigo do Sr. Fuji, uma porta que você nunca tinha visto está aberta. Lá dentro, uma estante de cadernos sem etiqueta e uma vela acesa pra ninguém.',
+        'Você não ouviu ele entrar, e a sala só tem uma porta. Ele está lá, de capuz, de costas pra você. Não tira o capuz pra te receber, e você entende que não vai tirar.',
+        fala('a figura de capuz', 'Três perguntas. Três respostas.', null, 'Ele abre o caderno na página certa sem procurar.'),
+        fala('a figura de capuz', 'Eu não li uma por uma. Eu li pra que lado elas caíam.'),
         d=>fala('a figura de capuz', guarda ? 'Você fica com as coisas. Com o que chega, com o que dói, com o que te pedem.' : 'Você deixa as coisas irem. O que chega, o que dói, o que te pedem.'),
         fala('a figura de capuz', 'Eu não escolho o que dar. As respostas escolhem.'),
         guarda
@@ -662,7 +666,8 @@ const CONTATOS = [
         guarda
           ? fala('a figura de capuz', 'Esse aqui ficou. Ficou porque ninguém veio buscar e porque eu não devolvi pro sistema.', 'baixo')
           : fala('a figura de capuz', 'Esse aqui passou por quatro pessoas antes de você. Nenhuma delas ficou com ele, e todas as quatro fizeram certo.', 'baixo'),
-        fala('a figura de capuz', 'Não abre aqui. Abre na estrada.')
+        fala('a figura de capuz', 'Não abre aqui. Abre na estrada.'),
+        'Você prende a Pokébola no cinto e levanta os olhos. A vela continua acesa. A cadeira está vazia.'
       ];
     },
     recompensa:d=>{
@@ -1192,24 +1197,26 @@ const CHAMADAS = [
           && d.insignias.filter(i=>i!=='Título de Campeão').length >= 2,
   peso:2,
   falas:d=>[
-    fala('a figura de capuz', 'Não desliga, é rápido.'),
-    fala('a figura de capuz', 'Eu reli o caderno setenta e um ontem. Eu releio todos, por ordem, um por mês.'),
-    fala('a figura de capuz', 'As suas respostas continuam lá e continuam as mesmas, e isso é a coisa mais óbvia do mundo e mesmo assim me surpreende toda vez.', 'baixo'),
-    fala('a figura de capuz', 'Quatro insígnias. Lavender. Eu tô sempre aqui.')
+    'O PokéNav toca com o número dele, e do outro lado só tem um chiado, como vento num corredor comprido.',
+    fala('a figura de capuz', 'Não desliga.'),
+    fala('a figura de capuz', 'Eu reli as suas respostas. Continuam as mesmas.'),
+    fala('a figura de capuz', 'É a coisa mais óbvia do mundo, e mesmo assim me surpreende.', 'baixo'),
+    fala('a figura de capuz', 'Quatro insígnias. Lavender.')
   ],
   escolhas:[
     {texto:'Perguntar se alguém já mudou de resposta.',
      ef:{rep:{eixo:'bom',delta:1,motivo:'Perguntou à figura de capuz se alguém já tinha mudado de resposta'},
          flag:'sabe_dos_que_mudaram'},
      resultado:[
-       fala('a figura de capuz', 'Onze pessoas voltaram pra mudar.'),
-       fala('a figura de capuz', 'Em nove anos, onze. Todas as onze mudaram a primeira, de "guardar" pra "passar adiante".'),
-       fala('a figura de capuz', 'Nenhuma foi no sentido contrário. Nenhuma, nunca.', 'frio'),
-       fala('a figura de capuz', 'Eu não sei o que fazer com essa informação e eu penso nela todo dia.')
+       fala('a figura de capuz', 'Já voltaram pra mudar.'),
+       fala('a figura de capuz', 'Sempre a primeira. Sempre de "guardar" pra "passar adiante".'),
+       fala('a figura de capuz', 'Nunca o contrário. Nunca.', 'frio'),
+       fala('a figura de capuz', 'Eu não sei o que fazer com isso.'),
+       'O chiado volta, e com ele a linha fica vazia.'
      ]},
     {texto:'"Eu vou aparecer."',
      ef:{rep:{eixo:'bom',delta:1,motivo:'Confirmou à figura de capuz que ia aparecer'}},
-     resultado:[fala('a figura de capuz', 'Todo mundo fala isso.'), fala('a figura de capuz', 'Umas trezentas aparecem. De mil e setecentas.', 'baixo')]}
+     resultado:[fala('a figura de capuz', 'Todo mundo fala isso.'), fala('a figura de capuz', 'Quem aparece sou eu.', 'baixo')]}
   ]
 },
 {
@@ -1266,7 +1273,7 @@ const CHAMADAS = [
      resultado:[fala('Sr. Juniper', 'Também é uma resposta. Eu anoto.')]},
     {texto:'"Por que eu?"',
      ef:{npc:{nome:'a figura de capuz', opiniao:1, memoria:'Você perguntou por que ele escolheu você.'}},
-     resultado:[fala('Sr. Juniper', 'Porque você respondeu as três. Em nove anos, menos de cem responderam as três.'),
+     resultado:[fala('Sr. Juniper', 'Porque você respondeu as três. Quase ninguém responde as três.'),
                 fala('Sr. Juniper', 'E porque você voltou.', 'baixo')]}
   ]
 },

@@ -560,57 +560,62 @@ lavender:[
      adiante, de três jeitos — e a soma é a índole que ele anota
      (indoleDoJuniper). Ele não fala em Pokémon uma vez sequer, nem
      aqui nem na entrega: se falasse, o jogador escolheria o prêmio e
-     não a resposta, e a coisa inteira perderia a graça. */
+     não a resposta, e a coisa inteira perderia a graça.
+     E ele chega e vai como aparição: a neblina baixa e ele está no
+     banco, sem passo no cascalho; ela passa e o banco está vazio. Não
+     diz de onde vem nem há quanto tempo faz isso, e te chama pelo nome
+     que você não disse — quem explica é ele mesmo, na ligação do nome
+     (cha_juniper_capuz: ele ainda lê o registro do PC). */
   id:'lav_a_pergunta_do_curador', umaVez:true, peso:4,
   titulo:'A pergunta',
   texto:[
-    'Tem alguém sentado num banco de pedra na entrada do abrigo, de capuz puxado até o nariz num dia sem frio, com um caderno de capa dura aberto no colo e uma caneta atravessada na página.',
-    'Pela voz é um homem velho. Pelas mãos, também. O resto o capuz guarda.',
-    'Ele não está escrevendo. Ele está esperando.',
-    fala('a figura de capuz', 'Desculpa. Posso te fazer umas perguntas? Três, e nenhuma é sobre nada.'),
-    fala('a figura de capuz', 'Eu faço essas perguntas pra quem passa aqui desde 1991. Tenho oitenta e três cadernos.'),
-    fala('a figura de capuz', 'A primeira é: quando uma coisa chega na sua mão e não é sua — você guarda, ou você passa adiante?'),
-    'Ele não explica que coisa. Ele não explica por quê. Ele espera, com a caneta atravessada na página, do jeito de quem já esperou muito.'
+    'A neblina de Lavender baixa de uma vez, do jeito que ela faz aqui, e por um instante a porta do abrigo some.',
+    'Quando ela abre, tem alguém no banco de pedra que estava vazio: um capuz fundo, sem rosto que dê pra ver lá dentro, num dia sem frio, e um caderno de capa dura fechado no colo.',
+    'Você não ouviu passo nenhum. O cascalho em volta do banco está liso.',
+    fala('a figura de capuz', 'Três perguntas. Nenhuma é sobre nada.'),
+    d=>fala('a figura de capuz', `A primeira, ${d.jogador.nome}.`, null, 'Você não disse o seu nome.'),
+    fala('a figura de capuz', 'Quando uma coisa chega na sua mão e não é sua — você guarda, ou você passa adiante?'),
+    'O caderno está aberto numa página em branco, com a caneta em cima. Você não viu ele abrir.'
   ],
   escolhas:[
     {texto:'"Eu guardo."', segue:'lav_juniper_segunda',
      ef:{flag:['a_pergunta_do_curador','respondeu_guardar'], juniper:'guarda',
-         npc:{nome:'a figura de capuz', opiniao:2, memoria:'Você respondeu "guardar" à primeira pergunta dele, no caderno setenta e um, página quatro.'},
+         npc:{nome:'a figura de capuz', opiniao:2, memoria:'Você respondeu "guardar" à primeira pergunta dele, na neblina da porta do abrigo.'},
          rep:{eixo:'bom',delta:1,motivo:'Respondeu a uma pergunta que não tinha resposta certa'},
          registrar:'Respondeu "guardar" à primeira pergunta da figura de capuz, em Lavender.'},
      resultado:[
-       'Ele escreve a palavra e a data e o seu nome, nessa ordem, em letra pequena.',
-       fala('a figura de capuz', 'Caderno setenta e um, página quatro.'),
-       fala('a figura de capuz', 'A segunda.', null, 'Ele não levanta os olhos do caderno.')
+       'Ele escreve sem olhar pro caderno, e a letra sai reta mesmo assim.',
+       fala('a figura de capuz', 'Anotado.'),
+       fala('a figura de capuz', 'A segunda.', null, 'O capuz não se mexe.')
      ]},
     {texto:'"Eu passo adiante."', segue:'lav_juniper_segunda',
      ef:{flag:'a_pergunta_do_curador', limpaFlag:'respondeu_guardar', juniper:'passa',
-         npc:{nome:'a figura de capuz', opiniao:2, memoria:'Você respondeu "passar adiante" à primeira pergunta dele, no caderno setenta e um, página quatro.'},
+         npc:{nome:'a figura de capuz', opiniao:2, memoria:'Você respondeu "passar adiante" à primeira pergunta dele, na neblina da porta do abrigo.'},
          rep:{eixo:'bom',delta:1,motivo:'Respondeu a uma pergunta que não tinha resposta certa'},
          registrar:'Respondeu "passar adiante" à primeira pergunta da figura de capuz, em Lavender.'},
      resultado:[
-       'Ele escreve a palavra e a data e o seu nome, nessa ordem, em letra pequena.',
-       fala('a figura de capuz', 'Caderno setenta e um, página quatro.'),
-       fala('a figura de capuz', 'A segunda.', null, 'Ele não levanta os olhos do caderno.')
+       'Ele escreve sem olhar pro caderno, e a letra sai reta mesmo assim.',
+       fala('a figura de capuz', 'Anotado.'),
+       fala('a figura de capuz', 'A segunda.', null, 'O capuz não se mexe.')
      ]},
     {texto:'Perguntar o que as outras pessoas responderam antes de responder.',
      ef:{flag:'perguntou_as_respostas_antes',
          rep:{eixo:'bom',delta:1,motivo:'Quis saber o que os outros responderam antes de responder'},
          registrar:'Perguntou à figura de capuz o que as outras pessoas tinham respondido.'},
      resultado:[
-       fala('a figura de capuz', 'Em nove anos: mil e setecentas pessoas.'),
-       fala('a figura de capuz', 'Novecentas e quarenta e uma disseram guardar. Setecentas e cinquenta e nove disseram passar adiante.'),
+       fala('a figura de capuz', 'Os outros responderam o que eram.'),
+       fala('a figura de capuz', 'A resposta deles ficou com eles. A sua fica comigo.'),
        d=>fala(d.jogador.nome, 'E qual é a certa?'),
-       fala('a figura de capuz', 'Não tem certa. Tem a sua.', null, 'Ele abre o caderno de novo e atravessa a caneta na página.'),
+       fala('a figura de capuz', 'Não tem certa. Tem a sua.', null, 'A neblina passa entre vocês dois e volta.'),
        fala('a figura de capuz', 'Agora responde.')
      ],
      continua:true},
     {texto:'Não responder e ir embora.',
      ef:{registrar:'Não respondeu às perguntas da figura de capuz, em Lavender.'},
      resultado:[
-       'Você não responde. Ele não insiste — ele claramente não insiste desde 1991.',
-       fala('a figura de capuz', 'Tudo bem. Eu anoto isso também.'),
-       'Ele escreve alguma coisa curta e fecha o caderno.',
+       'Você não responde. Ele não insiste.',
+       fala('a figura de capuz', 'Também é uma resposta.', 'baixo'),
+       'Você dá três passos e olha pra trás. O banco está vazio, e o cascalho em volta dele continua liso.',
        'A pergunta fica com você mais tempo do que tinha direito.'
      ]}
   ]
@@ -619,7 +624,7 @@ lavender:[
   id:'lav_juniper_segunda', encadeado:true,
   titulo:'A segunda pergunta',
   texto:[
-    'Ele vira a página. A letra da página nova é a mesma da anterior, e a da anterior é a mesma de 1991.',
+    'Ele vira a página. A nova já tem a data de hoje escrita no alto, com a mesma letra, e você não viu ele escrever.',
     fala('a figura de capuz', 'Você tem uma lembrança ruim. Uma que volta sem ser chamada.'),
     fala('a figura de capuz', 'Se desse pra tirar ela de você, inteira, sem sobrar nada — você deixava tirar?')
   ],
@@ -632,13 +637,14 @@ lavender:[
      resultado:['Ele anota. Uma palavra só, você vê de cabeça pra baixo: "vai".', fala('a figura de capuz', 'A última.')]},
     {texto:'"Eu não sei."', segue:'lav_juniper_terceira',
      ef:{registrar:'Disse à figura de capuz que não sabia se deixava tirar uma lembrança ruim.'},
-     resultado:['Ele anota mais do que você disse. Bem mais.', fala('a figura de capuz', 'Essa é a resposta mais comum e a mais honesta. A última.')]}
+     resultado:['Ele anota mais do que você disse. Bem mais.', fala('a figura de capuz', 'Essa é a mais honesta. A última.')]}
   ]
 },
 {
   id:'lav_juniper_terceira', encadeado:true,
   titulo:'A terceira pergunta',
   texto:[
+    'Em algum andar da Torre, um Gastly ri baixinho. A neblina engrossa em volta do banco e deixa só vocês dois dentro.',
     fala('a figura de capuz', 'Alguém que você gosta te pede emprestada a coisa de que você mais gosta.'),
     fala('a figura de capuz', 'Diz que devolve. Você acredita. Só que vai demorar anos, e quando voltar não vai ser do mesmo jeito.'),
     fala('a figura de capuz', 'Você empresta?')
@@ -647,32 +653,32 @@ lavender:[
     {texto:'"Não empresto."',
      ef:{juniper:'guarda', registrar:'Disse à figura de capuz que não emprestava.'},
      resultado:[
-       'Ele escreve, sublinha uma vez e fecha o caderno, e prende a caneta na espiral.',
-       fala('a figura de capuz', 'Pronto. É só isso.'),
+       'Ele escreve, sublinha uma vez e fecha o caderno.',
+       fala('a figura de capuz', 'Pronto.'),
        d=>fala(d.jogador.nome, 'Isso serve pra quê?'),
        fala('a figura de capuz', 'Pra nada. Eu anoto.'),
-       fala('a figura de capuz', 'Quando você tiver quatro insígnias, aparece aqui. É só isso.', 'baixo'),
-       'Ele te dá o número antes de você perguntar se ele tem número.'
+       fala('a figura de capuz', 'Quando tiver quatro insígnias, volta aqui. Eu te acho.', 'baixo'),
+       'A neblina passa na frente do banco. Quando ela passa, o banco está vazio — e o PokéNav vibra no seu bolso com um número que você não lembra de ter recebido.'
      ]},
     {texto:'"Empresto."',
      ef:{juniper:'passa', registrar:'Disse à figura de capuz que emprestava.'},
      resultado:[
-       'Ele escreve, sublinha uma vez e fecha o caderno, e prende a caneta na espiral.',
-       fala('a figura de capuz', 'Pronto. É só isso.'),
+       'Ele escreve, sublinha uma vez e fecha o caderno.',
+       fala('a figura de capuz', 'Pronto.'),
        d=>fala(d.jogador.nome, 'Isso serve pra quê?'),
        fala('a figura de capuz', 'Pra nada. Eu anoto.'),
-       fala('a figura de capuz', 'Quando você tiver quatro insígnias, aparece aqui. É só isso.', 'baixo'),
-       'Ele te dá o número antes de você perguntar se ele tem número.'
+       fala('a figura de capuz', 'Quando tiver quatro insígnias, volta aqui. Eu te acho.', 'baixo'),
+       'A neblina passa na frente do banco. Quando ela passa, o banco está vazio — e o PokéNav vibra no seu bolso com um número que você não lembra de ter recebido.'
      ]},
     {texto:'"Depende de quem pede."',
      ef:{registrar:'Disse à figura de capuz que dependia de quem pedia.'},
      resultado:[
        'Ele escreve "depende" e fica olhando a palavra um tempo, como se ela fosse de outra pessoa.',
-       fala('a figura de capuz', 'Pronto. É só isso.'),
+       fala('a figura de capuz', 'Pronto.'),
        d=>fala(d.jogador.nome, 'Isso serve pra quê?'),
        fala('a figura de capuz', 'Pra nada. Eu anoto.'),
-       fala('a figura de capuz', 'Quando você tiver quatro insígnias, aparece aqui. É só isso.', 'baixo'),
-       'Ele te dá o número antes de você perguntar se ele tem número.'
+       fala('a figura de capuz', 'Quando tiver quatro insígnias, volta aqui. Eu te acho.', 'baixo'),
+       'A neblina passa na frente do banco. Quando ela passa, o banco está vazio — e o PokéNav vibra no seu bolso com um número que você não lembra de ter recebido.'
      ]}
   ]
 },

@@ -1324,6 +1324,15 @@ const Estado = {
         (d.nomesSabidos = d.nomesSabidos || {})['a figura de capuz'] = 'Sr. Juniper';
         d.flags.juniper_sem_capuz = true;
       }
+      /* a figura de capuz não fala mais em caderno setenta e um: a
+         lembrança de quem respondeu antes perde o número */
+      const capuz = d.npcs && d.npcs['a figura de capuz'];
+      if (capuz && Array.isArray(capuz.memorias)) capuz.memorias = capuz.memorias.map(m => {
+        const t = typeof m === 'string' ? m : (m && m.texto);
+        if (!t || !/caderno setenta e um/.test(t)) return m;
+        const novo = t.replace(/, no caderno setenta e um, página quatro\./, ', na neblina da porta do abrigo.');
+        return typeof m === 'string' ? novo : Object.assign({}, m, {texto:novo});
+      });
       /* a menina da licença se chamava Maren, como a Maren Kestrel */
       if (d.nomesSabidos && d.nomesSabidos['a menina do formulário'] === 'Maren') d.nomesSabidos['a menina do formulário'] = 'Ida';
       /* a medalha da vitrine de Celadon é da filha do Sr. Wells, o do

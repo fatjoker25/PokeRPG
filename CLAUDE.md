@@ -476,6 +476,10 @@ recua pro fundo e **fica lá a luta inteira** (`.treinador-fundo`); depois a
 bola do seu sai do canto de baixo, abre, e ele nasce branco e ganha cor.
 Rosto de treinador mora em `js/data/treinadores.js` (Showdown, 80×80) —
 quem não tem equivalente honesto fica sem, e a abertura pula o treinador.
+A exceção é a figura de capuz: nenhum treinador do acervo é alguém
+encapuzado, e o rosto dela é pixel art nossa, no mesmo 80×80, gerada
+por `python3 ferramentas/desenhar-capuz.py` (capa, sombra no lugar do
+rosto, as mãos no caderno e a barra sumindo em névoa).
 
 Golpe de status que faz outra coisa além de mexer em número tem
 `ef.acao` e mora em `Batalha.acaoEspecial` (Protect, Substitute, Reflect,
@@ -694,6 +698,15 @@ texto concorda com ele: `depois` pode ser função do Pokémon que saiu
 de índole em Lavender (`lav_a_pergunta_do_curador` e as duas `encadeado`
 que seguem por `segue:`; `indoleDoJuniper` soma `ef.juniper`, empate fica
 com a primeira) e entrega o Pokémon com quatro insígnias, ainda de capuz.
+De capuz ele é **aparição**: a neblina baixa e ele está no banco, sem
+passo no cascalho; ela passa e o banco está vazio; a ligação não cai,
+acaba; na entrega a cadeira fica vazia. Ele chama você pelo nome que
+você não disse (quem explica é ele, na ligação do nome: ainda lê o
+registro do PC) e **nunca diz há quanto tempo faz aquilo nem pra
+quantos** — número de caderno, ano e contagem de gente saíram a
+pedido, porque matavam o mistério na primeira fala. Rosto ele não
+mostra nem depois do nome: `a figura de capuz`, `Figura de capuz` e
+`Sr. Juniper` são o mesmo `trainers/capuz`, desenhado aqui.
 Só depois, na ligação `cha_juniper_capuz`, ele diz o nome
 (`Nomes.apresentar`) e por que se esconde — e essa e qualquer fala dele
 depois sabem qual Pokémon você recebeu (`pokemonDoJuniper`, pela marca
