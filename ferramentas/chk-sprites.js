@@ -40,6 +40,26 @@ for (const f of fora.map(x => x.slice(1, -1))){
 const tr = fs.readFileSync(path.join(raiz, 'js/data/treinadores.js'), 'utf8');
 const rostos = new Set([...tr.matchAll(/'((?:gym_leaders|elite|trainers|overworld)\/[a-z_]+)'/g)].map(m => m[1]));
 for (const r of rostos) if (!fs.existsSync(path.join(raiz, base, 'npcs', r + '.png'))) falhas.push(`rosto ${r}.png não existe em ${base}npcs/`);
+/* as fotos da ficha: todas em npcs/jogador/, e nenhum NPC com a mesma
+   cara — nem apontando pra lá, nem com o mesmo arquivo noutra pasta */
+const insc = fs.readFileSync(path.join(raiz, 'js/data/inscricao.js'), 'utf8');
+const fichaFotos = [...((insc.match(/const RETRATOS_DA_FICHA = \{([\s\S]*?)\};/) || [0, ''])[1]).matchAll(/'([a-z_]+)'/g)].map(m => m[1]);
+if (!fichaFotos.length) falhas.push('RETRATOS_DA_FICHA vazio ou não encontrado');
+for (const a of fichaFotos) if (!fs.existsSync(path.join(raiz, base, 'npcs/jogador', a + '.png'))) falhas.push(`foto da ficha ${a}.png não existe em ${base}npcs/jogador/`);
+for (const r of rostos) if (r.startsWith('jogador/')) falhas.push(`${r} é foto do jogador e aparece como rosto de NPC`);
+if (/'jogador\//.test(tr)) falhas.push('treinadores.js aponta rosto de NPC pra npcs/jogador/');
+{
+  const crypto = require('crypto');
+  const hash = f => crypto.createHash('md5').update(fs.readFileSync(f)).digest('hex');
+  const dosNpcs = new Map();
+  const andar = d => { for (const n of fs.readdirSync(d)){ const p = path.join(d, n);
+    if (fs.statSync(p).isDirectory()){ if (n !== 'jogador') andar(p); } else if (n.endsWith('.png')) dosNpcs.set(hash(p), path.relative(raiz, p)); } };
+  andar(path.join(raiz, base, 'npcs'));
+  for (const a of fichaFotos){
+    const f = path.join(raiz, base, 'npcs/jogador', a + '.png');
+    if (fs.existsSync(f) && dosNpcs.has(hash(f))) falhas.push(`foto da ficha ${a}.png é o mesmo arquivo de ${dosNpcs.get(hash(f))}`);
+  }
+}
 const ins = src.match(/const INSIGNIA_ARQ = \{([\s\S]*?)\};/);
 const insArq = ins ? [...ins[1].matchAll(/:'([a-z]+)'/g)].map(m => m[1]) : [];
 for (const a of insArq) if (!fs.existsSync(path.join(raiz, base, 'badges', a + '_badge.png'))) falhas.push(`insígnia ${a}_badge.png não existe`);
@@ -63,7 +83,7 @@ for (const a of sdArq) if (!fs.existsSync(path.join(raiz, base, 'animations/show
 const fxSrc = fs.readFileSync(path.join(raiz, 'js/ui/efeitos.js'), 'utf8');
 const fxArq = [...new Set([...fxSrc.matchAll(/'((?:physical|special|stat|status)_[a-z_0-9]+)'/g)].map(m => m[1]))];
 for (const a of fxArq) if (!fs.existsSync(path.join(raiz, base, 'animations/moves', a + '.png'))) falhas.push(`efeito ${a}.png não existe em animations/moves/`);
-linhas.push(`  ícones de item ${itemArq.length} · bolsos ${bolsos.length} · rostos ${rostos.size} · insígnias ${insArq.length} · discos de TM ${tmArq.length} · gritos ${gritos} · efeitos de golpe ${fxArq.length} · animação do Showdown ${sdArq.length}`);
+linhas.push(`  ícones de item ${itemArq.length} · bolsos ${bolsos.length} · rostos ${rostos.size} · fotos da ficha ${fichaFotos.length} · insígnias ${insArq.length} · discos de TM ${tmArq.length} · gritos ${gritos} · efeitos de golpe ${fxArq.length} · animação do Showdown ${sdArq.length}`);
 
 if (falhas.length){
   console.log('FALHAS:'); falhas.forEach(f => console.log(' - ' + f));

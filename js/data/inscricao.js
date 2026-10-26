@@ -69,11 +69,34 @@ const CIDADES_DA_FICHA = {
   Indigo:   'O Planalto: a Liga mora na sua rua.'
 };
 
-/* o retrato do cartão: rosto de treinador, pelo gênero da ficha */
+/* A foto do cartão. Rostos jovens — quem sai de casa tem quinze anos,
+   então nada de criança —, de jeitos e tons de pele diferentes, que
+   só o jogador usa: moram em sprites_nds/npcs/jogador/ e nenhum NPC
+   tem a mesma cara, senão o rival ou o moço da rua aparecem com a
+   sua. Protagonista dos jogos também não entra. A lista do gênero da
+   ficha vem primeiro e é dela que sai a foto sorteada; a do outro
+   fica a um toque ("Mais rostos"), pra quem quiser. */
+const PASTA_DOS_RETRATOS = 'jogador/';
 const RETRATOS_DA_FICHA = {
-  Homem:  ['lucas', 'youngster', 'camper', 'backpacker', 'cyclist', 'schoolkid', 'ace_trainer', 'punk_guy'],
-  Mulher: ['lass', 'picnicker', 'backpacker_f', 'cyclist_f', 'schoolkid_f', 'ace_trainer_f', 'battle_girl', 'punk_girl']
+  Homem:  ['viajante', 'urbano', 'patinador', 'colecionador', 'terno', 'trilheiro', 'roqueiro', 'chamativo',
+           'lutador', 'mistico', 'piloto', 'naturalista', 'durao', 'criador', 'corredor', 'ciclista'],
+  Mulher: ['aventureira', 'animada', 'urbana', 'atleta', 'estudante', 'elegante', 'trilheira', 'punk',
+           'gotica', 'lutadora', 'dancarina', 'modelo', 'artista', 'aviadora', 'patinadora', 'ciclista_f']
 };
+/* o nome de cada foto, pra quem lê a tela com leitor (e no toque longo) */
+const ROTULO_DO_RETRATO = {
+  viajante:'viajante de mochila', urbano:'urbano de boné', patinador:'patinador', colecionador:'colecionador',
+  terno:'de terno', trilheiro:'trilheiro', roqueiro:'roqueiro', chamativo:'de óculos escuros', lutador:'lutador de quimono',
+  mistico:'místico', piloto:'piloto', naturalista:'naturalista de rede', durao:'durão de jaqueta', criador:'criador',
+  corredor:'corredor', ciclista:'ciclista',
+  aventureira:'aventureira de boné', animada:'animada', urbana:'urbana de jaqueta', atleta:'atleta de agasalho',
+  estudante:'estudante', elegante:'elegante', trilheira:'trilheira', punk:'punk', gotica:'gótica', lutadora:'lutadora',
+  dancarina:'dançarina', modelo:'modelo', artista:'artista', aviadora:'aviadora', patinadora:'patinadora', ciclista_f:'ciclista'
+};
+/* foto que a ficha aceita: qualquer uma das duas listas */
+function retratoDaFicha(arq){
+  return !!arq && (RETRATOS_DA_FICHA.Homem.includes(arq) || RETRATOS_DA_FICHA.Mulher.includes(arq));
+}
 
 /* a cor da mochila que sai de casa com você: chaves de CORES_MOCHILA */
 const MOCHILAS_DA_FICHA = ['bege', 'preta', 'branca', 'vermelha', 'azul', 'verde', 'amarela', 'roxa', 'rosa', 'laranja', 'cinza', 'marrom'];

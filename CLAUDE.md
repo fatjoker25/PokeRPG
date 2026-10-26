@@ -1201,6 +1201,19 @@ não dava afinidade nenhuma. Hoje:
   rosto de `RETRATOS_DA_FICHA`, no cartão e na Ficha por
   `retratoDoJogador`) são só aparência.
 
+**A foto é só de quem joga.** As 32 fotos (16 por gênero, de jeitos e
+tons de pele diferentes) moram em `sprites_nds/npcs/jogador/`
+(`PASTA_DOS_RETRATOS`) e nenhum NPC tem a mesma cara — senão o rival ou
+o moço da rua aparecem com a sua. Todas jovens, nenhuma criança (quem
+sai de casa tem quinze anos), e nada de protagonista dos jogos. A lista
+do gênero vem primeiro e é dela que sai o sorteio; a outra fica a um
+toque ("Mais rostos", `c.maisRostos`), e qualquer foto serve a qualquer
+ficha (`retratoDaFicha`): a escolhida de propósito fica quando o gênero
+muda, a sorteada sai. Cada foto tem nome em `ROTULO_DO_RETRATO`, pra
+leitor de tela. Save velho com `trainers/…` continua valendo.
+`chk-sprites` confere que cada foto existe e que nenhuma é arquivo de
+NPC; `chk-telas` abre os "Mais rostos" e escolhe um de lá.
+
 Aparência e roupa continuam texto livre, com sugestão sorteada (o dado ao
 lado do campo). Save de antes da inscrição continua sendo lido por
 palavra (`rumoDe`, `perfilDoJogador`, `corNaDescricao`). O `chk-telas`

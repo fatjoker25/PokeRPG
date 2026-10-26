@@ -441,7 +441,7 @@ const UI = {
       cidade:'Pallet', tracos:[], tracoLivre:'', forte:null,
       meta:null, frase:'', fraseMexida:false,
       gostos:{lugares:[], tipos:[], dex:[]}, desgostos:{lugares:[], tipos:[], dex:[]},
-      aparencia:'', vestimenta:'', mochila:null, retrato:null, corCartao:'azul',
+      aparencia:'', vestimenta:'', mochila:null, retrato:null, retratoEscolhido:false, maisRostos:false, corCartao:'azul',
       casaNome:'', casaQuem:'', inicial:'classico', ritmo:'fiel'
     };
     const estrelas = Array.from({length:22}, () =>
@@ -563,7 +563,9 @@ const UI = {
       case 'genero': {
         if (c.genero === ds.v) return;
         c.genero = ds.v;
-        if (c.retrato && !RETRATOS_DA_FICHA[c.genero].includes(c.retrato)) c.retrato = null;
+        /* a foto escolhida de propósito fica (qualquer rosto serve a qualquer
+           ficha); a que veio de sorteio sai, e o próximo sorteio é do gênero novo */
+        if (c.retrato && (!c.retratoEscolhido || !retratoDaFicha(c.retrato))) c.retrato = null;
         if (!c.fraseMexida && c.meta) this.crFraseDoRumo();
         return refaz('voce', 'jeito', 'rumo', 'visual', 'casa');
       }
@@ -582,7 +584,8 @@ const UI = {
         return refaz('rumo');
       }
       case 'mochila': c.mochila = c.mochila === ds.v ? null : ds.v; return refaz('visual');
-      case 'retrato': c.retrato = ds.v || null; return refaz('visual');
+      case 'retrato': c.retrato = ds.v || null; c.retratoEscolhido = !!c.retrato; return refaz('visual');
+      case 'maisRostos': c.maisRostos = !c.maisRostos; return refaz('visual');
       case 'cartao': c.corCartao = ds.v; return refaz('visual');
       case 'casaQuem': c.casaQuem = c.casaQuem === ds.v ? '' : ds.v; return refaz('casa');
       case 'inicial': c.inicial = ds.v; return refaz('casa');
@@ -684,7 +687,7 @@ const UI = {
       title="${this.esc(rotulo)}" aria-label="${this.esc(rotulo)}">${svgIcone('dado')}</button>`;
   },
   crRetratoImg(arq, cls){
-    return `<img class="${cls || 'cr-sprite'}" src="${caminhoNPC('trainers/' + arq)}" alt="" onerror="this.remove()">`;
+    return `<img class="${cls || 'cr-sprite'}" src="${caminhoNPC(PASTA_DOS_RETRATOS + arq)}" alt="" onerror="this.remove()">`;
   },
 
   crSec_voce(c){
@@ -786,11 +789,20 @@ const UI = {
 
   crSec_visual(c){
     const e = s => this.esc(s);
-    const retratos = RETRATOS_DA_FICHA[c.genero].map(arq => `<button type="button" class="cr-op cr-retrato${c.retrato === arq ? ' sel' : ''}"
-        data-acao="retrato" data-v="${arq}" data-foco="retrato-${arq}" aria-pressed="${c.retrato === arq}" aria-label="Retrato ${arq.replace(/_f$/, '').replace(/_/g, ' ')}">
-        ${this.crRetratoImg(arq)}</button>`).join('')
+    /* a lista do gênero da ficha primeiro; a outra abre no "Mais rostos",
+       e já vem aberta se a foto escolhida é de lá */
+    const foto = arq => `<button type="button" class="cr-op cr-retrato${c.retrato === arq ? ' sel' : ''}"
+        data-acao="retrato" data-v="${arq}" data-foco="retrato-${arq}" aria-pressed="${c.retrato === arq}"
+        aria-label="Foto: ${e(ROTULO_DO_RETRATO[arq] || arq)}" title="${e(maiuscula(ROTULO_DO_RETRATO[arq] || arq))}">
+        ${this.crRetratoImg(arq)}</button>`;
+    const outra = RETRATOS_DA_FICHA[c.genero === 'Homem' ? 'Mulher' : 'Homem'];
+    const abertos = c.maisRostos || outra.includes(c.retrato);
+    const retratos = RETRATOS_DA_FICHA[c.genero].map(foto).join('')
       + `<button type="button" class="cr-op cr-retrato cr-sem${!c.retrato ? ' sel' : ''}" data-acao="retrato" data-v="" data-foco="retrato-sem" aria-pressed="${!c.retrato}">
-        <span class="cr-monograma">${e((c.nome.trim() || '?').charAt(0).toUpperCase())}</span><span class="cr-op-nota">Sem foto</span></button>`;
+        <span class="cr-monograma">${e((c.nome.trim() || '?').charAt(0).toUpperCase())}</span><span class="cr-op-nota">Sem foto</span></button>`
+      + (abertos ? outra.map(foto).join('') : '');
+    const mais = `<button type="button" class="cr-mais" data-acao="maisRostos" data-foco="mais-rostos" aria-expanded="${abertos}">
+        ${abertos ? 'Menos rostos' : `Mais rostos (${outra.length})`}</button>`;
     const mochilas = MOCHILAS_DA_FICHA.map(k => `<button type="button" class="cr-cor${c.mochila === k ? ' sel' : ''}" data-acao="mochila" data-v="${k}" data-foco="mochila-${k}"
         aria-pressed="${c.mochila === k}" title="${e(maiuscula(k))}"><i style="background:${CORES_MOCHILA[k]}"></i><span>${e(maiuscula(k))}</span></button>`).join('');
     const cartoes = Object.entries(CORES_CARTAO).map(([k, cor]) => `<button type="button" class="cartao-cor${c.corCartao === k ? ' sel' : ''}"
@@ -804,7 +816,7 @@ const UI = {
         <div class="cr-cores" role="group" aria-label="Cor da mochila">${mochilas}</div>
         <p class="cr-nota">É a cor da mochila na tela, até você comprar outra bolsa.</p></div>
       <div class="cr-campo"><span class="cr-rot">Foto do cartão</span>
-        <div class="cr-grade cr-retratos" role="group" aria-label="Foto do cartão">${retratos}</div></div>
+        <div class="cr-grade cr-retratos" role="group" aria-label="Foto do cartão">${retratos}</div>${mais}</div>
       <div class="cr-campo"><span class="cr-rot">Cor do cartão</span>
         <div class="cartao-cores cr-cartoes" role="group" aria-label="Cor do cartão">${cartoes}</div></div>`;
   },
@@ -911,7 +923,7 @@ const UI = {
       inicial:c.inicial, ritmo:c.ritmo,
       nascimento:{dia:c.nasc.dia, mes:c.nasc.mes},
       casaNome:c.casaNome.trim(), casaQuem:c.casaQuem,
-      forte:c.forte, retrato:c.retrato ? 'trainers/' + c.retrato : null,
+      forte:c.forte, retrato:c.retrato ? PASTA_DOS_RETRATOS + c.retrato : null,
       corMochila:c.mochila, corCartao:c.corCartao
     };
   },

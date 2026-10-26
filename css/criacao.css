@@ -138,6 +138,12 @@ body.na-criacao #app{max-width:1120px;padding-block:18px 40px}
 .cr-monograma{display:grid;place-items:center;width:52px;height:52px;border-radius:50%;
   background:rgba(255,255,255,.08);font-size:24px;font-weight:800;color:var(--cr-fraco)}
 .cr-sem{gap:6px}
+/* "Mais rostos": a outra lista de fotos, a um toque, sem empurrar a tela */
+.cr-mais{margin-top:10px;padding:6px 12px;border-radius:8px;border:1px dashed var(--cr-borda);
+  background:transparent;color:var(--cr-fraco);font:inherit;font-size:13px;cursor:pointer;
+  transition:border-color .15s, color .15s}
+.cr-mais:hover{border-color:var(--cr-borda-forte);color:var(--cr-texto)}
+.cr-mais:focus-visible{outline:2px solid var(--cr-amarelo);outline-offset:2px}
 .cr-sem .cr-op-nota{text-align:center}
 .cr-iniciais{display:flex;align-items:flex-end;gap:0;height:46px;margin:-4px 0 2px -6px;color:var(--cr-fraco)}
 .cr-iniciais img{width:60px;height:45px;image-rendering:pixelated}

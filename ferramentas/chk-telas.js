@@ -173,6 +173,10 @@ const SUSPEITO = [
       for (const [k] of LUGARES_DA_FICHA) UI.crAcao('gosto', {lista:'gostos', cat:'lugares', v:k});
       for (const k of MOCHILAS_DA_FICHA) UI.crAcao('mochila', {v:k});
       for (const r of RETRATOS_DA_FICHA[c.genero]) UI.crAcao('retrato', {v:r});
+      /* os outros rostos, a um toque: abre, escolhe um de lá e fecha */
+      UI.crAcao('maisRostos', {});
+      UI.crAcao('retrato', {v:RETRATOS_DA_FICHA[c.genero === 'Homem' ? 'Mulher' : 'Homem'][0]});
+      UI.crAcao('maisRostos', {});
       for (const k of Object.keys(CORES_CARTAO)) UI.crAcao('cartao', {v:k});
       for (const q of PARENTESCOS) UI.crAcao('casaQuem', {v:q});
       for (const k of STATUS_DO_TREINADOR.map(s => s[0])) UI.crAcao('forte', {v:k});
@@ -186,6 +190,9 @@ const SUSPEITO = [
     await tentar(`inscrição/${g}/ficha`, () => UI.modalFicha('perfil'));
     const ok = await page.evaluate(() => !!(Estado.dados && Estado.j && Estado.j.meta && Estado.j.forte && Estado.j.status[Estado.j.forte] === 2));
     if (!ok){ onde = `inscrição/${g}`; anota('inscrição', 'a ficha não chegou inteira no Estado (meta, forte ou status)'); }
+    /* a foto sai da pasta do jogador, nunca de rosto de NPC */
+    const foto = await page.evaluate(() => Estado.j && Estado.j.retrato);
+    if (foto && !/^jogador\//.test(foto)){ onde = `inscrição/${g}`; anota('inscrição', `a foto da ficha saiu de ${foto}, fora de npcs/jogador/`); }
   }
 
   /* ---------- janelas ---------- */
