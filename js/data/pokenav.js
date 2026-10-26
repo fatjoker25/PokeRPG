@@ -624,76 +624,6 @@ const CONTATOS = [
   }
 },
 
-{
-  /* ============================================================
-     O CURADOR — ele pergunta uma coisa sobre você e some
-     A resposta decide o que ele te manda meses depois. Ele nunca
-     fala em Pokémon, nem na pergunta, nem na entrega. De capuz, ele é
-     aparição: a linha chia e acaba sem desligar, ele está na sala antes
-     de você e a cadeira fica vazia depois. Não diz há quanto tempo faz
-     isso nem pra quantos: quem conta o resto é a ligação do nome.
-     ============================================================ */
-  id:'curador', tipo:'figura', nome:'Figura de capuz', falaComo:'a figura de capuz', papel:'curador de coisa que ninguém guarda', cidade:'Lavender',
-  requer:d=>!!d.flags.a_pergunta_do_curador,
-  oferece:['missao'],
-  missao:{
-    rotulo:'Perguntar por que ele anotou aquilo',
-    rotuloEntrega:'Ligar e dizer que você chegou em Lavender',
-    dica:'Quatro insígnias. Depois, Lavender.',
-    pedido:[
-      'A linha chia antes de alguém atender. Ninguém diz alô.',
-      fala('a figura de capuz', 'Eu não anotei pra nada. Eu anoto.'),
-      fala('a figura de capuz', 'Quatro insígnias. Depois, o abrigo de Lavender.'),
-      d=>fala(d.jogador.nome, 'Pra quê?'),
-      fala('a figura de capuz', 'Pra eu te devolver uma coisa que não é minha.', 'baixo'),
-      fala('a figura de capuz', 'Não pergunta o que é. Se eu falar, estraga.'),
-      'A ligação não cai. Ela acaba, do jeito que a neblina acaba: você olha e já não tem ninguém do outro lado.'
-    ],
-    objetivo:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 4,
-    entregue:d=>{
-      /* as três respostas de meses atrás decidem o que chega */
-      const guarda = indoleDoJuniper(d) === 'guarda';
-      return [
-        'No fundo do abrigo do Sr. Fuji, uma porta que você nunca tinha visto está aberta. Lá dentro, uma estante de cadernos sem etiqueta e uma vela acesa pra ninguém.',
-        'Você não ouviu ele entrar, e a sala só tem uma porta. Ele está lá, de capuz, de costas pra você. Não tira o capuz pra te receber, e você entende que não vai tirar.',
-        fala('a figura de capuz', 'Três perguntas. Três respostas.', null, 'Ele abre o caderno na página certa sem procurar.'),
-        fala('a figura de capuz', 'Eu não li uma por uma. Eu li pra que lado elas caíam.'),
-        d=>fala('a figura de capuz', guarda ? 'Você fica com as coisas. Com o que chega, com o que dói, com o que te pedem.' : 'Você deixa as coisas irem. O que chega, o que dói, o que te pedem.'),
-        fala('a figura de capuz', 'Eu não escolho o que dar. As respostas escolhem.'),
-        guarda
-          ? 'Ele volta com uma Pokébola velha, dessas de antes do padrão atual, com o lacre da Liga de 1989 ainda intacto.'
-          : 'Ele volta com uma Pokébola velha, dessas de antes do padrão atual, com o lacre já rompido e um pedaço de fita no lugar.',
-        guarda
-          ? fala('a figura de capuz', 'Esse aqui ficou. Ficou porque ninguém veio buscar e porque eu não devolvi pro sistema.', 'baixo')
-          : fala('a figura de capuz', 'Esse aqui passou por quatro pessoas antes de você. Nenhuma delas ficou com ele, e todas as quatro fizeram certo.', 'baixo'),
-        fala('a figura de capuz', 'Não abre aqui. Abre na estrada.'),
-        'Você prende a Pokébola no cinto e levanta os olhos. A vela continua acesa. A cadeira está vazia.'
-      ];
-    },
-    recompensa:d=>{
-      const guarda = indoleDoJuniper(d) === 'guarda';
-      /* guardar → Haunter (fica com você, e não vira Gengar sem troca)
-         passar adiante → Kadabra (a linha dele só se completa passando por outra mão) */
-      const dex = guarda ? 93 : 64;
-      const p = criarPokemon(dex, Math.max(22, 18 + Estado.dados.insignias.length * 2), {
-        moral: 55,
-        historia: guarda
-          ? 'Veio do abrigo de Lavender, numa Pokébola lacrada desde 1989. Ninguém foi buscar.'
-          : 'Veio do abrigo de Lavender. Passou por quatro pessoas antes de você, e nenhuma delas ficou.'
-      });
-      p.doJuniper = true;
-      const onde = Estado.adicionar(p);
-      Estado.marcar(guarda ? 'ganhou_do_curador_guardando' : 'ganhou_do_curador_passando');
-      return [{tipo:'pokemon', texto:`${nomeExib(p)} (Nv ${p.nivel}) saiu da Pokébola.${notaDestino(onde)}`},
-              {tipo:'eco', texto: guarda
-                ? 'Coisa que fica, fica como está.'
-                : 'Tem coisa que só se completa passando por outra mão.'}];
-    },
-    rep:{eixo:'bom', delta:2, motivo:'Voltou em Lavender porque tinha prometido, sem saber pra quê'},
-    marca:'o_curador_entregou'
-  }
-},
-
 /* ── gente da estrada que a história deixou na agenda ──────
    Quem gostou de você o bastante passa o número. A condição é a
    opinião dela (o que você fez na cena), e a pessoa só entra depois
@@ -1032,12 +962,6 @@ function todosContatos(){
     typeof contatosDasTrocas === 'function' ? contatosDasTrocas() : []);
 }
 function contatoPorId(id){ return todosContatos().find(c => c.id === id) || null; }
-function pokemonDoJuniper(d){
-  const todos = [...(d.time || []), ...(d.pc || [])].filter(p => p && !p.morto);
-  return todos.find(p => p.doJuniper)
-      || todos.find(p => [93, 94, 64, 65].includes(p.dex) && /abrigo de Lavender/.test(p.historia || ''))
-      || null;
-}
 
 function textoContato(c, campo){
   /* A agenda não descreve ninguém: quem é quem está na conversa em que
@@ -1186,95 +1110,6 @@ const CHAMADAS = [
      ef:{rep:{eixo:'bom',delta:1,motivo:'Foi honest{o|a} sobre não querer falar'}},
      resultado:[d=>fala(cadastra(d), 'Então não fala.'),
                 d=>fala(cadastra(d), 'Eu ligo de novo em duas semanas e a gente fala de outra coisa. Pode ser?')]}
-  ]
-},
-{
-  id:'cha_curador_lembra',
-  de:'curador',
-  /* vale tanto pra lembrar quanto pra cutucar quem já podia ter ido */
-  cond:d=>Estado.temNumero('curador')
-          && ['fazendo','entregar'].includes(Estado.faseDaMissao('curador'))
-          && d.insignias.filter(i=>i!=='Título de Campeão').length >= 2,
-  peso:2,
-  falas:d=>[
-    'O PokéNav toca com o número dele, e do outro lado só tem um chiado, como vento num corredor comprido.',
-    fala('a figura de capuz', 'Não desliga.'),
-    fala('a figura de capuz', 'Eu reli as suas respostas. Continuam as mesmas.'),
-    fala('a figura de capuz', 'É a coisa mais óbvia do mundo, e mesmo assim me surpreende.', 'baixo'),
-    fala('a figura de capuz', 'Quatro insígnias. Lavender.')
-  ],
-  escolhas:[
-    {texto:'Perguntar se alguém já mudou de resposta.',
-     ef:{rep:{eixo:'bom',delta:1,motivo:'Perguntou à figura de capuz se alguém já tinha mudado de resposta'},
-         flag:'sabe_dos_que_mudaram'},
-     resultado:[
-       fala('a figura de capuz', 'Já voltaram pra mudar.'),
-       fala('a figura de capuz', 'Sempre a primeira. Sempre de "guardar" pra "passar adiante".'),
-       fala('a figura de capuz', 'Nunca o contrário. Nunca.', 'frio'),
-       fala('a figura de capuz', 'Eu não sei o que fazer com isso.'),
-       'O chiado volta, e com ele a linha fica vazia.'
-     ]},
-    {texto:'"Eu vou aparecer."',
-     ef:{rep:{eixo:'bom',delta:1,motivo:'Confirmou à figura de capuz que ia aparecer'}},
-     resultado:[fala('a figura de capuz', 'Todo mundo fala isso.'), fala('a figura de capuz', 'Quem aparece sou eu.', 'baixo')]}
-  ]
-},
-{
-  id:'cha_juniper_capuz',
-  de:'curador',
-  /* alguns dias depois da entrega, o capuz cai — e ele sabe o que te deu */
-  /* vale mesmo se o presente morreu ou saiu do time: o nome ele deve igual */
-  cond:d=>Estado.temNumero('curador') && d.flags.o_curador_entregou && !d.flags.juniper_sem_capuz,
-  peso:4,
-  falas:d=>{
-    const p = pokemonDoJuniper(d);
-    /* o presente morreu: ele vê no registro do PC, como vê o resto */
-    const morto = !p && (d.cemiterio || []).slice().reverse().find(x => x.doJuniper
-      || ([93, 94, 64, 65].includes(x.dex) && /abrigo de Lavender/.test(x.historia || '')));
-    const abre = [
-      'O número que liga é o do abrigo. A voz é a do capuz, mas sem o pano no meio.',
-      d=>{ Nomes.apresentar('a figura de capuz'); Estado.marcar('juniper_sem_capuz');
-           return fala('Sr. Juniper', 'Juniper. É o meu nome. Eu fiquei devendo ele pra você.'); },
-      fala('Sr. Juniper', 'Eu cuidava deste abrigo antes do Sr. Fuji. Em oitenta e nove a Liga mandou recolher o que estava aqui dentro, e o que ninguém veio buscar era pra voltar pro sistema.'),
-      fala('Sr. Juniper', 'Eu não devolvi. Quem fica com coisa recolhida não pode ter rosto. Por isso o capuz.', 'baixo')
-    ];
-    if (!p) return abre.concat(morto
-      ? [fala('Sr. Juniper', `E ${pron(morto).o} ${nomeExib(morto)}… eu vi no registro. Eu sinto.`, 'baixo'),
-         fala('Sr. Juniper', `${pron(morto).Ele} foi com você até onde deu. É mais do que a maioria aqui dentro teve.`, 'baixo')]
-      : [fala('Sr. Juniper', 'O que eu te dei não está mais com você. Eu vi no registro do PC.'),
-         fala('Sr. Juniper', 'Não vou perguntar. Cada um passa do jeito que dá.', 'baixo')]);
-    const n = nomeExib(p), e = pron(p);
-    return abre.concat([
-      fala('Sr. Juniper', p.dex === 93 || p.dex === 94
-        ? `E ${e.o} ${n}? ${e.Ele} é dos que ficam. Eu sabia pelas suas respostas, e ${e.ele} sabia antes de mim.`
-        : `E ${e.o} ${n}? ${e.Ele} é dos que passam. Eu sabia pelas suas respostas, e ${e.ele} sabia antes de mim.`),
-      ...(evoluiPorTroca(p.dex)
-        ? [fala('Sr. Juniper', `Se um dia você quiser que ${e.o} ${n} complete, manda ${e.ele} pelo PC do Centro pro abrigo. ${e.Ele} passa pela minha mão e volta no mesmo dia, outr${e.o}.`)]
-        : [fala('Sr. Juniper', `${e.Ele} já completou. Eu vi no registro do PC, eu ainda tenho acesso. ${p.nome}. Combina com você.`)])
-    ]);
-  },
-  escolhas:[
-    {texto:'Mandar pelo PC do Centro agora.',
-     cond:d=>{ const p = pokemonDoJuniper(d); return !!(p && evoluiPorTroca(p.dex)); },
-     ef:{executar:d=>{
-           const p = pokemonDoJuniper(d);
-           if (!p || !evoluiPorTroca(p.dex)) return [{tipo:'info', texto:'Não tem o que mandar.'}];
-           const antes = nomeExib(p), novo = evoluiPorTroca(p.dex);
-           evoluir(p, novo);
-           Estado.registrar(`Mandou ${antes} pelo PC até o abrigo de Lavender. Voltou ${p.nome}.`);
-           return [{tipo:'evolucao', texto:`${antes} passou pela mão do Sr. Juniper e voltou ${p.nome}. Ninguém sabe explicar por que a troca faz isso. Todo mundo já viu acontecer.`}];
-         },
-         npc:{nome:'a figura de capuz', opiniao:2, memoria:'Você mandou pela mão dele o Pokémon que ele te deu, pra completar.'},
-         rep:{eixo:'bom', delta:1, motivo:'Confiou de volta em quem confiou em você'}},
-     resultado:[fala('Sr. Juniper', 'Chegou. Volta já. Não abre a Pokébola em lugar fechado.', 'baixo')]},
-    {texto:'Deixar como está.',
-     cond:d=>!!pokemonDoJuniper(d),
-     ef:{npc:{nome:'a figura de capuz', opiniao:1, memoria:'Você preferiu deixar o Pokémon que ele te deu como estava.'}},
-     resultado:[fala('Sr. Juniper', 'Também é uma resposta. Eu anoto.')]},
-    {texto:'"Por que eu?"',
-     ef:{npc:{nome:'a figura de capuz', opiniao:1, memoria:'Você perguntou por que ele escolheu você.'}},
-     resultado:[fala('Sr. Juniper', 'Porque você respondeu as três. Quase ninguém responde as três.'),
-                fala('Sr. Juniper', 'E porque você voltou.', 'baixo')]}
   ]
 },
 {

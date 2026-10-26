@@ -1306,7 +1306,8 @@ const Estado = {
       /* o rival guardou o nome de quando ainda não tinha um */
       if (d.rivais && d.rivais.fuchsia) d.rivais.fuchsia.nome = 'Rory';
       /* o homem da pergunta de Lavender era gravado como o Fabre da
-         Comissão: o que é dele (o caderno setenta e um) vai pro Sr. Juniper */
+         Comissão: o que é dele (o caderno setenta e um) vai pro nome velho
+         dele, e o bloco de baixo leva tudo pra figura de capuz */
       const fab = d.npcs && d.npcs['Curador Fabre'];
       if (fab && !d.npcs['Sr. Juniper']){
         const dele = (fab.memorias || []).filter(m => /caderno setenta e um/.test(String(m && m.texto || m)));
@@ -1316,14 +1317,20 @@ const Estado = {
           d.npcs['Sr. Juniper'] = {nome:'Sr. Juniper', opiniao:2, memorias:dele};
         }
       }
-      /* o homem das perguntas virou a figura de capuz: quem já sabia o
-         nome dele continua sabendo */
-      if (d.npcs && d.npcs['Sr. Juniper'] && !d.npcs['a figura de capuz']){
-        d.npcs['a figura de capuz'] = Object.assign(d.npcs['Sr. Juniper'], {nome:'a figura de capuz'});
+      /* o homem das perguntas é a figura de capuz, e ela não tem nome que
+         se diga nem PokéNav: quem tinha ouvido "Juniper" na ligação, ou
+         gravado o número dela, fica só com a figura e com o que lembra */
+      if (d.npcs && d.npcs['Sr. Juniper']){
+        const jun = d.npcs['Sr. Juniper'];
+        const capuz = d.npcs['a figura de capuz'] || {nome:'a figura de capuz', opiniao:0, memorias:[]};
+        capuz.opiniao = Math.max(capuz.opiniao || 0, jun.opiniao || 0);
+        capuz.memorias = (capuz.memorias || []).concat(jun.memorias || []);
+        d.npcs['a figura de capuz'] = capuz;
         delete d.npcs['Sr. Juniper'];
-        (d.nomesSabidos = d.nomesSabidos || {})['a figura de capuz'] = 'Sr. Juniper';
-        d.flags.juniper_sem_capuz = true;
       }
+      if (d.nomesSabidos) delete d.nomesSabidos['a figura de capuz'];
+      if (d.pokenav && d.pokenav.contatos) delete d.pokenav.contatos.curador;
+      if (d.pokenav && d.pokenav.missoes) delete d.pokenav.missoes.curador;
       /* a figura de capuz não fala mais em caderno setenta e um: a
          lembrança de quem respondeu antes perde o número */
       const capuz = d.npcs && d.npcs['a figura de capuz'];

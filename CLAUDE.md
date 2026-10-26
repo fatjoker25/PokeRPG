@@ -692,28 +692,36 @@ texto concorda com ele: `depois` pode ser função do Pokémon que saiu
 (`meu => …pron(meu)…`), e a ligação do contato resolve `{ele}`, `{o}`,
 `{dele}` pelos sexos guardados na troca (`deuGenero`, `recebeuGenero`).
 
-**Haunter e Kadabra só vêm do Sr. Juniper.** Ele aparece primeiro como
-**a figura de capuz** (rótulo `'a figura de capuz'`, que recusa o nome em
-`RECUSAM_O_NOME`; contato `curador` com `falaComo`), faz as três perguntas
-de índole em Lavender (`lav_a_pergunta_do_curador` e as duas `encadeado`
-que seguem por `segue:`; `indoleDoJuniper` soma `ef.juniper`, empate fica
-com a primeira) e entrega o Pokémon com quatro insígnias, ainda de capuz.
-De capuz ele é **aparição**: a neblina baixa e ele está no banco, sem
-passo no cascalho; ela passa e o banco está vazio; a ligação não cai,
-acaba; na entrega a cadeira fica vazia. Ele chama você pelo nome que
-você não disse (quem explica é ele, na ligação do nome: ainda lê o
-registro do PC) e **nunca diz há quanto tempo faz aquilo nem pra
-quantos** — número de caderno, ano e contagem de gente saíram a
-pedido, porque matavam o mistério na primeira fala. Rosto ele não
-mostra nem depois do nome: `a figura de capuz`, `Figura de capuz` e
-`Sr. Juniper` são o mesmo `trainers/capuz`, desenhado aqui.
-Só depois, na ligação `cha_juniper_capuz`, ele diz o nome
-(`Nomes.apresentar`) e por que se esconde — e essa e qualquer fala dele
-depois sabem qual Pokémon você recebeu (`pokemonDoJuniper`, pela marca
-`p.doJuniper`). É ele também quem completa a evolução por troca: mandar
-pelo PC do Centro pra mão dele. Nenhuma troca dá Haunter, Kadabra ou
-alguém da linha deles, e a troca não oferece Abra nem Gastly. Ele não é o
-Curador Fabre da Comissão — são duas pessoas.
+**Haunter e Kadabra só vêm da figura de capuz.** Ela é quase
+aparição (rótulo `'a figura de capuz'`, que recusa o nome em
+`RECUSAM_O_NOME` e não tem nome fixo): a neblina baixa e ela está no
+banco, sem passo no cascalho; a neblina passa e o banco está vazio.
+Fala como quem pensa em voz alta, e **não conta nada de si** — nem
+nome, nem de onde vem, nem há quanto tempo, nem quantas insígnias. Te
+chama pelo nome que você não disse, e isso fica sem explicação. Faz as
+três perguntas de índole em Lavender (`lav_a_pergunta_do_curador` e as
+duas `encadeado` que seguem por `segue:`; `indoleDoJuniper` soma
+`ef.juniper`, empate fica com a primeira) e some.
+
+**Ela não tem PokéNav.** Quem chama de volta é a **intuição**
+(`js/story/intuicao.js`): com quatro insígnias (`INSIGNIAS_DA_INTUICAO`,
+que o jogo não diz) a tela do mapa avisa que a intuição pede pra
+voltar a Lavender (`Intuicao.talvez`, aviso `tipo:'intuicao'`, a lua),
+uma vez e depois um lembrete por capítulo; em Lavender aparece "Seguir
+a intuição até a porta do abrigo" (`Intuicao.afazeres`), que abre a
+entrega em pessoa (`lav_capuz_volta`, `Intuicao.entregar`). Dois
+capítulos depois (`CAPS_ATE_COMPLETAR`), com o Pokémon dela no cinto, a
+intuição volta: ela segura a Pokébola e devolve evoluído
+(`lav_capuz_completa`, `Intuicao.completar`) — é a troca que completa
+Haunter e Kadabra, e o `chk-obtencao` conta com ela pra Gengar e
+Alakazam. Recusar é resposta, e ela não volta mais. O presente se acha
+por `pokemonDoJuniper` (a marca `p.doJuniper`). Os nomes de código
+(`juniper`, `curador`) ficaram de quando ela tinha nome e telefone; o
+save velho perde o nome, o contato e a missão na carga. Rosto ela não
+mostra: `a figura de capuz` e `Figura de capuz` são o `trainers/capuz`,
+desenhado aqui. Nenhuma troca dá Haunter, Kadabra ou alguém da linha
+deles, e a troca não oferece Abra nem Gastly. Ela não é o Curador
+Fabre da Comissão — são duas pessoas.
 
 Evento com `encadeado:true` não entra no sorteio do lugar: só chega por
 `segue:` de outra escolha.
@@ -741,8 +749,8 @@ Os que não vêm do mato:
   `lugares`;
 - **evolução por troca** só acontece com quem troca com você: o Arlo
   (Túnel da Rocha) entrega Machamp, a Dara (Rota 9) entrega Golem, os
-  dois com `trocaEvolui`; o Sr. Juniper completa pelo PC só o que ele
-  mesmo deu. Diglett e Dugtrio saem nas duas pontas da caverna deles
+  dois com `trocaEvolui`; a figura de capuz completa, na neblina de
+  Lavender, só o que ela mesma deu. Diglett e Dugtrio saem nas duas pontas da caverna deles
   (Rotas 2 e 11), que não é lugar do mapa.
 
 Espécie nova numa tabela, troca nova ou fonte nova: roda o verificador.

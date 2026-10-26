@@ -578,7 +578,7 @@ const Trocas = {
     const comuns = id => (ENCONTROS[id] || []).filter(([x, peso]) => peso >= 10 && DEX[x] && !DEX[x].lendario
       && !FOSSEIS.includes(x) && !DEX[x].preEvo).map(([x]) => x);
     const aqui = comuns(cidade);
-    /* Haunter e Kadabra só vêm do Sr. Juniper: troca nenhuma dá alguém da linha deles */
+    /* Haunter e Kadabra só vêm da figura de capuz: troca nenhuma dá alguém da linha deles */
     const SO_DO_JUNIPER = [63, 64, 65, 92, 93, 94];
     const outros = Object.keys(ENCONTROS).filter(k => k !== cidade).flatMap(comuns)
       .filter(x => !aqui.includes(x) && !SO_DO_JUNIPER.includes(x));

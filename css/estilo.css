@@ -433,6 +433,7 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
 .aviso.item,.aviso.pokemon,.aviso.cura,.aviso.insignia{border-left-color:var(--bom);color:var(--bom)}
 .aviso.dano,.aviso.morte,.aviso.gameover{border-left-color:var(--perigo);color:var(--perigo)}
 .aviso.mundo{border-left-color:var(--destaque-2);color:var(--destaque-2);font-style:italic}
+.aviso.intuicao{border-left-color:#b39ddb;color:#b39ddb;font-style:italic}
 .aviso.liga{border-left-color:var(--liga);color:var(--liga)}
 .aviso.perigo{border-left-color:var(--perigo);color:var(--perigo);font-weight:600}
 .aviso.insignia{

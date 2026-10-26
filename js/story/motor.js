@@ -149,7 +149,7 @@ const Historia = {
     }
     const avisos = [];
     if (ef.flag) { (Array.isArray(ef.flag)?ef.flag:[ef.flag]).forEach(f => Estado.marcar(f)); }
-    /* a entrevista do Sr. Juniper: cada resposta pesa pra um lado */
+    /* a entrevista da figura de capuz: cada resposta pesa pra um lado */
     if (ef.juniper){
       const d = Estado.dados, j = d.juniper = d.juniper || {guarda:0, passa:0};
       j[ef.juniper] = (j[ef.juniper] || 0) + 1;
@@ -409,7 +409,7 @@ function repDaOpiniao(ef){
   return out;
 }
 
-/* A índole que o Sr. Juniper anotou: guarda (fica com o que chega, não
+/* A índole que a figura de capuz anotou: guarda (fica com o que chega, não
    larga a lembrança, não empresta) ou passa (o contrário). Empate fica
    com a primeira resposta; save de antes das três perguntas, com a flag. */
 function indoleDoJuniper(d){

@@ -76,8 +76,9 @@ const semPrecos = texto.replace(/^\s*'[^']+':\s*\d+,.*$/gm, '');
 const PEDRA_EXISTE = {};
 for (const nome of Object.keys(PEDRAS)) PEDRA_EXISTE[nome] = semPrecos.includes(`'${nome}'`);
 const pedraExiste = nome => PEDRA_EXISTE[nome];
-/* troca que evolui: só quem faz por você. O Sr. Juniper completa o
-   Pokémon que ele mesmo deu (Kadabra, Haunter); o resto vem pronto. */
+/* troca que evolui: só quem faz por você. A figura de capuz completa,
+   de novo na neblina de Lavender, o Pokémon que ela mesma deu (Kadabra,
+   Haunter: lav_capuz_completa, em intuicao.js); o resto vem pronto. */
 const TROCA_QUE_EVOLUI = new Set(
   (texto.match(/TROCA_QUE_EVOLUI_SERVICO\s*=\s*\[([\d,\s]*)\]/) || [, ''])[1].split(',').filter(Boolean).map(Number));
 [64, 93].forEach(d => TROCA_QUE_EVOLUI.add(d));

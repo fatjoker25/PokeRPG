@@ -17,6 +17,9 @@ const Exploracao = {
     if (typeof Jogo !== 'undefined' && Jogo.tocarAdiada) Jogo.tocarAdiada();
     /* o aniversário chega na primeira tela de mapa do dia */
     if (typeof Aniversario !== 'undefined' && Aniversario.pendente()) return Aniversario.festejar();
+    /* a intuição avisa quando chega a hora, sem dizer qual é a hora */
+    const intu = typeof Intuicao !== 'undefined' ? Intuicao.talvez() : null;
+    if (intu) avisos = (avisos || []).concat([intu]);
     Estado.dados.modo = 'mundo';
     UI.limpar();
     UI.add(UI.topo());
@@ -411,6 +414,7 @@ const Exploracao = {
     if (acao.startsWith('barr_')) return Barreiras.fazer(acao.slice(5));
     if (acao.startsWith('idade_')) return PortasDaIdade.fazer(acao.slice(6));
     if (acao.startsWith('lab_'))  return Laboratorio.fazer(acao.slice(4));
+    if (acao.startsWith('intu_')) return Intuicao.fazer(acao.slice(5));
     if (acao === 'rede')          return Rede.tela();
     if (acao === 'esperar')       return this.esperar();
     if (acao.startsWith('posto_')){

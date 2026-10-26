@@ -37,7 +37,7 @@ const RECUSAM_O_NOME = {
   'a figura de capuz': () => [
     'O capuz não se mexe.',
     fala('a figura de capuz', 'Nome é pra quem precisa ser achado.'),
-    fala('a figura de capuz', 'Responde a pergunta. O resto vem depois.', 'baixo')
+    fala('a figura de capuz', 'Eu não preciso.', 'baixo')
   ],
   /* de frente, na lavanderia, ela tem o crachá virado e o envelope no
      colo; no telefone (a ligação do 19.04, a volta do 25.04), nenhum dos dois */
@@ -169,7 +169,6 @@ const NOMES_FIXOS = {
   'o fotógrafo do Jornal':     'Bastian Fern',
   'a tratadora da Associação': 'Mina Bray',
   'a brigadista de Fuchsia':   'Tess Calder',
-  'a figura de capuz':         'Sr. Juniper',
   /* a usina, no 10: diz o nome quando senta com você, quando você volta
      ao açude ou quando espera no portão */
   'o homem do boné':           'Sr. Edric',

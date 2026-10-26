@@ -82,6 +82,9 @@ const SUSPEITO = [
     const pd = Estado.pdex();
     for (let i = 1; i <= 251; i++){ pd.vistos[i] = true; if (i % 2) pd.catalogados[i] = true; }
     d.local = 'celadon';
+    /* respondeu a figura de capuz: com quatro insígnias, a intuição chama
+       de volta a Lavender (o aviso no mapa e a ação no lugar) */
+    d.flags.a_pergunta_do_curador = true;
     return JSON.stringify(Estado.dados);
   });
 

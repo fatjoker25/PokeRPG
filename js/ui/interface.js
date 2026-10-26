@@ -1024,7 +1024,7 @@ const UI = {
     if (typeof CAMPEAO !== 'undefined' && CAMPEAO && CAMPEAO.nome) n.add(CAMPEAO.nome);
     if (typeof RIVAIS_EXTRA !== 'undefined') por(RIVAIS_EXTRA);
     ['Ezra','Oak','Professor Oak','Bill','Dr. Fuji','Lance','Agatha','Bruno','Lorelei',
-     'Blue','Red','Fabre','Sr. Juniper','Nadia','Vernon','Aldous'].forEach(x => n.add(x));
+     'Blue','Red','Fabre','Nadia','Vernon','Aldous'].forEach(x => n.add(x));
     /* e todo nome que a história registra como gente que você conheceu */
     if (typeof CAPITULOS !== 'undefined')
       for (const cap of CAPITULOS)
@@ -1431,7 +1431,7 @@ const UI = {
     const m = /^(?:Recebeu|Perdeu)\s+\d+×\s+(.+?)\.?$/.exec(t);
     if (m && typeof caminhoItem === 'function' && caminhoItem(m[1])) return imgItem(m[1]);
     if (/confia mais em você|te olha diferente/.test(t)) return svgIcone('doar');
-    const POR_TIPO = {item:'itens', rep:'liga', cura:'cura', dano:'alerta', perigo:'alerta', gameover:'alerta',
+    const POR_TIPO = {intuicao:'lua', item:'itens', rep:'liga', cura:'cura', dano:'alerta', perigo:'alerta', gameover:'alerta',
       morte:'luto', pokemon:'bola', insignia:'ginasio', mundo:'mundo', liga:'liga', natureza:'olho',
       pokedex:'pokedex', evolucao:'brilho', rival:'lutar'};
     return svgIcone(POR_TIPO[a.tipo] || 'info');
@@ -5813,6 +5813,7 @@ const UI = {
       <div class="linha"><span class="k">Espécie não catalogada</span><span class="v">aparece como ???</span></div>
       <div class="linha"><span class="k">Troca</span><span class="v">cada pessoa troca uma vez só, e o que ela oferece é dela · depois passa o número, pra você ligar e perguntar do que foi com ela</span></div>
       <div class="linha"><span class="k">Troca que completa</span><span class="v">Kadabra, Machoke, Graveler e Haunter só evoluem numa troca · quem te entrega um deles numa troca entrega já evoluído</span></div>
+      <div class="linha"><span class="k">Intuição</span><span class="v">às vezes ela pede pra você voltar a um lugar · o aviso aparece quando chega a hora, e de novo uma vez por capítulo enquanto você não for · ela não diz por quê, nem quando é a hora</span></div>
       <div class="linha"><span class="k">Fóssil</span><span class="v">Fóssil de Hélice, Fóssil de Domo e Âmbar Antigo se acham vasculhando caverna, com Sorte crítica · o laboratório de Cinnabar revive um de cada vez, pronto em 24 horas do jogo, no nível 30</span></div>
       <div class="linha"><span class="k">Porygon</span><span class="v">não vive no mato · fica na vitrine do balcão de prêmios do cassino de Celadon, 9.800 ₽</span></div>
       <div class="linha"><span class="k">Apelido do seu</span><span class="v">quem chega por captura ou presente pode ganhar um, na hora (até 12 letras) · quem chega por troca fica com o nome que veio</span></div>

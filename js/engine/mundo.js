@@ -727,6 +727,8 @@ function afazeresDoLocal(){
   if (typeof Laboratorio !== 'undefined') Laboratorio.afazeres(id).forEach(x => lista.push(x));
   /* o que tem dia e hora marcados, se for agora */
   if (typeof Agenda !== 'undefined') Agenda.afazeres(id).forEach(x => lista.push(x));
+  /* o que a intuição trouxe você pra fazer aqui (a figura de capuz, em Lavender) */
+  if (typeof Intuicao !== 'undefined') Intuicao.afazeres(id).forEach(x => lista.push(x));
   /* deixar o tempo passar: é assim que se chega na hora marcada */
   lista.push({id:'esperar', titulo:'Esperar a hora passar'});
   return lista;
