@@ -947,7 +947,7 @@ c11_vim_desafiar:{
     '"Me deixa desafiar o ginásio."',
     'Ela ri de verdade dessa vez, e a risada é boa e dura dois segundos.',
     d=>`"Tem sete pessoas na minha calçada há ${c11_diasDeFila(d)} dias e você entra aqui, ouve tudo isso, e ainda pede insígnia."`,
-    d=>{ const n = (d.insignias || []).length; return n ? `"Eu tenho ${n} insígnia${n===1?'':'s'}."` : '"Eu não tenho nenhuma."'; },
+    d=>{ const n = (d.insignias || []).length; return n ? `"Eu tenho ${insigniasDitas(n)}."` : '"Eu não tenho nenhuma."'; },
     '"Eu sei quantas você tem. Eu sei sem perguntar, o que é chato, e eu peço desculpa por isso."',
     'Ela olha a arena vazia.',
     '"Não hoje. Eu não consigo separar, e se eu não consigo separar eu não consigo lutar sem te machucar de um jeito que não sai."',

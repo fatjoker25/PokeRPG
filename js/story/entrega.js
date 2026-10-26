@@ -726,7 +726,7 @@ c1e_mais_alguma_coisa:{
     d=>fala(d.jogador.nome, 'Tem mais alguma coisa que eu preciso saber?'),
     'Ele pensa de verdade antes de responder, o que não era obrigado.',
     fala('Célio', 'Três coisas, e nenhuma delas é sobre batalha.'),
-    fala('Célio', 'Primeira: licença. Sem licença você não é treinador, você é uma pessoa andando com um Pokémon. Centro Pokémon, balcão, formulário, fila. Faz isso hoje.'),
+    fala('Célio', 'Primeira: licença. Sem licença você não é {treinador|treinadora}, você é uma pessoa andando com um Pokémon. Centro Pokémon, balcão, formulário, fila. Faz isso hoje.'),
     d=>fala('Célio', `Segunda: comida. Ração na mochila, sempre. ${pronReservado(d).Ele} não vai pedir.`),
     'Uma pausa mais longa que as outras.',
     d=>{ const p = d.time[d.time.length-1] || d.time[0], e = p ? pron(p) : {ele:'ele', dele:'dele'}; return fala('Célio', `Terceira: ${e.ele} não sabe que você é nov{o|a} nisso. Pra ${e.ele} você já é a pessoa ${e.dele} desde agorinha, com currículo e tudo.`, 'baixo'); },

@@ -64,7 +64,7 @@ const CONTATOS = [
         fala(nomeCasa(), 'Eu vou ter que sentar. Espera. Espera um pouco.')
       ];
       if (n >= 6) return [
-        fala(nomeCasa(), `${n} insígnias. ${n}!`, 'grita'),
+        fala(nomeCasa(), `${cap1(insigniasDitas(n))}. ${cap1(porExtensoF(n))}!`, 'grita'),
         fala(nomeCasa(), 'A rua inteira já sabe. Eu contei pra rua inteira. Eu não me arrependo.', 'riso')
       ];
       if (n >= 1) return [

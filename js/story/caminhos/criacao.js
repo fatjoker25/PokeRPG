@@ -133,7 +133,7 @@ cn1_devolveu:{
   texto:[
     'A fresta da cerca, perto do buraco, dá pra passar um filhote de cada vez.',
     'Do lado de dentro, eles demoram pra andar. Depois correm todos pro mesmo lado, sem olhar pra trás, como quem conhece o caminho.',
-    fala('a tratadora da Associação', 'Lá dentro tem mato e não tem mãe. Aqui fora tem mãe nenhuma e tem caçador. Eu não sei qual é melhor.', 'baixo'),
+    fala('a tratadora da Associação', 'Lá dentro tem mato e não tem mãe. Aqui fora também não tem mãe, e tem caçador. Eu não sei qual é melhor.', 'baixo'),
     fala('a tratadora da Associação', 'Ninguém sabe. Quem diz que sabe tá mentindo ou vendendo.', 'baixo')
   ],
   escolhas:[

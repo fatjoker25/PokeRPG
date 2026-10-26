@@ -227,7 +227,7 @@ function falaRival(){
       ? '"EI!" Ezra atravessa a rua correndo e quase é atropelado por uma bicicleta. "Cara, eu vi o teu nome no quadro de um Centro Pokémon e gritei no meio do saguão."'
       : '"EI!" Ezra vem correndo pelo caminho e quase tropeça na própria mochila. "Cara, eu vi o teu nome no quadro de um Centro Pokémon e gritei no meio do saguão."');
     const ins = d.insignias.filter(i=>i!=='Título de Campeão').length;
-    if (ins) L.push(`"${ins === 1 ? 'Uma insígnia' : ins + ' insígnias'}. ${ins > 4 ? 'CARA.' : 'Já?'}"`);
+    if (ins) L.push(`"${cap1(insigniasDitas(ins))}. ${ins > 4 ? 'CARA.' : 'Já?'}"`);
     if (d.cemiterio.length) L.push(`Ele fica sério de repente. "Eu soube ${pron(d.cemiterio[0]).do} ${nomeExib(d.cemiterio[0])}." Ele não sabe o que fazer com as mãos. "Desculpa. Eu não sei falar essas coisas."`);
     L.push(placar === 'perdendo'
       ? '"Eu perdi as últimas. Eu sei. Mas eu vim de novo, e eu vou vir de novo depois dessa."'
@@ -243,14 +243,14 @@ function falaRival(){
   else if (arco === 'ressentido'){
     L.push('Ezra está parado no caminho, de braços cruzados, e não se mexe quando você passa. Ele espera você notar.');
     L.push('"Oi." Ele não sorri. "Eu tenho treinado."');
-    if (r.derrotas >= 2) L.push(`"${r.derrotas} a ${r.vitorias}. Eu sei de cor, não precisa falar."`);
+    if (r.derrotas >= 2) L.push(`"${cap1(porExtenso(r.derrotas))} a ${porExtenso(r.vitorias)}. Eu sei de cor, não precisa falar."`);
     L.push('"Não precisa ser simpático. Eu não vim pra isso."');
   }
 
   else if (arco === 'perseguidor'){
     L.push('Ezra está esperando no meio do caminho, e dá pra ver que ele está ali há horas.');
     L.push('"Eu não vim te desafiar."');
-    if (d.cemiterio.length >= 2) L.push(`"Eu contei. Você perdeu ${d.cemiterio.length}. Isso não é acidente duas vezes."`);
+    if (d.cemiterio.length >= 2) L.push(`"Eu contei. Você perdeu ${porExtenso(d.cemiterio.length)}. Isso não é acidente duas vezes."`);
     if (d.flags.trabalha_para_comissao || d.flags.conselheiro_da_comissao) L.push('"Eu li as atas. Tem o teu nome numa delas, numa lista de presença, do lado de gente que assina descarte."');
     if (d.flags.assumiu_a_rede) L.push('"Eu fui em Celadon. Eu vi o portão azul. Eu perguntei de quem era agora e eles falaram o teu nome."');
     if (Estado.rep.eixo==='ruim' && Estado.rep.ruim>=6) L.push(`"Tem gente com medo de você. Gente de verdade, não Pokémon."`);
@@ -263,7 +263,7 @@ function falaRival(){
       ? 'Ezra está sentado no chão do Centro Pokémon, de costas para a porta, e demora pra virar.'
       : 'Ezra está sentado no chão, encostado na mochila, e demora pra virar.');
     L.push('"Ah. Oi."');
-    L.push(`"Eu perdi pra você ${r.derrotas} vezes." Ele diz o número sem drama. "Eu parei de contar como derrota faz um tempo. Agora eu conto como… sei lá. Estatística."`);
+    L.push(`"Eu perdi pra você ${r.derrotas === 1 ? 'uma vez' : porExtensoF(r.derrotas) + ' vezes'}." Ele diz o número sem drama. "Eu parei de contar como derrota faz um tempo. Agora eu conto como… sei lá. Estatística."`);
     L.push('"Eu vou lutar se você quiser. Eu só não vou fingir que eu acho que dá."');
   }
 
@@ -276,7 +276,7 @@ function falaVitoriaRival(){   // você venceu
   const d = Estado.dados;
   if (arco === 'parceiro') return [
     'Ezra vem te abraçar antes de recolher o time, o que é a ordem errada e é muito a cara dele.',
-    `Ele conta nos dedos, em voz alta: "${r.derrotas + 1} pra você. Eu vou chegar em você um dia. Não hoje. Mas eu vou."`,
+    `Ele conta nos dedos, em voz alta: "${cap1(porExtensoF(r.derrotas + 1))} pra você. Eu vou chegar em você um dia. Não hoje. Mas eu vou."`,
     'Ele te dá metade do dinheiro que tem no bolso e não aceita não.'
   ];
   if (arco === 'ressentido') return [
@@ -300,7 +300,7 @@ function falaVitoriaRival(){   // você venceu
   ];
   return [
     'Ezra aperta a sua mão antes de recolher o time, do jeito que ele faz desde a Rota 1.',
-    `"${r.derrotas + 1} a ${r.vitorias}." Ele já está calculando outra coisa. "Da próxima eu troco a ordem do time."`
+    `"${cap1(porExtenso(r.derrotas + 1))} a ${porExtenso(r.vitorias)}." Ele já está calculando outra coisa. "Da próxima eu troco a ordem do time."`
   ];
 }
 
@@ -331,7 +331,7 @@ function falaDerrotaRival(){   // ele venceu
   ];
   return [
     'Ezra ganha e grita alto demais para o tamanho do lugar.',
-    `"${r.vitorias + 1} a ${r.derrotas}!" Ele aponta pra você. "ANOTA ISSO."`
+    `"${cap1(porExtenso(r.vitorias + 1))} a ${porExtenso(r.derrotas)}!" Ele aponta pra você. "ANOTA ISSO."`
   ];
 }
 
@@ -388,7 +388,7 @@ const RIVAIS_EXTRA = [
       `Lior está te esperando ${rivalNaCidade() ? 'na saída da cidade' : 'no meio do caminho'} com um caderno novo, de capa dura, e um Kabuto no ombro que não estava lá da outra vez.`,
       r.encontros === 0
         ? '"Eu larguei a pedreira." Ele ri sozinho. "E depois eu voltei nela. Na velha, a que fechou."'
-        : `"${r.derrotas} a ${r.vitorias}." Ele vira o caderno pra você. "Agora tem uma coluna de coisa que eu aprendi. Tá mais cheia que a outra."`,
+        : `"${cap1(porExtenso(r.derrotas))} a ${porExtenso(r.vitorias)}." Ele vira o caderno pra você. "Agora tem uma coluna de coisa que eu aprendi. Tá mais cheia que a outra."`,
       '"Tem fóssil na parede do fundo que ninguém tirava porque não dava lucro." Ele coça a cabeça do Kabuto. "Dava outra coisa."',
       '"Eu quero ganhar de você do jeito que você ganha. Bora."'
     ];
@@ -407,14 +407,14 @@ const RIVAIS_EXTRA = [
     const L = [`Lior está sentado ${rivalNaCidade() ? 'no meio-fio' : 'numa pedra do caminho'} com um Geodude do lado, e o Geodude está sentado exatamente do mesmo jeito que ele.`];
     L.push(r.encontros === 0
       ? '"Eu larguei." Ele diz isso antes de dizer oi. "Eu larguei a pedreira e a minha mãe ficou três semanas sem falar comigo, e eu larguei do mesmo jeito."'
-      : `"${r.derrotas} a ${r.vitorias}." Ele fala o placar como quem fala a hora. "Eu anoto num caderno. Eu sei que é ridículo."`);
+      : `"${cap1(porExtenso(r.derrotas))} a ${porExtenso(r.vitorias)}." Ele fala o placar como quem fala a hora. "Eu anoto num caderno. Eu sei que é ridículo."`);
     if (d.insignias.length >= 5) L.push('"Você tem insígnia demais pra estar perdendo tempo comigo e vem mesmo assim. Eu reparo nisso."');
     L.push('"Eu não tenho jeito bonito. Eu tenho pedra." Ele se levanta e o Geodude se levanta junto. "Bora."');
     return L;
   },
   vitoria:(d, r, arco) => arco === 'inspirado' ? [
     'O Onix dele deita no chão devagar, do jeito que pedra deita.',
-    `"${r.derrotas + 1}." Ele anota e mostra: do lado do número tem uma pedrinha desenhada. "É assim que eu marco as boas. Essa foi boa."`
+    `"${cap1(porExtensoF(r.derrotas + 1))} pra você." Ele anota e mostra: do lado do número tem uma pedrinha desenhada. "É assim que eu marco as boas. Essa foi boa."`
   ] : arco === 'desconfiado' ? [
     'Ele recolhe o time sem olhar o que caiu.',
     '"Você ganha." Ele já está indo embora. "Ganhar nunca foi o problema das pessoas que eu conheço."'
@@ -424,7 +424,7 @@ const RIVAIS_EXTRA = [
   ] : [
     'O último dele cai e faz barulho de coisa pesada caindo, porque é exatamente isso.',
     'Lior anota no caderno antes de recolher o time, o que é uma ordem esquisita de fazer as coisas.',
-    `"${r.derrotas + 1}." Ele fecha o caderno. "Tá certo. Eu volto."`,
+    `"${cap1(porExtensoF(r.derrotas + 1))} pra você." Ele fecha o caderno. "Tá certo. Eu volto."`,
     'Ele não parece abalado. Ele parece um cara que calculou quantas vezes ia perder antes de começar.'
   ],
   derrota:(d, r, arco) => arco === 'inspirado' ? [
@@ -439,7 +439,9 @@ const RIVAIS_EXTRA = [
   ] : [
     'Lior ganha, e a primeira coisa que ele faz é olhar em volta pra ver se alguém viu.',
     rivalNaCidade() ? 'Ninguém viu. Numa cidade inteira, ninguém olhou pra cá.' : 'Ninguém viu. Tem só vocês dois e o caminho.',
-    `"Uma." Ele mostra o caderno pra você, aberto, com a coluna certa. "Uma de ${r.vitorias + 1}. Eu queria que a minha mãe tivesse visto essa."`
+    r.vitorias === 0
+      ? '"Uma." Ele mostra o caderno pra você, aberto, na coluna dele. "A primeira. Eu queria que a minha mãe tivesse visto essa."'
+      : `"Mais uma." Ele mostra o caderno pra você, aberto, na coluna dele. "${cap1(porExtensoF(r.vitorias + 1))} na minha coluna. Eu queria que a minha mãe tivesse visto essa."`
   ]
 },
 {
@@ -653,7 +655,7 @@ const RIVAIS_EXTRA = [
     const L = ['Otto não está escondido. Ele está parado no meio do caminho com as mãos vazias, o que é pior do que se estivessem cheias.'];
     L.push(r.encontros === 0
       ? '"Você me custou dois." Ele não levanta a voz nenhuma vez. "Dois que eu tinha pegado com a minha mão."'
-      : `"${r.vitorias} a ${r.derrotas}." Ele sabe o placar de cor e você não gosta que ele saiba. "Eu tenho paciência. É o único talento que eu tenho de verdade."`);
+      : `"${cap1(porExtenso(r.vitorias))} a ${porExtenso(r.derrotas)}." Ele sabe o placar de cor e você não gosta que ele saiba. "Eu tenho paciência. É o único talento que eu tenho de verdade."`);
     if (d.cemiterio.length) L.push(`"E eu soube do seu." Ele diz isso sem prazer nenhum, o que é o mais desagradável de tudo. "${nomeExib(d.cemiterio[0])}. Então você também perde Pokémon. A gente é mais parecido do que você aceita."`);
     if (Estado.rep.eixo === 'bom' && Estado.rep.bom >= 5) L.push('"Todo mundo fala bem de você agora. Isso facilita a minha vida: quem é conhecido é fácil de achar."');
     L.push('"Eu não vou te machucar. Eu vou te cansar."');
@@ -682,7 +684,7 @@ const RIVAIS_EXTRA = [
     'Ele ganha e não comemora, porque comemorar seria admitir que era uma competição.',
     'Otto se agacha na sua frente, na altura dos seus olhos, e fala baixo.',
     '"A floresta não é sua." Ele se levanta. "Nunca foi."',
-    'Ele abre o bolso da frente da sua mochila na sua frente, tira o dinheiro que estava ali, e leva. É sobre poder fazer isso.'
+    'Ele abre o bolso da frente da sua mochila na sua frente, tira o dinheiro que estava ali, e leva. Não é pelo dinheiro. É pra você ver que ele pode.'
   ]
 },
 {
@@ -766,7 +768,7 @@ const RIVAIS_EXTRA = [
       naAgua
         ? 'Diana chega pela água, de pé nas costas de um Lapras, e levanta a mão quando te vê: um gesto curto, de quem não acena pra ninguém.'
         : 'Diana te vê de longe e levanta a mão, um gesto curto, de quem não acena pra ninguém.',
-      fala('Diana', `${r.derrotas} pra você.`, null, 'Ela não esconde o número.'),
+      fala('Diana', `${cap1(porExtensoF(r.derrotas))} pra você.`, null, 'Ela não esconde o número.'),
       fala('Diana', 'Eu treinei o Rhydon com isso escrito na parede do quarto.'),
       fala('Diana', 'Não pega leve comigo. Se você pegar leve, eu vou perceber e vou ficar ofendida.'),
       fala('Diana', 'Vem.')
@@ -774,7 +776,7 @@ const RIVAIS_EXTRA = [
     if (arco === 'desdem') return [
       'Diana está sentada nas costas do Rhydon e não desce quando você chega.',
       r.vitorias >= 2 && r.derrotas === 0
-        ? fala('Diana', `${r.vitorias} a 0. Eu achei que você fosse outra coisa.`)
+        ? fala('Diana', `${cap1(porExtenso(r.vitorias))} a zero. Eu achei que você fosse outra coisa.`)
         : fala('Diana', 'Você passou por mim fingindo que não viu. Eu vi.'),
       fala('Diana', 'Me prova que eu errei. Ou não prova, e eu paro de perder tempo com você.')
     ];
@@ -789,8 +791,9 @@ const RIVAIS_EXTRA = [
       : naRua
         ? 'Diana está sentada nas costas do Rhydon, deitado no meio da calçada como se a calçada fosse dele.'
         : 'Diana está sentada nas costas do Rhydon, deitado atravessado no caminho como se o caminho fosse dele.'];
-    L.push(fala('Diana', `${r.vitorias} pra mim, ${r.derrotas} pra você.`, null, 'Ela diz o placar como quem diz o preço de alguma coisa.'));
-    if (ins >= 6) L.push(fala('Diana', `${ins} insígnias, e ainda anda de cabeça baixa. Levanta isso.`));
+    const quantas = n => n ? porExtensoF(n) : 'nenhuma';
+    L.push(fala('Diana', `${cap1(quantas(r.vitorias))} pra mim, ${quantas(r.derrotas)} pra você.`, null, 'Ela diz o placar como quem diz o preço de alguma coisa.'));
+    if (ins >= 6) L.push(fala('Diana', `${cap1(insigniasDitas(ins))}, e ainda anda de cabeça baixa. Levanta isso.`));
     L.push(fala('Diana', 'Vem.'));
     return L;
   },

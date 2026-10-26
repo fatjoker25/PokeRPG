@@ -1800,7 +1800,7 @@ c7_ficou_ate_alta:{
     '"Eles não iam recusar," você diz, sem ter a menor ideia.',
     '"Eu sei que não." Ele olha o soro. "Mas eu achei. E aí eu subi seis andares sozinho numa torre."',
     'Ele passa a mão na cara.',
-    '"Quatro dias, cara. Ele bateu osso por quatro dias."'
+    '"Quatro dias, cara. Ele bateu o osso na pedra por quatro dias."'
   ],
   ef:{rep:{eixo:'bom',delta:3,motivo:'Ficou três dias esperando a alta de um desconhecido'},
       flag:'sabe_do_hideo', hp:-2, causa:'Três dias dormindo em Centro Pokémon',

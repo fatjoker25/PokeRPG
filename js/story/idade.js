@@ -28,10 +28,23 @@ function porExtenso(n){
   const U = ['zero','um','dois','três','quatro','cinco','seis','sete','oito','nove','dez','onze','doze','treze',
              'quatorze','quinze','dezesseis','dezessete','dezoito','dezenove'];
   const D = {2:'vinte', 3:'trinta', 4:'quarenta', 5:'cinquenta', 6:'sessenta', 7:'setenta', 8:'oitenta', 9:'noventa'};
+  const C = {1:'cento', 2:'duzentos', 3:'trezentos', 4:'quatrocentos', 5:'quinhentos', 6:'seiscentos',
+             7:'setecentos', 8:'oitocentos', 9:'novecentos'};
   n = Math.max(0, Math.round(n));
   if (n < 20) return U[n];
   if (n < 100){ const d = Math.floor(n / 10), u = n % 10; return D[d] + (u ? ' e ' + U[u] : ''); }
+  if (n === 100) return 'cem';
+  if (n < 1000){ const c = Math.floor(n / 100), r = n % 100; return C[c] + (r ? ' e ' + porExtenso(r) : ''); }
   return String(n);
+}
+/* o mesmo número no feminino: o que se conta é vitória, insígnia, vez
+   ("duas pra você", "vinte e uma espécies", "duzentas") */
+function porExtensoF(n){
+  return porExtenso(n).replace(/\bum$/, 'uma').replace(/\bdois$/, 'duas').replace(/entos\b/g, 'entas');
+}
+/* quantas insígnias, do jeito que se diz em voz alta */
+function insigniasDitas(n){
+  return n <= 0 ? 'nenhuma insígnia' : n === 1 ? 'uma insígnia' : porExtensoF(n) + ' insígnias';
 }
 
 /* a data de hoje no jogo, com ano */

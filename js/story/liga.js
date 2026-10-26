@@ -67,7 +67,7 @@ const ELITE4 = [
     'O Gengar se dissolve no ar e a música do palco para no meio de um compasso.',
     'Mandi acende a luz normal da sala, e sem o refletor ele parece dez anos mais velho.',
     '"Bom." Ele guarda as Pokébolas. "Sabe quantas pessoas descobriram que o truque era o truque e ganharam mesmo assim? Poucas."',
-    '"Última porta." Ele perde o tom de palco de vez. "Essa aí não tem substituto. Essa aí é o dono da placa."'
+    '"Última porta." Ele perde o tom de palco de vez. "Essa aí não tem substituto. Quem senta atrás dela é o dono da placa."'
   ]
 },
 {

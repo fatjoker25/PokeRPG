@@ -2661,7 +2661,7 @@ c8_porque_me_conta:{
   texto:[
     '"Por que o senhor tá me contando isso?"',
     'Ele olha em volta do salão inteiro, devagar, de um jeito que não é paranoia — é hábito.',
-    '"Porque você é ninguém."',
+    '"Porque você não é ninguém."',
     'Ele não está sendo cruel.',
     '"Se eu contar pra um jornalista, ele pede fonte e eu viro fonte. Se eu contar pra um advogado, ele quer documento e eu não tenho. Se eu contar pra Liga, eles anotam e arquivam."',
     'Ele encolhe os ombros.',

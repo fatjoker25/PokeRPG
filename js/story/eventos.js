@@ -438,7 +438,7 @@ vermilion:[
          registrar:'Carregou a caixa de gelo do porto com as duas, seiscentos metros.'},
      resultado:[
        'Você pega uma ponta e a mais velha reclama por cento e cinquenta metros e depois para de reclamar.',
-       'São seiscentos metros até a peixaria e vocês três fazem em uma parada só.',
+       'São seiscentos metros até a banca do cais e vocês três fazem em uma parada só.',
        fala('a mais velha das duas', 'Amanhã a gente não precisa.'),
        fala('a mais nova das duas', 'Amanhã é quinta. Quinta é a caixa grande.', null, 'A mais nova fala isso olhando pra você, não pra mãe.')
      ]},
@@ -449,7 +449,7 @@ vermilion:[
        fala('a mais nova das duas', 'O que vem na rede e não passa na balança da cooperativa.'),
        fala('a mais nova das duas', 'Coisa boa, mas fora do tamanho. A cooperativa não compra e manda devolver ao mar.'),
        fala('a mais velha das duas', 'Devolver ao mar coisa morta. É isso que eles mandam.', 'frio'),
-       fala('a mais nova das duas', 'A gente carrega na mão pra vender na peixaria pequena. Dá metade do preço e dá pra comer.')
+       fala('a mais nova das duas', 'A gente carrega na mão pra vender na banca pequena do cais. Dá metade do preço e dá pra comer.')
      ]},
     {texto:'Comprar a caixa inteira pelo preço da cooperativa.',
      cond:d=>d.jogador.dinheiro >= 4000,
@@ -718,7 +718,7 @@ lavender:[
      ]},
     {texto:'"Por que eu?"', continua:true, ef:{},
      resultado:[
-       fala('a figura de capuz', 'Porque você respondeu as três.'),
+       fala('a figura de capuz', 'Porque você respondeu às três.'),
        fala('a figura de capuz', 'E porque voltou sem saber por quê. Quem sabe por que volta, volta pra outra coisa.', 'baixo')
      ]}
   ]
@@ -1004,7 +1004,7 @@ fuchsia:[
        fala('o homem da Pokébola vazia', 'Eu venho aqui desde 1994. Essa foi a trigésima primeira vez.'),
        d=>fala(d.jogador.nome, 'E nunca pegou nada?'),
        fala('o homem da Pokébola vazia', 'Peguei doze. Todos os doze eu soltei no portão, na saída.', 'baixo'),
-       fala('o homem da Pokébola vazia', 'Eu não venho aqui pra levar. Eu venho aqui porque lá dentro eu consigo dormir de olho aberto, se é que você me entende.'),
+       fala('o homem da Pokébola vazia', 'Eu não venho aqui pra levar. Eu venho aqui porque lá dentro é o único lugar onde eu descanso acordado, se é que você me entende.'),
        'Você não entende, e ele não espera que você entenda.'
      ]},
     {texto:'Perguntar aos quarenta o que eles viram.',
@@ -1180,7 +1180,7 @@ cinnabar:[
      resultado:[
        fala('o barqueiro', 'A temperatura. Meio grau, talvez menos.'),
        fala('o barqueiro', 'Meio grau não é nada pra ninguém. Pra Magikarp é tudo.'),
-       fala('o barqueiro', 'Os Magikarp desceram. Tudo que caçava Magikarp na superfície sumiu. E o que comia esses sumiu atrás.'),
+       fala('o barqueiro', 'Os Magikarp desceram. Tudo que caçava Magikarp na superfície sumiu. E o que comia esses foi atrás deles.'),
        fala('o barqueiro', 'Em três meses. Três meses, {moço|moça}.', 'baixo'),
        'Ele olha pro vulcão. Você olha pro vulcão. Nenhum dos dois fala o que os dois estão pensando.'
      ]},
@@ -1192,7 +1192,7 @@ cinnabar:[
        fala('o barqueiro', 'Quatro lugares. Eu escrevi pra quatro lugares.'),
        fala('o barqueiro', 'Prefeitura, capitania, o instituto de Cinnabar e a Liga.'),
        d=>fala(d.jogador.nome, 'E?'),
-       fala('o barqueiro', 'A Liga respondeu.', null, 'Ele tira um papel dobrado do bolso da camisa, onde ele claramente carrega há um tempo.'),
+       fala('o barqueiro', 'A Liga respondeu.', null, 'Ele tira do bolso da camisa um papel dobrado, que claramente mora ali faz tempo.'),
        '**PREZADO SENHOR, SUA MANIFESTAÇÃO FOI REGISTRADA SOB O PROTOCOLO ABAIXO E ENCAMINHADA AO ÓRGÃO COMPETENTE.**',
        ()=>fala('o barqueiro', `Isso aqui foi em ${Calendario.MESES[(Calendario.hoje().mes + 8) % 12]}.`)
      ]},

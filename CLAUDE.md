@@ -1560,7 +1560,14 @@ não esconde e os dois ficam na tela; e quem a animação escala pelo
 - Fala de NPC: `fala(quem, diz, tom, nota)`. Tons válidos: `grita`, `baixo`, `riso`,
   `frio`. Frase inteira entre aspas numa linha de narração também vira balão sozinha.
 - Aspas de ironia ("análise jurídica") continuam narração porque não terminam em
-  pontuação — se for fala, termina a frase dentro das aspas.
+  pontuação — se for fala, termina a frase dentro das aspas. Fala com a
+  vírgula do lado de fora (`"Foi sorte", ele diz.`) vira balão pela
+  atribuição, e o balão ganha o ponto que a aspa não tinha.
+- Número que alguém **diz em voz alta** vai por extenso: placar no masculino
+  (`porExtenso`: "dois a um"), conta de vitória, vez e insígnia no feminino
+  (`porExtensoF`, `insigniasDitas`: "duas pra você", "uma insígnia"), com
+  `cap1` no começo da frase. Algarismo na fala ("1 a 2.", "Uma de 1.") lê
+  como erro de digitação; os rivais falavam assim até alguém reparar.
 - Quem fala numa aspa sem `fala()` é adivinhado, e a adivinhação alterna entre você
   e o outro. `"…", ele diz` / `"…" Ele concorda` manda no lado (ele/ela é o outro,
   você é você). Cena de conversa comprida ganha `falante:'…'` e, se precisar,

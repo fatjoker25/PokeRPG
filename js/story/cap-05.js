@@ -151,7 +151,7 @@ c5_ab_sem_comprar:{
 
 c5_ab_quem_entra:{
   texto:[
-    fala('a senhora da barraca', 'Cinco, seis por semana. Sobe muito menino da sua idade.'),
+    fala('a senhora da barraca', 'Cinco, seis por semana. Sobe muita gente da sua idade.'),
     'Ela dobra um pano no balcão enquanto fala, e dobrar o pano parece ser mais importante que a conversa.',
     fala('a senhora da barraca', 'Volta menos.'),
     d=>fala(d.jogador.nome, 'Volta menos?'),

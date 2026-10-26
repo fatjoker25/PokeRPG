@@ -157,7 +157,7 @@ const TREINADORES_ESTRADA = [
    oferece:['revanche','prova'],
    prova:{rotulo:'Contar quantas espécies você registrou',
      texto:d=>[
-       `"${Estado.contagemDex().catalogados} espécies catalogadas?" Você ouve ele digitando. "Isso dá uma curva interessante."`,
+       (c => `"${!c ? 'Nenhuma espécie catalogada' : c === 1 ? 'Uma espécie catalogada' : cap1(porExtensoF(c)) + ' espécies catalogadas'}?" Você ouve ele digitando. "Isso dá uma curva interessante."`)(Estado.contagemDex().catalogados),
        '"Continua. Eu tô fazendo um gráfico de você. No bom sentido."'
      ]}}},
 {id:'marcos', local:'monte_lua', classe:'Montanhista', arq:'hiker', artigo:'um', nome:'Marcos',
@@ -450,7 +450,7 @@ const TREINADORES_ESTRADA = [
    oferece:['revanche','prova'],
    prova:{rotulo:'Contar quantas insígnias você tem',
      texto:d=>{ const n = numInsignias(); return [
-       n >= 7 ? `"${n}? Você passou de mim. Vou precisar de um caderno novo."` : `"${n}. Anotado."`,
+       n >= 7 ? `"${cap1(porExtensoF(n))}? Você passou de mim. Vou precisar de um caderno novo."` : `"${n ? cap1(porExtensoF(n)) : 'Nenhuma'}. Anotado."`,
        '"A gente vai se ver lá em cima. Não pega leve comigo quando for a hora."'
      ]; }}}},
 {id:'robert', local:'rota13', classe:'Tratador de Voadores', arq:'bird_keeper', artigo:'um', nome:'Robert',

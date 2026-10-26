@@ -36,7 +36,7 @@ const GINASIOS = [
   depois:d=>[
     'Brock está varrendo a terra da linha pintada pra dentro, que é o que se faz depois de cada luta e ninguém vê.',
     numInsignias() >= 6
-      ? fala('Líder Brock', `${numInsignias()} insígnias. Eu ouço falar de você no rádio do Centro. Não deixa o rádio decidir quem você é.`)
+      ? fala('Líder Brock', `${cap1(insigniasDitas(numInsignias()))}. Eu ouço falar de você no rádio do Centro. Não deixa o rádio decidir quem você é.`)
       : fala('Líder Brock', 'Voltou pra ver se o chão ainda é de terra? É. Vai continuar sendo.'),
     d.cemiterio.length
       ? fala('Líder Brock', 'Você continua carregando quem ficou. Dá pra ver no jeito que você entra. Isso não é fraqueza, é memória.', 'baixo')
@@ -47,7 +47,7 @@ const GINASIOS = [
     'O chão do ginásio é de terra batida sobre pedra. Não tem arquibancada — tem uma linha pintada e um homem parado do outro lado dela.',
     numInsignias() === 0
       ? '"Primeira?" Brock nem espera resposta. "Então escuta: eu não pego leve. Se eu pegar leve, você morre na segunda cidade achando que era bom."'
-      : `"${numInsignias()} insígnias." Ele olha o seu cinto e ajusta alguma coisa na cabeça. "Então eu subo o meu time. Ginásio que não acompanha o desafiante é museu."`
+      : `"${cap1(insigniasDitas(numInsignias()))}." Ele olha o seu cinto e ajusta alguma coisa na cabeça. "Então eu subo o meu time. Ginásio que não acompanha o desafiante é museu."`
   ],
   vitoria:d=>[
     'O último cai de lado e o chão inteiro sente. A poeira leva um tempo pra assentar.',

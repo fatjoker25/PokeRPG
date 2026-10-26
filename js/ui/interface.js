@@ -1340,8 +1340,13 @@ const UI = {
         const rosto = quem && lado !== 'voce' ? this.retratoFala(quem, rotulo) : '';
         const lugar = rosto ? (repete ? '<span class="fala-retrato vazio" aria-hidden="true"></span>' : rosto) : '';
         /* '"Regra é regra," ele reclama.' — no balão a fala fecha com ponto;
-           a vírgula era da frase de fora, que continua embaixo, miúda */
-        const diz = (/,$/.test(pe.texto) && /^[,;]?\s*[a-zà-ú]/.test(depois)) ? pe.texto.replace(/,$/, '.') : pe.texto;
+           a vírgula era da frase de fora, que continua embaixo, miúda. Com
+           a vírgula do lado de fora ('"Foi sorte", ele diz.') a fala chega
+           sem pontuação nenhuma, e o ponto entra do mesmo jeito. */
+        const atribuida = /^[,;]?\s*[a-zà-ú]/.test(depois);
+        const diz = (/,$/.test(pe.texto) && atribuida) ? pe.texto.replace(/,$/, '.')
+                  : (/^[,;]/.test(depois) && atribuida && !/[.!?…—–:"”)]$/.test(pe.texto)) ? pe.texto + '.'
+                  : pe.texto;
         html += `<div class="fala${quem ? '' : ' anonima'}${meu}${repete ? ' segue' : ''}${lugar ? ' com-rosto' : ''}" data-voz="${fonte}"${meu ? '' : estiloCor(quem)}>`
               + lugar + (quem ? `<div class="fala-quem">${this.esc(quem)}</div>` : '')
               + `<p class="fala-diz">${this.esc(diz)}</p></div>`;

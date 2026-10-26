@@ -248,7 +248,7 @@ c4_senhora_concordou:{
   texto:[
     '"Não é a mesma coisa mesmo."',
     'Ela olha pra você pela primeira vez direito. Avalia. Decide alguma coisa.',
-    '"Você é o quê, treinador?"',
+    '"Você é o quê, {treinador|treinadora}?"',
     '"Faz três dias."',
     '"Três dias." Ela ri um riso curto, sem deboche. "Então você ainda não fez nada de que se arrepender. Aproveita."'
   ],
@@ -805,7 +805,7 @@ c4_teo_volta:{
       : 'Ele já mapeou a cidade em dois dias: onde o pão sai às cinco, qual banco não balança, qual rua pega vento.',
     '"Aquela casa ali tem um Growlithe que late em pedra. Em PEDRA, cara. Ele late pra pedra."',
     '"Isso não é mapear a cidade."',
-    '"É o melhor tipo de mapear a cidade."',
+    '"É o melhor jeito de mapear a cidade."',
     'Vocês passam pela praça. A poeira cinza cobre tudo num tom só e o Ezra escreve o próprio nome no capô de um carro com o dedo, e depois apaga com a manga, envergonhado.',
     '"Cara, sério agora." Ele baixa o tom sem parar de andar. "Você tá com medo?"',
     '"Do ginásio?"',
@@ -1102,7 +1102,7 @@ c4_menina:{
     '"{Treinador|Treinadora}?" ela pergunta, já escrevendo.',
     '"Sou."',
     '"De onde?" Você fala. Ela anota. "Quantas insígnias?"',
-    d=>d.insignias.length ? `"${d.insignias.length}." Ela anota sem reagir, o que é decepcionante.` : '"Nenhuma." Ela anota sem reagir, o que de alguma forma é pior do que se ela tivesse rido.',
+    d=>d.insignias.length ? `"${cap1(porExtensoF(d.insignias.length))}." Ela anota sem reagir, o que é decepcionante.` : '"Nenhuma." Ela anota sem reagir, o que de alguma forma é pior do que se ela tivesse rido.',
     '"Eu tô fazendo pesquisa," ela explica. "Sobre quantos passam e quantos voltam."'
   ],
   ef:{npc:{nome:'Ulla', opiniao:1, memoria:'A menina do caderno de Pewter. Anotou você na pesquisa dela.'}},

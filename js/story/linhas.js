@@ -769,7 +769,7 @@ ciencia:[
   escolhas:[
     {texto:`Aceitar o nome na capa.`,
      ef:{flag:'ln_ciencia_capa', rep:{eixo:'bom', delta:2, motivo:'Assinou um livro com o Professor Oak'}},
-     resultado:[fala('Professor Oak', `Ótimo. Agora você vai receber carta de gente dizendo que está errado. É a melhor parte.`, 'riso')]},
+     resultado:[fala('Professor Oak', `Ótimo. Agora você vai receber carta de gente dizendo que você está {errado|errada}. É a melhor parte.`, 'riso')]},
     {texto:`Pedir que ponha o nome do seu time nos agradecimentos em vez do seu na capa.`,
      ef:{flag:'ln_ciencia_agradecimentos', moral:3},
      resultado:[`Na última página, em letra pequena:`,

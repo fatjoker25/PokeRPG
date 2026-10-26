@@ -515,7 +515,7 @@ c15_cabine:{
     'Ele te vê chegando e continua escrevendo até terminar a linha, do jeito que faz quem anota coisa com horário.',
     fala('Xavi', 'Bom dia. Você é o quê?'),
     c15_eu('Como assim?'),
-    fala('Xavi', 'Você é ciclista, pesquisador, turista ou treinador? São os quatro que passam aqui.'),
+    fala('Xavi', 'Você é ciclista, {pesquisador|pesquisadora}, turista ou {treinador|treinadora}? São os quatro que passam aqui.'),
     c15_eu('{Treinador|Treinadora}.'),
     'Ele anota.',
     d=>fala('Xavi', `${c15_horaFalada(d)}. {Treinador|Treinadora}. {Um|Uma}.`),

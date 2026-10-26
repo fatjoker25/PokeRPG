@@ -1617,7 +1617,7 @@ c1_registro_anterior:{
     d=>fala(d.jogador.nome, 'O que acontece se ele tivesse registro anterior?'),
     d=>`${Cadastra(d)} não levanta os olhos da prancheta.`,
     d=>fala(cadastra(d), 'Aí eu teria que chamar o oficial de plantão. E o oficial ia perguntar como ele chegou em você. E você ia responder. E a partir da sua resposta o seu dia ia ser muito, muito diferente.', 'frio'),
-    d=>fala(cadastra(d), 'Boa sorte que não é o caso.', null, 'O carimbo desce com força.')
+    d=>fala(cadastra(d), 'Sorte sua que não é o caso.', null, 'O carimbo desce com força.')
   ],
   ef:{flag:'sabe_do_registro_anterior'},
   escolhas:[{texto:'Assinar.', vai:'c1_registro'}]
