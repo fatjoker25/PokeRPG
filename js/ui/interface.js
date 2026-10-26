@@ -135,7 +135,7 @@ function ehFinalDeVerdade(f){ return !ehEpilogo(f) && f.id !== 'fim'; }
 /* O desenho do título de cada janela (o mesmo de icones.js, na cor
    dele) e as janelas de ler, que ganham a folha do HUD: seção com
    losango, a conta em linhas agrupadas, o exemplo num cartão. */
-const ICONE_DA_JANELA = {regras:'dado', tutorial:'pergunta', ajustes:'engrenagem', rota:'mapa',
+const ICONE_DA_JANELA = {bolas:'bola', regras:'dado', tutorial:'pergunta', ajustes:'engrenagem', rota:'mapa',
   diario:'diario', finais:'liga', credencial:'credenciais', centro:'centro', time:'bola'};
 const JANELAS_DE_LER = new Set(['regras', 'tutorial', 'ajustes', 'rota', 'diario', 'finais', 'credencial']);
 
@@ -3107,14 +3107,35 @@ const UI = {
     f.appendChild(this.el(`<div class="pc-erro">${this.esc(motivo)}</div>`));
   },
 
+  /* Qual Pokébola: um cartão por bola, a bola da arena em tamanho
+     grande, quantas você tem e o selo dela em dados (a Master fecha sem
+     rolar). O selo é da bola, não do alvo: a conta com o Pokémon do
+     outro lado só sai no log, depois do arremesso. */
   menuBolas(){
     if (Batalha.ativo && Batalha.tipo === 'treinador')
       return this.modal('Pokébolas', '<p class="nada">Não se joga Pokébola no Pokémon de outro treinador.</p>');
-    const bolas = Object.keys(Estado.dados.itens).filter(n => (ITENS_INFO[n]||{}).tipo === 'bola');
+    const ORDEM = ['Poké Ball', 'Great Ball', 'Ultra Ball', 'Master Ball'];
+    const pos = n => { const i = ORDEM.indexOf(n); return i < 0 ? 99 : i; };
+    const bolas = Object.keys(Estado.dados.itens)
+      .filter(n => (ITENS_INFO[n]||{}).tipo === 'bola' && Estado.contaItem(n) > 0)
+      .sort((x, y) => pos(x) - pos(y));
     if (!bolas.length) return this.modal('Mochila', '<p class="nada">Você não tem nenhuma Pokébola.</p>');
-    this.modal('Qual Pokébola?', bolas.map(n =>
-      `<button class="escolha com-item" onclick="UI.fecharModal();Jogo.acaoBatalha({tipo:'bola',nome:'${n}'})">
-        ${imgItem(n)}${this.esc(n)} <span class="pd">×${Estado.contaItem(n)}</span></button>`).join(''));
+    const COR = {'Poké Ball':'#e5484d', 'Great Ball':'#3b82f6', 'Ultra Ball':'#e8b923', 'Master Ball':'#9b59d0', 'Safari Ball':'#5aa35a'};
+    this.modal('Qual Pokébola?', `<div class="bolas-menu">${bolas.map(n => {
+      const selo = n === 'Master Ball' ? 0 : (SELO_DA_BOLA[n] || SELO_DA_BOLA['Poké Ball']);
+      const dados = selo
+        ? `<span class="bola-dados" aria-hidden="true">${'<i></i>'.repeat(selo)}</span><b>${selo}d6</b>`
+        : `<span class="bola-sem">${svgIcone('brilho')}</span><b>fecha sem rolar</b>`;
+      const nm = n.replace(/'/g, "\\'");
+      return `<button class="bola-cartao" style="--bola:${COR[n] || '#e5484d'}" onclick="UI.fecharModal();Jogo.acaoBatalha({tipo:'bola',nome:'${nm}'})">
+        <span class="bola-arte"><img src="${spriteDaBola(n)}" alt=""></span>
+        <span class="bola-info">
+          <span class="bola-nome">${this.esc(n)}</span>
+          <span class="bola-selo">${dados}</span>
+        </span>
+        <span class="bola-qtd">×${Estado.contaItem(n)}</span>
+      </button>`;
+    }).join('')}</div>`, false, 'bolas');
   },
 
   menuItens(){
@@ -3482,31 +3503,60 @@ const UI = {
     this.rolarTopo();
   },
 
+  /* O chaveamento do torneio e da Conferência: três lutas até o troféu,
+     uma em cada quadro — quem está nela (rosto e nome), o time em
+     ícones (na Conferência ninguém mostra antes: a bola fica fechada),
+     o prêmio da rodada, e onde você está no caminho. */
+  chaveamentoHTML(rodadas, atual){
+    return `<ol class="chave">${rodadas.map((r, i) => {
+      const est = i < atual ? 'vencida' : i === atual ? 'agora' : 'depois';
+      const selo = {vencida:'Vencida', agora:'Agora', depois:'Depois'}[est];
+      const time = r.time
+        ? r.time.map(p => `<span class="chave-pk">${imgSprite(p, 'icone')}</span>`).join('')
+        : Array.from({length:r.tam || 3}, () => '<span class="chave-pk fechado"></span>').join('');
+      const itens = Object.entries(r.premio.itens || {}).map(([n, q]) =>
+        `<span class="chave-item" title="${this.esc(n)}">${imgItem(n)}<b>${q}×</b></span>`).join('');
+      return `<li class="chave-rodada ${est}">
+        <div class="chave-cab">${i === rodadas.length - 1 ? svgIcone('torneio') : ''}<span class="chave-nome-rodada">${this.esc(r.rodada)}</span><span class="chave-selo">${selo}</span></div>
+        <div class="chave-rosto">${r.rosto ? `<img src="${r.rosto}" alt="" onerror="this.remove()">` : ''}</div>
+        <div class="chave-quem">${this.esc(r.nome)}</div>
+        ${r.sub ? `<div class="chave-sub">${this.esc(r.sub)}</div>` : ''}
+        <div class="chave-time" role="img" aria-label="${r.time ? 'time de ' + r.time.length : 'time que só aparece na arena'}">${time}</div>
+        <div class="chave-premio"><span class="chave-din">${svgIcone('moeda')}${fmtDin(r.premio.dinheiro)} ₽</span>${itens}</div>
+      </li>`;
+    }).join('')}</ol>`;
+  },
+  /* os três botões de quem está no meio do chaveamento */
+  acoesDoChaveamento(nome, lutar, curar, desistir, rotDesistir){
+    return `<div id="escolhas" class="escolhas">
+        <button class="escolha luta com-icone" onclick="${lutar}">${svgIcone('lutar')}<span class="esc-rot">Entrar na arena — ${this.esc(nome)}</span></button>
+        <button class="escolha menu com-icone" style="--ac:#43b581" onclick="${curar}">${svgIcone('cura', '', '--ac:#43b581')}<span class="esc-rot">Usar os vinte minutos para curar o time</span></button>
+        <button class="escolha utilitaria com-icone" onclick="${desistir}">${svgIcone('bandeira')}<span class="esc-rot">${this.esc(rotDesistir)}</span></button>
+      </div>`;
+  },
+
   telaTorneio(){
     this.limpar();
     this.add(this.topo());
     const t = Jogo.torneioAtual;
     if (!t) return this.telaLiga();
-    const chave = t.adversarios.map((a,i) => {
-      const est = i < t.rodada ? '✓ vencido' : (i === t.rodada ? 'agora' : 'aguardando');
-      const cor = i < t.rodada ? 'var(--bom)' : (i === t.rodada ? 'var(--destaque)' : 'var(--texto-fraco)');
-      return `<div class="linha longa"><span class="k">${PREMIO_TORNEIO[i].rodada} · ${this.esc(a.nome)}
-        <span class="fraco">${a.time.map(p=>p.nome+' Nv'+p.nivel).join(', ')}</span></span>
-        <span class="v" style="color:${cor}">${est}</span></div>`;
-    }).join('');
-
+    /* o torneio é aberto: o time de cada um está no quadro de anúncios */
+    const faixa = time => {
+      const n = time.map(p => p.nivel), a = Math.min(...n), b = Math.max(...n);
+      return a === b ? `Nv ${a}` : `Nv ${a}–${b}`;
+    };
+    const rodadas = t.adversarios.map((a, i) => ({
+      rodada:PREMIO_TORNEIO[i].rodada, nome:a.nome, time:a.time, sub:faixa(a.time), premio:PREMIO_TORNEIO[i],
+      rosto:(typeof retratoDe === 'function') ? retratoDe(a.nome) : null
+    }));
     this.add(`<div class="painel">
       <div class="cap-cabecalho">
         <div class="num">Torneio Aberto</div>
         <div class="tit">${this.esc(PREMIO_TORNEIO[t.rodada].rodada)}</div>
         <div class="loc">Arena do Planalto Indigo</div>
       </div>
-      ${chave}
-      <div id="escolhas" class="escolhas" style="margin-top:20px">
-        <button class="escolha" onclick="Jogo.lutarRodadaTorneio()">Entrar na arena — ${this.esc(t.adversarios[t.rodada].nome)}</button>
-        <button class="escolha" onclick="Jogo.curarNoTorneio()">Usar os vinte minutos para curar o time</button>
-        <button class="escolha" onclick="Jogo.desistirTorneio()">Desistir do torneio</button>
-      </div>
+      ${this.chaveamentoHTML(rodadas, t.rodada)}
+      ${this.acoesDoChaveamento(t.adversarios[t.rodada].nome, 'Jogo.lutarRodadaTorneio()', 'Jogo.curarNoTorneio()', 'Jogo.desistirTorneio()', 'Desistir do torneio')}
     </div>`);
     this.rolarTopo();
   },
@@ -3517,15 +3567,13 @@ const UI = {
     this.limpar();
     this.add(this.topo());
     /* o time você só vê na arena: na Conferência ninguém mostra antes */
-    const chave = c.adversarios.map((id, i) => {
+    const rodadas = c.adversarios.map((id, i) => {
       const v = veterano(id);
       const conhece = Veteranos.registro(id).conheceu;
-      const est = i < c.rodada ? '✓ vencido' : (i === c.rodada ? 'agora' : 'aguardando');
-      const cor = i < c.rodada ? 'var(--bom)' : (i === c.rodada ? 'var(--destaque)' : 'var(--texto-fraco)');
-      return `<div class="linha longa"><span class="k">${PREMIO_CONFERENCIA[i].rodada} · ${this.esc(nomeDeLuta(v))}
-        <span class="fraco">${conhece ? this.esc((LOCAIS[v.local] || {}).nome || '') : 'nunca se viram'}</span></span>
-        <span class="v" style="color:${cor}">${est}</span></div>`;
-    }).join('');
+      return {rodada:PREMIO_CONFERENCIA[i].rodada, nome:nomeDeLuta(v), time:null, tam:6, premio:PREMIO_CONFERENCIA[i],
+        sub:conhece ? ((LOCAIS[v.local] || {}).nome || '') : 'nunca se viram',
+        rosto:(typeof retratoDe === 'function') ? (retratoDe(nomeDeLuta(v)) || retratoDe(v.nome)) : null};
+    });
     const adv = veterano(c.adversarios[c.rodada]);
     this.add(`<div class="painel">
       <div class="cap-cabecalho">
@@ -3533,12 +3581,8 @@ const UI = {
         <div class="tit">${this.esc(PREMIO_CONFERENCIA[c.rodada].rodada)}</div>
         <div class="loc">Arena do Planalto Indigo</div>
       </div>
-      ${chave}
-      <div id="escolhas" class="escolhas" style="margin-top:20px">
-        <button class="escolha" onclick="Conferencia.lutar()">Entrar na arena — ${this.esc(nomeDeLuta(adv))}</button>
-        <button class="escolha" onclick="Conferencia.curar()">Usar os vinte minutos para curar o time</button>
-        <button class="escolha" onclick="Conferencia.desistir()">Desistir da Conferência</button>
-      </div>
+      ${this.chaveamentoHTML(rodadas, c.rodada)}
+      ${this.acoesDoChaveamento(nomeDeLuta(adv), 'Conferencia.lutar()', 'Conferencia.curar()', 'Conferencia.desistir()', 'Desistir da Conferência')}
     </div>`);
     this.rolarTopo();
   },

@@ -5067,3 +5067,152 @@ h3.sec-conf{--sec:#7fb2ff}
   .liga-porta{min-height:0}
   .lpr{min-width:0;flex-basis:calc(50% - 4px)}
 }
+
+/* ============================================================
+   O CHAVEAMENTO — torneio e Conferência
+   As três lutas até o troféu, uma em cada quadro, ligadas por um
+   trilho: a vencida fica verde com o carimbo, a de agora acende na
+   cor do torneio e a de depois espera apagada. Em cada quadro, o
+   rosto de quem está nela, o time em ícones (na Conferência a bola
+   fica fechada: ninguém mostra o time antes da arena) e o prêmio
+   da rodada. No celular o trilho desce.
+   ============================================================ */
+.chave{
+  --chave:#ff8a3d;
+  list-style:none;margin:6px 0 20px;padding:0;
+  display:grid;grid-template-columns:repeat(3, minmax(0, 1fr));gap:22px;counter-reset:rodada;
+}
+.chave-rodada{
+  position:relative;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;
+  padding:12px 12px 13px;border-radius:16px;
+  background:linear-gradient(180deg, color-mix(in srgb, var(--painel-2) 85%, var(--borda)), var(--bg-2));
+  border:1px solid color-mix(in srgb, var(--borda-forte) 70%, transparent);
+  box-shadow:0 4px 0 color-mix(in srgb, var(--bg) 55%, #000), 0 16px 24px -20px rgba(0,0,0,.9);
+}
+/* o trilho até o próximo quadro */
+.chave-rodada:not(:last-child)::after{
+  content:'';position:absolute;top:50%;right:-22px;width:22px;height:4px;margin-top:-2px;
+  background:linear-gradient(90deg, color-mix(in srgb, var(--borda-forte) 80%, transparent), color-mix(in srgb, var(--borda-forte) 40%, transparent));
+}
+.chave-rodada.vencida:not(:last-child)::after{background:linear-gradient(90deg, #43b581, color-mix(in srgb, #43b581 50%, transparent))}
+.chave-rodada.agora{
+  border-color:color-mix(in srgb, var(--chave) 75%, transparent);
+  background:linear-gradient(180deg, color-mix(in srgb, var(--chave) 20%, var(--painel-2)), color-mix(in srgb, var(--chave) 6%, var(--bg-2)));
+  box-shadow:0 4px 0 color-mix(in srgb, var(--chave) 35%, #05070f), 0 0 0 3px color-mix(in srgb, var(--chave) 22%, transparent),
+             0 18px 28px -18px color-mix(in srgb, var(--chave) 70%, #000);
+}
+.chave-rodada.depois{opacity:.62}
+.chave-rodada.vencida{border-color:color-mix(in srgb, #43b581 55%, transparent)}
+.chave-cab{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;flex-wrap:wrap}
+.chave-cab svg.icone{width:16px;height:16px;color:#ffd166}
+.chave-nome-rodada{font:700 12px/1.2 var(--letra-hud, var(--fonte));letter-spacing:.14em;text-transform:uppercase;color:var(--texto-fraco)}
+.chave-selo{
+  font:700 10.5px/1 var(--letra-hud, var(--fonte));letter-spacing:.06em;text-transform:uppercase;
+  padding:3px 8px;border-radius:999px;color:var(--texto-fraco);background:rgba(255,255,255,.07);
+}
+.chave-rodada.agora .chave-selo{color:#1b1206;background:var(--chave);animation:chaveAgora 1.6s ease-in-out infinite}
+.chave-rodada.vencida .chave-selo{color:#0c2416;background:#43b581}
+.chave-rodada.vencida .chave-selo::before{content:'✓ '}
+@keyframes chaveAgora{0%,100%{box-shadow:0 0 0 0 color-mix(in srgb, var(--chave) 60%, transparent)}50%{box-shadow:0 0 0 5px color-mix(in srgb, var(--chave) 0%, transparent)}}
+.chave-rosto{
+  width:84px;height:84px;margin-top:2px;border-radius:16px;overflow:hidden;flex:0 0 auto;
+  background:
+    radial-gradient(120% 90% at 50% 100%, color-mix(in srgb, var(--chave) 30%, transparent), transparent 70%),
+    color-mix(in srgb, var(--bg) 85%, var(--borda));
+  box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--borda-forte) 70%, transparent), inset 0 -12px 18px -12px rgba(0,0,0,.7);
+}
+.chave-rosto img{width:100%;height:100%;object-fit:contain;object-position:50% 100%;image-rendering:pixelated}
+.chave-rodada.vencida .chave-rosto img{filter:grayscale(.7) brightness(.85)}
+.chave-quem{font:700 15px/1.25 var(--letra-hud, var(--fonte));color:var(--texto);overflow-wrap:anywhere}
+.chave-sub{font:500 12px/1.3 var(--letra-hud, var(--fonte));color:var(--texto-fraco);font-variant-numeric:tabular-nums}
+.chave-time{display:flex;justify-content:center;flex-wrap:wrap;gap:2px;min-height:34px}
+.chave-pk{width:34px;height:34px;display:grid;place-items:center}
+.chave-pk img{width:40px;height:40px;max-width:none;image-rendering:pixelated}
+/* a bola fechada: o time que só aparece na arena */
+.chave-pk.fechado::before{
+  content:'';width:15px;height:15px;border-radius:50%;
+  background:
+    radial-gradient(circle at 50% 50%, #e9eef6 0 2px, #2a3142 2.4px 3.6px, transparent 4px),
+    linear-gradient(180deg, #d84a46 0 46%, #2a3142 46% 54%, #e9eef6 54%);
+  box-shadow:0 0 0 1px #2a3142, 0 2px 4px -1px rgba(0,0,0,.6);opacity:.8;
+}
+.chave-premio{
+  display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:5px;width:100%;
+  margin-top:3px;padding-top:9px;border-top:1px dashed color-mix(in srgb, var(--borda-forte) 60%, transparent);
+}
+.chave-din,.chave-item{
+  display:inline-flex;align-items:center;gap:4px;padding:2px 8px 2px 4px;border-radius:999px;
+  font:600 12px/1.6 var(--letra-hud, var(--fonte));font-variant-numeric:tabular-nums;color:var(--texto);
+  background:rgba(255,255,255,.06);
+}
+.chave-din svg.icone{width:15px;height:15px;color:#ffd166}
+.chave-item .item-icone{width:22px;height:22px;margin:-2px 0}
+.chave-item b{font-weight:600}
+@media (max-width:620px){
+  .chave{grid-template-columns:minmax(0,1fr);gap:16px}
+  .chave-rodada{display:grid;grid-template-columns:72px minmax(0,1fr);grid-template-areas:"rosto cab" "rosto quem" "rosto sub" "rosto time" "premio premio";
+    column-gap:12px;row-gap:3px;align-items:center;text-align:left;padding:11px 12px 12px}
+  .chave-cab{grid-area:cab;justify-content:flex-start}
+  .chave-rosto{grid-area:rosto;width:72px;height:72px;align-self:start}
+  .chave-quem{grid-area:quem}
+  .chave-sub{grid-area:sub}
+  .chave-time{grid-area:time;justify-content:flex-start;min-height:0}
+  .chave-premio{grid-area:premio;justify-content:flex-start}
+  .chave-rodada:not(:last-child)::after{top:auto;bottom:-16px;right:auto;left:47px;width:4px;height:16px;margin:0;
+    background:color-mix(in srgb, var(--borda-forte) 70%, transparent)}
+  .chave-rodada.vencida:not(:last-child)::after{background:#43b581}
+}
+@media (prefers-reduced-motion: reduce){ .chave-rodada.agora .chave-selo{animation:none} }
+
+/* ============================================================
+   QUAL POKÉBOLA? — um cartão por bola
+   A bola da arena (Black/White) em tamanho grande, numa moeda da
+   cor dela; o nome, quantas você tem, e o selo em dados: um dado
+   por sucesso que ela pode tirar. A Master fecha sem rolar.
+   ============================================================ */
+.bolas-menu{display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));gap:10px}
+.bola-cartao{
+  --bola:#e5484d;
+  position:relative;display:flex;align-items:center;gap:12px;min-width:0;
+  padding:10px 12px 10px 10px;border-radius:16px;text-align:left;cursor:pointer;
+  color:var(--texto);font-family:var(--letra-hud, var(--fonte));
+  background:
+    linear-gradient(112deg, transparent 0 64%, rgba(255,255,255,.05) 64% 74%, transparent 74%),
+    linear-gradient(180deg, color-mix(in srgb, var(--bola) 22%, var(--painel-2)), color-mix(in srgb, var(--bola) 7%, var(--bg-2)));
+  border:1px solid color-mix(in srgb, var(--bola) 50%, transparent);
+  box-shadow:0 4px 0 color-mix(in srgb, var(--bola) 28%, #05070f), 0 14px 22px -16px rgba(0,0,0,.95), inset 0 1px 0 rgba(255,255,255,.1);
+  animation:surge .3s var(--suave) backwards;
+}
+.bolas-menu .bola-cartao:nth-child(2){animation-delay:.05s}
+.bolas-menu .bola-cartao:nth-child(3){animation-delay:.1s}
+.bolas-menu .bola-cartao:nth-child(n+4){animation-delay:.15s}
+.bola-cartao:hover{transform:translateY(-2px);filter:brightness(1.08);border-color:color-mix(in srgb, var(--bola) 80%, #fff)}
+.bola-cartao:active{transform:translateY(3px);box-shadow:0 1px 0 color-mix(in srgb, var(--bola) 28%, #05070f)}
+.bola-cartao:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.bola-arte{
+  width:58px;height:58px;flex:0 0 auto;border-radius:50%;display:grid;place-items:center;
+  background:radial-gradient(circle at 50% 35%, color-mix(in srgb, var(--bola) 40%, #fff 20%), color-mix(in srgb, var(--bola) 30%, var(--bg)) 70%);
+  box-shadow:inset 0 0 0 2px color-mix(in srgb, var(--bola) 55%, transparent), 0 4px 10px -5px rgba(0,0,0,.8);
+}
+.bola-arte img{width:48px;height:48px;image-rendering:pixelated;image-rendering:crisp-edges;transition:transform .25s var(--mola)}
+.bola-cartao:hover .bola-arte img{transform:rotate(-14deg) scale(1.06)}
+.bola-info{display:flex;flex-direction:column;gap:5px;min-width:0;flex:1 1 auto}
+.bola-nome{font-size:16px;font-weight:700;line-height:1.15}
+.bola-selo{display:flex;align-items:center;flex-wrap:wrap;gap:6px;font:600 12px/1 var(--letra-hud, var(--fonte));color:var(--texto-fraco)}
+.bola-selo b{font-weight:700;color:var(--texto);font-variant-numeric:tabular-nums}
+/* um dado por sucesso possível: a face do um, branca, com a borda da bola */
+.bola-dados{display:inline-flex;flex-wrap:wrap;gap:3px;max-width:118px}
+.bola-dados i{
+  width:11px;height:11px;border-radius:3px;
+  background:radial-gradient(circle, #1d2433 0 1.5px, transparent 1.9px), #f4f6fb;
+  box-shadow:0 0 0 1px color-mix(in srgb, var(--bola) 70%, #000), 0 1px 0 rgba(0,0,0,.5);
+}
+.bola-sem svg.icone{width:16px;height:16px;color:color-mix(in srgb, var(--bola) 70%, #fff)}
+.bola-qtd{
+  flex:0 0 auto;align-self:flex-start;padding:3px 9px;border-radius:999px;
+  font:700 13px/1.2 var(--letra-hud, var(--fonte));font-variant-numeric:tabular-nums;
+  color:#fff;background:color-mix(in srgb, var(--bola) 45%, rgba(0,0,0,.35));
+}
+@media (max-width:520px){
+  .bolas-menu{grid-template-columns:minmax(0,1fr)}
+}

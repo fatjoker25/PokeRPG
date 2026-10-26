@@ -94,7 +94,8 @@ mochila com TM e ferramenta quebrada, todo lugar visitado) e um do começo
 sumário, Pokédex e as 251 fichas, PokéNav e cada contato, cartão, ficha,
 diário, rota, finais, credenciais, PC, ajustes, regras, tutorial e mapa —,
 toda loja comprando e vendendo, a tela de cada posto e de cada doação, o
-rival na saída do capítulo, e todo lugar do mapa com cada afazer da
+rival na saída do capítulo, o chaveamento do torneio e da Conferência em
+cada rodada, o "Qual Pokébola?", e todo lugar do mapa com cada afazer da
 lista dele, e acusa erro de JavaScript e texto quebrado (`undefined`,
 `NaN`, `null`, marca sem resolver, HTML vazando). Janela nova ou afazer
 novo passa por ali. Texto que entra numa janela montada à mão, sem
@@ -1403,9 +1404,12 @@ pode ter `cond` (`Linhas.mostrar` pula a que não vale).
 A linha de opção tem o jeito dos comandos da luta: espessura embaixo
 (afunda quando aperta), brilho na diagonal, a tecla numa bolinha de
 botão de controle e a seta à direita. A cor dela é `--ac`: dourada na
-história, a da coisa no resto. Na janela (Centro, "Qual Pokébola?") não
-tem tecla, e quem abre a linha é o desenho, numa pastilha da cor dele
-(`svg.icone` filho direto de `.escolha.com-icone`). Ação de cena que
+história, a da coisa no resto. Na janela (Centro) não tem tecla, e
+quem abre a linha é o desenho, numa pastilha da cor dele (`svg.icone`
+filho direto de `.escolha.com-icone`). "Qual Pokébola?" (`menuBolas`)
+é cartão por bola: a bola da arena grande, quantas tem e o selo em
+dados (um por sucesso possível; a Master "fecha sem rolar") — o selo é
+da bola, nunca a conta contra o alvo, que só sai no log. Ação de cena que
 não é frase ganha classe e desenho: `.luta` (Encarar, vermelho do
 Lutar), `.teste` (rolar, ciano), `.vontade` (roxo), `.fim` (encerrar,
 dourado), `.olhar`; as de serviço (`.utilitaria`, `.discreta`) ficam
@@ -1471,7 +1475,11 @@ no `resultadoElite`; pra quem é Campeão, todas). Embaixo, o Salão do
 Campeão; Torneio e Conferência com os prêmios em etiquetas. Entrar é
 pelo menu numerado, com a porta fechada dizendo o que falta. O placar
 e o time do **rival** são quadro (`quadroDoRival`): o placar como o de
-uma luta e o time em ícones. Na **Pokédex**, a casa tem duas linhas
+uma luta e o time em ícones. O **chaveamento** do torneio e da
+Conferência (`chaveamentoHTML`) são as três lutas em quadros ligados
+por um trilho — vencida verde, a de agora acesa, a de depois apagada —,
+com rosto, time em ícones (na Conferência a bola fica fechada: ninguém
+mostra o time antes da arena) e o prêmio da rodada. Na **Pokédex**, a casa tem duas linhas
 (número e marca em cima, nome embaixo): na mesma linha, a etiqueta
 "visto" cortava o nome. E `.linha .v` (a conta das linhas de valor) é
 letra do HUD; só a Pokédex e o PC guardam a letra de tela deles.

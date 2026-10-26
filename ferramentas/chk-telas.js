@@ -276,6 +276,22 @@ const SUSPEITO = [
   }
   await tentar('rival/celadon/centro', () => { Estado.dados.local = 'celadon'; Jogo.hubCentro('rival'); });
 
+  /* ---------- o chaveamento do torneio e da Conferência, e o menu de Pokébola ---------- */
+  for (const rodada of [0, 1, 2]){
+    await restaurar();
+    await tentar('torneio/' + rodada, r => {
+      Estado.dados.local = 'planalto'; Estado.dados.npcs['Ezra'] = {nome:'Ezra', opiniao:2, memorias:[]};
+      Jogo.torneioAtual = {rodada:r, adversarios:montarChaveamento()}; UI.telaTorneio();
+    }, rodada);
+    await restaurar();
+    await tentar('conferência/' + rodada, r => {
+      Estado.dados.local = 'planalto'; Jogo.conferenciaAtual = {rodada:r, adversarios:montarConferencia()}; UI.telaConferencia();
+    }, rodada);
+  }
+  await page.evaluate(() => { Jogo.torneioAtual = null; Jogo.conferenciaAtual = null; });
+  await restaurar();
+  await tentar('pokébolas', () => { Estado.darItem('Master Ball', 1); Exploracao.tela(); UI.menuBolas(); });
+
   /* ---------- lugares e afazeres ---------- */
   for (const id of await page.evaluate(() => Object.keys(LOCAIS))){
     await restaurar();
