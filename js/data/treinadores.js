@@ -29,8 +29,11 @@ const RETRATO_POR_NOME = {
   'Elite 4':'elite/lance',
   /* substitutos da Elite: a classe de treinador que os jogos dariam */
   'Giselle':'trainers/ace_trainer_f', 'A.J.':'trainers/veteran_gen7', 'Mandi':'trainers/harlequin',
-  /* rival e rivais de estrada */
-  'Ezra':'trainers/lucas', 'Otto':'trainers/otto', 'Caçador Roque':'trainers/otto', 'o caçador mais novo':'trainers/roughneck',
+  /* rival e rivais de estrada. O Ezra é o Rising Star de X/Y: tem a
+     sua idade e a roupa nova demais de quem comprou tudo pra viagem.
+     Rosto de rival nunca é protagonista dos jogos nem foto que o
+     jogador pode escolher pra si (RETRATOS_DA_FICHA) */
+  'Ezra':'trainers/ezra', 'Otto':'trainers/otto', 'Caçador Roque':'trainers/otto', 'o caçador mais novo':'trainers/roughneck',
   'Lior':'trainers/worker_gen7', 'Nolan':'trainers/nolan', 'Rory':'trainers/rory', 'o garoto de Fuchsia':'trainers/rory',
   'Diana':'trainers/diana',
   'Garoto de Fuchsia':'trainers/rory', 'Menino do cais':'trainers/nolan',
@@ -308,7 +311,7 @@ function retratoDe(nome){
 const PAGA_POR_CLASSE = {
   'gym_leaders':99, 'elite':99,
   'trainers/youngster':15, 'trainers/lass':15, 'trainers/bug_catcher':10, 'trainers/hiker':35,
-  'trainers/team_rocket_grunt_m':30, 'trainers/team_rocket_grunt_f':30, 'trainers/rival':35, 'trainers/lucas':35,
+  'trainers/team_rocket_grunt_m':30, 'trainers/team_rocket_grunt_f':30, 'trainers/rival':35, 'trainers/lucas':35, 'trainers/ezra':35,
   'trainers/ace_trainer':35, 'trainers/ace_trainer_f':35, 'trainers/diana':35, 'trainers/worker':50,
   'trainers/scientist':50, 'trainers/scientist_f':50, 'trainers/office_worker_f':70,
   'trainers/veteran_f':70, 'trainers/roughneck':90, 'trainers/sailor':30, 'trainers/gentleman':70,

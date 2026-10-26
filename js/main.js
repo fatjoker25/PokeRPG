@@ -1435,6 +1435,9 @@ const Jogo = {
     }
 
     // próximo membro da Elite 4
+    /* a fala sai antes do carimbo: quem já foi vencido noutra vez
+       (elite_passou_<id>) fala diferente da primeira */
+    const falas = alvo.vitoria(Estado.dados);
     e.indice++;
     Estado.registrar(`Venceu ${alvo.nome} na Elite 4.`);
     /* a porta ganha o carimbo na tela da Liga, mesmo que a ala recomece */
@@ -1445,7 +1448,7 @@ const Jogo = {
     UI.telaResultadoLiga({
       titulo: `${alvo.nome} derrotad${alvo.f ? 'a' : 'o'}`,
       sub: acabou ? 'A porta do fundo está aberta' : `Elite 4 · ${alvo.ordem} de 4`,
-      falas: alvo.vitoria(Estado.dados), quem: alvo.nome,
+      falas, quem: alvo.nome,
       avisos: [], venceu:true, continuar:true
     });
   },

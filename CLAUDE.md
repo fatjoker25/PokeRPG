@@ -1073,9 +1073,16 @@ visitas moram em `js/story/titulares.js` (`TITULARES`, `Titulares`).
   primeira e na segunda porta e 1 na terceira, com o Lance sempre no
   topo. O substituto continua na sala (a Giselle anota a Lorelei, o
   A.J. perdeu a cadeira numa luta, o Mandi abre a porta pra Agatha), o
-  Lance comenta quem voltou (`lanceSobreOsOutros`), a Conselheira do
+  Lance conta quem voltou (`lanceSobreOsOutros`), a Conselheira do
   26 conta, a oferta de cadeira na Elite (`c26_oferta`) e o posto
   `elite` precisam de porta sem dono.
+- **O Lance é imponente.** É a última porta e a única que nunca ficou
+  sem dono: fala pouco, fala de cima, sem piada, e a sala fala com ele
+  (o fogo das bacias deita quando o dragão respira). Fala dos outros
+  como quem fala de uma defesa: o que você já atravessou pra chegar
+  ali. A fala da vitória é lida **antes** do carimbo da porta
+  (`resultadoElite`), então `elite_passou_lance` nela quer dizer que
+  ele já tinha sido vencido noutra vez.
 - **Ninguém gira em volta de reverência.** Cada substituto olha o dono
   da placa do jeito dele: a Giselle quer a placa (a dela cabe no mesmo
   furo), o A.J. tem uma conta antiga com o Bruno, o Mandi sente falta
@@ -1375,6 +1382,13 @@ precisar. Nunca um `rep` dentro do outro — aninhado, o `mudarRep` não
 lê, e trinta cenas ficaram assim sem ninguém ver: valiam como ato comum
 e gastavam o teto do capítulo. Notícia vale 1,5× e passa por cima do
 teto, como ginásio e Liga.
+
+## O rosto do Ezra
+O Ezra é `trainers/ezra`, o Rising Star de X/Y: tem a sua idade (jovem,
+não criança) e a roupa nova demais de quem comprou tudo de uma vez pra
+viagem. Rosto de rival **nunca é protagonista dos jogos** (o Lucas já
+foi o dele) **nem foto que o jogador pode escolher pra si**
+(`RETRATOS_DA_FICHA`), senão o rival aparece com a cara de quem joga.
 
 ## O Pico do Ezra
 O parceiro do Ezra é sorteado pela tabela do inicial aleatório da casa

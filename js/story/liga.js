@@ -103,51 +103,63 @@ const ELITE4 = [
 {
   id:'lance', ordem:4, nome:'Lance', titular:'Lance', tipo:'Dragão', nivelBase:66,
   especies:[130, 148, 148, 142, 149],   // Gyarados, Dragonair, Dragonair, Aerodactyl, Dragonite
+  /* A última porta, e a única que nunca ficou sem dono. O Lance não
+     faz piada nem pede licença: fala pouco, fala de cima, e a sala
+     inteira fala com ele — o fogo deita quando o dragão respira. */
   intro:d=>[
-    'A quarta porta diz LANCE, e é a única da ala que está aberta.',
-    'A sala é alta, de pedra escura, com fogo em quatro bacias de metal que alguém acende todo dia de manhã e apaga todo dia à noite.',
-    'O homem de capa está em pé no centro, como esteve ontem e anteontem.',
-    `"Lance." Ele estende a mão, e a mão é firme e seca. "Da Elite dos Quatro. ${Titulares.todosVoltaram(d) ? 'Inteira de novo, faz pouco tempo.' : Titulares.quantos(d) ? 'De quase toda ela.' : 'O que sobrou dela.'}"`,
+    'A quarta porta diz LANCE, e é a única da ala que está aberta. O calor sai por ela antes de você chegar.',
+    'A sala é alta, de pedra escura, com fogo em quatro bacias de metal. No fundo, uma sombra do tamanho da parede se mexe devagar, e não é sombra de gente.',
+    'O homem de capa está em pé no centro, como esteve ontem e anteontem. Quando você entra, o fogo das quatro bacias deita na sua direção, como se alguma coisa atrás dele tivesse respirado fundo.',
+    `"Lance." A voz não sobe: ela ocupa a sala. "Mestre dos Dragões, e a última porta da Elite dos Quatro${Titulares.todosVoltaram(d) ? ', inteira de novo' : ''}."`,
     ...lanceSobreOsOutros(d),
     d=>d.flags.liga_aliada || d.flags.sabe_do_norte
-      ? '"E eu sei o que te mandaram fazer no norte." Ele não muda de expressão. "Então vamos ser rápidos e vamos ser sérios, porque o que está lá em cima é maior que esta sala, e eu tenho consciência disso."'
-      : '"Eu venho todo dia. Não é disciplina, é que eu não saberia o que fazer com um dia em que eu não viesse."',
-    '"Eu treino dragão. Não é estilo, é família — o meu avô treinava, o meu primo treina." Ele solta a primeira Pokébola sem cerimônia. "Vem."'
+      ? '"E eu sei o que te mandaram fazer no norte." Ele não muda de expressão. "O que está lá em cima é maior que esta sala. Então prove aqui que aguenta o que é grande."'
+      : d.flags.elite_passou_lance
+        ? '"Você já passou por mim nesta sala. Hoje eu descubro se foi acidente."'
+        : '"Nesta sala eu nunca perdi. Não é orgulho. É registro."',
+    '"Dragão não é estilo. É sangue: o meu avô treinava, o meu primo treina, e os meus nasceram pra ser o último obstáculo entre um desafiante e a cadeira do Campeão."',
+    'Ele solta a primeira Pokébola sem cerimônia, e o Gyarados que sai dela ocupa metade da sala.',
+    '"Vem."'
   ],
+  /* a fala da vitória é lida antes do carimbo da porta (resultadoElite):
+     elite_passou_lance aqui quer dizer que já foi vencido noutra vez */
   vitoria:d=>[
     'O Dragonite cai de joelhos primeiro e só depois de lado, o que é a coisa mais parecida com respeito que um Dragonite faz.',
-    'Lance recolhe os cinco sem pressa nenhuma e fica um tempo comprido de costas para você.',
-    Titulares.quantos(d)
-      ? `"Faz meses que ninguém chegava aqui." Ele finalmente se vira. "{O senhor|A senhora} chegou e passou pelas quatro portas${Titulares.todosVoltaram(d) ? ', com as quatro ocupadas por quem é dono delas' : ''}."`
-      : '"Desde que os outros três pararam de vir, {o senhor|a senhora} é {o primeiro|a primeira} que chega aqui." Ele finalmente se vira. "E {o primeiro|a primeira} que passa."',
+    'Lance recolhe os cinco sem pressa nenhuma. O fogo das quatro bacias baixa junto, como se a sala também tivesse perdido.',
+    d.flags.elite_passou_lance
+      ? '"De novo." Ele se vira. "Então não foi acidente."'
+      : Titulares.quantos(d)
+        ? `"Faz meses que ninguém chegava aqui." Ele se vira. "{O senhor|A senhora} passou pelas quatro portas${Titulares.todosVoltaram(d) ? ', com as quatro defendidas por quem é dono delas' : ''}. Nada que passa por mim é sorte."`
+        : '"Desde que os outros três pararam de vir, {o senhor|a senhora} é {o primeiro|a primeira} que chega aqui." Ele se vira. "E {o primeiro|a primeira} que me vence nesta sala."',
     'Ele vai até a parede do fundo e aperta um botão que você não tinha visto, e o que você achou que fosse parede começa a abrir.',
     '"A cadeira do Campeão está vaga no papel faz dois anos." Ele segura a porta. "No papel."',
-    '"Boa sorte. E, quando {o senhor|a senhora} sair de lá, seja lá como for, eu vou estar aqui amanhã às oito."'
+    '"Vai. Quem atravessa esta porta não volta a ser desafiante."'
   ],
   derrota:d=>[
-    'O Dragonite pousa na frente do seu último, que caiu, e espera. Só quando o Lance faz um gesto ele recua.',
-    '"Amanhã às oito." Ele recolhe os cinco sem pressa.',
-    '"A porta abre do mesmo jeito pra quem perdeu. É a única coisa nesta ala que não mudou."'
+    'O seu último cai, e o Dragonite pousa na frente dele de asas abertas, e fica assim até o Lance levantar a mão. Só então ele recua.',
+    '"É aqui que a maioria para." Ele recolhe os cinco sem pressa. "Não é vergonha. É a distância que ainda falta."',
+    '"Esta porta abre todo dia, às oito. Volte quando os seus estiverem à altura dos meus."'
   ]
 }
 ];
 
-/* O que o Lance diz dos outros três: nada de reverência. Ele é o que
-   ficou, e isso tem um custo que ele conta com humor seco; quem voltou,
-   ele conta pelo que mudou no corredor. */
+/* O que o Lance diz dos outros três: nada de reverência e nada de
+   piada. Ele é a parede que ficou, e fala da ala como quem fala de
+   uma defesa: quem guardava lugar, quem voltou pra sala, e o que o
+   desafiante já atravessou pra chegar até ele. */
 function lanceSobreOsOutros(d){
   const v = id => typeof Titulares !== 'undefined' && Titulares.voltou(id, d);
   if (!v('lorelei') && !v('bruno') && !v('agatha')) return [
-    '"Os outros três estão em casa. Eu sei o endereço dos três e não bati em porta nenhuma: quem tinha que bater era a Liga, e a Liga não bateu."',
-    '"Eu almoço sozinho faz meses. Já sei de cor a ordem das goteiras do corredor."'
+    '"Três salas desta ala estão sem dono há meses, e a ala não caiu. Não caiu porque esta porta nunca abriu pra quem não merecia."',
+    '"Você passou por quem guarda o lugar dos outros. Aqui ninguém guarda lugar de ninguém."'
   ];
   const linhas = [];
-  if (v('lorelei')) linhas.push('"A Lorelei voltou e, no primeiro dia, corrigiu três erros no regulamento da ala. Ninguém lia o regulamento fazia onze anos."');
-  if (v('bruno'))   linhas.push('"O Bruno voltou trazendo comida pra ala inteira, e a ala inteira não dá conta daquilo em uma semana."');
-  if (v('agatha'))  linhas.push('"A Agatha voltou e reclamou do café antes de dar bom dia. Eu senti falta disso, o que é constrangedor."');
+  if (v('lorelei')) linhas.push('"Você passou pela Lorelei. Pouca gente sai daquela sala pensando direito."');
+  if (v('bruno'))   linhas.push('"Você passou pelo Bruno e ainda está de pé. Isso já diz alguma coisa."');
+  if (v('agatha'))  linhas.push('"Você passou pela Agatha. Ela não gasta tempo com quem não aguenta, e gastou com você."');
   linhas.push(Titulares.todosVoltaram(d)
-    ? '"Eu tinha me acostumado com o silêncio. Desacostumei em uma semana."'
-    : '"Quem não voltou está em casa. Eu continuo abrindo esta porta às oito."');
+    ? '"Os quatro estão nos seus lugares. Pela primeira vez em meses a Elite está inteira, e você chegou até a última porta dela."'
+    : '"As salas que ainda estão sem dono vão ter dono. Esta nunca ficou sem."');
   return linhas;
 }
 
