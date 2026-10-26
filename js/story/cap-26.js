@@ -22,11 +22,15 @@ function c26_fem(n){ return n <= 8 ? c21_ext(n) : String(n); }
 function c26_oferta(d){
   if (d.flags.c26_oferta) return d.flags.c26_oferta;
   const rep = Estado.rep;
-  if (rep.eixo === 'bom' && rep.bom >= 6) return 'elite';
+  /* cadeira na Elite só existe com porta vaga: se os três titulares
+     voltaram (titulares.js), as quatro têm dono */
+  if (rep.eixo === 'bom' && rep.bom >= 6 && !(typeof Titulares !== 'undefined' && Titulares.todosVoltaram(d))) return 'elite';
   if (rep.eixo === 'ruim' && rep.ruim >= 5) return 'acordo';
   if (Historia.via() === 'pesquisador') return 'pesquisa';
   return 'instrutor';
 }
+/* quantos titulares a visita trouxe de volta (titulares.js) */
+function c26_titularesDeVolta(d){ return typeof Titulares !== 'undefined' ? Titulares.quantos(d) : 0; }
 const C26_CARGO = {elite:'Membro da Elite 4', acordo:'{Assessor|Assessora} da Liga',
                    pesquisa:'{Pesquisador|Pesquisadora} da Liga', instrutor:'{Instrutor|Instrutora} do Planalto'};
 
@@ -1365,15 +1369,43 @@ c21_desafio_elite:{
 c21_os_quatro_da_elite:{
   texto:[
     'A Conselheira Thistle lista sem consultar nada.',
-    fala('Conselheira Edda Thistle', 'Três das quatro cadeiras estão com substituto há meses.', null, 'Sem baixar a voz e sem desculpa nenhuma.'),
-    fala('Conselheira Edda Thistle', 'Os titulares estão vivos, estão em casa, e não vêm. A Liga não tirou o nome das portas e eu fui voto vencido nisso também.'),
-    'Na cadeira da Agatha senta um homem de cinquenta e um anos que entra na sala com refletor e música de palco, e que foi vice-campeão da Conferência Indigo antes de virar isso.',
-    'Na cadeira da Lorelei senta uma moça de vinte e poucos que não treina tipo nenhum e sim a ficha do desafiante — a mais nova a sentar numa cadeira da Elite em quarenta anos, e a cadeira não é dela.',
-    'Na cadeira do Bruno senta um homem que ganhou noventa e oito batalhas seguidas antes dos dezesseis anos, largou tudo aos trinta e três, foi da terceira equipe que subiu ao norte, e voltou, e desde então não fala sobre isso com ninguém.',
+    d=>{
+      const n = 3 - c26_titularesDeVolta(d);
+      return fala('Conselheira Edda Thistle', n === 3 ? 'Três das quatro cadeiras estão com substituto há meses.'
+        : n === 0 ? 'As quatro cadeiras estão com os donos de novo. Faz pouco tempo, e ninguém aqui em cima sabe direito por quê.'
+        : n === 2 ? 'Duas das quatro cadeiras estão com substituto há meses.'
+        : 'Uma das quatro cadeiras está com substituto há meses.', null, 'Sem baixar a voz e sem desculpa nenhuma.');
+    },
+    d=>{
+      const v = c26_titularesDeVolta(d);
+      return fala('Conselheira Edda Thistle', v === 0
+        ? 'Os titulares estão vivos, estão em casa, e não vêm. A Liga não tirou o nome das portas e eu fui voto vencido nisso também.'
+        : v === 3
+          ? 'Os três voltaram sem a Liga pedir. A Liga vai dizer que pediu.'
+          : 'Quem voltou, voltou sem a Liga pedir. Quem não voltou está em casa, e a Liga não tirou o nome das portas, e eu fui voto vencido nisso também.');
+    },
+    d=>Titulares.voltou('agatha', d)
+      ? 'Na cadeira da Agatha senta a Agatha de novo, com oitenta e quatro anos e um cinzeiro no corredor. O homem que guardou a sala dela, um vice-campeão da Conferência que entrava com refletor e música, agora abre a porta pra ela.'
+      : 'Na cadeira da Agatha senta um homem de cinquenta e um anos que entra na sala com refletor e música de palco, e que foi vice-campeão da Conferência Indigo antes de virar isso.',
+    d=>Titulares.voltou('lorelei', d)
+      ? 'Na cadeira da Lorelei senta a Lorelei, que não pediu desculpa por ter sumido nem explicou por que voltou. A moça que ficou no lugar dela ganhou uma carteira no fundo da sala e um caderno novo.'
+      : 'Na cadeira da Lorelei senta uma moça de vinte e poucos que não treina tipo nenhum e sim a ficha do desafiante — a mais nova a sentar numa cadeira da Elite em quarenta anos, e a cadeira não é dela.',
+    d=>Titulares.voltou('bruno', d)
+      ? 'Na cadeira do Bruno senta o Bruno, que voltou trazendo comida pra ala inteira. O homem que guardou a sala dele perdeu a cadeira numa luta e continua treinando aqui: ganhou noventa e oito batalhas seguidas antes dos dezesseis anos, foi da terceira equipe que subiu ao norte, e voltou, e desde então não fala sobre isso com ninguém.'
+      : 'Na cadeira do Bruno senta um homem que ganhou noventa e oito batalhas seguidas antes dos dezesseis anos, largou tudo aos trinta e três, foi da terceira equipe que subiu ao norte, e voltou, e desde então não fala sobre isso com ninguém.',
+    d=>{
+      const onde = [['lorelei', 'a Lorelei em Fuchsia'], ['bruno', 'o Bruno em Pewter'], ['agatha', 'a Agatha em Lavender']]
+        .filter(([id]) => !Titulares.voltou(id, d)).map(([, t]) => t);
+      if (!onde.length) return '';
+      const lista = onde.length > 1 ? onde.slice(0, -1).join(', ') + ' e ' + onde[onde.length - 1] : onde[0];
+      return fala('Conselheira Edda Thistle', `E onde ${onde.length > 1 ? 'eles estão' : 'quem falta está'} é público: ${lista}. Ninguém daqui de cima foi bater em porta nenhuma.`);
+    },
     'E a quarta é o Lance, que é o dono da própria placa, tem trinta e sete anos e nunca perdeu aqui dentro.',
     fala('Conselheira Edda Thistle', 'E antes que {o senhor|a senhora} pergunte: sim, os quatro sabem que {o senhor|a senhora} vem. E sim, os quatro leram a sua pasta.')
   ],
   ef:{flag:['sabe_da_elite'],
+      /* quem não voltou: a Conselheira disse onde mora */
+      executar:d=>{ ['lorelei','bruno','agatha'].forEach(id => { if (!Titulares.voltou(id, d)) Estado.marcar('sabe_onde_' + id); }); return []; },
       registrar:'Um da Elite 4 esteve na terceira equipe do norte e voltou.'},
   escolhas:[
     {texto:'"Eu quero falar com o da terceira equipe."', vai:'c21_o_da_terceira_equipe'},

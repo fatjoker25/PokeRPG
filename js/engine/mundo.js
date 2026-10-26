@@ -729,6 +729,8 @@ function afazeresDoLocal(){
   if (typeof Agenda !== 'undefined') Agenda.afazeres(id).forEach(x => lista.push(x));
   /* o que a intuição trouxe você pra fazer aqui (a figura de capuz, em Lavender) */
   if (typeof Intuicao !== 'undefined') Intuicao.afazeres(id).forEach(x => lista.push(x));
+  /* a porta de casa de um titular da Elite, pra quem sabe onde ele está */
+  if (typeof Titulares !== 'undefined') Titulares.afazeres(id).forEach(x => lista.push(x));
   /* deixar o tempo passar: é assim que se chega na hora marcada */
   lista.push({id:'esperar', titulo:'Esperar a hora passar'});
   return lista;

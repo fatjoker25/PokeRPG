@@ -8,30 +8,44 @@
    quando, pelo calendário). A Liga não tirou os nomes das portas: pôs
    substitutos embaixo deles. As quatro salas ficam num corredor (a
    ala, como diz o afazer do Planalto); o poço de pedra do capítulo 26
-   é a arena de baixo, outra sala. */
+   é a arena de baixo, outra sala.
+   Quem senta atrás de cada porta hoje sai de Titulares.membro(i)
+   (titulares.js): o titular, se a visita trouxe ele de volta, ou o
+   substituto daqui. Cada substituto tem o próprio jeito de olhar pro
+   dono da placa — ambição, conta antiga, saudade de ser xingado —
+   e conta, ganhando ou perdendo, onde o dono está (`pista`). */
 const ELITE4 = [
 {
   id:'giselle', ordem:1, nome:'Giselle', titular:'Lorelei', tipo:'variado', nivelBase:60, f:true,
+  pista:'sabe_onde_lorelei',
   especies:[105, 40, 53, 31, 112],   // Marowak, Wigglytuff, Persian, Nidoqueen, Rhydon
   intro:d=>[
     'O corredor da ala tem quatro portas seguidas. A primeira tem uma placa de bronze parafusada na altura dos olhos: LORELEI.',
     'A sala atrás dela não parece sala de batalha. Parece sala de aula: quadro, carteira, projetor desligado.',
-    'A mulher na frente tem uns vinte e poucos anos e um caderno aberto com a sua ficha dentro. Ela não é a Lorelei e sabe que você reparou.',
-    '"Giselle. Eu me formei em primeiro lugar na Escola Técnica Pokémon, no ano em que a escola ainda existia."',
-    '"A placa da porta não é minha. Eu não vou tirar e eu não vou explicar, e a Liga também não."',
+    'A mulher na frente tem uns vinte e poucos anos e um caderno aberto com a sua ficha dentro. Ela não é a Lorelei, e não faz cara de quem sente muito por isso.',
+    '"Giselle. Primeira da turma na Escola Técnica Pokémon, no último ano em que a escola existiu."',
+    '"A placa ainda diz Lorelei porque parafuso de bronze dá trabalho." Ela não olha pra porta. "Eu já medi. A minha cabe no mesmo furo."',
     '"Regra da ala, uma vez só, porque ninguém lê o regulamento: você não sai daqui até vencer os quatro ou perder para um. Não tem Centro Pokémon aqui dentro."',
     '"O que estiver na sua mochila é tudo o que você tem pelas próximas quatro batalhas."',
-    d=>d.insignias.length >= 8 ? '"Oito insígnias." Ela anota alguma coisa. "Eu tenho dados de quatrocentos e onze desafiantes com oito insígnias. Cento e nove passaram desta sala."' : ''
+    d=>d.insignias.length >= 8 ? '"Oito insígnias." Ela anota alguma coisa. "Eu tenho dados de quatrocentos e onze desafiantes com oito insígnias. Cento e nove passaram desta sala. Eu pretendo baixar essa conta."' : ''
   ],
   vitoria:d=>[
     'O último dela cai e Giselle fecha o caderno com as duas mãos, sem pressa.',
     '"Cento e dez." Ela anota. "Eu odiei isso e eu vou registrar direito mesmo assim, porque dado torto não serve pra nada."',
-    'Ela olha a placa da porta por um segundo antes de abrir a próxima.',
-    '"Próxima sala. Não descansa. Isso é de propósito."'
+    '"Eu mando a súmula de toda luta desta sala pra Lorelei, toda segunda, pela caixa de correio do cais velho de Fuchsia. Ela nunca respondeu."',
+    'Ela arranca a folha do caderno e dobra em quatro.',
+    '"Essa ela vai ler. Próxima sala. Não descansa: isso é de propósito."'
+  ],
+  derrota:d=>[
+    'O seu último cai, e Giselle não comemora. Ela escreve.',
+    '"Previsto na página quatro." Ela vira o caderno pra você ver, e está mesmo na página quatro.',
+    '"Você perdeu pro que eu sabia de você. Isso tem conserto: muda o que eu sei."',
+    '"E não adianta ir chorar com a dona da placa. A Lorelei mora no cais velho de Fuchsia e não abre carta da Liga. Nem as minhas."'
   ]
 },
 {
   id:'aj', ordem:2, nome:'A.J.', titular:'Bruno', tipo:'Terrestre', nivelBase:62,
+  pista:'sabe_onde_bruno',
   especies:[28, 51, 105, 112, 76],   // Sandslash, Dugtrio, Marowak, Rhydon, Golem
   intro:d=>[
     'A segunda porta diz BRUNO. A sala atrás é de terra batida e não tem mobília nenhuma. Nem cadeira, nem bancada, nem água.',
@@ -39,20 +53,28 @@ const ELITE4 = [
     '"A.J." Ele nem estende a mão. "Noventa e oito vitórias seguidas antes de eu fazer dezesseis anos. Depois disso eu parei de contar, porque contar vira vaidade."',
     '"Eu treinei do jeito errado quando era moleque. Muita gente me disse isso e todas elas tinham razão." Ele se alonga sem pressa.',
     '"Eu mudei o método. Não mudei o resultado."',
-    '"E antes que {o senhor|a senhora} pergunte: o Bruno treinou nesta sala por dezenove anos e eu treino aqui desde que ele parou de vir. Eu varro o chão dele toda manhã e eu não me acho ele."',
+    '"O dono da placa me ganhou duas vezes, quando eu tinha dezessete e dezenove anos. Eu esperei vinte anos pela terceira, e ele foi embora carregar pedra." Ele bate a terra da mão. "Então hoje {o senhor|a senhora} paga a conta dele."',
     d=>d.cemiterio.length ? `"E eu sei o que aconteceu com ${nomeExib(d.cemiterio[0])}." Ele fala isso sem acusação nenhuma, o que é pior. "Eu também perdi um. Continua doendo depois de doze anos. É pra doer."` : '',
     d=>d.flags.sabe_da_pergunta
       ? '"E {o senhor|a senhora} já sabe do vale." Ele se alonga do mesmo jeito, sem mudar nada na voz. "Aqui dentro a gente não fala disso. Aqui dentro é chão de terra e é batalha, e por quarenta minutos eu consigo não pensar naquilo. Deixa eu ter os quarenta minutos."'
       : (d.flags.conheceu_o_da_terceira ? '"A gente já se falou no vestiário." Ele assente uma vez. "Lá eu era um homem. Aqui eu sou a segunda porta. Não confunde as duas coisas."' : '')
   ],
   vitoria:d=>[
-    'O Sandslash cai de lado e a sala vazia devolve o som três vezes.',
+    'O Golem cai de lado e a sala vazia devolve o som três vezes.',
     'A.J. assente uma única vez e não fala nada por um tempo desconfortável.',
-    '"Você aguentou cansad{o|a}." Ele abre a porta com o ombro. "Tem gente que só sabe vencer descansada. Vai. O Mandi detesta esperar e faz questão de avisar."'
+    '"Você aguentou cansad{o|a}." Ele abre a porta com o ombro. "Tem gente que só sabe vencer descansada."',
+    '"Se passar por Pewter, diz pro Bruno que a sala dele está varrida. Turno da manhã, na pedreira." Ele quase sorri. "Ele vai rir. Ele ri de tudo, e é por isso que eu nunca ganhei dele."',
+    '"Vai. O Mandi detesta esperar e faz questão de avisar."'
+  ],
+  derrota:d=>[
+    'O seu último cai na terra batida e levanta poeira, e A.J. espera a poeira assentar antes de falar.',
+    '"{O senhor|A senhora} lutou como quem tem pressa de ir embora daqui." Ele recolhe os dele. "Aqui não é lugar de pressa."',
+    '"O Bruno dizia isso melhor. Ele está em Pewter, carregando pedra no turno da manhã da pedreira. Vai lá ouvir como ele fala." Ele vira as costas. "Ou não vai, e volta aqui com menos pressa."'
   ]
 },
 {
   id:'mandi', ordem:3, nome:'Mandi', titular:'Agatha', tipo:'Venenoso', nivelBase:64,
+  pista:'sabe_onde_agatha',
   especies:[103, 117, 42, 49, 94],   // Exeggutor, Seadra, Golbat, Venomoth, Gengar
   intro:d=>[
     'A terceira porta diz AGATHA, e é a única das quatro que tem uma cadeira encostada do lado de fora, como se alguém costumasse esperar ali.',
@@ -60,14 +82,22 @@ const ELITE4 = [
     '"MANDI!" Ele abre os braços para uma plateia que não existe. "O ESPANTOSO!"',
     'Depois baixa os braços e fala em tom normal, o que é muito mais assustador:',
     '"Todo mundo acha que eu sou palhaço. Eu fui vice-campeão da Conferência do Planalto Indigo, e eu virei palhaço de propósito, porque desafiante nervoso erra mais do que desafiante assustado."',
-    '"A cadeira lá fora é da Agatha. Ela tem oitenta e poucos anos e sentava ali entre os desafiantes pra fumar." Ele dá de ombros. "Eu não sento na cadeira dela. Eu só não deixo tirarem."',
+    '"A cadeira lá fora é da Agatha. Oitenta e poucos anos, sentava ali entre os desafiantes pra fumar e dizer a cada um quanto tempo ia durar." Ele sorri. "Ela errava pouco. E me chamava de palhaço na frente de todo mundo, e eu respondia que palhaço cobra ingresso."',
+    '"Eu deixo a cadeira ali porque sinto falta de ser xingado por alguém que entende do assunto."',
     '"Agora você sabe de tudo. E vai errar mesmo assim."'
   ],
   vitoria:d=>[
     'O Gengar se dissolve no ar e a música do palco para no meio de um compasso.',
     'Mandi acende a luz normal da sala, e sem o refletor ele parece dez anos mais velho.',
     '"Bom." Ele guarda as Pokébolas. "Sabe quantas pessoas descobriram que o truque era o truque e ganharam mesmo assim? Poucas."',
+    '"Se um dia passar por Lavender: a casa de janela verde atrás da Torre." Ele pisca. "Conta pra ela que me ganhou. Ela vai adorar saber que eu perdi."',
     '"Última porta." Ele perde o tom de palco de vez. "Essa aí não tem substituto. Quem senta atrás dela é o dono da placa."'
+  ],
+  derrota:d=>[
+    'O seu último cai, e o refletor gira devagar até achar você no chão da sala.',
+    '"E o ESPANTOSO vence de novo!" Ele faz uma reverência pra plateia que não existe, e depois estende a mão pra você levantar.',
+    '"Não fica assim. Você caiu no truque mais velho do mundo: olhou pra luz."',
+    '"A Agatha teria acertado quanto tempo você ia durar. Ela está em Lavender, na casa de janela verde atrás da Torre, se quiser perguntar. Leva paciência, que ela não tem."'
   ]
 },
 {
@@ -77,8 +107,8 @@ const ELITE4 = [
     'A quarta porta diz LANCE, e é a única da ala que está aberta.',
     'A sala é alta, de pedra escura, com fogo em quatro bacias de metal que alguém acende todo dia de manhã e apaga todo dia à noite.',
     'O homem de capa está em pé no centro, como esteve ontem e anteontem.',
-    '"Lance." Ele estende a mão, e a mão é firme e seca. "Da Elite dos Quatro. O que sobrou dela."',
-    '"Eu não vou falar dos outros três e eu peço que {o senhor|a senhora} também não fale. Eles têm motivo, e motivo de gente cansada não é assunto de desafiante."',
+    `"Lance." Ele estende a mão, e a mão é firme e seca. "Da Elite dos Quatro. ${Titulares.todosVoltaram(d) ? 'Inteira de novo, faz pouco tempo.' : Titulares.quantos(d) ? 'De quase toda ela.' : 'O que sobrou dela.'}"`,
+    ...lanceSobreOsOutros(d),
     d=>d.flags.liga_aliada || d.flags.sabe_do_norte
       ? '"E eu sei o que te mandaram fazer no norte." Ele não muda de expressão. "Então vamos ser rápidos e vamos ser sérios, porque o que está lá em cima é maior que esta sala, e eu tenho consciência disso."'
       : '"Eu venho todo dia. Não é disciplina, é que eu não saberia o que fazer com um dia em que eu não viesse."',
@@ -87,13 +117,39 @@ const ELITE4 = [
   vitoria:d=>[
     'O Dragonite cai de joelhos primeiro e só depois de lado, o que é a coisa mais parecida com respeito que um Dragonite faz.',
     'Lance recolhe os cinco sem pressa nenhuma e fica um tempo comprido de costas para você.',
-    '"Desde que os outros três pararam de vir, {o senhor|a senhora} é {o primeiro|a primeira} que chega aqui." Ele finalmente se vira. "E {o primeiro|a primeira} que passa."',
+    Titulares.quantos(d)
+      ? `"Faz meses que ninguém chegava aqui." Ele finalmente se vira. "{O senhor|A senhora} chegou e passou pelas quatro portas${Titulares.todosVoltaram(d) ? ', com as quatro ocupadas por quem é dono delas' : ''}."`
+      : '"Desde que os outros três pararam de vir, {o senhor|a senhora} é {o primeiro|a primeira} que chega aqui." Ele finalmente se vira. "E {o primeiro|a primeira} que passa."',
     'Ele vai até a parede do fundo e aperta um botão que você não tinha visto, e o que você achou que fosse parede começa a abrir.',
     '"A cadeira do Campeão está vaga no papel faz dois anos." Ele segura a porta. "No papel."',
     '"Boa sorte. E, quando {o senhor|a senhora} sair de lá, seja lá como for, eu vou estar aqui amanhã às oito."'
+  ],
+  derrota:d=>[
+    'O Dragonite pousa na frente do seu último, que caiu, e espera. Só quando o Lance faz um gesto ele recua.',
+    '"Amanhã às oito." Ele recolhe os cinco sem pressa.',
+    '"A porta abre do mesmo jeito pra quem perdeu. É a única coisa nesta ala que não mudou."'
   ]
 }
 ];
+
+/* O que o Lance diz dos outros três: nada de reverência. Ele é o que
+   ficou, e isso tem um custo que ele conta com humor seco; quem voltou,
+   ele conta pelo que mudou no corredor. */
+function lanceSobreOsOutros(d){
+  const v = id => typeof Titulares !== 'undefined' && Titulares.voltou(id, d);
+  if (!v('lorelei') && !v('bruno') && !v('agatha')) return [
+    '"Os outros três estão em casa. Eu sei o endereço dos três e não bati em porta nenhuma: quem tinha que bater era a Liga, e a Liga não bateu."',
+    '"Eu almoço sozinho faz meses. Já sei de cor a ordem das goteiras do corredor."'
+  ];
+  const linhas = [];
+  if (v('lorelei')) linhas.push('"A Lorelei voltou e, no primeiro dia, corrigiu três erros no regulamento da ala. Ninguém lia o regulamento fazia onze anos."');
+  if (v('bruno'))   linhas.push('"O Bruno voltou trazendo comida pra ala inteira, e a ala inteira não dá conta daquilo em uma semana."');
+  if (v('agatha'))  linhas.push('"A Agatha voltou e reclamou do café antes de dar bom dia. Eu senti falta disso, o que é constrangedor."');
+  linhas.push(Titulares.todosVoltaram(d)
+    ? '"Eu tinha me acostumado com o silêncio. Desacostumei em uma semana."'
+    : '"Quem não voltou está em casa. Eu continuo abrindo esta porta às oito."');
+  return linhas;
+}
 
 /* ── O CAMPEÃO ─────────────────────────────────────────── */
 const CAMPEAO = {

@@ -540,7 +540,7 @@ const Jogo = {
       if (venceu) dinheiro(premioCena(this.cenaBatalha).valor);
     } else if (this.eliteAtual){
       const e = this.eliteAtual;
-      const alvo = e.campeao ? CAMPEAO : ELITE4[e.indice];
+      const alvo = e.campeao ? CAMPEAO : Titulares.membro(e.indice);
       const falas = venceu ? (alvo.vitoria && alvo.vitoria(Estado.dados))
                            : (alvo.derrota && alvo.derrota(Estado.dados));
       /* Red não fala, nunca falou: qualquer aspas no salão é de outra pessoa */
@@ -1348,6 +1348,7 @@ const Jogo = {
     const meu = Estado.primeiroApto();
     if (!meu) return UI.modal('Elite 4', '<p class="nada">Nenhum Pokémon em pé. A ala não tem Centro Pokémon — cure antes de entrar.</p>');
     this.eliteAtual = {indice:0, campeao:false};
+    Estado.marcar('entrou_na_ala');
     Estado.registrar('Entrou na ala da Elite 4.');
     this.batalhaElite();
   },
@@ -1357,7 +1358,8 @@ const Jogo = {
     const meu = Estado.primeiroApto();
     if (!meu) return this.resultadoElite({resultado:'derrota'});
 
-    const alvo = e.campeao ? CAMPEAO : ELITE4[e.indice];
+    /* quem senta atrás da porta hoje: o titular que voltou, ou o substituto */
+    const alvo = e.campeao ? CAMPEAO : Titulares.membro(e.indice);
     const nivel = alvo.nivelBase;
     const time = alvo.especies.map((dex,i) =>
       criarPokemon(dex, nivel + i, {apelido: (alvo.apelidos||{})[dex] || null}));
@@ -1381,7 +1383,9 @@ const Jogo = {
     if (fim.resultado === 'gameover'){ this.eliteAtual = null; return UI.telaGameOver('Você caiu dentro do Planalto Indigo.'); }
 
     const venceu = fim.resultado === 'vitoria';
-    const alvo = e.campeao ? CAMPEAO : ELITE4[e.indice];
+    const alvo = e.campeao ? CAMPEAO : Titulares.membro(e.indice);
+    /* quem senta no lugar do titular conta onde ele está, ganhando ou perdendo */
+    if (!e.campeao && alvo.pista) Estado.marcar(alvo.pista);
 
     if (!venceu){
       this.eliteAtual = null;
@@ -1391,10 +1395,11 @@ const Jogo = {
         titulo: e.campeao ? 'O Campeão' : `${alvo.nome} venceu`,
         sub: e.campeao ? 'Salão do Campeão' : `Elite 4 · ${alvo.ordem} de 4`,
         falas: e.campeao ? CAMPEAO.derrota(Estado.dados) : [
-          `Você perde para ${alvo.nome}.`,
+          ...(alvo.derrota ? alvo.derrota(Estado.dados) : [`Você perde para ${alvo.nome}.`]),
           'A ala da Elite 4 tem uma regra só e a regra é essa: perdeu, sai. Do começo.',
           'Alguém do staff te acompanha até o corredor principal com uma educação que dói mais que deboche.'
         ],
+        quem: e.campeao ? null : alvo.nome,
         avisos: [], venceu:false
       });
     }

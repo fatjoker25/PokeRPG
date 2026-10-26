@@ -1021,6 +1021,7 @@ const UI = {
     if (typeof CONTATOS !== 'undefined') por(CONTATOS);
     if (typeof GINASIOS !== 'undefined') por(GINASIOS);
     if (typeof ELITE4  !== 'undefined') por(ELITE4);
+    if (typeof TITULARES !== 'undefined') por(Object.values(TITULARES));
     if (typeof CAMPEAO !== 'undefined' && CAMPEAO && CAMPEAO.nome) n.add(CAMPEAO.nome);
     if (typeof RIVAIS_EXTRA !== 'undefined') por(RIVAIS_EXTRA);
     ['Ezra','Oak','Professor Oak','Bill','Dr. Fuji','Lance','Agatha','Bruno','Lorelei',
@@ -3404,11 +3405,14 @@ const UI = {
 
     /* As quatro portas do corredor, cada uma com a placa de bronze do
        nome que está nela desde sempre. Quem senta atrás só aparece pra
-       quem já sabe; a porta que você já atravessou ganha o carimbo. */
-    const portas = ELITE4.map(m => {
+       quem já sabe; a porta que você já atravessou ganha o carimbo.
+       Titular que a visita trouxe de volta senta na própria porta
+       (Titulares.membro) e ganha a etiqueta de quem voltou. */
+    const portas = ELITE4.map((_, i) => Titulares.membro(i)).map(m => {
       const passou = campeao || !!d.flags['elite_passou_' + m.id];
       const rosto = sabeQuemSao && typeof retratoDe === 'function' ? retratoDe(m.nome) : null;
       const outro = m.titular && m.titular !== m.nome;
+      const voltou = !!TITULARES[m.id];
       const tipo = m.tipo === 'variado' ? '<span class="tipo-tag lp-variado">variado</span>' : this.tipoTag(m.tipo);
       return `<div class="liga-porta${passou ? ' passou' : ''}${sabeQuemSao ? '' : ' fechada'}">
         <span class="lp-ordem">${m.ordem}ª porta</span>
@@ -3416,7 +3420,7 @@ const UI = {
         <span class="lp-rosto">${rosto ? `<img src="${rosto}" alt="" onerror="this.remove()">` : '<b aria-hidden="true">?</b>'}</span>
         ${sabeQuemSao ? `<span class="lp-quem">${this.esc(m.nome)}</span>
           <span class="lp-info">${tipo}<span class="lp-nv">Nv ${m.nivelBase}–${m.nivelBase + m.especies.length + 1}</span></span>
-          ${outro ? `<span class="lp-cadeira">na cadeira de ${this.esc(m.titular)}</span>` : ''}`
+          ${outro ? `<span class="lp-cadeira">na cadeira de ${this.esc(m.titular)}</span>` : voltou ? '<span class="lp-cadeira">de volta à porta</span>' : ''}`
           : '<span class="lp-quem lp-fraco">Quem senta aqui?</span>'}
         ${passou ? `<span class="lp-selo">${campeao ? 'Vencida' : 'Você já passou'}</span>` : ''}
       </div>`;
@@ -5687,6 +5691,14 @@ const UI = {
       <div class="linha"><span class="k">Depois de vencer</span><span class="v">dá o número do PokéNav · revanche com time de 6 e +2 níveis · três dias depois ele pode ligar com um convite</span></div>
       <div class="linha"><span class="k">Convite</span><span class="v">aceito na chamada, vira um lugar pra ir no mapa · quem marcou dia e hora te espera nela, e ir até o convite leva o relógio até lá · uma luta, um treino ou outra coisa · perdendo a luta, o convite continua de pé</span></div>
       <div class="linha"><span class="k">Torneio Aberto</span><span class="v">veterano que você venceu pode cair no seu chaveamento, com 3 Pokémon</span></div>
+
+      <h3>Elite dos Quatro</h3>
+      <div class="linha"><span class="k">Quem entra</span><span class="v">quem tem as 8 insígnias · quatro salas seguidas, sem Centro Pokémon entre elas · perdeu uma, a ala recomeça da primeira porta</span></div>
+      <div class="linha"><span class="k">Nível</span><span class="v">o de cada porta, um a mais por Pokémon do time, e o último 2 acima disso · a quarta porta é sempre a mais alta</span></div>
+      <div class="linha"><span class="k">Os titulares</span><span class="v">Lorelei, Bruno e Agatha estão em casa desde antes do capítulo 17, cada um na sua cidade · quem senta na cadeira de cada um conta onde, ganhando ou perdendo, e a cidade também conta, pra quem anda e conversa</span></div>
+      <div class="linha"><span class="k">Voltar ou não</span><span class="v">cada titular pesa uma coisa que você fez antes, na cidade dele, e o resto se decide na visita: o que você diz, o que você faz e, às vezes, um teste · o jogo não diz o que cada um pesa</span></div>
+      <div class="linha"><span class="k">A visita</span><span class="v">abre depois do capítulo 17, pra quem sabe onde a pessoa está, e só até a cadeira do Campeão · ir embora sem decidir deixa a porta pra outro dia; o que se decide nela não se desfaz</span></div>
+      <div class="linha"><span class="k">Quem volta</span><span class="v">toma a porta de quem sentava nela, com o próprio time, 2 níveis acima do substituto na primeira e na segunda porta e 1 na terceira · com os três de volta, a ala não tem porta vaga pra cargo nenhum</span></div>
 
       <h3>Conferência do Planalto Indigo</h3>
       <div class="linha"><span class="k">Quem entra</span><span class="v">só quem sentou na cadeira do Campeão · inscrição de 5.000 ₽</span></div>

@@ -22,6 +22,9 @@ const RETRATO_POR_NOME = {
   'Erika':'gym_leaders/erika', 'Koga':'gym_leaders/koga', 'Sabrina':'gym_leaders/sabrina',
   'Blaine':'gym_leaders/blaine', 'Blue':'gym_leaders/blue', 'Giovanni':'gym_leaders/giovanni',
   'Lance':'elite/lance', 'Red':'elite/red',
+  /* os titulares, quando voltam (titulares.js): a arte de Let's Go da
+     Lorelei e da Agatha e o Bruno de HG/SS, do traço do Lance */
+  'Lorelei':'elite/lorelei', 'Bruno':'elite/bruno', 'Agatha':'elite/agatha',
   /* a Elite inteira no poço do capítulo 26: quem puxa a fila é o Lance */
   'Elite 4':'elite/lance',
   /* substitutos da Elite: a classe de treinador que os jogos dariam */

@@ -71,7 +71,11 @@ pewter:[
   {chave:'loja_pewter', texto:['A loja de Pewter vende mais equipamento de escalada que item de treinador. A dona explica que é questão de demanda.'], descobre:'loja_pewter'},
   {chave:'p_museu', texto:[
     'O museu tem duas salas e um funcionário. Na segunda, atrás do vidro, um Kabutops reconstruído em pedra.',
-    'A placa diz: "Extinto há aproximadamente 300 milhões de anos."'], ef:{flag:'viu_o_museu'}}
+    'A placa diz: "Extinto há aproximadamente 300 milhões de anos."'], ef:{flag:'viu_o_museu'}},
+  /* onde o Bruno da Elite está (titulares.js): só depois da notícia do 17 */
+  {chave:'p_bruno', cond:d=>typeof Titulares !== 'undefined' && Titulares.pistaAberta('bruno', d), texto:[
+    'Na guarita da pedreira, o quadro de turnos a giz tem trinta nomes. Um deles está escrito maior que os outros, por outra mão, e ninguém nunca apagou: BRUNO — MANHÃ — SETOR 2.',
+    'Embaixo, a giz mais fino, alguém acrescentou: "o da Liga".'], ef:{flag:'sabe_onde_bruno'}}
 ],
 cerulean:[
   {chave:'troca_cerulean', texto:[
@@ -111,7 +115,11 @@ lavender:[
     'Na base da torre tem um mural com nomes. Muitos nomes.',
     'Alguns têm data de um Pokémon e data de um treinador na mesma linha.']},
   {chave:'loja_lavender', texto:['A loja de Lavender vende incenso e vela junto com Potion, o que faz um sentido triste.'], descobre:'loja_lavender'},
-  {chave:'l_silencio', texto:['Você percebe, depois de meia hora, que a cidade inteira não tem música em lugar nenhum. Nenhum rádio, nenhuma loja com alto-falante.']}
+  {chave:'l_silencio', texto:['Você percebe, depois de meia hora, que a cidade inteira não tem música em lugar nenhum. Nenhum rádio, nenhuma loja com alto-falante.']},
+  /* onde a Agatha da Elite está (titulares.js) */
+  {chave:'l_agatha', cond:d=>typeof Titulares !== 'undefined' && Titulares.pistaAberta('agatha', d), texto:[
+    'Na rua de trás da Torre, uma casa tem a janela pintada de verde, e na caixa de correio, escrito à mão: A. — NÃO DEIXE PANFLETO DA LIGA.',
+    'Um menino que passa diz, sem você perguntar, que é a casa da Agatha, a da Liga, e que ela não gosta de visita.'], ef:{flag:'sabe_onde_agatha'}}
 ],
 celadon:[
   {chave:'troca_celadon', texto:[
@@ -136,7 +144,11 @@ fuchsia:[
     'O ginásio de Fuchsia não tem fachada. Você passa duas vezes na frente antes de entender que aquilo é a entrada.',
     'Não tem placa, não tem janela, e a porta abre pra dentro de um jeito estranho.'], descobre:'ginasio_fuchsia'},
   {chave:'loja_fuchsia', texto:['A loja fica na entrada da Zona Safári e vende mais repelente que Poké Ball.'], descobre:'loja_fuchsia'},
-  {chave:'f_cartaz', texto:['Um cartaz desbotado na recepção da reserva: "AJUDE-NOS — Pokémon avistados fora da cerca devem ser reportados."']}
+  {chave:'f_cartaz', texto:['Um cartaz desbotado na recepção da reserva: "AJUDE-NOS — Pokémon avistados fora da cerca devem ser reportados."']},
+  /* onde a Lorelei da Elite está (titulares.js) */
+  {chave:'f_lorelei', cond:d=>typeof Titulares !== 'undefined' && Titulares.pistaAberta('lorelei', d), texto:[
+    'No cais velho, entre as caixas de correio dos barcos, tem uma que não é de barco: L. — CASA DA PORTA AZUL. Está cheia de envelope da Liga, nenhum aberto.',
+    'Na rampa da última casa do cais, um Lapras dorme de lado, do tamanho de um barco pequeno.'], ef:{flag:'sabe_onde_lorelei'}}
 ],
 saffron:[
   {chave:'troca_saffron', texto:[
@@ -342,6 +354,8 @@ const CONVERSAS = {
     [fala('a quebradora de pedra', 'Pedra de Pewter tem veio. Pedra do Monte da Lua tem brilho. Quem confunde as duas não é daqui.')],
     {cond:d=>d.insignias.includes('Insígnia Pedra'), texto:[fala('a quebradora de pedra', 'Você é quem ganhou do Brock? Ele fez cara de quem gostou. Ele quase nunca faz essa cara.')]},
     [fala('a mulher da banca', 'Aqui todo mundo trabalhou na pedreira ou é filho de quem trabalhou. Inclusive o líder do ginásio.')],
+    {cond:d=>typeof Titulares !== 'undefined' && Titulares.pistaAberta('bruno', d), ef:{flag:'sabe_onde_bruno', registrar:'O Bruno da Elite carrega pedra no turno da manhã da pedreira de Pewter.'},
+     texto:[fala('a quebradora de pedra', 'O grandão do turno da manhã? É o Bruno, da Liga. Carrega pedra no setor dois faz meses, e ninguém aqui pergunta, porque aqui ninguém pergunta.')]},
     ['Uma menina de uns dez anos te aborda com a autoridade de quem já viu isso dar errado.',
      fala('a menina de dez anos', 'Você vai lutar no ginásio? Leva alguma coisa de Água. TODO MUNDO esquece.', 'grita')],
     [fala('o senhor da praça', 'O museu tá pedindo doação de novo. Eles têm um Pokémon de trezentos milhões de anos e não têm telhado.')],
@@ -405,6 +419,8 @@ const CONVERSAS = {
   ],
   lavender:[
     [fala('a vendedora de flores', 'Flor branca pra quem foi há pouco tempo. Flor amarela pra quem foi há muito. Ninguém compra a vermelha.', 'baixo')],
+    {cond:d=>typeof Titulares !== 'undefined' && Titulares.pistaAberta('agatha', d), ef:{flag:'sabe_onde_agatha', registrar:'A Agatha da Elite mora na casa de janela verde atrás da Torre de Lavender.'},
+     texto:[fala('a vendedora de flores', 'A senhora da janela verde, atrás da Torre? É a Agatha, da Liga. Compra uma flor amarela por semana e não diz pra quem.', 'baixo')]},
     ['Um Gastly passa pela praça a meio metro do chão, devagar, como quem faz o mesmo caminho todo dia. Ninguém olha. É Lavender.'],
     [fala('o menino que fala alto', 'Minha avó diz que a cidade é calma porque todo mundo aqui fala baixo. Eu falo alto. Ela diz que eu sou de outra cidade.')],
     {cond:d=>d.relogio.periodo==='madrugada', texto:['De madrugada a Torre tem uma luz acesa no último andar. Sempre a mesma janela.']},
@@ -458,6 +474,8 @@ const CONVERSAS = {
     [fala('o dono do quiosque', 'Água de coco gelada e mapa do Safári. Mapa errado de propósito: o certo, o guarda não deixa vender.', 'riso')],
     {cond:d=>d.relogio.periodo==='tarde', texto:['O calor de Fuchsia à tarde tem cheiro de mato molhado. As portas das casas ficam abertas, com cortina de miçanga balançando.']},
     [fala('o dono do bar da esquina', 'Metade desta cidade trabalha na Zona. A outra metade vive de quem trabalha na Zona.')],
+    {cond:d=>typeof Titulares !== 'undefined' && Titulares.pistaAberta('lorelei', d), ef:{flag:'sabe_onde_lorelei', registrar:'A Lorelei da Elite mora na casa de porta azul do cais velho de Fuchsia.'},
+     texto:[fala('o dono do bar da esquina', 'A moça de terno do cais velho? É a Lorelei, da Liga. Mora na casa de porta azul faz anos e só aparece aqui pra comprar caderno.')]},
     ['Um guarda-parque de folga, já bem bêbado, derruba o copo na mesa.',
      fala('o guarda-parque', 'Setor 7 é onde a gente aprende que não existe emprego limpo!', 'grita',
           'O colega dele manda ele calar a boca, e manda sério.')],
@@ -616,7 +634,12 @@ const Conversas = {
     }
     const escolhida = Dados.escolher(pool);
     this.ultima[id] = chave(escolhida);
-    if (!reencontro){ ouvidas.push(marca(escolhida)); return texto(escolhida); }
+    if (!reencontro){
+      ouvidas.push(marca(escolhida));
+      /* conversa que ensina alguma coisa ({cond, texto, ef}): vale na primeira vez */
+      if (escolhida.ef && typeof Historia !== 'undefined') Historia.aplicar(escolhida.ef);
+      return texto(escolhida);
+    }
     /* todo mundo daqui já falou com você: quem aparece te reconhece */
     const resolve = l => { if (typeof l !== 'function') return l; try { return l(d); } catch(e){ return null; } };
     const quem = texto(escolhida).map(resolve).find(l => l && typeof l === 'object' && l.quem);

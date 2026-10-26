@@ -196,6 +196,7 @@ function iconeDoAfazer(a){
   if (id === 'lab_premios') return 'loja';
   if (/^idade_/.test(id)) return 'porta';
   if (/^intu_/.test(id)) return 'lua';
+  if (/^tit_/.test(id)) return 'porta';
   const t = String(a.titulo || '').toLowerCase();
   if (/laborat/.test(t)) return 'laboratorio';
   if (/ferragem/.test(t)) return 'ferragem';

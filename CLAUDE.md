@@ -1038,6 +1038,57 @@ entre 10% e 90% (com veterano e jogador gastando Vontade). Espécie cuja evoluç
 Scyther) entra na lista **pela forma final** (208, 212): `finalDaLinha`
 não acha o Steelix saindo do Onix.
 
+## Os titulares da Elite
+Lorelei, Bruno e Agatha pararam de subir no mesmo mês (o capítulo 17
+conta desde quando) e estão em casa: a Lorelei no cais velho de
+Fuchsia, o Bruno no turno da manhã da pedreira de Pewter, a Agatha na
+casa de janela verde atrás da Torre de Lavender. Dados, decisão e
+visitas moram em `js/story/titulares.js` (`TITULARES`, `Titulares`).
+
+- **Voltar depende de decisão**, e nunca da Liga pedir. Cada um lê uma
+  coisa que você fez na cidade dele (`jeito(f)`, lido das flags, nunca
+  guardado): a Lorelei o gelo das Seafoam (capítulo 13), o Bruno a
+  fenda da pedreira (4), a Agatha o sexto andar da Torre (7). Dá
+  `volta` (o que você fez basta), `fecha` (não volta), `raiva` (só a
+  Agatha: volta pra ganhar de você) ou `talvez`, e no `talvez` a
+  conversa na porta decide — com o que cada um valoriza: a Lorelei
+  quer quem pergunta por quê e odeia elogio e carta da Liga, o Bruno
+  quer quem trabalha e odeia discurso, a Agatha gosta de aposta e de
+  cara de pau e odeia pena. O jogo não diz nada disso; a folha de
+  regras diz só que pesa.
+- **A visita** é um evento encadeado (`tit_<id>`) que abre pelo afazer
+  do lugar (`Titulares.afazeres`, `Titulares.fazer`), depois do 17
+  (`liberado`), pra quem sabe onde a pessoa está (`sabe_onde_<id>`) e
+  até a cadeira do Campeão. O que ela decide fica em `titular_<id>`
+  (`'voltou'`/`'ficou'`, por `Titulares.decidir`) e não se desfaz; ir
+  embora sem decidir deixa a porta pra outro dia. O Bruno só trabalha
+  de manhã (`hora`): fora dela, a visita leva o relógio até o turno.
+- **A pista** vem de três lados: o substituto, ganhando ou perdendo
+  (`pista` no ELITE4, marcada no `resultadoElite`), a cidade
+  (`DESCOBERTAS` andando e `CONVERSAS` com `ef`) e a Conselheira no
+  capítulo 26, que diz onde estão os que faltam.
+- **Quem volta senta na própria porta**: tudo que lê a ala passa por
+  `Titulares.membro(i)` (luta, citação, tela da Liga), nunca por
+  `ELITE4[i]`. Time e nível próprios, 2 acima do substituto na
+  primeira e na segunda porta e 1 na terceira, com o Lance sempre no
+  topo. O substituto continua na sala (a Giselle anota a Lorelei, o
+  A.J. perdeu a cadeira numa luta, o Mandi abre a porta pra Agatha), o
+  Lance comenta quem voltou (`lanceSobreOsOutros`), a Conselheira do
+  26 conta, a oferta de cadeira na Elite (`c26_oferta`) e o posto
+  `elite` precisam de porta sem dono.
+- **Ninguém gira em volta de reverência.** Cada substituto olha o dono
+  da placa do jeito dele: a Giselle quer a placa (a dela cabe no mesmo
+  furo), o A.J. tem uma conta antiga com o Bruno, o Mandi sente falta
+  de ser xingado pela Agatha. Fala nova deles segue o jeito, não o
+  respeito.
+- Rosto: `elite/lorelei` e `elite/agatha` (Let's Go) e `elite/bruno`
+  (HG/SS), do traço do Lance. O texto descreve o que a arte mostra.
+
+`chk-lutas` roda cada titular de volta, a Agatha com raiva e o Lance
+com os três; `chk-telas` abre a pista de cada cidade, cada jeito de
+cada visita com cada escolha (o teste pros dois lados) e a Liga com
+titulares de volta.
+
 ## Sexo do Pokémon
 Todo Pokémon ganha `genero` (`'m'`, `'f'` ou `null`) no `criarPokemon`,
 na proporção dos jogos (`chanceDeMacho`, em `js/engine/pokemon.js`). Save
@@ -1598,7 +1649,8 @@ não esconde e os dois ficam na tela; e quem a animação escala pelo
   fala, as aspas são dele.
 - Conversa de cidade (`CONVERSAS`, em `lugares.js`) pode ter linha que é
   função — quem é de lá, quantas insígnias, se o ginásio está fechado — e
-  `{cond, texto}` pro que só vale às vezes. Descoberta começa sempre por
+  `{cond, texto}` pro que só vale às vezes, com `ef` se a conversa ensina
+  alguma coisa (aplicado na primeira vez que ela é ouvida). Descoberta começa sempre por
   texto, que vai pro diário. Morador tem rótulo próprio da cidade: dois
   "o dono do bar" em lugares diferentes viram a mesma pessoa no dia em
   que o jogador pergunta o nome de um deles.

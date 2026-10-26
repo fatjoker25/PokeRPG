@@ -323,6 +323,59 @@ const SUSPEITO = [
   await restaurar();
   await tentar('pokébolas', () => { Estado.darItem('Master Ball', 1); Exploracao.tela(); UI.menuBolas(); });
 
+  /* ---------- os titulares da Elite: a pista, cada jeito e cada escolha da visita ---------- */
+  const JEITOS = {
+    lorelei:{volta:{devolveu_o_filhote:true}, fecha:{capturou_articuno:true}, fecha_traiu:{traiu_articuno:true},
+             talvez:{achou_o_filhote:true, prometeu_a_articuno:true}, talvez_sem_saber:{}},
+    bruno:{volta:{sugeriu_a_sirene:true, protegeu_o_rapaz:true}, volta_moleque:{pagou_o_rapaz:true}, fecha:{entregou_o_rapaz:true}, talvez:{}},
+    agatha:{volta:{acalmou_marowak:true}, volta_olhou:{entendeu_a_cena:true}, raiva:{usou_escudo:true}, raiva_bateu:{bateu_no_marowak:true},
+            talvez:{bateu_no_marowak:true, contou_a_verdade_ao_hideo:true}}
+  };
+  const naPorta = async (id, flags) => { await restaurar(); await page.evaluate(([id, flags]) => {
+    const d = Estado.dados, t = TITULARES[id];
+    d.capitulo = 20; d.capitulosFechados = (d.capitulosFechados || []).concat([17]);
+    Object.assign(d.flags, flags); d.flags[t.pista] = true; d.local = t.local;
+    Exploracao.tela();
+  }, [id, flags]); };
+  for (const [id, jeitos] of Object.entries(JEITOS)){
+    /* a pista: o que a cidade mostra andando e o que ela conta conversando */
+    await restaurar();
+    await tentar(`titular/${id}/pista`, x => {
+      const d = Estado.dados, t = TITULARES[x];
+      d.capitulo = 20; d.local = t.local;
+      const desc = DESCOBERTAS[t.local].find(a => a.ef && a.ef.flag === t.pista);
+      const conv = CONVERSAS[t.local].find(c => c.ef && c.ef.flag === t.pista);
+      if (!desc || !conv) throw new Error('sem pista de ' + x + ' na cidade');
+      if (!desc.cond(d) || !conv.cond(d)) throw new Error('pista de ' + x + ' fechada depois do 17');
+      Exploracao.tela(desc.texto.concat(conv.texto).map(l => ({tipo:'info', texto:l})));
+    }, id);
+    for (const [j, flags] of Object.entries(jeitos)){
+      await naPorta(id, flags);
+      await tentar(`titular/${id}/${j}`, x => Exploracao.fazer('tit_' + x), id);
+      const escolhas = await page.evaluate(x => (Eventos.porId('tit_' + x).escolhas || [])
+        .map((o, i) => { try { return !o.cond || o.cond(Estado.dados) ? [i, !!o.teste] : null; } catch(e){ return null; } })
+        .filter(Boolean), id);
+      for (const [i, teste] of escolhas) for (const passa of (teste ? [true, false] : [true])){
+        await naPorta(id, flags);
+        await tentar(`titular/${id}/${j}/${i}${passa ? '' : '/ruim'}`, ([x, i, passa]) => {
+          const orig = Eventos.rolar;
+          Eventos.rolar = function(esc){ const r = orig.call(this, esc); if (r) r.passou = passa; return r; };
+          try { Exploracao.fazer('tit_' + x); Jogo.resolverEvento('tit_' + x, i); } finally { Eventos.rolar = orig; }
+        }, [id, i, passa]);
+      }
+    }
+  }
+  /* a Liga com os três de volta, com dois, e a Conselheira contando quem falta */
+  for (const quem of [['lorelei', 'bruno', 'agatha'], ['bruno']]){
+    await restaurar();
+    await tentar('liga/titulares/' + quem.join('+'), q => {
+      const d = Estado.dados;
+      d.insignias = GINASIOS.map(g => g.insignia || g.id); d.flags.sabe_da_elite = true; d.local = 'planalto';
+      q.forEach(id => { d.flags['titular_' + id] = 'voltou'; });
+      UI.telaLiga();
+    }, quem);
+  }
+
   /* ---------- lugares e afazeres ---------- */
   for (const id of await page.evaluate(() => Object.keys(LOCAIS))){
     await restaurar();

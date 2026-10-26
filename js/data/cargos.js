@@ -183,8 +183,12 @@ const CARGOS = [
 {
   id:'elite', falante:'quem estava na porta antes de você', nome:'Elite dos Quatro', orgao:'Planalto Indigo', peso:5, cap:27,
   onde:'planalto', lugar:'Secretaria da Liga',
-  pede:[{t:'ter vencido a Elite dos Quatro', ok:d=>!!d.flags.campeao_de_kanto || !!d.flags.venceu_a_elite}],
-  requer:d=>!!d.flags.campeao_de_kanto || !!d.flags.venceu_a_elite,
+  /* a porta é a de um substituto: com os três titulares de volta
+     (titulares.js), as quatro têm dono e não sobra porta */
+  pede:[{t:'ter vencido a Elite dos Quatro', ok:d=>!!d.flags.campeao_de_kanto || !!d.flags.venceu_a_elite},
+        {t:'uma porta da ala sem o dono de volta', ok:d=>!(typeof Titulares !== 'undefined' && Titulares.todosVoltaram(d))}],
+  requer:d=>(!!d.flags.campeao_de_kanto || !!d.flags.venceu_a_elite)
+         && !(typeof Titulares !== 'undefined' && Titulares.todosVoltaram(d)),
   veta:['rocket'],
   resumo:'Uma das quatro portas. Você passa a ser a parede de alguém.',
   beneficios:{renda:5000, centro:true, semEspera:true},

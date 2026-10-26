@@ -108,6 +108,16 @@ const raiz = path.resolve(__dirname, '..');
     /* Elite e Campeão */
     ELITE4.forEach((e, i) => add(`Elite ${e.nome}`, 8, 22, () => { Jogo.eliteAtual = {indice:i, campeao:false}; Jogo.batalhaElite(); }));
     add('Campeão', 8, 22, () => { Jogo.eliteAtual = {indice:4, campeao:true}; Jogo.batalhaElite(); });
+    /* os titulares de volta (titulares.js): cada porta com o dono, a
+       Agatha também com raiva, e o Lance com os três de volta */
+    Object.values(TITULARES).forEach(t => add(`Elite ${t.nome} (de volta)`, 8, 22, d => {
+      d.flags['titular_' + t.id] = 'voltou'; Jogo.eliteAtual = {indice:t.porta, campeao:false}; Jogo.batalhaElite(); }));
+    add('Elite Agatha (com raiva)', 8, 22, d => {
+      d.flags.titular_agatha = 'voltou'; d.flags.agatha_com_raiva = true; d.flags.usou_escudo = true;
+      Jogo.eliteAtual = {indice:2, campeao:false}; Jogo.batalhaElite(); });
+    add('Elite Lance (os três de volta)', 8, 22, d => {
+      ['lorelei', 'bruno', 'agatha'].forEach(id => { d.flags['titular_' + id] = 'voltou'; });
+      Jogo.eliteAtual = {indice:3, campeao:false}; Jogo.batalhaElite(); });
     /* torneio: as três rodadas */
     [0, 1, 2].forEach(rd => add(`torneio rodada ${rd + 1}`, 8, 22, () => {
       Jogo.torneioAtual = {rodada:rd, adversarios: montarChaveamento()}; Jogo.lutarRodadaTorneio(); }));
