@@ -1325,7 +1325,10 @@ que o projeto tem:
 
 - **Letra**: a interface (fichas da luta, comandos, topo, placas) é
   Jost, embutida em `css/fonte-jogo.css` (OFL, em `fontes/`), pela
-  variável `--letra-hud`. O menu do lugar (portas, o que fazer, para
+  variável `--letra-hud`, que mora no `:root`. Ela já morou só no topo
+  e na luta, e tudo fora deles que pedia `var(--letra-hud, …)` caía
+  calado na fonte do sistema — medido com `getComputedStyle`, não no
+  olho. O menu do lugar (portas, o que fazer, para
   onde ir) e a ação de cena que não é frase (encarar, rolar, encerrar)
   também. O texto da história continua na fonte do sistema, que é a de
   ler, e a opção de cena que é frase vai junto com ele. Nada de fonte
@@ -1403,6 +1406,20 @@ fica no mapa (`Exploracao.rumo`, pelas quadras de `MAPA_GRADE`, em oito
 rumos), e o rumo vai escrito ("Ir para · leste"); lugar novo sem quadra
 fica sem seta. O capítulo que espera aqui é a missão dourada
 (`.escolha.chamado`), com a exclamação pulsando e o número do capítulo.
+
+**Janela** (`UI.modal`) tem o título em letra de placa, com o desenho
+da janela numa moeda da cor dele (`ICONE_DA_JANELA`, pela classe da
+janela; a cor vira o `--ac` da janela inteira). As janelas de ler
+(`JANELAS_DE_LER`: regras, tutorial, ajustes, rota, diário, códice)
+ganham a classe `.folha`: seção com losango e linha, a conta em linhas
+agrupadas numa ficha (a primeira e a última de cada grupo arredondam
+sozinhas, por `:has`), o exemplo da folha de regras num cartão com o
+dado. Ajustes tem a chave de liga e desliga no mudo e a régua de volume
+que enche até o valor (`--v`, posto pelo `oninput`). A Rota é a trilha
+dos capítulos, cada nó na cor do tom do capítulo, e o Diário é a ficha
+de agora com a linha do tempo. O fim da jornada (`telaFinal`) usa a
+mesma folha e põe os números em quadros. Janela nova de ler entra nas
+duas listas.
 
 Botão que entra animado entra com `animation-fill-mode` **backwards**,
 nunca `both`. O `both` segura o último quadro, e animação manda mais

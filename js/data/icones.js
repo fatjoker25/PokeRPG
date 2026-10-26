@@ -154,7 +154,7 @@ const COR_DO_ICONE = {
   pescar:'#42a5f5', acampar:'#c49a6c', esperar:'#90a4ae', lutar:'#ef5350', troca:'#26a69a',
   agenda:'#ffca28', convite:'#ffb74d', revanche:'#ff7043', trancado:'#7d88a8',
   mural:'#ffb74d', pc:'#4dd0e1', mapa:'#66bb6a', dormir:'#7986cb', diario:'#e8b923',
-  seta:'#5aa7ff', olho:'#90caf9', pergunta:'#9fa8da', dado:'#4dd0e1', chama:'#a77bff', tigela:'#d9a35b'
+  seta:'#5aa7ff', olho:'#90caf9', pergunta:'#8c9eff', dado:'#4dd0e1', chama:'#a77bff', tigela:'#d9a35b'
 };
 
 /* estilo: mais alguma coisa inline (a seta da placa gira por ele) */

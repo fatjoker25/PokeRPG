@@ -42,6 +42,10 @@
   --suave:cubic-bezier(.22,.61,.36,1);
   --fonte:'Segoe UI',system-ui,-apple-system,Roboto,'Helvetica Neue',sans-serif;
   --mono:'SFMono-Regular',Consolas,'Liberation Mono',Menlo,monospace;
+  /* a letra de placa (Jost, css/fonte-jogo.css) vale na página inteira:
+     definida só no topo e na luta, o menu do lugar e as janelas pediam
+     var(--letra-hud) e caíam calados na fonte do sistema */
+  --letra-hud:'Jost', var(--fonte);
 }
 
 /* Tons por capítulo — cada um é um lugar de Kanto, não um degrau de
@@ -4248,3 +4252,279 @@ button.item-linha.aparelho{
   .sa-pontos i{width:9px;height:9px}
   .sa-pontos{gap:3px}
 }
+
+/* ============================================================
+   JANELAS — o título no idioma do HUD (letra de placa e o desenho
+   da janela numa moeda da cor dele, ICONE_DA_JANELA) e as janelas
+   de ler (JANELAS_DE_LER: regras, tutorial, ajustes, rota, diário,
+   códice) com a folha: seção com losango e linha, a conta em linhas
+   agrupadas numa ficha, o exemplo num cartão com o dado, a régua de
+   volume que enche e a chave de liga e desliga. A cor da janela
+   (--ac) é a do desenho do título; sem desenho de cor, dourada.
+   ============================================================ */
+.modal > h2{
+  display:flex;align-items:center;gap:12px;
+  font-family:var(--letra-hud, var(--fonte));font-size:22px;font-weight:700;letter-spacing:.01em;line-height:1.15;
+}
+.modal > h2 svg.janela-icone{
+  width:38px;height:38px;padding:8px;flex:0 0 auto;border-radius:50%;stroke-width:2;color:#fff;
+  background:radial-gradient(circle at 50% 30%, color-mix(in srgb, var(--ac, var(--destaque)) 62%, #fff), var(--ac, var(--destaque)) 58%, color-mix(in srgb, var(--ac, var(--destaque)) 68%, #000));
+  box-shadow:0 0 0 2px rgba(255,255,255,.14), 0 4px 12px -4px rgba(0,0,0,.85);
+}
+.modal-pe .btn{
+  font-family:var(--letra-hud, var(--fonte));font-weight:600;letter-spacing:.02em;
+  padding:9px 18px;border-radius:11px;box-shadow:0 3px 0 rgba(0,0,0,.4);
+}
+.modal-pe .btn:active:not(:disabled){transform:translateY(2px);box-shadow:0 1px 0 rgba(0,0,0,.4)}
+
+/* a seção: losango na cor da janela e a linha até a borda */
+:is(.modal.folha, .painel.final) h3{
+  display:flex;align-items:center;gap:10px;margin:24px 0 10px;
+  font-family:var(--letra-hud, var(--fonte));font-size:15.5px;font-weight:700;letter-spacing:.01em;
+  color:var(--texto);text-transform:none;
+}
+:is(.modal.folha, .painel.final) h3::before{
+  content:'';flex:0 0 auto;width:8px;height:8px;border-radius:2px;transform:rotate(45deg);
+  background:var(--ac, var(--destaque));box-shadow:0 0 10px -1px var(--ac, var(--destaque));
+}
+:is(.modal.folha, .painel.final) h3::after{
+  content:'';flex:1 1 auto;height:1px;
+  background:linear-gradient(90deg, color-mix(in srgb, var(--ac, var(--destaque)) 40%, var(--borda)), transparent);
+}
+.modal.folha .modal-corpo > h3:first-child, .modal.folha .tut-corpo > h3:first-child{margin-top:2px}
+:is(.modal.folha, .painel.final) .sussurro{
+  font-style:normal;font-size:14px;line-height:1.6;margin:6px 0 10px;
+  color:color-mix(in srgb, var(--texto) 80%, var(--texto-fraco));
+}
+.modal.folha .modal-corpo{font-size:14px}
+
+/* a conta: linhas agrupadas numa ficha, o nome na cor da janela */
+:is(.modal.folha, .painel.final) .linha{
+  margin:0;padding:9px 14px;font-size:14px;
+  border:1px solid color-mix(in srgb, var(--borda) 80%, transparent);border-top:0;
+  background:color-mix(in srgb, var(--bg) 38%, transparent);
+}
+:is(.modal.folha, .painel.final) .linha:not(.linha + .linha){
+  margin-top:10px;border-top:1px solid color-mix(in srgb, var(--borda) 80%, transparent);border-radius:12px 12px 0 0;
+}
+:is(.modal.folha, .painel.final) .linha:not(:has(+ .linha)){margin-bottom:10px;border-radius:0 0 12px 12px}
+:is(.modal.folha, .painel.final) .linha:not(.linha + .linha):not(:has(+ .linha)){border-radius:12px}
+:is(.modal.folha, .painel.final) .linha .k{
+  font-family:var(--letra-hud, var(--fonte));font-weight:600;font-size:13.5px;
+  color:color-mix(in srgb, var(--ac, var(--destaque)) 48%, var(--texto));
+}
+:is(.modal.folha, .painel.final) .linha .v{color:var(--texto);line-height:1.5}
+
+/* o exemplo: cartão com o dado */
+.modal.folha .exemplo-regra{
+  position:relative;margin:10px 0 14px;padding:12px 15px 12px 52px;border-radius:12px;
+  border:1px solid color-mix(in srgb, var(--ac, var(--destaque)) 38%, transparent);
+  background:linear-gradient(180deg, color-mix(in srgb, var(--ac, var(--destaque)) 11%, var(--painel-2)), color-mix(in srgb, var(--ac, var(--destaque)) 4%, var(--bg-2)));
+  font-size:14px;line-height:1.6;
+}
+.modal.folha .exemplo-regra::before{
+  content:'';position:absolute;left:15px;top:13px;width:24px;height:24px;background:var(--ac, var(--destaque));
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.9'%3E%3Crect x='4' y='4' width='16' height='16' rx='3.5'/%3E%3Ccircle cx='8.6' cy='8.6' r='1.3' fill='black'/%3E%3Ccircle cx='15.4' cy='8.6' r='1.3' fill='black'/%3E%3Ccircle cx='12' cy='12' r='1.3' fill='black'/%3E%3Ccircle cx='8.6' cy='15.4' r='1.3' fill='black'/%3E%3Ccircle cx='15.4' cy='15.4' r='1.3' fill='black'/%3E%3C/svg%3E") center/contain no-repeat;
+          mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.9'%3E%3Crect x='4' y='4' width='16' height='16' rx='3.5'/%3E%3Ccircle cx='8.6' cy='8.6' r='1.3' fill='black'/%3E%3Ccircle cx='15.4' cy='8.6' r='1.3' fill='black'/%3E%3Ccircle cx='12' cy='12' r='1.3' fill='black'/%3E%3Ccircle cx='8.6' cy='15.4' r='1.3' fill='black'/%3E%3Ccircle cx='15.4' cy='15.4' r='1.3' fill='black'/%3E%3C/svg%3E") center/contain no-repeat;
+}
+.modal.folha .exemplo-regra > b:first-child{
+  font-family:var(--letra-hud, var(--fonte));font-weight:700;color:color-mix(in srgb, var(--ac, var(--destaque)) 55%, #fff);
+}
+
+/* tutorial: as abas são as dos menus dos jogos, e o passo a passo
+   numera cada passo numa bolinha */
+.modal.tutorial .tut-abas{gap:7px;margin-bottom:18px;padding-bottom:14px}
+.modal.tutorial .tut-aba{
+  padding:7px 14px;font-family:var(--letra-hud, var(--fonte));font-size:13px;font-weight:600;letter-spacing:.02em;
+  color:var(--texto-fraco);background:color-mix(in srgb, var(--bg) 55%, transparent);
+  border:1px solid var(--borda);box-shadow:0 2px 0 rgba(0,0,0,.35);
+}
+.modal.tutorial .tut-aba:hover{color:var(--texto);border-color:color-mix(in srgb, var(--ac, var(--destaque)) 60%, var(--borda))}
+.modal.tutorial .tut-aba.sel{
+  color:#11131f;border-color:var(--ac, var(--destaque));
+  background:linear-gradient(180deg, color-mix(in srgb, var(--ac, var(--destaque)) 68%, #fff), var(--ac, var(--destaque)) 60%, color-mix(in srgb, var(--ac, var(--destaque)) 82%, #000));
+  box-shadow:0 3px 0 color-mix(in srgb, var(--ac, var(--destaque)) 40%, #000), 0 0 16px -6px var(--ac, var(--destaque));
+}
+.modal.tutorial .tut-passos{list-style:none;padding-left:0;counter-reset:passo;gap:9px}
+.modal.tutorial .tut-passos li{
+  position:relative;counter-increment:passo;padding:11px 14px 11px 52px;border-radius:12px;
+  border:1px solid color-mix(in srgb, var(--borda) 80%, transparent);background:color-mix(in srgb, var(--bg) 38%, transparent);
+  font-size:14px;line-height:1.55;
+}
+.modal.tutorial .tut-passos li::before{
+  content:counter(passo);position:absolute;left:13px;top:10px;width:26px;height:26px;border-radius:50%;
+  display:grid;place-items:center;font:700 12.5px/1 var(--letra-hud, var(--fonte));color:#11131f;
+  background:var(--ac, var(--destaque));box-shadow:0 2px 0 rgba(0,0,0,.4);
+}
+.modal.tutorial .tut-passos li > b:first-child{font-family:var(--letra-hud, var(--fonte));font-weight:700;color:var(--texto)}
+
+/* ajustes: cada bloco num cartão, a chave do mudo e a régua de volume */
+.modal.ajustes .ajuste-moldura, .modal.ajustes .ajuste-som{
+  margin:0 0 6px;padding:14px 16px;border-radius:14px;
+  border:1px solid color-mix(in srgb, var(--borda) 85%, transparent);
+  background:color-mix(in srgb, var(--bg) 38%, transparent);
+}
+.modal.ajustes .ajuste-som{display:flex;flex-direction:column;gap:12px}
+.modal.ajustes .moldura-nome{font-family:var(--letra-hud, var(--fonte));font-weight:600;font-size:14.5px;color:var(--texto)}
+.modal.ajustes .escolha + .escolha{margin-top:8px}
+.som-mudo{
+  position:relative;display:flex;align-items:center;justify-content:space-between;gap:10px;cursor:pointer;
+  font-family:var(--letra-hud, var(--fonte));font-size:14.5px;font-weight:600;
+}
+.som-mudo input{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}
+.som-mudo .chave{
+  position:relative;flex:0 0 auto;width:46px;height:26px;border-radius:999px;
+  background:rgba(0,0,0,.35);box-shadow:inset 0 0 0 1px var(--borda-forte);transition:background .2s var(--suave);
+}
+.som-mudo .chave::after{
+  content:'';position:absolute;left:3px;top:3px;width:20px;height:20px;border-radius:50%;
+  background:#dfe5f7;box-shadow:0 1px 3px rgba(0,0,0,.5);transition:transform .22s var(--mola);
+}
+.som-mudo input:checked + .chave{background:var(--destaque);box-shadow:inset 0 0 0 1px var(--destaque-esc)}
+.som-mudo input:checked + .chave::after{transform:translateX(20px);background:#fff}
+.som-mudo input:focus-visible + .chave{outline:2px solid var(--destaque);outline-offset:2px}
+.modal.ajustes .som-linha{grid-template-columns:132px 1fr 46px;font-size:14px}
+.modal.ajustes .som-linha > span:first-child{font-family:var(--letra-hud, var(--fonte));font-weight:600}
+.som-linha input[type=range]{-webkit-appearance:none;appearance:none;height:24px;background:transparent;cursor:pointer;margin:0}
+.som-linha input[type=range]::-webkit-slider-runnable-track{
+  height:8px;border-radius:999px;box-shadow:inset 0 1px 2px rgba(0,0,0,.45);
+  background:linear-gradient(90deg, var(--destaque) 0 var(--v, 50%), rgba(255,255,255,.13) var(--v, 50%));
+}
+.som-linha input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;width:20px;height:20px;margin-top:-6px;border-radius:50%;
+  background:#fff;border:3px solid var(--destaque);box-shadow:0 2px 6px rgba(0,0,0,.55);
+}
+.som-linha input[type=range]::-moz-range-track{height:8px;border-radius:999px;background:rgba(255,255,255,.13)}
+.som-linha input[type=range]::-moz-range-progress{height:8px;border-radius:999px;background:var(--destaque)}
+.som-linha input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:#fff;border:3px solid var(--destaque)}
+.som-linha input[type=range]:focus-visible{outline:none}
+.som-linha input[type=range]:focus-visible::-webkit-slider-thumb{box-shadow:0 0 0 4px var(--destaque-sombra)}
+.modal.ajustes .som-pct{font-family:var(--letra-hud, var(--fonte));font-weight:600;font-size:13px;color:var(--texto);font-variant-numeric:tabular-nums}
+.modal.ajustes .som-linha select{
+  -webkit-appearance:none;appearance:none;padding:9px 34px 9px 12px;border-radius:10px;
+  font-family:var(--letra-hud, var(--fonte));font-size:14px;font-weight:600;color:var(--texto);
+  border:1px solid var(--borda-forte);
+  background:rgba(0,0,0,.28) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%2396a0c8' stroke-width='2'/%3E%3C/svg%3E") no-repeat right 12px center/12px;
+}
+.modal.ajustes .som-linha select option{background:var(--bg-2);color:var(--texto)}
+.modal.ajustes .ajuste-som .sussurro{margin:0;font-size:12.5px;color:var(--texto-fraco)}
+.modal.ajustes .som-testes .btn.mini{font-family:var(--letra-hud, var(--fonte));font-weight:600;border-radius:9px}
+
+/* a rota: a trilha dos capítulos, cada nó na cor do tom do capítulo */
+.modal.rota .rota-via{
+  display:flex;flex-direction:column;gap:3px;padding:14px 16px;border-radius:14px;
+  border:1px solid color-mix(in srgb, var(--ac, var(--destaque)) 40%, transparent);
+  background:linear-gradient(135deg, color-mix(in srgb, var(--ac, var(--destaque)) 16%, var(--painel-2)), color-mix(in srgb, var(--ac, var(--destaque)) 4%, var(--bg-2)));
+}
+.modal.rota .rota-via span{font:700 10.5px/1.3 var(--letra-hud, var(--fonte));letter-spacing:.16em;text-transform:uppercase;color:var(--texto-fraco)}
+.modal.rota .rota-via b{font-family:var(--letra-hud, var(--fonte));font-size:19px;font-weight:700}
+.rota-trilha{list-style:none;margin:4px 0 0;padding:0}
+.rota-trilha li{
+  --tc:var(--texto-fraco);
+  position:relative;display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:3px 10px;padding:8px 0 8px 34px;
+}
+.rota-trilha .rt-fim{display:flex;align-items:center;gap:8px;justify-self:end}
+.rota-trilha li::before{content:'';position:absolute;left:10px;top:0;bottom:0;width:2px;background:color-mix(in srgb, var(--borda-forte) 85%, transparent)}
+.rota-trilha li:first-child::before{top:50%}
+.rota-trilha li:last-child::before{bottom:50%}
+.rota-trilha li:only-child::before{display:none}
+.rota-trilha li::after{
+  content:'';position:absolute;left:4px;top:50%;width:14px;height:14px;margin-top:-7px;border-radius:50%;
+  background:var(--tc);box-shadow:0 0 0 3px var(--painel), 0 0 10px -2px var(--tc);
+}
+.rota-trilha li.agora::after{animation:noAgora 2.4s ease-in-out infinite}
+@keyframes noAgora{50%{box-shadow:0 0 0 3px var(--painel), 0 0 0 7px color-mix(in srgb, var(--tc) 25%, transparent)}}
+.rota-trilha li[data-tom="leve"]{--tc:#ffd429}
+.rota-trilha li[data-tom="inquieto"]{--tc:#ffa63d}
+.rota-trilha li[data-tom="sombrio"]{--tc:#8c9eff}
+.rota-trilha li[data-tom="muito sombrio"]{--tc:#ff5c4d}
+.rota-trilha li[data-tom="final"]{--tc:#ffd700}
+.rota-trilha .rt-num{
+  flex:0 0 auto;padding:4px 9px;border-radius:999px;font:700 12px/1 var(--letra-hud, var(--fonte));
+  color:color-mix(in srgb, var(--tc) 70%, #fff);background:color-mix(in srgb, var(--tc) 16%, rgba(0,0,0,.25));
+  box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--tc) 45%, transparent);
+}
+.rota-trilha .rt-tit{min-width:0;font-family:var(--letra-hud, var(--fonte));font-size:15px;font-weight:600}
+.rota-trilha .rt-agora{
+  flex:0 0 auto;padding:2px 8px;border-radius:999px;font:700 10.5px/1.4 var(--letra-hud, var(--fonte));letter-spacing:.12em;
+  text-transform:uppercase;color:#11131f;background:var(--tc);
+}
+.rota-trilha .rt-tom{flex:0 0 auto;font-size:12.5px;color:var(--tc)}
+.rota-decisoes{list-style:none;margin:4px 0 0;padding:0;display:flex;flex-direction:column;gap:6px}
+.rota-decisoes li{
+  display:grid;grid-template-columns:auto 1fr auto;align-items:baseline;gap:10px;padding:8px 12px;border-radius:10px;
+  background:color-mix(in srgb, var(--bg) 38%, transparent);border-left:3px solid var(--ruim);
+}
+.rota-decisoes li.bom{border-left-color:var(--bom)}
+.rota-decisoes .rd-cap{font:700 11.5px/1.2 var(--letra-hud, var(--fonte));color:var(--texto-fraco);white-space:nowrap}
+.rota-decisoes .rd-motivo{font-size:14px;min-width:0}
+.rota-decisoes .rd-delta{font:700 12px/1.2 var(--letra-hud, var(--fonte));white-space:nowrap;color:var(--ruim)}
+.rota-decisoes li.bom .rd-delta{color:var(--bom)}
+
+/* o diário: a ficha de agora e a linha do tempo, do mais novo pro mais velho */
+.diario-agora{
+  padding:12px 16px;border-radius:14px;
+  border:1px solid color-mix(in srgb, var(--ac, var(--destaque)) 35%, transparent);
+  background:linear-gradient(135deg, color-mix(in srgb, var(--ac, var(--destaque)) 12%, var(--painel-2)), color-mix(in srgb, var(--ac, var(--destaque)) 3%, var(--bg-2)));
+}
+.diario-agora p{margin:0;padding:6px 0;font-size:14px;line-height:1.5}
+.diario-agora p + p{border-top:1px solid color-mix(in srgb, var(--borda) 70%, transparent)}
+.diario-agora .da-quem{font-family:var(--letra-hud, var(--fonte));font-size:17px;font-weight:700;padding-top:2px}
+.diario-agora .da-linha{display:grid;grid-template-columns:minmax(7.5em, 30%) 1fr;gap:12px}
+.diario-agora .da-k{font-family:var(--letra-hud, var(--fonte));font-weight:600;font-size:13px;color:color-mix(in srgb, var(--ac, var(--destaque)) 55%, var(--texto))}
+.diario-lista{list-style:none;margin:4px 0 0;padding:0;display:flex;flex-direction:column}
+.diario-lista li{display:grid;grid-template-columns:auto 1fr;align-items:baseline;gap:12px;padding:8px 2px;
+  border-bottom:1px solid color-mix(in srgb, var(--borda) 70%, transparent)}
+.diario-lista li:last-child{border-bottom:0}
+.diario-lista .dl-quando{
+  padding:3px 8px;border-radius:999px;white-space:nowrap;font:700 11.5px/1.2 var(--letra-hud, var(--fonte));
+  color:var(--texto-fraco);background:rgba(0,0,0,.24);box-shadow:inset 0 0 0 1px var(--borda);
+}
+.diario-lista .dl-texto{font-size:14px;line-height:1.5}
+
+/* o códice: a barra de quantos de quantos */
+.codice-barra{height:6px;margin:-2px 0 10px;border-radius:999px;background:rgba(255,255,255,.1);overflow:hidden}
+.codice-barra i{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg, var(--ac, var(--destaque)), color-mix(in srgb, var(--ac, var(--destaque)) 60%, #fff))}
+
+@media (max-width:560px){
+  .modal > h2{font-size:19px;gap:10px}
+  .modal > h2 svg.janela-icone{width:32px;height:32px;padding:7px}
+  .modal.ajustes .som-linha{grid-template-columns:1fr 46px;row-gap:2px}
+  .modal.ajustes .som-linha > span:first-child{grid-column:1 / -1}
+  .modal.ajustes .som-linha select{grid-column:1 / -1}
+  .diario-agora .da-linha{grid-template-columns:1fr;gap:2px}
+  .diario-lista li{grid-template-columns:1fr;gap:4px}
+  .diario-lista .dl-quando{justify-self:start}
+  .rota-trilha li{grid-template-columns:auto minmax(0,1fr)}
+  .rota-trilha .rt-fim{grid-column:2;justify-self:start}
+  .rota-decisoes li{grid-template-columns:1fr auto}
+  .rota-decisoes .rd-cap{grid-column:1 / -1}
+}
+
+/* o fim da jornada: o letreiro em letra de placa e os números em
+   quadros, como a tela de resultado dos jogos; a folha (seção, linhas
+   agrupadas) é a mesma das janelas de ler */
+.final .tit{font-family:var(--letra-hud, var(--fonte));font-weight:700;font-size:32px;letter-spacing:.12em;
+  text-transform:uppercase;text-shadow:0 0 26px var(--destaque-sombra)}
+.painel.final .tit.epilogo{font-size:21px;text-shadow:none}
+.final-corte{border:none;height:1px;max-width:610px;margin:34px auto;
+  background:linear-gradient(90deg, transparent, var(--borda-forte), transparent)}
+.final-bloco{text-align:left;max-width:610px;margin:26px auto 0}
+.final-bloco.escolhas{margin-top:34px}
+.final-numeros{display:flex;flex-wrap:wrap;gap:8px}
+.fn-quadro{
+  flex:1 1 130px;min-width:0;display:flex;flex-direction:column;gap:4px;padding:12px 14px;border-radius:12px;
+  border:1px solid color-mix(in srgb, var(--borda) 85%, transparent);background:color-mix(in srgb, var(--bg) 40%, transparent);
+}
+.fn-quadro b{font-family:var(--letra-hud, var(--fonte));font-size:20px;font-weight:700;line-height:1.15;color:var(--texto);overflow-wrap:break-word}
+/* a reputação é palavra comprida ("Desconhecida"): o quadro dela é mais largo */
+.fn-quadro:first-child{flex-basis:190px}
+.fn-quadro span{font:600 10.5px/1.3 var(--letra-hud, var(--fonte));letter-spacing:.12em;text-transform:uppercase;color:var(--texto-fraco)}
+
+/* as naturezas do tutorial: uma ficha só, linhas finas, a agressiva com o fio vermelho */
+.modal.tutorial .tut-nats{gap:0;border:1px solid color-mix(in srgb, var(--borda) 80%, transparent);border-radius:12px;overflow:hidden}
+.modal.tutorial .tut-nat{padding:9px 14px;border-left:3px solid transparent;background:color-mix(in srgb, var(--bg) 38%, transparent)}
+.modal.tutorial .tut-nat + .tut-nat{border-top:1px solid color-mix(in srgb, var(--borda) 70%, transparent)}
+.modal.tutorial .tut-nat.agressiva{border-left-color:var(--perigo)}
+.modal.tutorial .tut-nat-nome{font-family:var(--letra-hud, var(--fonte));font-size:14px;font-weight:700}
+.modal.tutorial .tut-nat-stat{font-family:var(--fonte);font-size:12.5px}

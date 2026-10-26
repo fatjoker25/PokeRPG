@@ -132,6 +132,13 @@ function contarFinais(){
 function ehEpilogo(f){ return String(f.id || '').indexOf('ep_') === 0 || /^Epílogo/.test(f.titulo); }
 function ehFinalDeVerdade(f){ return !ehEpilogo(f) && f.id !== 'fim'; }
 
+/* O desenho do título de cada janela (o mesmo de icones.js, na cor
+   dele) e as janelas de ler, que ganham a folha do HUD: seção com
+   losango, a conta em linhas agrupadas, o exemplo num cartão. */
+const ICONE_DA_JANELA = {regras:'dado', tutorial:'pergunta', ajustes:'engrenagem', rota:'mapa',
+  diario:'diario', finais:'liga', credencial:'credenciais', centro:'centro'};
+const JANELAS_DE_LER = new Set(['regras', 'tutorial', 'ajustes', 'rota', 'diario', 'finais']);
+
 const APARELHOS = [
   {id:'pokedex', nome:'Pokédex', item:'Pokédex', abrir:'UI.modalPokedex()',
    tem:() => !!Estado.dados.flags.tem_pokedex,
@@ -1562,14 +1569,15 @@ const UI = {
   ajustesDeSom(){
     if (typeof Som === 'undefined') return '';
     const p = Som.pref();
-    const barra = (k, nome) => `<label class="som-linha" for="som-${k}"><span>${nome}</span>
-        <input type="range" id="som-${k}" min="0" max="100" step="5" value="${Math.round(p[k] * 100)}"
-          oninput="Som.ajustar('${k}', this.value / 100);this.nextElementSibling.textContent=this.value+'%'">
-        <span class="som-pct">${Math.round(p[k] * 100)}%</span></label>`;
-    return `<div class="ajuste-som">
-      <h3>Som</h3>
-      <label class="som-mudo" for="som-mudo"><input type="checkbox" id="som-mudo" ${p.mudo ? 'checked' : ''}
-        onchange="Som.ajustar('mudo', this.checked)"> Mudo</label>
+    /* a régua enche até o valor (--v), como a barra de volume dos jogos */
+    const barra = (k, nome) => { const v = Math.round(p[k] * 100); return `<label class="som-linha" for="som-${k}"><span>${nome}</span>
+        <input type="range" id="som-${k}" min="0" max="100" step="5" value="${v}" style="--v:${v}%"
+          oninput="Som.ajustar('${k}', this.value / 100);this.style.setProperty('--v', this.value + '%');this.nextElementSibling.textContent=this.value+'%'">
+        <span class="som-pct">${v}%</span></label>`; };
+    return `<h3>Som</h3>
+      <div class="ajuste-som">
+      <label class="som-mudo" for="som-mudo"><span>Mudo</span><input type="checkbox" role="switch" id="som-mudo" ${p.mudo ? 'checked' : ''}
+        onchange="Som.ajustar('mudo', this.checked)"><span class="chave" aria-hidden="true"></span></label>
       ${barra('geral', 'Geral')}${barra('musica', 'Música')}${barra('efeitos', 'Sons da interface')}${barra('gritos', 'Sons dos Pokémon')}
       <label class="som-linha" for="som-tema"><span>Trilha</span>
         <select id="som-tema" onchange="Som.ajustar('tema', this.value)">
@@ -3392,32 +3400,31 @@ const UI = {
     this.add(`<div class="painel final">
       <div class="tit">${this.esc(final.titulo)}</div>
       ${final.texto.map(t=>`<p>${this.esc(txt(t))}</p>`).join('')}
-      ${ep ? `<hr style="border:none;border-top:1px solid var(--borda);margin:32px 0">
+      ${ep ? `<hr class="final-corte">
         <div class="tit epilogo">${this.esc(ep.titulo)}</div>
         ${ep.texto.map(t=>`<p>${this.esc(txt(t))}</p>`).join('')}
         ${rodape.length ? `<div class="epilogo-rodape">${rodape.map(t=>`<p>${this.esc(txt(t))}</p>`).join('')}</div>` : ''}` : ''}
-      <hr style="border:none;border-top:1px solid var(--borda);margin:32px 0">
-      <div style="text-align:left;max-width:610px;margin:0 auto">
+      <hr class="final-corte">
+      <div class="final-bloco">
         <h3>Como você terminou</h3>
-        <div class="linha"><span class="k">Reputação final</span><span class="v">${this.esc(Estado.nomeRep())}</span></div>
-        <div class="linha"><span class="k">Insígnias</span><span class="v">${d.insignias.length}</span></div>
-        <div class="linha"><span class="k">Time</span><span class="v">${d.time.length} Pokémon</span></div>
-        <div class="linha"><span class="k">Mortes permanentes</span><span class="v">${d.cemiterio.length}</span></div>
-        <div class="linha"><span class="k">Lendários em cativeiro</span><span class="v">${presos.length ? presos.map(l=>DEX[l.dex].nome).join(', ') : 'nenhum'}</span></div>
-        <div class="linha"><span class="k">Instabilidade de Kanto</span><span class="v">${d.mundo.instabilidade}</span></div>
-        <div class="linha"><span class="k">Dias de jornada</span><span class="v">${d.relogio.dia}</span></div>
+        <div class="final-numeros">${[
+          ['Reputação final', Estado.nomeRep()], ['Insígnias', d.insignias.length], ['Time', `${d.time.length} Pokémon`],
+          ['Mortes permanentes', d.cemiterio.length], ['Dias de jornada', d.relogio.dia], ['Instabilidade de Kanto', d.mundo.instabilidade],
+          ['Lendários em cativeiro', presos.length ? presos.map(l=>DEX[l.dex].nome).join(', ') : 'nenhum']
+        ].map(([k, v]) => `<div class="fn-quadro"><b>${this.esc(String(v))}</b><span>${k}</span></div>`).join('')}</div>
         ${mortos}
       </div>
-      <div style="text-align:left;max-width:610px;margin:26px auto 0">
+      <div class="final-bloco">
         <h3>Finais descobertos — ${codice.length} de ${totalFinais}</h3>
+        <div class="codice-barra"><i style="width:${totalFinais ? Math.round(codice.length / totalFinais * 100) : 0}%"></i></div>
         ${codice.map(f=>`<div class="linha longa"><span class="k">${this.esc(f.titulo)}</span><span class="v">${f.titulo===final.titulo?'agora':'✓'}</span></div>`).join('')}
         <p class="sussurro">Escolhas diferentes levam a finais diferentes. A campanha tem ${totalFinais}.</p>
       </div>
-      <div id="escolhas" class="escolhas" style="text-align:left;max-width:610px;margin:34px auto 0">
-        ${final.continua ? '<button class="escolha" onclick="Jogo.continuarPelaEstrada()">Continuar pela estrada</button>' : ''}
-        <button class="escolha" onclick="Jogo.novo()">Nova jornada</button>
-        <button class="escolha" onclick="UI.modalDiario()">Ler o diário completo</button>
-        <button class="escolha" onclick="UI.modalRota()">Ver a rota que você percorreu</button>
+      <div id="escolhas" class="escolhas final-bloco">
+        ${final.continua ? `<button class="escolha com-icone" onclick="Jogo.continuarPelaEstrada()">${svgIcone('seta')}<span class="esc-rot">Continuar pela estrada</span></button>` : ''}
+        <button class="escolha com-icone" onclick="Jogo.novo()">${svgIcone('bola')}<span class="esc-rot">Nova jornada</span></button>
+        <button class="escolha com-icone" onclick="UI.modalDiario()">${svgIcone('diario')}<span class="esc-rot">Ler o diário completo</span></button>
+        <button class="escolha com-icone" onclick="UI.modalRota()">${svgIcone('mapa')}<span class="esc-rot">Ver a rota que você percorreu</span></button>
       </div>
     </div>`);
     this.rolarTopo();
@@ -3478,10 +3485,15 @@ const UI = {
     /* Pokédex e Cartão são aparelho na mão: cabem na tela, não rolam
        por fora, e só fecham no X — tocar fora não guarda o aparelho */
     const soX = classe === 'pokedex' || classe === 'cartao';
+    /* o título leva o desenho da janela numa moeda da cor dele, e a
+       janela de ler (regras, tutorial, ajustes…) ganha a folha do HUD */
+    const ic = ICONE_DA_JANELA[classe];
+    const cor = ic && typeof corDoIcone === 'function' ? corDoIcone(ic) : '';
+    const folha = JANELAS_DE_LER.has(classe) ? ' folha' : '';
     const m = this.el(`<div class="modal-fundo ${classe ? 'fundo-' + classe : ''}" id="modal">
-      <div class="modal ${classe || ''}${soX ? ' so-x' : ''}">
+      <div class="modal ${classe || ''}${folha}${soX ? ' so-x' : ''}"${cor ? ` style="--ac:${cor}"` : ''}>
         ${soX ? '<button class="modal-x" aria-label="Fechar" title="Fechar" onclick="UI.fecharModal()">×</button>' : ''}
-        ${titulo ? `<h2>${this.esc(titulo)}</h2>` : ''}
+        ${titulo ? `<h2>${ic ? svgIcone(ic, 'janela-icone') : ''}${this.esc(titulo)}</h2>` : ''}
         <div class="modal-corpo">${html}</div>
         ${semFechar || soX ? '' : '<div class="modal-pe"><button class="btn" onclick="UI.fecharModal()">Fechar</button></div>'}
       </div></div>`);
@@ -3865,8 +3877,8 @@ const UI = {
     const salva = molduraSalva();
     this._molduraProva = null;
     this.modal('Ajustes', `
+      <h3>Cor do jogo</h3>
       <div class="ajuste-moldura">
-        <h3>Cor do jogo</h3>
         <div class="bolinhas" role="radiogroup" aria-label="Cor do jogo">
           ${CORES_MOLDURA.map(c => `<button class="bolinha${c.id === salva ? ' sel' : ''}" role="radio"
               aria-checked="${c.id === salva}" aria-label="${c.nome}" title="${c.nome}" data-cor="${c.id}"
@@ -3877,9 +3889,10 @@ const UI = {
           <button class="btn mini" id="moldura-salvar" onclick="UI.salvarMoldura()" disabled>Salvar</button>
         </div>
       </div>
-      <button class="escolha" onclick="UI.modalRegras()">Regras</button>
-      <button class="escolha" onclick="UI.modalTutorial()">Tutorial</button>
-      ${this.ajustesDeSom()}`);
+      ${this.ajustesDeSom()}
+      <h3>Ajuda</h3>
+      <button class="escolha com-icone" onclick="UI.modalRegras()">${svgIcone('dado')}<span class="esc-rot">Regras<small class="esc-det">todas as contas do jogo, com os números</small></span></button>
+      <button class="escolha com-icone" onclick="UI.modalTutorial()">${svgIcone('pergunta')}<span class="esc-rot">Tutorial<small class="esc-det">a primeira hora, passo a passo</small></span></button>`, false, 'ajustes');
   },
 
   modalItens(modo, bolsoPedido){
@@ -4758,12 +4771,17 @@ const UI = {
 
   modalDiario(){
     const log = Estado.dados.log.slice().reverse();
-    const resumo = Historia.resumo().map(l=>`<p class="sussurro" style="margin:3px 0">${this.esc(l)}</p>`).join('');
+    /* "Time: Pikachu Nv30…" vira linha de ficha; a primeira, que é você, vai grande */
+    const resumo = Historia.resumo().map((l, i) => {
+      const m = i ? /^([^:]{3,40}):\s(.+)$/.exec(l) : null;
+      return m ? `<p class="da-linha"><span class="da-k">${this.esc(m[1])}</span><span class="da-v">${this.esc(m[2])}</span></p>`
+               : `<p class="${i ? 'da-solta' : 'da-quem'}">${this.esc(l)}</p>`;
+    }).join('');
     this.modal('Diário de campanha', `
-      <h3>Onde você está</h3>${resumo}
+      <h3>Onde você está</h3><div class="diario-agora">${resumo}</div>
       <h3>O que aconteceu</h3>
-      ${log.length ? log.map(l=>`<div class="linha"><span class="k">Cap ${l.cap} · dia ${l.dia}</span><span style="text-align:right;flex:1">${this.esc(l.texto)}</span></div>`).join('')
-                   : '<p class="nada">Nada registrado ainda.</p>'}`);
+      ${log.length ? `<ol class="diario-lista">${log.map(l=>`<li><span class="dl-quando">Cap ${l.cap} · dia ${l.dia}</span><span class="dl-texto">${this.esc(l.texto)}</span></li>`).join('')}</ol>`
+                   : '<p class="nada">Nada registrado ainda.</p>'}`, false, 'diario');
   },
 
   modalRota(){
@@ -4776,16 +4794,18 @@ const UI = {
     const fechados = d.capitulosFechados || [];
     const percorridos = fechados.concat(fechados.includes(d.capitulo) ? [] : [d.capitulo])
       .map(n => CAPITULOS.find(c => c.num === n)).filter(Boolean);
-    const rotulo = c => c.caminho ? `${numeroDoCapitulo(c)} — ${c.titulo}` : `${c.num}. ${c.titulo}`;
+    const agora = fechados.includes(d.capitulo) ? null : d.capitulo;
     this.modal('A sua rota', `
-      <div class="linha"><span class="k">Rota narrativa</span><span class="v">${this.esc(NOME_VIA[d.via]||d.via||'neutro')}</span></div>
+      <div class="rota-via"><span>Rota narrativa</span><b>${this.esc(NOME_VIA[d.via]||d.via||'neutro')}</b></div>
       <h3>Capítulos vividos</h3>
-      ${percorridos.map(c=>`<div class="linha longa"><span class="k">${this.esc(rotulo(c))}</span><span class="v">${this.esc(c.tom || '')}</span></div>`).join('')}
+      <ol class="rota-trilha">${percorridos.map(c=>`<li${c.num === agora ? ' class="agora"' : ''} data-tom="${this.esc(c.tom || '')}">
+        <span class="rt-num">${this.esc(c.caminho ? numeroDoCapitulo(c) : String(c.num))}</span>
+        <span class="rt-tit">${this.esc(c.titulo)}</span><span class="rt-fim">${c.num === agora ? '<span class="rt-agora">agora</span>' : ''}${c.tom ? `<span class="rt-tom">${this.esc(c.tom)}</span>` : ''}</span></li>`).join('')}</ol>
       <h3>Decisões que o mundo registrou</h3>
       ${d.reputacao.historico.length
-        ? d.reputacao.historico.slice(-25).map(h=>`<div class="linha longa"><span class="k">Cap ${h.cap} · ${this.esc(h.motivo)}</span><span class="v" style="color:${h.eixo==='bom'?'var(--bom)':'var(--ruim)'}">${h.eixo === 'bom' ? 'boa' : 'má'} +${h.delta}</span></div>`).join('')
+        ? `<ul class="rota-decisoes">${d.reputacao.historico.slice(-25).map(h=>`<li class="${h.eixo === 'bom' ? 'bom' : 'ruim'}"><span class="rd-cap">Cap ${h.cap}</span><span class="rd-motivo">${this.esc(h.motivo)}</span><span class="rd-delta">${h.eixo === 'bom' ? 'boa' : 'má'} +${h.delta}</span></li>`).join('')}</ul>`
         : '<p class="nada">Nada ainda.</p>'}
-    `);
+    `, false, 'rota');
   },
 
   modalFinais(){
@@ -4795,13 +4815,13 @@ const UI = {
     const eps = codice.filter(ehEpilogo);
     const fins = codice.filter(ehFinalDeVerdade);
     const bloco = (titulo, lista, total, vazio) =>
-      `<h3>${titulo} — ${lista.length} de ${total}</h3>` +
+      `<h3>${titulo} — ${lista.length} de ${total}</h3><div class="codice-barra"><i style="width:${total ? Math.round(lista.length / total * 100) : 0}%"></i></div>` +
       (lista.length ? lista.map(f=>`<div class="linha longa"><span class="k">${this.esc(String(f.titulo).replace(/^Epílogo: /,''))}</span><span class="v">✓</span></div>`).join('')
                     : `<p class="nada">${vazio}</p>`);
     this.modal('Códice de finais',
       bloco('Finais', fins, totalFim, 'Nenhum ainda.') +
       bloco('Epílogos', eps, totalEp, 'Nenhum ainda.') +
-      `<p class="sussurro">O final é o que aconteceu com Kanto. O epílogo é o que aconteceu com você, e depende do crachá que você carregava, do caminho que Kanto viu você seguir e do que Kanto conta de você.</p>`);
+      `<p class="sussurro">O final é o que aconteceu com Kanto. O epílogo é o que aconteceu com você, e depende do crachá que você carregava, do caminho que Kanto viu você seguir e do que Kanto conta de você.</p>`, false, 'finais');
   },
 
   /* ========================================================
