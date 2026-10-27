@@ -432,6 +432,22 @@ Essa animação nossa: físico investe e bate pelo jeito
 (`jeitoDeBater`), especial brilha 0,2 s na cor do tipo e o projétil de
 `FX_TIPO` viaja, status solta `stat_boost`/`stat_drop`.
 
+**Golpe que erra vai pro lado**, como no Showdown. O evento do golpe
+sai antes da rolagem de precisão, então quem decide como ele acaba
+marca o próprio evento (`Batalha.ev` devolve o evento): `errou:true`
+quando a precisão falha, `'esquiva'` quando o outro gasta Vontade e
+sai da frente. A encenação toca o golpe inteiro contra o
+`missedPokemon` de lá — um alvo invisível na altura de quem levaria o
+golpe, 100 pontos da cena do Showdown pro lado de dentro
+(`CenaShowdown.pontoDoErro`; a nossa animação erra pro mesmo ponto,
+`Efeitos.alvoErrado`). Investida, projétil e estalo vão até ali, e
+quem não foi acertado não treme nem pisca: o alvo é um ponto, e ponto
+não tem sprite (`Efeitos.sprite` não acha nada). Na esquiva ele salta
+pro lado de fora e fica lá enquanto o golpe passa
+(`AnimadorSprite.esquivar(lado, segura)`). Desfecho novo em que o
+golpe não chega marca o evento do mesmo jeito, senão a tela mostra o
+acerto e o texto diz que errou.
+
 ## A velocidade da luta
 Quem joga escolhe **1×, 2× ou 3×** no botão do canto de cima à direita
 da arena (`Velocidade.botao()`, desenhado no `atualizarArena`) ou nos

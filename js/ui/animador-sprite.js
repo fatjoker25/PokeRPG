@@ -312,16 +312,18 @@ const AnimadorSprite = {
   },
 
   /* ======================== EVADE ========================
-     Esquivar com Vontade: um salto curto pro lado, rápido na ida e
-     devagar na volta, como quem sai da frente e se recompõe. */
-  esquivar(lado){
+     Esquivar com Vontade: um salto curto pro lado de fora, rápido na
+     ida e devagar na volta, como quem sai da frente e se recompõe.
+     `segura` é quanto ele fica lá fora (o golpe passando, no
+     Efeitos.golpe). */
+  esquivar(lado, segura){
     const s = this.sprite(lado);
     if (!s || this.reduzido()) return Promise.resolve();
     this.marcar(lado, ESTADOS_SPRITE.EVADE);
     const dx = (lado === 'aliado' ? -1 : 1) * Math.max(16, s.offsetWidth * .3);
     return this.sequencia(s, [
       {de:{x:0, y:0}, para:{x:dx, y:-4}, ms:140, curva:'easeOut'},
-      {de:{x:dx, y:-4}, para:{x:dx, y:0}, ms:160, curva:'linear', passos:2},
+      {de:{x:dx, y:-4}, para:{x:dx, y:0}, ms:segura || 160, curva:'linear', passos:2},
       {de:{x:dx, y:0}, para:{x:0, y:0}, ms:280, curva:'easeInOut'}
     ], {composite:'add'}).then(() => { if (this.estado[lado] === ESTADOS_SPRITE.EVADE) this.marcar(lado, ESTADOS_SPRITE.IDLE); });
   },

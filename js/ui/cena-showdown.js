@@ -69,8 +69,37 @@ const CenaShowdown = {
     return m;
   },
 
+  /* As duas âncoras: o centro de cada lutador na nossa arena; e o
+     tamanho — o de lá tem 96 px no Showdown (escala 1 em z=200). */
+  ancorar(){
+    const qEu = Efeitos.alvo('aliado'), qEle = Efeitos.alvo('inimigo');
+    if (!qEu || !qEle) return false;
+    this._Q0 = {x:qEu.cx, y:qEu.cy}; this._Q1 = {x:qEle.cx, y:qEle.cy};
+    /* px nossos por px da arte do de lá: a parada tem quadro de 96, a
+       GIF animada tem o tamanho dela (é a mesma que o Showdown usa) */
+    const sEle = Efeitos.sprite('inimigo');
+    this._k = Math.max(0.35, Math.min(1.6, qEle.h / ((sEle && sEle.naturalHeight) || 96)));
+    /* altura: no Showdown o de lá tem 135 px de céu acima do centro; aqui
+       tem o que a arena der — pulo e voo sobem na mesma proporção */
+    const ceu = qEle.cy - 6;   /* alvo() já é relativo à arena */
+    this._ky = Math.min(this._k, Math.max(0.3, ceu / 135));
+    return true;
+  },
+
+  /* O golpe que erra, no Showdown, acontece inteiro contra o
+     `missedPokemon` do lado do alvo: um Pokémon invisível na mesma
+     altura, 100 pontos pro lado de dentro (Side.leftof(-100)). Aqui,
+     em coordenadas da arena — a nossa animação erra pro mesmo ponto. */
+  ERRO_X: 100,
+  pontoDoErro(lado){
+    if (!this.ancorar()) return null;
+    const longe = lado === 'inimigo';
+    const p = this.posSD({x:(longe ? -1 : 1) * this.ERRO_X, y:0, z:longe ? 200 : 0}, {w:96, h:96});
+    return {cx:p.cx, cy:p.cy};
+  },
+
   /* ---------- a cena de mentira: anota, não desenha ---------- */
-  montar(lado){
+  montar(lado, errou){
     const eu = lado === 'aliado';
     const reg = {efeitos:[], fundos:[], sprites:{}};
     const cena = {
@@ -123,6 +152,13 @@ const CenaShowdown = {
     };
     const atacante = sprite(lado, !eu);
     const alvo = sprite(eu ? 'inimigo' : 'aliado', eu);
+    if (errou){
+      /* o missedPokemon: o golpe (investida, projétil, estalo) vai até
+         ele, e quem levaria o golpe não se mexe nem vira cópia */
+      alvo.x = alvo.leftof(-this.ERRO_X);
+      alvo.isMissedPokemon = true;
+      alvo.sp = {url:'', w:96, h:96, filtro:''};
+    }
     return {cena, atacante, alvo, reg};
   },
 
@@ -138,26 +174,13 @@ const CenaShowdown = {
   },
 
   /* ---------- tocar ---------- */
-  tocar(nome, lado){
+  tocar(nome, lado, errou){
     if (!this.tem(nome)) return null;
     const A = Efeitos.arena(), camada = Efeitos.camada();
-    const qEu = Efeitos.alvo('aliado'), qEle = Efeitos.alvo('inimigo');
-    if (!A || !camada || !qEu || !qEle) return null;
-    const {cena, atacante, alvo, reg} = this.montar(lado);
+    if (!A || !camada || !this.ancorar()) return null;
+    const {cena, atacante, alvo, reg} = this.montar(lado, errou);
     try { SD_GOLPES[SD_ID_DO_GOLPE[nome]].anim(cena, [atacante, alvo]); }
     catch (e){ return null; }
-
-    /* as duas âncoras: o centro de cada lutador na nossa arena; e o
-       tamanho — o de lá tem 96 px no Showdown (escala 1 em z=200) */
-    this._Q0 = {x:qEu.cx, y:qEu.cy}; this._Q1 = {x:qEle.cx, y:qEle.cy};
-    /* px nossos por px da arte do de lá: a parada tem quadro de 96, a
-       GIF animada tem o tamanho dela (é a mesma que o Showdown usa) */
-    const sEle = Efeitos.sprite('inimigo');
-    this._k = Math.max(0.35, Math.min(1.6, qEle.h / ((sEle && sEle.naturalHeight) || 96)));
-    /* altura: no Showdown o de lá tem 135 px de céu acima do centro; aqui
-       tem o que a arena der — pulo e voo sobem na mesma proporção */
-    const ceu = qEle.cy - 6;   /* alvo() já é relativo à arena */
-    this._ky = Math.min(this._k, Math.max(0.3, ceu / 135));
     const mapa = (x, y) => ({x, y});
 
     /* duração total, e a velocidade que cabe no teto */
@@ -233,7 +256,8 @@ const CenaShowdown = {
 
     /* lutadores: deslocamento e escala relativos ao lugar de descanso */
     for (const s of Object.values(reg.sprites)){
-      if (!s.segs.length) continue;
+      /* o alvo do golpe que errou é invisível: ninguém de verdade apanha */
+      if (!s.segs.length || s.isMissedPokemon) continue;
       const el = Efeitos.sprite(s.lado);
       if (!el) continue;
       const repouso = this.posSD({x:s.x, y:s.y, z:s.z}, s.sp);

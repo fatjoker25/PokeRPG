@@ -166,6 +166,7 @@ const Batalha = {
     e.fotoI = foto(this.inimigo, 'inimigo');
     if (typeof Estado !== 'undefined' && Estado.j) e.fotoJ = Estado.j.hp;
     this.eventos.push(e);
+    return e;
   },
 
   /* O que está valendo em cada lado agora: estágio que subiu ou caiu e
@@ -285,14 +286,17 @@ const Batalha = {
 
   /* Esquivar: Destreza + Evasão contra os sucessos da precisão do outro.
      Empatou, saiu da frente. */
-  esquivou(p, est, contra){
+  esquivou(p, est, contra, evGolpe){
     const nD = this.attr(p, est, 'des'), nE = periciaDoNivel(p.nivel);
     const r = Dados.pool(nD + nE, `Esquiva de ${nomeVisivel(p)}`);
     const dor = this.dor(p);
     const suc = Math.max(0, r.suc - dor);
     this.ev('rolagem', `Esquiva: DES ${nD} + Evasão ${nE} = ${nD + nE}d6${facesDe(r)} → ${r.suc}${dor ? ` − ${dor} dor = ${suc}` : ''} contra precisão ${contra}`);
     if (suc >= contra){
-      this.ev('info', `${nomeVisivel(p)} sai da frente no último instante!`, {esquiva:this.ladoDe(p)});
+      /* o salto pro lado é encenado junto com o golpe que passa (o
+         evento do golpe fica sabendo); aqui é só a linha */
+      if (evGolpe) evGolpe.errou = 'esquiva';
+      this.ev('info', `${nomeVisivel(p)} sai da frente no último instante!`);
       return true;
     }
     this.ev('erro', `${nomeVisivel(p)} tenta sair da frente, mas não dá tempo.`);
@@ -643,7 +647,7 @@ const Batalha = {
     }
     estAtk.carregando = null;
 
-    this.ev('golpe', `${nomeVisivel(atacante)} usou ${nome}!`, {golpe:nome, tipoGolpe:g.t, lado:souAliado ? 'aliado' : 'inimigo'});
+    const evGolpe = this.ev('golpe', `${nomeVisivel(atacante)} usou ${nome}!`, {golpe:nome, tipoGolpe:g.t, lado:souAliado ? 'aliado' : 'inimigo'});
     if (nome !== 'Mirror Move') estAtk.ultimoGolpe = nome;
 
     /* Snore e Sleep Talk só saem de quem está dormindo */
@@ -661,6 +665,9 @@ const Batalha = {
 
     const prec = this.rolarPrecisao(atacante, defensor, estAtk, estDef, nome);
     if (!prec.acertou){
+      /* a encenação toca o golpe só depois do turno resolvido: marcado
+         aqui, ele vai pro lado em vez de acertar (Efeitos.golpe) */
+      evGolpe.errou = true;
       this.ev('erro', `${nomeVisivel(atacante)} errou o golpe!`);
       estAtk.cortes = 0;
       /* confuso que falha a ação se machuca: 1 de dano */
@@ -676,12 +683,12 @@ const Batalha = {
     if (!souAliado && defensor === this.aliado && this.vontadeDoTurno() === 'esquiva'
         && prec.rolou && prec.k !== 'soc' && !prec.garantido && this.miraNoOutro(g)){
       this.vontadeArmada = null;
-      if (this.esquivou(defensor, estDef, prec.sucessos)){ estAtk.cortes = 0; return; }
+      if (this.esquivou(defensor, estDef, prec.sucessos, evGolpe)){ estAtk.cortes = 0; return; }
     }
     if (souAliado && defensor === this.inimigo && this.vontadeInimigo === 'esquiva'
         && prec.rolou && prec.k !== 'soc' && !prec.garantido && this.miraNoOutro(g)){
       this.vontadeInimigo = null;
-      if (this.esquivou(defensor, estDef, prec.sucessos)){ estAtk.cortes = 0; return; }
+      if (this.esquivou(defensor, estDef, prec.sucessos, evGolpe)){ estAtk.cortes = 0; return; }
     }
 
     if (g.c === 'status'){

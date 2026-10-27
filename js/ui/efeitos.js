@@ -100,11 +100,13 @@ const Efeitos = {
     if (!c){ c = document.createElement('div'); c.className = 'fx-camada'; a.appendChild(c); }
     return c;
   },
-  sprite(lado){ const a = this.arena(); return a && a.querySelector(`.lutador.${lado} .arte .sprite`); },
+  /* o lado pode ser um ponto (o alvo do golpe que errou): ponto não tem sprite */
+  sprite(lado){ const a = this.arena(); return typeof lado === 'string' && a ? a.querySelector(`.lutador.${lado} .arte .sprite`) : null; },
 
   /* onde está o bicho, em coordenadas da arena. A arte ocupa mais ou
      menos de 23% a 76% da altura do quadro (medido nas 251). */
   alvo(lado){
+    if (lado && typeof lado === 'object') return lado;   /* já é um ponto (alvoErrado) */
     const a = this.arena(), s = this.sprite(lado);
     if (!a) return null;
     const A = a.getBoundingClientRect();
@@ -117,6 +119,22 @@ const Efeitos = {
     return {x, y, w:r.width, h:r.height,
             cx: x + r.width / 2, cy: y + r.height * 0.52, pe: y + r.height * 0.76,
             topo: y + r.height * 0.24};
+  },
+
+  /* Onde cai o golpe que errou: o "missedPokemon" do Showdown, um alvo
+     invisível na altura de quem levaria o golpe, um passo pro lado de
+     dentro da arena (CenaShowdown.pontoDoErro — a cena do Showdown erra
+     pro mesmo lugar). É um ponto, não um lado: o que pede o sprite dele
+     (tremer, tingir) não acha ninguém, e quem não foi acertado fica
+     quieto. */
+  alvoErrado(lado){
+    const u = this.alvo(lado), a = this.arena();
+    if (!u || !a) return null;
+    const p = typeof CenaShowdown !== 'undefined' ? CenaShowdown.pontoDoErro(lado) : null;
+    const dx = p ? p.cx - u.cx : (lado === 'inimigo' ? -1 : 1) * u.w;
+    /* sem sair da arena */
+    const W = a.clientWidth || 0, cx = W ? Math.max(u.w * .4, Math.min(W - u.w * .4, u.cx + dx)) : u.cx + dx;
+    return Object.assign({}, u, {x:u.x + (cx - u.cx), cx, errado:true});
   },
 
   /* espera a arte carregar e ganhar o tamanho dela (ajustarSpriteAni) */
@@ -253,24 +271,34 @@ const Efeitos = {
      volta. Especial: o atacante brilha 0,2 s na cor do tipo, o projétil
      do tipo viaja até o alvo, e o alvo pisca em branco. Status: quem
      sobe atributo solta partículas subindo; quem baixa, descendo. */
-  async golpe(lado, nome){
+  async golpe(lado, nome, errou){
     const g = GOLPES[nome] || {};
     const outro = lado === 'aliado' ? 'inimigo' : 'aliado';
+    /* Errou (ou o outro esquivou): o golpe vai pro lado, como no
+       Showdown. O alvo vira o ponto vazio ao lado de quem levaria o
+       golpe, e investida, projétil e estalo vão até ali; quem não foi
+       acertado não treme nem pisca. */
+    const alvoDoGolpe = errou ? (this.alvoErrado(outro) || outro) : outro;
+    /* esquivou gastando Vontade: salta pro lado de fora enquanto o golpe
+       vem, e fica lá até ele passar */
+    const salto = errou === 'esquiva' ? this.esperar(80).then(() => AnimadorSprite.esquivar(outro, 420)) : null;
     /* o corpo de quem ataca vem antes do efeito (AnimadorSprite):
        especial conjura no lugar; físico investe — a não ser que a
        cena do Showdown já leve o atacante até o outro */
     const temSD = typeof CenaShowdown !== 'undefined' && CenaShowdown.tem(nome);
     if (g.c === 'esp') await AnimadorSprite.ataqueEspecial(lado);
     else if (g.c === 'fis' && temSD && !PROJETEIS_FISICOS.test(nome) && !GOLPES_DE_CHAO.has(nome) && !SEM_INVESTIDA.test(nome)
-             && !CenaShowdown.mexeAtacante(nome, lado)) await AnimadorSprite.ataqueFisico(lado, outro);
+             && !CenaShowdown.mexeAtacante(nome, lado)) await AnimadorSprite.ataqueFisico(lado, alvoDoGolpe);
     /* a animação do próprio golpe, a do Showdown; sem ela, a nossa */
-    const sd = temSD ? CenaShowdown.tocar(nome, lado) : null;
-    if (sd) return sd;
-    if (g.c === 'status') return this.golpeStatus(lado, outro, nome, g);
-    if (GOLPES_DE_CHAO.has(nome)) return this.terremoto(lado, outro);
+    const sd = temSD ? CenaShowdown.tocar(nome, lado, !!errou) : null;
+    let anima;
+    if (sd) anima = sd;
+    else if (g.c === 'status') anima = this.golpeStatus(lado, alvoDoGolpe, nome, g);
+    else if (GOLPES_DE_CHAO.has(nome)) anima = this.terremoto(lado, alvoDoGolpe);
     /* físico que é arremesso (folha, pedra, ferrão) viaja como projétil */
-    if (g.c === 'fis' && !PROJETEIS_FISICOS.test(nome)) return this.golpeFisico(lado, outro, nome, g);
-    return this.golpeEspecial(lado, outro, nome, g);
+    else if (g.c === 'fis' && !PROJETEIS_FISICOS.test(nome)) anima = this.golpeFisico(lado, alvoDoGolpe, nome, g);
+    else anima = this.golpeEspecial(lado, alvoDoGolpe, nome, g);
+    await Promise.all([anima, salto]);
   },
 
   /* imagem de efeito solta na camada, centrada em (x, y) */
@@ -570,11 +598,9 @@ const Efeitos = {
       if (trocouA) await this.entrada(Batalha.aliado);
       return;
     }
-    /* Esquivar (Vontade): sai de lado e volta */
-    if (e.esquiva){ await AnimadorSprite.esquivar(e.esquiva); return; }
     /* atributo que mexeu: o corpo sobe ou desce junto */
     if (e.estagio){ await AnimadorSprite.atributo(e.estagio.lado, e.estagio.delta > 0); return; }
-    if (e.tipo === 'golpe' && e.lado){ await this.golpe(e.lado, e.golpe); return; }
+    if (e.tipo === 'golpe' && e.lado){ await this.golpe(e.lado, e.golpe, e.errou); return; }
     if (e.xp){ await this.encherXP(e.xp); return; }
     /* Transform: a arte troca na hora */
     if (e.transformou){
