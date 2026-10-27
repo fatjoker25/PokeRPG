@@ -85,10 +85,11 @@ const ROTULO_STATUS = {
 
 const Efeitos = {
   reduzido(){ return !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches); },
-  esperar(ms){ return new Promise(r => setTimeout(r, ms)); },
+  /* toda espera e toda animação da luta andam na velocidade escolhida (Velocidade) */
+  esperar(ms){ return new Promise(r => setTimeout(r, Velocidade.ms(ms))); },
   tocar(el, quadros, ms, extra){
     if (!el || !el.animate) return Promise.resolve();
-    return el.animate(quadros, Object.assign({duration:ms, easing:'ease-out'}, extra || {})).finished.catch(() => {});
+    return Velocidade.acelerar(el.animate(quadros, Object.assign({duration:ms, easing:'ease-out'}, extra || {}))).finished.catch(() => {});
   },
 
   arena(){ return document.getElementById('arena'); },
@@ -191,7 +192,7 @@ const Efeitos = {
     if (!a || !al || al.uid !== xp.uid) return this.esperar(120);
     const i = a.querySelector('.lutador.aliado .ficha .barra-exp i');
     if (!i) return this.esperar(120);
-    const ir = async (pct, ms) => { i.style.transition = `width ${ms}ms linear`; i.style.width = pct + '%'; await this.esperar(ms + 30); };
+    const ir = async (pct, ms) => { i.style.transition = `width ${Velocidade.ms(ms)}ms linear`; i.style.width = pct + '%'; await this.esperar(ms + 30); };
     i.style.transition = 'none'; i.style.width = xp.de + '%'; void i.offsetWidth;
     for (let k = 0; k < Math.min(xp.encheu || 0, 3); k++){
       await ir(100, 420);
@@ -517,7 +518,7 @@ const Efeitos = {
     const a = this.arena();
     if (!a) return;
     a.querySelectorAll(':scope > .clima-camada').forEach(velha => {
-      velha.classList.add('saindo'); setTimeout(() => velha.remove(), 450);
+      velha.classList.add('saindo'); setTimeout(() => velha.remove(), Velocidade.ms(450));
     });
     if (tipo) a.insertAdjacentHTML('beforeend', `<div class="clima-camada clima-${tipo} chegando" aria-hidden="true"></div>`);
   },

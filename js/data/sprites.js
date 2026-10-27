@@ -311,18 +311,21 @@ function spriteDaBola(nome){
 const ABRE_CASCA = '30%';
 function abrirBola(cima, baixo, fenda, ms){
   const o = {duration:ms || 150, fill:'forwards', easing:'cubic-bezier(.3,1.35,.5,1)'};
-  const p = [cima.animate([{transform:'translateY(0)'}, {transform:`translateY(-${ABRE_CASCA})`}], o).finished];
-  if (baixo) p.push(baixo.animate([{transform:'translateY(0)'}, {transform:`translateY(${ABRE_CASCA})`}], o).finished);
-  if (fenda) p.push(fenda.animate([
+  /* a bola só abre e fecha na arena: anda na velocidade da luta */
+  const v = a => Velocidade.acelerar(a).finished;
+  const p = [v(cima.animate([{transform:'translateY(0)'}, {transform:`translateY(-${ABRE_CASCA})`}], o))];
+  if (baixo) p.push(v(baixo.animate([{transform:'translateY(0)'}, {transform:`translateY(${ABRE_CASCA})`}], o)));
+  if (fenda) p.push(v(fenda.animate([
     {opacity:0, transform:'scale(.2, .4)'},
     {opacity:1, transform:'scale(1.35, 3.4)', offset:.5},
-    {opacity:.95, transform:'scale(1.05, 2.2)'}], Object.assign({}, o, {duration:(ms || 150) * 1.6, easing:'ease-out'})).finished);
+    {opacity:.95, transform:'scale(1.05, 2.2)'}], Object.assign({}, o, {duration:(ms || 150) * 1.6, easing:'ease-out'}))));
   return Promise.all(p);
 }
 function fecharBola(cima, baixo, fenda, ms){
   const o = {duration:ms || 130, fill:'forwards', easing:'ease-in'};
-  const p = [cima.animate([{transform:`translateY(-${ABRE_CASCA})`}, {transform:'translateY(0)'}], o).finished];
-  if (baixo) p.push(baixo.animate([{transform:`translateY(${ABRE_CASCA})`}, {transform:'translateY(0)'}], o).finished);
-  if (fenda) p.push(fenda.animate([{opacity:.95, transform:'scale(1.05, 2.2)'}, {opacity:0, transform:'scale(.6, .4)'}], o).finished);
+  const v = a => Velocidade.acelerar(a).finished;
+  const p = [v(cima.animate([{transform:`translateY(-${ABRE_CASCA})`}, {transform:'translateY(0)'}], o))];
+  if (baixo) p.push(v(baixo.animate([{transform:`translateY(${ABRE_CASCA})`}, {transform:'translateY(0)'}], o)));
+  if (fenda) p.push(v(fenda.animate([{opacity:.95, transform:'scale(1.05, 2.2)'}, {opacity:0, transform:'scale(.6, .4)'}], o)));
   return Promise.all(p);
 }

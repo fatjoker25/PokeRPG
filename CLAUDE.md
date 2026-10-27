@@ -432,6 +432,36 @@ Essa animação nossa: físico investe e bate pelo jeito
 (`jeitoDeBater`), especial brilha 0,2 s na cor do tipo e o projétil de
 `FX_TIPO` viaja, status solta `stat_boost`/`stat_drop`.
 
+## A velocidade da luta
+Quem joga escolhe **1×, 2× ou 3×** no botão do canto de cima à direita
+da arena (`Velocidade.botao()`, desenhado no `atualizarArena`) ou nos
+Ajustes (`Velocidade.ajustes()`), e a escolha fica no navegador
+('jc-vel-luta'). O botão mora fora de `#acoes` de propósito: o menu
+apaga (`.esperando`) enquanto o turno é encenado, e é justo aí que se
+quer apertar. Só a encenação muda; dado, conta e turno são os mesmos,
+nada é pulado.
+
+**Todo tempo da luta passa por `Velocidade`** (`js/ui/velocidade.js`):
+- espera: `Velocidade.ms(ms)` — o `Efeitos.esperar` já passa;
+- Web Animations: `Velocidade.acelerar(el.animate(…))`, que põe o
+  `playbackRate` (atraso e duração encolhem juntos e o `finished` chega
+  na hora). O `Efeitos.tocar` (e com ele a cena do Showdown), o
+  `AnimadorSprite`, `abrirBola`/`fecharBola` e o arremesso já passam;
+- CSS da luta: `calc(.34s / var(--vel-luta, 1))` — a variável mora na
+  raiz, então só regra da luta lê (a barra de HP da arena, as fichas
+  entrando, o clima, o sprite surgindo, a linha do registro e a
+  leitura da Pokédex).
+Animação nova na luta passa por um desses, senão fica em 1× no meio das
+outras, e a espera casada com ela desencontra (a barra desliza enquanto
+o `esperar(560)` corre). Loop sem fim (respiração, chuva) fica no ritmo
+dele. Trocar no meio de um golpe acelera o golpe: `aplicar()` muda o
+ritmo do que já está andando na arena, menos CSS (que lê a variável) e
+loop. A evolução e o treino ficam de fora: não são a luta.
+
+Medido numa luta de líder: a abertura vai de ~6,1 s a ~3,3 s e ~2,3 s,
+e um turno de dois golpes de ~2,9 s a ~1,7 s e ~1,1 s — a 3× sobra a
+latência de quadro entre um passo e outro.
+
 ## O corpo do Pokémon na luta
 O que o **lutador** faz com o próprio corpo mora em
 `js/ui/animador-sprite.js` (`AnimadorSprite`; os nomes da especificação,

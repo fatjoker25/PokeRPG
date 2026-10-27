@@ -822,6 +822,8 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
 .barra.medio i{background:linear-gradient(90deg, color-mix(in srgb, var(--hp-medio) 72%, #000), var(--hp-medio))}
 .barra.baixo i{background:linear-gradient(90deg, color-mix(in srgb, var(--hp-baixo) 72%, #000), var(--hp-baixo))}
 .barra.baixo{animation:pulsaPerigo 1.4s ease-in-out infinite}
+/* na arena a barra desliza na velocidade da luta (Velocidade) */
+.arena .barra i{transition-duration:calc(.55s / var(--vel-luta, 1)), calc(.4s / var(--vel-luta, 1))}
 @keyframes pulsaPerigo{0%,100%{box-shadow:none}50%{box-shadow:0 0 14px -4px rgba(221,84,66,.6)}}
 .hp-num{font-family:var(--mono);font-size:12px;color:var(--texto-fraco)}
 
@@ -845,7 +847,7 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
   max-height:168px;overflow-y:auto;font-size:13.5px;margin-bottom:8px;scroll-behavior:smooth;
   box-shadow:inset 0 1px 0 rgba(255,255,255,.05), 0 12px 24px -18px rgba(0,0,0,.9)
 }
-.log-combate .l{padding:3px 0;animation:entraLog .32s var(--suave) both}
+.log-combate .l{padding:3px 0;animation:entraLog calc(.32s / var(--vel-luta, 1)) var(--suave) both}
 /* o turno de antes fica de fundo; o de agora, na frente */
 .log-combate .l{transition:opacity .3s var(--suave)}
 .log-combate:has(.l.turno) .l{opacity:.55}
@@ -1861,11 +1863,11 @@ h3.cat-item{
   /* a sombra de corpo SOMA ao que o sprite já é — silhueta e brilho
      continuam valendo */
   filter:var(--fx-sprite, opacity(1)) drop-shadow(0 3px 3px rgba(0,0,0,.45));
-  animation:surgeSprite .45s var(--mola) both
+  animation:surgeSprite calc(.45s / var(--vel-luta, 1)) var(--mola) both
 }
 /* margem em % de item flex conta pela largura da caixa: a arte é
    quadrada, então 24% da largura é 24% da altura do quadro */
-.lutador.inimigo .arte .sprite{animation-delay:.08s}
+.lutador.inimigo .arte .sprite{animation-delay:calc(.08s / var(--vel-luta, 1))}
 @keyframes surgeSprite{
   from{opacity:0;transform:translateY(-10px) scale(.88)}
   to{opacity:1;transform:none}
@@ -1984,7 +1986,8 @@ h3.cat-item{
 .dex-scan .lin::before{content:'> ';color:var(--dex-verm, #cf3a2e)}
 .dex-scan .lin.alerta{color:#b8860b;font-weight:700;text-shadow:0 0 8px rgba(245,197,24,.4)}
 .dex-barra.lendo{margin:12px 0 0}
-.dex-barra.lendo i{transition:width .25s linear}
+/* a leitura é ação da luta: anda na velocidade dela */
+.dex-barra.lendo i{transition:width calc(.25s / var(--vel-luta, 1)) linear}
 .pokedex-lente.lendo{animation:piscaLente .8s var(--suave) infinite}
 .pokedex-luzes.lendo i{animation-duration:.55s}
 @media(prefers-reduced-motion:reduce){
@@ -3115,9 +3118,9 @@ details.nav-novos[open] .nav-novos-ver{transform:rotate(225deg) translate(-2px,-
    esquerda, entra pela esquerda quando chega alguém novo. */
 .lutador.aliado.por-entrar .ficha,
 .lutador .ficha.ficha-fora{opacity:0;transform:translateX(40px)}
-.lutador .ficha.ficha-entra{animation:fichaEntra .34s var(--suave) both}
+.lutador .ficha.ficha-entra{animation:fichaEntra calc(.34s / var(--vel-luta, 1)) var(--suave) both}
 @keyframes fichaEntra{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:none}}
-.lutador.inimigo:not(.fixo) .ficha{animation:fichaEntraEsq .36s var(--suave) both}
+.lutador.inimigo:not(.fixo) .ficha{animation:fichaEntraEsq calc(.36s / var(--vel-luta, 1)) var(--suave) both}
 @keyframes fichaEntraEsq{from{opacity:0;transform:translateX(-40px)}to{opacity:1;transform:none}}
 @media(prefers-reduced-motion:reduce){.lutador .ficha{animation:none!important}}
 
@@ -3229,8 +3232,8 @@ h3.com-mapa{display:flex;align-items:center;justify-content:space-between;gap:8p
 
 /* ---------- clima na arena ---------- */
 /* pelo cenário inteiro: por cima dos dois Pokémon, por baixo das fichas */
-.arena > .clima-camada{position:absolute;inset:0;z-index:5;pointer-events:none;transition:opacity .45s}
-.arena > .clima-camada.chegando{animation:climaEntra .6s ease-out both}
+.arena > .clima-camada{position:absolute;inset:0;z-index:5;pointer-events:none;transition:opacity calc(.45s / var(--vel-luta, 1))}
+.arena > .clima-camada.chegando{animation:climaEntra calc(.6s / var(--vel-luta, 1)) ease-out both}
 .arena > .clima-camada.saindo{opacity:0}
 @keyframes climaEntra{from{opacity:0}to{opacity:1}}
 .clima-camada.clima-chuva{
@@ -3258,6 +3261,47 @@ h3.com-mapa{display:flex;align-items:center;justify-content:space-between;gap:8p
 }
 @keyframes solPulsa{50%{opacity:.75}}
 @media(prefers-reduced-motion:reduce){.clima-camada{animation:none !important}}
+
+/* ---------- velocidade da luta ----------
+   1×, 2× ou 3× (Velocidade, em js/ui/velocidade.js). O botão mora no
+   canto de cima à direita da arena, livre das duas fichas e do
+   treinador do fundo, na cápsula inclinada das fichas. Fica fora do
+   menu de comandos de propósito: o menu apaga enquanto o turno é
+   encenado, e é justo aí que se quer apertar. As três setas são o
+   marcador — acendem tantas quantas a velocidade, e acelerada a luz
+   fica âmbar. */
+.vel-luta{
+  --vel-luz:#fff;
+  position:absolute;top:12px;right:18px;z-index:9;isolation:isolate;
+  display:inline-flex;align-items:center;gap:7px;height:30px;padding:0 13px 0 12px;
+  border:0;background:none;color:#fff;cursor:pointer;
+  font:700 13px/1 var(--letra-hud);font-variant-numeric:tabular-nums;letter-spacing:.02em;
+}
+.vel-luta::before{
+  content:'';position:absolute;inset:0;z-index:-1;border-radius:9px;
+  background:linear-gradient(180deg, rgba(22,28,56,.88), rgba(9,12,28,.92));
+  border:1px solid rgba(255,255,255,.18);
+  box-shadow:0 10px 20px -12px rgba(0,0,0,.9), inset 0 1px 0 rgba(255,255,255,.09);
+  transform:skewX(-9deg);
+  -webkit-backdrop-filter:blur(5px);backdrop-filter:blur(5px);
+  transition:border-color .15s var(--suave);
+}
+.vel-luta:not([data-vel="1"]){--vel-luz:#ffc94a}
+.vel-luta:hover::before{border-color:rgba(255,255,255,.5)}
+.vel-luta:active{translate:0 1px}
+.vel-luta:focus-visible{outline:none;box-shadow:none}
+.vel-luta:focus-visible::before{outline:2px solid #fff;outline-offset:2px}
+.vel-setas{display:inline-flex;gap:1px}
+.vel-setas i{width:7px;height:10px;background:rgba(255,255,255,.26);clip-path:polygon(0 0,100% 50%,0 100%)}
+.vel-luta[data-vel="1"] .vel-setas i:first-child,
+.vel-luta[data-vel="2"] .vel-setas i:nth-child(-n+2),
+.vel-luta[data-vel="3"] .vel-setas i{background:var(--vel-luz)}
+.vel-luta:not([data-vel="1"]) .vel-setas{filter:drop-shadow(0 0 3px rgba(255,201,74,.75))}
+.vel-luta .vel-n{min-width:1.6em;color:var(--vel-luz);font-weight:700}
+@media (max-width:620px){
+  .vel-luta{top:8px;right:12px;height:26px;padding:0 10px;gap:6px;font-size:12px}
+  .vel-setas i{width:6px;height:9px}
+}
 
 /* ---------- estágios e estados na ficha de HP (Batalha.marcas) ---------- */
 .marcas-luta{display:flex;flex-wrap:wrap;align-items:flex-start;gap:4px;margin-top:5px;min-height:0}
@@ -4677,6 +4721,25 @@ button.item-linha.aparelho{
 .modal.ajustes .som-linha select option{background:var(--bg-2);color:var(--texto)}
 .modal.ajustes .ajuste-som .sussurro{margin:0;font-size:12.5px;color:var(--texto-fraco)}
 .modal.ajustes .som-testes .btn.mini{font-family:var(--letra-hud, var(--fonte));font-weight:600;border-radius:9px}
+/* a velocidade da luta: a mesma escolha do botão da arena, as três à vista */
+.modal.ajustes .ajuste-vel{
+  display:flex;flex-direction:column;gap:10px;margin:0 0 6px;padding:14px 16px;border-radius:14px;
+  border:1px solid color-mix(in srgb, var(--borda) 85%, transparent);
+  background:color-mix(in srgb, var(--bg) 38%, transparent);
+}
+.ajuste-vel-linha{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.ajuste-vel-rot{font-family:var(--letra-hud, var(--fonte));font-size:14.5px;font-weight:600}
+.vel-opcoes{display:inline-flex;gap:3px;padding:3px;border-radius:12px;background:rgba(0,0,0,.28);box-shadow:inset 0 0 0 1px var(--borda-forte)}
+.vel-opcoes button{
+  min-width:50px;height:32px;padding:0 12px;border:0;border-radius:9px;cursor:pointer;
+  background:transparent;color:var(--texto-fraco);
+  font:700 14px/1 var(--letra-hud, var(--fonte));font-variant-numeric:tabular-nums;
+  transition:background .15s var(--suave), color .15s var(--suave);
+}
+.vel-opcoes button:hover{color:var(--texto)}
+.vel-opcoes button.sel{background:var(--destaque);color:#11131f;box-shadow:0 2px 0 rgba(0,0,0,.35)}
+.vel-opcoes button:focus-visible{outline:2px solid var(--destaque);outline-offset:2px;box-shadow:none}
+.modal.ajustes .ajuste-vel .sussurro{margin:0;font-size:12.5px;color:var(--texto-fraco)}
 
 /* a rota: a trilha dos capítulos, cada nó na cor do tom do capítulo */
 .modal.rota .rota-via{
@@ -6560,6 +6623,8 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
 .barra.medio i{background:linear-gradient(90deg, color-mix(in srgb, var(--hp-medio) 72%, #000), var(--hp-medio))}
 .barra.baixo i{background:linear-gradient(90deg, color-mix(in srgb, var(--hp-baixo) 72%, #000), var(--hp-baixo))}
 .barra.baixo{animation:pulsaPerigo 1.4s ease-in-out infinite}
+/* na arena a barra desliza na velocidade da luta (Velocidade) */
+.arena .barra i{transition-duration:calc(.55s / var(--vel-luta, 1)), calc(.4s / var(--vel-luta, 1))}
 @keyframes pulsaPerigo{0%,100%{box-shadow:none}50%{box-shadow:0 0 14px -4px rgba(221,84,66,.6)}}
 .hp-num{font-family:var(--mono);font-size:12px;color:var(--texto-fraco)}
 
@@ -6583,7 +6648,7 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
   max-height:168px;overflow-y:auto;font-size:13.5px;margin-bottom:8px;scroll-behavior:smooth;
   box-shadow:inset 0 1px 0 rgba(255,255,255,.05), 0 12px 24px -18px rgba(0,0,0,.9)
 }
-.log-combate .l{padding:3px 0;animation:entraLog .32s var(--suave) both}
+.log-combate .l{padding:3px 0;animation:entraLog calc(.32s / var(--vel-luta, 1)) var(--suave) both}
 /* o turno de antes fica de fundo; o de agora, na frente */
 .log-combate .l{transition:opacity .3s var(--suave)}
 .log-combate:has(.l.turno) .l{opacity:.55}
@@ -7599,11 +7664,11 @@ h3.cat-item{
   /* a sombra de corpo SOMA ao que o sprite já é — silhueta e brilho
      continuam valendo */
   filter:var(--fx-sprite, opacity(1)) drop-shadow(0 3px 3px rgba(0,0,0,.45));
-  animation:surgeSprite .45s var(--mola) both
+  animation:surgeSprite calc(.45s / var(--vel-luta, 1)) var(--mola) both
 }
 /* margem em % de item flex conta pela largura da caixa: a arte é
    quadrada, então 24% da largura é 24% da altura do quadro */
-.lutador.inimigo .arte .sprite{animation-delay:.08s}
+.lutador.inimigo .arte .sprite{animation-delay:calc(.08s / var(--vel-luta, 1))}
 @keyframes surgeSprite{
   from{opacity:0;transform:translateY(-10px) scale(.88)}
   to{opacity:1;transform:none}
@@ -7722,7 +7787,8 @@ h3.cat-item{
 .dex-scan .lin::before{content:'> ';color:var(--dex-verm, #cf3a2e)}
 .dex-scan .lin.alerta{color:#b8860b;font-weight:700;text-shadow:0 0 8px rgba(245,197,24,.4)}
 .dex-barra.lendo{margin:12px 0 0}
-.dex-barra.lendo i{transition:width .25s linear}
+/* a leitura é ação da luta: anda na velocidade dela */
+.dex-barra.lendo i{transition:width calc(.25s / var(--vel-luta, 1)) linear}
 .pokedex-lente.lendo{animation:piscaLente .8s var(--suave) infinite}
 .pokedex-luzes.lendo i{animation-duration:.55s}
 @media(prefers-reduced-motion:reduce){
@@ -8853,9 +8919,9 @@ details.nav-novos[open] .nav-novos-ver{transform:rotate(225deg) translate(-2px,-
    esquerda, entra pela esquerda quando chega alguém novo. */
 .lutador.aliado.por-entrar .ficha,
 .lutador .ficha.ficha-fora{opacity:0;transform:translateX(40px)}
-.lutador .ficha.ficha-entra{animation:fichaEntra .34s var(--suave) both}
+.lutador .ficha.ficha-entra{animation:fichaEntra calc(.34s / var(--vel-luta, 1)) var(--suave) both}
 @keyframes fichaEntra{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:none}}
-.lutador.inimigo:not(.fixo) .ficha{animation:fichaEntraEsq .36s var(--suave) both}
+.lutador.inimigo:not(.fixo) .ficha{animation:fichaEntraEsq calc(.36s / var(--vel-luta, 1)) var(--suave) both}
 @keyframes fichaEntraEsq{from{opacity:0;transform:translateX(-40px)}to{opacity:1;transform:none}}
 @media(prefers-reduced-motion:reduce){.lutador .ficha{animation:none!important}}
 
@@ -8967,8 +9033,8 @@ h3.com-mapa{display:flex;align-items:center;justify-content:space-between;gap:8p
 
 /* ---------- clima na arena ---------- */
 /* pelo cenário inteiro: por cima dos dois Pokémon, por baixo das fichas */
-.arena > .clima-camada{position:absolute;inset:0;z-index:5;pointer-events:none;transition:opacity .45s}
-.arena > .clima-camada.chegando{animation:climaEntra .6s ease-out both}
+.arena > .clima-camada{position:absolute;inset:0;z-index:5;pointer-events:none;transition:opacity calc(.45s / var(--vel-luta, 1))}
+.arena > .clima-camada.chegando{animation:climaEntra calc(.6s / var(--vel-luta, 1)) ease-out both}
 .arena > .clima-camada.saindo{opacity:0}
 @keyframes climaEntra{from{opacity:0}to{opacity:1}}
 .clima-camada.clima-chuva{
@@ -8996,6 +9062,47 @@ h3.com-mapa{display:flex;align-items:center;justify-content:space-between;gap:8p
 }
 @keyframes solPulsa{50%{opacity:.75}}
 @media(prefers-reduced-motion:reduce){.clima-camada{animation:none !important}}
+
+/* ---------- velocidade da luta ----------
+   1×, 2× ou 3× (Velocidade, em js/ui/velocidade.js). O botão mora no
+   canto de cima à direita da arena, livre das duas fichas e do
+   treinador do fundo, na cápsula inclinada das fichas. Fica fora do
+   menu de comandos de propósito: o menu apaga enquanto o turno é
+   encenado, e é justo aí que se quer apertar. As três setas são o
+   marcador — acendem tantas quantas a velocidade, e acelerada a luz
+   fica âmbar. */
+.vel-luta{
+  --vel-luz:#fff;
+  position:absolute;top:12px;right:18px;z-index:9;isolation:isolate;
+  display:inline-flex;align-items:center;gap:7px;height:30px;padding:0 13px 0 12px;
+  border:0;background:none;color:#fff;cursor:pointer;
+  font:700 13px/1 var(--letra-hud);font-variant-numeric:tabular-nums;letter-spacing:.02em;
+}
+.vel-luta::before{
+  content:'';position:absolute;inset:0;z-index:-1;border-radius:9px;
+  background:linear-gradient(180deg, rgba(22,28,56,.88), rgba(9,12,28,.92));
+  border:1px solid rgba(255,255,255,.18);
+  box-shadow:0 10px 20px -12px rgba(0,0,0,.9), inset 0 1px 0 rgba(255,255,255,.09);
+  transform:skewX(-9deg);
+  -webkit-backdrop-filter:blur(5px);backdrop-filter:blur(5px);
+  transition:border-color .15s var(--suave);
+}
+.vel-luta:not([data-vel="1"]){--vel-luz:#ffc94a}
+.vel-luta:hover::before{border-color:rgba(255,255,255,.5)}
+.vel-luta:active{translate:0 1px}
+.vel-luta:focus-visible{outline:none;box-shadow:none}
+.vel-luta:focus-visible::before{outline:2px solid #fff;outline-offset:2px}
+.vel-setas{display:inline-flex;gap:1px}
+.vel-setas i{width:7px;height:10px;background:rgba(255,255,255,.26);clip-path:polygon(0 0,100% 50%,0 100%)}
+.vel-luta[data-vel="1"] .vel-setas i:first-child,
+.vel-luta[data-vel="2"] .vel-setas i:nth-child(-n+2),
+.vel-luta[data-vel="3"] .vel-setas i{background:var(--vel-luz)}
+.vel-luta:not([data-vel="1"]) .vel-setas{filter:drop-shadow(0 0 3px rgba(255,201,74,.75))}
+.vel-luta .vel-n{min-width:1.6em;color:var(--vel-luz);font-weight:700}
+@media (max-width:620px){
+  .vel-luta{top:8px;right:12px;height:26px;padding:0 10px;gap:6px;font-size:12px}
+  .vel-setas i{width:6px;height:9px}
+}
 
 /* ---------- estágios e estados na ficha de HP (Batalha.marcas) ---------- */
 .marcas-luta{display:flex;flex-wrap:wrap;align-items:flex-start;gap:4px;margin-top:5px;min-height:0}
@@ -10415,6 +10522,25 @@ button.item-linha.aparelho{
 .modal.ajustes .som-linha select option{background:var(--bg-2);color:var(--texto)}
 .modal.ajustes .ajuste-som .sussurro{margin:0;font-size:12.5px;color:var(--texto-fraco)}
 .modal.ajustes .som-testes .btn.mini{font-family:var(--letra-hud, var(--fonte));font-weight:600;border-radius:9px}
+/* a velocidade da luta: a mesma escolha do botão da arena, as três à vista */
+.modal.ajustes .ajuste-vel{
+  display:flex;flex-direction:column;gap:10px;margin:0 0 6px;padding:14px 16px;border-radius:14px;
+  border:1px solid color-mix(in srgb, var(--borda) 85%, transparent);
+  background:color-mix(in srgb, var(--bg) 38%, transparent);
+}
+.ajuste-vel-linha{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.ajuste-vel-rot{font-family:var(--letra-hud, var(--fonte));font-size:14.5px;font-weight:600}
+.vel-opcoes{display:inline-flex;gap:3px;padding:3px;border-radius:12px;background:rgba(0,0,0,.28);box-shadow:inset 0 0 0 1px var(--borda-forte)}
+.vel-opcoes button{
+  min-width:50px;height:32px;padding:0 12px;border:0;border-radius:9px;cursor:pointer;
+  background:transparent;color:var(--texto-fraco);
+  font:700 14px/1 var(--letra-hud, var(--fonte));font-variant-numeric:tabular-nums;
+  transition:background .15s var(--suave), color .15s var(--suave);
+}
+.vel-opcoes button:hover{color:var(--texto)}
+.vel-opcoes button.sel{background:var(--destaque);color:#11131f;box-shadow:0 2px 0 rgba(0,0,0,.35)}
+.vel-opcoes button:focus-visible{outline:2px solid var(--destaque);outline-offset:2px;box-shadow:none}
+.modal.ajustes .ajuste-vel .sussurro{margin:0;font-size:12.5px;color:var(--texto-fraco)}
 
 /* a rota: a trilha dos capítulos, cada nó na cor do tom do capítulo */
 .modal.rota .rota-via{
@@ -12298,6 +12424,8 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
 .barra.medio i{background:linear-gradient(90deg, color-mix(in srgb, var(--hp-medio) 72%, #000), var(--hp-medio))}
 .barra.baixo i{background:linear-gradient(90deg, color-mix(in srgb, var(--hp-baixo) 72%, #000), var(--hp-baixo))}
 .barra.baixo{animation:pulsaPerigo 1.4s ease-in-out infinite}
+/* na arena a barra desliza na velocidade da luta (Velocidade) */
+.arena .barra i{transition-duration:calc(.55s / var(--vel-luta, 1)), calc(.4s / var(--vel-luta, 1))}
 @keyframes pulsaPerigo{0%,100%{box-shadow:none}50%{box-shadow:0 0 14px -4px rgba(221,84,66,.6)}}
 .hp-num{font-family:var(--mono);font-size:12px;color:var(--texto-fraco)}
 
@@ -12321,7 +12449,7 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
   max-height:168px;overflow-y:auto;font-size:13.5px;margin-bottom:8px;scroll-behavior:smooth;
   box-shadow:inset 0 1px 0 rgba(255,255,255,.05), 0 12px 24px -18px rgba(0,0,0,.9)
 }
-.log-combate .l{padding:3px 0;animation:entraLog .32s var(--suave) both}
+.log-combate .l{padding:3px 0;animation:entraLog calc(.32s / var(--vel-luta, 1)) var(--suave) both}
 /* o turno de antes fica de fundo; o de agora, na frente */
 .log-combate .l{transition:opacity .3s var(--suave)}
 .log-combate:has(.l.turno) .l{opacity:.55}
@@ -13337,11 +13465,11 @@ h3.cat-item{
   /* a sombra de corpo SOMA ao que o sprite já é — silhueta e brilho
      continuam valendo */
   filter:var(--fx-sprite, opacity(1)) drop-shadow(0 3px 3px rgba(0,0,0,.45));
-  animation:surgeSprite .45s var(--mola) both
+  animation:surgeSprite calc(.45s / var(--vel-luta, 1)) var(--mola) both
 }
 /* margem em % de item flex conta pela largura da caixa: a arte é
    quadrada, então 24% da largura é 24% da altura do quadro */
-.lutador.inimigo .arte .sprite{animation-delay:.08s}
+.lutador.inimigo .arte .sprite{animation-delay:calc(.08s / var(--vel-luta, 1))}
 @keyframes surgeSprite{
   from{opacity:0;transform:translateY(-10px) scale(.88)}
   to{opacity:1;transform:none}
@@ -13460,7 +13588,8 @@ h3.cat-item{
 .dex-scan .lin::before{content:'> ';color:var(--dex-verm, #cf3a2e)}
 .dex-scan .lin.alerta{color:#b8860b;font-weight:700;text-shadow:0 0 8px rgba(245,197,24,.4)}
 .dex-barra.lendo{margin:12px 0 0}
-.dex-barra.lendo i{transition:width .25s linear}
+/* a leitura é ação da luta: anda na velocidade dela */
+.dex-barra.lendo i{transition:width calc(.25s / var(--vel-luta, 1)) linear}
 .pokedex-lente.lendo{animation:piscaLente .8s var(--suave) infinite}
 .pokedex-luzes.lendo i{animation-duration:.55s}
 @media(prefers-reduced-motion:reduce){
@@ -14591,9 +14720,9 @@ details.nav-novos[open] .nav-novos-ver{transform:rotate(225deg) translate(-2px,-
    esquerda, entra pela esquerda quando chega alguém novo. */
 .lutador.aliado.por-entrar .ficha,
 .lutador .ficha.ficha-fora{opacity:0;transform:translateX(40px)}
-.lutador .ficha.ficha-entra{animation:fichaEntra .34s var(--suave) both}
+.lutador .ficha.ficha-entra{animation:fichaEntra calc(.34s / var(--vel-luta, 1)) var(--suave) both}
 @keyframes fichaEntra{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:none}}
-.lutador.inimigo:not(.fixo) .ficha{animation:fichaEntraEsq .36s var(--suave) both}
+.lutador.inimigo:not(.fixo) .ficha{animation:fichaEntraEsq calc(.36s / var(--vel-luta, 1)) var(--suave) both}
 @keyframes fichaEntraEsq{from{opacity:0;transform:translateX(-40px)}to{opacity:1;transform:none}}
 @media(prefers-reduced-motion:reduce){.lutador .ficha{animation:none!important}}
 
@@ -14705,8 +14834,8 @@ h3.com-mapa{display:flex;align-items:center;justify-content:space-between;gap:8p
 
 /* ---------- clima na arena ---------- */
 /* pelo cenário inteiro: por cima dos dois Pokémon, por baixo das fichas */
-.arena > .clima-camada{position:absolute;inset:0;z-index:5;pointer-events:none;transition:opacity .45s}
-.arena > .clima-camada.chegando{animation:climaEntra .6s ease-out both}
+.arena > .clima-camada{position:absolute;inset:0;z-index:5;pointer-events:none;transition:opacity calc(.45s / var(--vel-luta, 1))}
+.arena > .clima-camada.chegando{animation:climaEntra calc(.6s / var(--vel-luta, 1)) ease-out both}
 .arena > .clima-camada.saindo{opacity:0}
 @keyframes climaEntra{from{opacity:0}to{opacity:1}}
 .clima-camada.clima-chuva{
@@ -14734,6 +14863,47 @@ h3.com-mapa{display:flex;align-items:center;justify-content:space-between;gap:8p
 }
 @keyframes solPulsa{50%{opacity:.75}}
 @media(prefers-reduced-motion:reduce){.clima-camada{animation:none !important}}
+
+/* ---------- velocidade da luta ----------
+   1×, 2× ou 3× (Velocidade, em js/ui/velocidade.js). O botão mora no
+   canto de cima à direita da arena, livre das duas fichas e do
+   treinador do fundo, na cápsula inclinada das fichas. Fica fora do
+   menu de comandos de propósito: o menu apaga enquanto o turno é
+   encenado, e é justo aí que se quer apertar. As três setas são o
+   marcador — acendem tantas quantas a velocidade, e acelerada a luz
+   fica âmbar. */
+.vel-luta{
+  --vel-luz:#fff;
+  position:absolute;top:12px;right:18px;z-index:9;isolation:isolate;
+  display:inline-flex;align-items:center;gap:7px;height:30px;padding:0 13px 0 12px;
+  border:0;background:none;color:#fff;cursor:pointer;
+  font:700 13px/1 var(--letra-hud);font-variant-numeric:tabular-nums;letter-spacing:.02em;
+}
+.vel-luta::before{
+  content:'';position:absolute;inset:0;z-index:-1;border-radius:9px;
+  background:linear-gradient(180deg, rgba(22,28,56,.88), rgba(9,12,28,.92));
+  border:1px solid rgba(255,255,255,.18);
+  box-shadow:0 10px 20px -12px rgba(0,0,0,.9), inset 0 1px 0 rgba(255,255,255,.09);
+  transform:skewX(-9deg);
+  -webkit-backdrop-filter:blur(5px);backdrop-filter:blur(5px);
+  transition:border-color .15s var(--suave);
+}
+.vel-luta:not([data-vel="1"]){--vel-luz:#ffc94a}
+.vel-luta:hover::before{border-color:rgba(255,255,255,.5)}
+.vel-luta:active{translate:0 1px}
+.vel-luta:focus-visible{outline:none;box-shadow:none}
+.vel-luta:focus-visible::before{outline:2px solid #fff;outline-offset:2px}
+.vel-setas{display:inline-flex;gap:1px}
+.vel-setas i{width:7px;height:10px;background:rgba(255,255,255,.26);clip-path:polygon(0 0,100% 50%,0 100%)}
+.vel-luta[data-vel="1"] .vel-setas i:first-child,
+.vel-luta[data-vel="2"] .vel-setas i:nth-child(-n+2),
+.vel-luta[data-vel="3"] .vel-setas i{background:var(--vel-luz)}
+.vel-luta:not([data-vel="1"]) .vel-setas{filter:drop-shadow(0 0 3px rgba(255,201,74,.75))}
+.vel-luta .vel-n{min-width:1.6em;color:var(--vel-luz);font-weight:700}
+@media (max-width:620px){
+  .vel-luta{top:8px;right:12px;height:26px;padding:0 10px;gap:6px;font-size:12px}
+  .vel-setas i{width:6px;height:9px}
+}
 
 /* ---------- estágios e estados na ficha de HP (Batalha.marcas) ---------- */
 .marcas-luta{display:flex;flex-wrap:wrap;align-items:flex-start;gap:4px;margin-top:5px;min-height:0}
@@ -16153,6 +16323,25 @@ button.item-linha.aparelho{
 .modal.ajustes .som-linha select option{background:var(--bg-2);color:var(--texto)}
 .modal.ajustes .ajuste-som .sussurro{margin:0;font-size:12.5px;color:var(--texto-fraco)}
 .modal.ajustes .som-testes .btn.mini{font-family:var(--letra-hud, var(--fonte));font-weight:600;border-radius:9px}
+/* a velocidade da luta: a mesma escolha do botão da arena, as três à vista */
+.modal.ajustes .ajuste-vel{
+  display:flex;flex-direction:column;gap:10px;margin:0 0 6px;padding:14px 16px;border-radius:14px;
+  border:1px solid color-mix(in srgb, var(--borda) 85%, transparent);
+  background:color-mix(in srgb, var(--bg) 38%, transparent);
+}
+.ajuste-vel-linha{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.ajuste-vel-rot{font-family:var(--letra-hud, var(--fonte));font-size:14.5px;font-weight:600}
+.vel-opcoes{display:inline-flex;gap:3px;padding:3px;border-radius:12px;background:rgba(0,0,0,.28);box-shadow:inset 0 0 0 1px var(--borda-forte)}
+.vel-opcoes button{
+  min-width:50px;height:32px;padding:0 12px;border:0;border-radius:9px;cursor:pointer;
+  background:transparent;color:var(--texto-fraco);
+  font:700 14px/1 var(--letra-hud, var(--fonte));font-variant-numeric:tabular-nums;
+  transition:background .15s var(--suave), color .15s var(--suave);
+}
+.vel-opcoes button:hover{color:var(--texto)}
+.vel-opcoes button.sel{background:var(--destaque);color:#11131f;box-shadow:0 2px 0 rgba(0,0,0,.35)}
+.vel-opcoes button:focus-visible{outline:2px solid var(--destaque);outline-offset:2px;box-shadow:none}
+.modal.ajustes .ajuste-vel .sussurro{margin:0;font-size:12.5px;color:var(--texto-fraco)}
 
 /* a rota: a trilha dos capítulos, cada nó na cor do tom do capítulo */
 .modal.rota .rota-via{
@@ -18036,6 +18225,8 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
 .barra.medio i{background:linear-gradient(90deg, color-mix(in srgb, var(--hp-medio) 72%, #000), var(--hp-medio))}
 .barra.baixo i{background:linear-gradient(90deg, color-mix(in srgb, var(--hp-baixo) 72%, #000), var(--hp-baixo))}
 .barra.baixo{animation:pulsaPerigo 1.4s ease-in-out infinite}
+/* na arena a barra desliza na velocidade da luta (Velocidade) */
+.arena .barra i{transition-duration:calc(.55s / var(--vel-luta, 1)), calc(.4s / var(--vel-luta, 1))}
 @keyframes pulsaPerigo{0%,100%{box-shadow:none}50%{box-shadow:0 0 14px -4px rgba(221,84,66,.6)}}
 .hp-num{font-family:var(--mono);font-size:12px;color:var(--texto-fraco)}
 
@@ -18059,7 +18250,7 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
   max-height:168px;overflow-y:auto;font-size:13.5px;margin-bottom:8px;scroll-behavior:smooth;
   box-shadow:inset 0 1px 0 rgba(255,255,255,.05), 0 12px 24px -18px rgba(0,0,0,.9)
 }
-.log-combate .l{padding:3px 0;animation:entraLog .32s var(--suave) both}
+.log-combate .l{padding:3px 0;animation:entraLog calc(.32s / var(--vel-luta, 1)) var(--suave) both}
 /* o turno de antes fica de fundo; o de agora, na frente */
 .log-combate .l{transition:opacity .3s var(--suave)}
 .log-combate:has(.l.turno) .l{opacity:.55}
@@ -19075,11 +19266,11 @@ h3.cat-item{
   /* a sombra de corpo SOMA ao que o sprite já é — silhueta e brilho
      continuam valendo */
   filter:var(--fx-sprite, opacity(1)) drop-shadow(0 3px 3px rgba(0,0,0,.45));
-  animation:surgeSprite .45s var(--mola) both
+  animation:surgeSprite calc(.45s / var(--vel-luta, 1)) var(--mola) both
 }
 /* margem em % de item flex conta pela largura da caixa: a arte é
    quadrada, então 24% da largura é 24% da altura do quadro */
-.lutador.inimigo .arte .sprite{animation-delay:.08s}
+.lutador.inimigo .arte .sprite{animation-delay:calc(.08s / var(--vel-luta, 1))}
 @keyframes surgeSprite{
   from{opacity:0;transform:translateY(-10px) scale(.88)}
   to{opacity:1;transform:none}
@@ -19198,7 +19389,8 @@ h3.cat-item{
 .dex-scan .lin::before{content:'> ';color:var(--dex-verm, #cf3a2e)}
 .dex-scan .lin.alerta{color:#b8860b;font-weight:700;text-shadow:0 0 8px rgba(245,197,24,.4)}
 .dex-barra.lendo{margin:12px 0 0}
-.dex-barra.lendo i{transition:width .25s linear}
+/* a leitura é ação da luta: anda na velocidade dela */
+.dex-barra.lendo i{transition:width calc(.25s / var(--vel-luta, 1)) linear}
 .pokedex-lente.lendo{animation:piscaLente .8s var(--suave) infinite}
 .pokedex-luzes.lendo i{animation-duration:.55s}
 @media(prefers-reduced-motion:reduce){
@@ -20329,9 +20521,9 @@ details.nav-novos[open] .nav-novos-ver{transform:rotate(225deg) translate(-2px,-
    esquerda, entra pela esquerda quando chega alguém novo. */
 .lutador.aliado.por-entrar .ficha,
 .lutador .ficha.ficha-fora{opacity:0;transform:translateX(40px)}
-.lutador .ficha.ficha-entra{animation:fichaEntra .34s var(--suave) both}
+.lutador .ficha.ficha-entra{animation:fichaEntra calc(.34s / var(--vel-luta, 1)) var(--suave) both}
 @keyframes fichaEntra{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:none}}
-.lutador.inimigo:not(.fixo) .ficha{animation:fichaEntraEsq .36s var(--suave) both}
+.lutador.inimigo:not(.fixo) .ficha{animation:fichaEntraEsq calc(.36s / var(--vel-luta, 1)) var(--suave) both}
 @keyframes fichaEntraEsq{from{opacity:0;transform:translateX(-40px)}to{opacity:1;transform:none}}
 @media(prefers-reduced-motion:reduce){.lutador .ficha{animation:none!important}}
 
@@ -20443,8 +20635,8 @@ h3.com-mapa{display:flex;align-items:center;justify-content:space-between;gap:8p
 
 /* ---------- clima na arena ---------- */
 /* pelo cenário inteiro: por cima dos dois Pokémon, por baixo das fichas */
-.arena > .clima-camada{position:absolute;inset:0;z-index:5;pointer-events:none;transition:opacity .45s}
-.arena > .clima-camada.chegando{animation:climaEntra .6s ease-out both}
+.arena > .clima-camada{position:absolute;inset:0;z-index:5;pointer-events:none;transition:opacity calc(.45s / var(--vel-luta, 1))}
+.arena > .clima-camada.chegando{animation:climaEntra calc(.6s / var(--vel-luta, 1)) ease-out both}
 .arena > .clima-camada.saindo{opacity:0}
 @keyframes climaEntra{from{opacity:0}to{opacity:1}}
 .clima-camada.clima-chuva{
@@ -20472,6 +20664,47 @@ h3.com-mapa{display:flex;align-items:center;justify-content:space-between;gap:8p
 }
 @keyframes solPulsa{50%{opacity:.75}}
 @media(prefers-reduced-motion:reduce){.clima-camada{animation:none !important}}
+
+/* ---------- velocidade da luta ----------
+   1×, 2× ou 3× (Velocidade, em js/ui/velocidade.js). O botão mora no
+   canto de cima à direita da arena, livre das duas fichas e do
+   treinador do fundo, na cápsula inclinada das fichas. Fica fora do
+   menu de comandos de propósito: o menu apaga enquanto o turno é
+   encenado, e é justo aí que se quer apertar. As três setas são o
+   marcador — acendem tantas quantas a velocidade, e acelerada a luz
+   fica âmbar. */
+.vel-luta{
+  --vel-luz:#fff;
+  position:absolute;top:12px;right:18px;z-index:9;isolation:isolate;
+  display:inline-flex;align-items:center;gap:7px;height:30px;padding:0 13px 0 12px;
+  border:0;background:none;color:#fff;cursor:pointer;
+  font:700 13px/1 var(--letra-hud);font-variant-numeric:tabular-nums;letter-spacing:.02em;
+}
+.vel-luta::before{
+  content:'';position:absolute;inset:0;z-index:-1;border-radius:9px;
+  background:linear-gradient(180deg, rgba(22,28,56,.88), rgba(9,12,28,.92));
+  border:1px solid rgba(255,255,255,.18);
+  box-shadow:0 10px 20px -12px rgba(0,0,0,.9), inset 0 1px 0 rgba(255,255,255,.09);
+  transform:skewX(-9deg);
+  -webkit-backdrop-filter:blur(5px);backdrop-filter:blur(5px);
+  transition:border-color .15s var(--suave);
+}
+.vel-luta:not([data-vel="1"]){--vel-luz:#ffc94a}
+.vel-luta:hover::before{border-color:rgba(255,255,255,.5)}
+.vel-luta:active{translate:0 1px}
+.vel-luta:focus-visible{outline:none;box-shadow:none}
+.vel-luta:focus-visible::before{outline:2px solid #fff;outline-offset:2px}
+.vel-setas{display:inline-flex;gap:1px}
+.vel-setas i{width:7px;height:10px;background:rgba(255,255,255,.26);clip-path:polygon(0 0,100% 50%,0 100%)}
+.vel-luta[data-vel="1"] .vel-setas i:first-child,
+.vel-luta[data-vel="2"] .vel-setas i:nth-child(-n+2),
+.vel-luta[data-vel="3"] .vel-setas i{background:var(--vel-luz)}
+.vel-luta:not([data-vel="1"]) .vel-setas{filter:drop-shadow(0 0 3px rgba(255,201,74,.75))}
+.vel-luta .vel-n{min-width:1.6em;color:var(--vel-luz);font-weight:700}
+@media (max-width:620px){
+  .vel-luta{top:8px;right:12px;height:26px;padding:0 10px;gap:6px;font-size:12px}
+  .vel-setas i{width:6px;height:9px}
+}
 
 /* ---------- estágios e estados na ficha de HP (Batalha.marcas) ---------- */
 .marcas-luta{display:flex;flex-wrap:wrap;align-items:flex-start;gap:4px;margin-top:5px;min-height:0}
@@ -21891,6 +22124,25 @@ button.item-linha.aparelho{
 .modal.ajustes .som-linha select option{background:var(--bg-2);color:var(--texto)}
 .modal.ajustes .ajuste-som .sussurro{margin:0;font-size:12.5px;color:var(--texto-fraco)}
 .modal.ajustes .som-testes .btn.mini{font-family:var(--letra-hud, var(--fonte));font-weight:600;border-radius:9px}
+/* a velocidade da luta: a mesma escolha do botão da arena, as três à vista */
+.modal.ajustes .ajuste-vel{
+  display:flex;flex-direction:column;gap:10px;margin:0 0 6px;padding:14px 16px;border-radius:14px;
+  border:1px solid color-mix(in srgb, var(--borda) 85%, transparent);
+  background:color-mix(in srgb, var(--bg) 38%, transparent);
+}
+.ajuste-vel-linha{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.ajuste-vel-rot{font-family:var(--letra-hud, var(--fonte));font-size:14.5px;font-weight:600}
+.vel-opcoes{display:inline-flex;gap:3px;padding:3px;border-radius:12px;background:rgba(0,0,0,.28);box-shadow:inset 0 0 0 1px var(--borda-forte)}
+.vel-opcoes button{
+  min-width:50px;height:32px;padding:0 12px;border:0;border-radius:9px;cursor:pointer;
+  background:transparent;color:var(--texto-fraco);
+  font:700 14px/1 var(--letra-hud, var(--fonte));font-variant-numeric:tabular-nums;
+  transition:background .15s var(--suave), color .15s var(--suave);
+}
+.vel-opcoes button:hover{color:var(--texto)}
+.vel-opcoes button.sel{background:var(--destaque);color:#11131f;box-shadow:0 2px 0 rgba(0,0,0,.35)}
+.vel-opcoes button:focus-visible{outline:2px solid var(--destaque);outline-offset:2px;box-shadow:none}
+.modal.ajustes .ajuste-vel .sussurro{margin:0;font-size:12.5px;color:var(--texto-fraco)}
 
 /* a rota: a trilha dos capítulos, cada nó na cor do tom do capítulo */
 .modal.rota .rota-via{
@@ -23774,6 +24026,8 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
 .barra.medio i{background:linear-gradient(90deg, color-mix(in srgb, var(--hp-medio) 72%, #000), var(--hp-medio))}
 .barra.baixo i{background:linear-gradient(90deg, color-mix(in srgb, var(--hp-baixo) 72%, #000), var(--hp-baixo))}
 .barra.baixo{animation:pulsaPerigo 1.4s ease-in-out infinite}
+/* na arena a barra desliza na velocidade da luta (Velocidade) */
+.arena .barra i{transition-duration:calc(.55s / var(--vel-luta, 1)), calc(.4s / var(--vel-luta, 1))}
 @keyframes pulsaPerigo{0%,100%{box-shadow:none}50%{box-shadow:0 0 14px -4px rgba(221,84,66,.6)}}
 .hp-num{font-family:var(--mono);font-size:12px;color:var(--texto-fraco)}
 
@@ -23797,7 +24051,7 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
   max-height:168px;overflow-y:auto;font-size:13.5px;margin-bottom:8px;scroll-behavior:smooth;
   box-shadow:inset 0 1px 0 rgba(255,255,255,.05), 0 12px 24px -18px rgba(0,0,0,.9)
 }
-.log-combate .l{padding:3px 0;animation:entraLog .32s var(--suave) both}
+.log-combate .l{padding:3px 0;animation:entraLog calc(.32s / var(--vel-luta, 1)) var(--suave) both}
 /* o turno de antes fica de fundo; o de agora, na frente */
 .log-combate .l{transition:opacity .3s var(--suave)}
 .log-combate:has(.l.turno) .l{opacity:.55}
@@ -24813,11 +25067,11 @@ h3.cat-item{
   /* a sombra de corpo SOMA ao que o sprite já é — silhueta e brilho
      continuam valendo */
   filter:var(--fx-sprite, opacity(1)) drop-shadow(0 3px 3px rgba(0,0,0,.45));
-  animation:surgeSprite .45s var(--mola) both
+  animation:surgeSprite calc(.45s / var(--vel-luta, 1)) var(--mola) both
 }
 /* margem em % de item flex conta pela largura da caixa: a arte é
    quadrada, então 24% da largura é 24% da altura do quadro */
-.lutador.inimigo .arte .sprite{animation-delay:.08s}
+.lutador.inimigo .arte .sprite{animation-delay:calc(.08s / var(--vel-luta, 1))}
 @keyframes surgeSprite{
   from{opacity:0;transform:translateY(-10px) scale(.88)}
   to{opacity:1;transform:none}
@@ -24936,7 +25190,8 @@ h3.cat-item{
 .dex-scan .lin::before{content:'> ';color:var(--dex-verm, #cf3a2e)}
 .dex-scan .lin.alerta{color:#b8860b;font-weight:700;text-shadow:0 0 8px rgba(245,197,24,.4)}
 .dex-barra.lendo{margin:12px 0 0}
-.dex-barra.lendo i{transition:width .25s linear}
+/* a leitura é ação da luta: anda na velocidade dela */
+.dex-barra.lendo i{transition:width calc(.25s / var(--vel-luta, 1)) linear}
 .pokedex-lente.lendo{animation:piscaLente .8s var(--suave) infinite}
 .pokedex-luzes.lendo i{animation-duration:.55s}
 @media(prefers-reduced-motion:reduce){
@@ -26067,9 +26322,9 @@ details.nav-novos[open] .nav-novos-ver{transform:rotate(225deg) translate(-2px,-
    esquerda, entra pela esquerda quando chega alguém novo. */
 .lutador.aliado.por-entrar .ficha,
 .lutador .ficha.ficha-fora{opacity:0;transform:translateX(40px)}
-.lutador .ficha.ficha-entra{animation:fichaEntra .34s var(--suave) both}
+.lutador .ficha.ficha-entra{animation:fichaEntra calc(.34s / var(--vel-luta, 1)) var(--suave) both}
 @keyframes fichaEntra{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:none}}
-.lutador.inimigo:not(.fixo) .ficha{animation:fichaEntraEsq .36s var(--suave) both}
+.lutador.inimigo:not(.fixo) .ficha{animation:fichaEntraEsq calc(.36s / var(--vel-luta, 1)) var(--suave) both}
 @keyframes fichaEntraEsq{from{opacity:0;transform:translateX(-40px)}to{opacity:1;transform:none}}
 @media(prefers-reduced-motion:reduce){.lutador .ficha{animation:none!important}}
 
@@ -26181,8 +26436,8 @@ h3.com-mapa{display:flex;align-items:center;justify-content:space-between;gap:8p
 
 /* ---------- clima na arena ---------- */
 /* pelo cenário inteiro: por cima dos dois Pokémon, por baixo das fichas */
-.arena > .clima-camada{position:absolute;inset:0;z-index:5;pointer-events:none;transition:opacity .45s}
-.arena > .clima-camada.chegando{animation:climaEntra .6s ease-out both}
+.arena > .clima-camada{position:absolute;inset:0;z-index:5;pointer-events:none;transition:opacity calc(.45s / var(--vel-luta, 1))}
+.arena > .clima-camada.chegando{animation:climaEntra calc(.6s / var(--vel-luta, 1)) ease-out both}
 .arena > .clima-camada.saindo{opacity:0}
 @keyframes climaEntra{from{opacity:0}to{opacity:1}}
 .clima-camada.clima-chuva{
@@ -26210,6 +26465,47 @@ h3.com-mapa{display:flex;align-items:center;justify-content:space-between;gap:8p
 }
 @keyframes solPulsa{50%{opacity:.75}}
 @media(prefers-reduced-motion:reduce){.clima-camada{animation:none !important}}
+
+/* ---------- velocidade da luta ----------
+   1×, 2× ou 3× (Velocidade, em js/ui/velocidade.js). O botão mora no
+   canto de cima à direita da arena, livre das duas fichas e do
+   treinador do fundo, na cápsula inclinada das fichas. Fica fora do
+   menu de comandos de propósito: o menu apaga enquanto o turno é
+   encenado, e é justo aí que se quer apertar. As três setas são o
+   marcador — acendem tantas quantas a velocidade, e acelerada a luz
+   fica âmbar. */
+.vel-luta{
+  --vel-luz:#fff;
+  position:absolute;top:12px;right:18px;z-index:9;isolation:isolate;
+  display:inline-flex;align-items:center;gap:7px;height:30px;padding:0 13px 0 12px;
+  border:0;background:none;color:#fff;cursor:pointer;
+  font:700 13px/1 var(--letra-hud);font-variant-numeric:tabular-nums;letter-spacing:.02em;
+}
+.vel-luta::before{
+  content:'';position:absolute;inset:0;z-index:-1;border-radius:9px;
+  background:linear-gradient(180deg, rgba(22,28,56,.88), rgba(9,12,28,.92));
+  border:1px solid rgba(255,255,255,.18);
+  box-shadow:0 10px 20px -12px rgba(0,0,0,.9), inset 0 1px 0 rgba(255,255,255,.09);
+  transform:skewX(-9deg);
+  -webkit-backdrop-filter:blur(5px);backdrop-filter:blur(5px);
+  transition:border-color .15s var(--suave);
+}
+.vel-luta:not([data-vel="1"]){--vel-luz:#ffc94a}
+.vel-luta:hover::before{border-color:rgba(255,255,255,.5)}
+.vel-luta:active{translate:0 1px}
+.vel-luta:focus-visible{outline:none;box-shadow:none}
+.vel-luta:focus-visible::before{outline:2px solid #fff;outline-offset:2px}
+.vel-setas{display:inline-flex;gap:1px}
+.vel-setas i{width:7px;height:10px;background:rgba(255,255,255,.26);clip-path:polygon(0 0,100% 50%,0 100%)}
+.vel-luta[data-vel="1"] .vel-setas i:first-child,
+.vel-luta[data-vel="2"] .vel-setas i:nth-child(-n+2),
+.vel-luta[data-vel="3"] .vel-setas i{background:var(--vel-luz)}
+.vel-luta:not([data-vel="1"]) .vel-setas{filter:drop-shadow(0 0 3px rgba(255,201,74,.75))}
+.vel-luta .vel-n{min-width:1.6em;color:var(--vel-luz);font-weight:700}
+@media (max-width:620px){
+  .vel-luta{top:8px;right:12px;height:26px;padding:0 10px;gap:6px;font-size:12px}
+  .vel-setas i{width:6px;height:9px}
+}
 
 /* ---------- estágios e estados na ficha de HP (Batalha.marcas) ---------- */
 .marcas-luta{display:flex;flex-wrap:wrap;align-items:flex-start;gap:4px;margin-top:5px;min-height:0}
@@ -27629,6 +27925,25 @@ button.item-linha.aparelho{
 .modal.ajustes .som-linha select option{background:var(--bg-2);color:var(--texto)}
 .modal.ajustes .ajuste-som .sussurro{margin:0;font-size:12.5px;color:var(--texto-fraco)}
 .modal.ajustes .som-testes .btn.mini{font-family:var(--letra-hud, var(--fonte));font-weight:600;border-radius:9px}
+/* a velocidade da luta: a mesma escolha do botão da arena, as três à vista */
+.modal.ajustes .ajuste-vel{
+  display:flex;flex-direction:column;gap:10px;margin:0 0 6px;padding:14px 16px;border-radius:14px;
+  border:1px solid color-mix(in srgb, var(--borda) 85%, transparent);
+  background:color-mix(in srgb, var(--bg) 38%, transparent);
+}
+.ajuste-vel-linha{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.ajuste-vel-rot{font-family:var(--letra-hud, var(--fonte));font-size:14.5px;font-weight:600}
+.vel-opcoes{display:inline-flex;gap:3px;padding:3px;border-radius:12px;background:rgba(0,0,0,.28);box-shadow:inset 0 0 0 1px var(--borda-forte)}
+.vel-opcoes button{
+  min-width:50px;height:32px;padding:0 12px;border:0;border-radius:9px;cursor:pointer;
+  background:transparent;color:var(--texto-fraco);
+  font:700 14px/1 var(--letra-hud, var(--fonte));font-variant-numeric:tabular-nums;
+  transition:background .15s var(--suave), color .15s var(--suave);
+}
+.vel-opcoes button:hover{color:var(--texto)}
+.vel-opcoes button.sel{background:var(--destaque);color:#11131f;box-shadow:0 2px 0 rgba(0,0,0,.35)}
+.vel-opcoes button:focus-visible{outline:2px solid var(--destaque);outline-offset:2px;box-shadow:none}
+.modal.ajustes .ajuste-vel .sussurro{margin:0;font-size:12.5px;color:var(--texto-fraco)}
 
 /* a rota: a trilha dos capítulos, cada nó na cor do tom do capítulo */
 .modal.rota .rota-via{
@@ -30921,19 +31236,22 @@ function spriteDaBola(nome){
 const ABRE_CASCA = '30%';
 function abrirBola(cima, baixo, fenda, ms){
   const o = {duration:ms || 150, fill:'forwards', easing:'cubic-bezier(.3,1.35,.5,1)'};
-  const p = [cima.animate([{transform:'translateY(0)'}, {transform:`translateY(-${ABRE_CASCA})`}], o).finished];
-  if (baixo) p.push(baixo.animate([{transform:'translateY(0)'}, {transform:`translateY(${ABRE_CASCA})`}], o).finished);
-  if (fenda) p.push(fenda.animate([
+  /* a bola só abre e fecha na arena: anda na velocidade da luta */
+  const v = a => Velocidade.acelerar(a).finished;
+  const p = [v(cima.animate([{transform:'translateY(0)'}, {transform:`translateY(-${ABRE_CASCA})`}], o))];
+  if (baixo) p.push(v(baixo.animate([{transform:'translateY(0)'}, {transform:`translateY(${ABRE_CASCA})`}], o)));
+  if (fenda) p.push(v(fenda.animate([
     {opacity:0, transform:'scale(.2, .4)'},
     {opacity:1, transform:'scale(1.35, 3.4)', offset:.5},
-    {opacity:.95, transform:'scale(1.05, 2.2)'}], Object.assign({}, o, {duration:(ms || 150) * 1.6, easing:'ease-out'})).finished);
+    {opacity:.95, transform:'scale(1.05, 2.2)'}], Object.assign({}, o, {duration:(ms || 150) * 1.6, easing:'ease-out'}))));
   return Promise.all(p);
 }
 function fecharBola(cima, baixo, fenda, ms){
   const o = {duration:ms || 130, fill:'forwards', easing:'ease-in'};
-  const p = [cima.animate([{transform:`translateY(-${ABRE_CASCA})`}, {transform:'translateY(0)'}], o).finished];
-  if (baixo) p.push(baixo.animate([{transform:`translateY(${ABRE_CASCA})`}, {transform:'translateY(0)'}], o).finished);
-  if (fenda) p.push(fenda.animate([{opacity:.95, transform:'scale(1.05, 2.2)'}, {opacity:0, transform:'scale(.6, .4)'}], o).finished);
+  const v = a => Velocidade.acelerar(a).finished;
+  const p = [v(cima.animate([{transform:`translateY(-${ABRE_CASCA})`}, {transform:'translateY(0)'}], o))];
+  if (baixo) p.push(v(baixo.animate([{transform:`translateY(${ABRE_CASCA})`}, {transform:'translateY(0)'}], o)));
+  if (fenda) p.push(v(fenda.animate([{opacity:.95, transform:'scale(1.05, 2.2)'}, {opacity:0, transform:'scale(.6, .4)'}], o)));
   return Promise.all(p);
 }
 
@@ -38690,7 +39008,7 @@ const LutaSalva = {
     /* quem estava em campo caiu e a troca não tinha sido feita */
     if (B.aliado && !estaVivo(B.aliado)){
       const reservas = d.time.filter(p => estaVivo(p) && p.uid !== B.aliado.uid).map(p => p.uid);
-      if (reservas.length) setTimeout(() => UI.trocaObrigatoria(reservas), 2600);
+      if (reservas.length) setTimeout(() => UI.trocaObrigatoria(reservas), Velocidade.ms(2600));
     }
     return true;
   }
@@ -128948,6 +129266,112 @@ if (typeof document !== 'undefined' && document.addEventListener){
 }
 
 
+/* ===== js/ui/velocidade.js ===== */
+/* ============================================================
+   VELOCIDADE DA LUTA — 1×, 2× ou 3×
+   Quem joga escolhe no botão do canto da arena (ou nos Ajustes), e a
+   escolha fica neste navegador ('jc-vel-luta'). Só a encenação anda
+   mais rápido: o turno, os dados e a conta são os mesmos, nada é
+   pulado, tudo só dura menos.
+
+   Todo tempo da luta passa por aqui:
+   - espera (setTimeout): Velocidade.ms(ms);
+   - Web Animations: Velocidade.acelerar(el.animate(…)), que põe o
+     playbackRate — atraso e duração encolhem juntos e o `finished`
+     chega na hora certa, sem mexer em conta nenhuma de quadro;
+   - CSS da luta: a variável --vel-luta, posta na raiz
+     (calc(.55s / var(--vel-luta, 1))); só regra da luta lê.
+   Loop sem fim (a respiração, a chuva caindo) fica no ritmo dele: é o
+   Pokémon parado, não a luta andando.
+   ============================================================ */
+const VELOCIDADES_DA_LUTA = [1, 2, 3];
+
+const Velocidade = {
+  _f: 0,
+  fator(){
+    if (!this._f){
+      let v = 1;
+      try { v = Number(localStorage.getItem('jc-vel-luta')) || 1; } catch (e) {}
+      this._f = VELOCIDADES_DA_LUTA.includes(v) ? v : 1;
+    }
+    return this._f;
+  },
+  /* uma espera da luta, na velocidade escolhida */
+  ms(t){ return t / this.fator(); },
+  /* a animação que acabou de nascer anda na velocidade escolhida */
+  acelerar(anim){
+    if (anim && this.fator() !== 1) anim.playbackRate = this.fator();
+    return anim;
+  },
+  definir(v){
+    if (!VELOCIDADES_DA_LUTA.includes(v)) return;
+    this._f = v;
+    try { localStorage.setItem('jc-vel-luta', String(v)); } catch (e) {}
+    this.aplicar();
+  },
+  /* o botão da arena gira: 1× → 2× → 3× → 1× */
+  proxima(){
+    const L = VELOCIDADES_DA_LUTA;
+    return L[(L.indexOf(this.fator()) + 1) % L.length];
+  },
+  alternar(){ this.definir(this.proxima()); },
+
+  /* A escolha vale na hora: a variável do CSS, os botões que estão na
+     tela e o que já está andando na arena — apertar no meio do golpe
+     acelera o golpe. Animação de CSS lê a variável sozinha; a de
+     Web Animations troca de ritmo aqui. */
+  aplicar(){
+    if (typeof document === 'undefined' || !document.documentElement) return;
+    const f = this.fator();
+    document.documentElement.style.setProperty('--vel-luta', f);
+    document.querySelectorAll('.vel-luta').forEach(b => {
+      b.dataset.vel = f;
+      b.setAttribute('aria-label', this.rotulo());
+      const n = b.querySelector('.vel-n'); if (n) n.textContent = f + '×';
+    });
+    document.querySelectorAll('.ajuste-vel [data-vel]').forEach(b => {
+      const sel = Number(b.dataset.vel) === f;
+      b.classList.toggle('sel', sel); b.setAttribute('aria-checked', sel);
+    });
+    const a = document.getElementById('arena');
+    if (!a || !a.getAnimations) return;
+    for (const x of a.getAnimations({subtree:true})){
+      if ('animationName' in x || 'transitionProperty' in x) continue;
+      const t = x.effect && x.effect.getTiming ? x.effect.getTiming() : null;
+      if (!t || t.iterations === Infinity) continue;
+      try { x.updatePlaybackRate(f); } catch (e) {}
+    }
+  },
+
+  rotulo(){ return `Velocidade da luta: ${this.fator()}×. Tocar muda pra ${this.proxima()}×.`; },
+  /* No canto da arena, fora dos comandos: o menu fica apagado enquanto
+     o turno é encenado, e é justo aí que se quer apertar. As três setas
+     são o marcador — acendem tantas quantas a velocidade. */
+  botao(){
+    const f = this.fator();
+    return `<button type="button" class="vel-luta" data-vel="${f}" onclick="Velocidade.alternar()"
+      aria-label="${this.rotulo()}" title="Velocidade da luta"><span class="vel-setas" aria-hidden="true"><i></i><i></i><i></i></span><b class="vel-n">${f}×</b></button>`;
+  },
+  /* a mesma escolha nos Ajustes, com as três à vista */
+  ajustes(){
+    const f = this.fator();
+    return `<h3>Luta</h3>
+      <div class="ajuste-vel">
+        <div class="ajuste-vel-linha">
+          <span class="ajuste-vel-rot" id="vel-rot">Velocidade da luta</span>
+          <div class="vel-opcoes" role="radiogroup" aria-labelledby="vel-rot">
+            ${VELOCIDADES_DA_LUTA.map(v => `<button type="button" role="radio" data-vel="${v}" class="${v === f ? 'sel' : ''}"
+              aria-checked="${v === f}" onclick="Velocidade.definir(${v})">${v}×</button>`).join('')}
+          </div>
+        </div>
+        <p class="sussurro">Golpes, bolas, barras e entradas andam mais rápido; os dados e a conta são os mesmos. O botão no canto da arena muda isso no meio da luta.</p>
+      </div>`;
+  }
+};
+
+Velocidade.aplicar();
+
+
 /* ===== js/ui/interface.js ===== */
 /* ============================================================
    INTERFACE
@@ -130747,7 +131171,7 @@ const UI = {
     if (!el) return null;
     /* o clima cobre o cenário inteiro, por cima dos dois e por baixo das fichas */
     const clima = Batalha.clima ? `<div class="clima-camada clima-${Batalha.clima.tipo}" aria-hidden="true"></div>` : '';
-    el.innerHTML = card(a,'aliado',true) + card(i,'inimigo',false) + clima;
+    el.innerHTML = card(a,'aliado',true) + card(i,'inimigo',false) + clima + Velocidade.botao();
     this._arenaUltima = {A:kA, I:kI};
     /* arte nova: quem está de pé volta a respirar */
     if (typeof AnimadorSprite !== 'undefined') AnimadorSprite.montar();
@@ -130865,9 +131289,10 @@ const UI = {
     }
 
     const pos = (x, y, g) => `translate(${x}px, ${y}px) rotate(${g || 0}deg)`;
+    /* na velocidade da luta escolhida (Velocidade) */
     const tocar = (el, quadros, ms, extra) =>
-      el.animate(quadros, Object.assign({duration:ms, fill:'forwards', easing:'ease-in-out'}, extra || {})).finished;
-    const esperar = ms => new Promise(r => setTimeout(r, ms));
+      Velocidade.acelerar(el.animate(quadros, Object.assign({duration:ms, fill:'forwards', easing:'ease-in-out'}, extra || {}))).finished;
+    const esperar = ms => new Promise(r => setTimeout(r, Velocidade.ms(ms)));
     /* Abre no meio, como nos jogos de DS: a metade de cima sobe e
        tomba pra trás, a de baixo desce um pouco, e a luz sai da fenda. */
     const fenda = camada.querySelector('.fenda');
@@ -131487,7 +131912,7 @@ const UI = {
         clearInterval(this._scanTimer);
         this.fichaEscaneada(alvo, esp, r.eventos);
       }
-    }, 290);
+    }, Velocidade.ms(290));
   },
 
   fichaEscaneada(p, esp, eventos){
@@ -133104,6 +133529,7 @@ const UI = {
         </div>
       </div>
       ${this.ajustesDeSom()}
+      ${Velocidade.ajustes()}
       <h3>Ajuda</h3>
       <button class="escolha com-icone" onclick="UI.modalRegras()">${svgIcone('dado')}<span class="esc-rot">Regras<small class="esc-det">todas as contas do jogo, com os números</small></span></button>
       <button class="escolha com-icone" onclick="UI.modalTutorial()">${svgIcone('pergunta')}<span class="esc-rot">Tutorial<small class="esc-det">a primeira hora, passo a passo</small></span></button>`, false, 'ajustes');
@@ -134238,6 +134664,7 @@ const UI = {
       ${L('Pokédex', 'quantas vezes quiser · não gasta o turno')}
       ${L('Trocar', 'gasta o turno · o time aparece como fora da luta, na mesma ordem, com quem está brigando marcado')}
       ${L('Substituir quem desmaiou', 'não gasta · o novo entra sem apanhar')}
+      ${L('Velocidade', 'o botão do canto da arena gira 1×, 2× e 3×, até no meio do golpe · só a animação encurta, a conta é a mesma · a escolha também mora nos Ajustes')}
       <h3>Status</h3>
       ${L('Sono', '5 sucessos de Instinto somados pra acordar')} ${L('Paralisia', '−2 de Destreza')}
       ${L('Queimadura', '1 de dano por turno')} ${L('Veneno', '2 de dano por turno · o grave sobe 2 a cada turno')}
@@ -146553,10 +146980,11 @@ const ROTULO_STATUS = {
 
 const Efeitos = {
   reduzido(){ return !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches); },
-  esperar(ms){ return new Promise(r => setTimeout(r, ms)); },
+  /* toda espera e toda animação da luta andam na velocidade escolhida (Velocidade) */
+  esperar(ms){ return new Promise(r => setTimeout(r, Velocidade.ms(ms))); },
   tocar(el, quadros, ms, extra){
     if (!el || !el.animate) return Promise.resolve();
-    return el.animate(quadros, Object.assign({duration:ms, easing:'ease-out'}, extra || {})).finished.catch(() => {});
+    return Velocidade.acelerar(el.animate(quadros, Object.assign({duration:ms, easing:'ease-out'}, extra || {}))).finished.catch(() => {});
   },
 
   arena(){ return document.getElementById('arena'); },
@@ -146659,7 +147087,7 @@ const Efeitos = {
     if (!a || !al || al.uid !== xp.uid) return this.esperar(120);
     const i = a.querySelector('.lutador.aliado .ficha .barra-exp i');
     if (!i) return this.esperar(120);
-    const ir = async (pct, ms) => { i.style.transition = `width ${ms}ms linear`; i.style.width = pct + '%'; await this.esperar(ms + 30); };
+    const ir = async (pct, ms) => { i.style.transition = `width ${Velocidade.ms(ms)}ms linear`; i.style.width = pct + '%'; await this.esperar(ms + 30); };
     i.style.transition = 'none'; i.style.width = xp.de + '%'; void i.offsetWidth;
     for (let k = 0; k < Math.min(xp.encheu || 0, 3); k++){
       await ir(100, 420);
@@ -146985,7 +147413,7 @@ const Efeitos = {
     const a = this.arena();
     if (!a) return;
     a.querySelectorAll(':scope > .clima-camada').forEach(velha => {
-      velha.classList.add('saindo'); setTimeout(() => velha.remove(), 450);
+      velha.classList.add('saindo'); setTimeout(() => velha.remove(), Velocidade.ms(450));
     });
     if (tipo) a.insertAdjacentHTML('beforeend', `<div class="clima-camada clima-${tipo} chegando" aria-hidden="true"></div>`);
   },
@@ -147368,7 +147796,7 @@ const AnimadorSprite = {
     const o = op || {};
     const a = el.animate(this.caminho(de, para, curva, o.passos), {duration:ms, easing:'linear',
       fill:o.fill || 'none', composite:o.composite || 'replace', delay:o.atraso || 0});
-    return a.finished.catch(() => {});
+    return Velocidade.acelerar(a).finished.catch(() => {});
   },
   /* Várias pernas encadeadas numa animação só, com a duração de cada uma. */
   sequencia(el, pernas, op){
@@ -147385,8 +147813,8 @@ const AnimadorSprite = {
       t0 += p.ms;
     });
     const o = op || {};
-    return el.animate(quadros, {duration:total, easing:'linear', fill:o.fill || 'none',
-      composite:o.composite || 'replace'}).finished.catch(() => {});
+    return Velocidade.acelerar(el.animate(quadros, {duration:total, easing:'linear', fill:o.fill || 'none',
+      composite:o.composite || 'replace'})).finished.catch(() => {});
   },
 
   /* ---------- o jeito de cada um ----------
@@ -147464,7 +147892,7 @@ const AnimadorSprite = {
       {de:{x:dx * 1.08, y:dy * 1.08, sx:1.07, sy:.93}, para:{x:dx, y:dy, sx:1, sy:1}, ms:BATE / 2, curva:'easeIn', passos:3},
       {de:{x:dx, y:dy, sx:1, sy:1}, para:{x:0, y:0, sx:1, sy:1}, ms:VOLTA, curva:'easeOut'}
     ]).then(() => { if (this.estado[lado] === ESTADOS_SPRITE.ATTACK_PHYSICAL) this.marcar(lado, ESTADOS_SPRITE.IDLE); });
-    const impacto = new Promise(r => setTimeout(r, IDA + BATE / 2));
+    const impacto = new Promise(r => setTimeout(r, Velocidade.ms(IDA + BATE / 2)));
     impacto.volta = tudo;
     return impacto;
   },
@@ -147484,7 +147912,7 @@ const AnimadorSprite = {
       q.push(Object.assign(this.quadro({x:tremor, y:0, sx:1 + .05 * Math.abs(onda), sy:1 + .05 * Math.abs(onda),
                                           a:1 - .28 * Math.abs(onda)}), {offset:t}));
     }
-    return s.animate(q, {duration:MS, easing:'linear'}).finished.catch(() => {})
+    return Velocidade.acelerar(s.animate(q, {duration:MS, easing:'linear'})).finished.catch(() => {})
       .then(() => { if (this.estado[lado] === ESTADOS_SPRITE.ATTACK_SPECIAL) this.marcar(lado, ESTADOS_SPRITE.IDLE); });
   },
 
@@ -147503,13 +147931,13 @@ const AnimadorSprite = {
       q.push({translate:`${(i === 0 || i === vai ? 0 : (i % 2 ? -1 : 1) * AMP * queda).toFixed(2)}px 0px`,
               offset:i / vai, easing:'ease-in-out'});
     }
-    const tremor = s.animate(q, {duration:MS, easing:'linear', composite:'add'}).finished.catch(() => {});
+    const tremor = Velocidade.acelerar(s.animate(q, {duration:MS, easing:'linear', composite:'add'})).finished.catch(() => {});
     /* o degrau vai em cada quadro: no tempo da animação inteira ele
        seguraria o primeiro quadro até o fim e nada piscaria */
     const p = [];
     for (let i = 0; i < 3; i++) p.push({opacity:1, easing:'steps(1, end)'}, {opacity:0, easing:'steps(1, end)'});
     p.push({opacity:1});
-    const pisca = s.animate(p, {duration:MS, easing:'linear'}).finished.catch(() => {});
+    const pisca = Velocidade.acelerar(s.animate(p, {duration:MS, easing:'linear'})).finished.catch(() => {});
     return Promise.all([tremor, pisca])
       .then(() => { if (this.estado[lado] === ESTADOS_SPRITE.TAKE_DAMAGE) this.marcar(lado, ESTADOS_SPRITE.IDLE); });
   },

@@ -105,7 +105,7 @@ const AnimadorSprite = {
     const o = op || {};
     const a = el.animate(this.caminho(de, para, curva, o.passos), {duration:ms, easing:'linear',
       fill:o.fill || 'none', composite:o.composite || 'replace', delay:o.atraso || 0});
-    return a.finished.catch(() => {});
+    return Velocidade.acelerar(a).finished.catch(() => {});
   },
   /* Várias pernas encadeadas numa animação só, com a duração de cada uma. */
   sequencia(el, pernas, op){
@@ -122,8 +122,8 @@ const AnimadorSprite = {
       t0 += p.ms;
     });
     const o = op || {};
-    return el.animate(quadros, {duration:total, easing:'linear', fill:o.fill || 'none',
-      composite:o.composite || 'replace'}).finished.catch(() => {});
+    return Velocidade.acelerar(el.animate(quadros, {duration:total, easing:'linear', fill:o.fill || 'none',
+      composite:o.composite || 'replace'})).finished.catch(() => {});
   },
 
   /* ---------- o jeito de cada um ----------
@@ -201,7 +201,7 @@ const AnimadorSprite = {
       {de:{x:dx * 1.08, y:dy * 1.08, sx:1.07, sy:.93}, para:{x:dx, y:dy, sx:1, sy:1}, ms:BATE / 2, curva:'easeIn', passos:3},
       {de:{x:dx, y:dy, sx:1, sy:1}, para:{x:0, y:0, sx:1, sy:1}, ms:VOLTA, curva:'easeOut'}
     ]).then(() => { if (this.estado[lado] === ESTADOS_SPRITE.ATTACK_PHYSICAL) this.marcar(lado, ESTADOS_SPRITE.IDLE); });
-    const impacto = new Promise(r => setTimeout(r, IDA + BATE / 2));
+    const impacto = new Promise(r => setTimeout(r, Velocidade.ms(IDA + BATE / 2)));
     impacto.volta = tudo;
     return impacto;
   },
@@ -221,7 +221,7 @@ const AnimadorSprite = {
       q.push(Object.assign(this.quadro({x:tremor, y:0, sx:1 + .05 * Math.abs(onda), sy:1 + .05 * Math.abs(onda),
                                           a:1 - .28 * Math.abs(onda)}), {offset:t}));
     }
-    return s.animate(q, {duration:MS, easing:'linear'}).finished.catch(() => {})
+    return Velocidade.acelerar(s.animate(q, {duration:MS, easing:'linear'})).finished.catch(() => {})
       .then(() => { if (this.estado[lado] === ESTADOS_SPRITE.ATTACK_SPECIAL) this.marcar(lado, ESTADOS_SPRITE.IDLE); });
   },
 
@@ -240,13 +240,13 @@ const AnimadorSprite = {
       q.push({translate:`${(i === 0 || i === vai ? 0 : (i % 2 ? -1 : 1) * AMP * queda).toFixed(2)}px 0px`,
               offset:i / vai, easing:'ease-in-out'});
     }
-    const tremor = s.animate(q, {duration:MS, easing:'linear', composite:'add'}).finished.catch(() => {});
+    const tremor = Velocidade.acelerar(s.animate(q, {duration:MS, easing:'linear', composite:'add'})).finished.catch(() => {});
     /* o degrau vai em cada quadro: no tempo da animação inteira ele
        seguraria o primeiro quadro até o fim e nada piscaria */
     const p = [];
     for (let i = 0; i < 3; i++) p.push({opacity:1, easing:'steps(1, end)'}, {opacity:0, easing:'steps(1, end)'});
     p.push({opacity:1});
-    const pisca = s.animate(p, {duration:MS, easing:'linear'}).finished.catch(() => {});
+    const pisca = Velocidade.acelerar(s.animate(p, {duration:MS, easing:'linear'})).finished.catch(() => {});
     return Promise.all([tremor, pisca])
       .then(() => { if (this.estado[lado] === ESTADOS_SPRITE.TAKE_DAMAGE) this.marcar(lado, ESTADOS_SPRITE.IDLE); });
   },

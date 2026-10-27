@@ -83,7 +83,7 @@ const LutaSalva = {
     /* quem estava em campo caiu e a troca não tinha sido feita */
     if (B.aliado && !estaVivo(B.aliado)){
       const reservas = d.time.filter(p => estaVivo(p) && p.uid !== B.aliado.uid).map(p => p.uid);
-      if (reservas.length) setTimeout(() => UI.trocaObrigatoria(reservas), 2600);
+      if (reservas.length) setTimeout(() => UI.trocaObrigatoria(reservas), Velocidade.ms(2600));
     }
     return true;
   }

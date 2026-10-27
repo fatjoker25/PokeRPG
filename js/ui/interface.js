@@ -1796,7 +1796,7 @@ const UI = {
     if (!el) return null;
     /* o clima cobre o cenário inteiro, por cima dos dois e por baixo das fichas */
     const clima = Batalha.clima ? `<div class="clima-camada clima-${Batalha.clima.tipo}" aria-hidden="true"></div>` : '';
-    el.innerHTML = card(a,'aliado',true) + card(i,'inimigo',false) + clima;
+    el.innerHTML = card(a,'aliado',true) + card(i,'inimigo',false) + clima + Velocidade.botao();
     this._arenaUltima = {A:kA, I:kI};
     /* arte nova: quem está de pé volta a respirar */
     if (typeof AnimadorSprite !== 'undefined') AnimadorSprite.montar();
@@ -1914,9 +1914,10 @@ const UI = {
     }
 
     const pos = (x, y, g) => `translate(${x}px, ${y}px) rotate(${g || 0}deg)`;
+    /* na velocidade da luta escolhida (Velocidade) */
     const tocar = (el, quadros, ms, extra) =>
-      el.animate(quadros, Object.assign({duration:ms, fill:'forwards', easing:'ease-in-out'}, extra || {})).finished;
-    const esperar = ms => new Promise(r => setTimeout(r, ms));
+      Velocidade.acelerar(el.animate(quadros, Object.assign({duration:ms, fill:'forwards', easing:'ease-in-out'}, extra || {}))).finished;
+    const esperar = ms => new Promise(r => setTimeout(r, Velocidade.ms(ms)));
     /* Abre no meio, como nos jogos de DS: a metade de cima sobe e
        tomba pra trás, a de baixo desce um pouco, e a luz sai da fenda. */
     const fenda = camada.querySelector('.fenda');
@@ -2536,7 +2537,7 @@ const UI = {
         clearInterval(this._scanTimer);
         this.fichaEscaneada(alvo, esp, r.eventos);
       }
-    }, 290);
+    }, Velocidade.ms(290));
   },
 
   fichaEscaneada(p, esp, eventos){
@@ -4153,6 +4154,7 @@ const UI = {
         </div>
       </div>
       ${this.ajustesDeSom()}
+      ${Velocidade.ajustes()}
       <h3>Ajuda</h3>
       <button class="escolha com-icone" onclick="UI.modalRegras()">${svgIcone('dado')}<span class="esc-rot">Regras<small class="esc-det">todas as contas do jogo, com os números</small></span></button>
       <button class="escolha com-icone" onclick="UI.modalTutorial()">${svgIcone('pergunta')}<span class="esc-rot">Tutorial<small class="esc-det">a primeira hora, passo a passo</small></span></button>`, false, 'ajustes');
@@ -5287,6 +5289,7 @@ const UI = {
       ${L('Pokédex', 'quantas vezes quiser · não gasta o turno')}
       ${L('Trocar', 'gasta o turno · o time aparece como fora da luta, na mesma ordem, com quem está brigando marcado')}
       ${L('Substituir quem desmaiou', 'não gasta · o novo entra sem apanhar')}
+      ${L('Velocidade', 'o botão do canto da arena gira 1×, 2× e 3×, até no meio do golpe · só a animação encurta, a conta é a mesma · a escolha também mora nos Ajustes')}
       <h3>Status</h3>
       ${L('Sono', '5 sucessos de Instinto somados pra acordar')} ${L('Paralisia', '−2 de Destreza')}
       ${L('Queimadura', '1 de dano por turno')} ${L('Veneno', '2 de dano por turno · o grave sobe 2 a cada turno')}

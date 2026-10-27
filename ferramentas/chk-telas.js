@@ -11,7 +11,8 @@
        cada um a partir do mesmo save;
      - as janelas: os cinco bolsos da mochila, time, sumário de cada
        Pokémon, Pokédex e as 251 fichas, PokéNav e cada contato, cartão,
-       ficha (as cinco abas), diário, rota, códice de finais, credenciais, PC, ajustes,
+       ficha (as cinco abas), diário, rota, códice de finais, credenciais, PC, ajustes
+       (com as três velocidades da luta),
        as abas do tutorial, a folha de regras, o mapa e a ficha de cada
        lugar nele;
      - toda loja, comprando e vendendo;
@@ -211,6 +212,8 @@ const SUSPEITO = [
   for (const [r, f] of [['cartão', 'modalCartao'], ['ficha', 'modalFicha'], ['diário', 'modalDiario'], ['rota', 'modalRota'],
     ['finais', 'modalFinais'], ['credenciais', 'modalCredenciais'], ['pc', 'modalPC'], ['ajustes', 'modalAjustes'], ['regras', 'modalRegras']])
     await tentar(r, x => UI[x](), f);
+  /* a velocidade da luta nos Ajustes: as três, e volta pra 1× */
+  for (const v of [2, 3, 1]) await tentar('ajustes/velocidade ' + v, x => { UI.modalAjustes(); Velocidade.definir(x); }, v);
   for (const aba of ['perfil', 'status', 'jornada', 'pessoas', 'mundo'])
     await tentar('ficha/' + aba, x => UI.modalFicha(x), aba);
   for (const t of ['passos', 'comeco', 'ficha', 'combate', 'natureza', 'vinculo', 'mundo', 'pokenav', 'risco'])
