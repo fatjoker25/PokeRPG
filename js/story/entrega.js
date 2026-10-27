@@ -206,11 +206,11 @@ c1e_de_madrugada:{
     'Você acorda às quatro e quarenta da manhã sem despertador, do jeito que só se acorda quando o corpo passou a noite inteira sabendo a hora.',
     d=>`A perua chega em ${d.jogador.cidade} hoje. Chega uma vez por mês, fica até o meio-dia e vai embora, e se ela for embora com a sua Pokébola dentro você espera mais trinta dias.`,
     'Você se veste no escuro pra não acordar ninguém e falha na terceira gaveta.',
-    d=>fala(nomeCasa(), 'Ainda não amanheceu.', 'baixo', 'A voz vem do corredor, e não estava dormindo.'),
+    d=>falaCasa('Ainda não amanheceu.', 'baixo', 'A voz vem do corredor, e não estava dormindo.'),
     d=>fala(d.jogador.nome, 'Eu quero ser {o primeiro|a primeira}.'),
-    d=>fala(nomeCasa(), 'Você vai ser {o primeiro|a primeira}. Ninguém mais nessa rua pediu.'),
+    d=>falaCasa('Você vai ser {o primeiro|a primeira}. Ninguém mais nessa rua pediu.'),
     'Silêncio dos dois lados da porta.',
-    d=>fala(nomeCasa(), 'Come alguma coisa antes. Eu não vou deixar você sair daqui em jejum pra pegar Pokémon.', 'baixo')
+    d=>falaCasa('Come alguma coisa antes. Eu não vou deixar você sair daqui em jejum pra pegar Pokémon.', 'baixo')
   ],
   ef:{registrar:'Acordou antes do sol no dia da entrega.'},
   escolhas:[
@@ -228,13 +228,13 @@ c1e_a_pergunta_da_casa:{
   texto:[
     d=>fala(d.jogador.nome, '{casa:A senhora|O senhor} pediu uma? Quando tinha a minha idade.'),
     'A porta do corredor abre o suficiente pra passar um rosto.',
-    d=>fala(nomeCasa(), 'Pedi.'),
-    d=>fala(nomeCasa(), 'Em setembro. Eu tinha dezesseis e o Célio era magro e tinha cabelo.', 'riso'),
+    d=>falaCasa('Pedi.'),
+    d=>falaCasa('Em setembro. Eu tinha dezesseis e o Célio era magro e tinha cabelo.', 'riso'),
     d=>fala(d.jogador.nome, 'E aí?'),
-    d=>fala(nomeCasa(), 'E aí minha mãe adoeceu em outubro e eu cancelei em novembro, e em dezembro eu já estava trabalhando.'),
+    d=>falaCasa('E aí minha mãe adoeceu em outubro e eu cancelei em novembro, e em dezembro eu já estava trabalhando.'),
     '{casa:Ela|Ele} fala isso do jeito de quem conta uma coisa que já pensou até o fim, muitas vezes, e já parou de doer.',
-    d=>fala(nomeCasa(), 'Não é história triste. É história comum. A cidade inteira tem uma dessas.', 'baixo'),
-    d=>fala(nomeCasa(), 'Por isso eu acordei. Vai lá.')
+    d=>falaCasa('Não é história triste. É história comum. A cidade inteira tem uma dessas.', 'baixo'),
+    d=>falaCasa('Por isso eu acordei. Vai lá.')
   ],
   ef:{moral:6, flag:'sabe_da_bola_cancelada'},
   escolhas:[
@@ -248,8 +248,8 @@ c1e_qual_era:{
   texto:[
     d=>fala(d.jogador.nome, 'Qual era a sua?'),
     '{casa:Ela|Ele} fecha a porta um pouco. Não com raiva — do jeito de quem fecha pra não ter que mostrar a cara enquanto responde.',
-    d=>fala(nomeCasa(), 'Isso eu conto quando você voltar.'),
-    d=>fala(nomeCasa(), 'É o tipo de coisa que serve pra fazer alguém voltar.', 'riso')
+    d=>falaCasa('Isso eu conto quando você voltar.'),
+    d=>falaCasa('É o tipo de coisa que serve pra fazer alguém voltar.', 'riso')
   ],
   ef:{flag:'divida_de_uma_pergunta', moral:4,
       registrar:'{casa:Ela|Ele} não disse qual espécie tinha pedido. Disse que conta quando você voltar.'},
@@ -264,8 +264,8 @@ c1e_qual_era:{
 c1e_chantagem:{
   texto:[
     d=>fala(d.jogador.nome, 'Isso é chantagem.'),
-    d=>fala(nomeCasa(), 'É.', null, 'Sem nenhuma vergonha na voz.'),
-    d=>fala(nomeCasa(), 'Eu tenho poucas ferramentas e essa funciona. Vai pegar a sua Pokébola.')
+    d=>falaCasa('É.', null, 'Sem nenhuma vergonha na voz.'),
+    d=>falaCasa('Eu tenho poucas ferramentas e essa funciona. Vai pegar a sua Pokébola.')
   ],
   ef:{moral:4},
   escolhas:[{texto:'Ir.', vai:'c1e_a_praca'}]
@@ -278,7 +278,7 @@ c1e_quase_perdeu:{
     'Não é o barulho de um carro passando. É o barulho de um motor ligado e parado, que é diferente, e que está ligado e parado há tempo suficiente pra você ter ouvido dormindo.',
     d=>`A perua do laboratório para em ${d.jogador.cidade} uma vez por mês, fica até o meio-dia e vai embora. Você olha o relógio.`,
     'Onze e cinquenta e dois.',
-    d=>fala(nomeCasa(), 'EU TE CHAMEI TRÊS VEZES!', 'grita', 'Do andar de baixo, sem paciência nenhuma.'),
+    d=>falaCasa('EU TE CHAMEI TRÊS VEZES!', 'grita', 'Do andar de baixo, sem paciência nenhuma.'),
     'Você desce a escada calçando um pé de tênis e carregando o outro.'
   ],
   ef:{registrar:'Quase perdeu a entrega por oito minutos.', flag:'quase_perdeu_a_perua'},
@@ -294,7 +294,7 @@ c1e_voltou_pela_mochila:{
   texto:[
     'Você sobe de novo, dois degraus por vez, pega a mochila que já estava pronta desde ontem e desce.',
     'Custou quarenta segundos. Quarenta segundos é muito quando sobram oito minutos, e é nada quando você ia sair de casa pra sempre sem a mochila.',
-    d=>fala(nomeCasa(), 'Corre.', null, 'Já com a porta aberta.')
+    d=>falaCasa('Corre.', null, 'Já com a porta aberta.')
   ],
   ef:{flag:'levou_a_mochila_correndo', moral:2},
   escolhas:[{texto:'Correr.', vai:'c1e_a_praca'}]
@@ -304,10 +304,10 @@ c1e_por_que_nao_acordou:{
   texto:[
     d=>fala(d.jogador.nome, 'Por que você não me acordou antes?!'),
     'A resposta vem sem pressa nenhuma, o que é pior.',
-    d=>fala(nomeCasa(), 'Eu te chamei às sete. Te chamei às nove. Te chamei às onze.'),
-    d=>fala(nomeCasa(), 'Na terceira vez você falou "já vou" com a cara no travesseiro e eu resolvi que essa parte era sua.', 'frio'),
+    d=>falaCasa('Eu te chamei às sete. Te chamei às nove. Te chamei às onze.'),
+    d=>falaCasa('Na terceira vez você falou "já vou" com a cara no travesseiro e eu resolvi que essa parte era sua.', 'frio'),
     '{casa:Ela|Ele} estende a mochila com uma mão e abre a porta com a outra.',
-    d=>fala(nomeCasa(), 'Corre. E não briga comigo às onze e cinquenta e dois.')
+    d=>falaCasa('Corre. E não briga comigo às onze e cinquenta e dois.')
   ],
   ef:{flag:'brigou_na_porta', moral:-2},
   escolhas:[
@@ -322,9 +322,9 @@ c1e_chuva_na_praca:{
     'Chove desde ontem à noite, daquele jeito fino que não molha de uma vez e molha tudo no fim.',
     d=>`A perua chega em ${d.jogador.cidade} hoje e não deixa de chegar por chuva: dezenove anos de volta mensal e ninguém nunca ouviu falar de mês cancelado.`,
     'Você olha pela janela e vê três pessoas já paradas na praça, debaixo da marquise da farmácia, com a cara de quem chegou cedo demais e agora tem que fingir que não chegou.',
-    d=>fala(nomeCasa(), 'Leva o guarda-chuva.'),
+    d=>falaCasa('Leva o guarda-chuva.'),
     d=>fala(d.jogador.nome, 'Não precisa.'),
-    d=>fala(nomeCasa(), 'Leva o guarda-chuva.', 'frio')
+    d=>falaCasa('Leva o guarda-chuva.', 'frio')
   ],
   ef:{registrar:'Foi pegar a Pokébola debaixo de chuva.'},
   escolhas:[
@@ -340,7 +340,7 @@ c1e_chuva_na_praca:{
 c1e_dois_guarda_chuvas:{
   texto:[
     'Você pega dois. O seu e o de cabo quebrado, que abre mas não trava, e que serve se a pessoa segurar a haste com a mão.',
-    d=>fala(nomeCasa(), 'Pra quê dois?'),
+    d=>falaCasa('Pra quê dois?'),
     d=>fala(d.jogador.nome, 'Tem gente na praça desde cedo.'),
     '{casa:Ela|Ele} não responde. Só olha um pouco mais do que precisava e volta pra pia.'
   ],

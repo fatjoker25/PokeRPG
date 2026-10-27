@@ -473,8 +473,12 @@ function falaDe(t){
   /* se o jogador já perguntou o nome dessa pessoa, o balão passa a
      usar o nome — aqui e em qualquer cena depois. */
   const nome = (typeof Nomes !== 'undefined') ? Nomes.comoChamar(quem) : quem;
-  return {quem: nome, rotulo: quem, diz, tom: t.tom || null, nota: txt(t.nota) || null};
+  return {quem: nome, rotulo: quem, diz, tom: t.tom || null, nota: txt(t.nota) || null, casa: !!t.casa};
 }
 
 /* Açúcar para escrever cena: fala('Sra. Perla', 'Bom dia.', 'grita') */
 function fala(quem, diz, tom, nota){ return {quem, diz, tom, nota}; }
+/* Quem ficou em casa fala por aqui: o balão leva o nome da ficha e o
+   rosto do parentesco (retratoDaCasa), nunca o de outra pessoa que
+   tenha o mesmo nome. */
+function falaCasa(diz, tom, nota){ return {quem:nomeCasa(), diz, tom, nota, casa:true}; }

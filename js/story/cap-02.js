@@ -221,11 +221,11 @@ c2_ligou_por_causa_do_cartaz:{
   texto:[
     'Um mural inteiro de gente procurando gente. Você sai da frente dele e vai pro orelhão do saguão.',
     'Dois toques.',
-    d=>fala(nomeCasa(), 'Alô?', null, 'A voz está normal. É só isso — está normal, e é isso que te desmonta um pouco.'),
+    d=>falaCasa('Alô?', null, 'A voz está normal. É só isso — está normal, e é isso que te desmonta um pouco.'),
     d=>fala(d.jogador.nome, 'Oi. É que eu vi um mural aqui e eu… nada. Oi.'),
     'Silêncio do outro lado por dois segundos.',
-    d=>fala(nomeCasa(), 'Você tá em Viridian já? Criatura, você mal saiu.', 'riso'),
-    d=>fala(nomeCasa(), 'Tá comendo?'),
+    d=>falaCasa('Você tá em Viridian já? Criatura, você mal saiu.', 'riso'),
+    d=>falaCasa('Tá comendo?'),
     '{casa:Ela|Ele} pergunta do jeito de quem pergunta as horas, e você responde do jeito de quem não pensou nisso o dia inteiro.'
   ],
   ef:{flag:'ligou_por_causa_do_cartaz', moral:5,

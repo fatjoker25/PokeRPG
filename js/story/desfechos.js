@@ -355,10 +355,10 @@ c21_ficar_de_vez:{
       return p ? `${nomeExib(p)} dorme no tapete do corredor, que é um lugar que ${pron(p).ele} escolheu sozinh${pron(p).o} no segundo dia e do qual ${pron(p).ele} não saiu mais.`
                : 'A casa tem um barulho de fundo que você tinha esquecido: geladeira, rua, alguém na cozinha.';
     },
-    d=>fala(nomeCasa(), 'Você vai voltar quando?'),
+    d=>falaCasa('Você vai voltar quando?'),
     'É a primeira vez que perguntam isso desde que você chegou, e perguntaram da porta do quarto, sem entrar, o que é um cuidado.',
     d=>fala(d.jogador.nome, 'Não sei.'),
-    d=>fala(nomeCasa(), 'Tá.'),
+    d=>falaCasa('Tá.'),
     'E vai embora, porque a pergunta era de verdade e a resposta foi aceita.',
     'Você fica sentad{o|a} na cama olhando uma mochila encostada numa parede.'
   ],

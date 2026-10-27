@@ -109,7 +109,7 @@ c21_ab_a_faixa:{
       return p ? `${nomeExib(p)} desce do ônibus atrás de você e trava, porque quarenta pessoas gritando ao mesmo tempo é uma coisa que ${generoDe(p) === 'f' ? '{nenhum dos dois|nenhuma das duas}' : 'nenhum dos dois'} estava esperando.`
                : 'Você desce do ônibus e trava, porque quarenta pessoas gritando ao mesmo tempo é uma coisa que você não estava esperando.';
     },
-    d=>fala(nomeCasa(), 'Eu falei que era hoje! EU FALEI!', 'grita'),
+    d=>falaCasa('Eu falei que era hoje! EU FALEI!', 'grita'),
     'E é assim que você descobre que a sua casa vem te esperando no ponto de ônibus há três dias, todo dia, no horário de todos os ônibus.',
     'Três dias. Todos os ônibus.'
   ],
@@ -201,9 +201,9 @@ c21_chegada_em_casa:{
       if (!p) return 'A rua tem três pessoas nela e duas delas param de andar quando te veem.';
       return `${nomeExib(p)} desce atrás de você e para, e cheira o ar, e entende antes de você que isto aqui é casa.`;
     },
-    d=>fala(nomeCasa(), 'Eu liguei TRÊS VEZES.', 'grita',
+    d=>falaCasa('Eu liguei TRÊS VEZES.', 'grita',
             'A voz vem da terceira casa antes mesmo de você ver quem é.'),
-    d=>fala(nomeCasa(), 'Três! E esse aparelho fui eu que mandei consertar, eu sei que ele toca!')
+    d=>falaCasa('Três! E esse aparelho fui eu que mandei consertar, eu sei que ele toca!')
   ],
   ef:{flag:'voltou_pra_casa', registrar:d=>{ const n = c21_ins(d); return n ? `Voltou para a cidade de onde saiu, com ${c21_ext(n)} insígnia${n > 1 ? 's' : ''}.` : 'Voltou para a cidade de onde saiu.'; }},
   escolhas:[
@@ -562,10 +562,10 @@ c21_orelhao:{
   texto:[
     'Você está a trinta metros da sua própria porta e liga do orelhão da esquina, o que não faz sentido nenhum e faz todo sentido.',
     'Dois toques.',
-    d=>fala(nomeCasa(), 'Alô?', null, 'A voz está sem fôlego. {casa:Ela|Ele} correu pro telefone.'),
+    d=>falaCasa('Alô?', null, 'A voz está sem fôlego. {casa:Ela|Ele} correu pro telefone.'),
     d=>fala(d.jogador.nome, 'Oi. Sou eu.'),
     'Silêncio do outro lado.',
-    d=>fala(nomeCasa(), 'Você tá onde?', 'baixo'),
+    d=>falaCasa('Você tá onde?', 'baixo'),
     d=>fala(d.jogador.nome, 'Na esquina.'),
     'Você ouve o telefone cair na mesa sem ser desligado, e ouve a porta, e ouve, de dentro do fone e de fora do fone ao mesmo tempo, a sua rua inteira.'
   ],
@@ -583,8 +583,8 @@ c21_dentro_de_casa:{
     'A casa é menor. Não do jeito triste — do jeito real. Você cresceu quatro centímetros e viu prédio de onze andares, e a sua casa continuou a mesma, e a sua cabeça refez a escala.',
     'O seu quarto está exatamente como você deixou, o que quer dizer que alguém tem entrado ali pra deixar exatamente como você deixou.',
     d=>`${casaCompleto()}, está na porta do quarto, com o pano na mão, e não entra.`,
-    d=>fala(nomeCasa(), 'Eu não mexi em nada.'),
-    d=>fala(nomeCasa(), 'Eu tirei o pó. Mas eu não mexi.', 'baixo')
+    d=>falaCasa('Eu não mexi em nada.'),
+    d=>falaCasa('Eu tirei o pó. Mas eu não mexi.', 'baixo')
   ],
   ef:{moral:6, flag:'entrou_no_quarto_de_novo',
       registrar:'Entrou no próprio quarto depois de meses. Não tinham mexido em nada.'},
@@ -599,9 +599,9 @@ c21_dentro_de_casa:{
 c21_mostrou_as_oito:{
   texto:[
     d=>`Você abre o cartão em cima da mesa da cozinha e conta as ${c21_ext(c21_ins(d))}, uma por uma, com cidade e nome de líder.`,
-    d=>fala(nomeCasa(), 'Repete.'),
+    d=>falaCasa('Repete.'),
     'Você repete.',
-    d=>fala(nomeCasa(), 'Repete de novo. Devagar. Eu quero decorar a ordem.', 'baixo'),
+    d=>falaCasa('Repete de novo. Devagar. Eu quero decorar a ordem.', 'baixo'),
     'Você repete três vezes ao todo, e na terceira {casa:ela|ele} fecha os olhos pra ouvir melhor, e mexe os lábios junto.',
     'Depois {casa:ela|ele} repete sozinh{casa:a|o}, baixinho, e troca a ordem de duas. Você não corrige.'
   ],
@@ -618,14 +618,14 @@ c21_o_que_aconteceu_aqui:{
   texto:[
     d=>fala(d.jogador.nome, 'E aqui? O que aconteceu aqui?'),
     'A pergunta pega {casa:ela desprevenida|ele desprevenido}, porque ninguém faz essa pergunta pra quem ficou.',
-    d=>fala(nomeCasa(), 'Aqui? Aqui não acontece nada, {menino|menina}.'),
+    d=>falaCasa('Aqui? Aqui não acontece nada, {menino|menina}.'),
     'E aí {casa:ela|ele} conta, por quarenta minutos, tudo que não aconteceu:',
-    d=>fala(nomeCasa(), 'O telhado dos fundos. A conta de luz que veio errada duas vezes. O neto do Sr. Aldous que casou. O Growlithe do quatorze que morreu — aquele velho, você lembra dele.'),
+    d=>falaCasa('O telhado dos fundos. A conta de luz que veio errada duas vezes. O neto do Sr. Aldous que casou. O Growlithe do quatorze que morreu — aquele velho, você lembra dele.'),
     /* o Pokémon da caixa, que ficou em casa no capítulo 1 */
     d=>d.flags.a_caixa_ficou_em_casa
-      ? fala(nomeCasa(), 'E o Pokémon da caixa da Perla achou dono. Um menino da rua de baixo. Eu fiz ele prometer que trazia pra eu ver, e ele traz.')
+      ? falaCasa('E o Pokémon da caixa da Perla achou dono. Um menino da rua de baixo. Eu fiz ele prometer que trazia pra eu ver, e ele traz.')
       : '',
-    d=>fala(nomeCasa(), 'A Perla, a vizinha do dezoito, imprimindo cartaz com a sua cara. Eu falei pra ela não fazer isso. Ela fez vinte.', 'riso'),
+    d=>falaCasa('A Perla, a vizinha do dezoito, imprimindo cartaz com a sua cara. Eu falei pra ela não fazer isso. Ela fez vinte.', 'riso'),
     'Não aconteceu nada, e levou quarenta minutos pra contar.'
   ],
   ef:{moral:7, flag:'perguntou_o_que_aconteceu_em_casa',
@@ -648,7 +648,7 @@ c21_o_telhado:{
     d=>c21_armazem(d)
       ? 'Você desce, vai no armazém, compra três telhas por seiscentos, volta e sobe de novo.'
       : 'Você desce e bate na porta do lado do armazém, que é a do dono. Ele te vende três telhas por seiscentos, de chinelo, sem perguntar pra que é a essa hora. Você volta e sobe de novo.',
-    d=>fala(nomeCasa(), 'DESCE DAÍ!', 'grita', '{casa:Ela|Ele} grita do quintal, e continua gritando o tempo inteiro, e não sai de lá em nenhum momento.'),
+    d=>falaCasa('DESCE DAÍ!', 'grita', '{casa:Ela|Ele} grita do quintal, e continua gritando o tempo inteiro, e não sai de lá em nenhum momento.'),
     'Você desce quando termina. As três telhas estão no lugar, e a nova é mais clara que as outras.'
   ],
   ef:{dinheiro:-600, moral:6, flag:'consertou_o_telhado',
@@ -666,12 +666,12 @@ c21_contou_da_convocacao:{
   texto:[
     'Você põe o telegrama em cima da mesa e empurra.',
     'É um papel amarelo com quatro linhas em maiúsculo, sem timbre nenhum, e a palavra COMPARECIMENTO aparece duas vezes.',
-    d=>fala(nomeCasa(), 'Isso é ruim?'),
+    d=>falaCasa('Isso é ruim?'),
     d=>fala(d.jogador.nome, 'Eu não sei.'),
-    d=>fala(nomeCasa(), 'Você sabe alguma coisa?'),
+    d=>falaCasa('Você sabe alguma coisa?'),
     d=>fala(d.jogador.nome, 'Eu sei que eles não convocam quem não incomoda.'),
     '{casa:Ela|Ele} lê o telegrama mais duas vezes, do começo, os dois lados, inclusive o lado sem nada escrito.',
-    d=>fala(nomeCasa(), 'Come antes de ir. Só isso que eu tenho pra falar sobre isso.', 'baixo')
+    d=>falaCasa('Come antes de ir. Só isso que eu tenho pra falar sobre isso.', 'baixo')
   ],
   ef:{flag:'contou_da_convocacao_em_casa', moral:3,
       registrar:'Mostrou em casa o telegrama que te convoca pra segunda.'},
@@ -741,7 +741,7 @@ c21_mais_um_dia:{
 c21_saida_de_casa:{
   texto:[
     'A saída é curta, porque segunda saída sempre é curta. A primeira é que é comprida.',
-    d=>fala(nomeCasa(), 'Vai.', null, 'Nada de discurso. Nada de "volta". {casa:Ela|Ele} não é de repetir pedido.'),
+    d=>falaCasa('Vai.', null, 'Nada de discurso. Nada de "volta". {casa:Ela|Ele} não é de repetir pedido.'),
     'Na porta, {casa:ela|ele} enfia alguma coisa no bolso de fora da sua mochila, do jeito que {casa:ela|ele} faz, sem avisar o que é.',
     'Você só abre o bolso na saída da cidade, já na estrada. É uma foto três por quatro sua, a mesma da licença, com uma coisa escrita atrás.',
     'Escrito a lápis, na letra que você conhece desde que aprendeu a ler:',

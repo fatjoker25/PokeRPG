@@ -25,18 +25,18 @@ const CONTATOS = [
     rotuloEntrega:'Ligar e dizer que está consertado',
     dica:'{casa:Ela|Ele} está esperando você em casa.',
     pedido:[
-      d=>fala(nomeCasa(), 'Eu não preciso de nada.'),
+      d=>falaCasa('Eu não preciso de nada.'),
       'Pausa de quatro segundos, que nesta casa quer dizer o contrário.',
-      d=>fala(nomeCasa(), 'O telhado dos fundos pinga. São três telhas, duas fora do lugar e uma rachada.'),
-      d=>fala(nomeCasa(), 'Eu não subo mais em telhado e o rapaz que subia mudou pra Cerulean.'),
-      d=>fala(nomeCasa(), 'E não vem correndo. Eu ponho balde. Eu ponho balde há dois invernos.', 'baixo')
+      d=>falaCasa('O telhado dos fundos pinga. São três telhas, duas fora do lugar e uma rachada.'),
+      d=>falaCasa('Eu não subo mais em telhado e o rapaz que subia mudou pra Cerulean.'),
+      d=>falaCasa('E não vem correndo. Eu ponho balde. Eu ponho balde há dois invernos.', 'baixo')
     ],
     objetivo:d=>!!d.flags.consertou_o_telhado,
     entregue:[
       d=>fala(d.jogador.nome, 'Tá consertado.'),
-      d=>fala(nomeCasa(), 'Eu sei que tá. Eu tava no quintal gritando pra você descer, lembra.', 'riso'),
-      d=>fala(nomeCasa(), 'Eu tirei os baldes ontem. Todos. Guardei no armário de cima.'),
-      d=>fala(nomeCasa(), 'Dois invernos com balde no chão da sala e ontem eu guardei os baldes.', 'baixo')
+      d=>falaCasa('Eu sei que tá. Eu tava no quintal gritando pra você descer, lembra.', 'riso'),
+      d=>falaCasa('Eu tirei os baldes ontem. Todos. Guardei no armário de cima.'),
+      d=>falaCasa('Dois invernos com balde no chão da sala e ontem eu guardei os baldes.', 'baixo')
     ],
     recompensa:d=>{ Estado.curarJogador(20); Estado.j.dinheiro += 3000;
       return [{tipo:'item', texto:'+3000 ₽ — "é o que eu ia gastar com o pedreiro."'},
@@ -48,10 +48,10 @@ const CONTATOS = [
     rotulo:'Pedir um dinheiro emprestado',
     limite:3,
     texto:d=>[
-      fala(nomeCasa(), 'Quanto é que você precisa?', null, 'Sem "oi". Sem "como você está". Direto na pergunta que importa.'),
+      falaCasa('Quanto é que você precisa?', null, 'Sem "oi". Sem "como você está". Direto na pergunta que importa.'),
       d.jogador.dinheiro < 500
-        ? fala(nomeCasa(), 'Não me responde. Eu já sei. Eu deposito hoje.', 'baixo')
-        : fala(nomeCasa(), 'Tá. Eu mando. E não é pra gastar em Pokébola, que Pokébola você compra com o que ganha.')
+        ? falaCasa('Não me responde. Eu já sei. Eu deposito hoje.', 'baixo')
+        : falaCasa('Tá. Eu mando. E não é pra gastar em Pokébola, que Pokébola você compra com o que ganha.')
     ],
     efeito:d=>{ Estado.j.dinheiro += 2500; return [{tipo:'item', texto:'+2500 ₽ — veio de um lugar que não sobrava.'}]; }
   },
@@ -60,20 +60,20 @@ const CONTATOS = [
     texto:d=>{
       const n = d.insignias.filter(i=>i!=='Título de Campeão').length;
       if (d.flags.campeao_de_kanto) return [
-        fala(nomeCasa(), '{Campeão|Campeã}.', 'baixo', '{casa:Ela|Ele} repete a palavra três vezes antes de conseguir dizer outra coisa.'),
-        fala(nomeCasa(), 'Eu vou ter que sentar. Espera. Espera um pouco.')
+        falaCasa('{Campeão|Campeã}.', 'baixo', '{casa:Ela|Ele} repete a palavra três vezes antes de conseguir dizer outra coisa.'),
+        falaCasa('Eu vou ter que sentar. Espera. Espera um pouco.')
       ];
       if (n >= 6) return [
-        fala(nomeCasa(), `${cap1(insigniasDitas(n))}. ${cap1(porExtensoF(n))}!`, 'grita'),
-        fala(nomeCasa(), 'A rua inteira já sabe. Eu contei pra rua inteira. Eu não me arrependo.', 'riso')
+        falaCasa(`${cap1(insigniasDitas(n))}. ${cap1(porExtensoF(n))}!`, 'grita'),
+        falaCasa('A rua inteira já sabe. Eu contei pra rua inteira. Eu não me arrependo.', 'riso')
       ];
       if (n >= 1) return [
-        fala(nomeCasa(), `${n === 1 ? 'A primeira' : n + ' insígnias'}.`, null, 'Silêncio do outro lado por uns três segundos.'),
-        fala(nomeCasa(), 'Eu sabia. Eu não sabia nada, mas eu falei que sabia, e agora eu sabia mesmo.', 'riso')
+        falaCasa(`${n === 1 ? 'A primeira' : n + ' insígnias'}.`, null, 'Silêncio do outro lado por uns três segundos.'),
+        falaCasa('Eu sabia. Eu não sabia nada, mas eu falei que sabia, e agora eu sabia mesmo.', 'riso')
       ];
       return [
-        fala(nomeCasa(), 'Nenhuma ainda? Tudo bem. Tá comendo?'),
-        fala(nomeCasa(), 'Responde a pergunta da comida, que a insígnia eu espero.')
+        falaCasa('Nenhuma ainda? Tudo bem. Tá comendo?'),
+        falaCasa('Responde a pergunta da comida, que a insígnia eu espero.')
       ];
     },
     rep:{eixo:'bom', delta:1, motivo:'Ligou para casa para contar'}
@@ -1002,24 +1002,24 @@ const CHAMADAS = [
   cond:d=>Estado.temNumero('casa') && d.capitulo >= 3 && !d.flags.voltou_pra_casa,
   peso:3,
   falas:d=>[
-    d=>fala(nomeCasa(), 'Oi! Oi, é você? É você mesm{o|a}?', 'grita'),
+    d=>falaCasa('Oi! Oi, é você? É você mesm{o|a}?', 'grita'),
     ...falaDaCasa('ligacao', d),
-    d=>fala(nomeCasa(), 'Não aconteceu nada aqui, tá tudo bem.', 'baixo'),
-    d=>fala(nomeCasa(), 'Tá comendo?')
+    d=>falaCasa('Não aconteceu nada aqui, tá tudo bem.', 'baixo'),
+    d=>falaCasa('Tá comendo?')
   ],
   escolhas:[
     {texto:'"Tô comendo."',
      ef:{moral:4, rep:{eixo:'bom',delta:1,motivo:'Atendeu e respondeu a pergunta da comida'}},
-     resultado:[d=>fala(nomeCasa(), '{Mentiroso|Mentirosa}.', 'riso'),
-                d=>fala(nomeCasa(), 'Tá bom. Vai lá. Eu desligo primeiro, que eu sempre desligo primeiro.')]},
+     resultado:[d=>falaCasa('{Mentiroso|Mentirosa}.', 'riso'),
+                d=>falaCasa('Tá bom. Vai lá. Eu desligo primeiro, que eu sempre desligo primeiro.')]},
     {texto:'Contar onde você está e o que aconteceu até agora.',
      ef:{moral:6, rep:{eixo:'bom',delta:2,motivo:'Parou o que estava fazendo pra contar a viagem por telefone'}},
      resultado:['Você fala por onze minutos e {casa:ela|ele} não interrompe uma vez.',
-                d=>fala(nomeCasa(), 'Onze minutos. Eu cronometrei no relógio do fogão.', 'baixo'),
-                d=>fala(nomeCasa(), 'Onze minutos é mais do que a gente falava na mesma casa.')]},
+                d=>falaCasa('Onze minutos. Eu cronometrei no relógio do fogão.', 'baixo'),
+                d=>falaCasa('Onze minutos é mais do que a gente falava na mesma casa.')]},
     {texto:'"Agora não dá." E desligar.',
      ef:{moral:-4, rep:{eixo:'ruim',delta:1,motivo:'Desligou na cara de casa'}},
-     resultado:['Você desliga.', d=>fala(nomeCasa(), 'Tá bo—', 'baixo', 'A ligação cai no meio.'),
+     resultado:['Você desliga.', d=>falaCasa('Tá bo—', 'baixo', 'A ligação cai no meio.'),
                 '{casa:Ela|Ele} não liga de novo hoje. Nem amanhã.']}
   ]
 },

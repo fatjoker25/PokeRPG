@@ -283,7 +283,7 @@ const VETERANOS = [
 },
 {
   id:'corinne', local:'celadon', insignias:4, conferencia:false, f:true,
-  classe:'Dama', arq:'pr_rich_f', artigo:'uma', nome:'Corinne',
+  classe:'Dama', arq:'lady', artigo:'uma', nome:'Corinne',
   porta:{titulo:'Aceitar o convite para o chá no jardim do terraço',
          sub:'Um cartão de papel grosso, deixado no balcão do Centro com o seu nome.'},
   onde:'no jardim do terraço',

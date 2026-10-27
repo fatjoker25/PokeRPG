@@ -515,7 +515,7 @@ rosto, as mãos no caderno e a barra sumindo em névoa).
 rosto que o texto pede — idade, ofício, roupa e sexo —, e ninguém divide
 rosto com quem não é parecido com ele. O acervo é o do Showdown inteiro
 (todas as gerações e o Smogon Sprite Project, com o nome do arquivo de
-lá: `gentleman_gen7`, `madame_gen6`) e quatro do PokeRogue (`pr_*`).
+lá: `gentleman_gen7`, `madame_gen6`) e alguns do PokeRogue (`pr_*`).
 Pessoa nova lê a cena antes de escolher: o Célio tem uns cinquenta anos e
 não é o entregador de boné; a Elsa tem treze e não é funcionária de
 escritório; a cozinheira do Anne é mulher, e o `cook` é homem. Os
@@ -525,6 +525,16 @@ cidade. Arquivo novo que vem de luta entra em `PAGA_POR_CLASSE` com o que
 o antigo pagava, e o veterano muda pelo `arq`. O de GBC (Polished Crystal)
 foi olhado e ficou de fora: no balão, entre os de Black/White, parece
 outro jogo.
+
+**Rosto genérico nunca é rosto de alguém com nome.** O balão de quem não
+tem nome sai de `ROSTO_POR_PALAVRA` e `RETRATO_POR_CARGO`; se uma dessas
+regras cai no arquivo de um personagem, ele aparece em todo balão sem
+dono. Foi o que aconteceu com a Sra. Perla: o `madame` dela era o de
+toda "senhora", "velha", "viúva", de todo nome sorteado com "Sra." e da
+avó de casa, e parecia que ela estava em todo lugar. Hoje a senhora sem
+nome é o `madame_gen4`, e o `chk-rostos` reprova rosto da casa ou da
+Perla que seja de outra pessoa ou de regra genérica, e rosto de NPC que
+seja, byte a byte, uma foto que o jogador escolhe pra si.
 
 Golpe de status que faz outra coisa além de mexer em número tem
 `ef.acao` e mora em `Batalha.acaoEspecial` (Protect, Substitute, Reflect,
@@ -1493,6 +1503,15 @@ cartão não sai — ele vem na primeira ida ao Centro de Viridian
 Texto que não pode depender de "mãe": quem ficou em casa é `nomeCasa()`,
 `casaQuem()`, `{casa:ela|ele}` — nunca "sua mãe" escrito à mão.
 
+**Quem ficou em casa fala por `falaCasa(diz, tom, nota)`**, nunca por
+`fala(nomeCasa(), …)`: o balão leva o nome da ficha e o rosto do
+parentesco (`retratoDaCasa()`, de `RETRATO_DA_CASA`), e o contato da casa
+no PokéNav também. O rosto não sai do nome porque o nome é de quem joga:
+irmão que se chama Bruno ganhava o rosto do Bruno da Elite, e o sorteio
+já deu Bruno e Otto (o rival) pra casa. Os rostos de `RETRATO_DA_CASA`
+são só da casa, e `NOMES_DE_CASA` não tem nome da história — o
+`chk-rostos` confere os dois.
+
 ## A tela de morte
 `UI.telaGameOver(motivo)` fala o idioma da abertura (`css/titulo.css`,
 `.tela-fim`): no meio da tela (`body.na-abertura`), Pokébola do fundo
@@ -1558,7 +1577,17 @@ que o projeto tem:
   (super eficaz, pouco eficaz, sem efeito) — que está na folha de regras.
   No computador a caixa de mensagem ocupa a coluna da esquerda e a
   bandeja de dados mora embaixo dos comandos; no celular, mensagem,
-  comandos e bandeja, nessa ordem.
+  comandos e bandeja, nessa ordem. **A caixa de mensagem tem altura
+  fixa** desde a primeira linha (132 px no celular; no computador o
+  bloco inteiro, entre 282 e 360 px pelo que sobra da tela) e rola por
+  dentro: o turno novo desce lá dentro e a tela da luta não anda. No
+  computador a bandeja ocupa o que sobra embaixo dos comandos e rola
+  também, e os quatro golpes com o Voltar cabem no bloco (abrir o
+  Lutar não mexe na tela) — comando novo mais alto que a lista de
+  golpes empurra a tela de novo. **A bandeja mostra só o último turno**:
+  `Jogo.acaoBatalha` chama `UI.novaRodadaDeDados()`, e a primeira
+  rolagem do turno tira as do anterior; turno que não rola nada deixa a
+  bandeja como estava.
 
 ## A caixa de diálogo e o menu
 Tela de história (capítulo, linha, cidade: todo painel com

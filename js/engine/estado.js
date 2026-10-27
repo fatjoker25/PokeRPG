@@ -64,7 +64,9 @@ const CIDADES = ['Pallet','Viridian','Pewter','Cerulean','Vermilion','Lavender',
    também não: é a técnica de licença da Estação 4, no dezoito e no
    dezenove, e o crachá dela passa pela sua mão */
 const NOMES_DE_CASA_F = ['Delia','Alma','Dalva','Clara','Flora','Hilda','Nora','Vera'];
-const NOMES_DE_CASA_M = ['Aldo','Bruno','Dino','Marco','Otto','Vito'];
+/* nenhum nome da história: o irmão sorteado Bruno dividia o nome (e
+   ganhava o rosto) com o Bruno da Elite, e o Otto com o rival */
+const NOMES_DE_CASA_M = ['Aldo','Raul','Dino','Marco','Ciro','Vito'];
 const NOMES_DE_CASA = NOMES_DE_CASA_F.concat(NOMES_DE_CASA_M);
 const PARENTESCOS_F = ['mãe','avó','tia','irmã mais velha','madrinha'];
 const PARENTESCOS_M = ['pai','avô','tio','irmão mais velho','padrinho'];

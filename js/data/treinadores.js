@@ -79,7 +79,7 @@ const RETRATO_POR_NOME = {
   'Tobin':'trainers/fisherman_gen4', 'Sr. Cosmo':'trainers/fisherman',
   'Célio':'trainers/mateo', 'Capitão do Anne':'trainers/pilot', 'Contramestre Varo':'trainers/sailor',
   'Orso':'trainers/mohn', 'Marinheiro do turno':'trainers/sailor_gen3',
-  'Sra. Zelda':'trainers/madame', 'Senhora do Growlithe':'trainers/madame_gen4', 'Sra. Wilma':'trainers/madame_gen7',
+  'Sra. Zelda':'trainers/expertf_gen3', 'Senhora do Growlithe':'trainers/madame_gen4', 'Sra. Wilma':'trainers/madame_gen7',
   'Sra. Odile':'trainers/maid', 'Sr. Ives':'trainers/janitor',
   'Lojista de Celadon':'trainers/clerk', 'Tito':'trainers/clerk', 'a moça da junta':'trainers/clerk_f',
   'Gina':'trainers/clerk_f',
@@ -110,7 +110,7 @@ const RETRATO_POR_NOME = {
   'Lorca':'trainers/mohn_anime', 'Vernon':'trainers/veteran_gen6', 'o homem de sapato limpo':'trainers/cedricjuniper',
   'Revelador de Celadon':'trainers/cafemaster', 'Sra. Wren':'trainers/office_worker_f', 'Sra. Perla':'trainers/madame',
   'Ivo':'trainers/sightseer', 'Dorian':'trainers/youngster_gen8', 'a voz do duto':'trainers/youngster_gen8', 'o garoto da maca':'trainers/psychic', 'o mais velho dos quatro':'trainers/fisherman_gen6xy',
-  'o voluntário sem nome':'trainers/worker', 'Sr. Bram':'trainers/kurt', 'Sra. Tansy':'trainers/madame',
+  'o voluntário sem nome':'trainers/worker', 'Sr. Bram':'trainers/kurt', 'Sra. Tansy':'trainers/expertf_gen6',
   'o mais velho da mesa':'trainers/worker_gen7',
   'o magro de boné':'trainers/fisherman_gen6', 'Sr. Alder':'trainers/heath',
   'Varian':'trainers/laventon2', 'o senhor do museu':'trainers/laventon2', 'o homem do bar':'trainers/waiter', 'Sra. Myrtle':'trainers/office_worker_f',
@@ -125,7 +125,7 @@ const RETRATO_POR_NOME = {
   'a funcionária da prefeitura':'trainers/office_worker_f', 'a diretora da escola de Cinnabar':'trainers/teacher',
   'a recepcionista da pousada':'trainers/clerk_f', 'o homem da ferragem':'trainers/clerk',
   'a dona do armazém':'trainers/clerk_f', 'o homem do macacão':'trainers/worker_gen4',
-  'a funcionária da reserva':'trainers/pokemon_ranger_f', 'a mulher do baralho':'trainers/madame',
+  'a funcionária da reserva':'trainers/pokemon_ranger_f', 'a mulher do baralho':'trainers/pr_veteran_f',
   'Sr. Dunmore':'trainers/cook_gen7', 'Sr. Pell':'trainers/gentleman_gen4dp', 'o rapaz da descarga':'trainers/worker',
   'a moça do berçário':'trainers/pokemon_breeder_f', 'Livia Gale':'trainers/office_worker_f',
   'a editora do jornal':'trainers/madame_gen4dp', 'Falk':'trainers/worker_gen6', 'Sr. Delmar':'trainers/postman',
@@ -141,7 +141,7 @@ const RETRATO_POR_NOME = {
   'a técnica de jaleco':'trainers/scientist_f',
   'o sargento de Viridian':'overworld/policial', 'Sargento Holt':'overworld/policial',
   'a editora do Jornal':'trainers/reporter_gen8', 'Hazel Moss':'trainers/reporter_gen8',
-  'a avaliadora da Associação':'trainers/madame',
+  'a avaliadora da Associação':'trainers/pr_breeder_f',
   'a coordenadora da quadra':'trainers/league_staff_f', 'Coordenadora Maple':'trainers/league_staff_f',
 
   /* quem só falava e ficava sem rosto: agora todo mundo que fala tem.
@@ -232,7 +232,7 @@ const RETRATO_POR_NOME = {
   'a dona da pensão':'trainers/pokefanf_gen6', 'o guarda da primeira':'trainers/policeman_gen7',
   'o guarda da terceira':'trainers/policeman_gen7', 'o oitavo guarda':'trainers/policeman_gen7',
   'o guarda da sétima':'trainers/policeman_gen7', 'o guarda da quinta':'trainers/policeman_gen7',
-  'Dario':'trainers/streetthug', 'Sra. Vale':'trainers/touristf2', 'Nico':'trainers/jamie',
+  'Dario':'trainers/streetthug', 'Sra. Vale':'trainers/madame_gen4dp', 'Nico':'trainers/jamie',
   'o revelador':'trainers/mirror', 'o presidente da associação':'trainers/owner',
   'Hal':'trainers/tarragon', 'o porteiro da reserva':'trainers/postman',
   'o menino do muro':'trainers/youngster_gen4', 'o senhor do corredor':'trainers/gentleman_gen6',
@@ -244,12 +244,21 @@ const RETRATO_POR_NOME = {
   'o menino do Caterpie':'trainers/youngster_gen9'
 };
 
-/* quem ficou em casa: o rosto sai do parentesco da ficha */
+/* Quem ficou em casa: o rosto sai do parentesco da ficha, e é só dela.
+   Nenhum outro NPC usa estes arquivos, nem regra de rosto genérico: a
+   avó era o rosto da Sra. Perla e de toda senhora sem nome, o irmão o
+   de todo Treinador Ás, a irmã o da Giselle. Quem lê o rosto da casa é
+   retratoDaCasa(), pelo papel (falaCasa), nunca pelo nome: irmão que se
+   chama Bruno não pode ganhar o rosto do Bruno da Elite. */
 const RETRATO_DA_CASA = {
-  'mãe':'trainers/mom', 'avó':'trainers/madame', 'tia':'trainers/lady', 'madrinha':'trainers/lady',
-  'irmã mais velha':'trainers/ace_trainer_f', 'pai':'trainers/office_worker', 'avô':'trainers/gentleman',
-  'tio':'trainers/office_worker', 'padrinho':'trainers/gentleman', 'irmão mais velho':'trainers/ace_trainer'
+  'mãe':'trainers/mom', 'avó':'trainers/touristf2', 'tia':'trainers/johanna', 'madrinha':'trainers/johanna',
+  'irmã mais velha':'trainers/touristf', 'pai':'trainers/pokefan_gen6xy', 'avô':'trainers/expert_gen3',
+  'tio':'trainers/pokefan_gen6xy', 'padrinho':'trainers/expert_gen3', 'irmão mais velho':'trainers/youngathlete'
 };
+function retratoDaCasa(){
+  try { const arq = RETRATO_DA_CASA[casaDe().quem]; return arq ? caminhoNPC(arq) : null; }
+  catch (e) { return null; }
+}
 
 /* cargo → arquivo, pra quem fala sem nome. Só os que não deixam dúvida
    de quem é: enfermeira é enfermeira, guarda (ele) é guarda. */
@@ -366,7 +375,8 @@ const ROSTO_POR_NOME_SOLTO = {
 };
 const ROSTO_POR_PALAVRA = [
   [/\bvoz\b|r[áa]dio|telefone|locutor/i, null],
-  [/^Sra\.?\s/i, 'trainers/madame'],
+  /* a senhora sem nome tem rosto próprio: o da Sra. Perla (madame) é só dela */
+  [/^Sra\.?\s/i, 'trainers/madame_gen4'],
   [/^Sr\.?\s/i, 'trainers/gentleman'],
   [/entregador|encomenda|correio/i, 'trainers/courier'],
   [/leiloeiro/i, 'trainers/gentleman'],
@@ -384,7 +394,7 @@ const ROSTO_POR_PALAVRA = [
   [/oficial|policia|guarda|delegad/i, 'overworld/policial'],
   [/menina|garota/i, 'trainers/schoolkid_f'],
   [/menino|garoto|crian[çc]a/i, 'trainers/schoolkid'],
-  [/senhora|velha|av[óo]\b|vi[úu]va/i, 'trainers/madame'],
+  [/senhora|velha|av[óo]\b|vi[úu]va/i, 'trainers/madame_gen4'],
   [/senhor|velho|av[ôo]\b/i, 'trainers/gentleman'],
   [/rapaz|cara\b|jovem/i, 'trainers/punk_guy'],
   [/mo[çc]a\b/i, 'trainers/sightseer_f'],

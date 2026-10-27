@@ -122,6 +122,38 @@ const naoApresentado = Object.keys(NOMES_FIXOS).filter(r => usados.has(r) && !ap
 const sobraFixo = Object.keys(NOMES_FIXOS).filter(r => !usados.has(r) && !tudo.includes(`'${r}'`));
 const sobraRecusa = Object.keys(RECUSAM_O_NOME).filter(r => !usados.has(r) && !tudo.includes(`'${r}'`));
 
+/* ---------- rosto exclusivo ----------
+   Quem ficou em casa e a Sra. Perla têm rosto só deles: nenhum outro NPC
+   no mapa, nenhuma regra de rosto genérico (a senhora sem nome, o "Sra."
+   de nome sorteado, o cargo). O da Perla era o de toda senhora sem nome,
+   e parecia que ela estava em todo balão. E nenhum rosto de NPC é a foto
+   que o jogador escolhe pra si (comparado byte a byte, porque o mesmo
+   desenho entra com outro nome de arquivo). */
+const arqGenerico = new Set([
+  ...ROSTO_POR_PALAVRA.map(([, a]) => a).filter(Boolean)
+    .flatMap(a => a === 'office' ? ['trainers/office_worker', 'trainers/office_worker_f'] : [a]),
+  ...RETRATO_POR_CARGO.map(([, a]) => a), ...Object.values(ROSTO_POR_NOME_SOLTO)]);
+const exclusivos = Object.entries(RETRATO_DA_CASA).map(([q, a]) => [`a casa (${q})`, a])
+  .concat([['Sra. Perla', RETRATO_POR_NOME['Sra. Perla']]]);
+const divide = [];
+for (const [quem, arq] of exclusivos){
+  if (arqGenerico.has(arq)) divide.push([quem, arq, 'rosto genérico']);
+  for (const [n, a] of Object.entries(RETRATO_POR_NOME)) if (a === arq && n !== quem) divide.push([quem, arq, n]);
+  if (!quem.startsWith('a casa') && Object.values(RETRATO_DA_CASA).includes(arq)) divide.push([quem, arq, 'a casa']);
+}
+const bytes = arq => { try { return fs.readFileSync(path.join(raiz, caminhoNPC(arq))); } catch (e) { return null; } };
+const fotos = [].concat(...Object.values(RETRATOS_DA_FICHA)).map(f => [f, bytes(PASTA_DOS_RETRATOS + f)]).filter(([, b]) => b);
+const comFoto = [];
+for (const arq of new Set([...Object.values(RETRATO_POR_NOME), ...Object.values(RETRATO_DA_CASA), ...arqGenerico])){
+  const b = bytes(arq);
+  const igual = b && fotos.find(([, f]) => f.equals(b));
+  if (igual) comFoto.push([arq, igual[0]]);
+}
+/* nome sorteado da casa não é nome de ninguém da história: o irmão Otto
+   e o rival Otto viravam o mesmo contato */
+const daHistoria = new Set([...NOMES_DA_HISTORIA, ...Object.keys(RETRATO_POR_NOME)]);
+const casaComNome = NOMES_DE_CASA.filter(n => daHistoria.has(n));
+
 /* ---------- relatório ---------- */
 let problemas = 0;
 const lista = (titulo, itens, linha) => {
@@ -141,6 +173,9 @@ lista('Diz o próprio nome e o balão não sabe', diz, ([r, n, onde]) => `${r} d
 lista('Nome fixo que nenhuma cena apresenta', naoApresentado, r => `${r} → ${NOMES_FIXOS[r]}`);
 lista('Nome fixo que ninguém usa', sobraFixo, r => `${r} → ${NOMES_FIXOS[r]}`);
 lista('Recusa de nome que ninguém usa', sobraRecusa, r => r);
+lista('Rosto que devia ser só de uma pessoa e é de outra também', divide, ([q, a, n]) => `${q}: ${a} também é de ${n}`);
+lista('Rosto de NPC que é foto do jogador', comFoto, ([a, f]) => `${a} = ${PASTA_DOS_RETRATOS}${f}`);
+lista('Nome sorteado da casa que já é de alguém da história', casaComNome, n => n);
 
 const total = [...gente.keys()].filter(r => !naoEGente(r)).length;
 console.log(problemas

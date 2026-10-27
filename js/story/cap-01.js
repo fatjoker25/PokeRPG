@@ -123,7 +123,7 @@ c1_acorda:{
       return `${nomeExib(p)} está aos pés da cama, acordad${pron(p).o} antes de você, com o olho fixo na mochila como se ela pudesse sair andando sozinha.`;
     },
     'Lá embaixo a panela bate na pia, o rádio toca baixo, e a voz que atravessa o assoalho é a mesma de todos os dias da sua vida.',
-    d=>fala(nomeCasa(), `${d.jogador.nome.toUpperCase()}! Se o café esfriar eu não esquento de novo, e dessa vez eu falo sério!`, 'grita'),
+    d=>falaCasa(`${d.jogador.nome.toUpperCase()}! Se o café esfriar eu não esquento de novo, e dessa vez eu falo sério!`, 'grita'),
     '{casa:Ela|Ele} fala sério todo dia. Nunca foi sério nenhum dia. Hoje talvez seja.',
     d=>{
       const p = d.time[0];
@@ -151,7 +151,7 @@ c1_chuva:{
       return `${nomeExib(p)} está sentad${pron(p).o} na janela, olhando a água escorrer no vidro, com aquela atenção de Pokémon que não entende chuva e nunca vai entender.`;
     },
     'Lá embaixo a porta dos fundos abre e fecha duas vezes seguidas, que é o barulho de alguém decidindo se ainda vale a pena salvar a roupa do varal.',
-    d=>fala(nomeCasa(), 'Chuva de março não dura! Isso aí limpa até as dez!', 'grita',
+    d=>falaCasa('Chuva de março não dura! Isso aí limpa até as dez!', 'grita',
             '{casa:Ela|Ele} não faz ideia. Ninguém faz. Mas é o que se diz em março.'),
     'Ninguém vai falar em adiar. Você também não vai. Mas todo mundo nesta casa está pensando nisso.'
   ],
@@ -169,8 +169,8 @@ c1_calha:{
     'Você desce de chinelo, arrasta o banquinho, sobe e enfia a mão na calha.',
     'É folha. É sempre folha. Sai um punhado marrom e pesado e a água desce de uma vez, num jorro, e molha você da cabeça aos pés.',
     'Da porta dos fundos vem uma gargalhada que começa e não consegue parar.',
-    d=>fala(nomeCasa(), 'Quinze anos esperando essa calha e você vai embora no dia que resolve mexer nela!', 'riso'),
-    d=>fala(nomeCasa(), 'Deixa. Deixa que o resto eu limpo.', null, 'E não é da calha que {casa:ela|ele} está falando.'),
+    d=>falaCasa('Quinze anos esperando essa calha e você vai embora no dia que resolve mexer nela!', 'riso'),
+    d=>falaCasa('Deixa. Deixa que o resto eu limpo.', null, 'E não é da calha que {casa:ela|ele} está falando.'),
     'Você desce do banquinho encharcad{o|a} no dia em que ia sair de casa, e por algum motivo isso melhora tudo.'
   ],
   ef:{moral:3, rep:{eixo:'bom',delta:1,motivo:'Consertou a calha antes de ir embora'},
@@ -335,7 +335,7 @@ c1_quarenta_minutos:{
     'Você deita de novo e dorme em quatro minutos, que é o que acontece quando a gente para de tentar.',
     'E aí você sonha com uma coisa que não faz sentido nenhum e que você vai esquecer em duas horas: uma estrada que sobe e não tem fim, e você não está cansad{o|a} no sonho, e isso é a parte boa.',
     'Batem na porta do quarto às sete e meia, de leve, com dois dedos.',
-    d=>fala(nomeCasa(), 'Tá na hora.', 'baixo', 'Duas palavras. {casa:Ela|Ele} ensaiou a noite inteira e escolheu duas palavras.')
+    d=>falaCasa('Tá na hora.', 'baixo', 'Duas palavras. {casa:Ela|Ele} ensaiou a noite inteira e escolheu duas palavras.')
   ],
   ef:{hp:2, moral:2},
   escolhas:[
@@ -350,7 +350,7 @@ c1_fez_o_cafe:{
     'Você erra a medida, faz forte demais, e não tem como consertar.',
     d=>`Quando ${casaCompleto()}, desce, vinte minutos depois, {casa:ela|ele} para na porta da cozinha e não diz nada por uns bons cinco segundos.`,
     'Depois senta. Toma o café forte demais até o fim, sem fazer careta, sem pôr água, sem falar da medida.',
-    d=>fala(nomeCasa(), 'Tá bom.'),
+    d=>falaCasa('Tá bom.'),
     'Não estava. Estava horrível. Mas estava.'
   ],
   ef:{moral:5, rep:{eixo:'bom',delta:1,motivo:'Fez o café no último dia em casa'},
@@ -381,10 +381,10 @@ c1_voltou_pra_dentro:{
   texto:[
     d=>`Você volta as quatro casas, abre a porta, e ${casaCompleto()}, está em pé na cozinha, de costas, colocando água no fogo.`,
     '{casa:Ela|Ele} não se vira.',
-    d=>fala(nomeCasa(), 'Eu ouvi a porta.', 'frio'),
+    d=>falaCasa('Eu ouvi a porta.', 'frio'),
     'O fósforo risca. O fogo pega. {casa:Ela|Ele} ajusta a chama como se aquilo fosse a coisa mais importante da manhã.',
-    d=>fala(nomeCasa(), 'Eu ia deixar você ir assim, se fosse isso que você quisesse. Eu ia ficar aqui e ia deixar.'),
-    d=>fala(nomeCasa(), 'Senta.'),
+    d=>falaCasa('Eu ia deixar você ir assim, se fosse isso que você quisesse. Eu ia ficar aqui e ia deixar.'),
+    d=>falaCasa('Senta.'),
     'Você senta.'
   ],
   ef:{moral:5, limpaFlag:'tentou_sair_no_escuro',
@@ -481,7 +481,7 @@ c1_gritou_de_cima:{
   texto:[
     d=>fala(d.jogador.nome, 'JÁ VOU!', 'grita'),
     'Lá embaixo, a resposta demora dois segundos.',
-    d=>fala(nomeCasa(), 'EU NÃO PERGUNTEI NADA!', 'grita'),
+    d=>falaCasa('EU NÃO PERGUNTEI NADA!', 'grita'),
     d=>`${c1_vocesDaCasa(true)} estão gritando de andares diferentes de uma casa de dois andares, sobre uma coisa que ninguém perguntou, no último dia.`,
     'É exatamente assim que esta casa funciona, e você vai sentir falta disso de um jeito que não dá pra explicar pra ninguém.'
   ],
@@ -619,9 +619,9 @@ c1_chamou_de_dentro:{
     d=>`Você chama pra dentro e ${casaCompleto()}, vem até a porta secando a mão no pano.`,
     'As duas conversam por cima de você, do jeito que adulto de rua pequena conversa: sem cumprimento, direto no assunto, duas frases cada uma.',
     fala('Sra. Perla', 'E {o menino|a menina} sai hoje.'),
-    d=>fala(nomeCasa(), 'Sai.'),
+    d=>falaCasa('Sai.'),
     'Um silêncio de quatro segundos que decide tudo.',
-    d=>fala(nomeCasa(), 'Então deixa aqui. Eu cuido até ele achar dono.', null,
+    d=>falaCasa('Então deixa aqui. Eu cuido até ele achar dono.', null,
             '{casa:Ela|Ele} pega a caixa e olha pra você por cima dela. Não diz mais nada, porque não precisa.')
   ],
   ef:{flag:'a_caixa_ficou_em_casa', moral:2,
@@ -642,7 +642,7 @@ c1_apagao:{
       if (!p) return 'No escuro, a sua mochila está exatamente onde você deixou, o que é a única coisa confiável desta manhã.';
       return `${nomeExib(p)} está em pé no meio do quarto, tens${pron(p).o}, olhando pro teto como se a escuridão fosse uma coisa que dá pra encarar.`;
     },
-    d=>fala(nomeCasa(), 'É a rua toda! Não mexe no disjuntor que não é o disjuntor!', 'grita',
+    d=>falaCasa('É a rua toda! Não mexe no disjuntor que não é o disjuntor!', 'grita',
             'A voz vem lá de baixo, no escuro, com uma certeza que só quem já passou por isso tem.'),
     'Pela janela dá pra ver a cidade sem um poste aceso, e o céu com mais estrela do que você lembrava que tinha.'
   ],
@@ -657,8 +657,8 @@ c1_apagao:{
 c1_vela:{
   texto:[
     'A vela fica na terceira gaveta, atrás do barbante, e você acha ela de primeira porque você é quem sempre acha.',
-    d=>fala(nomeCasa(), 'Como é que você acha essas coisas no escuro, criatura.', 'riso'),
-    d=>fala(nomeCasa(), 'Vai fazer falta, isso. Isso aí vai fazer falta nesta casa.', 'baixo'),
+    d=>falaCasa('Como é que você acha essas coisas no escuro, criatura.', 'riso'),
+    d=>falaCasa('Vai fazer falta, isso. Isso aí vai fazer falta nesta casa.', 'baixo'),
     'E aí {casa:ela fica quieta|ele fica quieto}, porque falou uma coisa que não pretendia falar hoje.'
   ],
   ef:{moral:3, rep:{eixo:'bom',delta:1,motivo:'Achou a vela no escuro, no último dia em casa'},
@@ -708,8 +708,8 @@ c1_mala_trocada:{
     'A mochila está na porta, arrumada, fechada, com a fivela de baixo consertada com arame — coisa que ninguém te avisou que ia fazer.',
     'Você abre pra conferir e para.',
     'Não é a sua mochila. É a mochila de quem saiu desta casa antes de você, guardada no armário de cima há tempo demais, e alguém passou a noite transferindo as suas coisas pra dentro dela.',
-    d=>fala(nomeCasa(), 'A sua não ia aguentar Viridian.', null, 'Dito da cozinha, sem se virar, no tom de quem decidiu {casa:sozinha|sozinho} e não vai discutir.'),
-    d=>fala(nomeCasa(), 'Essa aqui aguentou coisa pior.')
+    d=>falaCasa('A sua não ia aguentar Viridian.', null, 'Dito da cozinha, sem se virar, no tom de quem decidiu {casa:sozinha|sozinho} e não vai discutir.'),
+    d=>falaCasa('Essa aqui aguentou coisa pior.')
   ],
   ef:{flag:'mochila_herdada', moral:5,
       registrar:'Saiu com a mochila de quem saiu desta casa antes.'},
@@ -724,9 +724,9 @@ c1_de_quem_era:{
   texto:[
     d=>fala(d.jogador.nome, 'De quem era essa mochila?'),
     'Silêncio de cozinha. Colher no fundo da xícara, duas vezes.',
-    d=>fala(nomeCasa(), 'De gente que saiu daqui e não voltou.', 'baixo'),
-    d=>fala(nomeCasa(), 'Não é maldição, {menino|menina}. É mochila. Mochila boa não tem culpa de quem carregou.'),
-    d=>fala(nomeCasa(), 'Mas se você quiser trocar, tem a sua ali no canto, e eu não vou achar ruim.'),
+    d=>falaCasa('De gente que saiu daqui e não voltou.', 'baixo'),
+    d=>falaCasa('Não é maldição, {menino|menina}. É mochila. Mochila boa não tem culpa de quem carregou.'),
+    d=>falaCasa('Mas se você quiser trocar, tem a sua ali no canto, e eu não vou achar ruim.'),
     'Você olha a sua, de lona fina, com a fivela quebrada. Olha a outra, de lona grossa, com arame novo.'
   ],
   ef:{flag:'sabe_da_mochila',
@@ -745,7 +745,7 @@ c1_nao_perguntou:{
     'Você fecha a fivela de arame, testa o peso no ombro, e não pergunta nada.',
     'Tem perguntas que a gente não faz porque já sabe a resposta, e tem perguntas que a gente não faz porque hoje não é o dia.',
     'Esta é das duas coisas ao mesmo tempo.',
-    d=>fala(nomeCasa(), '{casa:Obrigada|Obrigado}.', 'baixo', 'Por não ter perguntado. {casa:Ela|Ele} agradece isso, e você entende que {casa:ela|ele} está agradecendo isso.')
+    d=>falaCasa('{casa:Obrigada|Obrigado}.', 'baixo', 'Por não ter perguntado. {casa:Ela|Ele} agradece isso, e você entende que {casa:ela|ele} está agradecendo isso.')
   ],
   ef:{moral:4, flag:'ficou_com_a_mochila',
       registrar:'Ficou com a mochila herdada sem perguntar de quem era.'},
@@ -777,7 +777,7 @@ c1_festa:{
     'Tem gente demais na sua casa às sete da manhã e você não foi consultad{o|a} sobre isso.',
     'São sete pessoas na cozinha de quatro lugares: três vizinhos, dois primos que você vê uma vez por ano, a Sra. Perla do número dezoito, de casaco por cima da camisola, e alguém que você tem quase certeza de que mora na outra rua.',
     'Tem bolo. Tem bolo às sete da manhã, e o bolo tem o seu nome escrito errado de glacê.',
-    d=>fala(nomeCasa(), 'Eu falei pra não fazer nada. Eu falei. Quatro vezes.', 'baixo',
+    d=>falaCasa('Eu falei pra não fazer nada. Eu falei. Quatro vezes.', 'baixo',
             '{casa:Ela|Ele} fala isso ao seu lado, sem tirar o sorriso da cara, e está claramente muito feliz.'),
     d=>fala('Sra. Perla', 'Deixa {o menino|a menina} comer! DEIXA {O MENINO|A MENINA} COMER!', 'grita'),
     d=>{
@@ -820,7 +820,7 @@ c1_todo_mundo_falou:{
     fala('o primo que você vê uma vez por ano', 'Não empresta dinheiro pra treinador. Nunca. Nem pra você mesm{o|a}.'),
     fala('o vizinho do quatorze', 'Leva meia mais grossa do que você acha que precisa.'),
     fala('Sra. Perla', 'ESCREVE. Escreve, {menino|menina}, que ninguém escreve e todo mundo devia escrever.', 'grita'),
-    d=>fala(nomeCasa(), 'Come sentad{o|a}. Pelo menos uma vez por dia, come sentad{o|a}.', 'baixo'),
+    d=>falaCasa('Come sentad{o|a}. Pelo menos uma vez por dia, come sentad{o|a}.', 'baixo'),
     'A criança que ninguém sabe de quem é fala por último e fala a melhor de todas:',
     fala('a criança', 'Se você achar um shiny você TEM que voltar aqui pra mostrar.')
   ],
@@ -882,7 +882,7 @@ c1_voltou_pra_festa:{
   texto:[
     'Você volta o meio quarteirão e entra pela porta da frente, o que é diferente de nunca ter saído, e todo mundo percebe.',
     d=>fala('Sra. Perla', '{ELE|ELA} VOLTOU! EU FALEI QUE {ELE|ELA} VOLTAVA!', 'grita'),
-    d=>fala(nomeCasa(), 'Você não falou nada disso, Perla.', 'riso'),
+    d=>falaCasa('Você não falou nada disso, Perla.', 'riso'),
     'E aí a cozinha volta a ser barulhenta, e ninguém cobra nada de você, e é assim que se perdoa em casa de rua pequena: fingindo que não houve o que houve.'
   ],
   ef:{moral:5, limpaFlag:'saiu_no_meio_da_festa',
@@ -906,7 +906,7 @@ c1_ele_sumiu:{
     },
     'Você chama uma vez, baixo. Depois alto. Depois desce a escada de dois em dois degraus.',
     'A porta dos fundos está encostada, não fechada.',
-    d=>fala(nomeCasa(), '{pk:Ele|Ela} saiu antes de eu acordar. Eu achei que tinha sido você que soltou.', null,
+    d=>falaCasa('{pk:Ele|Ela} saiu antes de eu acordar. Eu achei que tinha sido você que soltou.', null,
             '{casa:Ela|Ele} está com o pano na mão, {casa:parada|parado} no meio da cozinha, e não está {casa:calma|calmo}.')
   ],
   ef:{flag:'ele_sumiu_no_ultimo_dia',
@@ -1032,7 +1032,7 @@ c1_esperou_ele:{
       return `Aos quarenta e um, ${nomeExib(p)} entra pelo buraco da cerca, tranquil${pron(p).o}, como quem foi dar uma volta.`;
     },
     'Você não briga. Você não chega nem a levantar.',
-    d=>fala(nomeCasa(), 'Esperar é a parte que ninguém conta que é a mais difícil.', 'baixo',
+    d=>falaCasa('Esperar é a parte que ninguém conta que é a mais difícil.', 'baixo',
             '{casa:Ela|Ele} estava na porta da cozinha o tempo todo, e você não tinha percebido.')
   ],
   ef:{moral:2, flag:'esperou_ele_voltar',
@@ -1257,12 +1257,12 @@ c1_silencio_mesa:{
 c1_despedida:{
   texto:[
     d=>`Na porta, ${casaCompleto()}, te enfia um embrulho pequeno e um envelope na mão, nessa ordem, sem cerimônia.`,
-    d=>fala(nomeCasa(), 'O embrulho é comida pra estrada. O envelope é dinheiro, não é muito, e não é pra gastar em besteira.'),
+    d=>falaCasa('O embrulho é comida pra estrada. O envelope é dinheiro, não é muito, e não é pra gastar em besteira.'),
     'Você abre o envelope depois, já na rua, e descobre que é mais do que esta casa podia dar.',
     'E aí vem a terceira coisa, que não estava na mão nenhuma até agora: um aparelho azul de tampa, do tamanho da sua palma, com a tinta gasta nos cantos.',
-    d=>fala(nomeCasa(), `Isso aqui é um PokéNav. Era ${/^(tio|tia)$/.test(casaQuem()) ? 'do seu avô' : 'do seu tio'} e ele não usava, e eu mandei consertar a tampa.`),
-    d=>fala(nomeCasa(), 'Serve pra guardar número. O número de quem te atender, de quem te dever alguma coisa, de quem quiser revanche.'),
-    d=>fala(nomeCasa(), 'Tem um número já gravado nele. É o daqui.'),
+    d=>falaCasa(`Isso aqui é um PokéNav. Era ${/^(tio|tia)$/.test(casaQuem()) ? 'do seu avô' : 'do seu tio'} e ele não usava, e eu mandei consertar a tampa.`),
+    d=>falaCasa('Serve pra guardar número. O número de quem te atender, de quem te dever alguma coisa, de quem quiser revanche.'),
+    d=>falaCasa('Tem um número já gravado nele. É o daqui.'),
     d=>falaDaCasa('adeus', d)[0],
     d=>falaDaCasa('adeus', d)[1]
   ],

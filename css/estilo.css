@@ -3363,24 +3363,41 @@ h3.com-mapa{display:flex;align-items:center;justify-content:space-between;gap:8p
    comandos: lado a lado no computador, como a caixa de texto e o menu
    dos jogos; no celular, a mensagem, os comandos logo depois e a
    bandeja por último — o que se aperta fica perto do polegar.
+   A caixa de mensagem tem ALTURA FIXA desde a primeira linha e rola por
+   dentro: o turno novo desce lá dentro e a tela da luta não anda. Com
+   altura que crescia (até 124 px no celular, ou a da coluna dos comandos
+   e da bandeja no computador), cada turno empurrava os comandos pra
+   baixo. No computador o bloco inteiro tem altura fixa, e a bandeja
+   ocupa o que sobra embaixo dos comandos, rolando por dentro também.
    ============================================================ */
 .combate-baixo{display:flex;flex-direction:column;gap:10px}
 .combate-registro{min-width:0}
 .log-combate .l.intro{color:var(--texto);font-style:italic;opacity:.85}
 @media (min-width:900px){
   .combate-baixo{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);
-    grid-template-areas:"log acoes" "log dados";grid-template-rows:auto 1fr;gap:10px 12px;align-items:start}
+    grid-template-areas:"log acoes" "log dados";grid-template-rows:auto minmax(0,1fr);gap:10px 12px;align-items:start;
+    /* o que sobra da tela embaixo da arena, entre 282 e 360 px: no mínimo
+       a lista de golpes inteira, pra abrir o Lutar não mexer na tela */
+    min-height:clamp(282px, calc(100vh - 618px), 360px)}
   .combate-baixo .combate-registro{display:contents}
-  /* a altura vem da coluna dos comandos: o registro não empurra a
-     tela pra baixo, rola por dentro */
-  .combate-baixo .log-combate{grid-area:log;align-self:stretch;contain:size;min-height:150px;max-height:none;margin:0}
+  /* nem o registro nem a bandeja medem o próprio conteúdo (contain):
+     a altura é a do bloco, e o que não cabe rola por dentro */
+  .combate-baixo .log-combate{grid-area:log;align-self:stretch;contain:size;min-height:0;max-height:none;margin:0}
   .combate-baixo .acoes-combate{grid-area:acoes}
-  .combate-baixo #dados{grid-area:dados;min-width:0}
+  .combate-baixo #dados{grid-area:dados;min-width:0;align-self:stretch;contain:size;overflow-y:auto;overscroll-behavior:contain}
+  .combate-baixo #dados .dados-area{margin-top:0}
+  /* os quatro golpes e o Voltar cabem na altura do bloco: abrir o Lutar
+     não empurra a tela (empilhados, eles mediam 314 px) */
+  .combate-baixo .grade-golpes{gap:6px;margin-bottom:6px}
+  .combate-baixo .golpe-btn{min-height:50px}
+  .combate-baixo .golpe-btn .g-nome{padding-top:5px;font-size:16.5px}
+  .combate-baixo .golpe-btn .pd{padding-bottom:5px}
+  .combate-baixo .mb-btn.voltar{min-height:38px;flex-direction:row;align-items:baseline;gap:8px}
 }
 @media (max-width:899px){
   .combate-baixo{display:grid;gap:8px}
   .combate-baixo .combate-registro{display:contents}
-  .combate-baixo .log-combate{order:1;margin:0;max-height:124px}
+  .combate-baixo .log-combate{order:1;margin:0;height:var(--log-alt, 132px);max-height:none;overscroll-behavior:contain}
   .combate-baixo .acoes-combate{order:2}
   .combate-baixo #dados{order:3}
 }

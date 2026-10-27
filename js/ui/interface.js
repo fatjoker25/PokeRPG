@@ -185,11 +185,17 @@ const UI = {
   tom(t){ document.body.setAttribute('data-tom', t || 'leve'); },
   rolarTopo(){ window.scrollTo({top:0, behavior:'smooth'}); },
 
+  /* Na luta a bandeja mostra só o turno que passou: Jogo.acaoBatalha
+     marca o turno novo, e a primeira rolagem dele tira as do anterior.
+     Turno que não rola nada (Pokédex, troca recusada) deixa a bandeja
+     como estava. */
+  novaRodadaDeDados(){ this._rodadaNova = true; },
   mostrarDado(reg){
+    if (this._rodadaNova){ this.dadosRecentes = []; this._rodadaNova = false; }
     this.dadosRecentes.push(reg);
-    if (this.dadosRecentes.length > 8) this.dadosRecentes.shift();
+    if (this.dadosRecentes.length > 16) this.dadosRecentes.shift();
   },
-  limparDados(){ this.dadosRecentes = []; },
+  limparDados(){ this.dadosRecentes = []; this._rodadaNova = false; },
   /* os cinco atributos do Pokérole numa linha */
   linhaAtrib(p){
     return ATRIBUTOS.map(k => `${SIGLA_ATRIB[k]} ${p.stats[k]}`).join(' · ');
@@ -845,7 +851,7 @@ const UI = {
         </div></div>
       <div class="cr-campo"><span class="cr-rot">É ${c.casaQuem ? artigoDe(c.casaQuem) : 'sua ou seu'}</span>
         <div class="cr-chips" role="group" aria-label="Parentesco">${parentes}</div>
-        <p class="cr-nota">${c.casaQuem ? 'Ela assina a sua licença, porque você sai com quinze.' : 'Sem escolher, o parentesco sai do nome, e o que faltar é sorteado.'}</p></div>
+        <p class="cr-nota">${c.casaQuem ? `${parentescoEhMulher(c.casaQuem) ? 'Ela' : 'Ele'} assina a sua licença, porque você sai com quinze.` : 'Sem escolher, o parentesco sai do nome, e o que faltar é sorteado.'}</p></div>
       ${this.crCabeca('Como começa', '')}
       <div class="cr-campo"><span class="cr-rot">Pokémon inicial</span>
         <div class="cr-grade cr-g2" role="group" aria-label="Pokémon inicial">${inicial}</div></div>
@@ -1260,7 +1266,7 @@ const UI = {
         /* o rosto mora à esquerda do balão, como na caixa de diálogo dos
            jogos; quem repete a vez guarda o lugar dele vazio, pro texto
            alinhar com o balão de cima */
-        const rosto = meu ? '' : this.retratoFala(f.quem, f.rotulo);
+        const rosto = meu ? '' : this.retratoFala(f.quem, f.rotulo, f.casa);
         const lugar = rosto ? (repete ? '<span class="fala-retrato vazio" aria-hidden="true"></span>' : rosto) : '';
         return `<div class="fala${tom}${meu}${repete ? ' segue' : ''}${lugar ? ' com-rosto' : ''}" data-voz="fala"${meu ? '' : estiloCor(f.quem)}>
           ${lugar}<div class="fala-quem">${this.esc(f.quem)}</div>
@@ -1392,7 +1398,12 @@ const UI = {
     /* quem já te conhece te reconhece antes da primeira fala */
     const paras = this.narrar(typeof Reencontros !== 'undefined'
       ? Reencontros.prefaciar(cena.texto, Estado.dados.capitulo + ':' + Estado.dados.cena) : cena.texto);
-    this.vozesDaCena = null;      // vale só pro texto da própria cena
+    /* quem fala aqui vale só pro texto da própria cena: a ligação que toca
+       por cima (tocarAdiada), o PokéNav e as mensagens não herdam o dono
+       da conversa de baixo — senão a aspa sem dono delas saía com o nome
+       de quem estava na cena (a Sra. Perla, no capítulo 1 inteiro) */
+    this.vozesDaCena = null; this.npcDaCena = null; this.npcEhProprio = false;
+    this.falanteDaCena = null; this.minhasFalasDaCena = null;
     if (typeof Jogo !== 'undefined' && Jogo.tocarAdiada) Jogo.tocarAdiada();
 
     const html = `<div class="painel">
@@ -1640,12 +1651,15 @@ const UI = {
      balão mostra, que vira o nome depois de perguntado. O rosto é o
      mesmo antes e depois: nome sorteado não tem rosto próprio, então o
      rótulo segura o retrato. */
-  retratoFala(quem, rotulo){
+  retratoFala(quem, rotulo, casa){
     /* Com rótulo, o rosto sai dele. O nome só manda quando é o nome fixo
        daquela pessoa (NOMES_FIXOS): nome sorteado que coincide com o de
-       outra pessoa ("Gina", "Tito") trazia o rosto dela pro balão. */
+       outra pessoa ("Gina", "Tito") trazia o rosto dela pro balão. E quem
+       ficou em casa (falaCasa) tem o rosto do parentesco, seja qual for o
+       nome que a ficha deu. */
     const fixo = rotulo && typeof NOMES_FIXOS !== 'undefined' && NOMES_FIXOS[rotulo] === quem;
-    const r = rotulo && rotulo !== quem
+    const r = casa && typeof retratoDaCasa === 'function' ? retratoDaCasa()
+      : rotulo && rotulo !== quem
       ? (retratoDe(rotulo) || (fixo ? retratoDe(quem) : null) || rostoGenerico(rotulo))
       : (retratoDe(quem) || rostoGenerico(quem));
     return r ? `<img class="fala-retrato" src="${r}" alt="" onerror="this.remove()">` : '';
@@ -2975,7 +2989,9 @@ const UI = {
      a inicial do nome na bolinha colorida */
   navRosto(c, grande){
     const nome = textoContato(c, 'nome') || '?';
-    const r = (typeof retratoDe === 'function') ? (retratoDe(nome) || retratoDe(c.nome && typeof c.nome === 'string' ? c.nome : '')) : null;
+    /* a casa pelo parentesco, como no balão: nunca o rosto de quem tem o mesmo nome */
+    const r = c.id === 'casa' && typeof retratoDaCasa === 'function' ? retratoDaCasa()
+      : (typeof retratoDe === 'function') ? (retratoDe(nome) || retratoDe(c.nome && typeof c.nome === 'string' ? c.nome : '')) : null;
     const cls = `nav-inicial${grande ? ' grande' : ''} ${c.tipo === 'treinador' ? 'treinador' : 'figura'}`;
     /* a inicial é a do nome, não a do artigo: "O menino do balde" é M */
     const ini = this.esc((this.navChave(nome).charAt(0) || '?').toUpperCase());
@@ -5179,6 +5195,8 @@ const UI = {
         <button class="escolha" onclick="Exploracao.tela()">${this.esc(c.guardar || 'Seguir.')}</button>
       </div>
     </div>`);
+    /* como na cena: o falante não passa pro que abre por cima */
+    this.falanteDaCena = null; this.vozesDaCena = null;
     if (avisos && avisos.length) this.avisos(avisos);
     this.rolarTopo();
   },
