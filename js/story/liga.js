@@ -212,81 +212,105 @@ const CAMPEAO = {
 
 /* ============================================================
    TORNEIO ABERTO DA LIGA
-   Chaveamento de oito. Acontece o ano inteiro, qualquer um entra.
+   Chaveamento de oito. Acontece o ano inteiro, qualquer um entra, e
+   você luta com três dos inscritos, um por rodada. Todo inscrito tem
+   nome, cidade e time montado: as linhas, como o treinador de estrada
+   (o nível escolhe a forma), golpes de TM do dono e um item no ás. O
+   time cresce com as suas insígnias e acompanha os seus três mais
+   fortes, um pouco acima a cada rodada — o torneio não fica fácil
+   quando você cresce, nem impossível quando você começa. Medido com
+   ferramentas/sim-torneio.js; os números estão na folha de regras.
    ============================================================ */
+const NIVEL_TORNEIO = [-3, -2, 0];                 // o ás de cada rodada, perto dos seus três mais fortes
+const TAM_TORNEIO = [3, 3, 4, 4, 5, 5, 6, 6, 6];   // pelas suas insígnias
+const TAM_EXTRA_TORNEIO = [0, 0, 0];               // a mais por rodada (a final já é a mais alta)
+const ERRO_IA_TORNEIO = [12, 10, 8];               // escolha errada de golpe, por rodada (o resto erra 22)
+const MORAL_TORNEIO = 85;
+
+/* `linhas` vai do mais fraco ao ás: o time pega as últimas, do tamanho
+   da rodada. `segura` é o item do ás. `ajuste` é o acerto de nível de
+   cada um, medido no sim-torneio: time de tipo que o jogador comum não
+   aguenta (a água e o gelo do Ewan) vem mais baixo, o que cai fácil vem mais
+   alto, e todos ficam perto da mesma dureza. */
 const RIVAIS_TORNEIO = [
   {nome:'Ezra', tipos:['Normal','Voador'], fala:'"A GENTE TÁ NO MESMO CHAVEAMENTO! Cara! Isso é tipo o destino!"',
    cond:d=>!!d.npcs['Ezra'] && d.npcs['Ezra'].opiniao >= 0},
   {nome:'Ezra', tipos:['Normal','Voador'], fala:'"Não sorri pra mim." Ezra não aperta a sua mão. "Eu treinei pra isso todo dia desde que saí de casa."',
    cond:d=>!!d.npcs['Ezra'] && d.npcs['Ezra'].opiniao < 0},
-  {nome:'Caçador Roque', tipos:['Venenoso','Terrestre'], fala:'"Torneio é o único lugar onde eu posso te bater na frente de gente e sair aplaudido."',
+  {nome:'Caçador Roque', de:'da Floresta de Viridian', fala:'"Torneio é o único lugar onde eu posso te bater na frente de gente e sair aplaudido."',
+   linhas:[49, 42, 89, 110, 34, 24], golpes:['Earthquake', 'Sludge Bomb', 'Rock Slide', 'Body Slam'], segura:'Faixa Firme',
    cond:d=>!!d.npcs['Caçador Roque']},
-  {nome:'Fenna, da Silph', f:true, tipos:['Elétrico','Psíquico'], fala:'"Eu pedi demissão." Ela dá de ombros. "Sobrou tempo pra treinar."',
+  {nome:'Fenna, da Silph', f:true, de:'de Saffron', fala:'"Eu pedi demissão." Ela dá de ombros. "Sobrou tempo pra treinar."',
+   linhas:[137, 101, 82, 64, 125, 135], golpes:['Thunderbolt', 'Psychic', 'Thunder Wave', 'Ice Beam'], segura:'Óculos Grossos',
    cond:d=>!!d.npcs['Fenna (crachá azul)']},
-  {nome:'Guia Orin', tipos:['Inseto','Grama'], fala:'"Eu saí da Zona." Orin está diferente. "Pedi as contas depois de tudo aquilo. Tô aqui."',
+  {nome:'Guia Orin', de:'de Fuchsia', fala:'"Eu saí da Zona." Orin está diferente. "Pedi as contas depois de tudo aquilo. Tô aqui."',
+   linhas:[47, 49, 103, 114, 127, 123], golpes:['Swords Dance', 'Body Slam', 'Solar Beam', 'Double-Edge'], segura:'Punho de Ferro', ajuste:2,
    cond:d=>!!d.npcs['Guia Orin']},
-  {nome:'Ás do Planalto', tipos:['Dragão','Voador'], fala:'"Eu treino aqui. Literalmente aqui. Boa sorte."'},
-  {nome:'Veterana de Saffron', f:true, tipos:['Psíquico','Fantasma'], fala:'"Décimo quarto torneio. Eu não vim ganhar, eu vim continuar vindo."'},
-  {nome:'Pescador de Fuchsia', tipos:['Água','Gelo'], fala:'"Eu não uso Poké Ball cara e ainda assim eu ganho de gente rica. É o meu hobby."'},
-  {nome:'Criador de Pallet', tipos:['Normal','Lutador'], fala:'"Eu crio. Eu não batalho. Mas os meus batalham."'},
-  {nome:'Estudante de Cinnabar', tipos:['Fogo','Pedra'], fala:'"O Blaine é meu professor. Ele diz pra nunca subestimar quem chega com a mochila suja."'},
-  {nome:'Mochileiro da Rota 3', tipos:['Pedra','Terrestre'], fala:'"Eu durmo no mato há dois anos. Isso conta como treino?"'},
-  {nome:'Enfermeira de folga', f:true, tipos:['Normal','Psíquico'], fala:'"Eu curo time a semana inteira. Hoje eu machuco."'}
+  /* quem não vem da sua história: sete inscritos de sempre */
+  {nome:'Domador de Dragões Ronan', curto:'Ronan', arq:'dragon_tamer', de:'do Planalto',
+   fala:'"Eu treino aqui. Literalmente aqui. Boa sorte."',
+   linhas:[18, 142, 117, 130, 6, 149], golpes:['Earthquake', 'Fire Blast', 'Thunderbolt', 'Ice Beam'], segura:'Faixa Firme', ajuste:3},
+  {nome:'Paranormal Sabine', curto:'Sabine', f:true, arq:'psychic_f', de:'de Saffron',
+   fala:'"Décimo quarto torneio. Eu não vim ganhar, eu vim continuar vindo."',
+   linhas:[122, 178, 200, 203, 97, 94], golpes:['Psychic', 'Shadow Ball', 'Thunderbolt', 'Ice Punch'], segura:'Óculos Grossos', ajuste:-4},
+  {nome:'Pescador Ewan', curto:'Ewan', arq:'ewan', de:'de Fuchsia',
+   fala:'"Eu não uso Poké Ball cara e ainda assim eu ganho de gente rica. É o meu hobby."',
+   linhas:[119, 99, 73, 87, 91, 130], golpes:['Ice Beam', 'Blizzard', 'Thunderbolt', 'Earthquake'], segura:'Resto de Ração', ajuste:-4},
+  {nome:'Criador Abel', curto:'Abel', arq:'pokemonbreeder_gen6xy', de:'de Pallet',
+   fala:'"Eu crio. Eu não batalho. Mas os meus batalham."',
+   linhas:[20, 53, 108, 57, 115, 128], golpes:['Body Slam', 'Earthquake', 'Rock Slide', 'Submission'], segura:'Punho de Ferro', ajuste:-4},
+  {nome:'Estudante Felix', curto:'Felix', arq:'schoolkid_gen4dp', de:'de Cinnabar',
+   fala:'"O Blaine é meu professor. Ele diz pra nunca subestimar quem chega com a mochila suja."',
+   linhas:[78, 139, 141, 38, 126, 59], golpes:['Fire Blast', 'Rock Slide', 'Body Slam', 'Hyper Beam'], segura:'Faixa Firme', ajuste:4},
+  {nome:'Mochileira Kaia', curto:'Kaia', f:true, arq:'backpacker_gen6', de:'da Rota 3',
+   fala:'"Eu durmo no mato há dois anos. Isso conta como treino?"',
+   linhas:[95, 28, 51, 75, 105, 112], golpes:['Earthquake', 'Rock Slide', 'Body Slam', 'Swords Dance'], segura:'Punho de Ferro', ajuste:-2},
+  {nome:'Enfermeira Mabel', curto:'Mabel', f:true, arq:'pokemoncenterlady', de:'de folga',
+   fala:'"Eu curo time a semana inteira. Hoje eu machuco."',
+   linhas:[40, 36, 103, 80, 121, 113], golpes:['Psychic', 'Thunderbolt', 'Ice Beam', 'Thunder Wave'], segura:'Resto de Ração', ajuste:-2}
 ];
+/* rosto e nome de quem se inscreve: o nome sai do sorteio, como o do
+   treinador de estrada, e o rosto é só dele */
+RIVAIS_TORNEIO.forEach(r => {
+  if (!r.arq) return;
+  if (typeof NOMES_DA_HISTORIA !== 'undefined') NOMES_DA_HISTORIA.add(r.curto);
+  if (typeof RETRATO_POR_NOME !== 'undefined') RETRATO_POR_NOME[r.nome] = 'trainers/' + r.arq;
+});
 
-/* Monta um adversário de torneio com time escalado ao jogador */
-function adversarioTorneio(rival, nivelAlvo){
+/* o ás de cada rodada e o tamanho do time, pelo seu time e pelas suas insígnias */
+function nivelDoTorneio(rodada){ return Math.min(85, nivelDeReferencia() + NIVEL_TORNEIO[rodada]); }
+function tamanhoDoTorneio(rodada){
+  return Math.min(6, TAM_TORNEIO[Math.min(8, numInsignias())] + TAM_EXTRA_TORNEIO[rodada]);
+}
+
+/* Monta o inscrito da rodada: time das linhas dele, ou das do veterano */
+function adversarioTorneio(rival, rodada){
   // Ezra entra com o time de verdade dele, no arco em que estiver
   if (rival.nome === 'Ezra' && Estado.dados.rival){
     return {nome:'Ezra', f:false, fala: rival.fala, time: timeRival()};
   }
-  // veterano vencido entra com as linhas do time dele, três Pokémon
+  let linhas = rival.linhas, golpes = rival.golpes;
   if (rival.veterano && typeof veterano === 'function'){
     const v = veterano(rival.veterano);
-    return {nome: rival.nome, f:!!v.f, fala: rival.fala, time: timeDeLinhas(v.times, nivelAlvo + 1, 3, v.golpes, 85)};
+    linhas = v.times; golpes = v.golpes;
   }
-  const pool = poolSelvagem().filter(d => {
-    const p = DEX[d];
-    return p.tipos.some(t => rival.tipos.includes(t)) && p.total >= 380 && !p.evo;
-  });
-  const fallback = poolSelvagem().filter(d => DEX[d].total >= 400 && !DEX[d].evo);
-  const base = pool.length >= 3 ? pool : fallback;
-  const qtd = 3;
-  const time = [];
-  const usados = new Set();
-  for (let i = 0; i < qtd; i++){
-    let dex = Dados.escolher(base);
-    let tentativas = 0;
-    while (usados.has(dex) && tentativas++ < 12) dex = Dados.escolher(base);
-    usados.add(dex);
-    time.push(criarPokemon(dex, Math.max(5, nivelAlvo + Dados.entre(-2, 2)), {}));
-  }
-  return {nome: rival.nome, f:!!rival.f, fala: rival.fala, time};
+  const nivel = Math.max(5, nivelDoTorneio(rodada) + (rival.ajuste || 0));
+  const time = timeDeLinhas(linhas, nivel, tamanhoDoTorneio(rodada), golpes, MORAL_TORNEIO);
+  if (rival.segura && time.length) time[time.length - 1].segurando = rival.segura;
+  return {nome: rival.nome, f:!!rival.f, fala: rival.fala, de: rival.de || '', time};
 }
 
-function nivelDoJogador(){
-  const t = Estado.dados.time.filter(p => !p.morto);
-  if (!t.length) return 10;
-  return Math.round(t.reduce((s,p) => s + p.nivel, 0) / t.length);
-}
-
-/* Sorteia sete adversários coerentes com a sua história */
+/* Sorteia os três que você enfrenta: até dois que conhecem você (o Ezra
+   sempre na final), o resto entre os inscritos de sempre. */
 function montarChaveamento(){
   const d = Estado.dados;
-  const disponiveis = RIVAIS_TORNEIO.filter(r => !r.cond || r.cond(d));
-  const escolhidos = [];
-  const vistos = new Set();
-  // primeiro os que têm ligação com a sua história
-  disponiveis.filter(r => r.cond).forEach(r => {
-    if (escolhidos.length < 3 && !vistos.has(r.nome)){ escolhidos.push(r); vistos.add(r.nome); }
-  });
-  const resto = disponiveis.filter(r => !r.cond);
-  while (escolhidos.length < 3 && resto.length){
-    const r = resto.splice(Dados.entre(0, resto.length-1), 1)[0];
-    if (!vistos.has(r.nome)){ escolhidos.push(r); vistos.add(r.nome); }
-  }
-  const nivel = nivelDoJogador();
-  return escolhidos.slice(0,3).map((r,i) => adversarioTorneio(r, nivel + i*2));
+  /* o Ezra só entra com o time de rival dele; o resto, com linhas */
+  const disponiveis = RIVAIS_TORNEIO.filter(r => (!r.cond || r.cond(d)) && (r.linhas || r.veterano || (r.nome === 'Ezra' && d.rival)));
+  const embaralha = l => l.map(r => [Math.random(), r]).sort((a, b) => a[0] - b[0]).map(x => x[1]);
+  const conhecidos = embaralha(disponiveis.filter(r => r.cond)).sort((a, b) => (a.nome === 'Ezra') - (b.nome === 'Ezra'));
+  const daHistoria = conhecidos.slice(-2);
+  const deSempre = embaralha(disponiveis.filter(r => !r.cond)).slice(0, 3 - daHistoria.length);
+  return deSempre.concat(daHistoria).map((r, i) => adversarioTorneio(r, i));
 }
 
 const PREMIO_TORNEIO = [

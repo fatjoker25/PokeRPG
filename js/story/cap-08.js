@@ -2739,11 +2739,16 @@ c8_torneio:{
     'Um desses quatro, de uns catorze anos, abre a noite com um Rapidash que já não é novo, luta direito e perde por pouco. Ele recolhe o Rapidash e fica olhando a Pokébola fechada.',
     'O locutor é um funcionário do navio com microfone e uma alegria profissional insuportável.',
     d=>d.flags.o_garoto_da_enfermaria ? 'Tem uma cadeira vazia na fila dos participantes com um número de inscrição colado no encosto.' : '',
-    '"PRÓXIMA LUTA!"'
+    'As suas duas primeiras passam rápido: um dos homens de equipamento caro, que trata o Pokémon como mais uma peça do equipamento, e uma garota de dezesseis que luta melhor do que o placar diz.',
+    'A mulher de vinte e cinco anos ganha as dela do mesmo jeito, sem pressa e sem olhar pra plateia.',
+    '"A FINAL!"',
+    'O locutor lê o cartão dela com a mesma alegria que leu todos os outros: Celeste, de Celadon. Ela sobe na arena, testa a corda com a mão e espera você.'
   ],
-  ef:{registrar:'Entrou no torneio do S.S. Anne.'},
-  batalha:{dex:26, nivel:32, tipo:'treinador', treinador:'Adversário do torneio', fuga:false,
-           timeExtra:[{dex:57, nivel:33}],
+  ef:{registrar:'Entrou no torneio do S.S. Anne e chegou à final, contra a Celeste.'},
+  /* a final, no ringue de corda: ela vem com o nível do seu time */
+  batalha:{dex:53, nivel:d=>Math.max(31, nivelDeReferencia()), tipo:'treinador', treinador:'Celeste', fuga:false,
+           arena:'ginasio', erroIA:12, vontadeIA:true,
+           timeExtra:[{dex:31, mais:0}, {dex:26, mais:2, segura:'Faixa Firme'}],
            vitoria:'c8_ganhou_torneio', derrota:'c8_perdeu_torneio', gameover:'gameover'}
 },
 
@@ -2751,8 +2756,8 @@ c8_ganhou_torneio:{
   falante:'o homem de sapato limpo',
   vozes:['N','N','N'],
   texto:[
-    'Três lutas. Você ganha as três.',
-    'A terceira é contra a mulher de vinte e cinco anos, e ela aperta a sua mão no fim e diz "bom, hein" de um jeito que vale mais que o prêmio.',
+    'O último Pokémon da Celeste cai, e o salão demora um segundo pra entender que acabou.',
+    'Ela recolhe a Pokébola, atravessa a arena, aperta a sua mão e diz "bom, hein" de um jeito que vale mais que o prêmio.',
     'O locutor fala o seu nome no microfone, errado, e o salão bate palma por uns oito segundos e volta a conversar.',
     'Vinte mil pokedólares. Em dinheiro, num envelope, numa bandeja.',
     'Por cima das cabeças, você vê o garoto do Rapidash, que caiu na primeira rodada, sair do salão pela porta de serviço sem olhar pra trás.',
@@ -3166,7 +3171,7 @@ c8_perdeu_torneio:{
   texto:[
     'Você perde.',
     'Não é humilhante e não é bonito: é uma derrota normal, de alguém que treinou menos que a outra pessoa.',
-    'O locutor fala o nome do adversário e o salão bate palma e volta a conversar, e você desce do emborrachado e ninguém olha.',
+    'O locutor fala o nome da Celeste e o salão bate palma e volta a conversar, e você desce do emborrachado e ninguém olha.',
     'Nos vestiários improvisados — que são um corredor de serviço com duas cadeiras —, um dos participantes que perdeu antes de você está sentado com a cabeça entre as mãos.',
     'É o garoto do Rapidash, o de uns catorze anos. Ele caiu na primeira rodada.'
   ],

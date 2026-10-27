@@ -121,6 +121,11 @@ const raiz = path.resolve(__dirname, '..');
     /* torneio: as três rodadas */
     [0, 1, 2].forEach(rd => add(`torneio rodada ${rd + 1}`, 8, 22, () => {
       Jogo.torneioAtual = {rodada:rd, adversarios: montarChaveamento()}; Jogo.lutarRodadaTorneio(); }));
+    /* e cada inscrito com time montado, nas três rodadas, cedo e tarde:
+       o sorteio sozinho podia deixar um sem nunca entrar na arena */
+    RIVAIS_TORNEIO.filter(r => r.linhas).forEach(r => [[1, 4], [6, 20]].forEach(([ins, cap]) => [0, 1, 2].forEach(rd =>
+      add(`torneio ${r.nome} (rodada ${rd + 1}, ${ins} insígnias)`, ins, cap, () => {
+        Jogo.torneioAtual = {rodada:rd, adversarios:[0, 1, 2].map(i => adversarioTorneio(r, i))}; Jogo.lutarRodadaTorneio(); }))));
     /* o Ezra em cada arco, e os rivais extras */
     /* o Ezra em cada um dos cinco arcos, cedo e tarde */
     const arcoOriginal = arcoRival, arcoExtraOriginal = arcoRivalExtra;

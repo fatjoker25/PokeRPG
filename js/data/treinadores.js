@@ -40,10 +40,8 @@ const RETRATO_POR_NOME = {
   'Nadia':'trainers/nadia', 'Nadia Arden':'trainers/nadia',
   /* torneio */
   'Fenna, da Silph':'trainers/fenna', 'Guia Orin':'trainers/pokemon_ranger',
-  'Ás do Planalto':'trainers/dragon_tamer', 'Veterana de Saffron':'trainers/psychic_f',
-  'Pescador de Fuchsia':'trainers/fisherman', 'Criador de Pallet':'trainers/pokemon_breeder',
-  'Estudante de Cinnabar':'trainers/schoolkid', 'Mochileiro da Rota 3':'trainers/backpacker',
-  'Enfermeira de folga':'overworld/nurse_joy', 'Adversário do torneio':'trainers/ace_trainer',
+  /* a final do torneio do S.S. Anne, no 8 */
+  'Celeste':'trainers/beauty_gen8',
   /* cenas */
   'Rapaz da pedreira':'trainers/worker', 'Carregador':'trainers/worker', 'Motorista':'trainers/worker',
   'Homem das tigelas':'trainers/gardener', 'Encarregado do Armazém 7':'trainers/worker',
@@ -118,7 +116,7 @@ const RETRATO_POR_NOME = {
   'Sr. Yves':'trainers/yves', 'Sr. Quint':'trainers/worker_gen9', 'a mulher da locadora':'trainers/clerk_f',
   'Lina':'trainers/lina', 'o gerente':'trainers/clerk_boss', 'a mulher almoçando':'trainers/pr_worker_f',
   'Rufo':'trainers/rufo', 'Cleo':'trainers/lass_gen4dp', 'a mãe da Cleo':'trainers/mom_paldea',
-  'o rapaz da caneta':'trainers/league_staff', 'Pipoqueiro da face sul':'trainers/garcon',
+  'o rapaz da caneta':'trainers/schoolkid_gen8', 'Pipoqueiro da face sul':'trainers/garcon',
   'a mulher de tailleur':'trainers/officeworkerf_gen9', 'a senhora da barraca':'trainers/pokefanf_gen4',
   'o rapaz do posto':'trainers/trialguide', 'o homem de terno claro':'trainers/gentleman_gen6xy',
   'o homem de terno escuro':'trainers/office_worker', 'a mulher do ferry':'trainers/madame_gen4', 'o homem do ferry':'trainers/gentleman_gen6',
@@ -380,7 +378,11 @@ const PAGA_POR_CLASSE = {
   'trainers/blackbelt_gen7':25, 'trainers/dragontamer_gen6':40, 'trainers/hiker_gen4':35,
   'trainers/acetrainer_gen6':35, 'trainers/veteran_gen7':35, 'trainers/harlequin':10,
   'trainers/rory':15, 'trainers/otto':90, 'trainers/gentleman_gen4':70,
-  'trainers/nadia':70, 'trainers/giselle':35
+  'trainers/nadia':70, 'trainers/giselle':35,
+  /* os inscritos do Torneio Aberto (o torneio paga o prêmio da rodada;
+     a classe fica pro que a tabela pede de todo rosto de luta) */
+  'trainers/ewan':35, 'trainers/pokemonbreeder_gen6xy':40, 'trainers/schoolkid_gen4dp':25,
+  'trainers/backpacker_gen6':25, 'trainers/pokemoncenterlady':20, 'trainers/beauty_gen8':35
 };
 const PAGA_PADRAO = 20;
 function pagaPorNivel(nome){

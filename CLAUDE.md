@@ -1143,6 +1143,35 @@ entre 10% e 90% (com veterano e jogador gastando Vontade). Espécie cuja evoluç
 Scyther) entra na lista **pela forma final** (208, 212): `finalDaLinha`
 não acha o Steelix saindo do Onix.
 
+## O Torneio Aberto
+Todo inscrito do Torneio Aberto (`RIVAIS_TORNEIO`, em `js/story/liga.js`)
+tem nome, cidade (`de`, que o chaveamento mostra com a faixa de nível),
+rosto só dele (`arq`, registrado no `RETRATO_POR_NOME` na carga, com o
+nome curto no `NOMES_DA_HISTORIA`) e time montado: `linhas` do mais
+fraco ao ás, `golpes` de TM do dono, `segura` (o item do ás) e `ajuste`
+(o acerto de nível dele). Quem vem da sua história (o Ezra, o Roque, a
+Fenna, o Orin, veterano vencido) entra pelo `cond`, no máximo dois por
+torneio, e o Ezra fica com a final. O ás acompanha os seus três mais
+fortes (`nivelDoTorneio`, com `NIVEL_TORNEIO` por rodada), o tamanho
+sai das insígnias (`TAM_TORNEIO`) e a escolha de golpe erra
+`ERRO_IA_TORNEIO`.
+
+Antes era um sorteio do mato por tipo, com forma final em qualquer
+nível: impossível no começo do jogo (6% de vitória) e passeio no fim
+(90%). `node ferramentas/sim-torneio.js` mede a curva por fase e por
+rodada, e `--cada` acha o inscrito que destoa. Quem destoa se acerta
+primeiro trocando espécie da lista (o Snorlax e o Machoke saíram do
+Criador) e só depois pelo `ajuste`; `NIVEL=… EXTRA=… ERRO=… SEM_ITEM=1`
+na frente do comando calibram sem mexer no jogo. Inscrito novo entra
+com as cinco coisas, passa por ali e pelo `chk-lutas`, que roda cada
+inscrito nas três rodadas.
+
+As finais de torneio da história (a Celeste no S.S. Anne, no 8; a Nadia
+no aberto do Planalto, no 22) usam as mesmas armas pela luta de cena:
+`erroIA`, `vontadeIA` e `segura` no `batalha` (e `segura` em cada
+`timeExtra`), que o `iniciarBatalhaDaCena` repassa, e nível em função
+do seu time (`nivelDeReferencia`), nunca fixo.
+
 ## Os titulares da Elite
 Lorelei, Bruno e Agatha pararam de subir no mesmo mês (o capítulo 17
 conta desde quando) e estão em casa: a Lorelei no cais velho de

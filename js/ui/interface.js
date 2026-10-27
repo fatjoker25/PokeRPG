@@ -3511,8 +3511,8 @@ const UI = {
     const premios = (lista, extra) => `<div class="liga-premios">${['Quartas', 'Semifinal', 'Final'].map((r, i) =>
       `<span class="lpr"><small>${r}</small><b>${din(lista[i].dinheiro)}</b></span>`).join('')}${extra || ''}</div>`;
     const torneio = `<div class="liga-evento torneio">
-        <p class="sussurro">Chaveamento de oito, três rodadas, o ano inteiro. Qualquer um entra — e os adversários saem da sua própria história.</p>
-        ${premios(PREMIO_TORNEIO, `<span class="lpr"><small>Adversários</small><b>~Nv ${nivelDoJogador()}</b></span>`)}
+        <p class="sussurro">Chaveamento de oito, três rodadas, o ano inteiro. Qualquer um entra: gente de Kanto inteira, e quem já cruzou com você na estrada.</p>
+        ${premios(PREMIO_TORNEIO, `<span class="lpr"><small>Adversários</small><b>Nv ${nivelDoTorneio(0)}–${nivelDoTorneio(2)}</b></span>`)}
         ${d.torneiosVencidos ? `<span class="liga-titulos">${svgIcone('torneio')}${this.esc(d.torneiosVencidos + '× {campeão|campeã}')}</span>` : ''}
       </div>`;
     const co = campeao ? statusConferencia() : null;
@@ -3604,7 +3604,7 @@ const UI = {
       return a === b ? `Nv ${a}` : `Nv ${a}–${b}`;
     };
     const rodadas = t.adversarios.map((a, i) => ({
-      rodada:PREMIO_TORNEIO[i].rodada, nome:a.nome, time:a.time, sub:faixa(a.time), premio:PREMIO_TORNEIO[i],
+      rodada:PREMIO_TORNEIO[i].rodada, nome:a.nome, time:a.time, sub:[a.de, faixa(a.time)].filter(Boolean).join(' · '), premio:PREMIO_TORNEIO[i],
       rosto:(typeof retratoDe === 'function') ? retratoDe(a.nome) : null
     }));
     this.add(`<div class="painel">
@@ -5770,7 +5770,7 @@ const UI = {
       <div class="linha"><span class="k">Lutar de novo no lugar</span><span class="v">depois da primeira vitória, só pelo gosto: não paga dinheiro · a revanche que paga é a do PokéNav</span></div>
       <div class="linha"><span class="k">Depois de vencer</span><span class="v">dá o número do PokéNav · revanche com time de 6 e +2 níveis · três dias depois ele pode ligar com um convite</span></div>
       <div class="linha"><span class="k">Convite</span><span class="v">aceito na chamada, vira um lugar pra ir no mapa · quem marcou dia e hora te espera nela, e ir até o convite leva o relógio até lá · uma luta, um treino ou outra coisa · perdendo a luta, o convite continua de pé</span></div>
-      <div class="linha"><span class="k">Torneio Aberto</span><span class="v">veterano que você venceu pode cair no seu chaveamento, com 3 Pokémon</span></div>
+      <div class="linha"><span class="k">Torneio Aberto</span><span class="v">veterano que você venceu pode cair no seu chaveamento, com o time do tamanho e do nível do torneio</span></div>
 
       <h3>Elite dos Quatro</h3>
       <div class="linha"><span class="k">Quem entra</span><span class="v">quem tem as 8 insígnias · quatro salas seguidas, sem Centro Pokémon entre elas · perdeu uma, a ala recomeça da primeira porta</span></div>
@@ -5779,6 +5779,17 @@ const UI = {
       <div class="linha"><span class="k">Voltar ou não</span><span class="v">cada titular pesa uma coisa que você fez antes, na cidade dele, e o resto se decide na visita: o que você diz, o que você faz e, às vezes, um teste · o jogo não diz o que cada um pesa</span></div>
       <div class="linha"><span class="k">A visita</span><span class="v">abre depois do capítulo 17, pra quem sabe onde a pessoa está, e só até a cadeira do Campeão · ir embora sem decidir deixa a porta pra outro dia; o que se decide nela não se desfaz</span></div>
       <div class="linha"><span class="k">Quem volta</span><span class="v">toma a porta de quem sentava nela, com o próprio time, 2 níveis acima do substituto na primeira e na segunda porta e 1 na terceira · com os três de volta, a ala não tem porta vaga pra cargo nenhum</span></div>
+
+      <h3>Torneio Aberto da Liga</h3>
+      <div class="linha"><span class="k">Quem entra</span><span class="v">qualquer um, a partir do capítulo 2 · inscrição de 2.000 ₽</span></div>
+      <div class="linha"><span class="k">Chaveamento</span><span class="v">três rodadas, uma luta em cada, contra inscritos com nome e cidade · até dois são gente que já cruzou com você (veterano que você venceu também entra) · o Ezra, se entrar, fica com a final</span></div>
+      <div class="linha"><span class="k">Nível</span><span class="v">o ás de cada inscrito fica 3 abaixo da média dos seus três mais fortes nas quartas, 2 abaixo na semifinal e no mesmo nível na final, mais o acerto de cada um (de −4 a +4, pra todos pesarem parecido) · o resto do time vai de 3 abaixo do ás até ele</span></div>
+      <div class="linha"><span class="k">Tamanho do time</span><span class="v">pelas suas insígnias: 3 com 0–1, 4 com 2–3, 5 com 4–5, 6 com 6 ou mais</span></div>
+      <div class="linha"><span class="k">Golpes e item</span><span class="v">os de nível da espécie, o mais fraco trocado por um de TM do dono · o ás segura um item de luta</span></div>
+      <div class="linha"><span class="k">Escolha do golpe</span><span class="v">o segundo melhor golpe 12% das vezes nas quartas, 10% na semifinal e 8% na final · gasta Vontade com a chance cheia</span></div>
+      <div class="linha"><span class="k">Entre as rodadas</span><span class="v">dá pra curar o time</span></div>
+      <div class="linha"><span class="k">Prêmio</span><span class="v">3.000, 8.000 e 25.000 ₽, com itens · perdendo, 30% do prêmio da rodada</span></div>
+      <p class="sussurro">As finais de torneio que acontecem na história, no navio e no Planalto, também vêm com o nível do seu time e item no ás, erram a escolha do golpe 10% a 12% das vezes e gastam Vontade com a chance cheia.</p>
 
       <h3>Conferência do Planalto Indigo</h3>
       <div class="linha"><span class="k">Quem entra</span><span class="v">só quem sentou na cadeira do Campeão · inscrição de 5.000 ₽</span></div>

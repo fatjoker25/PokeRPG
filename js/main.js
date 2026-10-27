@@ -362,16 +362,17 @@ const Jogo = {
       inimigo = unidades[0];
       /* quem traz Pokémon próprio além das unidades (timeExtra) põe no fim da fila */
       timeInimigo = unidades.slice(1).concat((b.timeExtra || []).map(x => criarPokemon(x.dex,
-        x.nivel !== undefined ? txt(x.nivel) : Math.max(2, nvC + (x.mais || 0)), {})));
+        x.nivel !== undefined ? txt(x.nivel) : Math.max(2, nvC + (x.mais || 0)), {segurando: x.segura || null})));
     } else {
       /* nível pode ser função: capítulo alcançável com progresso diferente
          não pode ter adversário de nível fixo. */
       const nvBase = txt(b.nivel) || Historia.capAtual.nivelArea;
       if (b.aleatorio) inimigo = sortearSelvagem(b.ambiente || Arenas.doCapitulo(Historia.capAtual), b.nivelBase || Historia.capAtual.nivelArea);
-      else inimigo = criarPokemon(txt(b.dex), nvBase, Object.assign({selvagem: b.tipo === 'selvagem' || b.tipo === 'lendario'},
-        b.genero !== undefined ? {genero: txt(b.genero)} : {}));
+      else inimigo = criarPokemon(txt(b.dex), nvBase, Object.assign({selvagem: b.tipo === 'selvagem' || b.tipo === 'lendario',
+        segurando: b.segura || null}, b.genero !== undefined ? {genero: txt(b.genero)} : {}));
+      /* `segura` é o item que o Pokémon leva na luta (o ás de quem compete) */
       timeInimigo = (b.timeExtra||[]).map(x => criarPokemon(x.dex,
-        x.nivel !== undefined ? txt(x.nivel) : Math.max(2, nvBase + (x.mais || 0)), {}));
+        x.nivel !== undefined ? txt(x.nivel) : Math.max(2, nvBase + (x.mais || 0)), {segurando: x.segura || null}));
     }
     const permiteFuga = (typeof b.fuga === 'boolean') ? b.fuga : true;
     /* lendário visto em cena passa a rondar o mapa (lendarios-errantes.js) */
@@ -384,7 +385,11 @@ const Jogo = {
       treinador: b.treinador,
       timeInimigo,
       introducao: b.intro,
-      arena: b.arena || null
+      arena: b.arena || null,
+      /* quem compete de verdade (as finais de torneio) escolhe melhor o
+         golpe e gasta Vontade com a chance cheia */
+      erroIA: b.erroIA,
+      vontadeIA: !!b.vontadeIA
     });
     UI.telaBatalha();
   },
@@ -1486,7 +1491,7 @@ const Jogo = {
     this.cenaBatalha = null; this.ginasioAtual = null; this.eliteAtual = null; this.redeAtual = null;
     UI.limparDados();
     Batalha.iniciar(meu, adv.time[0], {
-      tipo:'treinador', fuga:false, treinador: adv.nome, vontadeIA:true,
+      tipo:'treinador', fuga:false, treinador: adv.nome, vontadeIA:true, erroIA: ERRO_IA_TORNEIO[t.rodada],
       timeInimigo: adv.time.slice(1),
       revelarNatureza: true,   // líder e nome grande falam do próprio time
       introducao: `${adv.nome} enviou ${nomeVisivel(adv.time[0])} (Nv ${adv.time[0].nivel})!`

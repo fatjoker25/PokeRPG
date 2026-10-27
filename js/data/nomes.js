@@ -202,6 +202,8 @@ const NOMES_FIXOS = {
   'o professor do conselho':   'Sr. Tobias Dahl',
   'a conselheira da Liga':     'Margot Heath',
   'a secretária da mesa':      'Sra. Hedda',
+  /* o Planalto, no 22: ele mostra o próprio nome na folha do chaveamento */
+  'o rapaz da caneta':         'Owen',
   /* o Planalto, no 26: o da terceira equipe é quem senta na cadeira do
      Bruno; o cabo do chicote, na toalha do vestiário, tem as iniciais */
   'o lutador da Elite 4':      'A.J.'
@@ -304,7 +306,7 @@ const NOMES_DA_HISTORIA = new Set([
   'Dale','Varo','Tamsin','Thorne','Maple','Hale',
   'Dara','Rory','Hal','Diana','Brill','Sallow','Quill','Reed','Crane','Bramble','Rook',
   'Mina','Bray','Tess','Calder','Hazel','Moss','Margot','Heath','Mallow','Sedge','Senna',
-  'Briar','Brent','Fennel','Marla','Clover','Bastian','Fern',
+  'Briar','Brent','Fennel','Marla','Clover','Bastian','Fern','Celeste','Owen','Teasel',
   /* os nomes fixos daqui de cima */
   'Ida','Clary','Wells','Marlow','Myrtle','Tito','Pike','Rufo','Lena','Gina',
   'Tessa','Rue',

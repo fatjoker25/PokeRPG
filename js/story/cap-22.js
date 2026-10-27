@@ -102,7 +102,7 @@ c22_ab_o_outro_inscrito:{
     fala('o rapaz da caneta', 'Chave quatro.'),
     d=>fala(d.jogador.nome, 'Como você sabe?'),
     fala('o rapaz da caneta', 'Porque eu sou chave três, e a chave três luta com a chave quatro na segunda rodada.'),
-    'Ele levanta a folha e mostra. Tem sete nomes circulados de trinta e dois.',
+    d => { Nomes.apresentar('o rapaz da caneta'); return 'Ele levanta a folha e mostra. Na chave três, escrito à mão e sublinhado duas vezes: OWEN TEASEL, PEWTER. Tem sete nomes circulados de trinta e dois.'; },
     fala('o rapaz da caneta', 'Eu circulo os que eu conheço de vista. Sete, de trinta e dois.'),
     d=>fala(d.jogador.nome, 'E os outros vinte e cinco?'),
     fala('o rapaz da caneta', 'É isso que eu tô tentando entender desde ontem à noite.'),
@@ -304,7 +304,7 @@ c22_aceitou:{
     'Você luta quatro vezes em cinco horas.',
     'A primeira é contra um garoto de Lavender que decorou o seu time pelo boletim da Liga e montou tudo pra te vencer, e quase consegue, e perde por uma escolha errada no quinto turno.',
     d=>d.flags.vinte_e_cinco_desconhecidos
-      ? 'A segunda é contra o rapaz da caneta, chave três, como ele tinha dito. Oito torneios abertos dão pra ele uma calma que você não tem, e ele perde por um golpe e ri quando perde.'
+      ? 'A segunda é contra o Owen, o rapaz da caneta, chave três, como ele tinha dito. Oito torneios abertos dão pra ele uma calma que você não tem, e ele perde por um golpe e ri quando perde.'
       : 'A segunda é contra uma mulher de Cinnabar que não decorou nada e luta pelo instinto, o que é muito pior de enfrentar.',
     'A terceira e a quarta passam tão rápido que, quando o locutor grita, você ainda está tentando lembrar dos golpes.',
     fala('o locutor da arena', 'CHAVE QUATRO NA FINAL!', 'grita', 'A torre de som chia na palavra FINAL e a arquibancada acha graça.')
@@ -375,10 +375,12 @@ c22_a_final:{
     fala('Nadia', 'A primeira caiu em 1979, porque eu passei seis meses sem registrar batalha, porque eu estava criando gente.'),
     fala('Nadia', 'Não pega leve comigo. Se você pegar leve eu vou saber, e aí não vale.', 'frio')
   ],
+  /* a final: cinco Pokémon com o nível do seu time, e o Arcanine por
+     último, segurando a faixa que deixa ele de pé com 1 de HP */
   batalha:{
-    tipo:'treinador', fuga:false, treinador:'Nadia',
-    dex:59, nivel:d=>Math.max(38, 34 + Estado.dados.insignias.length * 2),
-    timeExtra:[{dex:26, mais:-2},{dex:94, mais:-1}],
+    tipo:'treinador', fuga:false, treinador:'Nadia', erroIA:10, vontadeIA:true,
+    dex:26, nivel:d=>Math.max(46, nivelDeReferencia() - 1),
+    timeExtra:[{dex:115, mais:0}, {dex:103, mais:1}, {dex:94, mais:1}, {dex:59, mais:3, segura:'Faixa Firme'}],
     vitoria:'c22_venceu_a_final', derrota:'c22_perdeu_a_final'
   }
 },

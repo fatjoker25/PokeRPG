@@ -913,9 +913,10 @@ const CONTATOS = [
 
 /* rivais extras entram na agenda sozinhos, pelo arquivo deles */
 /* A Nadia não é rival de arco: o time dela é montado na hora */
+/* a revanche vem com o time da final do aberto, um pouco acima */
 function timeDaNadia(){
-  const n = Math.max(40, 34 + Estado.dados.insignias.length * 3);
-  return [59, 26, 94, 103].map((dex, i) => criarPokemon(dex, n + i, {}));
+  const n = Math.max(48, nivelDeReferencia() + 1);
+  return [26, 115, 103, 94, 59].map((dex, i) => criarPokemon(dex, n + [0, 0, 1, 1, 3][i], i === 4 ? {segurando:'Faixa Firme'} : {}));
 }
 
 function contatosDeRivaisExtras(){

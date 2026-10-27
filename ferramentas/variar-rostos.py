@@ -147,6 +147,10 @@ VARIACOES = {
                    roupa=dict(tinta=(32, .32), so_neutros=True, l=(.14, .46), onde='corpo')),
     'gina':   dict(base='trainers/scientist_f', cabelo=dict(h=46, s=.34, l=(.54, .90)),       # a farmácia do 118, uns trinta
                    extra=[(['#683840', '#784858', '#a84068'], dict(h=178, s=.42, l=(.26, .46)))]),
+    # --- os inscritos do Torneio Aberto que o acervo não tem livres
+    'ewan':   dict(base='trainers/fisherman',                                                  # pescador de Fuchsia, colete amarelo
+                   extra=[(['#686030', '#988858', '#d0b888'], dict(h=88, s=.26, l=(.20, .56))),
+                          (['#385850', '#589088', '#78c0a8'], dict(h=46, s=.72, l=(.36, .70)))]),
 }
 
 
