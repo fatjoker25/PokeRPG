@@ -28,7 +28,7 @@ const RETRATO_POR_NOME = {
   /* a Elite inteira no poço do capítulo 26: quem puxa a fila é o Lance */
   'Elite 4':'elite/lance',
   /* substitutos da Elite: a classe de treinador que os jogos dariam */
-  'Giselle':'trainers/ace_trainer_f', 'A.J.':'trainers/veteran_gen7', 'Mandi':'trainers/harlequin',
+  'Giselle':'trainers/giselle', 'A.J.':'trainers/veteran_gen7', 'Mandi':'trainers/harlequin',
   /* rival e rivais de estrada. O Ezra é o Rising Star de X/Y: tem a
      sua idade e a roupa nova demais de quem comprou tudo pra viagem.
      Rosto de rival nunca é protagonista dos jogos nem foto que o
@@ -37,7 +37,7 @@ const RETRATO_POR_NOME = {
   'Lior':'trainers/worker_gen7', 'Nolan':'trainers/nolan', 'Rory':'trainers/rory', 'o garoto de Fuchsia':'trainers/rory',
   'Diana':'trainers/diana',
   'Garoto de Fuchsia':'trainers/rory', 'Menino do cais':'trainers/nolan',
-  'Nadia':'trainers/veteran_f', 'Nadia Arden':'trainers/veteran_f',
+  'Nadia':'trainers/nadia', 'Nadia Arden':'trainers/nadia',
   /* torneio */
   'Fenna, da Silph':'trainers/fenna', 'Guia Orin':'trainers/pokemon_ranger',
   'Ás do Planalto':'trainers/dragon_tamer', 'Veterana de Saffron':'trainers/psychic_f',
@@ -45,7 +45,7 @@ const RETRATO_POR_NOME = {
   'Estudante de Cinnabar':'trainers/schoolkid', 'Mochileiro da Rota 3':'trainers/backpacker',
   'Enfermeira de folga':'overworld/nurse_joy', 'Adversário do torneio':'trainers/ace_trainer',
   /* cenas */
-  'Rapaz da pedreira':'trainers/hiker', 'Carregador':'trainers/worker', 'Motorista':'trainers/worker',
+  'Rapaz da pedreira':'trainers/worker', 'Carregador':'trainers/worker', 'Motorista':'trainers/worker',
   'Homem das tigelas':'trainers/gardener', 'Encarregado do Armazém 7':'trainers/worker',
   'Segurança da Silph':'overworld/policial', 'Segurança da expedição':'overworld/policial',
   'Caçadores de recompensa':'trainers/roughneck', 'Auditora Brill':'trainers/madame_gen8',
@@ -82,11 +82,11 @@ const RETRATO_POR_NOME = {
   'Sra. Zelda':'trainers/expertf_gen3', 'Senhora do Growlithe':'trainers/madame_gen4', 'Sra. Wilma':'trainers/madame_gen7',
   'Sra. Odile':'trainers/maid', 'Sr. Ives':'trainers/janitor',
   'Lojista de Celadon':'trainers/clerk', 'Tito':'trainers/tito', 'a moça da junta':'trainers/clerk_f',
-  'Gina':'trainers/clerk_f',
+  'Gina':'trainers/gina',
   'Rhea Ashford':'trainers/rhea', 'Dra. Pia':'trainers/pia', 'o médico do conselho':'trainers/scientist_gen7',
   'Sr. Emory Poplar':'trainers/vince', 'o guia do colete verde':'trainers/pokemonranger_gen6xy',
   'Xavi':'trainers/baoba', 'Ylva':'trainers/pokemonbreederf_gen6xy', 'Enzo':'trainers/pokemonbreeder_gen7',
-  'Elias':'trainers/ace_trainer', 'Ulla':'trainers/ulla', 'Filha do Koga':'trainers/janine', 'a filha do Koga':'trainers/janine',
+  'Elias':'trainers/acetrainer_gen4', 'Ulla':'trainers/ulla', 'Filha do Koga':'trainers/janine', 'a filha do Koga':'trainers/janine',
   'Sr. Zane':'trainers/gentleman_gen7', 'Cozinheira do Anne':'trainers/rina', 'a dona da fritura':'trainers/waitress',
   'a moça do bolinho frito':'trainers/waitress_gen4', 'Dono da pousada':'trainers/waiter_gen9',
   'o dono do curral':'trainers/hale', 'Sr. Hale':'trainers/hale', 'o velho pescador':'trainers/mrbriney',
@@ -105,13 +105,13 @@ const RETRATO_POR_NOME = {
      dariam */
   'Homem da banca':'trainers/clerk', 'Sr. Mervin':'trainers/gentleman_lgpe', 'Rapaz da fenda':'trainers/worker',
   'Sibyl':'trainers/waitress_gen6', 'Filha da Sibyl':'trainers/lass_gen4', 'Maren Kestrel':'trainers/beauty_gen9',
-  'Sra. Laurel':'trainers/madame_gen4dp', 'Moça da floricultura':'trainers/aroma_lady', 'Sr. Ulric':'trainers/janitor_gen7',
+  'Sra. Laurel':'trainers/laurel', 'Moça da floricultura':'trainers/aroma_lady', 'Sr. Ulric':'trainers/janitor_gen7',
   'o fumante':'trainers/worker_gen8', 'Ex-Silph':'trainers/officeworker_gen9', 'Sra. Hedda':'trainers/hedda',
   'Lorca':'trainers/mohn_anime', 'Vernon':'trainers/veteran_gen6', 'o homem de sapato limpo':'trainers/cedricjuniper',
   'Revelador de Celadon':'trainers/cafemaster', 'Sra. Wren':'trainers/myrtle', 'Sra. Perla':'trainers/madame',
-  'Ivo':'trainers/sightseer', 'Dorian':'trainers/youngster_gen8', 'a voz do duto':'trainers/youngster_gen8', 'o garoto da maca':'trainers/psychic', 'o mais velho dos quatro':'trainers/fisherman_gen6xy',
-  'o voluntário sem nome':'trainers/worker', 'Sr. Bram':'trainers/kurt', 'Sra. Tansy':'trainers/expertf_gen6',
-  'o mais velho da mesa':'trainers/worker_gen7',
+  'Ivo':'trainers/sightseer', 'Dorian':'trainers/youngster_gen8', 'a voz do duto':'trainers/youngster_gen8', 'o garoto da maca':'trainers/psychic_gen4', 'o mais velho dos quatro':'trainers/fisherman_gen6xy',
+  'o voluntário sem nome':'trainers/worker', 'Sr. Bram':'trainers/bram', 'Sra. Tansy':'trainers/expertf_gen6',
+  'o mais velho da mesa':'trainers/rancher',
   'o magro de boné':'trainers/fisherman_gen6', 'Sr. Alder':'trainers/heath',
   'Varian':'trainers/laventon2', 'o senhor do museu':'trainers/laventon2', 'o homem do bar':'trainers/waiter', 'Sra. Myrtle':'trainers/myrtle',
   'a mulher do fogo':'trainers/backpacker_f', 'Sr. Berto':'trainers/berto', 'Janus':'trainers/janus',
@@ -120,7 +120,7 @@ const RETRATO_POR_NOME = {
   'Rufo':'trainers/rufo', 'Cleo':'trainers/lass_gen4dp', 'a mãe da Cleo':'trainers/mom_paldea',
   'o rapaz da caneta':'trainers/league_staff', 'Pipoqueiro da face sul':'trainers/garcon',
   'a mulher de tailleur':'trainers/officeworkerf_gen9', 'a senhora da barraca':'trainers/pokefanf_gen4',
-  'o rapaz do posto':'trainers/pokemon_ranger', 'o homem de terno claro':'trainers/gentleman_gen6xy',
+  'o rapaz do posto':'trainers/trialguide', 'o homem de terno claro':'trainers/gentleman_gen6xy',
   'o homem de terno escuro':'trainers/office_worker', 'a mulher do ferry':'trainers/madame_gen4', 'o homem do ferry':'trainers/gentleman_gen6',
   'a funcionária da prefeitura':'trainers/office_worker_f', 'a diretora da escola de Cinnabar':'trainers/teacher',
   'a recepcionista da pousada':'trainers/clerk_f', 'o homem da ferragem':'trainers/clerk',
@@ -135,7 +135,7 @@ const RETRATO_POR_NOME = {
   /* quem tem nome fixo (NOMES_FIXOS) usa o MESMO rosto antes e depois
      de dizer o nome: o rótulo e o nome apontam pro mesmo arquivo */
   'a funcionária da guarita':'trainers/myrtle', 'o rapaz do protocolo':'trainers/tito',
-  'a balconista da farmácia':'trainers/clerk_f', 'o homem de barba':'trainers/cedricjuniper',
+  'a balconista da farmácia':'trainers/gina', 'o homem de barba':'trainers/cedricjuniper',
   'Thea Larkin':'trainers/pr_worker_f', 'o rapaz da enfermaria':'trainers/janus',
   'o colega da enfermaria':'trainers/doctor_gen8', 'Pascal':'trainers/doctor_gen8',
   'a técnica de jaleco':'trainers/kira',
@@ -147,7 +147,7 @@ const RETRATO_POR_NOME = {
   /* quem só falava e ficava sem rosto: agora todo mundo que fala tem.
      Voz de rádio e de telefone ganha o rosto de quem está do outro lado */
   'o locutor':'trainers/waiter', 'uma voz no salão':'trainers/gentleman', 'outra voz':'trainers/lady',
-  'Stellan':'trainers/psychic', 'Funcionário da doca':'trainers/worker', 'outra acampada':'trainers/picnicker',
+  'Stellan':'trainers/psychic_gen4', 'Funcionário da doca':'trainers/worker', 'outra acampada':'trainers/picnicker',
   'Funcionária da reserva':'trainers/pokemon_ranger_f', 'o locutor do rádio':'trainers/office_worker',
   'o homem da Defesa Civil':'trainers/firefighter', 'o homem da caixa térmica':'trainers/fisherman', 'a voz do rádio':'trainers/roland',
   'Roland':'trainers/roland', 'Roland (central do Planalto)':'trainers/roland',
@@ -160,12 +160,12 @@ const RETRATO_POR_NOME = {
   'Maren de Pewter':'trainers/lass_gen6oras', 'a menina do formulário':'trainers/lass_gen7', 'Ida':'trainers/lass_gen7',
   'Museu de Pewter':'trainers/gentleman',
   /* quem troca na estrada e tem nome no rótulo */
-  'Arlo da pedreira':'trainers/hiker', 'Dara da pedreira':'trainers/backpacker_f',
-  'Beatrix, da escola de natação':'trainers/swimmer_f',
+  'Arlo da pedreira':'trainers/ruinmaniac_gen6', 'Dara da pedreira':'trainers/dara',
+  'Beatrix, da escola de natação':'trainers/swimmerf2_gen6',
   'As duas da caixa de gelo':'trainers/twins', 'quem estava na porta antes de você':'trainers/ace_trainer',
 
   /* caminho da Lei */
-  'o delegado de Fuchsia':'trainers/veteran', 'Delegado Crane':'trainers/veteran',
+  'o delegado de Fuchsia':'trainers/crane', 'Delegado Crane':'trainers/crane',
   'a delegada de Saffron':'trainers/thorne', 'a delegada':'trainers/thorne', 'Delegada Thorne':'trainers/thorne',
   'o advogado da Comissão':'trainers/collector_masters', 'Dr. Bramble':'trainers/collector_masters',
   'Motoqueiro da escolta':'trainers/biker', 'Segurança da Estação 4':'trainers/policeman_gen8',
@@ -183,13 +183,13 @@ const RETRATO_POR_NOME = {
   'a voz da lavanderia':'trainers/pokemon_breeder_f', 'o homem do carro cinza':'trainers/officeworker_gen9',
   'o oficial de justiça':'trainers/office_worker',
   /* caminho da Criação */
-  'a tratadora da Associação':'trainers/pokemon_breeder_f', 'Mina Bray':'trainers/pokemon_breeder_f',
+  'a tratadora da Associação':'trainers/pokemonbreederf_gen6', 'Mina Bray':'trainers/pokemonbreederf_gen6',
   'Caçador de filhote':'trainers/roughneck', 'Técnico do berçário':'trainers/scientist',
   'Representante da Comissão':'trainers/veteran',
   /* caminho da Liga */
   'o pai do patrocínio':'trainers/richboy_gen6',
   /* caminho do Herói */
-  'a brigadista de Fuchsia':'trainers/workerf_gen8', 'Tess Calder':'trainers/workerf_gen8',
+  'a brigadista de Fuchsia':'trainers/tess', 'Tess Calder':'trainers/tess',
   'a mãe do píer':'trainers/mom_alola', 'Dale':'trainers/fisherman_gen3rs', 'a mãe do menino':'trainers/mom_hoenn',
   /* caminho do Mercenário */
   'o intermediário':'trainers/gambler', 'o chefe do manejo':'trainers/worker',
@@ -207,8 +207,8 @@ const RETRATO_POR_NOME = {
      PokeRogue, em pr_*). Ninguém mais divide rosto com quem não é igual a ele:
      idade, ofício, roupa e sexo saem do texto da cena. */
   'a criança de nove anos':'trainers/preschoolerf_gen7', 'a criança':'trainers/preschooler',
-  'o senhor do cimento':'trainers/janitor_gen7', 'o menino da escada':'trainers/youngster_gen6',
-  'a operária':'trainers/workerf_gen8', 'o da aliança':'trainers/worker_gen6',
+  'o senhor do cimento':'trainers/worker', 'o menino da escada':'trainers/youngster_gen6',
+  'a operária':'trainers/workerf_gen8', 'o da aliança':'trainers/worker2_gen6',
   'o rapaz da câmera':'trainers/cameraman_gen6', 'a mulher da bandagem':'trainers/hayley',
   'a oficial de cinza':'trainers/league_staff_f', 'a mulher do carregador':'trainers/mom_hoenn',
   'Elsa':'trainers/schoolkidf_gen6', 'a mulher da varanda':'trainers/mom_unova2',
@@ -234,7 +234,7 @@ const RETRATO_POR_NOME = {
   'o guarda da sétima':'trainers/policeman_gen7', 'o guarda da quinta':'trainers/policeman_gen7',
   'Dario':'trainers/streetthug', 'Sra. Vale':'trainers/vale', 'Nico':'trainers/jamie',
   'o revelador':'trainers/mirror', 'o presidente da associação':'trainers/owner',
-  'Hal':'trainers/tarragon', 'o porteiro da reserva':'trainers/postman',
+  'Hal':'trainers/hal', 'o porteiro da reserva':'trainers/depotagent',
   'o menino do muro':'trainers/youngster_gen4', 'o senhor do corredor':'trainers/gentleman_gen6',
   'a mulher de terno':'trainers/clerkf_gen8', 'o primeiro da ponte':'trainers/youngster_gen9',
   'o sexto da ponte':'trainers/camper_gen6', 'Sr. Fuji':'trainers/mrfuji_gen3',
@@ -250,6 +250,28 @@ const RETRATO_POR_NOME = {
   'Mulher de crachá azul':'trainers/fenna',
   'a mulher de crachá azul':'trainers/fenna',
   'o entregador de pão':'trainers/rufo'
+};
+
+/* O rosto de quem tem nome é só dele: nem treinador de classe (a
+   Giselle andava com a cara de toda Treinadora Ás da estrada), nem quem
+   não tem nome, nem outra pessoa com nome (o Sr. Bram da banca de
+   Saffron e o marceneiro de Lavender eram o mesmo desenho). Dois rótulos
+   no mesmo rosto só quando são a mesma pessoa: o nome fixo do rótulo
+   (NOMES_FIXOS), o mesmo nome nos dois ("Nadia" e "Nadia Arden") ou
+   esta lista — o rótulo de antes do nome, o de luta, o do save velho.
+   É o que o ferramentas/chk-rostos.js lê. */
+const MESMA_PESSOA = {
+  'Menino do cais':'Nolan', 'a voz do duto':'Dorian', 'o homem de jaleco':'Dr. Hollis',
+  'Mulher de crachá azul':'Fenna', 'a mulher de crachá azul':'Fenna',
+  'Conselheira da Liga':'Margot Heath', 'Conselheira do broche':'Margot Heath',
+  'a mulher do broche da Liga':'Margot Heath', 'a presidente':'Hester Colman',
+  'Filha do Koga':'Janine', 'o garoto de Fuchsia':'Rory', 'Garoto de Fuchsia':'Rory',
+  'o Professor':'Professor Oak', 'Sra. Wren':'Sra. Myrtle',
+  /* a luta do poço no 26 é a ala inteira, com o Dragonite dele no fim */
+  'Elite 4':'Lance',
+  /* o caçador da floresta: Otto Roque, na história, na barreira da Rota 9
+     e de rival */
+  'Caçador Roque':'Otto', 'Roque':'Otto'
 };
 
 /* Quem ficou em casa: o rosto sai do parentesco da ficha, e é só dela.
@@ -357,7 +379,8 @@ const PAGA_POR_CLASSE = {
   'trainers/nolan':30, 'trainers/worker_gen7':20, 'trainers/pr_rich_f':80,
   'trainers/blackbelt_gen7':25, 'trainers/dragontamer_gen6':40, 'trainers/hiker_gen4':35,
   'trainers/acetrainer_gen6':35, 'trainers/veteran_gen7':35, 'trainers/harlequin':10,
-  'trainers/rory':15, 'trainers/otto':90, 'trainers/gentleman_gen4':70
+  'trainers/rory':15, 'trainers/otto':90, 'trainers/gentleman_gen4':70,
+  'trainers/nadia':70, 'trainers/giselle':35
 };
 const PAGA_PADRAO = 20;
 function pagaPorNivel(nome){

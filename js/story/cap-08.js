@@ -3556,7 +3556,8 @@ c8_esperou_acordar:{
     'Ele fecha os olhos.',
     '"Que vergonha."',
     'E é isso que ele diz. Não "que fome", não "que injustiça", não "eu ia ganhar". Que vergonha.',
-    'Vocês conversam por uns vinte minutos. Ele se chama Stellan, é de Saffron, e ele não vai voltar pra casa porque em casa ele teria que explicar.'
+    d=>{ Nomes.apresentar('o garoto da maca');
+      return 'Vocês conversam por uns vinte minutos. Ele se chama Stellan, é de Saffron, e ele não vai voltar pra casa porque em casa ele teria que explicar.'; }
   ],
   ef:{rep:{eixo:'bom',delta:2,motivo:'Esperou um desconhecido acordar'},
       flag:'conhece_o_wilton',

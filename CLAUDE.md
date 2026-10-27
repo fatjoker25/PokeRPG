@@ -564,6 +564,21 @@ entra em `NOMES_DA_HISTORIA` — é por ela que o sorteio não dá "Sra.
 Maple" pra uma desconhecida, e é por ela que o verificador sabe quem
 tem nome.
 
+E o rosto de quem tem nome é **só dele**: nem o treinador de classe (a
+Giselle tinha a cara de toda Treinadora Ás da estrada, o Arlo a de todo
+Montanhista), nem quem não tem nome (a Gina e quatro balconistas), nem
+outra pessoa com nome (o Sr. Bram da banca de Saffron era o marceneiro
+de Lavender). O `chk-rostos` reprova. Dois rótulos no mesmo rosto só
+quando são a mesma pessoa: o nome fixo do rótulo, um nome da história
+em comum ("Nadia" e "Nadia Arden") ou `MESMA_PESSOA` (em
+`treinadores.js`), onde mora o rótulo de antes do nome ("Menino do
+cais" é o Nolan), o de luta e o do save velho. Treinador de estrada que
+é gente da história luta com o rosto dela — o Roque da barreira da Rota
+9 é o Otto Roque, `arq:'otto'` —, porque o registro da estrada escreve
+`nomeDeLuta` por cima do `RETRATO_POR_NOME` na carga, e o rosto escrito
+à mão sumia de todos os capítulos sem ninguém ver; o verificador
+compara o mapa escrito à mão com o que sobra depois de carregar.
+
 Quando o acervo não tem um rosto livre do ofício (não há uma funcionária
 de escritório por pessoa, nem uma recepcionista da Liga), a pessoa ganha
 uma **variação de paleta** do desenho do ofício: outro cabelo, outra

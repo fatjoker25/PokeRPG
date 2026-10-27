@@ -30,7 +30,14 @@ global.window = {addEventListener(){}, removeEventListener(){}};
 global.document = {addEventListener(){}, getElementById(){ return null; }, querySelector(){ return null; },
   querySelectorAll(){ return []; }, body:{}, documentElement:{style:{setProperty(){}}}};
 global.localStorage = {getItem(){ return null; }, setItem(){}, removeItem(){}};
-for (const s of srcs){ if (!s.startsWith('http')) vm.runInThisContext(fs.readFileSync(path.join(raiz, s), 'utf8'), {filename:s}); }
+/* o rosto escrito à mão em treinadores.js, antes de a estrada, os
+   veteranos e a rede registrarem os de luta por cima */
+let escritoAMao = {};
+for (const s of srcs){
+  if (s.startsWith('http')) continue;
+  vm.runInThisContext(fs.readFileSync(path.join(raiz, s), 'utf8'), {filename:s});
+  if (/treinadores\.js$/.test(s)) escritoAMao = Object.assign({}, RETRATO_POR_NOME);
+}
 Estado.novo({nome:'Teste', genero:'Mulher', cidade:'Pallet', casaNome:'Delia', casaQuem:'mãe', nascimento:{dia:3, mes:9}});
 
 /* ---------- todos os arquivos de js/ ---------- */
@@ -177,6 +184,34 @@ for (const [k, a] of Object.entries(RETRATO_POR_NOME).concat(Object.entries(ROST
   if (deClasse.has(k) || !temNomeDaHistoria(k) || !arqDaRegra.has(a)) continue;
   comNomeNoGenerico.push([k, a]);
 }
+/* E o rosto de quem tem nome é só dele: nem o treinador de classe (a
+   Giselle tinha a cara de toda Treinadora Ás da estrada), nem quem não
+   tem nome, nem outra pessoa com nome (o Sr. Bram da banca de Saffron e
+   o marceneiro de Lavender). Dois rótulos no mesmo rosto só quando são
+   a mesma pessoa: o nome fixo (NOMES_FIXOS), o apelido (MESMA_PESSOA)
+   ou um nome da história em comum ("Nadia" e "Nadia Arden"). Lido
+   depois de tudo carregar: o registro da estrada escreve por cima do
+   RETRATO_POR_NOME, e foi assim que o Caçador Roque da história falava
+   com o rosto do Arruaceiro. */
+const apelidos = typeof MESMA_PESSOA !== 'undefined' ? MESMA_PESSOA : {};
+const quemE = k => NOMES_FIXOS[k] || apelidos[k] || k;
+const nomesDe = k => new Set(String(quemE(k)).split(/[\s,()]+/).filter(p => NOMES_DA_HISTORIA.has(p)));
+const mesmaPessoa = (a, b) => quemE(a) === quemE(b) || [...nomesDe(b)].some(p => nomesDe(a).has(p));
+const porArquivo = new Map();
+for (const [k, a] of Object.entries(RETRATO_POR_NOME).concat(Object.entries(ROSTO_POR_NOME_SOLTO)))
+  (porArquivo.get(a) || porArquivo.set(a, []).get(a)).push(k);
+const rostoDividido = [];
+for (const [a, ks] of porArquivo){
+  for (const k of ks.filter(x => !deClasse.has(x) && temNomeDaHistoria(x))){
+    const outros = ks.filter(o => o !== k && !mesmaPessoa(k, o));
+    if (outros.length) rostoDividido.push([k, a, outros]);
+  }
+}
+const apelidoSobrando = Object.keys(apelidos).filter(k => !RETRATO_POR_NOME[k] && !ROSTO_POR_NOME_SOLTO[k]);
+/* quem a história desenhou não pode perder o rosto pro registro de luta:
+   o Roque da barreira tinha arq:'roughneck', e o registro da estrada
+   trocava o rosto do Caçador Roque de todos os capítulos */
+const trocadoNaCarga = Object.entries(escritoAMao).filter(([k, a]) => RETRATO_POR_NOME[k] !== a);
 const bytes = arq => { try { return fs.readFileSync(path.join(raiz, caminhoNPC(arq))); } catch (e) { return null; } };
 const fotos = [].concat(...Object.values(RETRATOS_DA_FICHA)).map(f => [f, bytes(PASTA_DOS_RETRATOS + f)]).filter(([, b]) => b);
 const comFoto = [];
@@ -211,6 +246,11 @@ lista('Nome fixo que ninguém usa', sobraFixo, r => `${r} → ${NOMES_FIXOS[r]}`
 lista('Recusa de nome que ninguém usa', sobraRecusa, r => r);
 lista('Rosto que devia ser só de uma pessoa e é de outra também', divide, ([q, a, n]) => `${q}: ${a} também é de ${n}`);
 lista('Gente com nome que fala pelo rosto da regra genérica', comNomeNoGenerico, ([k, a]) => `${k} → ${a}`);
+lista('Gente com nome que divide o rosto com outra pessoa', rostoDividido,
+  ([k, a, outros]) => `${k} → ${a}, que também é de ${outros.slice(0, 6).join(', ')}${outros.length > 6 ? '…' : ''}`);
+lista('Apelido em MESMA_PESSOA que não tem rosto', apelidoSobrando, k => `${k} → ${apelidos[k]}`);
+lista('Rosto escrito em treinadores.js que outro arquivo trocou na carga', trocadoNaCarga,
+  ([k, a]) => `${k}: ${a} virou ${RETRATO_POR_NOME[k]}`);
 lista('Rosto de NPC que é foto do jogador', comFoto, ([a, f]) => `${a} = ${PASTA_DOS_RETRATOS}${f}`);
 lista('Nome sorteado da casa que já é de alguém da história', casaComNome, n => n);
 

@@ -19,7 +19,7 @@ const TREINADORES_ESTRADA = [
 
 /* ── Quem fecha caminho (barreiras.js): não para ninguém na estrada,
       espera onde está; só luta quem vai até lá ─────────────────── */
-{id:'roque_tunel', local:'rota9', classe:'Caçador', arq:'roughneck', artigo:'um', nome:'Roque', barreira:true, dif:2,
+{id:'roque_tunel', local:'rota9', classe:'Caçador', arq:'otto', artigo:'um', nome:'Roque', barreira:true, dif:2,
  times:[[23,41], [24,42,20], [24,42,20,49], [24,42,20,49,110]], reserva:[48,88],
  abre:'"Você é {o|a} da floresta." Ele não levanta da pedra. "A gente tem memória boa pra rosto. Quer passar, passa por cima."',
  volta:'"De novo? Tá. A gente tem o dia inteiro."',

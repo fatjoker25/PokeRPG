@@ -145,6 +145,8 @@ const NOMES_FIXOS = {
   /* o S.S. Anne, no 8: ele diz o nome quando você pergunta, ela assina o guardanapo */
   'o homem de sapato limpo':   'Curador Fabre',
   'Cozinheira do Anne':        'Rina',
+  /* o garoto que desmaiou no torneio: diz o nome na enfermaria, quando acorda */
+  'o garoto da maca':          'Stellan',
   'a mulher de tailleur':      'Hester Colman',
   'a mulher de trinta':        'Tessa Rue',
   'a mulher almoçando':       'Thea Larkin',
@@ -300,6 +302,9 @@ const NOMES_DA_HISTORIA = new Set([
   'Vesna','Waldo','Wilma','Xavi','Yarrow','Ylva','Yves','Zane','Zelda','Hawthorn',
   'Larch','Silas','Toby','Bertram','Edwin','Garth','Edith','Tansy','Elda',
   'Dale','Varo','Tamsin','Thorne','Maple','Hale',
+  'Dara','Rory','Hal','Diana','Brill','Sallow','Quill','Reed','Crane','Bramble','Rook',
+  'Mina','Bray','Tess','Calder','Hazel','Moss','Margot','Heath','Mallow','Sedge','Senna',
+  'Briar','Brent','Fennel','Marla','Clover','Bastian','Fern',
   /* os nomes fixos daqui de cima */
   'Ida','Clary','Wells','Marlow','Myrtle','Tito','Pike','Rufo','Lena','Gina',
   'Tessa','Rue',

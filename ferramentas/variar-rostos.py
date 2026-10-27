@@ -116,6 +116,37 @@ VARIACOES = {
                    extra=[(['#202020', '#303038', '#505050'], dict(h=222, s=.34, l=(.13, .40))),
                           (['#784040', '#b04848'], dict(h=222, s=.10, l=(.26, .46))),
                           (['#403838'], dict(h=24, s=.22, l=(.34, .34)))]),
+    # --- gente da história que dividia o rosto com treinador de classe (a
+    #     Treinadora Ás da estrada, a Veterana) ou com quem não tem nome
+    'giselle': dict(base='trainers/ace_trainer_f',                                             # vinte e poucos, a cadeira da Lorelei
+                    cabelo=dict(cores=['#407898', '#68b0d8'], h=18, s=.45, l=(.20, .42)),
+                    extra=[(['#e89058'], dict(h=190, s=.55, l=(.72, .72))),
+                           (['#a05860', '#604050'], dict(h=205, s=.22, l=(.24, .44)))]),
+    'nadia':  dict(base='trainers/veteran_f',                                                  # 41 anos, a segunda licença
+                   extra=[(['#202020', '#303038', '#505050'], dict(h=150, s=.28, l=(.12, .36))),
+                          (['#784040', '#b04848'], dict(h=40, s=.55, l=(.32, .50))),
+                          (['#403838'], dict(h=20, s=.42, l=(.28, .28)))]),
+    'crane':  dict(base='trainers/veteran',                                                    # delegado de Fuchsia: casaco por cima do pijama
+                   extra=[(['#181818', '#303038', '#505050'], dict(h=30, s=.30, l=(.16, .44))),
+                          (['#383028'], dict(h=215, s=.22, l=(.56, .56)))]),
+    'laurel': dict(base='trainers/madame_gen4dp',                                              # secretária da associação, uns sessenta
+                   extra=[(['#947b62', '#cda46a'], dict(h=222, s=.32, l=(.30, .52))),
+                          (['#7b4a5a', '#b45a6a', '#ff8b9c'], dict(h=42, s=.62, l=(.36, .70)))]),
+    'tess':   dict(base='trainers/workerf_gen8',                                               # brigadista: capacete amarelo
+                   extra=[(['#16498f', '#1e65b5', '#3193f2', '#7ebefe'], dict(h=48, s=.85, l=(.32, .80))),
+                          (['#9f652b', '#dcab5c', '#fff7a9'], dict(h=25, s=.22, l=(.08, .26))),
+                          (['#b40d49', '#f02d7a'], dict(h=8, s=.78, l=(.36, .54)))]),
+    'dara':   dict(base='trainers/workerf_gen8',                                               # a da pedreira, no caixote de ferramenta
+                   extra=[(['#16498f', '#1e65b5', '#3193f2', '#7ebefe'], dict(h=210, s=.05, l=(.44, .92))),
+                          (['#9f652b', '#dcab5c', '#fff7a9'], dict(h=12, s=.58, l=(.26, .56))),
+                          (['#b40d49', '#f02d7a'], dict(h=88, s=.62, l=(.34, .54)))]),
+    'hal':    dict(base='trainers/tarragon',                                                   # o mais velho da oficina: macacão azul
+                   extra=[(['#5a4a3a', '#5f4933', '#957a54', '#ddbe96'], dict(h=214, s=.42, l=(.22, .64)))]),
+    'bram':   dict(base='trainers/clerk',                                                      # a banca da esquina, vinte e seis anos
+                   cabelo=dict(cores=['#202828', '#384040', '#585868'], h=230, s=.04, l=(.46, .80), onde='cabeca'),
+                   roupa=dict(tinta=(32, .32), so_neutros=True, l=(.14, .46), onde='corpo')),
+    'gina':   dict(base='trainers/scientist_f', cabelo=dict(h=46, s=.34, l=(.54, .90)),       # a farmácia do 118, uns trinta
+                   extra=[(['#683840', '#784858', '#a84068'], dict(h=178, s=.42, l=(.26, .46)))]),
 }
 
 
