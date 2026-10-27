@@ -777,7 +777,7 @@ const Cidade = {
       <button class="escolha com-icone" onclick="UI.fecharModal(true);Cidade.atenderAqui()">${ic(this.dormeNoCentro() ? 'dormir' : 'centro')}<span>Deixar o time com a enfermeira${this.dormeNoCentro() ? ' e dormir' : ''}</span></button>
       <button class="escolha com-icone" onclick="UI.fecharModal(true);UI.modalPC()">${ic('pc')}<span>PC do saguão${d.pc.length ? ` (${d.pc.length})` : ''}</span></button>
       ${cargos}
-      <button class="escolha com-icone" onclick="UI.fecharModal(true);Exploracao.mapa('parede')">${ic('mapa')}<span>Mapa da parede</span></button>
+      <button class="escolha com-icone" onclick="UI.fecharModal(true);Exploracao.mapa('centro')">${ic('mapa')}<span>Mapa da parede</span></button>
       ${mural}`, false, 'centro');
   },
 

@@ -909,7 +909,17 @@ e o mapa tem que estar lá quando o texto diz que você está.
 O mapa desenhado abre com o item **Mapa de Kanto**
 na mochila, como o Town Map dos jogos — ou, sem ele, pela parede do Centro
 Pokémon de qualquer cidade que tenha um (`Exploracao.temCentro`). O `town-map.png` do roteiro é o
-ícone do item, não um mapa.
+ícone do item, não um mapa. Da mochila, o topo é a barra de aparelho
+("‹ Mochila"); da parede, é a do Centro (`UI.barraDoCentro`), com
+"‹ Centro" quando o mapa foi aberto no balcão (`Exploracao.mapa('centro')`).
+A ficha do lugar tocado no mapa (`mapaInfo`) fala o idioma da tela do
+lugar: o vizinho é placa de estrada (seta pro rumo, "Ir para · leste"),
+a passagem fechada mostra o cadeado e o `esc-trava`, e o voo leva o
+desenho `voar` e diz com quem se voa. Em tela larga (900 px ou mais) a
+ficha fica do lado do mapa, como o painel do Town Map, e a janela
+cresce só até o mapa caber na altura; embaixo do mapa ela caía fora da
+janela no computador. Na tela estreita, tocar num ponto rola só o que
+falta pra ficha aparecer inteira (`mapaInfo(id, tocou)`).
 
 ## A estrada não pede licença
 Andar por rota é estar sujeito a ela: entrar numa rota, sair dela, vasculhar,
@@ -1665,6 +1675,21 @@ também, e o cabeçalho de seção com o losango (no sumário na cor do tipo
 do Pokémon, `--t1`; na ficha na cor do cartão). O que fazer com um
 Pokémon do time é menu com desenho, como o do lugar.
 
+O **PC** é a carcaça bege com a tela de fósforo, e mora no Centro: o
+topo é a barra do Centro (`UI.barraDoCentro`, "‹ Centro" de volta pro
+balcão, como o "‹ Mochila" dos aparelhos). Na tela, nome, seção (o
+losango na luz verde) e botão são Jost; número (nível, HP, a faixa do
+sistema) fica na letra de terminal. Golpe tem a faixa da cor do tipo,
+como na luta, e os botões são tecla com espessura que afunda: Guardar
+na caixa / Levar no cinto (desligado com o motivo embaixo) e Ver ficha,
+que abre o Sumário com o Voltar levando de volta pro PC
+(`UI._sumarioDe`; o time aberto pela mochila marca `'time'`). Tocar
+num Pokémon, guardar e levar redesenham **só a tela de dentro**
+(`modalPC(sel)` com o PC aberto): reconstruir a janela fazia ela entrar
+de novo a cada toque e voltava a caixa rolada pro começo. No celular a
+ficha mora embaixo das listas, e o toque rola só o que falta pra ela
+aparecer.
+
 **Aviso** (o que a escolha mudou, `UI.avisos`) é a caixa de "você
 recebeu" dos jogos: o desenho numa pastilha da cor do tipo
 (`iconeDoAviso`) — a moeda no que tem ₽, o próprio item em "Recebeu
@@ -1691,7 +1716,8 @@ depois apagada —, com rosto, a bola fechada de cada Pokémon (quantos,
 nunca quais) e o prêmio da rodada. Na **Pokédex**, a casa tem duas linhas
 (número e marca em cima, nome embaixo): na mesma linha, a etiqueta
 "visto" cortava o nome. E `.linha .v` (a conta das linhas de valor) é
-letra do HUD; só a Pokédex e o PC guardam a letra de tela deles.
+letra do HUD; só a Pokédex e o PC guardam a letra de tela deles (no PC,
+só nos números).
 
 Botão que entra animado entra com `animation-fill-mode` **backwards**,
 nunca `both`. O `both` segura o último quadro, e animação manda mais

@@ -2131,12 +2131,17 @@ h3.cat-item{
 
 /* ============================================================
    PC — o terminal do Centro Pokémon
-   Carcaça bege de plástico de 1996, tela verde de fósforo.
+   Carcaça bege de plástico de 1996, tela verde de fósforo. Por fora,
+   o idioma dos aparelhos: a barra de volta pro balcão ("‹ Centro") e
+   o nome do aparelho na carcaça. Por dentro, a letra do HUD nos nomes,
+   nas seções e nos botões; a de tela (mono) fica nos números e na
+   faixa do sistema, como na Pokédex. Ficha e botão de tela têm
+   espessura e afundam quando aperta, como os do resto do jogo.
    ============================================================ */
 .modal.pc{
   --pc-caixa:#d9d2c0; --pc-caixa-esc:#8f887a; --pc-caixa-clara:#efe9da;
   --pc-tela:#0e2417; --pc-tela-2:#132f1e; --pc-luz:#7dfca8;
-  --pc-txt:#c9f7d8; --pc-txt-2:#79b993; --pc-linha:#1d4a2f;
+  --pc-txt:#c9f7d8; --pc-txt-2:#79b993; --pc-linha:#1d4a2f; --pc-tinta:#3d3830;
   max-width:760px;
   border:3px solid var(--pc-caixa-esc);
   background:linear-gradient(180deg, var(--pc-caixa-clara), var(--pc-caixa) 30%, var(--pc-caixa-esc));
@@ -2148,25 +2153,42 @@ h3.cat-item{
   40%{opacity:1}
   to{opacity:1;transform:none}
 }
-.modal.pc .modal-corpo{
+.modal.pc .modal-corpo{padding:0}
+/* a barra do balcão, gravada na carcaça bege */
+.modal.pc .volta-mochila{background:rgba(61,56,48,.1);border-color:rgba(61,56,48,.28);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.45)}
+.modal.pc .volta-mochila .aba-volta{color:var(--pc-tinta);background:rgba(255,255,255,.5);
+  font-family:var(--letra-hud, var(--fonte));box-shadow:0 2px 0 rgba(61,56,48,.35)}
+.modal.pc .volta-mochila .aba-volta:hover{background:rgba(255,255,255,.8)}
+.modal.pc .volta-mochila .aba-volta:active{transform:translateY(1px);box-shadow:0 1px 0 rgba(61,56,48,.35)}
+.modal.pc .volta-mochila .aparelho-aberto{color:var(--pc-tinta);font-family:var(--letra-hud, var(--fonte))}
+/* o desenho do Centro e do aparelho, na cor de cada um (o --ac vem do svgIcone) */
+.volta-centro svg.icone{width:20px;height:20px;flex:0 0 auto;stroke-width:2.1;color:var(--ac, currentColor)}
+.volta-centro .aparelho-aberto svg.icone{width:22px;height:22px;padding:3px;border-radius:7px;
+  background:color-mix(in srgb, var(--ac, #888) 22%, rgba(0,0,0,.2));box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--ac, #888) 50%, transparent)}
+.modal.pc .volta-centro .aparelho-aberto svg.icone{color:color-mix(in srgb, var(--ac) 60%, #0d3b3f);
+  background:color-mix(in srgb, var(--ac) 30%, #fff)}
+
+/* a tela */
+.pc-tela{
   position:relative;
   background:linear-gradient(180deg, var(--pc-tela-2), var(--pc-tela) 55%);
-  border:2px solid #05130c;border-radius:8px;padding:0;
+  border:2px solid #05130c;border-radius:9px;
   color:var(--pc-txt);
   box-shadow:inset 0 0 26px -6px rgba(0,0,0,.9), 0 0 20px -8px rgba(125,252,168,.35);
   overflow:hidden;
 }
-.modal.pc .modal-corpo::after{
+.pc-tela::after{
   content:'';position:absolute;inset:0;pointer-events:none;z-index:2;
   background:repeating-linear-gradient(180deg, rgba(0,0,0,.16) 0 1px, transparent 1px 3px);
 }
 .modal.pc .modal-pe{padding-top:10px}
 .modal.pc .modal-pe .btn{
-  background:#3d3830;border-color:var(--pc-caixa-esc);color:var(--pc-caixa-clara)
+  background:var(--pc-tinta);border-color:var(--pc-caixa-esc);color:var(--pc-caixa-clara)
 }
 .modal.pc .modal-pe .btn:hover:not(:disabled){background:#57503f;color:#fff}
 
-/* barra de título da tela */
+/* faixa do sistema, no alto da tela */
 .pc-topo{
   display:flex;align-items:center;gap:9px;
   padding:7px 12px;border-bottom:1px solid var(--pc-linha);
@@ -2183,44 +2205,52 @@ h3.cat-item{
 
 /* duas colunas: cinto e caixa */
 .pc-colunas{display:grid;grid-template-columns:1fr 1fr;gap:0}
-.pc-lado{padding:10px 12px;min-width:0}
+.pc-lado{padding:10px 12px 12px;min-width:0}
 .pc-lado + .pc-lado{border-left:1px solid var(--pc-linha)}
+/* cabeçalho de seção no idioma do HUD: losango e linha, na luz da tela */
 .pc-titulo{
-  display:flex;justify-content:space-between;align-items:baseline;gap:8px;
-  font-family:var(--mono);font-size:11px;letter-spacing:.13em;text-transform:uppercase;
-  color:var(--pc-txt-2);margin-bottom:7px;
-  border-bottom:1px dashed var(--pc-linha);padding-bottom:5px;
+  display:flex;align-items:center;gap:8px;margin-bottom:8px;
+  font:700 11.5px/1 var(--letra-hud, var(--fonte));letter-spacing:.16em;text-transform:uppercase;
+  color:var(--pc-txt-2);
 }
-.pc-titulo span{color:var(--pc-luz);letter-spacing:.06em}
-.pc-grade{display:grid;grid-template-columns:1fr 1fr;gap:5px}
-.pc-grade.caixa{max-height:198px;overflow-y:auto;padding-right:3px}
+.pc-titulo::before{content:'';width:7px;height:7px;border-radius:2px;transform:rotate(45deg);flex:0 0 auto;
+  background:var(--pc-luz);box-shadow:0 0 8px -1px var(--pc-luz)}
+.pc-titulo::after{content:'';flex:1 1 auto;height:1px;order:1;
+  background:linear-gradient(90deg, var(--pc-linha), transparent)}
+.pc-titulo span{order:2;font-family:var(--mono);font-weight:400;font-size:11px;color:var(--pc-luz);letter-spacing:.06em}
+.pc-grade{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.pc-grade.caixa{max-height:208px;overflow-y:auto;padding:0 3px 4px 0}
 .pc-grade.caixa::-webkit-scrollbar{width:7px}
 .pc-grade.caixa::-webkit-scrollbar-thumb{background:var(--pc-linha);border-radius:4px}
 
+/* cada Pokémon: tecla de terminal, com espessura embaixo */
 .pc-slot{
   display:grid;grid-template-columns:30px 1fr;grid-template-rows:auto auto auto;
   grid-template-areas:'ic nome' 'ic nv' 'barra barra';
   align-items:center;gap:1px 7px;
-  padding:5px 7px;text-align:left;cursor:pointer;
-  border:1px solid var(--pc-linha);border-radius:4px;
-  background:rgba(125,252,168,.04);color:var(--pc-txt);
-  font:inherit;transition:background .12s, border-color .12s;
+  padding:5px 8px 6px;text-align:left;cursor:pointer;
+  border:1px solid var(--pc-linha);border-radius:8px;
+  background:linear-gradient(180deg, rgba(125,252,168,.09), rgba(125,252,168,.03));color:var(--pc-txt);
+  box-shadow:0 3px 0 #06180e, inset 0 1px 0 rgba(125,252,168,.08);
+  font:inherit;transition:background .12s, border-color .12s, transform .12s var(--suave), box-shadow .12s var(--suave);
 }
-.pc-slot:hover{background:rgba(125,252,168,.12);border-color:var(--pc-txt-2)}
+.pc-slot:hover{background:rgba(125,252,168,.14);border-color:var(--pc-txt-2);transform:translateY(-1px)}
+.pc-slot:active{transform:translateY(2px);box-shadow:0 1px 0 #06180e}
+.pc-slot:focus-visible{outline:2px solid var(--pc-luz);outline-offset:2px}
 .pc-slot.sel{
-  border-color:var(--pc-luz);background:rgba(125,252,168,.18);
-  box-shadow:0 0 0 1px var(--pc-luz) inset, 0 0 12px -4px var(--pc-luz);
+  border-color:var(--pc-luz);background:rgba(125,252,168,.2);
+  box-shadow:0 3px 0 #0b3a20, 0 0 0 1px var(--pc-luz) inset, 0 0 14px -4px var(--pc-luz);
 }
 .pc-slot.caido{opacity:.62}
 .pc-slot.morto{opacity:.45;filter:grayscale(1)}
 .pc-slot.vazio{
   display:flex;align-items:center;justify-content:center;
-  border-style:dashed;background:transparent;cursor:default;min-height:48px;
+  border-style:dashed;background:transparent;box-shadow:none;cursor:default;min-height:52px;
 }
 .pc-vazio{color:var(--pc-linha);font-size:16px}
 .pc-icone{grid-area:ic;display:flex;align-items:center;justify-content:center}
 .pc-icone img{width:30px;height:30px;image-rendering:pixelated}
-.pc-nome{grid-area:nome;font-size:12.5px;line-height:1.15;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pc-nome{grid-area:nome;font:600 13px/1.15 var(--letra-hud, var(--fonte));overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .pc-nv{grid-area:nv;font-family:var(--mono);font-size:10.5px;color:var(--pc-txt-2)}
 .pc-barra{
   grid-area:barra;display:block;height:3px;margin-top:3px;
@@ -2231,65 +2261,93 @@ h3.cat-item{
 .pc-barra.moral i{background:#ffd166}
 .pc-caixa-vazia{
   grid-column:1/-1;text-align:center;padding:26px 8px;color:var(--pc-txt-2);
-  font-size:12.5px;line-height:1.5;
+  font:600 13px/1.5 var(--letra-hud, var(--fonte));
 }
-.pc-caixa-vazia span{color:var(--pc-linha);font-size:11.5px}
+.pc-caixa-vazia span{color:var(--pc-txt-2);opacity:.7;font:400 11.5px/1.5 var(--fonte)}
 
 /* ficha do selecionado */
 .pc-ficha{
-  display:grid;grid-template-columns:104px 1fr;gap:12px;
-  padding:11px 13px;border-top:1px solid var(--pc-linha);
+  display:grid;grid-template-columns:110px 1fr;gap:14px;
+  padding:12px 14px 14px;border-top:1px solid var(--pc-linha);
   background:rgba(0,0,0,.22);
 }
 .pc-arte{display:flex;align-items:center;justify-content:center}
 .pc-arte img{width:114px;height:114px;image-rendering:pixelated;
   filter:drop-shadow(0 0 10px rgba(125,252,168,.22))}
 .pc-dados{min-width:0}
-.pc-cab{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;margin-bottom:5px}
-.pc-ficha-nome{font-size:16px;font-weight:650;color:#e8fff0}
+.pc-cab{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;margin-bottom:6px}
+.pc-ficha-nome{font:700 19px/1.1 var(--letra-hud, var(--fonte));color:#e8fff0}
 .pc-ficha-nv{font-family:var(--mono);font-size:12px;color:var(--pc-txt-2)}
 .pc-tag{
-  font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;
-  padding:1px 6px;border-radius:3px;border:1px solid currentColor;
+  font:700 10px/1.4 var(--letra-hud, var(--fonte));letter-spacing:.1em;text-transform:uppercase;
+  padding:1px 7px;border-radius:999px;border:1px solid currentColor;
 }
 .pc-tag.caido{color:#ffc46b}
 .pc-tag.morto{color:#ff7b6b}
-.pc-tipos{display:flex;gap:5px;flex-wrap:wrap;align-items:center;margin-bottom:7px}
-.pc-nat{font-size:11.5px;color:var(--pc-txt-2);font-style:italic}
-.pc-nat.fraca{color:var(--pc-linha);font-size:11px}
-.pc-medida{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.pc-tipos{display:flex;gap:5px;flex-wrap:wrap;align-items:center;margin-bottom:8px}
+.pc-nat{font-size:12px;color:var(--pc-txt-2);font-style:italic}
+.pc-nat.fraca{color:var(--pc-txt-2);opacity:.6;font-size:11.5px}
+.pc-medida{display:flex;align-items:center;gap:8px;margin-bottom:5px}
 .pc-medida .rot{
-  flex:0 0 42px;font-family:var(--mono);font-size:10px;letter-spacing:.1em;
+  flex:0 0 46px;font:700 10.5px/1 var(--letra-hud, var(--fonte));letter-spacing:.12em;
   text-transform:uppercase;color:var(--pc-txt-2);
 }
 .pc-medida .num{font-size:11.5px;color:var(--pc-txt);flex:0 0 auto;min-width:58px;text-align:right}
-.pc-golpes{display:flex;flex-wrap:wrap;gap:4px;margin:7px 0 6px}
+.pc-sec{
+  display:flex;align-items:center;gap:8px;margin:10px 0 6px;
+  font:700 10.5px/1 var(--letra-hud, var(--fonte));letter-spacing:.16em;text-transform:uppercase;color:var(--pc-txt-2);
+}
+.pc-sec::before{content:'';width:6px;height:6px;border-radius:2px;transform:rotate(45deg);background:var(--pc-luz);flex:0 0 auto}
+.pc-sec::after{content:'';flex:1 1 auto;height:1px;background:linear-gradient(90deg, var(--pc-linha), transparent)}
+.pc-golpes{display:flex;flex-wrap:wrap;gap:5px;margin:0 0 8px}
+/* o golpe com a faixa da cor do tipo, como o botão de golpe da luta */
 .pc-golpe{
-  font-size:11px;padding:2px 6px;border-radius:3px;
-  border:1px solid var(--pc-linha);background:rgba(125,252,168,.05);color:var(--pc-txt-2);
+  --tc:#8a8f99;
+  font:600 12px/1.2 var(--letra-hud, var(--fonte));padding:4px 9px 4px 11px;border-radius:7px;
+  border:1px solid var(--pc-linha);color:var(--pc-txt);
+  background:linear-gradient(90deg, var(--tc) 0 4px, color-mix(in srgb, var(--tc) 14%, rgba(4,20,11,.6)) 4px);
 }
-.pc-golpe b{color:var(--pc-txt);font-weight:600}
-.pc-historia{font-size:11.5px;font-style:italic;color:var(--pc-txt-2);line-height:1.45;margin-bottom:8px}
-.pc-afinidade{font-size:11.5px;color:var(--pc-txt);letter-spacing:.2px;margin-bottom:6px}
+.pc-historia{font-size:12px;font-style:italic;color:var(--pc-txt-2);line-height:1.45;margin-bottom:9px}
+.pc-afinidade{font-size:12px;color:var(--pc-txt);letter-spacing:.2px;margin-bottom:7px}
 .sussurro.afinidade{color:var(--texto);opacity:.85}
-.pc-acao{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.pc-acao .btn{
-  background:var(--pc-linha);border-color:var(--pc-luz);color:var(--pc-txt);
-  padding:6px 14px;font-size:13px;
+.pc-acao{grid-column:2;display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:-4px}
+/* o botão da tela: tecla grande, com espessura, que afunda */
+.pc-bt{
+  display:inline-flex;align-items:center;gap:8px;min-height:38px;padding:6px 14px 6px 9px;cursor:pointer;
+  border:1px solid var(--pc-txt-2);border-radius:10px;color:var(--pc-txt);
+  font:600 14px/1.1 var(--letra-hud, var(--fonte));
+  background:linear-gradient(180deg, rgba(125,252,168,.12), rgba(125,252,168,.04));
+  box-shadow:0 3px 0 #06180e, inset 0 1px 0 rgba(125,252,168,.12);
+  transition:transform .12s var(--suave), box-shadow .12s var(--suave), background .15s;
 }
-.pc-acao .btn:hover:not(:disabled){background:var(--pc-luz);color:#08281a}
-.pc-acao .btn:disabled{border-color:var(--pc-linha);color:var(--pc-txt-2)}
-.pc-trava{font-size:11.5px;color:#ffc46b;flex:1;min-width:140px;line-height:1.35}
+.pc-bt svg.icone{width:22px;height:22px;padding:3px;border-radius:7px;flex:0 0 auto;stroke-width:2.1;
+  color:var(--pc-luz);background:rgba(125,252,168,.12)}
+.pc-bt.principal{border-color:var(--pc-luz);background:linear-gradient(180deg, rgba(125,252,168,.3), rgba(125,252,168,.14))}
+.pc-bt:hover:not(:disabled){transform:translateY(-1px);background:rgba(125,252,168,.24)}
+.pc-bt.principal:hover:not(:disabled){background:var(--pc-luz);color:#08281a}
+.pc-bt.principal:hover:not(:disabled) svg.icone{color:#08281a;background:rgba(8,40,26,.15)}
+.pc-bt:active:not(:disabled){transform:translateY(2px);box-shadow:0 1px 0 #06180e}
+.pc-bt:focus-visible{outline:2px solid var(--pc-luz);outline-offset:2px}
+.pc-bt:disabled{cursor:not-allowed;opacity:.55;box-shadow:none;border-color:var(--pc-linha)}
+.pc-trava{font-size:12px;color:#ffc46b;flex:1 1 100%;line-height:1.4}
 .pc-nada{grid-column:1/-1;text-align:center;color:var(--pc-txt-2);padding:18px 6px}
 .pc-erro{
-  grid-column:1/-1;margin-top:8px;padding:6px 9px;border-radius:4px;
+  grid-column:1/-1;margin-top:8px;padding:6px 9px;border-radius:6px;
   border:1px solid #ff7b6b;color:#ffb3a8;background:rgba(255,123,107,.1);font-size:12px;
 }
 @media (max-width:640px){
+  .modal.pc{padding:14px}
   .pc-colunas{grid-template-columns:1fr}
   .pc-lado + .pc-lado{border-left:none;border-top:1px solid var(--pc-linha)}
-  .pc-ficha{grid-template-columns:1fr}
-  .pc-arte img{width:90px;height:90px}
+  /* a arte encosta no nome, à esquerda: a ficha inteira cabe sem rolar */
+  .pc-ficha{grid-template-columns:72px 1fr;gap:10px;padding:10px 11px 12px}
+  .pc-arte{align-items:flex-start}
+  .pc-arte img{width:76px;height:76px}
+  .pc-ficha-nome{font-size:17px}
+  .pc-medida .rot{flex-basis:40px}
+  .pc-medida .num{min-width:40px}
+  .pc-acao{grid-column:1 / -1}
+  .pc-bt{flex:1 1 auto;justify-content:center}
 }
 
 /* ============================================================
@@ -3177,8 +3235,15 @@ h3.com-mapa{display:flex;align-items:center;justify-content:space-between;gap:8p
 .btn.mini.abre-mapa{display:inline-flex;align-items:center;gap:4px;text-transform:none;letter-spacing:0}
 .btn.mini.abre-mapa .item-icone{width:22px;height:22px}
 .modal.mapa{max-width:640px}
-.mapa-kanto .mapa-topo{display:flex;align-items:center;gap:8px;margin-bottom:8px}
-.mapa-kanto .mapa-topo span{margin-left:auto;color:var(--texto-fraco);font-size:13px}
+/* a faixa do mapa no idioma das seções: losango e linha na cor do mapa */
+.mapa-kanto .mapa-topo{display:flex;align-items:center;gap:10px;margin:2px 0 10px;
+  font-family:var(--letra-hud, var(--fonte))}
+.mapa-kanto .mapa-topo::before{content:'';flex:0 0 auto;width:8px;height:8px;border-radius:2px;transform:rotate(45deg);
+  background:#66bb6a;box-shadow:0 0 10px -1px #66bb6a}
+.mapa-kanto .mapa-topo b{font-size:12px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--texto-fraco)}
+.mapa-kanto .mapa-topo::after{content:'';flex:1 1 auto;height:1px;order:1;
+  background:linear-gradient(90deg, color-mix(in srgb, #66bb6a 45%, var(--borda)), transparent)}
+.mapa-kanto .mapa-topo span{order:2;color:var(--texto-fraco);font-size:13px;font-weight:500}
 .mapa-kanto svg{display:block;width:100%;height:auto;border-radius:10px;
   background:linear-gradient(180deg,#3d78b8,#2e5f99);box-shadow:inset 0 0 0 2px rgba(0,0,0,.25)}
 .mapa-kanto .mp-terra{fill:#7fb069;stroke:#4f7d43;stroke-width:1.2}
@@ -3189,31 +3254,74 @@ h3.com-mapa{display:flex;align-items:center;justify-content:space-between;gap:8p
 .mapa-kanto .mp-no{cursor:pointer;outline:none}
 .mapa-kanto .mp-no.nao-pisado rect,.mapa-kanto .mp-no.nao-pisado circle{opacity:.55}
 .mapa-kanto .mp-no.nao-pisado text{opacity:.75}
-.mapa-kanto .mp-no text.mp-rota{font:700 4.6px system-ui,sans-serif}
+.mapa-kanto .mp-no text.mp-rota{font:700 4.8px var(--letra-hud, system-ui),sans-serif}
 .mapa-kanto .mp-no:hover rect,.mapa-kanto .mp-no:hover circle,
 .mapa-kanto .mp-no:focus-visible rect,.mapa-kanto .mp-no:focus-visible circle{stroke:#10202e;stroke-width:1.6}
 .mapa-kanto .mp-no.sel rect,.mapa-kanto .mp-no.sel circle{stroke:#10202e;stroke-width:2.2;opacity:1}
-.mapa-legenda{display:flex;flex-wrap:wrap;gap:6px 14px;margin:8px 2px 0;font-size:12px;color:var(--texto-fraco)}
+.mapa-legenda{display:flex;flex-wrap:wrap;gap:6px 14px;margin:9px 2px 0;font:500 12px/1.3 var(--letra-hud, var(--fonte));color:var(--texto-fraco)}
 .mapa-legenda .lg{display:inline-block;width:10px;height:10px;margin-right:5px;vertical-align:-1px;border:1px solid #5a4a2a;background:#f4efe0}
 .mapa-legenda .lg.cidade{background:#e2463a;border-color:#fff;border-radius:2px}
 .mapa-legenda .lg.rota{border-radius:50%}
 .mapa-legenda .lg.especial{background:#f2c94c;transform:rotate(45deg) scale(.85)}
 .mapa-legenda .lg.nao-pisado{opacity:.5;border-radius:50%}
-.mapa-info{margin-top:10px;padding:10px 12px;border-radius:10px;background:rgba(0,0,0,.18);border:1px solid rgba(255,255,255,.08);min-height:92px}
-.mapa-info .mi-cab{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
-.mapa-info .mi-cab b{font-size:16px}
-.mapa-info .mi-cab span{color:var(--texto-fraco);font-size:12.5px}
-.mapa-info .mi-desc{margin:6px 0;font-size:13.5px;line-height:1.45}
+/* A ficha do lugar tocado: o nome em letra de placa com a etiqueta do
+   tipo (a bolinha na cor do desenho do mapa), a descrição na letra de
+   ler, o que liga e o que tem em linhas agrupadas como na folha, e
+   embaixo o que dá pra fazer: a placa de estrada pro vizinho, o voo,
+   ou por que não. */
+.mapa-info{margin-top:12px;padding:14px 16px 16px;border-radius:14px;min-height:120px;
+  border:1px solid color-mix(in srgb, var(--borda) 85%, transparent);
+  background:color-mix(in srgb, var(--bg) 38%, transparent)}
+.mapa-info .mi-cab{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.mapa-info .mi-cab b{font:700 21px/1.1 var(--letra-hud, var(--fonte));margin-right:2px}
+.mapa-info .mi-tipo{display:inline-flex;align-items:center;gap:6px;padding:3px 10px 3px 8px;border-radius:999px;
+  font:600 11.5px/1.3 var(--letra-hud, var(--fonte));letter-spacing:.03em;color:var(--texto-fraco);
+  background:rgba(0,0,0,.25);box-shadow:inset 0 0 0 1px var(--borda)}
+.mapa-info .mi-tipo::before{content:'';width:8px;height:8px;border-radius:50%;background:#f4efe0;box-shadow:0 0 0 1px #5a4a2a}
+.mapa-info .mi-tipo.cidade::before{background:#e2463a;border-radius:2px;box-shadow:0 0 0 1px #fff}
+.mapa-info .mi-tipo.especial::before{background:#f2c94c;border-radius:1px;transform:rotate(45deg) scale(.85)}
+.mapa-info .mi-tipo.perigo{color:color-mix(in srgb, var(--perigo) 75%, #fff);box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--perigo) 50%, transparent)}
+.mapa-info .mi-tipo.perigo::before{background:var(--perigo);box-shadow:none}
+.mapa-info .mi-desc{margin:9px 0 11px;font-size:14px;line-height:1.5}
 .mapa-info .mi-desc.fraco{color:var(--texto-fraco);font-style:italic}
-.mapa-info .mi-linhas{display:flex;flex-direction:column;gap:3px;font-size:13px}
-.mapa-info .mi-linhas .k{display:inline-block;min-width:70px;color:var(--texto-fraco);font-size:11.5px;text-transform:uppercase;letter-spacing:.06em}
-.mapa-info .mi-acao{margin-top:9px}
-.mapa-info .mapa-aqui,.mapa-info .mapa-longe{font-size:13px;color:var(--texto-fraco);font-style:italic}
+.mapa-info .mi-linhas{display:flex;flex-direction:column;border-radius:12px;overflow:hidden;box-shadow:inset 0 0 0 1px var(--borda)}
+.mapa-info .linha{align-items:baseline;gap:14px;padding:8px 13px;border-bottom:0;background:rgba(0,0,0,.18)}
+.mapa-info .linha + .linha{border-top:1px solid var(--borda)}
+.mapa-info .linha .k{font:700 10.5px/1.6 var(--letra-hud, var(--fonte));letter-spacing:.14em;text-transform:uppercase;color:var(--texto-fraco)}
+.mapa-info .linha .v{font:500 13.5px/1.45 var(--letra-hud, var(--fonte));color:var(--texto)}
+.mapa-info .mi-acao{margin-top:12px}
+.mapa-info .mi-acao .escolha{width:100%;--ac:#5aa7ff}
+.mapa-info .mi-acao .escolha.voo{--ac:#9fa8ff}
+.mapa-info .mi-aqui, .mapa-info .mi-longe{display:flex;align-items:center;gap:11px;padding:10px 13px;border-radius:12px}
+.mapa-info .mi-aqui{font:600 15px/1.3 var(--letra-hud, var(--fonte));color:#ffe9a3;
+  background:color-mix(in srgb, #ffd54f 12%, rgba(0,0,0,.22));box-shadow:inset 0 0 0 1px color-mix(in srgb, #ffd54f 40%, transparent)}
+.mapa-info .mi-longe{font:400 13.5px/1.45 var(--fonte);color:var(--texto-fraco);
+  background:rgba(0,0,0,.18);box-shadow:inset 0 0 0 1px var(--borda)}
+.mapa-info .mi-aqui svg.icone, .mapa-info .mi-longe svg.icone{width:30px;height:30px;padding:6px;border-radius:10px;flex:0 0 auto;stroke-width:2;
+  color:var(--ac, var(--texto-fraco));background:color-mix(in srgb, var(--ac, #8d97bd) 20%, rgba(0,0,0,.25))}
+@media (max-width:620px){
+  .mapa-info{padding:12px 13px 14px}
+  .mapa-info .linha{padding:7px 11px}
+}
+/* Tela larga: o mapa à esquerda e a ficha do lugar à direita, como o
+   painel do Town Map — embaixo do mapa, a ficha caía fora da janela e
+   o "Ir para" só aparecia rolando. A janela cresce até onde o mapa
+   ainda cabe na altura (86vh menos barra, faixa e Fechar; o mapa é
+   284×226), e a legenda desce pro pé da coluna da ficha. */
+@media (min-width:900px){
+  .modal.mapa{max-width:min(1040px, calc((86vh - 200px) * 1.2566 + 394px))}
+  .mapa-kanto{display:grid;grid-template-columns:minmax(0, 1fr) 330px;grid-template-rows:auto 1fr auto;
+    grid-template-areas:'topo topo' 'mapa info' 'mapa leg';column-gap:18px}
+  .mapa-kanto .mapa-topo{grid-area:topo}
+  .mapa-kanto > svg{grid-area:mapa;align-self:start}
+  .mapa-kanto .mapa-info{grid-area:info;align-self:start;margin-top:0}
+  .mapa-kanto .mapa-legenda{grid-area:leg;display:grid;grid-template-columns:max-content max-content;gap:7px 22px;margin:12px 4px 0}
+}
 .mapa-kanto .mp-no rect,.mapa-kanto .mp-no circle{fill:#f4efe0;stroke:#5a4a2a;stroke-width:1}
 .mapa-kanto .mp-no.cidade rect{fill:#e2463a;stroke:#fff}
 .mapa-kanto .mp-no.especial rect{fill:#f2c94c}
 .mapa-kanto .mp-no.desconhecido rect,.mapa-kanto .mp-no.desconhecido circle{fill:#b8b8b0;stroke:#6e6e66;opacity:.8}
-.mapa-kanto .mp-no text{font:600 6.2px system-ui,sans-serif;fill:#10202e;paint-order:stroke;stroke:#f4f7ea;stroke-width:1.6px}
+.mapa-kanto .mp-no text{font:600 6.4px var(--letra-hud, system-ui),sans-serif;fill:#10202e;paint-order:stroke;stroke:#f4f7ea;stroke-width:1.6px}
 .mapa-kanto .mp-no.vizinho{cursor:pointer}
 .mapa-kanto .mp-no.vizinho rect,.mapa-kanto .mp-no.vizinho circle{stroke:#ffe066;stroke-width:1.8}
 .mapa-kanto .mp-no.vizinho:hover rect,.mapa-kanto .mp-no.vizinho:hover circle,
@@ -4318,7 +4426,7 @@ button.item-linha.aparelho{
 .mapa-kanto .mp-arvore{fill:#4e9a45;stroke:#35702f;stroke-width:.6}
 .mapa-kanto .mp-rosa circle{fill:rgba(255,255,255,.12);stroke:rgba(255,255,255,.5);stroke-width:.8}
 .mapa-kanto .mp-rosa path{fill:#f4f2ea}
-.mapa-kanto .mp-rosa text{font:700 6px system-ui,sans-serif;fill:#f4f2ea;text-anchor:middle}
+.mapa-kanto .mp-rosa text{font:700 6px var(--letra-hud, system-ui),sans-serif;fill:#f4f2ea;text-anchor:middle}
 .mapa-kanto .mp-via-borda{fill:none;stroke:#9b7d45;stroke-width:5.4;stroke-linejoin:round;stroke-linecap:round;opacity:.55}
 .mapa-kanto .mp-via{fill:none;stroke:#f3e6b8;stroke-width:3.4;stroke-linejoin:round;stroke-linecap:round;opacity:.6}
 .mapa-kanto .mp-via.andada{opacity:1}
@@ -7949,12 +8057,17 @@ h3.cat-item{
 
 /* ============================================================
    PC — o terminal do Centro Pokémon
-   Carcaça bege de plástico de 1996, tela verde de fósforo.
+   Carcaça bege de plástico de 1996, tela verde de fósforo. Por fora,
+   o idioma dos aparelhos: a barra de volta pro balcão ("‹ Centro") e
+   o nome do aparelho na carcaça. Por dentro, a letra do HUD nos nomes,
+   nas seções e nos botões; a de tela (mono) fica nos números e na
+   faixa do sistema, como na Pokédex. Ficha e botão de tela têm
+   espessura e afundam quando aperta, como os do resto do jogo.
    ============================================================ */
 .modal.pc{
   --pc-caixa:#d9d2c0; --pc-caixa-esc:#8f887a; --pc-caixa-clara:#efe9da;
   --pc-tela:#0e2417; --pc-tela-2:#132f1e; --pc-luz:#7dfca8;
-  --pc-txt:#c9f7d8; --pc-txt-2:#79b993; --pc-linha:#1d4a2f;
+  --pc-txt:#c9f7d8; --pc-txt-2:#79b993; --pc-linha:#1d4a2f; --pc-tinta:#3d3830;
   max-width:760px;
   border:3px solid var(--pc-caixa-esc);
   background:linear-gradient(180deg, var(--pc-caixa-clara), var(--pc-caixa) 30%, var(--pc-caixa-esc));
@@ -7966,25 +8079,42 @@ h3.cat-item{
   40%{opacity:1}
   to{opacity:1;transform:none}
 }
-.modal.pc .modal-corpo{
+.modal.pc .modal-corpo{padding:0}
+/* a barra do balcão, gravada na carcaça bege */
+.modal.pc .volta-mochila{background:rgba(61,56,48,.1);border-color:rgba(61,56,48,.28);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.45)}
+.modal.pc .volta-mochila .aba-volta{color:var(--pc-tinta);background:rgba(255,255,255,.5);
+  font-family:var(--letra-hud, var(--fonte));box-shadow:0 2px 0 rgba(61,56,48,.35)}
+.modal.pc .volta-mochila .aba-volta:hover{background:rgba(255,255,255,.8)}
+.modal.pc .volta-mochila .aba-volta:active{transform:translateY(1px);box-shadow:0 1px 0 rgba(61,56,48,.35)}
+.modal.pc .volta-mochila .aparelho-aberto{color:var(--pc-tinta);font-family:var(--letra-hud, var(--fonte))}
+/* o desenho do Centro e do aparelho, na cor de cada um (o --ac vem do svgIcone) */
+.volta-centro svg.icone{width:20px;height:20px;flex:0 0 auto;stroke-width:2.1;color:var(--ac, currentColor)}
+.volta-centro .aparelho-aberto svg.icone{width:22px;height:22px;padding:3px;border-radius:7px;
+  background:color-mix(in srgb, var(--ac, #888) 22%, rgba(0,0,0,.2));box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--ac, #888) 50%, transparent)}
+.modal.pc .volta-centro .aparelho-aberto svg.icone{color:color-mix(in srgb, var(--ac) 60%, #0d3b3f);
+  background:color-mix(in srgb, var(--ac) 30%, #fff)}
+
+/* a tela */
+.pc-tela{
   position:relative;
   background:linear-gradient(180deg, var(--pc-tela-2), var(--pc-tela) 55%);
-  border:2px solid #05130c;border-radius:8px;padding:0;
+  border:2px solid #05130c;border-radius:9px;
   color:var(--pc-txt);
   box-shadow:inset 0 0 26px -6px rgba(0,0,0,.9), 0 0 20px -8px rgba(125,252,168,.35);
   overflow:hidden;
 }
-.modal.pc .modal-corpo::after{
+.pc-tela::after{
   content:'';position:absolute;inset:0;pointer-events:none;z-index:2;
   background:repeating-linear-gradient(180deg, rgba(0,0,0,.16) 0 1px, transparent 1px 3px);
 }
 .modal.pc .modal-pe{padding-top:10px}
 .modal.pc .modal-pe .btn{
-  background:#3d3830;border-color:var(--pc-caixa-esc);color:var(--pc-caixa-clara)
+  background:var(--pc-tinta);border-color:var(--pc-caixa-esc);color:var(--pc-caixa-clara)
 }
 .modal.pc .modal-pe .btn:hover:not(:disabled){background:#57503f;color:#fff}
 
-/* barra de título da tela */
+/* faixa do sistema, no alto da tela */
 .pc-topo{
   display:flex;align-items:center;gap:9px;
   padding:7px 12px;border-bottom:1px solid var(--pc-linha);
@@ -8001,44 +8131,52 @@ h3.cat-item{
 
 /* duas colunas: cinto e caixa */
 .pc-colunas{display:grid;grid-template-columns:1fr 1fr;gap:0}
-.pc-lado{padding:10px 12px;min-width:0}
+.pc-lado{padding:10px 12px 12px;min-width:0}
 .pc-lado + .pc-lado{border-left:1px solid var(--pc-linha)}
+/* cabeçalho de seção no idioma do HUD: losango e linha, na luz da tela */
 .pc-titulo{
-  display:flex;justify-content:space-between;align-items:baseline;gap:8px;
-  font-family:var(--mono);font-size:11px;letter-spacing:.13em;text-transform:uppercase;
-  color:var(--pc-txt-2);margin-bottom:7px;
-  border-bottom:1px dashed var(--pc-linha);padding-bottom:5px;
+  display:flex;align-items:center;gap:8px;margin-bottom:8px;
+  font:700 11.5px/1 var(--letra-hud, var(--fonte));letter-spacing:.16em;text-transform:uppercase;
+  color:var(--pc-txt-2);
 }
-.pc-titulo span{color:var(--pc-luz);letter-spacing:.06em}
-.pc-grade{display:grid;grid-template-columns:1fr 1fr;gap:5px}
-.pc-grade.caixa{max-height:198px;overflow-y:auto;padding-right:3px}
+.pc-titulo::before{content:'';width:7px;height:7px;border-radius:2px;transform:rotate(45deg);flex:0 0 auto;
+  background:var(--pc-luz);box-shadow:0 0 8px -1px var(--pc-luz)}
+.pc-titulo::after{content:'';flex:1 1 auto;height:1px;order:1;
+  background:linear-gradient(90deg, var(--pc-linha), transparent)}
+.pc-titulo span{order:2;font-family:var(--mono);font-weight:400;font-size:11px;color:var(--pc-luz);letter-spacing:.06em}
+.pc-grade{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.pc-grade.caixa{max-height:208px;overflow-y:auto;padding:0 3px 4px 0}
 .pc-grade.caixa::-webkit-scrollbar{width:7px}
 .pc-grade.caixa::-webkit-scrollbar-thumb{background:var(--pc-linha);border-radius:4px}
 
+/* cada Pokémon: tecla de terminal, com espessura embaixo */
 .pc-slot{
   display:grid;grid-template-columns:30px 1fr;grid-template-rows:auto auto auto;
   grid-template-areas:'ic nome' 'ic nv' 'barra barra';
   align-items:center;gap:1px 7px;
-  padding:5px 7px;text-align:left;cursor:pointer;
-  border:1px solid var(--pc-linha);border-radius:4px;
-  background:rgba(125,252,168,.04);color:var(--pc-txt);
-  font:inherit;transition:background .12s, border-color .12s;
+  padding:5px 8px 6px;text-align:left;cursor:pointer;
+  border:1px solid var(--pc-linha);border-radius:8px;
+  background:linear-gradient(180deg, rgba(125,252,168,.09), rgba(125,252,168,.03));color:var(--pc-txt);
+  box-shadow:0 3px 0 #06180e, inset 0 1px 0 rgba(125,252,168,.08);
+  font:inherit;transition:background .12s, border-color .12s, transform .12s var(--suave), box-shadow .12s var(--suave);
 }
-.pc-slot:hover{background:rgba(125,252,168,.12);border-color:var(--pc-txt-2)}
+.pc-slot:hover{background:rgba(125,252,168,.14);border-color:var(--pc-txt-2);transform:translateY(-1px)}
+.pc-slot:active{transform:translateY(2px);box-shadow:0 1px 0 #06180e}
+.pc-slot:focus-visible{outline:2px solid var(--pc-luz);outline-offset:2px}
 .pc-slot.sel{
-  border-color:var(--pc-luz);background:rgba(125,252,168,.18);
-  box-shadow:0 0 0 1px var(--pc-luz) inset, 0 0 12px -4px var(--pc-luz);
+  border-color:var(--pc-luz);background:rgba(125,252,168,.2);
+  box-shadow:0 3px 0 #0b3a20, 0 0 0 1px var(--pc-luz) inset, 0 0 14px -4px var(--pc-luz);
 }
 .pc-slot.caido{opacity:.62}
 .pc-slot.morto{opacity:.45;filter:grayscale(1)}
 .pc-slot.vazio{
   display:flex;align-items:center;justify-content:center;
-  border-style:dashed;background:transparent;cursor:default;min-height:48px;
+  border-style:dashed;background:transparent;box-shadow:none;cursor:default;min-height:52px;
 }
 .pc-vazio{color:var(--pc-linha);font-size:16px}
 .pc-icone{grid-area:ic;display:flex;align-items:center;justify-content:center}
 .pc-icone img{width:30px;height:30px;image-rendering:pixelated}
-.pc-nome{grid-area:nome;font-size:12.5px;line-height:1.15;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pc-nome{grid-area:nome;font:600 13px/1.15 var(--letra-hud, var(--fonte));overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .pc-nv{grid-area:nv;font-family:var(--mono);font-size:10.5px;color:var(--pc-txt-2)}
 .pc-barra{
   grid-area:barra;display:block;height:3px;margin-top:3px;
@@ -8049,65 +8187,93 @@ h3.cat-item{
 .pc-barra.moral i{background:#ffd166}
 .pc-caixa-vazia{
   grid-column:1/-1;text-align:center;padding:26px 8px;color:var(--pc-txt-2);
-  font-size:12.5px;line-height:1.5;
+  font:600 13px/1.5 var(--letra-hud, var(--fonte));
 }
-.pc-caixa-vazia span{color:var(--pc-linha);font-size:11.5px}
+.pc-caixa-vazia span{color:var(--pc-txt-2);opacity:.7;font:400 11.5px/1.5 var(--fonte)}
 
 /* ficha do selecionado */
 .pc-ficha{
-  display:grid;grid-template-columns:104px 1fr;gap:12px;
-  padding:11px 13px;border-top:1px solid var(--pc-linha);
+  display:grid;grid-template-columns:110px 1fr;gap:14px;
+  padding:12px 14px 14px;border-top:1px solid var(--pc-linha);
   background:rgba(0,0,0,.22);
 }
 .pc-arte{display:flex;align-items:center;justify-content:center}
 .pc-arte img{width:114px;height:114px;image-rendering:pixelated;
   filter:drop-shadow(0 0 10px rgba(125,252,168,.22))}
 .pc-dados{min-width:0}
-.pc-cab{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;margin-bottom:5px}
-.pc-ficha-nome{font-size:16px;font-weight:650;color:#e8fff0}
+.pc-cab{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;margin-bottom:6px}
+.pc-ficha-nome{font:700 19px/1.1 var(--letra-hud, var(--fonte));color:#e8fff0}
 .pc-ficha-nv{font-family:var(--mono);font-size:12px;color:var(--pc-txt-2)}
 .pc-tag{
-  font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;
-  padding:1px 6px;border-radius:3px;border:1px solid currentColor;
+  font:700 10px/1.4 var(--letra-hud, var(--fonte));letter-spacing:.1em;text-transform:uppercase;
+  padding:1px 7px;border-radius:999px;border:1px solid currentColor;
 }
 .pc-tag.caido{color:#ffc46b}
 .pc-tag.morto{color:#ff7b6b}
-.pc-tipos{display:flex;gap:5px;flex-wrap:wrap;align-items:center;margin-bottom:7px}
-.pc-nat{font-size:11.5px;color:var(--pc-txt-2);font-style:italic}
-.pc-nat.fraca{color:var(--pc-linha);font-size:11px}
-.pc-medida{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.pc-tipos{display:flex;gap:5px;flex-wrap:wrap;align-items:center;margin-bottom:8px}
+.pc-nat{font-size:12px;color:var(--pc-txt-2);font-style:italic}
+.pc-nat.fraca{color:var(--pc-txt-2);opacity:.6;font-size:11.5px}
+.pc-medida{display:flex;align-items:center;gap:8px;margin-bottom:5px}
 .pc-medida .rot{
-  flex:0 0 42px;font-family:var(--mono);font-size:10px;letter-spacing:.1em;
+  flex:0 0 46px;font:700 10.5px/1 var(--letra-hud, var(--fonte));letter-spacing:.12em;
   text-transform:uppercase;color:var(--pc-txt-2);
 }
 .pc-medida .num{font-size:11.5px;color:var(--pc-txt);flex:0 0 auto;min-width:58px;text-align:right}
-.pc-golpes{display:flex;flex-wrap:wrap;gap:4px;margin:7px 0 6px}
+.pc-sec{
+  display:flex;align-items:center;gap:8px;margin:10px 0 6px;
+  font:700 10.5px/1 var(--letra-hud, var(--fonte));letter-spacing:.16em;text-transform:uppercase;color:var(--pc-txt-2);
+}
+.pc-sec::before{content:'';width:6px;height:6px;border-radius:2px;transform:rotate(45deg);background:var(--pc-luz);flex:0 0 auto}
+.pc-sec::after{content:'';flex:1 1 auto;height:1px;background:linear-gradient(90deg, var(--pc-linha), transparent)}
+.pc-golpes{display:flex;flex-wrap:wrap;gap:5px;margin:0 0 8px}
+/* o golpe com a faixa da cor do tipo, como o botão de golpe da luta */
 .pc-golpe{
-  font-size:11px;padding:2px 6px;border-radius:3px;
-  border:1px solid var(--pc-linha);background:rgba(125,252,168,.05);color:var(--pc-txt-2);
+  --tc:#8a8f99;
+  font:600 12px/1.2 var(--letra-hud, var(--fonte));padding:4px 9px 4px 11px;border-radius:7px;
+  border:1px solid var(--pc-linha);color:var(--pc-txt);
+  background:linear-gradient(90deg, var(--tc) 0 4px, color-mix(in srgb, var(--tc) 14%, rgba(4,20,11,.6)) 4px);
 }
-.pc-golpe b{color:var(--pc-txt);font-weight:600}
-.pc-historia{font-size:11.5px;font-style:italic;color:var(--pc-txt-2);line-height:1.45;margin-bottom:8px}
-.pc-afinidade{font-size:11.5px;color:var(--pc-txt);letter-spacing:.2px;margin-bottom:6px}
+.pc-historia{font-size:12px;font-style:italic;color:var(--pc-txt-2);line-height:1.45;margin-bottom:9px}
+.pc-afinidade{font-size:12px;color:var(--pc-txt);letter-spacing:.2px;margin-bottom:7px}
 .sussurro.afinidade{color:var(--texto);opacity:.85}
-.pc-acao{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.pc-acao .btn{
-  background:var(--pc-linha);border-color:var(--pc-luz);color:var(--pc-txt);
-  padding:6px 14px;font-size:13px;
+.pc-acao{grid-column:2;display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:-4px}
+/* o botão da tela: tecla grande, com espessura, que afunda */
+.pc-bt{
+  display:inline-flex;align-items:center;gap:8px;min-height:38px;padding:6px 14px 6px 9px;cursor:pointer;
+  border:1px solid var(--pc-txt-2);border-radius:10px;color:var(--pc-txt);
+  font:600 14px/1.1 var(--letra-hud, var(--fonte));
+  background:linear-gradient(180deg, rgba(125,252,168,.12), rgba(125,252,168,.04));
+  box-shadow:0 3px 0 #06180e, inset 0 1px 0 rgba(125,252,168,.12);
+  transition:transform .12s var(--suave), box-shadow .12s var(--suave), background .15s;
 }
-.pc-acao .btn:hover:not(:disabled){background:var(--pc-luz);color:#08281a}
-.pc-acao .btn:disabled{border-color:var(--pc-linha);color:var(--pc-txt-2)}
-.pc-trava{font-size:11.5px;color:#ffc46b;flex:1;min-width:140px;line-height:1.35}
+.pc-bt svg.icone{width:22px;height:22px;padding:3px;border-radius:7px;flex:0 0 auto;stroke-width:2.1;
+  color:var(--pc-luz);background:rgba(125,252,168,.12)}
+.pc-bt.principal{border-color:var(--pc-luz);background:linear-gradient(180deg, rgba(125,252,168,.3), rgba(125,252,168,.14))}
+.pc-bt:hover:not(:disabled){transform:translateY(-1px);background:rgba(125,252,168,.24)}
+.pc-bt.principal:hover:not(:disabled){background:var(--pc-luz);color:#08281a}
+.pc-bt.principal:hover:not(:disabled) svg.icone{color:#08281a;background:rgba(8,40,26,.15)}
+.pc-bt:active:not(:disabled){transform:translateY(2px);box-shadow:0 1px 0 #06180e}
+.pc-bt:focus-visible{outline:2px solid var(--pc-luz);outline-offset:2px}
+.pc-bt:disabled{cursor:not-allowed;opacity:.55;box-shadow:none;border-color:var(--pc-linha)}
+.pc-trava{font-size:12px;color:#ffc46b;flex:1 1 100%;line-height:1.4}
 .pc-nada{grid-column:1/-1;text-align:center;color:var(--pc-txt-2);padding:18px 6px}
 .pc-erro{
-  grid-column:1/-1;margin-top:8px;padding:6px 9px;border-radius:4px;
+  grid-column:1/-1;margin-top:8px;padding:6px 9px;border-radius:6px;
   border:1px solid #ff7b6b;color:#ffb3a8;background:rgba(255,123,107,.1);font-size:12px;
 }
 @media (max-width:640px){
+  .modal.pc{padding:14px}
   .pc-colunas{grid-template-columns:1fr}
   .pc-lado + .pc-lado{border-left:none;border-top:1px solid var(--pc-linha)}
-  .pc-ficha{grid-template-columns:1fr}
-  .pc-arte img{width:90px;height:90px}
+  /* a arte encosta no nome, à esquerda: a ficha inteira cabe sem rolar */
+  .pc-ficha{grid-template-columns:72px 1fr;gap:10px;padding:10px 11px 12px}
+  .pc-arte{align-items:flex-start}
+  .pc-arte img{width:76px;height:76px}
+  .pc-ficha-nome{font-size:17px}
+  .pc-medida .rot{flex-basis:40px}
+  .pc-medida .num{min-width:40px}
+  .pc-acao{grid-column:1 / -1}
+  .pc-bt{flex:1 1 auto;justify-content:center}
 }
 
 /* ============================================================
@@ -8995,8 +9161,15 @@ h3.com-mapa{display:flex;align-items:center;justify-content:space-between;gap:8p
 .btn.mini.abre-mapa{display:inline-flex;align-items:center;gap:4px;text-transform:none;letter-spacing:0}
 .btn.mini.abre-mapa .item-icone{width:22px;height:22px}
 .modal.mapa{max-width:640px}
-.mapa-kanto .mapa-topo{display:flex;align-items:center;gap:8px;margin-bottom:8px}
-.mapa-kanto .mapa-topo span{margin-left:auto;color:var(--texto-fraco);font-size:13px}
+/* a faixa do mapa no idioma das seções: losango e linha na cor do mapa */
+.mapa-kanto .mapa-topo{display:flex;align-items:center;gap:10px;margin:2px 0 10px;
+  font-family:var(--letra-hud, var(--fonte))}
+.mapa-kanto .mapa-topo::before{content:'';flex:0 0 auto;width:8px;height:8px;border-radius:2px;transform:rotate(45deg);
+  background:#66bb6a;box-shadow:0 0 10px -1px #66bb6a}
+.mapa-kanto .mapa-topo b{font-size:12px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--texto-fraco)}
+.mapa-kanto .mapa-topo::after{content:'';flex:1 1 auto;height:1px;order:1;
+  background:linear-gradient(90deg, color-mix(in srgb, #66bb6a 45%, var(--borda)), transparent)}
+.mapa-kanto .mapa-topo span{order:2;color:var(--texto-fraco);font-size:13px;font-weight:500}
 .mapa-kanto svg{display:block;width:100%;height:auto;border-radius:10px;
   background:linear-gradient(180deg,#3d78b8,#2e5f99);box-shadow:inset 0 0 0 2px rgba(0,0,0,.25)}
 .mapa-kanto .mp-terra{fill:#7fb069;stroke:#4f7d43;stroke-width:1.2}
@@ -9007,31 +9180,74 @@ h3.com-mapa{display:flex;align-items:center;justify-content:space-between;gap:8p
 .mapa-kanto .mp-no{cursor:pointer;outline:none}
 .mapa-kanto .mp-no.nao-pisado rect,.mapa-kanto .mp-no.nao-pisado circle{opacity:.55}
 .mapa-kanto .mp-no.nao-pisado text{opacity:.75}
-.mapa-kanto .mp-no text.mp-rota{font:700 4.6px system-ui,sans-serif}
+.mapa-kanto .mp-no text.mp-rota{font:700 4.8px var(--letra-hud, system-ui),sans-serif}
 .mapa-kanto .mp-no:hover rect,.mapa-kanto .mp-no:hover circle,
 .mapa-kanto .mp-no:focus-visible rect,.mapa-kanto .mp-no:focus-visible circle{stroke:#10202e;stroke-width:1.6}
 .mapa-kanto .mp-no.sel rect,.mapa-kanto .mp-no.sel circle{stroke:#10202e;stroke-width:2.2;opacity:1}
-.mapa-legenda{display:flex;flex-wrap:wrap;gap:6px 14px;margin:8px 2px 0;font-size:12px;color:var(--texto-fraco)}
+.mapa-legenda{display:flex;flex-wrap:wrap;gap:6px 14px;margin:9px 2px 0;font:500 12px/1.3 var(--letra-hud, var(--fonte));color:var(--texto-fraco)}
 .mapa-legenda .lg{display:inline-block;width:10px;height:10px;margin-right:5px;vertical-align:-1px;border:1px solid #5a4a2a;background:#f4efe0}
 .mapa-legenda .lg.cidade{background:#e2463a;border-color:#fff;border-radius:2px}
 .mapa-legenda .lg.rota{border-radius:50%}
 .mapa-legenda .lg.especial{background:#f2c94c;transform:rotate(45deg) scale(.85)}
 .mapa-legenda .lg.nao-pisado{opacity:.5;border-radius:50%}
-.mapa-info{margin-top:10px;padding:10px 12px;border-radius:10px;background:rgba(0,0,0,.18);border:1px solid rgba(255,255,255,.08);min-height:92px}
-.mapa-info .mi-cab{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
-.mapa-info .mi-cab b{font-size:16px}
-.mapa-info .mi-cab span{color:var(--texto-fraco);font-size:12.5px}
-.mapa-info .mi-desc{margin:6px 0;font-size:13.5px;line-height:1.45}
+/* A ficha do lugar tocado: o nome em letra de placa com a etiqueta do
+   tipo (a bolinha na cor do desenho do mapa), a descrição na letra de
+   ler, o que liga e o que tem em linhas agrupadas como na folha, e
+   embaixo o que dá pra fazer: a placa de estrada pro vizinho, o voo,
+   ou por que não. */
+.mapa-info{margin-top:12px;padding:14px 16px 16px;border-radius:14px;min-height:120px;
+  border:1px solid color-mix(in srgb, var(--borda) 85%, transparent);
+  background:color-mix(in srgb, var(--bg) 38%, transparent)}
+.mapa-info .mi-cab{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.mapa-info .mi-cab b{font:700 21px/1.1 var(--letra-hud, var(--fonte));margin-right:2px}
+.mapa-info .mi-tipo{display:inline-flex;align-items:center;gap:6px;padding:3px 10px 3px 8px;border-radius:999px;
+  font:600 11.5px/1.3 var(--letra-hud, var(--fonte));letter-spacing:.03em;color:var(--texto-fraco);
+  background:rgba(0,0,0,.25);box-shadow:inset 0 0 0 1px var(--borda)}
+.mapa-info .mi-tipo::before{content:'';width:8px;height:8px;border-radius:50%;background:#f4efe0;box-shadow:0 0 0 1px #5a4a2a}
+.mapa-info .mi-tipo.cidade::before{background:#e2463a;border-radius:2px;box-shadow:0 0 0 1px #fff}
+.mapa-info .mi-tipo.especial::before{background:#f2c94c;border-radius:1px;transform:rotate(45deg) scale(.85)}
+.mapa-info .mi-tipo.perigo{color:color-mix(in srgb, var(--perigo) 75%, #fff);box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--perigo) 50%, transparent)}
+.mapa-info .mi-tipo.perigo::before{background:var(--perigo);box-shadow:none}
+.mapa-info .mi-desc{margin:9px 0 11px;font-size:14px;line-height:1.5}
 .mapa-info .mi-desc.fraco{color:var(--texto-fraco);font-style:italic}
-.mapa-info .mi-linhas{display:flex;flex-direction:column;gap:3px;font-size:13px}
-.mapa-info .mi-linhas .k{display:inline-block;min-width:70px;color:var(--texto-fraco);font-size:11.5px;text-transform:uppercase;letter-spacing:.06em}
-.mapa-info .mi-acao{margin-top:9px}
-.mapa-info .mapa-aqui,.mapa-info .mapa-longe{font-size:13px;color:var(--texto-fraco);font-style:italic}
+.mapa-info .mi-linhas{display:flex;flex-direction:column;border-radius:12px;overflow:hidden;box-shadow:inset 0 0 0 1px var(--borda)}
+.mapa-info .linha{align-items:baseline;gap:14px;padding:8px 13px;border-bottom:0;background:rgba(0,0,0,.18)}
+.mapa-info .linha + .linha{border-top:1px solid var(--borda)}
+.mapa-info .linha .k{font:700 10.5px/1.6 var(--letra-hud, var(--fonte));letter-spacing:.14em;text-transform:uppercase;color:var(--texto-fraco)}
+.mapa-info .linha .v{font:500 13.5px/1.45 var(--letra-hud, var(--fonte));color:var(--texto)}
+.mapa-info .mi-acao{margin-top:12px}
+.mapa-info .mi-acao .escolha{width:100%;--ac:#5aa7ff}
+.mapa-info .mi-acao .escolha.voo{--ac:#9fa8ff}
+.mapa-info .mi-aqui, .mapa-info .mi-longe{display:flex;align-items:center;gap:11px;padding:10px 13px;border-radius:12px}
+.mapa-info .mi-aqui{font:600 15px/1.3 var(--letra-hud, var(--fonte));color:#ffe9a3;
+  background:color-mix(in srgb, #ffd54f 12%, rgba(0,0,0,.22));box-shadow:inset 0 0 0 1px color-mix(in srgb, #ffd54f 40%, transparent)}
+.mapa-info .mi-longe{font:400 13.5px/1.45 var(--fonte);color:var(--texto-fraco);
+  background:rgba(0,0,0,.18);box-shadow:inset 0 0 0 1px var(--borda)}
+.mapa-info .mi-aqui svg.icone, .mapa-info .mi-longe svg.icone{width:30px;height:30px;padding:6px;border-radius:10px;flex:0 0 auto;stroke-width:2;
+  color:var(--ac, var(--texto-fraco));background:color-mix(in srgb, var(--ac, #8d97bd) 20%, rgba(0,0,0,.25))}
+@media (max-width:620px){
+  .mapa-info{padding:12px 13px 14px}
+  .mapa-info .linha{padding:7px 11px}
+}
+/* Tela larga: o mapa à esquerda e a ficha do lugar à direita, como o
+   painel do Town Map — embaixo do mapa, a ficha caía fora da janela e
+   o "Ir para" só aparecia rolando. A janela cresce até onde o mapa
+   ainda cabe na altura (86vh menos barra, faixa e Fechar; o mapa é
+   284×226), e a legenda desce pro pé da coluna da ficha. */
+@media (min-width:900px){
+  .modal.mapa{max-width:min(1040px, calc((86vh - 200px) * 1.2566 + 394px))}
+  .mapa-kanto{display:grid;grid-template-columns:minmax(0, 1fr) 330px;grid-template-rows:auto 1fr auto;
+    grid-template-areas:'topo topo' 'mapa info' 'mapa leg';column-gap:18px}
+  .mapa-kanto .mapa-topo{grid-area:topo}
+  .mapa-kanto > svg{grid-area:mapa;align-self:start}
+  .mapa-kanto .mapa-info{grid-area:info;align-self:start;margin-top:0}
+  .mapa-kanto .mapa-legenda{grid-area:leg;display:grid;grid-template-columns:max-content max-content;gap:7px 22px;margin:12px 4px 0}
+}
 .mapa-kanto .mp-no rect,.mapa-kanto .mp-no circle{fill:#f4efe0;stroke:#5a4a2a;stroke-width:1}
 .mapa-kanto .mp-no.cidade rect{fill:#e2463a;stroke:#fff}
 .mapa-kanto .mp-no.especial rect{fill:#f2c94c}
 .mapa-kanto .mp-no.desconhecido rect,.mapa-kanto .mp-no.desconhecido circle{fill:#b8b8b0;stroke:#6e6e66;opacity:.8}
-.mapa-kanto .mp-no text{font:600 6.2px system-ui,sans-serif;fill:#10202e;paint-order:stroke;stroke:#f4f7ea;stroke-width:1.6px}
+.mapa-kanto .mp-no text{font:600 6.4px var(--letra-hud, system-ui),sans-serif;fill:#10202e;paint-order:stroke;stroke:#f4f7ea;stroke-width:1.6px}
 .mapa-kanto .mp-no.vizinho{cursor:pointer}
 .mapa-kanto .mp-no.vizinho rect,.mapa-kanto .mp-no.vizinho circle{stroke:#ffe066;stroke-width:1.8}
 .mapa-kanto .mp-no.vizinho:hover rect,.mapa-kanto .mp-no.vizinho:hover circle,
@@ -10136,7 +10352,7 @@ button.item-linha.aparelho{
 .mapa-kanto .mp-arvore{fill:#4e9a45;stroke:#35702f;stroke-width:.6}
 .mapa-kanto .mp-rosa circle{fill:rgba(255,255,255,.12);stroke:rgba(255,255,255,.5);stroke-width:.8}
 .mapa-kanto .mp-rosa path{fill:#f4f2ea}
-.mapa-kanto .mp-rosa text{font:700 6px system-ui,sans-serif;fill:#f4f2ea;text-anchor:middle}
+.mapa-kanto .mp-rosa text{font:700 6px var(--letra-hud, system-ui),sans-serif;fill:#f4f2ea;text-anchor:middle}
 .mapa-kanto .mp-via-borda{fill:none;stroke:#9b7d45;stroke-width:5.4;stroke-linejoin:round;stroke-linecap:round;opacity:.55}
 .mapa-kanto .mp-via{fill:none;stroke:#f3e6b8;stroke-width:3.4;stroke-linejoin:round;stroke-linecap:round;opacity:.6}
 .mapa-kanto .mp-via.andada{opacity:1}
@@ -13767,12 +13983,17 @@ h3.cat-item{
 
 /* ============================================================
    PC — o terminal do Centro Pokémon
-   Carcaça bege de plástico de 1996, tela verde de fósforo.
+   Carcaça bege de plástico de 1996, tela verde de fósforo. Por fora,
+   o idioma dos aparelhos: a barra de volta pro balcão ("‹ Centro") e
+   o nome do aparelho na carcaça. Por dentro, a letra do HUD nos nomes,
+   nas seções e nos botões; a de tela (mono) fica nos números e na
+   faixa do sistema, como na Pokédex. Ficha e botão de tela têm
+   espessura e afundam quando aperta, como os do resto do jogo.
    ============================================================ */
 .modal.pc{
   --pc-caixa:#d9d2c0; --pc-caixa-esc:#8f887a; --pc-caixa-clara:#efe9da;
   --pc-tela:#0e2417; --pc-tela-2:#132f1e; --pc-luz:#7dfca8;
-  --pc-txt:#c9f7d8; --pc-txt-2:#79b993; --pc-linha:#1d4a2f;
+  --pc-txt:#c9f7d8; --pc-txt-2:#79b993; --pc-linha:#1d4a2f; --pc-tinta:#3d3830;
   max-width:760px;
   border:3px solid var(--pc-caixa-esc);
   background:linear-gradient(180deg, var(--pc-caixa-clara), var(--pc-caixa) 30%, var(--pc-caixa-esc));
@@ -13784,25 +14005,42 @@ h3.cat-item{
   40%{opacity:1}
   to{opacity:1;transform:none}
 }
-.modal.pc .modal-corpo{
+.modal.pc .modal-corpo{padding:0}
+/* a barra do balcão, gravada na carcaça bege */
+.modal.pc .volta-mochila{background:rgba(61,56,48,.1);border-color:rgba(61,56,48,.28);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.45)}
+.modal.pc .volta-mochila .aba-volta{color:var(--pc-tinta);background:rgba(255,255,255,.5);
+  font-family:var(--letra-hud, var(--fonte));box-shadow:0 2px 0 rgba(61,56,48,.35)}
+.modal.pc .volta-mochila .aba-volta:hover{background:rgba(255,255,255,.8)}
+.modal.pc .volta-mochila .aba-volta:active{transform:translateY(1px);box-shadow:0 1px 0 rgba(61,56,48,.35)}
+.modal.pc .volta-mochila .aparelho-aberto{color:var(--pc-tinta);font-family:var(--letra-hud, var(--fonte))}
+/* o desenho do Centro e do aparelho, na cor de cada um (o --ac vem do svgIcone) */
+.volta-centro svg.icone{width:20px;height:20px;flex:0 0 auto;stroke-width:2.1;color:var(--ac, currentColor)}
+.volta-centro .aparelho-aberto svg.icone{width:22px;height:22px;padding:3px;border-radius:7px;
+  background:color-mix(in srgb, var(--ac, #888) 22%, rgba(0,0,0,.2));box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--ac, #888) 50%, transparent)}
+.modal.pc .volta-centro .aparelho-aberto svg.icone{color:color-mix(in srgb, var(--ac) 60%, #0d3b3f);
+  background:color-mix(in srgb, var(--ac) 30%, #fff)}
+
+/* a tela */
+.pc-tela{
   position:relative;
   background:linear-gradient(180deg, var(--pc-tela-2), var(--pc-tela) 55%);
-  border:2px solid #05130c;border-radius:8px;padding:0;
+  border:2px solid #05130c;border-radius:9px;
   color:var(--pc-txt);
   box-shadow:inset 0 0 26px -6px rgba(0,0,0,.9), 0 0 20px -8px rgba(125,252,168,.35);
   overflow:hidden;
 }
-.modal.pc .modal-corpo::after{
+.pc-tela::after{
   content:'';position:absolute;inset:0;pointer-events:none;z-index:2;
   background:repeating-linear-gradient(180deg, rgba(0,0,0,.16) 0 1px, transparent 1px 3px);
 }
 .modal.pc .modal-pe{padding-top:10px}
 .modal.pc .modal-pe .btn{
-  background:#3d3830;border-color:var(--pc-caixa-esc);color:var(--pc-caixa-clara)
+  background:var(--pc-tinta);border-color:var(--pc-caixa-esc);color:var(--pc-caixa-clara)
 }
 .modal.pc .modal-pe .btn:hover:not(:disabled){background:#57503f;color:#fff}
 
-/* barra de título da tela */
+/* faixa do sistema, no alto da tela */
 .pc-topo{
   display:flex;align-items:center;gap:9px;
   padding:7px 12px;border-bottom:1px solid var(--pc-linha);
@@ -13819,44 +14057,52 @@ h3.cat-item{
 
 /* duas colunas: cinto e caixa */
 .pc-colunas{display:grid;grid-template-columns:1fr 1fr;gap:0}
-.pc-lado{padding:10px 12px;min-width:0}
+.pc-lado{padding:10px 12px 12px;min-width:0}
 .pc-lado + .pc-lado{border-left:1px solid var(--pc-linha)}
+/* cabeçalho de seção no idioma do HUD: losango e linha, na luz da tela */
 .pc-titulo{
-  display:flex;justify-content:space-between;align-items:baseline;gap:8px;
-  font-family:var(--mono);font-size:11px;letter-spacing:.13em;text-transform:uppercase;
-  color:var(--pc-txt-2);margin-bottom:7px;
-  border-bottom:1px dashed var(--pc-linha);padding-bottom:5px;
+  display:flex;align-items:center;gap:8px;margin-bottom:8px;
+  font:700 11.5px/1 var(--letra-hud, var(--fonte));letter-spacing:.16em;text-transform:uppercase;
+  color:var(--pc-txt-2);
 }
-.pc-titulo span{color:var(--pc-luz);letter-spacing:.06em}
-.pc-grade{display:grid;grid-template-columns:1fr 1fr;gap:5px}
-.pc-grade.caixa{max-height:198px;overflow-y:auto;padding-right:3px}
+.pc-titulo::before{content:'';width:7px;height:7px;border-radius:2px;transform:rotate(45deg);flex:0 0 auto;
+  background:var(--pc-luz);box-shadow:0 0 8px -1px var(--pc-luz)}
+.pc-titulo::after{content:'';flex:1 1 auto;height:1px;order:1;
+  background:linear-gradient(90deg, var(--pc-linha), transparent)}
+.pc-titulo span{order:2;font-family:var(--mono);font-weight:400;font-size:11px;color:var(--pc-luz);letter-spacing:.06em}
+.pc-grade{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.pc-grade.caixa{max-height:208px;overflow-y:auto;padding:0 3px 4px 0}
 .pc-grade.caixa::-webkit-scrollbar{width:7px}
 .pc-grade.caixa::-webkit-scrollbar-thumb{background:var(--pc-linha);border-radius:4px}
 
+/* cada Pokémon: tecla de terminal, com espessura embaixo */
 .pc-slot{
   display:grid;grid-template-columns:30px 1fr;grid-template-rows:auto auto auto;
   grid-template-areas:'ic nome' 'ic nv' 'barra barra';
   align-items:center;gap:1px 7px;
-  padding:5px 7px;text-align:left;cursor:pointer;
-  border:1px solid var(--pc-linha);border-radius:4px;
-  background:rgba(125,252,168,.04);color:var(--pc-txt);
-  font:inherit;transition:background .12s, border-color .12s;
+  padding:5px 8px 6px;text-align:left;cursor:pointer;
+  border:1px solid var(--pc-linha);border-radius:8px;
+  background:linear-gradient(180deg, rgba(125,252,168,.09), rgba(125,252,168,.03));color:var(--pc-txt);
+  box-shadow:0 3px 0 #06180e, inset 0 1px 0 rgba(125,252,168,.08);
+  font:inherit;transition:background .12s, border-color .12s, transform .12s var(--suave), box-shadow .12s var(--suave);
 }
-.pc-slot:hover{background:rgba(125,252,168,.12);border-color:var(--pc-txt-2)}
+.pc-slot:hover{background:rgba(125,252,168,.14);border-color:var(--pc-txt-2);transform:translateY(-1px)}
+.pc-slot:active{transform:translateY(2px);box-shadow:0 1px 0 #06180e}
+.pc-slot:focus-visible{outline:2px solid var(--pc-luz);outline-offset:2px}
 .pc-slot.sel{
-  border-color:var(--pc-luz);background:rgba(125,252,168,.18);
-  box-shadow:0 0 0 1px var(--pc-luz) inset, 0 0 12px -4px var(--pc-luz);
+  border-color:var(--pc-luz);background:rgba(125,252,168,.2);
+  box-shadow:0 3px 0 #0b3a20, 0 0 0 1px var(--pc-luz) inset, 0 0 14px -4px var(--pc-luz);
 }
 .pc-slot.caido{opacity:.62}
 .pc-slot.morto{opacity:.45;filter:grayscale(1)}
 .pc-slot.vazio{
   display:flex;align-items:center;justify-content:center;
-  border-style:dashed;background:transparent;cursor:default;min-height:48px;
+  border-style:dashed;background:transparent;box-shadow:none;cursor:default;min-height:52px;
 }
 .pc-vazio{color:var(--pc-linha);font-size:16px}
 .pc-icone{grid-area:ic;display:flex;align-items:center;justify-content:center}
 .pc-icone img{width:30px;height:30px;image-rendering:pixelated}
-.pc-nome{grid-area:nome;font-size:12.5px;line-height:1.15;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pc-nome{grid-area:nome;font:600 13px/1.15 var(--letra-hud, var(--fonte));overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .pc-nv{grid-area:nv;font-family:var(--mono);font-size:10.5px;color:var(--pc-txt-2)}
 .pc-barra{
   grid-area:barra;display:block;height:3px;margin-top:3px;
@@ -13867,65 +14113,93 @@ h3.cat-item{
 .pc-barra.moral i{background:#ffd166}
 .pc-caixa-vazia{
   grid-column:1/-1;text-align:center;padding:26px 8px;color:var(--pc-txt-2);
-  font-size:12.5px;line-height:1.5;
+  font:600 13px/1.5 var(--letra-hud, var(--fonte));
 }
-.pc-caixa-vazia span{color:var(--pc-linha);font-size:11.5px}
+.pc-caixa-vazia span{color:var(--pc-txt-2);opacity:.7;font:400 11.5px/1.5 var(--fonte)}
 
 /* ficha do selecionado */
 .pc-ficha{
-  display:grid;grid-template-columns:104px 1fr;gap:12px;
-  padding:11px 13px;border-top:1px solid var(--pc-linha);
+  display:grid;grid-template-columns:110px 1fr;gap:14px;
+  padding:12px 14px 14px;border-top:1px solid var(--pc-linha);
   background:rgba(0,0,0,.22);
 }
 .pc-arte{display:flex;align-items:center;justify-content:center}
 .pc-arte img{width:114px;height:114px;image-rendering:pixelated;
   filter:drop-shadow(0 0 10px rgba(125,252,168,.22))}
 .pc-dados{min-width:0}
-.pc-cab{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;margin-bottom:5px}
-.pc-ficha-nome{font-size:16px;font-weight:650;color:#e8fff0}
+.pc-cab{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;margin-bottom:6px}
+.pc-ficha-nome{font:700 19px/1.1 var(--letra-hud, var(--fonte));color:#e8fff0}
 .pc-ficha-nv{font-family:var(--mono);font-size:12px;color:var(--pc-txt-2)}
 .pc-tag{
-  font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;
-  padding:1px 6px;border-radius:3px;border:1px solid currentColor;
+  font:700 10px/1.4 var(--letra-hud, var(--fonte));letter-spacing:.1em;text-transform:uppercase;
+  padding:1px 7px;border-radius:999px;border:1px solid currentColor;
 }
 .pc-tag.caido{color:#ffc46b}
 .pc-tag.morto{color:#ff7b6b}
-.pc-tipos{display:flex;gap:5px;flex-wrap:wrap;align-items:center;margin-bottom:7px}
-.pc-nat{font-size:11.5px;color:var(--pc-txt-2);font-style:italic}
-.pc-nat.fraca{color:var(--pc-linha);font-size:11px}
-.pc-medida{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.pc-tipos{display:flex;gap:5px;flex-wrap:wrap;align-items:center;margin-bottom:8px}
+.pc-nat{font-size:12px;color:var(--pc-txt-2);font-style:italic}
+.pc-nat.fraca{color:var(--pc-txt-2);opacity:.6;font-size:11.5px}
+.pc-medida{display:flex;align-items:center;gap:8px;margin-bottom:5px}
 .pc-medida .rot{
-  flex:0 0 42px;font-family:var(--mono);font-size:10px;letter-spacing:.1em;
+  flex:0 0 46px;font:700 10.5px/1 var(--letra-hud, var(--fonte));letter-spacing:.12em;
   text-transform:uppercase;color:var(--pc-txt-2);
 }
 .pc-medida .num{font-size:11.5px;color:var(--pc-txt);flex:0 0 auto;min-width:58px;text-align:right}
-.pc-golpes{display:flex;flex-wrap:wrap;gap:4px;margin:7px 0 6px}
+.pc-sec{
+  display:flex;align-items:center;gap:8px;margin:10px 0 6px;
+  font:700 10.5px/1 var(--letra-hud, var(--fonte));letter-spacing:.16em;text-transform:uppercase;color:var(--pc-txt-2);
+}
+.pc-sec::before{content:'';width:6px;height:6px;border-radius:2px;transform:rotate(45deg);background:var(--pc-luz);flex:0 0 auto}
+.pc-sec::after{content:'';flex:1 1 auto;height:1px;background:linear-gradient(90deg, var(--pc-linha), transparent)}
+.pc-golpes{display:flex;flex-wrap:wrap;gap:5px;margin:0 0 8px}
+/* o golpe com a faixa da cor do tipo, como o botão de golpe da luta */
 .pc-golpe{
-  font-size:11px;padding:2px 6px;border-radius:3px;
-  border:1px solid var(--pc-linha);background:rgba(125,252,168,.05);color:var(--pc-txt-2);
+  --tc:#8a8f99;
+  font:600 12px/1.2 var(--letra-hud, var(--fonte));padding:4px 9px 4px 11px;border-radius:7px;
+  border:1px solid var(--pc-linha);color:var(--pc-txt);
+  background:linear-gradient(90deg, var(--tc) 0 4px, color-mix(in srgb, var(--tc) 14%, rgba(4,20,11,.6)) 4px);
 }
-.pc-golpe b{color:var(--pc-txt);font-weight:600}
-.pc-historia{font-size:11.5px;font-style:italic;color:var(--pc-txt-2);line-height:1.45;margin-bottom:8px}
-.pc-afinidade{font-size:11.5px;color:var(--pc-txt);letter-spacing:.2px;margin-bottom:6px}
+.pc-historia{font-size:12px;font-style:italic;color:var(--pc-txt-2);line-height:1.45;margin-bottom:9px}
+.pc-afinidade{font-size:12px;color:var(--pc-txt);letter-spacing:.2px;margin-bottom:7px}
 .sussurro.afinidade{color:var(--texto);opacity:.85}
-.pc-acao{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.pc-acao .btn{
-  background:var(--pc-linha);border-color:var(--pc-luz);color:var(--pc-txt);
-  padding:6px 14px;font-size:13px;
+.pc-acao{grid-column:2;display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:-4px}
+/* o botão da tela: tecla grande, com espessura, que afunda */
+.pc-bt{
+  display:inline-flex;align-items:center;gap:8px;min-height:38px;padding:6px 14px 6px 9px;cursor:pointer;
+  border:1px solid var(--pc-txt-2);border-radius:10px;color:var(--pc-txt);
+  font:600 14px/1.1 var(--letra-hud, var(--fonte));
+  background:linear-gradient(180deg, rgba(125,252,168,.12), rgba(125,252,168,.04));
+  box-shadow:0 3px 0 #06180e, inset 0 1px 0 rgba(125,252,168,.12);
+  transition:transform .12s var(--suave), box-shadow .12s var(--suave), background .15s;
 }
-.pc-acao .btn:hover:not(:disabled){background:var(--pc-luz);color:#08281a}
-.pc-acao .btn:disabled{border-color:var(--pc-linha);color:var(--pc-txt-2)}
-.pc-trava{font-size:11.5px;color:#ffc46b;flex:1;min-width:140px;line-height:1.35}
+.pc-bt svg.icone{width:22px;height:22px;padding:3px;border-radius:7px;flex:0 0 auto;stroke-width:2.1;
+  color:var(--pc-luz);background:rgba(125,252,168,.12)}
+.pc-bt.principal{border-color:var(--pc-luz);background:linear-gradient(180deg, rgba(125,252,168,.3), rgba(125,252,168,.14))}
+.pc-bt:hover:not(:disabled){transform:translateY(-1px);background:rgba(125,252,168,.24)}
+.pc-bt.principal:hover:not(:disabled){background:var(--pc-luz);color:#08281a}
+.pc-bt.principal:hover:not(:disabled) svg.icone{color:#08281a;background:rgba(8,40,26,.15)}
+.pc-bt:active:not(:disabled){transform:translateY(2px);box-shadow:0 1px 0 #06180e}
+.pc-bt:focus-visible{outline:2px solid var(--pc-luz);outline-offset:2px}
+.pc-bt:disabled{cursor:not-allowed;opacity:.55;box-shadow:none;border-color:var(--pc-linha)}
+.pc-trava{font-size:12px;color:#ffc46b;flex:1 1 100%;line-height:1.4}
 .pc-nada{grid-column:1/-1;text-align:center;color:var(--pc-txt-2);padding:18px 6px}
 .pc-erro{
-  grid-column:1/-1;margin-top:8px;padding:6px 9px;border-radius:4px;
+  grid-column:1/-1;margin-top:8px;padding:6px 9px;border-radius:6px;
   border:1px solid #ff7b6b;color:#ffb3a8;background:rgba(255,123,107,.1);font-size:12px;
 }
 @media (max-width:640px){
+  .modal.pc{padding:14px}
   .pc-colunas{grid-template-columns:1fr}
   .pc-lado + .pc-lado{border-left:none;border-top:1px solid var(--pc-linha)}
-  .pc-ficha{grid-template-columns:1fr}
-  .pc-arte img{width:90px;height:90px}
+  /* a arte encosta no nome, à esquerda: a ficha inteira cabe sem rolar */
+  .pc-ficha{grid-template-columns:72px 1fr;gap:10px;padding:10px 11px 12px}
+  .pc-arte{align-items:flex-start}
+  .pc-arte img{width:76px;height:76px}
+  .pc-ficha-nome{font-size:17px}
+  .pc-medida .rot{flex-basis:40px}
+  .pc-medida .num{min-width:40px}
+  .pc-acao{grid-column:1 / -1}
+  .pc-bt{flex:1 1 auto;justify-content:center}
 }
 
 /* ============================================================
@@ -14813,8 +15087,15 @@ h3.com-mapa{display:flex;align-items:center;justify-content:space-between;gap:8p
 .btn.mini.abre-mapa{display:inline-flex;align-items:center;gap:4px;text-transform:none;letter-spacing:0}
 .btn.mini.abre-mapa .item-icone{width:22px;height:22px}
 .modal.mapa{max-width:640px}
-.mapa-kanto .mapa-topo{display:flex;align-items:center;gap:8px;margin-bottom:8px}
-.mapa-kanto .mapa-topo span{margin-left:auto;color:var(--texto-fraco);font-size:13px}
+/* a faixa do mapa no idioma das seções: losango e linha na cor do mapa */
+.mapa-kanto .mapa-topo{display:flex;align-items:center;gap:10px;margin:2px 0 10px;
+  font-family:var(--letra-hud, var(--fonte))}
+.mapa-kanto .mapa-topo::before{content:'';flex:0 0 auto;width:8px;height:8px;border-radius:2px;transform:rotate(45deg);
+  background:#66bb6a;box-shadow:0 0 10px -1px #66bb6a}
+.mapa-kanto .mapa-topo b{font-size:12px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--texto-fraco)}
+.mapa-kanto .mapa-topo::after{content:'';flex:1 1 auto;height:1px;order:1;
+  background:linear-gradient(90deg, color-mix(in srgb, #66bb6a 45%, var(--borda)), transparent)}
+.mapa-kanto .mapa-topo span{order:2;color:var(--texto-fraco);font-size:13px;font-weight:500}
 .mapa-kanto svg{display:block;width:100%;height:auto;border-radius:10px;
   background:linear-gradient(180deg,#3d78b8,#2e5f99);box-shadow:inset 0 0 0 2px rgba(0,0,0,.25)}
 .mapa-kanto .mp-terra{fill:#7fb069;stroke:#4f7d43;stroke-width:1.2}
@@ -14825,31 +15106,74 @@ h3.com-mapa{display:flex;align-items:center;justify-content:space-between;gap:8p
 .mapa-kanto .mp-no{cursor:pointer;outline:none}
 .mapa-kanto .mp-no.nao-pisado rect,.mapa-kanto .mp-no.nao-pisado circle{opacity:.55}
 .mapa-kanto .mp-no.nao-pisado text{opacity:.75}
-.mapa-kanto .mp-no text.mp-rota{font:700 4.6px system-ui,sans-serif}
+.mapa-kanto .mp-no text.mp-rota{font:700 4.8px var(--letra-hud, system-ui),sans-serif}
 .mapa-kanto .mp-no:hover rect,.mapa-kanto .mp-no:hover circle,
 .mapa-kanto .mp-no:focus-visible rect,.mapa-kanto .mp-no:focus-visible circle{stroke:#10202e;stroke-width:1.6}
 .mapa-kanto .mp-no.sel rect,.mapa-kanto .mp-no.sel circle{stroke:#10202e;stroke-width:2.2;opacity:1}
-.mapa-legenda{display:flex;flex-wrap:wrap;gap:6px 14px;margin:8px 2px 0;font-size:12px;color:var(--texto-fraco)}
+.mapa-legenda{display:flex;flex-wrap:wrap;gap:6px 14px;margin:9px 2px 0;font:500 12px/1.3 var(--letra-hud, var(--fonte));color:var(--texto-fraco)}
 .mapa-legenda .lg{display:inline-block;width:10px;height:10px;margin-right:5px;vertical-align:-1px;border:1px solid #5a4a2a;background:#f4efe0}
 .mapa-legenda .lg.cidade{background:#e2463a;border-color:#fff;border-radius:2px}
 .mapa-legenda .lg.rota{border-radius:50%}
 .mapa-legenda .lg.especial{background:#f2c94c;transform:rotate(45deg) scale(.85)}
 .mapa-legenda .lg.nao-pisado{opacity:.5;border-radius:50%}
-.mapa-info{margin-top:10px;padding:10px 12px;border-radius:10px;background:rgba(0,0,0,.18);border:1px solid rgba(255,255,255,.08);min-height:92px}
-.mapa-info .mi-cab{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
-.mapa-info .mi-cab b{font-size:16px}
-.mapa-info .mi-cab span{color:var(--texto-fraco);font-size:12.5px}
-.mapa-info .mi-desc{margin:6px 0;font-size:13.5px;line-height:1.45}
+/* A ficha do lugar tocado: o nome em letra de placa com a etiqueta do
+   tipo (a bolinha na cor do desenho do mapa), a descrição na letra de
+   ler, o que liga e o que tem em linhas agrupadas como na folha, e
+   embaixo o que dá pra fazer: a placa de estrada pro vizinho, o voo,
+   ou por que não. */
+.mapa-info{margin-top:12px;padding:14px 16px 16px;border-radius:14px;min-height:120px;
+  border:1px solid color-mix(in srgb, var(--borda) 85%, transparent);
+  background:color-mix(in srgb, var(--bg) 38%, transparent)}
+.mapa-info .mi-cab{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.mapa-info .mi-cab b{font:700 21px/1.1 var(--letra-hud, var(--fonte));margin-right:2px}
+.mapa-info .mi-tipo{display:inline-flex;align-items:center;gap:6px;padding:3px 10px 3px 8px;border-radius:999px;
+  font:600 11.5px/1.3 var(--letra-hud, var(--fonte));letter-spacing:.03em;color:var(--texto-fraco);
+  background:rgba(0,0,0,.25);box-shadow:inset 0 0 0 1px var(--borda)}
+.mapa-info .mi-tipo::before{content:'';width:8px;height:8px;border-radius:50%;background:#f4efe0;box-shadow:0 0 0 1px #5a4a2a}
+.mapa-info .mi-tipo.cidade::before{background:#e2463a;border-radius:2px;box-shadow:0 0 0 1px #fff}
+.mapa-info .mi-tipo.especial::before{background:#f2c94c;border-radius:1px;transform:rotate(45deg) scale(.85)}
+.mapa-info .mi-tipo.perigo{color:color-mix(in srgb, var(--perigo) 75%, #fff);box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--perigo) 50%, transparent)}
+.mapa-info .mi-tipo.perigo::before{background:var(--perigo);box-shadow:none}
+.mapa-info .mi-desc{margin:9px 0 11px;font-size:14px;line-height:1.5}
 .mapa-info .mi-desc.fraco{color:var(--texto-fraco);font-style:italic}
-.mapa-info .mi-linhas{display:flex;flex-direction:column;gap:3px;font-size:13px}
-.mapa-info .mi-linhas .k{display:inline-block;min-width:70px;color:var(--texto-fraco);font-size:11.5px;text-transform:uppercase;letter-spacing:.06em}
-.mapa-info .mi-acao{margin-top:9px}
-.mapa-info .mapa-aqui,.mapa-info .mapa-longe{font-size:13px;color:var(--texto-fraco);font-style:italic}
+.mapa-info .mi-linhas{display:flex;flex-direction:column;border-radius:12px;overflow:hidden;box-shadow:inset 0 0 0 1px var(--borda)}
+.mapa-info .linha{align-items:baseline;gap:14px;padding:8px 13px;border-bottom:0;background:rgba(0,0,0,.18)}
+.mapa-info .linha + .linha{border-top:1px solid var(--borda)}
+.mapa-info .linha .k{font:700 10.5px/1.6 var(--letra-hud, var(--fonte));letter-spacing:.14em;text-transform:uppercase;color:var(--texto-fraco)}
+.mapa-info .linha .v{font:500 13.5px/1.45 var(--letra-hud, var(--fonte));color:var(--texto)}
+.mapa-info .mi-acao{margin-top:12px}
+.mapa-info .mi-acao .escolha{width:100%;--ac:#5aa7ff}
+.mapa-info .mi-acao .escolha.voo{--ac:#9fa8ff}
+.mapa-info .mi-aqui, .mapa-info .mi-longe{display:flex;align-items:center;gap:11px;padding:10px 13px;border-radius:12px}
+.mapa-info .mi-aqui{font:600 15px/1.3 var(--letra-hud, var(--fonte));color:#ffe9a3;
+  background:color-mix(in srgb, #ffd54f 12%, rgba(0,0,0,.22));box-shadow:inset 0 0 0 1px color-mix(in srgb, #ffd54f 40%, transparent)}
+.mapa-info .mi-longe{font:400 13.5px/1.45 var(--fonte);color:var(--texto-fraco);
+  background:rgba(0,0,0,.18);box-shadow:inset 0 0 0 1px var(--borda)}
+.mapa-info .mi-aqui svg.icone, .mapa-info .mi-longe svg.icone{width:30px;height:30px;padding:6px;border-radius:10px;flex:0 0 auto;stroke-width:2;
+  color:var(--ac, var(--texto-fraco));background:color-mix(in srgb, var(--ac, #8d97bd) 20%, rgba(0,0,0,.25))}
+@media (max-width:620px){
+  .mapa-info{padding:12px 13px 14px}
+  .mapa-info .linha{padding:7px 11px}
+}
+/* Tela larga: o mapa à esquerda e a ficha do lugar à direita, como o
+   painel do Town Map — embaixo do mapa, a ficha caía fora da janela e
+   o "Ir para" só aparecia rolando. A janela cresce até onde o mapa
+   ainda cabe na altura (86vh menos barra, faixa e Fechar; o mapa é
+   284×226), e a legenda desce pro pé da coluna da ficha. */
+@media (min-width:900px){
+  .modal.mapa{max-width:min(1040px, calc((86vh - 200px) * 1.2566 + 394px))}
+  .mapa-kanto{display:grid;grid-template-columns:minmax(0, 1fr) 330px;grid-template-rows:auto 1fr auto;
+    grid-template-areas:'topo topo' 'mapa info' 'mapa leg';column-gap:18px}
+  .mapa-kanto .mapa-topo{grid-area:topo}
+  .mapa-kanto > svg{grid-area:mapa;align-self:start}
+  .mapa-kanto .mapa-info{grid-area:info;align-self:start;margin-top:0}
+  .mapa-kanto .mapa-legenda{grid-area:leg;display:grid;grid-template-columns:max-content max-content;gap:7px 22px;margin:12px 4px 0}
+}
 .mapa-kanto .mp-no rect,.mapa-kanto .mp-no circle{fill:#f4efe0;stroke:#5a4a2a;stroke-width:1}
 .mapa-kanto .mp-no.cidade rect{fill:#e2463a;stroke:#fff}
 .mapa-kanto .mp-no.especial rect{fill:#f2c94c}
 .mapa-kanto .mp-no.desconhecido rect,.mapa-kanto .mp-no.desconhecido circle{fill:#b8b8b0;stroke:#6e6e66;opacity:.8}
-.mapa-kanto .mp-no text{font:600 6.2px system-ui,sans-serif;fill:#10202e;paint-order:stroke;stroke:#f4f7ea;stroke-width:1.6px}
+.mapa-kanto .mp-no text{font:600 6.4px var(--letra-hud, system-ui),sans-serif;fill:#10202e;paint-order:stroke;stroke:#f4f7ea;stroke-width:1.6px}
 .mapa-kanto .mp-no.vizinho{cursor:pointer}
 .mapa-kanto .mp-no.vizinho rect,.mapa-kanto .mp-no.vizinho circle{stroke:#ffe066;stroke-width:1.8}
 .mapa-kanto .mp-no.vizinho:hover rect,.mapa-kanto .mp-no.vizinho:hover circle,
@@ -15954,7 +16278,7 @@ button.item-linha.aparelho{
 .mapa-kanto .mp-arvore{fill:#4e9a45;stroke:#35702f;stroke-width:.6}
 .mapa-kanto .mp-rosa circle{fill:rgba(255,255,255,.12);stroke:rgba(255,255,255,.5);stroke-width:.8}
 .mapa-kanto .mp-rosa path{fill:#f4f2ea}
-.mapa-kanto .mp-rosa text{font:700 6px system-ui,sans-serif;fill:#f4f2ea;text-anchor:middle}
+.mapa-kanto .mp-rosa text{font:700 6px var(--letra-hud, system-ui),sans-serif;fill:#f4f2ea;text-anchor:middle}
 .mapa-kanto .mp-via-borda{fill:none;stroke:#9b7d45;stroke-width:5.4;stroke-linejoin:round;stroke-linecap:round;opacity:.55}
 .mapa-kanto .mp-via{fill:none;stroke:#f3e6b8;stroke-width:3.4;stroke-linejoin:round;stroke-linecap:round;opacity:.6}
 .mapa-kanto .mp-via.andada{opacity:1}
@@ -19585,12 +19909,17 @@ h3.cat-item{
 
 /* ============================================================
    PC — o terminal do Centro Pokémon
-   Carcaça bege de plástico de 1996, tela verde de fósforo.
+   Carcaça bege de plástico de 1996, tela verde de fósforo. Por fora,
+   o idioma dos aparelhos: a barra de volta pro balcão ("‹ Centro") e
+   o nome do aparelho na carcaça. Por dentro, a letra do HUD nos nomes,
+   nas seções e nos botões; a de tela (mono) fica nos números e na
+   faixa do sistema, como na Pokédex. Ficha e botão de tela têm
+   espessura e afundam quando aperta, como os do resto do jogo.
    ============================================================ */
 .modal.pc{
   --pc-caixa:#d9d2c0; --pc-caixa-esc:#8f887a; --pc-caixa-clara:#efe9da;
   --pc-tela:#0e2417; --pc-tela-2:#132f1e; --pc-luz:#7dfca8;
-  --pc-txt:#c9f7d8; --pc-txt-2:#79b993; --pc-linha:#1d4a2f;
+  --pc-txt:#c9f7d8; --pc-txt-2:#79b993; --pc-linha:#1d4a2f; --pc-tinta:#3d3830;
   max-width:760px;
   border:3px solid var(--pc-caixa-esc);
   background:linear-gradient(180deg, var(--pc-caixa-clara), var(--pc-caixa) 30%, var(--pc-caixa-esc));
@@ -19602,25 +19931,42 @@ h3.cat-item{
   40%{opacity:1}
   to{opacity:1;transform:none}
 }
-.modal.pc .modal-corpo{
+.modal.pc .modal-corpo{padding:0}
+/* a barra do balcão, gravada na carcaça bege */
+.modal.pc .volta-mochila{background:rgba(61,56,48,.1);border-color:rgba(61,56,48,.28);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.45)}
+.modal.pc .volta-mochila .aba-volta{color:var(--pc-tinta);background:rgba(255,255,255,.5);
+  font-family:var(--letra-hud, var(--fonte));box-shadow:0 2px 0 rgba(61,56,48,.35)}
+.modal.pc .volta-mochila .aba-volta:hover{background:rgba(255,255,255,.8)}
+.modal.pc .volta-mochila .aba-volta:active{transform:translateY(1px);box-shadow:0 1px 0 rgba(61,56,48,.35)}
+.modal.pc .volta-mochila .aparelho-aberto{color:var(--pc-tinta);font-family:var(--letra-hud, var(--fonte))}
+/* o desenho do Centro e do aparelho, na cor de cada um (o --ac vem do svgIcone) */
+.volta-centro svg.icone{width:20px;height:20px;flex:0 0 auto;stroke-width:2.1;color:var(--ac, currentColor)}
+.volta-centro .aparelho-aberto svg.icone{width:22px;height:22px;padding:3px;border-radius:7px;
+  background:color-mix(in srgb, var(--ac, #888) 22%, rgba(0,0,0,.2));box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--ac, #888) 50%, transparent)}
+.modal.pc .volta-centro .aparelho-aberto svg.icone{color:color-mix(in srgb, var(--ac) 60%, #0d3b3f);
+  background:color-mix(in srgb, var(--ac) 30%, #fff)}
+
+/* a tela */
+.pc-tela{
   position:relative;
   background:linear-gradient(180deg, var(--pc-tela-2), var(--pc-tela) 55%);
-  border:2px solid #05130c;border-radius:8px;padding:0;
+  border:2px solid #05130c;border-radius:9px;
   color:var(--pc-txt);
   box-shadow:inset 0 0 26px -6px rgba(0,0,0,.9), 0 0 20px -8px rgba(125,252,168,.35);
   overflow:hidden;
 }
-.modal.pc .modal-corpo::after{
+.pc-tela::after{
   content:'';position:absolute;inset:0;pointer-events:none;z-index:2;
   background:repeating-linear-gradient(180deg, rgba(0,0,0,.16) 0 1px, transparent 1px 3px);
 }
 .modal.pc .modal-pe{padding-top:10px}
 .modal.pc .modal-pe .btn{
-  background:#3d3830;border-color:var(--pc-caixa-esc);color:var(--pc-caixa-clara)
+  background:var(--pc-tinta);border-color:var(--pc-caixa-esc);color:var(--pc-caixa-clara)
 }
 .modal.pc .modal-pe .btn:hover:not(:disabled){background:#57503f;color:#fff}
 
-/* barra de título da tela */
+/* faixa do sistema, no alto da tela */
 .pc-topo{
   display:flex;align-items:center;gap:9px;
   padding:7px 12px;border-bottom:1px solid var(--pc-linha);
@@ -19637,44 +19983,52 @@ h3.cat-item{
 
 /* duas colunas: cinto e caixa */
 .pc-colunas{display:grid;grid-template-columns:1fr 1fr;gap:0}
-.pc-lado{padding:10px 12px;min-width:0}
+.pc-lado{padding:10px 12px 12px;min-width:0}
 .pc-lado + .pc-lado{border-left:1px solid var(--pc-linha)}
+/* cabeçalho de seção no idioma do HUD: losango e linha, na luz da tela */
 .pc-titulo{
-  display:flex;justify-content:space-between;align-items:baseline;gap:8px;
-  font-family:var(--mono);font-size:11px;letter-spacing:.13em;text-transform:uppercase;
-  color:var(--pc-txt-2);margin-bottom:7px;
-  border-bottom:1px dashed var(--pc-linha);padding-bottom:5px;
+  display:flex;align-items:center;gap:8px;margin-bottom:8px;
+  font:700 11.5px/1 var(--letra-hud, var(--fonte));letter-spacing:.16em;text-transform:uppercase;
+  color:var(--pc-txt-2);
 }
-.pc-titulo span{color:var(--pc-luz);letter-spacing:.06em}
-.pc-grade{display:grid;grid-template-columns:1fr 1fr;gap:5px}
-.pc-grade.caixa{max-height:198px;overflow-y:auto;padding-right:3px}
+.pc-titulo::before{content:'';width:7px;height:7px;border-radius:2px;transform:rotate(45deg);flex:0 0 auto;
+  background:var(--pc-luz);box-shadow:0 0 8px -1px var(--pc-luz)}
+.pc-titulo::after{content:'';flex:1 1 auto;height:1px;order:1;
+  background:linear-gradient(90deg, var(--pc-linha), transparent)}
+.pc-titulo span{order:2;font-family:var(--mono);font-weight:400;font-size:11px;color:var(--pc-luz);letter-spacing:.06em}
+.pc-grade{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.pc-grade.caixa{max-height:208px;overflow-y:auto;padding:0 3px 4px 0}
 .pc-grade.caixa::-webkit-scrollbar{width:7px}
 .pc-grade.caixa::-webkit-scrollbar-thumb{background:var(--pc-linha);border-radius:4px}
 
+/* cada Pokémon: tecla de terminal, com espessura embaixo */
 .pc-slot{
   display:grid;grid-template-columns:30px 1fr;grid-template-rows:auto auto auto;
   grid-template-areas:'ic nome' 'ic nv' 'barra barra';
   align-items:center;gap:1px 7px;
-  padding:5px 7px;text-align:left;cursor:pointer;
-  border:1px solid var(--pc-linha);border-radius:4px;
-  background:rgba(125,252,168,.04);color:var(--pc-txt);
-  font:inherit;transition:background .12s, border-color .12s;
+  padding:5px 8px 6px;text-align:left;cursor:pointer;
+  border:1px solid var(--pc-linha);border-radius:8px;
+  background:linear-gradient(180deg, rgba(125,252,168,.09), rgba(125,252,168,.03));color:var(--pc-txt);
+  box-shadow:0 3px 0 #06180e, inset 0 1px 0 rgba(125,252,168,.08);
+  font:inherit;transition:background .12s, border-color .12s, transform .12s var(--suave), box-shadow .12s var(--suave);
 }
-.pc-slot:hover{background:rgba(125,252,168,.12);border-color:var(--pc-txt-2)}
+.pc-slot:hover{background:rgba(125,252,168,.14);border-color:var(--pc-txt-2);transform:translateY(-1px)}
+.pc-slot:active{transform:translateY(2px);box-shadow:0 1px 0 #06180e}
+.pc-slot:focus-visible{outline:2px solid var(--pc-luz);outline-offset:2px}
 .pc-slot.sel{
-  border-color:var(--pc-luz);background:rgba(125,252,168,.18);
-  box-shadow:0 0 0 1px var(--pc-luz) inset, 0 0 12px -4px var(--pc-luz);
+  border-color:var(--pc-luz);background:rgba(125,252,168,.2);
+  box-shadow:0 3px 0 #0b3a20, 0 0 0 1px var(--pc-luz) inset, 0 0 14px -4px var(--pc-luz);
 }
 .pc-slot.caido{opacity:.62}
 .pc-slot.morto{opacity:.45;filter:grayscale(1)}
 .pc-slot.vazio{
   display:flex;align-items:center;justify-content:center;
-  border-style:dashed;background:transparent;cursor:default;min-height:48px;
+  border-style:dashed;background:transparent;box-shadow:none;cursor:default;min-height:52px;
 }
 .pc-vazio{color:var(--pc-linha);font-size:16px}
 .pc-icone{grid-area:ic;display:flex;align-items:center;justify-content:center}
 .pc-icone img{width:30px;height:30px;image-rendering:pixelated}
-.pc-nome{grid-area:nome;font-size:12.5px;line-height:1.15;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pc-nome{grid-area:nome;font:600 13px/1.15 var(--letra-hud, var(--fonte));overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .pc-nv{grid-area:nv;font-family:var(--mono);font-size:10.5px;color:var(--pc-txt-2)}
 .pc-barra{
   grid-area:barra;display:block;height:3px;margin-top:3px;
@@ -19685,65 +20039,93 @@ h3.cat-item{
 .pc-barra.moral i{background:#ffd166}
 .pc-caixa-vazia{
   grid-column:1/-1;text-align:center;padding:26px 8px;color:var(--pc-txt-2);
-  font-size:12.5px;line-height:1.5;
+  font:600 13px/1.5 var(--letra-hud, var(--fonte));
 }
-.pc-caixa-vazia span{color:var(--pc-linha);font-size:11.5px}
+.pc-caixa-vazia span{color:var(--pc-txt-2);opacity:.7;font:400 11.5px/1.5 var(--fonte)}
 
 /* ficha do selecionado */
 .pc-ficha{
-  display:grid;grid-template-columns:104px 1fr;gap:12px;
-  padding:11px 13px;border-top:1px solid var(--pc-linha);
+  display:grid;grid-template-columns:110px 1fr;gap:14px;
+  padding:12px 14px 14px;border-top:1px solid var(--pc-linha);
   background:rgba(0,0,0,.22);
 }
 .pc-arte{display:flex;align-items:center;justify-content:center}
 .pc-arte img{width:114px;height:114px;image-rendering:pixelated;
   filter:drop-shadow(0 0 10px rgba(125,252,168,.22))}
 .pc-dados{min-width:0}
-.pc-cab{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;margin-bottom:5px}
-.pc-ficha-nome{font-size:16px;font-weight:650;color:#e8fff0}
+.pc-cab{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;margin-bottom:6px}
+.pc-ficha-nome{font:700 19px/1.1 var(--letra-hud, var(--fonte));color:#e8fff0}
 .pc-ficha-nv{font-family:var(--mono);font-size:12px;color:var(--pc-txt-2)}
 .pc-tag{
-  font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;
-  padding:1px 6px;border-radius:3px;border:1px solid currentColor;
+  font:700 10px/1.4 var(--letra-hud, var(--fonte));letter-spacing:.1em;text-transform:uppercase;
+  padding:1px 7px;border-radius:999px;border:1px solid currentColor;
 }
 .pc-tag.caido{color:#ffc46b}
 .pc-tag.morto{color:#ff7b6b}
-.pc-tipos{display:flex;gap:5px;flex-wrap:wrap;align-items:center;margin-bottom:7px}
-.pc-nat{font-size:11.5px;color:var(--pc-txt-2);font-style:italic}
-.pc-nat.fraca{color:var(--pc-linha);font-size:11px}
-.pc-medida{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.pc-tipos{display:flex;gap:5px;flex-wrap:wrap;align-items:center;margin-bottom:8px}
+.pc-nat{font-size:12px;color:var(--pc-txt-2);font-style:italic}
+.pc-nat.fraca{color:var(--pc-txt-2);opacity:.6;font-size:11.5px}
+.pc-medida{display:flex;align-items:center;gap:8px;margin-bottom:5px}
 .pc-medida .rot{
-  flex:0 0 42px;font-family:var(--mono);font-size:10px;letter-spacing:.1em;
+  flex:0 0 46px;font:700 10.5px/1 var(--letra-hud, var(--fonte));letter-spacing:.12em;
   text-transform:uppercase;color:var(--pc-txt-2);
 }
 .pc-medida .num{font-size:11.5px;color:var(--pc-txt);flex:0 0 auto;min-width:58px;text-align:right}
-.pc-golpes{display:flex;flex-wrap:wrap;gap:4px;margin:7px 0 6px}
+.pc-sec{
+  display:flex;align-items:center;gap:8px;margin:10px 0 6px;
+  font:700 10.5px/1 var(--letra-hud, var(--fonte));letter-spacing:.16em;text-transform:uppercase;color:var(--pc-txt-2);
+}
+.pc-sec::before{content:'';width:6px;height:6px;border-radius:2px;transform:rotate(45deg);background:var(--pc-luz);flex:0 0 auto}
+.pc-sec::after{content:'';flex:1 1 auto;height:1px;background:linear-gradient(90deg, var(--pc-linha), transparent)}
+.pc-golpes{display:flex;flex-wrap:wrap;gap:5px;margin:0 0 8px}
+/* o golpe com a faixa da cor do tipo, como o botão de golpe da luta */
 .pc-golpe{
-  font-size:11px;padding:2px 6px;border-radius:3px;
-  border:1px solid var(--pc-linha);background:rgba(125,252,168,.05);color:var(--pc-txt-2);
+  --tc:#8a8f99;
+  font:600 12px/1.2 var(--letra-hud, var(--fonte));padding:4px 9px 4px 11px;border-radius:7px;
+  border:1px solid var(--pc-linha);color:var(--pc-txt);
+  background:linear-gradient(90deg, var(--tc) 0 4px, color-mix(in srgb, var(--tc) 14%, rgba(4,20,11,.6)) 4px);
 }
-.pc-golpe b{color:var(--pc-txt);font-weight:600}
-.pc-historia{font-size:11.5px;font-style:italic;color:var(--pc-txt-2);line-height:1.45;margin-bottom:8px}
-.pc-afinidade{font-size:11.5px;color:var(--pc-txt);letter-spacing:.2px;margin-bottom:6px}
+.pc-historia{font-size:12px;font-style:italic;color:var(--pc-txt-2);line-height:1.45;margin-bottom:9px}
+.pc-afinidade{font-size:12px;color:var(--pc-txt);letter-spacing:.2px;margin-bottom:7px}
 .sussurro.afinidade{color:var(--texto);opacity:.85}
-.pc-acao{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.pc-acao .btn{
-  background:var(--pc-linha);border-color:var(--pc-luz);color:var(--pc-txt);
-  padding:6px 14px;font-size:13px;
+.pc-acao{grid-column:2;display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:-4px}
+/* o botão da tela: tecla grande, com espessura, que afunda */
+.pc-bt{
+  display:inline-flex;align-items:center;gap:8px;min-height:38px;padding:6px 14px 6px 9px;cursor:pointer;
+  border:1px solid var(--pc-txt-2);border-radius:10px;color:var(--pc-txt);
+  font:600 14px/1.1 var(--letra-hud, var(--fonte));
+  background:linear-gradient(180deg, rgba(125,252,168,.12), rgba(125,252,168,.04));
+  box-shadow:0 3px 0 #06180e, inset 0 1px 0 rgba(125,252,168,.12);
+  transition:transform .12s var(--suave), box-shadow .12s var(--suave), background .15s;
 }
-.pc-acao .btn:hover:not(:disabled){background:var(--pc-luz);color:#08281a}
-.pc-acao .btn:disabled{border-color:var(--pc-linha);color:var(--pc-txt-2)}
-.pc-trava{font-size:11.5px;color:#ffc46b;flex:1;min-width:140px;line-height:1.35}
+.pc-bt svg.icone{width:22px;height:22px;padding:3px;border-radius:7px;flex:0 0 auto;stroke-width:2.1;
+  color:var(--pc-luz);background:rgba(125,252,168,.12)}
+.pc-bt.principal{border-color:var(--pc-luz);background:linear-gradient(180deg, rgba(125,252,168,.3), rgba(125,252,168,.14))}
+.pc-bt:hover:not(:disabled){transform:translateY(-1px);background:rgba(125,252,168,.24)}
+.pc-bt.principal:hover:not(:disabled){background:var(--pc-luz);color:#08281a}
+.pc-bt.principal:hover:not(:disabled) svg.icone{color:#08281a;background:rgba(8,40,26,.15)}
+.pc-bt:active:not(:disabled){transform:translateY(2px);box-shadow:0 1px 0 #06180e}
+.pc-bt:focus-visible{outline:2px solid var(--pc-luz);outline-offset:2px}
+.pc-bt:disabled{cursor:not-allowed;opacity:.55;box-shadow:none;border-color:var(--pc-linha)}
+.pc-trava{font-size:12px;color:#ffc46b;flex:1 1 100%;line-height:1.4}
 .pc-nada{grid-column:1/-1;text-align:center;color:var(--pc-txt-2);padding:18px 6px}
 .pc-erro{
-  grid-column:1/-1;margin-top:8px;padding:6px 9px;border-radius:4px;
+  grid-column:1/-1;margin-top:8px;padding:6px 9px;border-radius:6px;
   border:1px solid #ff7b6b;color:#ffb3a8;background:rgba(255,123,107,.1);font-size:12px;
 }
 @media (max-width:640px){
+  .modal.pc{padding:14px}
   .pc-colunas{grid-template-columns:1fr}
   .pc-lado + .pc-lado{border-left:none;border-top:1px solid var(--pc-linha)}
-  .pc-ficha{grid-template-columns:1fr}
-  .pc-arte img{width:90px;height:90px}
+  /* a arte encosta no nome, à esquerda: a ficha inteira cabe sem rolar */
+  .pc-ficha{grid-template-columns:72px 1fr;gap:10px;padding:10px 11px 12px}
+  .pc-arte{align-items:flex-start}
+  .pc-arte img{width:76px;height:76px}
+  .pc-ficha-nome{font-size:17px}
+  .pc-medida .rot{flex-basis:40px}
+  .pc-medida .num{min-width:40px}
+  .pc-acao{grid-column:1 / -1}
+  .pc-bt{flex:1 1 auto;justify-content:center}
 }
 
 /* ============================================================
@@ -20631,8 +21013,15 @@ h3.com-mapa{display:flex;align-items:center;justify-content:space-between;gap:8p
 .btn.mini.abre-mapa{display:inline-flex;align-items:center;gap:4px;text-transform:none;letter-spacing:0}
 .btn.mini.abre-mapa .item-icone{width:22px;height:22px}
 .modal.mapa{max-width:640px}
-.mapa-kanto .mapa-topo{display:flex;align-items:center;gap:8px;margin-bottom:8px}
-.mapa-kanto .mapa-topo span{margin-left:auto;color:var(--texto-fraco);font-size:13px}
+/* a faixa do mapa no idioma das seções: losango e linha na cor do mapa */
+.mapa-kanto .mapa-topo{display:flex;align-items:center;gap:10px;margin:2px 0 10px;
+  font-family:var(--letra-hud, var(--fonte))}
+.mapa-kanto .mapa-topo::before{content:'';flex:0 0 auto;width:8px;height:8px;border-radius:2px;transform:rotate(45deg);
+  background:#66bb6a;box-shadow:0 0 10px -1px #66bb6a}
+.mapa-kanto .mapa-topo b{font-size:12px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--texto-fraco)}
+.mapa-kanto .mapa-topo::after{content:'';flex:1 1 auto;height:1px;order:1;
+  background:linear-gradient(90deg, color-mix(in srgb, #66bb6a 45%, var(--borda)), transparent)}
+.mapa-kanto .mapa-topo span{order:2;color:var(--texto-fraco);font-size:13px;font-weight:500}
 .mapa-kanto svg{display:block;width:100%;height:auto;border-radius:10px;
   background:linear-gradient(180deg,#3d78b8,#2e5f99);box-shadow:inset 0 0 0 2px rgba(0,0,0,.25)}
 .mapa-kanto .mp-terra{fill:#7fb069;stroke:#4f7d43;stroke-width:1.2}
@@ -20643,31 +21032,74 @@ h3.com-mapa{display:flex;align-items:center;justify-content:space-between;gap:8p
 .mapa-kanto .mp-no{cursor:pointer;outline:none}
 .mapa-kanto .mp-no.nao-pisado rect,.mapa-kanto .mp-no.nao-pisado circle{opacity:.55}
 .mapa-kanto .mp-no.nao-pisado text{opacity:.75}
-.mapa-kanto .mp-no text.mp-rota{font:700 4.6px system-ui,sans-serif}
+.mapa-kanto .mp-no text.mp-rota{font:700 4.8px var(--letra-hud, system-ui),sans-serif}
 .mapa-kanto .mp-no:hover rect,.mapa-kanto .mp-no:hover circle,
 .mapa-kanto .mp-no:focus-visible rect,.mapa-kanto .mp-no:focus-visible circle{stroke:#10202e;stroke-width:1.6}
 .mapa-kanto .mp-no.sel rect,.mapa-kanto .mp-no.sel circle{stroke:#10202e;stroke-width:2.2;opacity:1}
-.mapa-legenda{display:flex;flex-wrap:wrap;gap:6px 14px;margin:8px 2px 0;font-size:12px;color:var(--texto-fraco)}
+.mapa-legenda{display:flex;flex-wrap:wrap;gap:6px 14px;margin:9px 2px 0;font:500 12px/1.3 var(--letra-hud, var(--fonte));color:var(--texto-fraco)}
 .mapa-legenda .lg{display:inline-block;width:10px;height:10px;margin-right:5px;vertical-align:-1px;border:1px solid #5a4a2a;background:#f4efe0}
 .mapa-legenda .lg.cidade{background:#e2463a;border-color:#fff;border-radius:2px}
 .mapa-legenda .lg.rota{border-radius:50%}
 .mapa-legenda .lg.especial{background:#f2c94c;transform:rotate(45deg) scale(.85)}
 .mapa-legenda .lg.nao-pisado{opacity:.5;border-radius:50%}
-.mapa-info{margin-top:10px;padding:10px 12px;border-radius:10px;background:rgba(0,0,0,.18);border:1px solid rgba(255,255,255,.08);min-height:92px}
-.mapa-info .mi-cab{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
-.mapa-info .mi-cab b{font-size:16px}
-.mapa-info .mi-cab span{color:var(--texto-fraco);font-size:12.5px}
-.mapa-info .mi-desc{margin:6px 0;font-size:13.5px;line-height:1.45}
+/* A ficha do lugar tocado: o nome em letra de placa com a etiqueta do
+   tipo (a bolinha na cor do desenho do mapa), a descrição na letra de
+   ler, o que liga e o que tem em linhas agrupadas como na folha, e
+   embaixo o que dá pra fazer: a placa de estrada pro vizinho, o voo,
+   ou por que não. */
+.mapa-info{margin-top:12px;padding:14px 16px 16px;border-radius:14px;min-height:120px;
+  border:1px solid color-mix(in srgb, var(--borda) 85%, transparent);
+  background:color-mix(in srgb, var(--bg) 38%, transparent)}
+.mapa-info .mi-cab{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.mapa-info .mi-cab b{font:700 21px/1.1 var(--letra-hud, var(--fonte));margin-right:2px}
+.mapa-info .mi-tipo{display:inline-flex;align-items:center;gap:6px;padding:3px 10px 3px 8px;border-radius:999px;
+  font:600 11.5px/1.3 var(--letra-hud, var(--fonte));letter-spacing:.03em;color:var(--texto-fraco);
+  background:rgba(0,0,0,.25);box-shadow:inset 0 0 0 1px var(--borda)}
+.mapa-info .mi-tipo::before{content:'';width:8px;height:8px;border-radius:50%;background:#f4efe0;box-shadow:0 0 0 1px #5a4a2a}
+.mapa-info .mi-tipo.cidade::before{background:#e2463a;border-radius:2px;box-shadow:0 0 0 1px #fff}
+.mapa-info .mi-tipo.especial::before{background:#f2c94c;border-radius:1px;transform:rotate(45deg) scale(.85)}
+.mapa-info .mi-tipo.perigo{color:color-mix(in srgb, var(--perigo) 75%, #fff);box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--perigo) 50%, transparent)}
+.mapa-info .mi-tipo.perigo::before{background:var(--perigo);box-shadow:none}
+.mapa-info .mi-desc{margin:9px 0 11px;font-size:14px;line-height:1.5}
 .mapa-info .mi-desc.fraco{color:var(--texto-fraco);font-style:italic}
-.mapa-info .mi-linhas{display:flex;flex-direction:column;gap:3px;font-size:13px}
-.mapa-info .mi-linhas .k{display:inline-block;min-width:70px;color:var(--texto-fraco);font-size:11.5px;text-transform:uppercase;letter-spacing:.06em}
-.mapa-info .mi-acao{margin-top:9px}
-.mapa-info .mapa-aqui,.mapa-info .mapa-longe{font-size:13px;color:var(--texto-fraco);font-style:italic}
+.mapa-info .mi-linhas{display:flex;flex-direction:column;border-radius:12px;overflow:hidden;box-shadow:inset 0 0 0 1px var(--borda)}
+.mapa-info .linha{align-items:baseline;gap:14px;padding:8px 13px;border-bottom:0;background:rgba(0,0,0,.18)}
+.mapa-info .linha + .linha{border-top:1px solid var(--borda)}
+.mapa-info .linha .k{font:700 10.5px/1.6 var(--letra-hud, var(--fonte));letter-spacing:.14em;text-transform:uppercase;color:var(--texto-fraco)}
+.mapa-info .linha .v{font:500 13.5px/1.45 var(--letra-hud, var(--fonte));color:var(--texto)}
+.mapa-info .mi-acao{margin-top:12px}
+.mapa-info .mi-acao .escolha{width:100%;--ac:#5aa7ff}
+.mapa-info .mi-acao .escolha.voo{--ac:#9fa8ff}
+.mapa-info .mi-aqui, .mapa-info .mi-longe{display:flex;align-items:center;gap:11px;padding:10px 13px;border-radius:12px}
+.mapa-info .mi-aqui{font:600 15px/1.3 var(--letra-hud, var(--fonte));color:#ffe9a3;
+  background:color-mix(in srgb, #ffd54f 12%, rgba(0,0,0,.22));box-shadow:inset 0 0 0 1px color-mix(in srgb, #ffd54f 40%, transparent)}
+.mapa-info .mi-longe{font:400 13.5px/1.45 var(--fonte);color:var(--texto-fraco);
+  background:rgba(0,0,0,.18);box-shadow:inset 0 0 0 1px var(--borda)}
+.mapa-info .mi-aqui svg.icone, .mapa-info .mi-longe svg.icone{width:30px;height:30px;padding:6px;border-radius:10px;flex:0 0 auto;stroke-width:2;
+  color:var(--ac, var(--texto-fraco));background:color-mix(in srgb, var(--ac, #8d97bd) 20%, rgba(0,0,0,.25))}
+@media (max-width:620px){
+  .mapa-info{padding:12px 13px 14px}
+  .mapa-info .linha{padding:7px 11px}
+}
+/* Tela larga: o mapa à esquerda e a ficha do lugar à direita, como o
+   painel do Town Map — embaixo do mapa, a ficha caía fora da janela e
+   o "Ir para" só aparecia rolando. A janela cresce até onde o mapa
+   ainda cabe na altura (86vh menos barra, faixa e Fechar; o mapa é
+   284×226), e a legenda desce pro pé da coluna da ficha. */
+@media (min-width:900px){
+  .modal.mapa{max-width:min(1040px, calc((86vh - 200px) * 1.2566 + 394px))}
+  .mapa-kanto{display:grid;grid-template-columns:minmax(0, 1fr) 330px;grid-template-rows:auto 1fr auto;
+    grid-template-areas:'topo topo' 'mapa info' 'mapa leg';column-gap:18px}
+  .mapa-kanto .mapa-topo{grid-area:topo}
+  .mapa-kanto > svg{grid-area:mapa;align-self:start}
+  .mapa-kanto .mapa-info{grid-area:info;align-self:start;margin-top:0}
+  .mapa-kanto .mapa-legenda{grid-area:leg;display:grid;grid-template-columns:max-content max-content;gap:7px 22px;margin:12px 4px 0}
+}
 .mapa-kanto .mp-no rect,.mapa-kanto .mp-no circle{fill:#f4efe0;stroke:#5a4a2a;stroke-width:1}
 .mapa-kanto .mp-no.cidade rect{fill:#e2463a;stroke:#fff}
 .mapa-kanto .mp-no.especial rect{fill:#f2c94c}
 .mapa-kanto .mp-no.desconhecido rect,.mapa-kanto .mp-no.desconhecido circle{fill:#b8b8b0;stroke:#6e6e66;opacity:.8}
-.mapa-kanto .mp-no text{font:600 6.2px system-ui,sans-serif;fill:#10202e;paint-order:stroke;stroke:#f4f7ea;stroke-width:1.6px}
+.mapa-kanto .mp-no text{font:600 6.4px var(--letra-hud, system-ui),sans-serif;fill:#10202e;paint-order:stroke;stroke:#f4f7ea;stroke-width:1.6px}
 .mapa-kanto .mp-no.vizinho{cursor:pointer}
 .mapa-kanto .mp-no.vizinho rect,.mapa-kanto .mp-no.vizinho circle{stroke:#ffe066;stroke-width:1.8}
 .mapa-kanto .mp-no.vizinho:hover rect,.mapa-kanto .mp-no.vizinho:hover circle,
@@ -21772,7 +22204,7 @@ button.item-linha.aparelho{
 .mapa-kanto .mp-arvore{fill:#4e9a45;stroke:#35702f;stroke-width:.6}
 .mapa-kanto .mp-rosa circle{fill:rgba(255,255,255,.12);stroke:rgba(255,255,255,.5);stroke-width:.8}
 .mapa-kanto .mp-rosa path{fill:#f4f2ea}
-.mapa-kanto .mp-rosa text{font:700 6px system-ui,sans-serif;fill:#f4f2ea;text-anchor:middle}
+.mapa-kanto .mp-rosa text{font:700 6px var(--letra-hud, system-ui),sans-serif;fill:#f4f2ea;text-anchor:middle}
 .mapa-kanto .mp-via-borda{fill:none;stroke:#9b7d45;stroke-width:5.4;stroke-linejoin:round;stroke-linecap:round;opacity:.55}
 .mapa-kanto .mp-via{fill:none;stroke:#f3e6b8;stroke-width:3.4;stroke-linejoin:round;stroke-linecap:round;opacity:.6}
 .mapa-kanto .mp-via.andada{opacity:1}
@@ -25403,12 +25835,17 @@ h3.cat-item{
 
 /* ============================================================
    PC — o terminal do Centro Pokémon
-   Carcaça bege de plástico de 1996, tela verde de fósforo.
+   Carcaça bege de plástico de 1996, tela verde de fósforo. Por fora,
+   o idioma dos aparelhos: a barra de volta pro balcão ("‹ Centro") e
+   o nome do aparelho na carcaça. Por dentro, a letra do HUD nos nomes,
+   nas seções e nos botões; a de tela (mono) fica nos números e na
+   faixa do sistema, como na Pokédex. Ficha e botão de tela têm
+   espessura e afundam quando aperta, como os do resto do jogo.
    ============================================================ */
 .modal.pc{
   --pc-caixa:#d9d2c0; --pc-caixa-esc:#8f887a; --pc-caixa-clara:#efe9da;
   --pc-tela:#0e2417; --pc-tela-2:#132f1e; --pc-luz:#7dfca8;
-  --pc-txt:#c9f7d8; --pc-txt-2:#79b993; --pc-linha:#1d4a2f;
+  --pc-txt:#c9f7d8; --pc-txt-2:#79b993; --pc-linha:#1d4a2f; --pc-tinta:#3d3830;
   max-width:760px;
   border:3px solid var(--pc-caixa-esc);
   background:linear-gradient(180deg, var(--pc-caixa-clara), var(--pc-caixa) 30%, var(--pc-caixa-esc));
@@ -25420,25 +25857,42 @@ h3.cat-item{
   40%{opacity:1}
   to{opacity:1;transform:none}
 }
-.modal.pc .modal-corpo{
+.modal.pc .modal-corpo{padding:0}
+/* a barra do balcão, gravada na carcaça bege */
+.modal.pc .volta-mochila{background:rgba(61,56,48,.1);border-color:rgba(61,56,48,.28);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.45)}
+.modal.pc .volta-mochila .aba-volta{color:var(--pc-tinta);background:rgba(255,255,255,.5);
+  font-family:var(--letra-hud, var(--fonte));box-shadow:0 2px 0 rgba(61,56,48,.35)}
+.modal.pc .volta-mochila .aba-volta:hover{background:rgba(255,255,255,.8)}
+.modal.pc .volta-mochila .aba-volta:active{transform:translateY(1px);box-shadow:0 1px 0 rgba(61,56,48,.35)}
+.modal.pc .volta-mochila .aparelho-aberto{color:var(--pc-tinta);font-family:var(--letra-hud, var(--fonte))}
+/* o desenho do Centro e do aparelho, na cor de cada um (o --ac vem do svgIcone) */
+.volta-centro svg.icone{width:20px;height:20px;flex:0 0 auto;stroke-width:2.1;color:var(--ac, currentColor)}
+.volta-centro .aparelho-aberto svg.icone{width:22px;height:22px;padding:3px;border-radius:7px;
+  background:color-mix(in srgb, var(--ac, #888) 22%, rgba(0,0,0,.2));box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--ac, #888) 50%, transparent)}
+.modal.pc .volta-centro .aparelho-aberto svg.icone{color:color-mix(in srgb, var(--ac) 60%, #0d3b3f);
+  background:color-mix(in srgb, var(--ac) 30%, #fff)}
+
+/* a tela */
+.pc-tela{
   position:relative;
   background:linear-gradient(180deg, var(--pc-tela-2), var(--pc-tela) 55%);
-  border:2px solid #05130c;border-radius:8px;padding:0;
+  border:2px solid #05130c;border-radius:9px;
   color:var(--pc-txt);
   box-shadow:inset 0 0 26px -6px rgba(0,0,0,.9), 0 0 20px -8px rgba(125,252,168,.35);
   overflow:hidden;
 }
-.modal.pc .modal-corpo::after{
+.pc-tela::after{
   content:'';position:absolute;inset:0;pointer-events:none;z-index:2;
   background:repeating-linear-gradient(180deg, rgba(0,0,0,.16) 0 1px, transparent 1px 3px);
 }
 .modal.pc .modal-pe{padding-top:10px}
 .modal.pc .modal-pe .btn{
-  background:#3d3830;border-color:var(--pc-caixa-esc);color:var(--pc-caixa-clara)
+  background:var(--pc-tinta);border-color:var(--pc-caixa-esc);color:var(--pc-caixa-clara)
 }
 .modal.pc .modal-pe .btn:hover:not(:disabled){background:#57503f;color:#fff}
 
-/* barra de título da tela */
+/* faixa do sistema, no alto da tela */
 .pc-topo{
   display:flex;align-items:center;gap:9px;
   padding:7px 12px;border-bottom:1px solid var(--pc-linha);
@@ -25455,44 +25909,52 @@ h3.cat-item{
 
 /* duas colunas: cinto e caixa */
 .pc-colunas{display:grid;grid-template-columns:1fr 1fr;gap:0}
-.pc-lado{padding:10px 12px;min-width:0}
+.pc-lado{padding:10px 12px 12px;min-width:0}
 .pc-lado + .pc-lado{border-left:1px solid var(--pc-linha)}
+/* cabeçalho de seção no idioma do HUD: losango e linha, na luz da tela */
 .pc-titulo{
-  display:flex;justify-content:space-between;align-items:baseline;gap:8px;
-  font-family:var(--mono);font-size:11px;letter-spacing:.13em;text-transform:uppercase;
-  color:var(--pc-txt-2);margin-bottom:7px;
-  border-bottom:1px dashed var(--pc-linha);padding-bottom:5px;
+  display:flex;align-items:center;gap:8px;margin-bottom:8px;
+  font:700 11.5px/1 var(--letra-hud, var(--fonte));letter-spacing:.16em;text-transform:uppercase;
+  color:var(--pc-txt-2);
 }
-.pc-titulo span{color:var(--pc-luz);letter-spacing:.06em}
-.pc-grade{display:grid;grid-template-columns:1fr 1fr;gap:5px}
-.pc-grade.caixa{max-height:198px;overflow-y:auto;padding-right:3px}
+.pc-titulo::before{content:'';width:7px;height:7px;border-radius:2px;transform:rotate(45deg);flex:0 0 auto;
+  background:var(--pc-luz);box-shadow:0 0 8px -1px var(--pc-luz)}
+.pc-titulo::after{content:'';flex:1 1 auto;height:1px;order:1;
+  background:linear-gradient(90deg, var(--pc-linha), transparent)}
+.pc-titulo span{order:2;font-family:var(--mono);font-weight:400;font-size:11px;color:var(--pc-luz);letter-spacing:.06em}
+.pc-grade{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.pc-grade.caixa{max-height:208px;overflow-y:auto;padding:0 3px 4px 0}
 .pc-grade.caixa::-webkit-scrollbar{width:7px}
 .pc-grade.caixa::-webkit-scrollbar-thumb{background:var(--pc-linha);border-radius:4px}
 
+/* cada Pokémon: tecla de terminal, com espessura embaixo */
 .pc-slot{
   display:grid;grid-template-columns:30px 1fr;grid-template-rows:auto auto auto;
   grid-template-areas:'ic nome' 'ic nv' 'barra barra';
   align-items:center;gap:1px 7px;
-  padding:5px 7px;text-align:left;cursor:pointer;
-  border:1px solid var(--pc-linha);border-radius:4px;
-  background:rgba(125,252,168,.04);color:var(--pc-txt);
-  font:inherit;transition:background .12s, border-color .12s;
+  padding:5px 8px 6px;text-align:left;cursor:pointer;
+  border:1px solid var(--pc-linha);border-radius:8px;
+  background:linear-gradient(180deg, rgba(125,252,168,.09), rgba(125,252,168,.03));color:var(--pc-txt);
+  box-shadow:0 3px 0 #06180e, inset 0 1px 0 rgba(125,252,168,.08);
+  font:inherit;transition:background .12s, border-color .12s, transform .12s var(--suave), box-shadow .12s var(--suave);
 }
-.pc-slot:hover{background:rgba(125,252,168,.12);border-color:var(--pc-txt-2)}
+.pc-slot:hover{background:rgba(125,252,168,.14);border-color:var(--pc-txt-2);transform:translateY(-1px)}
+.pc-slot:active{transform:translateY(2px);box-shadow:0 1px 0 #06180e}
+.pc-slot:focus-visible{outline:2px solid var(--pc-luz);outline-offset:2px}
 .pc-slot.sel{
-  border-color:var(--pc-luz);background:rgba(125,252,168,.18);
-  box-shadow:0 0 0 1px var(--pc-luz) inset, 0 0 12px -4px var(--pc-luz);
+  border-color:var(--pc-luz);background:rgba(125,252,168,.2);
+  box-shadow:0 3px 0 #0b3a20, 0 0 0 1px var(--pc-luz) inset, 0 0 14px -4px var(--pc-luz);
 }
 .pc-slot.caido{opacity:.62}
 .pc-slot.morto{opacity:.45;filter:grayscale(1)}
 .pc-slot.vazio{
   display:flex;align-items:center;justify-content:center;
-  border-style:dashed;background:transparent;cursor:default;min-height:48px;
+  border-style:dashed;background:transparent;box-shadow:none;cursor:default;min-height:52px;
 }
 .pc-vazio{color:var(--pc-linha);font-size:16px}
 .pc-icone{grid-area:ic;display:flex;align-items:center;justify-content:center}
 .pc-icone img{width:30px;height:30px;image-rendering:pixelated}
-.pc-nome{grid-area:nome;font-size:12.5px;line-height:1.15;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pc-nome{grid-area:nome;font:600 13px/1.15 var(--letra-hud, var(--fonte));overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .pc-nv{grid-area:nv;font-family:var(--mono);font-size:10.5px;color:var(--pc-txt-2)}
 .pc-barra{
   grid-area:barra;display:block;height:3px;margin-top:3px;
@@ -25503,65 +25965,93 @@ h3.cat-item{
 .pc-barra.moral i{background:#ffd166}
 .pc-caixa-vazia{
   grid-column:1/-1;text-align:center;padding:26px 8px;color:var(--pc-txt-2);
-  font-size:12.5px;line-height:1.5;
+  font:600 13px/1.5 var(--letra-hud, var(--fonte));
 }
-.pc-caixa-vazia span{color:var(--pc-linha);font-size:11.5px}
+.pc-caixa-vazia span{color:var(--pc-txt-2);opacity:.7;font:400 11.5px/1.5 var(--fonte)}
 
 /* ficha do selecionado */
 .pc-ficha{
-  display:grid;grid-template-columns:104px 1fr;gap:12px;
-  padding:11px 13px;border-top:1px solid var(--pc-linha);
+  display:grid;grid-template-columns:110px 1fr;gap:14px;
+  padding:12px 14px 14px;border-top:1px solid var(--pc-linha);
   background:rgba(0,0,0,.22);
 }
 .pc-arte{display:flex;align-items:center;justify-content:center}
 .pc-arte img{width:114px;height:114px;image-rendering:pixelated;
   filter:drop-shadow(0 0 10px rgba(125,252,168,.22))}
 .pc-dados{min-width:0}
-.pc-cab{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;margin-bottom:5px}
-.pc-ficha-nome{font-size:16px;font-weight:650;color:#e8fff0}
+.pc-cab{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;margin-bottom:6px}
+.pc-ficha-nome{font:700 19px/1.1 var(--letra-hud, var(--fonte));color:#e8fff0}
 .pc-ficha-nv{font-family:var(--mono);font-size:12px;color:var(--pc-txt-2)}
 .pc-tag{
-  font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;
-  padding:1px 6px;border-radius:3px;border:1px solid currentColor;
+  font:700 10px/1.4 var(--letra-hud, var(--fonte));letter-spacing:.1em;text-transform:uppercase;
+  padding:1px 7px;border-radius:999px;border:1px solid currentColor;
 }
 .pc-tag.caido{color:#ffc46b}
 .pc-tag.morto{color:#ff7b6b}
-.pc-tipos{display:flex;gap:5px;flex-wrap:wrap;align-items:center;margin-bottom:7px}
-.pc-nat{font-size:11.5px;color:var(--pc-txt-2);font-style:italic}
-.pc-nat.fraca{color:var(--pc-linha);font-size:11px}
-.pc-medida{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.pc-tipos{display:flex;gap:5px;flex-wrap:wrap;align-items:center;margin-bottom:8px}
+.pc-nat{font-size:12px;color:var(--pc-txt-2);font-style:italic}
+.pc-nat.fraca{color:var(--pc-txt-2);opacity:.6;font-size:11.5px}
+.pc-medida{display:flex;align-items:center;gap:8px;margin-bottom:5px}
 .pc-medida .rot{
-  flex:0 0 42px;font-family:var(--mono);font-size:10px;letter-spacing:.1em;
+  flex:0 0 46px;font:700 10.5px/1 var(--letra-hud, var(--fonte));letter-spacing:.12em;
   text-transform:uppercase;color:var(--pc-txt-2);
 }
 .pc-medida .num{font-size:11.5px;color:var(--pc-txt);flex:0 0 auto;min-width:58px;text-align:right}
-.pc-golpes{display:flex;flex-wrap:wrap;gap:4px;margin:7px 0 6px}
+.pc-sec{
+  display:flex;align-items:center;gap:8px;margin:10px 0 6px;
+  font:700 10.5px/1 var(--letra-hud, var(--fonte));letter-spacing:.16em;text-transform:uppercase;color:var(--pc-txt-2);
+}
+.pc-sec::before{content:'';width:6px;height:6px;border-radius:2px;transform:rotate(45deg);background:var(--pc-luz);flex:0 0 auto}
+.pc-sec::after{content:'';flex:1 1 auto;height:1px;background:linear-gradient(90deg, var(--pc-linha), transparent)}
+.pc-golpes{display:flex;flex-wrap:wrap;gap:5px;margin:0 0 8px}
+/* o golpe com a faixa da cor do tipo, como o botão de golpe da luta */
 .pc-golpe{
-  font-size:11px;padding:2px 6px;border-radius:3px;
-  border:1px solid var(--pc-linha);background:rgba(125,252,168,.05);color:var(--pc-txt-2);
+  --tc:#8a8f99;
+  font:600 12px/1.2 var(--letra-hud, var(--fonte));padding:4px 9px 4px 11px;border-radius:7px;
+  border:1px solid var(--pc-linha);color:var(--pc-txt);
+  background:linear-gradient(90deg, var(--tc) 0 4px, color-mix(in srgb, var(--tc) 14%, rgba(4,20,11,.6)) 4px);
 }
-.pc-golpe b{color:var(--pc-txt);font-weight:600}
-.pc-historia{font-size:11.5px;font-style:italic;color:var(--pc-txt-2);line-height:1.45;margin-bottom:8px}
-.pc-afinidade{font-size:11.5px;color:var(--pc-txt);letter-spacing:.2px;margin-bottom:6px}
+.pc-historia{font-size:12px;font-style:italic;color:var(--pc-txt-2);line-height:1.45;margin-bottom:9px}
+.pc-afinidade{font-size:12px;color:var(--pc-txt);letter-spacing:.2px;margin-bottom:7px}
 .sussurro.afinidade{color:var(--texto);opacity:.85}
-.pc-acao{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.pc-acao .btn{
-  background:var(--pc-linha);border-color:var(--pc-luz);color:var(--pc-txt);
-  padding:6px 14px;font-size:13px;
+.pc-acao{grid-column:2;display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:-4px}
+/* o botão da tela: tecla grande, com espessura, que afunda */
+.pc-bt{
+  display:inline-flex;align-items:center;gap:8px;min-height:38px;padding:6px 14px 6px 9px;cursor:pointer;
+  border:1px solid var(--pc-txt-2);border-radius:10px;color:var(--pc-txt);
+  font:600 14px/1.1 var(--letra-hud, var(--fonte));
+  background:linear-gradient(180deg, rgba(125,252,168,.12), rgba(125,252,168,.04));
+  box-shadow:0 3px 0 #06180e, inset 0 1px 0 rgba(125,252,168,.12);
+  transition:transform .12s var(--suave), box-shadow .12s var(--suave), background .15s;
 }
-.pc-acao .btn:hover:not(:disabled){background:var(--pc-luz);color:#08281a}
-.pc-acao .btn:disabled{border-color:var(--pc-linha);color:var(--pc-txt-2)}
-.pc-trava{font-size:11.5px;color:#ffc46b;flex:1;min-width:140px;line-height:1.35}
+.pc-bt svg.icone{width:22px;height:22px;padding:3px;border-radius:7px;flex:0 0 auto;stroke-width:2.1;
+  color:var(--pc-luz);background:rgba(125,252,168,.12)}
+.pc-bt.principal{border-color:var(--pc-luz);background:linear-gradient(180deg, rgba(125,252,168,.3), rgba(125,252,168,.14))}
+.pc-bt:hover:not(:disabled){transform:translateY(-1px);background:rgba(125,252,168,.24)}
+.pc-bt.principal:hover:not(:disabled){background:var(--pc-luz);color:#08281a}
+.pc-bt.principal:hover:not(:disabled) svg.icone{color:#08281a;background:rgba(8,40,26,.15)}
+.pc-bt:active:not(:disabled){transform:translateY(2px);box-shadow:0 1px 0 #06180e}
+.pc-bt:focus-visible{outline:2px solid var(--pc-luz);outline-offset:2px}
+.pc-bt:disabled{cursor:not-allowed;opacity:.55;box-shadow:none;border-color:var(--pc-linha)}
+.pc-trava{font-size:12px;color:#ffc46b;flex:1 1 100%;line-height:1.4}
 .pc-nada{grid-column:1/-1;text-align:center;color:var(--pc-txt-2);padding:18px 6px}
 .pc-erro{
-  grid-column:1/-1;margin-top:8px;padding:6px 9px;border-radius:4px;
+  grid-column:1/-1;margin-top:8px;padding:6px 9px;border-radius:6px;
   border:1px solid #ff7b6b;color:#ffb3a8;background:rgba(255,123,107,.1);font-size:12px;
 }
 @media (max-width:640px){
+  .modal.pc{padding:14px}
   .pc-colunas{grid-template-columns:1fr}
   .pc-lado + .pc-lado{border-left:none;border-top:1px solid var(--pc-linha)}
-  .pc-ficha{grid-template-columns:1fr}
-  .pc-arte img{width:90px;height:90px}
+  /* a arte encosta no nome, à esquerda: a ficha inteira cabe sem rolar */
+  .pc-ficha{grid-template-columns:72px 1fr;gap:10px;padding:10px 11px 12px}
+  .pc-arte{align-items:flex-start}
+  .pc-arte img{width:76px;height:76px}
+  .pc-ficha-nome{font-size:17px}
+  .pc-medida .rot{flex-basis:40px}
+  .pc-medida .num{min-width:40px}
+  .pc-acao{grid-column:1 / -1}
+  .pc-bt{flex:1 1 auto;justify-content:center}
 }
 
 /* ============================================================
@@ -26449,8 +26939,15 @@ h3.com-mapa{display:flex;align-items:center;justify-content:space-between;gap:8p
 .btn.mini.abre-mapa{display:inline-flex;align-items:center;gap:4px;text-transform:none;letter-spacing:0}
 .btn.mini.abre-mapa .item-icone{width:22px;height:22px}
 .modal.mapa{max-width:640px}
-.mapa-kanto .mapa-topo{display:flex;align-items:center;gap:8px;margin-bottom:8px}
-.mapa-kanto .mapa-topo span{margin-left:auto;color:var(--texto-fraco);font-size:13px}
+/* a faixa do mapa no idioma das seções: losango e linha na cor do mapa */
+.mapa-kanto .mapa-topo{display:flex;align-items:center;gap:10px;margin:2px 0 10px;
+  font-family:var(--letra-hud, var(--fonte))}
+.mapa-kanto .mapa-topo::before{content:'';flex:0 0 auto;width:8px;height:8px;border-radius:2px;transform:rotate(45deg);
+  background:#66bb6a;box-shadow:0 0 10px -1px #66bb6a}
+.mapa-kanto .mapa-topo b{font-size:12px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--texto-fraco)}
+.mapa-kanto .mapa-topo::after{content:'';flex:1 1 auto;height:1px;order:1;
+  background:linear-gradient(90deg, color-mix(in srgb, #66bb6a 45%, var(--borda)), transparent)}
+.mapa-kanto .mapa-topo span{order:2;color:var(--texto-fraco);font-size:13px;font-weight:500}
 .mapa-kanto svg{display:block;width:100%;height:auto;border-radius:10px;
   background:linear-gradient(180deg,#3d78b8,#2e5f99);box-shadow:inset 0 0 0 2px rgba(0,0,0,.25)}
 .mapa-kanto .mp-terra{fill:#7fb069;stroke:#4f7d43;stroke-width:1.2}
@@ -26461,31 +26958,74 @@ h3.com-mapa{display:flex;align-items:center;justify-content:space-between;gap:8p
 .mapa-kanto .mp-no{cursor:pointer;outline:none}
 .mapa-kanto .mp-no.nao-pisado rect,.mapa-kanto .mp-no.nao-pisado circle{opacity:.55}
 .mapa-kanto .mp-no.nao-pisado text{opacity:.75}
-.mapa-kanto .mp-no text.mp-rota{font:700 4.6px system-ui,sans-serif}
+.mapa-kanto .mp-no text.mp-rota{font:700 4.8px var(--letra-hud, system-ui),sans-serif}
 .mapa-kanto .mp-no:hover rect,.mapa-kanto .mp-no:hover circle,
 .mapa-kanto .mp-no:focus-visible rect,.mapa-kanto .mp-no:focus-visible circle{stroke:#10202e;stroke-width:1.6}
 .mapa-kanto .mp-no.sel rect,.mapa-kanto .mp-no.sel circle{stroke:#10202e;stroke-width:2.2;opacity:1}
-.mapa-legenda{display:flex;flex-wrap:wrap;gap:6px 14px;margin:8px 2px 0;font-size:12px;color:var(--texto-fraco)}
+.mapa-legenda{display:flex;flex-wrap:wrap;gap:6px 14px;margin:9px 2px 0;font:500 12px/1.3 var(--letra-hud, var(--fonte));color:var(--texto-fraco)}
 .mapa-legenda .lg{display:inline-block;width:10px;height:10px;margin-right:5px;vertical-align:-1px;border:1px solid #5a4a2a;background:#f4efe0}
 .mapa-legenda .lg.cidade{background:#e2463a;border-color:#fff;border-radius:2px}
 .mapa-legenda .lg.rota{border-radius:50%}
 .mapa-legenda .lg.especial{background:#f2c94c;transform:rotate(45deg) scale(.85)}
 .mapa-legenda .lg.nao-pisado{opacity:.5;border-radius:50%}
-.mapa-info{margin-top:10px;padding:10px 12px;border-radius:10px;background:rgba(0,0,0,.18);border:1px solid rgba(255,255,255,.08);min-height:92px}
-.mapa-info .mi-cab{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
-.mapa-info .mi-cab b{font-size:16px}
-.mapa-info .mi-cab span{color:var(--texto-fraco);font-size:12.5px}
-.mapa-info .mi-desc{margin:6px 0;font-size:13.5px;line-height:1.45}
+/* A ficha do lugar tocado: o nome em letra de placa com a etiqueta do
+   tipo (a bolinha na cor do desenho do mapa), a descrição na letra de
+   ler, o que liga e o que tem em linhas agrupadas como na folha, e
+   embaixo o que dá pra fazer: a placa de estrada pro vizinho, o voo,
+   ou por que não. */
+.mapa-info{margin-top:12px;padding:14px 16px 16px;border-radius:14px;min-height:120px;
+  border:1px solid color-mix(in srgb, var(--borda) 85%, transparent);
+  background:color-mix(in srgb, var(--bg) 38%, transparent)}
+.mapa-info .mi-cab{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.mapa-info .mi-cab b{font:700 21px/1.1 var(--letra-hud, var(--fonte));margin-right:2px}
+.mapa-info .mi-tipo{display:inline-flex;align-items:center;gap:6px;padding:3px 10px 3px 8px;border-radius:999px;
+  font:600 11.5px/1.3 var(--letra-hud, var(--fonte));letter-spacing:.03em;color:var(--texto-fraco);
+  background:rgba(0,0,0,.25);box-shadow:inset 0 0 0 1px var(--borda)}
+.mapa-info .mi-tipo::before{content:'';width:8px;height:8px;border-radius:50%;background:#f4efe0;box-shadow:0 0 0 1px #5a4a2a}
+.mapa-info .mi-tipo.cidade::before{background:#e2463a;border-radius:2px;box-shadow:0 0 0 1px #fff}
+.mapa-info .mi-tipo.especial::before{background:#f2c94c;border-radius:1px;transform:rotate(45deg) scale(.85)}
+.mapa-info .mi-tipo.perigo{color:color-mix(in srgb, var(--perigo) 75%, #fff);box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--perigo) 50%, transparent)}
+.mapa-info .mi-tipo.perigo::before{background:var(--perigo);box-shadow:none}
+.mapa-info .mi-desc{margin:9px 0 11px;font-size:14px;line-height:1.5}
 .mapa-info .mi-desc.fraco{color:var(--texto-fraco);font-style:italic}
-.mapa-info .mi-linhas{display:flex;flex-direction:column;gap:3px;font-size:13px}
-.mapa-info .mi-linhas .k{display:inline-block;min-width:70px;color:var(--texto-fraco);font-size:11.5px;text-transform:uppercase;letter-spacing:.06em}
-.mapa-info .mi-acao{margin-top:9px}
-.mapa-info .mapa-aqui,.mapa-info .mapa-longe{font-size:13px;color:var(--texto-fraco);font-style:italic}
+.mapa-info .mi-linhas{display:flex;flex-direction:column;border-radius:12px;overflow:hidden;box-shadow:inset 0 0 0 1px var(--borda)}
+.mapa-info .linha{align-items:baseline;gap:14px;padding:8px 13px;border-bottom:0;background:rgba(0,0,0,.18)}
+.mapa-info .linha + .linha{border-top:1px solid var(--borda)}
+.mapa-info .linha .k{font:700 10.5px/1.6 var(--letra-hud, var(--fonte));letter-spacing:.14em;text-transform:uppercase;color:var(--texto-fraco)}
+.mapa-info .linha .v{font:500 13.5px/1.45 var(--letra-hud, var(--fonte));color:var(--texto)}
+.mapa-info .mi-acao{margin-top:12px}
+.mapa-info .mi-acao .escolha{width:100%;--ac:#5aa7ff}
+.mapa-info .mi-acao .escolha.voo{--ac:#9fa8ff}
+.mapa-info .mi-aqui, .mapa-info .mi-longe{display:flex;align-items:center;gap:11px;padding:10px 13px;border-radius:12px}
+.mapa-info .mi-aqui{font:600 15px/1.3 var(--letra-hud, var(--fonte));color:#ffe9a3;
+  background:color-mix(in srgb, #ffd54f 12%, rgba(0,0,0,.22));box-shadow:inset 0 0 0 1px color-mix(in srgb, #ffd54f 40%, transparent)}
+.mapa-info .mi-longe{font:400 13.5px/1.45 var(--fonte);color:var(--texto-fraco);
+  background:rgba(0,0,0,.18);box-shadow:inset 0 0 0 1px var(--borda)}
+.mapa-info .mi-aqui svg.icone, .mapa-info .mi-longe svg.icone{width:30px;height:30px;padding:6px;border-radius:10px;flex:0 0 auto;stroke-width:2;
+  color:var(--ac, var(--texto-fraco));background:color-mix(in srgb, var(--ac, #8d97bd) 20%, rgba(0,0,0,.25))}
+@media (max-width:620px){
+  .mapa-info{padding:12px 13px 14px}
+  .mapa-info .linha{padding:7px 11px}
+}
+/* Tela larga: o mapa à esquerda e a ficha do lugar à direita, como o
+   painel do Town Map — embaixo do mapa, a ficha caía fora da janela e
+   o "Ir para" só aparecia rolando. A janela cresce até onde o mapa
+   ainda cabe na altura (86vh menos barra, faixa e Fechar; o mapa é
+   284×226), e a legenda desce pro pé da coluna da ficha. */
+@media (min-width:900px){
+  .modal.mapa{max-width:min(1040px, calc((86vh - 200px) * 1.2566 + 394px))}
+  .mapa-kanto{display:grid;grid-template-columns:minmax(0, 1fr) 330px;grid-template-rows:auto 1fr auto;
+    grid-template-areas:'topo topo' 'mapa info' 'mapa leg';column-gap:18px}
+  .mapa-kanto .mapa-topo{grid-area:topo}
+  .mapa-kanto > svg{grid-area:mapa;align-self:start}
+  .mapa-kanto .mapa-info{grid-area:info;align-self:start;margin-top:0}
+  .mapa-kanto .mapa-legenda{grid-area:leg;display:grid;grid-template-columns:max-content max-content;gap:7px 22px;margin:12px 4px 0}
+}
 .mapa-kanto .mp-no rect,.mapa-kanto .mp-no circle{fill:#f4efe0;stroke:#5a4a2a;stroke-width:1}
 .mapa-kanto .mp-no.cidade rect{fill:#e2463a;stroke:#fff}
 .mapa-kanto .mp-no.especial rect{fill:#f2c94c}
 .mapa-kanto .mp-no.desconhecido rect,.mapa-kanto .mp-no.desconhecido circle{fill:#b8b8b0;stroke:#6e6e66;opacity:.8}
-.mapa-kanto .mp-no text{font:600 6.2px system-ui,sans-serif;fill:#10202e;paint-order:stroke;stroke:#f4f7ea;stroke-width:1.6px}
+.mapa-kanto .mp-no text{font:600 6.4px var(--letra-hud, system-ui),sans-serif;fill:#10202e;paint-order:stroke;stroke:#f4f7ea;stroke-width:1.6px}
 .mapa-kanto .mp-no.vizinho{cursor:pointer}
 .mapa-kanto .mp-no.vizinho rect,.mapa-kanto .mp-no.vizinho circle{stroke:#ffe066;stroke-width:1.8}
 .mapa-kanto .mp-no.vizinho:hover rect,.mapa-kanto .mp-no.vizinho:hover circle,
@@ -27590,7 +28130,7 @@ button.item-linha.aparelho{
 .mapa-kanto .mp-arvore{fill:#4e9a45;stroke:#35702f;stroke-width:.6}
 .mapa-kanto .mp-rosa circle{fill:rgba(255,255,255,.12);stroke:rgba(255,255,255,.5);stroke-width:.8}
 .mapa-kanto .mp-rosa path{fill:#f4f2ea}
-.mapa-kanto .mp-rosa text{font:700 6px system-ui,sans-serif;fill:#f4f2ea;text-anchor:middle}
+.mapa-kanto .mp-rosa text{font:700 6px var(--letra-hud, system-ui),sans-serif;fill:#f4f2ea;text-anchor:middle}
 .mapa-kanto .mp-via-borda{fill:none;stroke:#9b7d45;stroke-width:5.4;stroke-linejoin:round;stroke-linecap:round;opacity:.55}
 .mapa-kanto .mp-via{fill:none;stroke:#f3e6b8;stroke-width:3.4;stroke-linejoin:round;stroke-linecap:round;opacity:.6}
 .mapa-kanto .mp-via.andada{opacity:1}
@@ -31483,6 +32023,8 @@ const ICONE = {
      que o lugar fica no mapa), parar e olhar, o capítulo que espera
      aqui e perguntar o nome de quem fala */
   seta:'<path d="M4.5 12h14M13 6.5l5.5 5.5-5.5 5.5"/>',
+  /* duas aves no céu: o voo do mapa (Campo.voar) */
+  voar:'<path d="M2.5 9.5c2.4-1.6 5-1.8 7.5 0 2.5-1.8 5.1-1.6 7.5 0"/><path d="M6 15.5c1.6-1 3.3-1.1 5 0 1.7-1.1 3.4-1 5 0"/>',
   olho:'<path d="M2.5 12s3.5-6.5 9.5-6.5 9.5 6.5 9.5 6.5-3.5 6.5-9.5 6.5S2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.8"/>',
   exclama:'<path d="M12 4.5v10"/><circle cx="12" cy="19" r="1.1" fill="currentColor"/>',
   pergunta:'<path d="M4 5h16v11H10l-4 3.5V16H4z"/><path d="M10.2 8.6a1.9 1.9 0 1 1 2.6 1.8c-.5.2-.8.6-.8 1.1v.4"/><circle cx="12" cy="13.6" r=".7" fill="currentColor"/>',
@@ -31509,7 +32051,7 @@ const COR_DO_ICONE = {
   agenda:'#ffca28', convite:'#ffb74d', revanche:'#ff7043', trancado:'#7d88a8',
   mural:'#ffb74d', pc:'#4dd0e1', mapa:'#66bb6a', dormir:'#7986cb', diario:'#e8b923',
   bola:'#4cc38a', pokedex:'#ef5350', itens:'#d9a35b', telefone:'#43b581', lua:'#b39ddb',
-  seta:'#5aa7ff', olho:'#90caf9', pergunta:'#8c9eff', dado:'#4dd0e1', chama:'#a77bff', tigela:'#d9a35b'
+  seta:'#5aa7ff', voar:'#9fa8ff', alfinete:'#ffd54f', olho:'#90caf9', pergunta:'#8c9eff', dado:'#4dd0e1', chama:'#a77bff', tigela:'#d9a35b'
 };
 
 /* estilo: mais alguma coisa inline (a seta da placa gira por ele) */
@@ -47826,7 +48368,7 @@ const Cidade = {
       <button class="escolha com-icone" onclick="UI.fecharModal(true);Cidade.atenderAqui()">${ic(this.dormeNoCentro() ? 'dormir' : 'centro')}<span>Deixar o time com a enfermeira${this.dormeNoCentro() ? ' e dormir' : ''}</span></button>
       <button class="escolha com-icone" onclick="UI.fecharModal(true);UI.modalPC()">${ic('pc')}<span>PC do saguão${d.pc.length ? ` (${d.pc.length})` : ''}</span></button>
       ${cargos}
-      <button class="escolha com-icone" onclick="UI.fecharModal(true);Exploracao.mapa('parede')">${ic('mapa')}<span>Mapa da parede</span></button>
+      <button class="escolha com-icone" onclick="UI.fecharModal(true);Exploracao.mapa('centro')">${ic('mapa')}<span>Mapa da parede</span></button>
       ${mural}`, false, 'centro');
   },
 
@@ -132512,11 +133054,11 @@ const UI = {
     if (!this.pcSel) this.pcSel = (d.time[0] && d.time[0].uid) || (d.pc[0] && d.pc[0].uid) || null;
 
     const slot = (p, onde) => {
-      if (!p) return `<div class="pc-slot vazio"><span class="pc-vazio">—</span></div>`;
+      if (!p) return `<div class="pc-slot vazio" aria-hidden="true"><span class="pc-vazio">—</span></div>`;
       const selecionado = p.uid === this.pcSel ? ' sel' : '';
       const ruim = p.morto ? ' morto' : (p.hp <= 0 ? ' caido' : '');
       const pct = p.hpMax ? Math.max(0, Math.round(p.hp / p.hpMax * 100)) : 0;
-      return `<button class="pc-slot${selecionado}${ruim}" onclick="UI.modalPC('${p.uid}')" title="${this.esc(nomeExib(p))}">
+      return `<button class="pc-slot${selecionado}${ruim}" onclick="UI.modalPC('${p.uid}')" title="${this.esc(nomeExib(p))}"${selecionado ? ' aria-current="true"' : ''}>
         <span class="pc-icone">${imgSprite(p, 'icone')}</span>
         <span class="pc-nome">${this.esc(nomeExib(p))}${this.shi(p)}</span>
         <span class="pc-nv">Nv ${p.nivel}</span>
@@ -132529,24 +133071,58 @@ const UI = {
       ? d.pc.map(p => slot(p, 'pc')).join('')
       : `<div class="pc-caixa-vazia">A caixa está vazia.<br><span>Tudo o que passar de seis aparece aqui.</span></div>`;
 
-    this.modal('', `
-      <div class="pc-topo">
-        <span class="pc-led"></span>
-        <span class="pc-marca">SISTEMA DE ARMAZENAMENTO</span>
-        <span class="pc-versao">v3.1</span>
-      </div>
-      <div class="pc-colunas">
-        <div class="pc-lado">
-          <div class="pc-titulo">Cinto <span>${d.time.length}/6</span></div>
-          <div class="pc-grade cinto">${cinto}</div>
+    /* o PC é do saguão do Centro: o topo é o caminho de volta pro balcão */
+    const temCentro = typeof Exploracao !== 'undefined' && Exploracao.temCentro(Mundo.atual());
+    const corpo = this.barraDoCentro('PC do saguão', 'pc', temCentro) + `
+      <div class="pc-tela">
+        <div class="pc-topo">
+          <span class="pc-led"></span>
+          <span class="pc-marca">SISTEMA DE ARMAZENAMENTO</span>
+          <span class="pc-versao">v3.1</span>
         </div>
-        <div class="pc-lado">
-          <div class="pc-titulo">Caixa <span>${d.pc.length} guardado${d.pc.length===1?'':'s'}</span></div>
-          <div class="pc-grade caixa">${caixa}</div>
+        <div class="pc-colunas">
+          <div class="pc-lado">
+            <div class="pc-titulo">Cinto <span>${d.time.length}/6</span></div>
+            <div class="pc-grade cinto">${cinto}</div>
+          </div>
+          <div class="pc-lado">
+            <div class="pc-titulo">Caixa <span>${d.pc.length} guardado${d.pc.length===1?'':'s'}</span></div>
+            <div class="pc-grade caixa">${caixa}</div>
+          </div>
         </div>
-      </div>
-      <div class="pc-ficha" id="pc-ficha">${this.pcFicha()}</div>
-    `, false, 'pc');
+        <div class="pc-ficha" id="pc-ficha">${this.pcFicha()}</div>
+      </div>`;
+
+    /* Dentro do PC (tocar num, guardar, levar) só a tela se redesenha:
+       a janela não entra de novo, e a rolagem dela e a da caixa ficam
+       onde estavam. No celular a ficha mora embaixo das duas listas,
+       então o toque rola só o que falta pra ela aparecer inteira. */
+    const aberto = sel !== undefined && document.querySelector('#modal .modal.pc');
+    if (!aberto) return this.modal('', corpo, false, 'pc');
+    const foco = document.activeElement;
+    const doBotao = !!(foco && foco.classList && foco.classList.contains('pc-bt'));
+    const caixaAntes = aberto.querySelector('.pc-grade.caixa');
+    const rolagemDaCaixa = caixaAntes ? caixaAntes.scrollTop : 0;
+    aberto.querySelector('.modal-corpo').innerHTML = corpo;
+    const caixaAgora = aberto.querySelector('.pc-grade.caixa');
+    if (caixaAgora) caixaAgora.scrollTop = rolagemDaCaixa;
+    /* o foco volta pra onde a mão estava: o botão, ou o selecionado */
+    const alvo = doBotao ? aberto.querySelector('.pc-bt.principal:not(:disabled)') || aberto.querySelector('.pc-bt:not(.principal)')
+      : aberto.querySelector('.pc-slot.sel');
+    if (alvo) alvo.focus({preventScroll:true});
+    const ficha = document.getElementById('pc-ficha');
+    const falta = ficha.getBoundingClientRect().bottom - Math.min(aberto.getBoundingClientRect().bottom, innerHeight);
+    if (falta > 0) aberto.scrollBy({top:falta + 10, behavior:Efeitos.reduzido() ? 'auto' : 'smooth'});
+  },
+
+  /* PC e mapa da parede moram no Centro: aberto um deles, o topo é o
+     caminho de volta pro balcão, como a mochila nos aparelhos. Sem
+     Centro no lugar, a barra só diz o que está aberto. */
+  barraDoCentro(nome, icone, volta){
+    return `<nav class="volta-mochila volta-centro" aria-label="${this.esc(nome)}">
+      ${volta ? `<button class="aba-volta" onclick="Cidade.centro()">${svgIcone('centro')}<span>Centro</span></button>` : ''}
+      <span class="aparelho-aberto">${svgIcone(icone)}<span>${this.esc(nome)}</span></span>
+    </nav>`;
   },
 
   pcFicha(){
@@ -132559,18 +133135,23 @@ const UI = {
     const moral = Math.max(0, Math.min(100, p.moral == null ? 50 : p.moral));
 
     /* o botão diz por que não dá, quando não dá */
-    let acao, rotulo, trava = null;
+    let acao, rotulo, icone, trava = null;
     if (noTime){
-      acao = `UI.pcGuardar('${p.uid}')`; rotulo = 'Guardar na caixa';
+      acao = `UI.pcGuardar('${p.uid}')`; rotulo = 'Guardar na caixa'; icone = 'pc';
       if (!p.morto && d.time.filter(x=>!x.morto).length <= 1)
         trava = 'É o único que você tem em pé. Ninguém anda por Kanto de cinto vazio.';
     } else {
-      acao = `UI.pcTirar('${p.uid}')`; rotulo = 'Levar no cinto';
+      acao = `UI.pcTirar('${p.uid}')`; rotulo = 'Levar no cinto'; icone = 'bola';
       if (d.time.length >= 6) trava = 'O cinto já tem seis. Guarde um antes de tirar outro.';
     }
 
     const tipos = (esp.tipos||[]).map(t =>
       `<span class="tipo-tag" style="background:${COR_TIPO[t]||'#555'}">${this.esc(t)}</span>`).join('');
+    /* cada golpe com a faixa da cor do tipo, como o botão de golpe da luta */
+    const golpes = (p.golpes || []).map(g => {
+      const G = GOLPES[g.nome] || {};
+      return `<span class="pc-golpe" style="--tc:${COR_TIPO[G.t] || '#8a8f99'}">${this.esc(g.nome)}</span>`;
+    }).join('') || '<span class="pc-golpe">—</span>';
 
     return `
       <div class="pc-arte">${imgSprite(p, 'frente')}</div>
@@ -132588,17 +133169,21 @@ const UI = {
         <div class="pc-medida"><span class="rot">Moral</span>
           <span class="pc-barra grossa moral"><i style="width:${moral}%"></i></span>
           <span class="num mono">${moral}</span></div>
-        <div class="pc-golpes">${(p.golpes||[]).map(g =>
-          `<span class="pc-golpe">${this.esc(g.nome)}</span>`).join('') || '<span class="pc-golpe">—</span>'}</div>
+        <div class="pc-sec">Golpes</div>
+        <div class="pc-golpes">${golpes}</div>
         ${(() => { const l = (typeof linhaDeAfinidade === 'function') ? linhaDeAfinidade(p) : null;
             return l ? `<div class="pc-afinidade">${this.esc(l)}</div>` : ''; })()}
         ${p.historia ? `<div class="pc-historia">${this.esc(p.historia)}</div>` : ''}
-        <div class="pc-acao">
-          <button class="btn" ${trava ? 'disabled' : `onclick="${acao}"`}>${rotulo}</button>
-          ${trava ? `<span class="pc-trava">${this.esc(trava)}</span>` : ''}
-        </div>
+      </div>
+      <div class="pc-acao">
+        <button class="pc-bt principal" ${trava ? 'disabled' : `onclick="${acao}"`}>${svgIcone(icone)}<span>${rotulo}</span></button>
+        <button class="pc-bt" onclick="UI.pcVerFicha('${p.uid}')">${svgIcone('olho')}<span>Ver ficha</span></button>
+        ${trava ? `<span class="pc-trava">${this.esc(trava)}</span>` : ''}
       </div>`;
   },
+
+  /* a ficha inteira (Sumário), e o Voltar dela volta pro PC */
+  pcVerFicha(uid){ this.sumario(uid, undefined, 'pc'); },
 
   pcGuardar(uid){
     const r = Estado.depositar(uid);
@@ -133319,6 +133904,7 @@ const UI = {
 
   modalTime(troca){
     const d = Estado.dados;
+    this._sumarioDe = 'time';      // a ficha aberta daqui volta pra cá
     if (troca && !d.time.some(p => p.uid === troca)) troca = null;
     const vivos = d.time.filter(p => !p.morto);
     const racao = Estado.contaItem('Ração');
@@ -133473,8 +134059,11 @@ const UI = {
     return {precisao, dano};
   },
 
-  sumario(uid, aba){
+  sumario(uid, aba, deOnde){
     const d = Estado.dados;
+    /* de onde a ficha foi aberta (o PC ou o time): as setas e as abas
+       chamam sem dizer, e o Voltar continua levando pro mesmo lugar */
+    if (deOnde !== undefined) this._sumarioDe = deOnde;
     const lista = [d.time, d.pc, d.cemiterio].find(l => l.some(x => x.uid === uid));
     const p = lista && lista.find(x => x.uid === uid);
     if (!p) return this.modalTime();
@@ -133612,7 +134201,7 @@ const UI = {
       }
     };
 
-    const volta = noPC ? `UI.modalPC('${uid}')` : 'UI.modalTime()';
+    const volta = noPC || this._sumarioDe === 'pc' ? `UI.modalPC('${uid}')` : 'UI.modalTime()';
     this.modal('', cabeca + `<div class="sm-folha" role="tabpanel">${abas[atual]()}</div>
       <div class="sm-pe"><button class="btn" onclick="${volta}">Voltar</button></div>`, true, 'sumario');
   },
@@ -148470,14 +149059,18 @@ const Exploracao = {
       const [dx, dy, ancora] = this.ROTULO_MAPA[id] || (L.tipo === 'rota' ? [5, 2, 'start'] : [0, -7.5, 'middle']);
       const rotulo = `<text class="${L.tipo === 'rota' ? 'mp-rota' : 'mp-nome'}" x="${x + dx}" y="${y + dy}" text-anchor="${ancora}">${UI.esc(rot)}</text>`;
       const anel = id === aqui ? `<circle class="mp-anel" cx="${x}" cy="${y}" r="9"/>` : '';
-      return `<g class="${cls}" data-id="${id}" onclick="Exploracao.mapaInfo('${id}')"
-        onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();Exploracao.mapaInfo('${id}')}"
+      return `<g class="${cls}" data-id="${id}" onclick="Exploracao.mapaInfo('${id}', true)"
+        onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();Exploracao.mapaInfo('${id}', true)}"
         role="button" tabindex="0" aria-label="${UI.esc(L.nome)}"><title>${UI.esc(L.nome)}</title>${anel}${forma}${rotulo}</g>`;
     });
     const L = Mundo.atual();
-    UI.modal('', (origem === 'mochila' ? UI.abasMochila('mapa') : '') + `<div class="mapa-kanto">
-      <div class="mapa-topo">${imgItem('Mapa de Kanto')}<b>Kanto</b><span>${origem === 'parede'
-        ? `na parede do Centro Pokémon de ${UI.esc(L.nome)}` : `você está ${UI.esc(emLocal(aqui))}`}</span></div>
+    /* o topo é o de aparelho: da mochila volta pra mochila; o da parede
+       é do Centro, e volta pro balcão quando foi aberto lá */
+    const barra = origem === 'mochila' ? UI.abasMochila('mapa')
+      : UI.barraDoCentro('Mapa da parede', 'mapa', origem === 'centro' && this.temCentro(L));
+    UI.modal('', barra + `<div class="mapa-kanto">
+      <div class="mapa-topo"><b>Kanto</b><span>${origem === 'mochila'
+        ? `você está ${UI.esc(emLocal(aqui))}` : `Centro Pokémon de ${UI.esc(L.nome)}`}</span></div>
       <svg viewBox="0 0 284 226" role="img" aria-label="Mapa de Kanto">
         ${this.terrenoKanto()}
         ${linhas.join('')}${pontos.join('')}
@@ -148493,7 +149086,7 @@ const Exploracao = {
 
   /* a ficha do lugar tocado no mapa: o que é, o que liga, se você já
      foi e, quando dá, o botão de ir ou de voar */
-  mapaInfo(id){
+  mapaInfo(id, tocou){
     const box = document.getElementById('mapa-info');
     const L = LOCAIS[id];
     if (!box || !L) return;
@@ -148515,23 +149108,40 @@ const Exploracao = {
     if ((L.lugares || []).includes('loja') && Mundo.descobriu('loja_' + id)) tem.push('loja');
     if (Mundo.descobriu('ginasio_' + id)) tem.push('ginásio');
     const desc = pisou && L.desc && L.desc.length ? txt(L.desc[0]) : null;
-    const botao = id === aqui
-      ? `<span class="mapa-aqui">Você está aqui.</span>`
-      : ir && travaDaPassagem(aqui, id) ? `<span class="mapa-longe">${UI.esc(textoTrava(travaDaPassagem(aqui, id)))}</span>`
-      : ir ? `<button class="btn" onclick="UI.fecharModal(true);Exploracao.viajar('${id}')">${pisou ? 'Ir para ' : 'Seguir o caminho até '}${UI.esc(L.nome)}</button>`
-      : voa ? `<button class="btn" onclick="UI.fecharModal(true);Exploracao.voarPara('${id}')">Voar até ${UI.esc(L.nome)}</button>`
-      : `<span class="mapa-longe">${L.tipo === 'cidade' && pisou
+    /* O que dá pra fazer daqui, no idioma do lugar: o vizinho é a placa de
+       estrada (seta pro rumo dele, "Ir para · leste"), o voo leva o
+       desenho das aves, e o resto diz por que não. */
+    const trava = ir ? travaDaPassagem(aqui, id) : null;
+    const rumo = ir ? this.rumo(aqui, id) : null;
+    const acao = id === aqui
+      ? `<div class="mi-aqui">${svgIcone('alfinete')}<span>Você está aqui.</span></div>`
+      : ir ? `<button class="escolha menu caminho com-icone" ${trava ? 'disabled' : `onclick="UI.fecharModal(true);Exploracao.viajar('${id}')"`}>
+          ${trava ? svgIcone('trancado') : svgIcone('seta', null, rumo ? `rotate:${rumo.graus}deg` : '')}<span class="esc-rot"><small>${pisou ? 'Ir para' : 'Seguir o caminho'}${rumo ? ' · ' + rumo.nome : ''}</small><b>${UI.esc(L.nome)}</b>${
+            trava ? `<span class="esc-trava">${UI.esc(textoTrava(trava))}</span>` : ''}</span></button>`
+      : voa ? `<button class="escolha menu caminho voo com-icone" onclick="UI.fecharModal(true);Exploracao.voarPara('${id}')">
+          ${svgIcone('voar')}<span class="esc-rot"><small>Voar${voo.quem ? ' com ' + UI.esc(nomeExib(voo.quem)) : ''}</small><b>${UI.esc(L.nome)}</b></span></button>`
+      : `<div class="mi-longe">${svgIcone('info')}<span>${L.tipo === 'cidade' && pisou
           ? `Longe daqui. Voar até lá pede ${UI.esc(voo.falta || 'um Pokémon voador de grande porte')}.`
-          : 'Longe daqui: dá pra chegar andando pelas rotas do caminho.'}</span>`;
+          : 'Longe daqui: dá pra chegar andando pelas rotas do caminho.'}</span></div>`;
+    const linha = (k, v) => `<div class="linha"><span class="k">${k}</span><span class="v">${v}</span></div>`;
+    const linhas = [
+      liga.length ? linha('Liga com', UI.esc(liga.join(', '))) : '',
+      tem.length ? linha('Tem', UI.esc(maiuscula(tem.join(', ')))) : '',
+      pisou && id !== aqui ? linha('Você', 'já esteve aqui') : ''
+    ].join('');
     box.innerHTML = `
-      <div class="mi-cab"><b>${UI.esc(L.nome)}</b><span>${UI.esc(tipo)}${L.perigosa ? ' · dizem que é perigoso' : ''}</span></div>
-      ${desc ? `<p class="mi-desc">${UI.esc(desc)}</p>` : `<p class="mi-desc fraco">${pisou ? '' : 'Você nunca foi lá.'}</p>`}
-      <div class="mi-linhas">
-        ${liga.length ? `<div><span class="k">Liga com</span> ${UI.esc(liga.join(', '))}</div>` : ''}
-        ${tem.length ? `<div><span class="k">Tem</span> ${UI.esc(tem.join(', '))}</div>` : ''}
-        ${pisou && id !== aqui ? '<div><span class="k">Você</span> já esteve aqui</div>' : ''}
-      </div>
-      <div class="mi-acao">${botao}</div>`;
+      <div class="mi-cab"><b>${UI.esc(L.nome)}</b><span class="mi-tipo ${L.tipo}">${UI.esc(tipo)}</span>${
+        L.perigosa ? '<span class="mi-tipo perigo">dizem que é perigoso</span>' : ''}</div>
+      ${desc ? `<p class="mi-desc">${UI.esc(desc)}</p>` : pisou ? '' : '<p class="mi-desc fraco">Você nunca foi lá.</p>'}
+      ${linhas ? `<div class="mi-linhas">${linhas}</div>` : ''}
+      <div class="mi-acao">${acao}</div>`;
+    /* tocou num ponto e a ficha ficou fora da janela (tela baixa, a ficha
+       embaixo do mapa): rola só o que falta pra ela aparecer inteira */
+    const md = tocou && box.closest('.modal');
+    if (md){
+      const falta = box.getBoundingClientRect().bottom - Math.min(md.getBoundingClientRect().bottom, innerHeight);
+      if (falta > 0) md.scrollBy({top:falta + 10, behavior:Efeitos.reduzido() ? 'auto' : 'smooth'});
+    }
   },
 
   /* Voo: sai daqui e desce na cidade escolhida, sem atravessar as rotas

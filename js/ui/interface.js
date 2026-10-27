@@ -3036,11 +3036,11 @@ const UI = {
     if (!this.pcSel) this.pcSel = (d.time[0] && d.time[0].uid) || (d.pc[0] && d.pc[0].uid) || null;
 
     const slot = (p, onde) => {
-      if (!p) return `<div class="pc-slot vazio"><span class="pc-vazio">—</span></div>`;
+      if (!p) return `<div class="pc-slot vazio" aria-hidden="true"><span class="pc-vazio">—</span></div>`;
       const selecionado = p.uid === this.pcSel ? ' sel' : '';
       const ruim = p.morto ? ' morto' : (p.hp <= 0 ? ' caido' : '');
       const pct = p.hpMax ? Math.max(0, Math.round(p.hp / p.hpMax * 100)) : 0;
-      return `<button class="pc-slot${selecionado}${ruim}" onclick="UI.modalPC('${p.uid}')" title="${this.esc(nomeExib(p))}">
+      return `<button class="pc-slot${selecionado}${ruim}" onclick="UI.modalPC('${p.uid}')" title="${this.esc(nomeExib(p))}"${selecionado ? ' aria-current="true"' : ''}>
         <span class="pc-icone">${imgSprite(p, 'icone')}</span>
         <span class="pc-nome">${this.esc(nomeExib(p))}${this.shi(p)}</span>
         <span class="pc-nv">Nv ${p.nivel}</span>
@@ -3053,24 +3053,58 @@ const UI = {
       ? d.pc.map(p => slot(p, 'pc')).join('')
       : `<div class="pc-caixa-vazia">A caixa está vazia.<br><span>Tudo o que passar de seis aparece aqui.</span></div>`;
 
-    this.modal('', `
-      <div class="pc-topo">
-        <span class="pc-led"></span>
-        <span class="pc-marca">SISTEMA DE ARMAZENAMENTO</span>
-        <span class="pc-versao">v3.1</span>
-      </div>
-      <div class="pc-colunas">
-        <div class="pc-lado">
-          <div class="pc-titulo">Cinto <span>${d.time.length}/6</span></div>
-          <div class="pc-grade cinto">${cinto}</div>
+    /* o PC é do saguão do Centro: o topo é o caminho de volta pro balcão */
+    const temCentro = typeof Exploracao !== 'undefined' && Exploracao.temCentro(Mundo.atual());
+    const corpo = this.barraDoCentro('PC do saguão', 'pc', temCentro) + `
+      <div class="pc-tela">
+        <div class="pc-topo">
+          <span class="pc-led"></span>
+          <span class="pc-marca">SISTEMA DE ARMAZENAMENTO</span>
+          <span class="pc-versao">v3.1</span>
         </div>
-        <div class="pc-lado">
-          <div class="pc-titulo">Caixa <span>${d.pc.length} guardado${d.pc.length===1?'':'s'}</span></div>
-          <div class="pc-grade caixa">${caixa}</div>
+        <div class="pc-colunas">
+          <div class="pc-lado">
+            <div class="pc-titulo">Cinto <span>${d.time.length}/6</span></div>
+            <div class="pc-grade cinto">${cinto}</div>
+          </div>
+          <div class="pc-lado">
+            <div class="pc-titulo">Caixa <span>${d.pc.length} guardado${d.pc.length===1?'':'s'}</span></div>
+            <div class="pc-grade caixa">${caixa}</div>
+          </div>
         </div>
-      </div>
-      <div class="pc-ficha" id="pc-ficha">${this.pcFicha()}</div>
-    `, false, 'pc');
+        <div class="pc-ficha" id="pc-ficha">${this.pcFicha()}</div>
+      </div>`;
+
+    /* Dentro do PC (tocar num, guardar, levar) só a tela se redesenha:
+       a janela não entra de novo, e a rolagem dela e a da caixa ficam
+       onde estavam. No celular a ficha mora embaixo das duas listas,
+       então o toque rola só o que falta pra ela aparecer inteira. */
+    const aberto = sel !== undefined && document.querySelector('#modal .modal.pc');
+    if (!aberto) return this.modal('', corpo, false, 'pc');
+    const foco = document.activeElement;
+    const doBotao = !!(foco && foco.classList && foco.classList.contains('pc-bt'));
+    const caixaAntes = aberto.querySelector('.pc-grade.caixa');
+    const rolagemDaCaixa = caixaAntes ? caixaAntes.scrollTop : 0;
+    aberto.querySelector('.modal-corpo').innerHTML = corpo;
+    const caixaAgora = aberto.querySelector('.pc-grade.caixa');
+    if (caixaAgora) caixaAgora.scrollTop = rolagemDaCaixa;
+    /* o foco volta pra onde a mão estava: o botão, ou o selecionado */
+    const alvo = doBotao ? aberto.querySelector('.pc-bt.principal:not(:disabled)') || aberto.querySelector('.pc-bt:not(.principal)')
+      : aberto.querySelector('.pc-slot.sel');
+    if (alvo) alvo.focus({preventScroll:true});
+    const ficha = document.getElementById('pc-ficha');
+    const falta = ficha.getBoundingClientRect().bottom - Math.min(aberto.getBoundingClientRect().bottom, innerHeight);
+    if (falta > 0) aberto.scrollBy({top:falta + 10, behavior:Efeitos.reduzido() ? 'auto' : 'smooth'});
+  },
+
+  /* PC e mapa da parede moram no Centro: aberto um deles, o topo é o
+     caminho de volta pro balcão, como a mochila nos aparelhos. Sem
+     Centro no lugar, a barra só diz o que está aberto. */
+  barraDoCentro(nome, icone, volta){
+    return `<nav class="volta-mochila volta-centro" aria-label="${this.esc(nome)}">
+      ${volta ? `<button class="aba-volta" onclick="Cidade.centro()">${svgIcone('centro')}<span>Centro</span></button>` : ''}
+      <span class="aparelho-aberto">${svgIcone(icone)}<span>${this.esc(nome)}</span></span>
+    </nav>`;
   },
 
   pcFicha(){
@@ -3083,18 +3117,23 @@ const UI = {
     const moral = Math.max(0, Math.min(100, p.moral == null ? 50 : p.moral));
 
     /* o botão diz por que não dá, quando não dá */
-    let acao, rotulo, trava = null;
+    let acao, rotulo, icone, trava = null;
     if (noTime){
-      acao = `UI.pcGuardar('${p.uid}')`; rotulo = 'Guardar na caixa';
+      acao = `UI.pcGuardar('${p.uid}')`; rotulo = 'Guardar na caixa'; icone = 'pc';
       if (!p.morto && d.time.filter(x=>!x.morto).length <= 1)
         trava = 'É o único que você tem em pé. Ninguém anda por Kanto de cinto vazio.';
     } else {
-      acao = `UI.pcTirar('${p.uid}')`; rotulo = 'Levar no cinto';
+      acao = `UI.pcTirar('${p.uid}')`; rotulo = 'Levar no cinto'; icone = 'bola';
       if (d.time.length >= 6) trava = 'O cinto já tem seis. Guarde um antes de tirar outro.';
     }
 
     const tipos = (esp.tipos||[]).map(t =>
       `<span class="tipo-tag" style="background:${COR_TIPO[t]||'#555'}">${this.esc(t)}</span>`).join('');
+    /* cada golpe com a faixa da cor do tipo, como o botão de golpe da luta */
+    const golpes = (p.golpes || []).map(g => {
+      const G = GOLPES[g.nome] || {};
+      return `<span class="pc-golpe" style="--tc:${COR_TIPO[G.t] || '#8a8f99'}">${this.esc(g.nome)}</span>`;
+    }).join('') || '<span class="pc-golpe">—</span>';
 
     return `
       <div class="pc-arte">${imgSprite(p, 'frente')}</div>
@@ -3112,17 +3151,21 @@ const UI = {
         <div class="pc-medida"><span class="rot">Moral</span>
           <span class="pc-barra grossa moral"><i style="width:${moral}%"></i></span>
           <span class="num mono">${moral}</span></div>
-        <div class="pc-golpes">${(p.golpes||[]).map(g =>
-          `<span class="pc-golpe">${this.esc(g.nome)}</span>`).join('') || '<span class="pc-golpe">—</span>'}</div>
+        <div class="pc-sec">Golpes</div>
+        <div class="pc-golpes">${golpes}</div>
         ${(() => { const l = (typeof linhaDeAfinidade === 'function') ? linhaDeAfinidade(p) : null;
             return l ? `<div class="pc-afinidade">${this.esc(l)}</div>` : ''; })()}
         ${p.historia ? `<div class="pc-historia">${this.esc(p.historia)}</div>` : ''}
-        <div class="pc-acao">
-          <button class="btn" ${trava ? 'disabled' : `onclick="${acao}"`}>${rotulo}</button>
-          ${trava ? `<span class="pc-trava">${this.esc(trava)}</span>` : ''}
-        </div>
+      </div>
+      <div class="pc-acao">
+        <button class="pc-bt principal" ${trava ? 'disabled' : `onclick="${acao}"`}>${svgIcone(icone)}<span>${rotulo}</span></button>
+        <button class="pc-bt" onclick="UI.pcVerFicha('${p.uid}')">${svgIcone('olho')}<span>Ver ficha</span></button>
+        ${trava ? `<span class="pc-trava">${this.esc(trava)}</span>` : ''}
       </div>`;
   },
+
+  /* a ficha inteira (Sumário), e o Voltar dela volta pro PC */
+  pcVerFicha(uid){ this.sumario(uid, undefined, 'pc'); },
 
   pcGuardar(uid){
     const r = Estado.depositar(uid);
@@ -3843,6 +3886,7 @@ const UI = {
 
   modalTime(troca){
     const d = Estado.dados;
+    this._sumarioDe = 'time';      // a ficha aberta daqui volta pra cá
     if (troca && !d.time.some(p => p.uid === troca)) troca = null;
     const vivos = d.time.filter(p => !p.morto);
     const racao = Estado.contaItem('Ração');
@@ -3997,8 +4041,11 @@ const UI = {
     return {precisao, dano};
   },
 
-  sumario(uid, aba){
+  sumario(uid, aba, deOnde){
     const d = Estado.dados;
+    /* de onde a ficha foi aberta (o PC ou o time): as setas e as abas
+       chamam sem dizer, e o Voltar continua levando pro mesmo lugar */
+    if (deOnde !== undefined) this._sumarioDe = deOnde;
     const lista = [d.time, d.pc, d.cemiterio].find(l => l.some(x => x.uid === uid));
     const p = lista && lista.find(x => x.uid === uid);
     if (!p) return this.modalTime();
@@ -4136,7 +4183,7 @@ const UI = {
       }
     };
 
-    const volta = noPC ? `UI.modalPC('${uid}')` : 'UI.modalTime()';
+    const volta = noPC || this._sumarioDe === 'pc' ? `UI.modalPC('${uid}')` : 'UI.modalTime()';
     this.modal('', cabeca + `<div class="sm-folha" role="tabpanel">${abas[atual]()}</div>
       <div class="sm-pe"><button class="btn" onclick="${volta}">Voltar</button></div>`, true, 'sumario');
   },

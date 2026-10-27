@@ -11,10 +11,11 @@
        cada um a partir do mesmo save;
      - as janelas: os cinco bolsos da mochila, time, sumário de cada
        Pokémon, Pokédex e as 251 fichas, PokéNav e cada contato, cartão,
-       ficha (as cinco abas), diário, rota, códice de finais, credenciais, PC, ajustes
+       ficha (as cinco abas), diário, rota, códice de finais, credenciais,
+       PC (com cada Pokémon selecionado e a ficha aberta de lá), ajustes
        (com as três velocidades da luta),
        as abas do tutorial, a folha de regras, o mapa e a ficha de cada
-       lugar nele;
+       lugar nele, e o mapa da parede do Centro;
      - toda loja, comprando e vendendo;
      - a rede: cada degrau em cada ponto, cada serviço e cada escolha
        dele, e a chegada de cada prova;
@@ -212,6 +213,11 @@ const SUSPEITO = [
   for (const [r, f] of [['cartão', 'modalCartao'], ['ficha', 'modalFicha'], ['diário', 'modalDiario'], ['rota', 'modalRota'],
     ['finais', 'modalFinais'], ['credenciais', 'modalCredenciais'], ['pc', 'modalPC'], ['ajustes', 'modalAjustes'], ['regras', 'modalRegras']])
     await tentar(r, x => UI[x](), f);
+  /* o PC com cada um selecionado (do cinto e da caixa), e a ficha
+     aberta de lá, que volta pro PC */
+  for (const u of uids) await tentar('pc/' + u, x => UI.modalPC(x), u);
+  for (const u of uids.slice(0, 2).concat(uids.slice(-1)))
+    await tentar('pc/ver ficha', x => { UI.pcVerFicha(x); UI.sumario(x, 'golpes'); }, u);
   /* a velocidade da luta nos Ajustes: as três, e volta pra 1× */
   for (const v of [2, 3, 1]) await tentar('ajustes/velocidade ' + v, x => { UI.modalAjustes(); Velocidade.definir(x); }, v);
   for (const aba of ['perfil', 'status', 'jornada', 'pessoas', 'mundo'])
@@ -221,6 +227,8 @@ const SUSPEITO = [
   await tentar('mapa', () => Exploracao.mapa('mochila'));
   for (const id of await page.evaluate(() => Object.keys(LOCAIS)))
     await tentar('mapa/' + id, x => Exploracao.mapaInfo(x), id);
+  /* o da parede: pelo balcão do Centro (com a volta) e pela tela do lugar */
+  for (const o of ['centro', 'parede']) await tentar('mapa da parede/' + o, x => Exploracao.mapa(x), o);
 
   /* ---------- lojas ---------- */
   for (const id of await page.evaluate(() => Object.keys(LOJAS))){

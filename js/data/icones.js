@@ -139,6 +139,8 @@ const ICONE = {
      que o lugar fica no mapa), parar e olhar, o capítulo que espera
      aqui e perguntar o nome de quem fala */
   seta:'<path d="M4.5 12h14M13 6.5l5.5 5.5-5.5 5.5"/>',
+  /* duas aves no céu: o voo do mapa (Campo.voar) */
+  voar:'<path d="M2.5 9.5c2.4-1.6 5-1.8 7.5 0 2.5-1.8 5.1-1.6 7.5 0"/><path d="M6 15.5c1.6-1 3.3-1.1 5 0 1.7-1.1 3.4-1 5 0"/>',
   olho:'<path d="M2.5 12s3.5-6.5 9.5-6.5 9.5 6.5 9.5 6.5-3.5 6.5-9.5 6.5S2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.8"/>',
   exclama:'<path d="M12 4.5v10"/><circle cx="12" cy="19" r="1.1" fill="currentColor"/>',
   pergunta:'<path d="M4 5h16v11H10l-4 3.5V16H4z"/><path d="M10.2 8.6a1.9 1.9 0 1 1 2.6 1.8c-.5.2-.8.6-.8 1.1v.4"/><circle cx="12" cy="13.6" r=".7" fill="currentColor"/>',
@@ -165,7 +167,7 @@ const COR_DO_ICONE = {
   agenda:'#ffca28', convite:'#ffb74d', revanche:'#ff7043', trancado:'#7d88a8',
   mural:'#ffb74d', pc:'#4dd0e1', mapa:'#66bb6a', dormir:'#7986cb', diario:'#e8b923',
   bola:'#4cc38a', pokedex:'#ef5350', itens:'#d9a35b', telefone:'#43b581', lua:'#b39ddb',
-  seta:'#5aa7ff', olho:'#90caf9', pergunta:'#8c9eff', dado:'#4dd0e1', chama:'#a77bff', tigela:'#d9a35b'
+  seta:'#5aa7ff', voar:'#9fa8ff', alfinete:'#ffd54f', olho:'#90caf9', pergunta:'#8c9eff', dado:'#4dd0e1', chama:'#a77bff', tigela:'#d9a35b'
 };
 
 /* estilo: mais alguma coisa inline (a seta da placa gira por ele) */

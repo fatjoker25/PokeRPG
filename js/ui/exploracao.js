@@ -252,14 +252,18 @@ const Exploracao = {
       const [dx, dy, ancora] = this.ROTULO_MAPA[id] || (L.tipo === 'rota' ? [5, 2, 'start'] : [0, -7.5, 'middle']);
       const rotulo = `<text class="${L.tipo === 'rota' ? 'mp-rota' : 'mp-nome'}" x="${x + dx}" y="${y + dy}" text-anchor="${ancora}">${UI.esc(rot)}</text>`;
       const anel = id === aqui ? `<circle class="mp-anel" cx="${x}" cy="${y}" r="9"/>` : '';
-      return `<g class="${cls}" data-id="${id}" onclick="Exploracao.mapaInfo('${id}')"
-        onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();Exploracao.mapaInfo('${id}')}"
+      return `<g class="${cls}" data-id="${id}" onclick="Exploracao.mapaInfo('${id}', true)"
+        onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();Exploracao.mapaInfo('${id}', true)}"
         role="button" tabindex="0" aria-label="${UI.esc(L.nome)}"><title>${UI.esc(L.nome)}</title>${anel}${forma}${rotulo}</g>`;
     });
     const L = Mundo.atual();
-    UI.modal('', (origem === 'mochila' ? UI.abasMochila('mapa') : '') + `<div class="mapa-kanto">
-      <div class="mapa-topo">${imgItem('Mapa de Kanto')}<b>Kanto</b><span>${origem === 'parede'
-        ? `na parede do Centro Pokémon de ${UI.esc(L.nome)}` : `você está ${UI.esc(emLocal(aqui))}`}</span></div>
+    /* o topo é o de aparelho: da mochila volta pra mochila; o da parede
+       é do Centro, e volta pro balcão quando foi aberto lá */
+    const barra = origem === 'mochila' ? UI.abasMochila('mapa')
+      : UI.barraDoCentro('Mapa da parede', 'mapa', origem === 'centro' && this.temCentro(L));
+    UI.modal('', barra + `<div class="mapa-kanto">
+      <div class="mapa-topo"><b>Kanto</b><span>${origem === 'mochila'
+        ? `você está ${UI.esc(emLocal(aqui))}` : `Centro Pokémon de ${UI.esc(L.nome)}`}</span></div>
       <svg viewBox="0 0 284 226" role="img" aria-label="Mapa de Kanto">
         ${this.terrenoKanto()}
         ${linhas.join('')}${pontos.join('')}
@@ -275,7 +279,7 @@ const Exploracao = {
 
   /* a ficha do lugar tocado no mapa: o que é, o que liga, se você já
      foi e, quando dá, o botão de ir ou de voar */
-  mapaInfo(id){
+  mapaInfo(id, tocou){
     const box = document.getElementById('mapa-info');
     const L = LOCAIS[id];
     if (!box || !L) return;
@@ -297,23 +301,40 @@ const Exploracao = {
     if ((L.lugares || []).includes('loja') && Mundo.descobriu('loja_' + id)) tem.push('loja');
     if (Mundo.descobriu('ginasio_' + id)) tem.push('ginásio');
     const desc = pisou && L.desc && L.desc.length ? txt(L.desc[0]) : null;
-    const botao = id === aqui
-      ? `<span class="mapa-aqui">Você está aqui.</span>`
-      : ir && travaDaPassagem(aqui, id) ? `<span class="mapa-longe">${UI.esc(textoTrava(travaDaPassagem(aqui, id)))}</span>`
-      : ir ? `<button class="btn" onclick="UI.fecharModal(true);Exploracao.viajar('${id}')">${pisou ? 'Ir para ' : 'Seguir o caminho até '}${UI.esc(L.nome)}</button>`
-      : voa ? `<button class="btn" onclick="UI.fecharModal(true);Exploracao.voarPara('${id}')">Voar até ${UI.esc(L.nome)}</button>`
-      : `<span class="mapa-longe">${L.tipo === 'cidade' && pisou
+    /* O que dá pra fazer daqui, no idioma do lugar: o vizinho é a placa de
+       estrada (seta pro rumo dele, "Ir para · leste"), o voo leva o
+       desenho das aves, e o resto diz por que não. */
+    const trava = ir ? travaDaPassagem(aqui, id) : null;
+    const rumo = ir ? this.rumo(aqui, id) : null;
+    const acao = id === aqui
+      ? `<div class="mi-aqui">${svgIcone('alfinete')}<span>Você está aqui.</span></div>`
+      : ir ? `<button class="escolha menu caminho com-icone" ${trava ? 'disabled' : `onclick="UI.fecharModal(true);Exploracao.viajar('${id}')"`}>
+          ${trava ? svgIcone('trancado') : svgIcone('seta', null, rumo ? `rotate:${rumo.graus}deg` : '')}<span class="esc-rot"><small>${pisou ? 'Ir para' : 'Seguir o caminho'}${rumo ? ' · ' + rumo.nome : ''}</small><b>${UI.esc(L.nome)}</b>${
+            trava ? `<span class="esc-trava">${UI.esc(textoTrava(trava))}</span>` : ''}</span></button>`
+      : voa ? `<button class="escolha menu caminho voo com-icone" onclick="UI.fecharModal(true);Exploracao.voarPara('${id}')">
+          ${svgIcone('voar')}<span class="esc-rot"><small>Voar${voo.quem ? ' com ' + UI.esc(nomeExib(voo.quem)) : ''}</small><b>${UI.esc(L.nome)}</b></span></button>`
+      : `<div class="mi-longe">${svgIcone('info')}<span>${L.tipo === 'cidade' && pisou
           ? `Longe daqui. Voar até lá pede ${UI.esc(voo.falta || 'um Pokémon voador de grande porte')}.`
-          : 'Longe daqui: dá pra chegar andando pelas rotas do caminho.'}</span>`;
+          : 'Longe daqui: dá pra chegar andando pelas rotas do caminho.'}</span></div>`;
+    const linha = (k, v) => `<div class="linha"><span class="k">${k}</span><span class="v">${v}</span></div>`;
+    const linhas = [
+      liga.length ? linha('Liga com', UI.esc(liga.join(', '))) : '',
+      tem.length ? linha('Tem', UI.esc(maiuscula(tem.join(', ')))) : '',
+      pisou && id !== aqui ? linha('Você', 'já esteve aqui') : ''
+    ].join('');
     box.innerHTML = `
-      <div class="mi-cab"><b>${UI.esc(L.nome)}</b><span>${UI.esc(tipo)}${L.perigosa ? ' · dizem que é perigoso' : ''}</span></div>
-      ${desc ? `<p class="mi-desc">${UI.esc(desc)}</p>` : `<p class="mi-desc fraco">${pisou ? '' : 'Você nunca foi lá.'}</p>`}
-      <div class="mi-linhas">
-        ${liga.length ? `<div><span class="k">Liga com</span> ${UI.esc(liga.join(', '))}</div>` : ''}
-        ${tem.length ? `<div><span class="k">Tem</span> ${UI.esc(tem.join(', '))}</div>` : ''}
-        ${pisou && id !== aqui ? '<div><span class="k">Você</span> já esteve aqui</div>' : ''}
-      </div>
-      <div class="mi-acao">${botao}</div>`;
+      <div class="mi-cab"><b>${UI.esc(L.nome)}</b><span class="mi-tipo ${L.tipo}">${UI.esc(tipo)}</span>${
+        L.perigosa ? '<span class="mi-tipo perigo">dizem que é perigoso</span>' : ''}</div>
+      ${desc ? `<p class="mi-desc">${UI.esc(desc)}</p>` : pisou ? '' : '<p class="mi-desc fraco">Você nunca foi lá.</p>'}
+      ${linhas ? `<div class="mi-linhas">${linhas}</div>` : ''}
+      <div class="mi-acao">${acao}</div>`;
+    /* tocou num ponto e a ficha ficou fora da janela (tela baixa, a ficha
+       embaixo do mapa): rola só o que falta pra ela aparecer inteira */
+    const md = tocou && box.closest('.modal');
+    if (md){
+      const falta = box.getBoundingClientRect().bottom - Math.min(md.getBoundingClientRect().bottom, innerHeight);
+      if (falta > 0) md.scrollBy({top:falta + 10, behavior:Efeitos.reduzido() ? 'auto' : 'smooth'});
+    }
   },
 
   /* Voo: sai daqui e desce na cidade escolhida, sem atravessar as rotas
