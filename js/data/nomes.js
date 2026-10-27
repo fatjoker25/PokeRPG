@@ -299,6 +299,7 @@ const NOMES_DA_HISTORIA = new Set([
   'Sibyl','Sorrel','Stellan','Thea','Thistle','Tobias','Ulla','Ulric','Varian','Vernon',
   'Vesna','Waldo','Wilma','Xavi','Yarrow','Ylva','Yves','Zane','Zelda','Hawthorn',
   'Larch','Silas','Toby','Bertram','Edwin','Garth','Edith','Tansy','Elda',
+  'Dale','Varo','Tamsin','Thorne','Maple','Hale',
   /* os nomes fixos daqui de cima */
   'Ida','Clary','Wells','Marlow','Myrtle','Tito','Pike','Rufo','Lena','Gina',
   'Tessa','Rue',

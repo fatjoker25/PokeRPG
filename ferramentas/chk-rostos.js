@@ -141,6 +141,42 @@ for (const [quem, arq] of exclusivos){
   for (const [n, a] of Object.entries(RETRATO_POR_NOME)) if (a === arq && n !== quem) divide.push([quem, arq, n]);
   if (!quem.startsWith('a casa') && Object.values(RETRATO_DA_CASA).includes(arq)) divide.push([quem, arq, 'a casa']);
 }
+/* E ninguém com nome fala pelo rosto da regra genérica: a Sra. Cybil com o
+   rosto de toda escrevente, o Sargento Holt com o de todo guarda. Gente com
+   nome é quem tem um nome da história (NOMES_DA_HISTORIA) ou nome fixo; o
+   treinador de classe (estrada, veterano, quem luta na rede) fica de fora,
+   porque ele é a classe dos jogos — o Pescador Andrew é pescador. */
+const deClasse = new Set();
+const classe = (c, n) => { if (!n) return; deClasse.add(n); if (c) deClasse.add(`${c} ${n}`); };
+for (const t of (typeof TREINADORES_ESTRADA !== 'undefined' ? TREINADORES_ESTRADA : [])) classe(t.classe, t.nome);
+for (const v of (typeof VETERANOS !== 'undefined' ? VETERANOS : [])){
+  classe(null, v.nome); if (typeof nomeDeLuta === 'function') classe(null, nomeDeLuta(v));
+  if (v.convite && v.convite.luta) classe(v.convite.luta.classe, v.convite.luta.nome);
+}
+if (typeof PROVAS_DA_REDE !== 'undefined'){
+  const lutas = Object.values(PROVAS_DA_REDE).slice();
+  SERVICOS_DA_REDE.forEach(s => s.escolhas.forEach(e => {
+    if (e.luta) lutas.push(e.luta);
+    ['bom', 'ruim'].forEach(k => { if (e[k] && e[k].luta) lutas.push(e[k].luta); });
+  }));
+  lutas.forEach(L => classe(L.classe, L.nome));
+  ['Guarda Teague', 'Guarda-parque Ines', 'Oficial Rourke', 'Cientista Odran'].forEach(n => deClasse.add(n));
+}
+const fixos = new Set([...Object.keys(NOMES_FIXOS), ...Object.values(NOMES_FIXOS)]);
+const temNomeDaHistoria = k => fixos.has(k) || String(k).split(/[\s,()]+/).some(p => NOMES_DA_HISTORIA.has(p));
+/* a regra genérica de verdade: palavra, cargo e o rótulo solto que é de
+   qualquer um ("os pescadores", "outro dos seis", "quem te atendeu") —
+   "o Professor" e a Maeve moram no solto e são uma pessoa só */
+const arqDaRegra = new Set([
+  ...ROSTO_POR_PALAVRA.map(([, a]) => a).filter(Boolean)
+    .flatMap(a => a === 'office' ? ['trainers/office_worker', 'trainers/office_worker_f'] : [a]),
+  ...RETRATO_POR_CARGO.map(([, a]) => a),
+  ...Object.entries(ROSTO_POR_NOME_SOLTO).filter(([k]) => /^(os|as|outr[oa]s?|quem)\s/i.test(k)).map(([, a]) => a)]);
+const comNomeNoGenerico = [];
+for (const [k, a] of Object.entries(RETRATO_POR_NOME).concat(Object.entries(ROSTO_POR_NOME_SOLTO))){
+  if (deClasse.has(k) || !temNomeDaHistoria(k) || !arqDaRegra.has(a)) continue;
+  comNomeNoGenerico.push([k, a]);
+}
 const bytes = arq => { try { return fs.readFileSync(path.join(raiz, caminhoNPC(arq))); } catch (e) { return null; } };
 const fotos = [].concat(...Object.values(RETRATOS_DA_FICHA)).map(f => [f, bytes(PASTA_DOS_RETRATOS + f)]).filter(([, b]) => b);
 const comFoto = [];
@@ -174,6 +210,7 @@ lista('Nome fixo que nenhuma cena apresenta', naoApresentado, r => `${r} → ${N
 lista('Nome fixo que ninguém usa', sobraFixo, r => `${r} → ${NOMES_FIXOS[r]}`);
 lista('Recusa de nome que ninguém usa', sobraRecusa, r => r);
 lista('Rosto que devia ser só de uma pessoa e é de outra também', divide, ([q, a, n]) => `${q}: ${a} também é de ${n}`);
+lista('Gente com nome que fala pelo rosto da regra genérica', comNomeNoGenerico, ([k, a]) => `${k} → ${a}`);
 lista('Rosto de NPC que é foto do jogador', comFoto, ([a, f]) => `${a} = ${PASTA_DOS_RETRATOS}${f}`);
 lista('Nome sorteado da casa que já é de alguém da história', casaComNome, n => n);
 

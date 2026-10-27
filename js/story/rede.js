@@ -500,7 +500,7 @@ const SERVICOS_DA_REDE = [
     {texto:'Vender pelo preço da tabela.', conf:2, ef:{dinheiro:3500, rep:{eixo:'ruim', delta:2, motivo:'Vendeu um Dratini da rede pra um colecionador'}},
      resultado:['Quinlan paga em dinheiro, conta duas vezes e leva a caixa d\'água inteira, com Dratini e tudo, no porta-malas.']},
     {texto:'Dobrar o preço na cara dele.',
-     luta:{classe:'Sr.', nome:'Quinlan', rosto:'trainers/gentleman', times:[53, 22, 115, 148, 131], tam:4, acima:1,
+     luta:{classe:'Sr.', nome:'Quinlan', rosto:'trainers/gentleman_gen4', times:[53, 22, 115, 148, 131], tam:4, acima:1,
        antes:[fala('Sr. Quinlan', 'Eu não pago o dobro. Eu pago o que pedirem a quem merece pedir.'), 'Ele tira as luvas, um dedo de cada vez.'],
        vence:'"Pelo preço da tabela, então."', perde:'"O dobro. Você mereceu pedir."',
        perdeu:['Quinlan paga o preço da tabela e leva a caixa d\'água no porta-malas.']},
@@ -963,12 +963,12 @@ function pinoDaRede(n){
   });
   /* quem fala nos serviços sem lutar */
   if (typeof RETRATO_POR_NOME !== 'undefined'){
-    RETRATO_POR_NOME['Tilly'] = 'trainers/clerk_f';
+    RETRATO_POR_NOME['Tilly'] = 'trainers/tilly';
     RETRATO_POR_NOME['Guarda Teague'] = 'overworld/policial';
     RETRATO_POR_NOME['Guarda-parque Ines'] = 'trainers/pokemon_ranger_f';
     RETRATO_POR_NOME['Oficial Rourke'] = 'overworld/policial';
     RETRATO_POR_NOME['Cientista Odran'] = 'trainers/scientist';
-    RETRATO_POR_NOME['Sr. Quinlan'] = 'trainers/gentleman';
+    RETRATO_POR_NOME['Sr. Quinlan'] = 'trainers/gentleman_gen4';
   }
   if (typeof NOMES_DA_HISTORIA !== 'undefined') NOMES_DA_HISTORIA.add('Tilly');
 })();

@@ -552,6 +552,30 @@ nome é o `madame_gen4`, e o `chk-rostos` reprova rosto da casa ou da
 Perla que seja de outra pessoa ou de regra genérica, e rosto de NPC que
 seja, byte a byte, uma foto que o jogador escolhe pra si.
 
+O mesmo vale pra **toda pessoa com nome**: o `chk-rostos` reprova quem
+tem nome da história (`NOMES_DA_HISTORIA`) ou nome fixo e fala pelo
+rosto de uma regra genérica (palavra, cargo, ou o rótulo solto que é de
+qualquer um, "os pescadores", "quem te atendeu"). O treinador de classe
+(estrada, veterano, quem luta na rede) fica de fora: o Pescador Andrew
+é o pescador dos jogos. A Sra. Cybil tinha o rosto de toda escrevente,
+o Sargento Holt o de todo guarda, a Lena, a Sra. Ada e a Coordenadora
+Maple o mesmo uniforme da Liga com a mesma cara. Nome novo na história
+entra em `NOMES_DA_HISTORIA` — é por ela que o sorteio não dá "Sra.
+Maple" pra uma desconhecida, e é por ela que o verificador sabe quem
+tem nome.
+
+Quando o acervo não tem um rosto livre do ofício (não há uma funcionária
+de escritório por pessoa, nem uma recepcionista da Liga), a pessoa ganha
+uma **variação de paleta** do desenho do ofício: outro cabelo, outra
+roupa, mesma pele e mesmo contorno. `python3 ferramentas/variar-rostos.py`
+gera todas (`VARIACOES`, uma linha por pessoa com o que a cena diz dela),
+sempre iguais, em `trainers/<nome>.png`; com `--folha f.png` sai a folha
+pra conferir no olho. Antes de variar, procura no acervo um desenho de
+verdade: o Holt é o policial de DP, o Hollis o cientista careca de
+óculos, o Quinlan o senhor de chapéu-coco e maleta. Arquivo do `pr_*`
+pode ser o mesmo desenho de um que já está no jogo com outros bytes
+(`pr_baker` é o `baker`), e o do Polished Crystal continua fora.
+
 Golpe de status que faz outra coisa além de mexer em número tem
 `ef.acao` e mora em `Batalha.acaoEspecial` (Protect, Substitute, Reflect,
 Leech Seed, Transform, Roar…). Estado que o golpe deixa fica no `est` do
