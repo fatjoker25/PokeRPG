@@ -5,7 +5,7 @@
    estado inteiro da batalha, quem está em campo, o time de lá e o
    contexto (ginásio, estrada, cena, rival, Elite…). Carregar o jogo
    volta pra mesma luta, no mesmo turno. A única saída de luta contra
-   treinador é vencer, perder ou o Forfeit.
+   treinador é vencer, perder ou desistir.
    ============================================================ */
 const LutaSalva = {
   CONTEXTOS: ['cenaBatalha','ginasioAtual','eliteAtual','torneioAtual','rivalAtual','revancheAtual',

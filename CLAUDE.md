@@ -714,7 +714,7 @@ moral 0 do capítulo 8 ao 12, com uma ordem em cada dez ignorada. Hoje:
 - a moral que **a cena tira** passa por `moralDaCena` (em `motor.js`): no
   máximo `MORAL_CENA_TETO` (10) por cena e nunca abaixo de
   `MORAL_PISO_CENA` (30). O que a cena dá entra inteiro. Abaixo de 30, só
-  o que acontece com o próprio Pokémon (fome, Forfeit, par solto ou morto).
+  o que acontece com o próprio Pokémon (fome, desistir da luta, par solto ou morto).
 `node ferramentas/sim-moral.js` anda os capítulos 1 a 20 com o motor e
 mede a moral por capítulo, de quem anda com Ração e de quem nunca compra:
 hoje a média fica entre 50 e 85, e a desobediência pela moral abaixo de
@@ -1214,7 +1214,8 @@ o save leva a foto da batalha e do contexto (ginásio por id, cena por
 capítulo e cena, o resto como dado). `Jogo.continuar` retoma antes de
 tudo. Campo novo em `Batalha` entra sozinho na foto, desde que seja dado
 — função não viaja. Contexto novo em `Jogo` entra em `LutaSalva.CONTEXTOS`.
-Contra treinador a saída é o **Forfeit** (`Batalha.desistir`): derrota,
+Contra treinador a saída é **Desistir** (`Batalha.desistir`, o botão
+com a bandeira branca; texto do jogo é português, nada de "Forfeit"): derrota,
 multa e moral (`MULTA_FORFEIT_POR_NIVEL`, `MORAL_FORFEIT`).
 
 ## A inscrição (criação de personagem)
@@ -1571,7 +1572,7 @@ que o projeto tem:
   (natureza, atributos, item, `.ficha-mais`) abre num toque na alça
   (`UI.alternarFicha`), e fica aberta entre turnos e lutas. Comandos
   grandes na cor dos jogos (Lutar vermelho, Mochila âmbar, Time verde,
-  Fugir azul, Forfeit cinza) e os do Pokérole menores (Vontade roxa,
+  Fugir azul, Desistir cinza) e os do Pokérole menores (Vontade roxa,
   Pokédex na cor da tela dela). Golpe na cor do tipo, com a aba do tipo
   e, quando o tipo do outro lado é conhecido, o aviso de eficácia
   (super eficaz, pouco eficaz, sem efeito) — que está na folha de regras.

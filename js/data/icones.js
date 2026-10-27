@@ -121,7 +121,7 @@ const ICONE = {
   telefone:'<path d="M7.2 3.5H5.4c-1 0-1.9.9-1.8 1.9.6 7.6 6.6 13.6 14.2 14.2 1 .1 1.9-.8 1.9-1.8v-1.8c0-.7-.5-1.3-1.2-1.5l-2.6-.6c-.6-.1-1.2.1-1.5.6l-.8 1.1c-2.4-1.1-4.3-3-5.4-5.4l1.1-.8c.5-.4.7-1 .6-1.5l-.6-2.6c-.2-.7-.8-1.2-1.5-1.2z"/>',
   cartao:'<rect x="3" y="6" width="18" height="13" rx="2"/><circle cx="8.5" cy="12" r="2"/><path d="M14 10h5M14 13h4M14 16h3"/>',
   /* os comandos da luta: o time é a Pokébola, fugir é correr, o
-     Forfeit é a bandeira branca e a Vontade é a chama */
+     Desistir é a bandeira branca e a Vontade é a chama */
   bola:'<circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h5.4M15.1 12h5.4"/><circle cx="12" cy="12" r="3.1"/>',
   correr:'<circle cx="15" cy="4.6" r="1.7"/><path d="M13.6 7.6L11 13M7.6 9.8l4.2-1.8 3.4 2.6 2.8-.4M11 13l3.4 2.6-.6 4.6M11 13l-2.1 3.6-3.6.6M2.5 9.5h3M2 13h2.5"/>',
   bandeira:'<path d="M6 21V3.5"/><path d="M6 4.6c3-1.7 5.5 1.7 8.5 0s4-1 4-1v8.2s-1-.6-4 1-5.5-1.7-8.5 0"/>',

@@ -875,7 +875,7 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
 /* ---------- os comandos ----------
    Os quatro grandes dos jogos de hoje, cada um na sua cor e com o seu
    desenho — Lutar vermelho, Mochila âmbar, Time verde, Fugir azul (o
-   Forfeit, cinza) — e os dois do Pokérole menores embaixo: Vontade
+   Desistir, cinza) — e os dois do Pokérole menores embaixo: Vontade
    roxa e Pokédex na cor da tela dela. Botão de verdade: tem espessura
    embaixo e afunda quando aperta. */
 .acoes-combate{display:flex;flex-direction:column;gap:8px}
@@ -6693,7 +6693,7 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
 /* ---------- os comandos ----------
    Os quatro grandes dos jogos de hoje, cada um na sua cor e com o seu
    desenho — Lutar vermelho, Mochila âmbar, Time verde, Fugir azul (o
-   Forfeit, cinza) — e os dois do Pokérole menores embaixo: Vontade
+   Desistir, cinza) — e os dois do Pokérole menores embaixo: Vontade
    roxa e Pokédex na cor da tela dela. Botão de verdade: tem espessura
    embaixo e afunda quando aperta. */
 .acoes-combate{display:flex;flex-direction:column;gap:8px}
@@ -12511,7 +12511,7 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
 /* ---------- os comandos ----------
    Os quatro grandes dos jogos de hoje, cada um na sua cor e com o seu
    desenho — Lutar vermelho, Mochila âmbar, Time verde, Fugir azul (o
-   Forfeit, cinza) — e os dois do Pokérole menores embaixo: Vontade
+   Desistir, cinza) — e os dois do Pokérole menores embaixo: Vontade
    roxa e Pokédex na cor da tela dela. Botão de verdade: tem espessura
    embaixo e afunda quando aperta. */
 .acoes-combate{display:flex;flex-direction:column;gap:8px}
@@ -18329,7 +18329,7 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
 /* ---------- os comandos ----------
    Os quatro grandes dos jogos de hoje, cada um na sua cor e com o seu
    desenho — Lutar vermelho, Mochila âmbar, Time verde, Fugir azul (o
-   Forfeit, cinza) — e os dois do Pokérole menores embaixo: Vontade
+   Desistir, cinza) — e os dois do Pokérole menores embaixo: Vontade
    roxa e Pokédex na cor da tela dela. Botão de verdade: tem espessura
    embaixo e afunda quando aperta. */
 .acoes-combate{display:flex;flex-direction:column;gap:8px}
@@ -24147,7 +24147,7 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
 /* ---------- os comandos ----------
    Os quatro grandes dos jogos de hoje, cada um na sua cor e com o seu
    desenho — Lutar vermelho, Mochila âmbar, Time verde, Fugir azul (o
-   Forfeit, cinza) — e os dois do Pokérole menores embaixo: Vontade
+   Desistir, cinza) — e os dois do Pokérole menores embaixo: Vontade
    roxa e Pokédex na cor da tela dela. Botão de verdade: tem espessura
    embaixo e afunda quando aperta. */
 .acoes-combate{display:flex;flex-direction:column;gap:8px}
@@ -31465,7 +31465,7 @@ const ICONE = {
   telefone:'<path d="M7.2 3.5H5.4c-1 0-1.9.9-1.8 1.9.6 7.6 6.6 13.6 14.2 14.2 1 .1 1.9-.8 1.9-1.8v-1.8c0-.7-.5-1.3-1.2-1.5l-2.6-.6c-.6-.1-1.2.1-1.5.6l-.8 1.1c-2.4-1.1-4.3-3-5.4-5.4l1.1-.8c.5-.4.7-1 .6-1.5l-.6-2.6c-.2-.7-.8-1.2-1.5-1.2z"/>',
   cartao:'<rect x="3" y="6" width="18" height="13" rx="2"/><circle cx="8.5" cy="12" r="2"/><path d="M14 10h5M14 13h4M14 16h3"/>',
   /* os comandos da luta: o time é a Pokébola, fugir é correr, o
-     Forfeit é a bandeira branca e a Vontade é a chama */
+     Desistir é a bandeira branca e a Vontade é a chama */
   bola:'<circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h5.4M15.1 12h5.4"/><circle cx="12" cy="12" r="3.1"/>',
   correr:'<circle cx="15" cy="4.6" r="1.7"/><path d="M13.6 7.6L11 13M7.6 9.8l4.2-1.8 3.4 2.6 2.8-.4M11 13l3.4 2.6-.6 4.6M11 13l-2.1 3.6-3.6.6M2.5 9.5h3M2 13h2.5"/>',
   bandeira:'<path d="M6 21V3.5"/><path d="M6 4.6c3-1.7 5.5 1.7 8.5 0s4-1 4-1v8.2s-1-.6-4 1-5.5-1.7-8.5 0"/>',
@@ -37363,7 +37363,7 @@ const CLIMA_TEXTO = {
   sol:{comeca:'O sol fica forte de repente.', acaba:'O sol volta ao normal.'}
 };
 
-/* Forfeit: multa por nível de quem está em campo do lado de lá, e moral perdida no time */
+/* Desistir: multa por nível de quem está em campo do lado de lá, e moral perdida no time */
 const MULTA_FORFEIT_POR_NIVEL = 60;
 const MORAL_FORFEIT = 5;
 
@@ -38956,7 +38956,7 @@ const Batalha = {
     return {eventos:this.eventos, fim:null, ameaca:true};
   },
 
-  /* Forfeit: a fuga de quem luta contra treinador. Conta como derrota
+  /* Desistir: a fuga de quem luta contra treinador. Conta como derrota
      (com tudo que a derrota já custa ali) e cobra por cima: multa de
      arena pelo nível de quem está em campo do lado de lá, e o time
      inteiro perde moral por ter visto você desistir. */
@@ -38971,7 +38971,7 @@ const Batalha = {
     Estado.j.dinheiro -= multa;
     (Estado.dados.time || []).forEach(p => { if (!p.morto) p.moral = Math.max(0, (p.moral || 0) - MORAL_FORFEIT); });
     this.ev('info', `Você levanta a mão e desiste. ${this.treinador || 'O treinador'} recolhe o Pokémon devagar, sem comemorar.`);
-    this.ev('perigo', multa ? `Forfeit: derrota, e ${fmtDin(multa)} ₽ de multa de arena. O time viu você jogar a toalha.` : 'Forfeit: derrota. O time viu você jogar a toalha.');
+    this.ev('perigo', multa ? `Desistência: derrota, e ${fmtDin(multa)} ₽ de multa de arena. O time viu você jogar a toalha.` : 'Desistência: derrota. O time viu você jogar a toalha.');
     Estado.registrar(`Desistiu da luta contra ${this.treinador || 'um treinador'}.`);
     return this.encerrar('derrota', {desistiu:true});
   },
@@ -39027,7 +39027,7 @@ const Batalha = {
    estado inteiro da batalha, quem está em campo, o time de lá e o
    contexto (ginásio, estrada, cena, rival, Elite…). Carregar o jogo
    volta pra mesma luta, no mesmo turno. A única saída de luta contra
-   treinador é vencer, perder ou o Forfeit.
+   treinador é vencer, perder ou desistir.
    ============================================================ */
 const LutaSalva = {
   CONTEXTOS: ['cenaBatalha','ginasioAtual','eliteAtual','torneioAtual','rivalAtual','revancheAtual',
@@ -131082,10 +131082,10 @@ const UI = {
     const bt = document.getElementById('moldura-salvar'); if (bt){ bt.disabled = true; bt.textContent = 'Salvo'; }
   },
 
-  /* Forfeit pede confirmação: é derrota, e custa */
+  /* Desistir pede confirmação: é derrota, e custa */
   confirmarForfeit(){
     if (!Batalha.ativo || Batalha.tipo !== 'treinador') return;
-    this.modal('Forfeit', `<p>Desistir desta luta? Conta como derrota.</p>
+    this.modal('Desistir', `<p>Desistir desta luta? Conta como derrota.</p>
       <button class="escolha" onclick="UI.fecharModal(true);Jogo.acaoBatalha({tipo:'desistir'})">Desistir</button>
       <button class="escolha" onclick="UI.fecharModal(true)">Continuar lutando</button>`, true);
   },
@@ -131871,7 +131871,7 @@ const UI = {
         ${bt('bag', 'itens', 'Mochila', 'UI.menuBag()', !Object.values(d.itens).some(q => q > 0))}
         ${bt('time', 'bola', 'Time', 'UI.menuTroca()', !vivos)}
         ${Batalha.tipo === 'treinador'
-          ? bt('desistir', 'bandeira', 'Forfeit', 'UI.confirmarForfeit()')
+          ? bt('desistir', 'bandeira', 'Desistir', 'UI.confirmarForfeit()')
           : bt('fugir', 'correr', 'Fugir', "Jogo.acaoBatalha({tipo:'fugir'})", !Batalha.fuga)}
       </div>
       <div class="mb-extra">
@@ -135045,7 +135045,7 @@ const UI = {
       <div class="linha"><span class="k">Fome na luta</span><span class="v">com fome, 10% de chance de se distrair e não fazer o que você mandou · faminto, 20% · comer resolve na hora</span></div>
       <div class="linha"><span class="k">Fome e moral</span><span class="v">só quem está faminto perde moral: −2 a cada 12 horas, no máximo −10 num jejum inteiro</span></div>
       <div class="linha"><span class="k">Comer</span><span class="v">Centro, casa e toda cura completa alimentam · quem sai do PC sai alimentado · Ração em toda loja de Kanto, 200 ₽ de base (a cidade mexe no preço) · Ração na mão: um Pokémon, +10 de moral · Alimentar o time (no Seu time): uma Ração pra todos, +2 de moral cada · acampar e treinar gastam uma Ração cada · dias que a história conta como vividos ("na sexta seguinte", "no dia seguinte", os dias entre um capítulo e outro) o time passa comendo</span></div>
-      <div class="linha"><span class="k">A história e a moral</span><span class="v">o que uma cena tira do time é no máximo 10 de moral, e cena nenhuma derruba alguém abaixo de 30 · abaixo disso, só o que acontece com o próprio Pokémon: fome, Forfeit, o par solto ou morto · o que a cena dá entra inteiro</span></div>
+      <div class="linha"><span class="k">A história e a moral</span><span class="v">o que uma cena tira do time é no máximo 10 de moral, e cena nenhuma derruba alguém abaixo de 30 · abaixo disso, só o que acontece com o próprio Pokémon: fome, desistir de uma luta, o par solto ou morto · o que a cena dá entra inteiro</span></div>
       <p class="sussurro">Moral alta zera a conta sozinha. Além disso, cada natureza tem a sua própria teimosia em combate — tem quem recuse golpe especial, quem hesite em chegar perto, quem ataque antes da ordem e quem use o golpe errado de propósito. O jogo diz na hora qual natureza fez o quê; a lista inteira você monta jogando.</p>
       <h3>Condições</h3>
       <div class="linha"><span class="k">PAR · paralisado</span><span class="v">−2 de Destreza (precisão e iniciativa)</span></div>
@@ -135339,7 +135339,7 @@ const UI = {
 
       <h3>PokéNav</h3>
       <div class="linha"><span class="k">No aparelho</span><span class="v">chamada recebida, ligação que você faz, mensagem e recado de quem é do seu lado acontecem dentro do PokéNav, por cima da tela · guardar o aparelho volta pra onde você estava</span></div>
-      <div class="linha"><span class="k">Forfeit</span><span class="v">contra treinador não se foge: desiste · conta como derrota (com o que a derrota já custa ali) · multa de arena de 60 ₽ por nível de quem está em campo do lado de lá · −5 de moral no time inteiro</span></div>
+      <div class="linha"><span class="k">Desistir</span><span class="v">contra treinador não se foge: desiste · conta como derrota (com o que a derrota já custa ali) · multa de arena de 60 ₽ por nível de quem está em campo do lado de lá · −5 de moral no time inteiro</span></div>
       <div class="linha"><span class="k">Recarregar</span><span class="v">a luta continua de onde parou, no mesmo turno · recarregar na tela do Continuar mostra o mesmo resultado de novo</span></div>
       <div class="linha"><span class="k">Na luta</span><span class="v">não dá pra ligar · chamada que toca no meio da luta espera ela acabar e toca depois · item só pela Mochila da barra de ações, gastando o turno</span></div>
       <div class="linha"><span class="k">Agenda</span><span class="v">só entra número que te deram · você grava na hora ou depois</span></div>

@@ -866,7 +866,7 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
 /* ---------- os comandos ----------
    Os quatro grandes dos jogos de hoje, cada um na sua cor e com o seu
    desenho — Lutar vermelho, Mochila âmbar, Time verde, Fugir azul (o
-   Forfeit, cinza) — e os dois do Pokérole menores embaixo: Vontade
+   Desistir, cinza) — e os dois do Pokérole menores embaixo: Vontade
    roxa e Pokédex na cor da tela dela. Botão de verdade: tem espessura
    embaixo e afunda quando aperta. */
 .acoes-combate{display:flex;flex-direction:column;gap:8px}

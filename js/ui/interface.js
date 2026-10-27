@@ -1606,10 +1606,10 @@ const UI = {
     const bt = document.getElementById('moldura-salvar'); if (bt){ bt.disabled = true; bt.textContent = 'Salvo'; }
   },
 
-  /* Forfeit pede confirmação: é derrota, e custa */
+  /* Desistir pede confirmação: é derrota, e custa */
   confirmarForfeit(){
     if (!Batalha.ativo || Batalha.tipo !== 'treinador') return;
-    this.modal('Forfeit', `<p>Desistir desta luta? Conta como derrota.</p>
+    this.modal('Desistir', `<p>Desistir desta luta? Conta como derrota.</p>
       <button class="escolha" onclick="UI.fecharModal(true);Jogo.acaoBatalha({tipo:'desistir'})">Desistir</button>
       <button class="escolha" onclick="UI.fecharModal(true)">Continuar lutando</button>`, true);
   },
@@ -2395,7 +2395,7 @@ const UI = {
         ${bt('bag', 'itens', 'Mochila', 'UI.menuBag()', !Object.values(d.itens).some(q => q > 0))}
         ${bt('time', 'bola', 'Time', 'UI.menuTroca()', !vivos)}
         ${Batalha.tipo === 'treinador'
-          ? bt('desistir', 'bandeira', 'Forfeit', 'UI.confirmarForfeit()')
+          ? bt('desistir', 'bandeira', 'Desistir', 'UI.confirmarForfeit()')
           : bt('fugir', 'correr', 'Fugir', "Jogo.acaoBatalha({tipo:'fugir'})", !Batalha.fuga)}
       </div>
       <div class="mb-extra">
@@ -5569,7 +5569,7 @@ const UI = {
       <div class="linha"><span class="k">Fome na luta</span><span class="v">com fome, 10% de chance de se distrair e não fazer o que você mandou · faminto, 20% · comer resolve na hora</span></div>
       <div class="linha"><span class="k">Fome e moral</span><span class="v">só quem está faminto perde moral: −2 a cada 12 horas, no máximo −10 num jejum inteiro</span></div>
       <div class="linha"><span class="k">Comer</span><span class="v">Centro, casa e toda cura completa alimentam · quem sai do PC sai alimentado · Ração em toda loja de Kanto, 200 ₽ de base (a cidade mexe no preço) · Ração na mão: um Pokémon, +10 de moral · Alimentar o time (no Seu time): uma Ração pra todos, +2 de moral cada · acampar e treinar gastam uma Ração cada · dias que a história conta como vividos ("na sexta seguinte", "no dia seguinte", os dias entre um capítulo e outro) o time passa comendo</span></div>
-      <div class="linha"><span class="k">A história e a moral</span><span class="v">o que uma cena tira do time é no máximo 10 de moral, e cena nenhuma derruba alguém abaixo de 30 · abaixo disso, só o que acontece com o próprio Pokémon: fome, Forfeit, o par solto ou morto · o que a cena dá entra inteiro</span></div>
+      <div class="linha"><span class="k">A história e a moral</span><span class="v">o que uma cena tira do time é no máximo 10 de moral, e cena nenhuma derruba alguém abaixo de 30 · abaixo disso, só o que acontece com o próprio Pokémon: fome, desistir de uma luta, o par solto ou morto · o que a cena dá entra inteiro</span></div>
       <p class="sussurro">Moral alta zera a conta sozinha. Além disso, cada natureza tem a sua própria teimosia em combate — tem quem recuse golpe especial, quem hesite em chegar perto, quem ataque antes da ordem e quem use o golpe errado de propósito. O jogo diz na hora qual natureza fez o quê; a lista inteira você monta jogando.</p>
       <h3>Condições</h3>
       <div class="linha"><span class="k">PAR · paralisado</span><span class="v">−2 de Destreza (precisão e iniciativa)</span></div>
@@ -5863,7 +5863,7 @@ const UI = {
 
       <h3>PokéNav</h3>
       <div class="linha"><span class="k">No aparelho</span><span class="v">chamada recebida, ligação que você faz, mensagem e recado de quem é do seu lado acontecem dentro do PokéNav, por cima da tela · guardar o aparelho volta pra onde você estava</span></div>
-      <div class="linha"><span class="k">Forfeit</span><span class="v">contra treinador não se foge: desiste · conta como derrota (com o que a derrota já custa ali) · multa de arena de 60 ₽ por nível de quem está em campo do lado de lá · −5 de moral no time inteiro</span></div>
+      <div class="linha"><span class="k">Desistir</span><span class="v">contra treinador não se foge: desiste · conta como derrota (com o que a derrota já custa ali) · multa de arena de 60 ₽ por nível de quem está em campo do lado de lá · −5 de moral no time inteiro</span></div>
       <div class="linha"><span class="k">Recarregar</span><span class="v">a luta continua de onde parou, no mesmo turno · recarregar na tela do Continuar mostra o mesmo resultado de novo</span></div>
       <div class="linha"><span class="k">Na luta</span><span class="v">não dá pra ligar · chamada que toca no meio da luta espera ela acabar e toca depois · item só pela Mochila da barra de ações, gastando o turno</span></div>
       <div class="linha"><span class="k">Agenda</span><span class="v">só entra número que te deram · você grava na hora ou depois</span></div>

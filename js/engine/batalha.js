@@ -43,7 +43,7 @@ const CLIMA_TEXTO = {
   sol:{comeca:'O sol fica forte de repente.', acaba:'O sol volta ao normal.'}
 };
 
-/* Forfeit: multa por nível de quem está em campo do lado de lá, e moral perdida no time */
+/* Desistir: multa por nível de quem está em campo do lado de lá, e moral perdida no time */
 const MULTA_FORFEIT_POR_NIVEL = 60;
 const MORAL_FORFEIT = 5;
 
@@ -1636,7 +1636,7 @@ const Batalha = {
     return {eventos:this.eventos, fim:null, ameaca:true};
   },
 
-  /* Forfeit: a fuga de quem luta contra treinador. Conta como derrota
+  /* Desistir: a fuga de quem luta contra treinador. Conta como derrota
      (com tudo que a derrota já custa ali) e cobra por cima: multa de
      arena pelo nível de quem está em campo do lado de lá, e o time
      inteiro perde moral por ter visto você desistir. */
@@ -1651,7 +1651,7 @@ const Batalha = {
     Estado.j.dinheiro -= multa;
     (Estado.dados.time || []).forEach(p => { if (!p.morto) p.moral = Math.max(0, (p.moral || 0) - MORAL_FORFEIT); });
     this.ev('info', `Você levanta a mão e desiste. ${this.treinador || 'O treinador'} recolhe o Pokémon devagar, sem comemorar.`);
-    this.ev('perigo', multa ? `Forfeit: derrota, e ${fmtDin(multa)} ₽ de multa de arena. O time viu você jogar a toalha.` : 'Forfeit: derrota. O time viu você jogar a toalha.');
+    this.ev('perigo', multa ? `Desistência: derrota, e ${fmtDin(multa)} ₽ de multa de arena. O time viu você jogar a toalha.` : 'Desistência: derrota. O time viu você jogar a toalha.');
     Estado.registrar(`Desistiu da luta contra ${this.treinador || 'um treinador'}.`);
     return this.encerrar('derrota', {desistiu:true});
   },
