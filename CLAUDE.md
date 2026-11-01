@@ -316,9 +316,18 @@ sozinha — e é por ser silencioso que precisa de script.
 vai do nome que **o jogo** usa pro arquivo, e só entra item com equivalente
 exato nos jogos — Resto de Ração é Leftovers porque a ficha é a mesma, Faixa
 Firme é Focus Band porque sobrevive com 1 HP. Ferramenta que só existe aqui
-(Machado, Picareta, Lanterna…), as mochilas e o papel de enredo ganham
-**desenho em SVG** de `js/data/icones.js` (`desenhoDoItem`, pelo nome; o
-papel de enredo pelo tipo: bilhete, foto, mapa, caixa, chave). Lugares,
+(Machado, Picareta, Lanterna…), a Ração, a Bandagem, as mochilas, o que
+a rede te dá e o papel de enredo ganham **desenho em pixel no jeito dos
+ícones dos jogos** — 30×30, contorno cinza-escuro, luz de cima à
+esquerda, três tons e o brilho —, gerado por `python3
+ferramentas/desenhar-itens.py` em `sprites_nds/items/nossos/` (com
+`--folha f.png` sai a folha ampliada ao lado de ícones dos jogos). O
+mapa nome → arquivo é `ITEM_PIXEL` (`js/data/icones.js`); mochila e
+bolsa saem pela cor (`CORES_DE_MOCHILA`), e o papel de enredo pelo tipo
+(bilhete, foto, mapa, caixa, chave, pacote), em `desenhoDoItem`. Item
+novo sem equivalente entra no gerador e no `ITEM_PIXEL`; o
+`chk-sprites` confere que todo arquivo apontado existe. Antes eram
+vetores chapados e destoavam dos ícones dos jogos do lado. Lugares,
 ações e opções do Centro usam os ícones de traço do mesmo arquivo
 (`svgIcone`, `iconeDoAfazer`): afazer novo com id novo entra lá.
 

@@ -1,9 +1,9 @@
 /* ============================================================
    ÍCONES DESENHADOS
    Duas coisas que não têm arte nos jogos e por isso são desenhadas
-   aqui, em SVG, sem arquivo:
+   aqui:
 
-   - ITEM_DESENHADO: o ícone de 30×30 de cada item que não tem
+   - ITEM_PIXEL: o ícone de 30×30, em pixel, de cada item que não tem
      equivalente exato nos jogos (Machado, Lanterna, as mochilas…) e,
      pelo nome, o papel de enredo (bilhete, foto, mapa, caixa, chave).
      caminhoItem() cai aqui quando ITEM_SPRITE não tem o item. O item
@@ -13,66 +13,41 @@
      do texto do botão (currentColor).
    ============================================================ */
 
-/* ---------- itens: 30×30, cor própria ---------- */
-const _CONT = 'stroke="#20242c" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"';
-function _mochilaSVG(cor, bolsa){
-  return bolsa
-    ? `<path d="M8 12 Q15 3 22 12" fill="none" ${_CONT}/><rect x="5" y="11" width="20" height="14" rx="4" fill="${cor}" ${_CONT}/><rect x="12" y="15" width="6" height="4" rx="1" fill="#fff" opacity=".7"/>`
-    : `<rect x="7" y="7" width="16" height="19" rx="5" fill="${cor}" ${_CONT}/><path d="M11 7 Q15 2 19 7" fill="none" ${_CONT}/><rect x="10" y="15" width="10" height="7" rx="2" fill="#000" opacity=".18" ${_CONT}/><path d="M10 12h10" ${_CONT}/>`;
-}
-const CORES_DE_BOLSA = {Preta:'#3a3d44', Vermelha:'#d8433b', Azul:'#3b74d8', Verde:'#3fa55a', Amarela:'#e9c33a',
-  Marrom:'#8a5a35', Laranja:'#ea8a2e', Roxa:'#8b55c9', Branca:'#eef0f2', Cinza:'#9aa1aa', Rosa:'#ec8fb6',
-  Prateada:'#c9d1da', Dourada:'#e2b64a'};
-
-const ITEM_DESENHADO = {
-  'Bandagem': `<rect x="4" y="11" width="22" height="9" rx="4.5" fill="#f1e2c6" ${_CONT}/><rect x="12" y="11" width="6" height="9" fill="#e3c99b"/><path d="M15 13v5M12.5 15.5h5" stroke="#d8433b" stroke-width="2"/>`,
-  'Cantil': `<circle cx="15" cy="17" r="9" fill="#3d7fbf" ${_CONT}/><rect x="12.5" y="4" width="5" height="5" rx="1" fill="#8a8f98" ${_CONT}/><path d="M9 16q6 4 12 0" fill="none" stroke="#9fd0ff" stroke-width="1.6"/>`,
-  'Ração': `<path d="M7 9h16l-2 17H9z" fill="#c9965a" ${_CONT}/><path d="M7 9l3-4h10l3 4" fill="#e0b47a" ${_CONT}/><circle cx="15" cy="18" r="2.4" fill="#7a4c22"/><circle cx="11.6" cy="14.6" r="1.3" fill="#7a4c22"/><circle cx="15" cy="13.4" r="1.3" fill="#7a4c22"/><circle cx="18.4" cy="14.6" r="1.3" fill="#7a4c22"/>`,
-  'Colete de Lona': `<path d="M9 5l3 3h6l3-3 4 4v16H5V9z" fill="#b39a62" ${_CONT}/><path d="M15 8v17" ${_CONT}/><rect x="7.5" y="15" width="5" height="4" fill="#9a824d" ${_CONT}/><rect x="17.5" y="15" width="5" height="4" fill="#9a824d" ${_CONT}/>`,
-  'Botina Leve': `<path d="M9 4h8v13l7 3v5H6V19z" fill="#8a5a35" ${_CONT}/><path d="M6 23h18" ${_CONT}/><path d="M11 8h4M11 11h4" stroke="#e0b47a" stroke-width="1.4"/>`,
-  'Bota de borracha': `<path d="M9 3h9v15l6 3v5H6V19z" fill="#e9c33a" ${_CONT}/><path d="M6 24h18" stroke="#20242c" stroke-width="2"/>`,
-  'Machado': `<path d="M18 4l7 7-3 3-7-7z" fill="#b8c1cc" ${_CONT}/><path d="M17 9L5 25" stroke="#8a5a35" stroke-width="3" stroke-linecap="round"/><path d="M17 9L5 25" stroke="#20242c" stroke-width=".8" fill="none"/>`,
-  'Picareta': `<path d="M4 10 Q15 2 26 10 Q15 6 4 10z" fill="#b8c1cc" ${_CONT}/><path d="M15 7v19" stroke="#8a5a35" stroke-width="3" stroke-linecap="round"/>`,
-  'Lanterna': `<rect x="11" y="11" width="8" height="15" rx="2" fill="#4c5563" ${_CONT}/><path d="M9 5h12l-2 6h-8z" fill="#d7dde4" ${_CONT}/><path d="M11 5l-3-3M15 4V1M19 5l3-3" stroke="#f7d84a" stroke-width="1.6"/>`,
-  'Pilha': `<rect x="8" y="7" width="14" height="19" rx="2" fill="#2f3440" ${_CONT}/><rect x="12" y="4" width="6" height="3" fill="#b8c1cc" ${_CONT}/><rect x="8" y="7" width="14" height="6" fill="#e9a23a" ${_CONT}/><path d="M15 16v6M12 19h6" stroke="#fff" stroke-width="1.6"/>`,
-  'Máscara de pó': `<path d="M5 13q10-6 20 0v4q-10 8-20 0z" fill="#eef0f2" ${_CONT}/><path d="M5 14L2 11M25 14l3-3" ${_CONT}/><path d="M10 15h10M10 18h10" stroke="#9aa1aa" stroke-width="1.2"/>`,
-  'Cobertor térmico': `<rect x="4" y="9" width="22" height="14" rx="2" fill="#c9d1da" ${_CONT}/><path d="M4 14h22M4 18h22" stroke="#8a95a3" stroke-width="1.2"/><path d="M8 9v14" stroke="#e2b64a" stroke-width="1.4"/>`,
-  'Câmera descartável': `<rect x="4" y="9" width="22" height="14" rx="2" fill="#e9c33a" ${_CONT}/><circle cx="17" cy="16" r="4.5" fill="#2f3440" ${_CONT}/><circle cx="17" cy="16" r="1.8" fill="#9fd0ff"/><rect x="7" y="11" width="5" height="3" fill="#fff" ${_CONT}/>`,
-  'Caderno de campo': `<rect x="7" y="4" width="17" height="22" rx="2" fill="#3fa55a" ${_CONT}/><path d="M7 4v22" stroke="#20242c" stroke-width="3"/><rect x="12" y="9" width="9" height="4" fill="#eef0f2" ${_CONT}/>`,
-  'Isca': `<path d="M15 3v13a5 5 0 1 1-6-5" fill="none" stroke="#9aa1aa" stroke-width="2" stroke-linecap="round"/><circle cx="19" cy="20" r="4" fill="#d8433b" ${_CONT}/><path d="M19 16l1-3" stroke="#3fa55a" stroke-width="1.6"/>`,
-  'Relógio': `<rect x="11" y="2" width="8" height="26" rx="3" fill="#4c5563" ${_CONT}/><circle cx="15" cy="15" r="7" fill="#eef0f2" ${_CONT}/><path d="M15 15V11M15 15l3 2" stroke="#20242c" stroke-width="1.6" stroke-linecap="round"/>`,
-  /* os itens dos degraus da rede (js/story/rede.js) */
-  'Uniforme preto da rede': `<path d="M10 4l5 3 5-3 6 4-2 6-3-1v13H9V13l-3 1-2-6z" fill="#26262c" ${_CONT}/><path d="M15 7v19" stroke="#4a4a54" stroke-width="1.2"/><path d="M12 11h6" stroke="#4a4a54" stroke-width="1.2" stroke-dasharray="1.5 1.5"/>`,
-  'Caderno de lote': `<rect x="7" y="4" width="17" height="22" rx="2" fill="#3a3d44" ${_CONT}/><path d="M7 4v22" stroke="#20242c" stroke-width="3"/><rect x="11" y="9" width="10" height="5" fill="#f4efe2" ${_CONT}/><path d="M12.5 11.5h7" stroke="#9aa1aa" stroke-width="1"/>`,
-  'Chave do subsolo': `<rect x="4" y="11" width="9" height="9" rx="1.5" fill="#9aa1aa" ${_CONT}/><rect x="6.5" y="13.5" width="4" height="4" fill="#3a3d44"/><path d="M13 15.5h13M22 15.5v4M25 15.5v3" stroke="#9aa1aa" stroke-width="3" stroke-linecap="round"/><path d="M13 15.5h13" stroke="#20242c" stroke-width=".7"/>`,
-  'Broche da letra antiga': `<circle cx="15" cy="15" r="10" fill="#2b2a31" ${_CONT}/><circle cx="15" cy="15" r="7.5" fill="none" stroke="#7d6a4a" stroke-width="1"/><path d="M12 20.5v-11h3.8a2.8 2.8 0 010 5.6H12m3.6 0l3 5.4" fill="none" stroke="#c23038" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>`,
-  /* papel de enredo, pelo nome */
-  _papel: `<path d="M8 4h11l4 4v18H8z" fill="#f4efe2" ${_CONT}/><path d="M19 4v4h4" fill="none" ${_CONT}/><path d="M11 12h9M11 15h9M11 18h6" stroke="#9aa1aa" stroke-width="1.3"/>`,
-  _foto: `<rect x="5" y="7" width="20" height="17" rx="1.5" fill="#f4efe2" ${_CONT}/><rect x="8" y="10" width="14" height="10" fill="#9fd0ff"/><path d="M8 20l5-5 4 3 5-5v7z" fill="#3fa55a"/>`,
-  _mapa: `<path d="M4 7l7-3 8 3 7-3v19l-7 3-8-3-7 3z" fill="#e8dcb8" ${_CONT}/><path d="M11 4v19M19 7v19" stroke="#b8a77a" stroke-width="1.2"/><path d="M7 15q4-4 8 0t8-2" fill="none" stroke="#d8433b" stroke-width="1.4" stroke-dasharray="2 2"/>`,
-  _caixa: `<path d="M4 11l11-5 11 5v12l-11 5-11-5z" fill="#c9965a" ${_CONT}/><path d="M4 11l11 5 11-5M15 16v12" fill="none" ${_CONT}/>`,
-  _chave: `<circle cx="10" cy="15" r="5" fill="#e2b64a" ${_CONT}/><circle cx="10" cy="15" r="1.8" fill="#20242c"/><path d="M15 15h11M22 15v4M25 15v3" stroke="#e2b64a" stroke-width="3" stroke-linecap="round"/><path d="M15 15h11" stroke="#20242c" stroke-width=".6"/>`,
-  _pacote: `<path d="M6 10h18l-2 16H8z" fill="#b39a62" ${_CONT}/><path d="M10 10q5-7 10 0" fill="none" ${_CONT}/>`
+/* ---------- itens: 30×30, em pixel ---------- */
+/* O item sem equivalente nos jogos tem ícone em pixel, no jeito dos
+   ícones de mochila de HG/SS que ficam do lado dele: 30×30, contorno
+   escuro, luz de cima à esquerda (ferramentas/desenhar-itens.py, em
+   sprites_nds/items/nossos/). Item novo sem arte entra lá e aqui. */
+const ITEM_PIXEL = {
+  'Bandagem':'bandagem', 'Cantil':'cantil', 'Ração':'racao', 'Colete de Lona':'colete', 'Botina Leve':'botina',
+  'Bota de borracha':'bota_borracha', 'Machado':'machado', 'Picareta':'picareta', 'Lanterna':'lanterna',
+  'Pilha':'pilha', 'Máscara de pó':'mascara', 'Cobertor térmico':'cobertor', 'Câmera descartável':'camera',
+  'Caderno de campo':'caderno', 'Isca':'isca', 'Relógio':'relogio',
+  /* o que a rede te dá */
+  'Uniforme preto da rede':'uniforme_rede', 'Caderno de lote':'caderno_lote',
+  'Chave do subsolo':'chave_subsolo', 'Broche da letra antiga':'broche'
 };
+/* mochila e bolsa: uma por cor, com o nome da cor do item */
+const CORES_DE_MOCHILA = ['Preta', 'Vermelha', 'Azul', 'Verde', 'Amarela', 'Marrom', 'Laranja', 'Roxa',
+  'Branca', 'Cinza', 'Rosa', 'Prateada', 'Dourada'];
 
-/* o desenho de um item, se ele não tem arte dos jogos */
+/* o arquivo do desenho: o do item, o da mochila pela cor ou, pro papel
+   de enredo, o genérico pelo nome (bilhete, foto, mapa, caixa, chave) */
+function arquivoDoDesenho(nome){
+  if (ITEM_PIXEL[nome]) return ITEM_PIXEL[nome];
+  const m = /^(Mochila|Bolsa) (\S+)/.exec(nome);
+  if (m && CORES_DE_MOCHILA.includes(m[2])) return m[1].toLowerCase() + '_' + m[2].toLowerCase();
+  const n = nome.toLowerCase();
+  return /foto/.test(n) ? 'foto'
+       : /mapa|croqui|planta/.test(n) ? 'mapa'
+       : /caixa|lacre|engradado/.test(n) ? 'caixa'
+       : /chave|cart[ãa]o-chave|crach/.test(n) ? 'chave'
+       : /bilhete|carta|papel|recibo|folha|caderno|caderneta|relat|ficha|guia|documento|c[óo]pia|lista|anota|passagem|envelope|di[áa]rio|livro|jornal|panfleto|cartaz|recorte|declara|depoimento|p[áa]ginas/.test(n) ? 'papel'
+       : 'pacote';
+}
 function desenhoDoItem(nome){
-  let corpo = ITEM_DESENHADO[nome];
-  if (!corpo){
-    const m = /^(Mochila|Bolsa) (\w+)/.exec(nome);
-    if (m && CORES_DE_BOLSA[m[2]]) corpo = _mochilaSVG(CORES_DE_BOLSA[m[2]], m[1] === 'Bolsa');
-  }
-  if (!corpo){
-    const n = nome.toLowerCase();
-    corpo = /foto/.test(n) ? ITEM_DESENHADO._foto
-          : /mapa|croqui|planta/.test(n) ? ITEM_DESENHADO._mapa
-          : /caixa|lacre|engradado/.test(n) ? ITEM_DESENHADO._caixa
-          : /chave|cart[ãa]o-chave|crach/.test(n) ? ITEM_DESENHADO._chave
-          : /bilhete|carta|papel|recibo|folha|caderno|caderneta|relat|ficha|guia|documento|c[óo]pia|lista|anota|passagem|envelope|di[áa]rio|livro|jornal|panfleto|cartaz|recorte|declara|depoimento|p[áa]ginas/.test(n) ? ITEM_DESENHADO._papel
-          : ITEM_DESENHADO._pacote;
-  }
-  return 'data:image/svg+xml;utf8,' + encodeURIComponent(
-    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30">${corpo}</svg>`);
+  const rel = SPRITES_BASE + ITENS_PASTA + 'nossos/' + arquivoDoDesenho(nome) + '.png';
+  return (typeof SPRITES_EMBUTIDOS !== 'undefined' && SPRITES_EMBUTIDOS[rel]) || rel;
 }
 
 /* ---------- lugares e ações: traço, cor do botão ---------- */

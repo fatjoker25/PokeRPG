@@ -71,6 +71,16 @@ const itemArq = [...new Set([...(src.match(/const ITEM_SPRITE = \{([\s\S]*?)\};/
 for (const a of itemArq) if (!fs.existsSync(path.join(raiz, base, 'items', a + '.png'))) falhas.push(`ícone ${a}.png não existe em items/`);
 const bolsos = [...((src.match(/const BOLSOS = \[([\s\S]*?)\];/) || [0, ''])[1]).matchAll(/id:'([a-z]+)'/g)].map(m => m[1]);
 for (const a of bolsos) if (!fs.existsSync(path.join(raiz, base, 'items/bolsos', a + '.png'))) falhas.push(`bolso ${a}.png não existe em items/bolsos/`);
+/* os nossos, em pixel (ferramentas/desenhar-itens.py): cada item de
+   ITEM_PIXEL, a mochila e a bolsa de cada cor e os genéricos do papel */
+const ic = fs.readFileSync(path.join(raiz, 'js/data/icones.js'), 'utf8');
+const pixelArq = new Set([...((ic.match(/const ITEM_PIXEL = \{([\s\S]*?)\};/) || [0, ''])[1]).matchAll(/:'([a-z_]+)'/g)].map(m => m[1]));
+for (const cor of [...((ic.match(/const CORES_DE_MOCHILA = \[([\s\S]*?)\];/) || [0, ''])[1]).matchAll(/'([^']+)'/g)].map(m => m[1].toLowerCase())){
+  pixelArq.add('mochila_' + cor); pixelArq.add('bolsa_' + cor);
+}
+for (const g of ['foto', 'mapa', 'caixa', 'chave', 'papel', 'pacote']) pixelArq.add(g);
+if (pixelArq.size < 30) falhas.push('ITEM_PIXEL ou CORES_DE_MOCHILA não foi lido em icones.js');
+for (const a of pixelArq) if (!fs.existsSync(path.join(raiz, base, 'items/nossos', a + '.png'))) falhas.push(`desenho ${a}.png não existe em items/nossos/ (python3 ferramentas/desenhar-itens.py)`);
 let gritos = 0;
 for (let i = 1; i <= 251; i++) if (fs.existsSync(path.join(raiz, 'sons/gritos', i + '.ogg'))) gritos++;
 if (gritos < 251) falhas.push(`sons/gritos: ${gritos} de 251`);
@@ -83,7 +93,7 @@ for (const a of sdArq) if (!fs.existsSync(path.join(raiz, base, 'animations/show
 const fxSrc = fs.readFileSync(path.join(raiz, 'js/ui/efeitos.js'), 'utf8');
 const fxArq = [...new Set([...fxSrc.matchAll(/'((?:physical|special|stat|status)_[a-z_0-9]+)'/g)].map(m => m[1]))];
 for (const a of fxArq) if (!fs.existsSync(path.join(raiz, base, 'animations/moves', a + '.png'))) falhas.push(`efeito ${a}.png não existe em animations/moves/`);
-linhas.push(`  ícones de item ${itemArq.length} · bolsos ${bolsos.length} · rostos ${rostos.size} · fotos da ficha ${fichaFotos.length} · insígnias ${insArq.length} · discos de TM ${tmArq.length} · gritos ${gritos} · efeitos de golpe ${fxArq.length} · animação do Showdown ${sdArq.length}`);
+linhas.push(`  ícones de item ${itemArq.length} · nossos em pixel ${pixelArq.size} · bolsos ${bolsos.length} · rostos ${rostos.size} · fotos da ficha ${fichaFotos.length} · insígnias ${insArq.length} · discos de TM ${tmArq.length} · gritos ${gritos} · efeitos de golpe ${fxArq.length} · animação do Showdown ${sdArq.length}`);
 
 if (falhas.length){
   console.log('FALHAS:'); falhas.forEach(f => console.log(' - ' + f));
