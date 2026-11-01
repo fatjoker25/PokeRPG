@@ -196,7 +196,7 @@ cg2_o_teste:{
   texto:[
     'Doze crianças da escola de treino, com Pokémon que elas mesmas pegaram, contra doze unidades de viveiro com um técnico de jaleco dando ordem.',
     'As unidades ganham onze de doze. Elas obedecem na hora, sem erro, sem medo.',
-    'A única que perde é contra uma menina com um Rattata desdentado que não obedece nada, e que morde a unidade quando a menina grita "não!".',
+    'A única que perde é contra uma menina com um Rattata desdentado que não obedece nada, e que morde a unidade quando a menina grita "não".',
     'As outras onze crianças choram. As unidades não olham pra elas.'
   ],
   escolhas:[

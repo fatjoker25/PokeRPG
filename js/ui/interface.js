@@ -873,8 +873,8 @@ const UI = {
         <label class="cr-rot cr-rot-menor" for="f-objetivo">Nas suas palavras</label>
         <textarea id="f-objetivo" data-campo="frase" data-foco="frase" rows="2" maxlength="120" placeholder="Escolha um objetivo, ou escreva o seu.">${e(c.frase)}</textarea>
         <p class="cr-nota">É a frase que sai da sua boca quando alguém pergunta por que você vai.</p></div>
-      ${lista('gostos', 'Do que você gosta', GOSTOS_MAX, 'Lugar de que você gosta te deixa mais à vontade; Pokémon de que você gosta chega com mais vontade de ficar.')}
-      ${lista('desgostos', 'Do que você não gosta', DESGOSTOS_MAX, 'E o contrário: lugar e Pokémon que te deixam com o pé atrás.')}
+      ${lista('gostos', 'Do que você gosta', GOSTOS_MAX, 'O que te alegra: lugar de que você gosta te deixa mais à vontade, e Pokémon de que você gosta chega com mais vontade de ficar e te dá ânimo quando aparece.')}
+      ${lista('desgostos', 'Do que você não gosta', DESGOSTOS_MAX, 'O que te dá medo: lugar e Pokémon que te deixam com o pé atrás.')}
       <datalist id="cr-especies">${DEX_KANTO_IDS.map(id => `<option value="${e(DEX[id].nome)}">`).join('')}</datalist>`;
   },
 
@@ -1291,6 +1291,8 @@ const UI = {
 
   /* só o que de fato carrega texto escrito — nada de "carimbo" ou
      "crachá", que aparecem em cena de conversa e roubavam a fala */
+  /* "ele diz.", "ela pergunta", "diz ele." — e nada mais */
+  _SO_ATRIBUICAO: /^(?:(?:ele|ela|eles|elas|você)\s+)?(?:diz|disse|fala|falou|responde|respondeu|pergunta|perguntou|completa|continua|repete|emenda|acrescenta|explica|insiste|corrige|murmura|sussurra)(?:\s+(?:ele|ela))?\.?$/i,
   _ESCRITO: /\b(placa|cartaz|letreiro|plaquinha|pichação|manchete|mural|painel|outdoor|banner|escrito à mão|escrita a caneta|está escrito|escrito assim|escreve no seu caderno|letra de (criança|imprensa|fôrma|forma))\b/i,
   /* Papel também se reconhece pela descrição logo depois: "…" — com
      uma foto colada, "…" — letra de imprensa. O travessão ali descreve
@@ -1378,6 +1380,18 @@ const UI = {
       if (!pedacos){
         pendente = t; ultimaBoca = null; return `<p>${this.esc(t)}</p>`;
       }
+      /* Papel no meio da frase ("letra de criança escrevendo coisas como
+         "AQUI TEM VULCÃO" e "PERIGO???" em lugares aleatórios"): a frase
+         continua depois das aspas, então o escrito fica dentro dela, em
+         vez de partir a frase em cinco blocos. Com `vozes` não: lá cada
+         aspa conta na ordem. */
+      const ultimo = pedacos[pedacos.length - 1];
+      if (!vozes && pedacos[0].tipo === 'narracao' && this._ESCRITO.test(pedacos[0].texto)
+          && ultimo.tipo === 'narracao' && /^[a-zà-ú]/.test(ultimo.texto)){
+        pendente = t; ultimaBoca = null;
+        return `<p>${pedacos.map(pe => pe.tipo === 'fala'
+          ? `<span class="escrito-inline">${this.esc('“' + pe.texto + '”')}</span>` : this.esc(pe.texto)).join(' ')}</p>`;
+      }
 
       let html = '';
       let papelNaLinha = false;
@@ -1387,7 +1401,13 @@ const UI = {
           /* ", diz a atendente" é atribuição da fala anterior, não
              parágrafo novo: tira a vírgula que ficou órfã na frente. */
           const limpo = html ? pe.texto.replace(/^[,;]\s*/, '') : pe.texto;
-          html += html ? `<p class="entre-falas">${this.esc(limpo)}</p>`
+          /* "Parabéns," ele diz. "Sério…": a atribuição curta, sozinha,
+             já está no nome em cima do balão, e solta ela lia como frase
+             começando em minúscula. Sai da tela, mas continua valendo pra
+             saber quem fala (o pendente). A atribuição que diz mais
+             alguma coisa fica, com maiúscula. */
+          if (html && this._SO_ATRIBUICAO.test(limpo.trim())){ pendente = pe.texto; continue; }
+          html += html ? `<p class="entre-falas">${this.esc(maiuscula(limpo))}</p>`
                        : `<p>${this.esc(limpo)}</p>`;
           pendente = pe.texto; ultimaBoca = null;
           continue;
@@ -1529,6 +1549,11 @@ const UI = {
       }
       if (a.tipo === 'eco'){
         c.appendChild(this.el(`<div class="eco">${this.esc(txt(a.texto))}</div>`));
+        return;
+      }
+      /* o momento do começo do capítulo (rumo.js): uma cena pequena, não alerta */
+      if (a.tipo === 'momento'){
+        c.appendChild(this.el(`<div class="momento">${svgIcone('brilho', 'momento-ic')}<span>${this.esc(txt(a.texto))}</span></div>`));
         return;
       }
       const t = String(txt(a.texto) ?? '');
@@ -6080,6 +6105,7 @@ const UI = {
       <div class="linha"><span class="k">Selo</span><span class="v">Poké Ball ${SELO_DA_BOLA['Poké Ball']}d6 · Great Ball ${SELO_DA_BOLA['Great Ball']}d6 · Ultra Ball ${SELO_DA_BOLA['Ultra Ball']}d6 · Master Ball fecha sem rolagem</span></div>
       <div class="linha"><span class="k">O posto pede</span><span class="v">${POSTOS[0]} (até o nível 9) ${SUCESSOS_DO_POSTO[0]} · ${POSTOS[1]} (10 a 19) ${SUCESSOS_DO_POSTO[1]} · ${POSTOS[2]} (20 a 34) ${SUCESSOS_DO_POSTO[2]} · ${POSTOS[3]} (35 a 49) ${SUCESSOS_DO_POSTO[3]} · ${POSTOS[4]} (50 a 64) ${SUCESSOS_DO_POSTO[4]} · ${POSTOS[5]} pra cima ${SUCESSOS_DO_POSTO[5]}</span></div>
       <div class="linha"><span class="k">Bônus</span><span class="v">com metade do HP ou menos +1 · com 1 HP +2 (no lugar do +1) · +1 por condição (a de status e a confusão)</span></div>
+      <div class="linha"><span class="k">Alegria e medo</span><span class="v">espécie já catalogada de que você gosta (pela espécie ou pelo tipo): +1 dado no selo · de que você não gosta: −1</span></div>
       <div class="linha"><span class="k">Sacudidas</span><span class="v">na conta, três e o clique · faltou um sucesso, duas e abre · faltaram dois, uma · mais que isso, ele sai antes da primeira</span></div>
       <p class="sussurro">A Pokédex mostra, na varredura, quantos sucessos aquele exemplar pede. Nenhuma bola tira mais sucessos do que tem dados: a Poké Ball, com 4, só pega quem pede 6 ou mais se o bônus completar.</p>
       <h3>Centro Pokémon</h3>
@@ -6102,13 +6128,15 @@ const UI = {
 
       <h3>Objetivo e gostos</h3>
       <div class="linha"><span class="k">Objetivo</span><span class="v">o rumo escolhido na inscrição: ser campeão, completar a Pokédex, proteger quem precisa, ter poder e dinheiro, crescer com o time, conhecer Kanto ou voltar pra casa com orgulho · aparece na Ficha</span></div>
-      <div class="linha"><span class="k">Cada capítulo</span><span class="v">abre com uma linha da sua via (como Kanto te vê) e do seu objetivo · quando a via muda no meio, o capítulo diz que mudou</span></div>
+      <div class="linha"><span class="k">Começo do capítulo</span><span class="v">é acaso, uma vez por capítulo · a linha da sua via (como Kanto te vê) sai com ${Math.round(CHANCE_DA_VIA * 100)}% de chance, mais 10% por degrau de reputação acima do primeiro, até 85% · quando a via muda no meio, o capítulo diz que mudou, sempre</span></div>
+      <div class="linha"><span class="k">O momento do objetivo</span><span class="v">sai pelo status que o objetivo puxa: ser campeão, Força · completar a Pokédex, Intelecto · proteger quem precisa e crescer com o time, Carisma · poder e dinheiro, Sorte · conhecer Kanto, Percepção · voltar pra casa, Resistência · ${Math.round(chanceDoMomento(1) * 100)}% com o status em 1, +15% por ponto, até ${Math.round(chanceDoMomento(9) * 100)}% · quando sai, deixa uma coisa pequena: 1 de Vontade, moral pro time, uma Poké Ball ou uma Potion, dinheiro (100 ₽ no começo, crescendo com os capítulos) ou fôlego</span></div>
       <div class="linha"><span class="k">A sua linha</span><span class="v">o lado em que você está: o posto de maior peso (Patrulha e Polícia são a Lei, o envelope sem timbre é a Rocket, o Laboratório é a Ciência, o Jornal, a Associação de Criadores, a Liga) ou, sem posto, a via (herói, mercenário, foragido)</span></div>
       <div class="linha"><span class="k">Cenas da linha</span><span class="v">na virada de capítulo, quem é do seu lado te acha: no máximo uma cena por capítulo, em ordem, e cada uma lembra o que você escolheu na anterior · mexem em reputação, dinheiro e moral como qualquer escolha</span></div>
       <div class="linha"><span class="k">Trocar de linha</span><span class="v">a linha que você deixou reage uma vez · a nova começa do começo</span></div>
       <div class="linha"><span class="k">No fim</span><span class="v">o epílogo fecha cada linha em que você viveu alguma coisa, pelo que você escolheu nela</span></div>
       <div class="linha"><span class="k">Lugar de que você gosta</span><span class="v">um dado a mais nos testes lá dentro (mar, caverna, montanha, floresta, cidade, torre, calor, campo) · de que não gosta, um a menos</span></div>
-      <div class="linha"><span class="k">Pokémon de que você gosta</span><span class="v">pelo tipo ou pela espécie: chega com +10 de moral · o de que você não gosta, −10</span></div>
+      <div class="linha"><span class="k">Pokémon de que você gosta</span><span class="v">pelo tipo ou pela espécie (a espécie manda antes do tipo): chega com +10 de moral · o de que você não gosta, −10</span></div>
+      <div class="linha"><span class="k">Alegria e medo na luta</span><span class="v">quando aparece do outro lado um Pokémon que a Pokédex já catalogou e de que você gosta, +1 de Vontade do treinador (até o máximo) · de que você não gosta, −1 (nunca abaixo de 1) · uma vez por luta · e ±1 dado no selo da Pokébola</span></div>
 
       <h3>Quem já te conhece</h3>
       <div class="linha"><span class="k">Reencontro</span><span class="v">quem a história registrou e tem opinião 3 ou mais sobre você (pra cima ou pra baixo), ou duas lembranças, te reconhece pelo nome quando aparece num capítulo seguinte · uma vez por capítulo · com a cara que a opinião manda</span></div>

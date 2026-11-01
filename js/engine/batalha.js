@@ -114,6 +114,9 @@ const Batalha = {
         : 'A cor está errada. Você olha duas vezes e ela continua errada — e aí você entende o que está na sua frente.');
     }
     this.ev('inicio', opts.introducao || this.introPadrao());
+    /* alegria e medo de quem joga (rumo.js) */
+    this.gostosVistos = {}; this.gostoNaVontade = false;
+    this.sentirGosto(inimigo);
     /* O tipo de quem a Pokédex não catalogou se lê com Percepção e
        Intelecto altos; o jeito, com Percepção 3. Não tem dado: quem
        tem o olho, tem. Vem depois da entrada, porque primeiro a coisa
@@ -1085,7 +1088,32 @@ const Batalha = {
     if (!par || this.viuOParCair[par.uid]) return;
     this.viuOParCair[par.uid] = nomeVisivel(caido);
   },
+  /* Alegria e medo (rumo.js): Pokémon do outro lado de que quem joga
+     gosta, ou não, pela espécie ou pelo tipo — só o que a Pokédex já
+     catalogou, senão a reação entregava o que ele é. A frase sai pra
+     cada um que entra; a Vontade do treinador mexe uma vez por luta:
+     +1 (até o máximo) ou −1 (nunca abaixo de 1). */
+  sentirGosto(p){
+    if (!p || p !== this.inimigo || typeof gostoSabido !== 'function' || !Estado.j) return;
+    this.gostosVistos = this.gostosVistos || {};
+    if (this.gostosVistos[p.uid]) return;
+    this.gostosVistos[p.uid] = true;
+    const g = gostoSabido(p);
+    if (!g) return;
+    let nota = '';
+    if (!this.gostoNaVontade){
+      const antes = Estado.vontadeJogador();
+      if (g > 0) Estado.recuperarVontadeJogador(1);
+      else if (antes > 1) Estado.j.vontade = antes - 1;
+      const mudou = Estado.vontadeJogador() - antes;
+      if (mudou){ this.gostoNaVontade = true; nota = ` (${mudou > 0 ? '+1' : '−1'} de Vontade: ${Estado.vontadeJogador()} de ${Estado.vontadeMaxJogador()})`; }
+    }
+    this.ev('info', fraseDeGosto(p, g) + nota);
+  },
+
   entrouEmCampo(p, est){
+    /* quem chega do outro lado pode ser alegria ou medo */
+    if (p === this.inimigo) this.sentirGosto(p);
     /* quem saiu pode ser quem prendia alguém */
     this.conferirPresos();
     const nomePar = this.viuOParCair && this.viuOParCair[p.uid];

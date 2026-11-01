@@ -351,6 +351,12 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
   background:color-mix(in srgb, var(--texto) 4%, transparent);
 }
 
+/* o escrito no meio de uma frase: fica nela, na letra do papel */
+.narrativa .escrito-inline{
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.86em;letter-spacing:.02em;
+  padding:1px 4px;border-radius:4px;color:var(--texto);
+  background:color-mix(in srgb, var(--texto) 7%, transparent);
+}
 /* narração curta no meio de uma troca de falas */
 .narrativa p.entre-falas{
   margin:-4px 0 10px 14px;max-width:62ch;
@@ -378,7 +384,7 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
     color-mix(in srgb, var(--perigo) 5%, var(--bg-2)));
 }
 .narrativa .fala.grita::before{border-right-color:var(--perigo)}
-.narrativa .fala.grita .fala-quem{color:var(--perigo)}
+.narrativa .fala.grita .fala-quem{color:color-mix(in srgb, var(--perigo) 45%, #fff);background:color-mix(in srgb, var(--perigo) 24%, transparent)}
 .narrativa .fala.grita .fala-diz{font-weight:600}
 .narrativa .fala.baixo{
   border-color:var(--borda);border-left-color:var(--texto-fraco);
@@ -1652,6 +1658,17 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
   background:linear-gradient(90deg, color-mix(in srgb, var(--destaque-2) 9%, transparent), transparent 70%);
   border-radius:0 8px 8px 0;
 }
+
+/* o momento do começo do capítulo: uma cena pequena, na luz dourada da história */
+.momento{
+  display:flex;align-items:flex-start;gap:11px;margin:0 0 12px;padding:10px 14px 10px 10px;border-radius:12px;
+  font-size:15px;line-height:1.55;color:var(--texto);
+  background:linear-gradient(100deg, color-mix(in srgb, #f2c94c 13%, var(--bg-2)), color-mix(in srgb, #f2c94c 3%, var(--bg-2)) 70%);
+  box-shadow:inset 0 0 0 1px color-mix(in srgb, #f2c94c 30%, transparent);
+  animation:aparece .6s var(--suave) both;
+}
+.momento svg.momento-ic{flex:0 0 auto;width:28px;height:28px;padding:5px;border-radius:9px;color:#3a2c00;stroke-width:2;
+  background:radial-gradient(circle at 40% 30%, #fff3b8, #f2c94c 60%, #c9961c)}
 
 /* ---------- quem se importa com movimento ---------- */
 @media (prefers-reduced-motion: reduce){

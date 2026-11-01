@@ -1504,6 +1504,34 @@ ou cena nova entra ali; quem acompanha a linha inteira tem nome em
 Briar), apresentado na primeira cena, e quem não diz está em
 `RECUSAM_O_NOME`. Cena de linha não sabe do futuro como capítulo nenhum.
 
+## O começo do capítulo e o que a ficha pesa
+`js/story/rumo.js`. O começo de cada capítulo (`avisosDeRumo`) era
+lista de chamada: a linha da via, a do objetivo ("três insígnias no
+cinto…") e a do gosto, toda vez, e o personagem passava a jornada se
+lembrando do que já tinha feito. Hoje é **acaso, uma vez por capítulo**
+(`d.rumoCap`): a linha da via sai pela fama (`chanceDaVia`: 35%, +10%
+por degrau de reputação), o **momento do objetivo** pelo status que ele
+puxa (`STATUS_DA_META`, `chanceDoMomento`: 25% com o status em 1, +15%
+por ponto) e, quando sai, deixa uma coisa pequena (`MOMENTOS_DA_META`,
+`aplicarMomento`: Vontade, moral, Poké Ball ou Potion, dinheiro de
+`dinheiroDoMomento`, fôlego), e a frase do lugar de gosto ou desgosto
+(`GOSTO_DO_LUGAR`) só sai quando você chega num tipo de lugar diferente
+do último (`d.rumoLugar`) — o dado a mais ou a menos vale sempre.
+Nenhuma linha repete as últimas doze (`_semRepetir`, `d.rumoVisto`).
+Momento novo entra com `deixa` (nunca `ef`: não é o das cenas) e, se
+for o caso, `cond`; os números moram
+na folha de regras.
+
+Gosto e desgosto de Pokémon são **alegria e medo** (`gostoDe`: a
+espécie manda antes do tipo): ±10 de moral pra quem chega no time, e,
+quando ele aparece do outro lado de uma luta, a frase
+(`fraseDeGosto`, `Batalha.sentirGosto`, também na troca do adversário)
+e ±1 de Vontade do treinador uma vez por luta (nunca abaixo de 1), e ±1
+dado no selo da Pokébola (`gostoNaCaptura`). Só vale **espécie que a
+Pokédex já catalogou** (`gostoSabido`): reação a um vulto entregaria o
+que ele é. O lugar lê o ambiente do capítulo por `Arenas.doCapitulo`
+(`grupoDoLugar`), nunca `cap.ambiente` direto.
+
 ## Os caminhos dividem a história
 `js/story/caminhos.js` desvia a jornada depois do 12, do 19 e do 25 por
 um capítulo do **caminho** do jogador naquela hora (`caminhoAtual`: a
@@ -2000,6 +2028,16 @@ não esconde e os dois ficam na tela; e quem a animação escala pelo
 - Linha inteira entre `**…**` é coisa escrita (placa, bilhete, cabeçalho) e sai
   como papel, mesmo com aspas dentro; `**trecho**` no meio da frase é negrito.
   Nunca aparece asterisco na tela.
+- Atribuição curta entre ou depois de aspas ("ele diz.", "ela pergunta",
+  "Você diz.") **some da tela** (`_SO_ATRIBUICAO`): o nome já está em
+  cima do balão, e solta ela lia como frase começando em minúscula. Ela
+  continua valendo pra saber quem fala. A que diz mais alguma coisa
+  ("ele diz, sem levantar os olhos") fica, com maiúscula.
+- Papel no meio da frase (`_ESCRITO` antes das aspas e a frase continuando
+  depois: "letra de criança escrevendo "AQUI TEM VULCÃO" em lugares…")
+  fica dentro da frase (`.escrito-inline`), em vez de partir a frase em
+  blocos. O grito de alguém no meio da narração ("a menina grita "não"")
+  vai sem pontuação dentro da aspa, senão vira balão.
 - Presságio (`ef.presagio`) sai em itálico sem aspas em volta: se ele cita uma
   fala, as aspas são dele.
 - Conversa de cidade (`CONVERSAS`, em `lugares.js`) pode ter linha que é

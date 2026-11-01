@@ -83,9 +83,12 @@ const Captura = {
     const bonus = this.bonusDaCondicao(alvo, batalha);
     const posto = esp.lendario ? Math.max(POSTO_MINIMO_LENDARIO, postoDoNivel(alvo.nivel)) : postoDoNivel(alvo.nivel);
     const pede = SUCESSOS_DO_POSTO[posto];
-    const r = Dados.pool(selo, `Selo da ${nomeBola}`);
+    /* alegria e medo (rumo.js): +1 dado pro que você gosta, −1 pro que não gosta */
+    const gosto = typeof gostoNaCaptura === 'function' ? gostoNaCaptura(alvo) : 0;
+    const dados = Math.max(1, selo + gosto);
+    const r = Dados.pool(dados, `Selo da ${nomeBola}`);
     const total = r.suc + bonus.n;
-    ev('rolagem', `Selo da ${nomeBola}: ${selo}d6 → ${r.faces.join(', ')} = ${r.suc} sucesso${r.suc === 1 ? '' : 's'}`
+    ev('rolagem', `Selo da ${nomeBola}: ${dados}d6${gosto > 0 ? ' (+1: você gosta dele)' : gosto < 0 ? ' (−1: a mão treme)' : ''} → ${r.faces.join(', ')} = ${r.suc} sucesso${r.suc === 1 ? '' : 's'}`
       + (bonus.n ? ` + ${bonus.n} (${bonus.porque.join(', ')})` : '')
       + ` = ${total} · ${nomeVisivel(alvo)} conta como ${POSTOS[posto]}: pede ${pede}`);
     if (esp.lendario) Estado.marcar('ultra_prende_lendario');
