@@ -79,7 +79,7 @@ const SUSPEITO = [
     for (const [n, q] of [['Poké Ball', 10], ['Great Ball', 5], ['Ultra Ball', 3], ['Potion', 5], ['Super Potion', 2], ['Revive', 2],
       ['Antidote', 2], ['Full Heal', 1], ['Éter', 1], ['PP Up', 1], ['Bandagem', 2], ['Ração', 6], ['Repelente', 2], ['Moon Stone', 1],
       ['Pedra do Fogo', 1], ['Fóssil de Hélice', 1], ['Exp. Share', 1], ['Machado', 2], ['Picareta', 1], ['Lanterna', 1], ['Pilha', 3],
-      ['Corda', 1], ['Mapa de Kanto', 1], ['Relógio', 1], ['Mochila Azul', 1], ['TM24 Thunderbolt', 1], ['TM11 Sunny Day', 1], ['Isca', 2]])
+      ['Corda', 1], ['Mapa de Kanto', 1], ['Relógio', 1], ['Mochila escolar', 1], ['TM24 Thunderbolt', 1], ['TM11 Sunny Day', 1], ['Isca', 2]])
       Estado.darItem(n, q);
     d.itens['Bilhete do Célio'] = 1;
     if (typeof Desgaste !== 'undefined'){ for (let i = 0; i < 15; i++) Desgaste.usar('Machado'); }

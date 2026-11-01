@@ -387,7 +387,7 @@ cerulean:[
   ],
   escolhas:[
     {texto:'Encher um pote e guardar. Isso é prova.',
-     ef:{itens:{'Pote de vidro com água verde do rio':1}, flag:'guardou_agua_do_rio',
+     ef:{itens:{'Pote de vidro com água do rio':1}, flag:'guardou_agua_do_rio',
          rep:{eixo:'bom',delta:2,motivo:'Guardou prova do que todo mundo só reclamava'},
          registrar:'Guardou um pote com a água verde do rio de Cerulean.'},
      resultado:[

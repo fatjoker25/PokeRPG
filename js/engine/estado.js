@@ -281,28 +281,29 @@ const ITENS_INFO = {
                      desc:'Dobrado em dezesseis. As estradas estão certas e os tempos estão otimistas.'}
 };
 
-/* ─────────── bolsas: o que você carrega, e de que cor ───────────
-   A cor lida no nome é a cor que a interface usa quando você abre. */
+/* ─────────── bolsas: o que você carrega ───────────
+   O nome diz o que a bolsa é, nunca a cor: a cor se vê no desenho e na
+   janela da mochila, e mora aqui (cor, uma chave de CORES_MOCHILA). */
 const BOLSAS_VENDIDAS = {
-  'Mochila Preta':    'Lona grossa encerada, alça reforçada, sem marca nenhuma. Quem anda de noite prefere não devolver luz.',
-  'Mochila Vermelha': 'Vermelha de sinalização, do tipo que se acha num barranco de longe. Feita pra quem trabalha em altura.',
-  'Mochila Azul':     'Azul de uniforme, costura dupla no fundo. Sobra de um lote encomendado por uma escola que fechou.',
-  'Mochila Verde':    'Verde de mato, com bolso lateral pra cantil. Cheira a barraca guardada úmida e ninguém consegue tirar.',
-  'Mochila Amarela':  'Amarela de estrada, com faixa refletiva na aba. Quem acampa perto de rodovia compra essa e nenhuma outra.',
-  'Mochila Marrom':   'Lona grossa e encerada, fivela de latão, e pesa vazia. Dura trinta anos e os trinta aparecem nela.',
-  'Mochila Laranja':  'Laranja de resgate, costurada pra abrir com uma mão só. Veio de um lote de brigada de incêndio.',
-  'Bolsa Roxa':       'Roxa escura, de tecido acetinado que marca o dedo. Vendida como bolsa de cidade e usada como mochila mesmo assim.',
-  'Bolsa Branca':     'Branca de algodão cru, que suja no primeiro dia e não desbota nunca mais.',
-  'Bolsa Cinza':      'Cinza chumbo, discreta, com forro removível. É a que some mais rápido da prateleira.',
-  'Bolsa Rosa':       'Rosa desbotada de sol de vitrine. Está mais barata por isso e a costura é a melhor do balcão.',
-  'Bolsa Prateada':   'Tecido metalizado sobre espuma fina. Reflete calor e faz um barulho seco quando você mexe.',
-  'Bolsa Dourada':    'Dourada de festa, com ferragem pesada. Ninguém que trabalha usa isso, e ela aguenta mais que parece.'
+  'Mochila sem marca':      {cor:'preta',    desc:'Lona grossa encerada, alça reforçada, sem marca nenhuma. Quem anda de noite prefere não devolver luz.'},
+  'Mochila de sinalização': {cor:'vermelha', desc:'Do tipo que se acha num barranco de longe. Feita pra quem trabalha em altura.'},
+  'Mochila escolar':        {cor:'azul',     desc:'Costura dupla no fundo. Sobra de um lote encomendado por uma escola que fechou.'},
+  'Mochila de acampamento': {cor:'verde',    desc:'Com bolso lateral pra cantil. Cheira a barraca guardada úmida e ninguém consegue tirar.'},
+  'Mochila de estrada':     {cor:'amarela',  desc:'Com faixa refletiva na aba. Quem acampa perto de rodovia compra essa e nenhuma outra.'},
+  'Mochila de carga':       {cor:'marrom',   desc:'Lona grossa e encerada, fivela de latão, e pesa vazia. Dura trinta anos e os trinta aparecem nela.'},
+  'Mochila de resgate':     {cor:'laranja',  desc:'Costurada pra abrir com uma mão só. Veio de um lote de brigada de incêndio.'},
+  'Bolsa acetinada':        {cor:'roxa',     desc:'Tecido que marca o dedo. Vendida como bolsa de cidade e usada como mochila mesmo assim.'},
+  'Bolsa de algodão':       {cor:'branca',   desc:'Algodão cru, que suja no primeiro dia e não desbota nunca mais.'},
+  'Bolsa discreta':         {cor:'cinza',    desc:'Com forro removível. É a que some mais rápido da prateleira.'},
+  'Bolsa de vitrine':       {cor:'rosa',     desc:'Desbotada de sol de vitrine. Está mais barata por isso e a costura é a melhor do balcão.'},
+  'Bolsa térmica':          {cor:'prateada', desc:'Tecido metalizado sobre espuma fina. Reflete calor e faz um barulho seco quando você mexe.'},
+  'Bolsa de festa':         {cor:'dourada',  desc:'Com ferragem pesada. Ninguém que trabalha usa isso, e ela aguenta mais que parece.'}
 };
-for (const [nome, desc] of Object.entries(BOLSAS_VENDIDAS)){
+for (const [nome, {cor, desc}] of Object.entries(BOLSAS_VENDIDAS)){
   ITENS_INFO[nome] = {
-    tipo:'bolsa', cat:'Vestuário',
+    tipo:'bolsa', cat:'Vestuário', cor,
     ficha:'Vestuário · passa a ser a bolsa que você carrega · não ocupa espaço de item',
-    desc: desc
+    desc
   };
 }
 
@@ -409,9 +410,10 @@ function descricaoItem(nome){
 
 /* ============================================================
    COR DA MOCHILA
-   A bolsa padrão é a bege, a de fábrica. Se o jogador
-   estiver carregando uma bolsa com cor no nome — "Mochila Preta",
-   "Bolsa Roxa" —, a cor lida ali é a cor que a interface usa.
+   A bolsa padrão é a bege, a de fábrica. A que o jogador carrega
+   dá a cor da interface: a comprada pela ficha dela (a "Mochila
+   escolar" é azul), a de casa pela cor escolhida na inscrição. O
+   nome da bolsa não diz a cor — o desenho mostra.
    ============================================================ */
 const COR_MOCHILA_PADRAO = '#c8ab74';
 const CORES_MOCHILA = {
@@ -437,43 +439,54 @@ const CORES_MOCHILA = {
 function _semAcento(s){
   return String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim();
 }
-/* "Mochila Preta" -> '#26262d'. Nome que não é bolsa -> null. */
-function corDaMochila(nome){
+/* "Mochila escolar" -> 'azul'. A bolsa vendida diz a cor na ficha; a
+   que só existe por escrito ("Mochila azul", de save velho) diz no nome.
+   Nome que não é bolsa -> null. */
+function nomeDaCorDaMochila(nome){
+  const info = typeof ITENS_INFO !== 'undefined' && ITENS_INFO[nome];
+  if (info && info.tipo === 'bolsa' && CORES_MOCHILA[info.cor]) return info.cor;
   const m = _semAcento(nome).match(/^(?:mochila|bolsa|sacola|mala|bornal|cartucheira)\s+(.+)$/);
   if (!m) return null;
   const resto = m[1].replace(/\s+/g, ' ').trim();
-  if (CORES_MOCHILA[resto]) return CORES_MOCHILA[resto];
+  if (CORES_MOCHILA[resto]) return resto;
   const primeira = resto.split(' ')[0];
-  return CORES_MOCHILA[primeira] || null;
+  return CORES_MOCHILA[primeira] ? primeira : null;
+}
+/* "Mochila escolar" -> '#2f6fb5' */
+function corDaMochila(nome){
+  const c = nomeDaCorDaMochila(nome);
+  return c ? CORES_MOCHILA[c] : null;
 }
 /* A bolsa que o jogador está carregando agora — a última que ele arranjou. */
 function mochilaAtual(){
   const d = Estado.dados;
-  let cor = COR_MOCHILA_PADRAO, nome = 'Mochila';
-  const saida = () => ({cor, nome, rotulo: nome.split(' ')[0]});
+  /* corNome é a cor por escrito ('azul', 'verde musgo'), pro desenho;
+     o nome nunca leva a cor */
+  let cor = COR_MOCHILA_PADRAO, nome = 'Mochila', corNome = null;
+  const saida = () => ({cor, nome, corNome, rotulo: nome.split(' ')[0]});
   if (!d || !d.itens) return saida();
   const escolhida = d.jogador && d.jogador.bolsa;
   if (escolhida && d.itens[escolhida] > 0){
     const c = corDaMochila(escolhida);
-    if (c){ cor = c; nome = escolhida; return saida(); }
+    if (c){ cor = c; nome = escolhida; corNome = nomeDaCorDaMochila(escolhida); return saida(); }
   }
   let achou = false;
   for (const [n, q] of Object.entries(d.itens)){
     if (q <= 0) continue;
     const c = corDaMochila(n);
-    if (c){ cor = c; nome = n; achou = true; }
+    if (c){ cor = c; nome = n; corNome = nomeDaCorDaMochila(n); achou = true; }
   }
   /* Sem bolsa comprada: a que você escolheu na ficha de inscrição, ou,
      em save de antes dela, a que você descreveu ("uma mochila preta",
      "bolsa verde musgo nas costas"). */
   if (!achou && d.jogador && d.jogador.corMochila && CORES_MOCHILA[d.jogador.corMochila]){
-    cor = CORES_MOCHILA[d.jogador.corMochila]; nome = 'Mochila ' + d.jogador.corMochila;
+    cor = CORES_MOCHILA[d.jogador.corMochila]; nome = 'Mochila'; corNome = d.jogador.corMochila;
     return saida();
   }
   if (!achou && d.jogador){
     const texto = _semAcento([d.jogador.vestimenta, d.jogador.aparencia].filter(Boolean).join(' . '));
     const lida = corNaDescricao(texto);
-    if (lida){ cor = lida.cor; nome = lida.nome; }
+    if (lida){ cor = lida.cor; nome = lida.nome; corNome = lida.corNome; }
   }
   return saida();
 }
@@ -495,7 +508,7 @@ function corNaDescricao(texto){
       const achada = CORES_MOCHILA[duas] ? duas : (CORES_MOCHILA[palavras[i]] ? palavras[i] : null);
       if (achada){
         const tipo = m[1][0].toUpperCase() + m[1].slice(1);
-        return {cor: CORES_MOCHILA[achada], nome: tipo + ' ' + achada};
+        return {cor: CORES_MOCHILA[achada], nome: tipo, corNome: achada};
       }
     }
   }
@@ -1269,6 +1282,26 @@ const Estado = {
         'Resto de Ração':'Leftovers', 'Faixa Firme':'Focus Band', 'Punho de Ferro':'Muscle Band',
         'Óculos Grossos':'Wise Glasses', 'Colete de Lona':'Eviolite', 'Botina Leve':'Quick Claw',
         'Sino Calmante':'Soothe Bell', 'Amuleto de Moeda':'Amulet Coin',
+        /* a cor saiu do nome: a bolsa e o item de história mostram a cor
+           no desenho */
+        'Mochila Preta':'Mochila sem marca',
+        'Mochila Vermelha':'Mochila de sinalização',
+        'Mochila Azul':'Mochila escolar',
+        'Mochila Verde':'Mochila de acampamento',
+        'Mochila Amarela':'Mochila de estrada',
+        'Mochila Marrom':'Mochila de carga',
+        'Mochila Laranja':'Mochila de resgate',
+        'Bolsa Roxa':'Bolsa acetinada',
+        'Bolsa Branca':'Bolsa de algodão',
+        'Bolsa Cinza':'Bolsa discreta',
+        'Bolsa Rosa':'Bolsa de vitrine',
+        'Bolsa Prateada':'Bolsa térmica',
+        'Bolsa Dourada':'Bolsa de festa',
+        'Pote de vidro com água verde do rio':'Pote de vidro com água do rio',
+        'Muda de flor branca':'Muda de flor',
+        'Crachá azul reserva':'Crachá reserva',
+        'Crachá verde (Limptotal)':'Crachá da Limptotal',
+        'Caderno azul do Rook':'Caderno do Rook',
         'Caixa de ventilador com um bicho dentro':'Caixa de ventilador com um Pokémon dentro',
         'Mapa de nove anos atrás':'Mapa velho de Kanto', 'Caderno do Teco':'Caderno do Toby',
         'Recorte da constituição da CGRB':'Recorte da ata da CGRB', 'Papel com o nome de Maeve Corwin':'Papel com o nome de Maeve Bracken',
@@ -1276,6 +1309,7 @@ const Estado = {
       for (const [velho, novo] of Object.entries(ITEM_NOVO)){
         if (d.itens && d.itens[velho]){ d.itens[novo] = (d.itens[novo] || 0) + d.itens[velho]; delete d.itens[velho]; }
         for (const p of [].concat(d.time || [], d.pc || [], d.cemiterio || [])) if (p && p.segurando === velho) p.segurando = novo;
+        if (d.jogador && d.jogador.bolsa === velho) d.jogador.bolsa = novo;
       }
       const NPC_DA_LIGA = {'a conselheira da Liga':'a conselheira regional', 'a recepcionista da Liga':'a recepcionista do Conselho',
                            'Técnica da Liga':'a técnica do terceiro andar', 'a atendente da Liga':'a atendente do protocolo',

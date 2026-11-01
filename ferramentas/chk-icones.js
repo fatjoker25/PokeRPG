@@ -19,7 +19,11 @@
    (ITEM_SPRITE): o Colete de Lona e a Botina Leve eram inventados, com
    desenho nosso, e repetiam o Eviolite e o Quick Claw do livro. Quem
    segura alguma coisa numa luta (segura:, segurando:) segura um item
-   de segurar que existe. */
+   de segurar que existe.
+
+   E o nome não diz a cor que o desenho já mostra: era "Mochila Azul"
+   com a mochila azul na frente. Desenho de cor (mochila_azul,
+   cracha_verde, caderno_azul) com a cor também no nome reprova. */
 const fs = require('fs'), vm = require('vm'), path = require('path');
 const raiz = path.join(__dirname, '..');
 const html = fs.readFileSync(path.join(raiz, 'index.html'), 'utf8');
@@ -50,6 +54,10 @@ for (const d of ['js/story', 'js/story/caminhos', 'js/data', 'js/engine', 'js/ui
       if (!ITENS_INFO[m[1]] || ITENS_INFO[m[1]].tipo !== 'equipar') seguraFantasma.push(`${m[1]}   [${d}/${f}]`);
   }
 
+const COR_DO_DESENHO = /_(bege|preta|vermelha|azul|verde|amarela|marrom|laranja|roxa|branca|cinza|rosa|prateada|dourada)$/;
+const semAcento = s => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+const corRepetida = [];
+
 const conta = {jogo:0, tm:0, desenho:0, bolsa:0};
 const noPacote = [], semArquivo = [];
 const existe = rel => fs.existsSync(path.join(raiz, SPRITES_BASE + rel));
@@ -60,13 +68,19 @@ for (const [n, onde] of [...nomes].sort((a, b) => a[0].localeCompare(b[0]))){
   if (/^(mochila|bolsa)_/.test(arq)) conta.bolsa++; else conta.desenho++;
   if (!existe(ITENS_PASTA + 'nossos/' + arq + '.png')) semArquivo.push(`${n} → nossos/${arq}.png`);
   if (arq === 'pacote') noPacote.push(`${n}   [${onde}]`);
+  const cor = (COR_DO_DESENHO.exec(arq) || [])[1];
+  if (cor){
+    const raiz = cor.replace(/a$/, '');                       // preta, preto; azul fica azul
+    if (new RegExp('\\b' + raiz + '(a|o|as|os|es|is)?\\b').test(semAcento(n))) corRepetida.push(`${n} → ${arq}`);
+  }
 }
 
 console.log(`${nomes.size} itens: ${conta.jogo} com a arte dos jogos, ${conta.tm} discos de TM, ${conta.desenho} com desenho nosso, ${conta.bolsa} mochilas e bolsas`);
 const falhas = [];
 if (inventados.length) falhas.push(`item de segurar que não é dos jogos (sem ícone em ITEM_SPRITE) (${inventados.length}):\n   ` + inventados.join('\n   '));
+if (corRepetida.length) falhas.push(`o nome diz a cor que o desenho já mostra (${corRepetida.length}):\n   ` + corRepetida.join('\n   '));
 if (seguraFantasma.length) falhas.push(`luta ou cena segura item que não é de segurar (${seguraFantasma.length}):\n   ` + seguraFantasma.join('\n   '));
 if (noPacote.length) falhas.push(`caem no desenho genérico de pacote (${noPacote.length}):\n   ` + noPacote.join('\n   '));
 if (semArquivo.length) falhas.push(`apontam pra arquivo que não existe (${semArquivo.length}):\n   ` + semArquivo.join('\n   '));
 if (falhas.length){ console.log('\nFALHAS:\n' + falhas.join('\n\n')); process.exit(1); }
-console.log('ok — nenhum item cai no pacote, todo arquivo apontado existe e todo item de segurar é dos jogos');
+console.log('ok — nenhum item cai no pacote, todo arquivo apontado existe, todo item de segurar é dos jogos e nenhum nome repete a cor do desenho');

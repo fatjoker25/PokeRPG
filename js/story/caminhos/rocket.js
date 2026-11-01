@@ -590,7 +590,7 @@ cr3_o_caderno:{
     'O caderno tem capa de plástico azul e quatro anos de números. Data, hora, cerca, barco, nota. Quem vendeu, quem comprou.',
     'É a rede inteira. É também a Comissão inteira, do lado de quem compra.'
   ],
-  ef:{flag:'cm_rocket_tem_caderno', itens:{'Caderno azul do Rook':1},
+  ef:{flag:'cm_rocket_tem_caderno', itens:{'Caderno do Rook':1},
       npc:{nome:'Rook', opiniao:1, memoria:'Perdeu pra você no subsolo e te entregou o caderno.'},
       registrar:'O caderno azul do Rook tem quatro anos da rede e de quem comprava dela.'},
   escolhas:[

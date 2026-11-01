@@ -393,13 +393,13 @@ def camera():
     return t
 
 
-def caderno():
+def caderno(capa='verde'):
     t = Tela()
     t.ret(21, 5, 24, 26, 'papel', fixo=1)                             # as folhas
     for y in range(7, 26, 2):
         t.ponto(23, y, M['papel'][3])
-    t.ret(6, 4, 21, 26, 'verde', grad=0.5)
-    t.ret(6, 4, 7, 26, 'verde', fixo=3)                               # a lombada
+    t.ret(6, 4, 21, 26, capa, grad=0.5)
+    t.ret(6, 4, 7, 26, capa, fixo=3)                                  # a lombada
     t.ret(10, 8, 17, 11, 'papel', borda=True)                         # a etiqueta
     t.ret(17, 4, 18, 26, 'preto', fixo=2)                             # o elástico
     return t
@@ -514,10 +514,10 @@ def medalha():
 # ----------------------------------------------------------------------
 #  o que as cenas te dão e não é papel: crachá, aparelho, objeto, comida
 # ----------------------------------------------------------------------
-def cracha():
+def cracha(faixa='azul'):
     t = Tela()
     t.ret(7, 7, 22, 27, 'branco', grad=0.3)                                       # o cartão
-    t.ret(7, 7, 22, 11, 'azul', fixo=1)                                           # a faixa de cima
+    t.ret(7, 7, 22, 11, faixa, fixo=1)                                            # a faixa de cima
     t.ret(12, 2, 17, 7, 'aco', fixo=1)                                            # o prendedor
     t.ret(13, 3, 16, 4, 'aco', fixo=3)
     t.ret(9, 13, 14, 20, 'cinza', fixo=0)                                         # a foto
@@ -892,7 +892,8 @@ DESENHOS = {
     'caderno_lote': caderno_lote, 'chave_subsolo': lambda: chave('ferro', velha=True),
     'broche': broche, 'papel': papel, 'foto': foto, 'mapa': mapa, 'caixa': caixa,
     'chave': chave, 'pacote': pacote, 'medalha': medalha,
-    'cracha': cracha, 'prancheta': prancheta, 'pasta': pasta, 'jornal': jornal, 'envelope': envelope,
+    'cracha': cracha, 'cracha_verde': lambda: cracha('verde'), 'caderno_azul': lambda: caderno('azul'),
+    'prancheta': prancheta, 'pasta': pasta, 'jornal': jornal, 'envelope': envelope,
     'anilha': anilha, 'apito': apito, 'binoculo': binoculo, 'placa': placa,
     'placa_bronze': lambda: placa('dourado'), 'fita': fita, 'rolo': rolo, 'garrafa': garrafa, 'pote': pote,
     'lata': lata, 'luva': luva, 'medidor': medidor, 'muda': muda, 'rede': rede, 'pena': pena,

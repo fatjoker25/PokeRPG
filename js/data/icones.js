@@ -26,9 +26,12 @@ const ITEM_PIXEL = {
   'Caderno de campo':'caderno', 'Isca':'isca', 'Relógio':'relogio',
   /* o que a rede te dá */
   'Uniforme preto da rede':'uniforme_rede', 'Caderno de lote':'caderno_lote',
-  'Chave do subsolo':'chave_subsolo', 'Broche da letra antiga':'broche'
+  'Chave do subsolo':'chave_subsolo', 'Broche da letra antiga':'broche',
+  /* a cor saiu do nome e foi pro desenho */
+  'Crachá da Limptotal':'cracha_verde', 'Caderno do Rook':'caderno_azul'
 };
-/* mochila e bolsa: uma por cor, com o nome da cor do item */
+/* mochila e bolsa: um desenho por cor; a cor vem da ficha da bolsa
+   (ITENS_INFO[nome].cor), porque o nome não diz */
 const CORES_DE_MOCHILA = ['Bege', 'Preta', 'Vermelha', 'Azul', 'Verde', 'Amarela', 'Marrom', 'Laranja', 'Roxa',
   'Branca', 'Cinza', 'Rosa', 'Prateada', 'Dourada'];
 const _corDeMochila = c => CORES_DE_MOCHILA.find(x => x.toLowerCase() === String(c || '').toLowerCase());
@@ -39,7 +42,9 @@ const _corDeMochila = c => CORES_DE_MOCHILA.find(x => x.toLowerCase() === String
    é o que sobra, e quase nada sobra */
 function arquivoDoDesenho(nome){
   if (ITEM_PIXEL[nome]) return ITEM_PIXEL[nome];
+  const info = typeof ITENS_INFO !== 'undefined' && ITENS_INFO[nome];
   const m = /^(Mochila|Bolsa) (\S+)/.exec(nome);
+  if (m && info && info.tipo === 'bolsa' && _corDeMochila(info.cor)) return m[1].toLowerCase() + '_' + info.cor.toLowerCase();
   if (m && _corDeMochila(m[2])) return m[1].toLowerCase() + '_' + m[2].toLowerCase();
   /* mochila de história ("Mochila de lona do Dr. Fuji"): a primeira
      palavra que é cor, ou a bege */
@@ -93,12 +98,13 @@ function _desenho(arq){
 }
 function desenhoDoItem(nome){ return _desenho(arquivoDoDesenho(nome)); }
 /* a bolsa que você carrega, pro alto da mochila: a comprada, a da ficha
-   ("Mochila azul", "Bolsa verde musgo", "sacola vermelha") ou a bege, a
-   de fábrica. A cor é a primeira palavra do nome que tem desenho; cor sem
-   desenho (vinho, turquesa) fica com o bege, e a janela leva a cor. */
+   (a cor escolhida, ou "bolsa verde musgo" na descrição) ou a bege, a
+   de fábrica. A cor vem de mochilaAtual().corNome — o nome não leva cor
+   —, e é a primeira palavra dela que tem desenho; cor sem desenho
+   (vinho, turquesa) fica com o bege, e a janela leva a cor. */
 function desenhoDaBolsa(b){
   const nome = String((b && b.nome) || '');
-  const cor = nome.split(/[\s-]+/).map(_corDeMochila).find(Boolean);
+  const cor = String((b && b.corNome) || nome).split(/[\s-]+/).map(_corDeMochila).find(Boolean);
   return _desenho((/^bolsa\b/i.test(nome) ? 'bolsa' : 'mochila') + '_' + (cor ? cor.toLowerCase() : 'bege'));
 }
 

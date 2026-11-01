@@ -19,10 +19,10 @@ const PRECO_BASE = {
   'Wise Glasses':2600, 'Eviolite':2400, 'Quick Claw':2200,
   'Soothe Bell':1800, 'Amulet Coin':3600, 'Exp. Share':3000, 'PP Up':9800,
   /* bolsas */
-  'Mochila Preta':1400, 'Mochila Vermelha':1300, 'Mochila Azul':1200, 'Mochila Verde':1200,
-  'Mochila Amarela':1300, 'Mochila Marrom':1800, 'Mochila Laranja':1500,
-  'Bolsa Roxa':1400, 'Bolsa Branca':1100, 'Bolsa Cinza':1200, 'Bolsa Rosa':900,
-  'Bolsa Prateada':2200, 'Bolsa Dourada':3200
+  'Mochila sem marca':1400, 'Mochila de sinalização':1300, 'Mochila escolar':1200, 'Mochila de acampamento':1200,
+  'Mochila de estrada':1300, 'Mochila de carga':1800, 'Mochila de resgate':1500,
+  'Bolsa acetinada':1400, 'Bolsa de algodão':1100, 'Bolsa discreta':1200, 'Bolsa de vitrine':900,
+  'Bolsa térmica':2200, 'Bolsa de festa':3200
 };
 
 /* O que a loja de cada cidade tem, e por quanto (multiplicador local).
@@ -33,13 +33,13 @@ const LOJAS = {
     nome:'Loja de Viridian',
     ar:'Fachada sem graça, prateleira organizada, e a atendente sabe exatamente o que um treinador de três dias esqueceu de comprar.',
     mult:1.0,
-    itens:['Poké Ball','Potion','Antidote','Corda','Bandagem','Isca','Ração','Pilha','Cantil','Mapa de Kanto','Relógio','Mochila Verde','Bolsa Cinza']
+    itens:['Poké Ball','Potion','Antidote','Corda','Bandagem','Isca','Ração','Pilha','Cantil','Mapa de Kanto','Relógio','Mochila de acampamento','Bolsa discreta']
   },
   pewter: {
     nome:'Casa de Ferragens Hawthorn',
     ar:'Vende mais equipamento de escalada que item de treinador. A dona explica que é questão de demanda: aqui todo mundo trabalha em pedra.',
     mult:1.15,
-    itens:['Ração','Poké Ball','Potion','Antidote','Corda','Lanterna','Pilha','Machado','Picareta','Máscara de pó','Bandagem','Caderno de campo','Muscle Band','Eviolite','Mochila Marrom']
+    itens:['Ração','Poké Ball','Potion','Antidote','Corda','Lanterna','Pilha','Machado','Picareta','Máscara de pó','Bandagem','Caderno de campo','Muscle Band','Eviolite','Mochila de carga']
   },
   cerulean: {
     nome:'Balcão da Ponte Sul',
@@ -51,7 +51,7 @@ const LOJAS = {
     nome:'Armazém do Cais',
     ar:'Abre às cinco da manhã e vende comida, corda e Pokébola no mesmo balcão. Metade do estoque é importado e entra sem imposto por um caminho que ninguém comenta.',
     mult:0.9,
-    itens:['Ração','Poké Ball','Potion','Super Potion','Antidote','Repelente','Bota de borracha','Cobertor térmico','Câmera descartável','Relógio','Corda','Cantil','Focus Band','Leftovers','Mochila Laranja','Bolsa Prateada']
+    itens:['Ração','Poké Ball','Potion','Super Potion','Antidote','Repelente','Bota de borracha','Cobertor térmico','Câmera descartável','Relógio','Corda','Cantil','Focus Band','Leftovers','Mochila de resgate','Bolsa térmica']
   },
   lavender: {
     nome:'Casa Boa Memória',
@@ -87,12 +87,12 @@ const LOJAS = {
        itens:['Água Fresca','Ração','Cantil','Cobertor térmico']},
       {n:7, nome:'7º · Terraço',
        ar:'Duas máquinas automáticas, um bebedouro quebrado e três pessoas dando comida para um bando de Pidgey que claramente mora aqui.',
-       itens:['Mochila Preta','Mochila Vermelha','Mochila Azul','Mochila Amarela','Bolsa Roxa','Bolsa Branca','Bolsa Rosa','Bolsa Dourada']}
+       itens:['Mochila sem marca','Mochila de sinalização','Mochila escolar','Mochila de estrada','Bolsa acetinada','Bolsa de algodão','Bolsa de vitrine','Bolsa de festa']}
     ],
     itens:['Poké Ball','Great Ball','Potion','Super Potion','Revive','Antidote','Éter','Elixir','Boneco','Repelente','Ração','Mapa de Kanto','Relógio',
            'TM01 Mega Punch','TM05 Mega Kick','TM07 Horn Drill','TM09 Take Down','TM17 Submission','TM18 Counter','TM32 Double Team','TM33 Reflect','TM11 Sunny Day','TM18 Rain Dance','TM37 Sandstorm',
            'Pedra do Fogo','Pedra da Água','Pedra do Trovão','Pedra da Folha',
-           'Leftovers','Focus Band','Muscle Band','Wise Glasses','Eviolite','Quick Claw','Soothe Bell','Amulet Coin','Mochila Preta','Mochila Vermelha','Mochila Azul','Mochila Amarela','Bolsa Roxa','Bolsa Branca','Bolsa Rosa','Bolsa Dourada','PP Up','Exp. Share']
+           'Leftovers','Focus Band','Muscle Band','Wise Glasses','Eviolite','Quick Claw','Soothe Bell','Amulet Coin','Mochila sem marca','Mochila de sinalização','Mochila escolar','Mochila de estrada','Bolsa acetinada','Bolsa de algodão','Bolsa de vitrine','Bolsa de festa','PP Up','Exp. Share']
   },
   fuchsia: {
     nome:'Posto da Zona Safári',
@@ -104,7 +104,7 @@ const LOJAS = {
     nome:'Conveniência Silph — térreo',
     ar:'Fica no térreo de um prédio comercial e tem fila de gente de crachá na hora do almoço. Tudo é caro e tudo tem nota fiscal.',
     mult:1.3,
-    itens:['Ração','Great Ball','Super Potion','Hyper Potion','Full Heal','Revive','Repelente','Corda','Elixir','Éter','Caderno de campo','Câmera descartável','Relógio','Wise Glasses','Amulet Coin','Mochila Preta','Bolsa Cinza']
+    itens:['Ração','Great Ball','Super Potion','Hyper Potion','Full Heal','Revive','Repelente','Corda','Elixir','Éter','Caderno de campo','Câmera descartável','Relógio','Wise Glasses','Amulet Coin','Mochila sem marca','Bolsa discreta']
   },
   cinnabar: {
     nome:'Vitrine da Sra. Juna',

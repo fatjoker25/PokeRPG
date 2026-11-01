@@ -1232,7 +1232,7 @@ c11_cida_topou:{
     '"De alguém abrindo por dentro, {meu filho|minha filha}. Sempre é."'
   ],
   ef:{flag:['tem_cracha_verde','dentro_da_silph'],
-      itens:{'Crachá verde (Limptotal)':1},
+      itens:{'Crachá da Limptotal':1},
       npc:{nome:'Sra. Odile (Limptotal)', opiniao:6, memoria:'Te emprestou o crachá verde dela a quatorze meses da aposentadoria.'},
       rep:{eixo:'bom',delta:2,motivo:'Alguém arriscou a aposentadoria por você'},
       registrar:'Sra. Odile te emprestou o crachá verde. Ele abre tudo menos o subsolo 4.'},
@@ -1619,7 +1619,7 @@ c11_marina_meio:{
     'Você espera quatro minutos antes de pegar, porque pegar rápido é o que chama atenção.'
   ],
   ef:{flag:['cracha_roubado','dentro_da_silph'],
-      itens:{'Crachá azul reserva':1},
+      itens:{'Crachá reserva':1},
       npc:{nome:'Fenna (crachá azul)', opiniao:3, memoria:'Deixou o crachá reserva num casaco para você, sem admitir.'},
       registrar:'Ficou com o crachá azul reserva da Fenna.'},
   escolhas:[
@@ -1627,7 +1627,7 @@ c11_marina_meio:{
     {texto:'Entrar pela porta de serviço.', vai:'c11_porta_de_servico'},
     {texto:'Ir pra doca.', vai:'c11_doca'},
     {texto:'Devolver o casaco e o crachá.', vai:'c11_protegeu_marina',
-     ef:{flag:'devolveu_o_casaco', limpaFlag:'cracha_roubado', perdeItens:{'Crachá azul reserva':1},
+     ef:{flag:'devolveu_o_casaco', limpaFlag:'cracha_roubado', perdeItens:{'Crachá reserva':1},
          /* sem o crachá dela, só entra quem tem outro jeito de entrar */
          executar:d=>{ const f = d.flags;
            if (!(f.tem_cracha_verde || f.tem_credencial_de_verificacao || f.tem_cracha_visitante || f.entrou_com_marina)) Estado.marcar('dentro_da_silph', false);

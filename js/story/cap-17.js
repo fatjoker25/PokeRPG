@@ -1153,7 +1153,7 @@ c17_levou_a_muda:{
     'Você fica de pé no meio da clareira com a muda na mão uns quatro minutos.',
     'Não tem resposta boa. Tem duas respostas, e as duas custam.'
   ],
-  ef:{flag:'tem_a_muda', itens:{'Muda de flor branca':1},
+  ef:{flag:'tem_a_muda', itens:{'Muda de flor':1},
       presagio:'A terra da muda ainda está úmida dentro do saco.'},
   escolhas:[
     {texto:'Replantar no mesmo lugar.', vai:'c17_replantou'},
@@ -1177,7 +1177,7 @@ c17_replantou:{
     d=>d.flags.teo_leva ? 'Ele assente devagar.' : '',
     d=>d.flags.teo_leva ? fala('Ezra', 'Beleza.') : ''
   ],
-  ef:{flag:'replantou_a_muda', limpaFlag:'tem_a_muda', perdeItens:{'Muda de flor branca':1},
+  ef:{flag:'replantou_a_muda', limpaFlag:'tem_a_muda', perdeItens:{'Muda de flor':1},
       rep:{eixo:'bom',delta:5,motivo:'Replantou uma descoberta científica de primeira grandeza'},
       moral:15,
       registrar:'Replantou a muda no mesmo lugar.',
