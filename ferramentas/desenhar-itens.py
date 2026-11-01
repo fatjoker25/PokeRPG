@@ -964,21 +964,26 @@ def mochila_estrada(mat='amarelo'):
 
 
 def mochila_carga(mat='marrom'):
-    """a armação de metal por fora, duas correias e a fivela de latão"""
+    """mochila velha de lona grossa: o saco largo, os bolsos dos lados, a
+    tampa com uma correia só e a fivela de latão, e o remendo dos trinta anos"""
     t = Tela()
-    t.bastao(6, 3, 6, 27, 1.6, 'aco')                                            # a armação
-    t.bastao(24, 3, 24, 27, 1.6, 'aco')
-    t.bastao(6, 3.5, 24, 3.5, 1.6, 'aco')
-    t.poli([(7, 6), (23, 6), (23, 26), (7, 26)], mat, grad=0.6)
-    t.poli([(7, 6), (23, 6), (23, 11), (7, 11)], mat, fixo=1)                    # a aba
-    t.linha(7, 11, 23, 11, M[mat][3])
-    for x in (10, 19):                                                           # as correias
-        t.ret(x, 8, x + 1, 23, 'lona_esc', fixo=2)
-        t.ret(x - 1, 15, x + 2, 17, 'dourado', fixo=1)                           # a fivela de latão
-        t.ponto(x, 16, M['dourado'][3])
-    t.ret(8, 22, 22, 25, 'lona_esc', fixo=1)                                      # o fundo reforçado
+    t.bastao(12, 4.5, 18, 4.5, 2.4, 'lona_esc', redondo=True)               # a alça de mão
+    t.poli([(2, 17), (7, 16), (7, 27), (3, 27), (2, 25)], mat, grad=0.5)    # os bolsos dos lados
+    t.poli([(28, 17), (23, 16), (23, 27), (27, 27), (28, 25)], mat, grad=0.5)
+    t.poli([(9, 6), (21, 6), (24, 11), (24, 27), (6, 27), (6, 11)], mat, grad=0.6)   # o saco
+    t.linha(6, 17, 6, 26, M[mat][3])
+    t.linha(24, 17, 24, 26, M[mat][3])
+    t.linha(3, 19, 6, 19, M[mat][3])                                         # a aba dos bolsos
+    t.linha(24, 19, 27, 19, M[mat][3])
+    t.poli([(9, 6), (21, 6), (23.5, 11), (22.5, 15), (15, 16.6), (7.5, 15), (6.5, 11)], mat, fixo=1)  # a tampa
+    t.linha(8, 15, 15, 16, M[mat][3])
+    t.linha(15, 16, 22, 15, M[mat][3])
+    t.ret(14, 9, 16, 23, 'lona_esc', fixo=2)                                 # a correia
+    t.ret(13, 16, 17, 19, 'dourado', fixo=1)                                 # a fivela de latão
+    t.ret(14, 17, 16, 18, 'lona_esc', fixo=2)
+    t.ret(15, 17, 15, 18, 'dourado', fixo=3)                                 # o pino
+    t.ret(8, 21, 11, 23, 'lona', fixo=1, borda=True)                         # o remendo
     return t
-
 
 def mochila_sem_marca(mat='preto'):
     """lisa: a alça reforçada, as alças de ombro dos lados, um zíper só"""

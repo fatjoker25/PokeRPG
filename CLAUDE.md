@@ -382,7 +382,10 @@ escolar, Mochila de resgate, Bolsa de festa) e a cor mora na ficha
 **desenho dela**, do que o nome e a descrição dizem (`BOLSAS_DA_LOJA`
 no gerador, mapa em `ITEM_PIXEL`): a escolar de alto arredondado e
 bolso, a de acampamento com o isolante enrolado e o cantil, a de carga
-com a armação de metal, a térmica acolchoada, a de algodão de sacola, a
+de lona velha com bolsos dos lados, uma correia e a fivela de latão (a
+armação de metal que ela tinha não estava na descrição, e por fora da
+mochila inteira ela parecia um armário: desenho sai do texto), a térmica
+acolchoada, a de algodão de sacola, a
 de festa com a corrente. Eram treze no mesmo desenho, só trocando a cor;
 o desenho de cada cor (`mochila_azul`, `bolsa_verde`) ficou pra de casa,
 pra da descrição e pra de história. Item de história cuja cor o
