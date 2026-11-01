@@ -35,6 +35,10 @@ const ATRIB_DO_ESTAGIO = {atk:'for', def:'vit', spa:'esp', spd:'ins', spe:'des'}
 const ESTAGIO_DO_ATRIB = {for:'atk', vit:'def', esp:'spa', ins:'spd', des:'spe'};
 /* Seismic Toss, Night Shade e Psywave: dados pelo posto */
 const DADOS_POR_POSTO = [1, 2, 4, 6, 8, 10, 10, 10];
+/* Wrap, Bind, Clamp e Fire Spin, pelo livro (3.0): prende 4 rodadas e
+   rola 2 dados de dano no fim de cada uma, sem defesa (BlockDamagePool
+   2, Duration 4) — de 0 a 2, 1 na média, num HP de 4 a 20 */
+const RODADAS_PRESO = 4, DADOS_PRESO = 2;
 
 /* o que o jogo diz quando o tempo muda */
 const CLIMA_TEXTO = {
@@ -130,7 +134,7 @@ const Batalha = {
   novoEstado(){
     return {atk:0, def:0, spa:0, spd:0, spe:0, precisao:0, evasao:0, confuso:0, carregando:null, recarregando:false,
             /* estados que os golpes deixam: somem quando o Pokémon sai da luta */
-            presoTurnos:0, presoPor:null, semente:false, maldito:false, pesadelo:false, apaixonado:false,
+            presoTurnos:0, presoPor:null, presoQuem:null, semente:false, maldito:false, pesadelo:false, apaixonado:false,
             desabilitado:null, substituto:0, focado:false, identificado:false, protegido:false,
             aguentando:false, seguidas:0, cortes:0, ultimoGolpe:null, transformado:null, origTipos:null};
   },
@@ -768,10 +772,12 @@ const Batalha = {
       estAtk.confuso = Dados.entre(2,4);
       this.ev('status', `${nomeVisivel(atacante)} ficou confus${pron(atacante).o} pela própria fúria!`);
     }
-    /* Wrap, Bind, Clamp, Fire Spin: prende de 2 a 5 turnos (2ª geração) */
+    /* Wrap, Bind, Clamp, Fire Spin: prende 4 rodadas, e a prisão é de
+       quem prendeu (presoQuem): ele cai ou sai, ela acaba */
     if (ef.preso && defensor.hp > 0 && !estDef.presoTurnos){
-      estDef.presoTurnos = Dados.entre(2, 5);
+      estDef.presoTurnos = RODADAS_PRESO;
       estDef.presoPor = nome;
+      estDef.presoQuem = atacante.uid;
       this.ev('status', `${nomeVisivel(defensor)} ficou pres${pron(defensor).o} por ${nome}!`);
     }
     if (ef.tipo && ef.chance && defensor.hp > 0 && this.sorteEfeito(nome, ef.chance)){
@@ -1080,6 +1086,8 @@ const Batalha = {
     this.viuOParCair[par.uid] = nomeVisivel(caido);
   },
   entrouEmCampo(p, est){
+    /* quem saiu pode ser quem prendia alguém */
+    this.conferirPresos();
     const nomePar = this.viuOParCair && this.viuOParCair[p.uid];
     if (!nomePar) return;
     delete this.viuOParCair[p.uid];
@@ -1088,6 +1096,19 @@ const Batalha = {
     this.ev('status', `${nomeVisivel(p)} viu ${quem} cair e entra diferente.`);
     this.mudarEstagio(p, est, 'atk', 1);
     this.mudarEstagio(p, est, 'spa', 1);
+  },
+
+  /* A prisão de Wrap e companhia é de quem prendeu: ele caiu ou saiu de
+     campo, o preso se solta na hora — sem esperar o fim da rodada e sem
+     segurar a fuga ou a troca de ninguém. Roda quando alguém entra em
+     campo, no começo de toda ação e no fim de turno. */
+  conferirPresos(){
+    for (const [p, est, outro] of [[this.aliado, this.estAliado, this.inimigo], [this.inimigo, this.estInimigo, this.aliado]]){
+      if (!est || !est.presoTurnos || !p || p.hp <= 0) continue;
+      if (outro && outro.hp > 0 && (!est.presoQuem || outro.uid === est.presoQuem)) continue;
+      this.ev('status', `${nomeVisivel(p)} se solta de ${est.presoPor}: quem apertava não está mais na luta.`);
+      est.presoTurnos = 0; est.presoPor = null; est.presoQuem = null;
+    }
   },
 
   /* ---------- fim de turno ---------- */
@@ -1124,9 +1145,20 @@ const Batalha = {
       }
       if (est.pesadelo && p.status === 'sono') tira(4, d => `${nomeVisivel(p)} se debate no pesadelo e perde ${d}.`, 'pesadelo');
       if (est.maldito) tira(4, d => `A maldição corrói ${nomeVisivel(p)}: ${d} de dano.`, 'maldicao');
+      if (est.presoTurnos > 0 && p.hp > 0) this.conferirPresos();
       if (est.presoTurnos > 0 && p.hp > 0){
-        tira(16, d => `${nomeVisivel(p)} sofre ${d} de ${est.presoPor}.`, 'preso');
-        if (--est.presoTurnos <= 0){ this.ev('status', `${nomeVisivel(p)} se soltou de ${est.presoPor}.`); est.presoPor = null; }
+        /* 2 dados de dano, sem defesa, como manda o livro */
+        const r = Dados.pool(DADOS_PRESO, `${est.presoPor} aperta ${nomeVisivel(p)}`);
+        const d = Math.min(p.hp, r.suc);
+        this.ev('rolagem', `${est.presoPor}: ${DADOS_PRESO}d6${facesDe(r)} → ${r.suc} de dano, sem defesa`);
+        if (d){
+          p.hp = Math.max(0, p.hp - d);
+          this.ev('dano', `${nomeVisivel(p)} sofre ${d} de ${est.presoPor}. (${p.hp}/${p.hpMax})`, {causa:'preso'});
+        } else this.ev('status', `${est.presoPor} aperta ${nomeVisivel(p)}, mas não chega a machucar.`);
+        if (--est.presoTurnos <= 0){
+          this.ev('status', `${nomeVisivel(p)} se soltou de ${est.presoPor}.`);
+          est.presoPor = null; est.presoQuem = null;
+        }
       }
       if (est.desabilitado && --est.desabilitado.turnos <= 0){
         this.ev('status', `${est.desabilitado.nome} de ${nomeVisivel(p)} voltou a funcionar.`);
@@ -1249,6 +1281,7 @@ const Batalha = {
     this.turno++;
     /* Protect e Endure valem só pro turno em que foram usados */
     for (const est of [this.estAliado, this.estInimigo]){ est.protegido = false; est.aguentando = false; }
+    this.conferirPresos();
 
     if (this.fase === 'ameaca') return this.acaoAmeaca(acao);
 

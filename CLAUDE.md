@@ -702,7 +702,16 @@ vem mais vezes).
   que estar escrito ali**, senão o jogador não tem como conferir.
 - Dano de condição e de item é número fixo do livro (veneno 2, queimadura
   1, Potion 2), não fração do HP: o HP vai de 4 a uns 20. O que continua
-  fração (Substitute, Curse, Recover) tem `Math.max(1, …)`.
+  fração (Substitute, Curse, Recover) tem `Math.max(1, …)`. O veneno é o
+  do GM Screen do 3.0 (2 por rodada, o grave sobe 2); o "1 por rodada"
+  do Cheat Sheet do SRD é do 2.0.
+- **Wrap, Bind, Clamp e Fire Spin** são do livro: prendem 4 rodadas
+  (`RODADAS_PRESO`) e rolam 2 dados de dano no fim de cada uma, sem
+  defesa (`DADOS_PRESO`; `BlockDamagePool: 2` no Pokerole-Data), com a
+  rolagem no registro. A prisão é **de quem prendeu** (`est.presoQuem`):
+  ele caiu ou saiu de campo, `Batalha.conferirPresos` solta na hora —
+  no `entrouEmCampo`, no começo de toda ação e no fim de turno. Antes
+  ela durava 2 a 5 turnos e continuava depois de quem prendeu cair.
 
 **Não existe PP**, como no livro: golpe não acaba (o campo `pp` ainda
 mora no slot, de save antigo, e ninguém lê). Éter e Elixir repõem

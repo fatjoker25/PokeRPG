@@ -5814,7 +5814,7 @@ const UI = {
 
       <h3>Estados que os golpes deixam</h3>
       <div class="linha"><span class="k">Confusão</span><span class="v">2 a 5 turnos · no começo da vez, 2 sucessos de Instinto ignoram · senão −1 sucesso (−2 do Avançado ao Ás, −3 do Mestre pra cima), e golpe que erra tira 1 de quem usou</span></div>
-      <div class="linha"><span class="k">Preso</span><span class="v">Wrap, Bind, Clamp, Fire Spin · 2 a 5 turnos · 1 de dano por turno · não foge nem troca</span></div>
+      <div class="linha"><span class="k">Preso</span><span class="v">Wrap, Bind, Clamp, Fire Spin · 4 rodadas · no fim de cada uma, 2d6 de dano sem defesa (cada 4+ tira 1) · não foge nem troca · acaba antes se quem prendeu cai ou sai da luta</span></div>
       <div class="linha"><span class="k">Leech Seed</span><span class="v">1 de HP por turno vai pra quem plantou · Grama não pega</span></div>
       <div class="linha"><span class="k">Curse</span><span class="v">Fantasma: gasta metade do HP e o outro perde 1/4 por turno · outros: FOR +1, VIT +1, DES −1</span></div>
       <div class="linha"><span class="k">Nightmare</span><span class="v">só em quem dorme · 1/4 do HP por turno enquanto dormir</span></div>
