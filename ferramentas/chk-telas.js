@@ -359,6 +359,40 @@ const SUSPEITO = [
     }, rodada);
   }
   await page.evaluate(() => { Jogo.torneioAtual = null; Jogo.conferenciaAtual = null; });
+
+  /* ---------- a festa da vitória (vitoria.js), adiantada até o fim ---------- */
+  const FESTAS = [
+    ...['pewter', 'cerulean', 'vermilion', 'celadon', 'fuchsia', 'saffron', 'cinnabar', 'viridian'].map(id =>
+      ['ginásio/' + id, `Jogo.ginasioAtual = GINASIOS.find(g => g.id === '${id}'); Jogo.resultadoGinasio({resultado:'vitoria'})`]),
+    ...[0, 1, 2, 3].map(i => ['elite/' + i, `Estado.dados.local = 'planalto'; Jogo.eliteAtual = {indice:${i}, campeao:false}; Jogo.resultadoElite({resultado:'vitoria'})`]),
+    ['campeão', `Estado.dados.local = 'planalto'; Jogo.eliteAtual = {indice:4, campeao:true}; Jogo.resultadoElite({resultado:'vitoria'})`],
+    ...[0, 1, 2].map(r => ['torneio/' + r, `Estado.dados.local = 'planalto'; Jogo.torneioAtual = {rodada:${r}, adversarios:montarChaveamento()}; Jogo.resultadoTorneio({resultado:'vitoria'})`]),
+    ...[0, 1, 2].map(r => ['conferência/' + r, `Estado.dados.local = 'planalto'; Jogo.conferenciaAtual = {rodada:${r}, adversarios:montarConferencia()}; Jogo.veteranoAtual = {tipo:'conferencia'}; Conferencia.resultado({resultado:'vitoria'})`])
+  ];
+  for (const [rot, codigo] of FESTAS){
+    await restaurar();
+    await tentar('festa/' + rot, c => {
+      Estado.dados.insignias = ['Insígnia Pedra', 'Insígnia Cascata'];
+      (0, eval)(c);
+      const b = document.querySelector('#modal .vt-seguir');
+      if (!b) throw new Error('a festa não abriu');
+      b.click();   /* o primeiro toque adianta tudo: a tela é a do fim */
+    }, codigo);
+    await page.evaluate(() => { const b = document.querySelector('#modal .vt-seguir'); if (b) b.click(); });
+  }
+  /* as finais de torneio da história: a festa vem do batalha da cena */
+  for (const cap of [8, 22]){
+    await restaurar();
+    await tentar(`festa/final do capítulo ${cap}`, n => {
+      const C = CAPITULOS.find(c => c.num === n);
+      const b = Object.values(C.cenas).map(x => x.batalha).find(x => x && x.festa);
+      if (!b) throw new Error('capítulo ' + n + ' sem final com festa');
+      Vitoria.mostrar(Vitoria.daCena(b.festa, b));
+      document.querySelector('#modal .vt-seguir').click();
+    }, cap);
+    await page.evaluate(() => { const b = document.querySelector('#modal .vt-seguir'); if (b) b.click(); });
+  }
+  await page.evaluate(() => { Jogo.torneioAtual = null; Jogo.conferenciaAtual = null; Jogo.eliteAtual = null; Jogo.veteranoAtual = null; });
   await restaurar();
   await tentar('pokébolas', () => { Estado.darItem('Master Ball', 1); Exploracao.tela(); UI.menuBolas(); });
 

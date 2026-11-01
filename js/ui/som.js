@@ -241,6 +241,36 @@ const Som = {
         .forEach(([f, d, dur]) => S.nota(f, t + d, dur, 'square', a));
       [[196, 0, .4], [262, .42, .6], [330, 1.12, .7]].forEach(([f, d, dur]) => S.nota(f, t + d, dur, 'triangle', a * .7));
       [2093, 2637, 3136].forEach((f, i) => S.nota(f, t + 1.9 + i * .06, .14, 'triangle', a * .45));
+    },
+    /* a festa da luta grande (vitoria.js): fanfarra curta de 8 bits que
+       sobe em arpejo e fecha num acorde aberto, com o brilho no fim
+       (composição nossa, no clima dos jogos) */
+    fanfarra: (S, t, v) => {
+      const a = v * .3;
+      [[392, 0, .1], [523, .11, .1], [659, .22, .1], [784, .33, .3], [659, .66, .1], [784, .78, .44],
+       [880, 1.26, .1], [988, 1.37, .1], [1047, 1.48, 1.0]]
+        .forEach(([f, d, dur]) => S.nota(f, t + d, dur, 'square', a));
+      [[262, 0, .3], [330, .33, .3], [392, .78, .44], [523, 1.48, 1.0], [659, 1.48, 1.0]]
+        .forEach(([f, d, dur]) => S.nota(f, t + d, dur, 'triangle', a * .7));
+      [[131, 0, .62], [196, .66, .56], [131, 1.48, 1.1]].forEach(([f, d, dur]) => S.nota(f, t + d, dur, 'triangle', a * .8));
+      [2093, 2637, 3136, 4186].forEach((f, i) => S.nota(f, t + 2.5 + i * .06, .15, 'triangle', a * .4));
+    },
+    /* a insígnia (ou o troféu) assentando: um brilho que sobe */
+    insignia: (S, t, v) => {
+      const a = v * .34;
+      S.nota(1047, t, .3, 'square', a * .5);
+      [1568, 2093, 2637, 3136, 4186].forEach((f, i) => S.nota(f, t + .05 + i * .055, .22, 'triangle', a * .55));
+    },
+    /* o carimbo na placa da Elite: pancada surda */
+    carimbo: (S, t, v) => {
+      const c = S.ctx(); const n = Math.floor(c.sampleRate * .18);
+      const buf = c.createBuffer(1, n, c.sampleRate), dados = buf.getChannelData(0);
+      for (let i = 0; i < n; i++) dados[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / n, 3);
+      const src = c.createBufferSource(), f = c.createBiquadFilter(), g = c.createGain();
+      src.buffer = buf; f.type = 'lowpass'; f.frequency.setValueAtTime(900, t);
+      g.gain.setValueAtTime(v * .9, t);
+      src.connect(f); f.connect(g); g.connect(c.destination); src.start(t);
+      S.nota(82, t, .22, 'triangle', v * .7);
     }
   },
   /* Efeito que aceita arquivo de verdade: se existir sons/efeitos/<nome>.ogg
@@ -326,9 +356,16 @@ const Som = {
     } catch(e){}
     return 'rota';
   },
+  /* a festa da vitória toca a fanfarra sozinha: a trilha para e só
+     volta (a do lugar de agora) quando a festa sai da frente */
+  segurar(on){
+    this._segura = !!on;
+    if (on){ this.pararMusica(); this._tocando = null; }
+    else this.aplicarMusica(true);
+  },
   /* chamada a cada tela: troca a trilha só quando o contexto muda */
   aplicarMusica(forcar){
-    if (typeof document === 'undefined' || !this._destravado) return;
+    if (typeof document === 'undefined' || !this._destravado || this._segura) return;
     const p = this.pref(), vol = this.volume('musica');
     const ctx = this.contexto();
     const chave = `${p.tema}:${ctx}`;

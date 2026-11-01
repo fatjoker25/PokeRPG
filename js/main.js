@@ -683,6 +683,8 @@ const Jogo = {
       return;
     }
     this.irPara(destino, [aviso].filter(Boolean));
+    /* final de torneio da história: a festa por cima da cena de vitória */
+    if (fim.resultado === 'vitoria' && b.festa) Vitoria.mostrar(Vitoria.daCena(b.festa, b));
   },
 
   /* Depois de uma briga que não é de cena (selvagem que surgiu, gente
@@ -987,17 +989,21 @@ const Jogo = {
     }
     const venceu = fim.resultado === 'vitoria';
     const avisos = [];
+    let festa = null;
 
     if (venceu){
       Estado.dados.insignias.push(g.insignia);
       avisos.push({tipo:'insignia', texto:`Insígnia conquistada: ${g.insignia} (${Estado.dados.insignias.length}/8)`});
       const p = g.premio || {};
+      let ganho = 0;
       if (p.dinheiro){
         const mult = (fim && fim.bonusDinheiro) || 1;
         const val = premioGinasio(g, fim);
         Estado.j.dinheiro += val;
+        ganho = val;
         avisos.push({tipo:'item', texto:`+${fmtDin(val)} ₽${mult > 1 ? ' (Amuleto de Moeda)' : ''}`});
       }
+      festa = Vitoria.ginasio(g, ganho, p.itens);
       if (p.itens) for (const [n,q] of Object.entries(p.itens)){ Estado.darItem(n,q); avisos.push({tipo:'item', texto:`Recebeu ${q}× ${n}.`}); }
       if (p.rep){
         const r = Estado.mudarRep('bom', p.rep, `Venceu o Ginásio de ${g.cidade}`, {rep:{notorio:true, peso:10}});
@@ -1021,6 +1027,8 @@ const Jogo = {
     }
     Estado.salvar('auto');
     UI.telaResultadoGinasio(g, venceu, avisos);
+    /* a festa (vitoria.js) por cima da tela de resultado já desenhada */
+    if (festa) Vitoria.mostrar(festa);
   },
 
   /* ============================================================
@@ -1437,10 +1445,11 @@ const Jogo = {
       if (r && r.mudou) avisos.push({tipo:'rep', texto:`Reputação: ${r.de} → ${r.para}`});
       Estado.registrar('Venceu Red. Tornou-se {Campeão|Campeã} de Kanto.');
       Estado.salvar('auto');
-      return UI.telaResultadoLiga({
+      UI.telaResultadoLiga({
         titulo:'{CAMPEÃO|CAMPEÃ} DE KANTO', sub:'Salão do Campeão',
         falas: CAMPEAO.vitoria(Estado.dados), avisos, venceu:true, campeao:true
       });
+      return Vitoria.mostrar(Vitoria.campeao(PREMIO_CAMPEAO, {'Master Ball':1, 'Hyper Potion':5, 'Full Heal':5}));
     }
 
     // próximo membro da Elite 4
@@ -1460,6 +1469,7 @@ const Jogo = {
       falas, quem: alvo.nome,
       avisos: [], venceu:true, continuar:true
     });
+    Vitoria.mostrar(Vitoria.elite(alvo));
   },
 
   continuarElite(){
@@ -1540,13 +1550,18 @@ const Jogo = {
 
     t.rodada++;
     const campeao = t.rodada >= t.adversarios.length;
+    const festa = () => Vitoria.rodada({
+      rodadas: PREMIO_TORNEIO.slice(0, t.adversarios.length).map(r => r.rodada), feitas: t.rodada,
+      adversario: adv.nome, nome:'Torneio Aberto', cor:'#ff8a3d', metal:'prata',
+      conta: `${Estado.dados.torneiosVencidos || 1}º título`, ganho: ganhoTorneio, itens: premio.itens
+    });
     if (campeao){
       this.torneioAtual = null;
       Estado.dados.torneiosVencidos = (Estado.dados.torneiosVencidos||0) + 1;
       Estado.marcar('venceu_torneio');
       Estado.registrar(`Venceu o Torneio Aberto da Liga (${Estado.dados.torneiosVencidos}ª vez).`);
       Estado.salvar('auto');
-      return UI.telaResultadoLiga({
+      UI.telaResultadoLiga({
         titulo:'{CAMPEÃO|CAMPEÃ} DO TORNEIO', sub:`${Estado.dados.torneiosVencidos}º título`,
         falas:[
           `${adv.nome} aperta a sua mão antes do juiz anunciar, o que é o maior elogio possível.`,
@@ -1558,6 +1573,7 @@ const Jogo = {
         ],
         avisos, venceu:true
       });
+      return Vitoria.mostrar(festa());
     }
 
     Estado.salvar('auto');
@@ -1570,6 +1586,7 @@ const Jogo = {
       ],
       avisos, venceu:true, torneio:true
     });
+    Vitoria.mostrar(festa());
   },
 
   curarNoTorneio(){

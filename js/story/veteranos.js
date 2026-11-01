@@ -1216,34 +1216,41 @@ const Conferencia = {
       if (m && m.mudou) avisos.push({tipo:'rep', texto:`Reputação: ${m.de} → ${m.para}`});
     }
     c.rodada++;
+    const ganhos = Object.assign({}, pr.itens || {});
+    const festa = () => Vitoria.rodada({
+      rodadas: PREMIO_CONFERENCIA.slice(0, c.adversarios.length).map(r => r.rodada), feitas: c.rodada,
+      adversario: v.nome, nome:'Conferência do Planalto Indigo', f:true, cor:'#7fb2ff', metal:'ouro',
+      conta: `${Estado.dados.conferenciasVencidas || 1}º título`, ganho: valor, itens: ganhos
+    });
     if (c.rodada >= c.adversarios.length){
       Jogo.conferenciaAtual = null;
       const d = Estado.dados;
       d.conferenciasVencidas = (d.conferenciasVencidas || 0) + 1;
       if (d.conferenciasVencidas === 1){
         Estado.darItem('Master Ball', 1);
+        ganhos['Master Ball'] = (ganhos['Master Ball'] || 0) + 1;
         avisos.push({tipo:'item', texto:'A primeira Conferência vem com uma Master Ball no fundo do troféu.'});
       }
       Estado.marcar('venceu_conferencia');
       Estado.registrar(`Venceu a Conferência do Planalto Indigo (${d.conferenciasVencidas}ª vez).`);
       Estado.salvar('auto');
-      return Jogo.resolverPendencias(() => UI.telaResultadoLiga({
+      return Jogo.resolverPendencias(() => { UI.telaResultadoLiga({
         titulo:'{CAMPEÃO|CAMPEÃ} DA CONFERÊNCIA', sub:`Conferência do Planalto Indigo · ${d.conferenciasVencidas}º título`,
         quem:v.nome, falas:[diz(v.perde),
           'A arquibancada da Conferência não levanta pra quem ganha. Ela levanta pra quem aguentou as três.',
           'Hoje ela levanta.',
           d.conferenciasVencidas === 1 ? 'No vestiário, alguém escreveu o seu nome a giz na parede, embaixo de outros quarenta e poucos. O de cima é o da Greer, três vezes.' : 'O seu nome na parede do vestiário ganhou mais um risco do lado.'],
         avisos, venceu:true
-      }));
+      }); Vitoria.mostrar(festa()); });
     }
     Estado.salvar('auto');
-    Jogo.resolverPendencias(() => UI.telaResultadoLiga({
+    Jogo.resolverPendencias(() => { UI.telaResultadoLiga({
       titulo:`${v.nome} derrotad${v.f ? 'a' : 'o'}`, sub:`Conferência do Planalto Indigo · ${pr.rodada} vencida`,
       quem:v.nome, falas:[diz(v.perde),
         `Próxima: ${PREMIO_CONFERENCIA[c.rodada].rodada}, contra ${nomeDeLuta(veterano(c.adversarios[c.rodada]))}.`,
         'Vinte minutos entre as lutas. Dá pra curar o time.'],
       avisos, venceu:true, conferencia:true
-    }));
+    }); Vitoria.mostrar(festa()); });
   },
 
   curar(){

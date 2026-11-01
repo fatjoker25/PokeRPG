@@ -1705,6 +1705,40 @@ já deu Bruno e Otto (o rival) pra casa. Os rostos de `RETRATO_DA_CASA`
 são só da casa, e `NOMES_DE_CASA` não tem nome da história — o
 `chk-rostos` confere os dois.
 
+## A festa da vitória
+Luta grande ganha tem festa antes da tela de resultado
+(`js/ui/vitoria.js`, `css/vitoria.css`): ginásio, cada porta da Elite,
+o Campeão, cada rodada do Torneio Aberto e da Conferência, e as finais
+de torneio da história (luta de cena com `festa:{sub, legenda, trofeu,
+cor, dinheiro, itens, frase}` no `batalha`, lida no `finalizarBatalha`;
+o prêmio de verdade continua no `ef` da cena de vitória, a festa só
+mostra). A tela inteira acende na cor da luta (`--vt`: o tipo do líder
+ou da porta), o "Vitória!" bate, o rosto de quem perdeu entra numa
+cápsula, e a peça do meio chega: a insígnia cai girando e acende a casa
+dela no estojo das oito, a porta da Elite tem a placa do titular e leva
+o carimbo "Vencida", o título vem com o troféu desenhado (ouro, prata)
+e a rodada com a medalha de fita (bronze nas quartas, prata na semi),
+com as etapas do chaveamento. Depois os prêmios, um cartão por vez.
+
+- **A tela de resultado é desenhada antes**, e a festa vai por cima
+  (`Vitoria.mostrar(o)` logo depois do `telaResultado…`): Continuar só
+  tira a festa da frente, sem piscar a tela da luta.
+- O compasso é por classe na raiz (`.f1`…`.f5`); adiantar (toque,
+  Enter, espaço, A) põe `.ja`, que zera a duração de tudo que entra
+  (`.vt-e`) e deixa o laço (raios, faíscas, brilho) seguindo. Animação
+  de entrada nova leva `.vt-e`, senão o adiantar não pega.
+- O tipo vai em `data-tipo`, nunca em classe `vt-<tipo>`: o título se
+  chama `.vt-titulo` e a raiz com essa classe herdou itálico e sombra.
+- A fanfarra é sintetizada (`Som.EFEITOS.fanfarra`, composição nossa),
+  com `insignia` e `carimbo` na hora da peça; a trilha do lugar espera
+  por `Som.segurar(true)` e volta quando a festa sai da página (um
+  `MutationObserver` solta, saia como sair).
+- Nada de placar nem de time de ninguém: só quem perdeu, o que você
+  ganhou e onde você está no chaveamento.
+
+`chk-telas` abre a festa de cada ginásio, porta, rodada, do Campeão e
+das duas finais da história, adiantada até o fim.
+
 ## A tela de morte
 `UI.telaGameOver(motivo)` fala o idioma da abertura (`css/titulo.css`,
 `.tela-fim`): no meio da tela (`body.na-abertura`), Pokébola do fundo

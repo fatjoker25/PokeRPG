@@ -2749,6 +2749,9 @@ c8_torneio:{
   batalha:{dex:53, nivel:d=>Math.max(31, nivelDeReferencia()), tipo:'treinador', treinador:'Celeste', fuga:false,
            arena:'ginasio', erroIA:12, vontadeIA:true,
            timeExtra:[{dex:31, mais:0}, {dex:26, mais:2, segura:'Faixa Firme'}],
+           /* a festa da vitória (vitoria.js); o prêmio é o ef da cena */
+           festa:{sub:'Final · Torneio do S.S. Anne', legenda:'Torneio do S.S. Anne', trofeu:'prata', cor:'#4aa3df',
+                  dinheiro:20000, frase:'O torneio do <b>S.S. Anne</b> é seu.'},
            vitoria:'c8_ganhou_torneio', derrota:'c8_perdeu_torneio', gameover:'gameover'}
 },
 
