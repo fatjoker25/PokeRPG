@@ -1,6 +1,6 @@
 /* ============================================================
    O RIVAL
-   Ezra, da pedra na Rota 1. Ele não é um obstáculo fixo:
+   Ezra, da pedra na saída da sua cidade. Ele não é um obstáculo fixo:
    o time, o tom e o arco dele mudam conforme o que você faz —
    e, se você for longe demais, ele deixa de ser rival.
    ============================================================ */
@@ -83,6 +83,26 @@ function rival(){
   const d = Estado.dados;
   if (!d.rival) iniciarRival();
   return d.rival;
+}
+
+/* Onde o Ezra estreia. Ele é da sua cidade — o {pico} sai da tabela
+   dela, e no capítulo 17 ele vem de ônibus de lá. Quem nasceu em
+   Pallet ou em Viridian divide a Rota 1 com ele (e Pallet não tem
+   Centro), então o encontro continua no capítulo 2, na escada do
+   Centro de Viridian. O resto conhece o Ezra no fim do capítulo 1,
+   numa pedra do lado da placa da saída da cidade (c1_ezra_pedra), e
+   a escada de Viridian vira reencontro (c2_teo_reencontro). Quem passa
+   reto pela pedra (passou_pelo_ezra_em_casa) foi visto: em Viridian
+   ele conta. */
+const CIDADES_DO_EZRA_NA_ROTA_1 = ['Pallet', 'Viridian'];
+function ezraEstreiaEmCasa(d){
+  d = d || Estado.dados;
+  return !!(d && d.jogador) && !CIDADES_DO_EZRA_NA_ROTA_1.includes(d.jogador.cidade);
+}
+/* a pedra dele, pra fala: "na Rota 1" ou "na saída de Vermilion" */
+function pedraDoEzra(d){
+  d = d || Estado.dados;
+  return ezraEstreiaEmCasa(d) ? `na saída de ${d.jogador.cidade}` : 'na Rota 1';
 }
 
 /* ============================================================
@@ -254,7 +274,9 @@ function falaRival(){
     if (d.flags.trabalha_para_comissao || d.flags.conselheiro_da_comissao) L.push('"Eu li as atas. Tem o teu nome numa delas, numa lista de presença, do lado de gente que assina descarte."');
     if (d.flags.assumiu_a_rede) L.push('"Eu fui em Celadon. Eu vi o portão azul. Eu perguntei de quem era agora e eles falaram o teu nome."');
     if (Estado.rep.eixo==='ruim' && Estado.rep.ruim>=6) L.push(`"Tem gente com medo de você. Gente de verdade, não Pokémon."`);
-    L.push('"A gente se conheceu numa pedra na Rota 1. Eu tava lá desde as seis da manhã e você foi a primeira pessoa que parou pra falar comigo."');
+    L.push(d.flags.passou_pelo_ezra_em_casa
+      ? `"Eu tava numa pedra ${pedraDoEzra(d)} no dia em que você saiu, e você passou reto. Em Viridian você foi a primeira pessoa que parou pra falar comigo."`
+      : `"A gente se conheceu numa pedra ${pedraDoEzra(d)}. Eu tava lá desde as seis da manhã e você foi a primeira pessoa que parou pra falar comigo."`);
     L.push('"Eu vou te parar. Eu não sei se eu consigo. Mas alguém tem que estar aqui, e quem te conhece sou eu."');
   }
 
@@ -290,7 +312,7 @@ function falaVitoriaRival(){   // você venceu
     '"Eu sabia." Ele está chorando e não está tentando esconder. "Eu sabia que não ia dar."',
     '"Eu vim mesmo assim porque não tinha mais ninguém."',
     d.flags.tem_sangue_nas_maos
-      ? '"Você lembra da pedra? Na Rota 1?" Ele te olha. "Eu lembro. Eu lembro de quem entrou naquela floresta."'
+      ? `"Você lembra da pedra? ${cap1(pedraDoEzra(d))}?" Ele te olha. "Eu lembro. Eu lembro de quem entrou naquela floresta."`
       : '"Para. Por favor. É só isso que eu vim pedir."'
   ];
   if (arco === 'quebrado') return [
@@ -299,7 +321,7 @@ function falaVitoriaRival(){   // você venceu
     '"Valeu por lutar." Ele diz isso sério. "Muita gente já não luta comigo."'
   ];
   return [
-    'Ezra aperta a sua mão antes de recolher o time, do jeito que ele faz desde a Rota 1.',
+    `Ezra aperta a sua mão antes de recolher o time, do jeito que ele faz desde a pedra ${pedraDoEzra(d)}.`,
     `"${cap1(porExtenso(r.derrotas + 1))} a ${porExtenso(r.vitorias)}." Ele já está calculando outra coisa. "Da próxima eu troco a ordem do time."`
   ];
 }
@@ -348,8 +370,8 @@ function registrarResultadoRival(venceuJogador){
 
 /* ============================================================
    OS OUTROS RIVAIS
-   Ezra é o rival de fábrica: ele estava na pedra da Rota 1 e
-   entrou na sua história porque você passou por lá.
+   Ezra é o rival de fábrica: ele estava na pedra da saída da sua
+   cidade e entrou na sua história porque você passou por lá.
    Os outros você conquista. Cada um nasce de uma escolha que
    você fez sem saber que estava escolhendo um rival — e o tom
    de cada um é o tom da escolha que o criou.

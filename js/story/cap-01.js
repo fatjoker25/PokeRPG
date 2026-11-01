@@ -95,6 +95,12 @@ const C1 = {
   }
 };
 
+/* Saiu pro mato sem falar com o garoto da pedra: ele te viu, e em
+   Viridian ele conta (c2_teo) */
+function c1_passouPeloEzra(d){
+  if (ezraEstreiaEmCasa(d) && !d.flags.falou_com_ezra_em_casa) d.flags.passou_pelo_ezra_em_casa = true;
+}
+
 CAPITULOS.push(
 
 {
@@ -1776,10 +1782,14 @@ c1_saida:{
                  : d.flags.recebeu_do_professor ? 'Oito e meia da manhã'
                  : 'Sete e cinquenta da manhã';
       return `${hora}. Você não andou nem uma hora de casa e já é outra pessoa, o que é ridículo e verdadeiro.`;
-    }
+    },
+    d=>ezraEstreiaEmCasa(d)
+      ? 'Do lado da placa tem uma pedra que todo mundo da cidade já usou de banco, e hoje tem um garoto da sua idade sentado nela, de roupa nova demais, olhando a estrada como se ela fosse sair andando.'
+      : ''
   ],
   escolhas:[
-    {texto:'Entrar no mato.', vai:'c1_primeiro_encontro'},
+    {texto:'Falar com o garoto da pedra.', vai:'c1_ezra_pedra', cond:d=>ezraEstreiaEmCasa(d)},
+    {texto:'Entrar no mato.', vai:'c1_primeiro_encontro', ef:{executar:c1_passouPeloEzra}},
     {texto:'Olhar a cidade uma última vez antes.', vai:'c1_olhar_pra_tras'}
   ]
 },
@@ -1793,7 +1803,115 @@ c1_olhar_pra_tras:{
     'Depois vira de volta.'
   ],
   ef:{flag:'olhou_pra_tras', moral:5},
+  escolhas:[
+    {texto:'Falar com o garoto da pedra.', vai:'c1_ezra_pedra', cond:d=>ezraEstreiaEmCasa(d) && !d.flags.falou_com_ezra_em_casa},
+    {texto:'Entrar no mato.', vai:'c1_primeiro_encontro', ef:{executar:c1_passouPeloEzra}}
+  ]
+},
+
+/* ------------------------------------------------------------
+   O EZRA NA PEDRA DA SAÍDA
+   Quem não nasceu em Pallet nem em Viridian conhece o Ezra aqui
+   (ezraEstreiaEmCasa, em rival.js): ele é da sua cidade, saiu na
+   mesma semana e está na pedra do lado da placa desde as seis da
+   manhã, esperando alguém que vá pro mesmo lado. Ele não vai junto:
+   vai na frente e te espera no Centro de Viridian, onde o capítulo 2
+   vira reencontro. A luta fica pra lá.
+   ------------------------------------------------------------ */
+c1_ezra_pedra:{
+  falante:'Ezra',
+  vozes:['N','N','P','N','N'],
+  texto:[
+    'Ele levanta da pedra antes de você chegar perto, rápido demais, e limpa a mão na calça.',
+    '"Ezra." Ele estende a mão antes de você oferecer. "Eu tô nessa pedra desde as seis da manhã esperando alguém passar."',
+    '"E ninguém passou?"',
+    '"Passaram três. Duas eram adultas e uma me ignorou." Ele diz isso sem nenhuma autopiedade, o que é impressionante. "Você é a quarta. Você conta."',
+    'Uma Pokébola só no cinto, e a mão dele não sai de cima dela. Não é ameaça — é ansiedade.'
+  ],
+  ef:{npc:{nome:'Ezra', opiniao:1, memoria:'Esperou numa pedra na saída da cidade de vocês desde as seis da manhã. Você foi a primeira pessoa que parou pra falar com ele.'},
+      flag:'falou_com_ezra_em_casa',
+      registrar:d=>`Conheceu Ezra numa pedra na saída de ${d.jogador.cidade}.`},
+  escolhas:[
+    {texto:'"Por que você tava esperando numa pedra?"', vai:'c1_ezra_porque'},
+    {texto:'"Eu tô indo agora. Vem junto?"', vai:'c1_ezra_combinado'},
+    {texto:'"Tô com pressa." E seguir.', vai:'c1_ezra_pressa',
+     ef:{npc:{nome:'Ezra', opiniao:-1, memoria:'Você passou por ele na pedra da saída com pressa.'}}}
+  ]
+},
+
+c1_ezra_porque:{
+  falante:'Ezra',
+  vozes:['P','N','N','N'],
+  texto:[
+    '"Por que você tava esperando numa pedra?"',
+    'Ele demora pra responder, e a resposta é mais honesta do que a pergunta merecia.',
+    '"Porque eu não sei ir sozinho." Ele olha o próprio tênis. "Tipo — eu sei andar. Eu não sei… ir."',
+    fala('Ezra', 'Meu pai falou que eu não duro uma semana. Não de maldade, sabe? Ele falou tipo estatística.'),
+    fala('Ezra', 'E aí eu sentei na pedra e fiquei esperando aparecer alguém que fosse na mesma direção.'),
+    'Ele finalmente te olha. "Achei que ia ser mais fácil."'
+  ],
+  ef:{flag:'teo_abriu_o_jogo',
+      npc:{nome:'Ezra', opiniao:3, memoria:'Te contou, logo que se conheceram, que não sabia ir sozinho.'}},
+  escolhas:[
+    {texto:'"Ninguém sabe. A gente só vai."', vai:'c1_ezra_combinado',
+     ef:{rep:{eixo:'bom',delta:1,motivo:'Disse a coisa certa para alguém com medo'},
+         npc:{nome:'Ezra', opiniao:2, memoria:'Você disse que ninguém sabe ir sozinho.'}}},
+    {texto:'"Então volta pra casa."', vai:'c1_ezra_volta_pra_casa',
+     ef:{rep:{eixo:'ruim',delta:1,motivo:'Mandou alguém desistir antes de começar'},
+         npc:{nome:'Ezra', opiniao:-3, memoria:'Você mandou ele voltar pra casa antes de ele começar.'}}},
+    {texto:'"Seu pai é um idiota."', vai:'c1_ezra_combinado',
+     ef:{npc:{nome:'Ezra', opiniao:2, memoria:'Você chamou o pai dele de idiota. Ele riu por quase um minuto.'}}},
+    {texto:'Não dizer nada e esperar ele continuar.', vai:'c1_ezra_combinado',
+     ef:{npc:{nome:'Ezra', opiniao:1, memoria:'Você ficou calad{o|a} e deixou ele falar. Foi o suficiente.'}}}
+  ]
+},
+
+c1_ezra_volta_pra_casa:{
+  falante:'Ezra',
+  vozes:['P','N'],
+  texto:[
+    '"Então volta pra casa."',
+    'A casa dele fica a quatro ruas daqui. Ele olha pra trás, na direção dela, e depois olha pra você.',
+    '"É." Ele assente muito devagar. "É, talvez."',
+    'Ele não vai voltar. Dá pra ver na cara dele: vai continuar, e sozinho, com essa sua frase no bolso.'
+  ],
+  escolhas:[
+    {texto:'"Espera. Desculpa. Eu falei besteira."', vai:'c1_ezra_combinado',
+     ef:{npc:{nome:'Ezra', opiniao:2, memoria:'Você falou besteira na pedra e pediu desculpa antes de ele sair.'},
+         rep:{eixo:'bom',delta:1,motivo:'Voltou atrás depressa'}}},
+    {texto:'Entrar no mato e deixar ele na pedra.', vai:'c1_primeiro_encontro'}
+  ]
+},
+
+c1_ezra_combinado:{
+  falante:'Ezra',
+  vozes:['N','N','N','P','N','N'],
+  texto:[
+    d=>d.flags.teo_abriu_o_jogo
+      ? 'Ele fica um tempo quieto, do jeito de quem acabou de falar mais do que queria.'
+      : 'Ele olha a estrada, depois você, depois a estrada de novo.',
+    '"Eu não vou junto com ninguém." Ele diz rápido, antes de mudar de ideia. "Se eu sair daqui grudado em alguém, eu nunca aprendo a ir."',
+    '"Eu vou na frente. Todo mundo que sai daqui passa pelo Centro de Viridian. Te espero lá."',
+    '"E se eu demorar?"',
+    '"Eu espero." Ele já está ajeitando a mochila nas costas. "Esperar eu sei."',
+    'Ele vai andando pela estrada e não olha pra trás nenhuma vez, o que deve estar custando muito. A Pokébola vai na mão dele, não no cinto.'
+  ],
+  ef:{flag:'ezra_te_espera_em_viridian'},
   escolhas:[{texto:'Entrar no mato.', vai:'c1_primeiro_encontro'}]
+},
+
+c1_ezra_pressa:{
+  falante:'Ezra',
+  vozes:['P','N','N'],
+  texto:[
+    '"Tô com pressa."',
+    '"Ah." Ele senta de novo na pedra. "Tá."',
+    'Você anda até a curva e ainda sente ele olhando. Na curva você olha pra trás: ele continua na pedra, com a mão em cima da Pokébola.'
+  ],
+  escolhas:[
+    {texto:'Voltar até a pedra.', vai:'c1_ezra_combinado'},
+    {texto:'Entrar no mato.', vai:'c1_primeiro_encontro'}
+  ]
 },
 
 c1_primeiro_encontro:{

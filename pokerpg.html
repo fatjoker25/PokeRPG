@@ -40847,7 +40847,7 @@ function conhecimentoComissao(){
 /* ===== js/story/rival.js ===== */
 /* ============================================================
    O RIVAL
-   Ezra, da pedra na Rota 1. Ele não é um obstáculo fixo:
+   Ezra, da pedra na saída da sua cidade. Ele não é um obstáculo fixo:
    o time, o tom e o arco dele mudam conforme o que você faz —
    e, se você for longe demais, ele deixa de ser rival.
    ============================================================ */
@@ -40930,6 +40930,26 @@ function rival(){
   const d = Estado.dados;
   if (!d.rival) iniciarRival();
   return d.rival;
+}
+
+/* Onde o Ezra estreia. Ele é da sua cidade — o {pico} sai da tabela
+   dela, e no capítulo 17 ele vem de ônibus de lá. Quem nasceu em
+   Pallet ou em Viridian divide a Rota 1 com ele (e Pallet não tem
+   Centro), então o encontro continua no capítulo 2, na escada do
+   Centro de Viridian. O resto conhece o Ezra no fim do capítulo 1,
+   numa pedra do lado da placa da saída da cidade (c1_ezra_pedra), e
+   a escada de Viridian vira reencontro (c2_teo_reencontro). Quem passa
+   reto pela pedra (passou_pelo_ezra_em_casa) foi visto: em Viridian
+   ele conta. */
+const CIDADES_DO_EZRA_NA_ROTA_1 = ['Pallet', 'Viridian'];
+function ezraEstreiaEmCasa(d){
+  d = d || Estado.dados;
+  return !!(d && d.jogador) && !CIDADES_DO_EZRA_NA_ROTA_1.includes(d.jogador.cidade);
+}
+/* a pedra dele, pra fala: "na Rota 1" ou "na saída de Vermilion" */
+function pedraDoEzra(d){
+  d = d || Estado.dados;
+  return ezraEstreiaEmCasa(d) ? `na saída de ${d.jogador.cidade}` : 'na Rota 1';
 }
 
 /* ============================================================
@@ -41101,7 +41121,9 @@ function falaRival(){
     if (d.flags.trabalha_para_comissao || d.flags.conselheiro_da_comissao) L.push('"Eu li as atas. Tem o teu nome numa delas, numa lista de presença, do lado de gente que assina descarte."');
     if (d.flags.assumiu_a_rede) L.push('"Eu fui em Celadon. Eu vi o portão azul. Eu perguntei de quem era agora e eles falaram o teu nome."');
     if (Estado.rep.eixo==='ruim' && Estado.rep.ruim>=6) L.push(`"Tem gente com medo de você. Gente de verdade, não Pokémon."`);
-    L.push('"A gente se conheceu numa pedra na Rota 1. Eu tava lá desde as seis da manhã e você foi a primeira pessoa que parou pra falar comigo."');
+    L.push(d.flags.passou_pelo_ezra_em_casa
+      ? `"Eu tava numa pedra ${pedraDoEzra(d)} no dia em que você saiu, e você passou reto. Em Viridian você foi a primeira pessoa que parou pra falar comigo."`
+      : `"A gente se conheceu numa pedra ${pedraDoEzra(d)}. Eu tava lá desde as seis da manhã e você foi a primeira pessoa que parou pra falar comigo."`);
     L.push('"Eu vou te parar. Eu não sei se eu consigo. Mas alguém tem que estar aqui, e quem te conhece sou eu."');
   }
 
@@ -41137,7 +41159,7 @@ function falaVitoriaRival(){   // você venceu
     '"Eu sabia." Ele está chorando e não está tentando esconder. "Eu sabia que não ia dar."',
     '"Eu vim mesmo assim porque não tinha mais ninguém."',
     d.flags.tem_sangue_nas_maos
-      ? '"Você lembra da pedra? Na Rota 1?" Ele te olha. "Eu lembro. Eu lembro de quem entrou naquela floresta."'
+      ? `"Você lembra da pedra? ${cap1(pedraDoEzra(d))}?" Ele te olha. "Eu lembro. Eu lembro de quem entrou naquela floresta."`
       : '"Para. Por favor. É só isso que eu vim pedir."'
   ];
   if (arco === 'quebrado') return [
@@ -41146,7 +41168,7 @@ function falaVitoriaRival(){   // você venceu
     '"Valeu por lutar." Ele diz isso sério. "Muita gente já não luta comigo."'
   ];
   return [
-    'Ezra aperta a sua mão antes de recolher o time, do jeito que ele faz desde a Rota 1.',
+    `Ezra aperta a sua mão antes de recolher o time, do jeito que ele faz desde a pedra ${pedraDoEzra(d)}.`,
     `"${cap1(porExtenso(r.derrotas + 1))} a ${porExtenso(r.vitorias)}." Ele já está calculando outra coisa. "Da próxima eu troco a ordem do time."`
   ];
 }
@@ -41195,8 +41217,8 @@ function registrarResultadoRival(venceuJogador){
 
 /* ============================================================
    OS OUTROS RIVAIS
-   Ezra é o rival de fábrica: ele estava na pedra da Rota 1 e
-   entrou na sua história porque você passou por lá.
+   Ezra é o rival de fábrica: ele estava na pedra da saída da sua
+   cidade e entrou na sua história porque você passou por lá.
    Os outros você conquista. Cada um nasce de uma escolha que
    você fez sem saber que estava escolhendo um rival — e o tom
    de cada um é o tom da escolha que o criou.
@@ -55906,6 +55928,12 @@ const C1 = {
   }
 };
 
+/* Saiu pro mato sem falar com o garoto da pedra: ele te viu, e em
+   Viridian ele conta (c2_teo) */
+function c1_passouPeloEzra(d){
+  if (ezraEstreiaEmCasa(d) && !d.flags.falou_com_ezra_em_casa) d.flags.passou_pelo_ezra_em_casa = true;
+}
+
 CAPITULOS.push(
 
 {
@@ -57587,10 +57615,14 @@ c1_saida:{
                  : d.flags.recebeu_do_professor ? 'Oito e meia da manhã'
                  : 'Sete e cinquenta da manhã';
       return `${hora}. Você não andou nem uma hora de casa e já é outra pessoa, o que é ridículo e verdadeiro.`;
-    }
+    },
+    d=>ezraEstreiaEmCasa(d)
+      ? 'Do lado da placa tem uma pedra que todo mundo da cidade já usou de banco, e hoje tem um garoto da sua idade sentado nela, de roupa nova demais, olhando a estrada como se ela fosse sair andando.'
+      : ''
   ],
   escolhas:[
-    {texto:'Entrar no mato.', vai:'c1_primeiro_encontro'},
+    {texto:'Falar com o garoto da pedra.', vai:'c1_ezra_pedra', cond:d=>ezraEstreiaEmCasa(d)},
+    {texto:'Entrar no mato.', vai:'c1_primeiro_encontro', ef:{executar:c1_passouPeloEzra}},
     {texto:'Olhar a cidade uma última vez antes.', vai:'c1_olhar_pra_tras'}
   ]
 },
@@ -57604,7 +57636,115 @@ c1_olhar_pra_tras:{
     'Depois vira de volta.'
   ],
   ef:{flag:'olhou_pra_tras', moral:5},
+  escolhas:[
+    {texto:'Falar com o garoto da pedra.', vai:'c1_ezra_pedra', cond:d=>ezraEstreiaEmCasa(d) && !d.flags.falou_com_ezra_em_casa},
+    {texto:'Entrar no mato.', vai:'c1_primeiro_encontro', ef:{executar:c1_passouPeloEzra}}
+  ]
+},
+
+/* ------------------------------------------------------------
+   O EZRA NA PEDRA DA SAÍDA
+   Quem não nasceu em Pallet nem em Viridian conhece o Ezra aqui
+   (ezraEstreiaEmCasa, em rival.js): ele é da sua cidade, saiu na
+   mesma semana e está na pedra do lado da placa desde as seis da
+   manhã, esperando alguém que vá pro mesmo lado. Ele não vai junto:
+   vai na frente e te espera no Centro de Viridian, onde o capítulo 2
+   vira reencontro. A luta fica pra lá.
+   ------------------------------------------------------------ */
+c1_ezra_pedra:{
+  falante:'Ezra',
+  vozes:['N','N','P','N','N'],
+  texto:[
+    'Ele levanta da pedra antes de você chegar perto, rápido demais, e limpa a mão na calça.',
+    '"Ezra." Ele estende a mão antes de você oferecer. "Eu tô nessa pedra desde as seis da manhã esperando alguém passar."',
+    '"E ninguém passou?"',
+    '"Passaram três. Duas eram adultas e uma me ignorou." Ele diz isso sem nenhuma autopiedade, o que é impressionante. "Você é a quarta. Você conta."',
+    'Uma Pokébola só no cinto, e a mão dele não sai de cima dela. Não é ameaça — é ansiedade.'
+  ],
+  ef:{npc:{nome:'Ezra', opiniao:1, memoria:'Esperou numa pedra na saída da cidade de vocês desde as seis da manhã. Você foi a primeira pessoa que parou pra falar com ele.'},
+      flag:'falou_com_ezra_em_casa',
+      registrar:d=>`Conheceu Ezra numa pedra na saída de ${d.jogador.cidade}.`},
+  escolhas:[
+    {texto:'"Por que você tava esperando numa pedra?"', vai:'c1_ezra_porque'},
+    {texto:'"Eu tô indo agora. Vem junto?"', vai:'c1_ezra_combinado'},
+    {texto:'"Tô com pressa." E seguir.', vai:'c1_ezra_pressa',
+     ef:{npc:{nome:'Ezra', opiniao:-1, memoria:'Você passou por ele na pedra da saída com pressa.'}}}
+  ]
+},
+
+c1_ezra_porque:{
+  falante:'Ezra',
+  vozes:['P','N','N','N'],
+  texto:[
+    '"Por que você tava esperando numa pedra?"',
+    'Ele demora pra responder, e a resposta é mais honesta do que a pergunta merecia.',
+    '"Porque eu não sei ir sozinho." Ele olha o próprio tênis. "Tipo — eu sei andar. Eu não sei… ir."',
+    fala('Ezra', 'Meu pai falou que eu não duro uma semana. Não de maldade, sabe? Ele falou tipo estatística.'),
+    fala('Ezra', 'E aí eu sentei na pedra e fiquei esperando aparecer alguém que fosse na mesma direção.'),
+    'Ele finalmente te olha. "Achei que ia ser mais fácil."'
+  ],
+  ef:{flag:'teo_abriu_o_jogo',
+      npc:{nome:'Ezra', opiniao:3, memoria:'Te contou, logo que se conheceram, que não sabia ir sozinho.'}},
+  escolhas:[
+    {texto:'"Ninguém sabe. A gente só vai."', vai:'c1_ezra_combinado',
+     ef:{rep:{eixo:'bom',delta:1,motivo:'Disse a coisa certa para alguém com medo'},
+         npc:{nome:'Ezra', opiniao:2, memoria:'Você disse que ninguém sabe ir sozinho.'}}},
+    {texto:'"Então volta pra casa."', vai:'c1_ezra_volta_pra_casa',
+     ef:{rep:{eixo:'ruim',delta:1,motivo:'Mandou alguém desistir antes de começar'},
+         npc:{nome:'Ezra', opiniao:-3, memoria:'Você mandou ele voltar pra casa antes de ele começar.'}}},
+    {texto:'"Seu pai é um idiota."', vai:'c1_ezra_combinado',
+     ef:{npc:{nome:'Ezra', opiniao:2, memoria:'Você chamou o pai dele de idiota. Ele riu por quase um minuto.'}}},
+    {texto:'Não dizer nada e esperar ele continuar.', vai:'c1_ezra_combinado',
+     ef:{npc:{nome:'Ezra', opiniao:1, memoria:'Você ficou calad{o|a} e deixou ele falar. Foi o suficiente.'}}}
+  ]
+},
+
+c1_ezra_volta_pra_casa:{
+  falante:'Ezra',
+  vozes:['P','N'],
+  texto:[
+    '"Então volta pra casa."',
+    'A casa dele fica a quatro ruas daqui. Ele olha pra trás, na direção dela, e depois olha pra você.',
+    '"É." Ele assente muito devagar. "É, talvez."',
+    'Ele não vai voltar. Dá pra ver na cara dele: vai continuar, e sozinho, com essa sua frase no bolso.'
+  ],
+  escolhas:[
+    {texto:'"Espera. Desculpa. Eu falei besteira."', vai:'c1_ezra_combinado',
+     ef:{npc:{nome:'Ezra', opiniao:2, memoria:'Você falou besteira na pedra e pediu desculpa antes de ele sair.'},
+         rep:{eixo:'bom',delta:1,motivo:'Voltou atrás depressa'}}},
+    {texto:'Entrar no mato e deixar ele na pedra.', vai:'c1_primeiro_encontro'}
+  ]
+},
+
+c1_ezra_combinado:{
+  falante:'Ezra',
+  vozes:['N','N','N','P','N','N'],
+  texto:[
+    d=>d.flags.teo_abriu_o_jogo
+      ? 'Ele fica um tempo quieto, do jeito de quem acabou de falar mais do que queria.'
+      : 'Ele olha a estrada, depois você, depois a estrada de novo.',
+    '"Eu não vou junto com ninguém." Ele diz rápido, antes de mudar de ideia. "Se eu sair daqui grudado em alguém, eu nunca aprendo a ir."',
+    '"Eu vou na frente. Todo mundo que sai daqui passa pelo Centro de Viridian. Te espero lá."',
+    '"E se eu demorar?"',
+    '"Eu espero." Ele já está ajeitando a mochila nas costas. "Esperar eu sei."',
+    'Ele vai andando pela estrada e não olha pra trás nenhuma vez, o que deve estar custando muito. A Pokébola vai na mão dele, não no cinto.'
+  ],
+  ef:{flag:'ezra_te_espera_em_viridian'},
   escolhas:[{texto:'Entrar no mato.', vai:'c1_primeiro_encontro'}]
+},
+
+c1_ezra_pressa:{
+  falante:'Ezra',
+  vozes:['P','N','N'],
+  texto:[
+    '"Tô com pressa."',
+    '"Ah." Ele senta de novo na pedra. "Tá."',
+    'Você anda até a curva e ainda sente ele olhando. Na curva você olha pra trás: ele continua na pedra, com a mão em cima da Pokébola.'
+  ],
+  escolhas:[
+    {texto:'Voltar até a pedra.', vai:'c1_ezra_combinado'},
+    {texto:'Entrar no mato.', vai:'c1_primeiro_encontro'}
+  ]
 },
 
 c1_primeiro_encontro:{
@@ -57765,6 +57905,13 @@ function c2_abertura(d){
   const cand = C2_ABERTURAS.filter(id => c2_cabe(id, d));
   return Dados.escolher(cand);
 }
+/* Quem conheceu o Ezra na pedra da saída de casa (capítulo 1) sabe
+   quem é o garoto da escada: a opção chama ele pelo nome */
+function c2_escada(texto){
+  return d => d.flags.falou_com_ezra_em_casa
+    ? texto.replace(/([Ii])r ver (?:quem é )?o garoto (?:que está sentado )?na escada/, (m, i) => i + 'r falar com o Ezra, na escada')
+    : texto;
+}
 
 /* ============================================================
    CAPÍTULO 2 — GENTE BOA E GENTE COMUM
@@ -57775,6 +57922,10 @@ CAPITULOS.push(
 num:2, titulo:'Gente Boa e Gente Comum', local:'Viridian', ambiente:'cidade', nivelArea:7,
 tom:'leve', entradas:C2_ABERTURAS,
 inicio: d => c2_abertura(d),
+/* o Ezra da pedra da saída de casa já se apresentou: aqui é reencontro */
+desvios:{
+  c2_teo:{se: d => !!d.flags.falou_com_ezra_em_casa && d.cena !== 'c2_teo', vai:'c2_teo_reencontro'}
+},
 cenas:{
 
 c2_ab_encharcado:{
@@ -57962,7 +58113,7 @@ c2_pregou_recado:{
       registrar:'Pregou um recado no mural de Viridian, embaixo à direita, meio torto.'},
   escolhas:[
     {texto:'Perguntar à atendente sobre o aviso da floresta.', vai:'c2_pergunta_floresta'},
-    {texto:'Ir ver o garoto na escada.', vai:'c2_teo'},
+    {texto:c2_escada('Ir ver o garoto na escada.'), vai:'c2_teo'},
     {texto:'Sair do Centro.', vai:'c2_saida_centro'}
   ]
 },
@@ -57983,7 +58134,7 @@ c2_ligou_por_causa_do_cartaz:{
       registrar:'Ligou pra casa depois de ler o mural de Viridian.'},
   escolhas:[
     {texto:'Pregar um recado seu no mural também.', vai:'c2_pregou_recado'},
-    {texto:'Ir ver o garoto na escada.', vai:'c2_teo'},
+    {texto:c2_escada('Ir ver o garoto na escada.'), vai:'c2_teo'},
     {texto:'Sair do Centro.', vai:'c2_saida_centro'}
   ]
 },
@@ -58061,7 +58212,7 @@ c2_growlithe:{
   escolhas:[
     {texto:'Perguntar à atendente sobre o aviso da floresta.', vai:'c2_pergunta_floresta'},
     {texto:'Arrancar o cartaz de quem compra Pokémon.', vai:'c2_arrancou'},
-    {texto:'Ir ver quem é o garoto que está sentado na escada.', vai:'c2_teo'},
+    {texto:c2_escada('Ir ver quem é o garoto que está sentado na escada.'), vai:'c2_teo'},
     {texto:'Sair do Centro.', vai:'c2_saida_centro'}
   ]
 },
@@ -58078,7 +58229,7 @@ c2_arrancou:{
   escolhas:[
     {texto:'"Quem cola isso aqui?"', vai:'c2_quem_cola'},
     {texto:'Arrancar de novo.', vai:'c2_arrancou_dnv'},
-    {texto:'Deixar pra lá e ir ver o garoto na escada.', vai:'c2_teo'},
+    {texto:c2_escada('Deixar pra lá e ir ver o garoto na escada.'), vai:'c2_teo'},
     {texto:'Sair do Centro.', vai:'c2_saida_centro'}
   ]
 },
@@ -58116,7 +58267,7 @@ c2_nunca:{
     '"Mas é bom ouvir." Ela volta pro computador. "Boa jornada. E olha: guarda esse telefone do Growlithe. A mulher liga aqui toda terça."'
   ],
   ef:{flag:'anotou_growlithe'},
-  escolhas:[{texto:'Ir ver o garoto na escada.', vai:'c2_teo'}]
+  escolhas:[{texto:c2_escada('Ir ver o garoto na escada.'), vai:'c2_teo'}]
 },
 
 c2_nao_sei_cartaz:{
@@ -58127,7 +58278,7 @@ c2_nao_sei_cartaz:{
     '"É." Volta pro computador. "Também acho."',
     'Você fica com a sensação exata de ter falhado num teste que ninguém disse que era um teste.'
   ],
-  escolhas:[{texto:'Ir ver o garoto na escada.', vai:'c2_teo'}]
+  escolhas:[{texto:c2_escada('Ir ver o garoto na escada.'), vai:'c2_teo'}]
 },
 
 c2_arrancou_dnv:{
@@ -58144,7 +58295,7 @@ c2_arrancou_dnv:{
   ef:{flag:'aliou_a_atendente',
       rep:{eixo:'bom',delta:2,motivo:'Insistiu numa coisa pequena até virar coisa de duas pessoas'},
       npc:{nome:'Atendente de Viridian', opiniao:5, memoria:'{Vocês dois|Vocês duas} enfrentaram um cartaz de cortiça por meia hora. Ela não esqueceu.'}},
-  escolhas:[{texto:'Ir ver o garoto na escada.', vai:'c2_teo'}]
+  escolhas:[{texto:c2_escada('Ir ver o garoto na escada.'), vai:'c2_teo'}]
 },
 
 c2_pergunta_floresta:{
@@ -58162,7 +58313,7 @@ c2_pergunta_floresta:{
   escolhas:[
     {texto:'"Descreveram como?"', vai:'c2_descricao'},
     {texto:'"Então eu vou de dia."', vai:'c2_vou_de_dia'},
-    {texto:'Agradecer e ir ver o garoto na escada.', vai:'c2_teo'},
+    {texto:c2_escada('Agradecer e ir ver o garoto na escada.'), vai:'c2_teo'},
     {texto:'"E ninguém faz nada?"', vai:'c2_quem_cola'}
   ]
 },
@@ -58178,7 +58329,7 @@ c2_descricao:{
   ],
   ef:{flag:'sabe_do_fio_de_aco',
       rep:{eixo:'bom',delta:1,motivo:'Perguntou o suficiente para receber a resposta inteira'}},
-  escolhas:[{texto:'Ir ver o garoto na escada.', vai:'c2_teo'}]
+  escolhas:[{texto:c2_escada('Ir ver o garoto na escada.'), vai:'c2_teo'}]
 },
 
 c2_vou_de_dia:{
@@ -58190,7 +58341,7 @@ c2_vou_de_dia:{
     'Ela olha o relógio da parede de propósito.',
     'São duas e quarenta.'
   ],
-  escolhas:[{texto:'Ir ver o garoto na escada.', vai:'c2_teo'}]
+  escolhas:[{texto:c2_escada('Ir ver o garoto na escada.'), vai:'c2_teo'}]
 },
 
 c2_leu_tudo:{
@@ -58198,7 +58349,9 @@ c2_leu_tudo:{
     'Você lê o mural inteiro, camada por camada, levantando os papéis de cima para ver os de baixo.',
     'Tem coisa de três anos atrás ali embaixo. Tem um pedido de emprego. Tem um desenho de criança.',
     'Tem um bilhete que diz só "obrigado" e nada mais, e você fica um tempo tentando entender de quem para quem.',
-    'Quando você se afasta, percebe que alguém está sentado na escada do outro lado do saguão, olhando você ler o mural há um tempo.'
+    d=>d.flags.falou_com_ezra_em_casa
+      ? 'Quando você se afasta, percebe que o Ezra está sentado na escada do outro lado do saguão, olhando você ler o mural há um tempo, sem coragem de interromper.'
+      : 'Quando você se afasta, percebe que alguém está sentado na escada do outro lado do saguão, olhando você ler o mural há um tempo.'
   ],
   escolhas:[
     {texto:'Ir falar com ele.', vai:'c2_teo'},
@@ -58214,9 +58367,11 @@ c2_provocou:{
   texto:[
     'Você continua lendo. Sabendo que ele está olhando.',
     'Dura quase dois minutos. Depois ele desiste, levanta da escada, e vem até você.',
-    '"Você lê rápido."',
-    '"Você olha muito."',
-    '"É." Ele não fica constrangido. "É que eu tô aqui desde as seis da manhã e você é a primeira pessoa com quem eu falo hoje."'
+    d=>d.flags.falou_com_ezra_em_casa ? '"Você ia fingir que não me viu?"' : '"Você lê rápido."',
+    d=>d.flags.falou_com_ezra_em_casa ? '"Ia."' : '"Você olha muito."',
+    d=>d.flags.falou_com_ezra_em_casa
+      ? '"Eu sabia." Ele não parece ofendido; parece aliviado. "Eu tô aqui desde as seis da manhã. Achei que você não vinha."'
+      : '"É." Ele não fica constrangido. "É que eu tô aqui desde as seis da manhã e você é a primeira pessoa com quem eu falo hoje."'
   ],
   escolhas:[{texto:'Ouvir.', vai:'c2_teo'}]
 },
@@ -58225,14 +58380,22 @@ c2_teo:{
   falante:'Ezra',
   vozes:['N','N','P','N','N','N'],
   texto:[
-    'Ele tem mais ou menos a sua idade e a roupa dele é nova demais, do jeito de quem comprou tudo de uma vez pra viagem.',
-    '"Ezra." Ele estende a mão antes de você oferecer. "Eu tava numa pedra na Rota 1 desde as seis da manhã esperando alguém passar."',
+    d=>d.flags.passou_pelo_ezra_em_casa
+      ? `Ele tem mais ou menos a sua idade e a roupa nova demais, e você já viu essa roupa: era o garoto da pedra, na saída de ${d.jogador.cidade}, no dia em que você saiu.`
+      : 'Ele tem mais ou menos a sua idade e a roupa dele é nova demais, do jeito de quem comprou tudo de uma vez pra viagem.',
+    d=>d.flags.passou_pelo_ezra_em_casa
+      ? '"Ezra." Ele estende a mão antes de você oferecer. "Eu tava naquela pedra desde as seis da manhã esperando alguém passar."'
+      : '"Ezra." Ele estende a mão antes de você oferecer. "Eu tava numa pedra na Rota 1 desde as seis da manhã esperando alguém passar."',
     '"E ninguém passou?"',
-    '"Passaram três. Duas eram adultas e uma me ignorou." Ele diz isso sem nenhuma autopiedade, o que é impressionante. "Aí eu vim pra cá, porque no Centro pelo menos tem gente."',
+    d=>d.flags.passou_pelo_ezra_em_casa
+      ? '"Passou você." Ele diz isso sem nenhuma autopiedade, o que é impressionante. "Reto. Aí eu vim pra cá, porque no Centro pelo menos tem gente."'
+      : '"Passaram três. Duas eram adultas e uma me ignorou." Ele diz isso sem nenhuma autopiedade, o que é impressionante. "Aí eu vim pra cá, porque no Centro pelo menos tem gente."',
     'Ele já está com a mão no cinto. Não é ameaça — é ansiedade.',
     '"Você é {treinador|treinadora}, né? Tipo, de verdade, com licença e tudo?"'
   ],
-  ef:{npc:{nome:'Ezra', opiniao:1, memoria:'Esperou numa pedra na Rota 1 desde as seis da manhã. Você foi a primeira pessoa que falou com ele.'},
+  ef:{npc:d=>({nome:'Ezra', opiniao:1, memoria:d.flags.passou_pelo_ezra_em_casa
+        ? 'Te viu passar pela pedra da saída da cidade de vocês e não teve coragem de chamar. Em Viridian você foi a primeira pessoa que falou com ele.'
+        : 'Esperou numa pedra na Rota 1 desde as seis da manhã. Você foi a primeira pessoa que falou com ele.'}),
       registrar:'Conheceu Ezra no Centro Pokémon de Viridian.'},
   escolhas:[
     {texto:'"Sou. Quer lutar?"', vai:'c2_batalha_teo'},
@@ -58240,6 +58403,37 @@ c2_teo:{
     {texto:'"Tô com pressa." E sair.', vai:'c2_recusa',
      ef:{npc:{nome:'Ezra', opiniao:-1, memoria:'Você recusou a primeira batalha dele.'}}},
     {texto:'"Por que você tava esperando numa pedra?"', vai:'c2_pergunta_pedra'}
+  ]
+},
+
+/* Quem conheceu o Ezra na pedra da saída de casa (c1_ezra_pedra) chega
+   e ele está aqui: o desvio de c2_teo manda pra cá. Quem combinou de
+   se ver em Viridian é esperado; quem saiu com pressa é encontrado. */
+c2_teo_reencontro:{
+  falante:'Ezra',
+  vozes:['N','P','N','N','N'],
+  texto:[
+    d=>Historia.jaAconteceu('c2_provocou')
+      ? 'Ele senta no degrau de cima e bate no degrau do lado, pra você sentar também.'
+      : 'É o Ezra, da pedra. A mesma roupa nova demais, agora com poeira de estrada na barra da calça.',
+    d=>d.flags.ezra_te_espera_em_viridian ? '"Você veio." Ele fala como quem confere uma conta.' : '"Ah. Você." Ele fala sem saber se fica contente.',
+    d=>d.flags.ezra_te_espera_em_viridian ? '"Eu disse que vinha."' : '"Você também veio pra cá?"',
+    d=>d.flags.ezra_te_espera_em_viridian
+      ? '"Todo mundo diz." Ele ri, sem graça. "Eu tô nessa escada desde as seis da manhã. Contei quarenta e uma pessoas entrando. Nenhuma era você."'
+      : '"Todo mundo que sai de lá passa por aqui." Ele dá de ombros. "Eu tô nessa escada desde as seis da manhã. Não tava esperando ninguém. Tava esperando alguém."',
+    'A mão dele está em cima da Pokébola de novo. Não é ameaça — é ansiedade.',
+    d=>d.flags.ezra_te_espera_em_viridian ? '"E agora? A gente luta?"' : '"Quer lutar? Pra ver se valeu a pressa."'
+  ],
+  ef:{npc:d=>({nome:'Ezra', opiniao:1, memoria:d.flags.ezra_te_espera_em_viridian
+        ? 'Te esperou na escada do Centro de Viridian desde as seis da manhã, como tinha combinado na pedra.'
+        : 'Estava na escada do Centro de Viridian quando você chegou, sem ter combinado nada.'}),
+      registrar:'Reencontrou Ezra no Centro Pokémon de Viridian.'},
+  escolhas:[
+    {texto:'"Agora. Bora."', vai:'c2_batalha_teo'},
+    {texto:'Sentar na escada com ele antes.', vai:'c2_conversa'},
+    {texto:'"Tô com pressa." E sair.', vai:'c2_recusa',
+     ef:{npc:{nome:'Ezra', opiniao:-1, memoria:'Você chegou em Viridian e não quis a luta que ele esperou o dia inteiro.'}}},
+    {texto:'"Por que você tava esperando numa pedra?"', vai:'c2_pergunta_pedra', cond:d=>!d.flags.teo_abriu_o_jogo}
   ]
 },
 
@@ -58309,7 +58503,7 @@ c2_conversa:{
     fala('Ezra', 'Agora a gente luta?', null, 'Ele pergunta, e é impossível dizer não.')
   ],
   ef:{rep:{eixo:'bom',delta:1,motivo:'Sentou e ouviu um estranho por quarenta minutos'},
-      npc:{nome:'Ezra', opiniao:4, memoria:'Vocês sentaram na escada do Centro de Viridian e conversaram quarenta minutos no dia em que se conheceram.'},
+      npc:d=>({nome:'Ezra', opiniao:4, memoria:`Vocês sentaram na escada do Centro de Viridian e conversaram quarenta minutos${d.flags.falou_com_ezra_em_casa ? '' : ' no dia em que se conheceram'}.`}),
       flag:'teo_amigo', moral:5},
   escolhas:[{texto:'Lutar.', vai:'c2_batalha_teo'}]
 },
@@ -136530,6 +136724,7 @@ const UI = {
       <div class="linha"><span class="k">Arco</span><span class="v">recalculado a cada encontro, pelo que você fez: a opinião dele, a sua reputação, o lado em que você está e o placar · o arco muda as falas, o time, o nível e a moral</span></div>
       <div class="linha"><span class="k">Ezra</span><span class="v">Parceiro (opinião 5+) · Rival · Ressentido (opinião −2 ou menos) · Perseguidor (reputação ruim 5, duas mortes, rede de Celadon ou Comissão; time contra o seu, +5 níveis) · Quebrado (perdeu 4+ e foi maltratado, −3 níveis)</span></div>
       <div class="linha"><span class="k">Pico</span><span class="v">o parceiro do Ezra é sorteado no começo, pela mesma tabela do inicial aleatório (1d6 de coluna, 1d6 de linha, da sua cidade), nunca da sua espécie · é o último e o mais forte do time dele, e evolui com o nível</span></div>
+      <div class="linha"><span class="k">Onde o Ezra aparece</span><span class="v">ele é da sua cidade · quem nasceu em Pallet ou Viridian conhece ele no Centro de Viridian · o resto, na saída da própria cidade, no fim do primeiro capítulo, e reencontra ele em Viridian</span></div>
       <div class="linha"><span class="k">Lior</span><span class="v">Teimoso · Inspirado (opinião 6+ ou reputação boa 3+; fósseis no time, +1 nível) · Desconfiado (lado Rocket, Mercenário ou Foragido, ou reputação ruim 3+; +2) · Cansado (perdeu 3 sem ganhar nenhuma; −2)</span></div>
       <div class="linha"><span class="k">Nolan</span><span class="v">Orgulhoso · Esperança (ajudou com a carta da mãe, ou opinião 8+) · Vendedor (lado Rocket, Mercenário ou Foragido, ou reputação ruim 3+; +2)</span></div>
       <div class="linha"><span class="k">Rory</span><span class="v">pelo que você fez no corredor do Anne: Devedor (deu o prêmio) · Quase (deu cinco mil) · Companhia (perdeu e ficou com ele) · Ressentido (o resto; time venenoso, +3)</span></div>

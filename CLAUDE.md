@@ -1599,6 +1599,22 @@ do bicho usa a marca `{pico}` (a espécie de agora, resolvida em
 `concordaJogador`), nunca "Pidgey" escrito à mão, e o jeito dele (criado
 em casa, olha pro Ezra antes de cada golpe) serve a qualquer espécie.
 
+## A estreia do Ezra
+O Ezra é da sua cidade (o Pico sai da tabela dela; no 17 ele vem de
+ônibus de lá), então ele **estreia onde você nasceu**. Quem nasceu em
+Pallet ou em Viridian divide a Rota 1 com ele, e Pallet não tem Centro:
+o encontro continua no capítulo 2, na escada do Centro de Viridian, com
+a pedra da Rota 1. O resto vê o Ezra na placa da saída da cidade, no fim
+do capítulo 1, sentado numa pedra (`ezraEstreiaEmCasa`, em `rival.js`;
+cenas `c1_ezra_*`). Falar com ele marca `falou_com_ezra_em_casa`, e no
+capítulo 2 o desvio de `c2_teo` leva ao reencontro (`c2_teo_reencontro`,
+esperado se ele combinou de te esperar, `ezra_te_espera_em_viridian`);
+passar reto marca `passou_pelo_ezra_em_casa`, e em Viridian ele conta
+que te viu. A luta continua sendo em Viridian. Texto que cita onde vocês
+se conheceram usa `pedraDoEzra(d)` ("na Rota 1" ou "na saída de
+Vermilion"), nunca "Rota 1" escrito à mão, e opção que leva até ele na
+escada passa por `c2_escada` (o nome dele pra quem já sabe).
+
 ## Os rivais extras e a Diana
 Os rivais que não são o Ezra moram em `RIVAIS_EXTRA` (`js/story/rival.js`):
 nascem de uma escolha sua (`gatilho`, lido no fim de cada capítulo por
