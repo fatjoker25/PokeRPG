@@ -883,6 +883,225 @@ def bolsa(mat):
     return t
 
 
+# ---------- as bolsas da loja: cada uma com o desenho do que ela é ----------
+def mochila_escolar(mat='azul'):
+    """o alto arredondado, o bolso grande da frente com zíper e dois puxadores"""
+    t = Tela()
+    t.bastao(12, 4.5, 18, 4.5, 2.2, mat, redondo=True)                          # a alça de mão
+    t.poli([(6, 26), (6, 13), (7, 10), (9, 8), (12, 6.6), (18, 6.6), (21, 8), (23, 10), (24, 13), (24, 26)], mat, grad=0.6)
+    t.linha(8, 11, 22, 11, M[mat][3])                                             # o zíper de cima
+    t.poli([(8, 17), (22, 17), (22, 24), (21, 25), (9, 25), (8, 24)], mat, fixo=2, borda=True)  # o bolso
+    t.linha(9, 19, 21, 19, M['aco'][1])
+    t.pontos([(12, 20), (12, 21), (18, 20), (18, 21)], M['aco'][0])              # os puxadores
+    t.ret(10, 13, 13, 14, 'branco', fixo=1)                                       # a etiqueta do nome
+    return t
+
+
+def mochila_sinalizacao(mat='vermelho'):
+    """duas faixas refletivas de lado a lado e a alça de fita em cima"""
+    t = Tela()
+    t.bastao(11, 4.5, 19, 4.5, 2.2, 'preto', redondo=True)                       # a alça de fita
+    t.poli([(9, 6), (21, 6), (23, 8.5), (23, 27), (7, 27), (7, 8.5)], mat, grad=0.6)
+    t.linha(9, 9, 21, 9, M[mat][3])                                               # o zíper
+    t.pontos([(20, 10), (20, 11)], M['aco'][1])
+    t.ret(7, 13, 23, 14, 'prata', fixo=1)                                         # as faixas refletivas
+    t.ret(7, 20, 23, 21, 'prata', fixo=1)
+    t.linha(7, 14, 23, 14, M['prata'][2])
+    t.linha(7, 21, 23, 21, M['prata'][2])
+    t.linha(9, 24, 21, 24, M[mat][3])                                             # a costura do fundo
+    return t
+
+
+def mochila_resgate(mat='laranja'):
+    """o zíper em U que abre com uma mão, a argola de puxar e a faixa amarela"""
+    t = Tela()
+    t.bastao(11, 4.5, 19, 4.5, 2.4, 'preto', redondo=True)                       # a alça
+    t.poli([(8, 6), (22, 6), (24, 9), (24, 27), (6, 27), (6, 9)], mat, grad=0.6)
+    for x in range(9, 22, 2):                                                     # o zíper em U, os dentes
+        t.ponto(x, 9, M[mat][3])
+    for y in range(10, 21, 2):
+        t.ponto(8, y, M[mat][3])
+        t.ponto(22, y, M[mat][3])
+    t.linha(8, 21, 22, 21, M[mat][3])
+    t.ret(13, 9, 17, 13, 'preto', fixo=1)                                         # a argola de puxar
+    t.ret(14, 10, 16, 12, mat, fixo=2)
+    t.ret(6, 23, 24, 25, 'amarelo', fixo=1)                                       # a faixa de brigada
+    t.linha(6, 25, 24, 25, M['amarelo'][2])
+    return t
+
+
+def mochila_acampamento(mat='verde'):
+    """o isolante enrolado em cima, preso por duas tiras, e o cantil do lado"""
+    t = Tela()
+    t.poli([(8, 9), (22, 9), (23, 27), (7, 27)], mat, grad=0.6)
+    t.poli([(8, 9), (22, 9), (22, 15), (8, 15)], mat, fixo=1)                    # a aba
+    t.linha(8, 15, 22, 15, M[mat][3])
+    t.ret(14, 14, 16, 17, 'aco', fixo=2)                                          # a fivela
+    t.bastao(5, 6.5, 25, 6.5, 5, 'lona', redondo=True)                           # o isolante enrolado
+    t.elipse(24.2, 6.5, 1.4, 2.4, 'lona_esc', fixo=2)                             # a ponta do rolo
+    t.ret(10, 4, 11, 9, 'preto', fixo=2)                                          # as tiras
+    t.ret(19, 4, 20, 9, 'preto', fixo=2)
+    t.ret(3, 17, 7, 26, 'oliva', grad=0.4)                                        # o bolso do cantil
+    t.ret(4, 15, 6, 16, 'aco', fixo=1)                                            # a tampa do cantil
+    t.ret(10, 19, 20, 24, mat, fixo=2, borda=True)                                # o bolso da frente
+    return t
+
+
+def mochila_estrada(mat='amarelo'):
+    """a aba com a faixa refletiva e duas tiras de compressão com fivela"""
+    t = Tela()
+    t.bastao(11, 5, 19, 5, 2.4, mat, redondo=True)
+    t.poli([(7, 7), (23, 7), (24, 27), (6, 27)], mat, grad=0.6)
+    t.poli([(7, 7), (23, 7), (23, 15), (15, 16), (7, 15)], mat, fixo=1)          # a aba
+    t.linha(7, 15, 15, 16, M[mat][3])
+    t.linha(15, 16, 23, 15, M[mat][3])
+    t.ret(7, 10, 23, 11, 'prata', fixo=1)                                         # a faixa refletiva
+    t.ret(10, 12, 11, 26, 'preto', fixo=2)                                        # as tiras
+    t.ret(19, 12, 20, 26, 'preto', fixo=2)
+    t.ret(9, 20, 12, 21, 'aco', fixo=1)                                           # as fivelas
+    t.ret(18, 20, 21, 21, 'aco', fixo=1)
+    return t
+
+
+def mochila_carga(mat='marrom'):
+    """a armação de metal por fora, duas correias e a fivela de latão"""
+    t = Tela()
+    t.bastao(6, 3, 6, 27, 1.6, 'aco')                                            # a armação
+    t.bastao(24, 3, 24, 27, 1.6, 'aco')
+    t.bastao(6, 3.5, 24, 3.5, 1.6, 'aco')
+    t.poli([(7, 6), (23, 6), (23, 26), (7, 26)], mat, grad=0.6)
+    t.poli([(7, 6), (23, 6), (23, 11), (7, 11)], mat, fixo=1)                    # a aba
+    t.linha(7, 11, 23, 11, M[mat][3])
+    for x in (10, 19):                                                           # as correias
+        t.ret(x, 8, x + 1, 23, 'lona_esc', fixo=2)
+        t.ret(x - 1, 15, x + 2, 17, 'dourado', fixo=1)                           # a fivela de latão
+        t.ponto(x, 16, M['dourado'][3])
+    t.ret(8, 22, 22, 25, 'lona_esc', fixo=1)                                      # o fundo reforçado
+    return t
+
+
+def mochila_sem_marca(mat='preto'):
+    """lisa: a alça reforçada, as alças de ombro dos lados, um zíper só"""
+    t = Tela()
+    t.bastao(12, 4.5, 18, 4.5, 3.0, mat, redondo=True)                          # a alça reforçada
+    t.poli([(5, 10), (8, 8), (8, 25), (5, 27)], mat, fixo=3)                     # as alças de ombro
+    t.poli([(25, 10), (22, 8), (22, 25), (25, 27)], mat, fixo=3)
+    t.poli([(6, 26), (6, 12), (8, 8.5), (11, 6.5), (19, 6.5), (22, 8.5), (24, 12), (24, 26)], mat, grad=0.6)
+    t.linha(9, 11, 21, 11, M['aco'][2])                                           # o zíper
+    t.ponto(20, 12, M['aco'][1])
+    t.linha(8, 25, 22, 25, M[mat][3])
+    t.pontos([(9, 14), (9, 15), (9, 19), (9, 20)], M[mat][1])                    # a lona encerada brilha
+    return t
+
+
+def bolsa_festa(mat='dourado'):
+    """a corrente de alça, o fecho de beijo e a ferragem pesada"""
+    t = Tela()
+    for i in range(13):                                                          # a corrente
+        a = math.pi * i / 12
+        x, y = 15 - 6.5 * math.cos(a), 12 - 8 * math.sin(a)
+        t.ponto(int(round(x)), int(round(y)), M[mat][1] if i % 2 else M[mat][3])
+    t.poli([(9, 13), (21, 13), (25, 26), (5, 26)], mat, grad=0.6)
+    t.bastao(7.5, 13.5, 22.5, 13.5, 2.2, mat)                                    # a ferragem de cima
+    t.elipse(13.6, 11.6, 1.3, 1.3, mat)                                           # o fecho de beijo
+    t.elipse(16.4, 11.6, 1.3, 1.3, mat)
+    t.pontos([(8, 23), (12, 23), (18, 23), (22, 23)], M['prata'][0])             # as tachas
+    t.linha(7, 21, 23, 21, M[mat][3])
+    return t
+
+
+def bolsa_termica(mat='prata'):
+    """caixa acolchoada em losango, a tampa de zíper e a alça curta"""
+    t = Tela()
+    t.bastao(10, 5.5, 20, 5.5, 2.4, 'cinza', redondo=True)                       # a alça
+    t.ret(10, 6, 11, 10, 'cinza', fixo=2)
+    t.ret(19, 6, 20, 10, 'cinza', fixo=2)
+    t.ret(5, 10, 25, 27, mat, grad=0.5)
+    t.ret(5, 10, 25, 12, mat, fixo=1)                                            # a tampa
+    t.linha(6, 12, 24, 12, M['aco'][3])                                           # o zíper
+    for k in range(-16, 24, 5):                                                   # o acolchoado
+        for x in range(6, 25):
+            for y in (x + k, -x + k + 30):
+                if 14 <= y <= 26:
+                    t.ponto(x, y, M[mat][3] if (x + y) % 2 else M[mat][2])
+    return t
+
+
+def bolsa_algodao(mat='branco'):
+    """sacola de algodão cru: duas alças compridas e a dobra da boca"""
+    t = Tela()
+    for x0, x1 in ((8, 13), (17, 22)):                                           # as alças
+        t.bastao(x0, 13, x0 + 1.5, 4.5, 1.6, 'lona')
+        t.bastao(x0 + 1.5, 4.5, x1 - 1.5, 4.5, 1.6, 'lona')
+        t.bastao(x1 - 1.5, 4.5, x1, 13, 1.6, 'lona')
+    t.poli([(6, 12), (24, 12), (25, 27), (5, 27)], mat, grad=0.6)
+    t.ret(6, 12, 24, 14, mat, fixo=2)                                             # a dobra da boca
+    t.linha(6, 14, 24, 14, M[mat][3])
+    t.pontos([(9, 19), (14, 22), (20, 18), (11, 25), (21, 24)], M['lona'][1])    # a sujeira do primeiro dia
+    return t
+
+
+def bolsa_discreta(mat='cinza'):
+    """transversal: a tira que atravessa, a aba curta e o botão de pressão"""
+    t = Tela()
+    t.bastao(3, 3, 22, 13, 1.8, 'preto')                                          # a tira transversal
+    t.poli([(9, 12), (23, 12), (23, 27), (9, 27)], mat, grad=0.6)
+    t.poli([(9, 12), (23, 12), (23, 19), (16, 20), (9, 19)], mat, fixo=1)        # a aba
+    t.linha(9, 19, 16, 20, M[mat][3])
+    t.linha(16, 20, 23, 19, M[mat][3])
+    t.elipse(16, 18, 1.2, 1.2, 'aco')                                             # o botão de pressão
+    t.linha(11, 24, 21, 24, M['aco'][2])                                          # o zíper do forro
+    return t
+
+
+def bolsa_vitrine(mat='rosa'):
+    """bolsa de mão: a alça redonda, o laço e a costura à mostra"""
+    t = Tela()
+    t.elipse(15, 11, 6, 6.5, mat)                                                 # a alça redonda
+    t.furo(15, 11.3, 3.8, 4.4)
+    t.poli([(7, 13), (23, 13), (25, 24), (23, 27), (7, 27), (5, 24)], mat, grad=0.6)
+    for x in range(7, 24, 2):                                                     # a costura
+        t.ponto(x, 15, M['branco'][1])
+        t.ponto(x, 25, M['branco'][1])
+    for y in range(17, 25, 2):
+        t.ponto(7, y, M['branco'][1])
+        t.ponto(23, y, M['branco'][1])
+    t.poli([(11, 17), (15, 19.5), (11, 22)], mat, fixo=3)                        # o laço
+    t.poli([(19, 17), (15, 19.5), (19, 22)], mat, fixo=3)
+    t.elipse(15, 19.5, 1.3, 1.3, mat, fixo=1)
+    return t
+
+
+def bolsa_acetinada(mat='roxo'):
+    """saco de cetim de cordão: a boca franzida, os cordões e o brilho"""
+    t = Tela()
+    t.linha(13, 9, 8, 3, M['dourado'][2])                                         # os cordões
+    t.linha(17, 9, 22, 3, M['dourado'][2])
+    t.elipse(8, 3, 1.2, 1.2, 'dourado')
+    t.elipse(22, 3, 1.2, 1.2, 'dourado')
+    t.poli([(10, 12), (20, 12), (24, 18), (24, 24), (21, 27), (9, 27), (6, 24), (6, 18)], mat, grad=0.6)
+    t.ret(12, 8, 18, 12, mat, fixo=2)                                             # a boca franzida
+    for x in (13, 15, 17):
+        t.linha(x, 8, x, 12, M[mat][3])
+    t.linha(11, 12, 19, 12, M['dourado'][2])
+    for i in range(5):                                                            # o brilho do cetim
+        t.ponto(9 + i, 21 - i, M[mat][0])
+        t.ponto(10 + i, 21 - i, M[mat][1])
+    return t
+
+
+# a bolsa da loja → o desenho dela; a cor de cada uma é a da ficha
+BOLSAS_DA_LOJA = {
+    'mochila_escolar': mochila_escolar, 'mochila_sinalizacao': mochila_sinalizacao,
+    'mochila_resgate': mochila_resgate, 'mochila_acampamento': mochila_acampamento,
+    'mochila_estrada': mochila_estrada, 'mochila_carga': mochila_carga,
+    'mochila_sem_marca': mochila_sem_marca, 'bolsa_festa': bolsa_festa,
+    'bolsa_termica': bolsa_termica, 'bolsa_algodao': bolsa_algodao,
+    'bolsa_discreta': bolsa_discreta, 'bolsa_vitrine': bolsa_vitrine,
+    'bolsa_acetinada': bolsa_acetinada,
+}
+
+
 # o nome do arquivo e quem desenha; o mapa nome → arquivo mora no JS
 DESENHOS = {
     'machado': machado, 'picareta': picareta, 'lanterna': lanterna, 'pilha': pilha,
@@ -906,6 +1125,7 @@ CORES_DE_MOCHILA = {'bege': 'lona', 'preta': 'preto', 'vermelha': 'vermelho', 'a
 for nome, mat in CORES_DE_MOCHILA.items():
     DESENHOS['mochila_' + nome] = (lambda m: lambda: mochila(m))(mat)
     DESENHOS['bolsa_' + nome] = (lambda m: lambda: bolsa(m))(mat)
+DESENHOS.update(BOLSAS_DA_LOJA)
 
 
 def main():

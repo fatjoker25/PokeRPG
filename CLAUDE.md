@@ -378,10 +378,18 @@ nome que muda entra no `ITEM_NOVO` do `Estado.abrir`.
 mochila azul na frente. A bolsa tem nome do que ela é (Mochila
 escolar, Mochila de resgate, Bolsa de festa) e a cor mora na ficha
 (`cor` em `BOLSAS_VENDIDAS`, lida por `nomeDaCorDaMochila`); a de casa
-é só "Mochila", com a cor da inscrição. Item de história cuja cor o
+é só "Mochila", com a cor da inscrição. E cada bolsa da loja tem o
+**desenho dela**, do que o nome e a descrição dizem (`BOLSAS_DA_LOJA`
+no gerador, mapa em `ITEM_PIXEL`): a escolar de alto arredondado e
+bolso, a de acampamento com o isolante enrolado e o cantil, a de carga
+com a armação de metal, a térmica acolchoada, a de algodão de sacola, a
+de festa com a corrente. Eram treze no mesmo desenho, só trocando a cor;
+o desenho de cada cor (`mochila_azul`, `bolsa_verde`) ficou pra de casa,
+pra da descrição e pra de história. Item de história cuja cor o
 desenho mostra também fica sem ela: o Crachá da Limptotal tem o
 crachá verde (`cracha_verde`), o Caderno do Rook o caderno azul. O
-`chk-icones` reprova desenho de cor com a cor no nome. Cor que o
+`chk-icones` reprova desenho de cor com a cor no nome e duas bolsas da
+loja no mesmo desenho. Cor que o
 desenho não mostra continua no nome quando diz o que a coisa é (a via
 amarela é a cópia do formulário; a caminhonete branca é o carro).
 
@@ -425,8 +433,8 @@ Platinum, PokéNav de Ruby/Sapphire/Emerald — do acervo da Bulbapedia.
 
 A **mochila aberta** (`UI.modalItens`, `.modal.mochila-cheia`) é a dos
 jogos de hoje: no alto, o desenho em pixel da bolsa que você carrega
-(`desenhoDaBolsa`, pela cor de `mochilaAtual().corNome`), o nome e
-o zíper; embaixo, os bolsos (coluna no computador, faixa no celular),
+(`desenhoDaBolsa`: a da loja com o desenho dela, a de casa pela cor
+de `mochilaAtual().corNome`), o nome e o zíper; embaixo, os bolsos (coluna no computador, faixa no celular),
 a lista do bolso e a **ficha do item tocado** (`fichaMochila`): o ícone
 grande no pedestal, a categoria, quantos tem, o desgaste, a conta, a
 descrição e os botões do que dá pra fazer (Usar, Ensinar, Dar pra

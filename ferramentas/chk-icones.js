@@ -23,7 +23,10 @@
 
    E o nome não diz a cor que o desenho já mostra: era "Mochila Azul"
    com a mochila azul na frente. Desenho de cor (mochila_azul,
-   cracha_verde, caderno_azul) com a cor também no nome reprova. */
+   cracha_verde, caderno_azul) com a cor também no nome reprova.
+
+   E cada bolsa da loja tem o desenho dela: eram treze com o mesmo
+   desenho, só trocando a cor. Duas bolsas no mesmo desenho reprova. */
 const fs = require('fs'), vm = require('vm'), path = require('path');
 const raiz = path.join(__dirname, '..');
 const html = fs.readFileSync(path.join(raiz, 'index.html'), 'utf8');
@@ -78,9 +81,16 @@ for (const [n, onde] of [...nomes].sort((a, b) => a[0].localeCompare(b[0]))){
 console.log(`${nomes.size} itens: ${conta.jogo} com a arte dos jogos, ${conta.tm} discos de TM, ${conta.desenho} com desenho nosso, ${conta.bolsa} mochilas e bolsas`);
 const falhas = [];
 if (inventados.length) falhas.push(`item de segurar que não é dos jogos (sem ícone em ITEM_SPRITE) (${inventados.length}):\n   ` + inventados.join('\n   '));
+const desenhoDeBolsa = new Map();
+for (const [n, i] of Object.entries(ITENS_INFO)) if (i.tipo === 'bolsa'){
+  const a = arquivoDoDesenho(n);
+  desenhoDeBolsa.set(a, (desenhoDeBolsa.get(a) || []).concat(n));
+}
+const bolsasIguais = [...desenhoDeBolsa].filter(([, ns]) => ns.length > 1).map(([a, ns]) => `${a}: ${ns.join(', ')}`);
+if (bolsasIguais.length) falhas.push(`bolsas da loja com o mesmo desenho (${bolsasIguais.length}):\n   ` + bolsasIguais.join('\n   '));
 if (corRepetida.length) falhas.push(`o nome diz a cor que o desenho já mostra (${corRepetida.length}):\n   ` + corRepetida.join('\n   '));
 if (seguraFantasma.length) falhas.push(`luta ou cena segura item que não é de segurar (${seguraFantasma.length}):\n   ` + seguraFantasma.join('\n   '));
 if (noPacote.length) falhas.push(`caem no desenho genérico de pacote (${noPacote.length}):\n   ` + noPacote.join('\n   '));
 if (semArquivo.length) falhas.push(`apontam pra arquivo que não existe (${semArquivo.length}):\n   ` + semArquivo.join('\n   '));
 if (falhas.length){ console.log('\nFALHAS:\n' + falhas.join('\n\n')); process.exit(1); }
-console.log('ok — nenhum item cai no pacote, todo arquivo apontado existe, todo item de segurar é dos jogos e nenhum nome repete a cor do desenho');
+console.log('ok — nenhum item cai no pacote, todo arquivo apontado existe, todo item de segurar é dos jogos, nenhum nome repete a cor do desenho e cada bolsa da loja tem o seu desenho');
