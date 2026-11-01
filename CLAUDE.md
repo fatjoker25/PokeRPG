@@ -367,10 +367,19 @@ esquerda, três tons e o brilho —, gerado por `python3
 ferramentas/desenhar-itens.py` em `sprites_nds/items/nossos/` (com
 `--folha f.png` sai a folha ampliada ao lado de ícones dos jogos). O
 mapa nome → arquivo é `ITEM_PIXEL` (`js/data/icones.js`); mochila e
-bolsa saem pela cor (`CORES_DE_MOCHILA`), e o papel de enredo pelo tipo
-(bilhete, foto, mapa, caixa, chave, medalha, pacote), em `desenhoDoItem`. Item
-novo sem equivalente entra no gerador e no `ITEM_PIXEL`; o
-`chk-sprites` confere que todo arquivo apontado existe. Antes eram
+bolsa saem pela cor (`CORES_DE_MOCHILA`), e o que a história te dá sai
+pelo que a coisa é (`arquivoDoDesenho`: papel, caderno, jornal,
+envelope, pasta, prancheta, crachá, chave, foto, mapa, etiqueta, rádio,
+medidor, apito, binóculo, pena, placa, fita, lata, luva, garrafa, pote,
+muda, rede, lanche, pipoca, sacola, taça…), em `desenhoDoItem`. O
+`pacote` é a sobra: já foram 61 itens ali, apito, binóculo, rádio e a
+Poké Ball velha com cara de caixa de papelão, e o
+`ferramentas/chk-icones.js` reprova item que cai nele. Papel de
+enredo que é a coisa dos jogos vai pelo `ITEM_SPRITE`: a Pena Arco-Íris
+é a Rainbow Wing de HG/SS, e a Poké Ball velha é a Poké Ball. Item
+novo sem equivalente entra no gerador e no `ITEM_PIXEL` (ou numa regra
+do `arquivoDoDesenho`); o `chk-sprites` confere que todo arquivo
+apontado existe. Antes eram
 vetores chapados e destoavam dos ícones dos jogos do lado. Lugares,
 ações e opções do Centro usam os ícones de traço do mesmo arquivo
 (`svgIcone`, `iconeDoAfazer`): afazer novo com id novo entra lá.

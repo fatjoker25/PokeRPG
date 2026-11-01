@@ -175,13 +175,17 @@ function imgSpriteDex(dexId, vista, opcoes){
    equivalente exato nos jogos — Resto de Ração é Leftovers porque a
    ficha é a mesma (7% do HP por turno), Faixa Firme é Focus Band
    porque sobrevive com 1 HP. Ferramenta que só existe aqui (Machado,
-   Picareta, Lanterna, Bandagem…) e papel de enredo ficam sem ícone:
-   inventar arte pra eles seria pior que deixar o espaço vazio.
+   Picareta, Lanterna, Bandagem…) e o que a história te dá ganham
+   desenho em pixel no jeito destes (js/data/icones.js,
+   ferramentas/desenhar-itens.py).
    ============================================================ */
 const ITENS_PASTA = 'items/';
 const ITEM_SPRITE = {
   /* bolas */
   'Poké Ball':'pokeball', 'Great Ball':'greatball',
+  /* papel de enredo que é a coisa dos jogos: a Pokébola velha do 13 e a
+     pena do Ho-Oh no 16 (a Rainbow Wing de HG/SS) */
+  'Poké Ball velha e arranhada':'pokeball', 'Pena Arco-Íris':'rainbow_wing',
   'Ultra Ball':'ultraball', 'Master Ball':'masterball',
   /* cura */
   'Potion':'potion', 'Super Potion':'super_potion', 'Hyper Potion':'hyper_potion',

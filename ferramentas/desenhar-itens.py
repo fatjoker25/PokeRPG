@@ -537,6 +537,295 @@ def medalha():
     return t
 
 
+# ----------------------------------------------------------------------
+#  o que as cenas te dão e não é papel: crachá, aparelho, objeto, comida
+# ----------------------------------------------------------------------
+def cracha():
+    t = Tela()
+    t.ret(7, 7, 22, 27, 'branco', grad=0.3)                                       # o cartão
+    t.ret(7, 7, 22, 11, 'azul', fixo=1)                                           # a faixa de cima
+    t.ret(12, 2, 17, 7, 'aco', fixo=1)                                            # o prendedor
+    t.ret(13, 3, 16, 4, 'aco', fixo=3)
+    t.ret(9, 13, 14, 20, 'cinza', fixo=0)                                         # a foto
+    t.elipse(11.5, 15.4, 1.6, 1.7, 'pele', fixo=1)
+    t.poli([(9.2, 20.5), (10, 17.8), (13, 17.8), (13.8, 20.5)], 'azul', fixo=2)
+    for y in (14, 16, 18):
+        t.linha(16, y, 20, y, M['cinza'][2])
+    t.linha(9, 23, 20, 23, M['cinza'][2])
+    t.linha(9, 25, 16, 25, M['cinza'][1])
+    return t
+
+
+def prancheta():
+    t = Tela()
+    t.ret(6, 5, 23, 28, 'marrom', grad=0.4)                                       # a tábua
+    t.ret(8, 8, 21, 26, 'papel', grad=0.2)                                        # a folha
+    for y in (12, 15, 18, 21):
+        t.linha(10, y, 19 if y < 21 else 15, y, M['cinza'][2])
+    t.ret(11, 3, 18, 8, 'aco', fixo=1)                                            # o prendedor
+    t.ret(13, 4, 16, 5, 'aco', fixo=3)
+    return t
+
+
+def pasta():
+    t = Tela()
+    t.poli([(5, 3), (12, 3), (14, 5), (25, 5), (25, 27), (5, 27)], 'papelao', fixo=2)    # o fundo, com a aba
+    t.ret(7, 6, 23, 12, 'papel', fixo=1)                                          # as folhas
+    t.linha(9, 8, 20, 8, M['cinza'][2])
+    t.poli([(4, 10), (26, 13), (26, 28), (4, 28)], 'lona', grad=0.5)              # a frente
+    t.ret(9, 17, 19, 20, 'branco', fixo=0)                                        # a etiqueta
+    t.linha(10, 18, 17, 18, M['cinza'][2])
+    return t
+
+
+def jornal():
+    t = Tela()
+    t.poli([(4, 7), (24, 4), (26, 23), (6, 26)], 'papel', grad=0.3)
+    t.poli([(6.5, 8), (23, 5.6), (23.4, 9), (7, 11.4)], 'preto', fixo=2)          # a manchete
+    t.poli([(7.4, 13), (13.6, 12.1), (14.4, 18.6), (8.1, 19.6)], 'cinza', fixo=1) # a foto
+    for i, y in enumerate((13, 15, 17, 19)):
+        t.linha(16, y - 1, 23, y - 2, M['cinza'][2])
+    t.linha(9, 22, 23, 20, M['cinza'][2])
+    t.linha(15, 5, 16, 24, M['papel'][3])                                         # a dobra
+    return t
+
+
+def envelope():
+    t = Tela()
+    t.ret(3, 8, 26, 23, 'papel', grad=0.3)
+    c = M['papel'][3]
+    t.linha(3, 8, 14, 17, c)
+    t.linha(26, 8, 15, 17, c)
+    t.linha(3, 23, 11, 16, c)
+    t.linha(26, 23, 18, 16, c)
+    t.elipse(14.6, 17, 2.4, 2.2, 'vermelho')                                      # o lacre
+    t.ret(20, 10, 23, 13, 'azul', fixo=1)                                         # o selo
+    return t
+
+
+def anilha():
+    t = Tela()
+    t.elipse(11, 11, 7, 7, 'aco')
+    t.furo(11, 11, 4.2, 4.2)                                                      # o anel
+    t.bastao(15, 15, 18, 18, 2.2, 'aco', fixo=2)
+    t.poli([(16, 16), (26, 16), (26, 26), (16, 26)], 'amarelo', grad=0.4)         # a plaqueta
+    t.furo(18.6, 18.6, 1.1, 1.1)
+    for y in (21, 23):
+        t.linha(19, y, 24, y, M['amarelo'][3])
+    return t
+
+
+def apito():
+    t = Tela()
+    t.elipse(9, 9, 4.2, 4.2, 'vermelho')                                          # a argola do cordão
+    t.furo(9, 9, 2.2, 2.2)
+    t.bastao(12, 12, 15, 15, 2, 'vermelho', fixo=2)
+    t.elipse(18, 19, 7.5, 6.5, 'aco')                                             # o corpo
+    t.ret(4, 17, 12, 21, 'aco', fixo=1)                                           # o bocal
+    t.ret(4, 18, 8, 20, 'aco', fixo=2)
+    t.ret(15, 13, 18, 15, 'preto', fixo=3)                                        # a fenda
+    t.ponto(16, 16, B)
+    return t
+
+
+def binoculo():
+    t = Tela()
+    for x in (9, 21):
+        t.bastao(x, 6, x, 22, 8, 'preto', redondo=True)                          # os canos
+        t.elipse(x, 23, 3.4, 2, 'vidro', fixo=1)                                  # a lente
+        t.elipse(x, 6, 3, 1.4, 'cinza', fixo=2)
+    t.ret(12, 11, 18, 16, 'preto', fixo=2)                                        # a ponte
+    t.elipse(15, 13.5, 1.8, 1.8, 'cinza')
+    return t
+
+
+def placa(mat='aco'):
+    t = Tela()
+    t.ret(3, 8, 26, 21, mat, grad=0.4, borda=True)
+    esc = M[mat][3]
+    for x, y in ((5, 10), (24, 10), (5, 19), (24, 19)):
+        t.ponto(x, y, esc)                                                        # os parafusos
+    for y in (13, 16):
+        t.linha(8, y, 21, y, esc)
+    return t
+
+
+def fita():
+    t = Tela()
+    t.ret(3, 8, 26, 22, 'preto', grad=0.3)                                        # a fita cassete
+    t.ret(6, 10, 23, 14, 'branco', fixo=0)                                        # a etiqueta
+    t.linha(8, 12, 19, 12, M['cinza'][2])
+    for x in (10, 19):
+        t.elipse(x, 17.5, 2.6, 2.6, 'branco', fixo=1)
+        t.elipse(x, 17.5, 1.2, 1.2, 'preto', fixo=2)
+    t.ret(12, 20, 17, 22, 'cinza', fixo=2)
+    return t
+
+
+def rolo():
+    t = Tela()
+    t.elipse(15, 15, 10.5, 10.5, 'preto')                                        # a fita isolante
+    t.elipse(15, 15, 5, 5, 'papelao', modo='plano', fixo=1)                       # o tubo
+    t.furo(15, 15, 3.2, 3.2)
+    t.poli([(24, 18), (28, 19), (27, 23), (23, 22)], 'preto', fixo=1)             # a ponta solta
+    return t
+
+
+def garrafa():
+    t = Tela()
+    t.ret(12, 2, 17, 5, 'azul', fixo=1)                                           # a tampa
+    t.poli([(12, 6), (17, 6), (20, 11), (20, 27), (9, 27), (9, 11)], 'vidro', grad=0.3)
+    t.poli([(9.6, 15), (19.4, 15), (19.4, 26.5), (9.6, 26.5)], 'azul', fixo=1)   # a água
+    t.ret(9, 18, 19, 21, 'branco', fixo=0)                                        # o rótulo
+    t.linha(10, 8, 10, 13, B)
+    return t
+
+
+def pote():
+    t = Tela()
+    t.ret(8, 5, 21, 8, 'aco', grad=0.3)                                           # a tampa
+    t.ret(7, 9, 22, 27, 'vidro', grad=0.3)
+    t.ret(8, 15, 21, 26, 'oliva', fixo=1)                                         # a água verde do rio
+    t.pontos([(11, 19), (15, 21), (18, 18), (13, 24)], M['oliva'][3])
+    t.linha(9, 11, 9, 14, B)
+    return t
+
+
+def lata():
+    t = Tela()
+    t.ret(6, 9, 23, 27, 'vermelho', grad=0.5)                                     # o galão
+    t.poli([(8, 5), (17, 5), (17, 9), (8, 9)], 'vermelho', fixo=2)               # a alça
+    t.furo(12.5, 7, 2.6, 1.1)
+    t.bastao(20, 9, 24, 4, 2.6, 'aco')                                            # o bico
+    t.ret(9, 14, 20, 21, 'amarelo', fixo=1)                                       # o rótulo
+    t.linha(11, 17, 18, 17, M['amarelo'][3])
+    return t
+
+
+def luva():
+    t = Tela()
+    for x, topo in ((11, 6), (14, 4), (17, 4), (20, 6)):
+        t.bastao(x, 15, x, topo, 3.2, 'amarelo', redondo=True)                  # os dedos
+    t.bastao(9, 18, 5, 12, 3.4, 'amarelo', redondo=True)                         # o polegar
+    t.poli([(9, 13), (22, 13), (22, 24), (10, 24), (8, 19)], 'amarelo', grad=0.4)
+    t.ret(9, 23, 23, 28, 'laranja', grad=0.3)                                     # o punho
+    return t
+
+
+def medidor():
+    t = Tela()
+    t.ret(6, 3, 23, 27, 'amarelo', grad=0.4, borda=True)                          # o corpo
+    t.ret(8, 5, 21, 13, 'vidro', fixo=0)                                          # o visor
+    t.linha(9, 12, 20, 12, M['cinza'][2])
+    t.linha(11, 12, 19, 6, M['vermelho'][2])                                      # a agulha no fim da escala
+    t.elipse(14.5, 19, 3.6, 3.6, 'preto')                                         # o seletor
+    t.linha(14, 19, 14, 16, M['cinza'][0])
+    for x in (9, 20):
+        t.elipse(x, 25, 1.2, 1.2, 'preto', fixo=2)                                # as entradas
+    return t
+
+
+def muda():
+    t = Tela()
+    t.ret(8, 17, 21, 19, 'laranja', fixo=1)                                       # a borda do vaso
+    t.poli([(9, 19), (21, 19), (19, 28), (11, 28)], 'laranja', grad=0.5)
+    t.linha(15, 17, 15, 8, M['verde'][3])                                         # o caule
+    t.elipse(11, 13, 3.6, 1.9, 'verde')
+    t.elipse(19, 11, 3.6, 1.9, 'verde')
+    t.elipse(15, 6, 2.8, 2.8, 'branco')                                           # a flor branca
+    t.ponto(15, 6, M['amarelo'][1])
+    return t
+
+
+def rede():
+    t = Tela()
+    dentro = t.poli([(4, 9), (12, 5), (22, 7), (27, 14), (24, 25), (13, 27), (5, 21)], 'lona', grad=0.4)  # a rede embolada
+    esc = M['lona'][3]
+    for x, y in dentro:                                                           # a malha, em losango
+        if (x + y) % 5 == 0 or (x - y) % 5 == 0:
+            t.ponto(x, y, esc)
+    t.elipse(22, 21, 3, 3, 'vermelho')                                            # a boia
+    t.ponto(21, 20, B)
+    t.bastao(4, 9, 1, 5, 1.4, 'lona', fixo=2)                                     # a ponta cortada
+    return t
+
+
+def pena(mat='amarelo'):
+    t = Tela()
+    t.poli([(6, 25), (9, 17), (15, 9), (23, 3), (25, 5), (21, 13), (14, 20)], mat, grad=0.3)
+    t.linha(6, 25, 23, 5, M[mat][3])                                              # a haste
+    t.poli([(13, 14), (16, 15), (14, 17)], mat, fixo=3)                           # o corte em raio
+    t.bastao(3, 28, 7, 24, 1.6, 'branco', redondo=True)
+    return t
+
+
+def lanche():
+    t = Tela()
+    t.elipse(11, 19, 9, 5.5, 'madeira')                                           # o pão
+    for x in (6, 10, 14):
+        t.linha(x, 19, x + 3, 16, M['madeira'][3])                                # os cortes
+        t.linha(x + 1, 19, x + 4, 16, M['madeira'][0])
+    t.elipse(21, 11, 5.5, 5.5, 'laranja')                                         # a laranja
+    t.elipse(22, 5.5, 2, 1, 'verde', fixo=1)
+    t.ponto(19, 9, B)
+    return t
+
+
+def pipoca():
+    t = Tela()
+    for x, y in ((10, 9), (14, 7), (18, 8), (21, 11), (8, 12), (13, 11), (17, 11)):
+        t.elipse(x, y, 2.6, 2.4, 'amarelo_luz')                                   # a pipoca
+    t.poli([(7, 13), (23, 13), (21, 28), (9, 28)], 'branco', grad=0.3)            # o saquinho
+    for x0, x1 in ((9, 10.4), (13, 13.8), (17, 17.2), (20.8, 20.2)):
+        t.linha(int(x0), 14, int(x1), 27, M['vermelho'][2])
+    return t
+
+
+def radio():
+    t = Tela()
+    t.bastao(19, 9, 19, 2, 2.4, 'preto', redondo=True)                           # a antena
+    t.ret(8, 8, 22, 28, 'preto', grad=0.3)
+    t.ret(10, 10, 20, 14, 'verde', fixo=1)                                        # o visor
+    for y in (17, 19, 21, 23):
+        t.linha(11, y, 19, y, M['preto'][0])                                      # o alto-falante
+    t.ret(10, 25, 12, 26, 'vermelho', fixo=1)                                     # o botão
+    return t
+
+
+def sacola():
+    t = Tela()
+    t.bastao(10, 11, 11, 4, 1.4, 'papelao')                                       # as alças
+    t.bastao(11, 4, 18, 4, 1.4, 'papelao')
+    t.bastao(18, 4, 19, 11, 1.4, 'papelao')
+    t.poli([(6, 10), (24, 10), (25, 28), (5, 28)], 'papelao', grad=0.5)
+    t.linha(6, 13, 24, 13, M['papelao'][3])                                       # a dobra
+    return t
+
+
+def taca():
+    t = Tela()
+    for x in (6, 24):
+        t.elipse(x, 10, 3.6, 4, 'dourado')                                        # as asas
+        t.furo(x, 10, 1.8, 2.2)
+    t.poli([(7, 4), (23, 4), (21, 13), (17, 16), (13, 16), (9, 13)], 'dourado', grad=0.3)
+    t.ret(14, 16, 16, 21, 'dourado', fixo=2)                                      # o pé
+    t.ret(9, 21, 21, 27, 'marrom', grad=0.3)                                      # a base
+    t.ret(11, 23, 19, 25, 'dourado', fixo=1)                                      # a plaquinha
+    t.ponto(10, 6, B)
+    return t
+
+
+def etiqueta():
+    t = Tela()
+    t.poli([(5, 9), (19, 9), (26, 16), (19, 23), (5, 23)], 'amarelo', grad=0.4)
+    t.furo(19.5, 16, 1.6, 1.6)                                                    # o furo do lacre
+    t.linha(21, 16, 27, 11, M['vermelho'][2])                                     # a fita do lacre
+    t.linha(27, 11, 28, 6, M['vermelho'][2])
+    for y in (13, 16, 19):
+        t.linha(8, y, 15, y, M['amarelo'][3])                                     # o número
+    return t
+
+
 def papel():
     t = Tela()
     t.poli([(7, 3), (19, 3), (23, 7), (23, 27), (7, 27)], 'papel', grad=0.3)
@@ -629,6 +918,11 @@ DESENHOS = {
     'caderno_lote': caderno_lote, 'chave_subsolo': lambda: chave('ferro', velha=True),
     'broche': broche, 'papel': papel, 'foto': foto, 'mapa': mapa, 'caixa': caixa,
     'chave': chave, 'pacote': pacote, 'medalha': medalha,
+    'cracha': cracha, 'prancheta': prancheta, 'pasta': pasta, 'jornal': jornal, 'envelope': envelope,
+    'anilha': anilha, 'apito': apito, 'binoculo': binoculo, 'placa': placa,
+    'placa_bronze': lambda: placa('dourado'), 'fita': fita, 'rolo': rolo, 'garrafa': garrafa, 'pote': pote,
+    'lata': lata, 'luva': luva, 'medidor': medidor, 'muda': muda, 'rede': rede, 'pena': pena,
+    'lanche': lanche, 'pipoca': pipoca, 'radio': radio, 'sacola': sacola, 'taca': taca, 'etiqueta': etiqueta,
 }
 CORES_DE_MOCHILA = {'bege': 'lona', 'preta': 'preto', 'vermelha': 'vermelho', 'azul': 'azul', 'verde': 'verde',
                     'amarela': 'amarelo', 'marrom': 'marrom', 'laranja': 'laranja', 'roxa': 'roxo',

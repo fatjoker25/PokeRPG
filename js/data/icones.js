@@ -33,20 +33,58 @@ const CORES_DE_MOCHILA = ['Bege', 'Preta', 'Vermelha', 'Azul', 'Verde', 'Amarela
   'Branca', 'Cinza', 'Rosa', 'Prateada', 'Dourada'];
 const _corDeMochila = c => CORES_DE_MOCHILA.find(x => x.toLowerCase() === String(c || '').toLowerCase());
 
-/* o arquivo do desenho: o do item, o da mochila pela cor ou, pro papel
-   de enredo, o genérico pelo nome (bilhete, foto, mapa, caixa, chave,
-   medalha) */
+/* o arquivo do desenho: o do item, o da mochila pela cor ou, pro que a
+   história te dá, o desenho da coisa pelo nome (papel, foto, mapa,
+   caixa, chave, crachá, medalha, pasta, rádio, apito, pena…); o pacote
+   é o que sobra, e quase nada sobra */
 function arquivoDoDesenho(nome){
   if (ITEM_PIXEL[nome]) return ITEM_PIXEL[nome];
   const m = /^(Mochila|Bolsa) (\S+)/.exec(nome);
   if (m && _corDeMochila(m[2])) return m[1].toLowerCase() + '_' + m[2].toLowerCase();
+  /* mochila de história ("Mochila de lona do Dr. Fuji"): a primeira
+     palavra que é cor, ou a bege */
+  if (m){
+    const cor = nome.split(/[\s-]+/).map(_corDeMochila).find(Boolean);
+    return m[1].toLowerCase() + '_' + (cor || 'Bege').toLowerCase();
+  }
   const n = nome.toLowerCase();
+  /* a ordem importa: o primeiro que casa leva. Coisa que tem desenho
+     próprio antes de papel, e papel antes do pacote, que é o resto */
   return /medalh/.test(n) ? 'medalha'
-       : /foto/.test(n) ? 'foto'
-       : /mapa|croqui|planta/.test(n) ? 'mapa'
-       : /caixa|lacre|engradado/.test(n) ? 'caixa'
-       : /chave|cart[ãa]o-chave|crach/.test(n) ? 'chave'
-       : /bilhete|carta|papel|recibo|folha|caderno|caderneta|relat|ficha|guia|documento|c[óo]pia|lista|anota|passagem|envelope|di[áa]rio|livro|jornal|panfleto|cartaz|recorte|declara|depoimento|p[áa]ginas/.test(n) ? 'papel'
+       : /crach[áa]/.test(n) ? 'cracha'
+       : /^pena\b/.test(n) ? 'pena'
+       : /foto|polaroid/.test(n) ? 'foto'
+       : /prancheta/.test(n) ? 'prancheta'
+       : /^pasta\b/.test(n) ? 'pasta'
+       : /jornal|di[áa]rio oficial|recorte/.test(n) ? 'jornal'
+       : /envelope|^carta\b|cart[ãa]o de anivers/.test(n) ? 'envelope'
+       : /^(caderno|caderneta|caderninho|agenda)/.test(n) ? 'caderno'
+       : /mapa|croqui|planta\b/.test(n) ? 'mapa'
+       : /lacre|etiqueta/.test(n) ? 'etiqueta'
+       : /caixa|engradado/.test(n) ? 'caixa'
+       : /chave|cart[ãa]o-chave/.test(n) ? 'chave'
+       : /^anilha\b/.test(n) ? 'anilha'
+       : /apito/.test(n) ? 'apito'
+       : /bin[óo]culo/.test(n) ? 'binoculo'
+       : /^placa(?!.*anotad)|chapa de metal/.test(n) ? (/bronze/.test(n) ? 'placa_bronze' : 'placa')
+       : /^fita do|grava[çc][ãa]o/.test(n) ? 'fita'
+       : /fita isolante/.test(n) ? 'rolo'
+       : /^p[ãa]o\b|sandu[íi]che/.test(n) ? 'lanche'
+       : /pipoca/.test(n) ? 'pipoca'
+       : /^pote\b/.test(n) ? 'pote'
+       : /^garrafa\b/.test(n) ? 'garrafa'
+       : /\blata\b|querosene/.test(n) ? 'lata'
+       : /luva/.test(n) ? 'luva'
+       : /mult[íi]metro|medidor/.test(n) ? 'medidor'
+       : /^muda\b/.test(n) ? 'muda'
+       : /\brede\b/.test(n) ? 'rede'
+       : /r[áa]dio\b/.test(n) ? 'radio'
+       : /sacola/.test(n) ? 'sacola'
+       : /^ta[çc]a\b|trof[ée]u/.test(n) ? 'taca'
+       : /lanterna/.test(n) ? 'lanterna'
+       : /cobertor/.test(n) ? 'cobertor'
+       : /cantil/.test(n) ? 'cantil'
+       : /bilhete|carta|papel|recibo|folha|relat|ficha|guia|documento|c[óo]pia|lista|anota|passagem|di[áa]rio|livro|panfleto|folheto|cartaz|declara|depoimento|p[áa]gina|(^|\s)ata\b|mandado|\bnotas?\b|ordem|protocolo|requisi|registro|resposta|\bvias?\b|convoca|contas|planilha|hor[áa]rio|nomes|desenho|guardanapo|matr[íi]cula|anexo|formul|placa/.test(n) ? 'papel'
        : 'pacote';
 }
 function _desenho(arq){
