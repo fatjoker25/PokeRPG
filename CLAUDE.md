@@ -224,7 +224,8 @@ cor é um conjunto inteiro no jeito do azul da abertura — degradê de fundo
 painel, borda e texto secundário. O padrão é o azul-noite; "Do capítulo"
 deixa o tom de cada capítulo mandar no painel. A abertura e a película do
 cenário leem as mesmas variáveis. Cor nova entra com as quatro do fundo.
-A abertura fica no meio da tela (`body.na-abertura`).
+A abertura toma a tela inteira (`body.na-titulo`, que tira a coluna
+do `#app`); a tela de morte fica no meio (`body.na-abertura`).
 
 Fora da batalha, o **fundo da página** também é o lugar: `CENARIO_POR_LOCAL`
 (em `arenas.js`) dá um cenário a cada ponto do mapa — os nove da batalha,
@@ -1704,6 +1705,31 @@ irmão que se chama Bruno ganhava o rosto do Bruno da Elite, e o sorteio
 já deu Bruno e Otto (o rival) pra casa. Os rostos de `RETRATO_DA_CASA`
 são só da casa, e `NOMES_DE_CASA` não tem nome da história — o
 `chk-rostos` confere os dois.
+
+## A abertura
+A tela de título (`UI.telaInicial`, `css/titulo.css`) é a noite em
+Pallet, de ponta a ponta: o `prado.png` desfocado de leve e puxado pra
+cor do jogo (as `--fundo-*` da moldura), estrelas no céu e um Pidgeot
+que cruza de tempos em tempos. No alto o logo; no meio, lado a lado
+(empilhados no celular), o **cartão da jornada** e o **menu**; embaixo,
+no chão, o seu time vivo — ou, sem jornada, Bulbasaur, Charmander,
+Pikachu e Squirtle —, com as GIFs na escala do jogo (`--q` é o quadro).
+
+- O cartão lê o save do navegador **cru e só pra mostrar**: nome, foto,
+  capítulo, lugar, dias, o estojo das oito, catalogados, time e
+  dinheiro, tudo pelo `esc` (o save pode ter vindo de arquivo de outra
+  pessoa). Save que não abre ali ainda tem o Continuar. Sem jornada, o
+  cartão conta o que espera (capítulos, finais e Pokémon contados do
+  jogo, nunca escritos à mão) e tem o Começar.
+- O menu é uma linha por coisa (`.tt-op`): Nova jornada (só com
+  jornada), Carregar jogo, Tutorial, Regras, Códice de finais (com a
+  conta) e Ajustes, cada uma com o desenho na pastilha da cor dele. No
+  celular vira grade de dois, só desenho e nome, e o ímpar ocupa a linha.
+- O meio fica no meio do que sobra (`margin-block:auto`), e em tela
+  grande cresce (`zoom`), senão sobra noite em volta. O `.json` do
+  Salvar pode ser solto em qualquer lugar dela (`UI.soltarSave`).
+
+`chk-telas` abre a abertura com e sem jornada.
 
 ## A festa da vitória
 Luta grande ganha tem festa antes da tela de resultado

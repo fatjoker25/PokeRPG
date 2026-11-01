@@ -178,7 +178,7 @@ const UI = {
      passa pra tela seguinte (o Ezra saía com o balão do Brock). */
   limpar(){
     this.app.innerHTML = '';
-    document.body.classList.remove('na-abertura', 'na-criacao');
+    document.body.classList.remove('na-abertura', 'na-criacao', 'na-titulo');
     this.npcDaCena = null; this.npcEhProprio = false; this.falanteDaCena = null;
     this.vozesDaCena = null; this.minhasFalasDaCena = null;
   },
@@ -394,39 +394,120 @@ const UI = {
   },
 
   /* ========================================================
-     TELA INICIAL
+     TELA INICIAL — a abertura
+     A tela inteira é a noite em Pallet: o prado do começo de tudo,
+     tingido na cor do jogo, com estrelas e um Pidgeot que passa de
+     tempos em tempos. No alto, o logo; no meio, o cartão da jornada
+     salva (quem, até onde, as insígnias e o Continuar) ao lado do
+     menu; embaixo, no chão, o seu time — ou, sem jornada, quem
+     costuma abrir uma. O .json do Salvar pode ser solto em qualquer
+     lugar dela.
      ======================================================== */
   telaInicial(){
     this.tom('leve'); this.limpar();
-    /* a abertura fica no meio da tela, na vertical também */
-    document.body.classList.add('na-abertura');
+    document.body.classList.add('na-abertura', 'na-titulo');
     const temSave = Estado.existeSave('auto');
-    /* estrelas do fundo: posição e ritmo sorteados a cada abertura */
-    const estrelas = Array.from({length:26}, () =>
-      `<i class="tt-estrela" style="--x:${(Math.random()*100).toFixed(1)}%;--y:${(Math.random()*100).toFixed(1)}%;--t:${(1.6+Math.random()*2.8).toFixed(2)}s;--a:${(Math.random()*3).toFixed(2)}s;--s:${Math.random() < .25 ? 3 : 2}px"></i>`).join('');
-    const botoes = [
-      temSave ? '<button class="tt-btn tt-principal" onclick="Jogo.continuar()">Continuar</button>' : '',
-      `<button class="tt-btn ${temSave ? '' : 'tt-principal'}" onclick="Jogo.novo()">${temSave ? 'Nova jornada' : 'Começar'}</button>`,
-      '<button class="tt-btn" onclick="UI.modalCarregar(true)">Carregar jogo</button>',
-      '<button class="tt-btn" onclick="UI.modalTutorial()">Tutorial</button>',
-      '<button class="tt-btn" onclick="UI.modalRegras()">Regras</button>',
-      '<button class="tt-btn" onclick="UI.modalFinais()">Códice de finais</button>'
-    ].filter(Boolean).map((h, i) => h.replace('<button ', `<button style="--i:${i}" `)).join('');
-    /* o .json do Salvar pode ser solto em qualquer lugar da abertura */
-    this.add(`<div class="tela-titulo" ondragover="event.preventDefault()" ondrop="UI.soltarSave(event)">
+    /* o save do navegador, só pra mostrar: lido cru, sem converter, e
+       tudo pelo esc (pode ter vindo de arquivo de outra pessoa) */
+    let save = null;
+    if (temSave){
+      try { save = JSON.parse(localStorage.getItem('pokerpg_save_auto')); } catch (e) { save = null; }
+      if (!save || typeof save !== 'object' || !save.jogador) save = null;
+    }
+    const e = x => this.esc(String(x == null ? '' : x));
+    const estrelas = Array.from({length:30}, () =>
+      `<i class="tt-estrela" style="--x:${(Math.random()*100).toFixed(1)}%;--y:${(Math.random()*46).toFixed(1)}%;--t:${(1.6+Math.random()*2.8).toFixed(2)}s;--a:${(Math.random()*3).toFixed(2)}s;--s:${Math.random() < .25 ? 3 : 2}px"></i>`).join('');
+
+    /* quem fica no chão: o seu time, vivo, ou os de sempre */
+    const time = save && Array.isArray(save.time)
+      ? save.time.filter(p => p && DEX[p.dex] && !p.morto).slice(0, 6).map(p => ({dex:+p.dex, shiny:!!p.shiny, nome:DEX[p.dex].nome}))
+      : [];
+    const desfile = (time.length ? time : [1, 4, 25, 7, 133].map(dex => ({dex, nome:DEX[dex].nome})))
+      .map((p, i) => `<span class="tt-pk" style="--i:${i}">${imgSprite(p, 'frente', {classe:'tt-pk-arte'})}</span>`).join('');
+
+    /* o cartão da jornada */
+    let jornada;
+    if (temSave){
+      const j = (save && save.jogador) || {};
+      const nIns = save && Array.isArray(save.insignias) ? save.insignias.filter(i => i !== 'Título de Campeão' && i !== 'Campeão de Kanto') : [];
+      const dias = save ? Math.max(1, Math.floor(+(save.relogio || {}).dia || 1)) : 0;
+      const lugar = save && save.local && LOCAIS[save.local] ? LOCAIS[save.local].nome : '';
+      const rosto = typeof j.retrato === 'string' && /^[\w\/.-]+$/.test(j.retrato) ? caminhoNPC(j.retrato) : null;
+      const cap = save ? Historia.capitulo(save.capitulo) : null;
+      const caixa = GINASIOS.map(g => {
+        const tem = nIns.includes(g.insignia), src = caminhoInsignia(g.id);
+        return `<span class="tt-casa${tem ? ' tem' : ''}">${tem && src ? `<img src="${src}" alt="${e(g.insignia)}">` : ''}</span>`;
+      }).join('');
+      const fatos = [[lugar, 'alfinete'], [dias ? `${dias} ${dias === 1 ? 'dia' : 'dias'} de estrada` : '', 'relogio']].filter(f => f[0]);
+      /* três números da jornada, em quadros */
+      const conta = o => o && typeof o === 'object' ? Object.keys(o).length : 0;
+      const dex = save && save.pokedex ? conta(save.pokedex.catalogados) : 0;
+      const din = save ? Math.max(0, Math.floor(+j.dinheiro || 0)) : 0;
+      const numeros = [[dex, dex === 1 ? 'catalogado' : 'catalogados', 'pokedex'],
+        [time.length, 'no time', 'bola'],
+        ['₽ ' + din.toLocaleString('pt-BR'), 'na carteira', 'moeda']]
+        .map(([v, k, ic]) => `<span class="tt-num">${svgIcone(ic)}<b>${e(v)}</b><small>${e(k)}</small></span>`).join('');
+      jornada = save ? `<section class="tt-jornada tt-e" style="--i:0" aria-label="Jornada salva">
+          <div class="tt-j-topo">
+            <span class="tt-j-rosto${rosto ? '' : ' vazio'}" aria-hidden="true">${rosto ? `<img src="${e(rosto)}" alt="" onerror="this.parentNode.classList.add('vazio');this.remove()">` : ''}<b>${e((j.nome || '?').slice(0, 1).toUpperCase())}</b></span>
+            <span class="tt-j-quem">
+              <b>${e(j.nome || 'Sem nome')}</b>
+              <span>${e(this.capituloDoSave(save, true))}${cap && cap.titulo ? ` · ${e(cap.titulo)}` : ''}</span>
+            </span>
+          </div>
+          ${fatos.length ? `<div class="tt-j-fatos">${fatos.map(([t, ic]) => `<span>${svgIcone(ic)}${e(t)}</span>`).join('')}</div>` : ''}
+          <div class="tt-j-caixa" aria-label="${nIns.length} de 8 insígnias">${caixa}</div>
+          <div class="tt-j-num">${numeros}</div>
+          <button class="tt-btn tt-principal" onclick="Jogo.continuar()">Continuar</button>
+        </section>`
+        : `<section class="tt-jornada tt-e" style="--i:0" aria-label="Jornada salva">
+          <div class="tt-j-novo"><b>Uma jornada neste navegador</b><span>O save não abriu aqui na abertura, mas pode abrir no jogo.</span></div>
+          <button class="tt-btn tt-principal" onclick="Jogo.continuar()">Continuar</button>
+        </section>`;
+    } else {
+      /* sem jornada: o que espera, em três linhas (contado do jogo, não escrito à mão) */
+      const nCaps = CAPITULOS.filter(c => !c.caminho).length;
+      const sobre = [
+        ['mapa', `${nCaps} capítulos por Kanto, e ${contarFinais().total} finais`],
+        ['pokedex', `${DEX_KANTO_IDS.length + 1} Pokémon pra encontrar, cada um com o seu jeito`],
+        ['dado', 'Batalha no dado, nas regras do Pokérole 3.0']
+      ].map(([ic, t]) => `<li>${svgIcone(ic)}<span>${e(t)}</span></li>`).join('');
+      jornada = `<section class="tt-jornada nova tt-e" style="--i:0">
+          <div class="tt-j-novo"><b>Kanto, ano 2000</b><span>Você tem quinze anos, uma mochila da Liga e a estrada que sai da sua cidade.</span></div>
+          <ul class="tt-j-sobre">${sobre}</ul>
+          <button class="tt-btn tt-principal" onclick="Jogo.novo()">Começar</button>
+        </section>`;
+    }
+
+    /* o menu: cada coisa com o desenho e uma linha do que ela é */
+    const fins = Estado.finaisDescobertos().filter(ehFinalDeVerdade).length, totalFins = contarFinais().total;
+    const op = (ic, rot, nota, acao) => `<button class="tt-op" onclick="${acao}">${svgIcone(ic, 'tt-op-ic')}<span class="tt-op-txt"><b>${rot}</b><small>${nota}</small></span></button>`;
+    const menu = [
+      temSave ? op('bandeira', 'Nova jornada', 'a de agora sai deste navegador', 'Jogo.novo()') : '',
+      op('carregar', 'Carregar jogo', 'um arquivo .json do Salvar', 'UI.modalCarregar(true)'),
+      op('pergunta', 'Tutorial', 'a primeira hora, passo a passo', 'UI.modalTutorial()'),
+      op('dado', 'Regras', 'todas as contas do jogo', 'UI.modalRegras()'),
+      op('liga', 'Códice de finais', `${fins} de ${totalFins} descobertos`, 'UI.modalFinais()'),
+      op('engrenagem', 'Ajustes', 'som, cor do jogo e velocidade da luta', 'UI.modalAjustes()')
+    ].filter(Boolean).join('');
+
+    this.add(`<div class="tela-titulo" ondragover="event.preventDefault()" ondrop="UI.soltarSave(event)"
+        style="--tt-cena:url('${Arenas.caminho('prado.png')}')">
+      <div class="tt-cena" aria-hidden="true"></div>
       <div class="tt-ceu" aria-hidden="true">${estrelas}</div>
-      <svg class="tt-pokebola" viewBox="0 0 100 100" aria-hidden="true">
-        <circle cx="50" cy="50" r="46" fill="none" stroke="currentColor" stroke-width="5"/>
-        <path d="M4 50h30M66 50h30" stroke="currentColor" stroke-width="5"/>
-        <circle cx="50" cy="50" r="15" fill="none" stroke="currentColor" stroke-width="5"/>
-        <circle cx="50" cy="50" r="6" fill="currentColor"/>
-      </svg>
-      <h1 class="tt-logo" aria-label="PokéRPG">
-        <span class="tt-poke" data-t="Poké">Poké</span><span class="tt-rpg" data-t="RPG">RPG</span>
-      </h1>
-      <div class="tt-sub">Sua jornada Pokémon começa agora!</div>
-      <div class="tt-botoes">${botoes}</div>
-      ${temSave ? '<div class="tt-nota">Começar uma nova jornada, ou carregar uma de arquivo, tira a atual do lugar.</div>' : ''}
+      <div class="tt-voo" aria-hidden="true">${imgSprite({dex:18, nome:'Pidgeot'}, 'frente', {classe:'tt-voo-arte'})}</div>
+      <header class="tt-topo">
+        <h1 class="tt-logo" aria-label="PokéRPG">
+          <span class="tt-poke" data-t="Poké">Poké</span><span class="tt-rpg" data-t="RPG">RPG</span>
+        </h1>
+        <div class="tt-sub">Sua jornada Pokémon começa agora!</div>
+      </header>
+      <main class="tt-corpo">
+        ${jornada}
+        <nav class="tt-menu tt-e" style="--i:1" aria-label="Opções">${menu}</nav>
+      </main>
+      <div class="tt-desfile" aria-hidden="true">${desfile}</div>
+      <footer class="tt-pe">Jogo de fã · regras do Pokérole 3.0 · arte da PokeAPI e do Pokémon Showdown</footer>
     </div>`);
   },
 

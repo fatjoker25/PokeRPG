@@ -239,9 +239,17 @@ const SUSPEITO = [
   await tentar('salvar', () => UI.modalSalvar());
   await tentar('ajustes/salvar', () => { UI.modalAjustes(); UI.modalSalvar(); });
   const arquivo = await page.evaluate(() => ArquivoSave.texto());
-  await tentar('abertura', () => { UI.fecharModal(true); UI.telaInicial(); });
-  if (!(await page.evaluate(() => [...document.querySelectorAll('.tt-btn')].some(b => /Carregar jogo/.test(b.textContent))))){
+  /* a abertura com a jornada salva (o cartão diz de quem é) e sem ela */
+  await tentar('abertura', () => { UI.fecharModal(true); Estado.salvar('auto'); UI.telaInicial(); });
+  if (!(await page.evaluate(() => [...document.querySelectorAll('.tela-titulo button')].some(b => /Carregar jogo/.test(b.textContent))))){
     onde = 'abertura'; anota('carregar', 'a abertura não tem o Carregar jogo');
+  }
+  if (!(await page.evaluate(() => /Lia/.test((document.querySelector('.tt-jornada') || {}).textContent || '')))){
+    onde = 'abertura'; anota('abertura', 'o cartão da jornada salva não diz de quem ela é');
+  }
+  await tentar('abertura/sem jornada', () => { try { localStorage.removeItem('pokerpg_save_auto'); } catch (e) {} UI.telaInicial(); });
+  if (!(await page.evaluate(() => [...document.querySelectorAll('.tela-titulo button')].some(b => /Começar/.test(b.textContent))))){
+    onde = 'abertura/sem jornada'; anota('abertura', 'sem jornada salva, a abertura não tem o Começar');
   }
   await tentar('carregar', () => UI.modalCarregar(false));
   for (const [r, t] of [['quebrado', '{"jogo":"PokéRPG","save":{'], ['outro json', '{"a":1}'], ['save cru', snap], ['arquivo', arquivo]])

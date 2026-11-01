@@ -2,9 +2,11 @@
    TELA DE TÍTULO — PokéRPG
    "Poké" no amarelo do logo dos jogos, "RPG" branco, os dois na
    Press Start 2P com contorno azul em pixel (sombra em degrau, não
-   desfoque). Entra em sequência: céu, Pokébola, logo caindo com
-   quique, brilho que passa pelas letras, subtítulo e os botões um
-   a um. Quem pede menos movimento vê tudo parado e já no lugar.
+   desfoque). A abertura toma a tela inteira: o prado de Pallet à
+   noite, na cor do jogo, com estrelas e um Pidgeot que passa; o logo
+   cai com quique e o brilho atravessa as letras; o cartão da jornada
+   e o menu sobem; o time pula pro chão, um por um. Quem pede menos
+   movimento vê tudo parado e já no lugar.
    ============================================================ */
 :root{
   --tt-amarelo:#ffcb05;
@@ -15,27 +17,40 @@
   --tt-pixel:'Press Start 2P', ui-monospace, 'Courier New', monospace;
 }
 
-/* a abertura no meio da tela, nas duas direções */
-body.na-abertura #app{
-  min-height:100vh;min-height:100dvh;max-width:860px;
-  display:flex;flex-direction:column;justify-content:center;
-  padding-block:24px;
-}
+/* ---------- a abertura: a tela inteira é a noite em Pallet ---------- */
+/* body.na-titulo tira a coluna do #app: a abertura vai de ponta a ponta */
+body.na-titulo #app{max-width:none;margin:0;padding:0;display:block;min-height:100vh;min-height:100dvh}
 .tela-titulo{
-  position:relative;overflow:hidden;isolation:isolate;width:100%;
-  min-height:min(560px, calc(100vh - 80px));
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:56px 18px 40px;text-align:center;
-  border-radius:var(--raio);border:1px solid var(--borda);
-  background:
-    radial-gradient(120% 70% at 50% 0%, rgba(var(--fundo-brilho, 42,117,187),.38), transparent 60%),
-    radial-gradient(90% 60% at 50% 110%, rgba(255,203,5,.12), transparent 70%),
-    linear-gradient(180deg, var(--fundo-topo, #121a44), var(--fundo-site, #0b1030) 70%, var(--fundo-pe, #090d26));
-  box-shadow:var(--sombra-alta);
+  position:relative;isolation:isolate;overflow:hidden;width:100%;
+  min-height:100vh;min-height:100dvh;
+  display:flex;flex-direction:column;align-items:center;
+  padding:clamp(26px, 6vh, 64px) 16px 0;text-align:center;
+  background:var(--fundo-site, #0b1030);
 }
+/* o prado do começo de tudo, puxado pra noite e pra cor do jogo */
+.tt-cena{
+  position:absolute;inset:-3%;z-index:-3;pointer-events:none;
+  background:var(--tt-cena) 50% 82% / cover no-repeat;
+  image-rendering:pixelated;
+  /* desfocado de leve: é o fundo, e o time na frente fica nítido */
+  filter:blur(2px) brightness(.58) saturate(.85);
+  animation:ttPan 46s ease-in-out infinite alternate;
+}
+.tt-cena::after{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(70% 45% at 50% 0%, rgba(var(--fundo-brilho, 42,117,187),.42), transparent 70%),
+    linear-gradient(180deg,
+      var(--fundo-topo, #121a44) 0%,
+      color-mix(in srgb, var(--fundo-topo, #121a44) 88%, transparent) 22%,
+      color-mix(in srgb, var(--fundo-site, #0b1030) 62%, transparent) 50%,
+      color-mix(in srgb, var(--fundo-site, #0b1030) 34%, transparent) 72%,
+      color-mix(in srgb, var(--fundo-pe, #090d26) 62%, transparent) 100%);
+}
+@keyframes ttPan{from{transform:scale(1.06) translateX(-1.2%)}to{transform:scale(1) translateX(1.2%)}}
 
-/* ---------- fundo: estrelas que piscam em pixel ---------- */
-.tt-ceu{position:absolute;inset:0;z-index:-1;pointer-events:none}
+/* estrelas que piscam em pixel, só no céu */
+.tt-ceu{position:absolute;inset:0 0 50% 0;z-index:-2;pointer-events:none}
 .tt-estrela{
   position:absolute;left:var(--x);top:var(--y);width:var(--s);height:var(--s);
   background:#fff;opacity:.15;image-rendering:pixelated;
@@ -43,15 +58,157 @@ body.na-abertura #app{
 }
 @keyframes ttPisca{0%,100%{opacity:.12}50%{opacity:.85}}
 
-/* ---------- a Pokébola grande, girando devagar atrás do logo ---------- */
-.tt-pokebola{
-  position:absolute;z-index:-1;width:min(440px, 92vw);height:auto;
-  top:50%;left:50%;color:rgba(255,255,255,.055);
-  transform:translate(-50%,-58%);
-  animation:ttBolaEntra 1.1s var(--suave) both, ttGira 60s linear 1.1s infinite;
+/* um Pidgeot que cruza o céu de tempos em tempos */
+.tt-voo{position:absolute;z-index:-1;top:11%;left:0;width:100%;pointer-events:none;
+  animation:ttVoo 30s linear 4s infinite;transform:translateX(110vw)}
+.tt-voo .sprite{width:64px;height:auto;filter:var(--fx-sprite, opacity(1)) brightness(.55) saturate(.7);
+  animation:ttPlana 2.4s ease-in-out infinite}
+@keyframes ttVoo{
+  0%{transform:translateX(105vw)}
+  38%, 100%{transform:translateX(-30vw)}
 }
-@keyframes ttBolaEntra{from{opacity:0;transform:translate(-50%,-58%) scale(.7) rotate(-40deg)}to{opacity:1;transform:translate(-50%,-58%)}}
-@keyframes ttGira{to{transform:translate(-50%,-58%) rotate(360deg)}}
+@keyframes ttPlana{0%, 100%{translate:0 0}50%{translate:0 -9px}}
+
+/* ---------- o alto: o logo e a frase ---------- */
+.tt-topo{display:flex;flex-direction:column;align-items:center;padding-bottom:clamp(18px, 4vh, 40px)}
+.tela-titulo .tt-logo{font-size:clamp(30px, min(9vw, 9.5vh), 92px)}
+
+/* ---------- o meio: a jornada e o menu ---------- */
+.tt-corpo{
+  /* o meio fica no meio do que sobra entre o logo e o chão */
+  width:min(820px, 100%);margin-block:auto;
+  display:grid;grid-template-columns:minmax(0, 1fr) minmax(0, 1fr);gap:16px;align-items:stretch;
+  text-align:left;
+}
+.tt-e{animation:ttSobe .6s var(--suave) calc(1.1s + var(--i, 0) * .14s) backwards}
+.tt-jornada, .tt-menu{
+  border-radius:20px;padding:16px;
+  background:linear-gradient(180deg, color-mix(in srgb, var(--fundo-topo, #121a44) 78%, transparent), color-mix(in srgb, var(--fundo-pe, #090d26) 86%, transparent));
+  border:1px solid rgba(255,255,255,.13);
+  box-shadow:0 22px 40px -24px rgba(0,0,0,.95), inset 0 1px 0 rgba(255,255,255,.08);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+}
+.tt-jornada{display:flex;flex-direction:column;gap:14px}
+.tt-j-topo{display:flex;align-items:center;gap:13px;min-width:0}
+.tt-j-rosto{
+  position:relative;flex:0 0 auto;width:64px;height:64px;border-radius:50%;overflow:hidden;display:grid;place-items:center;
+  background:radial-gradient(circle at 50% 30%, rgba(255,255,255,.2), rgba(0,0,0,.35) 75%);
+  box-shadow:0 0 0 3px var(--tt-amarelo), 0 6px 14px -6px rgba(0,0,0,.8);
+}
+.tt-j-rosto img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:50% 100%;image-rendering:pixelated}
+.tt-j-rosto b{font:400 22px/1 var(--tt-pixel);color:rgba(255,255,255,.4)}
+.tt-j-rosto:not(.vazio) b{display:none}
+.tt-j-quem{display:flex;flex-direction:column;gap:3px;min-width:0}
+.tt-j-quem b{font:700 22px/1.15 var(--letra-hud, var(--fonte));color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tt-j-quem span{font:500 13.5px/1.35 var(--letra-hud, var(--fonte));color:#c9d6f5}
+.tt-j-fatos{display:flex;flex-wrap:wrap;gap:6px}
+.tt-j-fatos span{
+  display:inline-flex;align-items:center;gap:5px;padding:4px 10px 4px 8px;border-radius:999px;
+  font:600 12.5px/1.2 var(--letra-hud, var(--fonte));color:#e4ecff;
+  background:rgba(0,0,0,.28);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1);
+}
+.tt-j-fatos svg{width:14px;height:14px;color:var(--ac, var(--tt-amarelo))}
+/* o estojo das oito, pequeno */
+.tt-j-caixa{
+  display:grid;grid-template-columns:repeat(8, minmax(0, 1fr));gap:5px;padding:8px;border-radius:13px;
+  background:linear-gradient(180deg, #3b1d2a, #26111b);
+  box-shadow:0 0 0 2px #a8853a, inset 0 3px 6px rgba(0,0,0,.6);
+}
+.tt-casa{aspect-ratio:1;border-radius:50%;display:grid;place-items:center;background:rgba(0,0,0,.35);box-shadow:inset 0 2px 3px rgba(0,0,0,.7)}
+.tt-casa img{width:84%;height:84%;object-fit:contain;filter:drop-shadow(0 1px 1px rgba(0,0,0,.6))}
+.tt-j-num{display:grid;grid-template-columns:repeat(3, minmax(0, 1fr));gap:6px}
+.tt-num{
+  display:flex;flex-direction:column;align-items:center;gap:2px;padding:9px 4px 8px;border-radius:12px;text-align:center;
+  background:rgba(0,0,0,.26);box-shadow:inset 0 0 0 1px rgba(255,255,255,.09);min-width:0;
+}
+.tt-num svg{width:18px;height:18px;color:var(--ac, var(--tt-amarelo))}
+.tt-num b{font:700 17px/1.15 var(--letra-hud, var(--fonte));color:#fff;font-variant-numeric:tabular-nums;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tt-num small{font:500 11.5px/1.2 var(--letra-hud, var(--fonte));color:#a9b8de}
+.tt-j-sobre{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px}
+.tt-j-sobre li{display:flex;align-items:center;gap:11px;font:500 14px/1.35 var(--letra-hud, var(--fonte));color:#dfe8ff}
+.tt-j-sobre svg{
+  flex:0 0 auto;width:30px;height:30px;padding:6px;border-radius:9px;stroke-width:2;color:#fff;
+  background:color-mix(in srgb, var(--ac, #5aa7ff) 70%, #000);box-shadow:inset 0 0 0 1px rgba(255,255,255,.18);
+}
+.tt-jornada .tt-btn{margin-top:auto;width:100%}
+.tt-j-novo{display:flex;flex-direction:column;gap:8px;padding:6px 2px}
+.tt-j-novo b{font:700 21px/1.2 var(--letra-hud, var(--fonte));color:#fff}
+.tt-j-novo span{font-size:14.5px;line-height:1.55;color:#c9d6f5;text-wrap:pretty}
+.tt-jornada.nova{justify-content:space-between}
+
+/* o menu: uma linha por coisa, o desenho numa pastilha da cor dele */
+.tt-menu{display:flex;flex-direction:column;gap:4px;padding:10px}
+.tt-op{
+  display:flex;align-items:center;gap:12px;width:100%;padding:8px 12px 8px 8px;border-radius:13px;
+  border:0;background:transparent;color:#eef3ff;cursor:pointer;text-align:left;font:inherit;
+  transition:background .15s var(--suave), transform .15s var(--mola);
+}
+.tt-op::after{content:'›';margin-left:auto;font:700 22px/1 var(--letra-hud, var(--fonte));color:rgba(255,255,255,.35);transition:color .15s, transform .15s var(--mola)}
+.tt-op svg.tt-op-ic{
+  flex:0 0 auto;width:36px;height:36px;padding:8px;border-radius:11px;stroke-width:2;color:#fff;
+  background:radial-gradient(circle at 50% 30%, color-mix(in srgb, var(--ac, #5aa7ff) 62%, #fff), var(--ac, #5aa7ff) 60%, color-mix(in srgb, var(--ac, #5aa7ff) 70%, #000));
+  box-shadow:0 3px 0 color-mix(in srgb, var(--ac, #5aa7ff) 45%, #000);
+}
+.tt-op-txt{display:flex;flex-direction:column;gap:1px;min-width:0}
+.tt-op-txt b{font:600 16px/1.2 var(--letra-hud, var(--fonte))}
+.tt-op-txt small{font:400 12.5px/1.3 var(--letra-hud, var(--fonte));color:#a9b8de;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tt-op:hover{background:rgba(255,255,255,.08);transform:translateX(2px)}
+.tt-op:hover::after{color:var(--tt-amarelo);transform:translateX(2px)}
+.tt-op:active{transform:translateY(1px)}
+.tt-op:focus-visible{outline:3px solid var(--tt-amarelo);outline-offset:1px}
+
+/* ---------- embaixo: o time no chão do prado ---------- */
+.tt-desfile{
+  padding-top:clamp(14px, 3vh, 30px);width:min(1100px, 100%);
+  display:flex;align-items:flex-end;justify-content:center;gap:clamp(4px, 2.4vw, 34px);
+  min-height:clamp(110px, 20vh, 240px);
+}
+.tt-pk{position:relative;display:flex;align-items:flex-end;justify-content:center;
+  animation:ttPula .7s cubic-bezier(.3,1.6,.5,1) calc(1.5s + var(--i, 0) * .12s) backwards}
+.tt-pk::after{
+  content:'';position:absolute;z-index:-1;left:50%;bottom:-5px;width:78%;height:12px;transform:translateX(-50%);
+  border-radius:50%;background:radial-gradient(closest-side, rgba(0,0,0,.55), transparent);
+}
+.tt-pk{--q:clamp(120px, 19vh, 230px)}
+.tt-pk .sprite{width:var(--q);height:auto}
+/* a arte parada (sem a GIF) tem 24% de folga embaixo do pé */
+.tt-pk .sprite:not(.ani){height:var(--q);margin-bottom:calc(var(--q) * -.24)}
+@keyframes ttPula{0%{opacity:0;transform:translateY(40px) scale(.7)}100%{opacity:1;transform:none}}
+
+.tt-pe{
+  width:100%;padding:12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+  font:500 11.5px/1.4 var(--letra-hud, var(--fonte));letter-spacing:.02em;color:rgba(214,226,255,.55);
+  background:linear-gradient(180deg, transparent, rgba(0,0,0,.35));
+}
+
+/* tela grande: o meio cresce junto, senão sobra noite em volta */
+@media (min-width:1500px) and (min-height:940px){
+  .tela-titulo .tt-corpo{zoom:1.2}
+  .tt-sub{zoom:1.15}
+}
+@media (max-width:760px){
+  .tt-corpo{grid-template-columns:minmax(0, 1fr);gap:12px;max-width:460px}
+  .tt-pk{--q:96px}
+  .tt-desfile{gap:clamp(2px, 1.4vw, 14px);min-height:96px}
+}
+@media (max-width:480px){
+  .tela-titulo{padding-top:24px}
+  .tt-jornada, .tt-menu{border-radius:18px}
+  .tt-op{padding:6px 10px 6px 6px}
+  .tt-op svg.tt-op-ic{width:32px;height:32px;padding:7px}
+  .tt-op-txt b{font-size:15px}
+  .tt-j-quem b{font-size:20px}
+  .tt-pk{--q:80px}
+  /* o menu vira grade de dois, só o desenho e o nome */
+  .tt-menu{display:grid;grid-template-columns:minmax(0, 1fr) minmax(0, 1fr);gap:6px;padding:8px}
+  .tt-op{gap:9px;padding:7px 8px;background:rgba(255,255,255,.04)}
+  .tt-op svg.tt-op-ic{width:30px;height:30px;padding:6px;border-radius:9px}
+  .tt-op::after{display:none}
+  /* número ímpar de coisas: a última ocupa a linha inteira */
+  .tt-op:last-child:nth-child(odd){grid-column:1 / -1}
+  .tt-op-txt small{display:none}
+  .tt-op-txt b{font-size:14.5px}
+}
 
 /* ---------- o logo ---------- */
 .tt-logo{
@@ -107,19 +264,15 @@ body.na-abertura #app{
 }
 @keyframes ttSobe{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 
-/* ---------- os botões, um a um ---------- */
-.tt-botoes{
-  margin-top:30px;display:flex;flex-wrap:wrap;justify-content:center;gap:12px;
-  max-width:560px;
-}
+/* ---------- o botão da abertura (e da tela de morte) ---------- */
 .tt-btn{
   font-family:var(--tt-pixel);font-size:10.5px;letter-spacing:.06em;line-height:1.3;
   color:#e7ecff;background:#1b2552;
   border:3px solid #3a4c93;border-radius:4px;
   padding:13px 16px 12px;cursor:pointer;position:relative;
   box-shadow:0 4px 0 #0a1030, inset 0 -3px 0 rgba(0,0,0,.25);
-  opacity:0;
-  animation:ttBotao .5s cubic-bezier(.3,1.4,.5,1) calc(1.35s + var(--i, 0) * .11s) both;
+  /* backwards, nunca both: o both segurava o último quadro e o hover não subia */
+  animation:ttBotao .5s cubic-bezier(.3,1.4,.5,1) calc(1.35s + var(--i, 0) * .11s) backwards;
   transition:transform .12s, box-shadow .12s, background .15s, border-color .15s, color .15s;
 }
 .tt-btn:hover{background:#25336d;border-color:var(--tt-amarelo);color:var(--tt-amarelo);transform:translateY(-2px);box-shadow:0 6px 0 #0a1030, inset 0 -3px 0 rgba(0,0,0,.25)}
@@ -137,13 +290,7 @@ body.na-abertura #app{
   to{opacity:1;transform:none}
 }
 
-.tt-nota{
-  margin-top:22px;font-size:12px;color:var(--texto-tenue);
-  animation:ttSobe .5s var(--suave) 2s both;
-}
-
 @media (max-width:480px){
-  .tela-titulo{padding:44px 14px 32px;min-height:calc(100vh - 60px)}
   .tt-btn{font-size:9.5px;padding:12px 12px 11px}
   .tt-sub{font-size:10.5px;max-width:24ch}
   .tt-principal{font-size:11px;width:100%}
@@ -157,8 +304,7 @@ body.na-abertura #app{
 
 @media (prefers-reduced-motion: reduce){
   .tela-titulo *, .tela-titulo *::after{animation:none !important}
-  .tt-btn{opacity:1}
-  .tt-pokebola{transform:translate(-50%,-58%)}
+  .tt-voo{display:none}
 }
 
 /* ============================================================
@@ -227,7 +373,7 @@ body.na-abertura #app{
 .tf-pk-nome{font-size:13px;font-weight:700;color:#ece6f6;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .tf-pk-nota{font-size:11px;color:#9d93b0;line-height:1.35}
 .tf-botoes{margin-top:30px}
-.tf-botoes .tt-btn{opacity:1;animation:ttBotao .5s cubic-bezier(.3,1.4,.5,1) 1.7s both}
+.tf-botoes .tt-btn{animation:ttBotao .5s cubic-bezier(.3,1.4,.5,1) 1.7s backwards}
 @media (max-width:520px){
   .tela-fim{padding:44px 14px 30px}
   .tf-quadros{grid-template-columns:repeat(2, minmax(0, 1fr))}
