@@ -88,8 +88,11 @@ const Jogo = {
     UI.telaCriacao();
   },
 
-  continuar(){
-    if (!Estado.carregar('auto')) return UI.telaInicial();
+  /* deArquivo: o save de um .json (ArquivoSave.usar) quando o navegador
+     não deixou gravar no lugar do automático — a jornada roda da memória */
+  continuar(deArquivo){
+    if (!(deArquivo ? Estado.abrir(deArquivo) : Estado.carregar('auto'))) return UI.telaInicial();
+    if (deArquivo) setTimeout(() => UI.avisar([{tipo:'perigo', texto:'Este navegador não deixou guardar a jornada: ela só existe aberta aqui. Use Salvar, no alto da tela, antes de fechar.', dura:9000}]), 600);
     /* recarregou no meio da luta: volta pra ela */
     if (Estado.dados.lutaSalva && typeof LutaSalva !== 'undefined' && LutaSalva.retomar()) return;
     if (Estado.dados.modo === 'mundo' || !Estado.dados.cena){

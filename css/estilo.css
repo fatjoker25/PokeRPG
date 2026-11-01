@@ -125,7 +125,7 @@ body{
 /* ---------- topo ----------
    O HUD dos jogos de hoje: o rosto e o nome de quem joga à esquerda,
    o que se carrega no meio (cada coisa num chip com o seu desenho) e
-   os cinco botões de menu à direita. Fica grudado no alto enquanto a
+   os seis botões de menu à direita. Fica grudado no alto enquanto a
    página rola. No celular vira duas linhas: quem você é com os botões
    (só o desenho), e os chips embaixo. */
 .topo{
@@ -181,7 +181,7 @@ body{
 @media (prefers-reduced-motion: reduce){.topo-aviso{animation:none}}
 .topo-acoes{display:flex;gap:5px;flex-wrap:wrap}
 .btn.mini.topo-bt{
-  display:inline-flex;align-items:center;gap:6px;padding:6px 11px 6px 9px;border-radius:11px;
+  display:inline-flex;align-items:center;gap:6px;padding:6px 9px 6px 8px;border-radius:11px;
   font-family:var(--letra-hud);font-size:13px;font-weight:600;letter-spacing:.02em
 }
 .topo-bt svg.topo-ic{width:17px;height:17px}
@@ -191,12 +191,19 @@ body{
 }
 @media (max-width:760px){
   .topo{padding:7px 9px 7px 7px;gap:7px 8px;border-radius:14px}
-  .topo-quem{flex:1 1 auto}
-  .topo-rosto{width:38px;height:38px}
-  .topo h1{font-size:16px}
-  .topo-rep{font-size:9.5px}
-  .topo-acoes{gap:4px;flex-wrap:nowrap}
-  .btn.mini.topo-bt{padding:7px;border-radius:10px}
+  /* o nome cede espaço aos seis botões (e quebra a linha por dentro)
+     até sobrar menos de 130 px pra ele: só aí os botões descem pra
+     linha de baixo, o que acontece em tela de 375 px pra baixo */
+  .topo-quem{flex:1 1 0;min-width:130px}
+  .topo-quem{gap:8px}
+  .topo-rosto{width:34px;height:34px}
+  .topo h1{font-size:15.5px}
+  .topo-rep{font-size:9.5px;letter-spacing:.12em}
+  /* nome comprido demais pro espaço que sobra dos botões: reticências */
+  .topo-nome,.topo-rep{overflow:hidden;text-overflow:ellipsis}
+  .topo-nome{white-space:nowrap}
+  .topo-acoes{gap:3px;flex-wrap:nowrap}
+  .btn.mini.topo-bt{padding:6px;border-radius:10px}
   .topo-bt .topo-rot{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
   .topo-bt{position:relative}
   .topo-bt .topo-conta{position:absolute;top:1px;right:1px;min-width:13px;height:13px;padding:0 3px;font-size:8.5px}
@@ -3688,6 +3695,65 @@ html[data-moldura="grafite"], body[data-moldura="grafite"]{
 .ajuste-moldura .bolinha:focus-visible{outline:2px solid var(--destaque);outline-offset:3px}
 .ajuste-moldura .moldura-pe{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px}
 .ajuste-moldura .moldura-nome{color:var(--texto-fraco);font-size:.9rem}
+
+/* ---------- salvar e carregar: o save num .json ----------
+   O cartão da jornada (de quem é, até onde, o time), o recibo do
+   download, a caixa de escolher o arquivo e a de colar o texto. */
+.vis-oculto{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;opacity:0}
+.save-cartao{display:grid;grid-template-columns:auto minmax(0, 1fr);gap:8px 14px;align-items:center;
+  padding:14px 16px;border:1px solid var(--borda);border-radius:var(--raio-sm);
+  background:linear-gradient(180deg, color-mix(in srgb, var(--ac, var(--destaque)) 9%, var(--painel-2)), var(--painel-2))}
+.save-rosto{width:58px;height:58px;border-radius:50%;overflow:hidden;display:grid;place-items:center;position:relative;
+  background:var(--bg-2);border:2px solid color-mix(in srgb, var(--ac, var(--destaque)) 65%, var(--borda))}
+.save-rosto img{width:100%;height:100%;object-fit:cover;object-position:50% 20%;image-rendering:pixelated}
+.save-rosto b{display:none;font-family:var(--letra-hud);font-size:24px;font-weight:700;color:var(--texto-fraco)}
+.save-rosto.vazio b{display:block}
+.save-quem{display:flex;flex-direction:column;gap:1px;min-width:0;font-family:var(--letra-hud)}
+.save-nome{font-size:19px;font-weight:700;line-height:1.15;overflow-wrap:anywhere}
+.save-capnum{margin-top:4px;font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ac, var(--destaque))}
+.save-cap{font-size:14px;line-height:1.3;color:var(--texto);text-wrap:balance}
+.save-fatos{grid-column:1 / -1;display:flex;flex-wrap:wrap;gap:5px}
+.save-fatos span{display:inline-flex;align-items:center;gap:5px;white-space:nowrap;padding:2px 9px 2px 7px;border-radius:999px;
+  font-family:var(--letra-hud);font-size:12px;line-height:18px;color:var(--texto-fraco);font-variant-numeric:tabular-nums;
+  background:color-mix(in srgb, var(--bg) 60%, transparent);border:1px solid color-mix(in srgb, var(--borda) 85%, transparent)}
+.save-fatos svg.icone{width:13px;height:13px;color:var(--ac, currentColor)}
+.save-time{grid-column:1 / -1;display:flex;flex-wrap:wrap;gap:4px;padding-top:8px;
+  border-top:1px solid color-mix(in srgb, var(--borda) 70%, transparent)}
+.save-pk{width:44px;height:36px;display:grid;place-items:center;border-radius:8px;background:color-mix(in srgb, var(--bg) 55%, transparent)}
+.save-pk img{max-width:40px;max-height:32px;image-rendering:pixelated}
+.save-nota{grid-column:1 / -1;margin:0;font-size:12px;color:var(--texto-tenue)}
+.save-ok, .save-erro, .save-troca{display:flex;gap:10px;align-items:flex-start;margin:12px 0 0;padding:10px 12px;
+  border-radius:var(--raio-sm);font-size:13.5px;line-height:1.45;color:var(--texto)}
+.save-ok{background:color-mix(in srgb, var(--bom) 13%, transparent);border:1px solid color-mix(in srgb, var(--bom) 45%, var(--borda))}
+.save-erro{background:color-mix(in srgb, var(--ruim) 14%, transparent);border:1px solid color-mix(in srgb, var(--ruim) 50%, var(--borda))}
+.save-troca{background:color-mix(in srgb, var(--destaque) 9%, transparent);border:1px solid color-mix(in srgb, var(--destaque) 40%, var(--borda))}
+.save-ok > svg.icone, .save-erro > svg.icone, .save-troca > svg.icone{flex:0 0 auto;width:18px;height:18px;margin-top:1px}
+.save-ok > svg.icone{color:var(--bom)}
+.save-erro > svg.icone{color:var(--ruim)}
+.save-troca > svg.icone{color:var(--destaque)}
+.save-ok b{overflow-wrap:anywhere}
+.save-botoes{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.save-botoes .btn{display:inline-flex;align-items:center;gap:7px;font-family:var(--letra-hud);font-weight:600}
+.save-botoes .btn > svg.icone{width:17px;height:17px}
+label.btn{cursor:pointer}
+label.btn:focus-within{outline:2px solid var(--destaque);outline-offset:2px}
+.save-erro + .save-zona{margin-top:12px}
+.save-zona{display:flex;align-items:center;gap:14px;padding:20px 18px;cursor:pointer;
+  border:2px dashed var(--borda-forte);border-radius:var(--raio);
+  background:color-mix(in srgb, var(--painel-2) 70%, transparent);transition:border-color .15s, background .15s}
+.save-zona:hover, .save-zona.sobre, .save-zona:focus-within{
+  border-color:var(--ac, var(--destaque));background:color-mix(in srgb, var(--ac, var(--destaque)) 11%, var(--painel-2))}
+.save-zona > svg.icone{flex:0 0 auto;width:32px;height:32px;color:var(--ac, var(--destaque))}
+.save-zona > span{display:flex;flex-direction:column;gap:3px;font-family:var(--letra-hud)}
+.save-zona b{font-size:16px}
+.save-zona small{font-size:12.5px;color:var(--texto-fraco)}
+.save-colar{margin-top:12px}
+.save-colar summary{cursor:pointer;color:var(--texto-fraco);font-size:13px;font-family:var(--letra-hud)}
+.save-colar summary:hover{color:var(--texto)}
+.save-texto{display:block;width:100%;margin:8px 0;padding:8px 10px;resize:vertical;
+  font-family:var(--mono);font-size:11.5px;line-height:1.4;color:var(--texto);
+  background:var(--bg);border:1px solid var(--borda);border-radius:8px}
+.save-texto:focus{outline:2px solid var(--ac, var(--destaque));outline-offset:1px}
 
 /* data de nascimento na ficha */
 .data-nasc{display:grid;grid-template-columns:70px 1fr 90px;gap:8px}

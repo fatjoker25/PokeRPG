@@ -16,6 +16,9 @@
        (com as três velocidades da luta),
        as abas do tutorial, a folha de regras, o mapa e a ficha de cada
        lugar nele, e o mapa da parede do Centro;
+     - salvar e carregar: o recibo do Salvar (do alto e dos Ajustes), a
+       abertura com o Carregar jogo, o arquivo bom (com a etiqueta e o
+       save cru), o ruim, e a volta pro jogo pelo arquivo;
      - toda loja, comprando e vendendo;
      - a rede: cada degrau em cada ponto, cada serviço e cada escolha
        dele, e a chegada de cada prova;
@@ -229,6 +232,24 @@ const SUSPEITO = [
     await tentar('mapa/' + id, x => Exploracao.mapaInfo(x), id);
   /* o da parede: pelo balcão do Centro (com a volta) e pela tela do lugar */
   for (const o of ['centro', 'parede']) await tentar('mapa da parede/' + o, x => Exploracao.mapa(x), o);
+
+  /* ---------- salvar e carregar ---------- */
+  await restaurar();
+  await page.evaluate(() => Exploracao.tela());
+  await tentar('salvar', () => UI.modalSalvar());
+  await tentar('ajustes/salvar', () => { UI.modalAjustes(); UI.modalSalvar(); });
+  const arquivo = await page.evaluate(() => ArquivoSave.texto());
+  await tentar('abertura', () => { UI.fecharModal(true); UI.telaInicial(); });
+  if (!(await page.evaluate(() => [...document.querySelectorAll('.tt-btn')].some(b => /Carregar jogo/.test(b.textContent))))){
+    onde = 'abertura'; anota('carregar', 'a abertura não tem o Carregar jogo');
+  }
+  await tentar('carregar', () => UI.modalCarregar(false));
+  for (const [r, t] of [['quebrado', '{"jogo":"PokéRPG","save":{'], ['outro json', '{"a":1}'], ['save cru', snap], ['arquivo', arquivo]])
+    await tentar('carregar/' + r, x => UI.lerTextoDeSave(x), t);
+  await tentar('carregar/usar', () => UI.usarSaveLido());
+  if (!(await page.evaluate(() => !!(Estado.dados && Estado.dados.jogador.nome === 'Lia' && document.querySelector('.topo'))))){
+    onde = 'carregar/usar'; anota('carregar', 'o arquivo carregado não voltou pro jogo');
+  }
 
   /* ---------- lojas ---------- */
   for (const id of await page.evaluate(() => Object.keys(LOJAS))){

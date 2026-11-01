@@ -136,7 +136,8 @@ function ehFinalDeVerdade(f){ return !ehEpilogo(f) && f.id !== 'fim'; }
    dele) e as janelas de ler, que ganham a folha do HUD: seção com
    losango, a conta em linhas agrupadas, o exemplo num cartão. */
 const ICONE_DA_JANELA = {bolas:'bola', regras:'dado', tutorial:'pergunta', ajustes:'engrenagem', rota:'mapa',
-  diario:'diario', finais:'liga', credencial:'credenciais', centro:'centro', time:'bola'};
+  diario:'diario', finais:'liga', credencial:'credenciais', centro:'centro', time:'bola',
+  salvar:'salvar', carregar:'carregar'};
 const JANELAS_DE_LER = new Set(['regras', 'tutorial', 'ajustes', 'rota', 'diario', 'finais', 'credencial']);
 
 const APARELHOS = [
@@ -343,7 +344,7 @@ const UI = {
     const rep = Estado.nomeRep();
     /* O alto da tela é o HUD dos jogos de hoje: quem você é (rosto,
        nome, título), o que você carrega (lugar, hora, HP, Vontade,
-       dinheiro, Ração) e os cinco botões de menu, cada um com o seu
+       dinheiro, Ração) e os seis botões de menu, cada um com o seu
        desenho. No celular os botões ficam só com o desenho. */
     const rosto = typeof retratoDoJogador === 'function' ? retratoDoJogador(d) : null;
     const hp = d.jogador.hp, hpMax = Estado.hpMaxJogador();
@@ -359,7 +360,7 @@ const UI = {
         <span class="topo-rosto${rosto ? '' : ' vazio'}" aria-hidden="true">${rosto
           ? `<img src="${rosto}" alt="" onerror="this.parentNode.classList.add('vazio');this.remove()">` : ''}<b>${this.esc((d.jogador.nome || '?').slice(0, 1).toUpperCase())}</b></span>
         <div class="topo-id">
-          <h1>${this.esc(d.jogador.nome)}<span class="topo-traco"> — </span><span class="topo-rep">${this.esc(rep)}</span></h1>
+          <h1><span class="topo-nome">${this.esc(d.jogador.nome)}</span><span class="topo-traco"> — </span><span class="topo-rep">${this.esc(rep)}</span></h1>
         </div>
       </div>
       <div class="topo-info">
@@ -377,6 +378,7 @@ const UI = {
           numeros ? '<b class="topo-conta">' + numeros + '</b>' : ''}</button>
         ${botao('cartao', 'Ficha', 'title="Ficha" onclick="UI.modalFicha()"')}</button>
         ${botao('diario', 'Diário', 'title="Diário" onclick="UI.modalDiario()"')}</button>
+        ${botao('salvar', 'Salvar', 'title="Salvar: baixa o save num arquivo .json" onclick="UI.modalSalvar()"')}</button>
         ${botao('engrenagem', 'Ajustes', 'title="Ajustes" onclick="UI.modalAjustes()"')}</button>
       </div>
       ${typeof Fome !== 'undefined' ? Fome.tirarAvisos().map(a => `<div class="topo-aviso">${this.esc(a)}</div>`).join('') : ''}
@@ -405,11 +407,13 @@ const UI = {
     const botoes = [
       temSave ? '<button class="tt-btn tt-principal" onclick="Jogo.continuar()">Continuar</button>' : '',
       `<button class="tt-btn ${temSave ? '' : 'tt-principal'}" onclick="Jogo.novo()">${temSave ? 'Nova jornada' : 'Começar'}</button>`,
+      '<button class="tt-btn" onclick="UI.modalCarregar(true)">Carregar jogo</button>',
       '<button class="tt-btn" onclick="UI.modalTutorial()">Tutorial</button>',
       '<button class="tt-btn" onclick="UI.modalRegras()">Regras</button>',
       '<button class="tt-btn" onclick="UI.modalFinais()">Códice de finais</button>'
     ].filter(Boolean).map((h, i) => h.replace('<button ', `<button style="--i:${i}" `)).join('');
-    this.add(`<div class="tela-titulo">
+    /* o .json do Salvar pode ser solto em qualquer lugar da abertura */
+    this.add(`<div class="tela-titulo" ondragover="event.preventDefault()" ondrop="UI.soltarSave(event)">
       <div class="tt-ceu" aria-hidden="true">${estrelas}</div>
       <svg class="tt-pokebola" viewBox="0 0 100 100" aria-hidden="true">
         <circle cx="50" cy="50" r="46" fill="none" stroke="currentColor" stroke-width="5"/>
@@ -422,7 +426,7 @@ const UI = {
       </h1>
       <div class="tt-sub">Sua jornada Pokémon começa agora!</div>
       <div class="tt-botoes">${botoes}</div>
-      ${temSave ? '<div class="tt-nota">Começar uma nova jornada apaga a atual.</div>' : ''}
+      ${temSave ? '<div class="tt-nota">Começar uma nova jornada, ou carregar uma de arquivo, tira a atual do lugar.</div>' : ''}
     </div>`);
   },
 
@@ -2206,8 +2210,10 @@ const UI = {
     (linhas || []).forEach(l => {
       const el = this.el(`<div class="recado ${this.esc(l.tipo || '')}">${this.esc(l.texto)}</div>`);
       caixa.appendChild(el);
-      setTimeout(() => el.classList.add('saindo'), 3400);
-      setTimeout(() => el.remove(), 3900);
+      /* dura: recado que precisa ficar mais tempo na tela */
+      const dura = l.dura || 3400;
+      setTimeout(() => el.classList.add('saindo'), dura);
+      setTimeout(() => el.remove(), dura + 500);
     });
   },
 
@@ -4218,9 +4224,182 @@ const UI = {
       </div>
       ${this.ajustesDeSom()}
       ${Velocidade.ajustes()}
+      ${Estado.dados ? `<h3>Salvar</h3>
+      <button class="escolha com-icone" onclick="UI.modalSalvar()">${svgIcone('salvar')}<span class="esc-rot">Baixar o save<small class="esc-det">a jornada inteira num arquivo .json · na abertura, Carregar jogo lê de volta</small></span></button>` : ''}
       <h3>Ajuda</h3>
       <button class="escolha com-icone" onclick="UI.modalRegras()">${svgIcone('dado')}<span class="esc-rot">Regras<small class="esc-det">todas as contas do jogo, com os números</small></span></button>
       <button class="escolha com-icone" onclick="UI.modalTutorial()">${svgIcone('pergunta')}<span class="esc-rot">Tutorial<small class="esc-det">a primeira hora, passo a passo</small></span></button>`, false, 'ajustes');
+  },
+
+  /* ========================================================
+     SALVAR E CARREGAR — o save num arquivo .json (ArquivoSave)
+     O Salvar baixa na hora do toque e a janela é o recibo; o Carregar
+     jogo, na abertura, mostra de quem é a jornada do arquivo antes de
+     pôr ela no lugar da do navegador.
+     ======================================================== */
+  /* "Capítulo 12 · O título" de um save qualquer; curto, só o número */
+  capituloDoSave(d, curto){
+    const cap = typeof Historia !== 'undefined' ? Historia.capitulo(d.capitulo) : null;
+    if (cap && typeof numeroDoCapitulo === 'function') return numeroDoCapitulo(cap) + (cap.titulo && !curto ? ' · ' + cap.titulo : '');
+    return 'Capítulo ' + Math.max(1, Math.floor(+d.capitulo || 0));
+  },
+  /* 27/10/2026, às 14:03 */
+  dataDoSave(iso){
+    const t = new Date(iso);
+    if (isNaN(t)) return '';
+    return t.toLocaleDateString('pt-BR') + ', às ' + t.toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
+  },
+  /* O cartão de uma jornada guardada: quem, até onde e com quem. Tudo
+     que sai do save passa pelo esc — o arquivo pode ter vindo de outra
+     pessoa —, e o rosto só entra com caminho de arquivo limpo. */
+  cartaoDoSave(d, nota){
+    const e = x => this.esc(String(x == null ? '' : x));
+    const j = d.jogador || {};
+    const nIns = (Array.isArray(d.insignias) ? d.insignias : []).filter(i => i !== 'Título de Campeão' && i !== 'Campeão de Kanto').length;
+    const dias = Math.max(1, Math.floor(+(d.relogio || {}).dia || 1));
+    const lugar = d.local && typeof LOCAIS !== 'undefined' && LOCAIS[d.local] ? LOCAIS[d.local].nome : '';
+    const rosto = typeof j.retrato === 'string' && /^[\w\/.-]+$/.test(j.retrato) && typeof caminhoNPC === 'function' ? caminhoNPC(j.retrato) : null;
+    const time = (d.time || []).slice(0, 6).map(p =>
+      `<span class="save-pk" title="${e(nomeExib(p))} · Nv ${e(p.nivel)}">${imgSprite({dex:p.dex, shiny:!!p.shiny}, 'icone')}</span>`).join('');
+    const notas = [].concat(nota || []);
+    if (d.lutaSalva) notas.push('no meio de uma luta, que volta junto');
+    const cap = typeof Historia !== 'undefined' ? Historia.capitulo(d.capitulo) : null;
+    /* cada fato num chip, como no alto da tela: a linha quebra entre um
+       e outro, nunca no meio */
+    const fatos = [[lugar, 'alfinete'], [`${dias} ${dias === 1 ? 'dia' : 'dias'} de estrada`, 'relogio'],
+      [`${nIns} ${nIns === 1 ? 'insígnia' : 'insígnias'}`, 'ginasio']].filter(f => f[0]);
+    return `<div class="save-cartao">
+      <span class="save-rosto${rosto ? '' : ' vazio'}" aria-hidden="true">${rosto
+        ? `<img src="${e(rosto)}" alt="" onerror="this.parentNode.classList.add('vazio');this.remove()">` : ''}<b>${e((j.nome || '?').slice(0, 1).toUpperCase())}</b></span>
+      <div class="save-quem">
+        <b class="save-nome">${e(j.nome || 'Sem nome')}</b>
+        <span class="save-capnum">${e(this.capituloDoSave(d, true))}</span>
+        ${cap && cap.titulo ? `<span class="save-cap">${e(cap.titulo)}</span>` : ''}
+      </div>
+      <div class="save-fatos">${fatos.map(([t, ic]) => `<span>${svgIcone(ic)}${e(t)}</span>`).join('')}</div>
+      ${time ? `<div class="save-time" aria-label="Time">${time}</div>` : ''}
+      ${notas.length ? `<p class="save-nota">${e(maiuscula(notas.join(' · ')))}</p>` : ''}
+    </div>`;
+  },
+
+  /* Salvar: o toque já baixa o arquivo, e a janela é o recibo, com o
+     que foi nele. O navegador pode barrar o download calado (a página
+     publicada barra): por isso o texto também se copia. */
+  modalSalvar(){
+    if (!Estado.dados) return;
+    const nome = ArquivoSave.baixar();
+    this.modal('Salvar', `
+      ${this.cartaoDoSave(Estado.dados, 'salvo agora')}
+      <div id="save-status">${this.statusDoSave(nome)}</div>
+      <p class="sussurro">O jogo também se salva sozinho neste navegador, a cada passo. O arquivo é uma cópia deste momento: pra continuar noutro aparelho ou noutro navegador, abra o jogo lá e escolha <b>Carregar jogo</b>, na abertura.</p>
+      <div class="save-botoes">
+        <button class="btn destaque" onclick="UI.salvarDeNovo()">${svgIcone('salvar')}Baixar de novo</button>
+        <button class="btn" onclick="UI.copiarSave()">Copiar o texto</button>
+      </div>
+      <div id="save-copia"></div>`, false, 'salvar');
+  },
+  statusDoSave(nome){
+    return nome
+      ? `<p class="save-ok" role="status">${svgIcone('salvar')}<span>Baixado: <b>${this.esc(nome)}</b>. Se ele não aparecer nos downloads, copie o texto e guarde num arquivo .json.</span></p>`
+      : `<p class="save-erro" role="alert">${svgIcone('alerta')}<span>O navegador não deixou montar o arquivo. Copie o texto e guarde num arquivo .json.</span></p>`;
+  },
+  salvarDeNovo(){
+    const nome = ArquivoSave.baixar();
+    const el = document.getElementById('save-status');
+    if (el) el.innerHTML = this.statusDoSave(nome);
+  },
+  async copiarSave(){
+    const texto = ArquivoSave.texto();
+    const ok = await ArquivoSave.copiar(texto);
+    const el = document.getElementById('save-copia');
+    if (!el) return;
+    el.innerHTML = ok
+      ? `<p class="save-ok" role="status">${svgIcone('salvar')}<span>Copiado. Cole num arquivo de texto e salve com o fim <b>.json</b>, ou cole direto no Carregar jogo, noutro navegador.</span></p>`
+      : `<p class="sussurro">O navegador não deixou copiar sozinho: o texto está aqui embaixo, já selecionado.</p>
+         <textarea class="save-texto" id="save-texto" rows="6" readonly spellcheck="false" aria-label="Texto do save"></textarea>`;
+    const ta = document.getElementById('save-texto');
+    if (ta){ ta.value = texto; ta.focus(); ta.select(); }
+  },
+
+  /* Carregar jogo, na abertura: o .json que o Salvar baixou. O seletor
+     de arquivo abre junto com a janela; o arquivo escolhido (ou solto
+     na tela, ou o texto colado) mostra de quem é a jornada antes de
+     trocar, e a do navegador, se tiver, diz que vai sair. */
+  modalCarregar(abrirSeletor){
+    this._saveLido = null;
+    this.janelaCarregar(null);
+    if (abrirSeletor){ const i = document.getElementById('save-arquivo'); if (i) i.click(); }
+  },
+  janelaCarregar(lido){
+    this.modal('Carregar jogo', `<div id="save-carregar">${this.corpoCarregar(lido)}</div>`, false, 'carregar');
+    /* arquivo solto fora da caixa: sem isso o navegador abre o .json
+       no lugar do jogo */
+    const m = document.getElementById('modal');
+    if (m){ m.addEventListener('dragover', ev => ev.preventDefault()); m.addEventListener('drop', ev => this.soltarSave(ev)); }
+  },
+  corpoCarregar(lido){
+    const entrada = `<input type="file" id="save-arquivo" class="vis-oculto" accept=".json,application/json,text/plain"
+      onchange="UI.lerArquivoDeSave(this.files && this.files[0]); this.value=''">`;
+    if (lido && lido.dados){
+      const atual = ArquivoSave.doNavegador();
+      const troca = atual ? `<p class="save-troca">${svgIcone('alerta')}<span>A jornada que está neste navegador (<b>${this.esc(atual.jogador.nome || 'sem nome')}</b>, ${this.esc(this.capituloDoSave(atual, true))}) sai, e esta entra no lugar dela. Pra guardar a de agora, feche, entre nela pelo Continuar e use Salvar antes.</span></p>` : '';
+      /* o códice separa final de epílogo, e a nota também */
+      const fins = (lido.finais || []).filter(ehFinalDeVerdade).length, eps = (lido.finais || []).filter(ehEpilogo).length;
+      const codice = [fins ? `${fins} ${fins === 1 ? 'final' : 'finais'}` : '', eps ? `${eps} ${eps === 1 ? 'epílogo' : 'epílogos'}` : ''].filter(Boolean);
+      const notas = [lido.salvoEm ? 'baixado em ' + this.dataDoSave(lido.salvoEm) : '',
+        codice.length ? `${codice.join(' e ')} no códice, que somam com os deste navegador` : ''].filter(Boolean);
+      return `${this.cartaoDoSave(lido.dados, notas)}${troca}
+        <div class="save-botoes">
+          <button class="btn destaque" onclick="UI.usarSaveLido()">${svgIcone('carregar')}Carregar esta jornada</button>
+          <label class="btn" for="save-arquivo">Escolher outro arquivo</label>
+        </div>${entrada}`;
+    }
+    return `${lido && lido.erro ? `<p class="save-erro" role="alert">${svgIcone('alerta')}<span>${this.esc(lido.erro)}</span></p>` : ''}
+      <label class="save-zona" ondragover="event.preventDefault();this.classList.add('sobre')" ondragleave="this.classList.remove('sobre')">
+        ${svgIcone('carregar')}<span><b>Escolher o arquivo do save</b><small>o .json que o Salvar baixou — ou arraste ele pra cá</small></span>
+        ${entrada}
+      </label>
+      <details class="save-colar"><summary>Colar o texto do save</summary>
+        <textarea id="save-colado" class="save-texto" rows="5" spellcheck="false" aria-label="Texto do save"></textarea>
+        <button class="btn mini" onclick="UI.lerTextoDeSave(document.getElementById('save-colado').value)">Ler o texto</button>
+      </details>
+      <p class="sussurro">Carregar põe a jornada do arquivo no lugar da que está neste navegador, do jeito que ela estava quando foi baixada.</p>`;
+  },
+  lerArquivoDeSave(arq){
+    if (!arq) return;
+    if (arq.size > 30 * 1024 * 1024) return this.mostrarSaveLido({erro:'Esse arquivo é grande demais pra ser um save.'});
+    const r = new FileReader();
+    r.onload = () => this.mostrarSaveLido(ArquivoSave.ler(r.result));
+    r.onerror = () => this.mostrarSaveLido({erro:'O navegador não conseguiu ler esse arquivo.'});
+    r.readAsText(arq);
+  },
+  lerTextoDeSave(texto){
+    if (!String(texto || '').trim()) return this.mostrarSaveLido({erro:'Cole o texto do save na caixa antes de ler.'}, '');
+    this.mostrarSaveLido(ArquivoSave.ler(texto), texto);
+  },
+  /* o .json solto na abertura ou na janela */
+  soltarSave(ev){
+    ev.preventDefault(); ev.stopPropagation();
+    document.querySelectorAll('.save-zona.sobre').forEach(z => z.classList.remove('sobre'));
+    const arq = ev.dataTransfer && ev.dataTransfer.files && ev.dataTransfer.files[0];
+    if (arq) this.lerArquivoDeSave(arq);
+  },
+  mostrarSaveLido(lido, colado){
+    this._saveLido = lido && lido.dados ? lido : null;
+    const caixa = document.getElementById('save-carregar');
+    if (caixa) caixa.innerHTML = this.corpoCarregar(lido);
+    else this.janelaCarregar(lido);
+    /* erro no texto colado: a caixa fica aberta com o texto, pra
+       consertar ali mesmo (o valor vai pelo DOM, nunca pelo esc, que
+       resolveria as marcas de gênero de dentro do save) */
+    const ta = colado != null && !this._saveLido ? document.getElementById('save-colado') : null;
+    if (ta){ ta.value = colado; ta.closest('details').open = true; ta.focus(); }
+  },
+  usarSaveLido(){
+    const lido = this._saveLido;
+    if (!lido) return;
+    this._saveLido = null;
+    ArquivoSave.usar(lido.dados, lido.finais);
   },
 
   modalItens(modo, bolsoPedido){
@@ -5525,8 +5704,10 @@ const UI = {
       <h3>Quando o seu cai contra um selvagem</h3>
       <p class="sussurro">Se o selvagem tem natureza agressiva, ele rola o Instinto dele: com um sucesso, ataca VOCÊ. Dano = Força dele + 2 em d6, e cada sucesso tira 3 do seu HP. As naturezas agressivas estão marcadas na aba Naturezas.</p>
       <h3>O que não dá pra desfazer</h3>
-      ${L('Salvar', 'automático — não existe voltar atrás')}
+      ${L('Salvar', 'automático, a cada passo — não existe voltar atrás, a não ser por um arquivo baixado antes')}
+      ${L('Arquivo', 'o Salvar, no alto da tela, baixa a jornada num .json · Carregar jogo, na abertura, lê de volta')}
       ${L('Nova jornada', 'apaga a atual')}
+      ${L('Carregar jogo', 'troca a atual pela do arquivo')}
       ${L('Insígnia, morte, reputação', 'ficam')}`;
   },
 
@@ -6069,7 +6250,17 @@ const UI = {
       <p class="sussurro">Trocar devolve o anterior à mochila. O efeito de cada um está escrito na ficha técnica do item, em letra de máquina.</p>
 
       <h3>Dados</h3>
-      <p class="sussurro">Toda rolagem do combate aparece na tela como dado de verdade, com o motivo embaixo. Dá pra clicar em qualquer um pra ver ele girar de novo — o resultado não muda, já está registrado. A bandeja embaixo é só pra girar por girar: não afeta nada.</p>`, false, 'regras');
+      <p class="sussurro">Toda rolagem do combate aparece na tela como dado de verdade, com o motivo embaixo. Dá pra clicar em qualquer um pra ver ele girar de novo — o resultado não muda, já está registrado. A bandeja embaixo é só pra girar por girar: não afeta nada.</p>
+
+      <h3>Salvar e carregar</h3>
+      <div class="linha"><span class="k">No navegador</span><span class="v">sozinho, a cada passo, por cima do anterior · não tem botão e não tem volta</span></div>
+      <div class="linha"><span class="k">Salvar</span><span class="v">no alto da tela e nos Ajustes · baixa a jornada inteira num arquivo .json: ficha, time, PC, cemitério, mochila, Pokédex, PokéNav, relógio, quem você conhece e a luta, se você estiver numa · e o códice de finais junto</span></div>
+      <div class="linha"><span class="k">Carregar jogo</span><span class="v">na abertura · escolhe o arquivo, arrasta ele pra tela ou cola o texto · mostra de quem é a jornada antes de trocar</span></div>
+      <div class="linha"><span class="k">O que sai</span><span class="v">a jornada que estava no navegador · o arquivo entra no lugar dela</span></div>
+      <div class="linha"><span class="k">Códice de finais</span><span class="v">não sai: os finais do arquivo somam com os do navegador, e nenhum some</span></div>
+      <div class="linha"><span class="k">Arquivo antigo</span><span class="v">passa pelas mesmas conversões de quem recarrega a página</span></div>
+      <div class="linha"><span class="k">Arquivo recusado</span><span class="v">JSON quebrado · sem treinador, time ou mochila · Pokémon danificado · código no meio do texto · feito numa versão mais nova do jogo</span></div>
+      <p class="sussurro">O arquivo é uma cópia do momento em que foi baixado. Carregar ele volta a jornada inteira àquele momento: o que veio depois — a insígnia, a escolha, a morte — não estava no arquivo.</p>`, false, 'regras');
   }
 };
 

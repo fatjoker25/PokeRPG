@@ -7,7 +7,9 @@ RPG de Pokémon feito para jogar no navegador. Projeto de fã, em português do 
 - **Arquivo único:** baixe `pokerpg.html` e abra em qualquer navegador. Funciona offline e não precisa de instalação.
 - **Pelo repositório:** abra `index.html`.
 
-O progresso fica salvo no próprio navegador.
+O progresso fica salvo no próprio navegador. Pra levar a jornada pra outro
+aparelho ou guardar uma cópia, use **Salvar** no alto da tela: ele baixa o
+save num arquivo `.json`, que a abertura lê de volta em **Carregar jogo**.
 
 Depois de mexer em qualquer arquivo de `js/` ou `css/`, gere o arquivo único de novo:
 

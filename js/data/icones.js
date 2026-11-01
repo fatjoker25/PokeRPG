@@ -132,6 +132,10 @@ const ICONE = {
   moeda:'<circle cx="12" cy="12" r="8.5"/><path d="M14.8 9.2c-.6-.9-1.6-1.4-2.8-1.4-1.6 0-2.8.9-2.8 2.1 0 2.9 5.8 1.4 5.8 4.3 0 1.2-1.2 2.1-2.9 2.1-1.3 0-2.4-.6-3-1.5M12 6.2v1.6M12 16.3v1.6"/>',
   tigela:'<path d="M3.5 11h17a8.5 8.5 0 0 1-17 0z"/><path d="M8 8.5c1-1 2.5-1.5 4-1.5s3 .5 4 1.5"/>',
   diario:'<path d="M12 6.5c-2-1.5-5-2-8-1.5v14c3-.5 6 0 8 1.5 2-1.5 5-2 8-1.5V5c-3-.5-6 0-8 1.5z"/><path d="M12 6.5V20.5"/>',
+  /* salvar é o disquete (baixa o save num .json); carregar, o arquivo
+     subindo da bandeja */
+  salvar:'<path d="M5 3.5h11.5l4 4V19a1.5 1.5 0 0 1-1.5 1.5H5A1.5 1.5 0 0 1 3.5 19V5A1.5 1.5 0 0 1 5 3.5z"/><path d="M8 3.5v5h7.5v-5M7 20.5v-6h10v6"/>',
+  carregar:'<path d="M4 15v3.5A1.5 1.5 0 0 0 5.5 20h13a1.5 1.5 0 0 0 1.5-1.5V15"/><path d="M12 15.5V4.5M7.5 9L12 4.5 16.5 9"/>',
   engrenagem:'<circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="6.6"/><path d="M12 2.6v2.8M12 18.6v2.8M2.6 12h2.8M18.6 12h2.8M5.4 5.4l2 2M16.6 16.6l2 2M5.4 18.6l2-2M16.6 7.4l2-2"/>',
   /* o dado da ficha de inscrição: sorteia uma sugestão */
   dado:'<rect x="4" y="4" width="16" height="16" rx="3.5"/><circle cx="8.6" cy="8.6" r=".9" fill="currentColor"/><circle cx="15.4" cy="8.6" r=".9" fill="currentColor"/><circle cx="12" cy="12" r=".9" fill="currentColor"/><circle cx="8.6" cy="15.4" r=".9" fill="currentColor"/><circle cx="15.4" cy="15.4" r=".9" fill="currentColor"/>',
@@ -167,7 +171,8 @@ const COR_DO_ICONE = {
   agenda:'#ffca28', convite:'#ffb74d', revanche:'#ff7043', trancado:'#7d88a8',
   mural:'#ffb74d', pc:'#4dd0e1', mapa:'#66bb6a', dormir:'#7986cb', diario:'#e8b923',
   bola:'#4cc38a', pokedex:'#ef5350', itens:'#d9a35b', telefone:'#43b581', lua:'#b39ddb',
-  seta:'#5aa7ff', voar:'#9fa8ff', alfinete:'#ffd54f', olho:'#90caf9', pergunta:'#8c9eff', dado:'#4dd0e1', chama:'#a77bff', tigela:'#d9a35b'
+  seta:'#5aa7ff', voar:'#9fa8ff', alfinete:'#ffd54f', olho:'#90caf9', pergunta:'#8c9eff', dado:'#4dd0e1', chama:'#a77bff', tigela:'#d9a35b',
+  salvar:'#64b5f6', carregar:'#81c784'
 };
 
 /* estilo: mais alguma coisa inline (a seta da placa gira por ele) */

@@ -1215,10 +1215,22 @@ const Estado = {
     } catch(e){ return false; }
   },
   carregar(slot='auto'){
+    let raw = null;
+    try { raw = localStorage.getItem('pokerpg_save_' + slot); } catch(e){ return false; }
+    return raw ? this.abrir(raw) : false;
+  },
+  /* grava um save inteiro num slot, do jeito que veio: quem lê e
+     converte é o carregar (o arquivo do Carregar jogo entra assim) */
+  gravar(dados, slot='auto'){
+    try { localStorage.setItem('pokerpg_save_' + slot, JSON.stringify(dados)); return true; }
+    catch(e){ return false; }
+  },
+  /* O save (texto ou objeto) vira o jogo. As conversões de save velho
+     moram aqui, e valem pro save do navegador e pro que vem de arquivo
+     (js/engine/save-arquivo.js). */
+  abrir(raw){
     try {
-      const raw = localStorage.getItem('pokerpg_save_' + slot);
-      if (!raw) return false;
-      this.dados = JSON.parse(raw);
+      this.dados = typeof raw === 'string' ? JSON.parse(raw) : raw;
       /* save de antes do Pokérole: atributos dos jogos viram os do livro */
       const d = this.dados;
       for (const p of [].concat(d.time || [], d.pc || [], d.cemiterio || []))
@@ -1385,5 +1397,17 @@ const Estado = {
   finaisDescobertos(){
     try { const raw = localStorage.getItem('pokerpg_finais'); return raw ? JSON.parse(raw) : []; }
     catch(e){ return []; }
+  },
+  /* finais que vieram num arquivo de save (js/engine/save-arquivo.js):
+     somam com os daqui, e nenhum some */
+  somarFinais(lista){
+    if (!Array.isArray(lista) || !lista.length) return;
+    try {
+      const aqui = this.finaisDescobertos();
+      for (const f of lista)
+        if (f && typeof f.id === 'string' && !aqui.find(x => x.id === f.id))
+          aqui.push({id:f.id, titulo:String(f.titulo || ''), quando:+f.quando || Date.now()});
+      localStorage.setItem('pokerpg_finais', JSON.stringify(aqui));
+    } catch(e){}
   }
 };

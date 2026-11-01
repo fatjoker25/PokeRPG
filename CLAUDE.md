@@ -136,7 +136,7 @@ O mesmo vale pro que só existe no nosso mundo:
 Expressão que carrega bicho no meio também sai: "burrice" é besteira,
 "pé de cabra" é alavanca, "galo na testa" é calombo, "motor de quarenta
 cavalos" é motor forte. Item que muda de nome ganha conversão em
-`Estado.carregar`, senão some da mochila de quem já tinha.
+`Estado.abrir`, senão some da mochila de quem já tinha.
 
 ## Não existe HM
 Nenhum Pokémon aprende "Corte" ou "Surf" aqui. O que existe:
@@ -1312,6 +1312,47 @@ Contra treinador a saída é **Desistir** (`Batalha.desistir`, o botão
 com a bandeira branca; texto do jogo é português, nada de "Forfeit"): derrota,
 multa e moral (`MULTA_FORFEIT_POR_NIVEL`, `MORAL_FORFEIT`).
 
+## O save em arquivo
+O jogo se salva sozinho no navegador (`Estado.salvar`, a cada passo,
+por cima do anterior). O **Salvar** do alto da tela (o disquete, entre
+o Diário e os Ajustes) e dos Ajustes, do lado das Regras, baixa uma
+cópia em `.json` (`ArquivoSave`, em `js/engine/save-arquivo.js`): o save
+inteiro dentro de uma etiqueta, `{jogo:'PokéRPG', formato, salvoEm,
+save, finais}`, com a luta junto se tiver uma — o `montar` passa pelo
+`Estado.salvar`, que chama o `LutaSalva.anotar`. O códice de finais é do
+navegador, não da jornada, mas vai no arquivo e, na carga, soma com o
+daqui (`Estado.somarFinais`): nenhum final some. A janela
+(`UI.modalSalvar`) é o recibo: o toque já baixou. Página publicada barra
+download calada, então ela também copia o texto (`ArquivoSave.copiar`;
+sem área de transferência, o texto aparece selecionado).
+
+O **Carregar jogo** da abertura (`UI.modalCarregar`) abre o seletor de
+arquivo junto com a janela, e aceita também o arquivo solto em qualquer
+lugar da abertura e o texto colado. `ArquivoSave.ler` aceita a etiqueta
+ou o save cru e recusa com o motivo: JSON quebrado, sem treinador, time,
+mochila ou flags, Pokémon sem `dex` ou `uid` que preste, formato maior
+que `FORMATO`, e texto com cara de código (etiqueta de HTML, `on…=`,
+`javascript:`) — o save vai pra tela de muitos jeitos e o arquivo pode
+ter vindo de outra pessoa. Antes de trocar, o cartão
+(`UI.cartaoDoSave`, tudo pelo `esc`) mostra de quem é a jornada e diz
+qual sai do navegador. Aceito, o arquivo é gravado no lugar do
+automático (`Estado.gravar`) e quem segue é o `Jogo.continuar()`, como
+num recarregar.
+
+- **Conversão de save velho mora em `Estado.abrir`**, que o recarregar
+  e o arquivo usam. Nada de converter no `carregar` nem no
+  `ArquivoSave`, senão um dos dois caminhos fica sem.
+- Mudou o jeito de guardar de um modo que a conversão não cobre: sobe o
+  `FORMATO`, e arquivo novo aberto em jogo velho é recusado com aviso.
+- Navegador que não deixa gravar: a jornada roda da memória
+  (`Jogo.continuar(dados)`) e o recado (`UI.avisar`, com `dura`) pede
+  pra salvar antes de fechar.
+- O topo tem seis botões. No celular eles cabem na linha do nome a
+  partir de 385 px: o nome cede (`.topo-quem` com `flex:1 1 0` e
+  mínimo de 130 px) e, no pior caso, corta com reticências; abaixo disso
+  os botões descem pra linha de baixo, como já desciam. Botão novo no
+  topo mede de novo em 375, 390 e 761 px.
+
 ## A inscrição (criação de personagem)
 A criação é a **ficha de inscrição da Liga** (`UI.telaCriacao`, dados em
 `js/data/inscricao.js`, desenho em `css/criacao.css`): seis passos no
@@ -1650,7 +1691,7 @@ que o projeto tem:
   ler, e a opção de cena que é frase vai junto com ele. Nada de fonte
   de pixel fora do título.
 - **Topo** (`UI.topo`): HUD em duas linhas — rosto, nome e título de
-  quem joga com os cinco botões de menu (cada um com o desenho de
+  quem joga com os seis botões de menu (cada um com o desenho de
   `icones.js`; no celular só o desenho, com `aria-label`), e embaixo os
   chips do que se carrega (lugar, hora, HP com barrinha, Vontade,
   dinheiro, Ração). No celular os chips andam numa linha de arrastar. O

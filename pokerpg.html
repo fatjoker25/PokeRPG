@@ -134,7 +134,7 @@ body{
 /* ---------- topo ----------
    O HUD dos jogos de hoje: o rosto e o nome de quem joga à esquerda,
    o que se carrega no meio (cada coisa num chip com o seu desenho) e
-   os cinco botões de menu à direita. Fica grudado no alto enquanto a
+   os seis botões de menu à direita. Fica grudado no alto enquanto a
    página rola. No celular vira duas linhas: quem você é com os botões
    (só o desenho), e os chips embaixo. */
 .topo{
@@ -190,7 +190,7 @@ body{
 @media (prefers-reduced-motion: reduce){.topo-aviso{animation:none}}
 .topo-acoes{display:flex;gap:5px;flex-wrap:wrap}
 .btn.mini.topo-bt{
-  display:inline-flex;align-items:center;gap:6px;padding:6px 11px 6px 9px;border-radius:11px;
+  display:inline-flex;align-items:center;gap:6px;padding:6px 9px 6px 8px;border-radius:11px;
   font-family:var(--letra-hud);font-size:13px;font-weight:600;letter-spacing:.02em
 }
 .topo-bt svg.topo-ic{width:17px;height:17px}
@@ -200,12 +200,19 @@ body{
 }
 @media (max-width:760px){
   .topo{padding:7px 9px 7px 7px;gap:7px 8px;border-radius:14px}
-  .topo-quem{flex:1 1 auto}
-  .topo-rosto{width:38px;height:38px}
-  .topo h1{font-size:16px}
-  .topo-rep{font-size:9.5px}
-  .topo-acoes{gap:4px;flex-wrap:nowrap}
-  .btn.mini.topo-bt{padding:7px;border-radius:10px}
+  /* o nome cede espaço aos seis botões (e quebra a linha por dentro)
+     até sobrar menos de 130 px pra ele: só aí os botões descem pra
+     linha de baixo, o que acontece em tela de 375 px pra baixo */
+  .topo-quem{flex:1 1 0;min-width:130px}
+  .topo-quem{gap:8px}
+  .topo-rosto{width:34px;height:34px}
+  .topo h1{font-size:15.5px}
+  .topo-rep{font-size:9.5px;letter-spacing:.12em}
+  /* nome comprido demais pro espaço que sobra dos botões: reticências */
+  .topo-nome,.topo-rep{overflow:hidden;text-overflow:ellipsis}
+  .topo-nome{white-space:nowrap}
+  .topo-acoes{gap:3px;flex-wrap:nowrap}
+  .btn.mini.topo-bt{padding:6px;border-radius:10px}
   .topo-bt .topo-rot{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
   .topo-bt{position:relative}
   .topo-bt .topo-conta{position:absolute;top:1px;right:1px;min-width:13px;height:13px;padding:0 3px;font-size:8.5px}
@@ -3697,6 +3704,65 @@ html[data-moldura="grafite"], body[data-moldura="grafite"]{
 .ajuste-moldura .bolinha:focus-visible{outline:2px solid var(--destaque);outline-offset:3px}
 .ajuste-moldura .moldura-pe{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px}
 .ajuste-moldura .moldura-nome{color:var(--texto-fraco);font-size:.9rem}
+
+/* ---------- salvar e carregar: o save num .json ----------
+   O cartão da jornada (de quem é, até onde, o time), o recibo do
+   download, a caixa de escolher o arquivo e a de colar o texto. */
+.vis-oculto{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;opacity:0}
+.save-cartao{display:grid;grid-template-columns:auto minmax(0, 1fr);gap:8px 14px;align-items:center;
+  padding:14px 16px;border:1px solid var(--borda);border-radius:var(--raio-sm);
+  background:linear-gradient(180deg, color-mix(in srgb, var(--ac, var(--destaque)) 9%, var(--painel-2)), var(--painel-2))}
+.save-rosto{width:58px;height:58px;border-radius:50%;overflow:hidden;display:grid;place-items:center;position:relative;
+  background:var(--bg-2);border:2px solid color-mix(in srgb, var(--ac, var(--destaque)) 65%, var(--borda))}
+.save-rosto img{width:100%;height:100%;object-fit:cover;object-position:50% 20%;image-rendering:pixelated}
+.save-rosto b{display:none;font-family:var(--letra-hud);font-size:24px;font-weight:700;color:var(--texto-fraco)}
+.save-rosto.vazio b{display:block}
+.save-quem{display:flex;flex-direction:column;gap:1px;min-width:0;font-family:var(--letra-hud)}
+.save-nome{font-size:19px;font-weight:700;line-height:1.15;overflow-wrap:anywhere}
+.save-capnum{margin-top:4px;font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ac, var(--destaque))}
+.save-cap{font-size:14px;line-height:1.3;color:var(--texto);text-wrap:balance}
+.save-fatos{grid-column:1 / -1;display:flex;flex-wrap:wrap;gap:5px}
+.save-fatos span{display:inline-flex;align-items:center;gap:5px;white-space:nowrap;padding:2px 9px 2px 7px;border-radius:999px;
+  font-family:var(--letra-hud);font-size:12px;line-height:18px;color:var(--texto-fraco);font-variant-numeric:tabular-nums;
+  background:color-mix(in srgb, var(--bg) 60%, transparent);border:1px solid color-mix(in srgb, var(--borda) 85%, transparent)}
+.save-fatos svg.icone{width:13px;height:13px;color:var(--ac, currentColor)}
+.save-time{grid-column:1 / -1;display:flex;flex-wrap:wrap;gap:4px;padding-top:8px;
+  border-top:1px solid color-mix(in srgb, var(--borda) 70%, transparent)}
+.save-pk{width:44px;height:36px;display:grid;place-items:center;border-radius:8px;background:color-mix(in srgb, var(--bg) 55%, transparent)}
+.save-pk img{max-width:40px;max-height:32px;image-rendering:pixelated}
+.save-nota{grid-column:1 / -1;margin:0;font-size:12px;color:var(--texto-tenue)}
+.save-ok, .save-erro, .save-troca{display:flex;gap:10px;align-items:flex-start;margin:12px 0 0;padding:10px 12px;
+  border-radius:var(--raio-sm);font-size:13.5px;line-height:1.45;color:var(--texto)}
+.save-ok{background:color-mix(in srgb, var(--bom) 13%, transparent);border:1px solid color-mix(in srgb, var(--bom) 45%, var(--borda))}
+.save-erro{background:color-mix(in srgb, var(--ruim) 14%, transparent);border:1px solid color-mix(in srgb, var(--ruim) 50%, var(--borda))}
+.save-troca{background:color-mix(in srgb, var(--destaque) 9%, transparent);border:1px solid color-mix(in srgb, var(--destaque) 40%, var(--borda))}
+.save-ok > svg.icone, .save-erro > svg.icone, .save-troca > svg.icone{flex:0 0 auto;width:18px;height:18px;margin-top:1px}
+.save-ok > svg.icone{color:var(--bom)}
+.save-erro > svg.icone{color:var(--ruim)}
+.save-troca > svg.icone{color:var(--destaque)}
+.save-ok b{overflow-wrap:anywhere}
+.save-botoes{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.save-botoes .btn{display:inline-flex;align-items:center;gap:7px;font-family:var(--letra-hud);font-weight:600}
+.save-botoes .btn > svg.icone{width:17px;height:17px}
+label.btn{cursor:pointer}
+label.btn:focus-within{outline:2px solid var(--destaque);outline-offset:2px}
+.save-erro + .save-zona{margin-top:12px}
+.save-zona{display:flex;align-items:center;gap:14px;padding:20px 18px;cursor:pointer;
+  border:2px dashed var(--borda-forte);border-radius:var(--raio);
+  background:color-mix(in srgb, var(--painel-2) 70%, transparent);transition:border-color .15s, background .15s}
+.save-zona:hover, .save-zona.sobre, .save-zona:focus-within{
+  border-color:var(--ac, var(--destaque));background:color-mix(in srgb, var(--ac, var(--destaque)) 11%, var(--painel-2))}
+.save-zona > svg.icone{flex:0 0 auto;width:32px;height:32px;color:var(--ac, var(--destaque))}
+.save-zona > span{display:flex;flex-direction:column;gap:3px;font-family:var(--letra-hud)}
+.save-zona b{font-size:16px}
+.save-zona small{font-size:12.5px;color:var(--texto-fraco)}
+.save-colar{margin-top:12px}
+.save-colar summary{cursor:pointer;color:var(--texto-fraco);font-size:13px;font-family:var(--letra-hud)}
+.save-colar summary:hover{color:var(--texto)}
+.save-texto{display:block;width:100%;margin:8px 0;padding:8px 10px;resize:vertical;
+  font-family:var(--mono);font-size:11.5px;line-height:1.4;color:var(--texto);
+  background:var(--bg);border:1px solid var(--borda);border-radius:8px}
+.save-texto:focus{outline:2px solid var(--ac, var(--destaque));outline-offset:1px}
 
 /* data de nascimento na ficha */
 .data-nasc{display:grid;grid-template-columns:70px 1fr 90px;gap:8px}
@@ -6060,7 +6126,7 @@ body{
 /* ---------- topo ----------
    O HUD dos jogos de hoje: o rosto e o nome de quem joga à esquerda,
    o que se carrega no meio (cada coisa num chip com o seu desenho) e
-   os cinco botões de menu à direita. Fica grudado no alto enquanto a
+   os seis botões de menu à direita. Fica grudado no alto enquanto a
    página rola. No celular vira duas linhas: quem você é com os botões
    (só o desenho), e os chips embaixo. */
 .topo{
@@ -6116,7 +6182,7 @@ body{
 @media (prefers-reduced-motion: reduce){.topo-aviso{animation:none}}
 .topo-acoes{display:flex;gap:5px;flex-wrap:wrap}
 .btn.mini.topo-bt{
-  display:inline-flex;align-items:center;gap:6px;padding:6px 11px 6px 9px;border-radius:11px;
+  display:inline-flex;align-items:center;gap:6px;padding:6px 9px 6px 8px;border-radius:11px;
   font-family:var(--letra-hud);font-size:13px;font-weight:600;letter-spacing:.02em
 }
 .topo-bt svg.topo-ic{width:17px;height:17px}
@@ -6126,12 +6192,19 @@ body{
 }
 @media (max-width:760px){
   .topo{padding:7px 9px 7px 7px;gap:7px 8px;border-radius:14px}
-  .topo-quem{flex:1 1 auto}
-  .topo-rosto{width:38px;height:38px}
-  .topo h1{font-size:16px}
-  .topo-rep{font-size:9.5px}
-  .topo-acoes{gap:4px;flex-wrap:nowrap}
-  .btn.mini.topo-bt{padding:7px;border-radius:10px}
+  /* o nome cede espaço aos seis botões (e quebra a linha por dentro)
+     até sobrar menos de 130 px pra ele: só aí os botões descem pra
+     linha de baixo, o que acontece em tela de 375 px pra baixo */
+  .topo-quem{flex:1 1 0;min-width:130px}
+  .topo-quem{gap:8px}
+  .topo-rosto{width:34px;height:34px}
+  .topo h1{font-size:15.5px}
+  .topo-rep{font-size:9.5px;letter-spacing:.12em}
+  /* nome comprido demais pro espaço que sobra dos botões: reticências */
+  .topo-nome,.topo-rep{overflow:hidden;text-overflow:ellipsis}
+  .topo-nome{white-space:nowrap}
+  .topo-acoes{gap:3px;flex-wrap:nowrap}
+  .btn.mini.topo-bt{padding:6px;border-radius:10px}
   .topo-bt .topo-rot{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
   .topo-bt{position:relative}
   .topo-bt .topo-conta{position:absolute;top:1px;right:1px;min-width:13px;height:13px;padding:0 3px;font-size:8.5px}
@@ -9623,6 +9696,65 @@ html[data-moldura="grafite"], body[data-moldura="grafite"]{
 .ajuste-moldura .bolinha:focus-visible{outline:2px solid var(--destaque);outline-offset:3px}
 .ajuste-moldura .moldura-pe{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px}
 .ajuste-moldura .moldura-nome{color:var(--texto-fraco);font-size:.9rem}
+
+/* ---------- salvar e carregar: o save num .json ----------
+   O cartão da jornada (de quem é, até onde, o time), o recibo do
+   download, a caixa de escolher o arquivo e a de colar o texto. */
+.vis-oculto{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;opacity:0}
+.save-cartao{display:grid;grid-template-columns:auto minmax(0, 1fr);gap:8px 14px;align-items:center;
+  padding:14px 16px;border:1px solid var(--borda);border-radius:var(--raio-sm);
+  background:linear-gradient(180deg, color-mix(in srgb, var(--ac, var(--destaque)) 9%, var(--painel-2)), var(--painel-2))}
+.save-rosto{width:58px;height:58px;border-radius:50%;overflow:hidden;display:grid;place-items:center;position:relative;
+  background:var(--bg-2);border:2px solid color-mix(in srgb, var(--ac, var(--destaque)) 65%, var(--borda))}
+.save-rosto img{width:100%;height:100%;object-fit:cover;object-position:50% 20%;image-rendering:pixelated}
+.save-rosto b{display:none;font-family:var(--letra-hud);font-size:24px;font-weight:700;color:var(--texto-fraco)}
+.save-rosto.vazio b{display:block}
+.save-quem{display:flex;flex-direction:column;gap:1px;min-width:0;font-family:var(--letra-hud)}
+.save-nome{font-size:19px;font-weight:700;line-height:1.15;overflow-wrap:anywhere}
+.save-capnum{margin-top:4px;font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ac, var(--destaque))}
+.save-cap{font-size:14px;line-height:1.3;color:var(--texto);text-wrap:balance}
+.save-fatos{grid-column:1 / -1;display:flex;flex-wrap:wrap;gap:5px}
+.save-fatos span{display:inline-flex;align-items:center;gap:5px;white-space:nowrap;padding:2px 9px 2px 7px;border-radius:999px;
+  font-family:var(--letra-hud);font-size:12px;line-height:18px;color:var(--texto-fraco);font-variant-numeric:tabular-nums;
+  background:color-mix(in srgb, var(--bg) 60%, transparent);border:1px solid color-mix(in srgb, var(--borda) 85%, transparent)}
+.save-fatos svg.icone{width:13px;height:13px;color:var(--ac, currentColor)}
+.save-time{grid-column:1 / -1;display:flex;flex-wrap:wrap;gap:4px;padding-top:8px;
+  border-top:1px solid color-mix(in srgb, var(--borda) 70%, transparent)}
+.save-pk{width:44px;height:36px;display:grid;place-items:center;border-radius:8px;background:color-mix(in srgb, var(--bg) 55%, transparent)}
+.save-pk img{max-width:40px;max-height:32px;image-rendering:pixelated}
+.save-nota{grid-column:1 / -1;margin:0;font-size:12px;color:var(--texto-tenue)}
+.save-ok, .save-erro, .save-troca{display:flex;gap:10px;align-items:flex-start;margin:12px 0 0;padding:10px 12px;
+  border-radius:var(--raio-sm);font-size:13.5px;line-height:1.45;color:var(--texto)}
+.save-ok{background:color-mix(in srgb, var(--bom) 13%, transparent);border:1px solid color-mix(in srgb, var(--bom) 45%, var(--borda))}
+.save-erro{background:color-mix(in srgb, var(--ruim) 14%, transparent);border:1px solid color-mix(in srgb, var(--ruim) 50%, var(--borda))}
+.save-troca{background:color-mix(in srgb, var(--destaque) 9%, transparent);border:1px solid color-mix(in srgb, var(--destaque) 40%, var(--borda))}
+.save-ok > svg.icone, .save-erro > svg.icone, .save-troca > svg.icone{flex:0 0 auto;width:18px;height:18px;margin-top:1px}
+.save-ok > svg.icone{color:var(--bom)}
+.save-erro > svg.icone{color:var(--ruim)}
+.save-troca > svg.icone{color:var(--destaque)}
+.save-ok b{overflow-wrap:anywhere}
+.save-botoes{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.save-botoes .btn{display:inline-flex;align-items:center;gap:7px;font-family:var(--letra-hud);font-weight:600}
+.save-botoes .btn > svg.icone{width:17px;height:17px}
+label.btn{cursor:pointer}
+label.btn:focus-within{outline:2px solid var(--destaque);outline-offset:2px}
+.save-erro + .save-zona{margin-top:12px}
+.save-zona{display:flex;align-items:center;gap:14px;padding:20px 18px;cursor:pointer;
+  border:2px dashed var(--borda-forte);border-radius:var(--raio);
+  background:color-mix(in srgb, var(--painel-2) 70%, transparent);transition:border-color .15s, background .15s}
+.save-zona:hover, .save-zona.sobre, .save-zona:focus-within{
+  border-color:var(--ac, var(--destaque));background:color-mix(in srgb, var(--ac, var(--destaque)) 11%, var(--painel-2))}
+.save-zona > svg.icone{flex:0 0 auto;width:32px;height:32px;color:var(--ac, var(--destaque))}
+.save-zona > span{display:flex;flex-direction:column;gap:3px;font-family:var(--letra-hud)}
+.save-zona b{font-size:16px}
+.save-zona small{font-size:12.5px;color:var(--texto-fraco)}
+.save-colar{margin-top:12px}
+.save-colar summary{cursor:pointer;color:var(--texto-fraco);font-size:13px;font-family:var(--letra-hud)}
+.save-colar summary:hover{color:var(--texto)}
+.save-texto{display:block;width:100%;margin:8px 0;padding:8px 10px;resize:vertical;
+  font-family:var(--mono);font-size:11.5px;line-height:1.4;color:var(--texto);
+  background:var(--bg);border:1px solid var(--borda);border-radius:8px}
+.save-texto:focus{outline:2px solid var(--ac, var(--destaque));outline-offset:1px}
 
 /* data de nascimento na ficha */
 .data-nasc{display:grid;grid-template-columns:70px 1fr 90px;gap:8px}
@@ -11986,7 +12118,7 @@ body{
 /* ---------- topo ----------
    O HUD dos jogos de hoje: o rosto e o nome de quem joga à esquerda,
    o que se carrega no meio (cada coisa num chip com o seu desenho) e
-   os cinco botões de menu à direita. Fica grudado no alto enquanto a
+   os seis botões de menu à direita. Fica grudado no alto enquanto a
    página rola. No celular vira duas linhas: quem você é com os botões
    (só o desenho), e os chips embaixo. */
 .topo{
@@ -12042,7 +12174,7 @@ body{
 @media (prefers-reduced-motion: reduce){.topo-aviso{animation:none}}
 .topo-acoes{display:flex;gap:5px;flex-wrap:wrap}
 .btn.mini.topo-bt{
-  display:inline-flex;align-items:center;gap:6px;padding:6px 11px 6px 9px;border-radius:11px;
+  display:inline-flex;align-items:center;gap:6px;padding:6px 9px 6px 8px;border-radius:11px;
   font-family:var(--letra-hud);font-size:13px;font-weight:600;letter-spacing:.02em
 }
 .topo-bt svg.topo-ic{width:17px;height:17px}
@@ -12052,12 +12184,19 @@ body{
 }
 @media (max-width:760px){
   .topo{padding:7px 9px 7px 7px;gap:7px 8px;border-radius:14px}
-  .topo-quem{flex:1 1 auto}
-  .topo-rosto{width:38px;height:38px}
-  .topo h1{font-size:16px}
-  .topo-rep{font-size:9.5px}
-  .topo-acoes{gap:4px;flex-wrap:nowrap}
-  .btn.mini.topo-bt{padding:7px;border-radius:10px}
+  /* o nome cede espaço aos seis botões (e quebra a linha por dentro)
+     até sobrar menos de 130 px pra ele: só aí os botões descem pra
+     linha de baixo, o que acontece em tela de 375 px pra baixo */
+  .topo-quem{flex:1 1 0;min-width:130px}
+  .topo-quem{gap:8px}
+  .topo-rosto{width:34px;height:34px}
+  .topo h1{font-size:15.5px}
+  .topo-rep{font-size:9.5px;letter-spacing:.12em}
+  /* nome comprido demais pro espaço que sobra dos botões: reticências */
+  .topo-nome,.topo-rep{overflow:hidden;text-overflow:ellipsis}
+  .topo-nome{white-space:nowrap}
+  .topo-acoes{gap:3px;flex-wrap:nowrap}
+  .btn.mini.topo-bt{padding:6px;border-radius:10px}
   .topo-bt .topo-rot{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
   .topo-bt{position:relative}
   .topo-bt .topo-conta{position:absolute;top:1px;right:1px;min-width:13px;height:13px;padding:0 3px;font-size:8.5px}
@@ -15549,6 +15688,65 @@ html[data-moldura="grafite"], body[data-moldura="grafite"]{
 .ajuste-moldura .bolinha:focus-visible{outline:2px solid var(--destaque);outline-offset:3px}
 .ajuste-moldura .moldura-pe{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px}
 .ajuste-moldura .moldura-nome{color:var(--texto-fraco);font-size:.9rem}
+
+/* ---------- salvar e carregar: o save num .json ----------
+   O cartão da jornada (de quem é, até onde, o time), o recibo do
+   download, a caixa de escolher o arquivo e a de colar o texto. */
+.vis-oculto{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;opacity:0}
+.save-cartao{display:grid;grid-template-columns:auto minmax(0, 1fr);gap:8px 14px;align-items:center;
+  padding:14px 16px;border:1px solid var(--borda);border-radius:var(--raio-sm);
+  background:linear-gradient(180deg, color-mix(in srgb, var(--ac, var(--destaque)) 9%, var(--painel-2)), var(--painel-2))}
+.save-rosto{width:58px;height:58px;border-radius:50%;overflow:hidden;display:grid;place-items:center;position:relative;
+  background:var(--bg-2);border:2px solid color-mix(in srgb, var(--ac, var(--destaque)) 65%, var(--borda))}
+.save-rosto img{width:100%;height:100%;object-fit:cover;object-position:50% 20%;image-rendering:pixelated}
+.save-rosto b{display:none;font-family:var(--letra-hud);font-size:24px;font-weight:700;color:var(--texto-fraco)}
+.save-rosto.vazio b{display:block}
+.save-quem{display:flex;flex-direction:column;gap:1px;min-width:0;font-family:var(--letra-hud)}
+.save-nome{font-size:19px;font-weight:700;line-height:1.15;overflow-wrap:anywhere}
+.save-capnum{margin-top:4px;font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ac, var(--destaque))}
+.save-cap{font-size:14px;line-height:1.3;color:var(--texto);text-wrap:balance}
+.save-fatos{grid-column:1 / -1;display:flex;flex-wrap:wrap;gap:5px}
+.save-fatos span{display:inline-flex;align-items:center;gap:5px;white-space:nowrap;padding:2px 9px 2px 7px;border-radius:999px;
+  font-family:var(--letra-hud);font-size:12px;line-height:18px;color:var(--texto-fraco);font-variant-numeric:tabular-nums;
+  background:color-mix(in srgb, var(--bg) 60%, transparent);border:1px solid color-mix(in srgb, var(--borda) 85%, transparent)}
+.save-fatos svg.icone{width:13px;height:13px;color:var(--ac, currentColor)}
+.save-time{grid-column:1 / -1;display:flex;flex-wrap:wrap;gap:4px;padding-top:8px;
+  border-top:1px solid color-mix(in srgb, var(--borda) 70%, transparent)}
+.save-pk{width:44px;height:36px;display:grid;place-items:center;border-radius:8px;background:color-mix(in srgb, var(--bg) 55%, transparent)}
+.save-pk img{max-width:40px;max-height:32px;image-rendering:pixelated}
+.save-nota{grid-column:1 / -1;margin:0;font-size:12px;color:var(--texto-tenue)}
+.save-ok, .save-erro, .save-troca{display:flex;gap:10px;align-items:flex-start;margin:12px 0 0;padding:10px 12px;
+  border-radius:var(--raio-sm);font-size:13.5px;line-height:1.45;color:var(--texto)}
+.save-ok{background:color-mix(in srgb, var(--bom) 13%, transparent);border:1px solid color-mix(in srgb, var(--bom) 45%, var(--borda))}
+.save-erro{background:color-mix(in srgb, var(--ruim) 14%, transparent);border:1px solid color-mix(in srgb, var(--ruim) 50%, var(--borda))}
+.save-troca{background:color-mix(in srgb, var(--destaque) 9%, transparent);border:1px solid color-mix(in srgb, var(--destaque) 40%, var(--borda))}
+.save-ok > svg.icone, .save-erro > svg.icone, .save-troca > svg.icone{flex:0 0 auto;width:18px;height:18px;margin-top:1px}
+.save-ok > svg.icone{color:var(--bom)}
+.save-erro > svg.icone{color:var(--ruim)}
+.save-troca > svg.icone{color:var(--destaque)}
+.save-ok b{overflow-wrap:anywhere}
+.save-botoes{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.save-botoes .btn{display:inline-flex;align-items:center;gap:7px;font-family:var(--letra-hud);font-weight:600}
+.save-botoes .btn > svg.icone{width:17px;height:17px}
+label.btn{cursor:pointer}
+label.btn:focus-within{outline:2px solid var(--destaque);outline-offset:2px}
+.save-erro + .save-zona{margin-top:12px}
+.save-zona{display:flex;align-items:center;gap:14px;padding:20px 18px;cursor:pointer;
+  border:2px dashed var(--borda-forte);border-radius:var(--raio);
+  background:color-mix(in srgb, var(--painel-2) 70%, transparent);transition:border-color .15s, background .15s}
+.save-zona:hover, .save-zona.sobre, .save-zona:focus-within{
+  border-color:var(--ac, var(--destaque));background:color-mix(in srgb, var(--ac, var(--destaque)) 11%, var(--painel-2))}
+.save-zona > svg.icone{flex:0 0 auto;width:32px;height:32px;color:var(--ac, var(--destaque))}
+.save-zona > span{display:flex;flex-direction:column;gap:3px;font-family:var(--letra-hud)}
+.save-zona b{font-size:16px}
+.save-zona small{font-size:12.5px;color:var(--texto-fraco)}
+.save-colar{margin-top:12px}
+.save-colar summary{cursor:pointer;color:var(--texto-fraco);font-size:13px;font-family:var(--letra-hud)}
+.save-colar summary:hover{color:var(--texto)}
+.save-texto{display:block;width:100%;margin:8px 0;padding:8px 10px;resize:vertical;
+  font-family:var(--mono);font-size:11.5px;line-height:1.4;color:var(--texto);
+  background:var(--bg);border:1px solid var(--borda);border-radius:8px}
+.save-texto:focus{outline:2px solid var(--ac, var(--destaque));outline-offset:1px}
 
 /* data de nascimento na ficha */
 .data-nasc{display:grid;grid-template-columns:70px 1fr 90px;gap:8px}
@@ -17912,7 +18110,7 @@ body{
 /* ---------- topo ----------
    O HUD dos jogos de hoje: o rosto e o nome de quem joga à esquerda,
    o que se carrega no meio (cada coisa num chip com o seu desenho) e
-   os cinco botões de menu à direita. Fica grudado no alto enquanto a
+   os seis botões de menu à direita. Fica grudado no alto enquanto a
    página rola. No celular vira duas linhas: quem você é com os botões
    (só o desenho), e os chips embaixo. */
 .topo{
@@ -17968,7 +18166,7 @@ body{
 @media (prefers-reduced-motion: reduce){.topo-aviso{animation:none}}
 .topo-acoes{display:flex;gap:5px;flex-wrap:wrap}
 .btn.mini.topo-bt{
-  display:inline-flex;align-items:center;gap:6px;padding:6px 11px 6px 9px;border-radius:11px;
+  display:inline-flex;align-items:center;gap:6px;padding:6px 9px 6px 8px;border-radius:11px;
   font-family:var(--letra-hud);font-size:13px;font-weight:600;letter-spacing:.02em
 }
 .topo-bt svg.topo-ic{width:17px;height:17px}
@@ -17978,12 +18176,19 @@ body{
 }
 @media (max-width:760px){
   .topo{padding:7px 9px 7px 7px;gap:7px 8px;border-radius:14px}
-  .topo-quem{flex:1 1 auto}
-  .topo-rosto{width:38px;height:38px}
-  .topo h1{font-size:16px}
-  .topo-rep{font-size:9.5px}
-  .topo-acoes{gap:4px;flex-wrap:nowrap}
-  .btn.mini.topo-bt{padding:7px;border-radius:10px}
+  /* o nome cede espaço aos seis botões (e quebra a linha por dentro)
+     até sobrar menos de 130 px pra ele: só aí os botões descem pra
+     linha de baixo, o que acontece em tela de 375 px pra baixo */
+  .topo-quem{flex:1 1 0;min-width:130px}
+  .topo-quem{gap:8px}
+  .topo-rosto{width:34px;height:34px}
+  .topo h1{font-size:15.5px}
+  .topo-rep{font-size:9.5px;letter-spacing:.12em}
+  /* nome comprido demais pro espaço que sobra dos botões: reticências */
+  .topo-nome,.topo-rep{overflow:hidden;text-overflow:ellipsis}
+  .topo-nome{white-space:nowrap}
+  .topo-acoes{gap:3px;flex-wrap:nowrap}
+  .btn.mini.topo-bt{padding:6px;border-radius:10px}
   .topo-bt .topo-rot{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
   .topo-bt{position:relative}
   .topo-bt .topo-conta{position:absolute;top:1px;right:1px;min-width:13px;height:13px;padding:0 3px;font-size:8.5px}
@@ -21475,6 +21680,65 @@ html[data-moldura="grafite"], body[data-moldura="grafite"]{
 .ajuste-moldura .bolinha:focus-visible{outline:2px solid var(--destaque);outline-offset:3px}
 .ajuste-moldura .moldura-pe{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px}
 .ajuste-moldura .moldura-nome{color:var(--texto-fraco);font-size:.9rem}
+
+/* ---------- salvar e carregar: o save num .json ----------
+   O cartão da jornada (de quem é, até onde, o time), o recibo do
+   download, a caixa de escolher o arquivo e a de colar o texto. */
+.vis-oculto{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;opacity:0}
+.save-cartao{display:grid;grid-template-columns:auto minmax(0, 1fr);gap:8px 14px;align-items:center;
+  padding:14px 16px;border:1px solid var(--borda);border-radius:var(--raio-sm);
+  background:linear-gradient(180deg, color-mix(in srgb, var(--ac, var(--destaque)) 9%, var(--painel-2)), var(--painel-2))}
+.save-rosto{width:58px;height:58px;border-radius:50%;overflow:hidden;display:grid;place-items:center;position:relative;
+  background:var(--bg-2);border:2px solid color-mix(in srgb, var(--ac, var(--destaque)) 65%, var(--borda))}
+.save-rosto img{width:100%;height:100%;object-fit:cover;object-position:50% 20%;image-rendering:pixelated}
+.save-rosto b{display:none;font-family:var(--letra-hud);font-size:24px;font-weight:700;color:var(--texto-fraco)}
+.save-rosto.vazio b{display:block}
+.save-quem{display:flex;flex-direction:column;gap:1px;min-width:0;font-family:var(--letra-hud)}
+.save-nome{font-size:19px;font-weight:700;line-height:1.15;overflow-wrap:anywhere}
+.save-capnum{margin-top:4px;font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ac, var(--destaque))}
+.save-cap{font-size:14px;line-height:1.3;color:var(--texto);text-wrap:balance}
+.save-fatos{grid-column:1 / -1;display:flex;flex-wrap:wrap;gap:5px}
+.save-fatos span{display:inline-flex;align-items:center;gap:5px;white-space:nowrap;padding:2px 9px 2px 7px;border-radius:999px;
+  font-family:var(--letra-hud);font-size:12px;line-height:18px;color:var(--texto-fraco);font-variant-numeric:tabular-nums;
+  background:color-mix(in srgb, var(--bg) 60%, transparent);border:1px solid color-mix(in srgb, var(--borda) 85%, transparent)}
+.save-fatos svg.icone{width:13px;height:13px;color:var(--ac, currentColor)}
+.save-time{grid-column:1 / -1;display:flex;flex-wrap:wrap;gap:4px;padding-top:8px;
+  border-top:1px solid color-mix(in srgb, var(--borda) 70%, transparent)}
+.save-pk{width:44px;height:36px;display:grid;place-items:center;border-radius:8px;background:color-mix(in srgb, var(--bg) 55%, transparent)}
+.save-pk img{max-width:40px;max-height:32px;image-rendering:pixelated}
+.save-nota{grid-column:1 / -1;margin:0;font-size:12px;color:var(--texto-tenue)}
+.save-ok, .save-erro, .save-troca{display:flex;gap:10px;align-items:flex-start;margin:12px 0 0;padding:10px 12px;
+  border-radius:var(--raio-sm);font-size:13.5px;line-height:1.45;color:var(--texto)}
+.save-ok{background:color-mix(in srgb, var(--bom) 13%, transparent);border:1px solid color-mix(in srgb, var(--bom) 45%, var(--borda))}
+.save-erro{background:color-mix(in srgb, var(--ruim) 14%, transparent);border:1px solid color-mix(in srgb, var(--ruim) 50%, var(--borda))}
+.save-troca{background:color-mix(in srgb, var(--destaque) 9%, transparent);border:1px solid color-mix(in srgb, var(--destaque) 40%, var(--borda))}
+.save-ok > svg.icone, .save-erro > svg.icone, .save-troca > svg.icone{flex:0 0 auto;width:18px;height:18px;margin-top:1px}
+.save-ok > svg.icone{color:var(--bom)}
+.save-erro > svg.icone{color:var(--ruim)}
+.save-troca > svg.icone{color:var(--destaque)}
+.save-ok b{overflow-wrap:anywhere}
+.save-botoes{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.save-botoes .btn{display:inline-flex;align-items:center;gap:7px;font-family:var(--letra-hud);font-weight:600}
+.save-botoes .btn > svg.icone{width:17px;height:17px}
+label.btn{cursor:pointer}
+label.btn:focus-within{outline:2px solid var(--destaque);outline-offset:2px}
+.save-erro + .save-zona{margin-top:12px}
+.save-zona{display:flex;align-items:center;gap:14px;padding:20px 18px;cursor:pointer;
+  border:2px dashed var(--borda-forte);border-radius:var(--raio);
+  background:color-mix(in srgb, var(--painel-2) 70%, transparent);transition:border-color .15s, background .15s}
+.save-zona:hover, .save-zona.sobre, .save-zona:focus-within{
+  border-color:var(--ac, var(--destaque));background:color-mix(in srgb, var(--ac, var(--destaque)) 11%, var(--painel-2))}
+.save-zona > svg.icone{flex:0 0 auto;width:32px;height:32px;color:var(--ac, var(--destaque))}
+.save-zona > span{display:flex;flex-direction:column;gap:3px;font-family:var(--letra-hud)}
+.save-zona b{font-size:16px}
+.save-zona small{font-size:12.5px;color:var(--texto-fraco)}
+.save-colar{margin-top:12px}
+.save-colar summary{cursor:pointer;color:var(--texto-fraco);font-size:13px;font-family:var(--letra-hud)}
+.save-colar summary:hover{color:var(--texto)}
+.save-texto{display:block;width:100%;margin:8px 0;padding:8px 10px;resize:vertical;
+  font-family:var(--mono);font-size:11.5px;line-height:1.4;color:var(--texto);
+  background:var(--bg);border:1px solid var(--borda);border-radius:8px}
+.save-texto:focus{outline:2px solid var(--ac, var(--destaque));outline-offset:1px}
 
 /* data de nascimento na ficha */
 .data-nasc{display:grid;grid-template-columns:70px 1fr 90px;gap:8px}
@@ -23838,7 +24102,7 @@ body{
 /* ---------- topo ----------
    O HUD dos jogos de hoje: o rosto e o nome de quem joga à esquerda,
    o que se carrega no meio (cada coisa num chip com o seu desenho) e
-   os cinco botões de menu à direita. Fica grudado no alto enquanto a
+   os seis botões de menu à direita. Fica grudado no alto enquanto a
    página rola. No celular vira duas linhas: quem você é com os botões
    (só o desenho), e os chips embaixo. */
 .topo{
@@ -23894,7 +24158,7 @@ body{
 @media (prefers-reduced-motion: reduce){.topo-aviso{animation:none}}
 .topo-acoes{display:flex;gap:5px;flex-wrap:wrap}
 .btn.mini.topo-bt{
-  display:inline-flex;align-items:center;gap:6px;padding:6px 11px 6px 9px;border-radius:11px;
+  display:inline-flex;align-items:center;gap:6px;padding:6px 9px 6px 8px;border-radius:11px;
   font-family:var(--letra-hud);font-size:13px;font-weight:600;letter-spacing:.02em
 }
 .topo-bt svg.topo-ic{width:17px;height:17px}
@@ -23904,12 +24168,19 @@ body{
 }
 @media (max-width:760px){
   .topo{padding:7px 9px 7px 7px;gap:7px 8px;border-radius:14px}
-  .topo-quem{flex:1 1 auto}
-  .topo-rosto{width:38px;height:38px}
-  .topo h1{font-size:16px}
-  .topo-rep{font-size:9.5px}
-  .topo-acoes{gap:4px;flex-wrap:nowrap}
-  .btn.mini.topo-bt{padding:7px;border-radius:10px}
+  /* o nome cede espaço aos seis botões (e quebra a linha por dentro)
+     até sobrar menos de 130 px pra ele: só aí os botões descem pra
+     linha de baixo, o que acontece em tela de 375 px pra baixo */
+  .topo-quem{flex:1 1 0;min-width:130px}
+  .topo-quem{gap:8px}
+  .topo-rosto{width:34px;height:34px}
+  .topo h1{font-size:15.5px}
+  .topo-rep{font-size:9.5px;letter-spacing:.12em}
+  /* nome comprido demais pro espaço que sobra dos botões: reticências */
+  .topo-nome,.topo-rep{overflow:hidden;text-overflow:ellipsis}
+  .topo-nome{white-space:nowrap}
+  .topo-acoes{gap:3px;flex-wrap:nowrap}
+  .btn.mini.topo-bt{padding:6px;border-radius:10px}
   .topo-bt .topo-rot{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
   .topo-bt{position:relative}
   .topo-bt .topo-conta{position:absolute;top:1px;right:1px;min-width:13px;height:13px;padding:0 3px;font-size:8.5px}
@@ -27401,6 +27672,65 @@ html[data-moldura="grafite"], body[data-moldura="grafite"]{
 .ajuste-moldura .bolinha:focus-visible{outline:2px solid var(--destaque);outline-offset:3px}
 .ajuste-moldura .moldura-pe{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px}
 .ajuste-moldura .moldura-nome{color:var(--texto-fraco);font-size:.9rem}
+
+/* ---------- salvar e carregar: o save num .json ----------
+   O cartão da jornada (de quem é, até onde, o time), o recibo do
+   download, a caixa de escolher o arquivo e a de colar o texto. */
+.vis-oculto{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;opacity:0}
+.save-cartao{display:grid;grid-template-columns:auto minmax(0, 1fr);gap:8px 14px;align-items:center;
+  padding:14px 16px;border:1px solid var(--borda);border-radius:var(--raio-sm);
+  background:linear-gradient(180deg, color-mix(in srgb, var(--ac, var(--destaque)) 9%, var(--painel-2)), var(--painel-2))}
+.save-rosto{width:58px;height:58px;border-radius:50%;overflow:hidden;display:grid;place-items:center;position:relative;
+  background:var(--bg-2);border:2px solid color-mix(in srgb, var(--ac, var(--destaque)) 65%, var(--borda))}
+.save-rosto img{width:100%;height:100%;object-fit:cover;object-position:50% 20%;image-rendering:pixelated}
+.save-rosto b{display:none;font-family:var(--letra-hud);font-size:24px;font-weight:700;color:var(--texto-fraco)}
+.save-rosto.vazio b{display:block}
+.save-quem{display:flex;flex-direction:column;gap:1px;min-width:0;font-family:var(--letra-hud)}
+.save-nome{font-size:19px;font-weight:700;line-height:1.15;overflow-wrap:anywhere}
+.save-capnum{margin-top:4px;font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ac, var(--destaque))}
+.save-cap{font-size:14px;line-height:1.3;color:var(--texto);text-wrap:balance}
+.save-fatos{grid-column:1 / -1;display:flex;flex-wrap:wrap;gap:5px}
+.save-fatos span{display:inline-flex;align-items:center;gap:5px;white-space:nowrap;padding:2px 9px 2px 7px;border-radius:999px;
+  font-family:var(--letra-hud);font-size:12px;line-height:18px;color:var(--texto-fraco);font-variant-numeric:tabular-nums;
+  background:color-mix(in srgb, var(--bg) 60%, transparent);border:1px solid color-mix(in srgb, var(--borda) 85%, transparent)}
+.save-fatos svg.icone{width:13px;height:13px;color:var(--ac, currentColor)}
+.save-time{grid-column:1 / -1;display:flex;flex-wrap:wrap;gap:4px;padding-top:8px;
+  border-top:1px solid color-mix(in srgb, var(--borda) 70%, transparent)}
+.save-pk{width:44px;height:36px;display:grid;place-items:center;border-radius:8px;background:color-mix(in srgb, var(--bg) 55%, transparent)}
+.save-pk img{max-width:40px;max-height:32px;image-rendering:pixelated}
+.save-nota{grid-column:1 / -1;margin:0;font-size:12px;color:var(--texto-tenue)}
+.save-ok, .save-erro, .save-troca{display:flex;gap:10px;align-items:flex-start;margin:12px 0 0;padding:10px 12px;
+  border-radius:var(--raio-sm);font-size:13.5px;line-height:1.45;color:var(--texto)}
+.save-ok{background:color-mix(in srgb, var(--bom) 13%, transparent);border:1px solid color-mix(in srgb, var(--bom) 45%, var(--borda))}
+.save-erro{background:color-mix(in srgb, var(--ruim) 14%, transparent);border:1px solid color-mix(in srgb, var(--ruim) 50%, var(--borda))}
+.save-troca{background:color-mix(in srgb, var(--destaque) 9%, transparent);border:1px solid color-mix(in srgb, var(--destaque) 40%, var(--borda))}
+.save-ok > svg.icone, .save-erro > svg.icone, .save-troca > svg.icone{flex:0 0 auto;width:18px;height:18px;margin-top:1px}
+.save-ok > svg.icone{color:var(--bom)}
+.save-erro > svg.icone{color:var(--ruim)}
+.save-troca > svg.icone{color:var(--destaque)}
+.save-ok b{overflow-wrap:anywhere}
+.save-botoes{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.save-botoes .btn{display:inline-flex;align-items:center;gap:7px;font-family:var(--letra-hud);font-weight:600}
+.save-botoes .btn > svg.icone{width:17px;height:17px}
+label.btn{cursor:pointer}
+label.btn:focus-within{outline:2px solid var(--destaque);outline-offset:2px}
+.save-erro + .save-zona{margin-top:12px}
+.save-zona{display:flex;align-items:center;gap:14px;padding:20px 18px;cursor:pointer;
+  border:2px dashed var(--borda-forte);border-radius:var(--raio);
+  background:color-mix(in srgb, var(--painel-2) 70%, transparent);transition:border-color .15s, background .15s}
+.save-zona:hover, .save-zona.sobre, .save-zona:focus-within{
+  border-color:var(--ac, var(--destaque));background:color-mix(in srgb, var(--ac, var(--destaque)) 11%, var(--painel-2))}
+.save-zona > svg.icone{flex:0 0 auto;width:32px;height:32px;color:var(--ac, var(--destaque))}
+.save-zona > span{display:flex;flex-direction:column;gap:3px;font-family:var(--letra-hud)}
+.save-zona b{font-size:16px}
+.save-zona small{font-size:12.5px;color:var(--texto-fraco)}
+.save-colar{margin-top:12px}
+.save-colar summary{cursor:pointer;color:var(--texto-fraco);font-size:13px;font-family:var(--letra-hud)}
+.save-colar summary:hover{color:var(--texto)}
+.save-texto{display:block;width:100%;margin:8px 0;padding:8px 10px;resize:vertical;
+  font-family:var(--mono);font-size:11.5px;line-height:1.4;color:var(--texto);
+  background:var(--bg);border:1px solid var(--borda);border-radius:8px}
+.save-texto:focus{outline:2px solid var(--ac, var(--destaque));outline-offset:1px}
 
 /* data de nascimento na ficha */
 .data-nasc{display:grid;grid-template-columns:70px 1fr 90px;gap:8px}
@@ -32016,6 +32346,10 @@ const ICONE = {
   moeda:'<circle cx="12" cy="12" r="8.5"/><path d="M14.8 9.2c-.6-.9-1.6-1.4-2.8-1.4-1.6 0-2.8.9-2.8 2.1 0 2.9 5.8 1.4 5.8 4.3 0 1.2-1.2 2.1-2.9 2.1-1.3 0-2.4-.6-3-1.5M12 6.2v1.6M12 16.3v1.6"/>',
   tigela:'<path d="M3.5 11h17a8.5 8.5 0 0 1-17 0z"/><path d="M8 8.5c1-1 2.5-1.5 4-1.5s3 .5 4 1.5"/>',
   diario:'<path d="M12 6.5c-2-1.5-5-2-8-1.5v14c3-.5 6 0 8 1.5 2-1.5 5-2 8-1.5V5c-3-.5-6 0-8 1.5z"/><path d="M12 6.5V20.5"/>',
+  /* salvar é o disquete (baixa o save num .json); carregar, o arquivo
+     subindo da bandeja */
+  salvar:'<path d="M5 3.5h11.5l4 4V19a1.5 1.5 0 0 1-1.5 1.5H5A1.5 1.5 0 0 1 3.5 19V5A1.5 1.5 0 0 1 5 3.5z"/><path d="M8 3.5v5h7.5v-5M7 20.5v-6h10v6"/>',
+  carregar:'<path d="M4 15v3.5A1.5 1.5 0 0 0 5.5 20h13a1.5 1.5 0 0 0 1.5-1.5V15"/><path d="M12 15.5V4.5M7.5 9L12 4.5 16.5 9"/>',
   engrenagem:'<circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="6.6"/><path d="M12 2.6v2.8M12 18.6v2.8M2.6 12h2.8M18.6 12h2.8M5.4 5.4l2 2M16.6 16.6l2 2M5.4 18.6l2-2M16.6 7.4l2-2"/>',
   /* o dado da ficha de inscrição: sorteia uma sugestão */
   dado:'<rect x="4" y="4" width="16" height="16" rx="3.5"/><circle cx="8.6" cy="8.6" r=".9" fill="currentColor"/><circle cx="15.4" cy="8.6" r=".9" fill="currentColor"/><circle cx="12" cy="12" r=".9" fill="currentColor"/><circle cx="8.6" cy="15.4" r=".9" fill="currentColor"/><circle cx="15.4" cy="15.4" r=".9" fill="currentColor"/>',
@@ -32051,7 +32385,8 @@ const COR_DO_ICONE = {
   agenda:'#ffca28', convite:'#ffb74d', revanche:'#ff7043', trancado:'#7d88a8',
   mural:'#ffb74d', pc:'#4dd0e1', mapa:'#66bb6a', dormir:'#7986cb', diario:'#e8b923',
   bola:'#4cc38a', pokedex:'#ef5350', itens:'#d9a35b', telefone:'#43b581', lua:'#b39ddb',
-  seta:'#5aa7ff', voar:'#9fa8ff', alfinete:'#ffd54f', olho:'#90caf9', pergunta:'#8c9eff', dado:'#4dd0e1', chama:'#a77bff', tigela:'#d9a35b'
+  seta:'#5aa7ff', voar:'#9fa8ff', alfinete:'#ffd54f', olho:'#90caf9', pergunta:'#8c9eff', dado:'#4dd0e1', chama:'#a77bff', tigela:'#d9a35b',
+  salvar:'#64b5f6', carregar:'#81c784'
 };
 
 /* estilo: mais alguma coisa inline (a seta da placa gira por ele) */
@@ -37298,10 +37633,22 @@ const Estado = {
     } catch(e){ return false; }
   },
   carregar(slot='auto'){
+    let raw = null;
+    try { raw = localStorage.getItem('pokerpg_save_' + slot); } catch(e){ return false; }
+    return raw ? this.abrir(raw) : false;
+  },
+  /* grava um save inteiro num slot, do jeito que veio: quem lê e
+     converte é o carregar (o arquivo do Carregar jogo entra assim) */
+  gravar(dados, slot='auto'){
+    try { localStorage.setItem('pokerpg_save_' + slot, JSON.stringify(dados)); return true; }
+    catch(e){ return false; }
+  },
+  /* O save (texto ou objeto) vira o jogo. As conversões de save velho
+     moram aqui, e valem pro save do navegador e pro que vem de arquivo
+     (js/engine/save-arquivo.js). */
+  abrir(raw){
     try {
-      const raw = localStorage.getItem('pokerpg_save_' + slot);
-      if (!raw) return false;
-      this.dados = JSON.parse(raw);
+      this.dados = typeof raw === 'string' ? JSON.parse(raw) : raw;
       /* save de antes do Pokérole: atributos dos jogos viram os do livro */
       const d = this.dados;
       for (const p of [].concat(d.time || [], d.pc || [], d.cemiterio || []))
@@ -37468,6 +37815,18 @@ const Estado = {
   finaisDescobertos(){
     try { const raw = localStorage.getItem('pokerpg_finais'); return raw ? JSON.parse(raw) : []; }
     catch(e){ return []; }
+  },
+  /* finais que vieram num arquivo de save (js/engine/save-arquivo.js):
+     somam com os daqui, e nenhum some */
+  somarFinais(lista){
+    if (!Array.isArray(lista) || !lista.length) return;
+    try {
+      const aqui = this.finaisDescobertos();
+      for (const f of lista)
+        if (f && typeof f.id === 'string' && !aqui.find(x => x.id === f.id))
+          aqui.push({id:f.id, titulo:String(f.titulo || ''), quando:+f.quando || Date.now()});
+      localStorage.setItem('pokerpg_finais', JSON.stringify(aqui));
+    } catch(e){}
   }
 };
 
@@ -39698,6 +40057,155 @@ const LutaSalva = {
       if (reservas.length) setTimeout(() => UI.trocaObrigatoria(reservas), Velocidade.ms(2600));
     }
     return true;
+  }
+};
+
+
+/* ===== js/engine/save-arquivo.js ===== */
+/* ============================================================
+   SAVE EM ARQUIVO — a jornada num .json
+   O jogo se salva sozinho no navegador (Estado.salvar, a cada passo,
+   por cima do anterior). O arquivo é uma cópia desse save com uma
+   etiqueta por fora — {jogo, formato, salvoEm, save, finais} —, pra
+   continuar noutro aparelho ou noutro navegador, ou guardar uma de
+   reserva. O códice de finais não é da jornada, é do navegador, mas
+   vai junto: quem muda de aparelho não perde o que já descobriu.
+
+   O Salvar do alto da tela (e dos Ajustes) baixa (UI.modalSalvar); o
+   Carregar jogo da abertura lê de volta (UI.modalCarregar). O arquivo
+   lido entra no lugar do save automático e quem segue é o
+   Jogo.continuar, como num recarregar: a conversão de save velho
+   (Estado.abrir) e a luta pela metade (LutaSalva.retomar) valem igual.
+   ============================================================ */
+const ArquivoSave = {
+  MARCA: 'PokéRPG',
+  /* sobe quando o jeito de guardar mudar de um modo que a conversão do
+     Estado.abrir não cobre: arquivo de formato maior que o do jogo é
+     recusado, com o motivo */
+  FORMATO: 1,
+
+  /* o save de agora, com a luta se tiver uma (o Estado.salvar passa
+     pelo LutaSalva.anotar antes de gravar) */
+  montar(){
+    Estado.salvar('auto');
+    return {jogo:this.MARCA, formato:this.FORMATO, salvoEm:new Date().toISOString(), save:Estado.dados,
+            finais:Estado.finaisDescobertos()};
+  },
+  texto(){ return JSON.stringify(this.montar(), null, 1); },
+
+  /* pokerpg-lia-cap12-2026-10-27-1403.json: de quem, até onde e quando */
+  nomeDoArquivo(d){
+    d = d || Estado.dados;
+    const quem = String((d && d.jogador && d.jogador.nome) || '').normalize('NFD').replace(/[̀-ͯ]/g, '')
+      .toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 24) || 'jornada';
+    const cap = String((d && d.capitulo) || 0).replace('.', '-');
+    const t = new Date(), z = n => String(n).padStart(2, '0');
+    return `pokerpg-${quem}-cap${cap}-${t.getFullYear()}-${z(t.getMonth() + 1)}-${z(t.getDate())}-${z(t.getHours())}${z(t.getMinutes())}.json`;
+  },
+
+  /* Baixa pelo navegador e devolve o nome do arquivo, ou null se nem
+     deu pra montar. O navegador ainda pode barrar o download calado (a
+     página publicada barra): por isso a janela também copia o texto. */
+  baixar(){
+    try {
+      const nome = this.nomeDoArquivo();
+      const url = URL.createObjectURL(new Blob([this.texto()], {type:'application/json'}));
+      const a = document.createElement('a');
+      a.href = url; a.download = nome; a.style.display = 'none';
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 10000);
+      return nome;
+    } catch(e){ return null; }
+  },
+
+  /* copia pro que o navegador deixar: a área de transferência, ou o
+     comando antigo de copiar numa caixa de texto escondida */
+  async copiar(texto){
+    try { await navigator.clipboard.writeText(texto); return true; } catch(e){}
+    try {
+      const ta = document.createElement('textarea');
+      ta.value = texto; ta.setAttribute('readonly', '');
+      ta.style.position = 'fixed'; ta.style.top = '0'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      const ok = document.execCommand('copy');
+      ta.remove();
+      return !!ok;
+    } catch(e){ return false; }
+  },
+
+  /* Lê o texto de um arquivo: {dados, salvoEm, finais} ou {erro}, com
+     o motivo dito pra quem joga. Aceita o arquivo do Salvar (com a
+     etiqueta) e o save cru, do jeito que o navegador guarda. */
+  ler(texto){
+    let obj;
+    try { obj = JSON.parse(String(texto == null ? '' : texto).replace(/^﻿/, '').trim()); }
+    catch(e){ return {erro:'O arquivo não é um JSON inteiro: falta um pedaço, ou ele foi editado e quebrou.'}; }
+    if (!obj || typeof obj !== 'object' || Array.isArray(obj)) return {erro:'Esse arquivo não é um save do PokéRPG.'};
+    let d = obj, salvoEm = null, finais = [];
+    if ('save' in obj || 'jogo' in obj){
+      if (obj.jogo !== this.MARCA || !obj.save || typeof obj.save !== 'object') return {erro:'Esse arquivo não é um save do PokéRPG.'};
+      if (+obj.formato > this.FORMATO) return {erro:'Esse save foi feito numa versão mais nova do jogo. Abra ele na versão nova.'};
+      d = obj.save;
+      if (typeof obj.salvoEm === 'string' && !isNaN(Date.parse(obj.salvoEm))) salvoEm = obj.salvoEm;
+      if (Array.isArray(obj.finais)) finais = obj.finais.filter(f => f && typeof f.id === 'string' && typeof f.titulo === 'string');
+    }
+    const falta = this.falta(d);
+    if (falta) return {erro:`Esse arquivo não é um save inteiro: ${falta}.`};
+    if (this.temCodigo(d) || this.temCodigo(finais)) return {erro:'Esse arquivo tem código escondido no meio do texto. O jogo não carrega save assim.'};
+    return {dados:d, salvoEm, finais};
+  },
+
+  /* o mínimo que um save tem, com o motivo do que faltou */
+  falta(d){
+    if (!d || typeof d !== 'object' || Array.isArray(d)) return 'não tem jornada dentro';
+    if (!d.jogador || typeof d.jogador !== 'object' || typeof d.jogador.nome !== 'string') return 'falta o treinador';
+    if (!Array.isArray(d.time)) return 'falta o time';
+    if (!d.itens || typeof d.itens !== 'object' || Array.isArray(d.itens)) return 'falta a mochila';
+    if (!d.flags || typeof d.flags !== 'object') return 'falta o que já aconteceu na história';
+    for (const k of ['pc', 'cemiterio']) if (d[k] != null && !Array.isArray(d[k])) return 'o PC está danificado';
+    for (const p of [].concat(d.time, d.pc || [], d.cemiterio || []))
+      if (!p || typeof p !== 'object' || !Number.isInteger(p.dex) || !(typeof DEX === 'undefined' || DEX[p.dex])
+          || typeof p.uid !== 'string' || !/^[\w.:-]{1,80}$/.test(p.uid))
+        return 'um dos Pokémon está danificado';
+    return null;
+  },
+
+  /* Texto do save vai pra tela de muitos jeitos, e o arquivo pode ter
+     vindo de outra pessoa: etiqueta de HTML ou gatilho de script em
+     qualquer texto (ou nome de campo) recusa o arquivo inteiro. Save
+     de verdade não guarda nada disso. */
+  temCodigo(v){
+    const RUIM = /<\s*\/?\s*[a-z!?]|\bon[a-z]+\s*=|javascript\s*:/i;
+    const andar = (x, fundo) => {
+      if (typeof x === 'string') return RUIM.test(x);
+      if (!x || typeof x !== 'object') return false;
+      if (fundo > 60) return true;
+      for (const k of Object.keys(x)) if (RUIM.test(k) || andar(x[k], fundo + 1)) return true;
+      return false;
+    };
+    return andar(v, 0);
+  },
+
+  /* a jornada que está no navegador agora, pra dizer o que vai sair */
+  doNavegador(){
+    try {
+      const raw = localStorage.getItem('pokerpg_save_auto');
+      const d = raw ? JSON.parse(raw) : null;
+      return d && d.jogador ? d : null;
+    } catch(e){ return null; }
+  },
+
+  /* O arquivo entra no lugar do save do navegador e a jornada segue
+     como num recarregar; o códice do arquivo soma com o daqui.
+     Navegador que não deixa gravar roda a jornada direto da memória
+     (devolve false, e o Jogo.continuar avisa pra salvar antes de
+     fechar). */
+  usar(dados, finais){
+    Estado.somarFinais(finais);
+    const gravou = Estado.gravar(dados);
+    if (typeof UI !== 'undefined' && UI.fecharModal) UI.fecharModal(true);
+    Jogo.continuar(gravou ? null : dados);
+    return gravou;
   }
 };
 
@@ -130235,7 +130743,8 @@ function ehFinalDeVerdade(f){ return !ehEpilogo(f) && f.id !== 'fim'; }
    dele) e as janelas de ler, que ganham a folha do HUD: seção com
    losango, a conta em linhas agrupadas, o exemplo num cartão. */
 const ICONE_DA_JANELA = {bolas:'bola', regras:'dado', tutorial:'pergunta', ajustes:'engrenagem', rota:'mapa',
-  diario:'diario', finais:'liga', credencial:'credenciais', centro:'centro', time:'bola'};
+  diario:'diario', finais:'liga', credencial:'credenciais', centro:'centro', time:'bola',
+  salvar:'salvar', carregar:'carregar'};
 const JANELAS_DE_LER = new Set(['regras', 'tutorial', 'ajustes', 'rota', 'diario', 'finais', 'credencial']);
 
 const APARELHOS = [
@@ -130442,7 +130951,7 @@ const UI = {
     const rep = Estado.nomeRep();
     /* O alto da tela é o HUD dos jogos de hoje: quem você é (rosto,
        nome, título), o que você carrega (lugar, hora, HP, Vontade,
-       dinheiro, Ração) e os cinco botões de menu, cada um com o seu
+       dinheiro, Ração) e os seis botões de menu, cada um com o seu
        desenho. No celular os botões ficam só com o desenho. */
     const rosto = typeof retratoDoJogador === 'function' ? retratoDoJogador(d) : null;
     const hp = d.jogador.hp, hpMax = Estado.hpMaxJogador();
@@ -130458,7 +130967,7 @@ const UI = {
         <span class="topo-rosto${rosto ? '' : ' vazio'}" aria-hidden="true">${rosto
           ? `<img src="${rosto}" alt="" onerror="this.parentNode.classList.add('vazio');this.remove()">` : ''}<b>${this.esc((d.jogador.nome || '?').slice(0, 1).toUpperCase())}</b></span>
         <div class="topo-id">
-          <h1>${this.esc(d.jogador.nome)}<span class="topo-traco"> — </span><span class="topo-rep">${this.esc(rep)}</span></h1>
+          <h1><span class="topo-nome">${this.esc(d.jogador.nome)}</span><span class="topo-traco"> — </span><span class="topo-rep">${this.esc(rep)}</span></h1>
         </div>
       </div>
       <div class="topo-info">
@@ -130476,6 +130985,7 @@ const UI = {
           numeros ? '<b class="topo-conta">' + numeros + '</b>' : ''}</button>
         ${botao('cartao', 'Ficha', 'title="Ficha" onclick="UI.modalFicha()"')}</button>
         ${botao('diario', 'Diário', 'title="Diário" onclick="UI.modalDiario()"')}</button>
+        ${botao('salvar', 'Salvar', 'title="Salvar: baixa o save num arquivo .json" onclick="UI.modalSalvar()"')}</button>
         ${botao('engrenagem', 'Ajustes', 'title="Ajustes" onclick="UI.modalAjustes()"')}</button>
       </div>
       ${typeof Fome !== 'undefined' ? Fome.tirarAvisos().map(a => `<div class="topo-aviso">${this.esc(a)}</div>`).join('') : ''}
@@ -130504,11 +131014,13 @@ const UI = {
     const botoes = [
       temSave ? '<button class="tt-btn tt-principal" onclick="Jogo.continuar()">Continuar</button>' : '',
       `<button class="tt-btn ${temSave ? '' : 'tt-principal'}" onclick="Jogo.novo()">${temSave ? 'Nova jornada' : 'Começar'}</button>`,
+      '<button class="tt-btn" onclick="UI.modalCarregar(true)">Carregar jogo</button>',
       '<button class="tt-btn" onclick="UI.modalTutorial()">Tutorial</button>',
       '<button class="tt-btn" onclick="UI.modalRegras()">Regras</button>',
       '<button class="tt-btn" onclick="UI.modalFinais()">Códice de finais</button>'
     ].filter(Boolean).map((h, i) => h.replace('<button ', `<button style="--i:${i}" `)).join('');
-    this.add(`<div class="tela-titulo">
+    /* o .json do Salvar pode ser solto em qualquer lugar da abertura */
+    this.add(`<div class="tela-titulo" ondragover="event.preventDefault()" ondrop="UI.soltarSave(event)">
       <div class="tt-ceu" aria-hidden="true">${estrelas}</div>
       <svg class="tt-pokebola" viewBox="0 0 100 100" aria-hidden="true">
         <circle cx="50" cy="50" r="46" fill="none" stroke="currentColor" stroke-width="5"/>
@@ -130521,7 +131033,7 @@ const UI = {
       </h1>
       <div class="tt-sub">Sua jornada Pokémon começa agora!</div>
       <div class="tt-botoes">${botoes}</div>
-      ${temSave ? '<div class="tt-nota">Começar uma nova jornada apaga a atual.</div>' : ''}
+      ${temSave ? '<div class="tt-nota">Começar uma nova jornada, ou carregar uma de arquivo, tira a atual do lugar.</div>' : ''}
     </div>`);
   },
 
@@ -132305,8 +132817,10 @@ const UI = {
     (linhas || []).forEach(l => {
       const el = this.el(`<div class="recado ${this.esc(l.tipo || '')}">${this.esc(l.texto)}</div>`);
       caixa.appendChild(el);
-      setTimeout(() => el.classList.add('saindo'), 3400);
-      setTimeout(() => el.remove(), 3900);
+      /* dura: recado que precisa ficar mais tempo na tela */
+      const dura = l.dura || 3400;
+      setTimeout(() => el.classList.add('saindo'), dura);
+      setTimeout(() => el.remove(), dura + 500);
     });
   },
 
@@ -134317,9 +134831,182 @@ const UI = {
       </div>
       ${this.ajustesDeSom()}
       ${Velocidade.ajustes()}
+      ${Estado.dados ? `<h3>Salvar</h3>
+      <button class="escolha com-icone" onclick="UI.modalSalvar()">${svgIcone('salvar')}<span class="esc-rot">Baixar o save<small class="esc-det">a jornada inteira num arquivo .json · na abertura, Carregar jogo lê de volta</small></span></button>` : ''}
       <h3>Ajuda</h3>
       <button class="escolha com-icone" onclick="UI.modalRegras()">${svgIcone('dado')}<span class="esc-rot">Regras<small class="esc-det">todas as contas do jogo, com os números</small></span></button>
       <button class="escolha com-icone" onclick="UI.modalTutorial()">${svgIcone('pergunta')}<span class="esc-rot">Tutorial<small class="esc-det">a primeira hora, passo a passo</small></span></button>`, false, 'ajustes');
+  },
+
+  /* ========================================================
+     SALVAR E CARREGAR — o save num arquivo .json (ArquivoSave)
+     O Salvar baixa na hora do toque e a janela é o recibo; o Carregar
+     jogo, na abertura, mostra de quem é a jornada do arquivo antes de
+     pôr ela no lugar da do navegador.
+     ======================================================== */
+  /* "Capítulo 12 · O título" de um save qualquer; curto, só o número */
+  capituloDoSave(d, curto){
+    const cap = typeof Historia !== 'undefined' ? Historia.capitulo(d.capitulo) : null;
+    if (cap && typeof numeroDoCapitulo === 'function') return numeroDoCapitulo(cap) + (cap.titulo && !curto ? ' · ' + cap.titulo : '');
+    return 'Capítulo ' + Math.max(1, Math.floor(+d.capitulo || 0));
+  },
+  /* 27/10/2026, às 14:03 */
+  dataDoSave(iso){
+    const t = new Date(iso);
+    if (isNaN(t)) return '';
+    return t.toLocaleDateString('pt-BR') + ', às ' + t.toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
+  },
+  /* O cartão de uma jornada guardada: quem, até onde e com quem. Tudo
+     que sai do save passa pelo esc — o arquivo pode ter vindo de outra
+     pessoa —, e o rosto só entra com caminho de arquivo limpo. */
+  cartaoDoSave(d, nota){
+    const e = x => this.esc(String(x == null ? '' : x));
+    const j = d.jogador || {};
+    const nIns = (Array.isArray(d.insignias) ? d.insignias : []).filter(i => i !== 'Título de Campeão' && i !== 'Campeão de Kanto').length;
+    const dias = Math.max(1, Math.floor(+(d.relogio || {}).dia || 1));
+    const lugar = d.local && typeof LOCAIS !== 'undefined' && LOCAIS[d.local] ? LOCAIS[d.local].nome : '';
+    const rosto = typeof j.retrato === 'string' && /^[\w\/.-]+$/.test(j.retrato) && typeof caminhoNPC === 'function' ? caminhoNPC(j.retrato) : null;
+    const time = (d.time || []).slice(0, 6).map(p =>
+      `<span class="save-pk" title="${e(nomeExib(p))} · Nv ${e(p.nivel)}">${imgSprite({dex:p.dex, shiny:!!p.shiny}, 'icone')}</span>`).join('');
+    const notas = [].concat(nota || []);
+    if (d.lutaSalva) notas.push('no meio de uma luta, que volta junto');
+    const cap = typeof Historia !== 'undefined' ? Historia.capitulo(d.capitulo) : null;
+    /* cada fato num chip, como no alto da tela: a linha quebra entre um
+       e outro, nunca no meio */
+    const fatos = [[lugar, 'alfinete'], [`${dias} ${dias === 1 ? 'dia' : 'dias'} de estrada`, 'relogio'],
+      [`${nIns} ${nIns === 1 ? 'insígnia' : 'insígnias'}`, 'ginasio']].filter(f => f[0]);
+    return `<div class="save-cartao">
+      <span class="save-rosto${rosto ? '' : ' vazio'}" aria-hidden="true">${rosto
+        ? `<img src="${e(rosto)}" alt="" onerror="this.parentNode.classList.add('vazio');this.remove()">` : ''}<b>${e((j.nome || '?').slice(0, 1).toUpperCase())}</b></span>
+      <div class="save-quem">
+        <b class="save-nome">${e(j.nome || 'Sem nome')}</b>
+        <span class="save-capnum">${e(this.capituloDoSave(d, true))}</span>
+        ${cap && cap.titulo ? `<span class="save-cap">${e(cap.titulo)}</span>` : ''}
+      </div>
+      <div class="save-fatos">${fatos.map(([t, ic]) => `<span>${svgIcone(ic)}${e(t)}</span>`).join('')}</div>
+      ${time ? `<div class="save-time" aria-label="Time">${time}</div>` : ''}
+      ${notas.length ? `<p class="save-nota">${e(maiuscula(notas.join(' · ')))}</p>` : ''}
+    </div>`;
+  },
+
+  /* Salvar: o toque já baixa o arquivo, e a janela é o recibo, com o
+     que foi nele. O navegador pode barrar o download calado (a página
+     publicada barra): por isso o texto também se copia. */
+  modalSalvar(){
+    if (!Estado.dados) return;
+    const nome = ArquivoSave.baixar();
+    this.modal('Salvar', `
+      ${this.cartaoDoSave(Estado.dados, 'salvo agora')}
+      <div id="save-status">${this.statusDoSave(nome)}</div>
+      <p class="sussurro">O jogo também se salva sozinho neste navegador, a cada passo. O arquivo é uma cópia deste momento: pra continuar noutro aparelho ou noutro navegador, abra o jogo lá e escolha <b>Carregar jogo</b>, na abertura.</p>
+      <div class="save-botoes">
+        <button class="btn destaque" onclick="UI.salvarDeNovo()">${svgIcone('salvar')}Baixar de novo</button>
+        <button class="btn" onclick="UI.copiarSave()">Copiar o texto</button>
+      </div>
+      <div id="save-copia"></div>`, false, 'salvar');
+  },
+  statusDoSave(nome){
+    return nome
+      ? `<p class="save-ok" role="status">${svgIcone('salvar')}<span>Baixado: <b>${this.esc(nome)}</b>. Se ele não aparecer nos downloads, copie o texto e guarde num arquivo .json.</span></p>`
+      : `<p class="save-erro" role="alert">${svgIcone('alerta')}<span>O navegador não deixou montar o arquivo. Copie o texto e guarde num arquivo .json.</span></p>`;
+  },
+  salvarDeNovo(){
+    const nome = ArquivoSave.baixar();
+    const el = document.getElementById('save-status');
+    if (el) el.innerHTML = this.statusDoSave(nome);
+  },
+  async copiarSave(){
+    const texto = ArquivoSave.texto();
+    const ok = await ArquivoSave.copiar(texto);
+    const el = document.getElementById('save-copia');
+    if (!el) return;
+    el.innerHTML = ok
+      ? `<p class="save-ok" role="status">${svgIcone('salvar')}<span>Copiado. Cole num arquivo de texto e salve com o fim <b>.json</b>, ou cole direto no Carregar jogo, noutro navegador.</span></p>`
+      : `<p class="sussurro">O navegador não deixou copiar sozinho: o texto está aqui embaixo, já selecionado.</p>
+         <textarea class="save-texto" id="save-texto" rows="6" readonly spellcheck="false" aria-label="Texto do save"></textarea>`;
+    const ta = document.getElementById('save-texto');
+    if (ta){ ta.value = texto; ta.focus(); ta.select(); }
+  },
+
+  /* Carregar jogo, na abertura: o .json que o Salvar baixou. O seletor
+     de arquivo abre junto com a janela; o arquivo escolhido (ou solto
+     na tela, ou o texto colado) mostra de quem é a jornada antes de
+     trocar, e a do navegador, se tiver, diz que vai sair. */
+  modalCarregar(abrirSeletor){
+    this._saveLido = null;
+    this.janelaCarregar(null);
+    if (abrirSeletor){ const i = document.getElementById('save-arquivo'); if (i) i.click(); }
+  },
+  janelaCarregar(lido){
+    this.modal('Carregar jogo', `<div id="save-carregar">${this.corpoCarregar(lido)}</div>`, false, 'carregar');
+    /* arquivo solto fora da caixa: sem isso o navegador abre o .json
+       no lugar do jogo */
+    const m = document.getElementById('modal');
+    if (m){ m.addEventListener('dragover', ev => ev.preventDefault()); m.addEventListener('drop', ev => this.soltarSave(ev)); }
+  },
+  corpoCarregar(lido){
+    const entrada = `<input type="file" id="save-arquivo" class="vis-oculto" accept=".json,application/json,text/plain"
+      onchange="UI.lerArquivoDeSave(this.files && this.files[0]); this.value=''">`;
+    if (lido && lido.dados){
+      const atual = ArquivoSave.doNavegador();
+      const troca = atual ? `<p class="save-troca">${svgIcone('alerta')}<span>A jornada que está neste navegador (<b>${this.esc(atual.jogador.nome || 'sem nome')}</b>, ${this.esc(this.capituloDoSave(atual, true))}) sai, e esta entra no lugar dela. Pra guardar a de agora, feche, entre nela pelo Continuar e use Salvar antes.</span></p>` : '';
+      /* o códice separa final de epílogo, e a nota também */
+      const fins = (lido.finais || []).filter(ehFinalDeVerdade).length, eps = (lido.finais || []).filter(ehEpilogo).length;
+      const codice = [fins ? `${fins} ${fins === 1 ? 'final' : 'finais'}` : '', eps ? `${eps} ${eps === 1 ? 'epílogo' : 'epílogos'}` : ''].filter(Boolean);
+      const notas = [lido.salvoEm ? 'baixado em ' + this.dataDoSave(lido.salvoEm) : '',
+        codice.length ? `${codice.join(' e ')} no códice, que somam com os deste navegador` : ''].filter(Boolean);
+      return `${this.cartaoDoSave(lido.dados, notas)}${troca}
+        <div class="save-botoes">
+          <button class="btn destaque" onclick="UI.usarSaveLido()">${svgIcone('carregar')}Carregar esta jornada</button>
+          <label class="btn" for="save-arquivo">Escolher outro arquivo</label>
+        </div>${entrada}`;
+    }
+    return `${lido && lido.erro ? `<p class="save-erro" role="alert">${svgIcone('alerta')}<span>${this.esc(lido.erro)}</span></p>` : ''}
+      <label class="save-zona" ondragover="event.preventDefault();this.classList.add('sobre')" ondragleave="this.classList.remove('sobre')">
+        ${svgIcone('carregar')}<span><b>Escolher o arquivo do save</b><small>o .json que o Salvar baixou — ou arraste ele pra cá</small></span>
+        ${entrada}
+      </label>
+      <details class="save-colar"><summary>Colar o texto do save</summary>
+        <textarea id="save-colado" class="save-texto" rows="5" spellcheck="false" aria-label="Texto do save"></textarea>
+        <button class="btn mini" onclick="UI.lerTextoDeSave(document.getElementById('save-colado').value)">Ler o texto</button>
+      </details>
+      <p class="sussurro">Carregar põe a jornada do arquivo no lugar da que está neste navegador, do jeito que ela estava quando foi baixada.</p>`;
+  },
+  lerArquivoDeSave(arq){
+    if (!arq) return;
+    if (arq.size > 30 * 1024 * 1024) return this.mostrarSaveLido({erro:'Esse arquivo é grande demais pra ser um save.'});
+    const r = new FileReader();
+    r.onload = () => this.mostrarSaveLido(ArquivoSave.ler(r.result));
+    r.onerror = () => this.mostrarSaveLido({erro:'O navegador não conseguiu ler esse arquivo.'});
+    r.readAsText(arq);
+  },
+  lerTextoDeSave(texto){
+    if (!String(texto || '').trim()) return this.mostrarSaveLido({erro:'Cole o texto do save na caixa antes de ler.'}, '');
+    this.mostrarSaveLido(ArquivoSave.ler(texto), texto);
+  },
+  /* o .json solto na abertura ou na janela */
+  soltarSave(ev){
+    ev.preventDefault(); ev.stopPropagation();
+    document.querySelectorAll('.save-zona.sobre').forEach(z => z.classList.remove('sobre'));
+    const arq = ev.dataTransfer && ev.dataTransfer.files && ev.dataTransfer.files[0];
+    if (arq) this.lerArquivoDeSave(arq);
+  },
+  mostrarSaveLido(lido, colado){
+    this._saveLido = lido && lido.dados ? lido : null;
+    const caixa = document.getElementById('save-carregar');
+    if (caixa) caixa.innerHTML = this.corpoCarregar(lido);
+    else this.janelaCarregar(lido);
+    /* erro no texto colado: a caixa fica aberta com o texto, pra
+       consertar ali mesmo (o valor vai pelo DOM, nunca pelo esc, que
+       resolveria as marcas de gênero de dentro do save) */
+    const ta = colado != null && !this._saveLido ? document.getElementById('save-colado') : null;
+    if (ta){ ta.value = colado; ta.closest('details').open = true; ta.focus(); }
+  },
+  usarSaveLido(){
+    const lido = this._saveLido;
+    if (!lido) return;
+    this._saveLido = null;
+    ArquivoSave.usar(lido.dados, lido.finais);
   },
 
   modalItens(modo, bolsoPedido){
@@ -135624,8 +136311,10 @@ const UI = {
       <h3>Quando o seu cai contra um selvagem</h3>
       <p class="sussurro">Se o selvagem tem natureza agressiva, ele rola o Instinto dele: com um sucesso, ataca VOCÊ. Dano = Força dele + 2 em d6, e cada sucesso tira 3 do seu HP. As naturezas agressivas estão marcadas na aba Naturezas.</p>
       <h3>O que não dá pra desfazer</h3>
-      ${L('Salvar', 'automático — não existe voltar atrás')}
+      ${L('Salvar', 'automático, a cada passo — não existe voltar atrás, a não ser por um arquivo baixado antes')}
+      ${L('Arquivo', 'o Salvar, no alto da tela, baixa a jornada num .json · Carregar jogo, na abertura, lê de volta')}
       ${L('Nova jornada', 'apaga a atual')}
+      ${L('Carregar jogo', 'troca a atual pela do arquivo')}
       ${L('Insígnia, morte, reputação', 'ficam')}`;
   },
 
@@ -136168,7 +136857,17 @@ const UI = {
       <p class="sussurro">Trocar devolve o anterior à mochila. O efeito de cada um está escrito na ficha técnica do item, em letra de máquina.</p>
 
       <h3>Dados</h3>
-      <p class="sussurro">Toda rolagem do combate aparece na tela como dado de verdade, com o motivo embaixo. Dá pra clicar em qualquer um pra ver ele girar de novo — o resultado não muda, já está registrado. A bandeja embaixo é só pra girar por girar: não afeta nada.</p>`, false, 'regras');
+      <p class="sussurro">Toda rolagem do combate aparece na tela como dado de verdade, com o motivo embaixo. Dá pra clicar em qualquer um pra ver ele girar de novo — o resultado não muda, já está registrado. A bandeja embaixo é só pra girar por girar: não afeta nada.</p>
+
+      <h3>Salvar e carregar</h3>
+      <div class="linha"><span class="k">No navegador</span><span class="v">sozinho, a cada passo, por cima do anterior · não tem botão e não tem volta</span></div>
+      <div class="linha"><span class="k">Salvar</span><span class="v">no alto da tela e nos Ajustes · baixa a jornada inteira num arquivo .json: ficha, time, PC, cemitério, mochila, Pokédex, PokéNav, relógio, quem você conhece e a luta, se você estiver numa · e o códice de finais junto</span></div>
+      <div class="linha"><span class="k">Carregar jogo</span><span class="v">na abertura · escolhe o arquivo, arrasta ele pra tela ou cola o texto · mostra de quem é a jornada antes de trocar</span></div>
+      <div class="linha"><span class="k">O que sai</span><span class="v">a jornada que estava no navegador · o arquivo entra no lugar dela</span></div>
+      <div class="linha"><span class="k">Códice de finais</span><span class="v">não sai: os finais do arquivo somam com os do navegador, e nenhum some</span></div>
+      <div class="linha"><span class="k">Arquivo antigo</span><span class="v">passa pelas mesmas conversões de quem recarrega a página</span></div>
+      <div class="linha"><span class="k">Arquivo recusado</span><span class="v">JSON quebrado · sem treinador, time ou mochila · Pokémon danificado · código no meio do texto · feito numa versão mais nova do jogo</span></div>
+      <p class="sussurro">O arquivo é uma cópia do momento em que foi baixado. Carregar ele volta a jornada inteira àquele momento: o que veio depois — a insígnia, a escolha, a morte — não estava no arquivo.</p>`, false, 'regras');
   }
 };
 
@@ -149758,8 +150457,11 @@ const Jogo = {
     UI.telaCriacao();
   },
 
-  continuar(){
-    if (!Estado.carregar('auto')) return UI.telaInicial();
+  /* deArquivo: o save de um .json (ArquivoSave.usar) quando o navegador
+     não deixou gravar no lugar do automático — a jornada roda da memória */
+  continuar(deArquivo){
+    if (!(deArquivo ? Estado.abrir(deArquivo) : Estado.carregar('auto'))) return UI.telaInicial();
+    if (deArquivo) setTimeout(() => UI.avisar([{tipo:'perigo', texto:'Este navegador não deixou guardar a jornada: ela só existe aberta aqui. Use Salvar, no alto da tela, antes de fechar.', dura:9000}]), 600);
     /* recarregou no meio da luta: volta pra ela */
     if (Estado.dados.lutaSalva && typeof LutaSalva !== 'undefined' && LutaSalva.retomar()) return;
     if (Estado.dados.modo === 'mundo' || !Estado.dados.cena){
