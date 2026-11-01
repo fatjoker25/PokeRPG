@@ -3810,19 +3810,23 @@ const UI = {
     /* Pokédex e Cartão são aparelho na mão: cabem na tela, não rolam
        por fora, e só fecham no X — tocar fora não guarda o aparelho */
     const soX = classe === 'pokedex' || classe === 'cartao';
+    /* com-x: o × no canto em vez do Fechar embaixo, e continua fechando
+       por fora e no Esc (a mochila) */
+    const classes = String(classe || '').split(/\s+/).filter(Boolean);
+    const comX = soX || classes.includes('com-x');
     /* o título leva o desenho da janela numa moeda da cor dele, e a
        janela de ler (regras, tutorial, ajustes…) ganha a folha do HUD */
     const ic = ICONE_DA_JANELA[classe];
     const cor = ic && typeof corDoIcone === 'function' ? corDoIcone(ic) : '';
     const folha = JANELAS_DE_LER.has(classe) ? ' folha' : '';
-    const m = this.el(`<div class="modal-fundo ${classe ? 'fundo-' + classe : ''}" id="modal">
+    const m = this.el(`<div class="modal-fundo ${classes.length ? 'fundo-' + classes[0] : ''}" id="modal">
       <div class="modal ${classe || ''}${folha}${soX ? ' so-x' : ''}"${cor ? ` style="--ac:${cor}"` : ''}>
-        ${soX ? '<button class="modal-x" aria-label="Fechar" title="Fechar" onclick="UI.fecharModal()">×</button>' : ''}
+        ${comX ? '<button class="modal-x" aria-label="Fechar" title="Fechar" onclick="UI.fecharModal()">×</button>' : ''}
         ${titulo ? `<h2>${ic ? svgIcone(ic, 'janela-icone') : ''}${this.esc(titulo)}</h2>` : ''}
         <div class="modal-corpo">${html}</div>
-        ${semFechar || soX ? '' : '<div class="modal-pe"><button class="btn" onclick="UI.fecharModal()">Fechar</button></div>'}
+        ${semFechar || comX ? '' : '<div class="modal-pe"><button class="btn" onclick="UI.fecharModal()">Fechar</button></div>'}
       </div></div>`);
-    if (!vars && classe === 'mochila' && typeof paletaMochila === 'function')
+    if (!vars && classes.includes('mochila') && typeof paletaMochila === 'function')
       vars = paletaMochila(mochilaAtual().cor);
     if (vars){
       const caixa = m.querySelector('.modal');
@@ -4402,128 +4406,276 @@ const UI = {
     ArquivoSave.usar(lido.dados, lido.finais);
   },
 
+  /* ========================================================
+     MOCHILA — a bolsa aberta, no jeito da mochila dos jogos de hoje
+     Três partes no forro: os bolsos (coluna no computador, faixa no
+     celular), a lista do bolso aberto e a ficha do item tocado, com o
+     que dá pra fazer com ele e, pra TM, pedra e item de segurar, o
+     time de relance. Trocar de bolso ou de item redesenha só o miolo
+     (a bolsa não abre de novo a cada toque); a cor continua a da
+     bolsa que você carrega (paletaMochila).
+     ======================================================== */
   modalItens(modo, bolsoPedido){
     const luta = modo === 'luta' && emLuta();
-    const d = Estado.dados;
-    const itens = Object.entries(d.itens).filter(([,q]) => q > 0);
-    const total = itens.reduce((a,[,q]) => a + q, 0);
-    const bolsa = mochilaAtual();
-    /* os bolsos, como na mochila dos jogos; na luta, o de Itens-chave e
-       o de TMs não abrem */
+    /* na luta, o de Itens-chave e o de TMs não abrem */
     const bolsos = BOLSOS.filter(b => !luta || !b.foraDaLuta);
     const quer = bolsoPedido || (bolsos.some(b => b.id === this._bolso) ? this._bolso : (luta ? 'remedios' : 'itens'));
     const atual = (bolsos.find(b => b.id === quer) || bolsos[0]).id;
     this._bolso = atual;
+    this._mochLuta = luta;
+    const html = this.mioloMochila(luta, atual, bolsos);
+    const vars = paletaMochila(mochilaAtual().cor);
+    const aberta = document.querySelector('#modal .modal.mochila-cheia');
+    if (aberta && aberta.dataset.luta === String(luta)){
+      aberta.querySelector('.modal-corpo').innerHTML = html;
+      for (const [k, v] of Object.entries(vars)) aberta.style.setProperty(k, v);
+      return;
+    }
+    this.modal('', html, false, 'mochila mochila-cheia com-x', vars);
+    const m = document.querySelector('#modal .modal.mochila-cheia');
+    if (m){ m.dataset.luta = String(luta); m.setAttribute('role', 'dialog'); m.setAttribute('aria-label', 'Mochila'); }
+  },
+
+  /* o que mora em cada bolso: [nome, quantidade, quebrado], já na ordem
+     das categorias; ferramenta quebrada tem linha própria */
+  itensDoBolso(id, luta){
+    const d = Estado.dados;
     const aparelhos = luta ? [] : APARELHOS.filter(a => a.tem());
-    const doBolso = itens.filter(([n]) => bolsoDoItem(n) === atual
-      && !(atual === 'chave' && aparelhos.some(a => a.item === n)));
-    const conta = id => itens.filter(([n]) => bolsoDoItem(n) === id).length
-      + (id === 'chave' ? aparelhos.filter(a => !Estado.contaItem(a.item)).length : 0);
-    const nav = `<nav class="bolsos" role="tablist" aria-label="Bolsos da mochila">${bolsos.map(b =>
-      `<button class="bolso${b.id === atual ? ' sel' : ''}" role="tab" aria-selected="${b.id === atual}"
-        style="--bolso:${b.cor}" onclick="UI.modalItens(${luta ? "'luta'" : 'null'}, '${b.id}')">
-        ${imgBolso(b.id)}<span class="bolso-nome">${b.nome}</span>${conta(b.id) ? `<span class="bolso-n">${conta(b.id)}</span>` : ''}
-      </button>`).join('')}</nav>`;
-    const B = BOLSOS.find(b => b.id === atual);
-    const topo = `<div class="mochila-topo">
-      <span class="fecho"></span>
-      <span class="bolsa-nome">${this.esc(bolsa.rotulo)}</span>
-      <span class="peso">${total} ${total === 1 ? 'unidade' : 'unidades'} · ${itens.length} tipos</span>
-    </div>${nav}`;
-
-    /* Itens-chave: os aparelhos primeiro, e tocar abre */
-    const linhasAparelho = aparelhos.map(a => `<button class="item-linha aparelho" onclick="${a.abrir}">
-        ${imgItem(a.item)}
-        <span class="corpo">
-          <span class="nome">${this.esc(a.nome)}${a.novos && a.novos() ? `<b class="aparelho-novos">${a.novos()}</b>` : ''}</span>
-          <span class="ficha">${this.esc(a.ficha())}</span>
-        </span>
-        <span class="abrir" aria-hidden="true">abrir ›</span>
-      </button>`).join('');
-    const aparelhosHTML = atual === 'chave' && linhasAparelho
-      ? `<h3 class="cat-item">Aparelhos</h3>${linhasAparelho}` : '';
-
-    if (!doBolso.length && !aparelhosHTML)
-      return this.modal('Mochila', topo + `<div class="bolso-forro" style="--bolso:${B.cor}">
-        <p class="nada">${itens.length ? 'Nada neste bolso.' : 'A mochila está vazia. Tudo o que você tiver vai ter vindo de alguém ou de algum balcão.'}</p></div>`,
-        false, 'mochila');
-
+    const itens = Object.entries(d.itens).filter(([n, q]) => q > 0 && bolsoDoItem(n) === id
+      && !(id === 'chave' && aparelhos.some(a => a.item === n)));
     const ORDEM = ['Captura','Recuperação','Treinador','Máquina','Campo','Evolução','Segurado','Vínculo','Fóssil','Ferramenta','Vestuário','Outro'];
     const grupos = {};
-    doBolso.forEach(([n,q]) => {
+    for (const [n, q] of itens){
       const c = CONSUMIVEL_DE_CAMPO.has(n) ? 'Campo' : categoriaItem(n);
-      (grupos[c] = grupos[c] || []).push([n,q]);
-    });
-    const variasCats = Object.keys(grupos).length > 1 || !!aparelhosHTML;
+      const dura = typeof Desgaste !== 'undefined' && Desgaste.dura(n);
+      const quebradas = dura ? Desgaste.quebrados(n) : 0;
+      const g = (grupos[c] = grupos[c] || []);
+      if (q - quebradas > 0) g.push([n, q - quebradas, false]);
+      if (quebradas) g.push([n, quebradas, true]);
+    }
+    return ORDEM.filter(c => grupos[c] && grupos[c].length).map(c => ({cat:c, itens:grupos[c]}));
+  },
 
-    const corpo = ORDEM.filter(c => grupos[c]).map(c => {
-      const linhas = grupos[c].map(([n,q]) => {
-        const info = ITENS_INFO[n] || {};
-        const usavel = (['pedra','curaJogador','cura','revive','status','moral','repelente','vontade','tm'].includes(info.tipo)
-                        || info.tipo === 'vontadeMais'
-                        || (info.tipo === 'mapa' && Estado.dados.modo === 'mundo'))
-                       && !emLuta();
-        const equipavel = info.tipo === 'equipar' && !emLuta();
-        const ebolsa = info.tipo === 'bolsa';
-        const emUso = ebolsa && bolsa.nome === n;
-        if (luta){
-          const serve = info.tipo === 'bola' ? Batalha.tipo !== 'treinador' : usavelEmBatalha(n);
-          const esc = n.replace(/'/g, "\\'");
-          const acao = info.tipo === 'bola'
-            ? `UI.fecharModal();UI.modoBatalha='menu';Jogo.acaoBatalha({tipo:'bola',nome:'${esc}'})`
-            : info.tipo === 'curaJogador'
-              ? `UI.fecharModal();UI.modoBatalha='menu';Jogo.acaoBatalha({tipo:'item',nome:'${esc}'})`
-              : `UI.bagEmQuem('${esc}')`;
-          return `<div class="item-linha${serve ? '' : ' apagado'}"${serve ? '' : ' aria-disabled="true"'}>
-            ${imgItem(n)}
-            <span class="qtd">×${q}</span>
-            <span class="corpo">
-              <span class="nome">${this.esc(n)}</span>
-              <span class="ficha">${this.esc(fichaItem(n))}</span>
-            </span>
-            ${serve ? `<button class="btn mini" style="flex:0 0 auto;align-self:center" onclick="${acao}">usar</button>` : ''}
-          </div>`;
-        }
-        /* ferramenta que gasta: a que funciona mostra como está, e a
-           quebrada vem numa linha própria, com descartar (desgaste.js) */
-        const dura = typeof Desgaste !== 'undefined' && Desgaste.dura(n);
-        const quebradas = dura ? Desgaste.quebrados(n) : 0;
-        const inteiras = q - quebradas;
-        const esc = n.replace(/'/g, "\\'");
-        const linhaQuebrada = quebradas ? `<div class="item-linha quebrado">
-          ${imgItem(n)}
-          <span class="qtd">×${quebradas}</span>
-          <span class="corpo">
-            <span class="nome">${this.esc(n)} <span class="uso-tag uso-quebrado">${this.esc(Desgaste.rotulo(n, 'quebrado'))}</span></span>
-            <span class="ficha">Não serve pra nada assim. Dá pra descartar e comprar outr${FERRAMENTA_FEMININA.has(n) ? 'a' : 'o'}.</span>
-          </span>
-          <button class="btn mini perigo" style="flex:0 0 auto;align-self:center" onclick="UI.descartarFerramenta('${esc}')">descartar</button>
-        </div>` : '';
-        if (dura && inteiras <= 0) return linhaQuebrada;
-        const est = dura ? Desgaste.estado(n) : null;
-        const usoTag = est ? `<span class="uso-tag uso-${est.replace(/ /g, '-')}">${this.esc(Desgaste.rotulo(n, est))}</span>
-            <span class="uso-barra uso-${est.replace(/ /g, '-')}" aria-hidden="true"><i style="width:${Math.round((1 - Desgaste.fracao(n)) * 100)}%"></i></span>` : '';
-        return `<div class="item-linha">
-          ${imgItem(n)}
-          <span class="qtd">×${dura ? inteiras : q}</span>
-          <span class="corpo">
-            <span class="nome">${this.esc(n)} ${usoTag}</span>
-            <span class="ficha">${this.esc(fichaItem(n))}</span>
-            ${info.desc && info.tipo !== 'bola' ? `<span class="desc">${this.esc(descricaoItem(n))}</span>` : ''}
-          </span>
-          ${usavel ? `<button class="btn mini" style="flex:0 0 auto;align-self:center"
-            onclick="UI.usarDaMochila('${n.replace(/'/g,"\\'")}')">usar</button>` : ''}
-          ${equipavel ? `<button class="btn mini" style="flex:0 0 auto;align-self:center"
-            onclick="UI.menuEquiparItem('${n.replace(/'/g,"\\'")}')">equipar</button>` : ''}
-          ${ebolsa && !emUso ? `<button class="btn mini" style="flex:0 0 auto;align-self:center"
-            onclick="UI.usarBolsa('${n.replace(/'/g,"\\'")}')">usar</button>` : ''}
-          ${emUso ? '<span class="qtd" style="align-self:center">em uso</span>' : ''}
-        </div>` + linhaQuebrada;
-      }).join('');
-      return `${variasCats ? `<h3 class="cat-item">${this.esc(NOME_DA_CATEGORIA[c] || c)}</h3>` : ''}${linhas}`;
-    }).join('');
+  /* serve agora? — na luta, o que vale no meio da briga; fora, o que
+     tem uso pela mochila */
+  servePraLuta(n){
+    const info = ITENS_INFO[n] || {};
+    return info.tipo === 'bola' ? Batalha.tipo !== 'treinador' : usavelEmBatalha(n);
+  },
 
-    this.modal('Mochila', topo + `<div class="bolso-forro" style="--bolso:${B.cor}">${aparelhosHTML}${corpo}</div>`, false, 'mochila');
+  mioloMochila(luta, atual, bolsos){
+    const d = Estado.dados;
+    const todos = Object.entries(d.itens).filter(([,q]) => q > 0);
+    const total = todos.reduce((a, [,q]) => a + q, 0);
+    const bolsa = mochilaAtual();
+    const B = BOLSOS.find(b => b.id === atual);
+    const aparelhos = luta || atual !== 'chave' ? [] : APARELHOS.filter(a => a.tem());
+    const grupos = this.itensDoBolso(atual, luta);
+    const conta = id => this.itensDoBolso(id, luta).reduce((a, g) => a + g.itens.length, 0)
+      + (id === 'chave' && !luta ? APARELHOS.filter(a => a.tem()).length : 0);
+    const L = luta ? "'luta'" : 'null';
+
+    const cab = `<header class="moch-cab">
+      <span class="moch-bolsa"><img src="${desenhoDaBolsa(bolsa)}" alt=""></span>
+      <span class="moch-cab-txt">
+        <b class="moch-nome">${this.esc(bolsa.nome)}</b>
+        <span class="moch-peso">${total} ${total === 1 ? 'unidade' : 'unidades'} · ${todos.length} ${todos.length === 1 ? 'tipo' : 'tipos'}</span>
+        ${luta ? '<span class="moch-luta">Na luta · usar gasta a sua vez</span>' : ''}
+      </span>
+    </header>`;
+
+    const nav = `<nav class="moch-bolsos" role="tablist" aria-label="Bolsos da mochila">${bolsos.map(b => {
+      const n = conta(b.id);
+      return `<button class="moch-bolso${b.id === atual ? ' sel' : ''}" role="tab" aria-selected="${b.id === atual}"
+        style="--bolso:${b.cor}" onclick="UI.modalItens(${L}, '${b.id}')">
+        ${imgBolso(b.id)}<span class="moch-bolso-nome">${b.nome}</span>${n ? `<span class="moch-bolso-n">${n}</span>` : ''}
+      </button>`;
+    }).join('')}</nav>`;
+
+    /* a seleção: a de antes, se ainda está no bolso; senão o primeiro
+       que serve (na luta) ou o primeiro da lista */
+    const linhas = grupos.flatMap(g => g.itens);
+    const ant = this._mochSel;
+    let sel = ant && linhas.find(([n,, qb]) => n === ant.n && qb === ant.quebrado);
+    if (!sel) sel = (luta && linhas.find(([n]) => this.servePraLuta(n))) || linhas[0] || null;
+    this._mochSel = sel ? {n:sel[0], quebrado:sel[2]} : null;
+
+    const cat = t => `<h3 class="moch-cat">${this.esc(t)}</h3>`;
+    const aparelhosHTML = aparelhos.length ? cat('Aparelhos') + aparelhos.map(a => `<button class="moch-item aparelho" onclick="${a.abrir}">
+        <span class="moch-ic">${imgItem(a.item)}</span>
+        <span class="moch-item-txt"><span class="moch-item-nome">${this.esc(a.nome)}${a.novos && a.novos() ? `<b class="aparelho-novos">${a.novos()}</b>` : ''}</span>
+          <small>${this.esc(a.ficha())}</small></span>
+        <span class="moch-abrir" aria-hidden="true">Abrir ›</span>
+      </button>`).join('') : '';
+    const variasCats = grupos.length > 1 || !!aparelhosHTML;
+    const lista = grupos.map(g => (variasCats ? cat(NOME_DA_CATEGORIA[g.cat] || g.cat) : '')
+      + g.itens.map(([n, q, qb]) => this.linhaMochila(n, q, qb, luta, sel && sel[0] === n && sel[2] === qb)).join('')).join('');
+    const vazio = !lista && !aparelhosHTML
+      ? `<p class="moch-nada">${todos.length ? 'Nada neste bolso.' : 'A mochila está vazia. Tudo o que você tiver vai ter vindo de alguém ou de algum balcão.'}</p>` : '';
+
+    return `<div class="moch" style="--bolso:${B.cor}">
+      ${cab}${nav}
+      <section class="moch-lista" role="tabpanel" aria-label="${this.esc(B.nome)}" onkeydown="UI.mochilaTecla(event)">${aparelhosHTML}${lista}${vazio}</section>
+      <aside class="moch-ficha" aria-live="polite">${sel ? this.fichaMochila(sel[0], sel[2], luta) : this.fichaDaBolsa(bolsa, total, todos.length)}</aside>
+    </div>`;
+  },
+
+  /* uma linha da lista: ícone, nome (com o desgaste, se gasta) e quantas */
+  linhaMochila(n, q, quebrado, luta, sel){
+    const at = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+    const info = ITENS_INFO[n] || {};
+    let marca = '';
+    if (quebrado) marca = `<span class="uso-tag uso-quebrado">${this.esc(Desgaste.rotulo(n, 'quebrado'))}</span>`;
+    else if (typeof Desgaste !== 'undefined' && Desgaste.dura(n)){
+      const est = Desgaste.estado(n), c = est.replace(/ /g, '-');
+      marca = `<span class="uso-barra uso-${c}" title="${at(Desgaste.rotulo(n, est))}"><i style="width:${Math.round((1 - Desgaste.fracao(n)) * 100)}%"></i></span>`;
+    } else if (info.tipo === 'bolsa' && mochilaAtual().nome === n) marca = '<span class="uso-tag uso-em-uso">em uso</span>';
+    const apagado = luta && !this.servePraLuta(n);
+    return `<button class="moch-item${sel ? ' sel' : ''}${quebrado ? ' quebrado' : ''}${apagado ? ' apagado' : ''}"
+      data-item="${at(n)}" data-quebrado="${quebrado ? 1 : 0}" aria-pressed="${!!sel}" onclick="UI.mochilaVer(this)">
+      <span class="moch-ic">${imgItem(n)}</span>
+      <span class="moch-item-txt"><span class="moch-item-nome">${this.esc(n)}</span>${marca}</span>
+      <span class="moch-q">×${q}</span>
+    </button>`;
+  },
+
+  /* a ficha do item tocado */
+  fichaMochila(n, quebrado, luta){
+    const at = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+    const info = ITENS_INFO[n] || {};
+    const d = Estado.dados;
+    const q = Estado.contaItem(n);
+    const c = CONSUMIVEL_DE_CAMPO.has(n) ? 'Campo' : categoriaItem(n);
+    const dura = typeof Desgaste !== 'undefined' && Desgaste.dura(n);
+    const f = FERRAMENTA_FEMININA.has(n);
+    const bolsa = mochilaAtual();
+    const emUso = info.tipo === 'bolsa' && bolsa.nome === n;
+    const quantas = dura ? (quebrado ? Desgaste.quebrados(n) : q - Desgaste.quebrados(n)) : q;
+
+    /* o estado da ferramenta: a barra e o nome dele */
+    let uso = '';
+    if (quebrado) uso = `<div class="mf-uso quebrado"><span>${this.esc(maiuscula(Desgaste.rotulo(n, 'quebrado')))}</span></div>`;
+    else if (dura){
+      const est = Desgaste.estado(n), cl = est.replace(/ /g, '-');
+      uso = `<div class="mf-uso"><span>${this.esc(maiuscula(Desgaste.rotulo(n, est)))}</span>
+        <span class="uso-barra uso-${cl}" aria-hidden="true"><i style="width:${Math.round((1 - Desgaste.fracao(n)) * 100)}%"></i></span></div>`;
+    }
+
+    /* o time de relance: quem aprende a TM, em quem a pedra funciona,
+       quem já segura alguma coisa */
+    let time = '';
+    const vivos = (d.time || []).filter(p => !p.morto);
+    const icone = (p, cl, rot) => `<span class="mf-p ${cl}" title="${at(nomeExib(p) + ' · ' + rot)}">${imgSprite(p, 'icone')}<small>${this.esc(rot)}</small></span>`;
+    if (!quebrado && vivos.length){
+      if (info.tipo === 'tm' && info.golpe){
+        time = vivos.map(p => p.golpes.some(g => g.nome === info.golpe) ? icone(p, 'ja', 'já sabe')
+          : aprendeTM(p, n) ? icone(p, 'sim', 'aprende') : icone(p, 'nao', 'não aprende')).join('');
+      } else if (info.tipo === 'pedra'){
+        const tab = pedrasDe(n) || {};
+        time = vivos.map(p => tab[p.dex] ? icone(p, 'sim', 'funciona') : icone(p, 'nao', 'nada')).join('');
+      } else if (info.tipo === 'equipar'){
+        time = vivos.map(p => p.segurando === n ? icone(p, 'ja', 'segura')
+          : p.segurando ? icone(p, 'nao', 'mão ocupada') : icone(p, 'sim', 'mão livre')).join('');
+      }
+    }
+
+    /* o que dá pra fazer com ele */
+    const btn = (rot, acao, cl, ic) => `<button class="mf-btn ${cl || ''}" data-item="${at(n)}" onclick="${acao}">${ic ? svgIcone(ic, 'mf-btn-ic') : ''}<span>${rot}</span></button>`;
+    const acoes = [];
+    let nota = '';
+    if (luta){
+      if (info.tipo === 'bola'){
+        if (Batalha.tipo !== 'treinador') acoes.push(btn('Arremessar', 'UI.usarNaLuta(this.dataset.item)', 'bola', 'bola'));
+        else nota = 'Pokémon de treinador não se captura.';
+      } else if (usavelEmBatalha(n)){
+        acoes.push(btn(info.tipo === 'curaJogador' ? 'Usar em você' : 'Usar', 'UI.usarNaLuta(this.dataset.item)', 'usar', 'cura'));
+      } else nota = 'No meio da luta, isso fica na mochila.';
+    } else if (quebrado){
+      acoes.push(btn('Descartar', 'UI.descartarFerramenta(this.dataset.item)', 'perigo', 'alerta'));
+      nota = `Não serve pra nada assim. Dá pra descartar e comprar outr${f ? 'a' : 'o'}.`;
+    } else {
+      const usavel = ['pedra','curaJogador','cura','revive','status','moral','repelente','vontade','tm','vontadeMais'].includes(info.tipo)
+        || (info.tipo === 'mapa' && d.modo === 'mundo');
+      if (usavel){
+        const rot = info.tipo === 'tm' ? 'Ensinar' : info.tipo === 'mapa' ? 'Abrir o mapa' : info.tipo === 'curaJogador' ? 'Usar em você' : 'Usar';
+        acoes.push(btn(rot, 'UI.usarDaMochila(this.dataset.item)', 'usar', info.tipo === 'mapa' ? 'mapa' : info.tipo === 'tm' ? 'brilho' : 'cura'));
+      }
+      if (info.tipo === 'equipar') acoes.push(btn('Dar pra segurar', 'UI.menuEquiparItem(this.dataset.item)', 'segurar', 'itens'));
+      if (info.tipo === 'bolsa'){
+        if (emUso) nota = 'É a que está nas suas costas.';
+        else acoes.push(btn('Usar esta bolsa', 'UI.usarBolsa(this.dataset.item)', 'segurar', 'itens'));
+      }
+    }
+
+    const desc = info.desc && info.tipo !== 'bola' ? descricaoItem(n) : '';
+    return `<div class="mf" data-item="${at(n)}">
+      <div class="mf-topo">
+        <span class="mf-pedestal${quebrado ? ' quebrado' : ''}">${imgItem(n, 'mf-ic')}</span>
+        <div class="mf-tit">
+          <h3 class="mf-nome">${this.esc(n)}</h3>
+          <span class="mf-tags"><span class="mf-tag">${this.esc(NOME_DA_CATEGORIA[c] || c)}</span><span class="mf-tag n">×${quantas} na mochila</span></span>
+        </div>
+      </div>
+      ${uso}
+      ${info.tipo === 'tm' && info.golpe ? `<div class="mf-golpe">${this.cartaoGolpe(info.golpe)}</div>` : ''}
+      ${fichaItem(n) && info.tipo !== 'tm' ? `<p class="mf-efeito">${this.esc(fichaItem(n))}</p>` : ''}
+      ${desc ? `<p class="mf-desc">${this.esc(desc)}</p>` : ''}
+      ${time ? `<div class="mf-time">${time}</div>` : ''}
+      ${nota ? `<p class="mf-nota">${this.esc(nota)}</p>` : ''}
+      ${acoes.length ? `<div class="mf-acoes">${acoes.join('')}</div>` : ''}
+    </div>`;
+  },
+
+  /* sem item escolhido (bolso vazio, ou só aparelhos): a própria bolsa */
+  fichaDaBolsa(bolsa, total, tipos){
+    return `<div class="mf mf-bolsa">
+      <div class="mf-topo">
+        <span class="mf-pedestal"><img class="item-icone mf-ic" src="${desenhoDaBolsa(bolsa)}" alt=""></span>
+        <div class="mf-tit">
+          <h3 class="mf-nome">${this.esc(bolsa.nome)}</h3>
+          <span class="mf-tags"><span class="mf-tag n">${total} ${total === 1 ? 'unidade' : 'unidades'}</span><span class="mf-tag n">${tipos} ${tipos === 1 ? 'tipo' : 'tipos'}</span></span>
+        </div>
+      </div>
+    </div>`;
+  },
+
+  /* tocar num item: só a seleção e a ficha mudam */
+  mochilaVer(btn){
+    const caixa = btn && btn.closest('.moch');
+    if (!caixa) return;
+    const n = btn.dataset.item, quebrado = btn.dataset.quebrado === '1';
+    this._mochSel = {n, quebrado};
+    caixa.querySelectorAll('.moch-item.sel').forEach(b => { b.classList.remove('sel'); b.setAttribute('aria-pressed', 'false'); });
+    btn.classList.add('sel'); btn.setAttribute('aria-pressed', 'true');
+    const ficha = caixa.querySelector('.moch-ficha');
+    ficha.innerHTML = this.fichaMochila(n, quebrado, this._mochLuta);
+    ficha.scrollTop = 0;
+  },
+
+  /* setas sobem e descem na lista; Enter faz a primeira coisa da ficha */
+  mochilaTecla(ev){
+    const linha = ev.target && ev.target.closest && ev.target.closest('.moch-item');
+    if (!linha) return;
+    if (ev.key === 'ArrowDown' || ev.key === 'ArrowUp'){
+      const todas = [...linha.closest('.moch-lista').querySelectorAll('.moch-item')];
+      const i = todas.indexOf(linha) + (ev.key === 'ArrowDown' ? 1 : -1);
+      if (todas[i]){ ev.preventDefault(); todas[i].focus(); if (!todas[i].classList.contains('aparelho')) this.mochilaVer(todas[i]); }
+    } else if (ev.key === 'Enter' && linha.classList.contains('sel')){
+      const b = document.querySelector('#modal .moch-ficha .mf-btn');
+      if (b){ ev.preventDefault(); b.click(); }
+    }
+  },
+
+  /* na luta: a bola e o remédio de você gastam a vez na hora; o resto
+     pergunta em quem */
+  usarNaLuta(n){
+    const info = ITENS_INFO[n] || {};
+    if (!Estado.contaItem(n) || !emLuta()) return;
+    if (info.tipo === 'bola' || info.tipo === 'curaJogador'){
+      this.fecharModal(); this.modoBatalha = 'menu';
+      return Jogo.acaoBatalha(info.tipo === 'bola' ? {tipo:'bola', nome:n} : {tipo:'item', nome:n});
+    }
+    this.bagEmQuem(n);
   },
 
   descartarFerramenta(nome){

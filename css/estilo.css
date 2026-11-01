@@ -1136,28 +1136,6 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
   background:var(--moch);border-color:var(--moch-claro);color:var(--moch-btn-txt, var(--moch-realce))
 }
 
-.mochila-topo{
-  display:flex;align-items:center;gap:10px;
-  padding:10px 14px;margin:-4px 0 14px;border-radius:10px;
-  background:linear-gradient(180deg, rgba(230,180,85,.10), transparent);
-  border:1px solid color-mix(in srgb, var(--destaque) 26%, var(--borda));
-}
-.mochila-topo .grana{font-family:var(--mono);color:var(--destaque);font-weight:700;font-size:15px}
-.mochila-topo .bolsa-nome{font-weight:650;font-size:14px;letter-spacing:.02em}
-.mochila-topo .peso{font-size:12px;color:var(--texto-fraco);margin-left:auto;text-align:right}
-.mochila-topo .fecho{
-  width:16px;height:16px;flex:0 0 auto;border-radius:4px;
-  background:linear-gradient(160deg,#e8e3d6,#9aa0a8);
-  box-shadow:inset 0 -2px 3px rgba(0,0,0,.35), 0 1px 2px rgba(0,0,0,.4)
-}
-.modal.mochila .mochila-topo{
-  background:linear-gradient(180deg, var(--moch-claro), var(--moch));
-  border-color:var(--moch-esc);
-}
-.modal.mochila .mochila-topo .grana,
-.modal.mochila .mochila-topo .bolsa-nome{color:var(--moch-titulo)}
-.modal.mochila .mochila-topo .peso{color:var(--moch-titulo);opacity:.8}
-
 .item-linha{
   display:flex;align-items:flex-start;gap:12px;padding:11px 12px;border-radius:10px;
   border:1px solid transparent;
@@ -1181,26 +1159,10 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
 .item-linha .nome{display:block;font-weight:600;font-size:14px}
 .item-linha .desc{display:block;font-size:12.5px;color:var(--texto-fraco);font-style:italic;margin-top:3px;line-height:1.5}
 
-/* as linhas, lidas contra o forro da bolsa */
-.modal.mochila .item-linha{border-color:transparent}
-.modal.mochila .item-linha:hover{
-  background:rgba(255,255,255,.07);border-color:var(--moch-linha)
-}
-.modal.mochila .item-linha .qtd{
-  background:rgba(0,0,0,.24);border-color:var(--moch-linha);color:var(--moch-txt)
-}
-.modal.mochila .item-linha .nome{color:var(--moch-txt)}
-.modal.mochila .item-linha .ficha{color:var(--moch-txt-2)}
-.modal.mochila .item-linha .desc{color:var(--moch-txt-3)}
-.modal.mochila h3.cat-item{color:var(--moch-txt-3);border-bottom-color:var(--moch-linha)}
 .modal.mochila .btn.mini{
   background:rgba(0,0,0,.22);border-color:var(--moch-linha);color:var(--moch-txt)
 }
 .modal.mochila .btn.mini:hover:not(:disabled){
-  background:var(--moch);border-color:var(--moch-claro);color:var(--moch-realce)
-}
-.modal.mochila .item-linha.compravel .qtd{color:var(--moch-txt)}
-.modal.mochila .item-linha.compravel:hover:not(:disabled) .qtd{
   background:var(--moch);border-color:var(--moch-claro);color:var(--moch-realce)
 }
 
@@ -3788,18 +3750,18 @@ label.btn:focus-within{outline:2px solid var(--destaque);outline-offset:2px}
 .loja-modos{margin-bottom:10px}
 .loja-modos .tut-aba{display:inline-flex;align-items:center;gap:6px}
 .loja-modos .tut-aba .icone{width:16px;height:16px}
-.item-linha .uso-tag{display:inline-block;margin-left:6px;padding:1px 7px;border-radius:999px;font-size:10.5px;font-weight:600;
+.uso-tag{display:inline-block;margin-left:6px;padding:1px 7px;border-radius:999px;font-size:10.5px;font-weight:600;
   letter-spacing:.02em;vertical-align:middle;background:rgba(76,185,107,.18);color:#8fe0a8;border:1px solid rgba(76,185,107,.35)}
-.item-linha .uso-meio-desgastado{background:rgba(245,197,24,.14);color:#f2d66a;border-color:rgba(245,197,24,.32)}
-.item-linha .uso-desgastado{background:rgba(255,150,60,.16);color:#ffb37a;border-color:rgba(255,150,60,.34)}
-.item-linha .uso-quebrando{background:rgba(238,21,21,.16);color:#ff8a7a;border-color:rgba(238,21,21,.38)}
-.item-linha .uso-quebrado{background:rgba(120,120,130,.22);color:#c3c7cf;border-color:rgba(160,160,170,.35)}
-.item-linha .uso-barra{display:inline-block;width:46px;height:5px;margin-left:6px;vertical-align:middle;border-radius:3px;
+.uso-meio-desgastado{background:rgba(245,197,24,.14);color:#f2d66a;border-color:rgba(245,197,24,.32)}
+.uso-desgastado{background:rgba(255,150,60,.16);color:#ffb37a;border-color:rgba(255,150,60,.34)}
+.uso-quebrando{background:rgba(238,21,21,.16);color:#ff8a7a;border-color:rgba(238,21,21,.38)}
+.uso-quebrado{background:rgba(120,120,130,.22);color:#c3c7cf;border-color:rgba(160,160,170,.35)}
+.uso-barra{display:inline-block;width:46px;height:5px;margin-left:6px;vertical-align:middle;border-radius:3px;
   background:rgba(255,255,255,.12);overflow:hidden}
-.item-linha .uso-barra i{display:block;height:100%;background:#4cb96b}
-.item-linha .uso-barra.uso-meio-desgastado i{background:#f5c518}
-.item-linha .uso-barra.uso-desgastado i{background:#ff963c}
-.item-linha .uso-barra.uso-quebrando i{background:#e8402f}
+.uso-barra i{display:block;height:100%;background:#4cb96b}
+.uso-barra.uso-meio-desgastado i{background:#f5c518}
+.uso-barra.uso-desgastado i{background:#ff963c}
+.uso-barra.uso-quebrando i{background:#e8402f}
 .item-linha.quebrado > img, .item-linha.quebrado > .item-icone{filter:grayscale(1) brightness(.75);transform:rotate(-12deg)}
 .item-linha.quebrado .nome{text-decoration:line-through;text-decoration-color:rgba(255,255,255,.35)}
 .confirma-compra{display:flex;flex-direction:column;gap:8px;align-items:stretch;text-align:center}
@@ -4292,72 +4254,302 @@ h3.sec-ir{--sec:#5aa7ff}
 }
 .modal.mochila .modal-corpo{border-radius:14px;padding:12px}
 
-/* o zíper: o puxador e os dentes correndo embaixo do nome da bolsa */
-.modal.mochila .mochila-topo{position:relative;margin:0 0 12px;padding:10px 14px 16px;overflow:hidden}
-.modal.mochila .mochila-topo::after{
-  content:'';position:absolute;left:10px;right:10px;bottom:5px;height:5px;border-radius:3px;
-  background:repeating-linear-gradient(90deg, #ece6d6 0 3px, #8d8676 3px 6px);
-  box-shadow:0 1px 0 rgba(255,255,255,.25), inset 0 1px 1px rgba(0,0,0,.3);
-  opacity:.9;
+/* ============================================================
+   MOCHILA ABERTA (UI.modalItens) — a mochila dos jogos de hoje
+   Por fora, a lona da bolsa que você carrega; no alto, o desenho
+   dela numa moeda, o nome e o zíper. No forro, três partes: os
+   bolsos (coluna no computador, faixa no celular), a lista do bolso
+   aberto e a ficha do item tocado, com o que dá pra fazer com ele.
+   A janela tem altura fixa: trocar de bolso não faz nada pular, e a
+   lista e a ficha rolam por dentro. A cor do bolso aberto é --bolso.
+   ============================================================ */
+.modal.mochila.mochila-cheia{
+  max-width:980px;height:min(690px, calc(100dvh - 36px));max-height:none;
+  display:flex;flex-direction:column;overflow:hidden;padding:14px 14px 16px;
 }
-.modal.mochila .mochila-topo .fecho{
-  width:14px;height:22px;border-radius:4px 4px 7px 7px;
-  background:linear-gradient(90deg,#a9aeb6,#eceff3 45%,#9aa0a8);
-  box-shadow:inset 0 -6px 0 -3px rgba(0,0,0,.25), 0 2px 3px rgba(0,0,0,.45);
+.modal.mochila.mochila-cheia > .modal-corpo{
+  flex:1 1 auto;min-height:0;padding:0;border:0;border-radius:0;background:none;box-shadow:none;
+}
+.modal.mochila-cheia > .modal-x{
+  top:16px;right:16px;width:38px;height:38px;border-radius:50%;
+  color:var(--moch-titulo);text-shadow:none;opacity:.8;background:rgba(0,0,0,.1);
+}
+.modal.mochila-cheia > .modal-x:hover{opacity:1;background:rgba(0,0,0,.2)}
+.modal.mochila-cheia > .modal-x:focus-visible{outline-color:var(--moch-titulo)}
+
+.moch{
+  height:100%;display:grid;gap:10px 12px;
+  grid-template-columns:176px minmax(0, 1fr) minmax(250px, 300px);
+  grid-template-rows:auto minmax(0, 1fr);
+  grid-template-areas:"cab cab cab" "bolsos lista ficha";
 }
 
-/* ---------- os bolsos ---------- */
-.bolsos{display:grid;grid-template-columns:repeat(auto-fit, minmax(0, 1fr));gap:6px;margin:0 0 -1px;position:relative;z-index:1}
-.bolso{
-  position:relative;display:flex;flex-direction:column;align-items:center;gap:3px;
-  padding:8px 4px 7px;border:1px solid rgba(0,0,0,.28);border-bottom:0;border-radius:12px 12px 0 0;
-  background:linear-gradient(180deg, rgba(0,0,0,.12), rgba(0,0,0,.26));
-  color:var(--moch-txt-2);font:inherit;cursor:pointer;min-width:0;
-  transition:transform .18s var(--mola), background .18s var(--suave), color .18s;
+/* ---------- o alto: a bolsa, o nome e o zíper ---------- */
+.moch-cab{
+  grid-area:cab;position:relative;display:flex;align-items:center;gap:13px;
+  padding:2px 50px 15px 2px;min-width:0;
 }
-.bolso:hover{transform:translateY(-2px);color:var(--moch-txt)}
-.bolso:focus-visible{outline:2px solid var(--bolso);outline-offset:2px}
-.bolso .bolso-icone{width:32px;height:32px;image-rendering:pixelated;filter:saturate(.55) brightness(.85);transition:filter .18s, transform .25s var(--mola)}
-.bolso .bolso-nome{font-size:11px;font-weight:700;letter-spacing:.03em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
-.bolso .bolso-n{
-  position:absolute;top:4px;right:6px;min-width:17px;height:17px;padding:0 4px;border-radius:9px;
-  font:700 10.5px/17px var(--mono);text-align:center;color:#fff;background:rgba(0,0,0,.4);
+.moch-cab::after{
+  content:'';position:absolute;left:2px;right:2px;bottom:2px;height:6px;border-radius:3px;
+  background:repeating-linear-gradient(90deg, color-mix(in srgb, var(--moch-claro) 55%, #fff) 0 3px, var(--moch-esc) 3px 6px);
+  box-shadow:inset 0 1px 1px rgba(0,0,0,.35), 0 1px 0 rgba(255,255,255,.22);
 }
-.bolso.sel{
-  color:var(--moch-txt);
-  background:linear-gradient(180deg, color-mix(in srgb, var(--bolso) 30%, var(--moch-forro-2)), var(--moch-forro-2));
-  border-color:color-mix(in srgb, var(--bolso) 60%, var(--moch-linha));
-  box-shadow:inset 0 3px 0 var(--bolso);
+.moch-bolsa{
+  flex:0 0 auto;width:68px;height:68px;border-radius:50%;display:grid;place-items:center;
+  background:radial-gradient(circle at 50% 32%, color-mix(in srgb, var(--moch-claro) 55%, #fff), var(--moch-claro) 48%, var(--moch) 78%);
+  box-shadow:0 0 0 3px var(--moch-esc), inset 0 -4px 0 rgba(0,0,0,.16), 0 8px 16px -8px rgba(0,0,0,.75);
 }
-.bolso.sel .bolso-icone{filter:none;transform:translateY(-1px) scale(1.08)}
-.bolso.sel .bolso-n{background:var(--bolso)}
-/* o forro do bolso aberto: a borda de cima é a cor do bolso */
-.bolso-forro{
-  border:1px solid color-mix(in srgb, var(--bolso) 55%, var(--moch-linha));
-  border-top:3px solid var(--bolso);border-radius:0 0 12px 12px;
-  padding:6px 8px 8px;min-height:120px;
+.moch-bolsa img{width:60px;height:60px;image-rendering:pixelated;filter:drop-shadow(0 2px 0 rgba(0,0,0,.2))}
+.moch-cab-txt{display:flex;flex-direction:column;gap:3px;min-width:0}
+.moch-nome{
+  font-family:var(--letra-hud, var(--fonte));font-size:23px;font-weight:700;line-height:1.1;letter-spacing:.01em;
+  color:var(--moch-titulo);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.moch-peso{
+  font-family:var(--letra-hud, var(--fonte));font-size:13.5px;font-weight:500;
+  color:var(--moch-titulo);opacity:.78;font-variant-numeric:tabular-nums;
+}
+.moch-luta{
+  align-self:flex-start;margin-top:3px;padding:2px 10px;border-radius:999px;
+  font-family:var(--letra-hud, var(--fonte));font-size:11.5px;font-weight:600;color:#fff;
+  background:linear-gradient(180deg, #e39a24, #c07a0c);box-shadow:0 2px 0 #8a5606, inset 0 1px 0 rgba(255,255,255,.3);
+  text-shadow:0 1px 1px rgba(0,0,0,.3);
+}
+
+/* ---------- os bolsos: botões com espessura, o aberto na cor dele ---------- */
+.moch-bolsos{grid-area:bolsos;display:flex;flex-direction:column;gap:7px;min-height:0;overflow-y:auto;padding:2px 2px 6px}
+.moch-bolso{
+  --bolso-e:color-mix(in srgb, var(--moch-esc) 70%, #000);
+  position:relative;display:flex;align-items:center;gap:9px;min-width:0;
+  padding:8px 10px 8px 7px;border:0;border-radius:13px;cursor:pointer;text-align:left;
+  font-family:var(--letra-hud, var(--fonte));font-size:14.5px;font-weight:600;color:var(--moch-txt-2);
+  background:linear-gradient(180deg, var(--moch-forro-2), var(--moch-forro));
+  box-shadow:inset 0 0 0 1px var(--moch-linha), 0 3px 0 var(--bolso-e);
+  transition:transform .14s var(--mola), color .14s, filter .14s;
+}
+.moch-bolso .bolso-icone{
+  flex:0 0 auto;width:32px;height:32px;image-rendering:pixelated;
+  filter:saturate(.45) brightness(.82);transition:filter .16s, transform .24s var(--mola);
+}
+.moch-bolso-nome{flex:1 1 auto;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.moch-bolso-n{
+  flex:0 0 auto;min-width:22px;padding:0 6px;border-radius:999px;text-align:center;
+  font:700 11.5px/20px var(--letra-hud, var(--fonte));font-variant-numeric:tabular-nums;
+  color:var(--moch-txt);background:rgba(0,0,0,.3);
+}
+.moch-bolso:hover{color:var(--moch-txt);transform:translateY(-1px)}
+.moch-bolso:hover .bolso-icone{filter:saturate(.8) brightness(.95)}
+.moch-bolso:active{transform:translateY(2px);box-shadow:inset 0 0 0 1px var(--moch-linha), 0 1px 0 var(--bolso-e)}
+.moch-bolso:focus-visible{outline:2px solid var(--bolso);outline-offset:2px}
+.moch-bolso.sel{
+  --bolso-e:color-mix(in srgb, var(--bolso) 48%, #000);
+  color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.4);
+  background:linear-gradient(180deg, color-mix(in srgb, var(--bolso) 86%, #fff) 0%, var(--bolso) 48%, color-mix(in srgb, var(--bolso) 80%, #000) 100%);
+  box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--bolso) 55%, #fff), 0 3px 0 var(--bolso-e), 0 10px 16px -10px rgba(0,0,0,.9);
+}
+.moch-bolso.sel .bolso-icone{filter:drop-shadow(0 1px 1px rgba(0,0,0,.4));transform:scale(1.1)}
+.moch-bolso.sel .moch-bolso-n{background:rgba(0,0,0,.28);color:#fff}
+
+/* ---------- a lista do bolso aberto ---------- */
+.moch-lista{
+  grid-area:lista;min-height:0;overflow-y:auto;overscroll-behavior:contain;
+  padding:8px 8px 10px;border-radius:15px;
   background:
     repeating-linear-gradient(0deg, rgba(0,0,0,.05) 0 1px, transparent 1px 3px),
-    linear-gradient(180deg, rgba(0,0,0,.14), rgba(0,0,0,.04));
-  animation:aparece .3s var(--suave) both;
+    linear-gradient(180deg, var(--moch-forro-2), var(--moch-forro));
+  box-shadow:inset 0 0 0 1px var(--moch-linha), inset 0 3px 0 var(--bolso), inset 0 12px 18px -14px rgba(0,0,0,.9);
+  scrollbar-width:thin;scrollbar-color:var(--moch-linha) transparent;
 }
-.bolso-forro .nada{padding:22px 8px;text-align:center}
-.modal.mochila .bolso-forro h3.cat-item:first-child{margin-top:4px}
-
-/* ---------- aparelhos no bolso de Itens-chave ---------- */
-button.item-linha.aparelho{
-  width:100%;text-align:left;font:inherit;color:inherit;cursor:pointer;align-items:center;
-  background:rgba(255,255,255,.04);border:1px solid var(--moch-linha);margin-bottom:6px;
+.moch-cat{
+  display:flex;align-items:center;gap:9px;margin:14px 4px 7px;
+  font-family:var(--letra-hud, var(--fonte));font-size:12.5px;font-weight:700;letter-spacing:.07em;
+  text-transform:uppercase;color:var(--moch-txt-3);
 }
-.item-linha.aparelho .item-icone{width:36px;height:36px;image-rendering:pixelated;align-self:center;margin:0}
-.item-linha.aparelho .abrir{
-  flex:0 0 auto;font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px;
-  background:rgba(0,0,0,.24);border:1px solid var(--moch-linha);color:var(--moch-txt);
+.moch-cat::before{
+  content:'';flex:0 0 auto;width:7px;height:7px;border-radius:2px;transform:rotate(45deg);
+  background:var(--bolso);box-shadow:0 0 8px -1px var(--bolso);
 }
-.modal.mochila .item-linha.aparelho:hover{border-color:var(--bolso, #e0b030);background:rgba(255,255,255,.09)}
-.item-linha.aparelho:hover .abrir{background:var(--bolso, #e0b030);border-color:var(--bolso, #e0b030);color:#1b1500}
+.moch-cat::after{content:'';flex:1 1 auto;height:1px;background:linear-gradient(90deg, var(--moch-linha), transparent)}
+.moch-lista > .moch-cat:first-child{margin-top:6px}
+.moch-item{
+  width:100%;display:flex;align-items:center;gap:11px;margin:0 0 5px;
+  padding:5px 14px 5px 5px;border:0;border-radius:12px;cursor:pointer;text-align:left;
+  font-family:var(--letra-hud, var(--fonte));color:var(--moch-txt);
+  background:rgba(255,255,255,.035);box-shadow:inset 0 0 0 1px rgba(255,255,255,.045);
+  transition:background .14s var(--suave), transform .14s var(--mola), box-shadow .14s;
+  animation:entraItem .28s var(--suave) backwards;
+}
+.moch-item:nth-of-type(2){animation-delay:.03s}
+.moch-item:nth-of-type(3){animation-delay:.06s}
+.moch-item:nth-of-type(4){animation-delay:.09s}
+.moch-item:nth-of-type(n+5){animation-delay:.12s}
+.moch-ic{
+  flex:0 0 auto;width:42px;height:42px;border-radius:10px;display:grid;place-items:center;
+  background:radial-gradient(circle at 50% 40%, rgba(255,255,255,.1), rgba(0,0,0,.24) 70%);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.06);
+}
+.moch-ic .item-icone{width:30px;height:30px;margin:0;align-self:center;image-rendering:pixelated}
+.moch-item-txt{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:4px}
+.moch-item-nome{max-width:100%;font-size:15px;font-weight:600;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.moch-item-txt small{font-family:var(--fonte);font-size:12px;line-height:1.3;color:var(--moch-txt-3)}
+.moch-item .uso-tag{margin-left:0}
+.moch-item .uso-barra{width:72px;margin-left:0}
+.moch-q{flex:0 0 auto;font-size:15px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--moch-txt-2)}
+.moch-item:hover{background:rgba(255,255,255,.08);transform:translateX(2px)}
+.moch-item:focus-visible{outline:2px solid var(--bolso);outline-offset:1px}
+.moch-item.sel{
+  background:linear-gradient(90deg, color-mix(in srgb, var(--bolso) 36%, transparent), color-mix(in srgb, var(--bolso) 10%, transparent));
+  box-shadow:inset 0 0 0 1.5px color-mix(in srgb, var(--bolso) 72%, #fff), 0 6px 14px -8px rgba(0,0,0,.8);
+}
+.moch-item.sel .moch-q{color:var(--moch-txt)}
+.moch-item.sel .moch-ic{background:radial-gradient(circle at 50% 40%, color-mix(in srgb, var(--bolso) 45%, transparent), rgba(0,0,0,.2) 72%)}
+.moch-item.apagado .moch-ic, .moch-item.apagado .moch-item-txt, .moch-item.apagado .moch-q{opacity:.42}
+.moch-item.apagado .item-icone{filter:grayscale(1)}
+.moch-item.quebrado .item-icone{filter:grayscale(1) brightness(.75);transform:rotate(-12deg)}
+.moch-item.quebrado .moch-item-nome{text-decoration:line-through;text-decoration-color:rgba(255,255,255,.4)}
+/* os aparelhos abrem no toque */
+.moch-item.aparelho{padding:7px 12px 7px 6px;background:rgba(255,255,255,.06);box-shadow:inset 0 0 0 1px var(--moch-linha)}
+.moch-item.aparelho .moch-item-nome{white-space:normal}
+.moch-abrir{
+  flex:0 0 auto;padding:5px 12px;border-radius:999px;font-size:12.5px;font-weight:700;color:var(--moch-txt);
+  background:rgba(0,0,0,.26);box-shadow:inset 0 0 0 1px var(--moch-linha);transition:background .14s, color .14s;
+}
+.moch-item.aparelho:hover .moch-abrir{background:var(--bolso);color:#1b1500;box-shadow:none}
 .aparelho-novos{display:inline-block;margin-left:8px;min-width:18px;padding:0 5px;border-radius:9px;
   background:#d9534f;color:#fff;font-size:11px;line-height:18px;text-align:center;vertical-align:1px}
+.moch-nada{margin:0;padding:34px 14px;text-align:center;font-size:14px;line-height:1.55;color:var(--moch-txt-3)}
+.uso-tag.uso-em-uso{background:color-mix(in srgb, var(--bolso) 26%, transparent);color:var(--moch-txt);border-color:color-mix(in srgb, var(--bolso) 55%, transparent)}
+
+/* ---------- a ficha do item tocado ---------- */
+.moch-ficha{
+  grid-area:ficha;min-height:0;overflow-y:auto;overscroll-behavior:contain;
+  display:flex;flex-direction:column;padding:16px;border-radius:16px;color:var(--moch-txt);
+  background:
+    radial-gradient(120% 60% at 50% 0%, color-mix(in srgb, var(--bolso) 22%, transparent), transparent 62%),
+    linear-gradient(180deg, var(--moch-forro-2), var(--moch-forro));
+  box-shadow:inset 0 0 0 1px var(--moch-linha), 0 10px 22px -14px rgba(0,0,0,.9);
+  scrollbar-width:thin;scrollbar-color:var(--moch-linha) transparent;
+}
+.mf{flex:1 0 auto;display:flex;flex-direction:column;gap:12px;animation:aparece .22s var(--suave) backwards}
+.mf-topo{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center}
+.mf-pedestal{
+  position:relative;width:118px;height:118px;flex:0 0 auto;display:grid;place-items:center;border-radius:50%;
+  background:radial-gradient(circle at 50% 42%, color-mix(in srgb, var(--bolso) 40%, transparent), color-mix(in srgb, var(--bolso) 10%, transparent) 60%, transparent 71%);
+}
+.mf-pedestal::after{
+  content:'';position:absolute;left:24px;right:24px;bottom:12px;height:14px;border-radius:50%;
+  background:radial-gradient(closest-side, rgba(0,0,0,.5), transparent);
+}
+.mf-pedestal .item-icone{
+  position:relative;z-index:1;width:90px;height:90px;margin:0;align-self:center;image-rendering:pixelated;
+  animation:mfFlutua 2.8s ease-in-out infinite;
+}
+@keyframes mfFlutua{0%,100%{transform:translateY(-2px)}50%{transform:translateY(-7px)}}
+.mf-pedestal.quebrado .item-icone{animation:none;transform:rotate(-12deg);filter:grayscale(1) brightness(.75)}
+.mf-tit{min-width:0}
+.mf-nome{margin:0;font-family:var(--letra-hud, var(--fonte));font-size:21px;font-weight:700;line-height:1.15;color:var(--moch-txt);text-wrap:balance}
+.mf-tags{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin-top:7px}
+.mf-tag{
+  padding:3px 10px;border-radius:999px;font-family:var(--letra-hud, var(--fonte));font-size:12px;font-weight:600;color:var(--moch-txt);
+  background:color-mix(in srgb, var(--bolso) 30%, rgba(0,0,0,.3));box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--bolso) 50%, transparent);
+}
+.mf-tag.n{background:rgba(0,0,0,.26);box-shadow:inset 0 0 0 1px var(--moch-linha);font-variant-numeric:tabular-nums}
+.mf-uso{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;padding:9px 12px;border-radius:11px;
+  background:rgba(0,0,0,.22);font-family:var(--letra-hud, var(--fonte));font-size:13.5px;font-weight:600;
+}
+.mf-uso .uso-barra{flex:0 0 48%;height:8px;margin:0;border-radius:4px}
+.mf-uso.quebrado{color:#c3c7cf;justify-content:center}
+.mf-golpe{padding:10px 12px;border-radius:11px;background:rgba(0,0,0,.22);border-left:3px solid var(--bolso)}
+.mf-golpe .golpe-cartao .gc-nome{font-family:var(--letra-hud, var(--fonte));font-size:15px;color:var(--moch-txt)}
+.mf-golpe .golpe-cartao .gc-num{color:var(--moch-txt-2)}
+.mf-efeito{
+  margin:0;padding:10px 12px;border-radius:11px;background:rgba(0,0,0,.22);border-left:3px solid var(--bolso);
+  font-family:var(--letra-hud, var(--fonte));font-size:14px;font-weight:500;line-height:1.45;color:var(--moch-txt);
+}
+.mf-desc{margin:0;font-size:13.5px;line-height:1.6;font-style:italic;color:var(--moch-txt-2)}
+.mf-nota{margin:0;font-size:13px;line-height:1.5;text-align:center;color:var(--moch-txt-3)}
+/* o time de relance: quem aprende, em quem funciona, quem segura */
+.mf-time{display:flex;flex-wrap:wrap;justify-content:center;gap:6px}
+.mf-p{
+  display:flex;flex-direction:column;align-items:center;gap:0;width:62px;padding:3px 2px 5px;border-radius:11px;
+  background:rgba(0,0,0,.22);box-shadow:inset 0 0 0 1px rgba(255,255,255,.05);
+}
+.mf-p img{width:40px;height:40px;object-fit:contain;image-rendering:pixelated}
+.mf-p small{font-family:var(--letra-hud, var(--fonte));font-size:10.5px;font-weight:600;line-height:1.15;text-align:center;color:var(--moch-txt-3)}
+.mf-p.sim{box-shadow:inset 0 0 0 1px rgba(76,185,107,.55);background:rgba(76,185,107,.12)}
+.mf-p.sim small{color:#8fe0a8}
+.mf-p.ja small{color:#9cc7ff}
+.mf-p.nao{opacity:.5}
+/* o que dá pra fazer: os botões dos comandos da luta */
+.mf-acoes{display:flex;flex-direction:column;gap:9px;margin-top:auto;padding-top:4px}
+.mf-btn{
+  --mb:#2f9c55;
+  position:relative;display:flex;align-items:center;justify-content:center;gap:9px;min-height:48px;
+  padding:8px 16px;border-radius:13px;overflow:hidden;cursor:pointer;
+  font-family:var(--letra-hud, var(--fonte));font-size:17px;font-weight:700;letter-spacing:.02em;color:#fff;
+  background:linear-gradient(180deg, color-mix(in srgb, var(--mb) 88%, #fff) 0%, var(--mb) 46%, color-mix(in srgb, var(--mb) 80%, #000) 100%);
+  border:1px solid color-mix(in srgb, var(--mb) 55%, #fff);
+  box-shadow:0 4px 0 color-mix(in srgb, var(--mb) 50%, #000), 0 12px 18px -12px rgba(0,0,0,.9), inset 0 1px 0 rgba(255,255,255,.3);
+  text-shadow:0 1px 2px rgba(0,0,0,.4);
+  transition:transform .12s var(--suave), box-shadow .12s var(--suave), filter .15s var(--suave);
+}
+.mf-btn::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(115deg, transparent 0 58%, rgba(255,255,255,.14) 58% 70%, transparent 70%);
+}
+.mf-btn svg.mf-btn-ic{width:24px;height:24px;flex:0 0 auto;padding:4px;border-radius:50%;stroke-width:2;
+  background:rgba(0,0,0,.2);box-shadow:inset 0 0 0 1px rgba(255,255,255,.22)}
+.mf-btn:hover{filter:brightness(1.08) saturate(1.05);transform:translateY(-1px)}
+.mf-btn:active{transform:translateY(3px);box-shadow:0 1px 0 color-mix(in srgb, var(--mb) 50%, #000), inset 0 1px 0 rgba(255,255,255,.2)}
+.mf-btn:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.mf-btn.bola{--mb:#d9413a}
+.mf-btn.segurar{--mb:#2f73cf}
+.mf-btn.perigo{--mb:#8d3b36}
+
+/* ---------- celular: bolsos em faixa, a lista no meio e a ficha embaixo ---------- */
+@media (max-width:760px){
+  .modal.mochila.mochila-cheia{height:calc(100dvh - 24px);padding:10px 10px 12px;border-radius:18px}
+  .modal-fundo.fundo-mochila{padding:12px}
+  .modal.mochila-cheia > .modal-x{top:12px;right:12px}
+  .moch{
+    grid-template-columns:minmax(0, 1fr);grid-template-rows:auto auto minmax(0, 1fr) fit-content(48%);
+    grid-template-areas:"cab" "bolsos" "lista" "ficha";gap:8px;
+  }
+  .moch-cab{gap:10px;padding:0 46px 12px 0}
+  .moch-bolsa{width:52px;height:52px}
+  .moch-bolsa img{width:45px;height:45px}
+  .moch-nome{font-size:18.5px}
+  .moch-peso{font-size:12.5px}
+  .moch-bolsos{flex-direction:row;gap:5px;overflow:visible;padding:0 0 3px}
+  .moch-bolso{flex:1 1 0;flex-direction:column;justify-content:center;gap:2px;padding:6px 2px 5px;border-radius:11px;font-size:10.5px;text-align:center}
+  .moch-bolso .bolso-icone{width:30px;height:30px}
+  .moch-bolso-nome{flex:0 0 auto;max-width:100%}
+  .moch-bolso-n{position:absolute;top:2px;right:3px;min-width:17px;padding:0 4px;font-size:10px;line-height:16px}
+  .moch-bolso:hover{transform:none}
+  .moch-lista{padding:6px 6px 8px}
+  .moch-item{gap:9px;padding:4px 12px 4px 4px;margin-bottom:4px}
+  .moch-ic{width:38px;height:38px}
+  .moch-item-nome{font-size:14.5px}
+  .moch-ficha{padding:11px 12px 12px}
+  .mf{gap:9px}
+  .mf-topo{flex-direction:row;align-items:center;text-align:left;gap:10px}
+  .mf-pedestal{width:68px;height:68px}
+  .mf-pedestal::after{left:12px;right:12px;bottom:4px;height:9px}
+  .mf-pedestal .item-icone{width:60px;height:60px}
+  .mf-nome{font-size:18px}
+  .mf-tags{justify-content:flex-start;margin-top:5px}
+  .mf-desc{font-size:13px;line-height:1.5}
+  .mf-time{justify-content:flex-start}
+  .mf-acoes{
+    flex-direction:row;position:sticky;bottom:-12px;margin:0 -12px -12px;padding:8px 12px 12px;
+    background:linear-gradient(180deg, transparent, var(--moch-forro) 34%);
+  }
+  .mf-btn{flex:1 1 0;min-height:44px;font-size:15.5px;padding:6px 10px}
+}
+@media (prefers-reduced-motion:reduce){
+  .mf-pedestal .item-icone{animation:none}
+}
 
 /* ---------- aparelho aberto: o caminho de volta pra mochila ---------- */
 .volta-mochila{
@@ -4440,23 +4632,10 @@ button.item-linha.aparelho{
 .modal.loja .confirma-compra .cc-qtd input{background:#fff;color:var(--lj-txt);border-color:var(--lj-linha)}
 
 @media (max-width:520px){
-  /* no celular: menos moldura em volta, e o nome só no bolso aberto,
-     como na tela pequena do jogo */
+  /* no celular: menos moldura em volta (as janelas pequenas da
+     mochila: equipar, ensinar, descartar) */
   .modal.mochila{padding:16px 12px 14px;outline-offset:-6px}
   .modal.mochila .modal-corpo{padding:8px}
-  .bolso{padding:7px 2px 6px}
-  .bolso .bolso-icone{width:30px;height:30px}
-  .bolso .bolso-nome{display:none}
-  .bolso.sel .bolso-nome{display:block;font-size:10px;letter-spacing:0;overflow:visible}
-  .bolso .bolso-n{top:2px;right:3px}
-  .bolso-forro{padding:4px 4px 6px}
-  /* a linha do item quebra: ícone e quantidade, o texto do lado, e o
-     botão desce pra baixo do texto em vez de espremer a coluna */
-  .modal.mochila .item-linha{flex-wrap:wrap;gap:4px 10px;padding:10px 8px}
-  .modal.mochila .item-linha .corpo{flex:1 1 calc(100% - 96px)}
-  .modal.mochila .item-linha > .btn.mini,
-  .modal.mochila .item-linha > .qtd + .corpo + .btn.mini{margin-left:auto}
-  .item-linha.aparelho .abrir{display:none}
   .volta-mochila .aparelho-aberto > span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:9.5em;font-size:12px}
   .loja-placa{flex-wrap:wrap}
   .modal.loja{padding-left:14px;padding-right:14px}
@@ -5181,10 +5360,10 @@ button.item-linha.aparelho{
 .cargo .btn{font-family:var(--letra-hud, var(--fonte));font-weight:600;border-radius:10px}
 
 /* A letra que sobrou do jogo antigo: a conta das linhas de valor, a
-   linha de efeito dos itens, o ×N, o dinheiro da mochila e a nota da
+   linha de efeito dos itens da loja, o ×N e a nota da
    reputação saem na letra do HUD com algarismo de largura fixa. A
    Pokédex e o PC continuam com a letra de tela de aparelho deles. */
-.linha .v, .item-linha .ficha, .item-linha .qtd, .mochila-topo .grana, .rep-nota, .fn-op{
+.linha .v, .item-linha .ficha, .item-linha .qtd, .rep-nota, .fn-op{
   font-family:var(--letra-hud, var(--fonte));font-variant-numeric:tabular-nums;
 }
 .linha .v{font-weight:500}

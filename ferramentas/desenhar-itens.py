@@ -609,7 +609,7 @@ DESENHOS = {
     'broche': broche, 'papel': papel, 'foto': foto, 'mapa': mapa, 'caixa': caixa,
     'chave': chave, 'pacote': pacote,
 }
-CORES_DE_MOCHILA = {'preta': 'preto', 'vermelha': 'vermelho', 'azul': 'azul', 'verde': 'verde',
+CORES_DE_MOCHILA = {'bege': 'lona', 'preta': 'preto', 'vermelha': 'vermelho', 'azul': 'azul', 'verde': 'verde',
                     'amarela': 'amarelo', 'marrom': 'marrom', 'laranja': 'laranja', 'roxa': 'roxo',
                     'branca': 'branco', 'cinza': 'cinza', 'rosa': 'rosa', 'prateada': 'prata',
                     'dourada': 'dourado'}

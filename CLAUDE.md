@@ -342,6 +342,25 @@ bolso, senão cai em Itens-chave. Na luta, TMs e Itens-chave não abrem.
 topo o caminho de volta (`abasMochila`, que agora devolve a barra
 "‹ Mochila"). Os ícones são os de menu dos jogos — Pokédex e Cartão de
 Platinum, PokéNav de Ruby/Sapphire/Emerald — do acervo da Bulbapedia.
+
+A **mochila aberta** (`UI.modalItens`, `.modal.mochila-cheia`) é a dos
+jogos de hoje: no alto, o desenho em pixel da bolsa que você carrega
+(`desenhoDaBolsa`, pela primeira palavra do nome que é cor), o nome e
+o zíper; embaixo, os bolsos (coluna no computador, faixa no celular),
+a lista do bolso e a **ficha do item tocado** (`fichaMochila`): o ícone
+grande no pedestal, a categoria, quantos tem, o desgaste, a conta, a
+descrição e os botões do que dá pra fazer (Usar, Ensinar, Dar pra
+segurar, Usar esta bolsa, Descartar; na luta, Arremessar e Usar, por
+`usarNaLuta`). TM, pedra e item de segurar mostram o time de relance
+(quem aprende, em quem funciona, quem tem a mão livre). Lista tem uma
+linha por item (`linhaMochila`, com `data-item`, nunca o nome dentro de
+aspas no `onclick`), e o que não serve na luta fica apagado com o
+motivo na ficha. A janela tem altura fixa e trocar de bolso, de item ou
+de bolsa redesenha só o miolo (`mioloMochila`): reconstruir a janela
+fazia ela abrir de novo a cada toque. O × no canto vem de `com-x` na
+classe do `UI.modal` (fecha por fora e no Esc, como o Fechar). Setas
+andam na lista e Enter faz o primeiro botão da ficha.
+
 A **loja tem cor própria**, a do Poké Mart (`.modal.loja`): toldo
 listrado, placa azul, visor da caixa e etiqueta de preço; a mochila
 continua na cor da bolsa que você carrega.

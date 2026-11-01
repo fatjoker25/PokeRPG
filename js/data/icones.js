@@ -28,15 +28,16 @@ const ITEM_PIXEL = {
   'Chave do subsolo':'chave_subsolo', 'Broche da letra antiga':'broche'
 };
 /* mochila e bolsa: uma por cor, com o nome da cor do item */
-const CORES_DE_MOCHILA = ['Preta', 'Vermelha', 'Azul', 'Verde', 'Amarela', 'Marrom', 'Laranja', 'Roxa',
+const CORES_DE_MOCHILA = ['Bege', 'Preta', 'Vermelha', 'Azul', 'Verde', 'Amarela', 'Marrom', 'Laranja', 'Roxa',
   'Branca', 'Cinza', 'Rosa', 'Prateada', 'Dourada'];
+const _corDeMochila = c => CORES_DE_MOCHILA.find(x => x.toLowerCase() === String(c || '').toLowerCase());
 
 /* o arquivo do desenho: o do item, o da mochila pela cor ou, pro papel
    de enredo, o genérico pelo nome (bilhete, foto, mapa, caixa, chave) */
 function arquivoDoDesenho(nome){
   if (ITEM_PIXEL[nome]) return ITEM_PIXEL[nome];
   const m = /^(Mochila|Bolsa) (\S+)/.exec(nome);
-  if (m && CORES_DE_MOCHILA.includes(m[2])) return m[1].toLowerCase() + '_' + m[2].toLowerCase();
+  if (m && _corDeMochila(m[2])) return m[1].toLowerCase() + '_' + m[2].toLowerCase();
   const n = nome.toLowerCase();
   return /foto/.test(n) ? 'foto'
        : /mapa|croqui|planta/.test(n) ? 'mapa'
@@ -45,9 +46,19 @@ function arquivoDoDesenho(nome){
        : /bilhete|carta|papel|recibo|folha|caderno|caderneta|relat|ficha|guia|documento|c[óo]pia|lista|anota|passagem|envelope|di[áa]rio|livro|jornal|panfleto|cartaz|recorte|declara|depoimento|p[áa]ginas/.test(n) ? 'papel'
        : 'pacote';
 }
-function desenhoDoItem(nome){
-  const rel = SPRITES_BASE + ITENS_PASTA + 'nossos/' + arquivoDoDesenho(nome) + '.png';
+function _desenho(arq){
+  const rel = SPRITES_BASE + ITENS_PASTA + 'nossos/' + arq + '.png';
   return (typeof SPRITES_EMBUTIDOS !== 'undefined' && SPRITES_EMBUTIDOS[rel]) || rel;
+}
+function desenhoDoItem(nome){ return _desenho(arquivoDoDesenho(nome)); }
+/* a bolsa que você carrega, pro alto da mochila: a comprada, a da ficha
+   ("Mochila azul", "Bolsa verde musgo", "sacola vermelha") ou a bege da
+   Liga. A cor é a primeira palavra do nome que tem desenho; cor sem
+   desenho (vinho, turquesa) fica com o bege, e a janela leva a cor. */
+function desenhoDaBolsa(b){
+  const nome = String((b && b.nome) || '');
+  const cor = nome.split(/[\s-]+/).map(_corDeMochila).find(Boolean);
+  return _desenho((/^bolsa\b/i.test(nome) ? 'bolsa' : 'mochila') + '_' + (cor ? cor.toLowerCase() : 'bege'));
 }
 
 /* ---------- lugares e ações: traço, cor do botão ---------- */
