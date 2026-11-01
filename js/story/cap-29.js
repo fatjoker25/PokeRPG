@@ -96,8 +96,8 @@ c29_as_quatro_ligacoes:{
     fala('Sra. Vale', 'Delegacia: "sem flagrante não tem ocorrência, a senhora pode registrar um boletim informativo".'),
     d=>fala(d.jogador.nome, 'E a quarta?'),
     'Ela vira a página.',
-    fala('Sra. Vale', 'A quarta foi na Liga.'),
-    fala('Sra. Vale', 'A Liga foi a única que mandou alguém.'),
+    fala('Sra. Vale', 'A quarta foi na Patrulha.'),
+    fala('Sra. Vale', 'A Patrulha foi a única que mandou alguém.'),
     d=>fala(d.jogador.nome, 'E?'),
     fala('Sra. Vale', 'Veio um moço de cinza. Ficou vinte minutos lá dentro, saiu, e me disse que estava tudo regular.'),
     'Ela fecha a agenda.',
@@ -105,7 +105,7 @@ c29_as_quatro_ligacoes:{
     fala('Sra. Vale', 'Isso foi faz uns dois meses. Aí o barulho de madrugada aumentou.', 'frio')
   ],
   ef:{flag:['a_agenda_da_senhora','sabe_do_lote_unico'],
-      registrar:'A Liga mandou um oficial ao portão verde faz uns dois meses. Ele disse que estava tudo regular. O barulho aumentou depois.',
+      registrar:'A Patrulha mandou um oficial ao portão verde faz uns dois meses. Ele disse que estava tudo regular. O barulho aumentou depois.',
       presagio:'Três órgãos não vieram e um veio e disse que estava regular. Esse é o pior dos quatro.'},
   escolhas:[
     {texto:'Pedir a agenda emprestada.', vai:'c29_pediu_a_agenda'},

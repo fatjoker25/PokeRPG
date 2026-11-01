@@ -65,7 +65,7 @@ cena em que a pessoa entra mostra o nome (crachá, placa, porta pintada)
 numa linha que chama `Nomes.apresentar(rotulo)` — dali em diante o balão
 usa o nome, e perguntar antes dá o mesmo nome, nunca um sorteado. Rótulo
 compartilhado por pessoas diferentes em capítulos diferentes ("a
-recepcionista") ganha rótulo próprio antes ("a recepcionista da Liga"),
+recepcionista") ganha rótulo próprio antes ("a recepcionista do Conselho"),
 senão o nome de uma vira o de todas. Cargo que é função de cidade em
 cidade fica em `CARGO_DE_PROPOSITO`. `chk-nomes.js` lê as três listas.
 
@@ -111,6 +111,38 @@ jogador e a outra metade sem dono. Fala de posto e de doação vai por
 conta e hora: só aparece onde tem Centro. O balcão dorme até as seis de
 noite, anda um período de dia e não mexe no relógio no meio de uma cena
 de capítulo; a casa, o mesmo.
+
+## Quem manda em Kanto
+A **Liga é a do esporte**: licença e Cartão de Treinador, ginásios,
+insígnias, Elite, Campeão, Torneio Aberto, Conferência, o Planalto, a
+passagem da Rota 23 e a do norte. Ela convoca, credencia, contrata e
+manda carta; não prende, não fiscaliza e não faz política. Já fez: a
+Liga tinha oficial, custódia, convênio e plenário que decidia, e virou
+um governo sem ninguém dizer. Quem manda é o **governo de Kanto**:
+
+- a **Patrulha de Kanto**, os oficiais de cinza: estrada, posto,
+  barreira, custódia, apreensão, o aviso e o mandado da sua ficha (o
+  campo ainda se chama `d.liga.avisos`) e a ordem de devolução e de
+  detenção de quem prende lendário na frente dos outros
+  (`Captura.ligaReage`). Aviso dela é `tipo:'lei'`, com o distintivo
+  (`patrulha` em `icones.js`);
+- a **polícia**: inquérito e crime (o incêndio de Celadon, o andar 11);
+- a **Fiscalização de Kanto**, em Saffron: Pokémon selvagem, manejo,
+  chamado de ataque, guia de trânsito. Foi ela que assinou o convênio
+  com a CGRB, e a Hester Colman era a diretora;
+- o **Conselho Regional**: quinze conselheiros que decidem. A Margot
+  Heath é a conselheira regional (`'a conselheira regional'`) que senta
+  de observadora na Comissão (cláusula nona) e na audiência do 25, e o
+  estatuto dele dá cadeira extraordinária ao Campeão;
+- a **Auditoria de Kanto**, a do posto de Investigador.
+
+E **"da Liga" não é enfeite**: a mochila é a Mochila, o cartão é o
+Cartão de Treinador, o ônibus é o ônibus. Escreve "da Liga" quando a
+Liga é o assunto, e uma vez, não em cada objeto da cena. Rótulo de quem
+fala não carrega instituição quando o lugar ou o ofício bastam ("o
+oficial de Celadon", "a técnica do terceiro andar", "a secretária do
+Planalto"). Rótulo que mudou entra em `NPC_DA_LIGA`, no `Estado.abrir`,
+e papel que mudou de nome em `PAPEL_DA_LIGA`.
 
 ## Nada do mundo real
 O mundo é o de Pokémon, e nele **não existe bicho de verdade**: nada de
@@ -579,7 +611,7 @@ lá: `gentleman_gen7`, `madame_gen6`) e alguns do PokeRogue (`pr_*`).
 Pessoa nova lê a cena antes de escolher: o Célio tem uns cinquenta anos e
 não é o entregador de boné; a Elsa tem treze e não é funcionária de
 escritório; a cozinheira do Anne é mulher, e o `cook` é homem. Os
-oficiais da Liga andam de cinza (`policeman_gen7` pelo cargo, a mulher
+oficiais da Patrulha andam de cinza (`policeman_gen7` pelo cargo, a mulher
 pelo `league_staff_f`); o de azul (`overworld/policial`) é polícia de
 cidade. Arquivo novo que vem de luta entra em `PAGA_POR_CLASSE` com o que
 o antigo pagava, e o veterano muda pelo `arq`. O de GBC (Polished Crystal)
@@ -624,7 +656,7 @@ cais" é o Nolan), o de luta e o do save velho. Treinador de estrada que
 compara o mapa escrito à mão com o que sobra depois de carregar.
 
 Quando o acervo não tem um rosto livre do ofício (não há uma funcionária
-de escritório por pessoa, nem uma recepcionista da Liga), a pessoa ganha
+de escritório por pessoa, nem uma recepcionista do Conselho), a pessoa ganha
 uma **variação de paleta** do desenho do ofício: outro cabelo, outra
 roupa, mesma pele e mesmo contorno. `python3 ferramentas/variar-rostos.py`
 gera todas (`VARIACOES`, uma linha por pessoa com o que a cena diz dela),
@@ -816,7 +848,7 @@ moral 0 do capítulo 8 ao 12, com uma ordem em cada dez ignorada. Hoje:
   fome, 20% faminto, em `Batalha.vontade`) e só o faminto perde moral,
   `FOME_MORAL` a cada 12 h até `FOME_TETO` por jejum;
 - pulo de dia que a história conta como vivido **alimenta**: o
-  `fecharCapitulo`, o ônibus da Liga, `Relogio.viver`. Pulo novo de
+  `fecharCapitulo`, o ônibus pra Viridian, `Relogio.viver`. Pulo novo de
   `relogio.dia` escrito à mão chama `Fome.alimentarTime()` junto, senão o
   primeiro tique do relógio cobra os dias de uma vez;
 - a moral que **a cena tira** passa por `moralDaCena` (em `motor.js`): no
@@ -1725,7 +1757,7 @@ jeito é medroso; fala nova de casa entra nos oito, não numa só.
 
 A jornada começa na cidade natal. Na cidade natal tem **Sua casa** (cura
 de graça, `Cidade.casa`) e, pra quem nasceu longe de Pallet e Viridian,
-a **rodoviária** com o ônibus da Liga, uma vez, opcional (`Cidade.onibus`).
+a **rodoviária** com o ônibus pra Viridian, uma vez, opcional (`Cidade.onibus`).
 **Pallet não tem Centro nem loja**: o cadastro de treinador lá é no
 laboratório, e cena de Pallet que fala em Centro usa `oPostoDaCidade(d)`.
 Quem atende é `cadastra(d)` (a assistente do Professor em Pallet, a

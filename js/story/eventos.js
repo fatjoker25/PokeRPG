@@ -1190,9 +1190,9 @@ cinnabar:[
          registrar:'O barqueiro avisou quatro órgãos sobre a água. Nenhum respondeu.'},
      resultado:[
        fala('o barqueiro', 'Quatro lugares. Eu escrevi pra quatro lugares.'),
-       fala('o barqueiro', 'Prefeitura, capitania, o instituto de Cinnabar e a Liga.'),
+       fala('o barqueiro', 'Prefeitura, capitania, o instituto de Cinnabar e o governo.'),
        d=>fala(d.jogador.nome, 'E?'),
-       fala('o barqueiro', 'A Liga respondeu.', null, 'Ele tira do bolso da camisa um papel dobrado, que claramente mora ali faz tempo.'),
+       fala('o barqueiro', 'O governo respondeu.', null, 'Ele tira do bolso da camisa um papel dobrado, que claramente mora ali faz tempo.'),
        '**PREZADO SENHOR, SUA MANIFESTAÇÃO FOI REGISTRADA SOB O PROTOCOLO ABAIXO E ENCAMINHADA AO ÓRGÃO COMPETENTE.**',
        ()=>fala('o barqueiro', `Isso aqui foi em ${Calendario.MESES[(Calendario.hoje().mes + 8) % 12]}.`)
      ]},

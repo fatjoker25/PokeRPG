@@ -113,8 +113,8 @@ const CARGOS = [
   aviso:'Enquanto você carregar isso, a sua reputação piora sozinha todo capítulo.'
 },
 {
-  id:'investigador', falante:'a auditora', nome:'{Investigador|Investigadora} de campo', orgao:'Auditoria da Liga', peso:3, cap:10,
-  onde:'saffron', lugar:'Auditoria da Liga',
+  id:'investigador', falante:'a auditora', nome:'{Investigador|Investigadora} de campo', orgao:'Auditoria de Kanto', peso:3, cap:10,
+  onde:'saffron', lugar:'Auditoria de Kanto',
   guardar:'Guardar a credencial e seguir.',
   pede:[{t:'4 insígnias', ok:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 4}, {t:'reputação boa: {Respeitado|Respeitada} ou mais', ok:d=>d.reputacao.eixo === 'bom' && d.reputacao.bom >= 4}],
   requer:d=>d.reputacao.eixo === 'bom' && d.reputacao.bom >= 4
@@ -167,8 +167,8 @@ const CARGOS = [
         d => fala('o coordenador', 'Quase nunca é o time.')]
 },
 {
-  id:'lider', falante:'a conselheira da Liga', nome:'Líder de ginásio', orgao:'Liga Pokémon', peso:5, cap:24,
-  onde:'planalto', lugar:'Secretaria da Liga',
+  id:'lider', falante:'a secretária do Planalto', nome:'Líder de ginásio', orgao:'Liga Pokémon', peso:5, cap:24,
+  onde:'planalto', lugar:'Secretaria do Planalto',
   guardar:'Assinar e seguir.',
   pede:[{t:'8 insígnias', ok:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 8}, {t:'reputação boa: {Famoso|Famosa} ou mais', ok:d=>d.reputacao.eixo === 'bom' && d.reputacao.bom >= 5}],
   requer:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 8
@@ -177,12 +177,12 @@ const CARGOS = [
   resumo:'Uma cidade, uma porta e uma insígnia que passa a ser sua de dar.',
   beneficios:{renda:3000, centro:true, loja:0.9, semEspera:true},
   fala:['O convite está em cima da mesa, num papel timbrado que pesa mais que papel devia pesar.',
-        d => fala('a conselheira da Liga', 'Ginásio não é prêmio por ser forte. É um posto de trabalho com horário fixo e uma criança chorando na sua sala toda quinta.'),
-        d => fala('a conselheira da Liga', 'Pensa bem. E depois assina, porque a gente precisa.')]
+        d => fala('a secretária do Planalto', 'Ginásio não é prêmio por ser forte. É um posto de trabalho com horário fixo e uma criança chorando na sua sala toda quinta.'),
+        d => fala('a secretária do Planalto', 'Pensa bem. E depois assina, porque a gente precisa.')]
 },
 {
   id:'elite', falante:'quem estava na porta antes de você', nome:'Elite dos Quatro', orgao:'Planalto Indigo', peso:5, cap:27,
-  onde:'planalto', lugar:'Secretaria da Liga',
+  onde:'planalto', lugar:'Secretaria do Planalto',
   /* a porta é a de um substituto: com os três titulares de volta
      (titulares.js), as quatro têm dono e não sobra porta */
   pede:[{t:'ter vencido a Elite dos Quatro', ok:d=>!!d.flags.campeao_de_kanto || !!d.flags.venceu_a_elite},

@@ -573,7 +573,7 @@ const CONVERSAS_ROTA = [
    'Ele e o amigo estão dividindo o último de um frasco entre os dois, o que não é como Repelente funciona.'],
   ['Um entregador com uma caixa amarrada nas costas anda mais rápido que você sem parecer estar com pressa.'],
   ['Uma senhora com um Meowth no ombro pergunta as horas e depois fica conversando por dez minutos sem olhar o relógio nenhuma vez.'],
-  ['Dois guardas da Liga passam montados em Rapidash e cumprimentam com a cabeça. Nenhum dos dois diminui o passo.']
+  ['Dois guardas da Patrulha passam montados em Rapidash e cumprimentam com a cabeça. Nenhum dos dois diminui o passo.']
 ];
 
 /* Uma conversa pode vir condicionada ao estado: {cond, texto}.
@@ -925,7 +925,7 @@ const Cidade = {
     Exploracao.tela(av);
   },
 
-  /* O ônibus da Liga: quem nasceu longe de Viridian pode pegar, uma vez. */
+  /* O ônibus: quem nasceu longe de Viridian pode pegar, uma vez. */
   onibus(){
     const d = Estado.dados;
     d.flags.onibus_da_liga = true;
@@ -938,7 +938,7 @@ const Cidade = {
     Estado.salvar('auto');
     Exploracao.tela([
       {tipo:'info', texto: d.flags.tem_licenca
-        ? 'A passagem veio grampeada na licença. O ônibus da Liga sai da rodoviária de manhã cedo, cheio de gente da sua idade com mochila nova, e para em cada cidade grande do caminho.'
+        ? 'A passagem veio grampeada na licença. O ônibus sai da rodoviária de manhã cedo, cheio de gente da sua idade com mochila nova, e para em cada cidade grande do caminho.'
         : 'Sem licença não tem passagem de graça: 500 ₽ do próprio bolso, sentad{o|a} no fundo, do lado de uma senhora com uma gaiola de Pidgey no colo.'},
       {tipo:'info', texto:'Você desce em Viridian no fim da tarde.'}
     ]);

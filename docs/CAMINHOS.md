@@ -49,7 +49,7 @@ Numeração: A = 33..42, B = 43..52, C = 53..62, na ordem da tabela abaixo.
 ### 3. Ciência
 - **A · A Contagem** — censo da área do Safári pra conferir o número do "manejo". O número não fecha.
 - **B · A Amostra 4** — uma amostra de unidade de viveiro chega ao laboratório. Publicar, vender ou destruir.
-- **C · A Terceira Edição** — defender os dados numa banca da Liga. Finais: **A Tabela** · **O Laboratório Lacrado** · **Campo**.
+- **C · A Terceira Edição** — defender os dados numa banca da Fiscalização. Finais: **A Tabela** · **O Laboratório Lacrado** · **Campo**.
 
 ### 4. Imprensa
 - **A · A Cerca** — matéria sobre os 31 km de cerca do Safári, com foto.
@@ -77,7 +77,7 @@ Numeração: A = 33..42, B = 43..52, C = 53..62, na ordem da tabela abaixo.
 - **C · O Último Preço** — os dois lados te oferecem tudo. Finais: **O Preço** · **Calote** · **De Graça**.
 
 ### 9. Foragido
-- **A · A Rota 15 à Noite** — a ficha da Liga virou cartaz, e a Patrulha está na ponte.
+- **A · A Rota 15 à Noite** — a ficha na Patrulha virou cartaz, e a Patrulha está na ponte.
 - **B · O Porão da Pensão** — Dona Briar esconde gente, e alguém da Estação 4 pede abrigo.
 - **C · Rendição ou Estrada** — finais: **Rendição** · **A Estrada** · **A Pensão**.
 

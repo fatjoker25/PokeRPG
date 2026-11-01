@@ -204,7 +204,7 @@ c18_ab_anotou_a_linha:{
   escolhas:[
     {texto:'Ir ao cartório de registro de pessoas jurídicas.', vai:'c18_cartorio'},
     {texto:'Ir à hemeroteca procurar o nome em jornal velho.', vai:'c18_hemeroteca'},
-    {texto:'Ir à Liga e perguntar oficialmente.', vai:'c18_liga'}
+    {texto:'Ir à Fiscalização e perguntar oficialmente.', vai:'c18_liga'}
   ]
 },
 
@@ -276,7 +276,7 @@ c18_ab_copia_dos_oito:{
   escolhas:[
     {texto:'Ir ao cartório de pessoas jurídicas.', vai:'c18_cartorio'},
     {texto:'Ir à hemeroteca.', vai:'c18_hemeroteca'},
-    {texto:'Ir à Liga e perguntar oficialmente.', vai:'c18_liga'}
+    {texto:'Ir à Fiscalização e perguntar oficialmente.', vai:'c18_liga'}
   ]
 },
 
@@ -318,7 +318,7 @@ c18_ab_a_secao_certa:{
   escolhas:[
     {texto:'Procurar na seção três.', vai:'c18_hemero_legais'},
     {texto:'Ir ao cartório de pessoas jurídicas primeiro.', vai:'c18_cartorio'},
-    {texto:'Ir à Liga e perguntar oficialmente.', vai:'c18_liga'}
+    {texto:'Ir à Fiscalização e perguntar oficialmente.', vai:'c18_liga'}
   ]
 },
 
@@ -378,22 +378,22 @@ c18_ab_a_reporter:{
 c18_ab_as_tres_vezes:{
   texto:[
     'Ela abre a pasta em cima do banco e mostra as três, com marcador amarelo em cada uma.',
-    fala('Rhea Ashford', 'Um: ata de reunião da Liga, do ano passado. Manifestação da Comissão sobre o pleito.'),
+    fala('Rhea Ashford', 'Um: ata de reunião do Conselho Regional, do ano passado. Manifestação da Comissão sobre o pleito.'),
     fala('Rhea Ashford', 'Dois: nota de rodapé de um relatório de auditoria da Zona Safári. Rodapé, tamanho seis.'),
     fala('Rhea Ashford', 'Três: uma procuração juntada num processo trabalhista de um ex-funcionário da Silph.'),
     'Ela alinha as três folhas.',
-    fala('Rhea Ashford', 'Liga, reserva e empresa privada. Três mundos que não se falam.'),
+    fala('Rhea Ashford', 'Governo, reserva e empresa privada. Três mundos que não se falam.'),
     c18_eu('E o mesmo nome nos três.'),
     fala('Rhea Ashford', 'O mesmo nome nos três, e nos três aparece como se todo mundo já soubesse quem é.'),
     'Ela fecha a pasta.',
     fala('Rhea Ashford', 'Ninguém explica o que é. Todo mundo cita.')
   ],
   ef:{flag:['as_tres_citacoes','sabe_o_nome_da_comissao'],
-      registrar:'O mesmo nome aparece em ata da Liga, rodapé de auditoria da Zona Safári e procuração num processo da Silph.'},
+      registrar:'O mesmo nome aparece em ata do Conselho Regional, rodapé de auditoria da Zona Safári e procuração num processo da Silph.'},
   escolhas:[
     {texto:'Ir ao cartório pedir a ficha.', vai:'c18_cartorio'},
     {texto:'Ir à hemeroteca procurar o ato publicado.', vai:'c18_hemeroteca'},
-    {texto:'Ir à Liga e perguntar oficialmente.', vai:'c18_liga'}
+    {texto:'Ir à Fiscalização e perguntar oficialmente.', vai:'c18_liga'}
   ]
 },
 
@@ -417,7 +417,7 @@ c18_ab_recusou_a_reika:{
   escolhas:[
     {texto:'Ir ao cartório mesmo assim, por conta própria.', vai:'c18_cartorio'},
     {texto:'Ir à hemeroteca.', vai:'c18_hemeroteca'},
-    {texto:'Ir à Liga e perguntar oficialmente.', vai:'c18_liga'}
+    {texto:'Ir à Fiscalização e perguntar oficialmente.', vai:'c18_liga'}
   ]
 },
 
@@ -507,7 +507,7 @@ c18_ab_imprimiu:{
   escolhas:[
     {texto:'Ir ao cartório conferir no papel.', vai:'c18_cartorio'},
     {texto:'Ir à hemeroteca.', vai:'c18_hemeroteca'},
-    {texto:'Ir à Liga e perguntar oficialmente.', vai:'c18_liga'}
+    {texto:'Ir à Fiscalização e perguntar oficialmente.', vai:'c18_liga'}
   ]
 },
 
@@ -562,7 +562,7 @@ c18_fio:{
     {texto:'Procurar a Dra. Cordell. Pesquisadora sabe onde se procura papel.', vai:'c18_ivone', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Procurar a Terceira. Quem vende sabe para quem vendeu.', vai:'c18_terceira', cond:d=>!!d.flags.conheceu_terceira},
     {texto:'Ir à hemeroteca. Jornal velho e paciência.', vai:'c18_hemeroteca'},
-    {texto:'Ir à Liga e perguntar oficialmente.', vai:'c18_liga'}
+    {texto:'Ir à Fiscalização e perguntar oficialmente.', vai:'c18_liga'}
   ]
 },
 
@@ -788,17 +788,17 @@ c18_os_onze_nomes:{
       registrar:'O conselho da CGRB: uma ex-diretora de fiscalização, dois advogados, um representante de federação de batalha e sete técnicos.'},
   escolhas:[
     {texto:'"Quero cópia de tudo."', vai:'c18_quintela_copia'},
-    {texto:'Perguntar se algum deles já esteve na Liga.', vai:'c18_algum_da_liga'}
+    {texto:'Perguntar se algum deles já foi do governo.', vai:'c18_algum_da_liga'}
   ]
 },
 
 c18_algum_da_liga:{
   texto:[
-    fala('Sra. Cybil', 'Eu não sei o que é a Liga para efeito de registro.'),
+    fala('Sra. Cybil', 'Para efeito de registro, ninguém aqui foi nada antes.'),
     'A Sra. Cybil é literal do jeito que só quem trabalha com papel é.',
     fala('Sra. Cybil', 'Aqui diz ex-diretora de fiscalização. Não diz de onde.'),
     d=>fala(d.jogador.nome, 'E a senhora acha que é de onde?'),
-    fala('Sra. Cybil', 'Eu acho que quando é da Liga eles escrevem da Liga, porque dá orgulho.'),
+    fala('Sra. Cybil', 'Eu acho que quando é do governo eles escrevem do governo, porque dá orgulho.'),
     'Ela ajeita os óculos.',
     fala('Sra. Cybil', 'Quando não escrevem, é porque saíram brigados.'),
     'Você anota isso também.'
@@ -1789,7 +1789,7 @@ c18_hemero_fauna:{
     'Você procura por fauna, controle, ataque, manejo, e acha mais do que esperava e menos do que queria.',
     'Vinte e dois registros de ataque de Pokémon a pessoa em área urbana em dezoito meses. Três mortes.',
     'Nenhum deles vira reportagem. Todos são nota de canto, três linhas, sem nome.',
-    'E em nenhum lugar, em dezoito meses de jornal, existe uma linha sobre o que a Liga fez a respeito.',
+    'E em nenhum lugar, em dezoito meses de jornal, existe uma linha sobre o que o governo fez a respeito.',
     'Você começa a entender uma coisa que não queria entender: alguém contou essas notinhas antes de você.'
   ],
   ef:{flag:'contou_as_notas_de_ataque', instabilidade:1,
@@ -1797,7 +1797,7 @@ c18_hemero_fauna:{
   escolhas:[
     {texto:'Procurar nas publicações legais.', vai:'c18_hemero_legais'},
     {texto:'Procurar nos classificados.', vai:'c18_hemero_classificados'},
-    {texto:'Ir à Liga com essa conta.', vai:'c18_liga'}
+    {texto:'Ir à Fiscalização com essa conta.', vai:'c18_liga'}
   ]
 },
 
@@ -1819,19 +1819,19 @@ c18_hemero_social:{
   ]
 },
 
-/* ── Liga ───────────────────────────────────────────────── */
+/* ── a Fiscalização (o ID das cenas ainda diz liga) ─────── */
 c18_liga:{
   texto:[
-    'A sede regional da Liga em Saffron atende das nove às três, com uma hora de almoço que na prática é uma e meia.',
+    'A Fiscalização de Kanto, a repartição do governo que cuida de Pokémon selvagem, atende em Saffron das nove às três, com uma hora de almoço que na prática é uma e meia.',
     'Você faz o pedido de informação no balcão, por escrito, no formulário certo, e a atendente protocola com carimbo e devolve a segunda via.',
     'Protocolo 4.881. Prazo de resposta: trinta dias.',
     c18_eu('Trinta dias?'),
-    fala('a atendente da Liga', 'Trinta dias.'),
+    fala('a atendente do protocolo', 'Trinta dias.'),
     'Ela já está olhando o próximo da fila.',
-    fala('a atendente da Liga', 'Se {o senhor|a senhora} quiser, pode perguntar informalmente ao setor técnico, no terceiro andar. Informalmente eles falam hoje. Formalmente é trinta dias.')
+    fala('a atendente do protocolo', 'Se {o senhor|a senhora} quiser, pode perguntar informalmente ao setor técnico, no terceiro andar. Informalmente eles falam hoje. Formalmente é trinta dias.')
   ],
   ef:{flag:'protocolou_na_liga',
-      registrar:'Protocolou pedido de informação na Liga. Protocolo 4.881, prazo de 30 dias.',
+      registrar:'Protocolou pedido de informação na Fiscalização. Protocolo 4.881, prazo de 30 dias.',
       executar:d=>{ const h = c18_hora(d); if (h >= 15) Relogio.amanhaAs(9); else if (h < 9) c18_ate(9, true); return []; }},
   escolhas:[
     {texto:'Subir ao terceiro andar e perguntar informalmente.', vai:'c18_liga_tecnico'},
@@ -1844,19 +1844,19 @@ c18_liga_tecnico:{
   texto:[
     'O setor técnico é uma sala com quatro mesas e três pessoas, uma delas comendo um sanduíche por cima de um relatório.',
     'Você diz a palavra comissão e as três param.',
-    fala('Técnica da Liga', 'CGRB.'),
+    fala('a técnica do terceiro andar', 'CGRB.'),
     'Quem diz é a do sanduíche, sem levantar os olhos.',
-    fala('Técnica da Liga', 'É o que {o senhor|a senhora} quer saber.'),
+    fala('a técnica do terceiro andar', 'É o que {o senhor|a senhora} quer saber.'),
     c18_eu('É.'),
-    fala('Técnica da Liga', 'A gente tem convênio com eles.'),
+    fala('a técnica do terceiro andar', 'A gente tem convênio com eles.'),
     'Ela dobra o papel do sanduíche.',
-    fala('Técnica da Liga', 'Está publicado. Convênio de cooperação técnica, assinado pela diretoria anterior, renovado automaticamente.'),
+    fala('a técnica do terceiro andar', 'Está publicado. Convênio de cooperação técnica, assinado pela diretoria anterior, renovado automaticamente.'),
     'Ela finalmente olha pra você.',
-    fala('Técnica da Liga', 'Eu sou contra. Eu sou uma pessoa, e eles são um convênio.')
+    fala('a técnica do terceiro andar', 'Eu sou contra. Eu sou uma pessoa, e eles são um convênio.')
   ],
   ef:{flag:['sabe_do_convenio','sabe_da_comissao','sabe_o_nome_da_comissao'], instabilidade:1,
-      npc:{nome:'Técnica da Liga', opiniao:1, memoria:'Te contou do convênio e disse que é contra ele.'},
-      registrar:'A Liga tem convênio de cooperação técnica com a CGRB, renovado automaticamente.'},
+      npc:{nome:'a técnica do terceiro andar', opiniao:1, memoria:'Te contou do convênio e disse que é contra ele.'},
+      registrar:'A Fiscalização tem convênio de cooperação técnica com a CGRB, renovado automaticamente.'},
   escolhas:[
     {texto:'"Me dá uma cópia do convênio."', vai:'c18_liga_copia_convenio'},
     {texto:'"Por que a senhora é contra?"', vai:'c18_liga_porque_contra'},
@@ -1867,18 +1867,18 @@ c18_liga_tecnico:{
 
 c18_liga_porque_contra:{
   texto:[
-    fala('Técnica da Liga', 'Porque eles resolvem.'),
+    fala('a técnica do terceiro andar', 'Porque eles resolvem.'),
     'Ela vê a sua cara e levanta a mão antes que você fale.',
-    fala('Técnica da Liga', 'Eu sei como soa. Escuta.'),
+    fala('a técnica do terceiro andar', 'Eu sei como soa. Escuta.'),
     'Ela empurra o relatório para o seu lado da mesa.',
-    fala('Técnica da Liga', 'Trinta e um chamados de ataque em área urbana no último ano. A Liga atendeu nove. A CGRB atendeu vinte e dois, de graça, em média em quatro horas, com relatório.'),
+    fala('a técnica do terceiro andar', 'Trinta e um chamados de ataque em área urbana no último ano. A gente atendeu nove. A CGRB atendeu vinte e dois, de graça, em média em quatro horas, com relatório.'),
     d=>fala(d.jogador.nome, 'E daí que eles resolvem?'),
-    fala('Técnica da Liga', 'E daí que daqui a três anos ninguém vai ligar para a Liga.'),
+    fala('a técnica do terceiro andar', 'E daí que daqui a três anos ninguém vai ligar pra gente.'),
     'Ela pega o relatório de volta.',
-    fala('Técnica da Liga', 'E aí eles não vão precisar mais pedir licença para nada, porque licença é uma coisa que se pede a quem tem trabalho, e a gente não vai mais ter.')
+    fala('a técnica do terceiro andar', 'E aí eles não vão precisar mais pedir licença para nada, porque licença é uma coisa que se pede a quem tem trabalho, e a gente não vai mais ter.')
   ],
   ef:{flag:'entendeu_o_convenio', instabilidade:1,
-      registrar:'A CGRB atendeu 22 dos 31 chamados de ataque urbano no último ano. A Liga atendeu 9.'},
+      registrar:'A CGRB atendeu 22 dos 31 chamados de ataque urbano no último ano. A Fiscalização atendeu 9.'},
   escolhas:[
     {texto:'"Me dá uma cópia do convênio."', vai:'c18_liga_copia_convenio'},
     {texto:'"Quem assinou?"', vai:'c18_liga_quem_assinou'},
@@ -1888,17 +1888,17 @@ c18_liga_porque_contra:{
 
 c18_liga_quem_assinou:{
   texto:[
-    fala('Técnica da Liga', 'A diretoria anterior.'),
+    fala('a técnica do terceiro andar', 'A diretoria anterior.'),
     'Ela diz isso com um cuidado que não passa despercebido.',
-    fala('Técnica da Liga', 'A diretora de fiscalização assinou pela Liga. Hester Colman. Nove anos no cargo.'),
+    fala('a técnica do terceiro andar', 'A diretora da Fiscalização assinou pelo governo. Hester Colman. Nove anos no cargo.'),
     c18_eu('E ela está onde hoje?'),
     'A técnica olha pras outras duas mesas. Ninguém levanta a cabeça.',
-    fala('Técnica da Liga', 'Ela pediu demissão quatro meses depois e foi presidir a outra ponta do convênio.'),
+    fala('a técnica do terceiro andar', 'Ela pediu demissão quatro meses depois e foi presidir a outra ponta do convênio.'),
     'Você fica um tempo processando isso.',
     'A mesma pessoa assinou dos dois lados, com quatro meses de intervalo, e não é crime.'
   ],
   ef:{flag:['sabe_o_nome_da_presidente','presidente_saiu_brigada'], instabilidade:1,
-      registrar:'Hester Colman assinou o convênio pela Liga e quatro meses depois foi presidir a CGRB.'},
+      registrar:'Hester Colman assinou o convênio pelo governo e quatro meses depois foi presidir a CGRB.'},
   escolhas:[
     {texto:'"Me dá uma cópia do convênio."', vai:'c18_liga_copia_convenio'},
     {texto:'Ir ao cartório.', vai:'c18_cartorio'}
@@ -1908,15 +1908,15 @@ c18_liga_quem_assinou:{
 c18_liga_copia_convenio:{
   texto:[
     'Ela tira a cópia ela mesma, na máquina do corredor, e volta com onze páginas ainda quentes.',
-    fala('Técnica da Liga', 'Isso é público, então eu não estou fazendo nada.'),
+    fala('a técnica do terceiro andar', 'Isso é público, então eu não estou fazendo nada.'),
     'Ela entrega e segura sua mão por um segundo em cima do papel.',
-    fala('Técnica da Liga', 'Cláusula sexta. Lê a cláusula sexta hoje, não amanhã.'),
-    'A cláusula sexta diz que a Liga se compromete a não duplicar esforço em áreas objeto de plano de manejo apresentado pela Comissão.',
+    fala('a técnica do terceiro andar', 'Cláusula sexta. Lê a cláusula sexta hoje, não amanhã.'),
+    'A cláusula sexta diz que o governo se compromete a não duplicar esforço em áreas objeto de plano de manejo apresentado pela Comissão.',
     'Não duplicar esforço. É assim que se escreve sair de perto.'
   ],
-  ef:{flag:'tem_o_convenio', itens:{'Cópia do convênio Liga–CGRB':1},
-      rep:{eixo:'bom',delta:1,motivo:'Saiu da Liga com o convênio na mão'},
-      registrar:'Cláusula sexta: a Liga se compromete a não duplicar esforço onde a CGRB apresentar plano de manejo.'},
+  ef:{flag:'tem_o_convenio', itens:{'Cópia do convênio Kanto–CGRB':1},
+      rep:{eixo:'bom',delta:1,motivo:'Saiu da Fiscalização com o convênio na mão'},
+      registrar:'Cláusula sexta: o governo se compromete a não duplicar esforço onde a CGRB apresentar plano de manejo.'},
   escolhas:[
     {texto:'Ir ao cartório buscar o resto.', vai:'c18_cartorio'},
     {texto:'Ir à hemeroteca ver o que saiu em jornal.', vai:'c18_hemeroteca'}
@@ -1926,17 +1926,17 @@ c18_liga_copia_convenio:{
 c18_liga_esperou:{
   texto:[
     'Você espera os trinta dias, porque decidiu fazer do jeito certo.',
-    'No vigésimo oitavo dia chega um envelope pardo com o brasão da Liga.',
-    '**Resposta ao protocolo 4.881: informamos que a entidade mencionada é pessoa jurídica de direito privado, não integrante da estrutura da Liga, cujos atos constitutivos encontram-se disponíveis no registro competente.**',
+    'No vigésimo oitavo dia chega um envelope pardo com o brasão de Kanto.',
+    '**Resposta ao protocolo 4.881: informamos que a entidade mencionada é pessoa jurídica de direito privado, não integrante da estrutura do governo de Kanto, cujos atos constitutivos encontram-se disponíveis no registro competente.**',
     'Traduzido: procura no cartório, como qualquer pessoa.',
     'Vinte e oito dias pra te mandarem ao lugar certo. E o pior é que é o lugar certo.'
   ],
-  ef:{flag:'resposta_da_liga', itens:{'Resposta oficial da Liga':1},
-      registrar:'A Liga levou 28 dias para dizer que a CGRB é privada e está no cartório.',
+  ef:{flag:'resposta_da_liga', itens:{'Resposta oficial da Fiscalização':1},
+      registrar:'A Fiscalização levou 28 dias para dizer que a CGRB é privada e está no cartório.',
       executar:()=>{ Relogio.viver(28 * 24); return []; }},
   escolhas:[
     {texto:'Ir ao cartório.', vai:'c18_cartorio'},
-    {texto:'Voltar à Liga e falar com o setor técnico.', vai:'c18_liga_tecnico'}
+    {texto:'Voltar à Fiscalização e falar com o setor técnico.', vai:'c18_liga_tecnico'}
   ]
 },
 
@@ -2825,7 +2825,7 @@ c18_ela_decide:{
     c18_eu('A senhora decide.'),
     'Ela não agradece e não comemora. Ela puxa a quarta pilha pro lado e abre espaço na mesa, que é o jeito dela de dizer que aceitou.',
     'A matéria começa a sair na quinta, em três partes, ao longo de três semanas.',
-    'A primeira é sobre o convênio com a Liga. A segunda é sobre o orçamento. A terceira é sobre o Art. 19.',
+    'A primeira é sobre o convênio com o governo. A segunda é sobre o orçamento. A terceira é sobre o Art. 19.',
     'Ela escolheu terminar pelo que dói, porque é assim que se faz quando se quer que alguém chegue ao fim.'
   ],
   ef:{flag:['publicou','publicou_serie'], instabilidade:2,
@@ -2838,7 +2838,7 @@ c18_ela_decide:{
 c18_depois_da_materia:{
   texto:[
     'O que acontece é quase nada, e o quase é a parte que importa.',
-    'A Liga emite uma nota de esclarecimento de quatro linhas. Duas prefeituras pedem informações. Um conselheiro da prefeitura de Celadon protocola um requerimento e depois viaja.',
+    'O governo emite uma nota de esclarecimento de quatro linhas. Duas prefeituras pedem informações. Um conselheiro da prefeitura de Celadon protocola um requerimento e depois viaja.',
     'A Comissão publica no boletim dela o inteiro teor do estatuto, com um texto de apresentação dizendo que sempre esteve disponível.',
     'E aí, na segunda semana, chegam as cartas.',
     'Onze cartas de leitores. Nove são contra você.'

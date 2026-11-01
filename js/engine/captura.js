@@ -256,7 +256,7 @@ const Captura = {
       Estado.marcar('cientistas_atras');
     }
 
-    // --- A Liga reage
+    // --- A Patrulha reage (o campo ainda se chama d.liga, de quando era a Liga)
     if (testemunhado) this.ligaReage(eventos);
   },
 
@@ -265,17 +265,17 @@ const Captura = {
     const liga = Estado.dados.liga;
     liga.avisos++;
     if (liga.avisos === 1){
-      ev('liga', 'A Liga Pokémon vai querer conversar. Eles sempre começam conversando.');
+      ev('lei', 'A Patrulha vai querer conversar. Eles sempre começam conversando.');
       Estado.marcar('liga_aviso_1');
     } else if (liga.avisos === 2){
       liga.ordemDevolucao = true;
-      ev('liga', 'Segunda vez. Ordem formal de devolução — e alguém de terno te seguindo a três quarteirões de distância.');
+      ev('lei', 'Segunda vez. Ordem formal de devolução — e alguém de terno te seguindo a três quarteirões de distância.');
       Estado.marcar('liga_aviso_2');
     } else if (liga.avisos >= 3){
       liga.detencao = true;
-      ev('liga', 'Terceira vez. Ordem de detenção emitida. Treinadores da Liga estão autorizados a te capturar.');
+      ev('lei', 'Terceira vez. Ordem de detenção emitida. Qualquer oficial da Patrulha pode te deter.');
       Estado.marcar('liga_detencao');
-      Estado.mudarRep('ruim', 1, 'Ordem de detenção da Liga', {rep:{notorio:true, peso:4}});
+      Estado.mudarRep('ruim', 1, 'Ordem de detenção da Patrulha', {rep:{notorio:true, peso:4}});
     }
   },
 

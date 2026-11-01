@@ -7,18 +7,18 @@ const NIVEIS_BOM = [
   {n:3, nome:'Reconhecid{o|a}',  ef:'Descontos, informação de graça, selvagens menos agressivos por perto.'},
   {n:4, nome:'Respeitad{o|a}',   ef:'NPCs te ouvem antes de agir. Lojas te priorizam.'},
   {n:5, nome:'Famos{o|a}',       ef:'Seu nome corre em várias cidades. Convites e rivais.'},
-  {n:6, nome:'Admirad{o|a}',     ef:'Favores sem cobrança. A Liga te consulta. Selvagens fracos fogem de você.'},
+  {n:6, nome:'Admirad{o|a}',     ef:'Favores sem cobrança. Gente importante te pede opinião. Selvagens fracos fogem de você.'},
   {n:7, nome:'Ídolo Regional', ef:'Cidades te recebem com festa. Cargos oferecidos sem pedir.'},
-  {n:8, nome:'Lendári{o|a}',     ef:'Kanto inteira sabe seu nome. A Liga te trata como autoridade.'}
+  {n:8, nome:'Lendári{o|a}',     ef:'Kanto inteira sabe seu nome. Te tratam como autoridade.'}
 ];
 const NIVEIS_RUIM = [
   {n:1, nome:'Desconhecid{o|a}', ef:'Ninguém te conhece.'},
   {n:2, nome:'Suspeit{o|a}',     ef:'Olhares desconfiados. Lojistas te observam.'},
   {n:3, nome:'Indesejad{o|a}',   ef:'NPCs evitam te abordar. Atendimento a contragosto.'},
   {n:4, nome:'Temid{o|a}',       ef:'Vozes baixam quando você entra. Selvagens atacam primeiro.'},
-  {n:5, nome:'Notóri{o|a}',      ef:'NPCs fogem. A Liga manda oficiais "conversar".'},
+  {n:5, nome:'Notóri{o|a}',      ef:'NPCs fogem. A Patrulha manda oficiais "conversar".'},
   {n:6, nome:'Proscrit{o|a}',    ef:'Banido de cidades. Recompensa por informações sobre você.'},
-  {n:7, nome:'Caçad{o|a}',       ef:'Ordem de detenção ativa. Treinadores da Liga autorizados a te capturar.'},
+  {n:7, nome:'Caçad{o|a}',       ef:'Ordem de detenção ativa. Todo oficial da Patrulha pode te deter.'},
   {n:8, nome:'Monstro Lendário', ef:'Seu nome é terror. A Elite 4 é mobilizada contra você.'}
 ];
 
@@ -115,7 +115,7 @@ const ITENS_INFO = {
   /* ─────────── bolas ─────────── */
   'Poké Ball':   {tipo:'bola', cat:'Captura',
                   ficha:'Selo 4 (4d6) · consumida no arremesso',
-                  desc:'A Pokébola comum. É o que a Liga entrega e o que todo mundo usa.',
+                  desc:'A Pokébola comum. É a que vem no kit da licença e a que todo mundo usa.',
                   sabido:{bola_fraca_em_lendario:'Você já viu uma dessas ricochetear numa coisa grande demais. Não insista.'}},
   'Great Ball':  {tipo:'bola', cat:'Captura',
                   ficha:'Selo 6 (6d6) · consumida no arremesso',
@@ -383,7 +383,7 @@ function descricaoItem(nome){
 
 /* ============================================================
    COR DA MOCHILA
-   A bolsa padrão é bege, igual à de fábrica da Liga. Se o jogador
+   A bolsa padrão é a bege, a de fábrica. Se o jogador
    estiver carregando uma bolsa com cor no nome — "Mochila Preta",
    "Bolsa Roxa" —, a cor lida ali é a cor que a interface usa.
    ============================================================ */
@@ -423,7 +423,7 @@ function corDaMochila(nome){
 /* A bolsa que o jogador está carregando agora — a última que ele arranjou. */
 function mochilaAtual(){
   const d = Estado.dados;
-  let cor = COR_MOCHILA_PADRAO, nome = 'Mochila da Liga';
+  let cor = COR_MOCHILA_PADRAO, nome = 'Mochila';
   const saida = () => ({cor, nome, rotulo: nome.split(' ')[0]});
   if (!d || !d.itens) return saida();
   const escolhida = d.jogador && d.jogador.bolsa;
@@ -1246,6 +1246,10 @@ const Estado = {
         if (d.itens && d.itens[velho]){ d.itens[novo] = (d.itens[novo] || 0) + d.itens[velho]; delete d.itens[velho]; }
         for (const p of [].concat(d.time || [], d.pc || [])) if (p && p.segurando === velho) p.segurando = novo;
       }
+      const NPC_DA_LIGA = {'a conselheira da Liga':'a conselheira regional', 'a recepcionista da Liga':'a recepcionista do Conselho',
+                           'Técnica da Liga':'a técnica do terceiro andar', 'a atendente da Liga':'a atendente do protocolo',
+                           'o oficial da Liga':'o oficial da Rota 25', 'o oficial da Liga de Celadon':'o oficial de Celadon',
+                           'a oficial da Liga':'a oficial de Fuchsia', 'Oficial da Liga (Fuchsia)':'a oficial de Fuchsia'};
       const NPC_NOVO = {'a mulher da pasta de couro':'a mulher da pasta', 'Mulher da pasta de couro':'a mulher da pasta',
                         'a recepcionista':'a moça da recepção', 'a balconista':'a balconista da farmácia',
                         'o veterinário do conselho':'o médico do conselho', 'a veterinária de Cerulean':'a médica de Cerulean',
@@ -1257,7 +1261,11 @@ const Estado = {
                         /* a troca da Rota 11 era de "Nolan ou outro menino do
                            cais", anotação que foi parar no balão e no PokéNav;
                            o Nolan pega Krabby toda semana, então é outro menino */
-                        'Nolan ou outro menino do cais':'o menino do balde'};
+                        'Nolan ou outro menino do cais':'o menino do balde',
+                        /* a Liga voltou a ser a do esporte: quem fiscaliza é a
+                           Patrulha, quem decide é o governo, e o rótulo de
+                           quem falava "da Liga" mudou junto */
+                        ...NPC_DA_LIGA};
       /* a mesma pessoa gravada com duas grafias virava duas pessoas, com
          opinião separada: junta na grafia certa */
       const MESMA_PESSOA = {'a Terceira':'A Terceira', 'Mulher da pasta de vinil':'a mulher da pasta',
@@ -1289,6 +1297,19 @@ const Estado = {
       }
       for (const [velho, novo] of Object.entries(NPC_NOVO))
         if (d.npcs && d.npcs[velho] && !d.npcs[novo]){ d.npcs[novo] = d.npcs[velho]; d.npcs[novo].nome = novo; delete d.npcs[velho]; }
+      /* o nome que você perguntou vai junto com o rótulo novo */
+      for (const [velho, novo] of Object.entries(NPC_DA_LIGA))
+        if (d.nomesSabidos && d.nomesSabidos[velho]){ if (!d.nomesSabidos[novo]) d.nomesSabidos[novo] = d.nomesSabidos[velho]; delete d.nomesSabidos[velho]; }
+      /* papel que dizia "da Liga" e era do governo */
+      const PAPEL_DA_LIGA = {'Cópia do convênio Liga–CGRB':'Cópia do convênio Kanto–CGRB', 'Resposta oficial da Liga':'Resposta oficial da Fiscalização',
+                             'Convocação para a reunião da Liga':'Convocação para a reunião do Conselho'};
+      for (const [velho, novo] of Object.entries(PAPEL_DA_LIGA))
+        if (d.itens && d.itens[velho] > 0){ d.itens[novo] = (d.itens[novo] || 0) + d.itens[velho]; delete d.itens[velho]; }
+      /* cargo do 26: o título não carrega mais "da Liga" */
+      if (d.jogador && typeof d.jogador.cargo === 'string'){
+        if (d.jogador.cargo === 'Agente de campo da Liga') d.jogador.cargo = 'Agente de campo';
+        d.jogador.cargo = d.jogador.cargo.replace(/^(\{Assessor\|Assessora\}|\{Pesquisador\|Pesquisadora\}|Assessora?|Pesquisadora?) da Liga$/, '$1 do Planalto');
+      }
       for (const p of [...(d.time || []), ...(d.pc || []), ...(d.cemiterio || [])])
         if (p && typeof p.historia === 'string') p.historia = p.historia.replace('com Nolan ou outro menino do cais', 'com o menino do balde');
       /* a caixa do ventilador entregue no posto da cidade continuava na

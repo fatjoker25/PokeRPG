@@ -1659,7 +1659,7 @@ c1_registro:{
     d=>d.jogador.cidade === 'Pallet'
       ? fala('o Professor', 'A Pokédex. Ela não é sua, é do laboratório, e é por isso que eu entrego em mão. Registra o que encontrar. Eu leio tudo.')
       : '',
-    d=>fala(cadastra(d), 'Kit inicial: cinco Poké Balls e dois frascos de Potion. É o que a Liga paga. O resto você compra.'),
+    d=>fala(cadastra(d), 'Kit inicial: cinco Poké Balls e dois frascos de Potion. É o que vem com a licença. O resto você compra.'),
     d=>['Pallet','Viridian'].includes(d.jogador.cidade) ? ''
       : fala(cadastra(d), 'E a passagem do ônibus até Viridian, que é onde começa a estrada dos ginásios. Grampeada aí atrás. Não perde essa também.')
   ],

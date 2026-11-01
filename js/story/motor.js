@@ -124,8 +124,8 @@ const Historia = {
     const caçando = Object.values(d.lendarios).filter(l => l.caçandoVoce);
     if (caçando.length) linhas.push(`Te caçando: ${caçando.map(l => DEX[l.dex].nome).join(', ')}.`);
     if (d.via && d.via !== 'neutro') linhas.push(`Kanto te trata como: ${NOME_VIA[d.via] || d.via}.`);
-    if (d.liga.detencao) linhas.push('A Liga Pokémon tem uma ordem de detenção com o seu nome.');
-    else if (d.liga.ordemDevolucao) linhas.push('A Liga exigiu formalmente a devolução do que você pegou.');
+    if (d.liga.detencao) linhas.push('A Patrulha tem uma ordem de detenção com o seu nome.');
+    else if (d.liga.ordemDevolucao) linhas.push('A Patrulha exigiu formalmente a devolução do que você pegou.');
     if (d.mundo.clima !== 'normal') linhas.push(`O clima de Kanto está ${d.mundo.clima}.`);
     const nomesNPC = Object.keys(d.npcs);
     if (nomesNPC.length) linhas.push(`Gente que lembra de você: ${nomesNPC.join(', ')}.`);
@@ -386,7 +386,7 @@ const NPC_NO_MEIO = new Set(['Curador Fabre', 'Auditora Brill', 'Hester Colman',
   'Conselheira do broche', 'o intermediário', 'Homem da banca', 'Rapaz da fenda', 'o fumante', 'Assessora da Silph',
   'a advogada do conselho', 'Dra. Pia', 'Sr. Cosmo', 'Contramestre Varo', 'o pai do patrocínio',
   /* a mesa da sala 704, no 20 */
-  'a Presidente', 'a secretária da mesa', 'Sra. Hedda', 'a conselheira da Liga', 'Margot Heath',
+  'a Presidente', 'a secretária da mesa', 'Sra. Hedda', 'a conselheira regional', 'Margot Heath',
   'o médico do conselho', 'Dr. Senna', 'Dra. Sedge', 'o contador do conselho', 'Sr. Mallow',
   'o professor do conselho', 'Sr. Tobias Dahl', 'o homem de barba', 'o homem de sapato limpo']);
 function repDaOpiniao(ef){

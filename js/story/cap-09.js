@@ -379,7 +379,7 @@ c9_quem_emite:{
   texto:[
     '"Quem emite essa documentação?"',
     'Aí ele para de arrumar o balcão.',
-    '"Depende." Ele pensa em como responder. "Transferência entre particulares, é a Liga. Recolhimento, é a Comissão."',
+    '"Depende." Ele pensa em como responder. "Transferência entre particulares, é o registro do governo. Recolhimento, é a Comissão."',
     '"Recolhimento?"',
     '"Quando um Pokémon é retirado de um guardião inidôneo." Ele fala isso com a naturalidade de quem repete termo técnico. "Aí ele passa pra custódia e a custódia pode destinar."',
     'Ele encolhe os ombros.',
@@ -1274,7 +1274,7 @@ c9_escreve_isso:{
   texto:[
     '"Escreve isso."',
     '"Escrever pra quem?"',
-    '"Pra Liga. Pra Comissão. Pra alguém."',
+    '"Pra Patrulha. Pra Comissão. Pra alguém."',
     'Ele ri.',
     '"Eu escrevo e cai numa gaveta."',
     '"Cai. E aí tem uma gaveta com isso escrito dentro." Você fala mais alto do que pretendia e a enfermeira olha. "E daqui a dois anos alguém abre a gaveta e tem uma folha assinada por um cara de vinte e dois anos que quase morreu num sexto andar."',
@@ -2502,7 +2502,7 @@ c9_via_mercenario:{
     'Ela não comemora. Empurra um envelope pardo pela mesa, com dois dedos, como quem paga uma conta de luz.',
     '"Regra única: você não pergunta o que tem na caixa, e eu não pergunto o que você faz com o dinheiro."',
     '"Você vai carregar em rota, porque treinador em rota é invisível — ninguém para {um moleque|uma moleca} de mochila entre duas cidades. Você vai ter proteção nas cidades: se um guarda te encostar em Celadon, Fuchsia ou Saffron, você diz o nome do Palace e ele desencosta."',
-    '"E se a Liga te parar de verdade, você me liga antes de abrir a boca. Antes. Não depois de explicar metade."',
+    '"E se a Patrulha te parar de verdade, você me liga antes de abrir a boca. Antes. Não depois de explicar metade."',
     'O envelope é grosso. O primeiro sempre é.',
     'Você pega. E a coisa que te assusta não é pegar. É como é fácil.'
   ],
@@ -2542,7 +2542,7 @@ c9_via_heroi:{
       presagio:'Cada gaiola tem número de processo. Ela te avisou porque sabe que isso é o que mais dói.'},
   escolhas:[
     {texto:'Ir ao armazém agora.', vai:'c9_deposito'},
-    {texto:'Ligar pra Liga primeiro e ir junto.', vai:'c9_liga_deposito'},
+    {texto:'Ligar pra Patrulha primeiro e ir junto.', vai:'c9_liga_deposito'},
     {texto:'Ligar pra Dra. Cordell antes.', vai:'c9_ivone', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Ir ao cartório pegar os papéis antes.', vai:'c9_junta', ef:{flag:'sabe_do_cartorio'}}
   ]
@@ -2952,7 +2952,7 @@ c9_deposito:{
     {texto:'Entrar pela frente. Sem plano.', vai:'c9_frente'},
     {texto:'Procurar outra entrada.', vai:'c9_lateral'},
     {texto:'Esperar o caminhão chegar e entrar junto com a carga.', vai:'c9_caminhao'},
-    {texto:'Chamar a Liga agora e esperar na esquina.', vai:'c9_liga_deposito'},
+    {texto:'Chamar a Patrulha agora e esperar na esquina.', vai:'c9_liga_deposito'},
     {texto:'Ir embora.', vai:'c9_fim', ef:{flag:'desistiu_deposito', rep:{eixo:'ruim',delta:1,motivo:'Chegou até a porta e voltou'}}}
   ]
 },
@@ -3211,7 +3211,7 @@ c9_comprou_um:{
     {texto:'Sair.', vai:'c9_fim'},
     {texto:'Voltar pela lateral e abrir as outras.', vai:'c9_lateral'},
     {texto:'Levar o recibo à Dra. Cordell.', vai:'c9_ivone', cond:d=>!!d.flags.cartao_ivone},
-    {texto:'Levar o recibo à Liga.', vai:'c9_liga_celadon'}
+    {texto:'Levar o recibo à Patrulha.', vai:'c9_liga_celadon'}
   ]
 },
 
@@ -3313,7 +3313,7 @@ c9_incendio:{
   ],
   ef:{rep:{eixo:'ruim',delta:4,motivo:'Incendiou um armazém com Pokémon feridos dentro'},
       flag:['incendiou_deposito','tem_sangue_nas_maos'], instabilidade:2, moral:-25,
-      executar:d=>{ Estado.dados.liga.avisos++; return [{tipo:'liga', texto:'A Liga Pokémon abriu inquérito sobre o incêndio de Celadon.'}]; },
+      executar:d=>{ Estado.dados.liga.avisos++; return [{tipo:'lei', texto:'A polícia abriu inquérito sobre o incêndio de Celadon.'}]; },
       registrar:'Incendiou o armazém de Celadon com seis Pokémon feridos dentro.'},
   escolhas:[
     {texto:'Ir embora.', vai:'c9_fim'},
@@ -3339,7 +3339,7 @@ c9_documentou:{
       presagio:'Trinta dias. É esse o tempo que leva pra abrir outro galpão.'},
   escolhas:[
     {texto:'Levar à Dra. Cordell.', vai:'c9_ivone', cond:d=>!!d.flags.cartao_ivone},
-    {texto:'Levar à Liga.', vai:'c9_liga_celadon'},
+    {texto:'Levar à Patrulha.', vai:'c9_liga_celadon'},
     {texto:'Levar à Auditora Brill.', vai:'c9_prado_conversa', cond:d=>!!d.flags.conheceu_prado},
     {texto:'Guardar. Você ainda não sabe em quem confiar.', vai:'c9_fim', ef:{flag:'guardou_provas'}}
   ]
@@ -3424,7 +3424,7 @@ c9_perdeu_deposito:{
   escolhas:[
     {texto:'Seguir o caminhão a pé enquanto der.', vai:'c9_seguiu_caminhao'},
     {texto:'Sentar no meio-fio.', vai:'c9_fim'},
-    {texto:'Voltar amanhã com a Liga.', vai:'c9_liga_celadon'},
+    {texto:'Voltar amanhã com a Patrulha.', vai:'c9_liga_celadon'},
     {texto:'Voltar amanhã com a Dra. Cordell.', vai:'c9_ivone', cond:d=>!!d.flags.cartao_ivone}
   ]
 },
@@ -3443,7 +3443,7 @@ c9_seguiu_caminhao:{
   escolhas:[
     {texto:'Seguir viagem.', vai:'c9_fim'},
     {texto:'Levar a placa à Dra. Cordell.', vai:'c9_ivone', cond:d=>!!d.flags.cartao_ivone},
-    {texto:'Levar a placa à Liga.', vai:'c9_liga_celadon'},
+    {texto:'Levar a placa à Patrulha.', vai:'c9_liga_celadon'},
     {texto:'Resolver as pendências antes de sair.', vai:'c9_pendencias'}
   ]
 },
@@ -3465,7 +3465,7 @@ c9_tomou:{
       executar:d=>{
         Historia.definirVia('foragido','assumiu a rede de Celadon');
         Estado.dados.liga.avisos++;
-        return [{tipo:'liga', texto:'Um relatório da Liga sobre Celadon passou a ter o seu nome no topo.'}];
+        return [{tipo:'lei', texto:'Um relatório da Patrulha sobre Celadon passou a ter o seu nome no topo.'}];
       },
       registrar:'Assumiu o controle do armazém e da rede de Celadon.',
       presagio:'O vale do ônibus. A coisa se rendeu a você por causa do vale do ônibus.'},
@@ -3533,10 +3533,10 @@ c9_ivone_44207:{
 },
 
 c9_liga_celadon:{
-  falante:'o oficial da Liga de Celadon',
+  falante:'o oficial de Celadon',
   vozes:['N','N','N','P','N','N'],
   texto:[
-    'O posto da Liga em Celadon fica no terceiro andar de um prédio comercial, entre um consultório de fisioterapia e uma escola de informática, e fecha às dezoito horas.',
+    'O posto da Patrulha em Celadon fica no terceiro andar de um prédio comercial, entre um consultório de fisioterapia e uma escola de informática, e fecha às dezoito horas.',
     'Tem quatro cadeiras de plástico na recepção e um cartaz desbotado de campanha de adoção de 1993.',
     'O oficial que te atende é competente e honesto, e é exatamente por isso que a conversa é tão frustrante.',
     '"Isso aqui é bom material." Ele folheia devagar, anotando. "Sério. É melhor do que noventa por cento do que chega aqui."',
@@ -3546,8 +3546,8 @@ c9_liga_celadon:{
   ],
   ef:{flag:'liga_tem_provas',
       rep:{eixo:'bom',delta:1,motivo:'Levou provas às autoridades'},
-      executar:d=>{ d.liga.avisos = Math.max(0, d.liga.avisos); return [{tipo:'liga', texto:'A Liga registrou você como informante — o que é bom e ruim.'}]; },
-      registrar:'Entregou as provas à Liga. Prazo estimado: quatro a nove meses.'},
+      executar:d=>{ d.liga.avisos = Math.max(0, d.liga.avisos); return [{tipo:'lei', texto:'A Patrulha registrou você como informante — o que é bom e ruim.'}]; },
+      registrar:'Entregou as provas à Patrulha. Prazo estimado: quatro a nove meses.'},
   escolhas:[
     {texto:'"Então eu vou eu mesm{o|a}."', vai:'c9_fim',
      ef:{flag:'vai_sozinho_saffron', executar:d=>{ if(Historia.via()==='neutro') Historia.definirVia('heroi','decidiu ir sozinho quando o sistema disse nove meses'); return []; }}},
@@ -3569,7 +3569,7 @@ c9_liga_deposito:{
   ],
   ef:{flag:'liga_falhou_celadon', instabilidade:1, moral:-10,
       rep:{eixo:'bom',delta:1,motivo:'Tentou fazer pelo caminho certo'},
-      registrar:'A Liga foi ao armazém, não pôde entrar, e o caminhão saiu vinte e nove minutos depois.',
+      registrar:'A Patrulha foi ao armazém, não pôde entrar, e o caminhão saiu vinte e nove minutos depois.',
       presagio:'Vinte e nove minutos. Eles esperaram a viatura virar a esquina.'},
   escolhas:[
     {texto:'Entrar sozinh{o|a} agora, com raiva.', vai:'c9_frente',

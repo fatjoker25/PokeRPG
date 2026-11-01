@@ -727,13 +727,13 @@ c21_dormiu_na_cama:{
 
 c21_mais_um_dia:{
   texto:[
-    'Você fica mais um dia. A carta da Liga diz uma data pro Planalto, e a data tem folga de três dias, e você gasta um.',
+    'Você fica mais um dia. A carta diz uma data pro Planalto, e a data tem folga de três dias, e você gasta um.',
     'Não acontece nada de especial neste dia. Você conserta o que dá, come o que colocam no prato, anda a rua duas vezes.',
     'É o primeiro dia em meses em que ninguém precisa de você pra nada, e você não sabe muito bem o que fazer com as mãos.'
   ],
   ef:{moral:5, hp:6, flag:'ficou_mais_um_dia',
       rep:{eixo:'bom',delta:1,motivo:'Gastou em casa um dia da folga do Planalto'},
-      registrar:'Gastou em casa um dia da folga que a carta da Liga dava, sem fazer nada.',
+      registrar:'Gastou em casa um dia da folga que a carta do Planalto dava, sem fazer nada.',
       executar:d=>{ Relogio.amanhaAs(7); }},
   escolhas:[{texto:'No dia seguinte, ir.', vai:'c21_saida_de_casa'}]
 },

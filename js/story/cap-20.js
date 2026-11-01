@@ -80,7 +80,7 @@ function c20_quemJaTeViu(d){
 
 /* ------------------------------------------------------------
    A MESA. Treze cadeiras: a Presidente, nove conselheiros, a
-   observadora da Liga, a cadeira vazia da Dra. Yarrow e a de
+   observadora do governo, a cadeira vazia da Dra. Yarrow e a de
    representação externa (a do desfecho, em desfechos.js). O Dr.
    Hollis fica na parede, sem voto, e a secretária numa mesinha
    do lado da cabeceira. Cada um tem uma plaquinha de papel com
@@ -92,7 +92,7 @@ const C20_DA_MESA = {
   'a advogada do conselho':  ['a advogada', 'a mulher de óculos da ponta da mesa'],
   'o contador do conselho':  ['o contador', 'o homem da calculadora'],
   'o professor do conselho': ['o Sr. Dahl', 'o senhor da bengala'],
-  'a conselheira da Liga':   ['a conselheira da Liga', 'a mulher do broche da Liga'],
+  'a conselheira regional':   ['a conselheira regional', 'a mulher do broche'],
   'a secretária da mesa':    ['a Sra. Hedda', 'a secretária']
 };
 function c20_quem(rot, maiuscula){
@@ -161,8 +161,8 @@ function c20_contarVotos(d){
   if (Estado.rep.eixo === 'bom' && Estado.rep.bom >= 6){ favor += 1; razoes.push('Um conselheiro vota a favor e diz o seu nome como justificativa, o que é constrangedor para todo mundo na sala, inclusive para você.'); }
   if (mat === 'visita'){ favor += 1; razoes.push('Um conselheiro vota a favor e diz, sem nenhuma ironia, que é a primeira matéria em um ano e oito meses que não custa nada a ninguém.'); }
   if (mat === 'edital'){ favor -= 1; razoes.push(`${c20_quem('o contador do conselho', true)} vota contra e explica, com números, quanto custa uma assembleia de trezentas pessoas.`); }
-  if (f.conselheira_confrontada) razoes.push(`${c20_quem('a conselheira da Liga', true)} não vota: assento de observadora, sem direito a voto. Ela fecha os olhos quando a contagem chega nela.`);
-  if (f.observadora_pode_falar) razoes.push(`${c20_quem('a conselheira da Liga', true)} pede a palavra pela primeira vez em dois anos e fala noventa segundos. Não muda voto nenhum, e muda a sala.`);
+  if (f.conselheira_confrontada) razoes.push(`${c20_quem('a conselheira regional', true)} não vota: assento de observadora, sem direito a voto. Ela fecha os olhos quando a contagem chega nela.`);
+  if (f.observadora_pode_falar) razoes.push(`${c20_quem('a conselheira regional', true)} pede a palavra pela primeira vez em dois anos e fala noventa segundos. Não muda voto nenhum, e muda a sala.`);
   if (Historia.via() === 'mercenario' || Historia.via() === 'foragido'){ favor -= 2; razoes.push('Um conselheiro lembra, em voz alta e com documento, de onde vem o seu dinheiro. Dois votos mudam de lado.'); }
   if (f.atacou_o_conselho){ favor -= 3; razoes.push('Alguém lembra que você sacou uma Pokébola dentro desta sala. Isso pesa mais que tudo o que você disse.'); }
   favor = Math.max(0, Math.min(conselheiros, favor));
@@ -617,11 +617,11 @@ c20_mesa:{
       ? 'Fora da mesa, numa cadeira de plástico encostada na parede, o Dr. Hollis, de jaleco. Ele te reconhece e volta para a pasta.'
       : 'Fora da mesa, numa cadeira de plástico encostada na parede, um homem de jaleco, que levanta os olhos e volta para a pasta.',
     'Numa mesinha ao lado da cabeceira, a secretária escreve a ata à mão, sem levantar a cabeça.',
-    'E, na terceira cadeira da direita, uma mulher com o broche da Liga Pokémon na lapela, sentada à mesa de uma associação privada como quem senta à própria.',
+    'E, na terceira cadeira da direita, uma mulher com o broche do Conselho Regional na lapela, sentada à mesa de uma associação privada como quem senta à própria.',
     d => d.flags.sabe_da_terceira ? 'Não tem ninguém de Celadon aqui. A Terceira vende para eles e não senta com eles, e agora isso faz muito sentido.' : '',
     'Na frente de cada cadeira tem uma plaquinha de papel dobrada, com nome e função em letra de forma, a mesma letra da pauta. A da cabeceira, que da porta só dizia PRESIDÊNCIA, tem o nome embaixo, menor: Hester Colman.',
     'O homem magro é o Dr. Senna, médico de Pokémon. A mulher de óculos é a Dra. Sedge, advogada. O da calculadora é o Sr. Mallow, contador e vice-presidente. O homem de barba é o Curador Fabre. A plaquinha do senhor da bengala tem só o nome, sem função nenhuma: Sr. Tobias Dahl.',
-    'A da mulher do broche diz OBSERVADORA — LIGA POKÉMON, e embaixo, à mão: Margot Heath. A da mesinha diz só SRA. HEDDA. As duas cadeiras vazias são as únicas sem plaquinha.',
+    'A da mulher do broche diz OBSERVADORA — GOVERNO DE KANTO, e embaixo, à mão: Margot Heath. A da mesinha diz só SRA. HEDDA. As duas cadeiras vazias são as únicas sem plaquinha.',
     d => d.flags.c20_conhecia_a_presidente
       ? 'A Presidente espera você terminar de ler. Ela sabe que você já esteve aqui e não diz nada sobre isso.'
       : 'A Presidente espera você terminar de ler. Ela deixa você olhar, e isso é escolha dela.'
@@ -633,18 +633,18 @@ c20_mesa:{
         Nomes.apresentar('a advogada do conselho');
         Nomes.apresentar('o contador do conselho');
         Nomes.apresentar('o professor do conselho');
-        Nomes.apresentar('a conselheira da Liga');
+        Nomes.apresentar('a conselheira regional');
         Nomes.apresentar('a secretária da mesa');
         c20_sabeOFabre();
         Estado.marcar('sabe_o_nome_da_presidente');
         Estado.marcar('viu_a_liga_na_mesa');
-        return [{tipo:'liga', texto:'A Liga tem uma cadeira na mesa do conselho da Comissão, com plaquinha e tudo.'}];
+        return [{tipo:'mundo', texto:'O governo de Kanto tem uma cadeira na mesa do conselho da Comissão, com plaquinha e tudo.'}];
       },
-      registrar:'Olhou a mesa da sala 704: treze cadeiras, duas vazias, e uma observadora da Liga.'},
+      registrar:'Olhou a mesa da sala 704: treze cadeiras, duas vazias, e uma observadora do governo.'},
   escolhas:[
     {texto:'"Quem é cada um aqui?"', vai:'c20_quem_e_quem'},
     {texto:'"De quem é a cadeira com a pasta?"', vai:'c20_cadeira_vazia'},
-    {texto:'"Você." — apontando para a mulher do broche da Liga.', vai:'c20_conselheira'},
+    {texto:'"Você." — apontando para a mulher do broche.', vai:'c20_conselheira'},
     {texto:d => c20_sabeDoArt27(d) ? 'Pedir a palavra, pelo Art. 27.' : 'Pedir a palavra.', vai:'c20_palavra'},
     {texto:'Dizer o seu nome.', vai:'c20_nome'}
   ]
@@ -656,8 +656,8 @@ c20_quem_e_quem:{
     'A Presidente apresenta a mesa inteira, um por um, com cargo e formação, e leva dois minutos e meio. As plaquinhas diziam os nomes; ela diz o resto.',
     'Uma bióloga, com doutorado. O Dr. Senna, médico de Pokémon, vinte e dois anos de clínica de Pokémon grande. Um engenheiro agrônomo. A Dra. Sedge, advogada. O Sr. Mallow, contador e vice. O Sr. Tobias Dahl, professor titular aposentado, que dorme por três segundos no meio da própria apresentação.',
     'Uma servidora pública licenciada. Uma ex-diretora de escola técnica. O Curador Fabre.',
-    'A observadora da Liga, Margot Heath, da diretoria, sem voto. Na parede, o Dr. Hollis, técnico-chefe da Estação 4, também sem voto. E a Sra. Hedda, que faz a ata e o café.',
-    'E ela: Hester Colman, ex-diretora de fiscalização da Liga por nove anos.',
+    'A observadora do governo, Margot Heath, conselheira regional, sem voto. Na parede, o Dr. Hollis, técnico-chefe da Estação 4, também sem voto. E a Sra. Hedda, que faz a ata e o café.',
+    'E ela: Hester Colman, ex-diretora da Fiscalização por nove anos.',
     'Ninguém desvia o olhar quando o próprio nome é dito. Todo mundo aqui está com o nome no cartório desde o primeiro dia.'
   ],
   ef:{flag:['viu_a_mesa_inteira','sabe_o_nome_da_presidente','c20_hollis_apresentado'],
@@ -679,7 +679,7 @@ c20_o_professor:{
     'A voz é fraca e a frase é firme.',
     fala('o professor do conselho', 'Cento e oitenta páginas. Eu andei a região inteira a pé, com um caderno.'),
     c20_eu('E o senhor está aqui por quê?'),
-    fala('o professor do conselho', 'Porque eu entreguei aquele levantamento pra três diretorias da Liga, e nenhuma abriu.'),
+    fala('o professor do conselho', 'Porque eu entreguei aquele levantamento pra três diretorias da Fiscalização, e nenhuma abriu.'),
     'Ele arruma os óculos.',
     fala('o professor do conselho', 'Estes aqui abriram. Leram as cento e oitenta páginas e me chamaram.'),
     'Ele volta a se encostar na cadeira.',
@@ -913,22 +913,22 @@ c20_a_proxima_sessao:{
 c20_conselheira:{
   texto:[
     c20_eu('Você.'),
-    'A mulher do broche da Liga não desvia o olhar e não parece constrangida.',
-    fala('a conselheira da Liga', 'Eu tenho assento de observadora. Sem direito a voto. Consta na ata, e a ata é pública.'),
+    'A mulher do broche não desvia o olhar e não parece constrangida.',
+    fala('a conselheira regional', 'Eu tenho assento de observadora. Sem direito a voto. Consta na ata, e a ata é pública.'),
     'Ela fala com a calma de quem já ensaiou a frase.',
-    c20_eu('Você é da Liga.'),
-    fala('a conselheira da Liga', 'Diretoria. Há dezesseis anos.'),
-    c20_eu('E o que a Liga faz sentada aqui?'),
+    c20_eu('Você é do governo.'),
+    fala('a conselheira regional', 'Do Conselho Regional. Há dezesseis anos.'),
+    c20_eu('E o que o governo faz sentado aqui?'),
     'Pela primeira vez, ela hesita.',
-    fala('a conselheira da Liga', 'Olha.'),
+    fala('a conselheira regional', 'Olha.'),
     'Ela olha a Presidente, do outro lado da mesa.',
-    fala('a conselheira da Liga', 'Eu queria que alguém de fora olhasse também. E eu não podia ser eu.')
+    fala('a conselheira regional', 'Eu queria que alguém de fora olhasse também. E eu não podia ser eu.')
   ],
   ef:{flag:'conselheira_confrontada', instabilidade:1,
-      npc:{nome:'a conselheira da Liga', opiniao:1, memoria:'Admitiu, na frente do conselho, que queria alguém de fora olhando.'},
-      registrar:'Uma diretora da Liga senta no conselho da Comissão como observadora, e queria que alguém de fora olhasse.'},
+      npc:{nome:'a conselheira regional', opiniao:1, memoria:'Admitiu, na frente do conselho, que queria alguém de fora olhando.'},
+      registrar:'Uma conselheira regional senta no conselho da Comissão como observadora, e queria que alguém de fora olhasse.'},
   escolhas:[
-    {texto:'"A Liga sabe que você senta aqui?"', vai:'c20_liga_sabe'},
+    {texto:'"O Conselho sabe que você senta aqui?"', vai:'c20_liga_sabe'},
     {texto:'"Então vote comigo."', vai:'c20_pediu_voto_dela'},
     {texto:'Pedir a palavra.', vai:'c20_palavra'}
   ]
@@ -936,22 +936,22 @@ c20_conselheira:{
 
 c20_liga_sabe:{
   texto:[
-    c20_eu('A Liga sabe que você senta aqui?'),
-    fala('a conselheira da Liga', 'A Liga assinou o convênio que criou este assento.'),
+    c20_eu('O Conselho sabe que você senta aqui?'),
+    fala('a conselheira regional', 'O governo assinou o convênio que criou este assento.'),
     'Ela abre a pasta e tira uma folha.',
-    fala('a conselheira da Liga', 'Cláusula nona. Publicada. Com a minha assinatura e a de mais três diretores.'),
+    fala('a conselheira regional', 'Cláusula nona. Publicada. Com a minha assinatura e a de mais três diretores da Fiscalização.'),
     'Ela desliza a folha pela mesa até você.',
     d => d.flags.presidente_saiu_brigada
-      ? 'Entre as quatro assinaturas da folha está a de Hester Colman, ainda como diretora de fiscalização.'
+      ? 'Entre as quatro assinaturas da folha está a de Hester Colman, ainda como diretora da Fiscalização.'
       : '',
-    fala('a conselheira da Liga', 'O que a Liga não sabe é o que eu faço na cadeira, porque ninguém nunca me perguntou, em dois anos.'),
+    fala('a conselheira regional', 'O que o Conselho não sabe é o que eu faço na cadeira, porque ninguém nunca me perguntou, em dois anos.'),
     c20_eu('E o que você faz?'),
-    fala('a conselheira da Liga', 'Eu anoto.'),
+    fala('a conselheira regional', 'Eu anoto.'),
     'Ela guarda a folha de volta.',
-    fala('a conselheira da Liga', 'Eu tenho dois anos de anotação de reunião de conselho de uma entidade privada, feita por uma diretora da Liga, e ninguém nunca pediu pra ver.')
+    fala('a conselheira regional', 'Eu tenho dois anos de anotação de reunião de conselho de uma entidade privada, feita por uma conselheira regional, e ninguém nunca pediu pra ver.')
   ],
   ef:{flag:['sabe_do_assento_da_liga','liga_infiltrada'], instabilidade:1,
-      registrar:'O assento de observadora da Liga foi criado pela cláusula nona do convênio.'},
+      registrar:'O assento de observadora do governo foi criado pela cláusula nona do convênio.'},
   escolhas:[
     {texto:'"Me dá as anotações."', vai:'c20_pediu_as_anotacoes'},
     {texto:'"Então vote comigo."', vai:'c20_pediu_voto_dela'},
@@ -963,17 +963,17 @@ c20_pediu_as_anotacoes:{
   texto:[
     c20_eu('Me dá as anotações.'),
     'Ela olha a mesa inteira, devagar, e depois olha a Presidente, que não faz nenhum sinal em nenhuma direção.',
-    fala('a conselheira da Liga', 'São quatro cadernos.'),
+    fala('a conselheira regional', 'São quatro cadernos.'),
     c20_eu('Eu carrego.'),
     'Ela abre a pasta e tira um. Só um.',
-    fala('a conselheira da Liga', 'Este é o mais recente, que é o que interessa, e é o que eu posso justificar se me perguntarem.'),
+    fala('a conselheira regional', 'Este é o mais recente, que é o que interessa, e é o que eu posso justificar se me perguntarem.'),
     'Ela empurra o caderno pela mesa.',
-    fala('a conselheira da Liga', 'Os outros três eu entrego quando alguém me perguntar oficialmente, e eu vou querer que perguntem por escrito.')
+    fala('a conselheira regional', 'Os outros três eu entrego quando alguém me perguntar oficialmente, e eu vou querer que perguntem por escrito.')
   ],
   ef:{flag:['tem_caderno_da_liga','provas_do_11'], itens:{'Caderno de anotações da conselheira':1},
-      npc:{nome:'a conselheira da Liga', opiniao:3, memoria:'Te entregou um dos quatro cadernos, na frente da mesa inteira.'},
-      rep:{eixo:'bom',delta:2,motivo:'Arrancou um caderno de anotações da Liga na frente do conselho'},
-      registrar:'O caderno mais recente da observadora da Liga nas reuniões do conselho.'},
+      npc:{nome:'a conselheira regional', opiniao:3, memoria:'Te entregou um dos quatro cadernos, na frente da mesa inteira.'},
+      rep:{eixo:'bom',delta:2,motivo:'Arrancou um caderno de anotações do governo na frente do conselho'},
+      registrar:'O caderno mais recente da observadora do governo nas reuniões do conselho.'},
   escolhas:[
     {texto:'Pedir a palavra.', vai:'c20_palavra'},
     {texto:'"Então vote comigo."', vai:'c20_pediu_voto_dela'}
@@ -983,18 +983,18 @@ c20_pediu_as_anotacoes:{
 c20_pediu_voto_dela:{
   texto:[
     c20_eu('Então vote comigo.'),
-    fala('a conselheira da Liga', 'Eu não tenho voto.'),
+    fala('a conselheira regional', 'Eu não tenho voto.'),
     c20_eu('Então fale.'),
     'Ela fica quieta.',
     'A Presidente, da cabeceira, diz uma coisa que muda o dia inteiro:',
     fala('a Presidente', 'Observador pode falar. Art. 27, §2º. Só não pode votar.'),
     'As duas se olham por cima da mesa oval por um tempo longo demais.',
-    fala('a conselheira da Liga', 'Eu sei.'),
-    fala('a conselheira da Liga', 'Eu sei há dois anos.')
+    fala('a conselheira regional', 'Eu sei.'),
+    fala('a conselheira regional', 'Eu sei há dois anos.')
   ],
   ef:{flag:['observadora_pode_falar'], instabilidade:1,
-      npc:{nome:'a conselheira da Liga', opiniao:2, memoria:'Foi lembrada, na sua frente, de que pode falar há dois anos.'},
-      registrar:'A observadora da Liga pode falar nas reuniões. Nunca falou em dois anos.'},
+      npc:{nome:'a conselheira regional', opiniao:2, memoria:'Foi lembrada, na sua frente, de que pode falar há dois anos.'},
+      registrar:'A observadora do governo pode falar nas reuniões. Nunca falou em dois anos.'},
   escolhas:[{texto:'Pedir a palavra.', vai:'c20_palavra'}]
 },
 
@@ -1193,7 +1193,7 @@ c20_resposta:{
     d => fala('a Presidente', d.flags.ouviu_a_doutrina
       ? 'Eu vou dizer a parte que ele não diz.'
       : COMISSAO.doutrina[2].replace(/^"|"$/g, '')),
-    fala('a Presidente', 'Eu fui diretora de fiscalização da Liga por nove anos. Eu assinei setenta e um relatórios sobre risco populacional. Nenhum virou política pública. Nenhum.'),
+    fala('a Presidente', 'Eu fui diretora da Fiscalização por nove anos. Eu assinei setenta e um relatórios sobre risco populacional. Nenhum virou política pública. Nenhum.'),
     fala('a Presidente', 'No septuagésimo segundo, eu pedi demissão e vim presidir isto aqui.'),
     'Ela junta as mãos.',
     fala('a Presidente', 'O galpão 4 é indefensável. Eu sei. Eu votei a favor do Art. 19, eu durmo mal por causa dele, e eu votaria de novo, porque a alternativa era não produzir, e não produzir é aceitar o número que a gente tinha antes.'),
@@ -1956,14 +1956,14 @@ c20_resultado_publicacao:{
       if (d.flags.leu_o_livro_fechado)
         return 'O livro fechado é o que pega. Uma entidade que publica tudo e guarda nove atas num armário é uma manchete melhor que qualquer planilha, porque cabe numa linha.';
       if (d.flags.tem_caderno_da_liga)
-        return 'O caderno da observadora é o que pega: uma diretora da Liga anotando, há dois anos, as reuniões de uma entidade privada, e ninguém nunca pediu pra ver.';
+        return 'O caderno da observadora é o que pega: uma conselheira regional anotando, há dois anos, as reuniões de uma entidade privada, e ninguém nunca pediu pra ver.';
       if (d.flags.provas_do_11)
         return 'O que pega é o que você trouxe do andar 11 da Silph, publicado ao lado do estatuto de uma associação registrada em cartório.';
       return 'Sem prova material, a Comissão responde citando o próprio estatuto e o endereço do cartório, e o assunto começa a morrer na mesma semana.';
     },
     d => d.flags.representacao_no_mp
       ? 'A representação da Dra. Cordell entra no meio disso e muda o ritmo de tudo: com inquérito aberto, nota de esclarecimento deixa de ser resposta suficiente.'
-      : 'A Comissão continua atendendo chamado de ataque em área urbana durante toda a repercussão, e continua sendo mais rápida que a Liga, e isso não sai em jornal nenhum.',
+      : 'A Comissão continua atendendo chamado de ataque em área urbana durante toda a repercussão, e continua sendo mais rápida que a Fiscalização, e isso não sai em jornal nenhum.',
     'E a Presidente concede entrevista. Ela concede todas as entrevistas que pedem, sempre, sem exceção, e responde tudo, e é por isso que é difícil.'
   ],
   ef:{executar:d => {
@@ -2128,7 +2128,7 @@ c20_perdeu_presidente:{
     'Ela retoma a reunião de onde parou assim que te levam.'
   ],
   ef:{hp:-8, causa:'Derrota na sala 704',
-      executar:d => { d.liga.avisos++; return [{tipo:'liga', texto:'O incidente foi registrado em ata, com o seu nome.'}]; },
+      executar:d => { d.liga.avisos++; return [{tipo:'lei', texto:'O incidente foi registrado em ata, com o seu nome.'}]; },
       rep:{eixo:'ruim',delta:1,motivo:'Atacou um conselho e perdeu'}},
   escolhas:[
     {texto:'Sair do prédio.', vai:'c20_fim'},

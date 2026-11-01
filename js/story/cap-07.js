@@ -267,8 +267,8 @@ c7_ab_o_livro:{
 
 c7_ab_pra_quem:{
   texto:[
-    fala('a funcionária da guarita', 'Primeiro pra prefeitura. A prefeitura falou que a torre é da Liga.'),
-    fala('a funcionária da guarita', 'Aí eu liguei pra Liga. A Liga falou que a torre é patrimônio, quem cuida é a Fundação.'),
+    fala('a funcionária da guarita', 'Primeiro pra prefeitura. A prefeitura falou que a torre é do governo de Kanto.'),
+    fala('a funcionária da guarita', 'Aí eu liguei pro governo. O governo falou que a torre é patrimônio, quem cuida é a Fundação.'),
     d=>fala(d.jogador.nome, 'E a Fundação?'),
     fala('a funcionária da guarita', 'A Fundação não existe desde oitenta e seis.'),
     'Ela fala isso sem drama nenhum, como quem já passou da parte de achar isso absurdo.',
@@ -276,7 +276,7 @@ c7_ab_pra_quem:{
     'Você diz que quer, e ela já tinha tirado. Estava numa pasta embaixo do livro, esperando alguém pedir há dois meses.'
   ],
   ef:{flag:'copia_das_tres_respostas',
-      registrar:'Tem cópia por escrito: prefeitura aponta pra Liga, Liga aponta pra Fundação, Fundação não existe desde 1986.'},
+      registrar:'Tem cópia por escrito: prefeitura aponta pro governo, governo aponta pra Fundação, Fundação não existe desde 1986.'},
   escolhas:[
     {texto:'Pedir pra ver o livro de registro também.', vai:'c7_ab_o_livro'},
     {texto:'Ir até a base da torre.', vai:'c7_base'}
@@ -1592,7 +1592,7 @@ c7_ninguem_chamou:{
     '"Ninguém chamou ninguém em quatro dias?"',
     '"Chamou."',
     'Ele senta no banco de concreto.',
-    d=>`"Eu liguei pra Liga ${c7_naDia(3)}. Eles anotaram." Ele esfrega o joelho. "Disseram que ia ser designado um oficial."`,
+    d=>`"Eu liguei pra Patrulha ${c7_naDia(3)}. Eles anotaram." Ele esfrega o joelho. "Disseram que ia ser designado um oficial."`,
     'Ele olha pra escada.',
     d=>`"Isso foi ${c7_diaAtras(3)}. Hoje é ${c7_diaAtras(0)}."`
   ],
@@ -1796,7 +1796,7 @@ c7_ficou_ate_alta:{
   texto:[
     'Você fica três dias em Celadon esperando a alta de um desconhecido.',
     'Dorme no Centro Pokémon. Visita todo dia. Traz café ruim de máquina.',
-    'No terceiro dia ele conta: epilepsia. Diagnosticada aos dezessete. Ele não contou pra ninguém porque a Liga pede laudo médico pra licença e ele achou que iam recusar.',
+    'No terceiro dia ele conta: epilepsia. Diagnosticada aos dezessete. Ele não contou pra ninguém porque a licença pede laudo médico e ele achou que iam recusar.',
     '"Eles não iam recusar," você diz, sem ter a menor ideia.',
     '"Eu sei que não." Ele olha o soro. "Mas eu achei. E aí eu subi seis andares sozinho numa torre."',
     'Ele passa a mão na cara.',
@@ -2356,7 +2356,7 @@ c7_fim:{
       ? 'No seu caderno tem onze nomes copiados de um mural, e um endereço em Fuchsia com portão azul, e as duas coisas são a mesma coisa e você ainda não sabe provar.'
       : 'Lá embaixo, naquela parede preta, tem um canto perto do chão com onze nomes e uma data só.',
     'No dia seguinte, sai uma notícia de Cinnabar: incêndio numa instalação abandonada do laboratório. Ninguém ferido. Ninguém consegue explicar o que causou.',
-    'E, muito menor, no pé da mesma página: a Liga Pokémon informa que "procedimentos de avaliação de custódia" passarão a ser comunicados por via postal.'
+    'E, muito menor, no pé da mesma página: o governo de Kanto informa que "procedimentos de avaliação de custódia" passarão a ser comunicados por via postal.'
   ],
   fim:true, resumo:'A Torre te mostrou o que você trouxe — e um osso batendo em pedra há quatro dias.'
 }

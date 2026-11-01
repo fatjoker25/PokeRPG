@@ -165,7 +165,7 @@ c24_a_primeira:{
   texto:[
     'A Rota 23 sempre teve as sete guaritas. Elas estavam lá antes de você nascer, de pedra, com telhado de duas águas e nenhuma porta.',
     'A diferença é que agora elas têm gente dentro.',
-    'Sete guaritas, sete pessoas de uniforme cinza que não é uniforme da Liga, e uma cancela de madeira pintada de branco e vermelho em cada uma.',
+    'Sete guaritas, sete pessoas de uniforme cinza, que parece o da Patrulha e não é, e uma cancela de madeira pintada de branco e vermelho em cada uma.',
     d=>{ Nomes.apresentar('o guarda da primeira'); return 'O da primeira tem PIKE bordado em cima do bolso, que é mais do que os outros seis têm.'; },
     fala('o guarda da primeira', 'Cartão de treinador, por favor.'),
     'Você entrega. Ele passa o leitor. A máquina apita uma vez.',
@@ -203,7 +203,7 @@ c24_perguntou_por_que:{
 
 c24_o_uniforme:{
   texto:[
-    d=>fala(d.jogador.nome, 'Esse uniforme é de quem? Não é da Liga.'),
+    d=>fala(d.jogador.nome, 'Esse uniforme é de quem? Não é da Patrulha.'),
     'Ele puxa a manga e mostra o bordado no ombro, que é uma coisa que ele claramente já fez hoje e que já cansou de fazer.',
     'O bordado é um círculo com três linhas dentro e uma sigla embaixo em letra pequena.',
     fala('o guarda da primeira', 'Empresa terceirizada. Eu sou de Celadon, eu fiz uma prova, eu passei, eu vim.'),

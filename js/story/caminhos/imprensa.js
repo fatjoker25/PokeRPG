@@ -507,7 +507,7 @@ ci3_a_sentenca:{
 ci3_seguir:{
   texto:[
     fala('a editora do Jornal', 'Vai. Processo de jornal se ganha sentado. Eu sento.', 'riso'),
-    'O ônibus da Liga pro Planalto sai às oito e quinze. Alguém no banco da frente está lendo a edição extra.'
+    'O ônibus pro Planalto sai às oito e quinze. Alguém no banco da frente está lendo a edição extra.'
   ],
   ef:{flag:'cm_imprensa_seguiu_planalto'},
   fim:true, resumo:'A edição extra: oito páginas, uma liminar de município e uma banca de jornal em Celadon.'

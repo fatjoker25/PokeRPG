@@ -466,7 +466,7 @@ c11_saffron:{
     d=>{
       const via = Historia.via();
       if (via==='pesquisador') return 'Você tem um guardanapo de cassino com o número 11 e um livro de destinos que diz SPH-11 sete vezes. É o suficiente pra saber onde procurar e insuficiente pra absolutamente qualquer outra coisa.';
-      if (via==='mercenario') return 'A Terceira te mandou fazer uma entrega aqui, quinta-feira, dezenove horas, doca de carga. Você é o entregador. Você tem acesso pela doca — o que é mais do que a Liga conseguiu em nove meses de mandado.';
+      if (via==='mercenario') return 'A Terceira te mandou fazer uma entrega aqui, quinta-feira, dezenove horas, doca de carga. Você é o entregador. Você tem acesso pela doca — o que é mais do que a polícia conseguiu em nove meses de mandado.';
       if (via==='foragido') return 'Você herdou um cliente quando herdou a rede. O cliente é este prédio. Você veio renegociar e ainda não decidiu se renegociar quer dizer cobrar mais caro ou parar de entregar.';
       if (via==='heroi') return 'Você não tem crachá, não tem mandado e não tem plano. Tem um livro de destinos, um número de andar e raiva suficiente pra atravessar uma catraca.';
       return 'Você não sabe direito por que veio. Sabe que veio, e que andou um dia inteiro pra isso.';
@@ -596,7 +596,7 @@ c11_ginasio:{
       ? `O do caderno está lá há ${c11_diasDeFila(d)} dias e tem a insígnia de sete ginásios.`
       : `Um deles, de uns dezoito anos, está lá há ${c11_diasDeFila(d)} dias e tem a insígnia de sete ginásios.`,
     fala('o rapaz das sete insígnias', 'Só falta essa.'),
-    d=>fala('o rapaz das sete insígnias', `${cap1(c11_diasDeFila(d))} dias. Eu tenho passagem comprada pra Liga em ${c11_diasPraLiga(d)}.`),
+    d=>fala('o rapaz das sete insígnias', `${cap1(c11_diasDeFila(d))} dias. Eu tenho passagem comprada pro Planalto em ${c11_diasPraLiga(d)}.`),
     d=>fala(d.jogador.nome, 'E se não abrir?'),
     fala('o rapaz das sete insígnias', 'Aí não abre.'),
     'Ele não olha pra você quando diz isso.',
@@ -733,7 +733,7 @@ c11_eles_sabem:{
     '"E o que era?"',
     '"Eles estão me cumprimentando."',
     'Ela olha o teto do ginásio.',
-    '"Três vezes por dia. De manhã, de tarde e de noite. Onze coisas em tanque cumprimentando a única pessoa que responde, e eu tranquei um ginásio de Liga porque eu não aguento mais dar bom dia."'
+    '"Três vezes por dia. De manhã, de tarde e de noite. Onze coisas em tanque cumprimentando a única pessoa que responde, e eu tranquei um ginásio porque eu não aguento mais dar bom dia."'
   ],
   ef:{flag:['sabe_do_cumprimento','sabrina_quebrada'],
       moral:-12,
@@ -794,7 +794,7 @@ c11_silencio_com_sabrina:{
       : 'Em algum momento ela empurra o saco de pão de forma na sua direção com o pé.',
     d=>d.flags.sabrina_na_garagem
       ? 'Você come duas fatias de pão sem nada, sentad{o|a} na guia de uma garagem, ao lado da líder mais forte de Kanto.'
-      : 'Você come duas fatias de pão sem nada, sentad{o|a} no chão de um ginásio de Liga, ao lado da líder mais forte de Kanto.',
+      : 'Você come duas fatias de pão sem nada, sentad{o|a} no chão de um ginásio, ao lado da líder mais forte de Kanto.',
     'Perto do fim ela fala uma coisa só:',
     '"Obrigada por não pensar alto agora."',
     'E você percebe que, pela primeira vez em muito tempo, você não estava pensando em nada.'
@@ -1462,7 +1462,7 @@ c11_devolveu_as_folhas:{
     '"Ah."',
     '"É."',
     'Ela guarda o envelope na bolsa, com cuidado, e fica parada na calçada por um tempo.',
-    '"Eu ia mandar isso pra Liga na segunda."',
+    '"Eu ia mandar isso pra polícia na segunda."',
     '"Eu sei."',
     '"E eles iam abrir processo contra mim."',
     '"Iam."',
@@ -1889,7 +1889,7 @@ c11_venceu_seguranca:{
   ef:{flag:['dentro_da_silph','video_da_silph'],
       rep:{eixo:'ruim',delta:2,motivo:'Invadiu a Silph à força, gravado por quatro câmeras'},
       instabilidade:1,
-      executar:d=>{ d.liga.avisos++; return [{tipo:'liga', texto:'A Silph vai acionar a Liga. Isso é questão de horas.'}]; },
+      executar:d=>{ d.liga.avisos++; return [{tipo:'lei', texto:'A Silph vai acionar a polícia. Isso é questão de horas.'}]; },
       registrar:'Invadiu o saguão da Silph à força, com vídeo.',
       presagio:'Vídeo não precisa de ninguém pra contar. Isso vale pros dois lados.'},
   escolhas:[
@@ -2104,7 +2104,7 @@ c11_saiu_com_a_foto:{
   escolhas:[
     {texto:'Levar à Dra. Cordell.', vai:'c11_entregou_ivone', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Levar à Sabrina.', vai:'c11_entregou_sabrina', cond:d=>!!d.flags.sabrina_avisou},
-    {texto:'Levar à Liga.', vai:'c11_entregou_liga'},
+    {texto:'Levar à polícia.', vai:'c11_entregou_liga'},
     {texto:'Voltar e descer assim mesmo.', vai:'c11_escada'}
   ]
 },
@@ -2574,7 +2574,7 @@ c11_levou_a_caixa:{
   escolhas:[
     {texto:'Levar à Dra. Cordell.', vai:'c11_entregou_ivone', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Levar à Sabrina.', vai:'c11_entregou_sabrina', cond:d=>!!d.flags.sabrina_avisou},
-    {texto:'Levar à Liga.', vai:'c11_entregou_liga'},
+    {texto:'Levar à polícia.', vai:'c11_entregou_liga'},
     {texto:'Voltar e descer no prédio assim mesmo.', vai:'c11_escada'}
   ]
 },
@@ -3351,7 +3351,7 @@ c11_fugiu_do_11:{
     {texto:'Voltar. Agora.', vai:'c11_tirou_os_seis'},
     {texto:'Sair do prédio.', vai:'c11_fim'},
     {texto:'Ir contar pra Sabrina.', vai:'c11_entregou_sabrina', cond:d=>!!d.flags.sabrina_avisou},
-    {texto:'Ir contar pra Liga.', vai:'c11_entregou_liga'}
+    {texto:'Ir contar pra polícia.', vai:'c11_entregou_liga'}
   ]
 },
 
@@ -3372,7 +3372,7 @@ c11_fotografou_11:{
   escolhas:[
     {texto:'Levar à Dra. Cordell.', vai:'c11_entregou_ivone', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Levar à Sabrina.', vai:'c11_entregou_sabrina', cond:d=>!!d.flags.sabrina_avisou},
-    {texto:'Levar à Liga.', vai:'c11_entregou_liga'},
+    {texto:'Levar à polícia.', vai:'c11_entregou_liga'},
     {texto:'Guardar. Você decide depois.', vai:'c11_fim', ef:{flag:'guardou_provas_11'}}
   ]
 },
@@ -3395,7 +3395,7 @@ c11_fotografou_o_que_sobrou:{
   escolhas:[
     {texto:'Levar à Dra. Cordell.', vai:'c11_entregou_ivone', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Levar à Sabrina.', vai:'c11_entregou_sabrina', cond:d=>!!d.flags.sabrina_avisou},
-    {texto:'Levar à Liga.', vai:'c11_entregou_liga'},
+    {texto:'Levar à polícia.', vai:'c11_entregou_liga'},
     {texto:'Guardar. Você decide depois.', vai:'c11_fim'}
   ]
 },
@@ -3433,7 +3433,7 @@ c11_entregou_ivone:{
 
 c11_entregou_liga:{
   texto:[
-    'A Liga age rápido dessa vez. Rápido demais, na verdade, e a velocidade devia ser boa notícia.',
+    'A polícia age rápido dessa vez. Rápido demais, na verdade, e a velocidade devia ser boa notícia.',
     'Em nove horas tem gente de terno na Silph.',
     'Em dezoito, um comunicado oficial de três parágrafos: "irregularidades administrativas em unidade de pesquisa".',
     'Irregularidades administrativas.',
@@ -3443,11 +3443,11 @@ c11_entregou_liga:{
     'Recebe três respostas diferentes: "encaminhado", "sob custódia", e "essa informação está protegida por sigilo de investigação".',
     'Encaminhado pra onde. Custódia de quem.'
   ],
-  ef:{rep:{eixo:'bom',delta:2,motivo:'Entregou o andar 11 à Liga Pokémon'},
+  ef:{rep:{eixo:'bom',delta:2,motivo:'Entregou o andar 11 à polícia'},
       flag:'liga_lacrou_o_11', instabilidade:1, moral:-8,
       executar:d=>{ d.liga.avisos = Math.max(0, d.liga.avisos-1); Relogio.viver(36);
-                    return [{tipo:'liga', texto:'A Liga passou a te dever um favor. Isso é uma moeda estranha.'}]; },
-      registrar:'A Liga lacrou o andar 11 em 36 horas. Ninguém explicou o destino dos tanques.'},
+                    return [{tipo:'lei', texto:'A polícia passou a te dever um favor. Isso é uma moeda estranha.'}]; },
+      registrar:'A polícia lacrou o andar 11 em 36 horas. Ninguém explicou o destino dos tanques.'},
   escolhas:[
     {texto:'Sair de Saffron.', vai:'c11_fim'},
     {texto:'Perguntar uma quarta vez.', vai:'c11_quarta_vez'},
@@ -3467,7 +3467,7 @@ c11_quarta_vez:{
     '"O superintendente e dois da empresa." Ele fecha o porta-malas. "A sala ficou fechada quarenta minutos e quando abriu já tinha decisão."',
     '"E qual foi?"',
     'Ele demora.',
-    '"Cara, eu tenho vinte e três anos e três meses de Liga."',
+    '"Cara, eu tenho vinte e três anos e três meses de polícia."',
     '"Eu sei."',
     '"Encaminhado pra unidade da própria empresa em outra região." Ele diz muito rápido. "Com fiscalização semestral. Semestral."',
     'Ele entra no carro.',
@@ -3556,7 +3556,7 @@ c11_abriu_pra_eles:{
     d=>fala(d.jogador.nome, c11_jaLutou(d) ? 'Abre pra eles agora.' : 'Abre pra eles primeiro.'),
     'Ela para no meio da arena iluminada.',
     d=>fala('Sabrina', c11_jaLutou(d) ? 'Agora?' : 'Você tem certeza?'),
-    d=>fala(d.jogador.nome, `O cara tá com sete insígnias e passagem comprada pra Liga em ${c11_diasPraLiga(d)} dias. Ele tá lá há ${c11_diasDeFila(d)}.`),
+    d=>fala(d.jogador.nome, `O cara tá com sete insígnias e passagem comprada pro Planalto em ${c11_diasPraLiga(d)} dias. Ele tá lá há ${c11_diasDeFila(d)}.`),
     'Ela olha o portão de aço.',
     'Depois vai lá e levanta.',
     'Entram sete pessoas numa arena que estava fechada fazia semanas, e a primeira coisa que acontece é que ninguém sabe o que fazer, porque eles ensaiaram entrar e não ensaiaram estar dentro.',
@@ -3679,7 +3679,7 @@ c11_destruir:{
   ],
   ef:{rep:{eixo:'ruim',delta:3,motivo:'Destruiu os onze sem perguntar a nenhum deles'},
       flag:['destruiu_o_11','tem_sangue_nas_maos'], instabilidade:2, moral:-25,
-      executar:d=>{ d.liga.avisos++; return [{tipo:'liga', texto:'A Silph vai registrar isso como terrorismo industrial. E vai estar tecnicamente correta.'}]; },
+      executar:d=>{ d.liga.avisos++; return [{tipo:'lei', texto:'A Silph vai registrar isso como terrorismo industrial. E vai estar tecnicamente correta.'}]; },
       registrar:'Destruiu o andar 11 e os onze tanques.'},
   escolhas:[
     {texto:'Sair antes que cheguem.', vai:'c11_fim'},

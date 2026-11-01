@@ -107,7 +107,7 @@ function c12_sabeDoSete(d){
 }
 /* o Armazém Geral 7, em Celadon, no capítulo 9 */
 function c12_viuOGalpao(d){ const f = d.flags; return !!(f.viu_o_alvara || f.chegou_no_armazem || f.dentro_do_deposito); }
-/* o curral já foi esvaziado: soltura, porta aberta ou barreira da Liga */
+/* o curral já foi esvaziado: soltura, porta aberta ou barreira da Patrulha */
 function c12_esvaziado(d){ return !!d.flags.esvaziou_o_setor7; }
 function c12_contouGaiolas(d){ const f = d.flags; return !!(f.contou_gaiolas || f.dentro_do_deposito); }
 function c12_perguntaDoSete(d){ return c12_sabeDoSete(d) ? 'Me fala do setor 7.' : 'Tem algum pedaço da reserva onde você nunca entrou?'; }
@@ -969,7 +969,7 @@ c12_enchendo:{
     '"Como assim enchendo a reserva?"',
     '"Solturas."',
     'Ele espera você entender sozinh{o|a} e você não entende, e ele explica sem impaciência.',
-    '"A reserva recebe solturas. Apreensão de Liga, resgate de maus-tratos, entrega voluntária. São umas duzentas por ano e elas entram na população."',
+    '"A reserva recebe solturas. Apreensão da Patrulha, resgate de maus-tratos, entrega voluntária. São umas duzentas por ano e elas entram na população."',
     '"E isso é bom."',
     '"Isso é ótimo. É o que uma reserva deve fazer."',
     'Ele vira a xícara vazia de boca pra baixo.',
@@ -2137,7 +2137,7 @@ c12_pergunta_dificil:{
     'Ele olha a planta baixa na parede.',
     '"Mas mudaria a ordem de grandeza do que a gente chama de excedente. E a ordem de grandeza é tudo."',
     '"Eu peço ampliação há dezenove anos."',
-    '"Dezenove anos, três prefeitos, quatro diretores de Liga e dois presidentes de Comissão. Nenhum disse não."',
+    '"Dezenove anos, três prefeitos, quatro diretores da Fiscalização e dois presidentes de Comissão. Nenhum disse não."',
     '"Todos disseram depois."',
     'Ele volta pra você.',
     '"Eu não estou pedindo sua compreensão. Compreensão é barata e eu já recebi muita."',
@@ -2722,7 +2722,7 @@ c12_setor7:{
     d=>d.flags.entrou_no_setor7_de_dia ? '' : 'Exatamente como se faz com rebanho de Tauros, porque foi feito por quem faz com rebanho de Tauros, porque a firma que instalou é a mesma que instala em fazenda e o catálogo é o mesmo.',
     d=>c12_esvaziado(d) ? 'Está vazio.' : 'Está cheio.',
     d=>!c12_esvaziado(d) ? 'Você tenta contar e desiste na casa dos oitenta.'
-      : d.flags.barreira_funcionou ? 'Os oitenta e sete estão sob custódia da Liga, no quilômetro quatro. Aqui sobrou o cheiro e um bebedouro pingando.'
+      : d.flags.barreira_funcionou ? 'Os oitenta e sete estão sob custódia da Patrulha, no quilômetro quatro. Aqui sobrou o cheiro e um bebedouro pingando.'
       : 'Sobrou o cheiro e um bebedouro pingando.',
     d=>c12_esvaziado(d) ? '' : 'E o som — o som é a coisa.',
     d=>c12_esvaziado(d) ? '' : 'Não é pânico. Pânico você reconheceria.',
@@ -3095,7 +3095,7 @@ c12_fotografou_zona:{
   escolhas:[
     {texto:'Levar tudo pro Koga.', vai:'c12_koga', cond:d=>!!d.flags.achou_ginasio_fuchsia},
     {texto:'Levar à Dra. Cordell.', vai:'c12_entregar', cond:d=>!!d.flags.cartao_ivone},
-    {texto:'Levar à Liga.', vai:'c12_liga_zona', cond:d=>!Historia.jaAconteceu('c12_liga_zona')},
+    {texto:'Levar à Patrulha.', vai:'c12_liga_zona', cond:d=>!Historia.jaAconteceu('c12_liga_zona')},
     {texto:'Vender a rota à Terceira.', vai:'c12_vendeu_zona', cond:d=>(['mercenario','foragido'].includes(Historia.via())) && !Historia.jaAconteceu('c12_vendeu_zona')},
     {texto:'Voltar e abrir o curral mesmo assim.', vai:'c12_abriu_curral', cond:d=>(!c12_esvaziado(d)) && !Historia.jaAconteceu('c12_abriu_curral')}
   ]
@@ -3129,11 +3129,11 @@ c12_entregar:{
   texto:[
     'Você reúne tudo que tem numa mesa de pousada em Fuchsia e olha a pilha.',
     d=>{ const t = c12_pilha(d); return t.length ? 'Você tem: ' + c12_lista(t) + '.' : 'Você tem o que viu e mais nada, e o que você viu não é documento.'; },
-    d=>c12_pilha(d).length ? 'É mais material do que a Liga juntou sobre a Zona Safári em vinte anos, e você juntou em poucos dias porque perguntou às pessoas que estavam ali o tempo todo.' : ''
+    d=>c12_pilha(d).length ? 'É mais material do que o governo juntou sobre a Zona Safári em vinte anos, e você juntou em poucos dias porque perguntou às pessoas que estavam ali o tempo todo.' : ''
   ],
   escolhas:[
     {texto:'Levar à Dra. Cordell.', vai:'c12_ivone_zona', cond:d=>(!!d.flags.cartao_ivone) && !Historia.jaAconteceu('c12_ivone_zona')},
-    {texto:'Levar à Liga.', vai:'c12_liga_zona', cond:d=>!Historia.jaAconteceu('c12_liga_zona')},
+    {texto:'Levar à Patrulha.', vai:'c12_liga_zona', cond:d=>!Historia.jaAconteceu('c12_liga_zona')},
     {texto:'Levar à imprensa de Fuchsia.', vai:'c12_imprensa_zona', cond:d=>(c12_pilha(d).length > 0) && !Historia.jaAconteceu('c12_imprensa_zona')},
     {texto:'Entregar ao Koga, para a reunião do conselho.', vai:'c12_entregou_koga', cond:d=>(!!d.flags.conheceu_koga && c12_pilha(d).length > 0) && !Historia.jaAconteceu('c12_entregou_koga')},
     {texto:'Ir ao setor 7 à noite.', vai:'c12_noite_zona', repetivel:true},
@@ -3246,18 +3246,18 @@ c12_ivone_zona:{
     {texto:'Ficar até a reunião do conselho.', vai:'c12_ficou_pra_reuniao', cond:d=>(!!d.flags.koga_convoca || !!d.flags.koga_descredencia) && !Historia.jaAconteceu('c12_ficou_pra_reuniao')},
     {texto:'Ir ao setor 7 hoje à noite.', vai:'c12_noite_zona'},
     {texto:'Seguir viagem.', vai:'c12_fim'},
-    {texto:'Levar cópia à Liga também.', vai:'c12_liga_zona', cond:d=>!Historia.jaAconteceu('c12_liga_zona')}
+    {texto:'Levar cópia à Patrulha também.', vai:'c12_liga_zona', cond:d=>!Historia.jaAconteceu('c12_liga_zona')}
   ]
 },
 
 c12_liga_zona:{
-  falante:'a oficial da Liga',
+  falante:'a oficial de Fuchsia',
   vozes:['N','P','N','N','N','P','N'],
   texto:[
-    'O posto da Liga mais próximo fica em Fuchsia mesmo, numa sala do prédio da prefeitura, e é uma mesa e um armário.',
+    'O posto da Patrulha mais próximo fica em Fuchsia mesmo, numa sala do prédio da prefeitura, e é uma mesa e um armário.',
     'A oficial é uma mulher de uns trinta e cinco anos que atende a região inteira sozinha.',
     'Ela lê tudo com atenção real, faz anotação, pede para você repetir duas coisas, e no fim ela fala a verdade, que é o melhor e o pior que ela podia fazer:',
-    '"Zona Safári é área de Kanto com gestão por conselho autônomo. A Liga não tem competência aqui."',
+    '"Zona Safári é área de Kanto com gestão por conselho autônomo. A Patrulha não tem competência aqui."',
     '"Nenhuma?"',
     '"Nenhuma sobre manejo. Eu tenho competência sobre captura ilegal por particular, sobre maus-tratos em flagrante, e sobre trânsito de espécime sem guia."',
     'Ela bate na pilha.',
@@ -3268,9 +3268,9 @@ c12_liga_zona:{
     '"Na quinta de manhã eu não tenho nada marcado."'
   ],
   ef:{flag:['liga_vai_fiscalizar','liga_tem_provas'],
-      npc:{nome:'Oficial da Liga (Fuchsia)', opiniao:6, memoria:'Não tem competência sobre manejo, mas vai montar barreira aleatória na vicinal na quinta de manhã.'},
-      rep:{eixo:'bom',delta:4,motivo:'Achou a única competência que a Liga tinha e usou ela'},
-      registrar:'A Liga vai montar barreira de fiscalização de trânsito na vicinal, quinta de manhã.',
+      npc:{nome:'a oficial de Fuchsia', opiniao:6, memoria:'Não tem competência sobre manejo, mas vai montar barreira aleatória na vicinal na quinta de manhã.'},
+      rep:{eixo:'bom',delta:4,motivo:'Achou a única competência que a Patrulha tinha e usou ela'},
+      registrar:'A Patrulha vai montar barreira de fiscalização de trânsito na vicinal, quinta de manhã.',
       presagio:'A barreira é aleatória por definição. E ela escolheu a quinta depois de ler a sua pilha.'},
   escolhas:[
     {texto:'Ficar para ver a barreira na quinta.', vai:'c12_barreira', cond:d=>(!c12_esvaziado(d) && !d.flags.sabotou_o_curral) && !Historia.jaAconteceu('c12_barreira')},
@@ -3283,17 +3283,17 @@ c12_liga_zona:{
 c12_barreira:{
   texto:[
     'Quinta, sete e dez da manhã, quilômetro quatro da estrada vicinal.',
-    'Dois cones, uma viatura atravessada e uma oficial da Liga com prancheta.',
+    'Dois cones, uma viatura atravessada e uma oficial da Patrulha com prancheta.',
     'O caminhão baú encosta às sete e vinte e dois.',
     'Ela pede a guia de trânsito de fauna.',
     'O motorista entrega a nota fiscal.',
     'Ela devolve a nota fiscal e pede a guia de trânsito de fauna.',
     'O motorista entrega a autorização de manejo.',
-    'Ela devolve a autorização de manejo e pede a guia de trânsito de fauna, e explica, com paciência de professora, que guia de trânsito de fauna é documento individual por espécime, emitido pelo órgão ambiental, e que ele está transportando oitenta e sete espécimes vivos.',
+    'Ela devolve a autorização de manejo e pede a guia de trânsito de fauna, e explica, com paciência de professora, que guia de trânsito de fauna é documento individual por espécime, emitido pela Fiscalização de Kanto, e que ele está transportando oitenta e sete espécimes vivos.',
     'O motorista liga pra alguém.',
     'Às oito e cinquenta chega um advogado de Celadon de carro.',
     'Às onze e quarenta a carga é desembarcada ali mesmo, na beira da estrada, em recinto provisório, por decisão de fiscalização.',
-    'E às catorze horas, oitenta e sete Pokémon que iam pra Celadon estão numa área de pastagem cercada no quilômetro quatro, com água, sob custódia da Liga, porque ninguém tem guia pra nenhum deles.',
+    'E às catorze horas, oitenta e sete Pokémon que iam pra Celadon estão numa área de pastagem cercada no quilômetro quatro, com água, sob custódia da Patrulha, porque ninguém tem guia pra nenhum deles.',
     'Ninguém nunca teve guia pra nenhum deles.',
     'Quinze anos.'
   ],
@@ -3301,8 +3301,8 @@ c12_barreira:{
       rep:{eixo:'bom',delta:8,motivo:'Parou um embarque inteiro com um documento que ninguém nunca pediu'},
       moral:30, instabilidade:-1,
       executar:d=>{ Relogio.ateODia(3, 7); Relogio.ate(14);
-        return [{tipo:'liga', texto:'Oitenta e sete espécimes estão sob custódia da Liga por ausência de guia de trânsito.'}]; },
-      registrar:'A barreira da Liga parou o embarque: ninguém nunca emitiu guia de trânsito em quinze anos.',
+        return [{tipo:'lei', texto:'Oitenta e sete espécimes estão sob custódia da Patrulha por ausência de guia de trânsito.'}]; },
+      registrar:'A barreira da Patrulha parou o embarque: ninguém nunca emitiu guia de trânsito em quinze anos.',
       presagio:'Ninguém nunca pediu o documento. Quinze anos. Foi só pedir.'},
   escolhas:[
     {texto:'Seguir viagem.', vai:'c12_fim'},
@@ -3463,7 +3463,7 @@ c12_voltou_do_onibus:{
 c12_fim:{
   texto:[
     d=>{
-      if (d.flags.barreira_funcionou) return 'Oitenta e sete estão numa pastagem cercada no quilômetro quatro, sob custódia, porque uma oficial da Liga pediu um papel que ninguém tinha pedido em quinze anos.';
+      if (d.flags.barreira_funcionou) return 'Oitenta e sete estão numa pastagem cercada no quilômetro quatro, sob custódia, porque uma oficial da Patrulha pediu um papel que ninguém tinha pedido em quinze anos.';
       if (d.flags.soltou_organizado) return 'Oitenta e sete estão a quarenta e dois quilômetros dali, num ponto de soltura que só existe num mapa de mil novecentos e oitenta e nove, e nenhum vai voltar por fome.';
       if (d.flags.sabotou_o_curral) return 'O corredor de contenção do setor 7 está no chão em seções de tubo, e a licitação de reposição leva seis a nove semanas, e você comprou essas semanas com uma marreta.';
       if (d.flags.abriu_o_curral) return 'O curral do setor 7 está aberto e vazio, e você não sabe quantos vão voltar em três dias.';

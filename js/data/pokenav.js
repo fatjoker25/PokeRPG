@@ -114,7 +114,7 @@ const CONTATOS = [
     limite:99, esperaCap:2,
     texto:d=>[
       fala(vz().nome, `Eu fico aqui na frente de casa ${vz().fazer.replace(/^\S+/, m => m.replace(/r$/, 'ndo'))}, {menino|menina}. A frente de casa é onde a cidade fala.`),
-      d=>fala(vz().nome, 'Passou gente aqui perguntando de você. Não era da Liga. Eu não dei linha nenhuma.'),
+      d=>fala(vz().nome, 'Passou gente aqui perguntando de você. Não era da Patrulha. Eu não dei linha nenhuma.'),
       d=>fala(vz().nome, 'E olha: quando alguém te oferecer coisa demais de graça, conta quantas saídas tem a sala.')
     ],
     efeito:d=>{ Estado.subirStatus('percepcao'); return [{tipo:'rep', texto:'PERCEPÇÃO +1 — você passou a contar as saídas das salas.'}]; }
@@ -882,7 +882,7 @@ const CONTATOS = [
     entregue:[
       d=>{ const n = Estado.contagemDex().catalogados; return fala(d.jogador.nome, n === 60 ? 'Sessenta.' : `${n}.`); },
       fala('Ezra', 'Mentira.'),
-      d=>fala(d.jogador.nome, 'Confere no seu aparelho. A Liga sincroniza.'),
+      d=>fala(d.jogador.nome, 'Confere no seu aparelho. Ele sincroniza.'),
       'Você ouve ele digitando. Você ouve ele parando de digitar.',
       d=>{ const n = Estado.contagemDex().catalogados;
            return fala('Ezra', n === 60 ? 'Você tá em sessenta e eu tô em quarenta e três.' : `Você tá em ${n} e eu tô em quarenta e três.`); },

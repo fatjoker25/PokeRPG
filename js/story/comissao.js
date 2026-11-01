@@ -43,7 +43,7 @@ const COMISSAO = {
 const GENTE_COMISSAO = {
   presidente:{
     nome:'a Presidente', nomeReal:'Hester Colman', cargo:'Presidente do Conselho',
-    descricao:'Cinquenta e poucos anos, tailleur cinza, fala baixo e nunca repete uma frase. Foi diretora de fiscalização da Liga por nove anos antes de pedir demissão para presidir a Comissão.'
+    descricao:'Cinquenta e poucos anos, tailleur cinza, fala baixo e nunca repete uma frase. Foi diretora da Fiscalização por nove anos antes de pedir demissão para presidir a Comissão.'
   },
   curador:{
     nome:'Curador Fabre', cargo:'Curador',

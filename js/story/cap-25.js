@@ -15,8 +15,8 @@ function c25_abertura(d){
        conhece (o Blue, a mulher de crachá azul, a observadora da 704)
        tem o reconhecimento escrito nas cenas */
     d.reencontros = d.reencontros || {};
-    const conhecidos = ['Blue', 'a mulher de crachá azul', 'a conselheira da Liga'];
-    if (typeof Nomes !== 'undefined' && Nomes.comoChamar) conhecidos.push(Nomes.comoChamar('a conselheira da Liga'));
+    const conhecidos = ['Blue', 'a mulher de crachá azul', 'a conselheira regional'];
+    if (typeof Nomes !== 'undefined' && Nomes.comoChamar) conhecidos.push(Nomes.comoChamar('a conselheira regional'));
     for (const n of conhecidos) d.reencontros[n] = {cap:d.capitulo, cena:'c25'};
   }
   return id;
@@ -29,8 +29,8 @@ function c25_meses(d){
   const m = Math.round(dias / 30);
   return `${porExtenso(m)} meses`;
 }
-/* a observadora da Liga da sala 704: quem leu a plaquinha dela no 20 reconhece */
-function c25_conheceAMargot(){ return typeof Nomes !== 'undefined' && Nomes.sabe && Nomes.sabe('a conselheira da Liga'); }
+/* a observadora do governo na sala 704: quem leu a plaquinha dela no 20 reconhece */
+function c25_conheceAMargot(){ return typeof Nomes !== 'undefined' && Nomes.sabe && Nomes.sabe('a conselheira regional'); }
 
 /* ============================================================
    CAPÍTULO 25 — SEGUNDA, DEZ HORAS
@@ -51,10 +51,10 @@ c25_ab_cedo_demais:{
     'O prédio está aberto. A antessala está vazia. As seis cadeiras de plástico estão todas livres e você escolhe a do canto, de frente pra porta.',
     'A planta precisa de água e o relógio de parede atrasa, e você tem uma hora e quarenta e oito pra olhar pros dois.',
     'Às oito e quarenta chega a recepcionista, que te vê sentad{o|a} e não se assusta.',
-    d=>{ Nomes.apresentar('a recepcionista da Liga'); return 'Ela vira pra frente a plaquinha de acrílico da mesa, como faz toda manhã: LENA.'; },
-    fala('a recepcionista da Liga', 'Audiência das dez?'),
+    d=>{ Nomes.apresentar('a recepcionista do Conselho'); return 'Ela vira pra frente a plaquinha de acrílico da mesa, como faz toda manhã: LENA.'; },
+    fala('a recepcionista do Conselho', 'Audiência das dez?'),
     d=>fala(d.jogador.nome, 'Das dez.'),
-    fala('a recepcionista da Liga', 'Tem café no fim do corredor. A máquina engole moeda mas devolve se você bater do lado.'),
+    fala('a recepcionista do Conselho', 'Tem café no fim do corredor. A máquina engole moeda mas devolve se você bater do lado.'),
     'Ela liga o computador e o computador leva quatro minutos pra ligar, e nos quatro minutos ela fica olhando pra tela preta.',
     'Duas pessoas esperando uma máquina, cada uma na sua.'
   ],
@@ -72,19 +72,19 @@ c25_ab_perguntou_a_recepcionista:{
   texto:[
     d=>fala(d.jogador.nome, 'Quem convocou essa audiência?'),
     'Ela olha a tela, que agora já ligou.',
-    fala('a recepcionista da Liga', 'Aqui tá como "de ofício".'),
+    fala('a recepcionista do Conselho', 'Aqui tá como "de ofício".'),
     d=>fala(d.jogador.nome, 'O que é "de ofício"?'),
-    fala('a recepcionista da Liga', 'É quando não tem parte pedindo. A casa convoca sozinha.'),
+    fala('a recepcionista do Conselho', 'É quando não tem parte pedindo. A casa convoca sozinha.'),
     'Ela rola a tela.',
-    fala('a recepcionista da Liga', 'É raro. Eu tô aqui há onze anos e vi umas cinco.'),
+    fala('a recepcionista do Conselho', 'É raro. Eu tô aqui há onze anos e vi umas cinco.'),
     d=>fala(d.jogador.nome, 'E as outras quatro?'),
     'Ela para de rolar.',
-    fala('a recepcionista da Liga', 'Foram todas no mesmo ano. Oitenta e nove.'),
+    fala('a recepcionista do Conselho', 'Foram todas no mesmo ano. Oitenta e nove.'),
     'Ela olha pra você pela primeira vez desde que sentou.',
-    fala('a recepcionista da Liga', 'Eu era estagiária. Eu servi o café das quatro.', 'baixo')
+    fala('a recepcionista do Conselho', 'Eu era estagiária. Eu servi o café das quatro.', 'baixo')
   ],
   ef:{flag:'audiencia_de_oficio',
-      npc:{nome:'a recepcionista da Liga', opiniao:2, viuVoce:'Te contou que a última audiência de ofício foi em 1989.'},
+      npc:{nome:'a recepcionista do Conselho', opiniao:2, viuVoce:'Te contou que a última audiência de ofício foi em 1989.'},
       registrar:'A audiência foi convocada de ofício. As outras quatro da história da casa foram todas em 1989.'},
   escolhas:[
     {texto:'Perguntar o que se decidiu nas quatro de oitenta e nove.', vai:'c25_ab_as_quatro_de_oitenta_e_nove'},
@@ -95,16 +95,16 @@ c25_ab_perguntou_a_recepcionista:{
 
 c25_ab_as_quatro_de_oitenta_e_nove:{
   texto:[
-    fala('a recepcionista da Liga', 'Eu tinha dezenove anos. Eu servia café e recolhia xícara.'),
+    fala('a recepcionista do Conselho', 'Eu tinha dezenove anos. Eu servia café e recolhia xícara.'),
     'Ela junta as mãos no balcão.',
-    fala('a recepcionista da Liga', 'Eu não lembro do que decidiram. Eu lembro de como eles saíam.'),
+    fala('a recepcionista do Conselho', 'Eu não lembro do que decidiram. Eu lembro de como eles saíam.'),
     d=>fala(d.jogador.nome, 'Como?'),
-    fala('a recepcionista da Liga', 'Rápido. As quatro. Nenhum deles ficou conversando no corredor.'),
-    fala('a recepcionista da Liga', 'E em todas as quatro, quem saiu por último foi a mesma pessoa. Sozinha, sempre uns dez minutos depois.'),
+    fala('a recepcionista do Conselho', 'Rápido. As quatro. Nenhum deles ficou conversando no corredor.'),
+    fala('a recepcionista do Conselho', 'E em todas as quatro, quem saiu por último foi a mesma pessoa. Sozinha, sempre uns dez minutos depois.'),
     d=>fala(d.jogador.nome, 'Quem?'),
     'Ela balança a cabeça.',
-    fala('a recepcionista da Liga', 'Uma mulher. Eu tinha dezenove anos e ela era a única que agradecia o café.'),
-    fala('a recepcionista da Liga', 'É a única coisa que eu lembro dela e eu lembro há onze anos.')
+    fala('a recepcionista do Conselho', 'Uma mulher. Eu tinha dezenove anos e ela era a única que agradecia o café.'),
+    fala('a recepcionista do Conselho', 'É a única coisa que eu lembro dela e eu lembro há onze anos.')
   ],
   ef:{flag:'a_mulher_que_agradecia_o_cafe',
       registrar:'Nas quatro audiências de ofício de 1989, a última a sair foi sempre a mesma mulher.',
@@ -126,7 +126,7 @@ c25_ab_em_cima_da_hora:{
       : 'Um rapaz da sua idade está na terceira cadeira e levanta a sobrancelha pro seu estado.',
     'Uma mulher de uns cinquenta com uma pasta de vinil olha o relógio de parede, que atrasa, e depois o relógio de pulso dela, que não.',
     'Um homem de terno, com um crachá azul, não levanta os olhos do jornal.',
-    fala('a recepcionista da Liga', 'A audiência é às dez. Os senhores podem entrar às dez.'),
+    fala('a recepcionista do Conselho', 'A audiência é às dez. Os senhores podem entrar às dez.'),
     'São nove e cinquenta e oito. Você tem cento e vinte segundos pra parar de suar e não vai dar.'
   ],
   ef:{flag:['chegou_na_audiencia','chegou_em_cima_da_hora'], hp:-1,
@@ -248,7 +248,7 @@ c25_a_antessala:{
       ? 'Blue está na terceira cadeira, de braços cruzados, olhando o relógio que atrasa como se fosse culpa dele.'
       : 'Um rapaz da sua idade está na terceira cadeira, de braços cruzados, olhando o relógio que atrasa como se fosse culpa dele.',
     'Os outros dois você não conhece: uma mulher de uns cinquenta com uma pasta de vinil e um homem de terno com um crachá azul.',
-    fala('a recepcionista da Liga', 'A audiência é às dez. Os senhores podem entrar às dez.', null,
+    fala('a recepcionista do Conselho', 'A audiência é às dez. Os senhores podem entrar às dez.', null,
          'Ela fala isso sem tirar o olho da tela.')
   ],
   ef:{flag:['chegou_na_audiencia','viu_quem_esperava'],
@@ -423,11 +423,11 @@ c25_com_advogada:{
     'A sala tem uma mesa comprida e nove cadeiras.',
     'Cinco do lado de lá, quatro do lado de cá.',
     d=>c25_conheceAMargot()
-      ? `Do lado de lá tem a mulher de crachá azul, dois homens de terno, ${Nomes.comoChamar('a conselheira da Liga')} — a observadora da sala 704, com o mesmo broche da Liga no colarinho —, e uma cadeira vazia.`
-      : 'Do lado de lá tem a mulher de crachá azul, dois homens de terno, uma mulher de uns sessenta com um broche da Liga no colarinho, e uma cadeira vazia.',
+      ? `Do lado de lá tem a mulher de crachá azul, dois homens de terno, ${Nomes.comoChamar('a conselheira regional')} — a observadora da sala 704, com o mesmo broche do Conselho no colarinho —, e uma cadeira vazia.`
+      : 'Do lado de lá tem a mulher de crachá azul, dois homens de terno, uma mulher de uns sessenta com o broche do Conselho Regional no colarinho, e uma cadeira vazia.',
     d=>`Do lado de cá senta você, ${d.npcs['Blue'] ? 'o Blue' : 'o rapaz de braços cruzados'}, a advogada de ofício e outra cadeira vazia.`,
     fala('a mulher da pasta', 'Antes de qualquer coisa: consta em ata que os convocados constituíram defesa.'),
-    fala('a conselheira da Liga', 'Consta.', null, 'Ela escreve à mão, o que ninguém mais nessa mesa está fazendo.'),
+    fala('a conselheira regional', 'Consta.', null, 'Ela escreve à mão, o que ninguém mais nessa mesa está fazendo.'),
     fala('a mulher de crachá azul', 'Bom. Então a gente pode começar pelo começo, que é a parte que ninguém gosta.'),
     fala('a mulher de crachá azul', 'Nós três aqui desta mesa assinamos o convênio de 1995. Eu, ele, e a cadeira vazia.', 'frio')
   ],
@@ -446,12 +446,12 @@ c25_sozinho_na_sala:{
     d=>d.flags.catorze_gaiolas ? 'Na porta, uma plaquinha de acrílico: AUDIÊNCIA 2. A porta da 3, do lado, está fechada, e de lá não vem som nenhum.' : '',
     'A sala tem uma mesa comprida e nove cadeiras.',
     d=>c25_conheceAMargot()
-      ? `Cinco do lado de lá, quatro ocupadas e uma vazia. Numa delas, ${Nomes.comoChamar('a conselheira da Liga')}, a observadora da sala 704, com o broche da Liga.`
+      ? `Cinco do lado de lá, quatro ocupadas e uma vazia. Numa delas, ${Nomes.comoChamar('a conselheira regional')}, a observadora da sala 704, com o broche do Conselho.`
       : 'Cinco do lado de lá, quatro ocupadas e uma vazia.',
     d=>`Quatro do lado de cá: você e ${d.npcs['Blue'] ? 'o Blue' : 'o rapaz de braços cruzados'} ocupam duas.`,
     'Sem advogada, o lado de cá fica com duas cadeiras vazias, e duas cadeiras vazias numa mesa comprida são uma coisa que se sente no corpo.',
     fala('a mulher de crachá azul', 'Nós três desta mesa assinamos o convênio de 1995. Eu, ele, e a cadeira vazia.'),
-    fala('a mulher de crachá azul', 'Nós convocamos vocês porque vocês dois juntaram, em alguns meses, mais papel sobre isso do que a Liga juntou em cinco anos de convênio.', 'frio')
+    fala('a mulher de crachá azul', 'Nós convocamos vocês porque vocês dois juntaram, em alguns meses, mais papel sobre isso do que o governo juntou em cinco anos de convênio.', 'frio')
   ],
   ef:{flag:'a_audiencia_comecou',
       registrar:'Entrou sozinh{o|a} na sala. Três cadeiras vazias do seu lado.'},
@@ -467,8 +467,8 @@ c25_a_cadeira_vazia:{
   texto:[
     d=>fala(d.jogador.nome, 'De quem é a cadeira vazia?'),
     'A pergunta cai na mesa e fica lá por uns bons três segundos.',
-    fala('a conselheira da Liga', 'Do terceiro signatário.'),
-    fala('a conselheira da Liga', 'Ele foi notificado e não compareceu. É a décima primeira vez que ele não comparece.'),
+    fala('a conselheira regional', 'Do terceiro signatário.'),
+    fala('a conselheira regional', 'Ele foi notificado e não compareceu. É a décima primeira vez que ele não comparece.'),
     d=>d.flags.leu_o_verso_da_segunda_pagina
       ? fala(d.jogador.nome, 'Ele é o titular anterior do ginásio de Viridian.')
       : fala(d.jogador.nome, 'Ele tem nome?'),
@@ -492,13 +492,13 @@ c25_decima_segunda:{
   texto:[
     d=>fala(d.jogador.nome, 'O que acontece na décima segunda ausência?'),
     'Silêncio.',
-    fala('a conselheira da Liga', 'Nada.'),
-    fala('a conselheira da Liga', 'Não existe décima segunda consequência. Não existe décima primeira. Não existe nenhuma.'),
-    fala('a conselheira da Liga', 'Eu estou nesta comissão há três anos e o meu trabalho é escrever à mão que ele não veio.', 'baixo'),
+    fala('a conselheira regional', 'Nada.'),
+    fala('a conselheira regional', 'Não existe décima segunda consequência. Não existe décima primeira. Não existe nenhuma.'),
+    fala('a conselheira regional', 'Eu estou nesta comissão há três anos e o meu trabalho é escrever à mão que ele não veio.', 'baixo'),
     'Ela larga a caneta em cima da ata, o que é o gesto mais violento que aconteceu nesta sala até agora.'
   ],
   ef:{flag:'nao_existe_consequencia', moral:-3,
-      npc:{nome:'a conselheira da Liga', opiniao:3, memoria:'Largou a caneta na ata ao admitir que não existe consequência nenhuma.'},
+      npc:{nome:'a conselheira regional', opiniao:3, memoria:'Largou a caneta na ata ao admitir que não existe consequência nenhuma.'},
       rep:{eixo:'bom',delta:2,motivo:'Fez a pergunta que fez alguém largar a caneta', notorio:true},
       registrar:'Onze ausências e nenhuma consequência. A conselheira largou a caneta.'},
   escolhas:[
@@ -597,7 +597,7 @@ c25_pos_tudo_na_mesa:{
         : 'Em cima da mesa: tudo que você juntou desde que saiu de casa, e é mais do que cabe na mesa.';
     },
     'Leva onze minutos. Ninguém interrompe.',
-    'Quando você termina, a mulher do broche da Liga está escrevendo à mão numa velocidade completamente diferente da de antes.',
+    'Quando você termina, a mulher do broche está escrevendo à mão numa velocidade completamente diferente da de antes.',
     fala('a mulher de crachá azul', 'Tem coisa aí que eu não tinha.', 'baixo'),
     fala('a mulher de crachá azul', 'Tem três coisas aí que eu não tinha.')
   ],
@@ -633,30 +633,30 @@ c25_o_que_vao_fazer:{
   texto:[
     d=>fala(d.jogador.nome, 'O que vocês vão fazer com isso?'),
     fala('a mulher de crachá azul', 'Honestamente? Não sei.'),
-    fala('a mulher de crachá azul', 'A comissão tem poder de recomendar. Quem decide é a Liga, e a Liga é aquela senhora ali com o broche e mais catorze pessoas que não vieram.'),
-    fala('a conselheira da Liga', 'Eu vou levar.', null, 'Ela fala pela terceira vez em duas horas.'),
-    fala('a conselheira da Liga', 'Eu vou levar na reunião de quinta e vou ler em voz alta, do começo, inclusive a parte que fala de mim.'),
-    fala('a conselheira da Liga', 'Eu assinei o anexo técnico em 1996. Está na folha sete.', 'baixo'),
+    fala('a mulher de crachá azul', 'A comissão tem poder de recomendar. Quem decide é o Conselho Regional, e o Conselho é aquela senhora ali com o broche e mais catorze pessoas que não vieram.'),
+    fala('a conselheira regional', 'Eu vou levar.', null, 'Ela fala pela terceira vez em duas horas.'),
+    fala('a conselheira regional', 'Eu vou levar na reunião de quinta e vou ler em voz alta, do começo, inclusive a parte que fala de mim.'),
+    fala('a conselheira regional', 'Eu assinei o anexo técnico em 1996. Está na folha sete.', 'baixo'),
     'Ninguém sabia disso. Dá pra ver na cara dos dois homens de terno que ninguém sabia disso.'
   ],
   ef:{flag:'a_conselheira_assinou', moral:3,
-      npc:{nome:'a conselheira da Liga', opiniao:5, memoria:'Admitiu na mesa que assinou o anexo técnico em 1996.'},
+      npc:{nome:'a conselheira regional', opiniao:5, memoria:'Admitiu na mesa que assinou o anexo técnico em 1996.'},
       rep:{eixo:'bom',delta:2,motivo:'Estava na sala quando alguém se entregou sozinha'},
-      registrar:'A conselheira da Liga assinou o anexo técnico em 1996 e admitiu na mesa.'},
+      registrar:'A conselheira regional assinou o anexo técnico em 1996 e admitiu na mesa.'},
   escolhas:[{texto:'Sair da sala.', vai:'c25_saiu_da_sala'}]
 },
 
 c25_a_folha_na_mesa:{
   texto:[
     'A folha é curta. Tem um timbre de verdade, desta vez, e um número de protocolo.',
-    'É uma convocação para depor na reunião ordinária da Liga Pokémon, quinta-feira, com direito a voz e sem direito a voto.',
+    'É uma convocação para depor na reunião ordinária do Conselho Regional, quinta-feira, com direito a voz e sem direito a voto.',
     'Embaixo, no campo de qualificação do depoente, alguém já preencheu à máquina:',
     d=>`**QUALIFICAÇÃO: {TREINADOR LICENCIADO|TREINADORA LICENCIADA}, ${c21_insignias(d).toUpperCase()}, TESTEMUNHA PRESENCIAL.**`,
     'Eles preencheram antes de você entrar na sala.'
   ],
   ef:{flag:'recebeu_a_convocacao_da_liga',
-      itens:{'Convocação para a reunião da Liga':1},
-      registrar:'Recebeu convocação para depor na reunião da Liga, com voz e sem voto.'},
+      itens:{'Convocação para a reunião do Conselho':1},
+      registrar:'Recebeu convocação para depor na reunião do Conselho Regional, com voz e sem voto.'},
   escolhas:[
     {texto:'Assinar o recebimento.', vai:'c25_assinou_o_recebimento'},
     {texto:'Exigir direito a voto antes de assinar.', vai:'c25_exigiu_voto'},
@@ -671,14 +671,14 @@ c25_exigiu_voto:{
     d=>fala(d.jogador.nome, 'Então me faz {conselheiro|conselheira}.'),
     'A sala inteira para.',
     'Um dos homens de terno começa a rir e para na metade, porque percebe que você não está brincando, e percebe que a mulher do broche não está rindo.',
-    fala('a conselheira da Liga', 'O estatuto prevê cadeira de conselheiro extraordinário para o Campeão de Kanto.'),
-    fala('a conselheira da Liga', 'A cadeira está vaga há dois anos, porque o Campeão está vago há dois anos.', 'baixo'),
+    fala('a conselheira regional', 'O estatuto prevê cadeira de conselheiro extraordinário para o Campeão de Kanto.'),
+    fala('a conselheira regional', 'A cadeira está vaga há dois anos, porque o Campeão está vago há dois anos.', 'baixo'),
     'E aí ela olha pra você, e é a primeira vez que ela olha pra você nesta sala, e o olhar dura mais do que devia.'
   ],
   ef:{flag:'a_cadeira_de_conselheiro', moral:5,
       rep:{eixo:'bom',delta:3,motivo:'Exigiu voto numa sala onde ninguém exige nada', notorio:true},
-      npc:{nome:'a conselheira da Liga', opiniao:4, memoria:'Te contou que a cadeira de conselheiro extraordinário é do Campeão de Kanto.'},
-      registrar:'A cadeira de conselheiro extraordinário da Liga é do Campeão, e está vaga há dois anos.'},
+      npc:{nome:'a conselheira regional', opiniao:4, memoria:'Te contou que a cadeira de conselheiro extraordinário é do Campeão de Kanto.'},
+      registrar:'A cadeira de conselheiro extraordinário do Conselho Regional é do Campeão, e está vaga há dois anos.'},
   escolhas:[
     {texto:'Assinar o recebimento.', vai:'c25_assinou_o_recebimento'},
     {texto:'Não assinar nada e sair.', vai:'c25_saiu_com_tudo'}
@@ -694,7 +694,7 @@ c25_assinou_o_recebimento:{
          'Ela diz isso olhando pro lado de cá da mesa, e é a coisa mais parecida com bondade que saiu da boca dela hoje.')
   ],
   ef:{flag:'assinou_a_convocacao_da_liga', moral:3,
-      rep:{eixo:'bom',delta:2,motivo:'Assinou para depor na reunião da Liga'},
+      rep:{eixo:'bom',delta:2,motivo:'Assinou para depor na reunião do Conselho'},
       registrar:'Assinou o recebimento. Quinta, nove horas, no Planalto.'},
   escolhas:[{texto:'Sair da sala.', vai:'c25_saiu_da_sala'}]
 },
@@ -711,7 +711,7 @@ c25_nao_assinou:{
   ],
   ef:{flag:'recusou_a_convocacao_da_liga',
       rep:{eixo:'bom',delta:2,motivo:'Recusou uma convocação com o campo preenchido de antemão'},
-      registrar:'Recusou assinar a convocação da Liga. Tinham preenchido a sua qualificação antes.'},
+      registrar:'Recusou assinar a convocação do Conselho. Tinham preenchido a sua qualificação antes.'},
   escolhas:[{texto:'Sair da sala.', vai:'c25_saiu_da_sala'}]
 },
 

@@ -500,7 +500,7 @@ c8_lembra_do_terno:{
     d=>d.flags.sapato_da_caverna
       ? 'Você já ouviu isso, num chão de caverna, de um homem que limpava a mão no jeans.'
       : 'Você guarda isso sem saber por quê.',
-    '"E o crachá dele não era do porto e não era de Liga." Ele volta pra prancheta. "Tinha um desenho de balança."'
+    '"E o crachá dele não era do porto e não era da Patrulha." Ele volta pra prancheta. "Tinha um desenho de balança."'
   ],
   ef:{flag:['sapato_limpo','sapato_do_porto','brasao_no_porto'],
       registrar:'O homem de terno que libera carga retida no porto usa crachá com uma balança.',
@@ -2663,7 +2663,7 @@ c8_porque_me_conta:{
     'Ele olha em volta do salão inteiro, devagar, de um jeito que não é paranoia — é hábito.',
     '"Porque você não é ninguém."',
     'Ele não está sendo cruel.',
-    '"Se eu contar pra um jornalista, ele pede fonte e eu viro fonte. Se eu contar pra um advogado, ele quer documento e eu não tenho. Se eu contar pra Liga, eles anotam e arquivam."',
+    '"Se eu contar pra um jornalista, ele pede fonte e eu viro fonte. Se eu contar pra um advogado, ele quer documento e eu não tenho. Se eu contar pra polícia, eles anotam e arquivam."',
     'Ele encolhe os ombros.',
     '"Se eu contar pra você, não acontece nada. E eu preciso muito que isso saia da minha cabeça e vá pra cabeça de outra pessoa, porque faz um ano que eu carrego sozinho."'
   ],

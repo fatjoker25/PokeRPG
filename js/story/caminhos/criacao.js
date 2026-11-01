@@ -428,7 +428,7 @@ cn3_a_decisao:{
 cn3_seguir:{
   texto:[
     fala('a tratadora da Associação', 'Vai. O terreno não vai a lugar nenhum. Ninguém quer ele.', 'riso'),
-    'O ônibus da Liga pro Planalto sai às oito e quinze. Você ainda tem cheiro de ração no casaco.'
+    'O ônibus pro Planalto sai às oito e quinze. Você ainda tem cheiro de ração no casaco.'
   ],
   ef:{flag:'cm_criacao_seguiu_planalto', executar:() => { caminhoAs(8); }},
   fim:true, resumo:'O selo: uma assembleia de cadeira de plástico, um voto de mão levantada e um terreno que ninguém quer.'

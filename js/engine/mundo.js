@@ -672,10 +672,10 @@ function afazeresDoLocal(){
        {casa:quem ficou|quem ficou} esperando */
     if (Estado.j && L.nome === Estado.j.cidade)
       lista.push({lugar:true, id:'casa', titulo:'Sua casa'});
-    /* quem nasceu longe de Viridian pode pegar o ônibus da Liga uma vez */
+    /* quem nasceu longe de Viridian pode pegar o ônibus uma vez */
     if (Estado.j && L.nome === Estado.j.cidade && !['Pallet','Viridian'].includes(Estado.j.cidade)
         && !d.flags.onibus_da_liga && d.capitulo <= 3)
-      lista.push({lugar:true, id:'onibus', titulo:'Rodoviária — ônibus da Liga pra Viridian'});
+      lista.push({lugar:true, id:'onibus', titulo:'Rodoviária — ônibus pra Viridian'});
     /* credencial se pega no lugar dela, não no Centro */
     if (typeof Cargos !== 'undefined') Cargos.lugaresEm(id).forEach((x, i) =>
       lista.push({lugar:true, id:'posto_' + i, titulo:x.lugar}));

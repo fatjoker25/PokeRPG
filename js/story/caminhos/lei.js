@@ -577,7 +577,7 @@ cl3_o_forum:{
     d => fala('a delegada de Saffron', d.flags.cm_lei_mandado
       ? 'Saiu. O juiz assinou às oito da manhã, antes de alguém ligar pra ele. O nome no mandado é o da sala 704.'
       : d.flags.cm_lei_vazou
-        ? 'A matéria saiu, a Liga se mexeu, e o juiz achou mais seguro assinar do que não assinar. O nome no mandado é o da sala 704.'
+        ? 'A matéria saiu, o governo se mexeu, e o juiz achou mais seguro assinar do que não assinar. O nome no mandado é o da sala 704.'
         : d.flags.cm_lei_arquivou
           ? 'Você arquivou e eu desarquivei. Não pergunta como. Saiu o mandado, e o nome é o da sala 704.'
           : 'O inquérito da Estação 4 andou sem você, devagar, e chegou. Saiu o mandado, e o nome é o da sala 704.'),
@@ -742,7 +742,7 @@ cl3_seguir:{
   texto:[
     'Você deixa a sua parte assinada e a outra parte com a delegada.',
     fala('a delegada de Saffron', 'Vai. Processo anda sozinho, devagar. Gente é que não espera.'),
-    'Na rodoviária, o ônibus da Liga pro Planalto sai às oito e quinze.'
+    'Na rodoviária, o ônibus pro Planalto sai às oito e quinze.'
   ],
   ef:{flag:'cm_lei_seguiu_planalto'},
   fim:true, resumo:'O mandado da sala 704: uma busca, um acostamento e a meia-noite.'
@@ -764,7 +764,7 @@ cl3_final_farda:{
     d => d.flags.cm_lei_41 ? 'Você recorta e guarda no fundo da mochila, junto com o número de um lacre de plástico de uma madrugada na ciclovia.'
       : d.flags.cm_lei_placa ? 'Você recorta e guarda no fundo da mochila, junto com a placa de um baú, anotada numa madrugada na ciclovia.'
       : 'Você recorta e guarda no fundo da mochila, dobrado em quatro, junto com o mandado que venceu à meia-noite.',
-    d => `${({guarita:'A Patrulha de Kanto', policia:'A polícia de Kanto', auditoria:'A Auditoria da Liga', comissao:'A Comissão'})[casaNaLei()]} continua sendo o que era. Um pouco menos. Por dentro, que é o único lugar de onde dá pra mudar uma coisa sem quebrar ela inteira.`,
+    d => `${({guarita:'A Patrulha de Kanto', policia:'A polícia de Kanto', auditoria:'A Auditoria de Kanto', comissao:'A Comissão'})[casaNaLei()]} continua sendo o que era. Um pouco menos. Por dentro, que é o único lugar de onde dá pra mudar uma coisa sem quebrar ela inteira.`,
     d => `${({guarita:'Na guarita de Viridian', policia:'Na delegacia de Saffron', auditoria:'Na Auditoria', comissao:'Na sala dos peritos'})[casaNaLei()]}, todo dia às seis, alguém faz café ruim e pergunta se você quer. Você sempre quer.`
   ]}
 },

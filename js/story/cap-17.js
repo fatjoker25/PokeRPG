@@ -289,7 +289,7 @@ c17_ab_quem_pos:{
 
 c17_ab_o_oficial:{
   texto:[
-    'A convocação não chega em envelope. Chega na mão de um oficial da Liga, de uniforme cinza, que estava sentado na recepção do Centro de Viridian esperando você entrar.',
+    'A convocação não chega em envelope. Chega na mão de um oficial da Patrulha, de uniforme cinza, que estava sentado na recepção do Centro de Viridian esperando você entrar.',
     'Ele levanta quando te vê. Não bloqueia a porta. Fica em pé e espera você chegar até ele, o que é uma escolha, e você repara nela.',
     fala('o oficial de cinza', 'Eu tenho duas coisas pra te entregar, e a ordem importa.'),
     'A primeira é a convocação, igual à de todo mundo: papel de gramatura alta, timbre em relevo.',
@@ -303,7 +303,7 @@ c17_ab_o_oficial:{
     'Ele entrega as duas folhas juntas, uma em cima da outra, com a notificação por baixo.'
   ],
   ef:{flag:['convocado_com_notificacao','tem_a_convocacao'],
-      registrar:'A Liga entregou a convocação em mão, junto com uma notificação sobre a sua conduta.',
+      registrar:'A convocação veio na mão de um oficial da Patrulha, junto com uma notificação sobre a sua conduta.',
       presagio:'Ele pôs a notificação por baixo. Foi cuidado, não descuido.'},
   escolhas:[
     {texto:'Perguntar quem mandou ele te esperar aqui.', vai:'c17_ab_quem_mandou'},
@@ -323,13 +323,13 @@ c17_ab_quem_mandou:{
     c17_eu('Que conselho?'),
     fala('o oficial de cinza', 'Eu ia te perguntar a mesma coisa.'),
     'Ele dobra a ordem e guarda.',
-    fala('o oficial de cinza', 'Eu tenho dezenove anos de Liga. Ordem de serviço sempre teve nome de quem assina.'),
+    fala('o oficial de cinza', 'Eu tenho dezenove anos de Patrulha. Ordem de serviço sempre teve nome de quem assina.'),
     fala('o oficial de cinza', 'Nos últimos oito meses, quatro das minhas vieram assim.', 'baixo')
   ],
   ef:{flag:'ordens_assinadas_por_conselho',
       npc:{nome:'o oficial de cinza', opiniao:1, viuVoce:'Te mostrou a ordem de serviço assinada apenas por "conselho".'},
-      registrar:'Quatro ordens de serviço da Liga, em oito meses, vieram assinadas só como "CONSELHO".',
-      presagio:'Um solicitante sem nome que a própria Liga obedece.'},
+      registrar:'Quatro ordens de serviço da Patrulha, em oito meses, vieram assinadas só como "CONSELHO".',
+      presagio:'Um solicitante sem nome que a própria Patrulha obedece.'},
   escolhas:[
     {texto:'Ler o envelope inteiro.', vai:'c17_leu_o_envelope'},
     ...c17_sair()
@@ -1527,8 +1527,8 @@ c17_denunciou_van:{
     fala('a voz do rádio', 'Vai dar uma hora e quarenta.'),
     'Dá duas horas.',
     d=>d.flags.espantou_cacadores_mew
-      ? 'A caminhonete da Liga pega a van na saída da estrada de manutenção, antes do asfalto.'
-      : 'A caminhonete da Liga sobe a estrada de manutenção e para atrás da van.',
+      ? 'A caminhonete da Patrulha pega a van na saída da estrada de manutenção, antes do asfalto.'
+      : 'A caminhonete da Patrulha sobe a estrada de manutenção e para atrás da van.',
     d=>d.flags['achou_os_caçadores_de_mew']
       ? 'Os quatro são detidos por acampamento irregular em área restrita — não por caça, porque não dá pra provar caça.'
       : 'Dentro dela tem quatro pessoas, uma rede de pesca e uma caixa térmica, e as quatro são detidas por acampamento irregular em área restrita — não por caça, porque não dá pra provar caça.',
@@ -1542,7 +1542,7 @@ c17_denunciou_van:{
   ef:{rep:{eixo:'bom',delta:3,motivo:'Usou o sistema onde o sistema ainda funcionava'},
       flag:'liga_pegou_a_van',
       executar:()=>{ Relogio.avancar(2); return []; },
-      registrar:'A Liga deteve as quatro pessoas da van por acampamento irregular. A van ficou apreendida por três semanas.'},
+      registrar:'A Patrulha deteve as quatro pessoas da van por acampamento irregular. A van ficou apreendida por três semanas.'},
   escolhas:[
     {texto:d=>d.flags.teo_leva ? 'Seguir o Ezra pelo mato até a clareira.' : 'Voltar pra clareira.', vai:'c17_a_clareira'},
     {texto:'Subir até a boca do Caminho da Vitória.', vai:'c17_boca_do_caminho'},
@@ -1926,7 +1926,7 @@ c17_ficou_com_mew:{
       : c17_horasDoEzra() ? 'O Ezra desce do seu lado sem falar uma palavra, e em Viridian pega o primeiro ônibus de volta pra casa.'
       : 'O Ezra desce do seu lado sem falar uma palavra, e em Viridian vai embora a pé.',
     'Nos dias seguintes, nada acontece.',
-    'Nenhum lendário vem atrás de você. O clima não muda. A Liga não sabe. Ninguém te para na estrada.',
+    'Nenhum lendário vem atrás de você. O clima não muda. A Patrulha não fica sabendo. Ninguém te para na estrada.',
     'O que acontece é mais silencioso.',
     'Você começa a reparar em carros que passam devagar. Em gente que olha demais num Centro Pokémon. Em chamadas no PokéNav que caem no segundo toque.',
     'Numa loja de Viridian, o atendente demora a devolver o seu troco porque está olhando o seu cinto.',

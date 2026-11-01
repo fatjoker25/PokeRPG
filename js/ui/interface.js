@@ -473,7 +473,7 @@ const UI = {
         ['dado', 'Batalha no dado, nas regras do Pokérole 3.0']
       ].map(([ic, t]) => `<li>${svgIcone(ic)}<span>${e(t)}</span></li>`).join('');
       jornada = `<section class="tt-jornada nova tt-e" style="--i:0">
-          <div class="tt-j-novo"><b>Kanto, ano 2000</b><span>Você tem quinze anos, uma mochila da Liga e a estrada que sai da sua cidade.</span></div>
+          <div class="tt-j-novo"><b>Kanto, ano 2000</b><span>Você tem quinze anos, uma mochila nas costas e a estrada que sai da sua cidade.</span></div>
           <ul class="tt-j-sobre">${sobre}</ul>
           <button class="tt-btn tt-principal" onclick="Jogo.novo()">Começar</button>
         </section>`;
@@ -793,7 +793,7 @@ const UI = {
         <span class="cr-op-nome">${e(cid)}</span><span class="cr-op-nota">${e(CIDADES_DA_FICHA[cid] || '')}</span></button>`).join('');
     const natal = c.cidade === 'Pallet'
       ? 'Em Pallet, quem entrega o primeiro Pokémon é o Professor, na rua, na manhã em que você sai. A Pokédex sai da mão dele; o cartão de treinador, só no Centro de Viridian.'
-      : `Fora de Pallet, a perua do laboratório passa uma vez por mês com a caixa térmica. A Pokédex e o cartão saem do Centro Pokémon de ${c.cidade === 'Indigo' ? 'Viridian' : c.cidade}.${c.cidade !== 'Viridian' ? ' E da rodoviária sai o ônibus da Liga, uma vez, se você quiser.' : ''}`;
+      : `Fora de Pallet, a perua do laboratório passa uma vez por mês com a caixa térmica. A Pokédex e o cartão saem do Centro Pokémon de ${c.cidade === 'Indigo' ? 'Viridian' : c.cidade}.${c.cidade !== 'Viridian' ? ' E da rodoviária sai o ônibus pra Viridian, uma vez, se você quiser.' : ''}`;
     return this.crCabeca('Quem é você', 'Como te chamam, como você nasceu e de onde vem.') + `
       <div class="cr-campo"><label class="cr-rot" for="f-nome">Nome</label>
         <div class="cr-linha">
@@ -1573,7 +1573,7 @@ const UI = {
     if (m && typeof caminhoItem === 'function' && caminhoItem(m[1])) return imgItem(m[1]);
     if (/confia mais em você|te olha diferente/.test(t)) return svgIcone('doar');
     const POR_TIPO = {intuicao:'lua', item:'itens', rep:'liga', cura:'cura', dano:'alerta', perigo:'alerta', gameover:'alerta',
-      morte:'luto', pokemon:'bola', insignia:'ginasio', mundo:'mundo', liga:'liga', natureza:'olho',
+      morte:'luto', pokemon:'bola', insignia:'ginasio', mundo:'mundo', liga:'liga', lei:'patrulha', natureza:'olho',
       pokedex:'pokedex', evolucao:'brilho', rival:'lutar'};
     return svgIcone(POR_TIPO[a.tipo] || 'info');
   },
@@ -5279,7 +5279,7 @@ const UI = {
           + bloco('Kanto', dl([
             ['Clima', M(d.mundo.clima)],
             ['Instabilidade', `<span class="mono">${d.mundo.instabilidade}</span>`],
-            ['Avisos da Liga', `<span class="mono">${e(liga)}</span>`]
+            ['Avisos da Patrulha', `<span class="mono">${e(liga)}</span>`]
           ]));
       }
     };
@@ -6223,7 +6223,7 @@ const UI = {
       <div class="linha"><span class="k">A visita</span><span class="v">abre depois do capítulo 17, pra quem sabe onde a pessoa está, e só até a cadeira do Campeão · ir embora sem decidir deixa a porta pra outro dia; o que se decide nela não se desfaz</span></div>
       <div class="linha"><span class="k">Quem volta</span><span class="v">toma a porta de quem sentava nela, com o próprio time, 2 níveis acima do substituto na primeira e na segunda porta e 1 na terceira · com os três de volta, a ala não tem porta vaga pra cargo nenhum</span></div>
 
-      <h3>Torneio Aberto da Liga</h3>
+      <h3>Torneio Aberto</h3>
       <div class="linha"><span class="k">Quem entra</span><span class="v">qualquer um, a partir do capítulo 2 · inscrição de 2.000 ₽</span></div>
       <div class="linha"><span class="k">Chaveamento</span><span class="v">três rodadas, uma luta em cada, contra inscritos com nome e cidade · até dois são gente que já cruzou com você (veterano que você venceu também entra) · o Ezra, se entrar, fica com a final</span></div>
       <div class="linha"><span class="k">Nível</span><span class="v">o ás de cada inscrito fica 3 abaixo da média dos seus três mais fortes nas quartas, 2 abaixo na semifinal e no mesmo nível na final, mais o acerto de cada um (de −4 a +4, pra todos pesarem parecido) · o resto do time vai de 3 abaixo do ás até ele</span></div>
@@ -6308,7 +6308,7 @@ const UI = {
       <div class="linha"><span class="k">Insistir</span><span class="v">cada Pokébola que ele rompe conta · na terceira, quem estava neutro fica hostil</span></div>
       ${Object.values(Estado.dados.lendarios||{}).some(l=>l.quebrouBola) ? '<p class="sussurro">E existem coisas que simplesmente quebram a Pokébola no ar.</p>' : ''}
       <h3>Lendário no cinto</h3>
-      <div class="linha"><span class="k">Alguém viu</span><span class="v">${this.esc('seis vezes em dez, e sempre pra quem já é {Famoso|Famosa} ou {Temido|Temida} · quem era {Respeitado|Respeitada} ou mais vira notícia boa,')} o resto vira notícia ruim, e as duas andam muito · a Liga conversa na primeira vez, manda devolver na segunda e emite ordem de detenção na terceira</span></div>
+      <div class="linha"><span class="k">Alguém viu</span><span class="v">${this.esc('seis vezes em dez, e sempre pra quem já é {Famoso|Famosa} ou {Temido|Temida} · quem era {Respeitado|Respeitada} ou mais vira notícia boa,')} o resto vira notícia ruim, e as duas andam muito · a Patrulha conversa na primeira vez, manda devolver na segunda e emite ordem de detenção na terceira</span></div>
       <div class="linha"><span class="k">Ninguém viu</span><span class="v">a reputação espera · dois capítulos depois alguém fala, e aí conta</span></div>
       <div class="linha"><span class="k">Enquanto estiver preso</span><span class="v">a cada dois capítulos a reputação piora e Kanto fica mais instável · com a moral abaixo de 30 ele pode romper a Pokébola numa virada de capítulo e sumir, hostil</span></div>
       <div class="linha"><span class="k">O grupo dele</span><span class="v">preso um do trio lendário ou das três aves, os outros do grupo passam a caçar você · o grupo inteiro preso quebra o clima de Kanto</span></div>
@@ -6383,7 +6383,7 @@ const UI = {
       <div class="linha"><span class="k">Nasceu em Pallet</span><span class="v">o Professor traz a bandeja pra rua, na manhã em que você sai de casa</span></div>
       <div class="linha"><span class="k">Nasceu em qualquer outra</span><span class="v">a perua do laboratório passa uma vez por mês</span></div>
       <div class="linha"><span class="k">O que já morava na casa</span><span class="v">não passa por ninguém: já é seu</span></div>
-      <div class="linha"><span class="k">Onde a jornada começa</span><span class="v">na cidade em que você nasceu · quem nasceu longe de Pallet e Viridian tem, na rodoviária da cidade, o ônibus da Liga até Viridian, uma vez, se quiser · com licença a passagem é de graça, sem licença custa 500 ₽</span></div>
+      <div class="linha"><span class="k">Onde a jornada começa</span><span class="v">na cidade em que você nasceu · quem nasceu longe de Pallet e Viridian tem, na rodoviária da cidade, o ônibus até Viridian, uma vez, se quiser · com licença a passagem é de graça, sem licença custa 500 ₽</span></div>
       <div class="linha"><span class="k">Sua casa</span><span class="v">na sua cidade natal · cura o time inteiro e você, de graça, e a noite passa</span></div>
       <div class="linha"><span class="k">Pallet</span><span class="v">não tem Centro Pokémon nem loja · o cadastro de treinador é no laboratório do Professor</span></div>
       <p class="sussurro">Bulbasaur, Charmander e Squirtle saem de Pallet numa caixa térmica, uma fileira de cada. Quem assina a inscrição é quem é responsável por você; a espécie ninguém escolhe no papel. Se a manhã acabar sem você na frente da caixa, a Pokébola que o laboratório separou te espera no balcão do Centro (em Pallet, na porta de casa). Quem não aparece vira duas letras no caderno. A volta é mensal e a perua não deixa de passar por chuva.</p>

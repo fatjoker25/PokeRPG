@@ -1038,18 +1038,18 @@ c13_seguiu_ate_a_fabrica:{
     'Você pisa num pedaço de rede velha e ela faz barulho.',
     'Os dois viram.',
     'Ninguém grita. O Tobin põe a caixa térmica no chão, devagar, e fala com a voz de quem já esperou isso acontecer todo dia por dezenove semanas:',
-    fala('Tobin', 'Você é da Liga?'),
+    fala('Tobin', 'Você é da Patrulha?'),
     d=>fala(d.jogador.nome, 'Não.'),
     'Ele solta o ar.',
     fala('Tobin', 'Ainda bem.')
   ],
   ef:{flag:['conheceu_o_goro','achou_o_filhote','viu_o_segundo_articuno','entrou_na_fabrica'],
       executar:()=>{ Estado.marcar('c13_na_camara'); return []; },
-      npc:{nome:'Tobin', opiniao:1, memoria:'Te viu entrar atrás dele na fábrica de gelo e perguntou se você era da Liga.'},
+      npc:{nome:'Tobin', opiniao:1, memoria:'Te viu entrar atrás dele na fábrica de gelo e perguntou se você era da Patrulha.'},
       rep:{eixo:'bom',delta:2,motivo:'Seguiu quem sabia até a porta certa'},
       moral:-5, instabilidade:1,
       registrar:'Tobin, mestre do Estrela do Sul, cuida do Articuno ferido numa câmara fria da fábrica de gelo.',
-      presagio:'"Ainda bem." Ele tem medo da Liga, não de você.'},
+      presagio:'"Ainda bem." Ele tem medo da Patrulha, não de você.'},
   escolhas:[
     {texto:'"Foi você que pegou ele na rede."', vai:'c13_goro_conta', cond:d=>!!d.flags.sabe_do_estrela_do_sul},
     {texto:'"Por que você não devolveu?"', vai:'c13_porque_nao_devolveu'},
@@ -1133,7 +1133,7 @@ c13_esperou_na_camara:{
     'A porta da câmara fria abre e tem um homem de sessenta anos com uma caixa térmica e um homem de quarenta com uma sacola, e os dois ficam parados na porta olhando {um moleque|uma menina} sentad{o|a} na cadeira deles.',
     'Ninguém grita.',
     'O de sessenta anos põe a caixa térmica no chão e fala, com a voz de quem já esperou isso acontecer todo dia por dezenove semanas:',
-    d=>fala(c13_tobinRotulo(d), 'Você é da Liga?'),
+    d=>fala(c13_tobinRotulo(d), 'Você é da Patrulha?'),
     d=>fala(d.jogador.nome, 'Não.'),
     'Ele solta o ar.',
     d=>fala(c13_tobinRotulo(d), 'Ainda bem.'),
@@ -1148,10 +1148,10 @@ c13_esperou_na_camara:{
         c13_esperarBalde(d);
         return [];
       },
-      npc:{nome:'Tobin', opiniao:1, memoria:'Te encontrou sentado na cadeira dele, dentro da câmara fria, e perguntou se você era da Liga.'},
+      npc:{nome:'Tobin', opiniao:1, memoria:'Te encontrou sentado na cadeira dele, dentro da câmara fria, e perguntou se você era da Patrulha.'},
       rep:{eixo:'bom',delta:2,motivo:'Esperou sentad{o|a} em vez de levar embora'},
       registrar:'Tobin, mestre do Estrela do Sul, cuida do Articuno ferido há dezenove semanas.',
-      presagio:'"Ainda bem." Ele tem medo da Liga, não de você.'},
+      presagio:'"Ainda bem." Ele tem medo da Patrulha, não de você.'},
   escolhas:[
     {texto:'"Foi você que pegou ele na rede."', vai:'c13_goro_conta', cond:d=>!!d.flags.sabe_do_estrela_do_sul},
     {texto:'"Por que você não devolveu?"', vai:'c13_porque_nao_devolveu'},
@@ -1282,7 +1282,7 @@ c13_a_parte_dificil:{
       presagio:'Dezenove semanas. Ele levou ração marinha três vezes por semana durante dezenove semanas.'},
   escolhas:[
     {texto:'"Eu devolvo por você."', vai:'c13_eu_devolvo', cond:d=>!d.flags.goro_vai && !Historia.jaAconteceu('c13_eu_devolvo')},
-    {texto:'"A gente devolve junto e eu falo com a Liga."', vai:'c13_juntos', cond:d=>!d.flags.goro_vai},
+    {texto:'"A gente devolve junto e eu falo com a Patrulha."', vai:'c13_juntos', cond:d=>!d.flags.goro_vai},
     {texto:'"Me leva onde ele está."', vai:'c13_goro_leva', cond:d=>!c13_naCamara(d) && !c13_comVoce(d) && !Historia.jaAconteceu('c13_goro_leva')},
     {texto:'"Você sabe o que tá acontecendo no mar?"', vai:'c13_ele_sabe', cond:c13_nova('c13_ele_sabe')},
     {texto:'Buscar o Sr. Dane e ir os três.', vai:'c13_os_tres', cond:d=>!!d.flags.goro_vai && c13_sabeDoDane(d)}
@@ -1379,7 +1379,7 @@ c13_goro_leva:{
       presagio:'"Ô. Cheguei." Ele diz isso três vezes por semana há dezenove semanas.'},
   escolhas:[
     {texto:'"Eu devolvo ele por você."', vai:'c13_eu_devolvo', cond:d=>!d.flags.goro_vai && !Historia.jaAconteceu('c13_eu_devolvo')},
-    {texto:'"A gente vai junto e eu falo com a Liga."', vai:'c13_juntos', cond:d=>!d.flags.goro_vai},
+    {texto:'"A gente vai junto e eu falo com a Patrulha."', vai:'c13_juntos', cond:d=>!d.flags.goro_vai},
     {texto:'"Ele aguenta a travessia?"', vai:'c13_aguenta'},
     {texto:'Buscar o Sr. Dane e ir os três.', vai:'c13_os_tres', cond:d=>!!d.flags.goro_vai && c13_sabeDoDane(d)},
     ...c13_irAoDane('Ir falar com o Sr. Dane antes.')
@@ -1487,8 +1487,8 @@ c13_juntos:{
   texto:[
     '"A gente vai junto."',
     'Ele demora uns dez segundos.',
-    '"E a Liga?"',
-    '"A Liga vai saber de qualquer jeito, porque duzentos quilômetros de gelo não descongelam sem alguém perguntar por quê."',
+    '"E a Patrulha?"',
+    '"A Patrulha vai saber de qualquer jeito, porque duzentos quilômetros de gelo não descongelam sem alguém perguntar por quê."',
     '"E eu vou perder o barco."',
     '"Provavelmente."',
     d=>Historia.jaAconteceu('c13_ele_sabe') ? 'Ele ri, e dessa vez tem alegria no riso.' : 'Ele ri. É a primeira vez que ele ri.',
@@ -1857,7 +1857,7 @@ c13_levou_o_filhote:{
     'E enquanto você carrega ele pelos seiscentos metros até o cais, você passa por sete pessoas e nenhuma pergunta nada, porque na cidade toda o normal é ver alguém carregando caixa de gelo.',
     d=>c13_sabeDoTobin(d) ? 'A parte ruim vem depois: você não avisou o Tobin.' : 'A parte ruim vem depois: alguém cuidava dele, e você não sabe quem.',
     d=>`Você sabe quando é a próxima entrega, porque estava escrito na porta: ${c13_proximaEntrega(d)}${d.flags.viu_a_entrega_na_fabrica || d.flags.conheceu_o_goro ? ', às quatro e vinte' : ''}. Quem abrir aquela porta com dois baldes na mão acha a câmara vazia.`,
-    'E uma câmara vazia não diz se ele morreu, se levaram, ou se a Liga veio.'
+    'E uma câmara vazia não diz se ele morreu, se levaram, ou se a Patrulha veio.'
   ],
   ef:{flag:['levou_o_filhote','nao_avisou_o_goro'],
       rep:{eixo:'bom',delta:1,motivo:'Tirou o Articuno da câmara fria'},

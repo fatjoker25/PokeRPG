@@ -173,19 +173,19 @@ c6_ab_sumiu:{
 c6_ab_ficou:{
   texto:[
     'Você fica. Encosta na mureta da ponte e olha a água, que é o que todo mundo faz nessa ponte, e espera.',
-    'Doze minutos depois param dois oficiais da Liga. Não é a polícia da cidade: é a Liga, de uniforme cinza, e isso é pior e melhor ao mesmo tempo.',
+    'Doze minutos depois param dois oficiais da Patrulha. Não é a polícia da cidade: é a Patrulha de Kanto, de uniforme cinza, e isso é pior e melhor ao mesmo tempo.',
     fala('a oficial de cinza', 'Documento.'),
     'Você entrega. Ela lê com calma, compara com a folha do quadro, e a comparação não fecha do jeito que ela esperava que fechasse.',
     fala('a oficial de cinza', 'Esse retrato aqui é de semana passada e foi feito por alguém que te viu de longe.'),
-    fala('a oficial de cinza', 'A Liga tem três avisos abertos no seu nome. Aviso não é mandado. Você sabe a diferença?'),
+    fala('a oficial de cinza', 'A Patrulha tem três avisos abertos no seu nome. Aviso não é mandado. Você sabe a diferença?'),
     d=>fala(d.jogador.nome, 'Não.'),
     fala('a oficial de cinza', 'A diferença é que hoje eu te devolvo o documento.'),
     'Ela devolve. O parceiro dela anota alguma coisa numa prancheta e o ato de anotar demora mais do que precisaria.',
     fala('a oficial de cinza', 'Quarto aviso é mandado. Boa estadia em Cerulean.', 'frio')
   ],
   ef:{flag:'tres_avisos_da_liga',
-      executar:d=>{ d.liga.avisos = Math.max(d.liga.avisos, 3); return [{tipo:'liga', texto:'A Liga registrou três avisos abertos no seu nome.'}]; },
-      registrar:'Dois oficiais da Liga te pararam na ponte sul. Três avisos abertos; o quarto vira mandado.',
+      executar:d=>{ d.liga.avisos = Math.max(d.liga.avisos, 3); return [{tipo:'lei', texto:'A Patrulha registrou três avisos abertos no seu nome.'}]; },
+      registrar:'Dois oficiais da Patrulha te pararam na ponte sul. Três avisos abertos; o quarto vira mandado.',
       presagio:'Ela devolveu o documento hoje. Ela disse "hoje" de propósito.'},
   escolhas:[
     {texto:'Seguir pra cidade com a conversa na cabeça.', vai:'c6_chegada'}
@@ -204,7 +204,7 @@ c6_ab_de_cracha:{
     fala('o rapaz do posto', 'Então, já que você tá aqui e é do serviço — eu posso te perguntar uma coisa fora do protocolo?'),
     d=>fala(d.jogador.nome, 'Pode.'),
     fala('o rapaz do posto', 'Quem é que fiscaliza venda de Pokémon nessa cidade?', 'baixo'),
-    fala('o rapaz do posto', 'Eu perguntei pro meu chefe. Ele falou que é a Liga. Eu liguei pra Liga. A Liga falou que é a prefeitura.')
+    fala('o rapaz do posto', 'Eu perguntei pro meu chefe. Ele falou que é a Patrulha. Eu liguei pra Patrulha. A Patrulha falou que é a prefeitura.')
   ],
   ef:{flag:'ninguem_fiscaliza_a_venda',
       registrar:'Nenhum órgão assume a fiscalização de venda de Pokémon em Cerulean.',
@@ -862,7 +862,7 @@ c6_papeis:{
   vozes:['E','N','N'],
   texto:[
     'Os papéis são reais. É isso que estraga tudo.',
-    'Carimbo da Liga, registro numérico, campo de espécie, campo de nível, campo de procedência. Tudo preenchido a máquina.',
+    'Carimbo do registro de Kanto, número, campo de espécie, campo de nível, campo de procedência. Tudo preenchido a máquina.',
     'Na quarta folha, o campo de origem: "Transferência voluntária — treinador desistente."',
     'Você olha a caixa de veludo de novo. Seis Pokébolas. Seis treinadores que desistiram.',
     '"O negócio não é o Pokémon", ele diz, acompanhando seu olhar com uma precisão desconfortável. "O negócio é que tem muita gente saindo de casa aos quinze e voltando aos dezesseis."',
@@ -948,7 +948,7 @@ c6_legal:{
   texto:[
     '"Isso não é ilegal?"',
     'Ele acha graça de verdade — não é deboche, é alívio de ouvir uma pergunta fácil.',
-    '"Vender é. Dá cadeia." Ele bate no veludo. "Eu não vendo. Eu faço transferência voluntária, que é legal, e cobro a papelada, que também é. E a Liga cobra imposto da papelada. Tem formulário e tudo. Tem campo pra alíquota."',
+    '"Vender é. Dá cadeia." Ele bate no veludo. "Eu não vendo. Eu faço transferência voluntária, que é legal, e cobro a papelada, que também é. E o governo cobra imposto da papelada. Tem formulário e tudo. Tem campo pra alíquota."',
     'Ele tira uma nota fiscal do bolso e balança.',
     '"Ilegal é o que acontece quando não tem banca. Aí o Pokémon vai pro porão de alguém em Celadon e ninguém carimba nada e ninguém sabe quantos foram."',
     'Ele não está errado. É por isso que incomoda.'
@@ -2309,7 +2309,7 @@ c6_veneno:{
     {texto:'Derrubar as tigelas. Todas.', vai:'c6_tigelas'},
     {texto:'"Me conta o que aconteceu com a sua filha."', vai:'c6_a_filha'},
     {texto:'Batalhar com ele.', vai:'c6_luta_veneno'},
-    {texto:'Chamar a Liga e ficar de olho até chegarem.', vai:'c6_liga_veneno'}
+    {texto:'Chamar a Patrulha e ficar de olho até chegarem.', vai:'c6_liga_veneno'}
   ]
 },
 
@@ -2356,7 +2356,7 @@ c6_resolveu:{
     {texto:'"Então para."', vai:'c6_entao_para'},
     {texto:'"Deixa eu tentar de outro jeito."', vai:'c6_outro_jeito'},
     {texto:'Derrubar as tigelas.', vai:'c6_tigelas'},
-    {texto:'Chamar a Liga.', vai:'c6_liga_veneno'}
+    {texto:'Chamar a Patrulha.', vai:'c6_liga_veneno'}
   ]
 },
 
@@ -2379,7 +2379,7 @@ c6_entao_para:{
     {texto:'Virar todas.', vai:'c6_tigelas', ef:{flag:'virou_a_pedido'}},
     {texto:'"Vira você."', vai:'c6_vira_voce'},
     {texto:'"A gente vira junto."', vai:'c6_juntos'},
-    {texto:'Chamar a Liga em vez disso.', vai:'c6_liga_veneno'}
+    {texto:'Chamar a Patrulha em vez disso.', vai:'c6_liga_veneno'}
   ]
 },
 
@@ -2570,7 +2570,7 @@ c6_outro_jeito:{
   escolhas:[
     {texto:'Ir até o fim. Pegar quantos der.', vai:'c6_tentou_tirar'},
     {texto:'Desistir na segunda hora e virar as tigelas.', vai:'c6_tigelas'},
-    {texto:'Desistir e chamar a Liga.', vai:'c6_liga_veneno'},
+    {texto:'Desistir e chamar a Patrulha.', vai:'c6_liga_veneno'},
     {texto:'Desistir e ir procurar a Misty.', vai:'c6_misty_tigelas'}
   ]
 },
@@ -2704,7 +2704,7 @@ c6_vinganca:{
       registrar:'Agrediu o homem das tigelas. Três pessoas viram. A filha dele estava em casa.',
       executar:d=>{
         Estado.dados.liga.avisos++;
-        return [{tipo:'liga', texto:'Um relatório com o seu nome entrou no sistema da Liga Pokémon hoje.'}];
+        return [{tipo:'lei', texto:'Um relatório com o seu nome entrou no sistema da Patrulha hoje.'}];
       },
       presagio:'Existe agora, em algum arquivo, uma primeira linha sobre você. A segunda linha é mais fácil de escrever que a primeira.'},
   escolhas:[
@@ -2760,7 +2760,7 @@ c6_misty_ninguem:{
     'Misty ri um riso curto e sem graça nenhuma.',
     '"Todo mundo faz alguma coisa." Ela tira o pé da água. "É esse o problema."',
     'Ela levanta e começa a enrolar um cabo de mangueira, porque ela é do tipo que não consegue conversar parada.',
-    '"A prefeitura faz ofício. A Liga designa oficial. Eu peço providência. O pescador acompanha o processo. A doutora do museu vai na câmara municipal."',
+    '"A prefeitura faz ofício. A Patrulha designa oficial. Eu peço providência. O pescador acompanha o processo. A doutora do museu vai na câmara municipal."',
     'O cabo já está enrolado e ela continua enrolando.',
     '"Todo mundo faz a parte que cabe no cargo de cada um. E a soma das partes dá zero, porque ninguém tem o cargo de juntar as partes."'
   ],
@@ -2944,7 +2944,7 @@ c6_recuou_do_desafio:{
   ef:{flag:'recuou_do_desafio'},
   escolhas:[
     {texto:'Voltar atrás e ir falar com a menina.', vai:'c6_a_menina'},
-    {texto:'Chamar a Liga.', vai:'c6_liga_veneno'},
+    {texto:'Chamar a Patrulha.', vai:'c6_liga_veneno'},
     {texto:'Ir embora.', vai:'c6_fim'}
   ]
 },
@@ -2962,13 +2962,13 @@ c6_perdeu_veneno:{
     {texto:'Virar as tigelas mesmo assim.', vai:'c6_tigelas'},
     {texto:'Ir atrás dele e perguntar da filha.', vai:'c6_a_filha'},
     {texto:'Ir atrás dele e resolver isso do jeito feio.', vai:'c6_vinganca'},
-    {texto:'Chamar a Liga.', vai:'c6_liga_veneno'},
+    {texto:'Chamar a Patrulha.', vai:'c6_liga_veneno'},
     {texto:'Seguir.', vai:'c6_fim'}
   ]
 },
 
 c6_liga_veneno:{
-  falante:'o oficial da Liga',
+  falante:'o oficial da Rota 25',
   vozes:['N'],
   texto:[
     'Você liga e fica.',

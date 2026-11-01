@@ -796,7 +796,7 @@ c5_ligou_antes:{
     'Quando você acaba, o silêncio dela dura quatro segundos e é um silêncio de quem está escrevendo.',
     '"Você tá do lado de fora?"',
     '"Tô."',
-    '"Fica do lado de fora." Ela fala devagar, com muito cuidado de ser entendida. "Eu chego em seis horas. Eu levo gente com câmera. Se for pra Liga eles somem antes; com câmera eles não somem."'
+    '"Fica do lado de fora." Ela fala devagar, com muito cuidado de ser entendida. "Eu chego em seis horas. Eu levo gente com câmera. Se for pra Patrulha eles somem antes; com câmera eles não somem."'
   ],
   ef:{flag:'ligou_pra_ivone', registrar:'Ligou para a Dra. Cordell da entrada do Monte da Lua.',
       npc:{nome:'Dra. Cordell', opiniao:4, memoria:'Você ligou pra ela do Monte da Lua, como combinado.'}},
@@ -1487,7 +1487,7 @@ c5_virar_alguem:{
     '"Com o quê? Com insígnia?"',
     '"Com insígnia."',
     'Ela ri. Depois para de rir, porque a ideia é menos idiota do que ela gostaria.',
-    '"Oito insígnias te dão credencial de Liga." Ela pensa em voz alta. "Credencial de Liga te dá legitimação pra pedir vista de processo administrativo. Você virava parte interessada."',
+    '"Oito insígnias te dão credencial de Liga." Ela pensa em voz alta. "E credencial te dá legitimação pra pedir vista de processo administrativo. Você virava parte interessada."',
     'Ela bate na pasta com dois dedos.',
     '"É o plano mais lento e mais bobo que eu já ouvi. E é o único que eu ouvi."'
   ],
@@ -1673,7 +1673,7 @@ c5_nome_do_terno:{
     'Otto ri sem nenhum humor.',
     '"Eu não sei o nome dele, {moleque|moleca}. Ele não se apresenta."',
     'Ele pensa um pouco.',
-    '"Ele usa um crachá. Não é crachá de Liga, é outro. Tem uma balança desenhada." Ele faz o gesto no ar. "E embaixo tem escrito uma coisa em latim ou sei lá o quê."',
+    '"Ele usa um crachá. Não é da Patrulha, é outro. Tem uma balança desenhada." Ele faz o gesto no ar. "E embaixo tem escrito uma coisa em latim ou sei lá o quê."',
     '"O que tá escrito?"',
     '"Sei lá, eu não sei latim." Ele dá de ombros. "Tem uma palavra que parece custódia. Custodiam, alguma coisa assim."'
   ],
@@ -1855,7 +1855,7 @@ c5_ligar:{
     'Quatrocentos metros de caverna e mais quatrocentos de subida até o vale abrir e o telefone pegar.',
     'A Dra. Cordell atende no segundo toque, como quem dorme com o telefone na mão.',
     'Você fala. Ela não interrompe uma vez.',
-    '"Fica longe," ela diz. "Eu levo gente de imprensa. Com a Liga eles somem antes; com câmera eles não somem."',
+    '"Fica longe," ela diz. "Eu levo gente de imprensa. Com a Patrulha eles somem antes; com câmera eles não somem."',
     'Ela chega em seis horas com quatro pessoas, dois carros e uma câmera de ombro. Você fica na entrada da caverna esse tempo todo, porque alguém tem que ficar olhando a boca do buraco.'
   ],
   ef:{rep:{eixo:'bom',delta:2,motivo:'Expôs o tráfico do Monte da Lua à imprensa'},

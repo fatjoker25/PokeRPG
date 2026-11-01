@@ -31,8 +31,8 @@ function c26_oferta(d){
 }
 /* quantos titulares a visita trouxe de volta (titulares.js) */
 function c26_titularesDeVolta(d){ return typeof Titulares !== 'undefined' ? Titulares.quantos(d) : 0; }
-const C26_CARGO = {elite:'Membro da Elite 4', acordo:'{Assessor|Assessora} da Liga',
-                   pesquisa:'{Pesquisador|Pesquisadora} da Liga', instrutor:'{Instrutor|Instrutora} do Planalto'};
+const C26_CARGO = {elite:'Membro da Elite 4', acordo:'{Assessor|Assessora} do Planalto',
+                   pesquisa:'{Pesquisador|Pesquisadora} do Planalto', instrutor:'{Instrutor|Instrutora} do Planalto'};
 
 /* ============================================================
    CAPÍTULO 26 — O QUE TE OFERECEM
@@ -97,7 +97,7 @@ c26_ab_quantos:{
 c26_ab_a_carona:{
   texto:[
     'Você sobe a estrada do Planalto num carro oficial, o que não estava no seu plano e não foi sua escolha.',
-    'Ele parou do seu lado a quatro quilômetros da curva final, com uma placa de Liga no para-brisa, e a mulher do volante abriu a janela e falou o seu nome.',
+    'Ele parou do seu lado a quatro quilômetros da curva final, com o adesivo do Planalto no para-brisa, e a mulher do volante abriu a janela e falou o seu nome.',
     'Você entra porque recusar teria sido pior e porque faltavam quatro quilômetros de subida.',
     'Ela dirige sem falar nada por dois quilômetros. Aí:',
     fala('a mulher do volante', 'Eu não vou te perguntar nada e você não vai me contar nada.'),
@@ -1118,7 +1118,7 @@ c21_ofertas:{
   ef:{executar:d=>{ if (!d.flags.c26_oferta) d.flags.c26_oferta = c26_oferta(d); }},
   escolhas:[
     {texto:'Ler as duas folhas antes de qualquer coisa.', vai:'c21_leu_as_folhas'},
-    {texto:'Aceitar o cargo formal da Liga.', vai:'c21_cargo'},
+    {texto:'Aceitar o cargo formal.', vai:'c21_cargo'},
     {texto:'Aceitar o contrato de campo.', vai:'c21_contrato'},
     {texto:'"Me fala do norte."', vai:'c21_norte_conversa'},
     {texto:'Recusar as três e enfrentar a Elite 4.', vai:'c21_desafio_elite'}
@@ -1171,7 +1171,7 @@ c21_mudem_o_contrato:{
     d=>fala(d.jogador.nome, 'Então mudem o contrato.'),
     'A Conselheira Thistle olha o Sr. Waldo. O Sr. Waldo olha o teto por uns dois segundos, fazendo uma conta.',
     fala('Sr. Waldo', 'Dá.', null, 'Ele volta a olhar a mesa.'),
-    fala('Sr. Waldo', 'Contratação como servidor temporário, prazo determinado, com regime próprio. Leva dezessete dias e passa por três assinaturas, e uma delas é do presidente da Liga.'),
+    fala('Sr. Waldo', 'Contratação temporária, prazo determinado, com regime próprio. Leva dezessete dias e passa por três assinaturas, e uma delas é do presidente da Liga.'),
     d=>fala(d.jogador.nome, 'E por que não foi feito nas outras quatro vezes?'),
     fala('Sr. Waldo', 'Porque ninguém pediu.', null, 'Ele abre a pasta e começa a escrever.'),
     fala('Sr. Waldo', 'E porque eu não propus, e isso é meu, e eu vou propor agora.')
@@ -1179,7 +1179,7 @@ c21_mudem_o_contrato:{
   ef:{flag:['mudou_o_contrato'],
       rep:{eixo:'bom',delta:3,motivo:'Fez a Liga mudar o vínculo antes de aceitar qualquer coisa'},
       npc:{nome:'Sr. Waldo', opiniao:5, memoria:'Vai propor contratação com regime próprio por sua causa.'},
-      registrar:'A Liga vai contratar como servidor temporário, com regime próprio. Ninguém tinha pedido.'},
+      registrar:'A Liga vai contratar por prazo determinado, com regime próprio. Ninguém tinha pedido.'},
   escolhas:[
     {texto:'"Quem teve esse cargo antes de mim?"', vai:'c21_quem_teve_antes'},
     {texto:'Aceitar o cargo formal.', vai:'c21_cargo'},
@@ -1319,7 +1319,7 @@ c21_contrato:{
       : 'A cláusula de risco está lá, na mesma linha de sempre, e você assinou em cima dela.'
   ],
   ef:{flag:'contrato_de_campo',
-      executar:d=>{ d.jogador.cargo='Agente de campo da Liga'; return []; },
+      executar:d=>{ d.jogador.cargo='Agente de campo'; return []; },
       itens:{'Ultra Ball':4,'Hyper Potion':4,'Full Heal':3}, dinheiro:12000,
       rep:{eixo:'bom',delta:1,motivo:'Assinou contrato de campo com a Liga'},
       registrar:'Assinou contrato de campo com a Liga.'},

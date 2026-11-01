@@ -621,7 +621,7 @@ cr3_o_caixa:{
 cr3_seguir:{
   texto:[
     'Às dez, a Terceira sai pelo portão azul com a mala, a pé, e não olha pra trás. Na esquina, ela para e acende um cigarro e aí sim olha, uma vez.',
-    'Você pega o ônibus da Liga pro Planalto às oito e quinze do dia seguinte.'
+    'Você pega o ônibus pro Planalto às oito e quinze do dia seguinte.'
   ],
   ef:{flag:'cm_rocket_seguiu_planalto', executar:() => { Relogio.amanhaAs(8); }},
   fim:true, resumo:'A cadeira do primeiro: uma mala, um caderno azul e um quarto até a meia-noite.'

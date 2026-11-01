@@ -513,7 +513,7 @@ c23_fim_assumiu:{
     'O arquivo do segundo andar continua lá.',
     'Você não entrega ele à imprensa, não entrega à Liga e não queima. Você faz outra coisa, que leva onze anos e que ninguém repara acontecendo.',
     'Você organiza.',
-    'Cataloga caixa por caixa, cruza com o que você juntou pelo caminho, e abre requerimento atrás de requerimento — porque titular de ginásio é autoridade da Liga, e autoridade da Liga tem legitimidade pra requerer, e requerimento de autoridade é respondido em quinze dias.',
+    'Cataloga caixa por caixa, cruza com o que você juntou pelo caminho, e abre requerimento atrás de requerimento — porque titular de ginásio tem legitimidade pra requerer ao governo, e requerimento de titular é respondido em quinze dias.',
     'Onze anos de requerimentos de quinze dias.',
     'Quando a junta de inquérito é instalada, ela não precisa investigar nada: ela recebe do titular do ginásio de Viridian um índice remissivo de oitocentas e quarenta páginas, com referência cruzada e cópia autenticada de tudo.',
     'O relator da junta pergunta, na primeira sessão, há quanto tempo você vinha preparando aquilo.',
@@ -734,7 +734,7 @@ c25_fim_recusou_o_termo:{
    8. CAP 26 — O QUE TE OFERECEM
    No Planalto te oferecem coisas. Dá pra aceitar, e aceitar é
    um fim. A oferta é antes da reunião das catorze, numa sala do
-   segundo andar, e quem oferece é a conselheira da Liga que senta
+   segundo andar, e quem oferece é a conselheira regional que senta
    no conselho da Comissão (a do 20).
    ------------------------------------------------------------ */
 enxertarDesfecho(26, {
@@ -743,18 +743,18 @@ c26_aceitou_o_posto:{
   texto:[
     'A sala dois fica no segundo andar: mesa comprida, oito cadeiras e uma janela com o vidro trincado remendado com fita.',
     d=>d.flags.viu_a_liga_na_mesa || d.flags.conselheira_confrontada
-      ? 'Sentadas, quatro pessoas. Uma delas você já viu numa mesa maior, com o mesmo broche: a observadora da Liga no conselho da Comissão. Outra tem o crachá da Comissão, e as outras duas você não consegue classificar, o que provavelmente é o ponto.'
-      : 'Sentadas, quatro pessoas. Uma tem o broche da Liga, outra tem o crachá da Comissão, e as outras duas você não consegue classificar, o que provavelmente é o ponto.',
-    fala('a conselheira da Liga', 'Vamos ser diretos, porque {o senhor|a senhora} já perdeu bastante tempo com gente que não foi direta.'),
+      ? 'Sentadas, quatro pessoas. Uma delas você já viu numa mesa maior, com o mesmo broche: a observadora do governo no conselho da Comissão. Outra tem o crachá da Comissão, e as outras duas você não consegue classificar, o que provavelmente é o ponto.'
+      : 'Sentadas, quatro pessoas. Uma tem o broche do Conselho Regional, outra tem o crachá da Comissão, e as outras duas você não consegue classificar, o que provavelmente é o ponto.',
+    fala('a conselheira regional', 'Vamos ser diretos, porque {o senhor|a senhora} já perdeu bastante tempo com gente que não foi direta.'),
     'Ela empurra uma pasta fina pela mesa.',
-    fala('a conselheira da Liga', 'Coordenação de campo. Cargo novo, criado no mês passado, com dotação orçamentária própria.'),
+    fala('a conselheira regional', 'Coordenação de campo. Cargo novo, criado no mês passado, com dotação orçamentária própria.'),
     d=>fala(d.jogador.nome, 'Criado no mês passado.'),
-    fala('a conselheira da Liga', 'Criado no mês passado.'),
+    fala('a conselheira regional', 'Criado no mês passado.'),
     'Ela não finge que isso é coincidência, o que é quase um elogio.',
-    fala('a conselheira da Liga', '{O senhor|A senhora} teria acesso a todas as estações, a todos os manifestos e a todos os relatórios de manejo de Kanto. Legalmente. Com crachá.'),
-    fala('a conselheira da Liga', 'E um dever funcional de sigilo, que é a parte que {o senhor|a senhora} está pensando agora.'),
+    fala('a conselheira regional', '{O senhor|A senhora} teria acesso a todas as estações, a todos os manifestos e a todos os relatórios de manejo de Kanto. Legalmente. Com crachá.'),
+    fala('a conselheira regional', 'E um dever funcional de sigilo, que é a parte que {o senhor|a senhora} está pensando agora.'),
     'Ela junta as mãos.',
-    fala('a conselheira da Liga', 'Acesso total e boca fechada. É a oferta. Não vai ficar mais bonita se eu repetir.')
+    fala('a conselheira regional', 'Acesso total e boca fechada. É a oferta. Não vai ficar mais bonita se eu repetir.')
   ],
   ef:{flag:'a_oferta_da_coordenacao',
       registrar:'Te ofereceram uma coordenação de campo criada no mês passado: acesso total e dever de sigilo.'},
@@ -771,16 +771,16 @@ c26_quem_criou_o_cargo:{
     'Os quatro se olham, e é o homem que você não conseguiu classificar quem responde.',
     fala('o homem sem crachá', 'Resolução conjunta.'),
     d=>fala(d.jogador.nome, 'Conjunta de quem com quem?'),
-    fala('o homem sem crachá', 'Da Liga com a Comissão.'),
-    'Você olha pra conselheira da Liga, que não desvia.',
-    d=>fala(d.jogador.nome, 'A Liga e a Comissão assinam resolução conjunta?'),
+    fala('o homem sem crachá', 'Do governo com a Comissão.'),
+    'Você olha pra conselheira, que não desvia.',
+    d=>fala(d.jogador.nome, 'O governo e a Comissão assinam resolução conjunta?'),
     'Silêncio de uns quatro segundos, e é o silêncio mais informativo do dia.',
-    fala('a conselheira da Liga', 'Desde mil novecentos e sessenta e dois.'),
+    fala('a conselheira regional', 'Desde mil novecentos e sessenta e dois.'),
     'Ela diz isso sem nenhum constrangimento, e é aí que você entende que ela nunca achou que isso fosse segredo.',
-    fala('a conselheira da Liga', '{O senhor|A senhora} passou meses procurando uma conspiração e o que existe é um convênio. Está publicado.', 'baixo')
+    fala('a conselheira regional', '{O senhor|A senhora} passou meses procurando uma conspiração e o que existe é um convênio. Está publicado.', 'baixo')
   ],
   ef:{flag:'resolucao_conjunta_desde_sessenta_e_dois',
-      registrar:'A Liga e a Comissão assinam resolução conjunta desde 1962. Está publicado.',
+      registrar:'O governo e a Comissão assinam resolução conjunta desde 1962. Está publicado.',
       presagio:'Não era escondido. Era só chato de ler.'},
   escolhas:[
     {texto:'Aceitar o cargo.', vai:'c26_fim_aceitou'},
@@ -796,7 +796,7 @@ c26_fim_aceitou:{
     'Na página dois do termo tem uma frase que você relê três vezes: "o sigilo funcional não alcança comunicação dirigida a órgão de controle interno ou externo, nos termos da legislação aplicável".',
     'Está lá. Escrito. Em corpo dez, no meio do parágrafo terceiro.',
     'Você assina.',
-    'A conselheira da Liga acompanha o seu dedo parando naquela linha e não fala nada, e você não sabe se ela reparou ou se ela sempre soube.'
+    'A conselheira acompanha o seu dedo parando naquela linha e não fala nada, e você não sabe se ela reparou ou se ela sempre soube.'
   ],
   final:{id:'aceitou_a_coordenacao', titulo:'PARÁGRAFO TERCEIRO', texto:[
     'Você trabalha para eles por nove anos.',
@@ -816,12 +816,12 @@ c26_fim_aceitou:{
 c26_fim_recusou:{
   texto:[
     d=>fala(d.jogador.nome, 'Não.'),
-    fala('a conselheira da Liga', 'Não é uma oferta que se repete.'),
+    fala('a conselheira regional', 'Não é uma oferta que se repete.'),
     d=>fala(d.jogador.nome, 'Eu sei.'),
     'Ela fecha a pasta fina.',
-    fala('a conselheira da Liga', '{O senhor|A senhora} entende que, recusando, continua sem acesso a nada, e que tudo que {o senhor|a senhora} tem é papel juntado de forma irregular por {um menor|uma menor} de idade.'),
+    fala('a conselheira regional', '{O senhor|A senhora} entende que, recusando, continua sem acesso a nada, e que tudo que {o senhor|a senhora} tem é papel juntado de forma irregular por {um menor|uma menor} de idade.'),
     d=>fala(d.jogador.nome, 'Entendo.'),
-    fala('a conselheira da Liga', 'E que {o senhor|a senhora} está escolhendo a versão mais difícil de todas.'),
+    fala('a conselheira regional', 'E que {o senhor|a senhora} está escolhendo a versão mais difícil de todas.'),
     d=>fala(d.jogador.nome, 'Tô.'),
     'Ela assente uma vez, e é um gesto de quem registra, não de quem concorda.',
     d=>d.flags.resolucao_conjunta_desde_sessenta_e_dois ? 'O homem sem crachá é o único que fala quando você já está na porta:' : 'O homem sem crachá, que não falou desde o começo, é o único que fala quando você já está na porta:',

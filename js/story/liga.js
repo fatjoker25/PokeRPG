@@ -192,15 +192,15 @@ const CAMPEAO = {
     'Você fica ali um tempo que não dá pra medir. Depois a Pokédex apita no seu bolso, do jeito errado — dois apitos curtos, que ela nunca deu.',
     'Na tela: ATUALIZAÇÃO REMOTA AUTORIZADA. REGISTRO REGIONAL CONCLUÍDO. AGUARDE.',
     'Ela trava por quatro segundos, reinicia sozinha, e quando volta a barra de progresso embaixo não termina mais no cento e cinquenta e um.',
-    'Uma auxiliar da Liga entra no salão com uma pasta e não olha pro chão nem pro teto, só pra você.',
-    '"A Liga libera o registro nacional pra quem senta na cadeira." Ela entrega a pasta aberta na página certa. "São cem entradas novas. Todas vazias."',
+    'Uma auxiliar entra no salão com uma pasta e não olha pro chão nem pro teto, só pra você.',
+    '"O registro nacional é liberado pra quem senta na cadeira." Ela entrega a pasta aberta na página certa. "São cem entradas novas. Todas vazias."',
     /* do norte, só pergunta quem já ouviu falar dele */
     d.flags.sabe_do_norte || d.flags.liga_aliada || d.flags.sabe_do_norte_antes
-      ? '"E a fronteira do norte?" — porque é o que você pergunta, e ela já estava esperando.'
+      ? '"E o norte?" — porque é o que você pergunta, e ela já estava esperando.'
       : 'Ela fica parada um segundo a mais, como quem tem mais uma coisa pra dizer.',
     d.flags.sabe_do_norte || d.flags.liga_aliada || d.flags.sabe_do_norte_antes
-      ? '"A fronteira do norte pede autorização da Liga." Ela fecha a pasta. "{O senhor|A senhora} é a Liga agora. Autoriza quando quiser."'
-      : '"E tem a fronteira do norte, que ninguém cruza sem autorização da Liga." Ela fecha a pasta. "{O senhor|A senhora} é a Liga agora. Autoriza quando quiser."'
+      ? '"A passagem do norte pede autorização da Liga." Ela fecha a pasta. "Quem autoriza agora é {o senhor|a senhora}."'
+      : '"E tem a passagem do norte, que ninguém sobe sem autorização da Liga." Ela fecha a pasta. "Quem autoriza agora é {o senhor|a senhora}."'
   ],
   derrota:d=>[
     'Você perde. Não tem vergonha nisso: você perdeu para a pessoa que derrubou a Equipe Rocket sozinha aos dezesseis anos.',

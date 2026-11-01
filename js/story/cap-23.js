@@ -289,7 +289,7 @@ c23_corredor_b:{
   ef:{flag:'achou_a_segunda_pagina',
       itens:{'Segunda página do convênio':1},
       rep:{eixo:'bom',delta:2,motivo:'Achou a página que faltava no convênio'},
-      registrar:'Achou a segunda página do convênio Liga–CGRB no arquivo do ginásio.'},
+      registrar:'Achou a segunda página do convênio Kanto–CGRB no arquivo do ginásio.'},
   escolhas:[
     {texto:'Ler a segunda página em voz alta pro Blue.', vai:'c23_leu_em_voz_alta'},
     {texto:'Guardar e ir pro corredor D.', vai:'c23_procurou_o_proprio_nome'},

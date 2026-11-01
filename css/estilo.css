@@ -28,6 +28,7 @@
   --ruim:#d4553f;
   --perigo:#ee1515;
   --liga:#a884d4;
+  --lei:#9fb3c8;
 
   --hp:#4cb96b;
   --hp-medio:#f5c518;
@@ -448,6 +449,7 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
 .aviso.mundo{border-left-color:var(--destaque-2);color:var(--destaque-2);font-style:italic}
 .aviso.intuicao{border-left-color:#b39ddb;color:#b39ddb;font-style:italic}
 .aviso.liga{border-left-color:var(--liga);color:var(--liga)}
+.aviso.lei{border-left-color:var(--lei);color:var(--lei)}
 .aviso.perigo{border-left-color:var(--perigo);color:var(--perigo);font-weight:600}
 .aviso.insignia{
   border-left-color:var(--destaque);color:var(--destaque);

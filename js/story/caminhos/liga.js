@@ -421,7 +421,7 @@ cg3_final_quadra:{
     'Você não ensina tática. Ensina água, sombra e sono, e ensina a deixar o Pokémon corrigir a ordem errada sozinho.',
     'Ninguém paga. Às vezes uma mãe deixa um bolo no muro com um bilhete.',
     'De lá saem, em dez anos, quatro treinadores que chegam ao Planalto. Nenhum deles com unidade de lote.',
-    'A Coordenadora Maple vem uma vez por ano, de agasalho da Liga, e apita uma copa de criança na sua quadra de terra, com chaveamento desenhado à mão numa cartolina.'
+    'A Coordenadora Maple vem uma vez por ano, de agasalho, e apita uma copa de criança na sua quadra de terra, com chaveamento desenhado à mão numa cartolina.'
   ]}
 }
 

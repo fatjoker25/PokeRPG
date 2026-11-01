@@ -29,7 +29,7 @@ c3_ab_de_noite:{
   texto:[
     'Você chega na boca da floresta às seis e quarenta da tarde, que é a pior hora possível: cedo demais pra acampar e tarde demais pra atravessar.',
     'A luz dentro do mato já acabou. Aqui fora ainda tem uns vinte minutos dela.',
-    'Tem uma placa da Liga com três avisos, e o terceiro aviso está escrito à mão por cima do impresso: NÃO ENTRE DEPOIS DAS 18H.',
+    'Tem uma placa com três avisos, e o terceiro aviso está escrito à mão por cima do impresso: NÃO ENTRE DEPOIS DAS 18H.',
     'Letra de gente que se cansou de ver o mesmo erro.',
     d=>{
       const p = d.time[0];

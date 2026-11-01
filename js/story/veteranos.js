@@ -104,7 +104,7 @@ const VETERANOS = [
   golpes:['Body Slam', 'Swift', 'Thunder Wave'],
   premio:{'TM08 Body Slam':1, 'Exp. Share':1},
   apresenta:[
-    'Debaixo da ponte velha, onde o rio faz barulho de gente falando, um rapaz de jaqueta de Liga treina seis Pokémon ao mesmo tempo, um de cada vez, em silêncio.',
+    'Debaixo da ponte velha, onde o rio faz barulho de gente falando, um rapaz de jaqueta de torneio treina seis Pokémon ao mesmo tempo, um de cada vez, em silêncio.',
     'Ele te vê chegar pelo reflexo na água antes de virar.',
     fala('Morgan', 'Morgan. Eu fui da Liga dois anos. Oito insígnias, quarta rodada do Planalto, e depois eu voltei pra cá pra aprender o que eu não tinha aprendido.'),
     fala('Morgan', 'Eu não desafio gente com duas insígnias.'),

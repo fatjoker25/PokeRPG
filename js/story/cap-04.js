@@ -411,8 +411,8 @@ c4_senhora_museu_cai:{
     '"E a prefeitura?"',
     '"A prefeitura mandou um engenheiro. O engenheiro fez um relatório. O relatório tá numa gaveta e a lona tá no telhado, e as duas coisas vão continuar exatamente onde estão."',
     'Ela fala isso sem raiva nenhuma, que é pior do que se tivesse raiva.',
-    '"Tem uma moça lá dentro que cuida daquilo sozinha. Cuida mesmo: passa pano, troca balde, escreve carta pra Liga."',
-    '"E a Liga responde?"',
+    '"Tem uma moça lá dentro que cuida daquilo sozinha. Cuida mesmo: passa pano, troca balde, escreve carta pro governo."',
+    '"E o governo responde?"',
     '"Respondeu uma vez, em noventa e oito." Ela ri sem alegria. "Pediu mais informações."'
   ],
   ef:{flag:'sabe_da_lona_do_museu'},
@@ -1467,14 +1467,14 @@ c4_ivone_reportou:{
   texto:[
     '"A senhora reportou isso?"',
     'Ela ri uma risada de uma sílaba só.',
-    '"Três vezes. A Liga mandou um oficial. O oficial subiu até a entrada da caverna, tirou quatro fotos, escreveu um relatório de uma página e meia e voltou."',
+    '"Três vezes. A Patrulha mandou um oficial. O oficial subiu até a entrada da caverna, tirou quatro fotos, escreveu um relatório de uma página e meia e voltou."',
     '"E aí?"',
     '"E aí o relatório está numa gaveta em Saffron. Eu sei o número da gaveta. Eu liguei tantas vezes que a moça do arquivo me deu o número da gaveta pra eu parar de ligar."'
   ],
   ef:{flag:'liga_engavetou'},
   escolhas:[
     {texto:'"O que a senhora quer de mim?"', vai:'c4_ivone_pedido'},
-    {texto:'"Por que a Liga não faz nada?"', vai:'c4_ivone_liga'},
+    {texto:'"Por que ninguém faz nada?"', vai:'c4_ivone_liga'},
     {texto:'"Então não tem o que fazer." Sair.', vai:'c4_ivone_recusa'},
     {texto:'"Me dá o número da gaveta."', vai:'c4_ivone_gaveta'}
   ]
@@ -1504,12 +1504,12 @@ c4_ivone_liga:{
   falante:'Dra. Cordell',
   vozes:['P','N','N','P','N','N'],
   texto:[
-    '"Por que a Liga não faz nada?"',
-    '"Porque a Liga é uma federação esportiva."',
+    '"Por que ninguém faz nada?"',
+    '"Porque não é de ninguém."',
     'Ela fala isso devagar, como quem repete uma coisa que teve que aceitar.',
-    '"Ela organiza campeonato, emite licença e credencia ginásio. Em algum momento nos últimos quarenta anos ela virou também polícia, tribunal e conselho de ética, porque ninguém mais quis fazer isso e ela tinha o carimbo."',
-    '"E ela é ruim nisso."',
-    '"Ela é péssima nisso." Cordell guarda a caneta no bolso do jaleco. "E o problema não é a maldade. É que não tem ninguém no organograma cujo trabalho seja se importar."'
+    '"A Patrulha é estrada: para carro, confere licença, tira cartaz de poste. Caverna saqueada é com a Fiscalização do governo, em Saffron, e a Fiscalização responde ofício com ofício. A Liga, que todo mundo acha que manda, organiza campeonato e credencia ginásio. Cada um tem um pedaço, e o pedaço do meio não é de ninguém."',
+    '"E o governo é ruim nisso."',
+    '"É péssimo nisso." Cordell guarda a caneta no bolso do jaleco. "E o problema não é a maldade. É que não tem ninguém no organograma cujo trabalho seja se importar."'
   ],
   ef:{flag:'entendeu_a_liga'},
   escolhas:[
@@ -1603,13 +1603,13 @@ c4_ivone_pedido:{
     '"O que a senhora quer de mim?"',
     '"Nada perigoso." Ela levanta as duas mãos. "Eu não sou doida de mandar {um garoto|uma garota} de {idade} anos enfrentar gente com serra."',
     'Ela tira do bolso do jaleco um cartão amassado. Não é cartão de visita profissional — é um pedaço de cartolina cortado à mão, com um número escrito à caneta.',
-    '"Se você vir alguma coisa lá dentro — mesa, gerador, gaiola, buraco quadrado na parede — você me liga. Não liga pra Liga. Liga pra mim."',
+    '"Se você vir alguma coisa lá dentro — mesa, gerador, gaiola, buraco quadrado na parede — você me liga. Não liga pra Patrulha. Liga pra mim."',
     '"Qual a diferença?"',
-    '"A Liga manda um oficial em dois dias." Ela põe o cartão na sua mão. "Eu chego em seis horas com imprensa."'
+    '"A Patrulha manda um oficial em dois dias." Ela põe o cartão na sua mão. "Eu chego em seis horas com imprensa."'
   ],
   ef:{flag:'cartao_ivone',
       npc:{nome:'Dra. Cordell', opiniao:4, memoria:'Te deu o número dela por causa do saque no Monte da Lua.'},
-      registrar:'Dra. Cordell te deu o número dela. Ligar para ela, não para a Liga.'},
+      registrar:'Dra. Cordell te deu o número dela. Ligar para ela, não para a Patrulha.'},
   escolhas:[
     {texto:'Guardar o cartão. "Se eu vir, eu ligo."', vai:'c4_ivone_aceitou'},
     {texto:'Guardar o cartão sem prometer nada.', vai:'c4_museu_saiu'},
@@ -1868,11 +1868,11 @@ c4_ivone_folheto:{
     '"Onde você achou isso?"',
     '"Debaixo do balcão."',
     'Ela lê o rodapé inteiro, duas vezes, e depois devolve com uma delicadeza exagerada, como quem devolve uma coisa que preferia queimar.',
-    '"Guarda." Ela fala baixo. "E não mostra pra funcionário de Liga."',
+    '"Guarda." Ela fala baixo. "E não mostra pra ninguém de repartição."',
     '"Por quê?"',
     '"Porque eu não sei ainda." Ela fecha o caderno. "E porque as duas vezes em que eu mostrei uma coisa dessas pra alguém de crachá, a coisa sumiu da minha mesa na semana seguinte."'
   ],
-  ef:{flag:'ivone_viu_folheto', npc:{nome:'Dra. Cordell', opiniao:3, memoria:'Você mostrou o folheto da fundação pra ela. Ela mandou guardar e não mostrar pra Liga.'},
+  ef:{flag:'ivone_viu_folheto', npc:{nome:'Dra. Cordell', opiniao:3, memoria:'Você mostrou o folheto da fundação pra ela. Ela mandou guardar e não mostrar pra ninguém de repartição.'},
       presagio:'Existe uma coisa em Kanto com papel bom, brasão e advogado, e ela ainda não tem nome na sua cabeça.'},
   escolhas:[
     {texto:'"Me dá o número da gaveta."', vai:'c4_ivone_gaveta'},

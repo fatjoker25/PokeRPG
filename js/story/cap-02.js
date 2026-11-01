@@ -352,12 +352,12 @@ c2_quem_cola:{
     'A atendente demora pra responder e escolhe as palavras.',
     '"O mural é público. Qualquer um cola qualquer coisa."',
     '"E se for crime?"',
-    '"Aí eu ligo pra Liga e a Liga manda um oficial em dois dias e o oficial tira o cartaz." Ela finalmente olha pra você. "E no terceiro dia tem outro cartaz."',
+    '"Aí eu ligo pra Patrulha e a Patrulha manda um oficial em dois dias e o oficial tira o cartaz." Ela finalmente olha pra você. "E no terceiro dia tem outro cartaz."',
     '"Eu já liguei quatro vezes. Eu paro de ligar quando?"',
     'Ela pergunta isso de verdade, como quem quer mesmo a resposta.'
   ],
   ef:{flag:'sabe_do_cartaz',
-      npc:{nome:'Atendente de Viridian', opiniao:2, memoria:'Te perguntou quando é que ela deve parar de ligar para a Liga.'}},
+      npc:{nome:'Atendente de Viridian', opiniao:2, memoria:'Te perguntou quando é que ela deve parar de ligar para a Patrulha.'}},
   escolhas:[
     {texto:'"Nunca."', vai:'c2_nunca', ef:{rep:{eixo:'bom',delta:1,motivo:'Disse a alguém cansado para não parar'}}},
     {texto:'"Eu não sei."', vai:'c2_nao_sei_cartaz'},
@@ -434,7 +434,7 @@ c2_descricao:{
   texto:[
     '"Homem, quarenta e poucos, roupa boa demais pra mato." Ela recita de memória. "Carregando rolo de fio de aço no ombro, sem disfarçar."',
     '"Fio de aço."',
-    '"Fio de aço." Ela volta ao computador. "Eu anotei a ocorrência duas vezes com essa mesma frase e mandei as duas pra Liga."',
+    '"Fio de aço." Ela volta ao computador. "Eu anotei a ocorrência duas vezes com essa mesma frase e mandei as duas pra Patrulha."',
     'Você guarda a frase sem saber onde ela vai caber. Fio de aço não é coisa que se leva pra mato à toa.'
   ],
   ef:{flag:'sabe_do_fio_de_aco',

@@ -326,8 +326,8 @@ ch3_o_palanque:{
   texto:[
     'Depois da audiência de segunda, o seu nome saiu em três jornais. A prefeitura de Saffron montou um palanque na praça da estação pra te dar uma medalha.',
     d => Nomes.sabe('o advogado da Comissão')
-      ? 'Na fila da frente: o prefeito, um conselheiro da Liga e o Dr. Bramble, de terno cinza claro, que já sabe o seu nome.'
-      : 'Na fila da frente: o prefeito, um conselheiro da Liga e um homem de terno cinza claro que ninguém apresenta.',
+      ? 'Na fila da frente: o prefeito, um conselheiro regional e o Dr. Bramble, de terno cinza claro, que já sabe o seu nome.'
+      : 'Na fila da frente: o prefeito, um conselheiro regional e um homem de terno cinza claro que ninguém apresenta.',
     'Atrás da grade, umas trezentas pessoas. Muita criança com Pokémon no colo.',
     d => d.flags.ln_heroi_conselho || d.flags.ln_heroi_melhor ? 'Na grade, de boné, um menino com um Butterfree no ombro acena com as duas mãos. Era um Caterpie da última vez.' : 'Na grade, uma senhora segura um pote de doce de leite, e do lado dela um menino de boné, com um Butterfree no ombro, acena com as duas mãos.'
   ],
@@ -455,7 +455,7 @@ ch3_depois:{
 ch3_seguir:{
   texto:[
     d => fala('a brigadista de Fuchsia', d.flags.cm_heroi_1 ? 'Vai. Se pegar fogo no caminho, você sabe onde é a linha.' : 'Vai. Se pegar fogo no caminho, cava uma faixa na frente dele e torce pro vento.', 'riso'),
-    'O ônibus da Liga pro Planalto sai às oito e quinze. Alguém deixou um pote de doce de leite no seu assento.'
+    'O ônibus pro Planalto sai às oito e quinze. Alguém deixou um pote de doce de leite no seu assento.'
   ],
   ef:{flag:'cm_heroi_seguiu', executar:() => { caminhoAs(8); }},
   fim:true, resumo:'Quem ajuda quem: um palanque, uma medalha pesada e um microfone que alguém tentou desligar.'

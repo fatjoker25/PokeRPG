@@ -1694,7 +1694,7 @@ c16_venceu_equipe:{
   ],
   ef:{rep:{eixo:'ruim',delta:3,motivo:'Destruiu o equipamento de uma expedição autorizada'},
       flag:'destruiu_a_expedicao', instabilidade:1, moral:-15,
-      executar:d=>{ d.liga.avisos++; return [{tipo:'liga', texto:'Mais uma ocorrência com o seu nome no sistema da Liga.'}]; },
+      executar:d=>{ d.liga.avisos++; return [{tipo:'lei', texto:'Mais uma ocorrência com o seu nome no sistema da Patrulha.'}]; },
       registrar:'Destruiu o equipamento da expedição. O incidente prorroga o projeto.',
       presagio:'Incidente prorroga projeto. Você acabou de comprar dois anos pra eles.'},
   escolhas:[

@@ -115,7 +115,7 @@ const APARENCIAS_DA_FICHA = [
 const VESTIMENTAS_DA_FICHA = [
   'Boné desbotado, jaqueta grande demais e tênis de lona.',
   'Moletom com capuz, bermuda e bota de trilha emprestada.',
-  'Camiseta velha da Liga, calça de brim e um cachecol que alguém tricotou.',
+  'Camiseta velha de torneio, calça de brim e um cachecol que alguém tricotou.',
   'Colete de lona cheio de bolso e calça dobrada na canela.',
   'Chapéu de palha, camisa xadrez e sandália de borracha.',
   'Jaqueta de vinil, luva sem dedo e tênis branco que já foi branco.',

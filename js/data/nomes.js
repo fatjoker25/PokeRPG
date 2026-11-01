@@ -30,6 +30,13 @@ const RECUSAM_O_NOME = {
     fala('o da aliança', 'Nome? Você quer o meu nome pra contar pra quem?'),
     fala('o da aliança', 'Me chama de quem te deixou passar. É o que eu vou ser, se você colaborar.', 'baixo')
   ],
+  /* a técnica da Fiscalização que te dá o convênio no 18: é servidora
+     falando de convênio, e servidor que fala vira nome num ofício */
+  'a técnica do terceiro andar': () => [
+    'Ela olha as outras duas mesas antes de responder.',
+    fala('a técnica do terceiro andar', 'Não.'),
+    fala('a técnica do terceiro andar', 'Nome de servidor que fala de convênio aparece num ofício na semana seguinte. Fica com a cláusula sexta, que ela é pública.', 'baixo')
+  ],
   'a técnica fugida': () => [
     fala('a técnica fugida', 'Não.', 'baixo'),
     fala('a técnica fugida', 'Três anos eu fui um número de crachá. Deixa eu ficar uns dias sem nome nenhum, antes de escolher qual.', 'baixo')
@@ -136,7 +143,7 @@ const NOMES_FIXOS = {
   'o rapaz do protocolo':      'Tito',
   'o guarda da primeira':      'Pike',
   'o entregador de pão':       'Rufo',
-  'a recepcionista da Liga':   'Lena',
+  'a recepcionista do Conselho': 'Lena',
   'a balconista da farmácia':  'Gina',
   'Chefe da expedição':        'Dra. Sallow',
   'a voz do rádio':            'Roland',
@@ -200,7 +207,7 @@ const NOMES_FIXOS = {
   'a advogada do conselho':    'Dra. Sedge',
   'o contador do conselho':    'Sr. Mallow',
   'o professor do conselho':   'Sr. Tobias Dahl',
-  'a conselheira da Liga':     'Margot Heath',
+  'a conselheira regional':    'Margot Heath',
   'a secretária da mesa':      'Sra. Hedda',
   /* o Planalto, no 22: ele mostra o próprio nome na folha do chaveamento */
   'o rapaz da caneta':         'Owen',

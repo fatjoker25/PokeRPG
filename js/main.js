@@ -762,7 +762,7 @@ const Jogo = {
   voltarAoMundo(){
     if (Estado.j.pontos > 0 && !confirm('Você ainda tem pontos para distribuir. Seguir mesmo assim? (Eles ficam guardados.)')) return;
     /* Começa de onde nasceu: a jornada sai da sua cidade. Quem nasceu
-       longe de Viridian tem, na rodoviária da cidade, o ônibus da Liga
+       longe de Viridian tem, na rodoviária da cidade, o ônibus
        (Cidade.onibus) — pega se quiser, não é obrigado. */
     const d = Estado.dados;
     /* o rival espera no caminho do próximo capítulo de verdade: depois de
@@ -1440,7 +1440,7 @@ const Jogo = {
       Estado.marcar('dex_nacional');
       Estado.marcar('johto_liberado');
       avisos.push({tipo:'pokedex', texto:'A Pokédex trava por quatro segundos e reinicia sozinha. Quando volta, a lista não termina mais no 151.'});
-      avisos.push({tipo:'mundo', texto:'Cem registros novos, todos vazios. E a fronteira do norte, que ninguém cruzava sem autorização da Liga, agora é sua para autorizar.'});
+      avisos.push({tipo:'mundo', texto:'Cem registros novos, todos vazios. E a passagem do norte, que ninguém subia sem autorização da Liga, agora é sua para autorizar.'});
       Estado.registrar('Pokédex Nacional liberada: 251 registros. Johto aberto.');
       if (r && r.mudou) avisos.push({tipo:'rep', texto:`Reputação: ${r.de} → ${r.para}`});
       Estado.registrar('Venceu Red. Tornou-se {Campeão|Campeã} de Kanto.');
@@ -1490,7 +1490,7 @@ const Jogo = {
     if (!meu) return UI.modal('Torneio', '<p class="nada">Nenhum Pokémon em pé. Cure o time antes de se inscrever.</p>');
     Estado.j.dinheiro -= INSCRICAO_TORNEIO;
     this.torneioAtual = {rodada:0, adversarios: montarChaveamento()};
-    Estado.registrar('Inscreveu-se no Torneio Aberto da Liga.');
+    Estado.registrar('Inscreveu-se no Torneio Aberto do Planalto.');
     UI.telaTorneio();
   },
 
@@ -1533,7 +1533,7 @@ const Jogo = {
         falas:[
           `${adv.nome} vence e a arena bate palma pelo nome ${adv.f ? 'dela' : 'dele'}, não pelo seu.`,
           'Torneio é assim: o chaveamento não tem memória. Amanhã tem outro.',
-          'Você recebe a premiação por participação num envelope com o logotipo da Liga e o seu nome escrito errado.'
+          'Você recebe a premiação por participação num envelope com o logotipo do torneio e o seu nome escrito errado.'
         ],
         avisos, venceu:false
       });
@@ -1544,7 +1544,7 @@ const Jogo = {
     avisos.push({tipo:'item', texto:`+${fmtDin(ganhoTorneio)} ₽`});
     for (const [n,q] of Object.entries(premio.itens||{})){ Estado.darItem(n,q); avisos.push({tipo:'item', texto:`Recebeu ${q}× ${n}.`}); }
     if (premio.rep){
-      const r = Estado.mudarRep('bom', premio.rep, `Avançou na ${premio.rodada} do Torneio da Liga`, {rep:{notorio:true, peso:3}});
+      const r = Estado.mudarRep('bom', premio.rep, `Avançou na ${premio.rodada} do Torneio Aberto`, {rep:{notorio:true, peso:3}});
       if (r && r.mudou) avisos.push({tipo:'rep', texto:`Reputação: ${r.de} → ${r.para}`});
     }
 
@@ -1559,7 +1559,7 @@ const Jogo = {
       this.torneioAtual = null;
       Estado.dados.torneiosVencidos = (Estado.dados.torneiosVencidos||0) + 1;
       Estado.marcar('venceu_torneio');
-      Estado.registrar(`Venceu o Torneio Aberto da Liga (${Estado.dados.torneiosVencidos}ª vez).`);
+      Estado.registrar(`Venceu o Torneio Aberto (${Estado.dados.torneiosVencidos}ª vez).`);
       Estado.salvar('auto');
       UI.telaResultadoLiga({
         titulo:'{CAMPEÃO|CAMPEÃ} DO TORNEIO', sub:`${Estado.dados.torneiosVencidos}º título`,

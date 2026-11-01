@@ -1,6 +1,6 @@
 /* ============================================================
    CAMINHO DO FORAGIDO — quem te esconde
-   Pra quem tem ficha aberta na Liga (a via do capítulo 9) na hora do
+   Pra quem tem ficha aberta na Patrulha (a via do capítulo 9) na hora do
    desvio. Quem acompanha: a Dona Briar, que não pergunta nome e
    pergunta se paga, e o Corwin, que atravessa gente de noite.
    ============================================================ */
@@ -102,7 +102,7 @@ cf1_a_ponte:{
 cf1_entregou:{
   texto:[
     'Na guarita da ponte tem uma cadeira de plástico e uma garrafa térmica de café. O guarda te serve uma xícara enquanto liga pro Centro mais próximo.',
-    'A ficha da Liga, quando chega, é de três folhas e um título só: ESCLARECIMENTOS SOBRE ATIVIDADE EM CELADON. Não é mandado. É conversa.',
+    'A ficha da Patrulha, quando chega, é de três folhas e um título só: ESCLARECIMENTOS SOBRE ATIVIDADE EM CELADON. Não é mandado. É conversa.',
     'Você esclarece por quatro horas, numa sala do Centro de Fuchsia, com uma atendente que digita devagar. No fim, ela carimba "aguardando".',
     fala('a atendente do Centro de Fuchsia', 'Pode ir. Não sai de Kanto. E tira esse desenho do poste, que tá assustando as crianças.', 'riso')
   ],
@@ -270,19 +270,19 @@ cf2_fim:{
 {
 num:25.09, titulo:'Rendição ou Estrada', local:'Lavender — a cozinha da pensão', ambiente:'cemiterio', nivelArea:58,
 tom:'muito sombrio',
-ancora:{local:'lavender', chamada:'Na cozinha da Pensão Briar tem uma carta da Liga em cima da mesa, aberta, e a Dona Briar não está lendo.'},
+ancora:{local:'lavender', chamada:'Na cozinha da Pensão Briar tem uma carta da Patrulha em cima da mesa, aberta, e a Dona Briar não está lendo.'},
 entradas:['cf3_a_carta'],
 inicio: d => 'cf3_a_carta',
 cenas:{
 
 cf3_a_carta:{
   texto:[
-    'A carta da Liga chegou pro endereço da pensão, que não é o seu endereço em lugar nenhum. Alguém sabe.',
+    'A carta chegou pro endereço da pensão, que não é o seu endereço em lugar nenhum. Alguém sabe.',
     '**"Depois da audiência de segunda, a ficha de esclarecimentos foi convertida em mandado de condução. Apresentação voluntária em quinze dias reduz as medidas."**',
     fala('a dona da pensão', 'Quinze dias. Isso é tempo de fugir ou de se entregar com dignidade. Eu já vi gente fazer as duas coisas.'),
     fala('a dona da pensão', 'Os dois funcionam. Os dois cobram.', 'baixo')
   ],
-  ef:{flag:'cm_foragido_3', registrar:'A ficha da Liga virou mandado de condução. Quinze dias pra se apresentar.'},
+  ef:{flag:'cm_foragido_3', registrar:'A ficha da Patrulha virou mandado de condução. Quinze dias pra se apresentar.'},
   escolhas:[
     {texto:'Juntar tudo o que você sabe antes de decidir.', vai:'cf3_o_que_tem'},
     {texto:'Ligar pro Corwin.', vai:'cf3_o_corwin', cond:d => Nomes.sabe('o atravessador')},
@@ -296,7 +296,7 @@ cf3_o_que_tem:{
     d => d.flags.cm_foragido_salvou_a_tecnica ? 'Um crachá da Estação 4 cortado ao meio com tesoura.'
       : d.flags.cm_foragido_levaram_a_tecnica ? 'O pelo de um Eevee, que você guardou num envelope sem saber por quê.'
       : d.flags.cm_foragido_1 ? 'Um desenho seu, arrancado de um poste da Rota 15, com o nariz certo.'
-      : 'A cópia da sua ficha da Liga, com o seu nome em letra de máquina.',
+      : 'A cópia da sua ficha na Patrulha, com o seu nome em letra de máquina.',
     'Não é processo. É uma vida de quem viu coisa demais pra quem tem ficha.',
     fala('a dona da pensão', 'Quem se entrega com documento não se entrega. Depõe.', 'baixo')
   ],
@@ -310,7 +310,7 @@ cf3_o_que_tem:{
 cf3_o_corwin:{
   texto:[
     d => d.flags.cm_foragido_corwin_ficou ? 'O Corwin atende. Ele ficou dois meses preso depois da noite da ponte. O Hoothoot dele ainda está com você.' : 'O Corwin atende no terceiro toque.',
-    fala('o atravessador', 'Eu atravesso você pro sul, de barco, pra uma ilha que não tem Centro Pokémon nem Liga. Dois mil. É a última que eu faço.', 'baixo'),
+    fala('o atravessador', 'Eu atravesso você pro sul, de barco, pra uma ilha que não tem Centro Pokémon nem Patrulha. Dois mil. É a última que eu faço.', 'baixo'),
     fala('o atravessador', 'Ou você fica, e eu fico também, e a gente vê.', 'baixo')
   ],
   escolhas:[
@@ -321,8 +321,8 @@ cf3_o_corwin:{
 cf3_a_decisao:{
   texto:[
     'Na rua da pensão, um carro preto estaciona de ré, devagar, e não desliga o motor.',
-    'Não é a Liga. A Liga manda carta. Quem estaciona de ré na frente de pensão é quem não quer que você chegue no dia quinze.',
-    fala('a dona da pensão', 'Comissão. Eles não querem você na Liga. Na Liga você fala.', 'frio')
+    'Não é a Patrulha. A Patrulha manda carta. Quem estaciona de ré na frente de pensão é quem não quer que você chegue no dia quinze.',
+    fala('a dona da pensão', 'Comissão. Eles não querem você na Patrulha. Na Patrulha você fala.', 'frio')
   ],
   ef:{executar:() => { caminhoEntre(23, 5, 1); }},
   escolhas:[
@@ -338,8 +338,8 @@ cf3_os_fundos:{
   ],
   ef:{flag:'cm_foragido_fundos'},
   escolhas:[
-    {texto:'Ir pro Centro de Lavender e se apresentar à Liga.', vai:'cf3_final_rendicao',
-     ef:{rep:{eixo:'bom', delta:3, motivo:'Se apresentou voluntariamente à Liga, com o que sabia'}}},
+    {texto:'Ir pro Centro de Lavender e se apresentar à Patrulha.', vai:'cf3_final_rendicao',
+     ef:{rep:{eixo:'bom', delta:3, motivo:'Se apresentou voluntariamente à Patrulha, com o que sabia'}}},
     {texto:d => Nomes.sabe('o atravessador') ? 'Ir pro cais encontrar o Corwin.' : 'Ir pro cais procurar um barco que saia sem luz.', vai:'cf3_final_estrada',
      ef:{rep:{eixo:'ruim', delta:1, motivo:'Fugiu de Kanto de barco'}}},
     {texto:'Voltar pra pensão de manhã e ficar. Alguém tem que abrir a porta pra próxima.', vai:'cf3_final_pensao',
@@ -364,8 +364,8 @@ cf3_venceu_o_carro:{
   ],
   ef:{rep:{eixo:'bom', delta:1, motivo:'Enfrentou a Comissão na porta da Pensão Briar'}},
   escolhas:[
-    {texto:'Ir pro Centro de Lavender e se apresentar à Liga.', vai:'cf3_final_rendicao',
-     ef:{rep:{eixo:'bom', delta:3, motivo:'Se apresentou voluntariamente à Liga, com o que sabia'}}},
+    {texto:'Ir pro Centro de Lavender e se apresentar à Patrulha.', vai:'cf3_final_rendicao',
+     ef:{rep:{eixo:'bom', delta:3, motivo:'Se apresentou voluntariamente à Patrulha, com o que sabia'}}},
     {texto:d => Nomes.sabe('o atravessador') ? 'Ir pro cais encontrar o Corwin.' : 'Ir pro cais procurar um barco que saia sem luz.', vai:'cf3_final_estrada',
      ef:{rep:{eixo:'ruim', delta:1, motivo:'Fugiu de Kanto de barco'}}},
     {texto:'Ficar na pensão. Alguém tem que abrir a porta pra próxima.', vai:'cf3_final_pensao',
@@ -378,15 +378,15 @@ cf3_venceu_o_carro:{
 cf3_seguir:{
   texto:[
     fala('a dona da pensão', 'Vai. O quarto fica. Eu não alugo.', 'baixo'),
-    'O ônibus da Liga pro Planalto sai às oito e quinze. Você compra a passagem com o nome que está no seu documento, porque esconder já cansou.'
+    'O ônibus pro Planalto sai às oito e quinze. Você compra a passagem com o nome que está no seu documento, porque esconder já cansou.'
   ],
   ef:{flag:'cm_foragido_seguiu', executar:() => { caminhoAs(8); }},
-  fim:true, resumo:'Rendição ou estrada: uma carta da Liga num endereço que não é seu e um carro estacionado de ré.'
+  fim:true, resumo:'Rendição ou estrada: uma carta da Patrulha num endereço que não é seu e um carro estacionado de ré.'
 },
 
 cf3_final_rendicao:{
   texto:[
-    'No Centro de Lavender, a atendente lê a carta da Liga, olha pra você, e liga a chaleira antes de ligar pra Liga.',
+    'No Centro de Lavender, a atendente lê a carta, olha pra você, e liga a chaleira antes de ligar pra Patrulha.',
     d => `O depoimento dura dois dias. Você conta tudo: Celadon${d.flags.cm_foragido_1 ? ', a ponte' : ''}${d.flags.cm_foragido_2 ? ', o porão' : ''}, o carro estacionado de ré.`
   ],
   final:{id:'foragido_rendicao', titulo:'RENDIÇÃO', texto:[
@@ -405,7 +405,7 @@ cf3_final_estrada:{
     'O barco é baixo e não tem nome. Sai às quatro da manhã, sem luz, pro sul.'
   ],
   final:{id:'foragido_estrada', titulo:'A ESTRADA', texto:[
-    'A ilha do sul não tem Centro Pokémon, nem Liga, nem poste pra colar desenho.',
+    'A ilha do sul não tem Centro Pokémon, nem Patrulha, nem poste pra colar desenho.',
     'Você vive de pescar com o time e de consertar barco. Ninguém pergunta o seu nome, e depois de um ano você para de lembrar de esconder.',
     'Às vezes chega um barco baixo sem nome, de madrugada, com alguém dentro que precisa de lugar. Você tem um quarto.',
     'Kanto continua do outro lado do mar, com a sua ficha aberta. Nunca fecha. Você aprende que tem ficha que é melhor deixar aberta.'
@@ -419,7 +419,7 @@ cf3_final_pensao:{
   ],
   final:{id:'foragido_pensao', titulo:'A PENSÃO', texto:[
     'Em dois anos, o porão da Pensão Briar esconde quarenta e uma pessoas e dezenove Pokémon que não piscavam.',
-    'A ficha da Liga continua aberta. Ninguém vem buscar: quem sabe onde você está não conta, e quem conta não sabe.',
+    'A ficha na Patrulha continua aberta. Ninguém vem buscar: quem sabe onde você está não conta, e quem conta não sabe.',
     'A Dona Briar morre num inverno, dormindo, e deixa a pensão no seu nome, num testamento de uma linha só: "NÃO PERGUNTA."',
     'Você pinta a porta de azul de novo, mais forte. Café às seis. Como sempre.'
   ]}

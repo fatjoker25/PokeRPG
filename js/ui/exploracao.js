@@ -36,7 +36,7 @@ const Exploracao = {
     const portas = todos.filter(a => a.lugar);
     const lugares = portas.map(a => {
       const ic = iconeDoAfazer(a);
-      /* "Rodoviária — ônibus da Liga pra Viridian": o nome na placa, o resto embaixo */
+      /* "Rodoviária — ônibus pra Viridian": o nome na placa, o resto embaixo */
       const [nome, mais] = String(a.titulo).split(' — ');
       return `<button class="porta"${cor(ic)} onclick="Exploracao.fazer('${a.id}')">
         ${svgIcone(ic, 'porta-icone')}<span class="porta-nome">${UI.esc(nome)}${mais ? `<small>${UI.esc(mais)}</small>` : ''}</span></button>`;

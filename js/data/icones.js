@@ -55,8 +55,8 @@ function _desenho(arq){
 }
 function desenhoDoItem(nome){ return _desenho(arquivoDoDesenho(nome)); }
 /* a bolsa que você carrega, pro alto da mochila: a comprada, a da ficha
-   ("Mochila azul", "Bolsa verde musgo", "sacola vermelha") ou a bege da
-   Liga. A cor é a primeira palavra do nome que tem desenho; cor sem
+   ("Mochila azul", "Bolsa verde musgo", "sacola vermelha") ou a bege, a
+   de fábrica. A cor é a primeira palavra do nome que tem desenho; cor sem
    desenho (vinho, turquesa) fica com o bege, e a janela leva a cor. */
 function desenhoDaBolsa(b){
   const nome = String((b && b.nome) || '');
@@ -140,6 +140,8 @@ const ICONE = {
   /* os avisos do que a escolha mudou: cura, alerta, luto (a vela da
      vigília da Torre), o mundo, uma nota e o brilho da evolução */
   cura:'<rect x="4" y="4" width="16" height="16" rx="4.5"/><path d="M12 8v8M8 12h8"/>',
+  /* o distintivo da Patrulha: escudo com a estrela */
+  patrulha:'<path d="M12 3l7.5 3v5.4c0 4.6-3.2 8.3-7.5 9.6-4.3-1.3-7.5-5-7.5-9.6V6z"/><path d="M12 8.6l1.2 2.4 2.6.4-1.9 1.8.5 2.6-2.4-1.3-2.4 1.3.5-2.6-1.9-1.8 2.6-.4z"/>',
   alerta:'<path d="M12 3.8L21.2 19.8H2.8z"/><path d="M12 10v4.6"/><circle cx="12" cy="17.1" r=".95" fill="currentColor"/>',
   luto:'<path d="M8.5 21h7M10 21V11.5h4V21"/><path d="M12 11.5V9.4"/><path d="M12 9c-1.4-1-1.4-2.7 0-4.3 1.4 1.6 1.4 3.3 0 4.3z"/>',
   mundo:'<circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.5 2.4 3.7 5.2 3.7 8.5s-1.2 6.1-3.7 8.5c-2.5-2.4-3.7-5.2-3.7-8.5s1.2-6.1 3.7-8.5z"/>',
@@ -161,7 +163,7 @@ const COR_DO_ICONE = {
   mural:'#ffb74d', pc:'#4dd0e1', mapa:'#66bb6a', dormir:'#7986cb', diario:'#e8b923',
   bola:'#4cc38a', pokedex:'#ef5350', itens:'#d9a35b', telefone:'#43b581', lua:'#b39ddb',
   seta:'#5aa7ff', voar:'#9fa8ff', alfinete:'#ffd54f', olho:'#90caf9', pergunta:'#8c9eff', dado:'#4dd0e1', chama:'#a77bff', tigela:'#d9a35b',
-  salvar:'#64b5f6', carregar:'#81c784'
+  salvar:'#64b5f6', carregar:'#81c784', patrulha:'#9fb3c8'
 };
 
 /* estilo: mais alguma coisa inline (a seta da placa gira por ele) */

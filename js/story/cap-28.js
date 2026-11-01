@@ -1145,7 +1145,7 @@ c23_final_libertacao:{
   final:{id:'libertacao', titulo:'A PORTA', texto:[
     'Mewtwo anda solto por Kanto. Não ataca ninguém. Aparece em lugares aleatórios e some antes que alguém chegue perto.',
     'A Liga te interroga por seis horas. Você conta tudo, sem inventar nada. Eles não gostam da resposta e não têm o que fazer com ela.',
-    'Três meses depois, um relatório da Liga usa pela primeira vez a expressão "indivíduo não-humano com autonomia reconhecida". A frase vira jurisprudência.',
+    'Três meses depois, um relatório da Liga usa pela primeira vez a expressão "indivíduo não-humano com autonomia reconhecida". Um juiz de Saffron cita a frase, e ela vira jurisprudência.',
     'Você não ganhou nada com isso. Nenhuma insígnia, nenhum cargo, nenhum troféu.',
     'Mudou o vocabulário de uma instituição inteira, o que é uma coisa tão grande que ninguém percebe que foi você.'
   ]}
@@ -1293,7 +1293,7 @@ c23_final_tratado:{
     'Ele para. Isso o desarma mais do que qualquer coisa que aconteceu nesta câmara.',
     '"Ninguém nunca me perguntou o que escrever."',
     '"Eu sei."',
-    'Ele leva quase dez minutos pra responder, e quando responde, é uma frase só. Você anota exatamente como ele dita, palavra por palavra, num caderno de campo da Liga, à luz de lanterna, no fundo de uma caverna.'
+    'Ele leva quase dez minutos pra responder, e quando responde, é uma frase só. Você anota exatamente como ele dita, palavra por palavra, num caderno de campo, à luz de lanterna, no fundo de uma caverna.'
   ],
   final:{id:'tratado', titulo:'O DOCUMENTO', texto:[
     'O documento tem uma frase. A frase é dele.',
@@ -1363,7 +1363,7 @@ c23_final_socio:{
   final:{id:'socio', titulo:'DOIS SEGUNDOS', texto:[
     'Você sobe do vale e volta pra Celadon e toca a rede por mais quatro anos.',
     'Ela cresce. Você é {bom|boa} nisso — você é muito {bom|boa} nisso, melhor que a Terceira, porque você viu Kanto inteira de perto e sabe onde as coisas doem.',
-    'A Liga te pega no quinto ano. Não por heroísmo de ninguém: por planilha. Um contador comete um erro de lançamento e um auditor puxa o fio.',
+    'A polícia te pega no quinto ano. Não por heroísmo de ninguém: por planilha. Um contador comete um erro de lançamento e um auditor puxa o fio.',
     'Você pega nove anos. Cumpre cinco.',
     'Na prisão, você recebe uma visita que não estava na lista e que ninguém registrou na portaria. Ela dura quarenta segundos e acontece de madrugada, e o que é dito nela você nunca conta pra ninguém.',
     'Quando você sai, você não volta pro negócio. Não por arrependimento.',
@@ -1404,7 +1404,7 @@ c23_final_posse:{
   ],
   final:{id:'posse', titulo:'O QUE VOCÊ CARREGA', texto:[
     'Você sobrevive ao vale. Muita gente não teria.',
-    'A partir daí, as coisas acontecem numa ordem previsível: a Liga emite a ordem de devolução. Você recusa. Emitem a detenção. Você foge.',
+    'A partir daí, as coisas acontecem numa ordem previsível: o governo emite a ordem de devolução. Você recusa. A Patrulha emite a detenção. Você foge.',
     'Kanto passa a ter um clima que os meteorologistas param de tentar prever. Incêndios em Cinnabar. Gelo na Rota 11 em pleno verão. Duas cidades evacuadas parcialmente.',
     'Você fica com ele. É a única coisa que você tem depois de um tempo — as pessoas vão saindo, uma por uma, do jeito que as pessoas saem: sem anúncio.',
     'Ele nunca fala com você. Nem uma vez, depois da Pokébola. Ele sabe falar. Escolhe não falar.',

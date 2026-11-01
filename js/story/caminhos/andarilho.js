@@ -21,7 +21,7 @@ ca1_a_pedra:{
     'A mulher da pedra tem uns cinquenta anos, bota de lona remendada três vezes e um mapa de Kanto feito à mão, dobrado em dezesseis, com borracha em cima.',
     d => { Nomes.apresentar('a mulher do mapa'); return 'Na capa do caderno de desenho dela, a lápis: TAMSIN REED — MAPA 7.'; },
     fala('a mulher do mapa', 'Esse é o sétimo. Os outros seis estavam errados. Esse também está, mas eu ainda não sei onde.'),
-    fala('a mulher do mapa', 'Tem um vale aqui atrás que não está em mapa nenhum da Liga. Nem no meu. Eu ouvi ele de noite, de longe. Quer ir ver?')
+    fala('a mulher do mapa', 'Tem um vale aqui atrás que não está em mapa oficial nenhum. Nem no meu. Eu ouvi ele de noite, de longe. Quer ir ver?')
   ],
   ef:{flag:'cm_andarilho_1', registrar:'Conheceu Tamsin Reed, que faz mapas de Kanto à mão e está no sétimo.'},
   escolhas:[
@@ -307,7 +307,7 @@ ca3_o_marco:{
 
 ca3_a_estrada:{
   texto:[
-    'A estrada velha do oeste é de pedra, de antes da Liga, com marco a cada légua. Ninguém usa desde que abriram a estrada nova.',
+    'A estrada velha do oeste é de pedra, mais velha que qualquer mapa, com marco a cada légua. Ninguém usa desde que abriram a estrada nova.',
     'Vocês andam três dias. Ela desenha, você conta Pokémon, e à noite {nenhum dos dois|nenhuma das duas} fala muito.',
     'No terceiro dia, a estrada acaba num muro de pedra caído, e do outro lado do muro tem uma casa sem telhado e uma árvore de Oran no quintal, carregada.',
     fala('a mulher do mapa', 'A casa onde eu nasci.', 'baixo')

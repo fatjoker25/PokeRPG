@@ -374,16 +374,16 @@ cc2_fim:{
 
 /* ── III · A TERCEIRA EDIÇÃO (depois do 25) ─────────────────── */
 {
-num:25.03, titulo:'A Terceira Edição', local:'Saffron — o auditório da Liga', ambiente:'cidade', nivelArea:58,
+num:25.03, titulo:'A Terceira Edição', local:'Saffron — o auditório da Fiscalização', ambiente:'cidade', nivelArea:58,
 tom:'muito sombrio',
-ancora:{local:'saffron', chamada:'Na porta do auditório da Liga tem uma lista de quem defende trabalho hoje, e o seu nome está nela, escrito errado.'},
+ancora:{local:'saffron', chamada:'Na porta do auditório da Fiscalização tem uma lista de quem defende trabalho hoje, e o seu nome está nela, escrito errado.'},
 entradas:['cc3_a_banca'],
 inicio: d => 'cc3_a_banca',
 cenas:{
 
 cc3_a_banca:{
   texto:[
-    'O auditório da Liga em Saffron tem duzentas cadeiras e, hoje, quarenta pessoas. Na mesa da banca, três: um professor de Celadon, uma médica de Pokémon de Cinnabar, e o Dr. Hollis, da Estação 4.',
+    'O auditório da Fiscalização em Saffron tem duzentas cadeiras e, hoje, quarenta pessoas. Na mesa da banca, três: um professor de Celadon, uma médica de Pokémon de Cinnabar, e o Dr. Hollis, da Estação 4.',
     fala('Professor Oak', 'O Hollis na banca. Isso não é coincidência, é convite.', 'baixo'),
     fala('Professor Oak', 'Hoje é a terceira edição do livro. A primeira eu escrevi sozinho. A segunda eu errei. Esta é sua também.'),
     d => d.flags.cm_ciencia_sete && d.flags.cm_ciencia_dois_anos
@@ -394,11 +394,11 @@ cc3_a_banca:{
           ? 'No seu fichário: dois anos de vida útil, com o caderno de bancada. Uma coisa que ninguém na mesa quer ouvir.'
           : 'No seu fichário, o que você conseguiu juntar. É menos do que você queria.'
   ],
-  ef:{flag:'cm_ciencia_3', registrar:'Defendeu dados contra o manejo e o viveiro numa banca da Liga, com o Dr. Hollis na mesa.',
+  ef:{flag:'cm_ciencia_3', registrar:'Defendeu dados contra o manejo e o viveiro numa banca da Fiscalização, com o Dr. Hollis na mesa.',
       executar:() => { caminhoEntre(9, 17, 14); }},
   escolhas:[
     {texto:'Apresentar os números, sem adjetivo.', vai:'cc3_os_numeros',
-     ef:{rep:{eixo:'bom', delta:1, motivo:'Apresentou os números na banca da Liga sem adjetivo'}}},
+     ef:{rep:{eixo:'bom', delta:1, motivo:'Apresentou os números na banca da Fiscalização sem adjetivo'}}},
     {texto:d => {
        const c = [];
        if (d.flags.cm_ciencia_1) c.push('do bando de Doduo da Rota 14');
@@ -501,7 +501,7 @@ cc3_o_hollis:{
 cc3_seguir:{
   texto:[
     fala('Professor Oak', 'Vai. Livro bom é livro que espera o autor voltar com mais coisa.', 'riso'),
-    'O ônibus da Liga pro Planalto sai às oito e quinze do dia seguinte. O fichário vai no seu colo a viagem inteira.'
+    'O ônibus pro Planalto sai às oito e quinze do dia seguinte. O fichário vai no seu colo a viagem inteira.'
   ],
   ef:{flag:'cm_ciencia_seguiu_planalto', executar:() => { Relogio.amanhaAs(8); }},
   fim:true, resumo:'A terceira edição: uma banca, um bebedouro e um homem que estava certo num mundo pior que ele.'

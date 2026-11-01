@@ -424,7 +424,7 @@ cm3_depois:{
 cm3_seguir:{
   texto:[
     fala('o intermediário', 'Vai. Se precisar de mim, deixa um chapéu num banco de rodoviária. Eu acho.', 'riso'),
-    'O ônibus da Liga pro Planalto sai às oito e quinze, de Vermilion.'
+    'O ônibus pro Planalto sai às oito e quinze, de Vermilion.'
   ],
   ef:{flag:'cm_merc_seguiu', executar:() => { caminhoAs(8); }},
   fim:true, resumo:'O último preço: duas mesas, dois envelopes e uma funcionária de cartório com um Bellsprout na janela.'
