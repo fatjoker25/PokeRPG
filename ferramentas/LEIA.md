@@ -22,6 +22,13 @@ eles acham o `index.html` sozinhos e carregam os scripts na ordem de lá.
 | `sim-veteranos.js` | força dos veteranos, dos convites e das três rodadas da Conferência do Planalto Indigo |
 | `sim-moral.js` | moral do time capítulo a capítulo (1 a 20), quanto a história e a fome tiram, quantas Rações o time come e a chance de desobedecer — de quem anda com Ração e de quem nunca compra |
 
+Um é Python, porque precisa ler imagem (Pillow, o mesmo dos geradores de
+rosto em `variar-rostos.py` e `desenhar-capuz.py`):
+
+| arquivo | o que ele acusa |
+|---|---|
+| `chk-arte.py` | GIF animada que não tem a cara da arte parada da mesma espécie — forma regional, outra espécie ou brilhante trocado. A PokeAPI tinha o Rattata de costas de Alola no lugar do de Kanto |
+
 Rodar todos os de Node:
 
 ```sh

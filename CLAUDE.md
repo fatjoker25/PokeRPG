@@ -264,7 +264,11 @@ arena soma à margem os 24% que a arte parada tinha embaixo do pé.
 Quem mede a arte pergunta `peDoSprite(img)` (76% na parada, 100% na
 GIF) — `Efeitos.alvo`, a cena do Showdown e o desmaio já perguntam.
 Com GIF o repouso é o da própria GIF: o `AnimadorSprite` não respira
-por cima. Sem a GIF a `<img>` cai sozinha na arte parada
+por cima. A PokeAPI tem arquivo trocado: o Rattata animado de costas
+era o de Alola, e o seu Rattata virava de Alola na luta. O certo veio do
+Showdown (`gen5ani-back`, a mesma coleção), e `python3
+ferramentas/chk-arte.py` confere cada GIF contra a arte parada da mesma
+vista, pela cor: GIF nova ou trocada passa por ali. Sem a GIF a `<img>` cai sozinha na arte parada
 (`spriteParado`). O `pokerpg.html` **embute as GIFs**
 (`SPRITES_SO_NO_UNICO` no `build.py`; ~52 MB, ~5 s pra carregar); o
 `artefato.html` não, porque a publicação tem teto de 16 MB — lá a arte é
