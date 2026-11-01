@@ -26,12 +26,28 @@ const REGRAS = [
   ['aspas desbalanceadas',    null]
 ];
 
+/* O que está escrito no mundo copia o papel como ele é: a linha
+   pontilhada do visor ("Z-11 ....... 8,0") e o "PERIGO???" da letra de
+   criança não são erro de quem escreve o jogo. A tela já separa — linha
+   inteira entre ** vira papel, e a aspa de uma linha que fala de placa,
+   painel ou letra de criança (UI._ESCRITO) vira escrito — e aqui essas
+   duas regras de pontuação deixam o papel de fora. O resto (acento,
+   palavra repetida, espaço) continua valendo pra ele também. */
+const DO_PAPEL = new Set(['reticências erradas', 'interrogação dupla']);
+const ESCRITO = typeof UI !== 'undefined' && UI._ESCRITO;
+const semPapel = t => {
+  if (/^\*\*[^*][\s\S]*\*\*$/.test(t.trim())) return '';
+  const antes = t.split('"')[0];
+  return (ESCRITO && t.includes('"') && ESCRITO.test(antes)) ? t.replace(/"[^"]*"/g, '""') : t;
+};
+
 let total=0; const achados={};
 const ver = (texto, onde) => {
   if (typeof texto !== 'string') return;
+  const fora = semPapel(texto);
   for (const [nome, re] of REGRAS){
     if (!re) continue;
-    if (re.test(texto)){
+    if (re.test(DO_PAPEL.has(nome) ? fora : texto)){
       const mm = texto.match(re);
       const i = mm ? mm.index : 0;
       (achados[nome] = achados[nome] || []).push(onde + ' :: ...' + texto.slice(Math.max(0,i-45), i+45) + '...');

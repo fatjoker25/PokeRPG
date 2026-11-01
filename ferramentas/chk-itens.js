@@ -28,7 +28,7 @@ const ehBolsa = n => /^(Mochila|Bolsa)\s/.test(n);
 const COMPRA_DE_ENREDO = new Set([
   'Recibo de consignação',
   'Saco de pipoca',
-  'Medalha de natação da filha do Vernon'
+  'Medalha de natação da filha do Sr. Wells'
 ]);
 
 const arqs = [];

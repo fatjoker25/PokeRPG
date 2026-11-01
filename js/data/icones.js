@@ -5,7 +5,8 @@
 
    - ITEM_PIXEL: o ícone de 30×30, em pixel, de cada item que não tem
      equivalente exato nos jogos (Machado, Lanterna, as mochilas…) e,
-     pelo nome, o papel de enredo (bilhete, foto, mapa, caixa, chave).
+     pelo nome, o papel de enredo (bilhete, foto, mapa, caixa, chave,
+     medalha).
      caminhoItem() cai aqui quando ITEM_SPRITE não tem o item. O item
      que tem equivalente nos jogos continua com a arte dos jogos.
    - ICONE: os ícones de traço dos lugares e das ações (Ginásio,
@@ -33,13 +34,15 @@ const CORES_DE_MOCHILA = ['Bege', 'Preta', 'Vermelha', 'Azul', 'Verde', 'Amarela
 const _corDeMochila = c => CORES_DE_MOCHILA.find(x => x.toLowerCase() === String(c || '').toLowerCase());
 
 /* o arquivo do desenho: o do item, o da mochila pela cor ou, pro papel
-   de enredo, o genérico pelo nome (bilhete, foto, mapa, caixa, chave) */
+   de enredo, o genérico pelo nome (bilhete, foto, mapa, caixa, chave,
+   medalha) */
 function arquivoDoDesenho(nome){
   if (ITEM_PIXEL[nome]) return ITEM_PIXEL[nome];
   const m = /^(Mochila|Bolsa) (\S+)/.exec(nome);
   if (m && _corDeMochila(m[2])) return m[1].toLowerCase() + '_' + m[2].toLowerCase();
   const n = nome.toLowerCase();
-  return /foto/.test(n) ? 'foto'
+  return /medalh/.test(n) ? 'medalha'
+       : /foto/.test(n) ? 'foto'
        : /mapa|croqui|planta/.test(n) ? 'mapa'
        : /caixa|lacre|engradado/.test(n) ? 'caixa'
        : /chave|cart[ãa]o-chave|crach/.test(n) ? 'chave'

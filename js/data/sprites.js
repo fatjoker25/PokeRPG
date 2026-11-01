@@ -56,6 +56,33 @@ const SPRITES_PASTA = {
 /* Preenchido pelo build.py no arquivo único. Vazio no modo pasta. */
 const SPRITES_EMBUTIDOS = (typeof SPRITES_DATA !== 'undefined') ? SPRITES_DATA : {};
 
+/* O GIF shiny que é o normal com outra paleta (quase todos) chega do
+   build.py só com as tabelas de cor (SPRITES_PALETA: o normal e, pra
+   cada tabela, onde ela começa e os bytes dela). Monta-se aqui, na
+   primeira vez que alguém pede: os bytes do normal com as tabelas do
+   shiny no lugar, que é o arquivo do shiny, byte a byte. */
+if (typeof SPRITES_PALETA !== 'undefined'){
+  for (const [rel, [normal, tabelas]] of Object.entries(SPRITES_PALETA)){
+    let pronto = null;
+    Object.defineProperty(SPRITES_EMBUTIDOS, rel, {enumerable:true, configurable:true, get(){
+      if (pronto) return pronto;
+      const base = SPRITES_EMBUTIDOS[normal];
+      if (!base) return undefined;
+      try {
+        const bin = atob(base.slice(base.indexOf(',') + 1));
+        const partes = []; let pos = 0;
+        for (const [ini, tab] of tabelas){
+          const t = atob(tab);
+          partes.push(bin.slice(pos, ini), t); pos = ini + t.length;
+        }
+        partes.push(bin.slice(pos));
+        pronto = 'data:image/gif;base64,' + btoa(partes.join(''));
+      } catch (e) { return undefined; }
+      return pronto;
+    }});
+  }
+}
+
 /* vista: 'icone' | 'frente' | 'costas' */
 function caminhoSprite(dexId, vista, shiny){
   const chave = (shiny && vista !== 'icone') ? vista + 'Shiny' : vista;

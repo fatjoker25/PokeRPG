@@ -271,9 +271,20 @@ Showdown (`gen5ani-back`, a mesma coleção), e `python3
 ferramentas/chk-arte.py` confere cada GIF contra a arte parada da mesma
 vista, pela cor: GIF nova ou trocada passa por ali. Sem a GIF a `<img>` cai sozinha na arte parada
 (`spriteParado`). O `pokerpg.html` **embute as GIFs**
-(`SPRITES_SO_NO_UNICO` no `build.py`; ~52 MB, ~5 s pra carregar); o
+(`SPRITES_SO_NO_UNICO` no `build.py`; ~43 MB, ~4 s pra carregar); o
 `artefato.html` não, porque a publicação tem teto de 16 MB — lá a arte é
 a parada.
+
+O `pokerpg.html` fica no repositório e tem que ficar **abaixo de 50 MB**,
+o aviso do GitHub (já passou: 57 MB). O que segura é a paleta: 363 dos
+502 GIFs shiny são o GIF normal byte a byte, menos as tabelas de cor, e
+esses vão só com as tabelas (`SPRITES_PALETA`, do `build.py`); o
+`sprites.js` monta o arquivo na primeira vez que alguém pede, com as
+tabelas do shiny nos bytes do normal — o mesmo arquivo, byte a byte. O
+build decide sozinho quem vai assim (`tabelas_de_cor`), e o que difere
+em outra coisa (tela de outro tamanho, quadro, tempo) vai inteiro. GIF
+trocada de um lado só sai da conta sozinha, mas pesa: medir o arquivo
+depois do build. O build diz quantos foram pela paleta.
 
 Duas consequências que mordem e já estão no CSS. Os dois números
 foram **medidos** pelo canvas nas 251 espécies, não chutados:
@@ -325,7 +336,7 @@ ferramentas/desenhar-itens.py` em `sprites_nds/items/nossos/` (com
 `--folha f.png` sai a folha ampliada ao lado de ícones dos jogos). O
 mapa nome → arquivo é `ITEM_PIXEL` (`js/data/icones.js`); mochila e
 bolsa saem pela cor (`CORES_DE_MOCHILA`), e o papel de enredo pelo tipo
-(bilhete, foto, mapa, caixa, chave, pacote), em `desenhoDoItem`. Item
+(bilhete, foto, mapa, caixa, chave, medalha, pacote), em `desenhoDoItem`. Item
 novo sem equivalente entra no gerador e no `ITEM_PIXEL`; o
 `chk-sprites` confere que todo arquivo apontado existe. Antes eram
 vetores chapados e destoavam dos ícones dos jogos do lado. Lugares,

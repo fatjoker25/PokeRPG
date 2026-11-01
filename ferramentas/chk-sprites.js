@@ -78,7 +78,10 @@ const pixelArq = new Set([...((ic.match(/const ITEM_PIXEL = \{([\s\S]*?)\};/) ||
 for (const cor of [...((ic.match(/const CORES_DE_MOCHILA = \[([\s\S]*?)\];/) || [0, ''])[1]).matchAll(/'([^']+)'/g)].map(m => m[1].toLowerCase())){
   pixelArq.add('mochila_' + cor); pixelArq.add('bolsa_' + cor);
 }
-for (const g of ['foto', 'mapa', 'caixa', 'chave', 'papel', 'pacote']) pixelArq.add(g);
+/* os genéricos saem da própria arquivoDoDesenho: todo '…' depois de ? ou : */
+const genericos = [...((ic.match(/function arquivoDoDesenho\([\s\S]*?\n\}/) || [''])[0]).matchAll(/[?:] '([a-z_]+)'/g)].map(m => m[1]);
+if (genericos.length < 6) falhas.push('os desenhos genéricos de arquivoDoDesenho não foram lidos em icones.js');
+for (const g of genericos) pixelArq.add(g);
 if (pixelArq.size < 30) falhas.push('ITEM_PIXEL ou CORES_DE_MOCHILA não foi lido em icones.js');
 for (const a of pixelArq) if (!fs.existsSync(path.join(raiz, base, 'items/nossos', a + '.png'))) falhas.push(`desenho ${a}.png não existe em items/nossos/ (python3 ferramentas/desenhar-itens.py)`);
 let gritos = 0;

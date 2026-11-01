@@ -516,6 +516,27 @@ def broche():
     return t
 
 
+def medalha():
+    """medalha de prova: a fita em V, a argola e o disco com a onda
+    (as duas do jogo são de natação)"""
+    t = Tela()
+    t.poli([(6, 2), (12, 2), (17.5, 13), (13, 14)], 'azul', fixo=1)              # a tira de cá
+    t.poli([(18, 2), (24, 2), (17, 14), (12.5, 13)], 'azul', fixo=2)             # a de lá, por cima
+    t.linha(9, 2, 14, 12, M['branco'][1])                                         # a listra de cada uma
+    t.linha(21, 2, 16, 12, M['branco'][2])
+    t.elipse(15, 13.2, 1.9, 1.5, 'dourado', fixo=2)                               # a argola
+    t.elipse(15, 20.5, 7.6, 7.6, 'dourado')
+    t.elipse(15, 20.5, 5.4, 5.4, 'dourado', modo='plano', fixo=1)                 # o relevo do meio
+    esc, luz = M['dourado'][3], M['dourado'][0]
+    sobe = [0, 1, 2, 2, 1, 0, 0, 1, 2]                                            # duas ondas, gravadas
+    for base in (17, 21):
+        onda = [(11 + i, base + s) for i, s in enumerate(sobe)]
+        t.pontos(onda, esc)
+        t.pontos([(x, y + 1) for x, y in onda], luz)
+    t.ponto(9, 16, B)
+    return t
+
+
 def papel():
     t = Tela()
     t.poli([(7, 3), (19, 3), (23, 7), (23, 27), (7, 27)], 'papel', grad=0.3)
@@ -607,7 +628,7 @@ DESENHOS = {
     'caderno': caderno, 'isca': isca, 'relogio': relogio, 'uniforme_rede': uniforme,
     'caderno_lote': caderno_lote, 'chave_subsolo': lambda: chave('ferro', velha=True),
     'broche': broche, 'papel': papel, 'foto': foto, 'mapa': mapa, 'caixa': caixa,
-    'chave': chave, 'pacote': pacote,
+    'chave': chave, 'pacote': pacote, 'medalha': medalha,
 }
 CORES_DE_MOCHILA = {'bege': 'lona', 'preta': 'preto', 'vermelha': 'vermelho', 'azul': 'azul', 'verde': 'verde',
                     'amarela': 'amarelo', 'marrom': 'marrom', 'laranja': 'laranja', 'roxa': 'roxo',
