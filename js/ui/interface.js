@@ -332,6 +332,9 @@ const UI = {
     const b = document.body;
     if (url){ b.style.setProperty('--cenario-lugar', `url("${url}")`); b.classList.add('com-cenario'); }
     else { b.style.removeProperty('--cenario-lugar'); b.classList.remove('com-cenario'); }
+    /* o panorama da cidade tem o marco no meio: a placa desce até ele */
+    const foco = url && Arenas.focoDe ? Arenas.focoDe(url) : null;
+    if (foco) b.style.setProperty('--cenario-foco', foco); else b.style.removeProperty('--cenario-foco');
     if (typeof Luz !== 'undefined') Luz.aplicar();
   },
 

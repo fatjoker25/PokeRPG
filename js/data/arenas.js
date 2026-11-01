@@ -82,22 +82,32 @@ const TERRENO = {
 };
 
 /* O fundo da página, atrás do texto: um cenário por lugar do mapa.
-   É só ambiente — não muda regra nenhuma. Os mesmos nove fundos da
-   batalha, mais o campo cercado (Pallet, Rota 1, Fuchsia) e a
-   caverna de gelo das Seafoam. Cena de capítulo num canto que não é
-   o do mapa (a caverna embaixo de uma cidade) usa o ambiente do
-   capítulo. */
+   É só ambiente — não muda regra nenhuma. Rota e caverna usam os
+   fundos da batalha, mais o campo cercado (Rota 1) e a caverna de gelo
+   das Seafoam; cada cidade tem o panorama dela, com o marco e a cor do
+   nome (ferramentas/desenhar-cidades.py) — antes Viridian, Cerulean,
+   Saffron e Celadon dividiam a mesma rua de tijolo. Cena de capítulo
+   num canto que não é o do mapa (a caverna embaixo de uma cidade) usa
+   o ambiente do capítulo. */
 const CENARIO_POR_LOCAL = {
-  pallet:'prado.png', rota1:'prado.png', viridian:'cidade.png', rota22:'montanha.png',
-  rota2:'floresta.png', floresta:'floresta.png', pewter:'montanha.png', rota3:'montanha.png',
-  monte_lua:'caverna.png', rota4:'campo.png', cerulean:'cidade.png', rota24:'agua.png',
-  rota9:'montanha.png', usina:'ruina.png', tunel_rocha:'caverna.png', lavender:'cemiterio.png',
-  rota5:'campo.png', saffron:'cidade.png', rota6:'campo.png', rota7:'campo.png', rota8:'campo.png',
-  vermilion:'agua.png', rota11:'campo.png', rota12:'agua.png', rota13:'campo.png',
-  celadon:'cidade.png', rota16:'campo.png', fuchsia:'prado.png', rota19:'agua.png',
-  seafoam:'gelo.png', cinnabar:'vulcao.png', rota21:'agua.png', rota23:'montanha.png',
+  pallet:'pallet.png', rota1:'prado.png', viridian:'viridian.png', rota22:'montanha.png',
+  rota2:'floresta.png', floresta:'floresta.png', pewter:'pewter.png', rota3:'montanha.png',
+  monte_lua:'caverna.png', rota4:'campo.png', cerulean:'cerulean.png', rota24:'agua.png',
+  rota9:'montanha.png', usina:'ruina.png', tunel_rocha:'caverna.png', lavender:'lavender.png',
+  rota5:'campo.png', saffron:'saffron.png', rota6:'campo.png', rota7:'campo.png', rota8:'campo.png',
+  vermilion:'vermilion.png', rota11:'campo.png', rota12:'agua.png', rota13:'campo.png',
+  celadon:'celadon.png', rota16:'campo.png', fuchsia:'fuchsia.png', rota19:'agua.png',
+  seafoam:'gelo.png', cinnabar:'cinnabar.png', rota21:'agua.png', rota23:'montanha.png',
   caminho_vitoria:'caverna.png', planalto:'montanha.png', norte:'montanha.png',
   ilha_sem_nome:'montanha.png'
+};
+/* Onde a placa do lugar recorta a imagem (a altura, de cima pra baixo).
+   Os fundos da batalha mostram a faixa de cima; o panorama da cidade
+   tem o marco no meio, e a placa desce até ele. */
+const FOCO_DO_CENARIO = {
+  'pallet.png':'44%', 'viridian.png':'42%', 'pewter.png':'40%', 'cerulean.png':'44%',
+  'vermilion.png':'48%', 'lavender.png':'36%', 'celadon.png':'32%', 'fuchsia.png':'40%',
+  'saffron.png':'30%', 'cinnabar.png':'38%'
 };
 
 const Arenas = {
@@ -117,6 +127,12 @@ const Arenas = {
     return typeof cap.ambiente === 'function'
       ? cap.ambiente(d || (typeof Estado !== 'undefined' ? Estado.dados : null) || {})
       : cap.ambiente;
+  },
+
+  /* onde a placa recorta o cenário de agora */
+  focoDe(url){
+    const arq = Object.keys(FOCO_DO_CENARIO).find(a => String(url || '').endsWith('/' + a) || String(url || '') === this.caminho(a));
+    return arq ? FOCO_DO_CENARIO[arq] : null;
   },
 
   /* o fundo da página agora: o lugar do mapa, ou o chão do capítulo */

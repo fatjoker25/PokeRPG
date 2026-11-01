@@ -260,8 +260,18 @@ A abertura toma a tela inteira (`body.na-titulo`, que tira a coluna
 do `#app`); a tela de morte fica no meio (`body.na-abertura`).
 
 Fora da batalha, o **fundo da página** também é o lugar: `CENARIO_POR_LOCAL`
-(em `arenas.js`) dá um cenário a cada ponto do mapa — os nove da batalha,
-mais `prado.png` (Pallet, Rota 1, Fuchsia) e `gelo.png` (Seafoam). Em cena
+(em `arenas.js`) dá um cenário a cada ponto do mapa — os nove da batalha
+nas rotas e cavernas, mais `prado.png` (Rota 1) e `gelo.png` (Seafoam) —,
+e **cada cidade tem o panorama dela**, em pixel no jeito dos fundos do
+Showdown, com o marco e a cor do nome (Pallet branca com o moinho do
+laboratório, Lavender lilás com a Torre, Vermilion no poente com o S.S.
+Anne, Saffron amarela com a Silph…), gerado por `python3
+ferramentas/desenhar-cidades.py` em `sprites_nds/arenas/<cidade>.png`.
+Antes Viridian, Cerulean, Saffron e Celadon dividiam a mesma rua de
+tijolo, e o Showdown não tem mais fundo de cidade. A placa do lugar
+recorta a faixa de cima da imagem; no panorama o marco fica no meio, e
+`FOCO_DO_CENARIO` desce a placa até ele (`--cenario-foco`). Cidade nova
+entra no gerador, no mapa e no foco. Em cena
 de capítulo cujo ambiente não é o do lugar, vale o do capítulo. É só
 estética, fica escurecido e puxado pro tom do capítulo, e entra por
 `UI.pintarCenario()`, chamado no `topo()` de toda tela. Lugar novo em
@@ -767,7 +777,17 @@ laço do próprio Showdown (`laco`, em ms), não no começo do arquivo.
 Fora da luta, a trilha sintetizada é **calma** (`Som.CALMAS`,
 `tocarCalma`): composição própria no clima de cidade pequena dos jogos
 (flauta com vibrato, dedilhado, colchão, eco) — cidade em 3/4 e rota em
-4/4. Três lugares fogem disso, e o contexto sai do ambiente do capítulo
+4/4. **Cada cidade tem a dela** (`CALMAS[<id>]`, contexto `cidade:<id>`;
+a pasta de arquivos continua lendo `cidade`), com o timbre e o ritmo do
+jeito dela: Pallet valsa de flauta, Viridian clarinete, Pewter trompa
+em marcha, Cerulean sino corrido, Vermilion sanfona de porto, Celadon
+sino em bossa com sétima, Fuchsia marimba e Cinnabar tambor de aço em
+ritmo tropical, Saffron metais sobre um pulso de cidade grande; Lavender
+é a Torre. O tocador sabe os timbres `flauta`, `clarinete`, `trompa`,
+`metais`, `sino`, `sanfona`, `marimba` e `aco` e os ritmos `arpejo`,
+`valsa`, `marcha`, `tropical`, `pulso` e `bossa`, e `node
+ferramentas/chk-musica.js` confere que toda melodia fecha a volta e que
+toda cidade do mapa tem tema. Três lugares fogem disso, e o contexto sai do ambiente do capítulo
 na cena e do lugar no mapa (`Som.contexto`):
 - **caverna** (`tocarCaverna`): quase silêncio — grave que mal se ouve,
   gota sem hora marcada, e de vez em quando um ronco ou um tom que sobe

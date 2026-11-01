@@ -351,8 +351,11 @@ const Som = {
       if (amb === 'cemiterio') return 'torre';
       if (amb === 'caverna') return 'caverna';
       /* capítulo que muda de lugar com a cena: a cena na cidade toca a cidade */
-      if (doCap === 'cidade' && typeof cap.ambiente === 'function') return 'cidade';
-      if (L && L.tipo === 'cidade' && !(doCap && doCap !== L.ambiente)) return 'cidade';
+      /* cada cidade tem a dela (CALMAS[id]); sem, a calma de cidade */
+      const idL = typeof Mundo.id === 'function' ? Mundo.id() : null;
+      const daCidade = L && L.tipo === 'cidade' && this.CALMAS[idL] ? 'cidade:' + idL : 'cidade';
+      if (doCap === 'cidade' && typeof cap.ambiente === 'function') return daCidade;
+      if (L && L.tipo === 'cidade' && !(doCap && doCap !== L.ambiente)) return daCidade;
     } catch(e){}
     return 'rota';
   },
@@ -380,7 +383,9 @@ const Som = {
     if (!vol || p.tema === 'nenhuma') return;
     const tema = TEMAS_DE_MUSICA.find(t => t.id === p.tema);
     const [base, sub, resto] = ctx.split(':');   /* 'batalha:lider:pewter' → sub 'lider'; 'batalha:faixa:bw-rival' */
-    const sintetizada = vale(() => this.tocarSintetizada(base, vol));
+    /* 'cidade:celadon' toca a de Celadon; a pasta de arquivos continua por 'cidade' */
+    const calma = base === 'cidade' && sub && this.CALMAS[sub] ? sub : base;
+    const sintetizada = vale(() => this.tocarSintetizada(calma, vol));
     if (!tema || p.tema === 'sintetizada') return sintetizada();
     /* luta: a faixa do Showdown do tipo de luta; sem ela, o arquivo da pasta */
     const daPasta = vale(() => tema.pasta ? this.tocarArquivo(tema.pasta, base, vol, sintetizada, geracao) : sintetizada());
@@ -470,7 +475,85 @@ const Som = {
     torre:{bpm:56, compasso:4, menor:true, assombrado:true,
       acordes:[[48,51,55],[44,48,51],[41,44,48],[43,47,50],[48,51,55],[49,53,56],[44,48,51],[43,47,50]],
       melodia:[[79,1],[78,1],[75,2], [75,1],[74,1],[72,2], [77,1.5],[80,.5],[79,2], [78,3],[null,1],
-               [72,1],[73,1],[77,2], [80,1],[79,1],[75,2], [74,1],[71,1],[68,2], [67,3],[null,1]]}
+               [72,1],[73,1],[77,2], [80,1],[79,1],[75,2], [74,1],[71,1],[68,2], [67,3],[null,1]]},
+    /* ---------- uma por cidade ----------
+       Composição própria, cada uma com o jeito da cidade: timbre da
+       melodia (flauta, clarinete, trompa, sino, sanfona, marimba, aço) e
+       ritmo do acompanhamento (arpejo, valsa, marcha, tropical, pulso,
+       bossa). Lavender continua com a Torre. Toda melodia soma
+       acordes × compasso (ferramentas/chk-musica.js confere). */
+    /* Pallet: casa — valsa lenta de flauta, Sol maior */
+    pallet:{bpm:80, compasso:3, timbre:'flauta', ritmo:'valsa',
+      acordes:[[55,59,62],[52,55,59],[48,52,55],[50,54,57],[55,59,62],[52,55,59],[45,48,52],[50,54,57],
+               [48,52,55],[50,54,57],[47,50,54],[52,55,59],[45,48,52],[50,54,57],[55,59,62],[55,59,62]],
+      melodia:[[71,1.5],[69,.5],[67,1], [64,2],[67,1], [72,1.5],[71,.5],[69,1], [69,3],
+               [71,1.5],[69,.5],[67,1], [71,1],[74,2], [72,1],[71,1],[69,1], [66,1],[69,2],
+               [76,2],[74,1], [72,1],[74,2], [74,1.5],[71,.5],[74,1], [79,3],
+               [76,1],[74,1],[72,1], [71,1],[69,1],[66,1], [67,3], [null,3]]},
+    /* Viridian: a mata em volta — clarinete, Ré maior, arpejo */
+    viridian:{bpm:92, compasso:4, timbre:'clarinete', ritmo:'arpejo',
+      acordes:[[50,54,57],[47,50,54],[55,59,62],[45,49,52],[50,54,57],[47,50,54],[52,55,59],[45,49,52],
+               [55,59,62],[45,49,52],[54,57,61],[47,50,54],[55,59,62],[45,49,52],[50,54,57],[50,54,57]],
+      melodia:[[66,1],[69,1],[74,2], [73,1],[71,1],[66,2], [67,1],[71,1],[74,1],[71,1], [69,3],[null,1],
+               [66,1],[69,1],[74,1.5],[76,.5], [74,1],[71,1],[66,2], [67,1],[71,1],[76,1],[74,1], [73,4],
+               [71,1.5],[74,.5],[79,2], [76,1],[73,1],[69,2], [73,1.5],[69,.5],[66,2], [71,2],[74,2],
+               [79,1],[78,1],[76,1],[74,1], [73,1],[71,1],[69,2], [74,4], [null,4]]},
+    /* Pewter: pedra — trompa em marcha, Dó com o Si bemol da montanha */
+    pewter:{bpm:88, compasso:4, timbre:'trompa', ritmo:'marcha',
+      acordes:[[48,52,55],[48,52,55],[53,57,60],[48,52,55],[45,48,52],[50,53,57],[55,59,62],[55,59,62],
+               [53,57,60],[48,52,55],[46,50,53],[53,57,60],[50,53,57],[55,59,62],[48,52,55],[48,52,55]],
+      melodia:[[60,1],[64,1],[67,2], [72,2],[67,2], [69,1],[72,1],[69,1],[65,1], [67,4],
+               [69,1],[67,1],[64,2], [65,1],[69,1],[74,2], [71,1.5],[69,.5],[67,2], [62,2],[null,2],
+               [65,1],[69,1],[72,2], [76,2],[72,2], [74,1],[70,1],[65,2], [72,3],[null,1],
+               [69,1],[72,1],[74,1],[72,1], [71,1],[67,1],[74,2], [72,4], [null,4]]},
+    /* Cerulean: água — sino em arpejo corrido, Lá maior */
+    cerulean:{bpm:100, compasso:3, timbre:'sino', ritmo:'arpejo',
+      acordes:[[45,49,52],[45,49,52],[42,45,49],[42,45,49],[50,54,57],[52,56,59],[45,49,52],[52,56,59],
+               [42,45,49],[49,52,56],[50,54,57],[45,49,52],[47,50,54],[52,56,59],[45,49,52],[45,49,52]],
+      melodia:[[76,2],[73,1], [69,1],[71,1],[73,1], [78,2],[76,1], [73,3],
+               [74,1],[78,1],[81,1], [80,2],[76,1], [81,1.5],[80,.5],[78,1], [76,3],
+               [73,1],[76,1],[81,1], [80,2],[76,1], [78,1.5],[76,.5],[74,1], [73,3],
+               [74,1],[78,1],[74,1], [71,1],[74,1],[80,1], [81,3], [null,3]]},
+    /* Vermilion: o porto — sanfona em valsa de marinheiro, Sol com Fá */
+    vermilion:{bpm:116, compasso:3, timbre:'sanfona', ritmo:'valsa',
+      acordes:[[55,59,62],[55,59,62],[48,52,55],[55,59,62],[55,59,62],[52,55,59],[45,48,52],[50,54,57],
+               [48,52,55],[55,59,62],[53,57,60],[48,52,55],[55,59,62],[50,54,57],[55,59,62],[55,59,62]],
+      melodia:[[62,1],[67,1],[71,1], [74,2],[71,1], [72,1],[76,1],[72,1], [71,3],
+               [67,1],[71,1],[74,1], [79,2],[76,1], [72,1],[76,1],[74,1], [69,3],
+               [76,1.5],[74,.5],[72,1], [71,1],[74,2], [72,1],[69,1],[65,1], [67,3],
+               [71,1],[74,1],[79,1], [78,1.5],[76,.5],[74,1], [67,3], [null,3]]},
+    /* Celadon: a loja e o jardim — sino em bossa, acordes com sétima */
+    celadon:{bpm:100, compasso:4, timbre:'sino', ritmo:'bossa',
+      acordes:[[46,50,53,57],[43,46,50,53],[48,51,55,58],[53,57,60,63],[46,50,53,57],[43,46,50,53],[51,55,58,62],[53,57,60,63],
+               [50,53,57,60],[43,46,50,53],[48,51,55,58],[53,57,60,63],[51,55,58,62],[53,57,60,63],[46,50,53,57],[46,50,53,57]],
+      melodia:[[74,1.5],[72,.5],[70,1],[65,1], [67,1],[70,1],[74,2], [75,1.5],[74,.5],[72,1],[70,1], [69,3],[null,1],
+               [74,1.5],[72,.5],[70,1],[77,1], [74,2],[70,2], [70,1],[74,1],[79,2], [77,2],[75,1],[72,1],
+               [69,1],[72,1],[77,2], [74,1.5],[72,.5],[70,2], [67,1],[70,1],[75,1],[72,1], [69,2],[72,2],
+               [79,1.5],[77,.5],[74,1],[70,1], [72,1],[69,1],[65,2], [70,4], [null,4]]},
+    /* Fuchsia: a Zona Safári — marimba em ritmo tropical, Dó maior */
+    fuchsia:{bpm:108, compasso:4, timbre:'marimba', ritmo:'tropical',
+      acordes:[[48,52,55],[53,57,60],[55,59,62],[48,52,55],[45,48,52],[50,53,57],[55,59,62],[55,59,62],
+               [53,57,60],[48,52,55],[50,53,57],[52,56,59,62],[45,48,52],[53,57,60],[55,59,62],[48,52,55]],
+      melodia:[[72,.5],[76,1],[79,.5],[76,1],[72,1], [77,1],[76,.5],[74,1],[72,1.5], [71,.5],[74,1],[79,1.5],[77,1], [76,3],[null,1],
+               [69,.5],[72,1],[76,.5],[81,2], [77,1],[74,1],[69,2], [71,.5],[74,.5],[77,1],[76,.5],[74,1.5], [74,2],[null,2],
+               [77,.5],[81,1],[77,.5],[72,2], [76,1.5],[74,.5],[72,2], [74,.5],[77,1],[81,.5],[79,2], [80,2],[76,2],
+               [81,1],[76,1],[72,1],[69,1], [72,.5],[77,1],[81,.5],[77,2], [79,1.5],[77,.5],[74,1],[71,1], [72,3],[null,1]]},
+    /* Saffron: a capital — metais sobre um pulso de cidade grande, Mi dórico */
+    saffron:{bpm:112, compasso:4, timbre:'metais', ritmo:'pulso',
+      acordes:[[52,55,59],[45,49,52],[52,55,59],[45,49,52],[48,52,55],[50,54,57],[52,55,59],[52,55,59],
+               [55,59,62],[50,54,57],[48,52,55],[47,50,54],[52,55,59],[45,49,52],[50,54,57],[52,55,59]],
+      melodia:[[71,.5],[71,.5],[74,1],[76,1],[71,1], [73,1],[69,1],[76,2], [79,.5],[78,.5],[76,1],[74,1],[71,1], [73,3],[null,1],
+               [72,1],[76,1],[79,1.5],[76,.5], [78,1],[74,1],[69,2], [71,1],[74,1],[76,1],[79,1], [76,3],[null,1],
+               [79,1.5],[78,.5],[74,2], [78,1],[81,1],[78,2], [76,1],[79,1],[84,2], [83,1.5],[81,.5],[78,2],
+               [79,1],[76,1],[71,2], [73,1],[76,1],[81,2], [78,1],[74,1],[69,2], [71,3],[null,1]]},
+    /* Cinnabar: a ilha do vulcão — tambor de aço em calipso, Fá maior */
+    cinnabar:{bpm:104, compasso:4, timbre:'aco', ritmo:'tropical',
+      acordes:[[53,57,60],[46,50,53],[48,52,55],[53,57,60],[50,53,57],[55,58,62],[48,52,55],[48,52,55],
+               [46,50,53],[53,57,60],[55,58,62],[45,49,52,55],[50,53,57],[46,50,53],[48,52,55],[53,57,60]],
+      melodia:[[72,.5],[77,1],[81,.5],[79,1],[77,1], [74,1],[77,.5],[74,1],[70,1.5], [72,.5],[76,1],[79,1.5],[76,1], [77,3],[null,1],
+               [74,.5],[77,1],[81,.5],[86,2], [82,1],[79,1],[74,2], [76,.5],[79,.5],[84,1],[82,.5],[79,1.5], [79,2],[null,2],
+               [77,.5],[82,1],[77,.5],[74,2], [81,1.5],[79,.5],[77,2], [79,.5],[82,1],[86,.5],[84,2], [85,2],[81,2],
+               [86,1],[81,1],[77,1],[74,1], [74,.5],[77,1],[82,.5],[77,2], [79,1.5],[77,.5],[76,1],[72,1], [77,3],[null,1]]},
   },
   tocarCalma(ctx, vol){
     const c = this.ctx(); if (!c) return;
@@ -510,6 +593,44 @@ const Som = {
       envelope(o, t, .07, dur * .92, .35, .5); envelope(mistura, t, .07, dur * .92, .35, .5);
       [o, o2, vib].forEach(x => { x.start(t); x.stop(t + dur + .5); });
     };
+    /* o timbre da melodia: a flauta é o de sempre; as cidades trazem o delas */
+    const voz = (m, t, dur) => {
+      const tim = P.timbre || 'flauta';
+      if (tim === 'flauta' || P.assombrado) return flauta(m, t, dur);
+      const f0 = hz(m);
+      const osc = (tipo, mult, ct) => { const o = c.createOscillator(); o.type = tipo; o.frequency.value = f0 * mult; if (ct) o.detune.value = ct; return o; };
+      const filtrado = (no, corte) => { const f = c.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = corte; no.connect(f); return f; };
+      const tocar = (os, fim) => os.forEach(o => { o.start(t); o.stop(t + fim); });
+      if (tim === 'clarinete'){            /* quadrada abafada: madeira */
+        const o = osc('square', 1), vib = c.createOscillator(), prof = c.createGain();
+        vib.frequency.value = 4.6; prof.gain.setValueAtTime(0, t); prof.gain.linearRampToValueAtTime(f0 * .003, t + .3);
+        vib.connect(prof); prof.connect(o.frequency);
+        envelope(filtrado(o, 1300), t, .05, dur * .9, .25, .2); tocar([o, vib], dur + .4);
+      } else if (tim === 'trompa'){        /* entrada lenta, redonda */
+        const a = osc('sine', 1), b = osc('sawtooth', 1, 3);
+        envelope(a, t, .12, dur * .9, .3, .42); envelope(filtrado(b, 900), t, .14, dur * .88, .3, .13); tocar([a, b], dur + .5);
+      } else if (tim === 'metais'){        /* metal curto, de cidade grande */
+        const a = osc('sawtooth', 1), b = osc('sawtooth', 1, -6);
+        envelope(filtrado(a, 1700), t, .03, dur * .7, .18, .12); envelope(filtrado(b, 1700), t, .03, dur * .7, .18, .1); tocar([a, b], dur + .3);
+      } else if (tim === 'sino'){          /* celesta: o parcial desafinado do sino e a cauda longa */
+        const a = osc('sine', 1), b = osc('sine', 2.76), d = osc('sine', 5.4);
+        envelope(a, t, .004, .03, Math.min(1.6, dur + .9), .4); envelope(b, t, .004, .02, .7, .11); envelope(d, t, .002, .01, .3, .04);
+        tocar([a, b, d], dur + 1.8);
+      } else if (tim === 'sanfona'){       /* duas palhetas meio desafinadas, com o fole tremendo */
+        const a = osc('sawtooth', 1, -7), b = osc('sawtooth', 1, 7), trem = c.createOscillator(), prof = c.createGain();
+        const fa = filtrado(a, 1600), fb = filtrado(b, 1600), e = envelope(fa, t, .04, dur * .92, .15, .1);
+        envelope(fb, t, .04, dur * .92, .15, .1);
+        trem.frequency.value = 5.5; prof.gain.value = .025; trem.connect(prof); prof.connect(e.gain);
+        tocar([a, b, trem], dur + .3);
+      } else if (tim === 'marimba'){       /* madeira batida: cai depressa */
+        const a = osc('sine', 1), b = osc('sine', 4, 0);
+        envelope(a, t, .003, .02, .5, .5); envelope(b, t, .002, .01, .12, .12); tocar([a, b], .8);
+      } else if (tim === 'aco'){           /* tambor de aço: parciais em cima, brilho de metal */
+        const a = osc('sine', 1), b = osc('sine', 2, 4), d = osc('sine', 3, -3);
+        envelope(a, t, .004, .03, .85, .42); envelope(b, t, .004, .02, .5, .16); envelope(d, t, .003, .01, .25, .06);
+        tocar([a, b, d], 1.1);
+      } else flauta(m, t, dur);
+    };
     const dedilhado = (m, t) => {
       const o = c.createOscillator(); o.type = 'triangle'; o.frequency.value = hz(m);
       envelope(o, t, .006, .02, .9, .2); o.start(t); o.stop(t + 1);
@@ -547,11 +668,25 @@ const Som = {
       /* arpejo em colcheias: tônica, quinta, terça em cima, quinta... */
       const arp = [ac[0] + 12, ac[2] + 12, ac[1] + 24, ac[2] + 12];
       const passos = P.compasso * 2;
-      if (!P.menor) for (let k = 0; k < passos; k++) eventos.push({t:t0 + k * tempo / 2, f:t => dedilhado(arp[k % arp.length], t)});
-      else for (let k = 0; k < P.compasso; k += 2) eventos.push({t:t0 + k * tempo, f:t => dedilhado(arp[k % arp.length], t)});
+      const toque = (k, ms) => eventos.push({t:t0 + k * tempo / 2, f:t => ms.forEach(m => dedilhado(m, t))});
+      const ritmo = P.ritmo || 'arpejo';
+      if (P.menor) for (let k = 0; k < P.compasso; k += 2) eventos.push({t:t0 + k * tempo, f:t => dedilhado(arp[k % arp.length], t)});
+      else if (ritmo === 'valsa'){        /* o baixo no um, o acorde no dois e no três */
+        for (let b = 1; b < P.compasso; b++) toque(b * 2, [ac[1] + 12, ac[2] + 12]);
+      } else if (ritmo === 'marcha'){     /* tônica e quinta no baixo, acorde no dois e no quatro */
+        eventos.push({t:t0 + 2 * tempo, f:t => baixo(ac[2] - 12, t, tempo * 1.8)});
+        for (let b = 1; b < P.compasso; b += 2) toque(b * 2, [ac[0] + 12, ac[1] + 12, ac[2] + 12]);
+      } else if (ritmo === 'tropical'){   /* o três-três-dois das ilhas */
+        [0, 3, 6].forEach((k, j) => toque(k, [arp[j % arp.length]]));
+        toque(4, [ac[1] + 12, ac[2] + 12]);
+      } else if (ritmo === 'pulso'){      /* colcheia batendo na tônica, a cidade que não para */
+        for (let k = 0; k < passos; k++) toque(k, [k % 4 === 3 ? ac[2] + 12 : ac[0] + 12]);
+      } else if (ritmo === 'bossa'){      /* a batida quebrada: um, a do dois, o três e a do quatro */
+        [0, 3, 4, 7].forEach((k, j) => toque(k, j % 2 ? [ac[1] + 12, ac[2] + 12] : [ac[0] + 12, (ac[3] || ac[2]) + 12]));
+      } else for (let k = 0; k < passos; k++) toque(k, [arp[k % arp.length]]);
     });
     let at = 0;
-    P.melodia.forEach(([m, d]) => { const dur = d * tempo; if (m != null) eventos.push({t:at, f:t => flauta(m, t, dur)}); at += dur; });
+    P.melodia.forEach(([m, d]) => { const dur = d * tempo; if (m != null) eventos.push({t:at, f:t => voz(m, t, dur)}); at += dur; });
     if (P.assombrado) for (let k = 0; k < 2; k++){ const tg = (k + .3 + Math.random() * .5) * volta_s / 2; eventos.push({t:tg, f:sussurro}); }
     eventos.sort((a, b) => a.t - b.t);
     let inicio = c.currentTime + .15, i = 0;

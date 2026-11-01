@@ -3890,7 +3890,7 @@ svg.icone{flex:0 0 auto;width:18px;height:18px;vertical-align:-3px}
     linear-gradient(var(--luz-cor, #fff), var(--luz-cor, #fff)),
     var(--cenario-lugar, linear-gradient(135deg, var(--painel-2), var(--bg)));
   background-blend-mode:normal, normal, multiply, normal;
-  background-size:cover;background-position:center 10%;background-repeat:no-repeat;
+  background-size:cover;background-position:center var(--cenario-foco, 10%);background-repeat:no-repeat;
   /* as camadas escuras cobrem a borda também: sem isso a última fileira
      da arte aparecia crua, numa linha clara embaixo da placa */
   background-origin:border-box;
