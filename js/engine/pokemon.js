@@ -146,7 +146,7 @@ function criarPokemon(dexId, nivel, opcoes={}){
     historia: opcoes.historia ? concordar(opcoes.historia, genero) : null,
     capturadoEm: opcoes.capturadoEm || null,
     segurando: opcoes.segurando || null,   // item segurado
-    faixaUsada: false,                     // Faixa Firme já salvou nesta batalha?
+    faixaUsada: false,                     // Focus Band já salvou nesta batalha?
     convivencia: 0,                        // combates junto — leva à leitura da natureza
     naturezaVista: !!opcoes.naturezaVista, // você sabe qual é o jeito dele?
     genero                                 // 'm' | 'f' | null

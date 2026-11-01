@@ -172,9 +172,8 @@ function imgSpriteDex(dexId, vista, opcoes){
      sprites_nds/animations/pokeball/{tipo}-ball.png  a bola na arena (24×24)
 
    O mapa vai do nome que o JOGO usa pro arquivo. Só entra item com
-   equivalente exato nos jogos — Resto de Ração é Leftovers porque a
-   ficha é a mesma (7% do HP por turno), Faixa Firme é Focus Band
-   porque sobrevive com 1 HP. Ferramenta que só existe aqui (Machado,
+   equivalente exato nos jogos, e item de segurar é sempre um deles,
+   com o nome e o ícone dos jogos. Ferramenta que só existe aqui (Machado,
    Picareta, Lanterna, Bandagem…) e o que a história te dá ganham
    desenho em pixel no jeito destes (js/data/icones.js,
    ferramentas/desenhar-itens.py).
@@ -201,9 +200,10 @@ const ITEM_SPRITE = {
   'Pedra do Trovão':'thunder_stone', 'Pedra da Folha':'leaf_stone', 'Pedra do Sol':'sun_stone',
   /* fósseis */
   'Fóssil de Hélice':'helix_fossil', 'Fóssil de Domo':'dome_fossil', 'Âmbar Antigo':'old_amber',
-  /* segurados — mesma ficha do item dos jogos */
-  'Resto de Ração':'leftovers', 'Faixa Firme':'focus_band', 'Sino Calmante':'soothe_bell',
-  'Amuleto de Moeda':'amulet_coin', 'Punho de Ferro':'muscle_band', 'Óculos Grossos':'wise_glasses',
+  /* segurados: os dos jogos, com o ícone deles */
+  'Leftovers':'leftovers', 'Focus Band':'focus_band', 'Soothe Bell':'soothe_bell',
+  'Amulet Coin':'amulet_coin', 'Muscle Band':'muscle_band', 'Wise Glasses':'wise_glasses',
+  'Quick Claw':'quick_claw', 'Eviolite':'eviolite',
   /* o mapa da região: o ícone do Town Map abre o mapa desenhado */
   'Mapa de Kanto':'town_map',
   'PP Up':'pp_up', 'Exp. Share':'exp_share',

@@ -40,7 +40,7 @@ const VETERANOS = [
   onde:'no fundo da caverna',
   times:[27, 104, 66, 111, 74, 208],
   golpes:['Rock Slide', 'Dig', 'Earthquake'],
-  premio:{'TM48 Rock Slide':1, 'Colete de Lona':1},
+  premio:{'TM48 Rock Slide':1, 'Eviolite':1},
   apresenta:[
     'A trilha marcada acaba numa placa de "PERIGO" que alguém pintou por cima com "É SÓ OLHAR ONDE PISA".',
     'Depois da placa tem uma barraca, um fogareiro, e um homem de barba branca desenhando num caderno quadriculado com a lanterna presa na testa.',
@@ -165,7 +165,7 @@ const VETERANOS = [
   onde:'no fim do cais de pesca',
   times:[98, 120, 81, 171, 125, 129],
   golpes:['Bubble Beam', 'Thunder Wave', 'Water Gun'],
-  premio:{'TM13 Ice Beam':1, 'Resto de Ração':1},
+  premio:{'TM13 Ice Beam':1, 'Leftovers':1},
   apresenta:[
     'No fim do cais de pesca tem uma mulher de uns sessenta anos, de capa de chuva num dia sem chuva, fazendo um Gyarados subir e descer na água como quem ensina escada a criança.',
     fala('Rhoda', 'Trinta e um anos de mar. Rhoda. Eu comandava rebocador nesse porto quando o porto ainda era de rebocador.'),
@@ -226,7 +226,7 @@ const VETERANOS = [
   onde:'na casa de chá',
   times:[200, 96, 177, 124, 122, 92],
   golpes:['Shadow Ball', 'Psychic', 'Dream Eater'],
-  premio:{'TM30 Shadow Ball':1, 'Sino Calmante':1},
+  premio:{'TM30 Shadow Ball':1, 'Soothe Bell':1},
   apresenta:[
     'O segundo andar da casa de chá tem uma mesa só, perto da janela que dá pra Torre. Uma mulher de xale joga paciência com um baralho de cartas sem desenho.',
     'Ela serve a segunda xícara antes de você sentar.',
@@ -289,7 +289,7 @@ const VETERANOS = [
   onde:'no jardim do terraço',
   times:[114, 209, 241, 35, 43, 102],
   golpes:['Giga Drain', 'Body Slam', 'Mega Drain'],
-  premio:{'TM19 Giga Drain':1, 'Amuleto de Moeda':1},
+  premio:{'TM19 Giga Drain':1, 'Amulet Coin':1},
   apresenta:[
     'O terraço do prédio mais alto da avenida é um jardim inteiro, com árvore de verdade plantada em vaso do tamanho de um carro.',
     'A mulher que te chamou tem cabelo branco preso com grampo de ouro e as unhas sujas de terra.',
@@ -352,7 +352,7 @@ const VETERANOS = [
   onde:'no salão de luta da rua de trás',
   times:[56, 106, 107, 237, 214, 66],
   golpes:['Dynamic Punch', 'Submission', 'Rock Slide'],
-  premio:{'TM01 Dynamic Punch':1, 'Punho de Ferro':1},
+  premio:{'TM01 Dynamic Punch':1, 'Muscle Band':1},
   apresenta:[
     'O salão tem tatame gasto, espelho rachado na parede do fundo, e um homem de cinquenta e poucos anos contando em voz alta enquanto um Machamp repete o mesmo soco no saco de areia.',
     'Ele para de contar quando você entra. O Machamp não para de socar.',
@@ -398,8 +398,8 @@ const VETERANOS = [
       fala('Conrad', 'Ano que vem ela passa. Ela precisava saber quanto faltava. Agora ela sabe.')
     ],
     recompensa:()=>{
-      Estado.darItem('Faixa Firme', 1); Estado.darItem('PP Up', 1); Estado.j.dinheiro += 6000;
-      return [{tipo:'item', texto:'+6.000 ₽ · Faixa Firme · PP Up'}];
+      Estado.darItem('Focus Band', 1); Estado.darItem('PP Up', 1); Estado.j.dinheiro += 6000;
+      return [{tipo:'item', texto:'+6.000 ₽ · Focus Band · PP Up'}];
     }
   }
 },
@@ -411,7 +411,7 @@ const VETERANOS = [
   onde:'no posto da Ciclovia',
   times:[23, 88, 211, 41, 32, 109],
   golpes:['Sludge Bomb', 'Toxic', 'Earthquake'],
-  premio:{'TM36 Sludge Bomb':1, 'Botina Leve':1},
+  premio:{'TM36 Sludge Bomb':1, 'Quick Claw':1},
   apresenta:[
     'O posto da Ciclovia fica aberto a noite inteira, e a noite inteira tem moto parada em fila na frente dele.',
     'Quem manda na fila é um homem grisalho de jaqueta de lona remendada, sentado no banco de fita da moto mais velha.',
@@ -531,7 +531,7 @@ const VETERANOS = [
   onde:'na lagoa de gelo',
   times:[220, 215, 124, 90, 86, 131],
   golpes:['Blizzard', 'Ice Beam', 'Icy Wind'],
-  premio:{'TM14 Blizzard':1, 'Faixa Firme':1},
+  premio:{'TM14 Blizzard':1, 'Focus Band':1},
   apresenta:[
     'A lagoa de dentro das ilhas é verde-escura, com uma crosta de gelo nas bordas, e tem um homem saindo dela de roupa de borracha como se fosse agosto.',
     'Ele tira a máscara e o rosto está roxo de frio e sorrindo.',
@@ -588,7 +588,7 @@ const VETERANOS = [
   onde:'na barraca da encosta',
   times:[58, 109, 100, 126, 228, 137],
   golpes:['Tri Attack', 'Fire Blast', 'Thunderbolt'],
-  premio:{'TM49 Tri Attack':1, 'Óculos Grossos':1},
+  premio:{'TM49 Tri Attack':1, 'Wise Glasses':1},
   apresenta:[
     'A barraca laranja está presa na encosta com estaca de ferro, e tem fio de sensor saindo dela pra todo lado, enterrado na pedra quente.',
     'A mulher lá dentro usa óculos de proteção na testa e escreve número numa prancheta sem olhar pro papel.',

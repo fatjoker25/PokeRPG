@@ -20,7 +20,7 @@
    escuro, luz de cima à esquerda (ferramentas/desenhar-itens.py, em
    sprites_nds/items/nossos/). Item novo sem arte entra lá e aqui. */
 const ITEM_PIXEL = {
-  'Bandagem':'bandagem', 'Cantil':'cantil', 'Ração':'racao', 'Colete de Lona':'colete', 'Botina Leve':'botina',
+  'Bandagem':'bandagem', 'Cantil':'cantil', 'Ração':'racao',
   'Bota de borracha':'bota_borracha', 'Machado':'machado', 'Picareta':'picareta', 'Lanterna':'lanterna',
   'Pilha':'pilha', 'Máscara de pó':'mascara', 'Cobertor térmico':'cobertor', 'Câmera descartável':'camera',
   'Caderno de campo':'caderno', 'Isca':'isca', 'Relógio':'relogio',

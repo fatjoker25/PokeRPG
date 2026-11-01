@@ -358,8 +358,23 @@ sozinha — e é por ser silencioso que precisa de script.
 ## Ícone de item e arremesso da bola
 Ícones em `sprites_nds/items/`, 30×30. `ITEM_SPRITE` (em `js/data/sprites.js`)
 vai do nome que **o jogo** usa pro arquivo, e só entra item com equivalente
-exato nos jogos — Resto de Ração é Leftovers porque a ficha é a mesma, Faixa
-Firme é Focus Band porque sobrevive com 1 HP. Ferramenta que só existe aqui
+exato nos jogos.
+
+**Item de segurar é sempre um dos jogos**, com o nome e o ícone deles:
+Leftovers, Focus Band, Muscle Band, Wise Glasses, Eviolite, Quick Claw,
+Soothe Bell, Amulet Coin e Exp. Share. O Colete de Lona e a Botina Leve
+eram inventados, com desenho nosso, e repetiam o Eviolite e o Quick Claw
+do livro; o Resto de Ração e os outros eram itens dos jogos com nome
+traduzido. O Quick Claw (+2 na iniciativa) e o Eviolite (+1 de
+Vitalidade e de Instinto contra dano) têm o efeito do Pokérole 3.0, e o
+Eviolite só pega em quem ainda evolui, por qualquer caminho
+(`aindaEvolui`, lido no `efeitoSegurado`); os outros o livro não tem, e
+o efeito é o dos jogos traduzido pra parada de dados. A lista inteira,
+com o efeito de cada um, está na folha de regras. O `chk-icones` reprova
+segurado sem ícone dos jogos e luta que segura item que não existe, e
+nome que muda entra no `ITEM_NOVO` do `Estado.abrir`.
+
+Ferramenta que só existe aqui
 (Machado, Picareta, Lanterna…), a Ração, a Bandagem, as mochilas, o que
 a rede te dá e o papel de enredo ganham **desenho em pixel no jeito dos
 ícones dos jogos** — 30×30, contorno cinza-escuro, luz de cima à

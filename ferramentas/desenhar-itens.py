@@ -343,32 +343,6 @@ def racao():
     return t
 
 
-def colete():
-    t = Tela()
-    esq = [(7, 7), (11, 4), (14, 12), (14, 26), (7, 26), (5, 16), (8, 12)]
-    dir_ = [(23, 7), (19, 4), (16, 12), (16, 26), (23, 26), (25, 16), (22, 12)]
-    t.poli(esq, 'lona', grad=0.5)
-    t.poli(dir_, 'lona', grad=0.5)
-    t.ret(14, 12, 15, 26, 'lona_esc', fixo=3)
-    t.ret(12, 16, 18, 17, 'marrom', fixo=2)                            # a correia
-    t.ret(14, 15, 16, 18, 'aco', borda=True)                           # a fivela
-    t.ret(8, 19, 11, 22, 'lona_esc', fixo=1)                           # o remendo
-    t.pontos([(8, 19), (11, 19), (8, 22), (11, 22)], M['lona_esc'][3])
-    return t
-
-
-def botina():
-    t = Tela()
-    t.poli([(11, 5), (19, 5), (19, 16), (24, 19), (24, 23), (6, 23), (6, 19), (11, 17)], 'marrom', grad=0.6)
-    t.ret(5, 23, 24, 25, 'preto', fixo=2)                              # a sola
-    t.linha(6, 24, 23, 24, M['preto'][1])
-    t.ret(11, 5, 19, 7, 'marrom', fixo=3)                              # a borda do cano
-    for y in (9, 11, 13, 15):
-        t.ponto(18, y, M['lona'][0])
-        t.ponto(17, y + 1, M['lona'][0])
-    return t
-
-
 def bota_borracha():
     t = Tela()
     t.bastao(15, 4, 15, 20, 10, 'amarelo')
@@ -912,7 +886,7 @@ def bolsa(mat):
 # o nome do arquivo e quem desenha; o mapa nome → arquivo mora no JS
 DESENHOS = {
     'machado': machado, 'picareta': picareta, 'lanterna': lanterna, 'pilha': pilha,
-    'bandagem': bandagem, 'cantil': cantil, 'racao': racao, 'colete': colete, 'botina': botina,
+    'bandagem': bandagem, 'cantil': cantil, 'racao': racao,
     'bota_borracha': bota_borracha, 'mascara': mascara, 'cobertor': cobertor, 'camera': camera,
     'caderno': caderno, 'isca': isca, 'relogio': relogio, 'uniforme_rede': uniforme,
     'caderno_lote': caderno_lote, 'chave_subsolo': lambda: chave('ferro', velha=True),

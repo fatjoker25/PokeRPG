@@ -15,7 +15,7 @@ function premioTorneio(t, venceu){
   return venceu ? pr.dinheiro : Math.round(pr.dinheiro * 0.3);
 }
 /* Batalha de cena contra treinador paga como nos jogos: o valor da
-   classe × o nível do último Pokémon dele (× o Amuleto de Moeda). Quando
+   classe × o nível do último Pokémon dele (× o Amulet Coin). Quando
    a própria cena de vitória já te entrega dinheiro (o Ezra que tira do
    bolso, o envelope do torneio), o prêmio é esse — não paga em dobro. */
 function premioCena(b){
@@ -1001,7 +1001,7 @@ const Jogo = {
         const val = premioGinasio(g, fim);
         Estado.j.dinheiro += val;
         ganho = val;
-        avisos.push({tipo:'item', texto:`+${fmtDin(val)} ₽${mult > 1 ? ' (Amuleto de Moeda)' : ''}`});
+        avisos.push({tipo:'item', texto:`+${fmtDin(val)} ₽${mult > 1 ? ' (Amulet Coin)' : ''}`});
       }
       festa = Vitoria.ginasio(g, ganho, p.itens);
       if (p.itens) for (const [n,q] of Object.entries(p.itens)){ Estado.darItem(n,q); avisos.push({tipo:'item', texto:`Recebeu ${q}× ${n}.`}); }

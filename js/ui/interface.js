@@ -4668,7 +4668,7 @@ const UI = {
     }
 
     /* o time de relance: quem aprende a TM, em quem a pedra funciona,
-       quem já segura alguma coisa */
+       quem já segura alguma coisa (e, no Eviolite, quem já não evolui) */
     let time = '';
     const vivos = (d.time || []).filter(p => !p.morto);
     const icone = (p, cl, rot) => `<span class="mf-p ${cl}" title="${at(nomeExib(p) + ' · ' + rot)}">${imgSprite(p, 'icone')}<small>${this.esc(rot)}</small></span>`;
@@ -4680,7 +4680,9 @@ const UI = {
         const tab = pedrasDe(n) || {};
         time = vivos.map(p => tab[p.dex] ? icone(p, 'sim', 'funciona') : icone(p, 'nao', 'nada')).join('');
       } else if (info.tipo === 'equipar'){
-        time = vivos.map(p => p.segurando === n ? icone(p, 'ja', 'segura')
+        const naoPega = p => info.efeito && info.efeito.soQuemEvolui && !aindaEvolui(p.dex);
+        time = vivos.map(p => p.segurando === n ? icone(p, naoPega(p) ? 'nao' : 'ja', naoPega(p) ? 'segura à toa' : 'segura')
+          : naoPega(p) ? icone(p, 'nao', 'não evolui')
           : p.segurando ? icone(p, 'nao', 'mão ocupada') : icone(p, 'sim', 'mão livre')).join('');
       }
     }
@@ -6509,7 +6511,17 @@ const UI = {
       <h3>Item segurado</h3>
       <div class="linha"><span class="k">Quantos</span><span class="v">1 por Pokémon</span></div>
       <div class="linha"><span class="k">Onde</span><span class="v">Time → o Pokémon → equipar · ou Mochila, bolso de Itens → equipar</span></div>
-      <p class="sussurro">Trocar devolve o anterior à mochila. O efeito de cada um está escrito na ficha técnica do item, em letra de máquina.</p>
+      <div class="linha"><span class="k">Quais</span><span class="v">os dos jogos, com o nome e o ícone deles · o Quick Claw e o Eviolite fazem o que o livro manda; os outros o livro não tem, e o efeito é o dos jogos traduzido pra parada de dados</span></div>
+      <div class="linha"><span class="k">Leftovers</span><span class="v">+1 de HP no fim de cada turno</span></div>
+      <div class="linha"><span class="k">Focus Band</span><span class="v">uma vez por combate, fica com 1 de HP em vez de cair de um golpe só</span></div>
+      <div class="linha"><span class="k">Muscle Band</span><span class="v">+1 dado de dano em golpe físico</span></div>
+      <div class="linha"><span class="k">Wise Glasses</span><span class="v">+1 dado de dano em golpe especial</span></div>
+      <div class="linha"><span class="k">Eviolite</span><span class="v">+1 de Vitalidade e de Instinto contra dano · só em quem ainda evolui, por nível, pedra, troca ou amizade</span></div>
+      <div class="linha"><span class="k">Quick Claw</span><span class="v">+2 na iniciativa</span></div>
+      <div class="linha"><span class="k">Soothe Bell</span><span class="v">+3 de moral no fim de cada vitória, pra quem termina de pé</span></div>
+      <div class="linha"><span class="k">Amulet Coin</span><span class="v">+50% de dinheiro em vitória contra treinador, se quem segura termina a luta em campo</span></div>
+      <div class="linha"><span class="k">Exp. Share</span><span class="v">quem segura divide metade da experiência de cada nocaute, mesmo sem entrar na luta</span></div>
+      <p class="sussurro">Trocar devolve o anterior à mochila. O efeito de cada um também está na ficha técnica do item, em letra de máquina.</p>
 
       <h3>Dados</h3>
       <p class="sussurro">Toda rolagem do combate aparece na tela como dado de verdade, com o motivo embaixo. Dá pra clicar em qualquer um pra ver ele girar de novo — o resultado não muda, já está registrado. A bandeja embaixo é só pra girar por girar: não afeta nada.</p>

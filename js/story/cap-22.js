@@ -380,7 +380,7 @@ c22_a_final:{
   batalha:{
     tipo:'treinador', fuga:false, treinador:'Nadia', erroIA:10, vontadeIA:true,
     dex:26, nivel:d=>Math.max(46, nivelDeReferencia() - 1),
-    timeExtra:[{dex:115, mais:0}, {dex:103, mais:1}, {dex:94, mais:1}, {dex:59, mais:3, segura:'Faixa Firme'}],
+    timeExtra:[{dex:115, mais:0}, {dex:103, mais:1}, {dex:94, mais:1}, {dex:59, mais:3, segura:'Focus Band'}],
     /* a festa da vitória (vitoria.js); o prêmio é o ef da cena */
     festa:{sub:'Final · Torneio aberto do Planalto', legenda:'Aberto do Planalto Indigo', trofeu:'ouro', cor:'#ff8a3d',
            dinheiro:18000, itens:{'Taça com o ano errado':1}, frase:'O aberto do <b>Planalto Indigo</b> é seu.'},

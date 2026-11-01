@@ -243,17 +243,17 @@ const ACHADOS_ROTA = [
    ef:{itens:{'Câmera descartável':1}}},
   {amb:['especial','cidade'], texto:['Um papel timbrado amassado no chão, com brasão no alto. Você desamassa. É um aviso de cobrança de água.']},
 
-  /* ─── itens segurados: coisa de gente, largada por gente ─── */
-  {amb:['campo','floresta','montanha'], texto:['Amarrado num galho, na altura do peito, um saquinho de pano com ração boa dentro e um nó que alguém deu com muito cuidado.',
-          'O nó é de quem amarrou pra não perder e perdeu assim mesmo.'], ef:{itens:{'Resto de Ração':1}}},
-  {amb:['campo','floresta','montanha','caverna','cidade','ruina'], texto:['Uma faixa de algodão grossa, suja de terra, no meio da trilha. Tem marca de nó nas duas pontas.'], ef:{itens:{'Faixa Firme':1}}},
-  {amb:['montanha','caverna'], texto:['Um peso de chumbo costurado numa tira de lona, encostado numa pedra. Pesa muito mais do que parece.'], ef:{itens:{'Punho de Ferro':1}}},
-  {amb:['cidade','especial'], texto:['Numa mureta, um par de óculos de lente grossa com a armação torta, esperando um dono que não voltou.'], ef:{itens:{'Óculos Grossos':1}}},
-  {amb:['campo','floresta'], texto:['Um colete de lona rachado pendurado numa cerca, com remendo nas costas e a fivela ainda boa.'], ef:{itens:{'Colete de Lona':1}}},
-  {texto:['Um sino de latão do tamanho de uma unha, no chão, com o barbante arrebentado.',
-          'Você balança sem querer e o som é ridículo e você balança de novo de propósito.'], ef:{itens:{'Sino Calmante':1}}},
-  {amb:['agua','cidade'], texto:['Uma moeda antiga furada no meio, pendurada num barbante, presa numa fresta de calçada.'], ef:{itens:{'Amuleto de Moeda':1}}},
-  {amb:['campo','rota','floresta'], texto:['Uma botina de sola fina, quase gasta, do pé esquerdo — e o do direito três metros adiante.'], ef:{itens:{'Botina Leve':1}}}
+  /* ─── itens segurados: os dos jogos, largados por gente ─── */
+  {amb:['campo','floresta','montanha'], texto:['Amarrado num galho, na altura do peito, um saquinho de pano e, dentro, um miolo de fruta que não escureceu. Alguém deu o nó com muito cuidado.',
+          'O nó é de quem amarrou pra não perder e perdeu assim mesmo.'], ef:{itens:{'Leftovers':1}}},
+  {amb:['campo','floresta','montanha','caverna','cidade','ruina'], texto:['Uma faixa vermelha, suja de terra, no meio da trilha. Tem marca de nó nas duas pontas.'], ef:{itens:{'Focus Band':1}}},
+  {amb:['montanha','caverna'], texto:['Uma faixa amarela de punho encostada numa pedra, ainda com o nó dado. Quem largou estava treinando aqui.'], ef:{itens:{'Muscle Band':1}}},
+  {amb:['cidade','especial'], texto:['Numa mureta, um par de óculos de armação preta e lente grossa, esperando um dono que não voltou.'], ef:{itens:{'Wise Glasses':1}}},
+  {amb:['caverna','montanha'], texto:['No meio do cascalho, uma pedra lilás do tamanho de uma noz, lisa demais pra ser daqui. Pega a luz que quase não tem.'], ef:{itens:{'Eviolite':1}}},
+  {texto:['Um sino prateado do tamanho de uma noz, no chão, com o laço arrebentado.',
+          'Você balança sem querer e o som é ridículo e você balança de novo de propósito.'], ef:{itens:{'Soothe Bell':1}}},
+  {amb:['agua','cidade'], texto:['Uma moeda dourada num cordão vermelho, presa numa fresta de calçada.'], ef:{itens:{'Amulet Coin':1}}},
+  {amb:['campo','rota','floresta'], texto:['Uma garra clara, leve e afiada, caída no meio da trilha. Na mão, dá vontade de sair correndo.'], ef:{itens:{'Quick Claw':1}}}
 ];
 
 const Descobertas = {

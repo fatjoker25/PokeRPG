@@ -73,7 +73,7 @@ const SUSPEITO = [
     d.insignias = ['Insígnia Pedra', 'Insígnia Cascata', 'Insígnia Trovão', 'Insígnia Arco-Íris'];
     const sh = criarPokemon(6, 36); sh.shiny = true;
     d.time = [criarPokemon(25, 30), sh, criarPokemon(130, 32), criarPokemon(94, 31), criarPokemon(143, 33), criarPokemon(65, 34)];
-    d.time[3].segurando = 'Resto de Ração';
+    d.time[3].segurando = 'Leftovers';
     d.pc = [criarPokemon(19, 10), criarPokemon(129, 20), criarPokemon(1, 15)];
     const m = criarPokemon(16, 12); m.morto = true; m.causaMorte = 'Rota 2, contra um Spearow'; d.cemiterio = [m];
     for (const [n, q] of [['Poké Ball', 10], ['Great Ball', 5], ['Ultra Ball', 3], ['Potion', 5], ['Super Potion', 2], ['Revive', 2],

@@ -13,7 +13,13 @@
    regra do nome em arquivoDoDesenho passa a pegar ele.
 
    Junta o nome de três lados: ITENS_INFO, todo itens:{'…':n} das cenas
-   e dos dados, e o estoque das lojas. */
+   e dos dados, e o estoque das lojas.
+
+   E item de segurar é sempre um dos jogos, com o nome e o ícone deles
+   (ITEM_SPRITE): o Colete de Lona e a Botina Leve eram inventados, com
+   desenho nosso, e repetiam o Eviolite e o Quick Claw do livro. Quem
+   segura alguma coisa numa luta (segura:, segurando:) segura um item
+   de segurar que existe. */
 const fs = require('fs'), vm = require('vm'), path = require('path');
 const raiz = path.join(__dirname, '..');
 const html = fs.readFileSync(path.join(raiz, 'index.html'), 'utf8');
@@ -34,6 +40,16 @@ for (const d of ['js/story', 'js/story/caminhos', 'js/data', 'js/engine', 'js/ui
       for (const q of (m[1].match(/'([^']+)'\s*:/g) || [])) anota(q.replace(/'\s*:$/, '').slice(1), d + '/' + f);
   }
 
+const inventados = Object.entries(ITENS_INFO).filter(([n, i]) => i.tipo === 'equipar' && !ITEM_SPRITE[n]).map(([n]) => n);
+const seguraFantasma = [];
+for (const d of ['js/story', 'js/story/caminhos', 'js/data', 'js/engine', 'js/ui', 'ferramentas'])
+  for (const f of fs.readdirSync(path.join(raiz, d))){
+    if (!f.endsWith('.js')) continue;
+    const t = fs.readFileSync(path.join(raiz, d, f), 'utf8');
+    for (const m of t.matchAll(/\bsegura(?:ndo)?\s*[:=]\s*'([^']+)'/g))
+      if (!ITENS_INFO[m[1]] || ITENS_INFO[m[1]].tipo !== 'equipar') seguraFantasma.push(`${m[1]}   [${d}/${f}]`);
+  }
+
 const conta = {jogo:0, tm:0, desenho:0, bolsa:0};
 const noPacote = [], semArquivo = [];
 const existe = rel => fs.existsSync(path.join(raiz, SPRITES_BASE + rel));
@@ -48,7 +64,9 @@ for (const [n, onde] of [...nomes].sort((a, b) => a[0].localeCompare(b[0]))){
 
 console.log(`${nomes.size} itens: ${conta.jogo} com a arte dos jogos, ${conta.tm} discos de TM, ${conta.desenho} com desenho nosso, ${conta.bolsa} mochilas e bolsas`);
 const falhas = [];
+if (inventados.length) falhas.push(`item de segurar que não é dos jogos (sem ícone em ITEM_SPRITE) (${inventados.length}):\n   ` + inventados.join('\n   '));
+if (seguraFantasma.length) falhas.push(`luta ou cena segura item que não é de segurar (${seguraFantasma.length}):\n   ` + seguraFantasma.join('\n   '));
 if (noPacote.length) falhas.push(`caem no desenho genérico de pacote (${noPacote.length}):\n   ` + noPacote.join('\n   '));
 if (semArquivo.length) falhas.push(`apontam pra arquivo que não existe (${semArquivo.length}):\n   ` + semArquivo.join('\n   '));
 if (falhas.length){ console.log('\nFALHAS:\n' + falhas.join('\n\n')); process.exit(1); }
-console.log('ok — nenhum item cai no pacote, e todo arquivo apontado existe');
+console.log('ok — nenhum item cai no pacote, todo arquivo apontado existe e todo item de segurar é dos jogos');

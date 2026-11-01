@@ -533,7 +533,7 @@ const Batalha = {
       }
       if (!fisico && this.clima && this.clima.tipo === 'areia' && def.tipos.includes('Pedra')){ dVal++; extraDef += ' + 1 areia'; }
       const segD = efeitoSegurado(def);
-      if (segD && segD.defesa){ dVal += segD.defesa; extraDef += ` + ${segD.defesa} colete`; }
+      if (segD && segD.defesa){ dVal += segD.defesa; extraDef += ` + ${segD.defesa} ${def.segurando}`; }
     }
     const crit = prec.critico ? 2 : 0;
     if (crit) res.critico = true;
@@ -754,7 +754,7 @@ const Batalha = {
     } else if (this.aguentou(defensor, r.dano)){
       defensor.hp = 1;
       this.ev('dano', `${nomeVisivel(defensor)} sofreu ${r.dano} de dano.`, {alvo:souAliado?'inimigo':'aliado', dano:r.dano});
-      this.ev('cura', `A Faixa Firme segurou. ${nomeVisivel(defensor)} fica de pé com 1 de HP.`);
+      this.ev('cura', `A Focus Band segurou. ${nomeVisivel(defensor)} fica de pé com 1 de HP.`);
     } else {
       defensor.hp = Math.max(0, defensor.hp - r.dano);
       this.ev('dano', `${nomeVisivel(defensor)} sofreu ${r.dano} de dano. (${defensor.hp}/${defensor.hpMax})`, {alvo:souAliado?'inimigo':'aliado', dano:r.dano});
@@ -1236,7 +1236,7 @@ const Batalha = {
     }
   },
 
-  /* Faixa Firme: uma vez por combate, não deixa cair de um golpe só */
+  /* Focus Band: uma vez por combate, não deixa cair de um golpe só */
   aguentou(p, danoPrevisto){
     const seg = efeitoSegurado(p);
     if (!seg || !seg.aguenta) return false;
@@ -1742,7 +1742,7 @@ const Batalha = {
       const seg = efeitoSegurado(this.aliado);
       if (seg && seg.dinheiro && this.tipo === 'treinador'){
         this.bonusDinheiro = seg.dinheiro;
-        this.ev('info', `O Amuleto de Moeda vale alguma coisa depois de uma vitória dessas.`);
+        this.ev('info', `O Amulet Coin vale alguma coisa depois de uma vitória dessas.`);
       }
       /* convivência e leitura de natureza */
       if (Estado.tickNatureza) Estado.tickNatureza().forEach(a => this.ev('natureza', a.texto));

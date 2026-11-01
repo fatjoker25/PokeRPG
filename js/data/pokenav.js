@@ -292,8 +292,8 @@ const CONTATOS = [
       fala('Brock', 'Eu criei nove irmãos. Você aprende a ver quando uma coisa foi feita com tempo ou comprada pronta.', 'baixo'),
       fala('Brock', 'Essa foi feita com tempo. Tá anotado aqui do meu lado.')
     ],
-    recompensa:d=>{ Estado.darItem('Punho de Ferro', 1); Estado.darItem('Hyper Potion', 1);
-      return [{tipo:'item', texto:'Recebeu 1× Punho de Ferro e 1× Hyper Potion.'}]; },
+    recompensa:d=>{ Estado.darItem('Muscle Band', 1); Estado.darItem('Hyper Potion', 1);
+      return [{tipo:'item', texto:'Recebeu 1× Muscle Band e 1× Hyper Potion.'}]; },
     rep:{eixo:'bom', delta:1, motivo:'Criou do começo um Pokémon que o líder de Pewter quis ver', notorio:true},
     marca:'brock_viu_a_pedra'
   },
@@ -304,7 +304,7 @@ const CONTATOS = [
       fala('Brock', 'Pedra não é sobre aguentar. Todo mundo acha que é sobre aguentar.'),
       fala('Brock', 'É sobre estar no lugar certo quando o outro cansa. Leva isso pro Planalto.')
     ],
-    efeito:d=>{ Estado.darItem('Faixa Firme', 1); return [{tipo:'item', texto:'Recebeu 1× Faixa Firme.'}]; }
+    efeito:d=>{ Estado.darItem('Focus Band', 1); return [{tipo:'item', texto:'Recebeu 1× Focus Band.'}]; }
   }
 },
 {
@@ -422,8 +422,8 @@ const CONTATOS = [
       fala('Erika', 'Obrigada. Eu precisava lembrar que isso existe.', 'baixo')
     ],
     recompensa:d=>{ d.time.forEach(p=>{ if(!p.morto) p.moral = Math.min(100,(p.moral||50)+8); });
-      Estado.darItem('Sino Calmante', 1);
-      return [{tipo:'item', texto:'Recebeu 1× Sino Calmante. O time inteiro subiu 8 de moral.'}]; },
+      Estado.darItem('Soothe Bell', 1);
+      return [{tipo:'item', texto:'Recebeu 1× Soothe Bell. O time inteiro subiu 8 de moral.'}]; },
     rep:{eixo:'bom', delta:2, motivo:'Mostrou à líder de Celadon um time que quer estar ali', notorio:true},
     marca:'erika_viu_o_time'
   },
@@ -508,8 +508,8 @@ const CONTATOS = [
       fala('Sabrina', 'Obrigada. Eu não podia subir de novo.'),
       'Ela desliga. Você percebe, com atraso, que ela disse obrigada.'
     ],
-    recompensa:d=>{ Estado.subirStatus('percepcao'); Estado.darItem('Sino Calmante', 1);
-      return [{tipo:'rep', texto:'PERCEPÇÃO +1.'}, {tipo:'item', texto:'Recebeu 1× Sino Calmante.'}]; },
+    recompensa:d=>{ Estado.subirStatus('percepcao'); Estado.darItem('Soothe Bell', 1);
+      return [{tipo:'rep', texto:'PERCEPÇÃO +1.'}, {tipo:'item', texto:'Recebeu 1× Soothe Bell.'}]; },
     rep:{eixo:'bom', delta:1, motivo:'Subiu a torre de Lavender calad{o|a}, porque pediram'},
     marca:'sabrina_ouviu_a_torre'
   },
@@ -916,7 +916,7 @@ const CONTATOS = [
 /* a revanche vem com o time da final do aberto, um pouco acima */
 function timeDaNadia(){
   const n = Math.max(48, nivelDeReferencia() + 1);
-  return [26, 115, 103, 94, 59].map((dex, i) => criarPokemon(dex, n + [0, 0, 1, 1, 3][i], i === 4 ? {segurando:'Faixa Firme'} : {}));
+  return [26, 115, 103, 94, 59].map((dex, i) => criarPokemon(dex, n + [0, 0, 1, 1, 3][i], i === 4 ? {segurando:'Focus Band'} : {}));
 }
 
 function contatosDeRivaisExtras(){

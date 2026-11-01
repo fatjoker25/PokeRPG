@@ -218,34 +218,39 @@ const ITENS_INFO = {
                       ficha:'Fóssil · o laboratório de Cinnabar revive o que tem dentro',
                       desc:'Uma pedra cor de mel, morna na mão, com uma sombra pequena presa lá dentro.'},
 
-  /* ─────────── segurados ─────────── */
-  'Resto de Ração':  {tipo:'equipar', cat:'Segurado', efeito:{regen:1},
-                      ficha:'SEGURADO · recupera 1 de HP no fim de cada turno',
-                      desc:'Um saquinho amarrado no cinto com o que sobra da ração boa. Some devagar.'},
-  'Faixa Firme':     {tipo:'equipar', cat:'Segurado', efeito:{aguenta:true},
-                      ficha:'SEGURADO · uma vez por combate, sobrevive a um golpe fatal com 1 HP',
-                      desc:'Faixa de algodão grossa amarrada no punho ou na pata. Não protege de nada. Aperta.'},
-  'Punho de Ferro':  {tipo:'equipar', cat:'Segurado', efeito:{fis:1},
-                      ficha:'SEGURADO · +1 dado de dano em golpes físicos',
-                      desc:'Um peso de chumbo costurado numa tira de lona. Pesa e cansa e funciona.'},
-  'Óculos Grossos':  {tipo:'equipar', cat:'Segurado', efeito:{esp:1},
-                      ficha:'SEGURADO · +1 dado de dano em golpes especiais',
-                      desc:'Lente de vidro grosso numa armação torta. Foi de alguém.'},
-  'Colete de Lona': {tipo:'equipar', cat:'Segurado', efeito:{defesa:1},
-                      ficha:'SEGURADO · +1 de Vitalidade e de Instinto contra dano',
-                      desc:'Lona rachada, fivela de metal, remendo nas costas. Já levou pancada por outro.'},
-  'Botina Leve':     {tipo:'equipar', cat:'Segurado', efeito:{vel:2},
-                      ficha:'SEGURADO · +2 de iniciativa pra ordem dos turnos',
-                      desc:'Sola fina, quase gasta. Quem usa isso não planeja apanhar.'},
-  'Sino Calmante':   {tipo:'equipar', cat:'Segurado', efeito:{moral:3},
-                      ficha:'SEGURADO · +3 de moral ao fim de cada combate',
-                      desc:'Um sino de latão do tamanho de uma unha. O som é ridículo e acalma.'},
-  'Exp. Share':  {tipo:'equipar', cat:'Segurado', efeito:{expShare:true},
-                  ficha:'SEGURADO · fica com metade da experiência de cada nocaute, mesmo sem entrar na luta',
-                  desc:'Um aparelhinho de plástico no pescoço dele. Ele assiste e aprende junto.'},
-  'Amuleto de Moeda':{tipo:'equipar', cat:'Segurado', efeito:{dinheiro:1.5},
-                      ficha:'SEGURADO · +50% de dinheiro em vitórias contra treinador',
-                      desc:'Moeda antiga furada e pendurada num barbante. Não vale nada como moeda.'},
+  /* ─────────── segurados ───────────
+     Os dos jogos, com o nome dos jogos e o ícone deles (ITEM_SPRITE).
+     O Quick Claw e o Eviolite têm o efeito do livro (Pokérole 3.0); os
+     outros o livro não tem, e o número é a tradução nossa do efeito
+     dos jogos pra parada de dados. Item de segurar inventado não entra
+     (ferramentas/chk-icones.js reprova). */
+  'Leftovers':    {tipo:'equipar', cat:'Segurado', efeito:{regen:1},
+                   ficha:'SEGURADO · recupera 1 de HP no fim de cada turno',
+                   desc:'Um miolo de fruta que nunca acaba de ser comido. Quem segura belisca entre um golpe e outro.'},
+  'Focus Band':   {tipo:'equipar', cat:'Segurado', efeito:{aguenta:true},
+                   ficha:'SEGURADO · uma vez por combate, sobrevive a um golpe fatal com 1 HP',
+                   desc:'Uma faixa vermelha de amarrar na cabeça ou na pata, com o nó atrás. Não protege de nada. Aperta.'},
+  'Muscle Band':  {tipo:'equipar', cat:'Segurado', efeito:{fis:1},
+                   ficha:'SEGURADO · +1 dado de dano em golpes físicos',
+                   desc:'Uma faixa amarela de punho, justa, com o nó em cima. Faz o golpe sair do corpo inteiro.'},
+  'Wise Glasses': {tipo:'equipar', cat:'Segurado', efeito:{esp:1},
+                   ficha:'SEGURADO · +1 dado de dano em golpes especiais',
+                   desc:'Óculos de armação preta e lente grossa. Quem usa mira antes de soltar.'},
+  'Eviolite':     {tipo:'equipar', cat:'Segurado', efeito:{defesa:1, soQuemEvolui:true},
+                   ficha:'SEGURADO · +1 de Vitalidade e de Instinto contra dano · só em quem ainda evolui',
+                   desc:'Uma pedra lilás do tamanho de uma noz, que reage a quem ainda tem forma pra mudar. Em quem já chegou na última, é só uma pedra bonita.'},
+  'Quick Claw':   {tipo:'equipar', cat:'Segurado', efeito:{vel:2},
+                   ficha:'SEGURADO · +2 de iniciativa pra ordem dos turnos',
+                   desc:'Uma garra clara, leve e afiada. Na mão, dá vontade de sair na frente.'},
+  'Soothe Bell':  {tipo:'equipar', cat:'Segurado', efeito:{moral:3},
+                   ficha:'SEGURADO · +3 de moral ao fim de cada vitória',
+                   desc:'Um sino prateado do tamanho de uma noz, com um laço vermelho. O som é ridículo e acalma.'},
+  'Exp. Share':   {tipo:'equipar', cat:'Segurado', efeito:{expShare:true},
+                   ficha:'SEGURADO · fica com metade da experiência de cada nocaute, mesmo sem entrar na luta',
+                   desc:'Um aparelhinho de plástico no pescoço dele. Ele assiste e aprende junto.'},
+  'Amulet Coin':  {tipo:'equipar', cat:'Segurado', efeito:{dinheiro:1.5},
+                   ficha:'SEGURADO · +50% de dinheiro em vitórias contra treinador',
+                   desc:'Uma moeda dourada num cordão vermelho. Não vale nada como moeda.'},
 
   /* ─────────── ferramenta ─────────── */
   'Machado':        {tipo:'ferramenta', cat:'Ferramenta', ficha:'Abre mato fechado, cerca viva e tapume de madeira',
@@ -367,7 +372,28 @@ function categoriaItem(nome){
 function efeitoSegurado(p){
   if (!p || !p.segurando) return null;
   const i = ITENS_INFO[p.segurando];
-  return (i && i.tipo === 'equipar') ? (i.efeito || {}) : null;
+  if (!i || i.tipo !== 'equipar') return null;
+  /* o Eviolite só pega em quem ainda tem forma pra mudar */
+  if (i.efeito && i.efeito.soQuemEvolui && !aindaEvolui(p.dex)) return {};
+  return i.efeito || {};
+}
+
+/* Quem ainda evolui, por qualquer caminho que o arquivo conheça: nível,
+   pedra, troca, amizade. Olha a espécie, não o momento — como o Eviolite
+   dos jogos: um Golbat antes da Pokédex Nacional também conta. */
+let _quemEvolui = null;
+function aindaEvolui(dex){
+  if (!_quemEvolui){
+    _quemEvolui = new Set();
+    for (const e of Object.values(DEX)){
+      if (e.evo) _quemEvolui.add(e.dex);
+      if (e.preEvo) _quemEvolui.add(e.preEvo);
+    }
+    const tabelas = [EVO_TROCA, EVO_JOHTO_AMIZADE, EVO_JOHTO_TROCA, EVO_JOHTO_PEDRA, EVO_JOHTO_NIVEL]
+      .concat(Object.values(PEDRAS), Object.values(PEDRAS_JOHTO));
+    for (const t of tabelas) for (const de of Object.keys(t)) _quemEvolui.add(+de);
+  }
+  return _quemEvolui.has(+dex);
 }
 
 function descricaoItem(nome){
@@ -1237,14 +1263,19 @@ const Estado = {
         if (p && p.stats && p.stats.vit === undefined) atualizarAtributos(p);
       /* nomes que mudaram depois que o save foi gravado: o item e a
          pessoa continuam os mesmos, só o nome na tela é outro */
-      const ITEM_NOVO = {'Colete de Couro':'Colete de Lona', 'Cobertor de lã':'Cobertor de flanela',
+      const ITEM_NOVO = {'Colete de Couro':'Eviolite', 'Cobertor de lã':'Cobertor de flanela',
+        /* os segurados inventados viraram os dos jogos, e os traduzidos
+           ganharam o nome dos jogos */
+        'Resto de Ração':'Leftovers', 'Faixa Firme':'Focus Band', 'Punho de Ferro':'Muscle Band',
+        'Óculos Grossos':'Wise Glasses', 'Colete de Lona':'Eviolite', 'Botina Leve':'Quick Claw',
+        'Sino Calmante':'Soothe Bell', 'Amuleto de Moeda':'Amulet Coin',
         'Caixa de ventilador com um bicho dentro':'Caixa de ventilador com um Pokémon dentro',
         'Mapa de nove anos atrás':'Mapa velho de Kanto', 'Caderno do Teco':'Caderno do Toby',
         'Recorte da constituição da CGRB':'Recorte da ata da CGRB', 'Papel com o nome de Maeve Corwin':'Papel com o nome de Maeve Bracken',
         'Caderno de campo de K. Fuji':'Caderno de campo do Dr. Fuji', 'Anilha 41-C-07':'Anilha 41-C-107'};
       for (const [velho, novo] of Object.entries(ITEM_NOVO)){
         if (d.itens && d.itens[velho]){ d.itens[novo] = (d.itens[novo] || 0) + d.itens[velho]; delete d.itens[velho]; }
-        for (const p of [].concat(d.time || [], d.pc || [])) if (p && p.segurando === velho) p.segurando = novo;
+        for (const p of [].concat(d.time || [], d.pc || [], d.cemiterio || [])) if (p && p.segurando === velho) p.segurando = novo;
       }
       const NPC_DA_LIGA = {'a conselheira da Liga':'a conselheira regional', 'a recepcionista da Liga':'a recepcionista do Conselho',
                            'Técnica da Liga':'a técnica do terceiro andar', 'a atendente da Liga':'a atendente do protocolo',
