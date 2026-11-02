@@ -1389,17 +1389,49 @@ Scyther) entra na lista **pela forma final** (208, 212): `finalDaLinha`
 não acha o Steelix saindo do Onix.
 
 ## O Torneio Aberto
-Todo inscrito do Torneio Aberto (`RIVAIS_TORNEIO`, em `js/story/liga.js`)
-tem nome, cidade (`de`, que o chaveamento mostra com a faixa de nível),
-rosto só dele (`arq`, registrado no `RETRATO_POR_NOME` na carga, com o
-nome curto no `NOMES_DA_HISTORIA`) e time montado: `linhas` do mais
-fraco ao ás, `golpes` de TM do dono, `segura` (o item do ás) e `ajuste`
-(o acerto de nível dele). Quem vem da sua história (o Ezra, o Roque, a
-Fenna, o Orin, veterano vencido) entra pelo `cond`, no máximo dois por
-torneio, e o Ezra fica com a final. O ás acompanha os seus três mais
-fortes (`nivelDoTorneio`, com `NIVEL_TORNEIO` por rodada), o tamanho
-sai das insígnias (`TAM_TORNEIO`) e a escolha de golpe erra
-`ERRO_IA_TORNEIO`.
+É uma **chave de dezesseis, sorteada na inscrição** (`sortearChaveamento`,
+em `js/story/liga.js`): oitavas, quartas, semifinal e final, e foi
+pedido assim — "não fosse decidido desde já quem tá na final". Você é
+uma das vagas (`t.eu`), e ninguém tem vaga marcada: o Ezra ficava
+sempre com a final, e não fica mais. `t.chave[k]` são as vagas de quem
+começa a rodada k, na ordem dos confrontos (a 0 com a 1, a 2 com a 3),
+e `t.chave[4]` é quem levou o título. As outras lutas de cada rodada se
+decidem quando a sua acaba (`fecharRodadaDoTorneio`, `lutaDeFora`): uma
+parada de d6 de cada lado, um dado a cada dez níveis somados do time
+que ele levaria pra arena; a chave mostra quem passou, nunca o placar.
+Caiu, a tarde se joga sem você até o título (`terminarSemVoce`), e a
+tela de eliminado mostra a chave inteira e diz quem levou. O
+adversário da vez é montado quando a rodada abre (`t.adv`,
+`adversarioDaVez`), e é ele que a tela mostra e a luta usa.
+
+A chave mora **no save** (`d.torneioAberto`, por um getter e um setter
+de `Jogo.torneioAtual`): recarregar entre uma rodada e outra volta pra
+chave, e luta que começa noutro lugar (`Jogo.torneioAtual = null`) tira
+o torneio de cena junto. Luta salva do torneio de antes (três rodadas,
+`adversarios`) vira chave nova na carga (`torneioDeAntes`).
+
+Todo inscrito (`RIVAIS_TORNEIO`) tem uma chave (`id`, a vaga dele no
+save), nome, nome curto (`curto`, o que cabe na chave), cidade (`de`,
+que o quadro da sua luta mostra com a faixa de nível), rosto só dele
+(`arq`, registrado no `RETRATO_POR_NOME` na carga, com o nome curto no
+`NOMES_DA_HISTORIA`) e time montado: `linhas` do mais fraco ao ás,
+`golpes` de TM do dono, `segura` (o item do ás) e `ajuste` (o acerto de
+nível dele). Os de sempre são dezoito, mais que as quinze vagas, então
+a chave de cada dia tem gente diferente. Quem vem da sua história (o
+Ezra, o Roque, a Fenna, o Orin, veterano vencido) entra pelo `cond`,
+até quatro por chave (`DA_HISTORIA_NO_TORNEIO`), sorteados. O ás
+acompanha os seus três mais fortes (`nivelDoTorneio`, com
+`NIVEL_TORNEIO` por rodada), o tamanho sai das insígnias
+(`TAM_TORNEIO`) e a escolha de golpe erra `ERRO_IA_TORNEIO`.
+
+A chave na tela (`UI.chaveDoTorneio`) é a tabela de copa: duas metades
+que se encontram na final, no meio, a da direita no espelho
+(`direction:rtl`, então os colchetes usam propriedade lógica e viram
+sozinhos). Cada confronto mora numa casa de altura igual à das irmãs
+(`flex:1`), e é isso que põe o confronto seguinte no meio do par que o
+alimenta. No celular as metades descem uma depois da outra e a final
+fecha embaixo. Rodada que termina em "s" é plural: `naRodada`
+("nas Oitavas", "na Semifinal") e `rodadaVencida` ("Quartas vencidas").
 
 **Um chaveamento por dia, à tarde** (`tardeDaArena`, em `liga.js`): a
 inscrição abre de manhã e fecha às seis, o chaveamento sai à uma (quem
@@ -1419,9 +1451,12 @@ nível: impossível no começo do jogo (6% de vitória) e passeio no fim
 rodada, e `--cada` acha o inscrito que destoa. Quem destoa se acerta
 primeiro trocando espécie da lista (o Snorlax e o Machoke saíram do
 Criador) e só depois pelo `ajuste`; `NIVEL=… EXTRA=… ERRO=… SEM_ITEM=1`
-na frente do comando calibram sem mexer no jogo. Inscrito novo entra
-com as cinco coisas, passa por ali e pelo `chk-lutas`, que roda cada
-inscrito nas três rodadas.
+na frente do comando calibram sem mexer no jogo, e a última coluna é a
+chance de título (as quatro rodadas seguidas). Inscrito novo entra com
+as seis coisas (o `id` sai do `curto` se não vier), passa por ali e
+pelo `chk-lutas`, que roda cada inscrito nas quatro rodadas; o
+`chk-telas` confere a chave de cada rodada, a de quem caiu e o sorteio
+(dezesseis vagas, ninguém repetido, a final variando).
 
 As finais de torneio da história (a Celeste no S.S. Anne, no 8; a Nadia
 no aberto do Planalto, no 22) usam as mesmas armas pela luta de cena:
@@ -2059,7 +2094,7 @@ ou da porta), o "Vitória!" bate, o rosto de quem perdeu entra numa
 cápsula, e a peça do meio chega: a insígnia cai girando e acende a casa
 dela no estojo das oito, a porta da Elite tem a placa do titular e leva
 o carimbo "Vencida", o título vem com o troféu desenhado (ouro, prata)
-e a rodada com a medalha de fita (bronze nas quartas, prata na semi),
+e a rodada com a medalha de fita (bronze até as quartas, prata na semi),
 com as etapas do chaveamento. Depois os prêmios, um cartão por vez.
 
 - **A tela de resultado é desenhada antes**, e a festa vai por cima
@@ -2267,11 +2302,14 @@ pelo menu numerado, com a porta fechada dizendo o que falta.
 **Placar e prévia de time não aparecem em lugar nenhum** — foi pedido
 assim: o rival te para sem quadro (o placar é coisa que ele diz, se
 quiser), o resultado mostra o lugar, a Ficha e o diário não contam, e
-o time de quem você enfrenta só se vê na arena. O **chaveamento** do
-torneio e da Conferência (`chaveamentoHTML`) são as três lutas em
-quadros ligados por um trilho — vencida verde, a de agora acesa, a de
-depois apagada —, com rosto, a bola fechada de cada Pokémon (quantos,
-nunca quais) e o prêmio da rodada. Na **Pokédex**, a casa tem duas linhas
+o time de quem você enfrenta só se vê na arena. O **chaveamento** da
+Conferência (`chaveamentoHTML`) são as três lutas em quadros ligados
+por um trilho — vencida verde, a de agora acesa, a de depois apagada —,
+com rosto, a bola fechada de cada Pokémon (quantos, nunca quais) e o
+prêmio da rodada. O do Torneio Aberto é a chave de dezesseis
+(`chaveDoTorneio`, ver "O Torneio Aberto"), com o quadro da sua luta em
+cima (rosto, cidade, faixa de nível, as bolas fechadas e o prêmio) e a
+escada dos prêmios embaixo. Na **Pokédex**, a casa tem duas linhas
 (número e marca em cima, nome embaixo): na mesma linha, a etiqueta
 "visto" cortava o nome. E `.linha .v` (a conta das linhas de valor) é
 letra do HUD; só a Pokédex e o PC guardam a letra de tela deles (no PC,

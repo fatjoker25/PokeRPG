@@ -1106,7 +1106,7 @@ if (typeof CHAMADAS !== 'undefined') VETERANOS.forEach(v => {
 
 /* ── no Torneio Aberto, quem você venceu pode cair no seu chaveamento ── */
 if (typeof RIVAIS_TORNEIO !== 'undefined') VETERANOS.forEach(v => {
-  RIVAIS_TORNEIO.push({nome:nomeDeLuta(v), f:!!v.f, veterano:v.id, fala:v.torneio, cond:d=>Veteranos.venceu(v.id)});
+  RIVAIS_TORNEIO.push({id:'vt_' + v.id, nome:nomeDeLuta(v), curto:v.nome, f:!!v.f, veterano:v.id, fala:v.torneio, cond:d=>Veteranos.venceu(v.id)});
 });
 
 /* ============================================================
@@ -1202,7 +1202,7 @@ const Conferencia = {
       Jogo.conferenciaAtual = null;
       sairDaArena();
       avisos.push({tipo:'item', texto:`Premiação por participação: +${valor.toLocaleString('pt-BR')} ₽`});
-      Estado.registrar(`Eliminado da Conferência do Planalto Indigo por ${v.nome} nas ${pr.rodada}.`);
+      Estado.registrar(`Eliminado da Conferência do Planalto Indigo por ${v.nome} ${naRodada(pr.rodada)}.`);
       Estado.salvar('auto');
       return Jogo.resolverPendencias(() => UI.telaResultadoLiga({
         titulo:'Eliminad{o|a}', sub:`Conferência do Planalto Indigo · ${pr.rodada}`,
@@ -1217,7 +1217,7 @@ const Conferencia = {
     for (const [n, q] of Object.entries(pr.itens || {})){ Estado.darItem(n, q); avisos.push({tipo:'item', texto:`Recebeu ${q}× ${n}.`}); }
     const fama = repDaRodada('conferencia', c.rodada, pr.rep);
     if (fama){
-      const m = Estado.mudarRep('bom', fama, `Avançou nas ${pr.rodada} da Conferência do Planalto Indigo`, {rep:{notorio:true, peso:3}});
+      const m = Estado.mudarRep('bom', fama, `Avançou ${naRodada(pr.rodada)} da Conferência do Planalto Indigo`, {rep:{notorio:true, peso:3}});
       if (m && m.mudou) avisos.push({tipo:'rep', texto:`Reputação: ${m.de} → ${m.para}`});
     }
     c.rodada++;
@@ -1251,7 +1251,7 @@ const Conferencia = {
     }
     Estado.salvar('auto');
     Jogo.resolverPendencias(() => { UI.telaResultadoLiga({
-      titulo:`${v.nome} derrotad${v.f ? 'a' : 'o'}`, sub:`Conferência do Planalto Indigo · ${pr.rodada} vencida`,
+      titulo:`${v.nome} derrotad${v.f ? 'a' : 'o'}`, sub:`Conferência do Planalto Indigo · ${rodadaVencida(pr.rodada)}`,
       quem:v.nome, falas:[diz(v.perde),
         `Próxima: ${PREMIO_CONFERENCIA[c.rodada].rodada}, contra ${nomeDeLuta(veterano(c.adversarios[c.rodada]))}.`,
         'Vinte minutos entre as lutas. Dá pra curar o time.'],

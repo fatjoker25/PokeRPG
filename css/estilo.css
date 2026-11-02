@@ -5615,6 +5615,155 @@ h3.sec-conf{--sec:#7fb2ff}
 @media (prefers-reduced-motion: reduce){ .chave-rodada.agora .chave-selo{animation:none} }
 
 /* ============================================================
+   A CHAVE DE DEZESSEIS — o Torneio Aberto
+   A tabela de copa: oitavas, quartas e semifinal de cada lado, e as
+   duas metades se encontram na final, no meio. A metade da direita é
+   a da esquerda no espelho (direction:rtl), então os colchetes que
+   ligam um confronto ao seguinte usam as propriedades lógicas e viram
+   sozinhos. Cada confronto vive numa casa de altura igual à das irmãs
+   (flex:1), e é isso que põe o confronto da rodada seguinte no meio do
+   par que o alimenta. No celular as metades descem uma depois da
+   outra, sem espelho, e a final fecha embaixo.
+   ============================================================ */
+.chave16{
+  --chave:#ff8a3d; --c16-gap:18px; --c16-meio:18px;
+  --c16-linha:color-mix(in srgb, var(--borda-forte) 80%, transparent);
+  display:grid;grid-template-columns:minmax(0,1fr) minmax(118px,.6fr) minmax(0,1fr);column-gap:var(--c16-meio);
+  margin:6px 0 16px;
+}
+.painel:has(> .cap-cabecalho) > .chave16{max-width:66rem}
+.c16-lado{display:grid;grid-template-columns:repeat(3, minmax(0, 1fr));column-gap:var(--c16-gap)}
+.c16-lado.b{direction:rtl}
+.c16-col,.c16-final{display:flex;flex-direction:column;min-width:0}
+.c16-cab{
+  display:flex;align-items:center;justify-content:center;gap:5px;direction:ltr;padding:2px 0 8px;
+  font:700 10.5px/1.2 var(--letra-hud, var(--fonte));letter-spacing:.13em;text-transform:uppercase;color:var(--texto-fraco);
+}
+.c16-cab.agora{color:var(--chave)}
+.c16-cab svg.icone{width:14px;height:14px;color:#ffd166}
+.c16-jogos{flex:1;display:flex;flex-direction:column}
+.c16-par{flex:1;display:flex;flex-direction:column;position:relative}
+.c16-casa{flex:1;display:flex;flex-direction:column;justify-content:center;position:relative;padding:4px 0}
+/* o colchete que junta dois confrontos e leva quem passou adiante */
+.c16-par::after{
+  content:'';position:absolute;inset-inline-start:100%;top:25%;bottom:25%;width:calc(var(--c16-gap) / 2);
+  border:2px solid var(--c16-linha);border-inline-start:0;
+  border-start-end-radius:7px;border-end-end-radius:7px;pointer-events:none;
+}
+/* o tracinho que chega no confronto da rodada seguinte */
+.c16-col:not([data-rodada="0"]) .c16-casa::before{
+  content:'';position:absolute;inset-inline-end:100%;top:50%;width:calc(var(--c16-gap) / 2);
+  border-top:2px solid var(--c16-linha);pointer-events:none;
+}
+/* da semifinal até a final, no meio */
+.c16-col[data-rodada="2"] .c16-casa::after{
+  content:'';position:absolute;inset-inline-start:100%;top:50%;width:var(--c16-meio);
+  border-top:2px solid var(--c16-linha);pointer-events:none;
+}
+.c16-jogo{
+  border-radius:10px;overflow:hidden;
+  background:linear-gradient(180deg, color-mix(in srgb, var(--painel-2) 85%, var(--borda)), var(--bg-2));
+  border:1px solid color-mix(in srgb, var(--borda-forte) 65%, transparent);
+  box-shadow:0 3px 0 color-mix(in srgb, var(--bg) 55%, #000);
+}
+.c16-jogo.espera{background:transparent;border-style:dashed;box-shadow:none}
+.c16-jogo.agora{
+  border-color:color-mix(in srgb, var(--chave) 80%, transparent);
+  box-shadow:0 3px 0 color-mix(in srgb, var(--chave) 35%, #05070f), 0 0 0 3px color-mix(in srgb, var(--chave) 22%, transparent);
+  animation:chaveAgora 1.6s ease-in-out infinite;
+}
+.c16-quem{
+  display:flex;align-items:center;gap:6px;min-height:30px;padding:3px 7px 3px 3px;direction:ltr;
+  font:600 12.5px/1.2 var(--letra-hud, var(--fonte));color:var(--texto);
+}
+.c16-quem + .c16-quem{border-top:1px solid color-mix(in srgb, var(--borda) 75%, transparent)}
+.c16-nome{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* o rosto em busto: a arte é o corpo inteiro, e a cabeça mora em cima */
+.c16-rosto{
+  flex:0 0 auto;width:24px;height:24px;border-radius:7px;overflow:hidden;
+  background:radial-gradient(120% 90% at 50% 100%, color-mix(in srgb, var(--chave) 22%, transparent), transparent 70%),
+             color-mix(in srgb, var(--bg) 82%, var(--borda));
+}
+.c16-rosto img{width:175%;height:175%;max-width:none;margin:-6% 0 0 -37.5%;object-fit:contain;image-rendering:pixelated}
+.c16-rosto b{display:grid;place-items:center;width:100%;height:100%;font:700 12px/1 var(--letra-hud, var(--fonte));color:#ffd166}
+.c16-quem.vaga{color:var(--texto-fraco);font-weight:500;font-style:italic}
+.c16-quem.vaga .c16-rosto{background:none;box-shadow:inset 0 0 0 1px dashed}
+.c16-quem.voce{color:#ffd166}
+.c16-quem.voce .c16-rosto{box-shadow:inset 0 0 0 1.5px #ffd166}
+.c16-quem.passou{font-weight:700}
+.c16-quem.passou::after{content:'';flex:0 0 auto;margin-left:auto;width:7px;height:7px;border-radius:50%;background:#43b581;
+  box-shadow:0 0 0 2px color-mix(in srgb, #43b581 25%, transparent)}
+.c16-quem.caiu{color:var(--texto-fraco);opacity:.55}
+.c16-quem.caiu .c16-rosto img{filter:grayscale(1) brightness(.8)}
+.c16-quem.caiu .c16-nome{text-decoration:line-through;text-decoration-thickness:1px}
+/* a final, no meio: o confronto, e o título embaixo (o fantasma em
+   cima, do mesmo tamanho, deixa o confronto na altura das semifinais) */
+.c16-final .c16-casa{gap:10px}
+.c16-final .c16-jogo{border-color:color-mix(in srgb, #ffd166 45%, transparent)}
+.c16-titulo{
+  display:flex;flex-direction:column;align-items:center;gap:2px;padding:7px 8px;border-radius:10px;text-align:center;
+  background:color-mix(in srgb, #ffd166 8%, transparent);border:1px dashed color-mix(in srgb, #ffd166 35%, transparent);
+}
+.c16-titulo small{font:700 9.5px/1 var(--letra-hud, var(--fonte));letter-spacing:.14em;text-transform:uppercase;color:var(--texto-fraco)}
+.c16-titulo b{font:700 14px/1.2 var(--letra-hud, var(--fonte));color:var(--texto-fraco);overflow-wrap:anywhere}
+.c16-titulo.tem{border-style:solid;background:linear-gradient(180deg, color-mix(in srgb, #ffd166 22%, transparent), color-mix(in srgb, #ffd166 6%, transparent))}
+.c16-titulo.tem b{color:#ffd166}
+.c16-titulo.fantasma{visibility:hidden}
+@media (max-width:760px){
+  .chave16{display:flex;flex-direction:column;gap:16px;--c16-gap:14px}
+  .c16-lado.b{direction:ltr}
+  .c16-final{order:3}
+  .c16-col[data-rodada="2"] .c16-casa::after{display:none}
+  .c16-final .c16-casa{flex-direction:row;align-items:center;gap:10px}
+  .c16-final .c16-jogo{flex:1 1 auto;min-width:0}
+  .c16-final .c16-titulo{flex:0 0 auto;min-width:96px}
+  .c16-final .c16-titulo.fantasma{display:none}
+  .c16-quem{font-size:12px;gap:5px;padding-right:5px}
+  .c16-rosto{width:22px;height:22px}
+}
+@media (prefers-reduced-motion: reduce){ .c16-jogo.agora{animation:none} }
+
+/* a sua luta da rodada, em cima da chave */
+.torneio-vez{
+  --chave:#ff8a3d;
+  display:grid;grid-template-columns:84px minmax(0,1fr) auto;align-items:center;column-gap:14px;row-gap:8px;
+  margin:4px 0 16px;padding:12px 14px;border-radius:16px;
+  border:1px solid color-mix(in srgb, var(--chave) 75%, transparent);
+  background:linear-gradient(180deg, color-mix(in srgb, var(--chave) 18%, var(--painel-2)), color-mix(in srgb, var(--chave) 5%, var(--bg-2)));
+  box-shadow:0 4px 0 color-mix(in srgb, var(--chave) 35%, #05070f), 0 18px 28px -18px color-mix(in srgb, var(--chave) 70%, #000);
+}
+.torneio-vez .chave-rosto{margin:0}
+.tv-corpo{display:flex;flex-direction:column;gap:3px;min-width:0}
+.torneio-vez .chave-cab{justify-content:flex-start}
+.torneio-vez .chave-selo{color:#1b1206;background:var(--chave);animation:chaveAgora 1.6s ease-in-out infinite}
+.torneio-vez .chave-time{justify-content:flex-start;min-height:0}
+.torneio-vez .chave-premio{width:auto;margin:0;padding:0 0 0 14px;border-top:0;border-left:1px dashed color-mix(in srgb, var(--borda-forte) 60%, transparent);
+  flex-direction:column;align-items:flex-start}
+/* a escada dos prêmios, rodada por rodada */
+.tv-escada{display:grid;grid-template-columns:repeat(4, minmax(0, 1fr));gap:8px;margin:0 0 18px}
+.tv-degrau{
+  display:flex;flex-direction:column;align-items:center;gap:2px;padding:7px 6px;border-radius:12px;text-align:center;
+  background:rgba(255,255,255,.05);border:1px solid color-mix(in srgb, var(--borda-forte) 50%, transparent);
+}
+.tv-degrau small{font:700 9.5px/1.2 var(--letra-hud, var(--fonte));letter-spacing:.13em;text-transform:uppercase;color:var(--texto-fraco)}
+.tv-degrau b{font:700 13px/1.2 var(--letra-hud, var(--fonte));font-variant-numeric:tabular-nums;color:var(--texto)}
+.tv-degrau.feito{border-color:color-mix(in srgb, #43b581 55%, transparent)}
+.tv-degrau.feito b{color:#7fdca9}
+.tv-degrau.agora{border-color:color-mix(in srgb, #ff8a3d 75%, transparent);background:color-mix(in srgb, #ff8a3d 12%, transparent)}
+.tv-degrau.agora small{color:#ff8a3d}
+@media (max-width:620px){
+  /* as peças são as do quadro antigo, que no celular ganham grid-area:
+     aqui elas voltam pro fluxo da grade do quadro da sua luta */
+  .torneio-vez > *{grid-area:auto}
+  .torneio-vez{grid-template-columns:72px minmax(0,1fr);padding:11px 12px}
+  .torneio-vez .chave-rosto{width:72px;height:72px;align-self:start}
+  .torneio-vez .chave-premio{grid-column:1 / -1;flex-direction:row;flex-wrap:wrap;padding:9px 0 0;border-left:0;
+    border-top:1px dashed color-mix(in srgb, var(--borda-forte) 60%, transparent)}
+  .tv-escada{grid-template-columns:repeat(2, minmax(0, 1fr))}
+}
+@media (prefers-reduced-motion: reduce){ .torneio-vez .chave-selo{animation:none} }
+
+/* ============================================================
    QUAL POKÉBOLA? — um cartão por bola
    A bola da arena (Black/White) em tamanho grande, numa moeda da
    cor dela; o nome, quantas você tem, e o selo em dados: um dado

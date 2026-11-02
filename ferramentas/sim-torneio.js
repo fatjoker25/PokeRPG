@@ -5,11 +5,13 @@
    contra times do tamanho e do nível que o jogador teria em cada fase
    da jornada. O inscrito acompanha os seus três mais fortes, então a
    conta que importa é a curva: cada rodada mais dura que a anterior, e
-   a mesma dureza no começo e no fim do jogo.
+   a mesma dureza no começo e no fim do jogo. A última coluna é o
+   título: as quatro rodadas seguidas, curando entre uma e outra (o
+   produto das quatro, que é o que a chave pede de quem joga).
 
    Uso:  node ferramentas/sim-torneio.js [lutas por caso] [--cada]
          --cada mostra cada inscrito na final, pra achar quem destoa.
-         NIVEL=0,1,3 EXTRA=0,0,1 ERRO=12,10,8 SEM_ITEM=1 trocam os
+         NIVEL=-4,-3,-2,0 EXTRA=0,0,0,0 ERRO=14,12,10,8 SEM_ITEM=1 trocam os
          números da rodada só na medição, pra calibrar antes de mudar.
    ============================================================ */
 const fs = require('fs'), vm = require('vm'), path = require('path');
@@ -38,7 +40,7 @@ function escolhaJogador(){
 
 const N = +process.argv[2] || 30;
 const CADA = process.argv.includes('--cada');
-/* pra calibrar sem mexer no jogo: NIVEL=0,1,3 EXTRA=0,0,1 ERRO=12,10,8 SEM_ITEM=1 */
+/* pra calibrar sem mexer no jogo: NIVEL=-4,-3,-2,0 EXTRA=0,0,0,0 ERRO=14,12,10,8 SEM_ITEM=1 */
 const lista = v => v.split(',').map(Number);
 if (process.env.NIVEL) lista(process.env.NIVEL).forEach((x, i) => { NIVEL_TORNEIO[i] = x; });
 if (process.env.EXTRA) lista(process.env.EXTRA).forEach((x, i) => { TAM_EXTRA_TORNEIO[i] = x; });
@@ -78,10 +80,11 @@ function lutar(meu, inimigos, rodada){
 const FASES = [[1, 16, 3, 'rota3'], [3, 28, 4, 'rota9'], [5, 38, 5, 'rota16'], [6, 44, 6, 'rota23'], [8, 55, 6, 'caminho_vitoria']];
 const inscritos = RIVAIS_TORNEIO.filter(r => r.linhas);   // o Ezra luta com o time de rival, medido no sim-rivais
 console.log(`${inscritos.length} inscritos com time montado, ${N} lutas por inscrito e rodada`);
-console.log('fase (ins/nv/tam) | quartas · semifinal · final   (vitória, caídos)   tamanho e nível do inscrito');
+const RODADAS = PREMIO_TORNEIO.map((_, i) => i);
+console.log(`fase (ins/nv/tam) | ${PREMIO_TORNEIO.map(r => r.rodada.toLowerCase()).join(' · ')}   (vitória, caídos) | título   tamanho e nível do inscrito`);
 for (const [ins, nv, tam, loc] of FASES){
   d.insignias = INS.slice(0, ins);
-  const linha = [0, 1, 2].map(rodada => {
+  const linha = RODADAS.map(rodada => {
     let v = 0, c = 0, n = 0, amostra = '';
     for (const r of inscritos) for (let k = 0; k < N; k++){
       const meu = timeJogador(nv, loc, tam); d.time = meu;
@@ -90,17 +93,18 @@ for (const [ins, nv, tam, loc] of FASES){
       const x = lutar(meu, adv.time, rodada);
       v += x.venceu ? 1 : 0; c += x.caidos; n++;
     }
-    return {txt:`${String(Math.round(100 * v / n)).padStart(3)}% ${(c / n).toFixed(1)}`, amostra};
+    return {txt:`${String(Math.round(100 * v / n)).padStart(3)}% ${(c / n).toFixed(1)}`, amostra, p: v / n};
   });
-  console.log(`${ins}/${nv}/${tam}`.padEnd(18) + '| ' + linha.map(l => l.txt).join(' · ') + '   ' + linha.map(l => l.amostra).join(' · '));
+  const titulo = linha.reduce((x, l) => x * l.p, 1);
+  console.log(`${ins}/${nv}/${tam}`.padEnd(18) + '| ' + linha.map(l => l.txt).join(' · ') + ' | ' + `${Math.round(100 * titulo)}%`.padStart(4) + '   ' + linha.map(l => l.amostra).join(' · '));
 }
 
 if (CADA){
   /* cada inscrito em cada rodada, somando as cinco fases: quem destoa
      destoa em qualquer lugar, não só contra o time de uma área */
-  console.log('\n--- cada inscrito, somando as fases: quartas · semifinal · final ---');
+  console.log(`\n--- cada inscrito, somando as fases: ${PREMIO_TORNEIO.map(r => r.rodada.toLowerCase()).join(' · ')} ---`);
   for (const r of inscritos){
-    const res = [0, 1, 2].map(rodada => {
+    const res = RODADAS.map(rodada => {
       let v = 0, n = 0;
       for (const [ins, nv, tam, loc] of FASES){
         d.insignias = INS.slice(0, ins);

@@ -61,7 +61,15 @@ const Jogo = {
   voltarDeGinasio: 'exploracao',
   eliteAtual: null,
   revancheAtual: null,
-  torneioAtual: null,
+  /* o chaveamento do Torneio Aberto mora no save (d.torneioAberto):
+     recarregar entre uma rodada e outra volta pra chave, e luta
+     começada noutro lugar tira o torneio de cena junto */
+  get torneioAtual(){ const d = Estado.dados; return (d && d.torneioAberto) || null; },
+  set torneioAtual(t){
+    const d = Estado.dados;
+    if (!d) return;
+    if (t) d.torneioAberto = torneioDeAntes(t); else delete d.torneioAberto;
+  },
   rivalAtual: null,
   encontroRival: null,
   estradaAtual: null,
@@ -96,6 +104,12 @@ const Jogo = {
     if (deArquivo) setTimeout(() => UI.avisar([{tipo:'perigo', texto:'Este navegador não deixou guardar a jornada: ela só existe aberta aqui. Use Salvar, no alto da tela, antes de fechar.', dura:9000}]), 600);
     /* recarregou no meio da luta: volta pra ela */
     if (Estado.dados.lutaSalva && typeof LutaSalva !== 'undefined' && LutaSalva.retomar()) return;
+    /* recarregou entre duas rodadas do torneio: volta pra chave (quem
+       saiu do Planalto sem desistir largou o torneio lá) */
+    if (this.torneioAtual){
+      if (Mundo.id() === 'planalto') return UI.telaTorneio();
+      this.torneioAtual = null;
+    }
     if (Estado.dados.modo === 'mundo' || !Estado.dados.cena){
       return Exploracao.tela([{tipo:'info', texto:'Você retoma o caminho de onde parou.'}]);
     }
@@ -1491,7 +1505,7 @@ const Jogo = {
     if (!meu) return UI.modal('Torneio', '<p class="nada">Nenhum Pokémon em pé. Cure o time antes de se inscrever.</p>');
     Estado.j.dinheiro -= INSCRICAO_TORNEIO;
     entrarNaArena('torneio');
-    this.torneioAtual = {rodada:0, adversarios: montarChaveamento()};
+    this.torneioAtual = sortearChaveamento();
     Estado.registrar('Inscreveu-se no Torneio Aberto do Planalto.');
     Estado.salvar('auto');
     UI.telaTorneio();
@@ -1502,7 +1516,7 @@ const Jogo = {
     if (!t) return UI.telaLiga();
     const meu = Estado.primeiroApto();
     if (!meu) return this.resultadoTorneio({resultado:'derrota'});
-    const adv = t.adversarios[t.rodada];
+    const adv = t.adv || (t.adv = adversarioDaVez(t));
     adv.time.forEach(x => { x.nomeAnunciado = true; });
     this.cenaBatalha = null; this.ginasioAtual = null; this.eliteAtual = null; this.redeAtual = null;
     UI.limparDados();
@@ -1517,29 +1531,45 @@ const Jogo = {
 
   resultadoTorneio(fim){
     const t = this.torneioAtual;
+    if (!t) return UI.telaLiga();
     if (fim.resultado === 'gameover'){ this.torneioAtual = null; return UI.telaGameOver('Você caiu numa arena de torneio, na frente de todo mundo.'); }
 
-    const adv = t.adversarios[t.rodada];
+    const adv = t.adv || (t.adv = adversarioDaVez(t));
     const premio = PREMIO_TORNEIO[t.rodada];
     const venceu = fim.resultado === 'vitoria';
     const avisos = [];
+    const pron = x => x && x.f ? 'dela' : 'dele';
 
     if (!venceu){
+      /* a tarde segue sem você: as outras quadras jogam até o título */
+      const rodada = t.rodada;
+      const campeao = terminarSemVoce(t, rodada);
+      const final = t.chave[PREMIO_TORNEIO.length - 1].map(v => t.inscritos[v]);
+      const vice = final.find(x => x !== campeao && !x.voce) || null;
+      const naFinal = rodada === PREMIO_TORNEIO.length - 1;
+      const chave = UI.chaveDoTorneio(t);
       this.torneioAtual = null;
       sairDaArena();
-      const consolo = premioTorneio(t, false);
+      const consolo = premioTorneio({rodada}, false);
       Estado.j.dinheiro += consolo;
       avisos.push({tipo:'item', texto:`Premiação por participação: +${fmtDin(consolo)} ₽`});
-      Estado.registrar(`Eliminado do torneio por ${adv.nome} nas ${premio.rodada}.`);
+      Estado.registrar(`Eliminado do torneio por ${adv.nome} ${naRodada(premio.rodada)}. O título ficou com ${campeao.nome}.`);
       Estado.salvar('auto');
+      /* a final era a sua: o título é de quem te ganhou */
+      const levou = naFinal
+        ? `O título do dia fica com ${adv.nome}. O seu nome fica do lado, no quadro da final.`
+        : campeao.id === adv.id
+          ? `${adv.nome} vai até o fim: o título do dia é ${pron(adv)}${vice ? `, numa final contra ${vice.nome}` : ''}.`
+          : `A tarde segue sem você. O título fica com ${campeao.nome}${vice ? `, que ganha de ${vice.nome} na final` : ''}.`;
       return UI.telaResultadoLiga({
         titulo:'Eliminad{o|a}', sub:`${premio.rodada} · ${adv.nome}`,
         falas:[
-          `${adv.nome} vence e a arena bate palma pelo nome ${adv.f ? 'dela' : 'dele'}, não pelo seu.`,
+          `${adv.nome} vence e a arena bate palma pelo nome ${pron(adv)}, não pelo seu.`,
+          levou,
           'Torneio é assim: o chaveamento não tem memória. Amanhã tem outro.',
           'Você recebe a premiação por participação num envelope com o logotipo do torneio e o seu nome escrito errado.'
         ],
-        avisos, venceu:false
+        chave, avisos, venceu:false
       });
     }
 
@@ -1549,18 +1579,21 @@ const Jogo = {
     for (const [n,q] of Object.entries(premio.itens||{})){ Estado.darItem(n,q); avisos.push({tipo:'item', texto:`Recebeu ${q}× ${n}.`}); }
     const fama = repDaRodada('torneio', t.rodada, premio.rep);
     if (fama){
-      const r = Estado.mudarRep('bom', fama, `Avançou na ${premio.rodada} do Torneio Aberto`, {rep:{notorio:true, peso:3}});
+      const r = Estado.mudarRep('bom', fama, `Avançou ${naRodada(premio.rodada)} do Torneio Aberto`, {rep:{notorio:true, peso:3}});
       if (r && r.mudou) avisos.push({tipo:'rep', texto:`Reputação: ${r.de} → ${r.para}`});
     }
 
+    /* a sua quadra fecha; as outras também, e a chave anda */
+    fecharRodadaDoTorneio(t, t.rodada, true);
     t.rodada++;
-    const campeao = t.rodada >= t.adversarios.length;
+    const campeao = t.rodada >= PREMIO_TORNEIO.length;
     const festa = () => Vitoria.rodada({
-      rodadas: PREMIO_TORNEIO.slice(0, t.adversarios.length).map(r => r.rodada), feitas: t.rodada,
+      rodadas: PREMIO_TORNEIO.map(r => r.rodada), feitas: t.rodada,
       adversario: adv.nome, nome:'Torneio Aberto', cor:'#ff8a3d', metal:'prata',
       conta: `${Estado.dados.torneiosVencidos || 1}º título`, ganho: ganhoTorneio, itens: premio.itens
     });
     if (campeao){
+      const chave = UI.chaveDoTorneio(t);
       this.torneioAtual = null;
       sairDaArena();
       Estado.dados.torneiosVencidos = (Estado.dados.torneiosVencidos||0) + 1;
@@ -1577,17 +1610,20 @@ const Jogo = {
             ? 'Três delas te esperam na saída pra pedir foto. Você não sabe o que fazer com as mãos.'
             : 'Você sai pela porta lateral antes da premiação terminar.'
         ],
-        avisos, venceu:true
+        chave, avisos, venceu:true
       });
       return Vitoria.mostrar(festa());
     }
 
+    t.adv = adversarioDaVez(t);
+    const tirou = quemOProximoTirou(t);
     Estado.salvar('auto');
     UI.telaResultadoLiga({
-      titulo:`${adv.nome} derrotad${adv.f ? 'a' : 'o'}`, sub:`${premio.rodada} vencida`,
+      titulo:`${adv.nome} derrotad${adv.f ? 'a' : 'o'}`, sub:rodadaVencida(premio.rodada),
       falas:[
         `${adv.nome} sai da arena sem drama. Torneio tem essa elegância que rota não tem.`,
-        `Próxima: ${PREMIO_TORNEIO[t.rodada].rodada}, contra ${t.adversarios[t.rodada].nome}.`,
+        tirou ? `Na quadra ao lado, ${t.adv.nome} passou por ${tirou.nome}.` : null,
+        `Próxima: ${PREMIO_TORNEIO[t.rodada].rodada}, contra ${t.adv.nome}.`,
         'Você tem vinte minutos entre as lutas. Dá pra curar o time.'
       ],
       avisos, venceu:true, torneio:true

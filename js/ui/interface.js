@@ -3699,11 +3699,11 @@ const UI = {
     </div>`;
 
     /* os prêmios, um por etiqueta */
-    const premios = (lista, extra) => `<div class="liga-premios">${['Quartas', 'Semifinal', 'Final'].map((r, i) =>
-      `<span class="lpr"><small>${r}</small><b>${din(lista[i].dinheiro)}</b></span>`).join('')}${extra || ''}</div>`;
+    const premios = (lista, extra) => `<div class="liga-premios">${lista.map(r =>
+      `<span class="lpr"><small>${this.esc(r.rodada)}</small><b>${din(r.dinheiro)}</b></span>`).join('')}${extra || ''}</div>`;
     const torneio = `<div class="liga-evento torneio">
-        <p class="sussurro">Chaveamento de oito e três rodadas, todo dia, à uma da tarde. Qualquer um entra: gente de Kanto inteira, e quem já cruzou com você na estrada.</p>
-        ${premios(PREMIO_TORNEIO, `<span class="lpr"><small>Adversários</small><b>Nv ${nivelDoTorneio(0)}–${nivelDoTorneio(2)}</b></span>`)}
+        <p class="sussurro">Dezesseis inscritos, sorteados na hora, todo dia à uma da tarde: oitavas, quartas, semifinal e final. Qualquer um entra: gente de Kanto inteira, e quem já cruzou com você na estrada.</p>
+        ${premios(PREMIO_TORNEIO, `<span class="lpr"><small>Adversários</small><b>Nv ${nivelDoTorneio(0)}–${nivelDoTorneio(PREMIO_TORNEIO.length - 1)}</b></span>`)}
         ${d.torneiosVencidos ? `<span class="liga-titulos">${svgIcone('torneio')}${this.esc(d.torneiosVencidos + '× {campeão|campeã}')}</span>` : ''}
       </div>`;
     const co = campeao ? statusConferencia() : null;
@@ -3753,7 +3753,7 @@ const UI = {
     this.rolarTopo();
   },
 
-  /* O chaveamento do torneio e da Conferência: três lutas até o troféu,
+  /* O chaveamento da Conferência: três lutas até o troféu,
      uma em cada quadro — quem está nela (rosto e nome), quantos ela
      leva (a bola fica fechada: ninguém mostra o time antes da arena),
      o prêmio da rodada, e onde você está no caminho. */
@@ -3784,28 +3784,97 @@ const UI = {
       </div>`;
   },
 
+  /* A chave de dezesseis do Torneio Aberto, no jeito da tabela de copa:
+     duas metades que se encontram na final, no meio. Cada confronto é
+     um quadro com os dois nomes; quem passou acende, quem caiu apaga, e
+     o confronto que ainda não tem gente espera tracejado. A sua vaga
+     leva a sua foto, e o seu confronto de agora acende na cor do
+     torneio. Placar não aparece: a chave só diz quem passou. No
+     celular as duas metades descem uma depois da outra, e a final
+     fecha embaixo. */
+  chaveDoTorneio(t){
+    const R = PREMIO_TORNEIO.length, vivo = t.chave || [];
+    const meu = Estado.dados ? retratoDoJogador(Estado.dados) : null;
+    /* sem foto na ficha, a sua vaga leva a inicial, como no alto da tela */
+    const inicial = this.esc(((Estado.j && Estado.j.nome) || '?').trim().charAt(0).toUpperCase() || '?');
+    const acabou = vivo[R] != null;
+    const quem = (vaga, passou) => {
+      if (vaga == null) return '<div class="c16-quem vaga"><span class="c16-rosto"></span><span class="c16-nome">a definir</span></div>';
+      const x = t.inscritos[vaga] || {};
+      const est = passou == null ? '' : passou === vaga ? ' passou' : ' caiu';
+      const rosto = x.voce ? meu : (typeof retratoDe === 'function' ? retratoDe(x.nome) : null);
+      const nome = x.voce ? 'Você' : (x.curto || x.nome || '');
+      const titulo = x.voce ? 'Você' : [x.nome, x.de].filter(Boolean).join(', ');
+      return `<div class="c16-quem${est}${x.voce ? ' voce' : ''}" title="${this.esc(titulo)}">
+        <span class="c16-rosto">${rosto ? `<img src="${rosto}" alt="" onerror="this.remove()">` : x.voce ? `<b>${inicial}</b>` : ''}</span>
+        <span class="c16-nome">${this.esc(nome)}</span></div>`;
+    };
+    /* o confronto m da rodada k */
+    const jogo = (k, m, antes = '', depois = '') => {
+      const vivos = vivo[k];
+      const a = vivos ? vivos[2 * m] : null, b = vivos ? vivos[2 * m + 1] : null;
+      const passou = vivo[k + 1] ? vivo[k + 1][m] : null;
+      const agora = !acabou && vivos && k === t.rodada && passou == null && (a === t.eu || b === t.eu);
+      const cls = 'c16-jogo' + (passou != null ? ' feito' : '') + (agora ? ' agora' : '') + (vivos ? '' : ' espera');
+      return `<div class="c16-casa">${antes}<div class="${cls}">${quem(a, passou)}${quem(b, passou)}</div>${depois}</div>`;
+    };
+    const pares = l => { let h = ''; for (let i = 0; i < l.length; i += 2) h += `<div class="c16-par">${l[i]}${l[i + 1]}</div>`; return h; };
+    /* uma metade: oitavas, quartas e semifinal, da borda pro meio */
+    const metade = h => `<div class="c16-lado ${h ? 'b' : 'a'}">${[0, 1, 2].map(k => {
+      const n = (VAGAS_TORNEIO >> (k + 1)) / 2;            // confrontos dessa metade: 4, 2, 1
+      const jogos = Array.from({length:n}, (_, i) => jogo(k, h * n + i));
+      return `<div class="c16-col" data-rodada="${k}">
+        <div class="c16-cab${k === t.rodada && !acabou ? ' agora' : ''}">${this.esc(PREMIO_TORNEIO[k].rodada)}</div>
+        <div class="c16-jogos">${n > 1 ? pares(jogos) : jogos.join('')}</div></div>`;
+    }).join('')}</div>`;
+    /* o título embaixo da final, e o fantasma dele em cima, do mesmo
+       tamanho, que deixa a final na altura das duas semifinais */
+    const campeao = acabou ? t.inscritos[vivo[R][0]] : null;
+    const titulo = fantasma => `<div class="c16-titulo${campeao ? ' tem' : ''}${fantasma ? ' fantasma' : ''}"${fantasma ? ' aria-hidden="true"' : ''}>
+      <small>Título</small><b>${this.esc(campeao ? (campeao.voce ? 'Você' : (campeao.curto || campeao.nome)) : 'em jogo')}</b></div>`;
+    const final = `<div class="c16-final">
+      <div class="c16-cab${t.rodada === R - 1 && !acabou ? ' agora' : ''}">${svgIcone('torneio')}${this.esc(PREMIO_TORNEIO[R - 1].rodada)}</div>
+      <div class="c16-jogos">${jogo(R - 1, 0, titulo(true), titulo(false))}</div>
+    </div>`;
+    return `<div class="chave16" role="group" aria-label="Chaveamento do Torneio Aberto">${metade(0)}${final}${metade(1)}</div>`;
+  },
+
   telaTorneio(){
-    this.limpar();
-    this.add(this.topo());
     const t = Jogo.torneioAtual;
     if (!t) return this.telaLiga();
+    this.limpar();
+    this.add(this.topo());
+    const adv = t.adv || (t.adv = adversarioDaVez(t));
+    const pr = PREMIO_TORNEIO[t.rodada];
     /* o torneio é aberto: o quadro de anúncios diz o nível de cada um, não o time */
-    const faixa = time => {
-      const n = time.map(p => p.nivel), a = Math.min(...n), b = Math.max(...n);
-      return a === b ? `Nv ${a}` : `Nv ${a}–${b}`;
-    };
-    const rodadas = t.adversarios.map((a, i) => ({
-      rodada:PREMIO_TORNEIO[i].rodada, nome:a.nome, time:a.time, sub:[a.de, faixa(a.time)].filter(Boolean).join(' · '), premio:PREMIO_TORNEIO[i],
-      rosto:(typeof retratoDe === 'function') ? retratoDe(a.nome) : null
-    }));
+    const nv = adv.time.map(p => p.nivel), a = Math.min(...nv), b = Math.max(...nv);
+    const faixa = a === b ? `Nv ${a}` : `Nv ${a}–${b}`;
+    const rosto = typeof retratoDe === 'function' ? retratoDe(adv.nome) : null;
+    const bolas = adv.time.map(() => '<span class="chave-pk fechado"></span>').join('');
+    const itens = Object.entries(pr.itens || {}).map(([n, q]) =>
+      `<span class="chave-item" title="${this.esc(n)}">${imgItem(n)}<b>${q}×</b></span>`).join('');
+    /* a escada dos prêmios: a rodada de agora acesa, as de antes feitas */
+    const escada = PREMIO_TORNEIO.map((r, i) =>
+      `<span class="tv-degrau${i < t.rodada ? ' feito' : i === t.rodada ? ' agora' : ''}"><small>${this.esc(r.rodada)}</small><b>${fmtDin(r.dinheiro)} ₽</b></span>`).join('');
     this.add(`<div class="painel">
       <div class="cap-cabecalho">
         <div class="num">Torneio Aberto</div>
-        <div class="tit">${this.esc(PREMIO_TORNEIO[t.rodada].rodada)}</div>
+        <div class="tit">${this.esc(pr.rodada)}</div>
         <div class="loc">Arena do Planalto Indigo</div>
       </div>
-      ${this.chaveamentoHTML(rodadas, t.rodada)}
-      ${this.acoesDoChaveamento(t.adversarios[t.rodada].nome, 'Jogo.lutarRodadaTorneio()', 'Jogo.curarNoTorneio()', 'Jogo.desistirTorneio()', 'Desistir do torneio')}
+      <div class="torneio-vez">
+        <div class="chave-rosto">${rosto ? `<img src="${rosto}" alt="" onerror="this.remove()">` : ''}</div>
+        <div class="tv-corpo">
+          <div class="chave-cab"><span class="chave-nome-rodada">Sua luta · ${this.esc(pr.rodada)}</span><span class="chave-selo">Agora</span></div>
+          <div class="chave-quem">${this.esc(adv.nome)}</div>
+          <div class="chave-sub">${this.esc([adv.de, faixa].filter(Boolean).join(' · '))}</div>
+          <div class="chave-time" role="img" aria-label="${adv.time.length} Pokémon, que só aparecem na arena">${bolas}</div>
+        </div>
+        <div class="chave-premio"><span class="chave-din">${svgIcone('moeda')}${fmtDin(pr.dinheiro)} ₽</span>${itens}</div>
+      </div>
+      ${this.chaveDoTorneio(t)}
+      <div class="tv-escada" aria-label="Prêmio de cada rodada">${escada}</div>
+      ${this.acoesDoChaveamento(adv.nome, 'Jogo.lutarRodadaTorneio()', 'Jogo.curarNoTorneio()', 'Jogo.desistirTorneio()', 'Desistir do torneio')}
     </div>`);
     this.rolarTopo();
   },
@@ -3872,6 +3941,7 @@ const UI = {
         <div class="loc">Planalto Indigo</div>
       </div>
       <div class="narrativa">${o.quem ? this.narrarMonologo((o.falas||[]).filter(Boolean), o.quem) : (o.falas||[]).filter(Boolean).map(t=>`<p>${this.esc(txt(t))}</p>`).join('')}</div>
+      ${o.chave || ''}
       <div id="avisos" class="avisos"></div>
       <div id="escolhas" class="escolhas" style="margin-top:20px">
         ${o.continuar ? `<button class="escolha" onclick="Jogo.continuarElite()">Abrir a próxima porta</button>` : ''}
@@ -6320,13 +6390,14 @@ const UI = {
       <h3>Torneio Aberto</h3>
       <div class="linha"><span class="k">Quem entra</span><span class="v">qualquer um que chegue à arena do Planalto Indigo (a guarita da Rota 23 pede as oito insígnias) · inscrição de 2.000 ₽</span></div>
       <div class="linha"><span class="k">Quando</span><span class="v">um chaveamento por dia · a inscrição abre de manhã e fecha às seis da tarde · o chaveamento sai à uma, e quem se inscreve antes espera · o torneio toma a tarde: no fim, ganhando, perdendo ou desistindo, são seis horas</span></div>
-      <div class="linha"><span class="k">Chaveamento</span><span class="v">três rodadas, uma luta em cada, contra inscritos com nome e cidade · até dois são gente que já cruzou com você (veterano que você venceu também entra) · o Ezra, se entrar, fica com a final</span></div>
-      <div class="linha"><span class="k">Nível</span><span class="v">o ás de cada inscrito fica 3 abaixo da média dos seus três mais fortes nas quartas, 2 abaixo na semifinal e no mesmo nível na final, mais o acerto de cada um (de −4 a +4, pra todos pesarem parecido) · o resto do time vai de 3 abaixo do ás até ele</span></div>
+      <div class="linha"><span class="k">Chaveamento</span><span class="v">dezesseis vagas, sorteadas na inscrição: oitavas, quartas, semifinal e final · você é uma delas, e os outros quinze são inscritos com nome e cidade · até quatro são gente que já cruzou com você (veterano que você venceu também entra) · ninguém tem vaga marcada: quem chega na final do outro lado é quem ganhou as dele</span></div>
+      <div class="linha"><span class="k">As outras lutas</span><span class="v">acontecem nas outras quadras enquanto você luta a sua · cada lado rola uma parada de d6, um dado a cada 10 níveis somados do time que levaria pra arena naquela rodada · 4+ é sucesso, quem tira mais passa e o empate rola de novo · a chave mostra quem passou, nunca o placar · caindo, você fica até o fim da tarde e vê quem leva o título</span></div>
+      <div class="linha"><span class="k">Nível</span><span class="v">o ás de cada inscrito fica 5 abaixo da média dos seus três mais fortes nas oitavas, 3 nas quartas, 2 na semifinal e no mesmo nível na final, mais o acerto de cada um (de −6 a +5, pra todos pesarem parecido) · o resto do time vai de 3 abaixo do ás até ele</span></div>
       <div class="linha"><span class="k">Tamanho do time</span><span class="v">pelas suas insígnias: 3 com 0–1, 4 com 2–3, 5 com 4–5, 6 com 6 ou mais</span></div>
       <div class="linha"><span class="k">Golpes e item</span><span class="v">os de nível da espécie, o mais fraco trocado por um de TM do dono · o ás segura um item de luta</span></div>
-      <div class="linha"><span class="k">Escolha do golpe</span><span class="v">o segundo melhor golpe 12% das vezes nas quartas, 10% na semifinal e 8% na final · gasta Vontade com a chance cheia</span></div>
-      <div class="linha"><span class="k">Entre as rodadas</span><span class="v">dá pra curar o time</span></div>
-      <div class="linha"><span class="k">Prêmio</span><span class="v">3.000, 8.000 e 25.000 ₽, com itens · perdendo, 30% do prêmio da rodada · a reputação da semifinal e da final vem só na primeira vez que você passa por elas; dinheiro e itens, toda vez</span></div>
+      <div class="linha"><span class="k">Escolha do golpe</span><span class="v">o segundo melhor golpe 14% das vezes nas oitavas, 12% nas quartas, 10% na semifinal e 8% na final · gasta Vontade com a chance cheia</span></div>
+      <div class="linha"><span class="k">Entre as rodadas</span><span class="v">dá pra curar o time · recarregar o jogo entre uma rodada e outra volta pra chave</span></div>
+      <div class="linha"><span class="k">Prêmio</span><span class="v">1.500, 3.000, 8.000 e 25.000 ₽, com itens · perdendo, 30% do prêmio da rodada · a reputação da semifinal e da final vem só na primeira vez que você passa por elas; dinheiro e itens, toda vez</span></div>
       <p class="sussurro">As finais de torneio que acontecem na história, no navio e no Planalto, também vêm com o nível do seu time e item no ás, erram a escolha do golpe 10% a 12% das vezes e gastam Vontade com a chance cheia.</p>
 
       <h3>Conferência do Planalto Indigo</h3>

@@ -261,11 +261,12 @@ const Vitoria = {
       tipo: titulo ? 'taca' : 'rodada', cor:o.cor,
       titulo: titulo ? '{Campeão|Campeã}!' : 'Vitória!',
       quem:o.adversario, sub:`${rodada} · ${o.nome}`, rosto:retratoDe(o.adversario),
-      trofeu: titulo ? o.metal : null, medalha: titulo ? null : (o.feitas === 1 ? 'bronze' : 'prata'),
+      /* a medalha da rodada: bronze até a que vem antes da final, prata nela */
+      trofeu: titulo ? o.metal : null, medalha: titulo ? null : (o.feitas >= o.rodadas.length - 1 ? 'prata' : 'bronze'),
       legenda: titulo ? o.nome : rodada, conta: titulo ? o.conta : `${o.feitas} de ${o.rodadas.length}`,
       etapas, premios:this.premios(o.ganho, o.itens),
       frase: titulo ? `${o.f ? 'A' : 'O'} <b>${UI.esc(o.nome)}</b> é ${o.f ? 'sua' : 'seu'}.`
-                    : `<b>${UI.esc(rodada)}</b> vencida. Próxima: ${UI.esc(o.rodadas[o.feitas])}.`
+                    : `<b>${UI.esc(rodada)}</b> ${/s$/.test(rodada) ? 'vencidas' : 'vencida'}. Próxima: ${UI.esc(o.rodadas[o.feitas])}.`
     };
   }
 };
