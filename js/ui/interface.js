@@ -41,12 +41,13 @@ function varsCartao(k){
   return {'--cart-clara':c[0], '--cart':c[1], '--cart-esc':c[2]};
 }
 /* O rosto do jogador no cartão e na ficha: o uniforme da rede, quando
-   veste um, ou a foto escolhida na inscrição. Sem nenhum, null. */
+   veste um, ou a foto escolhida na inscrição, nas cores que você deu
+   pra ela (FotoJogador). Sem nenhum, null. */
 function retratoDoJogador(d){
   d = d || (typeof Estado !== 'undefined' ? Estado.dados : null);
   if (typeof Rede !== 'undefined' && Rede.dentro && d && Rede.dentro(d)){ const r = Rede.retrato(); if (r) return r; }
   const j = d && d.jogador;
-  return j && j.retrato && typeof caminhoNPC === 'function' ? caminhoNPC(j.retrato) : null;
+  return j && j.retrato ? FotoJogador.doSave(j) : null;
 }
 
 /* Os seis status do treinador, na ordem da ficha, com o que cada um
@@ -480,7 +481,7 @@ const UI = {
       const nIns = save && Array.isArray(save.insignias) ? save.insignias.filter(i => i !== 'Título de Campeão' && i !== 'Campeão de Kanto') : [];
       const dias = save ? Math.max(1, Math.floor(+(save.relogio || {}).dia || 1)) : 0;
       const lugar = save && save.local && LOCAIS[save.local] ? LOCAIS[save.local].nome : '';
-      const rosto = typeof j.retrato === 'string' && /^[\w\/.-]+$/.test(j.retrato) ? caminhoNPC(j.retrato) : null;
+      const rosto = FotoJogador.doSave(j);
       const cap = save ? Historia.capitulo(save.capitulo) : null;
       const caixa = GINASIOS.map(g => {
         const tem = nIns.includes(g.insignia), src = caminhoInsignia(g.id);
@@ -548,8 +549,10 @@ const UI = {
      CRIAÇÃO DE PERSONAGEM — a ficha de inscrição da Liga
      Seis passos no idioma da abertura: quem você é, o seu jeito, o
      que você quer, a aparência, quem fica em casa e a conferência.
-     O que pesa no jogo é escolha (js/data/inscricao.js); o que é só
-     descrição é texto livre, com sugestão sorteada. Ao lado, o
+     O que pesa no jogo é escolha (js/data/inscricao.js), e a aparência
+     também: a foto, com a cor do cabelo, da pele e da roupa
+     (FotoJogador), de onde sai a descrição que os outros fazem de
+     você. Ao lado, o
      cartão de inscrição vai se preenchendo; no celular ele aparece
      na conferência. O estado mora em UI._cr até "Sair de casa".
      ======================================================== */
@@ -565,7 +568,7 @@ const UI = {
       cidade:'Pallet', tracos:[], tracoLivre:'', forte:null,
       meta:null, frase:'', fraseMexida:false,
       gostos:{lugares:[], tipos:[], dex:[]}, desgostos:{lugares:[], tipos:[], dex:[]},
-      aparencia:'', vestimenta:'', mochila:null, retrato:null, retratoEscolhido:false, maisRostos:false, corCartao:'azul',
+      cores:{cabelo:null, pele:null, roupa:null}, mochila:null, retrato:null, retratoEscolhido:false, maisRostos:false, corCartao:'azul',
       casaNome:'', casaQuem:'', inicial:'classico', ritmo:'fiel'
     };
     const estrelas = Array.from({length:22}, () =>
@@ -710,12 +713,13 @@ const UI = {
       }
       case 'mochila': c.mochila = c.mochila === ds.v ? null : ds.v; return refaz('visual');
       case 'retrato': c.retrato = ds.v || null; c.retratoEscolhido = !!c.retrato; return refaz('visual');
+      case 'cor': if (ds.parte in c.cores){ c.cores[ds.parte] = ds.v || null; } return refaz('visual');
       case 'maisRostos': c.maisRostos = !c.maisRostos; return refaz('visual');
       case 'cartao': c.corCartao = ds.v; return refaz('visual');
       case 'casaQuem': c.casaQuem = c.casaQuem === ds.v ? '' : ds.v; return refaz('casa');
       case 'inicial': c.inicial = ds.v; return refaz('casa');
       case 'ritmo': c.ritmo = ds.v; return refaz('casa');
-      case 'dado': this.crDado(ds.v); return refaz(...{nome:['voce'], aparencia:['visual'], vestimenta:['visual'],
+      case 'dado': this.crDado(ds.v); return refaz(...{nome:['voce'], cores:['visual'],
         casaNome:['casa'], tracos:['jeito']}[ds.v] || []);
       case 'editar': c.passo = +ds.v; this.crMostrar(); this.crRolar(); return;
     }
@@ -737,8 +741,6 @@ const UI = {
       if (/\n/.test(v)){ el.value = v.replace(/\s*\n+\s*/g, ' '); }
       c.frase = el.value; c.fraseMexida = true;
     }
-    else if (k === 'aparencia') c.aparencia = v;
-    else if (k === 'vestimenta') c.vestimenta = v;
     else if (k === 'casaNome') c.casaNome = v;
     else if (k === 'especie' && mudou){
       /* o nome escrito vira espécie da Pokédex de Kanto, se for uma */
@@ -771,8 +773,11 @@ const UI = {
     /* nome de gente da história não vira o seu: duas Eldas confundem */
     if (campo === 'nome') c.nome = outro((c.genero === 'Mulher' ? NOMES_F : NOMES_M)
       .filter(n => typeof NOMES_DA_HISTORIA === 'undefined' || !NOMES_DA_HISTORIA.has(n)), c.nome);
-    if (campo === 'aparencia') c.aparencia = generoDaFicha(outro(APARENCIAS_DA_FICHA, null), c.genero);
-    if (campo === 'vestimenta') c.vestimenta = outro(VESTIMENTAS_DA_FICHA, c.vestimenta);
+    /* o dado das cores sorteia cabelo e roupa; a pele fica como você deixou */
+    if (campo === 'cores'){
+      c.cores.cabelo = outro(CORES_DA_FOTO.cabelo.map(k => k.id), c.cores.cabelo);
+      c.cores.roupa = outro(CORES_DA_FOTO.roupa.map(k => k.id), c.cores.roupa);
+    }
     if (campo === 'casaNome'){
       const mulher = c.casaQuem ? parentescoEhMulher(c.casaQuem) : Math.random() < .5;
       c.casaNome = outro(mulher ? NOMES_DE_CASA_F : NOMES_DE_CASA_M, c.casaNome);
@@ -797,8 +802,6 @@ const UI = {
       c.gostos.tipos.push(Dados.escolher(TIPOS_KANTO));
       c.desgostos.lugares.push(lugares[1]);
     }
-    if (!c.aparencia.trim()) this.crDado('aparencia');
-    if (!c.vestimenta.trim()) this.crDado('vestimenta');
     if (!c.mochila) c.mochila = Dados.escolher(MOCHILAS_DA_FICHA);
     if (!c.retrato) c.retrato = Dados.escolher(RETRATOS_DA_FICHA[c.genero]);
   },
@@ -811,8 +814,9 @@ const UI = {
     return `<button type="button" class="cr-dado" data-acao="dado" data-v="${campo}" data-foco="dado-${campo}"
       title="${this.esc(rotulo)}" aria-label="${this.esc(rotulo)}">${svgIcone('dado')}</button>`;
   },
-  crRetratoImg(arq, cls){
-    return `<img class="${cls || 'cr-sprite'}" src="${caminhoNPC(PASTA_DOS_RETRATOS + arq)}" alt="" onerror="this.remove()">`;
+  /* a foto, nas cores escolhidas quando vêm (cores), ou como o desenho tem */
+  crRetratoImg(arq, cls, cores){
+    return `<img class="${cls || 'cr-sprite'}" src="${cores ? FotoJogador.url(arq, cores) : FotoJogador.original(arq)}" alt="" onerror="this.remove()">`;
   },
 
   crSec_voce(c){
@@ -920,11 +924,12 @@ const UI = {
   crSec_visual(c){
     const e = s => this.esc(s);
     /* só as fotos do gênero da ficha: as primeiras de cara, as outras no
-       "Mais rostos", que já vem aberto se a foto escolhida é de lá */
+       "Mais rostos", que já vem aberto se a foto escolhida é de lá. Todas
+       nas cores escolhidas: dá pra ver cada corpo com o seu cabelo */
     const foto = arq => `<button type="button" class="cr-op cr-retrato${c.retrato === arq ? ' sel' : ''}"
         data-acao="retrato" data-v="${arq}" data-foco="retrato-${arq}" aria-pressed="${c.retrato === arq}"
         aria-label="Foto: ${e(ROTULO_DO_RETRATO[arq] || arq)}" title="${e(maiuscula(ROTULO_DO_RETRATO[arq] || arq))}">
-        ${this.crRetratoImg(arq)}</button>`;
+        ${this.crRetratoImg(arq, null, c.cores)}</button>`;
     const doGenero = RETRATOS_DA_FICHA[c.genero];
     const aVista = doGenero.slice(0, RETRATOS_A_VISTA), outras = doGenero.slice(RETRATOS_A_VISTA);
     const abertos = c.maisRostos || outras.includes(c.retrato);
@@ -938,17 +943,47 @@ const UI = {
     const cartoes = Object.entries(CORES_CARTAO).map(([k, cor]) => `<button type="button" class="cartao-cor${c.corCartao === k ? ' sel' : ''}"
         style="background:${cor[1]}" data-acao="cartao" data-v="${k}" data-foco="cartao-${k}" title="${e(cor[3])}" aria-label="${e(cor[3])}" aria-pressed="${c.corCartao === k}"></button>`).join('');
     return this.crCabeca('Como você é', 'O que os outros veem quando você chega, e o que eles vão contar de você depois.') + `
-      <div class="cr-campo"><label class="cr-rot" for="f-aparencia">Aparência ${this.crDadoBtn('aparencia', 'Sortear uma aparência')}</label>
-        <textarea id="f-aparencia" data-campo="aparencia" data-foco="aparencia" maxlength="240" placeholder="Altura, cabelo, olhos, cicatriz, o que for.">${e(c.aparencia)}</textarea></div>
-      <div class="cr-campo"><label class="cr-rot" for="f-vestimenta">Roupa ${this.crDadoBtn('vestimenta', 'Sortear uma roupa')}</label>
-        <textarea id="f-vestimenta" data-campo="vestimenta" data-foco="vestimenta" maxlength="160" placeholder="Jaqueta velha de casa, tênis furado, um boné.">${e(c.vestimenta)}</textarea></div>
+      <div class="cr-campo"><span class="cr-rot">Foto do cartão</span>
+        <div class="cr-grade cr-retratos" role="group" aria-label="Foto do cartão">${retratos}</div>${mais}</div>
+      ${this.crProvador(c)}
       <div class="cr-campo"><span class="cr-rot">Cor da mochila</span>
         <div class="cr-cores" role="group" aria-label="Cor da mochila">${mochilas}</div>
         <p class="cr-nota">É a cor da mochila na tela, até você comprar outra bolsa.</p></div>
-      <div class="cr-campo"><span class="cr-rot">Foto do cartão</span>
-        <div class="cr-grade cr-retratos" role="group" aria-label="Foto do cartão">${retratos}</div>${mais}</div>
       <div class="cr-campo"><span class="cr-rot">Cor do cartão</span>
         <div class="cartao-cores cr-cartoes" role="group" aria-label="Cor do cartão">${cartoes}</div></div>`;
+  },
+
+  /* As cores da foto escolhida: a foto grande e, do lado, cabelo, pele
+     e roupa. A primeira opção de cada uma é a cor que o desenho tem;
+     foto de boné, capacete ou chapéu não tem cor de cabelo. Embaixo, o
+     que os outros vão dizer de você. Sem foto, nada aqui. */
+  crProvador(c){
+    const arq = c.retrato, f = arq && FOTOS_DO_JOGADOR[arq];
+    if (!f) return '';
+    const e = s => this.esc(s);
+    const desc = descricaoDaFoto(arq, c.cores);
+    const [, gen] = PECA_DO_RETRATO[arq] || ['roupa', 'f'];
+    const linha = ([parte, rot]) => {
+      if (!f[parte]){
+        const cabeca = (CABECA_DO_RETRATO[arq] || 'boné').replace(/ pra trás$/, '');
+        return `<div class="cr-parte sem"><div class="cr-parte-rot"><b>${rot}</b><span>debaixo do ${e(cabeca)}, nesta foto</span></div></div>`;
+      }
+      const atual = c.cores[parte] && corDaFoto(parte, c.cores[parte]) ? c.cores[parte] : null;
+      const nome = id => nomeDaCorDaFoto(parte, id, parte === 'pele' || (parte === 'roupa' && gen === 'f'));
+      const tinta = (id, rotulo, fundo, cls) => `<button type="button" class="cr-tinta${cls || ''}${atual === id ? ' sel' : ''}"
+          data-acao="cor" data-parte="${parte}" data-v="${id || ''}" data-foco="cor-${parte}-${id || 'desenho'}"
+          aria-pressed="${atual === id}" title="${e(maiuscula(rotulo))}" aria-label="${e(rot)}: ${e(rotulo)}"><i style="background:${fundo}"></i>${cls ? `<span>Do desenho</span>` : ''}</button>`;
+      const tintas = [tinta(null, `a do desenho (${nome(f[parte].cor)})`, f[parte].de, ' do-desenho')]
+        .concat(CORES_DA_FOTO[parte].map(k => tinta(k.id, nome(k.id), FotoJogador.amostra(k))));
+      return `<div class="cr-parte"><div class="cr-parte-rot"><b>${rot}</b><span>${e(maiuscula(nome(atual || f[parte].cor)))}</span></div>
+        <div class="cr-tintas" role="group" aria-label="Cor ${parte === 'cabelo' ? 'do' : 'da'} ${rot.toLowerCase()}">${tintas.join('')}</div></div>`;
+    };
+    return `<div class="cr-campo cr-provador"><span class="cr-rot">Cores da foto ${this.crDadoBtn('cores', 'Sortear cabelo e roupa')}</span>
+      <div class="cr-prov">
+        <div class="cr-prov-foto">${this.crRetratoImg(arq, 'cr-prov-sprite', c.cores)}</div>
+        <div class="cr-partes">${PARTES_DA_FOTO.map(linha).join('')}
+          <p class="cr-nota">Quem precisar te descrever vai dizer: <b>${e([desc.aparencia, desc.vestimenta].filter(Boolean).join(', '))}</b>.</p></div>
+      </div></div>`;
   },
 
   crSec_casa(c){
@@ -1010,8 +1045,9 @@ const UI = {
     const linha = (k, v) => `<dt>${e(k)}</dt><dd>${v}</dd>`;
     const vars = varsCartao(c.corCartao);
     const estilo = Object.entries(vars).map(([k, v]) => `${k}:${v}`).join(';');
-    const retrato = c.retrato ? this.crRetratoImg(c.retrato, 'crc-sprite')
+    const retrato = c.retrato ? this.crRetratoImg(c.retrato, 'crc-sprite', c.cores)
       : `<span class="crc-monograma">${e((nome || '?').charAt(0).toUpperCase())}</span>`;
+    const desc = c.retrato ? descricaoDaFoto(c.retrato, c.cores) : {aparencia:'', vestimenta:''};
     return `<div class="crc${inteiro ? ' inteiro' : ''}" style="${estilo}">
       <div class="crc-topo"><span>Inscrição de treinador</span><span>Liga de Kanto</span></div>
       <div class="crc-corpo">
@@ -1028,8 +1064,8 @@ const UI = {
         ${linha('Quer', meta ? `${e(maiuscula(generoDaFicha(meta.nome, g)))}${c.frase.trim() ? `<q>${e(c.frase.trim())}</q>` : ''}` : vago('—'))}
         ${inteiro || gostos ? linha('Gosta de', gostos ? e(gostos) : vago('Nada em especial')) : ''}
         ${inteiro || desgostos ? linha('Não gosta de', desgostos ? e(desgostos) : vago('Nada em especial')) : ''}
-        ${inteiro ? linha('Aparência', c.aparencia.trim() ? e(c.aparencia.trim()) : vago('Nada que chame atenção')) : ''}
-        ${inteiro ? linha('Roupa', c.vestimenta.trim() ? e(c.vestimenta.trim()) : vago('Roupa comum e um casaco')) : ''}
+        ${inteiro ? linha('Aparência', desc.aparencia ? e(maiuscula(desc.aparencia)) : vago('Nada que chame atenção')) : ''}
+        ${inteiro ? linha('Roupa', desc.vestimenta ? e(maiuscula(desc.vestimenta)) : vago('Roupa comum e um casaco')) : ''}
         ${c.mochila ? linha('Mochila', `<i class="crc-cor" style="background:${CORES_MOCHILA[c.mochila]}"></i>${e(maiuscula(c.mochila))}`) : ''}
         ${linha('Em casa', casa)}
         ${linha('Começa com', c.inicial === 'rand' ? 'O que já estava em casa' : 'Um dos três clássicos')}
@@ -1045,8 +1081,11 @@ const UI = {
     const tracos = c.tracos.map(p => tracoNoGenero(this.crPar(p), c.genero));
     const livre = c.tracoLivre.trim();
     const gostos = gostoDaFicha(c.gostos), desgostos = gostoDaFicha(c.desgostos);
+    /* a aparência é a foto: a descrição sai dela, e as cores vão junto */
+    const desc = c.retrato ? descricaoDaFoto(c.retrato, c.cores) : {aparencia:'', vestimenta:''};
+    const cores = c.retrato ? coresDaFotoValidas(c.retrato, c.cores) : {};
     return {
-      nome:c.nome.trim(), genero:c.genero, aparencia:c.aparencia.trim(), vestimenta:c.vestimenta.trim(),
+      nome:c.nome.trim(), genero:c.genero, aparencia:desc.aparencia, vestimenta:desc.vestimenta,
       personalidade:juntarComE(tracos.concat(livre ? [livre] : [])),
       cidade:c.cidade, objetivo:c.frase.trim(), meta:c.meta,
       gosta:gostos.texto, naoGosta:desgostos.texto, gostos, desgostos,
@@ -1054,6 +1093,7 @@ const UI = {
       nascimento:{dia:c.nasc.dia, mes:c.nasc.mes},
       casaNome:c.casaNome.trim(), casaQuem:c.casaQuem,
       forte:c.forte, retrato:c.retrato ? PASTA_DOS_RETRATOS + c.retrato : null,
+      retratoCores:Object.keys(cores).length ? cores : null,
       corMochila:c.mochila, corCartao:c.corCartao
     };
   },
@@ -4408,7 +4448,7 @@ const UI = {
     const nIns = (Array.isArray(d.insignias) ? d.insignias : []).filter(i => i !== 'Título de Campeão' && i !== 'Campeão de Kanto').length;
     const dias = Math.max(1, Math.floor(+(d.relogio || {}).dia || 1));
     const lugar = d.local && typeof LOCAIS !== 'undefined' && LOCAIS[d.local] ? LOCAIS[d.local].nome : '';
-    const rosto = typeof j.retrato === 'string' && /^[\w\/.-]+$/.test(j.retrato) && typeof caminhoNPC === 'function' ? caminhoNPC(j.retrato) : null;
+    const rosto = FotoJogador.doSave(j);
     const time = (d.time || []).slice(0, 6).map(p =>
       `<span class="save-pk" title="${e(nomeExib(p))} · Nv ${e(p.nivel)}">${imgSprite({dex:p.dex, shiny:!!p.shiny}, 'icone')}</span>`).join('');
     const notas = [].concat(nota || []);
@@ -5771,7 +5811,7 @@ const UI = {
     if (k === 'passos') return `
       <h3>A primeira hora, passo a passo</h3>
       <ol class="tut-passos">
-        <li><b>Inscrição.</b> Seis passos: quem você é, o seu jeito, o que você quer, a aparência, quem fica em casa e a conferência. O que pesa no jogo é escolha: o jeito mexe em quem te obedece, o seu forte começa em 2, o objetivo vira o rumo que abre cada capítulo, e lugar ou Pokémon de que você gosta pesa nos dados e na moral. O dado ao lado de um campo sorteia uma sugestão, e "Sortear o resto" preenche o que ficou em branco.</li>
+        <li><b>Inscrição.</b> Seis passos: quem você é, o seu jeito, o que você quer, a aparência, quem fica em casa e a conferência. O que pesa no jogo é escolha: o jeito mexe em quem te obedece, o seu forte começa em 2, o objetivo vira o rumo que abre cada capítulo, e lugar ou Pokémon de que você gosta pesa nos dados e na moral. A aparência é a foto: você escolhe o corpo e a cor do cabelo, da pele e da roupa, e é isso que os outros vão dizer de você. O dado ao lado de um campo sorteia uma sugestão, e "Sortear o resto" preenche o que ficou em branco.</li>
         <li><b>O capítulo 1.</b> Você acorda em casa. Leia a cena e toque numa opção — ou escreva o que quer fazer no campo de baixo. Não tem opção certa: tem o que você fez.</li>
         <li><b>O primeiro Pokémon.</b> Os três iniciais saem da Pokébola na sua frente; escolha um e, se quiser, dê um apelido.</li>
         <li><b>A licença.</b> No Centro Pokémon (em Pallet, no laboratório). Com ela, o Centro cura de graça.</li>
@@ -5798,7 +5838,7 @@ const UI = {
       ${L('No que você é bom', 'um dos seis status começa em 2; os outros, em 1 · Resistência em 2 já começa com HP 32 e Vontade 4')}
       ${L('Objetivo', 'um dos sete rumos, numa frase sua (ou na sugerida) · a frase sai da sua boca na história, e o rumo abre cada capítulo')}
       ${L('Gostos', `até ${GOSTOS_MAX} coisas de que você gosta e ${DESGOSTOS_MAX} de que não gosta, entre lugares, tipos de Pokémon e uma espécie · a mesma coisa não fica nas duas listas · o que cada uma faz está em Objetivo e gostos`)}
-      ${L('Aparência e roupa', 'texto livre · é como os outros te descrevem quando precisam')}
+      ${L('Aparência', 'a foto do cartão, entre as do seu gênero, com a cor do cabelo, da pele e da roupa · o desenho é sempre o mesmo, só a cor muda · cabelo e roupa viram a descrição que os outros fazem de você quando precisam (foto de boné, capacete ou chapéu diz o que está na cabeça) · sem foto, a descrição fica vaga · nada disso mexe em regra')}
       ${L('Mochila e cartão', 'a cor da mochila na tela (até você comprar outra bolsa) e a do Cartão de Treinador · a foto vai no cartão e na Ficha · nada disso mexe em regra')}
       ${L('Gênero', 'o texto inteiro concorda com ele — narração, tratamento, cargo e título')}
       ${L('Quem fica em casa', 'a voz que te acorda e o primeiro número do PokéNav · o parentesco decide como a história fala dessa pessoa · o que ficar em branco é sorteado combinando nome e parentesco')}

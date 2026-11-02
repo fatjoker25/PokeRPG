@@ -109,30 +109,117 @@ function retratoDaFicha(arq){
   return !!arq && (RETRATOS_DA_FICHA.Homem.includes(arq) || RETRATOS_DA_FICHA.Mulher.includes(arq));
 }
 
+/* As cores da foto. Escolhido o corpo, o cabelo, a pele e a roupa
+   trocam de cor sem trocar o desenho, que continua sendo o do
+   artista: cada foto tem, em js/data/fotos-jogador.js (gerado por
+   ferramentas/fotos-do-jogador.py), quais cores da paleta dela são
+   cabelo, pele e roupa, e onde cada uma fica do escuro ao claro. A
+   cor nova é uma escala do mesmo jeito — matiz h, saturação s, do
+   escuro l[0] ao claro l[1] —, então a sombra e o brilho ficam onde o
+   artista pôs. Cabelo e roupa viram também a descrição que os outros
+   fazem de você (o retrato falado do capítulo 6); a pele fica só na
+   foto. Cor nova entra aqui e o gerador roda de novo: é ele que diz
+   qual destas é a cor de cada foto como ela veio. */
+const CORES_DA_FOTO = {
+  cabelo: [
+    {id:'preto',           nome:'preto',           h:225, s:.12, l:[.07, .30]},
+    {id:'castanho-escuro', nome:'castanho-escuro', h:22,  s:.40, l:[.12, .34]},
+    {id:'castanho',        nome:'castanho',        h:26,  s:.45, l:[.22, .52]},
+    {id:'ruivo',           nome:'ruivo',           h:14,  s:.70, l:[.28, .62]},
+    {id:'loiro',           nome:'loiro',           h:45,  s:.70, l:[.45, .85]},
+    {id:'platinado',       nome:'platinado',       h:50,  s:.30, l:[.62, .93]},
+    {id:'prateado',        nome:'prateado',        h:220, s:.08, l:[.45, .88]},
+    {id:'vermelho',        nome:'vermelho',        h:355, s:.65, l:[.25, .58]},
+    {id:'rosa',            nome:'rosa',            h:330, s:.65, l:[.42, .82]},
+    {id:'roxo',            nome:'roxo',            h:275, s:.45, l:[.24, .62]},
+    {id:'azul',            nome:'azul',            h:215, s:.60, l:[.22, .62]},
+    {id:'verde',           nome:'verde',           h:145, s:.45, l:[.20, .58]}
+  ],
+  pele: [
+    {id:'muito-clara',  nome:'muito clara',  h:22, s:.70, l:[.50, .92]},
+    {id:'clara',        nome:'clara',        h:24, s:.62, l:[.42, .86]},
+    {id:'morena-clara', nome:'morena clara', h:24, s:.52, l:[.32, .74]},
+    {id:'morena',       nome:'morena',       h:22, s:.48, l:[.22, .60]},
+    {id:'escura',       nome:'escura',       h:18, s:.42, l:[.13, .46]}
+  ],
+  /* roupa: [masculino, feminino], pela palavra da peça (PECA_DO_RETRATO) */
+  roupa: [
+    {id:'vermelho',     nome:['vermelho', 'vermelha'],  h:355, s:.65, l:[.22, .62]},
+    {id:'vinho',        nome:'vinho',                   h:345, s:.50, l:[.12, .42]},
+    {id:'laranja',      nome:'laranja',                 h:25,  s:.80, l:[.30, .70]},
+    {id:'amarelo',      nome:['amarelo', 'amarela'],    h:48,  s:.80, l:[.38, .80]},
+    {id:'verde',        nome:'verde',                   h:130, s:.45, l:[.18, .55]},
+    {id:'verde-agua',   nome:'verde-água',              h:172, s:.50, l:[.20, .70]},
+    {id:'azul-claro',   nome:['azul-claro', 'azul-clara'], h:200, s:.60, l:[.38, .86]},
+    {id:'azul',         nome:'azul',                    h:212, s:.60, l:[.20, .62]},
+    {id:'azul-marinho', nome:'azul-marinho',            h:225, s:.45, l:[.10, .38]},
+    {id:'roxo',         nome:['roxo', 'roxa'],          h:275, s:.45, l:[.22, .62]},
+    {id:'rosa',         nome:'rosa',                    h:330, s:.60, l:[.40, .82]},
+    {id:'marrom',       nome:'marrom',                  h:25,  s:.35, l:[.15, .45]},
+    {id:'bege',         nome:'bege',                    h:38,  s:.30, l:[.45, .85]},
+    {id:'preto',        nome:['preto', 'preta'],        h:230, s:.08, l:[.06, .32]},
+    {id:'cinza',        nome:'cinza',                   h:220, s:.06, l:[.30, .70]},
+    {id:'branco',       nome:['branco', 'branca'],      h:220, s:.08, l:[.62, .96]}
+  ]
+};
+/* a ordem em que a ficha mostra as três, da cabeça pro pé */
+const PARTES_DA_FOTO = [['cabelo', 'Cabelo'], ['pele', 'Pele'], ['roupa', 'Roupa']];
+
+/* o que a roupa de cada foto é, e o gênero da palavra, que decide a
+   cor ("vestido preto", "saia preta"): é o que vai na descrição */
+const PECA_DO_RETRATO = {
+  viajante:['calça', 'f'], urbano:['bermuda', 'f'], patinador:['bermuda', 'f'], colecionador:['bermuda', 'f'],
+  terno:['terno', 'm'], trilheiro:['camisa', 'f'], roqueiro:['roupa', 'f'], chamativo:['jaqueta', 'f'],
+  lutador:['quimono', 'm'], mistico:['calça', 'f'], piloto:['macacão', 'm'], naturalista:['camisa', 'f'],
+  durao:['jaqueta', 'f'], criador:['uniforme', 'm'], corredor:['regata', 'f'], ciclista:['camiseta', 'f'],
+  esportivo:['camiseta', 'f'], surfista:['bermuda', 'f'], artesao:['avental', 'm'], prateado:['jaqueta', 'f'],
+  violeiro:['calça', 'f'], explorador:['jaqueta', 'f'], cinegrafista:['jaqueta', 'f'], lavrador:['avental', 'm'],
+  aventureira:['vestido', 'm'], animada:['blusa', 'f'], urbana:['short', 'm'], atleta:['agasalho', 'm'],
+  estudante:['casaco', 'm'], elegante:['casaco', 'm'], trilheira:['blusa', 'f'], punk:['saia', 'f'],
+  gotica:['vestido', 'm'], lutadora:['quimono', 'm'], dancarina:['calça', 'f'], modelo:['casaco', 'm'],
+  artista:['calça', 'f'], aviadora:['macacão', 'm'], patinadora:['roupa', 'f'], ciclista_f:['camiseta', 'f'],
+  mochileira:['bermuda', 'f'], despojada:['regata', 'f'], esportiva:['saia', 'f'], descolada:['macacão', 'm'],
+  fazendeira:['jardineira', 'f'], cantora:['vestido', 'm'], vidente:['túnica', 'f'], guitarrista:['saia', 'f']
+};
+/* foto em que o cabelo não aparece ou não se separa do que está por
+   cima: não tem cor de cabelo, e a descrição diz o que tem na cabeça */
+const CABECA_DO_RETRATO = {
+  urbano:'boné', patinador:'capacete', criador:'boné', ciclista:'boné', esportivo:'boné pra trás',
+  violeiro:'chapéu', explorador:'boné', cinegrafista:'boné pra trás', aviadora:'capacete', patinadora:'capacete'
+};
+
+function corDaFoto(parte, id){
+  return (CORES_DA_FOTO[parte] || []).find(c => c.id === id) || null;
+}
+function nomeDaCorDaFoto(parte, id, feminino){
+  const c = corDaFoto(parte, id);
+  if (!c) return '';
+  return Array.isArray(c.nome) ? c.nome[feminino ? 1 : 0] : c.nome;
+}
+/* só o que existe e que a foto tem: o save pode ter vindo de arquivo de
+   outra pessoa, e cor de cabelo em foto de boné não entra */
+function coresDaFotoValidas(arq, cores){
+  const f = typeof FOTOS_DO_JOGADOR !== 'undefined' && FOTOS_DO_JOGADOR[arq];
+  const ok = {};
+  if (!f || !cores || typeof cores !== 'object') return ok;
+  for (const [parte] of PARTES_DA_FOTO)
+    if (f[parte] && typeof cores[parte] === 'string' && corDaFoto(parte, cores[parte])) ok[parte] = cores[parte];
+  return ok;
+}
+/* a descrição que sai da foto: o cabelo (ou o que está na cabeça) e a
+   roupa, na cor escolhida ou na que o desenho tem */
+function descricaoDaFoto(arq, cores){
+  const f = typeof FOTOS_DO_JOGADOR !== 'undefined' && FOTOS_DO_JOGADOR[arq];
+  if (!f) return {aparencia:'', vestimenta:''};
+  const c = coresDaFotoValidas(arq, cores);
+  const aparencia = f.cabelo ? `cabelo ${nomeDaCorDaFoto('cabelo', c.cabelo || f.cabelo.cor)}` : (CABECA_DO_RETRATO[arq] || '');
+  const [peca, gen] = PECA_DO_RETRATO[arq] || ['roupa', 'f'];
+  const vestimenta = f.roupa ? `${peca} ${nomeDaCorDaFoto('roupa', c.roupa || f.roupa.cor, gen === 'f')}` : '';
+  return {aparencia, vestimenta};
+}
+
 /* a cor da mochila que sai de casa com você: chaves de CORES_MOCHILA */
 const MOCHILAS_DA_FICHA = ['bege', 'preta', 'branca', 'vermelha', 'azul', 'verde', 'amarela', 'roxa', 'rosa', 'laranja', 'cinza', 'marrom'];
-
-/* sugestão pra quem não quer escrever: {o|a} resolve pelo gênero */
-const APARENCIAS_DA_FICHA = [
-  'Alt{o|a} pra idade, cabelo curto e escuro, uma cicatriz pequena no queixo.',
-  'Baixinh{o|a}, cabelo castanho sempre bagunçado, sardas no nariz.',
-  'Magr{o|a}, cabelo comprido preso atrás, olhos que não param quietos.',
-  'Cabelo ruivo cortado em casa e um dente lascado que aparece quando ri.',
-  'Moren{o|a}, cabelo crespo, um calombo na sobrancelha de quando caiu da árvore.',
-  'Óculos remendados e uma franja que vive caindo no olho.',
-  'Ombros largos de quem carrega peso desde cedo, mãos sempre arranhadas.',
-  'Cabelo platinado de sol, pele queimada e um sorriso torto.'
-];
-const VESTIMENTAS_DA_FICHA = [
-  'Boné desbotado, jaqueta grande demais e tênis de lona.',
-  'Moletom com capuz, bermuda e bota de trilha emprestada.',
-  'Camiseta velha de torneio, calça de brim e um cachecol que alguém tricotou.',
-  'Colete de lona cheio de bolso e calça dobrada na canela.',
-  'Chapéu de palha, camisa xadrez e sandália de borracha.',
-  'Jaqueta de vinil, luva sem dedo e tênis branco que já foi branco.',
-  'Capa de chuva amarela e galocha, por via das dúvidas.',
-  'Uniforme da escola com as mangas cortadas e um apito no pescoço.'
-];
 
 /* {a|b} pelo gênero da ficha, antes de existir jogo pra resolver */
 function generoDaFicha(texto, genero){

@@ -177,7 +177,14 @@ const SUSPEITO = [
       for (const t of TIPOS_KANTO) UI.crAcao('gosto', {lista:'desgostos', cat:'tipos', v:t});
       for (const [k] of LUGARES_DA_FICHA) UI.crAcao('gosto', {lista:'gostos', cat:'lugares', v:k});
       for (const k of MOCHILAS_DA_FICHA) UI.crAcao('mochila', {v:k});
-      for (const r of RETRATOS_DA_FICHA[c.genero]) UI.crAcao('retrato', {v:r});
+      /* cada foto, e nela cada cor de cada parte e a volta pra do desenho */
+      for (const r of RETRATOS_DA_FICHA[c.genero]){
+        UI.crAcao('retrato', {v:r});
+        for (const [parte] of PARTES_DA_FOTO){
+          for (const k of CORES_DA_FOTO[parte]) UI.crAcao('cor', {parte, v:k.id});
+          UI.crAcao('cor', {parte, v:''});
+        }
+      }
       /* os outros rostos do mesmo gênero, a um toque: abre, escolhe um de lá e fecha */
       UI.crAcao('maisRostos', {});
       UI.crAcao('retrato', {v:RETRATOS_DA_FICHA[c.genero][RETRATOS_A_VISTA]});
@@ -186,7 +193,7 @@ const SUSPEITO = [
       for (const q of PARENTESCOS) UI.crAcao('casaQuem', {v:q});
       for (const k of STATUS_DO_TREINADOR.map(s => s[0])) UI.crAcao('forte', {v:k});
       UI.crAcao('inicial', {v:'rand'}); UI.crAcao('ritmo', {v:'longo'});
-      for (const f of ['nome', 'aparencia', 'vestimenta', 'casaNome', 'tracos']) UI.crAcao('dado', {v:f});
+      for (const f of ['nome', 'cores', 'casaNome', 'tracos']) UI.crAcao('dado', {v:f});
       if (!c.forte) UI.crAcao('forte', {v:'sorte'});
       UI.crAcao('passo', {v:'5'});
     });
@@ -212,7 +219,62 @@ const SUSPEITO = [
       return falhas;
     });
     for (const f of regras){ onde = `inscrição/${g}`; anota('inscrição', f); }
+    /* as cores da foto: foto de boné não oferece cor de cabelo; a foto
+       troca de cor só onde devia, pixel por pixel, e abre no navegador;
+       a descrição sai das cores */
+    const pintura = await page.evaluate(async () => {
+      const c = UI._cr, falhas = [];
+      UI.crAcao('passo', {v:'3'});
+      const doGenero = RETRATOS_DA_FICHA[c.genero];
+      const semCabelo = doGenero.find(a => !FOTOS_DO_JOGADOR[a].cabelo);
+      const comCabelo = doGenero.find(a => FOTOS_DO_JOGADOR[a].cabelo);
+      UI.crAcao('retrato', {v:semCabelo});
+      if (document.querySelector('.cr-tinta[data-parte="cabelo"]')) falhas.push(`a foto ${semCabelo} (de ${CABECA_DO_RETRATO[semCabelo]}) oferece cor de cabelo`);
+      if (!document.querySelector('.cr-parte.sem')) falhas.push(`a foto ${semCabelo} não diz que o cabelo fica debaixo do ${CABECA_DO_RETRATO[semCabelo]}`);
+      UI.crAcao('retrato', {v:comCabelo});
+      const alvo = {cabelo:'rosa', pele:'escura', roupa:'verde'};
+      for (const [parte, v] of Object.entries(alvo)) UI.crAcao('cor', {parte, v});
+      const img = document.querySelector('.cr-prov-sprite');
+      const mini = document.querySelector(`.cr-retrato[data-v="${comCabelo}"] img`);
+      if (!img || !/^data:image\/png/.test(img.src)) return falhas.concat('a foto grande não saiu nas cores escolhidas');
+      if (!mini || mini.src !== img.src) falhas.push('a foto da grade não está nas mesmas cores da grande');
+      const abrir = src => new Promise(ok => { const i = new Image(); i.onload = () => ok(i); i.onerror = () => ok(null); i.src = src; });
+      const nova = await abrir(img.src), antes = await abrir('data:image/png;base64,' + FOTOS_DO_JOGADOR[comCabelo].png);
+      if (!nova || nova.naturalWidth !== 80) return falhas.concat('a foto recolorida não abre no navegador');
+      const ler = i => { const cv = document.createElement('canvas'); cv.width = cv.height = 80; const x = cv.getContext('2d'); x.drawImage(i, 0, 0); return x.getImageData(0, 0, 80, 80).data; };
+      const a = ler(antes), b = ler(nova);
+      const matiz = (r, g, bl) => { const mx = Math.max(r, g, bl), mn = Math.min(r, g, bl); if (mx === mn) return null;
+        const d = mx - mn; const h = mx === r ? ((g - bl) / d) % 6 : mx === g ? (bl - r) / d + 2 : (r - g) / d + 4; return (h * 60 + 360) % 360; };
+      const matizes = Object.entries(alvo).map(([p, v]) => corDaFoto(p, v).h);
+      let mudou = 0, fora = 0;
+      for (let i = 0; i < a.length; i += 4){
+        if (a[i + 3] !== b[i + 3]){ fora++; continue; }
+        if (a[i] === b[i] && a[i + 1] === b[i + 1] && a[i + 2] === b[i + 2]) continue;
+        mudou++;
+        const h = matiz(b[i], b[i + 1], b[i + 2]);
+        if (h == null || !matizes.some(m => Math.min(Math.abs(h - m), 360 - Math.abs(h - m)) <= 20)) fora++;
+      }
+      if (!mudou) falhas.push(`a foto ${comCabelo} não mudou de cor`);
+      if (fora) falhas.push(`a foto ${comCabelo} tem ${fora} pixels que mudaram pra cor que ninguém escolheu (ou de transparência)`);
+      const d = descricaoDaFoto(comCabelo, alvo);
+      if (d.aparencia !== 'cabelo rosa' || !/ verde$/.test(d.vestimenta)) falhas.push(`a descrição saiu "${d.aparencia}, ${d.vestimenta}"`);
+      if (!document.querySelector('.cr-provador .cr-nota b') || !document.querySelector('.cr-provador .cr-nota b').textContent.includes('cabelo rosa'))
+        falhas.push('o "quem precisar te descrever" não diz o cabelo escolhido');
+      return falhas;
+    });
+    for (const f of pintura){ onde = `inscrição/${g}/cores`; anota('inscrição', f); }
     await tentar(`inscrição/${g}/saiu de casa`, () => { UI.crAcao('passo', {v:'5'}); UI.crAcao('proximo', {}); });
+    const pintado = await page.evaluate(() => {
+      const j = Estado.j, falhas = [];
+      if (!j.retratoCores || j.retratoCores.cabelo !== 'rosa' || j.retratoCores.pele !== 'escura' || j.retratoCores.roupa !== 'verde')
+        falhas.push(`as cores da foto não chegaram no Estado: ${JSON.stringify(j.retratoCores)}`);
+      if (j.aparencia !== 'cabelo rosa') falhas.push(`a aparência saiu "${j.aparencia}"`);
+      if (!/^data:image\/png/.test(retratoDoJogador() || '')) falhas.push('o rosto do jogador não sai nas cores escolhidas');
+      const topo = document.querySelector('.topo-rosto img');
+      if (topo && !/^data:image\/png/.test(topo.src)) falhas.push('o rosto do alto da tela não está nas cores escolhidas');
+      return falhas;
+    });
+    for (const f of pintado){ onde = `inscrição/${g}/saiu de casa`; anota('inscrição', f); }
     await tentar(`inscrição/${g}/cartão`, () => { Object.assign(Estado.dados.flags, {tem_pokedex:true, tem_cartao:true}); UI.modalCartao(); });
     await tentar(`inscrição/${g}/ficha`, () => UI.modalFicha('perfil'));
     const ok = await page.evaluate(() => !!(Estado.dados && Estado.j && Estado.j.meta && Estado.j.forte && Estado.j.status[Estado.j.forte] === 2));
@@ -263,6 +325,17 @@ const SUSPEITO = [
   const arquivo = await page.evaluate(() => ArquivoSave.texto());
   /* a abertura com a jornada salva (o cartão diz de quem é) e sem ela */
   await tentar('abertura', () => { UI.fecharModal(true); Estado.salvar('auto'); UI.telaInicial(); });
+  /* a foto da jornada sai nas cores dela, e cor que não existe (save de
+     arquivo de outra pessoa) não passa */
+  if (!(await page.evaluate(() => {
+    const j = Estado.j, antes = j.retratoCores;
+    j.retrato = 'jogador/viajante'; j.retratoCores = {cabelo:'rosa', roupa:'"><img src=x onerror=alert(1)>', pele:'escura'};
+    Estado.salvar('auto'); UI.telaInicial();
+    const img = document.querySelector('.tt-j-rosto img');
+    const ok = img && /^data:image\/png/.test(img.src) && img.src === FotoJogador.url('viajante', {cabelo:'rosa', pele:'escura'});
+    j.retratoCores = antes; Estado.salvar('auto'); UI.telaInicial();
+    return ok;
+  }))){ onde = 'abertura'; anota('abertura', 'o cartão da jornada não mostra a foto nas cores dela, ou deixou passar cor que não existe'); }
   if (!(await page.evaluate(() => [...document.querySelectorAll('.tela-titulo button')].some(b => /Carregar jogo/.test(b.textContent))))){
     onde = 'abertura'; anota('carregar', 'a abertura não tem o Carregar jogo');
   }

@@ -1634,11 +1634,41 @@ nenhuma é arquivo de NPC; `chk-telas` abre os "Mais rostos", escolhe
 um de lá e reprova foto do outro gênero na grade e gosto que fica nas
 duas listas.
 
-Aparência e roupa continuam texto livre, com sugestão sorteada (o dado ao
-lado do campo). Save de antes da inscrição continua sendo lido por
-palavra (`rumoDe`, `perfilDoJogador`, `corNaDescricao`). O `chk-telas`
-passa por cada passo e cada opção nos dois gêneros, e o `bot-jogador` sai
-de casa pelo "Sortear o resto".
+**A cor é sua, o desenho é do artista.** Escolhido o corpo, quem joga
+troca a cor do cabelo, da pele e da roupa (`CORES_DA_FOTO`, em
+`inscricao.js`), e a aparência, que era texto livre, sai daí: o cabelo
+(ou o que está na cabeça, `CABECA_DO_RETRATO`, nas dez fotos de boné,
+capacete e chapéu, que não oferecem cor de cabelo) e a peça de roupa
+(`PECA_DO_RETRATO`, com o gênero da palavra pra cor concordar: "vestido
+preto", "saia preta"), por `descricaoDaFoto`. É isso que vai em
+`j.aparencia`/`j.vestimenta` (o retrato falado do capítulo 6, a Ficha),
+e as cores ficam em `j.retratoCores`. A pele fica só na foto. Desenho
+novo não tem: cada foto vira um PNG de paleta com casa própria pra cada
+cor de cabelo, pele e roupa (`js/data/fotos-jogador.js`, gerado por
+`python3 ferramentas/fotos-do-jogador.py`; com `--folha f.png` sai a
+folha pra conferir no olho), e o `FotoJogador` (`js/ui/foto-jogador.js`)
+escreve as cores novas nessas casas e refaz o CRC da paleta — sem
+canvas, que em `file://` suja. A cor nova é uma escala (matiz,
+saturação, do escuro ao claro) e cada cor do desenho cai no ponto dela,
+então sombra e brilho ficam onde o artista pôs. Quais cores são cabelo,
+pele e roupa foi anotado à mão, cor por cor (`GRUPOS` no gerador, com
+recorte por altura ou caixa quando a mesma cor está no cabelo e na
+bermuda), e conferido com cores gritantes nas 48: o automático acertava
+quatro em dez. Foto nova ou trocada é anotada de novo (o gerador para
+se o número de cores mudar), e cor nova na lista roda o gerador, que
+diz qual é a cor de cada foto como ela veio (`nome_<parte>` acerta à
+mão quando o olho discorda da conta). Tudo que mostra a sua foto passa
+por `retratoDoJogador` ou `FotoJogador.doSave`: o save de arquivo pode
+trazer cor que não existe, e ela não passa. O `chk-telas` passa cada
+foto por cada cor, reprova foto de boné com cor de cabelo, confere
+pixel a pixel que só mudou o que foi escolhido e que a foto chega
+pintada no alto da tela e na abertura.
+
+Save de antes da inscrição continua sendo lido por palavra (`rumoDe`,
+`perfilDoJogador`, `corNaDescricao`), e o de antes das cores fica com a
+aparência escrita à mão. O `chk-telas` passa por cada passo e cada
+opção nos dois gêneros, e o `bot-jogador` sai de casa pelo "Sortear o
+resto".
 
 ## Idade de quem joga
 **Todo mundo sai de casa com quinze anos.** A ficha pede só o

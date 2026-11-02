@@ -180,6 +180,29 @@ body.na-criacao #app{max-width:1120px;padding-block:18px 40px}
 .cr-cor:hover{border-color:var(--cr-borda-forte)}
 .cr-cor.sel{border-color:var(--cr-amarelo);background:rgba(255,203,5,.15)}
 .cr-cor:focus-visible{outline:2px solid var(--cr-amarelo);outline-offset:2px}
+/* ---------- as cores da foto: a foto grande e as três tintas ---------- */
+.cr-prov{display:grid;grid-template-columns:172px minmax(0, 1fr);gap:20px;align-items:start}
+.cr-prov-foto{width:172px;height:172px;border-radius:14px;display:grid;place-items:center;position:sticky;top:12px;
+  border:2px solid var(--cr-borda);box-shadow:0 3px 0 rgba(4,8,30,.85);
+  background:radial-gradient(70% 60% at 50% 38%, rgba(255,255,255,.1), transparent 72%), var(--cr-campo)}
+.cr-prov-sprite{width:160px;height:160px;image-rendering:pixelated}
+.cr-partes{display:flex;flex-direction:column;gap:13px;min-width:0}
+.cr-parte-rot{display:flex;align-items:baseline;gap:10px;margin-bottom:7px;font-size:13px;color:var(--cr-fraco)}
+.cr-parte-rot b{font-size:13.5px;color:var(--cr-texto);letter-spacing:.02em}
+.cr-parte.sem .cr-parte-rot span{font-style:italic;color:var(--cr-tenue)}
+.cr-tintas{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.cr-tinta{flex:none;display:grid;place-items:center;width:32px;height:32px;padding:0;border-radius:50%;cursor:pointer;
+  border:2px solid var(--cr-borda);background:var(--cr-op);color:var(--cr-texto);font:inherit;
+  transition:transform .12s, border-color .15s, box-shadow .15s}
+.cr-tinta i{width:22px;height:22px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(255,255,255,.28), inset 0 -2px 0 rgba(0,0,0,.18)}
+.cr-tinta:hover{transform:translateY(-2px);border-color:var(--cr-borda-forte)}
+.cr-tinta.sel{border-color:var(--cr-amarelo);box-shadow:0 0 0 2px rgba(255,203,5,.3), 0 0 14px -3px rgba(255,203,5,.85)}
+.cr-tinta:focus-visible{outline:2px solid var(--cr-amarelo);outline-offset:2px}
+/* a primeira: a cor que o desenho tem, com o nome */
+.cr-tinta.do-desenho{display:flex;gap:7px;width:auto;height:32px;padding:0 12px 0 4px;border-radius:999px;font-size:12.5px;margin-right:4px}
+.cr-tinta.do-desenho i{width:20px;height:20px}
+.cr-tinta.do-desenho:hover{transform:translateY(-1px)}
+
 .cr-cartoes{gap:10px}
 .cr-cartoes .cartao-cor{width:32px;height:32px}
 .cr-cartoes .cartao-cor.sel{box-shadow:0 0 0 3px var(--cr-amarelo), 0 0 14px rgba(255,203,5,.6)}
@@ -266,6 +289,10 @@ body.na-criacao #app{max-width:1120px;padding-block:18px 40px}
   .cr-genero{flex-direction:column;align-items:center;text-align:center;gap:4px}
   .cr-genero .cr-op-nome{padding:0}
   .cr-iniciais{height:38px}
+  .cr-prov{grid-template-columns:minmax(0, 1fr);gap:14px}
+  .cr-prov-foto{position:static;width:136px;height:136px;margin:0 auto}
+  .cr-prov-sprite{width:128px;height:128px}
+  .cr-tinta{width:34px;height:34px}
   .cr-iniciais img{width:46px;height:34px}
   .cr-sortear span{display:none}
   .criacao .tt-btn{font-size:9.5px;padding:12px 11px 11px}

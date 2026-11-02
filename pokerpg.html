@@ -6302,6 +6302,29 @@ body.na-criacao #app{max-width:1120px;padding-block:18px 40px}
 .cr-cor:hover{border-color:var(--cr-borda-forte)}
 .cr-cor.sel{border-color:var(--cr-amarelo);background:rgba(255,203,5,.15)}
 .cr-cor:focus-visible{outline:2px solid var(--cr-amarelo);outline-offset:2px}
+/* ---------- as cores da foto: a foto grande e as três tintas ---------- */
+.cr-prov{display:grid;grid-template-columns:172px minmax(0, 1fr);gap:20px;align-items:start}
+.cr-prov-foto{width:172px;height:172px;border-radius:14px;display:grid;place-items:center;position:sticky;top:12px;
+  border:2px solid var(--cr-borda);box-shadow:0 3px 0 rgba(4,8,30,.85);
+  background:radial-gradient(70% 60% at 50% 38%, rgba(255,255,255,.1), transparent 72%), var(--cr-campo)}
+.cr-prov-sprite{width:160px;height:160px;image-rendering:pixelated}
+.cr-partes{display:flex;flex-direction:column;gap:13px;min-width:0}
+.cr-parte-rot{display:flex;align-items:baseline;gap:10px;margin-bottom:7px;font-size:13px;color:var(--cr-fraco)}
+.cr-parte-rot b{font-size:13.5px;color:var(--cr-texto);letter-spacing:.02em}
+.cr-parte.sem .cr-parte-rot span{font-style:italic;color:var(--cr-tenue)}
+.cr-tintas{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.cr-tinta{flex:none;display:grid;place-items:center;width:32px;height:32px;padding:0;border-radius:50%;cursor:pointer;
+  border:2px solid var(--cr-borda);background:var(--cr-op);color:var(--cr-texto);font:inherit;
+  transition:transform .12s, border-color .15s, box-shadow .15s}
+.cr-tinta i{width:22px;height:22px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(255,255,255,.28), inset 0 -2px 0 rgba(0,0,0,.18)}
+.cr-tinta:hover{transform:translateY(-2px);border-color:var(--cr-borda-forte)}
+.cr-tinta.sel{border-color:var(--cr-amarelo);box-shadow:0 0 0 2px rgba(255,203,5,.3), 0 0 14px -3px rgba(255,203,5,.85)}
+.cr-tinta:focus-visible{outline:2px solid var(--cr-amarelo);outline-offset:2px}
+/* a primeira: a cor que o desenho tem, com o nome */
+.cr-tinta.do-desenho{display:flex;gap:7px;width:auto;height:32px;padding:0 12px 0 4px;border-radius:999px;font-size:12.5px;margin-right:4px}
+.cr-tinta.do-desenho i{width:20px;height:20px}
+.cr-tinta.do-desenho:hover{transform:translateY(-1px)}
+
 .cr-cartoes{gap:10px}
 .cr-cartoes .cartao-cor{width:32px;height:32px}
 .cr-cartoes .cartao-cor.sel{box-shadow:0 0 0 3px var(--cr-amarelo), 0 0 14px rgba(255,203,5,.6)}
@@ -6388,6 +6411,10 @@ body.na-criacao #app{max-width:1120px;padding-block:18px 40px}
   .cr-genero{flex-direction:column;align-items:center;text-align:center;gap:4px}
   .cr-genero .cr-op-nome{padding:0}
   .cr-iniciais{height:38px}
+  .cr-prov{grid-template-columns:minmax(0, 1fr);gap:14px}
+  .cr-prov-foto{position:static;width:136px;height:136px;margin:0 auto}
+  .cr-prov-sprite{width:128px;height:128px}
+  .cr-tinta{width:34px;height:34px}
   .cr-iniciais img{width:46px;height:34px}
   .cr-sortear span{display:none}
   .criacao .tt-btn{font-size:9.5px;padding:12px 11px 11px}
@@ -12949,6 +12976,29 @@ body.na-criacao #app{max-width:1120px;padding-block:18px 40px}
 .cr-cor:hover{border-color:var(--cr-borda-forte)}
 .cr-cor.sel{border-color:var(--cr-amarelo);background:rgba(255,203,5,.15)}
 .cr-cor:focus-visible{outline:2px solid var(--cr-amarelo);outline-offset:2px}
+/* ---------- as cores da foto: a foto grande e as três tintas ---------- */
+.cr-prov{display:grid;grid-template-columns:172px minmax(0, 1fr);gap:20px;align-items:start}
+.cr-prov-foto{width:172px;height:172px;border-radius:14px;display:grid;place-items:center;position:sticky;top:12px;
+  border:2px solid var(--cr-borda);box-shadow:0 3px 0 rgba(4,8,30,.85);
+  background:radial-gradient(70% 60% at 50% 38%, rgba(255,255,255,.1), transparent 72%), var(--cr-campo)}
+.cr-prov-sprite{width:160px;height:160px;image-rendering:pixelated}
+.cr-partes{display:flex;flex-direction:column;gap:13px;min-width:0}
+.cr-parte-rot{display:flex;align-items:baseline;gap:10px;margin-bottom:7px;font-size:13px;color:var(--cr-fraco)}
+.cr-parte-rot b{font-size:13.5px;color:var(--cr-texto);letter-spacing:.02em}
+.cr-parte.sem .cr-parte-rot span{font-style:italic;color:var(--cr-tenue)}
+.cr-tintas{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.cr-tinta{flex:none;display:grid;place-items:center;width:32px;height:32px;padding:0;border-radius:50%;cursor:pointer;
+  border:2px solid var(--cr-borda);background:var(--cr-op);color:var(--cr-texto);font:inherit;
+  transition:transform .12s, border-color .15s, box-shadow .15s}
+.cr-tinta i{width:22px;height:22px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(255,255,255,.28), inset 0 -2px 0 rgba(0,0,0,.18)}
+.cr-tinta:hover{transform:translateY(-2px);border-color:var(--cr-borda-forte)}
+.cr-tinta.sel{border-color:var(--cr-amarelo);box-shadow:0 0 0 2px rgba(255,203,5,.3), 0 0 14px -3px rgba(255,203,5,.85)}
+.cr-tinta:focus-visible{outline:2px solid var(--cr-amarelo);outline-offset:2px}
+/* a primeira: a cor que o desenho tem, com o nome */
+.cr-tinta.do-desenho{display:flex;gap:7px;width:auto;height:32px;padding:0 12px 0 4px;border-radius:999px;font-size:12.5px;margin-right:4px}
+.cr-tinta.do-desenho i{width:20px;height:20px}
+.cr-tinta.do-desenho:hover{transform:translateY(-1px)}
+
 .cr-cartoes{gap:10px}
 .cr-cartoes .cartao-cor{width:32px;height:32px}
 .cr-cartoes .cartao-cor.sel{box-shadow:0 0 0 3px var(--cr-amarelo), 0 0 14px rgba(255,203,5,.6)}
@@ -13035,6 +13085,10 @@ body.na-criacao #app{max-width:1120px;padding-block:18px 40px}
   .cr-genero{flex-direction:column;align-items:center;text-align:center;gap:4px}
   .cr-genero .cr-op-nome{padding:0}
   .cr-iniciais{height:38px}
+  .cr-prov{grid-template-columns:minmax(0, 1fr);gap:14px}
+  .cr-prov-foto{position:static;width:136px;height:136px;margin:0 auto}
+  .cr-prov-sprite{width:128px;height:128px}
+  .cr-tinta{width:34px;height:34px}
   .cr-iniciais img{width:46px;height:34px}
   .cr-sortear span{display:none}
   .criacao .tt-btn{font-size:9.5px;padding:12px 11px 11px}
@@ -19596,6 +19650,29 @@ body.na-criacao #app{max-width:1120px;padding-block:18px 40px}
 .cr-cor:hover{border-color:var(--cr-borda-forte)}
 .cr-cor.sel{border-color:var(--cr-amarelo);background:rgba(255,203,5,.15)}
 .cr-cor:focus-visible{outline:2px solid var(--cr-amarelo);outline-offset:2px}
+/* ---------- as cores da foto: a foto grande e as três tintas ---------- */
+.cr-prov{display:grid;grid-template-columns:172px minmax(0, 1fr);gap:20px;align-items:start}
+.cr-prov-foto{width:172px;height:172px;border-radius:14px;display:grid;place-items:center;position:sticky;top:12px;
+  border:2px solid var(--cr-borda);box-shadow:0 3px 0 rgba(4,8,30,.85);
+  background:radial-gradient(70% 60% at 50% 38%, rgba(255,255,255,.1), transparent 72%), var(--cr-campo)}
+.cr-prov-sprite{width:160px;height:160px;image-rendering:pixelated}
+.cr-partes{display:flex;flex-direction:column;gap:13px;min-width:0}
+.cr-parte-rot{display:flex;align-items:baseline;gap:10px;margin-bottom:7px;font-size:13px;color:var(--cr-fraco)}
+.cr-parte-rot b{font-size:13.5px;color:var(--cr-texto);letter-spacing:.02em}
+.cr-parte.sem .cr-parte-rot span{font-style:italic;color:var(--cr-tenue)}
+.cr-tintas{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.cr-tinta{flex:none;display:grid;place-items:center;width:32px;height:32px;padding:0;border-radius:50%;cursor:pointer;
+  border:2px solid var(--cr-borda);background:var(--cr-op);color:var(--cr-texto);font:inherit;
+  transition:transform .12s, border-color .15s, box-shadow .15s}
+.cr-tinta i{width:22px;height:22px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(255,255,255,.28), inset 0 -2px 0 rgba(0,0,0,.18)}
+.cr-tinta:hover{transform:translateY(-2px);border-color:var(--cr-borda-forte)}
+.cr-tinta.sel{border-color:var(--cr-amarelo);box-shadow:0 0 0 2px rgba(255,203,5,.3), 0 0 14px -3px rgba(255,203,5,.85)}
+.cr-tinta:focus-visible{outline:2px solid var(--cr-amarelo);outline-offset:2px}
+/* a primeira: a cor que o desenho tem, com o nome */
+.cr-tinta.do-desenho{display:flex;gap:7px;width:auto;height:32px;padding:0 12px 0 4px;border-radius:999px;font-size:12.5px;margin-right:4px}
+.cr-tinta.do-desenho i{width:20px;height:20px}
+.cr-tinta.do-desenho:hover{transform:translateY(-1px)}
+
 .cr-cartoes{gap:10px}
 .cr-cartoes .cartao-cor{width:32px;height:32px}
 .cr-cartoes .cartao-cor.sel{box-shadow:0 0 0 3px var(--cr-amarelo), 0 0 14px rgba(255,203,5,.6)}
@@ -19682,6 +19759,10 @@ body.na-criacao #app{max-width:1120px;padding-block:18px 40px}
   .cr-genero{flex-direction:column;align-items:center;text-align:center;gap:4px}
   .cr-genero .cr-op-nome{padding:0}
   .cr-iniciais{height:38px}
+  .cr-prov{grid-template-columns:minmax(0, 1fr);gap:14px}
+  .cr-prov-foto{position:static;width:136px;height:136px;margin:0 auto}
+  .cr-prov-sprite{width:128px;height:128px}
+  .cr-tinta{width:34px;height:34px}
   .cr-iniciais img{width:46px;height:34px}
   .cr-sortear span{display:none}
   .criacao .tt-btn{font-size:9.5px;padding:12px 11px 11px}
@@ -26243,6 +26324,29 @@ body.na-criacao #app{max-width:1120px;padding-block:18px 40px}
 .cr-cor:hover{border-color:var(--cr-borda-forte)}
 .cr-cor.sel{border-color:var(--cr-amarelo);background:rgba(255,203,5,.15)}
 .cr-cor:focus-visible{outline:2px solid var(--cr-amarelo);outline-offset:2px}
+/* ---------- as cores da foto: a foto grande e as três tintas ---------- */
+.cr-prov{display:grid;grid-template-columns:172px minmax(0, 1fr);gap:20px;align-items:start}
+.cr-prov-foto{width:172px;height:172px;border-radius:14px;display:grid;place-items:center;position:sticky;top:12px;
+  border:2px solid var(--cr-borda);box-shadow:0 3px 0 rgba(4,8,30,.85);
+  background:radial-gradient(70% 60% at 50% 38%, rgba(255,255,255,.1), transparent 72%), var(--cr-campo)}
+.cr-prov-sprite{width:160px;height:160px;image-rendering:pixelated}
+.cr-partes{display:flex;flex-direction:column;gap:13px;min-width:0}
+.cr-parte-rot{display:flex;align-items:baseline;gap:10px;margin-bottom:7px;font-size:13px;color:var(--cr-fraco)}
+.cr-parte-rot b{font-size:13.5px;color:var(--cr-texto);letter-spacing:.02em}
+.cr-parte.sem .cr-parte-rot span{font-style:italic;color:var(--cr-tenue)}
+.cr-tintas{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.cr-tinta{flex:none;display:grid;place-items:center;width:32px;height:32px;padding:0;border-radius:50%;cursor:pointer;
+  border:2px solid var(--cr-borda);background:var(--cr-op);color:var(--cr-texto);font:inherit;
+  transition:transform .12s, border-color .15s, box-shadow .15s}
+.cr-tinta i{width:22px;height:22px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(255,255,255,.28), inset 0 -2px 0 rgba(0,0,0,.18)}
+.cr-tinta:hover{transform:translateY(-2px);border-color:var(--cr-borda-forte)}
+.cr-tinta.sel{border-color:var(--cr-amarelo);box-shadow:0 0 0 2px rgba(255,203,5,.3), 0 0 14px -3px rgba(255,203,5,.85)}
+.cr-tinta:focus-visible{outline:2px solid var(--cr-amarelo);outline-offset:2px}
+/* a primeira: a cor que o desenho tem, com o nome */
+.cr-tinta.do-desenho{display:flex;gap:7px;width:auto;height:32px;padding:0 12px 0 4px;border-radius:999px;font-size:12.5px;margin-right:4px}
+.cr-tinta.do-desenho i{width:20px;height:20px}
+.cr-tinta.do-desenho:hover{transform:translateY(-1px)}
+
 .cr-cartoes{gap:10px}
 .cr-cartoes .cartao-cor{width:32px;height:32px}
 .cr-cartoes .cartao-cor.sel{box-shadow:0 0 0 3px var(--cr-amarelo), 0 0 14px rgba(255,203,5,.6)}
@@ -26329,6 +26433,10 @@ body.na-criacao #app{max-width:1120px;padding-block:18px 40px}
   .cr-genero{flex-direction:column;align-items:center;text-align:center;gap:4px}
   .cr-genero .cr-op-nome{padding:0}
   .cr-iniciais{height:38px}
+  .cr-prov{grid-template-columns:minmax(0, 1fr);gap:14px}
+  .cr-prov-foto{position:static;width:136px;height:136px;margin:0 auto}
+  .cr-prov-sprite{width:128px;height:128px}
+  .cr-tinta{width:34px;height:34px}
   .cr-iniciais img{width:46px;height:34px}
   .cr-sortear span{display:none}
   .criacao .tt-btn{font-size:9.5px;padding:12px 11px 11px}
@@ -32890,6 +32998,29 @@ body.na-criacao #app{max-width:1120px;padding-block:18px 40px}
 .cr-cor:hover{border-color:var(--cr-borda-forte)}
 .cr-cor.sel{border-color:var(--cr-amarelo);background:rgba(255,203,5,.15)}
 .cr-cor:focus-visible{outline:2px solid var(--cr-amarelo);outline-offset:2px}
+/* ---------- as cores da foto: a foto grande e as três tintas ---------- */
+.cr-prov{display:grid;grid-template-columns:172px minmax(0, 1fr);gap:20px;align-items:start}
+.cr-prov-foto{width:172px;height:172px;border-radius:14px;display:grid;place-items:center;position:sticky;top:12px;
+  border:2px solid var(--cr-borda);box-shadow:0 3px 0 rgba(4,8,30,.85);
+  background:radial-gradient(70% 60% at 50% 38%, rgba(255,255,255,.1), transparent 72%), var(--cr-campo)}
+.cr-prov-sprite{width:160px;height:160px;image-rendering:pixelated}
+.cr-partes{display:flex;flex-direction:column;gap:13px;min-width:0}
+.cr-parte-rot{display:flex;align-items:baseline;gap:10px;margin-bottom:7px;font-size:13px;color:var(--cr-fraco)}
+.cr-parte-rot b{font-size:13.5px;color:var(--cr-texto);letter-spacing:.02em}
+.cr-parte.sem .cr-parte-rot span{font-style:italic;color:var(--cr-tenue)}
+.cr-tintas{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.cr-tinta{flex:none;display:grid;place-items:center;width:32px;height:32px;padding:0;border-radius:50%;cursor:pointer;
+  border:2px solid var(--cr-borda);background:var(--cr-op);color:var(--cr-texto);font:inherit;
+  transition:transform .12s, border-color .15s, box-shadow .15s}
+.cr-tinta i{width:22px;height:22px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(255,255,255,.28), inset 0 -2px 0 rgba(0,0,0,.18)}
+.cr-tinta:hover{transform:translateY(-2px);border-color:var(--cr-borda-forte)}
+.cr-tinta.sel{border-color:var(--cr-amarelo);box-shadow:0 0 0 2px rgba(255,203,5,.3), 0 0 14px -3px rgba(255,203,5,.85)}
+.cr-tinta:focus-visible{outline:2px solid var(--cr-amarelo);outline-offset:2px}
+/* a primeira: a cor que o desenho tem, com o nome */
+.cr-tinta.do-desenho{display:flex;gap:7px;width:auto;height:32px;padding:0 12px 0 4px;border-radius:999px;font-size:12.5px;margin-right:4px}
+.cr-tinta.do-desenho i{width:20px;height:20px}
+.cr-tinta.do-desenho:hover{transform:translateY(-1px)}
+
 .cr-cartoes{gap:10px}
 .cr-cartoes .cartao-cor{width:32px;height:32px}
 .cr-cartoes .cartao-cor.sel{box-shadow:0 0 0 3px var(--cr-amarelo), 0 0 14px rgba(255,203,5,.6)}
@@ -32976,6 +33107,10 @@ body.na-criacao #app{max-width:1120px;padding-block:18px 40px}
   .cr-genero{flex-direction:column;align-items:center;text-align:center;gap:4px}
   .cr-genero .cr-op-nome{padding:0}
   .cr-iniciais{height:38px}
+  .cr-prov{grid-template-columns:minmax(0, 1fr);gap:14px}
+  .cr-prov-foto{position:static;width:136px;height:136px;margin:0 auto}
+  .cr-prov-sprite{width:128px;height:128px}
+  .cr-tinta{width:34px;height:34px}
   .cr-iniciais img{width:46px;height:34px}
   .cr-sortear span{display:none}
   .criacao .tt-btn{font-size:9.5px;padding:12px 11px 11px}
@@ -39537,6 +39672,29 @@ body.na-criacao #app{max-width:1120px;padding-block:18px 40px}
 .cr-cor:hover{border-color:var(--cr-borda-forte)}
 .cr-cor.sel{border-color:var(--cr-amarelo);background:rgba(255,203,5,.15)}
 .cr-cor:focus-visible{outline:2px solid var(--cr-amarelo);outline-offset:2px}
+/* ---------- as cores da foto: a foto grande e as três tintas ---------- */
+.cr-prov{display:grid;grid-template-columns:172px minmax(0, 1fr);gap:20px;align-items:start}
+.cr-prov-foto{width:172px;height:172px;border-radius:14px;display:grid;place-items:center;position:sticky;top:12px;
+  border:2px solid var(--cr-borda);box-shadow:0 3px 0 rgba(4,8,30,.85);
+  background:radial-gradient(70% 60% at 50% 38%, rgba(255,255,255,.1), transparent 72%), var(--cr-campo)}
+.cr-prov-sprite{width:160px;height:160px;image-rendering:pixelated}
+.cr-partes{display:flex;flex-direction:column;gap:13px;min-width:0}
+.cr-parte-rot{display:flex;align-items:baseline;gap:10px;margin-bottom:7px;font-size:13px;color:var(--cr-fraco)}
+.cr-parte-rot b{font-size:13.5px;color:var(--cr-texto);letter-spacing:.02em}
+.cr-parte.sem .cr-parte-rot span{font-style:italic;color:var(--cr-tenue)}
+.cr-tintas{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.cr-tinta{flex:none;display:grid;place-items:center;width:32px;height:32px;padding:0;border-radius:50%;cursor:pointer;
+  border:2px solid var(--cr-borda);background:var(--cr-op);color:var(--cr-texto);font:inherit;
+  transition:transform .12s, border-color .15s, box-shadow .15s}
+.cr-tinta i{width:22px;height:22px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(255,255,255,.28), inset 0 -2px 0 rgba(0,0,0,.18)}
+.cr-tinta:hover{transform:translateY(-2px);border-color:var(--cr-borda-forte)}
+.cr-tinta.sel{border-color:var(--cr-amarelo);box-shadow:0 0 0 2px rgba(255,203,5,.3), 0 0 14px -3px rgba(255,203,5,.85)}
+.cr-tinta:focus-visible{outline:2px solid var(--cr-amarelo);outline-offset:2px}
+/* a primeira: a cor que o desenho tem, com o nome */
+.cr-tinta.do-desenho{display:flex;gap:7px;width:auto;height:32px;padding:0 12px 0 4px;border-radius:999px;font-size:12.5px;margin-right:4px}
+.cr-tinta.do-desenho i{width:20px;height:20px}
+.cr-tinta.do-desenho:hover{transform:translateY(-1px)}
+
 .cr-cartoes{gap:10px}
 .cr-cartoes .cartao-cor{width:32px;height:32px}
 .cr-cartoes .cartao-cor.sel{box-shadow:0 0 0 3px var(--cr-amarelo), 0 0 14px rgba(255,203,5,.6)}
@@ -39623,6 +39781,10 @@ body.na-criacao #app{max-width:1120px;padding-block:18px 40px}
   .cr-genero{flex-direction:column;align-items:center;text-align:center;gap:4px}
   .cr-genero .cr-op-nome{padding:0}
   .cr-iniciais{height:38px}
+  .cr-prov{grid-template-columns:minmax(0, 1fr);gap:14px}
+  .cr-prov-foto{position:static;width:136px;height:136px;margin:0 auto}
+  .cr-prov-sprite{width:128px;height:128px}
+  .cr-tinta{width:34px;height:34px}
   .cr-iniciais img{width:46px;height:34px}
   .cr-sortear span{display:none}
   .criacao .tt-btn{font-size:9.5px;padding:12px 11px 11px}
@@ -44563,30 +44725,117 @@ function retratoDaFicha(arq){
   return !!arq && (RETRATOS_DA_FICHA.Homem.includes(arq) || RETRATOS_DA_FICHA.Mulher.includes(arq));
 }
 
+/* As cores da foto. Escolhido o corpo, o cabelo, a pele e a roupa
+   trocam de cor sem trocar o desenho, que continua sendo o do
+   artista: cada foto tem, em js/data/fotos-jogador.js (gerado por
+   ferramentas/fotos-do-jogador.py), quais cores da paleta dela são
+   cabelo, pele e roupa, e onde cada uma fica do escuro ao claro. A
+   cor nova é uma escala do mesmo jeito — matiz h, saturação s, do
+   escuro l[0] ao claro l[1] —, então a sombra e o brilho ficam onde o
+   artista pôs. Cabelo e roupa viram também a descrição que os outros
+   fazem de você (o retrato falado do capítulo 6); a pele fica só na
+   foto. Cor nova entra aqui e o gerador roda de novo: é ele que diz
+   qual destas é a cor de cada foto como ela veio. */
+const CORES_DA_FOTO = {
+  cabelo: [
+    {id:'preto',           nome:'preto',           h:225, s:.12, l:[.07, .30]},
+    {id:'castanho-escuro', nome:'castanho-escuro', h:22,  s:.40, l:[.12, .34]},
+    {id:'castanho',        nome:'castanho',        h:26,  s:.45, l:[.22, .52]},
+    {id:'ruivo',           nome:'ruivo',           h:14,  s:.70, l:[.28, .62]},
+    {id:'loiro',           nome:'loiro',           h:45,  s:.70, l:[.45, .85]},
+    {id:'platinado',       nome:'platinado',       h:50,  s:.30, l:[.62, .93]},
+    {id:'prateado',        nome:'prateado',        h:220, s:.08, l:[.45, .88]},
+    {id:'vermelho',        nome:'vermelho',        h:355, s:.65, l:[.25, .58]},
+    {id:'rosa',            nome:'rosa',            h:330, s:.65, l:[.42, .82]},
+    {id:'roxo',            nome:'roxo',            h:275, s:.45, l:[.24, .62]},
+    {id:'azul',            nome:'azul',            h:215, s:.60, l:[.22, .62]},
+    {id:'verde',           nome:'verde',           h:145, s:.45, l:[.20, .58]}
+  ],
+  pele: [
+    {id:'muito-clara',  nome:'muito clara',  h:22, s:.70, l:[.50, .92]},
+    {id:'clara',        nome:'clara',        h:24, s:.62, l:[.42, .86]},
+    {id:'morena-clara', nome:'morena clara', h:24, s:.52, l:[.32, .74]},
+    {id:'morena',       nome:'morena',       h:22, s:.48, l:[.22, .60]},
+    {id:'escura',       nome:'escura',       h:18, s:.42, l:[.13, .46]}
+  ],
+  /* roupa: [masculino, feminino], pela palavra da peça (PECA_DO_RETRATO) */
+  roupa: [
+    {id:'vermelho',     nome:['vermelho', 'vermelha'],  h:355, s:.65, l:[.22, .62]},
+    {id:'vinho',        nome:'vinho',                   h:345, s:.50, l:[.12, .42]},
+    {id:'laranja',      nome:'laranja',                 h:25,  s:.80, l:[.30, .70]},
+    {id:'amarelo',      nome:['amarelo', 'amarela'],    h:48,  s:.80, l:[.38, .80]},
+    {id:'verde',        nome:'verde',                   h:130, s:.45, l:[.18, .55]},
+    {id:'verde-agua',   nome:'verde-água',              h:172, s:.50, l:[.20, .70]},
+    {id:'azul-claro',   nome:['azul-claro', 'azul-clara'], h:200, s:.60, l:[.38, .86]},
+    {id:'azul',         nome:'azul',                    h:212, s:.60, l:[.20, .62]},
+    {id:'azul-marinho', nome:'azul-marinho',            h:225, s:.45, l:[.10, .38]},
+    {id:'roxo',         nome:['roxo', 'roxa'],          h:275, s:.45, l:[.22, .62]},
+    {id:'rosa',         nome:'rosa',                    h:330, s:.60, l:[.40, .82]},
+    {id:'marrom',       nome:'marrom',                  h:25,  s:.35, l:[.15, .45]},
+    {id:'bege',         nome:'bege',                    h:38,  s:.30, l:[.45, .85]},
+    {id:'preto',        nome:['preto', 'preta'],        h:230, s:.08, l:[.06, .32]},
+    {id:'cinza',        nome:'cinza',                   h:220, s:.06, l:[.30, .70]},
+    {id:'branco',       nome:['branco', 'branca'],      h:220, s:.08, l:[.62, .96]}
+  ]
+};
+/* a ordem em que a ficha mostra as três, da cabeça pro pé */
+const PARTES_DA_FOTO = [['cabelo', 'Cabelo'], ['pele', 'Pele'], ['roupa', 'Roupa']];
+
+/* o que a roupa de cada foto é, e o gênero da palavra, que decide a
+   cor ("vestido preto", "saia preta"): é o que vai na descrição */
+const PECA_DO_RETRATO = {
+  viajante:['calça', 'f'], urbano:['bermuda', 'f'], patinador:['bermuda', 'f'], colecionador:['bermuda', 'f'],
+  terno:['terno', 'm'], trilheiro:['camisa', 'f'], roqueiro:['roupa', 'f'], chamativo:['jaqueta', 'f'],
+  lutador:['quimono', 'm'], mistico:['calça', 'f'], piloto:['macacão', 'm'], naturalista:['camisa', 'f'],
+  durao:['jaqueta', 'f'], criador:['uniforme', 'm'], corredor:['regata', 'f'], ciclista:['camiseta', 'f'],
+  esportivo:['camiseta', 'f'], surfista:['bermuda', 'f'], artesao:['avental', 'm'], prateado:['jaqueta', 'f'],
+  violeiro:['calça', 'f'], explorador:['jaqueta', 'f'], cinegrafista:['jaqueta', 'f'], lavrador:['avental', 'm'],
+  aventureira:['vestido', 'm'], animada:['blusa', 'f'], urbana:['short', 'm'], atleta:['agasalho', 'm'],
+  estudante:['casaco', 'm'], elegante:['casaco', 'm'], trilheira:['blusa', 'f'], punk:['saia', 'f'],
+  gotica:['vestido', 'm'], lutadora:['quimono', 'm'], dancarina:['calça', 'f'], modelo:['casaco', 'm'],
+  artista:['calça', 'f'], aviadora:['macacão', 'm'], patinadora:['roupa', 'f'], ciclista_f:['camiseta', 'f'],
+  mochileira:['bermuda', 'f'], despojada:['regata', 'f'], esportiva:['saia', 'f'], descolada:['macacão', 'm'],
+  fazendeira:['jardineira', 'f'], cantora:['vestido', 'm'], vidente:['túnica', 'f'], guitarrista:['saia', 'f']
+};
+/* foto em que o cabelo não aparece ou não se separa do que está por
+   cima: não tem cor de cabelo, e a descrição diz o que tem na cabeça */
+const CABECA_DO_RETRATO = {
+  urbano:'boné', patinador:'capacete', criador:'boné', ciclista:'boné', esportivo:'boné pra trás',
+  violeiro:'chapéu', explorador:'boné', cinegrafista:'boné pra trás', aviadora:'capacete', patinadora:'capacete'
+};
+
+function corDaFoto(parte, id){
+  return (CORES_DA_FOTO[parte] || []).find(c => c.id === id) || null;
+}
+function nomeDaCorDaFoto(parte, id, feminino){
+  const c = corDaFoto(parte, id);
+  if (!c) return '';
+  return Array.isArray(c.nome) ? c.nome[feminino ? 1 : 0] : c.nome;
+}
+/* só o que existe e que a foto tem: o save pode ter vindo de arquivo de
+   outra pessoa, e cor de cabelo em foto de boné não entra */
+function coresDaFotoValidas(arq, cores){
+  const f = typeof FOTOS_DO_JOGADOR !== 'undefined' && FOTOS_DO_JOGADOR[arq];
+  const ok = {};
+  if (!f || !cores || typeof cores !== 'object') return ok;
+  for (const [parte] of PARTES_DA_FOTO)
+    if (f[parte] && typeof cores[parte] === 'string' && corDaFoto(parte, cores[parte])) ok[parte] = cores[parte];
+  return ok;
+}
+/* a descrição que sai da foto: o cabelo (ou o que está na cabeça) e a
+   roupa, na cor escolhida ou na que o desenho tem */
+function descricaoDaFoto(arq, cores){
+  const f = typeof FOTOS_DO_JOGADOR !== 'undefined' && FOTOS_DO_JOGADOR[arq];
+  if (!f) return {aparencia:'', vestimenta:''};
+  const c = coresDaFotoValidas(arq, cores);
+  const aparencia = f.cabelo ? `cabelo ${nomeDaCorDaFoto('cabelo', c.cabelo || f.cabelo.cor)}` : (CABECA_DO_RETRATO[arq] || '');
+  const [peca, gen] = PECA_DO_RETRATO[arq] || ['roupa', 'f'];
+  const vestimenta = f.roupa ? `${peca} ${nomeDaCorDaFoto('roupa', c.roupa || f.roupa.cor, gen === 'f')}` : '';
+  return {aparencia, vestimenta};
+}
+
 /* a cor da mochila que sai de casa com você: chaves de CORES_MOCHILA */
 const MOCHILAS_DA_FICHA = ['bege', 'preta', 'branca', 'vermelha', 'azul', 'verde', 'amarela', 'roxa', 'rosa', 'laranja', 'cinza', 'marrom'];
-
-/* sugestão pra quem não quer escrever: {o|a} resolve pelo gênero */
-const APARENCIAS_DA_FICHA = [
-  'Alt{o|a} pra idade, cabelo curto e escuro, uma cicatriz pequena no queixo.',
-  'Baixinh{o|a}, cabelo castanho sempre bagunçado, sardas no nariz.',
-  'Magr{o|a}, cabelo comprido preso atrás, olhos que não param quietos.',
-  'Cabelo ruivo cortado em casa e um dente lascado que aparece quando ri.',
-  'Moren{o|a}, cabelo crespo, um calombo na sobrancelha de quando caiu da árvore.',
-  'Óculos remendados e uma franja que vive caindo no olho.',
-  'Ombros largos de quem carrega peso desde cedo, mãos sempre arranhadas.',
-  'Cabelo platinado de sol, pele queimada e um sorriso torto.'
-];
-const VESTIMENTAS_DA_FICHA = [
-  'Boné desbotado, jaqueta grande demais e tênis de lona.',
-  'Moletom com capuz, bermuda e bota de trilha emprestada.',
-  'Camiseta velha de torneio, calça de brim e um cachecol que alguém tricotou.',
-  'Colete de lona cheio de bolso e calça dobrada na canela.',
-  'Chapéu de palha, camisa xadrez e sandália de borracha.',
-  'Jaqueta de vinil, luva sem dedo e tênis branco que já foi branco.',
-  'Capa de chuva amarela e galocha, por via das dúvidas.',
-  'Uniforme da escola com as mangas cortadas e um apito no pescoço.'
-];
 
 /* {a|b} pelo gênero da ficha, antes de existir jogo pra resolver */
 function generoDaFicha(texto, genero){
@@ -44620,6 +44869,67 @@ function gostoDaFicha(escolha){
     .concat(dex.map(n => typeof DEX !== 'undefined' ? DEX[n].nome : String(n)));
   return {lugares, tipos, dex, texto: partes.join(' · ')};
 }
+
+
+/* ===== js/data/fotos-jogador.js ===== */
+/* ============================================================
+   gerado por ferramentas/fotos-do-jogador.py — não editar à mão.
+   As fotos do jogador em PNG de paleta, com casa própria pra cada
+   cor de cabelo, pele e roupa. Em cada parte, i lista [casa, t]:
+   a casa da paleta e onde aquela cor fica do escuro (0) ao claro
+   (1); cor é a cor de CORES_DA_FOTO que o desenho tem, de é a
+   amostra dela. Foto sem cabelo não tem a parte.
+   ============================================================ */
+const FOTOS_DO_JOGADOR = {
+"viajante":{"png":"iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAMAAAC5zwKfAAAAWlBMVEUAAAAAAAAyMiswMDBMTEx1dWh/dHKYmaWyoZmosLD4+Pj////KWVgqRWUvaa1ipfCpyuIeJj5NVnmAi7d4SFhOMDaIN0YdFABWaYiao702Plq4eGDYoHj40LjoLnv6AAAAAXRSTlMAQObYZgAAAxJJREFUeNrt2OuSojAQBWCOEUUQUDYKBHj/19zTHZxyp0bEhD9bNT0XL1N+drqTTCRJfuM3/o+4Smzp/ZHYzoR6DX+wjdfIgJtmKxGKNY3eYANOrSvAmw1AWGvFkuSuhGNBO0kMwyQoNMs4bxxFmybeAfzMuUZ5w8iwoKekzh/E5CcIbGEmioNFKw+jvBEJ2rGAVBIntK1wZVlGeASzaVAwF7Aqy7quEehpgi1G7bUZeX+Hui6rKhAcNMEWh4nkOGYepBcIWstvIm12yCQO2BEULwRMMPpBE0SW5fkhQxw4iwpCEsSgYEWxLMNEbYyAFdczBoK7HcL7PCep4HUcZq8C+xwMJsDIcSrInUbAklWIERPfieZ6uaDd0da6xoCJ5iV7LD0uQ+j8rI0JX9Mqspb8rTujpGj2exOTIm5+47F2UnGAMXVMirjfb7fbHX7/5gpCTBEplncf8Nt3RrGK2BiTssJD5Pyepoxf2O8RA57P4p3PZQ0ZuIKxogZXHZRETJ+fQIoVDE1jYqZiUn6BZ1KqRYBybCgfnnKIApsLA/c5K+mF14LnjQfpXC7CeYvbYhUMFkVxVPAouUkZKw05QwWBx+PR123ujFOQ/wYul2MTtiXCN1c157qODziTioLvFSZ2mD3n+r53naYoYFiKYEosoUSvoSJYiaYIAemxu+iavm882IstpWVxP/fc7HWdE7DrVPSlDZmKjkRnDDnnAM/1rnehi9hJTnPI0WkuYh8qSlOfvIfItN02nn9KU0SgN4MOXz2PALnl32VhdM/dfAw6AITXum+TYxYRNKM791W8b+IPz68CKeKH1FmLABHP3f33D37PCfJ+fNnLt1oG3ctXBYI6MCSbida9fg06FwCO7vVkk/Q/B/lhaqnAzn4MYqllbsLHCWL56sGmoFzfGD4CzbKnF0w+SZGHjmVQxA9Ac0pT2DegMetXSZqe0jdnaGvSdKUIpCdm+OZEiTTP140ZPAOm9JaP+XzTNF0nyicGk+7fnAtYlTw/ndaJa04Z2EtR9uk2Fz19inpC3g5cN5At4i++u096w9pc1QAAAABJRU5ErkJggg==","cabelo":{"i":[[23,0.5]],"cor":"castanho-escuro","de":"#1d1400"},"roupa":{"i":[[24,0.392],[25,1.0],[26,0.0]],"cor":"cinza","de":"#566988"},"pele":{"i":[[27,0.0],[28,0.368],[29,1.0]],"cor":"clara","de":"#d8a078"}},
+"urbano":{"png":"iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAMAAAC5zwKfAAAAM1BMVEUAAAAAAAA5OUVNSltmXlu1rqz///8YaJgCrf4tLUB5RldNSlstLUC9e2K+fGPYoHj40LgKoZN5AAAAAXRSTlMAQObYZgAAAjFJREFUeNrt2NtyhDAIAFBxk2jJhfz/1xaIGqfbJ6EzfVhmb33wlNzRZfnEJz7xfwM0fLnX6wVe3JeEkC7i4JR0AafnJMJoroR8u4AAlSSYdAFhIxKx0uYyc2DfaF17X1cRXcB13VPttKd1Q7uHG2coYN0T7R5g3bZea+/y4QP2rZ/hslKw74oRvyxgO96ylpmiWitZGtw66nuQYyLaEuzIrzMlQKsnYG/UhhhSQkSIYBoK7P1oM3spRX6bQLo8Ti4OEdGUYusKosy/L0kyoWWcUScfjm8qwAnGiJaBAZLUhkclA2iKlm5kEQpImgLmrKJp6pSSC8jIsAhDtC1m8ahxKw+QRePuUMqxPrjpWUUjeC04BotEtu5feC5gKDGKaN4QzzZKijwTHcRlghzWYX4DOUP0zpDQx+PFHGVcoJHLYT8ylIqJmkd9w02V4BVt23BuoC4UAcEBhDzBHH0SdAUvL8NfgHZRetAdHD1YwKMTrwSLzm27eIC6TnSPdQDH3nqAxQhyt53e4gTGn6BJZCNep8mxxxrBmeAJFhcQxq5oBvVmfp6fcGyzxrN5Pm7Axj+th4qWD3iCHGZQCkR8x59XTL2f9ysC2msHHoYLXDzKG14a8Psfj4/kmZT8NoJBj+TbrEwpWMEUw+14idEMxnQDuUgMwUKGGMINFE/+Q7C0OMwqEzi7qLd94akX5WK4H9FJ6rqnHRn04rldBR5mvdl9WhrDuDi8P560bId+T0ofxTdOQiEqUg8vjAAAAABJRU5ErkJggg==","roupa":{"i":[[12,0.0],[11,1.0]],"cor":"preto","de":"#2d2d40"},"pele":{"i":[[13,0.0],[14,0.014],[15,0.338],[16,1.0]],"cor":"clara","de":"#f8d0b8"}},
+"patinador":{"png":"iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAMAAAC5zwKfAAAAM1BMVEUAAAAAAAAvNDdbXVxra2udnZ3Gxsb////XSUl8SVowbHkotLYsQ1JRLS1rSUmdY0DPlXyzK4owAAAAAXRSTlMAQObYZgAAAlpJREFUeNrt2EGS4yAMBVBL0BDbBLj/aed/GSfpqZoNaHZRss0ryQIZsm3f+MY3nKJWft00kdqlixsoveLj6IUQavDzDAyo2stTJdjdSgYnlqFbiym+uMhYSW+rqPWdXMyMeVKD9vfDQ27kVEF6gFd2BKdFPD3Vv70cCGaZbrCOn0p+iXkJvLeIqFqxiJRQt8w9wg/QQgO9lOZBwZRhB569qbZGkmCa29uCQYMup0gQXt1Jmphnd05tvUeIBLtkiE10AYwVQrQUsSQl9zbE2aUdswxQuMYRrFvCdIJYcK2iQjzNcIFdfvamMp1gzvRSRC9a35Eg6m7P6VkGMKarqaizPR47etSeK+P/8lJOBPcHc1wbtWIkhyBFtnh9dIO0sZpt83m8BV6TKzq9WI7Tgg0SR+88+TijJ3hK8kjxsGoZFF3A/A6HLsf8K95g9QHzWIu1NlkEAdlBRIUvhrbo3VqM4Pj6k6WKS+EmNo5vPvMWMizlsJB49fhCp1MsBevQwFI+h9D0simn7RRL85Oc986x9URcyBfIXhwe5CjZrgKXWTxSrMbx8O4hHmft8IIFRXEA6/AAFpGyWHPlgeEGpZQifiC5sjgUxzHpuk+plPldMrYu7hY4G/Z6z4V5D+20Y3WiyQlonM4eveSwfPTUxOuAHTTHLJwGMZ0DwXCDK94L1HAlOGbrwuDCiBbWq+E+JS0eljChA8CkXpdvpBOuep08ziy125QXyLtomu/qP8CUHMEkniA28X8AWbNryWizIzhEv5IBfvzp4COeIp7/8xHcNk/w9AW3uXr/APmSG9yFB7GeAAAAAElFTkSuQmCC","roupa":{"i":[[10,0.448],[11,1.0],[12,0.0]],"cor":"verde-agua","de":"#28b4b6"},"pele":{"i":[[13,0.0],[14,0.263],[15,0.463],[16,1.0]],"cor":"morena","de":"#cf957c"}},
+"colecionador":{"png":"iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAMAAAC5zwKfAAAAaVBMVEUAAAAAAAAvLy9QUFBra4R7e3vFxcX///9gS0a1OjrqvmmtpYzW1r0icM5psv1KSmN0drS0xflrIqiwU+97SlqMRVhCQik5WilBi0pqtGIwWmVCfox9uLiihX+ca1KwcFq9e1LTl3j8yLHt4EIjAAAAAXRSTlMAQObYZgAAAoJJREFUeNrt191y4jAMBeCc0MZddgMpuECdBGPe/yF7JNLSMHuzkS72omKGvxk+JDuWnar6iZ+oqtPDq9l7P02vRy/w/Sjx7gUeT7QYp6NTzS+jeuM4wgv8Cjh7XmC5ahQn8WW8TjGOxQPEHSzjwcHL2yflnrYUr9EMxqxi3m5/M0cPsMQATktAKAQdBjGWfJtmPmeXSZk8CZ+lEktx9SqUHMIfOBU8ib+Qr8XLY9FSbz64JQjkJ9Zb2hYus7xeX7Dd5oINVqva7J3XDMgUbxQ053g+ny8XSlCwXsFe8Pp84TDSU9BYdM2KwzpqxavVMwiaREnoHOK1ZIrPDBlFC8hfcxpK1AuRonBNU5su6Mzh47NWzYgx5uWiKEyqEJL+wAHI8hexNvQZllyKiCgyoLeus7xts0BQxRvw2kFLtoHTUn4TkNG9Qj7C7r2J13UqGqPdtFwh6OgF8Tqztwmy5pgggqjWDNu2/QI7Cdgz3OBTNM/HLUUwy1axCxujR/+HesMw9P1utzODdV1jit1uv9/DI0UuOhALfDiAfd/T3EsE5ugCkhRMwmFW+puooMd1kyZQg1OdfBIkkwYNJxB+oJac7qBRRNMkRiNzoaImawM1FFT69t6yUD69KjWBYQWrLBvVlK2A0Xol8ihc4me2X7gJvO+b4BZdoiMoNxglW8HybWeffVh+HLlXGeX+zBeUw5IdxPyAZ72N8gfxcGSM/xWoHeFBNIGY2us3MCdLS9QGi1nG/TAsX9BsqmkOatdeDoIteiYKmBbXnBLzGzBLEfLV0C+uNwHzQUTPrBfWnHRTaubbCHTTX1Y0dA95OLcSXL6Z/u0QfDg0+jeVX/ictf8hPgDUuExXhctlpQAAAABJRU5ErkJggg==","cabelo":{"i":[[22,0.0],[23,0.14],[24,0.567],[25,1.0]],"cor":"verde","de":"#6ab462"},"roupa":{"i":[[26,0.0],[27,0.356],[28,1.0]],"cor":"verde-agua","de":"#427e8c"},"pele":{"i":[[29,0.267],[30,0.0],[31,0.147],[32,0.173],[33,0.487],[34,1.0]],"cor":"morena-clara","de":"#fcc8b1"}},
+"terno":{"png":"iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAMAAAC5zwKfAAAAPFBMVEUAAAAAAACooKj///+LUlLeWjkxQTnRq95eOWKbY5++m8F7SlpiUouWfsJBNEF5aXG9e2LNe1repHv/1b0UnMihAAAAAXRSTlMAQObYZgAAAf5JREFUeNrt2MtyqzAQBFDakIsUxAhL//+vaY145C7jGapclczCeMOploQeMAx/dXOlpD96cfHmmdjKgosHSvPaC17gWXDov97addWruR87Nu+cQ0Zt78xR2bnkAKaWbz1Bs5h2p3sVHhETdjPVCnNAFqBeoucDFo35r5YGJphBFIrACHrFCjYRZSI4jQw4jWZQxYldV1uhJPvka2Ldq8BjeWArl6ojsi0uq42OC/tv4+C4gL1q+d9bLGmRQ2zod69UQ1wRgiInykupywde5nIWeTxAU6Shzd7Kq2Ljcg6Pxzh2UiuiGkCKYRwpjrjAbXvdaxFBrYt91JdXn/ELROiU7Sk8PIqR4eyPtRxeDp8hw8XL8AO7N6gYohOI3fUAtQP7ZFbRBeyTVyfLZ3AD23R2GZWjzUcnBicQIXQwRvOe1xqNHBlOm5wdQC4shGJUMNgjSozSRDYZzGkH6RVKWbeVaAclSq3Ss3G1iQ7LA48NwrUr7juKw75cpQ+1NNLlKKKrV943PUfQy9tBDZjfEuw7CpftO0B5XxDD+4JHiwe8cUBxBzG4gWdAT/C+MXYDHVt8I+j1XN8CYvhVIO4FHcQL9InIV/nzXM1jbLCDPAQfCs9L/G/9rtTOhLg+ZjyfT9vraCMOoGnTNDXTALb7J5xgN03gdAE4yvwV6Oe3fQFnrS0Ny5QpPwAAAABJRU5ErkJggg==","cabelo":{"i":[[12,0.0],[13,1.0]],"cor":"roxo","de":"#967ec2"},"roupa":{"i":[[14,0.0],[15,1.0]],"cor":"cinza","de":"#796971"},"pele":{"i":[[16,0.0],[17,0.051],[18,0.369],[19,1.0]],"cor":"clara","de":"#ffd5bd"}},
+"trilheiro":{"png":"iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAMAAAC5zwKfAAAANlBMVEUAAAAAAAD////eWjlBakpilFIxQTlBMUF7SlpBakpilFIxQTmLUlJiSkHNe1q9e2LepHv/1b20fgz4AAAAAXRSTlMAQObYZgAAAihJREFUeNrt2NFu5CAMBVBuZgeHBhLy/z9b25DMkD5Ujb0rVVq/dBRpTm0wJm0I/+PfxMLhqn1wOJlda+FgLkniBFOykkOCKiabOHB2sKf3qjrZQF3Aj9cS6ker97aGqXWPpWKkoWesHgegjByUtC2apbEPIUUvacFSq3rmzmaxprpjwiIeHFLct7TveaqSXoVDivu296h1g8N4wJ5PES7jCwe4OYHcPKzlrXp5IuZaa3bzuOgMkOOVgkwEeBacM+V1hVu97K0SLiJI0lMwkx+4gog/wGdDWBSP4AEiv4HkBoJK4cZxAllEkfDoRRQGee2ISguriUIKllMstkMDrZRWNtBJ+XF77ujaIfRzoqqy811RE5Sd0YMiZw/zNE3YZ9z1iBMcwGl+PB77/QRb66GDORB708OY4AtcQyBOkIIxwQaKyJ/neTb0TPNi7KBtOqB0MP6RkDmbn7CBPUHxni1cQG5nD/CsmIe2zkP1rCAO8JgMhrFQc9l0V6EZ2sFcc+0Jyqw+5qGh5IpzCZk8arbscjg9Io8Uwy8BDy/AHSQfEd3zBw8RVg/d+wugXslGEP29qxfvBZ5nxgy+duR8j/AHTSLePYcUxwS9QFxexiwjEXEEW+cYbgG+jmMcwOczjk9+CvIdH0fQcjc3EM7g+O1oBC8JyiMD+LXiDkbbnuCy75dHP+rCeP06YhdxN0M2R7CL99aR88DlzzBAfseXzTf+TwMRjt538Qn7biWGKhVijwAAAABJRU5ErkJggg==","cabelo":{"i":[[9,0.491],[10,1.0],[11,0.0]],"cor":"verde","de":"#629452"},"roupa":{"i":[[12,0.439],[13,0.0],[14,1.0]],"cor":"marrom","de":"#624a41"},"pele":{"i":[[15,0.0],[16,0.369],[17,1.0]],"cor":"clara","de":"#ffd5bd"}},
+"roqueiro":{"png":"iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAMAAAC5zwKfAAAAP1BMVEUAAAAAAAAHBwf///9qWj+qsl7586cQU2EYfJKtrsZ0SVpqWj+qsl7586c3N0BRUVFISVp8UVG+fGLfpXz/1r7XTnuNAAAAAXRSTlMAQObYZgAAAqtJREFUeNrt19ty4yAMBmD+Og7HQAJ+/2ddiYPjJrPjBLjbJeN2MuN+lhAWVIj/4x8ftl7TvJu1dE30bu5Gw2KO5+ytDcwKsA0HMSHMJ+ics24Q5Go4nkKXLyZHw3P5Y7ctZQ8TEk5uI4+GbaCJpr/GrmDpABr61i/iwV4sEdosGn5Af+7YEoX38xO3ZDfbwK0/RtT4ctp5GZav/SE+frY26rLOIcaBnF+8DA6sH6QtJk4T8QkOrcdHLfIsj0WqiI0RLwlL2S0CiBU8TKBcesmMwBjxa1VLuWjVlbxJtczGHN8SuSjlOsGU9rWT9reOQNcXoU1pJ9MTFNK5zkmkEA3VBS+eWlf0rm0a3kdGIVpJCOxdjx4Z9DH6aC5ZvNDbLLvXN4O+DGrWHKVAHHlhvED1PBmXK2gXkFqaeaAxUDLGixgXQd5KfYfeEdPvvYFQSmOk5XiqQghFvNLq00qNdbAChgZKik9MAtkjUM0BA3DlALUaPpJ4Bgs3I+MCYmXOBwLHT4kE1vDmgdcM3n3w64Szsa8B3pX3oX+3O3REXTMmMShgAuizx2JQapxE0LXEJOaBSaC/5/gwGCItQga5JDPC20FeNFMS3sHV+1lTSGUuVV4lMGcOM3inD9rmMgq2EDOYIsZA6jUrkxRg2V/SUIwIHrkmaz7ODCedN6gqZgZjYNlOwGIrLgZA5N2E/55+8e7SwL6yFI5F5L3qIHb9A/nkIF7Bnpyb16buKXaWBXu2c8C9HMcd/5Dzt+K7x5wX3bOId28PsEdsx6O/3/CliHAyTWUaPyaxnLYA7rM6fCiGZVnC2bkXWocvwHB6M4E0PtoP2NOnx8AC6nB+gs8Jh/PbaLCnT5/N4LLwDJ01I9R+hE88/oFPWtzpLPJD2TtP5eO2ir2zimlj6IDwB9uTMt2kYfkdAAAAAElFTkSuQmCC","cabelo":{"i":[[11,0.0],[12,0.417],[13,1.0]],"cor":"loiro","de":"#f9f3a7"},"roupa":{"i":[[14,0.0],[15,1.0],[16,1.0]],"cor":"preto","de":"#373740"},"pele":{"i":[[17,0.0],[18,0.346],[19,0.592],[20,1.0]],"cor":"clara","de":"#ffd6be"}},
+"chamativo":{"png":"iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAMAAAC5zwKfAAAAQlBMVEUAAAAAAAAzKCg3N0BVWVqEfnupqbLd3eP///+LbS/SsCj/65ktLUBFLTFMMTJeER+IGS3KKkV8UVG+fGPfpXz/1r5ZwdT8AAAAAXRSTlMAQObYZgAAAqdJREFUeNrt2N1u2zAMBWCfxq4nWan+7Pd/1R3SyZrWDoZQGrCLEqjdm3ygREqRMgw/8RP/It40OnIfGujlfdwD/bxaay9QvHWTWPuIbzeOUWsXsO7a9bptfTKkted3rV1AbFfJsbrLxbkeIjaRHD2+P9YeokibG9/Hi1u7gOM7wVWy3FaUYXCuEaR065wKoJRlEdHZXdz7sBTtb0fR8eGtIljlunK4xBSGd34haBcVCiNKFTkELOp5/3KJyk0sCgZwFvkeR0C918BShrKJCMgfCHLYCgYm6V4FixaBAnIGErgzYEOKkAgc/8sjLiwCy1G8zzkKSDKlFKUhscerxa0hlHVzPkefmFStMSUflbPUtmzh1whpkhwpUQRfMTvj6nMLOPsOAmYBWVs+OaFDA+jYKYhZxhxHqg0gl9Yi885KCiiDTQqaE9wXl3YGRQ5awKUF9H/WgoCLTCNjMW+I+FxbCkqHM2tv32E/W3cH5ZHtRX4Iev4mci67eIuktiQ+fOzi+dwPjPkeCuZeoDR1H3DQBZJkz1+UbK5y9H7Zg21Jsr1tuG/dQ8h2MMwM7mT6VeI79LWCs4LcEjuc5+RrcxSN/8xz6OTJF6d4XUBhBLzRHRKc50m8EDqB9KYJ2j2jVKfDFIZJTyMhaP+09oxUZO8WTFOzGGZJ8N59FGVKQ2OGAY/LsK0XdQbxbWG3iOFxwA87BVpKgpO9By37Ao672TTB3tTfQSl1AzgedyyC1jHrFB5B+yR+7eovog2EdPUJaB4yxjNPQGPbPJktBDt42h+9QVi78Fk528DjR2M0jzjmeAYm84FJTnLpmDbvLLy3mECNA6iHupiMJ8PjARN+P3zCNOSTz/G25m0HT7lt57PjIGD6/WKQe8mT4yVMV3BjHn+5mw3/RfwGCgEwC5/rRJ8AAAAASUVORK5CYII=","cabelo":{"i":[[13,0.0],[14,1.0]],"cor":"castanho-escuro","de":"#4c3132"},"roupa":{"i":[[15,0.0],[16,0.376],[17,1.0]],"cor":"vermelho","de":"#ca2a45"},"pele":{"i":[[18,0.0],[19,0.35],[20,0.592],[21,1.0]],"cor":"clara","de":"#ffd6be"}},
+"lutador":{"png":"iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAMAAAC5zwKfAAAAS1BMVEUAAAAAAAAoKDAtKzhHRVL///+dRkbIODj/Ylrjxb8gIEBPOkBgQFAtKzhHRVJaV1qLi5WooKjAwMz4+Pj5+fpeMSh3PzWcXFHLkITzp0gRAAAAAXRSTlMAQObYZgAAAsxJREFUeNq12Ity2yAQBVDdKqnbqhIYs8D/f2nvLnIdPzKdaCmxZxLP+GRhl4eYpn82kWlkK9LaSFFaLVKHgmwY2GEGWPYeAxgYILV12/yktFLMWzd627bCn5PKsLCZt2qQbhBVCNJaLUanyC5riHVtq75Wb4zMSanscW29WV6coOYYW9tJYHF4IbQ+7ZhjgrVtW10cYMhyBX+Cv1Wm2QN2r4PvCm54LwNAK+s+gN/ea12Y9KOegfZ1acue5lq9IMIVXMyTo56CuYikoMBSS1s00RDHEFoLKWkh1u8aZXVNu3AFEycHOHaLIMILqpdzzBABSsjJM/HCR5ARlkowB8dkDuYlwoGieln/IH9YTDsYha0HqOBxEeqxzzZVBHuADlBjDOl0yoKiVW5gyK4QSZ4sRGFhQ3Q8Q/CIBPOPObNohEEWwJLv6DSHcZ4JFra+6qgYnaLmhvUXTCxa8dEFWq4jfxKuIeZBYNJsO8G9GLunK0ULPm/6jTtwQvR5vy4nGAikvjAE116PE5uuiJhnfblPiDhfLmdKs71HnDlxPkOLUDUbQ2fjLKMT6SV9pxDcYN9XDFQRbi/rVjJbd/1iXwgM1Gqe3WKABpi7t4vOPjO36hhoxfj25iP16ACrQC5fMeJNG5wghUSML500Po/grCEl8+IpxuTsce4eV2x6kUlxFiL3OI6fFs6kIvcX2v4zmC2A7HLqq/cgcN8MnGK4eTfRAcb8EQx+8HowvtsBPeJdj2+iFwwPW+rxBecxwL8iXMshns8Rh8FILz2DRyNEPy2MBB+/PcQbDg7rMZ8iRoP5kx4fA22f+x8gpjEgdH3O+aGsYzwO2sMD21OED5994cjQ+4z7Y4Qny3t79eGxm7QXlzT6ZF+P3kLr7aa88OzO03Of+wzyH339/kbaqxtsQO8Kqnz9wopfafWTm58jaUET9cbdsQv7hiGPOe72ByCkUTe4RfBdAAAAAElFTkSuQmCC","cabelo":{"i":[[13,0.0],[14,1.0]],"cor":"preto","de":"#474552"},"roupa":{"i":[[15,0.0],[16,0.345],[17,0.469],[18,0.68],[19,0.991],[20,1.0]],"cor":"branco","de":"#c0c0cc"},"pele":{"i":[[21,0.0],[22,0.189],[23,0.512],[24,1.0]],"cor":"morena","de":"#cb9084"}},
+"mistico":{"png":"iVBORw0KGgoAAAANSUhEUgAAAFAAAABQBAMAAAB8P++eAAAAMFBMVEUAAAAAAAC9tcXv/5xjSmv/9/+tSlJCUlIhMTE6MVpSSpyUa61SMTFrSkqcY0LOlHu8CHm5AAAAAXRSTlMAQObYZgAAAuJJREFUeNrtlj9Mk0EYxn/XEkrV4n1iDP80UFcixMbNxV2NcTRxYJGIQx1MZCDSJg7GGCmDRphgc3Bw0ESjidW4aAJU/BMXqIKJDMp3FU3B8PUcqvLRr73r4uYtTS6/PO/7vPfc9YP/61+tprQjA5uiCjeiELdUxW64KgeH3qxZwFxHWevQ8637oQoutvd3S1oawRjby4LawQjO5daRIMDtlyZQd5d/JqHRqNhbaJ4sIBicZEKZwFXFSz2hpyKDU0mLGXY4K9sgcjZlOry+BV0q7PPyxeutaRMXTsTmv5Zc3alHW6VpPJ63ur/luGQJfVbZotPwaFbrUkCw0kwf4J5m6YVFMJzoa7jXrTfap4KVKtFexLPo6B2pzKUZz1yiP/+FIxiDezC6+P7Tz0hPllm9ZlS8qk5l0FlIOOY8sucmpWFAT0yZQc7QpchRFO3S4Dp3rnB/17sWukCeEAZFL+R+8wD0+R9vZ6ShdC7elbsGOxE7tkthAL3pacpBPLnY3CxNZsCDmSxafshb8iPG4/HdR7+urHw0nTWgQxe5/UPAYcylG+7GO8ILar+as/RINBM5lk8kEnFlBo+I6MJYi5p2XWyuxUOkdi1njZCQQ0hsYPg19EHKCjrlOI9ZQYYfZ6td48BOz/p48UIMrIpPIHpDRVwrGJXAyLKy9wgUm1L20mPAEE2yLsUqK1StxWKqDhAIHkstMAmkbaCDrq/HFBTVMgHboWDICsl6FJvqHY8DRYVOBdxUgCIDI8BynXO0l27zdWv6vxYZ0H8CljaAbcAagDbHTGS2TKr2Q9oG4NrNiNGBpD856VqgPn/lQbKu8SxfPvBA1TXVmPZ+fxiJtvGxztpgXnt/G3Y652VN0NU5n7f5V7Url/xDmPZL+s3E5pTvGohOeFrtkYpmGrvU902uNSU3stVAx2kobbvluzwbj2s9ext3CptN6SHwX8jNHj8PuFsebtd1XVXjq9nZDGNg/QKWYu1VwvhDeAAAAABJRU5ErkJggg==","cabelo":{"i":[[7,1.0],[8,0.0]],"cor":"preto","de":"#425252"},"roupa":{"i":[[9,0.0],[10,0.645],[11,1.0]],"cor":"azul-marinho","de":"#3a315a"},"pele":{"i":[[12,0.0],[13,0.253],[14,0.46],[15,1.0]],"cor":"morena","de":"#ce947b"}},
+"piloto":{"png":"iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAMAAAC5zwKfAAAAPFBMVEUAAAAAAAAxMTFJOzhKSlqDg4u9vcX////NWlp7SlreUloxMTFKSlpKanuFnbrH6v6AWUi9e2LepHv/1b0v/pbjAAAAAXRSTlMAQObYZgAAApNJREFUeNrd2Nuu4jAMBdDuNBegxIX2//91bCcFlcM8JPFIR2MJ8cSSkzqO6TQ1RNaYrCLnVcOKZI4WCSZtPCCEcL/fmSQTbxFNAyALbzk8zhEtPw7hC7icwRYxpBR+mMv9APWrDQwhxRQ+vHtJEXg80Aa62+3G4ie4LI8Zws0MLq3gLaZzilJ882PL2zxv84amFbuUb47Bc45ZQcR935/8jUeT6BJ7KbkTmIkzTAwibvOjBZwc7xUkRefeZiaad42cWkENwPPjDi8SB/jc2JvnjsMhJ1fIl5i3/XrddwHRddrgVJQGc4iXy+W6PWf0Hd/ka5KC6i5sLG5PDDRAeTyFBDN3FjdgpKOu3ntuW5UEYYAropeom+kdEY2C5AspXhVHkswrcY7ygXgxeHLCvztTB7h6+XgXfEqMBhVrvYcYGsnMmKCrd+yJGJLTTRASMUTXCZI0jCS9PAVf9xUxtnqldArqDjBJcYLF9vz+Bpb8ABdj6CqdT7DUEmU+jK4fLKI8FGKQxOuvxRPInZG7bf/EZA6+SqeAPlZwsgG9gOyNgEfpnMA8/ddgqUWnl38FB2fifDSHKGCEBVibjRl4eFFAWfQgeHiaoAFYurV6QcDoxkC9TjS0SXME2ICQa2QclFveV6+KzsEAlPygYBgCy7DkU2QsU7nq3IhYpy8ZFyB9C+qNgL7MXnUuJrgxEDw1HB6nmKuYu8cwHRIPT/oMROyf68pbAbz+CWRM5QroBE+ePhQtnm6weK+DK7nhneqwp2Ldza4xVu/P9bS24Zmd75KxxvJlToKl97liC/D3egW09MjW0wTzZAzCGPzVCf6DHSRTUDwyXTFZg8Z9y/zYwbovgMwzpNE3NN/WbHqSMfhOyjL+APZjLvyh1+/1AAAAAElFTkSuQmCC","cabelo":{"i":[[11,0.0],[12,1.0]],"cor":"preto","de":"#313131"},"roupa":{"i":[[13,0.0],[14,0.477],[15,1.0]],"cor":"azul-claro","de":"#c7eafe"},"pele":{"i":[[16,0.0],[17,0.357],[18,0.594],[19,1.0]],"cor":"morena-clara","de":"#dea47b"}},
+"naturalista":{"png":"iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAMAAAC5zwKfAAAAUVBMVEUAAAAAAAA9QDs4QkRRUWJidF98fHz///9sYEadjGjJuY5TWj3f2ITy8up1gFWHxoy0x7EtWmpvpsR8hJ04QkQiQVc6bZQ9m9e+fGLfpXx8SVp1je8zAAAAAXRSTlMAQObYZgAAAw9JREFUeNrt1+tuozAQBWDOBpdbaZwmENvv/6A7Z+wAVVLVLP6zUqeElqj5NON7quo3fuN/ioFRkntnDCjlvT8CpYqNUUIcho81MBwWIwcN/esgOCTuJgEM+nDcu2nwV0zyAEhguG3iqIiYYCAVNNNhj3hhvADhPeTll6IzZ8zlk/HVlM8PcD7FzmYU8HK9qrkRhw9JTkjn9oOCXeyV5oYcpNqg+YXgZejc8kEzqmitkpskvQuBl/NSPfaAKiZyI9ZNUwe5neubVzCzlwUcYxOS3Ig4n2tXn3knmL2GERxTr1y24gp6hwHZy6yCiaS5inUt7efqWjpmzyxJIMlrHJLLp5ehiGn6B3C0NK8638Kjp5sm0Lvfp2zTrJ5l3DjfnJKSGIvGTFCu/RkSRMUhLT8V5nmeZFVMXq5o7LgGPQF9cE2DieA8yTVHcJ52ppjAwM4IaBqxojgzyft8v2NvigpKjoFjOZEzXyKKN/mwt2Y8BoyTtgOs1Ypj2eL5HNFY+wKUpVryepDC4T7B7xZjxZUsMULO3OoiyfzkCVweQw5oOWaWJiToXJxvS+HskMAlElW+mDwF0078KBy4c4RmeQrSNBtwndDsZiVD2AnaBaw2BwXEgQME3Q4yV+3k2ed/x5xGok5IFw6DFdrT6U8Enc/NMIrfgF0npATghMSeFL/JsG27tuv6Tg937O8s0BjzWlRQbn3Xo4oDPYOMJRvzDNIDvQSSZPmZJb8EafYrmEca8y2YvA2YyJ+S1FZ8BhE5AfH1/azONs990qfYJngg2sLeApbyKo7p0l5X0ONE5qTrgYKegm0ZUecxSbQdSmXYcqIUAmPFkiCnXwlRph2I9j3BAqJ43E5b9HFRLJEid3zoglimFY3XLZ+eZFtAlCVN9jn1CoHjaJD2AecMSoBjBNma1pQCKz3Kvd63d4PrqckWBqsCGZpxCxZIUUbgiC/iMRA8Ip1WBIeLxtt4WkE9LxwEx7e39YQAefj5wPBTyUuC0KcjILAFI3ekn1NCS4LxLHWgDRG/TG6+GBzuEeQbfwEcok5R+G4ZswAAAABJRU5ErkJggg==","cabelo":{"i":[[20,0.5]],"cor":"preto","de":"#384244"},"roupa":{"i":[[21,0.0],[22,0.548],[23,1.0]],"cor":"azul","de":"#3a6d94"},"pele":{"i":[[24,0.607],[25,1.0],[26,0.0]],"cor":"morena-clara","de":"#dfa57c"}},
+"durao":{"png":"iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAMAAAC5zwKfAAAAV1BMVEUAAAAAAAAlIys5ND9HQU9eYF9pZmm9vb37+vv////x33t8l8J5l9AYFh5eYKEvKTh4SFhjTzCRgzvcymvx33v67LRNOVuKYqC4eGC9e2LNoHvYoHj40LiB8/7rAAAAAXRSTlMAQObYZgAAArlJREFUeNrd2OtuozAQBWCOIZhSQoAkplnz/s+5M76AodFusf1jtU6ltEh8HM8YjFoU/8mYaGTl7jSAvN59ykWCqCd79/uITODz+ZzIHLOA432a2HtO45hFHKGXZdL8kwcshsWPPF4A6kzgl1708kWfJRP48UmW/vwgcMlTQ27LAp5zFpA5bWu4ZLpVPDhk8BQNaNfkdK9W8zzLB5aXflEVZapYNxZUZiniIWckPXDqxoDNQ/0iCOrR0F9zArmBtLK1diCRiSCL1JHVUw2ivQBcPKjoMGI9KZVFNi8aZM+DvLKV3LxoUHrwel1s1DSQPPA6nHG7Xa9XB0q+EmI9mIA3Hg6c6XBERltBFDvQzhoGPCvW/hzlvTUhjJcASgfe4MAmAqybMCE1ZAMVYkRfwhXkwSA/HYPLnVyEMN4GKjNQRIi1WTM2IBXxKMZEbNvWBXwfUdoZ/HwrsU89B5pVs4oMnl6KdJ7wM/YLkfpsvKgi8ibCU1brjeJAWjS+hmdA+36EQtETdvNutK80TQt7o58GX8OrUG2rQnCebbNq2bby9JR5X0dLPQZcPgMyMwzi5F41aG23S8yoqop3UfqG20T5cuLk08HtvqJiqKoEfYxbwVd4iNr5mNlAHgy+hug3HWKE8KD5zU9ZR4E2lmBOCOETmve76IBWBJxnE+IV+WrnE/ICChKuPUvwyLB9SXpFFLaALlSVLNr2egFBEeNBEQhIBY+JIHKA4S2bGBFBh3OBYuelg+IAOjEaFN9BkR0U+zZlAI+H0sTcoD3wD4EWCEHkAIPzIZBhyjswbc42zvcaJkSk0aHI2Oa+7PojmPBPAvL6PkxIcYGyiy5hWfZdtwe7ruzLSNCcvQcpc0+pEe2xeMH+ICWMi2jBy74D71L/GLzwwPGg8SJFvFkguMSDfwp+yQfa4Bm9v4/fDhlD9V1GivYAAAAASUVORK5CYII=","cabelo":{"i":[[17,0.0],[18,0.201],[19,0.636],[20,0.767],[21,1.0]],"cor":"loiro","de":"#dcca6b"},"roupa":{"i":[[22,0.0],[23,1.0]],"cor":"roxo","de":"#8a62a0"},"pele":{"i":[[24,0.0],[25,0.046],[26,0.316],[27,0.368],[28,1.0]],"cor":"clara","de":"#f8d0b8"}},
+"criador":{"png":"iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAMAAAC5zwKfAAAARVBMVEUAAAAAAAAvNDdSQkJra2u0tMX////m1rqNeyXBrhbn7+tZbap7Slrfr9FSXVZdX16AjoW+zsNsSESob2q9e2PepHv/1r0aiTbbAAAAAXRSTlMAQObYZgAAAhZJREFUeNrt2NlygzAMBVCuapyNCJsA//+plQzZXqubmXam6vp0ImMjJLruP/5oqAVVq6VWlql6Pp/Nq4YySOfOxX6aWOOiblDdUqz41WDOmQrmaZoyEczTzcQwCAvVO3hDUHQMlpbHdDPQ/g15dnNgNnFalsVA2Hd8wbNfuXleV/sTBptpS8VXXtcVKzARREtrRQPzwgAtx7WFXccFYNSbYWngvCwDqSDCxNk8kLxuAGy5A82DzPPQDjfJq1UsQSkiFBGjmGhRXEwp6sk4uui/C9DnHhxQjkfB9QqkaEl08ChVTsjpcrlcUx8TW4KnO3i4ppQTBSzIOR0OtuDUx0E7OLYdJqacEdyVHUTfu2hetD44CD8vqYkY7IRHlyxev8zze8/vmDEI2pcXL6g/5AH7BARX3EDbl61rCJaIBproXmW0hxs4YmtulARi9zgpWskqLVhtNrxXKrwMO7TUVFuW4GRYt5aO0r82UCsT1M1rIGXJW7fZQM5F1PsEoGSQts07uJ9uIqifAZUHdqwUdfdY4CPBXw46o5yD8wRJKWp5gGCAus22L2BQ3EtXUzhgKe49QRtPg0+UZ1ZoT5bgo897/8cqXdTowDz6QLEjAgbYWof7REWYpvAGSnyY+giIxxAphCWLvICgZPg08AlQwAQlvC0iL5uygyHx7WB3sBk3KL6DdhGPHhHw5IH3t2GxF3S8lyE/jW9MuC9+xLW8lgAAAABJRU5ErkJggg==","roupa":{"i":[[14,0.0],[15,0.059],[16,0.43],[17,1.0]],"cor":"cinza","de":"#becec3"},"pele":{"i":[[18,0.0],[19,0.366],[20,0.418],[21,0.631],[22,1.0]],"cor":"morena-clara","de":"#ffd6bd"}},
+"corredor":{"png":"iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAMAAAC5zwKfAAAAQlBMVEUAAAAAAABNSlu3t8f///9wJSWbNDPVXEyVUTbur5GbmzItLUBLQTRxYU6ajG8VLkcyVHJIlMy+fGLfpXz/1r58SVq53etLAAAAAXRSTlMAQObYZgAAAhlJREFUeNrt181y6yAMBWAfEmzXMQHz8/6vWkkmTe7ymrPookqG8SbfSCAgnqa/+It/Y9/J3nNnJrfvz2cIgcU9e+ykWn9i3wPPCzaCANYiVqiF5tUaxJPggFDKPHXD+LJgLYqVVcBAAZ1QdV0tRYIItz1KeTw2VwwECKDEJiOKeISKNwfnts05DjgBqICA4lXCmkjb2CrLOpdSCQlOrdT19ALFE9F6RvIDx5OiW2FyJjYa19TKEokiZik2HakUAY/UWh5NL5cOynikWnMbbJjSqXR6Em3Yi4dYx/ECSxv08AGWkRxt+rT3OniTmcz1utjOrSFPHVxkzMBlsb1/GHvJh3biSbaLoP6wtZiSZhljfJ0V18QzFYWR1NQH9a9PY5+wmiuieFkyA4YW2tKRlYXmmPXROafqwK6Wwu2TEsSTLsL4pQfIcgiYa+acYOLZooB1IsYORpKHeZ6jBWje7HWY2eCygON5+y4LDbT8FiY4e6/cnQdi+VLwTgZvFNBEBe+cKezgF6vgU/Ra8bvg0S3dwQWtn2fDWwZnWyM3jXzzo6De95JV7iGgHwfLCwS8H63Zrnx0bpokwXFQ7k+cHAts724BoeRcP14nMHrU6hR+gtPoZWUJVuIbxflfhg22iQyCDP5mz7qGDf7SBL33HeS0DOSQ9syK4ZyI3lci6JZ5ud9oa6yiU5HWNCY64gWv554VTm3D/38t+QYIqzC16jj5CAAAAABJRU5ErkJggg==","cabelo":{"i":[[12,0.0],[13,0.464],[14,1.0]],"cor":"castanho","de":"#9a8c6f"},"roupa":{"i":[[15,0.0],[16,0.391],[17,1.0]],"cor":"azul","de":"#4894cc"},"pele":{"i":[[18,0.367],[19,0.605],[20,1.0],[21,0.0]],"cor":"clara","de":"#ffd6be"}},
+"ciclista":{"png":"iVBORw0KGgoAAAANSUhEUgAAAFAAAABQBAMAAAB8P++eAAAAMFBMVEUAAAAAAABzWmqcg5y0vb1qOTlKSmpqapTu7v85KTmcSkHmWlK9e2LepHv/1b17Slr77z8+AAAAAXRSTlMAQObYZgAAA7FJREFUeNrtlk9oHFUcxz9vk+zORsm+aa12FZohIsnBQkoUe1BMpKVelAZpA14aBKuHWNODREHLxH9sg8r2UGH30qR4ysWtl6IRzUWwmJAgCFrMZhN6SMHsvE2jO2Z353lIY5pm344I3nyn4fHhN7/f9/f7fWfg//NfngyZnRfCwOU78snhO28idbl4XufvuqoLijYE/BIOJseyoNvS4a9unczenX09UKQlk1m4GQZKQKcVKgS0RwSo5OfIxjqKY730eEKX/RHVMKI+ALMFjRVaTDafnw7yvOqHN/q+6sxM7XUvXMdmh0fSwWKojvGWnAhAh01P/EJTP2hV7QyJ+OnLzRrUjauGCuzb+iZqCxP5uepCu4ETU1e2uIVJ+9eP7ZqqX8yDtVYJ6G8KQOa79zPzBsFrTTpBouolFOsQz7TI+mCCa2OB/nYNWz523QbOmFbhy+mpwqID609lE8qWr+xqwtbDo1M6EnCrm0mQDHj3slQXLDGH8zAR7yEl4aTHminiHq+4FJFAQsl1zS7w7xxL9t5DEsQNkfA26ui83cLSZtuPHhH7VD9opxKyM8fy1+cB2jt0yFDMzmNdgAhahRrAwZ9sSuwgd4HNfXbt4DwnZMmmuKr1Lnm2dnD+afZSyVmj7h4bZqSS9UEQBG7wRN/VzuPne44sFToMEakCFa79EPR8bT3nXlxaM+W4CtDVFjje6oq+54slaa5aglpLDXqLiDdqTiN5vDaV8lMCLF4QZpvYP1RsL9nJExPb+1a/6uBdLjs82WuBhxEU0otBV8qfblYN7SmZkaJYvJnZ19/Tc7yB94gPB0dR+PD9az829McXoxY66PYvEv+oT5rBA+PjZLSC2Eo8Zdlpc8Qog++BOA+4nM2YQOHCBOJ3OXqKGKdjf6ZN8rSe3MilISYB+r9KfWIe3Msr3TgqqqDAHw/EjYJnncO/0T4GFgpyviGipa4UYH2UU8jKOOTOpuuDvsQZxxIuUAYEriGiHFh26GVA8bbiKBWTPD7x6BBv6WnALUMlljRWfWtTTdGicwY3A2BZu4erLhbQKYbMQ6FdeH6ZSAELXtrfYCjQ78j8OcpsfeB8A+g58hKcU/hQfFbBsCHH8tqblUptbjP4pQaDq89sfDD7swu6EgUgZcpxJch2bBtzC2Xzetm2DZD8DGjNSLM/et7tbR4Eber1HUcpYNwfDgX96P2gLEJBrQ+djjOyfdFkKmr28a5n/Gk/NCKqeR1X/ZPf4WRmhwE0OLb8V//bfwF/hlOOgkLn5QAAAABJRU5ErkJggg==","roupa":{"i":[[10,0.0],[11,1.0]],"cor":"vermelho","de":"#9c4a41"},"pele":{"i":[[12,0.364],[13,0.599],[14,1.0],[15,0.0]],"cor":"morena-clara","de":"#dea47b"}},
+"esportivo":{"png":"iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAMAAAC5zwKfAAAASFBMVEUAAAAAAAAwLSsxMTpKSlqzwcHRzdb///9jKSmUMTHFSkpxTx6aYC+sgjvApmX13JXxyy0wkJgwLStKSlq9e2PepXv/1r17SlpOgbReAAAAAXRSTlMAQObYZgAAAjtJREFUeNrtl92WgjAMhBmUJSgglra+/5tu0oILC1dN3Ksdz+GoF5+T/kxiVf3rX5/TRWSJu4ouMOLhusqGiFSvmLxYeASmrIuA9UDG9VnTZEKEsMASJEwsMm64D6w7vzVZRAohDHd+BJgAKxqCD0mDCZB8+4wxeqYOg4nB0EKA/osLNznZxO6YiDbc+WlxU2IU4LONgxlwlbe5zK/kUHAWeywWh+jb1ofaZEMykY/iq2ZZbDAq1MALIdTjFbqqmScrN9bpqvjrqA1ZAfJrrAUca31qU4jBR+4AdeI9DIhyWjA/ZufmeR7nJBWQC8ZKkid0RAp8lp1AHmOGQuVRkhXOZcjcT/00Q0OkFKpYgdL5VmAZMQH5WC8MJs6OPzKt9HRDeFWVgS5J+Pw1FTf59HQ/YtxiXJOHWyCfTLIDMs5TDGTGS1ebAuly9jewfEuOSwjuBVp/h03Wj19uJ4Ppa2uvN2nLWTkgLKa5lK1uSRwDIuQaCzCB9UDkYOCcNap5Af6kLGx4bk1FA+Cag1bA93l2FjVjcz/wGSB3Fhhcuw1QZRHYJoK+ZuwjRl8z9hm4nEmVRaSiscuJXrMtaVp6h/T7GmomTr/pwWkJvKpF/Z4S0meyBHITjVrgbsVkeCc7g3noJkOD9kCp2auAdPJHo9gieX/4gwwNEE2Ds18pHoi7rjsC0bZU7O8U2N06FPprmpOacesalARXJzoCuWIWSpbv1CFurK4A2CTYcV4tBeah8PSXThdCPX5Wf6Zv9CA5WSSrkusAAAAASUVORK5CYII=","roupa":{"i":[[18,0.0],[19,1.0]],"cor":"preto","de":"#302d2b"},"pele":{"i":[[20,0.368],[21,0.599],[22,1.0],[23,0.0]],"cor":"clara","de":"#dea57b"}},
+"surfista":{"png":"iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAMAAAC5zwKfAAAASFBMVEUAAAAcHBwwKSl2dna2tsbJ0NP////frlHu91gABwcAwPt4vM8Ld7FOhJk4JT/aNoTxZqswKSlLQkJbQGqNaKthOjaGVkTBg2gUDUBzAAAAAXRSTlMAQObYZgAAAvBJREFUeNrN2N2yojAMAGB6VCQiKGDT93/TzU8LheNeNGVmtxfKOMM3SZNSadP883E527ufK166e3s5GzxThK4GdDqyX7yCNtG5eZppTJvosQJ0bE1ETjNA8hJoEMULIbA5TbAFWANikOGmKGZgseh47kKY5yhmoC1ELoiLXgLJe3XWEB1Vw3kM3gcMUA9ygJND/7zSPPo4iQS+X7acpcTeBXy0nDJKztw0b2OIAiLGKgfNuQaUImMSeRKhyUBjzlQTRC/iBhonkb3ZXR2LVGctCtfkbcwZdB0DcJA8g3StAVpDBPEkQFCPZ7QCbIAGcnxkyjUCgoAiGlYfVQNxItKj54JDgMcDdmALZZ6I0jwTe8E/IfidaAARf36uP7F7fPCvehCxbSVA6cfbTiwGg1alpYKgegqaRMhEeMgneZlYDspC5v6D7vEkrrlsYBSLQH0wcPdh1z3pW8GdCE1xzlIO7LixI5iLBjA+bTADM7EIVNFL90iAK7i8k1gGxhjVC1/A96sQ9Nk0ZuDyWUUTGFfJKSBbsHoHcBhMoiw6zMHlI+DQ94MB1I0P9xkzSB6LRjCfwi1AAzh6GSeCw7DQg0rUuFDIizUxzCF5Aso4gpYqC0h3RfEAGhpxVC/dew5I93/SzbWgZPzZBtwO4jCYAlyWJQdT30idC8E+BjiqCbf9Wu7/AzDmehI49t/BfK3YwOhlVV7XShUIDRzA0jY8ZtzAPYFRNNYEdmAeYjXYHUIs3OcB1KORg5lYus8jW7Bd8PHATiwG5R+NfstFBJNo8Y5gErUxy8GQvOD1ECiJLZGwjIWgbnYCy0YPwwa27VII+rQd6x/2FRRRX3tqQK9BJ1E9OyhzmYEa4DiWgxCrk8B+6EwvequYQEzgJhZ7OzDeDf0mmkA8gLloAqH5AqpY7v0d7IfBAq7eb5DIygB3VZFhA+PykLMMgFy0eVvXyFEG+BqQwqLXPD3WlEMWFuPpC4DBozcJytLnpziGNPfHQFbgD9vvgNLOmMo4AAAAAElFTkSuQmCC","cabelo":{"i":[[17,0.0],[18,1.0]],"cor":"preto","de":"#302929"},"roupa":{"i":[[19,0.0],[20,1.0]],"cor":"roxo","de":"#8d68ab"},"pele":{"i":[[21,0.0],[22,0.349],[23,1.0]],"cor":"morena","de":"#c18368"}},
+"artesao":{"png":"iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAMAAAC5zwKfAAAASFBMVEUAAAAAAAB1amW1tcb///9JNjCyMRbXSUlaSS1gT0R7YFaSdWaig229oHzt06V5RldJNjClm5uqn5v16eO+fGLfpXz/1r58SVq3RIr1AAAAAXRSTlMAQObYZgAAAstJREFUeNrt2Nty4jAMBmAUDhHBQLxg+/3ftPplOyTp7pbY7k2nmk4JLfMhWbI57Ha/8RvfEeM4tvW6rhupXXJj96cD2Sy55DXJcexUBBeDqgsWMWOwqb7icfQSro0H0HkVvZd6qUGLO/xEr8UKaqEoml0WmWtAksw6SY85p8i3BBbBIwGCt0db3Ayc4G1BLLV6x4fD3o3OwVOI5bZsQemAivcUwVFBBlfoCUgZFO8OMEZpw+/7zhvj9+ppgoc6cHd3RsL7gBUUMHqmfH7uLkhb1JONwkY5Y4h0NYtW0QUi9U4nIpNCL24loyN5uRDEtALaUxY53mwXNS2J51NEKxecwZjtZhGgJX4+GSmKwbdUs/yvQBQP4IlZb8W5JfCGvDeLZG0EtXAFTRRlcIaBUqqbErRp6SyCtLtxcKL4zplL04MYCUq5EaMM5skZIH65ZQL1/SE9iDVBFA7wiJqZzWwU39mEFPrQ9/ogflj0QpdSvKM0gV8pTsfE8H+RZJeFngI8CUu7DEqCmlCe6cQN74ByZAWEiAlEgpaikg5E9Gb40ouivmw67N8JpNiU2yxMCMLRG132Xo8DBMVxRKNZR3lauSGgFHrzQEC3aenZNIkmLtwglQRHWw+a3SxB/QVxGBLoSl9X0AVONcuRAA2HWqmXBjuVrInTYkNt9h4xMlgdGdSgZt712grEDryKd1WyDZi8NqAeEVF8tANfS3imNt7U5J8PfvIqwZXXBJT2XpuB6s3FSlA33cvDsVWZIYhH8oAhKrssY5IC103Al6HXlwtVg5NAFwQ1yzCBVeJ52YizgufaBNdgTYp0+RtYLuqi0esFGOCZar55ADZ/f7C+X/K5zC2A9f0iMSzv+lAFhrBKEZ9M68TWILnjYtFCJUjybn0hCkiV3BJcP8HmwV6BdMTfit9qqkbLBOUpKvbe532GFI+tvuD915N8d3wAXZtDr6Zwyt8AAAAASUVORK5CYII=","cabelo":{"i":[[16,0.5]],"cor":"castanho-escuro","de":"#493630"},"roupa":{"i":[[17,0.0],[18,0.033],[19,1.0]],"cor":"branco","de":"#f5e9e3"},"pele":{"i":[[20,0.367],[21,0.605],[22,1.0],[23,0.0]],"cor":"morena-clara","de":"#ffd6be"}},
+"prateado":{"png":"iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAMAAAC5zwKfAAAAPFBMVEUAAAAAAAA0PENTYWxeZXTHt7f///83QVxIbLCQoqxRUWKTmafN0NqSSlHWP0nqVma+fGLfpXz/1r58SVr4Zpp3AAAAAXRSTlMAQObYZgAAAjZJREFUeNrt2M1u6yAQBWAOuP4hIRR4/3ftGbAd7yp5JlJ1dWfTpotPZxhwcJ37X5+vGK3BhzUZHySjpUpRCmZrGLs4RcAwnlVICXclo0G8i/fUZ+T6PZ9CPR+TePqmo2BiTpNF0/Hsd5oqf5+U4tguA6yVYo+p6RqsPpdIr5aJpd6M8fBareI5I6+1YgLSwwxaBXOpFgGBNkMWEDMT1iuIdM9sVbqVJZScFy/fjNtK+a69Sm3nXxNyvjtwlDK8M18CuYyUbovfzIgzEFImmOTHzd29sNqZR9Ixnnj3IiIt65JY4BK2hiCgfJRlvAemAcr2Zuuhc6qpSMtUxqwRUvdw/1Rj/ppTzn3Y3OgUoXtEBIIMyG2DNqakPH+hB0zF6ov5AO28sYT5HwfbdV/3ISu8xvPFM7F/aEjKgMTmFx/S6FwpSQu69mKhliZcQVaDeAklmFRfwpR1opxZsaTyPhPVlPmILvv5PzvWbZt2DJkPgtExYHMhdlh74z6EACtvRZDavI0XBrixYNPvyn6pLYsFCOcloBdwXUwW8QquMAG5gqZgnzA+AFL8u6APCB00EHtA771ZxBMMtiAcjPb2mAlBx4x2YOhg4KXO4DhfQBFtwWAWcayhTdMHKHM2iegv4GYS8RA/Am5GoL9GtAU3ozH7E9xs943Ft/N5VIzA4b3XUC2+wcNTieArNt6g+o4DeSNL+1R2GJp7Hb567ZdN9H9d6G6y/bKJty93Y7uXyCOxIejw+1X7BwAcJSsYG8tGAAAAAElFTkSuQmCC","cabelo":{"i":[[10,0.0],[11,0.553],[12,1.0]],"cor":"prateado","de":"#9399a7"},"roupa":{"i":[[13,0.0],[14,0.57],[15,1.0]],"cor":"vermelho","de":"#ea5666"},"pele":{"i":[[16,0.367],[17,0.605],[18,1.0],[19,0.0]],"cor":"morena-clara","de":"#ffd6be"}},
+"violeiro":{"png":"iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAMAAAC5zwKfAAAAS1BMVEUAAAAAAAAvLS9VVVVaWmucnK3///+1d2vpfHBYLw6DSyiWWTShYDjFkV/hpGfyvYusrMXOzt7OKUIPUGhNiqaF1fBTKjRkLzKGRVMzEijQAAAAAXRSTlMAQObYZgAAA0FJREFUeNrt2FuToyAQBWDPBDWQqGFA8f//0j3daC6ztQ+Ctfuy1FxiUvV5Whp0pmn+2UjpRAtNg3E8TcT9DnrjiPPA+53e/X5OxiTUqCDOAsfsqZhqZwfjE6SFVHcphXiCaU24V3p00lZySuuKsd4bwWDk1qTx6uYl5aldV02n8YDKCZapTTo0Lb5QPcVbV2eOA2c1DasV8FLb3NCFlwALh8vX5fJVvZJ1OAfXK1gtch6IOdf3J4J9HricUTNB9L2Tr/D1ARpTDLre2e9vzAQ51TZr5tGhcFKiTIrDPPN18LYH3+we3bIUthBiDGybMMewrgri8VhkHADNfoGMCXOIMi9BvejZkOSY8FDJputaI6PrwjwHz6tImCDgrVseD+3OA15Liabnjyigd148cs6yf45vOtbarvO+ZcA4hxAWz1/kBmt7XkR/uGMYw5oug1gWyUaOHjkm9J057PWOCT37BNM0UVzIDTxmg1uHEpA5WjQ38abpppwH81orTXlQzOBNhnoTPYkbpSV1p7CHRCvbgc3ZpmldNd6qnoL66dF87unBrBpvyaBH3noOer3dvMkYGC/zsnA1a/Pkz4+ALoOkJolmtolWcObhsYCN7lYC4sFOHox6CrJigroDHdte2L02g7x4ufBbTjjHiKI9sJdU3KXMfiXpreAa1IQlpCqMuOVbxePK8TSLwCWDxkixS17M/sq9p/Q+vwzTsNW67QzUrvxui8FNXHKttALFioi3LKp3vcrFixQZsq7m5TUXsuq6ioQN8lxorygnYqgAt6ckZCpqT8te0zYVA3PWEIXTg7rHQ2y5KErE0oX3GrsSEZ6varxNkeWrL6Pctc4AkYtXEdUVbzvgFrDFOQFzwtjGWF2xPIjs4MwVc1LAvfxYBcY3b+crQLRtSwHNieD7UtsvaF3C9rUwTgCjRMT7uo6VoOxWL5En8L5mLf8GevHqwfDWRkLivJrDj+P6mmWSTgVPT5hvfP/BI7tX/BS3W36xGGL72Sf7M0Txcpb/B8iOg8/IbfF9KvHvMnm42RMFWc3kCr2UhmFQ8/09FP+/D9SSeB+gnKMU5BNsrvj9JLcbT4LiKflZnZykPOKfH0Gbvzt+AS5gUvIuXWMDAAAAAElFTkSuQmCC","roupa":{"i":[[19,0.0],[20,0.488],[21,1.0]],"cor":"azul-claro","de":"#4d8aa6"},"pele":{"i":[[22,0.0],[23,0.282],[24,1.0]],"cor":"escura","de":"#864553"}},
+"explorador":{"png":"iVBORw0KGgoAAAANSUhEUgAAAFAAAABQBAMAAAB8P++eAAAAMFBMVEUAAAAAAAC4uMD4+PhQMDD4yEAwOFBgaICAiKjIaEiASDDwkFCIaFC4iGjguJD44MhwkSokAAAAAXRSTlMAQObYZgAAAtVJREFUeNrtlk1IVFEUx39PZ4ZhfOZ9k0gWxTSgqyArFwUuWkwFlWJQrgJzUYsIahluskWLoUW0CiRw3EjqQtuEySzsAwqykqBCyPEJLYIY33VQfM5M77boO9/MfcsWnc2Dw4//Offcc9658N/+TTN8fLGhldjdmb+ctT7c7WbL7PiU04Ij2wBj+6r9h7fGL5/BDF6AHEfjyZxn417WhV7beteSUJ76wxvaDPZxRslN3s3gmAXKcLhG9cPErPl0etEaL2mvINW5b+F9+9KFcxpFsrsjyViMAUMruVMptfxxqU8L1itHLeeXhBYM5VJdyy8tfVN463fW97Q7oL3rmv5DpxV6cCyRTL3t04Oj1hbCcFgDxkbjdksz3AtZ1e46lnHiwPa2HQdL4WeyouLYrZXktwmoTdB93b9xZy1nQZKEXFzw+dWx+TDRXh9Fc7+1awVsSABGDViWO+wDrh6VAN58+iaAIcNDjvE7+TPHrAwpUTd+KTsjUXN4uJMNuGIzaCbe3V8/mwU8uwgZXk8R3+2juPqu48H3XvW+TbQaFoZfeTq+f8s/Kz2Nc73aFPakOIB7VcLG8c5qbcbiGdixcw6vcPJhs125eyLnMuBMgJlZODJXObR5trk4aCkDqHsRlRXbzJxusAmn1rphNTkxIioqPo6q8xFR7EZISrUfKvaj2XRRtv6Qyed//YT+HvOuwowp+wsbYRgES1XMcQCgkGiZpAQ4slLoUOsMIHyq5lPHJ88FQFhUA6NR8GqAKzrFbsy9oJzPGtCtnX3yZkCtCAGnqireOFDfVLQFEY1iuf9IwQaJManJ8cFYU5ohDKnbCuWesgkKByaqr48snQhJkIKvP2pDFU+MSx2Y3VrqlUw6us0FEMl9cQI8ClKNT2dFgBwhSqDDAOmwDAS2+axhP2ucXRCBQuddJ2iOV9uDPZo6c3kR5CVFXLAs9UsTXNxgx/5v/4B9BYrM8fM2gEjaAAAAAElFTkSuQmCC","roupa":{"i":[[9,0.667],[10,0.0],[11,1.0]],"cor":"laranja","de":"#c86848"},"pele":{"i":[[12,0.0],[13,0.31],[14,0.655],[15,1.0]],"cor":"morena-clara","de":"#886850"}},
+"cinegrafista":{"png":"iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAMAAAC5zwKfAAAARVBMVEUAAAAAAABPPEZdVWJZWWGLi5X///+NHgTPQECtXjLPsUssLD5+cKk5LFpdP0F4YHi0oKzy5ee+e2HYkmffpXv/1r57SFncuik/AAAAAXRSTlMAQObYZgAAAsBJREFUeNrtmOtyozAMhTmptwScYJMYv/+jri6YlJD+iOzpdGf2DEkJHb5IliyJdN1//aMKqna4WRTRhod5ExrxgCmKiS1sRJwxkYTXgkjACawQK4DAFyDCwgqAGYjLBUwFvyC4fKM3/mQFXgHnnLxSIljKOS20mFbg9QpP4jfkTMaxgQS8JSORgJvUQvpLwHQzR+WPCM6vq5gW8TiY4+zYOF5EsnBRYcJkDQsDP70ClZjY7Wmy57PjoDh48llNTKSKfcIJwznDYU43EfFyBXAV8ToklZQJO1H2ByEjvTLhspSxijoLjgJt3kjlZiDmQMA4c601EtnRgBgEyNqARiI7N5N9YQ7DChReNBZuNYVMRAEOKEATUdqcdCbyeBz4QOGZnOa1mwvwNPBBZwVoIErF5zspbU6iEZw4MVQROW0wKvCEII2PVjZaIoMCDGwdQ8sV7ahvE7HyGDiOTCw20742zRG8TTgK4a4e3xWYqbukYMod7nq8/Pf7SQ5Zwnz+PCvRlN4MxF2l4c3n8xlLDsY5R4CjJrYA85IZSLZ35v23sxDLjZpWgrHiHIEzddNsL7MvgDOX3Irh9QjkROpqewvhBglKrJ5jaSj5onreA3hhreddtcuqKy6qmn7Pu3drAWInWYg6C6NX0dnqcg3Q84zjvOODErAFkKVMXkbGVYW5AL2emMf2PVCHbbcOZF0TA3kOaw10vhVQcqaMoJXEAsRjqK0H+gL07YDYzd01G88dgL4O6B8eK/HDxxoi1rKwfYwfMfrmwAriAei5PrYGeruJK+8RFDqNvjHQtwRuF34dEN9+w9vApxDUA73b3406l1/cX0kE/Auf9TnfhKMHi2cDoVctQHrsjrHfd2Kgj33fRyNvGHoWuj2RvqY3ENEr7+k3Q9Al+ocFGPVX0qfZA/3B6jdnzePE2OjX3f33dD+mv+cuQL2zp+F8AAAAAElFTkSuQmCC","roupa":{"i":[[15,0.0],[16,0.486],[17,1.0]],"cor":"branco","de":"#f2e5e7"},"pele":{"i":[[18,0.368],[19,0.496],[20,0.604],[21,1.0],[22,0.0]],"cor":"clara","de":"#ffd6be"}},
+"lavrador":{"png":"iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAMAAAC5zwKfAAAAUVBMVEUAAAAAAABSQkJra2u0tMXk6er///+Ea1LLn05eWzGRiTnYy2H+9aZBWoVzkL4MSW0RaJ6lQkLeWjnsYFh4MTK9e2K9e2PepHvepXv/1r17SlqJGdJ4AAAAAXRSTlMAQObYZgAAAvZJREFUeNrV2NtyozAMBmD+tUtKCAHHSjm8/4OuJAMh3cMslm/WE5LpdOaLfJScqvrfGxEV9RBjREkvhBiJipEUtYWAoh6DZcTNKyYyGEqC2D0BC4iI2mdeiJRAGE2QcjM3IQFrkAgrNw7DCPbMvSYM/TAxOH2N/dCbI6zYmwYJ8Uc9Df1sHcKqHxgUb0Y99/xemcF+mWYoOU9fJUD00zKlIKcFvRkEOEQF+YMHtMTphUnEx+M3XtbBi4HFZXlwhwH3faMjC9QYZVVT/SZebrecWeplJBc8ib26djCDvKEDPccVrGs4t4NZnqspkn96eZcQxbQEKECU2AR0yRuXJRuEgixq7vPOiTfyslwY/LxkgJ4bxaAHN3nw3wyOstJzAnTq+T1VQb8BEBC3z2/r8h88z31kgEHSZADdOvLMjv/lPM56XuKRXMVZ5a0igU7PSXBZND5NfrwKZRCPoPcnwYUHf9QzWsqllP6OsyWL8rz3Xj8cwZojPB3geugLGL6BLNY4exJqMsGxIDmIl4yMpauDp5n2guQIfubsZDiZyhBiKVCXB+Kr0cvL2cl/BfNyKryDlHKbt8+EAQzbsuaPx2NbK/lgugWsNed+XGeDlRRx28YTk8xg4Eoz9Zi2M9EIBi5e4yYGsq0arTf2SZZYyRigFu60itJ7mMFOj9fC4L5uOFiYu3zHNsHhdfsxgocrZJpmwyQzeN/Prz1EQ4A8iPeOt4teqkqB3Dq5561Ns4wVvGs67aSZwSQiDWdREPedLgB2Gt8K0nuKzgD5hXUs7QFWXZfAbuXs4NrVNB8FQBk9BVfFaSHq7CBe94K6Pl0q/SriWNdqbVsKlOL6fIH9nkrfQOxPrtchHQ+FQPhON3EpEMTD/4qwQIB8IfuQXZIGsQSID25MJpDX3/aYQCbLgRDSexELLBq5kETIvdaXAVHrFTym7OTQwDf8GALc7qTSrm3btGhxxdXy2xK2g0a9tuWPtmlK/ApdXa9Vo5ywVanWVI2+/th+AkFCQ3et/hx8AAAAAElFTkSuQmCC","cabelo":{"i":[[15,0.0],[16,1.0]],"cor":"azul","de":"#0c496d"},"roupa":{"i":[[17,0.4],[18,0.71],[19,1.0],[20,0.0]],"cor":"vermelho","de":"#ec6058"},"pele":{"i":[[21,0.364],[22,0.368],[23,0.599],[24,0.599],[25,1.0],[26,0.0]],"cor":"clara","de":"#ffd6bd"}},
+"aventureira":{"png":"iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAMAAAC5zwKfAAAASFBMVEUAAAAAAAAvNDdbXVyooKj////IODjV3Od7SlpgQFBTOTp2UlMsSGAwXJRThLd+v+ey4va9j4C4eGC9e2LYoHjepHv40Lj/1b38e9QYAAAAAXRSTlMAQObYZgAAAlhJREFUeNrt2MFuwyAMAFAM3ULJTCgNyf//6WwnZK12yuxJk1arq9QdXk0w2Kpzr3jFK0wjpfRBYcaNY4JC8WHnkXa5hACGXgj8ZgNC90oBkwQFRA6LndkSRJx6oAUoHGUIFOoKpCXDNJE0pnm+JlBzHKSNwN4lnRPjtw3ZIzV4m+cZ3ugrTohxjd92eLyN4y01ApdlhuUs+CwmWWu6UYJLXSgoxzNgvJPo/cN/wDFIr2XZvMqfT+TX7vcQnkgWYRffrzN/OrFiSTDQHRAldhHSJl7f6xXOeA5a815Ev3IcJBf0ldfrThYNAL28pzTXdScjH45S6Ht+fEgA1kbyJjaOiHyac85AT8X/iJQ3Sq9tkVksGSPcW/CaowcbmQuW4HGCNQYdyGRssmLvJ2ghqEHaYlkv3WAoFaC9vjALiCFT8fBeaz3eXqQ/Ahvqr1e3Fwz3E+BnqW9SIB2FGgDV4Iq4qkU+duwhgxRaEHJvdyDXkT7BR9Dp94SqRrRS9P34IcGyVbYZWH4JNBH/MUi3v8HFIJW8hze4uSS4p9Kdag56O1AasnSWFi1EmbmiDBU00RmAkUH4LTAagi62agRWeYZmoIt1qQLFZgRSih2s1eghdtBqV3am2oD1AKNJJR4rFpAGEj14IBFxb8+qvozHVU2cjNna4atPDS6ErM8Qw3T80hDCZAF+/XQBQb/iDekMGOyJIH1MAh5j1dMXfikw5EFfiDgMQwfzYLHmnI8lD0Oe9NtCSt+UnGnRA+g3ZTe4RatLEbiwO0Ejydb3VYX4TOhnJjAau/5GfAJKDy5IBGQuywAAAABJRU5ErkJggg==","cabelo":{"i":[[9,0.333],[10,0.0],[11,1.0]],"cor":"castanho-escuro","de":"#765253"},"roupa":{"i":[[12,0.0],[13,0.197],[14,0.444],[15,0.764],[16,1.0]],"cor":"azul-claro","de":"#b2e2f6"},"pele":{"i":[[17,0.226],[18,0.0],[19,0.043],[20,0.341],[21,0.396],[22,0.927],[23,1.0]],"cor":"clara","de":"#dea47b"}},
+"animada":{"png":"iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAMAAAC5zwKfAAAANlBMVEUAAAAAAABra2ucnJzFxcX////WSkpCKQhaOilCKQhaOimUjCnFtTrv94y9e2PepXv/1r17SlryqP6IAAAAAXRSTlMAQObYZgAAAoJJREFUeNrt2NuSpCAMBmD/ALa0Gsj7v+wmoHbv3Yq5mKqdTDnefZVAONjT9Bu/8T8FAF8vzTPE0Zstip8ISSnNUsWv4igiteIa0IdjKuBaTy/nd4v8gBTjyuG9rxgXhUuRw5MPKA/EwnLkp4N5epKf1CxXwbmZzR1OkQ+wDWA+Hns9APlKsM1HfjYv1jWWIqxbzOFzsgeb5wOC9XmjXuJYkgeoyQUBKkqt13AOia2z2RJMhlWkks/JGStajNFqc5UOKlRsRDUw2NoKkSrmaXTwy9PmvC1SXE9R3sI5f3u62OXmnigxrhRRZJ6t/HyAOBenindIRPU2iirq5s2IdJF9/6hSS70nrpuBEVJg74jvohXkmyC2rYnEzAbSvn6JXFnzvnuWbptWTtQ8BfedLrC11cDxvFOkdHlrpAPUcisPHGIKphg+ntZ/emXomMVuKcZEtG8twVKZJ7a1PnYOQmeFQGRaA9vx9TkS74c1Yuj1rkDUrafH8GFAsCS18g19OmA70fj513pxI3vhECfwgyMfWLce8LrjcV8xm9N9ETrDZP98PEIIpH+BYiAPT5eIacHWioNoK1it0N+RfLz+tBThBPathh6Dp6egTXSxNf2sYS4wtIOv2PQ8bcHYq+3bgYTHzYg2HTiOeoHHOtHgY8Py+WjR+4N4ehMuEGHx2GwU7Hu03kvCssCj5g6i6AQtLimi2LSwguHlINogamNzIXoty8ul5qK9Yxe3l4ZDigqedwQsy88E9drm+NOGJsiOPz78VbHT2tNvcXYFI3P0BPttfXIWXUH8eNBqpsk5xeRbc0q+YFTQtWZQSq6tDdFdSxZHcIF+jrKruLjsrH9fSP7R+wMHAicbrNoFLwAAAABJRU5ErkJggg==","cabelo":{"i":[[9,0.0],[10,1.0]],"cor":"castanho-escuro","de":"#5a3a29"},"roupa":{"i":[[11,0.0],[12,0.333],[13,1.0]],"cor":"amarelo","de":"#c5b53a"},"pele":{"i":[[14,0.368],[15,0.599],[16,1.0],[17,0.0]],"cor":"morena-clara","de":"#ffd6bd"}},
+"urbana":{"png":"iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAMAAAC5zwKfAAAAS1BMVEUAAAAAAAAxMTo+MzZWVmn////FSkpsZJVecd2rqsDn7f+JdkGjfE/ZwI58XWAeSGopY5RSndaE1v2tc2rUm4n7yLpuPU5vPk54SFgUVaU5AAAAAXRSTlMAQObYZgAAAnNJREFUeNrt2N1S2zAQBWCfKKqiGjuxfhbe/0l7Vg7BBm6wlg6dqUIGc5EvR1pJthiG/+0fbvM8W3IYp2mCoTdNtiLYaFqBmCeNN49GIqZ51p8JNiAmx6ag0RgqNs/OaUgLsXHaYAi6u+iciedmV1q/4RwMQGqzq8VxKhqBtTq+68uLc6MFmF+qck+e/R4NyoLn+qQiCBZYzEV41LWJEVjyHVTPYio+N7HQ4xbmLBZzLiV7T28cJzf2ciEEPFMsWDfF7ozwbIBkiYEX/TORYIxScs6w8SLosSgnRB/Q60FTRZzpnbGElFIXCSSOX8D5fKKXFr8sKfHvw15Ky+KZrzUFPUm+D6YMnpVlQXBivvMJKYboW1vSETGwtKXICp7oLbxkYXzwOpRHyttEdg9vIIc1MGBaMBwUa81cH3cQr/M8eRwr8rpvgQvvAQ4hB106B+tcuc/IL53XD1B0GHB4n6nSwKJgiyXceqRjagszot5BFaXLawNZ20iu81q0w52recE151UU5rUAb1dtSLLeV3p3QwX5urXhZND+e+jtDjJhZs27A15v0Iwqsizi0ed5NOsB+j5wwJVlYEG0MOtM7B1DWVdz+w2g/7FhC9beimzB9aIYgbKV+1p+MEagfAsob5c2IIxBGYxBfHJ92MsbQwxmtuiD60bvvZ/oHalsxdJ9A2iPN9u8vRGxjdjydkbEvs8/FJTBGMQeFEOw/8HmW0DspyV+FoiwP+VIuVw6wbgDL7/56vP2CXG5dB31Is9Ou4iI7yJ/6STFT9PbAeHdF3z1IB/jHvwY+Wv9VW37eAQfgu+I+OFhq53KouH/nj/5jr/Q/gBeBDOJ/mzyHQAAAABJRU5ErkJggg==","cabelo":{"i":[[11,0.0],[12,0.255],[13,1.0],[14,0.096]],"cor":"castanho","de":"#7c5d60"},"roupa":{"i":[[15,0.0],[16,0.213],[17,0.643],[18,1.0]],"cor":"azul-claro","de":"#84d6fd"},"pele":{"i":[[19,0.406],[20,0.669],[21,1.0],[22,0.0],[23,0.008],[24,0.079]],"cor":"morena-clara","de":"#fbc8ba"}},
+"atleta":{"png":"iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAMAAAC5zwKfAAAAUVBMVEUAAAAAAAAuLCwwLSs+MzZPTU1KSlq9t7////+aYC/xyy1sZJWrqsB2OFS/YHnfUVp3W25HNULGh7UwLSsxMTpKSlpeMSh9RDqjYVbUl4rqy8UL3pX4AAAAAXRSTlMAQObYZgAAAl1JREFUeNrt2NuSmzAMBmB+CFkwYQOoNnbf/0EryYR09xJpLzpTTSaT3Hyjgw8kTfM//uFY19XX27bNU8SybOvSrJ4g57hscOI4ls0N5NTkpRkuXl4vM3FLsN16BvttRe+wdrD1bc+gmCu30iyiVZDfN6nYLqK0rXj80hZal3dKpRTJr5S29wD3dCtHKLiaM8y/VdxvufXwGBwgHobcFjBoXzZlzyzehtIXTdEM5vxqotPJkPKuXIbXOZNy5qp9vAb3eweuek/wOgrvXdchQd5dvK7jFHMW0ENEGHHH5+wkggLFiMDi/AmydhEUR/YiMShh5TBGCeIIvxSEsXnqAQJyivPMNVu8EBiLaCo4z1YwBs1PW1lBTBYR2j00bqDs4ZzTCfLeY44sYiNHQtJkxyBHrGRoFpMWL2CuoHHpsJhOMGnJeohdZaVzhShqxSXJUDJvaj4f932/KIpEFSwT6aTEfA7Pi6Lcd0WGUaci1XLa+/P5ca1qQkFJdVESJp2xJLl/pGs3AkXI6cWa7ptjpddhXfOizvg4dLTmY9VfG3M9DXVXy8ej5uuhCZImWI9GeIC1YsnwHIvJi+EFfumiPUGZNFlrlsUSjhnjEB2ebLRekA/Y0Fi9xkukUO8+f9BLpL8uP2fQSVTwvE4dQIRXgqcIs0ee4PgG4VLxeD6RCAgH8J2UB1i9EwR5gkeCniDIqYWu4Nea7VsZPwh69vCnQIeN8n2nkP03s1x77yckjA/zPRpeBh4cE3+zbZVhnA6RQTGnYYAJ5HioOIEfbCRLU9V4nOD3llqG4vR3yMX4A32IP2BKBYNoAAAAAElFTkSuQmCC","cabelo":{"i":[[16,0.411],[17,0.0],[18,1.0]],"cor":"rosa","de":"#c687b5"},"roupa":{"i":[[19,0.0],[20,0.219],[21,1.0]],"cor":"preto","de":"#302d2b"},"pele":{"i":[[22,0.0],[23,0.165],[24,0.387],[25,0.727],[26,1.0]],"cor":"morena","de":"#d4978a"}},
+"estudante":{"png":"iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAMAAAC5zwKfAAAASFBMVEUAAAAAAAA7MTRCPkFZSk9iYmKttb7////XSUk/SVpadJXv7/9qVD2ZgGTXwZD68eE3HiBRLTBlOD2dV1+4cFTfpXz/1r58SVpI89o/AAAAAXRSTlMAQObYZgAAAidJREFUeNrt2O2OozAMBVBu+ShMAx0Cid//Tdd2Uob+WGmbeKRKW4sRZCSOnNgB1Kb5xCc+YRXOAYaYmxcOK9GxpaCR6JYj7rDy3OLccr+b5OjYmWfHR5o1KoujCzhHiWPuqAWdemGerTzNMKQUZ1flQRrGBdEiDUmvW0KACzyQgLgGp+kWipROXFxcIWv4dQ1YykUKaIgSGL9iCizlkyYWBWUDIYR4ahxXVBcKdB2h4EIh7OPIXm7uosahSOM4otHnDIsMhgSWJZjAgUFdNxZDyNuvdA0jhoFSK6Yd/LOdC9smAlyU9LTBvu9I3j2DhNfLEgTMKU77JAVfHo8wXhJ6eZcEbCoCC4bpNoDHhxcovJwjtk1E+I3NabrxGA8v0v7ypMVjAt57Pk3jJKAg398U970kQ69iArkrV014Xb2XzUMF1RaR7+aDM5ymlecunIJlbwKdrwCb57ZcfR7yP6j4gai38+kE1r2oZMLNCUT1J4kCXBPcRDT6HJGp4naDt/q84Xkagy1yWHktk60eZl4+LERlDEH0fZ9NE1G8/gk1AFv5azNYL7YJFNME5K7OYJq3QVUu0tEK2rQ2LhK6T+RsBh7n9wXThRWIdNF1FmD3ALvufUHkKwvx3Hz4DbC6zk/b41hPM/DyhqAgvwc2+E9A/I2vT/ADlr5EzwSehwUev47PbcOjOpDvv/TH40u8vjrDIyUdVGbYnL+sJd0ehr+dNjDV/jX+AC1JJKDHlPCUAAAAAElFTkSuQmCC","cabelo":{"i":[[12,0.0],[13,0.279],[14,0.623],[15,1.0]],"cor":"platinado","de":"#d7c190"},"roupa":{"i":[[16,0.0],[17,0.258],[18,0.453],[19,1.0]],"cor":"vinho","de":"#65383d"},"pele":{"i":[[20,0.286],[21,0.605],[22,1.0],[23,0.0]],"cor":"morena-clara","de":"#ffd6be"}},
+"elegante":{"png":"iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAMAAAC5zwKfAAAAOVBMVEUAAAAAAACooKj////eWjleOWKbY5++m8FtXDWxk2WknGL//5xBNEF5aXGLUlK9e2LepHv/1b17SloCUBweAAAAAXRSTlMAQObYZgAAAiJJREFUeNrt1w1r4zAMBmC/9ezaF3mz9f9/7El20mtHBiPSwR1MlAYKeZD8Ibsh/MRP/K0oMxy5bYYXuXOT9PCgUq1uIvbk6jYrL34F17IVB7DM5Fa58qkFVrAuMSUBf5VazeCYYslZvM0B5DHmKOYsX6jFDGL0odMrJTOqB9jj++ilAODOtXqAGGMg1q13OIA6iBLvUVahgrDvFPV67wKiuIA8PrpGYYcp0YWN3jl+dHIZQAULND/cvEDpBrJk6HajP6CxQ1BrMcacHikWW8+hJumJ15qKerbIHjSBFJc3wdXJbGB8BqvZA6KQRAdoLVjA2wsoy8g0JSDklIiwg6Ual6OA93RPD7BqIzN5kiEdIKp5tyhIlKVmGUQEF3EHoWBxOFVkCLVkBSloitaTWSaZ7jIRcxCDQ89WS6qmA3Ro2TRjgcHLawfo5QnmCbYDhF+CU0QyT3FaXpJQO2fjNsk5zbhLQD5k3siSk8ZRMmBtro8pWaub+Q0O+0RCj3qSL35jm8jzWiNbbj5UHE7gvNRBHsaSeXnHNRHmpf0ZNO8U3r1d5OCVoJeoIAdnEM/Xd/ZL0ANEf07QQdTN9txfuNvE1VwRXkVDB5NLjbSvV7BTu961oc0Qn67HLWWYSn59G+LZQJwcCs5gun48n4HBct7jxPMHA/4d8HQILTWfJ3gd/CLB6+L/AJ6/h3YVPH9R/67Q5ZLPdgp9NRTfunh9/+cjfgOAsyYRT7i+zgAAAABJRU5ErkJggg==","cabelo":{"i":[[8,0.0],[9,0.466],[10,0.402],[11,1.0]],"cor":"platinado","de":"#ffff9c"},"roupa":{"i":[[12,0.0],[13,1.0]],"cor":"cinza","de":"#413441"},"pele":{"i":[[14,0.097],[15,0.364],[16,0.599],[17,1.0],[18,0.0]],"cor":"morena-clara","de":"#dea47b"}},
+"trilheira":{"png":"iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAMAAAC5zwKfAAAANlBMVEUAAAAAAAD////eWjlBakpilFIxQTlBMUF7SlpBakpilFIxQTmLUlJiSkHNe1q9e2LepHv/1b20fgz4AAAAAXRSTlMAQObYZgAAAkxJREFUeNrt19tu7CAMBdDsJOVOQv7/Z2sbQqK+DbjSOVKRpjMvXdrYMcwsy9/6W0uM2mCoZIxKdAwhMBbkXUn0PvAfr0PGwJwsNsdF59wTMXRzGLTbttnmcQFvMw5767Y5+4C3OBqRA7oV5HmiXqIffHyAdV2dgL5FlGZTX+JIr527AAduC0cs8SZlDVQSp7sKcJEI+vdSrhj9Q34+NnAnUARcEFd/XVd5xRyoJW0450wmfSwrCPRYCyerXq3mZyEzL3BBJV/xBJ7Fv0B8uG1bvQUVpFXBULsNfNwZayvorrOCvtR8cYSrm65iKW4ls9cvRAyNCxq4OCKLg+zWT4g9IncdyJCDx4+WkCf6BlGOg4V6UrSBGa+iTQcvfibl1J4Eaa9ZxGR567Lb0S3znjO/Mnk5yVMEljDG3ePCoLUpjSo/I2ZLj3hOGUkBBHNIKWUKWPc8K4LQ5iWNiJJSGVzAHrWEKgk9EK/Znl35AVVEpAZKzzXAgwblBucjGmMEPJQimi9Z+74bLBp9ecBdJ2IFe1skIiZbTItPrwPtKrRTJI56XHNj0E+0c5jE8YBtkvkId2fBZMDX0UDf82YSpu71swYzNaQeNNBaqzLI9OAxBasH1rtUGVx+B1S5pGz7IksfFCPKcU2iKqie0Kon1OrK/esC/yrY26sHmtYNtT3vzcF9U02DdEsJSFe00QD5Dv0yegnrTcqQ0QbVivj/gFpFfED8Bqggms7ogKTcCXWKKLEaQ9M3LfLk9Rkm3EyDbPRYwPxvXCJUDpnB9Q2g3yX9RMKhegAAAABJRU5ErkJggg==","cabelo":{"i":[[9,0.491],[10,1.0],[11,0.0]],"cor":"verde","de":"#629452"},"roupa":{"i":[[12,0.439],[13,0.0],[14,1.0]],"cor":"marrom","de":"#624a41"},"pele":{"i":[[15,0.0],[16,0.369],[17,1.0]],"cor":"clara","de":"#dea47b"}},
+"punk":{"png":"iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAMAAAC5zwKfAAAARVBMVEUAAAAAAAAjIy05OUVeYF++vsbd3eH///+ENC7OPjlqP1F5RleELVGrPmrhaJb1pcfrsk/4z5ihV2CZUz22c0/cpIr448CSLpMJAAAAAXRSTlMAQObYZgAAAuZJREFUeNrt2NFyozAMBVCuzTZ2E1MgJv//qXslQUO6ndnF4mEf6pmWNJ2cypKwTbvuZ/wMGTeOU7mB42bjDE+4oZBc3RO8j+GjlIdgZvq8It5QlvJA1wFO8iagTnmpZaC4kc0cHoViKXVZCIrYobQGyYwBD4ZWFhm1oCjTGqR4DGexwSAJFo2R75bjonqM5q4k8qXelqc4HBbN6/COX5D54lLvCxziGmDB/ZIthayLpKBYPUS8NQRIsN6riYu9YyTk7sHBCuvH3yvnKuFVPDZRSBwC2YDIWWfIEGt9e2N8GK0Pb0oeBHG9XinSG8EQiWrJ118WJYfy76AW9mrgOzjrCuw+Dc3kcMSrTFskyFnzxwSktBdJvvyFv4JYrgImnVQIWRIaI1rXGKQoAWQpCz1KKfN7u0hQRs59YHgx9pxudIMMsO+FiymlkPhW8M05o++jeLym0HM4QC1it02TYg5O0NQ1bVKdwHxGL9htnRIiixy2ohzrwK8z10tIIa6gdhMb3RmogCJC0pnlPofP07YRlAXPkOURvtIku0/Uy7pwVEca8ycIA+uVEaKVG0fkFGaKst4yg+x5rmWNZSE3ihhGdg6sJaWXGDPavXmc55ErmG4AyNrubR4d9SxM+fKBL55ddV85J0B7MW9t1BQgienpfYbItS2lrg2cpukbsGvrQQ2Q4PQn2DYMlCCnHegQBRwNnM4DbdqngObtiuwFw1fQXs2tYOjD/F2ArSBk0wzhNBCyB3O9D4Luwbk5QuisN1RYH/hERbX564D37NDLQdPOTDzp8MsLyspCVVaYIGc7vyggsF41ZPfpRigF7eB00gHMXmTv6Uv2pB2YTwE3RV79l2D/ieghHn7waciKcTboP2TnPQF/3+ClDvBXZVeTrwlovE9eBXiTiBRfc8jnFdfxP+jC8NLlXjDsgCBe9D2ghN0zsm4B0QnKsr8K6ybgrXLcgeK5H3CfD57B9T+Cb08n/k20bfwG9SY0Bmdvs1IAAAAASUVORK5CYII=","cabelo":{"i":[[12,0.0],[13,0.24],[14,0.652],[15,1.0]],"cor":"rosa","de":"#e16896"},"roupa":{"i":[[16,0.434],[17,1.0],[18,0.0]],"cor":"laranja","de":"#ebb24f"},"pele":{"i":[[19,0.0],[20,0.208],[21,0.637],[22,1.0]],"cor":"morena-clara","de":"#dca48a"}},
+"gotica":{"png":"iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAMAAAC5zwKfAAAASFBMVEUAAAAAAAAYGB4qKiooKDKwsMD///+oQEDoiIgxKjxIIGBCOlJ4OLCgUNhYOEhYWYaRm8cxKjxCQlJWSFqJbYu4eGDYoHj40Li+UkCfAAAAAXRSTlMAQObYZgAAA0lJREFUeNrt2O12mzAMAFBE6TLHYKrYwPu/6fRhjE2TFpOc/Yq2kdG6N5KlAFvTvOMd73jHO97xv8JKvMDByI0ST5N2BH1Jga8A8UqRxEgingNJxJ5Dya+UJJ5LFujne07wSmQu4qi7US+CNORrJDIrm7yToOQiIo/NmAc842lia27PeDk4sgY6kAjc6DOtxtGqEPMq9NTyehBnYAvKbUwtrxZxttMEseXjaIt9ODhCzukBpE609s+Mqc/xFQGONmhyy+LctDAIVC6l+GfZGmTTJMLBhk/LNM2zejDT3ygwy85a2oA4+sc20LmZRAKhcQJeJlgtOdjKkXFU5+y9kyTm5XL5u0C6Klo51I32RBREsAFHKbYQ59DGGHW46y4Ncb0DaDvudw7asfYigZfLBePWe04QQsDNW4fosIgE4tBzN8nrqK2BQIawII+DA35+4gAeaDPbjn4RCCVoa240OAx47Qf0FJiDmSciHAb7gYNEDEE9BtXDepBuTysIGbh6oKBeGrAGHKjT4AO3BCKIfOCLD003dx+PZYlDDOQ+K+gh7SDo5xiOz04CSZSZCZzo5m332oNef91E9YJPcwPFB6qpAXvtjIIoG4e1l4YS7LXVBCJyhrR59oxIDzVXBfteppvK9oFS5M9i/QWxaUwGmggGEwSkfTMnvATyp9mDMYF+R7E+EmjkeiOm4aLNSZFAEFAq9FK0kaLD2Sc56mbmGUN/qGZGzz4pNSzK9dVLhkZS5DDmNAhGdk9j9U6TYAbVjIIhjxN1Q5K2njwjbqWqufOqRXjM+bSRHL9PoCzaeSvl14OKcvgl07jorida0R7/c+0tRf5z30FaUPb7B5HWdl1bZpKavHIdLYFS9Po+FDuv6zJvR6ooS+gBFPYzGb/Xwt4rwNLUHEAfaB+JHZQgV5Sv4a+0keNvzxr0fOz02SmkPZdHgbZIEdr2RhFJyZfPb5KZnIKEW2LwiWShcNftUoRbjM26dXreFmuT+XH7EFO19j7YZcd0JouLapx6Yq5Y+20V15dDN4hvIqXu/5kgIB1uSaQuw/4iHetWF/RN4P7YOs0wB+8tBJVgdQDg8U1iA79tSpmmvBy67wgIcQJe8V9OoPW8Bmsebsk/Slhtm/IR+cAAAAAASUVORK5CYII=","cabelo":{"i":[[15,0.496],[16,1.0],[17,0.0]],"cor":"roxo","de":"#585986"},"roupa":{"i":[[18,0.0],[19,0.14],[20,1.0]],"cor":"cinza","de":"#896d8b"},"pele":{"i":[[21,0.0],[22,0.368],[23,1.0]],"cor":"clara","de":"#f8d0b8"}},
+"lutadora":{"png":"iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAMAAAC5zwKfAAAANlBMVEUAAAAAAACttb7///9iP0mhGj7hT2hbYk6Wn4bb1qolMVIweLw6S4C5eWC+fGLZoXn/1r55RldnJkYGAAAAAXRSTlMAQObYZgAAAopJREFUeNrt192SwiAMBeAeWxcE2sD7v+wmodRZ/2ZK2Dvj6LgXfnuANNZp+ta3vsXlpEZ6N6lhJnBr5UYsFD8/ktCbQedUAYPw/Eaezrhvksp7YGLRe9seun3XPD8wVRFmz/vjLODsoM9cSorkYPVczrtoy9ZAn/ei++6VYgBdA/MBlryWXs/fHFVuZdBB0xUqufSCZZuxMlcocwOC0+VCK619ouN8DEpAzOSyJuTdJCY7QRDNUcA4EynIC5ZC6WwabKSbyC+Eeii85BX9XS2BatvAN5BKfxcyQnS98rm0aw4MGgJy8RKvV8mnIAL/h77Lj0EZBTK3uILuYEoIIRD/1QNKDvArrzHEFFkKMQrIz/6rGjFQBWsJGAxgSAKWA6xr7vZSkqWWMuuS1RPx5JmUouMphCSpGJpnAWX/9jqXiscAD5MS2hIF1ICdo5qxvOrVqmA4wN5tk3S08rr0SCHRLhaQvVXbWNLxF7GCFz3kPnFlrzaaAhWsTdO75r1za6tVMPUHvINoF4o0oCVgFY8Wwe7bxMYpdblcwMeiZb7FnKW4d+qbGQPAoyGHiFWTgZBiz1X8PAr/FnjSmMAgA2dfs46aYI041RFYV5us+RrIAyekWoPAGCooaY1e+2IK+7QdBqId+CBQvp7vb8eATcSAI9kVFdMQsCIY0DijwYdtw7+AFhF6bcQw/QEN4g5iGiSmmB4bD8EGPjUykkGsXngAVTSA4eHDBjHVe8NnMBnA9HRDg/7JneLzIVsiphhfzr//As+L6bVn2MT92x3TK7HnlmQhvWPAi7sdoOPn7SI/K6Y3SRhcOrz3KUAnIy4LbZ8+wuC2nci4bHnLS8aH/Po4k1Dq833o6939BY1wL/KbbMNkAAAAAElFTkSuQmCC","cabelo":{"i":[[7,0.0],[8,0.549],[9,1.0]],"cor":"platinado","de":"#dbd6aa"},"roupa":{"i":[[10,0.0],[11,1.0],[12,0.573]],"cor":"azul","de":"#3078bc"},"pele":{"i":[[13,0.354],[14,0.382],[15,0.579],[16,1.0],[17,0.0]],"cor":"morena-clara","de":"#d9a179"}},
+"dancarina":{"png":"iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAMAAAC5zwKfAAAASFBMVEUAAAAAAAAiIiZEREdycoG+vsb4+Pj///+LbS/nyVf/65lXfYRbI0CPOmOSOGTST6GIGS3KKkXfUVm+fGLZoXjfpXz/1r58SFnB3VLjAAAAAXRSTlMAQObYZgAAApBJREFUeNrt2OtypCAQBWAPygqJM2oUeP833dMw18SpbGj+bajKpabKL31BIHTd7/gd//UAR1PN9MY0I9H3pucXyVpiGL56GnGwNqVtu3lakN4QY0w30NpeJQ52i9tWHp2uA1CEmAIidjZ1ms7n8zTP82mKEaYaJJfSvkO47M3TzBoIidqJt9N7Az0IOL1vAgbUTxzO5TcBmfaJIP4EAQP6WtG9yYCA4XQiSG+eGWKtKKCnyFiDdIQBzu9xYxXrRZ9j7HDK9ZOejIxYIV6y7nAFwyhFVSwRQnpPQRoStxBZ0LNuxYHngEcI6eMj0OLMnNqIxevym6MUHUl3WbA5yc/KpEuMju+NRwbnuQVIkYEWUbsPQDotdRSwgVfeQd/3Gewa7FNOXhhZsz1ck13POedTki7DNRFl1qQYuc8QbCGWqb2FRFFiVJOyi4IrDUO0pkXaAvZcHwJFQ5ikymP54t73Kea27LLVeKcFZdMvtROSXXJ6kLlm0MGVGa7y9huYe65qyzXA7Xo0UZ47sV3GOI5N3juMD2NpCFq7rmsDcFlllO9NxNbgRco/TGNQzppqcclhZbF4RjlzlsLkEPOvLUDJdgEusUJbQZNDk81ubQNKujlPlDY3AZeybkmoatDc00SuJ1o0+Q6aS7TVC4N5zBLktCBDvAtYFq1I4gHMoi5pPEekBvE5RYnYtARzlxQhQhJ8flwn5qfx+bP6RuOoYCxD9RstLfjypGbRwVFyWIGmoOzTqANhcQQO3POBATWgHY6ORfzcouacM+Qnjy837Dg+3Y39250IM8Pw4t/Tnx/F6LkX50oe2n0FaK1z9hjkXxotftySgQPHF23O2nGoaPJxT2TiVB1mX9/htr3d/Xb8BQB6K0o9Up/qAAAAAElFTkSuQmCC","cabelo":{"i":[[12,0.0],[13,0.46],[14,0.466],[15,1.0]],"cor":"rosa","de":"#5b2340"},"roupa":{"i":[[16,0.0],[17,0.58],[18,1.0]],"cor":"vermelho","de":"#ca2a45"},"pele":{"i":[[19,0.369],[20,0.566],[21,0.606],[22,1.0],[23,0.0]],"cor":"clara","de":"#ffd6be"}},
+"modelo":{"png":"iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAMAAAC5zwKfAAAANlBMVEUAAAAAAABUUF19eIvExMz////Hmy7foEb/+V0zXicfHiQ6OEEbIkRmRKplTEVsNxd7SB2ZXDLaYDj6AAAAAXRSTlMAQObYZgAAAiJJREFUeNrt2NFu5CAMBdC4u6WexCzk/3927zWJZl8Ld6pKXXeKRn04sg0E0m37H18T+y72jgOiNVl6vw6IZmcTpUfvsDeIJqo3vTdkqBCvejFAPNfFUTCp81CA9PYLTLEJGrhf3hBXUzR6pVH7czbKrfclcN+xWn7DK8RYdCl9yYN4vJ9n4dB6g1d6LHm7NZZs70iwlw6wrIHwEuSEWEmvzoqGuBLMDuIvJeDVGZGTmZnZJdLbAlHrjNjd6eBjzdrHR2uGyUCxtU6B9JjVLdJj8+bB4s5pQMUYvaPw8o9on90wgQwh2iM/we/BBdMT/DS3MRF3APZAJFjiStFsYjvnwqCIBB+W391KdnHy4RDGwizHOnSsQBQ9/7CxEanhtxNEkrH6xCYa1ZGiCLw7WqEFGqEEw3WgO2YnvKpAcMSkYHWAxkZKWuhqsOZmJiio+X5eVa5CCehacMxIrhtsFUETRwf5sSgCMDuYSUpBf4J1rYvhPsRnExfB6vckP8EVEce6j7MdwwBj5bGNwzR4nkDjiUU0j6pZMc/SEUUN5pnK6LZQcjc+FHoOYHA9RGAHLtyzeaozr5Z3MOTXzQQvP7wrMYhLXveeoCruW7EOHHdiHbi114Bt+94pNumsvALUeqadlAEKp0QN/ryKXwUKdzKOEWmCG453nFNKL+ys3xvMd0hTzgnvnELQzE0p5uXBhUUbf1zaRv6PKu9g0tWdsX15/AUwZCpX3h8vxAAAAABJRU5ErkJggg==","cabelo":{"i":[[10,0.0],[11,1.0]],"cor":"preto","de":"#3a3841"},"roupa":{"i":[[12,0.0],[13,1.0]],"cor":"roxo","de":"#6644aa"},"pele":{"i":[[14,0.542],[15,0.0],[16,0.292],[17,1.0]],"cor":"morena-clara","de":"#995c32"}},
+"artista":{"png":"iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAMAAAC5zwKfAAAATlBMVEUAAAAAAAAyODVjY2N6mZTH0dP///9QPS91Szn/g0qdjVbOx3fk4YQJdYgNqMbKL3jyVpr/lNOfVTvmlFr2eEsyODVjY2OLWUPGiGTntqFPgHkfAAAAAXRSTlMAQObYZgAAAylJREFUeNrt2O12ojAQBmBHARFpE7OEJPd/o/vOJK1gi5DA2V+btlo/eM5MJhOF0+n/+GejbQ/2gldHe1od6z20ptLjCUcaY6Zgq1v1KASNGQbC30BTsA1UGCFTGIZexEC7vMEMBPQJhlCasHBnIgaHqVgaIIvny+WMG8461QZ1Ls7YGHgQ6XJ5BtmGHTMoHkIkoN9eGSieOUMkLBxDdN4FGvHojEEhAAzma6m0ugCM9SXDIFZJMIymAMvajjDQcfBgBR+C86nKrS/t4wgOxnvng6Maj0nArEXTdVOPPM8eNdwbTQTJZ4Hd/U5xT2bPkPMmgQ4gv5QJ0h0itbwyYoTesMXT6GOVKS9jiF1HKAJ+KIbotY6e9B1lTiGXFyDvUJ7i8KjIH+eYqfiRz29kgud58WICujub7o8naHVdFYG8CD2xxGDXNBxoXTWNgIV7a9IiiN6o60ZAKv5wYlM8UAoivKrew8U19PGJABuIDO7kGPz8+PzgZMU77fUgMoj4JMCqqg4QQYLTWqnqEJBJLYMO8p4kqYM8IZWQx4kV94rMpFIHgX1TR1PQySgHufGIvmr0PYrYqpHhnEufXphUWUwzNg8E5l42LjVHHxliJZi3POaviJngDJGEsiOPH0tHPSDFZtoOCjVG1v4QWVI6g0wBIkQEiZtf38RpP7ZlzalaDjKB40LDbK40g5K0gPh3ZwfaCch3mIBdTW25FtGzJIXmKX1LSpHUm/AShLu0coR8A6LcC/WxY9/z8WkFCtj3dFoV9bKH5Oh7RZOAo4jvk1aL5eXd4NkiW8XF9WJ5c5m0nPzf325UBlqZ/ykYQ7xBLAHj3IPo8UunV7HwVIAr2483mm0UDFJpn3Cpb/0MnD2RGyJEZDg5nqegL+0+nnp74wRfTonGhU1sZVyd7ARzj2PsR9sWeU721h/p4dkQ2hJPRPrlyk0oBt1vs18GJm/h4lK+KN6VToeC9Ob6Vy743ssX17xc8OpXPBHbLO+6ehUxQyS3GmBeiJtAmxWiXRfbHDHuCWvf8SgEa48TeU+049ZrQttC1OO4+bIVb8ubvtjq406v0hnGuzf8BQCeTp6yFmz0AAAAAElFTkSuQmCC","cabelo":{"i":[[18,0.0],[19,0.99],[20,1.0]],"cor":"ruivo","de":"#9f553b"},"roupa":{"i":[[21,0.0],[22,1.0]],"cor":"cinza","de":"#636363"},"pele":{"i":[[23,0.0],[24,0.495],[25,1.0]],"cor":"morena-clara","de":"#e7b6a1"}},
+"aviadora":{"png":"iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAMAAAC5zwKfAAAAPFBMVEUAAAAAAAAxMTFKSlqDg4u9vcX////NWlqGfWHEwY///8F7SlreUlpKanuFnbrH6v6AWUi9e2LepHv/1b2SpWjGAAAAAXRSTlMAQObYZgAAAuVJREFUeNrt2NtupDAMAFDsXBrYcdil//+vazskDQxSk8DjuFU1Lz2ysXNhpqkhSGJ6LFBiXeNDJIC11hghYQiwJ8/kGBTR2WvPGBgRLYN4AhGLCCMJHnJkEJZlzxNjv8iaq0ECWOYs4liK7lBy3AKDIZX+CBgoLGHbQIYRInT3hCuuRYgOtvC9qQixFxTNHdoMm6dvjn9/NwDuSneGANKVn38jzk1AcBtFNDC01ByPSk6SFvW+yVOkFccWn87ILsK8/RGQ84vXC8X2itvX1x/16Mqz1tnfSUqi/j9FFsWLBFdD5vG0+i/BCLp8IT3TTfODK897fL3w9wwjY5ok4hRmkKAZ3ofWe/d6URMYRZSdVcaZCGaOk2i985whF91whsSUo+UffnpR1l3IIu7BmogtXgJ5GNnjs0RhazNk9xAP+YCY2kD+5WqscZxFAk/BC8A3z7mCXJM1UpN/86RLXEH7uqGD5wRE+Il0JGDH4sugelxxNuro8c7gfqSsHOUT9u0PstTQp4o9rO9g7y1CQN4ZjUtgFKv+030r0cXL+4gMDaxvYO2FdtBbmxI8gwdvCa1d2UFYz+ChXrgPUiGCeEtzzZAG+wySnPthr7bZS6C5AIn3sUVICf4wN4M82AoemyKeijnC1A4m7wAm74ec2/eHkmA92MXLdXec01dg7ckjnHvOfd5dM+ih9CPMdfR5zinoCkgpsR+u614iIJr9GNLRoVLrAJdAFTNIfOKX1ABC73ajoMMC6voNMGRdgQ+8leEBnJ4Fn/Bq0DwDmgzyKVq/OI+/1qKC5uDF0XdcBVHOY7l4lPR0h4Ab4H6TKZyu6NsgVNxKvFGOf9VQQFCO78VyARgWIYMAmpzA8jIQ4Q6oXwxkbxfH+6zXIqg8AccznBKVupHflIHiOEjl8GSPSopPgNre/BBvrOx99qBuLtzZKegwLg/sOaTppUopPrGJQS7wVnMv5fg8+Kh3s7mf+MQnPjFN/wGvQTJm6bvcQwAAAABJRU5ErkJggg==","roupa":{"i":[[13,0.0],[14,0.477],[15,1.0]],"cor":"azul-claro","de":"#c7eafe"},"pele":{"i":[[16,0.0],[17,0.357],[18,0.594],[19,1.0]],"cor":"clara","de":"#dea47b"}},
+"patinadora":{"png":"iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAMAAAC5zwKfAAAANlBMVEUAAAAAAAAvNDdbXVyGiIfGxsb////XSUmfeiTGtjfz6Y0vNDdbXVxra2u+fGPfpnz/1758SVq3WlyGAAAAAXRSTlMAQObYZgAAAqRJREFUeNrtmOtuozAQhXvsmBjGgP3+L7tzMQntttL68m87ElEUxJe5HM/YfHz82q/92v9nUW0aDn5Tm4VECN6vhhyHAQIMIaqXK4aBziE4NvZyDtFhWdyNGIc9NKD3lTjsIuK6LIsXJCdyRsxxWwXJFqOUerwsEqeaibELKEW4A2+GPqDnIrDp0zdiBEJfyEJ8PLwhRYtm54mlM4dCNDchQOcds86cy1lGeEZc4bLzGUtmw7UkmxeIASXQdUU+nRPcWR10L3JTW4D5ARTOnne5PJ+oATxcHhMkiqSx8iQjD4c+Pb6+HOxveefYeXTgJInOlVKkGuVz0dBZaVg1cj5uRFVTs1FiA1FS3nngJUG50w4smZ8DXmvkCBcRnTxOG64hdRjwlF9KRgvQtEfEvBrhLjPqOIIATwLe//RPvEXEy8HSJdx9CWYqb2JrkjSez+dC76zvO7dqpu3WySDApvzxE4FTRArcFSfEqyUQ32/rC6SwpJnEFo336oGKa3bxClc6dQzC2+8BUHPnwqUW5skGKUb8fbNv3MVtYNB9F/x0IJHyehbaDzwVZErDRN39moYrkIaIUdNmHhqRchnipSRbDgMi0b1TdAJD2uiaemQNexxYqwHtV0bsFTVSCMoju8BT6sileRW/XYQBid3kSxvrwROBOoFxk3MEpcAAvQTIrTV1esii4Rx+AmISkGnJVguGgRpyUOFYrft50rasyiHg2oXZZ/f6ixWIL70CA8IW1XwBdrdqbN8Chw46SVfeLB7q+WZe38e8KXLNXUzjGXCfymP3ZgNpbsAS8Sxi3f3xJg6TJnut8aSwJX8K3NUwRTB1FNMEoKUPdbwT5jgoodL7WDshYkvfTus65TUcn9xrJtd1hm6ivNlb2Tn5mNdu6kRqf/IPGWkkrPtxVEYAAAAASUVORK5CYII=","roupa":{"i":[[11,0.0],[12,0.732],[13,1.0]],"cor":"preto","de":"#2f3437"},"pele":{"i":[[14,0.371],[15,0.605],[16,1.0],[17,0.0]],"cor":"clara","de":"#ffd7be"}},
+"ciclista_f":{"png":"iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAMAAAC5zwKfAAAANlBMVEUAAAAAAABzWmqcg5y0vb1qOTmLalLmnFru7v85KTmLalLmnFqcSkHmWlK9e2LepHv/1b17SlqRHDtzAAAAAXRSTlMAQObYZgAAA3BJREFUeNrtmMmO4zAMRFWx5ZhpWTL//2enSClOGrMAUgTMpXkIssAvxUUk7RB+7MceZjNxX2bTkBVnJnN4AKQCH78R+VsvD0jHcTjS4/jNcdhPnbxkvONIEEsM6P/jnbeTqH3AyktHIlHwLTfY/a+Kdgs0XqJIA74Rse/rqkW1V2CqRl6toAbQE+Rph0BQglsFgjyL4Qt4AmcHEGvjrTQl7lQnPgF6lqJn7nGYNZM1m2HNjzOfSoEvgBrw1L6yyasTdS8OfBeoueTSyXt8YQevohWaufwMILWdORftPcco+Ww8BTHaxPmXp2p/Z8inCcwEoknTKpkp1qHeUF2rvEsacTrabgDSMgsYb7RxnHvJ+jGNaQqtVVxi0SUSS38H/AuwZHaIM0/B2ZGIpVibKNOAx7ORYRbwOOYBWclFGi/OIFJgiZEdMforZgBzCJU2A2gC60SWOcQXcA7ROv07T2Rd8RGP560eXqjQtu0joPFOFwhhKyRu+4TojV7Fm5jqZ0C/3tt89bYZcff7fd+GtN3cYMatAS4S+W7AHd2h40C2Ee/bw7Kv4h8INN46BCxNme0NwIJmdzq9j7hcOOARBAHLshhPIfZqc2UbiiHnkoDAAMZRLIjCeNY5hW2kZOAYApeb+Huhyjanhico6pYYY8syPuI9TVKUGD0leQ7QvI3udN1zMHRDcVlcLM/RiU+BLbyDwBhCqhLRBPKt1cBgYlg8QqDdBlgQbW1yno4ABTdz7sYbJhwO5NbKHivWGgeIcjOeSAUm3BxY4AIHgM5TE2O3dDj42Xa7giQO7I4ieYlJuYBJKjAxptZte6eVOI/AuwNNIk+LS5RDBoBMSHTgxutDlRiqz8pvpBdIgT6dooT18HAxdsx0BUpaRaRXYGpASqtAqyJ3WQ4COxVeHhMosY7SO4GUyFtvVnoNxIjH4UADLuyyLhG2Q/Q9H3gDsqSbzxwCiwPp7yjQD91agTZVKLJkzi3zeATItJJCoPjRtnnFTVYc2J2TCxga0H22ArQHEN3AVmbYeF1z2fnWLVxgCkNAtwvI/uiTX6z59LbCF3Bbo1wDxheKBf0Nm5fFPwAX+IwZGFLW+X/z2Ofd4MiTK4jbO/ADuyRuq0x5dviUuN3nCGyVsxlvzsPN4KcicrOZJLARRWYJ9Or+aIv5x474n+0XyF84rDvEdZcAAAAASUVORK5CYII=","cabelo":{"i":[[10,0.0],[11,1.0]],"cor":"castanho","de":"#8b6a52"},"roupa":{"i":[[12,0.0],[13,1.0]],"cor":"vermelho","de":"#9c4a41"},"pele":{"i":[[14,0.364],[15,0.599],[16,1.0],[17,0.0]],"cor":"morena-clara","de":"#7b4a5a"}},
+"mochileira":{"png":"iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAMAAAC5zwKfAAAAPFBMVEUAAAAAAAC1tb3///97OjGlSkLeWjqchHNaUjrFtYQxUkJjpZxaUjrFtYSchHPFtYS9e2PepXv/1r17SlqU/JC9AAAAAXRSTlMAQObYZgAAA1pJREFUeNrtmN1u2zAMRvPJkuXIjiub7/+u+0gpXZam2ZxwFwNGtEBuenD4I0rN6fQ//uFYlsWXd7lcfJFKzHDk5YsGHP2M6Oa4XHp4Kl5cFTk2vopLzos1xtEwMwgsxfGs5FzmGVjcjs2CuaA15x1k1GgfseTc251fJaaYYkypMZFtwrMR8YobMDIITTmB02gom6AlT8dxiREN2YgN2DbPclQxpTEYKMXmmFNCz3dZNp2iQ4ppHEPgj4E+FTNxlNs2BU5HFMnIFAx5VFDswAh6bRXGw6GcYxdU0k9gwrZsO4Z9o2Y9YhhNMFBwbDmnDtzrvi/DplGnlwQ7EMajIYGMbRPk6bjgtRksnnE53tveiBheFmw1hAmy69hH2fc6hWO8O8ExXoEhcNCFJcShVfApmK5TMwLKK+BhvOPhGVvXwPlcY74VxAhFAwGxVoG25OZvZMeTZJPieH7VM3VB4Hqsq4ZAbv8G2zMgzueoZ5ea54rUBFNrszoasZIo8hP4PS/tY18u5kk1wkxOYVrDTqycnpY2ZN9EHnSiAaHlN555snLG7ERtsVaxtunewRtL7NMXYjzHtp1tobJWDRfNtxONp8lDrsS9zDbo9UsVVUn9q5I4umg7kLyBU4fOE212DOUkQAPNnVxxekCMzEZJ9mt+JihDB4pK6yzarLAWKLM8FrQqWl9j1dmwxJM1JQzDgNVKeMu7drjUnfkLHo8MR96ArYTNL4YBcV0T1E+7cPdwYPLy/KiAA9OArYCcwJVEaI6PXiH4DtcuXp1snYw4jtcCKi9ivUv292FnRAvJvNGAzFILqESsIuHgzQ6lnSN6HjpxQXlr462rvPSIuamNLmiuBS0geSKnd0MnbdVNE03Q46mpea6K5QcvoBVPPhguj+FO/HAFrubnBGyK3sBOdATCgKsfEe5FXJ2BEFHme0BMDAPyUlJDeQ/I1ZyHINyqdg0Z8V2gbtT+GlTiK+vrHjjjytvx9nbgbZTm4giEAueNu0tceCf+I0tgMRJ0vb47hc2Qrw4RvfgdhrrMJeg9J/bGdDgiqvgJdCIasBFdznGvnB/wcz84pfwrEd5EXyD+ArD6fUXVVg/f06VMTp7cjBO3T5mH4EQsnRiCn2Kwb3C8WmNARMdO408X2A9ecjdTOScfKgAAAABJRU5ErkJggg==","cabelo":{"i":[[12,0.0],[13,1.0]],"cor":"platinado","de":"#c5b584"},"roupa":{"i":[[14,0.0],[15,1.0]],"cor":"bege","de":"#9c8473"},"pele":{"i":[[16,0.368],[17,0.599],[18,1.0],[19,0.0]],"cor":"morena-clara","de":"#ffd6bd"}},
+"despojada":{"png":"iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAMAAAC5zwKfAAAASFBMVEUAAAAAAAAtJiZUVFR4cni6trr////OLS3PQECkxc0nO0U1TGZWe5B2gqrVQ1UtJiZJPj4rWVlgjphSqaFo6eBQNzd2SjCkb12ueJR/AAAAAXRSTlMAQObYZgAAAjVJREFUeNrt2N1yozAMBWBOscna0BpjbL//m64kaLuQvditdBlNL5jO5MuR/+JkGF71qlfZVeKy5FYuMxJrWg8SNl5KPXXiejICO1cSEyYNr+Sta+OMMAt4ZEwWTdczIYs2IKdrR0QbULDeWm9G4MSj2DC1nhoMQAjYMVHPIFi/7+oxydwyB1WLqbVz3VC+jl9qsNZW60OGkVE1mFa09ng0mmIBoT1z6JghsdH8pkqjCYOlAykiS+3sasFc9r1kmpnCAdlXBsw7VSk5s1cMFjaDBaVIwGIgEkhN4/RMxLzn3Hi/IFPrreoj5uP8ooCZlxAsTkQB34ssSRuRvI930OloAR4iPgrkuLU4ZM8pxlBNPNl+vLoNwV0K1WIAP7efiPRn6e3I2QJ0OR9m9rQQq96bqMjMznkSq4lH5aeJwV6NPMQJDh5GAYE5xugJtBlBzPMcPYPe2XkEkuj0HrCEEGxA8hxCWJYlTp6GUQu6ybnI8cIJUlyN6HglR4pHDctIakGaUwa5ZQEXLShiXEQEWZRTuxAB7pgKQ+TJgf5OHE/veDA4u8SJgyE4H56IMwy8ef4E6dEGxPfjHA28r1hRD4p3AXVNXz09GEPYTEHQ3gjb9kVg27YQNCJdPMIfAvthU4Gdv/Dg+oVFey3ENbFuZd/vbtq73D2gBXh9PcZRA76N99crQTr076D3ChFyZXj6iIHKu4Lwz+/xH+A43VvGSOKPI4Ln5A3P//t5z3/ZZwBsfpP89/oNrYguITrJ0HwAAAAASUVORK5CYII=","cabelo":{"i":[[15,0.0],[16,1.0]],"cor":"preto","de":"#2d2626"},"roupa":{"i":[[17,0.0],[18,0.566],[19,0.58],[20,1.0]],"cor":"verde-agua","de":"#68e9e0"},"pele":{"i":[[21,0.0],[22,0.254],[23,1.0]],"cor":"escura","de":"#a46f5d"}},
+"esportiva":{"png":"iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAMAAAC5zwKfAAAANlBMVEUAAAAAAAA/NjZ2fHXRzsf////OLS35w1FkOCifW0LIdlgEtOkrQ1dFbI2+fGLfpXz/1r58SVp6yg+rAAAAAXRSTlMAQObYZgAAAi9JREFUeNrt2MtywyAMBVDL4BgwD+v/f7ZXEmm7rdGii2imyTSLMxekgNtt+9SnPvWpx5WTlBuXUi4l55zIiSvCXajsIQpXwGHV2UOcHrT7vtO1vJFvr6RbKq1GzFnBtzcSOrMesOA13QPe3fNaREhZwdSHJOyIWGgtn06grLjLkg98tAgikq34QEY69KMFkLK0AcYgA8dSRKKNDCyJDuszlcXJoQlqUzCItLSJFjOVbHMoi14HZSutzegz9sADpCxrRpE2yuHE0YVi7aqvUbtWCOBCI4dwsEKQlxj3dhwh6KfM/IzjXx7EAyUio+PcH3A89untEyQV+818/335jLYy9k6tKO90YC8DAsoAvegJiLmLrbW4k/RGNFvxIDoegQMabruGjJLXNkLyxdfr2ZrpumqtU8TWMetBC/DJCNEY0NATuvAzjwf5PutBtD0TpScy1/jlh1v4zs0ZVIREW/uyYPyCBAz0PnCXSrJJPHnzeEjap6evHsdCm+UE7te7DF0V608ZugqStLa1inQTXRbJxKr7SORwWoMkDajHw80Og4NYFg8ezmgPEmbbe2d7DHERN+pdRJbDxlGcR42bOD0nUKd8/Sj85YVQz+rGGXid1e9PUblV6r8GufqC3G0Tyc3DGDqK3A2E6AyG6gnS993s4+nR6NgSz3/YAGRXL0bngDG6BiTm6BlQ7rzdEaTTLnlH0ERcAF4infIogucGcgwpN9TpuGyQ5+k6in998PoCcFch8SK6J5MAAAAASUVORK5CYII=","cabelo":{"i":[[8,0.0],[9,0.574],[10,1.0]],"cor":"castanho","de":"#c87658"},"roupa":{"i":[[11,1.0],[12,0.0],[13,0.748]],"cor":"azul-claro","de":"#456c8d"},"pele":{"i":[[14,0.367],[15,0.605],[16,1.0],[17,0.0]],"cor":"morena-clara","de":"#ffd6be"}},
+"descolada":{"png":"iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAMAAAC5zwKfAAAAUVBMVEUAAAAAAABaUkq9vcX////NWjn42NCaURqGYFOLe2Krhke1gWrcqWr2xWLs5c6v3/RnQTu0f2UoOkQhO1wwSFhOYGs7X5e4eGDQoIDsuZp7SlqZ7rv6AAAAAXRSTlMAQObYZgAAAlJJREFUeNrt18ty4yAQBVCubGHLsWwJbMTw/x86t0FylMxiqqAXSZW78vIipy4txMOYd70r1ySlyc1/5nkmCah4c/GAR7g/VDyGewDUdMBpYkCEEO5BY8jSQAEp3jHN0OogpOZ2kOPdwIn5Xt7pVB0Pn+CMbTKerjdU9k9AiozHaRPx8irBOYsybgaMiDYV8Ha7on4KTmVWRxyt/VhywOu1vofSPRku4kIwRxSw8mkjRxSNQ7arh9oOFjEvNIhF7AmiuoNFlPkiERNtSQiO9+q9r5/bBDOc+Kj5Fzp6x8PB178pZXgZ5K9h6PyRK0Xw1a/KFnRGArqBYteFcKhcedZ/A+zEFjprRRwGHNG1rBNJKFt+rGKT9wW0ELDNMylGl8GUM4JtbFwYU1wjphKya165KcbFumhRxPatAM4tHLhzEDJGFTEXh8tXWwFcRXBak9Q4QuD5fIEaJxL3lMqgiicBpaSFSWXArkSUJ5J6pFbPx7iUh2JSMn3fmtEH52IucGXs+wNaPT+GdRoa2Q743QiGix/HMI4+iChkK+jD5eL5NcIonIwzmMtfVF6SHRjO41ljFn6CwNmcm014jw3kx/aU30BT0Uc5f6R/xNWr25D5biRFUJYD2TugmBApyRaSi2IrKKsBUV8KK9jg8dTK8rtCE7jeIfYmGhPuJpBKwq+fihd0tqc1ZlAFjbZnvDJYVi/83IC/BNT08rR5gz8M5LlLGZTjtaLH2yM0Qd7wogNUOxidyu1p10GXouZ6LSIURTzlrKNz49nAcnnUE1FOeP8H/wIJ+DNvdnxzXgAAAABJRU5ErkJggg==","cabelo":{"i":[[16,0.0],[17,1.0]],"cor":"castanho","de":"#67413b"},"roupa":{"i":[[18,0.0],[19,0.167],[20,0.275],[21,0.755],[22,1.0]],"cor":"azul","de":"#3b5f97"},"pele":{"i":[[23,0.43],[24,0.72],[25,1.0],[26,0.0]],"cor":"morena-clara","de":"#d0a080"}},
+"fazendeira":{"png":"iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAMAAAC5zwKfAAAAM1BMVEUAAAAAAAC9vcX////eYkpSQTF7WjGsi0r2zXv2zXtii+Y5OVpaYqS9e2LepHv/1b17SlptxuivAAAAAXRSTlMAQObYZgAAArRJREFUeNrtmOFupDAMhJmwThYSSN7/aW8coIG7VSVipPuzVlWplfJpHI/t7A7DN77xjW/0BjQeo4mI13iKKMFvEZ5RKYFReQEhyEPAGl7kAWLjUSYgAcZynATyEvmnWHA1zekHOBEosCYrfjrC+weA4g/XbF60XKGAVjkVRfMXa8eRuLWJ1mctdtvUJqZZ/MpI+QkfUmRYMC7rmjGKGSjabwtRmVEyzALZwH5aclJeXldYFQrdBwJ3nq9FUsubgCoxv0qhQAVObJ5JentvmpgkUHJ5rQUDBPwPf26nrrZTeRyqA5sDpQ5XbROK1DbE/VTrwYoYImjCGCtQ3T7dHmKyE7eDiG5ZnZvR3N5RDKVtBzEDzpUCR5H95Q0/MlyaE8rrVZIzIFtWGAl0DkjBqdBibRY3jnEi0aUJbuaMMCIx7sCUIoraO+fFgsQ8lsSY57neXynahv1IHp8R5xr7tdqQPExjV176qRMT12nWc5mVp0DNuhGHfQCVXmDaos1XqMCOFUjeOsjB4746iFjp9LGgB8hlvNF0/TWJL43bM8IzNV3vxy5tAAWOI+7O10BgJmdfzOeycF64m7z3W19wdFzQZ9d2jfGysu/ydBdViQHVNjGeJd69PvKOuiwCtgniXxLvAjcetM+gfXd4sffFUIF8Dq4bkMpgBL71PawJ5zXWwYBkyFnegUj+qvt9nzQ2iUojk6ul6ChswN6yAFSopW2jcKtzv3O2x8KcGjBFE3DfAKnNaqi1bUDNss1qXfUp2oDjRRN01TtYeAqMZ6CzAsezJHh3e2pdgYHAM6ASTUASr0DvXf+XBfoZ5TrnYfv2oQLDw8Bwff7CDryeNgErzz8L/Ocw5LKebwLlgxpd+p1A6HbHh//25vz5qH4a7wXKRyD6q+LFhw8fwvq/U7OI+W2t/O/4A7laIbrbuvgXAAAAAElFTkSuQmCC","cabelo":{"i":[[9,0.5]],"cor":"loiro","de":"#f6cd7b"},"roupa":{"i":[[10,1.0],[11,0.0],[12,0.591]],"cor":"azul","de":"#5a62a4"},"pele":{"i":[[13,0.364],[14,0.599],[15,1.0],[16,0.0]],"cor":"morena-clara","de":"#ffd5bd"}},
+"cantora":{"png":"iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAMAAAC5zwKfAAAAM1BMVEUAAAAAAADe3ub///85KSnNrHP/5oOkpL05KSlaQTmLWjnNWoPug6y9e2LepHv/1b17SloyslMDAAAAAXRSTlMAQObYZgAAAo5JREFUeNrt18ty6yAMBuDINmAsDHr/pz2/uCR2ujkYFl1UK5oZfyNAIPp6/cVf/MUvjx0xVTsQ00ivAdB7oimc1YAZ2B/j4m5sCQ4h+HFxN0cOYwAychwE9+MdPmiMpoi98A08sjcGkhbLO8W62zQGer+X/D4oDU0ZwF6K8J3kUIr4PsYTSMWgj4g7vncUU0q0RsX33Q+Cfl8JXjrWhINHo3MGQPFQMKFkzjhjDc0RYxZTXO0UkLApIvDE2mGvTPqMkWOd7ugN5ha9qs8zCvkJ6QF0CzEzyamiW5dlcYMZEq8qGutWxOKcG0xRE2Sh6o0mqLuyichCxmXPDXsvIaRFuKsXeTpdkes4Rpw4wd3KOnwExiQXLsZc1LqQDcQaSE+CqYjQIKEAIwYKYpx/1vYXpAtEBueZzy9SIcmDkmDR+kRBRlg2vQ3KzDTTCkrjsKIdhZIF7ET7W6ee4MlD75W/1cFnbzTHSG+O+8BaOA2UzVpdxzpj5j5vu9F5V3nbWHQZmfJBfAzq7EVTIqNVmLFC9pThdpt+XjYKpiamRUN93lXUJUMBAbWhcfpTn/cBP0VibbhG74nevj2AY2IJvnp3kB9dYp/P7ZeIvR4B+fLGbufkiShfnpLcDsojsHxtb9HKUaRbRE/61pqpF3Z/93OLtk1rzZ3TPxeN7n6V23AJkx1z0ZYn/RnPjvVHNOxRv0cXXu/oW3vc77Pp7phzY88b56pTqfGniKYZM6VviDn/gGsDjSUmkfmBU0mhKaC+IdCpZ5HaREtnVZMniHjonK3pc5iZot5qEiaCGMxI8AI+blE/F1Fq659UiSnJa2boO3suGBPPBdHxaCanr/R5oAStPqa5CRLNXEGayv1//ANi1jFgvw7uqQAAAABJRU5ErkJggg==","cabelo":{"i":[[8,0.0],[9,0.5],[10,1.0]],"cor":"castanho-escuro","de":"#5a4139"},"roupa":{"i":[[11,0.0],[12,1.0]],"cor":"rosa","de":"#ee83ac"},"pele":{"i":[[13,0.364],[14,0.599],[15,1.0],[16,0.0]],"cor":"morena-clara","de":"#7b4a5a"}},
+"vidente":{"png":"iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAMAAAC5zwKfAAAANlBMVEUAAAAAAAAxMTkxOTFKWlL////eWjn//7SsrMUxOTFKWlJig2pqUmqsWpy9e2LepHv/1b17SlqmYxnOAAAAAXRSTlMAQObYZgAAAs1JREFUeNrd2MuSozAMBVAkQgJEtvH//+xcyQZCJZmKH7MZ9SIpujh9MZbBPQz/Wz2sukAn14M043GpbiAR9ch4evfp3iy+DCDdtagvOE3VIE6LcT81gZNWJWhcOMTHIVaOoXo++O0aseEun94lYvU81IABF6yX/Lg0XuZKzeRt23nJ114uTglwC+A0IKM+Nk8Z6AHaCK5ab2TxMOKGhsDwnutTa+XmJYa2jR/rc83iszkjQFr3uohpAGtAPsAFJl9nT+klM0AVlx1c0zBaS8ZykdcXcFnsk/cZGn2M5eCaQGghhOUAkwiyHEwRafKYkt4ynhG3gohsnbFkcKEJH5rxNSKO/Aoy37RGN94UFEYDoohGHN3v81uT/6VuuYhpDFsQNg8R6fAwo5L40+Tj0TjC19F7Ly6BPpwBB/K2cPw6hliUST/GBJIuiyH4W14f8FuLTMWNMkJkBzBOWLuJs+bzmBYvDgeIeCGdT+Sc93Wc3u9xZHFu9PHgREFfxyXQwZB5Jmii350LVOupaOCMUs5AwZ+pB8XlhLNw9lwLOGhAEbbXD/sqmpDrQWSEJwJQP9SDSC0PFjJwnmYhydUGohUVmeUEpQ0cDMIAakNSF9CJTZm986jRU9Gq2fnnYD+xN5g94Rt1AyU/uPqIlDU8AbqAlDHm9im9g4Zx6uMuV5wo68AOEW3ll7Q2uB6izZoUUBfDXiAN3UTau4T7rIYnuIvUw5MXsFHM4PHEMpG5dWWgC4jHdB3JPKV7vM8+3r0JZIWnz/f5DTRvqgZBSh7CLOqbzlR9yYmkF3CuHkEDYvq3ynlAPd/wsoS36/kV1D0MXrep2kPF65PdjrWBnw5WitH2O7/8lR8D6vbh/VSqTmjgh1NjrRg/e9UR+YtnIlUG/Dz45GvE7wEH3awVg7rjjPTVK+4WHfhvMbA9Db40Irbs+kNfN9Tll9zl/by9/gBuizJIJBqb4wAAAABJRU5ErkJggg==","cabelo":{"i":[[9,0.0],[10,0.472],[11,1.0]],"cor":"preto","de":"#4a5a52"},"roupa":{"i":[[12,0.0],[13,1.0]],"cor":"roxo","de":"#6a526a"},"pele":{"i":[[14,0.364],[15,0.599],[16,1.0],[17,0.0]],"cor":"morena-clara","de":"#ffd5bd"}},
+"guitarrista":{"png":"iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAMAAAC5zwKfAAAANlBMVEUAAAAAAAAQEBA6OkJSUlLFtb3///+Ea5RrOmM6OkJSUlJjISGlITHOKUJ7UlL/3ta9e2PWpYSy+nqDAAAAAXRSTlMAQObYZgAAAzZJREFUeNrtmNuSozAMRKEd3zD48v8/u5JMQnZDBrB52IdR1UymhnDSagnJlWH4jd/4b8MDt6Eo6GWa7iHCTxSE9NNdEiFM76fbiMScJHCbhVNNe7oFN63hl8VjLVAHb2J9TPXzjJq5x5HnP13Dq87zauRRcaBwqiAThFV/4QcJR7wX0FfehPwVqBSUc8cC/SpQ/kRKft9GwhmoMwK9gDZg9rtAwjl3BijPCdMSkBETSdwBEol4zml1ABwZNYGGDWlbw2fs6HPO0s/hUBo9tw11NDSLSxOBfYqfQOeMsccCuQ2ZxkAU8g+mpLwDHKDNGYEv4IDiCyskYCofwJyhtTsj8AUcYnl6iA9eTLAs79RYr0R6LSsxftyVY4SyOD2zK5CINCB2eSSa2ibl08S17xCXEj/rEYLwchnPArf2x6e8EJYlWGrr0wLfBhKpKEB8qswUJc3LwgamBoEhqMLEQolHZtWY+R1RjZcFUt9kxV1DxFcLUaszD3G4njA/eiSrqI0ojWePR8z+iggiSCkRFImVc/1E27Zfwf2WYgVuH4Nr+v4ChlKBWNfXk9cMHFAl4s0K2yxwA+LN3GYDK7ASsZWrI+Gh5imF3hpKtSdcBSohlpXnbIfAFaieGsk8ywa2H/G4JjOnyA9MCGCegusBgubUQqMFiSeWNqoLyLzAs49YoIk1BmMUbI9AlsVMqgyWOeXMe7gDiHkmIG0VZzVGKY3uAjIszFxcY0ys668jY67IEkQe8QxkHI49FkLqy+okcqHzSJ+FASxPk2/OWhsLbc0uYAYdJi2HehDRjLGMXRbSk6HeiNqMXQIH4lkno78SqTRdTTNkZvGuhGhUBLQ9wFz7rs4siV6BwhPgamSfQAEWSZhqrRw3UBdQpipqbZysZRbZwVOqCG9gA2lIR7bSdQHrMsKaZ3z9p49HwHWHwN4ExFufo/3IsKOGyn03sH3J795J664HiN3vAtqBOK+8WeB6JbQA+Qubb1cagMEEvewDZx309ZxpHX/hDYH39HUezfoviQXagZeJdFyYv0gMs8Q1Yph5q+/fFDQPxYsuQkvs3oQHX3pcBD7kJPP1uztcPhK33PNP/AFVxylQhc/d2gAAAABJRU5ErkJggg==","cabelo":{"i":[[9,0.0],[10,1.0]],"cor":"preto","de":"#525252"},"roupa":{"i":[[11,0.0],[12,0.574],[13,1.0]],"cor":"vermelho","de":"#632121"},"pele":{"i":[[14,0.0],[15,1.0],[16,0.314],[17,0.534]],"cor":"muito-clara","de":"#ffded6"}}
+};
 
 
 /* ===== js/engine/dados.js ===== */
@@ -47058,6 +47368,8 @@ const Estado = {
         ...(ficha.desgostos ? {desgostos: ficha.desgostos} : {}),
         forte: ficha.forte || null,
         retrato: ficha.retrato || null,
+        /* as cores da foto ({cabelo, pele, roupa}, ids de CORES_DA_FOTO) */
+        ...(ficha.retratoCores ? {retratoCores: ficha.retratoCores} : {}),
         corMochila: ficha.corMochila || null,
         corCartao: ficha.corCartao || 'azul',
         idade: ficha.idade || 15,
@@ -141792,6 +142104,123 @@ const Letra = {
 Letra.aplicar();
 
 
+/* ===== js/ui/foto-jogador.js ===== */
+/* ============================================================
+   A FOTO DO JOGADOR — a mesma foto, nas cores que você escolheu
+   A foto (js/data/fotos-jogador.js, gerado por
+   ferramentas/fotos-do-jogador.py) é um PNG de paleta em que cada cor
+   de cabelo, pele e roupa tem casa própria. Trocar a cor é escrever
+   as cores novas nessas casas e refazer o CRC do pedaço da paleta
+   (PLTE): o desenho não muda um pixel, e a imagem sai como data: sem
+   passar por canvas, que em file:// suja e não deixa ler de volta.
+   A cor nova é a escala da cor escolhida (CORES_DA_FOTO, em
+   inscricao.js), no mesmo ponto do escuro ao claro em que a cor do
+   desenho estava, então sombra e brilho ficam onde o artista pôs.
+   ============================================================ */
+const FotoJogador = {
+  _cache: new Map(),
+  _tabela: null,
+
+  /* matiz, claro e saturação (0 a 1) → [r, g, b] de 0 a 255; a conta
+     do colorsys.hls_to_rgb do Python, que o gerador usa pra conferir */
+  rgb(h, l, s){
+    if (!s){ const v = Math.round(l * 255); return [v, v, v]; }
+    const m2 = l <= .5 ? l * (1 + s) : l + s - l * s;
+    const m1 = 2 * l - m2;
+    const canal = x => {
+      x = ((x % 1) + 1) % 1;
+      const v = x < 1 / 6 ? m1 + (m2 - m1) * x * 6
+              : x < .5    ? m2
+              : x < 2 / 3 ? m1 + (m2 - m1) * (2 / 3 - x) * 6
+              : m1;
+      return Math.round(Math.min(1, Math.max(0, v)) * 255);
+    };
+    return [canal(h + 1 / 3), canal(h), canal(h - 1 / 3)];
+  },
+  /* a cor no ponto t (0 o escuro, 1 o claro) da escala de uma cor da lista */
+  naEscala(cor, t){
+    return this.rgb(cor.h / 360, cor.l[0] + (cor.l[1] - cor.l[0]) * t, cor.s);
+  },
+  /* a amostra da cor na ficha: o claro e o escuro dela, em CSS */
+  amostra(cor){
+    const css = c => `rgb(${c.join(',')})`;
+    return `linear-gradient(135deg, ${css(this.naEscala(cor, .85))}, ${css(this.naEscala(cor, .5))} 55%, ${css(this.naEscala(cor, .12))})`;
+  },
+
+  crc(b, de, ate){
+    if (!this._tabela){
+      this._tabela = new Uint32Array(256);
+      for (let n = 0; n < 256; n++){
+        let c = n;
+        for (let k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1;
+        this._tabela[n] = c >>> 0;
+      }
+    }
+    let c = 0xFFFFFFFF;
+    for (let i = de; i < ate; i++) c = this._tabela[(c ^ b[i]) & 255] ^ (c >>> 8);
+    return (c ^ 0xFFFFFFFF) >>> 0;
+  },
+
+  /* a foto como veio, do arquivo */
+  original(arq){
+    return typeof caminhoNPC === 'function' ? caminhoNPC(PASTA_DOS_RETRATOS + arq) : PASTA_DOS_RETRATOS + arq;
+  },
+
+  /* o endereço da foto nas cores escolhidas ({cabelo, pele, roupa}, ids
+     de CORES_DA_FOTO; o que falta fica como o desenho tem) */
+  url(arq, cores){
+    const f = typeof FOTOS_DO_JOGADOR !== 'undefined' && FOTOS_DO_JOGADOR[arq];
+    const ok = coresDaFotoValidas(arq, cores);
+    const partes = PARTES_DA_FOTO.map(([p]) => p).filter(p => ok[p]);
+    if (!f || !partes.length) return this.original(arq);
+    const chave = arq + '|' + partes.map(p => p + ':' + ok[p]).join('|');
+    if (this._cache.has(chave)) return this._cache.get(chave);
+    let url = this.original(arq);
+    try {
+      const bin = atob(f.png);
+      const b = new Uint8Array(bin.length);
+      for (let i = 0; i < bin.length; i++) b[i] = bin.charCodeAt(i);
+      /* os pedaços do PNG: tamanho, tipo, dados e CRC; acha a paleta */
+      let p = 8, plte = -1, tam = 0;
+      while (p + 8 <= b.length){
+        const n = ((b[p] << 24) | (b[p + 1] << 16) | (b[p + 2] << 8) | b[p + 3]) >>> 0;
+        if (b[p + 4] === 0x50 && b[p + 5] === 0x4C && b[p + 6] === 0x54 && b[p + 7] === 0x45){ plte = p; tam = n; break; }
+        p += 12 + n;
+      }
+      if (plte < 0) throw new Error('foto sem paleta');
+      for (const parte of partes){
+        const cor = corDaFoto(parte, ok[parte]);
+        for (const [casa, t] of f[parte].i){
+          const o = plte + 8 + casa * 3;
+          if (o + 2 >= plte + 8 + tam) continue;
+          const [r, g, bl] = this.naEscala(cor, t);
+          b[o] = r; b[o + 1] = g; b[o + 2] = bl;
+        }
+      }
+      const c = this.crc(b, plte + 4, plte + 8 + tam);
+      const o = plte + 8 + tam;
+      b[o] = c >>> 24; b[o + 1] = (c >>> 16) & 255; b[o + 2] = (c >>> 8) & 255; b[o + 3] = c & 255;
+      let s = '';
+      for (let i = 0; i < b.length; i += 8192) s += String.fromCharCode.apply(null, b.subarray(i, i + 8192));
+      url = 'data:image/png;base64,' + btoa(s);
+    } catch (e) {
+      /* foto que não abre fica como veio: melhor a cor do desenho que foto nenhuma */
+    }
+    this._cache.set(chave, url);
+    return url;
+  },
+
+  /* a foto de quem joga, pelo save (que pode ter vindo de arquivo de
+     outra pessoa: só passa foto e cor que existem) */
+  doSave(j){
+    if (!j || typeof j.retrato !== 'string' || !/^[\w\/.-]+$/.test(j.retrato)) return null;
+    const arq = j.retrato.startsWith(PASTA_DOS_RETRATOS) ? j.retrato.slice(PASTA_DOS_RETRATOS.length) : null;
+    if (arq && retratoDaFicha(arq) && j.retratoCores) return this.url(arq, j.retratoCores);
+    return typeof caminhoNPC === 'function' ? caminhoNPC(j.retrato) : null;
+  }
+};
+
+
 /* ===== js/ui/interface.js ===== */
 /* ============================================================
    INTERFACE
@@ -141836,12 +142265,13 @@ function varsCartao(k){
   return {'--cart-clara':c[0], '--cart':c[1], '--cart-esc':c[2]};
 }
 /* O rosto do jogador no cartão e na ficha: o uniforme da rede, quando
-   veste um, ou a foto escolhida na inscrição. Sem nenhum, null. */
+   veste um, ou a foto escolhida na inscrição, nas cores que você deu
+   pra ela (FotoJogador). Sem nenhum, null. */
 function retratoDoJogador(d){
   d = d || (typeof Estado !== 'undefined' ? Estado.dados : null);
   if (typeof Rede !== 'undefined' && Rede.dentro && d && Rede.dentro(d)){ const r = Rede.retrato(); if (r) return r; }
   const j = d && d.jogador;
-  return j && j.retrato && typeof caminhoNPC === 'function' ? caminhoNPC(j.retrato) : null;
+  return j && j.retrato ? FotoJogador.doSave(j) : null;
 }
 
 /* Os seis status do treinador, na ordem da ficha, com o que cada um
@@ -142275,7 +142705,7 @@ const UI = {
       const nIns = save && Array.isArray(save.insignias) ? save.insignias.filter(i => i !== 'Título de Campeão' && i !== 'Campeão de Kanto') : [];
       const dias = save ? Math.max(1, Math.floor(+(save.relogio || {}).dia || 1)) : 0;
       const lugar = save && save.local && LOCAIS[save.local] ? LOCAIS[save.local].nome : '';
-      const rosto = typeof j.retrato === 'string' && /^[\w\/.-]+$/.test(j.retrato) ? caminhoNPC(j.retrato) : null;
+      const rosto = FotoJogador.doSave(j);
       const cap = save ? Historia.capitulo(save.capitulo) : null;
       const caixa = GINASIOS.map(g => {
         const tem = nIns.includes(g.insignia), src = caminhoInsignia(g.id);
@@ -142343,8 +142773,10 @@ const UI = {
      CRIAÇÃO DE PERSONAGEM — a ficha de inscrição da Liga
      Seis passos no idioma da abertura: quem você é, o seu jeito, o
      que você quer, a aparência, quem fica em casa e a conferência.
-     O que pesa no jogo é escolha (js/data/inscricao.js); o que é só
-     descrição é texto livre, com sugestão sorteada. Ao lado, o
+     O que pesa no jogo é escolha (js/data/inscricao.js), e a aparência
+     também: a foto, com a cor do cabelo, da pele e da roupa
+     (FotoJogador), de onde sai a descrição que os outros fazem de
+     você. Ao lado, o
      cartão de inscrição vai se preenchendo; no celular ele aparece
      na conferência. O estado mora em UI._cr até "Sair de casa".
      ======================================================== */
@@ -142360,7 +142792,7 @@ const UI = {
       cidade:'Pallet', tracos:[], tracoLivre:'', forte:null,
       meta:null, frase:'', fraseMexida:false,
       gostos:{lugares:[], tipos:[], dex:[]}, desgostos:{lugares:[], tipos:[], dex:[]},
-      aparencia:'', vestimenta:'', mochila:null, retrato:null, retratoEscolhido:false, maisRostos:false, corCartao:'azul',
+      cores:{cabelo:null, pele:null, roupa:null}, mochila:null, retrato:null, retratoEscolhido:false, maisRostos:false, corCartao:'azul',
       casaNome:'', casaQuem:'', inicial:'classico', ritmo:'fiel'
     };
     const estrelas = Array.from({length:22}, () =>
@@ -142505,12 +142937,13 @@ const UI = {
       }
       case 'mochila': c.mochila = c.mochila === ds.v ? null : ds.v; return refaz('visual');
       case 'retrato': c.retrato = ds.v || null; c.retratoEscolhido = !!c.retrato; return refaz('visual');
+      case 'cor': if (ds.parte in c.cores){ c.cores[ds.parte] = ds.v || null; } return refaz('visual');
       case 'maisRostos': c.maisRostos = !c.maisRostos; return refaz('visual');
       case 'cartao': c.corCartao = ds.v; return refaz('visual');
       case 'casaQuem': c.casaQuem = c.casaQuem === ds.v ? '' : ds.v; return refaz('casa');
       case 'inicial': c.inicial = ds.v; return refaz('casa');
       case 'ritmo': c.ritmo = ds.v; return refaz('casa');
-      case 'dado': this.crDado(ds.v); return refaz(...{nome:['voce'], aparencia:['visual'], vestimenta:['visual'],
+      case 'dado': this.crDado(ds.v); return refaz(...{nome:['voce'], cores:['visual'],
         casaNome:['casa'], tracos:['jeito']}[ds.v] || []);
       case 'editar': c.passo = +ds.v; this.crMostrar(); this.crRolar(); return;
     }
@@ -142532,8 +142965,6 @@ const UI = {
       if (/\n/.test(v)){ el.value = v.replace(/\s*\n+\s*/g, ' '); }
       c.frase = el.value; c.fraseMexida = true;
     }
-    else if (k === 'aparencia') c.aparencia = v;
-    else if (k === 'vestimenta') c.vestimenta = v;
     else if (k === 'casaNome') c.casaNome = v;
     else if (k === 'especie' && mudou){
       /* o nome escrito vira espécie da Pokédex de Kanto, se for uma */
@@ -142566,8 +142997,11 @@ const UI = {
     /* nome de gente da história não vira o seu: duas Eldas confundem */
     if (campo === 'nome') c.nome = outro((c.genero === 'Mulher' ? NOMES_F : NOMES_M)
       .filter(n => typeof NOMES_DA_HISTORIA === 'undefined' || !NOMES_DA_HISTORIA.has(n)), c.nome);
-    if (campo === 'aparencia') c.aparencia = generoDaFicha(outro(APARENCIAS_DA_FICHA, null), c.genero);
-    if (campo === 'vestimenta') c.vestimenta = outro(VESTIMENTAS_DA_FICHA, c.vestimenta);
+    /* o dado das cores sorteia cabelo e roupa; a pele fica como você deixou */
+    if (campo === 'cores'){
+      c.cores.cabelo = outro(CORES_DA_FOTO.cabelo.map(k => k.id), c.cores.cabelo);
+      c.cores.roupa = outro(CORES_DA_FOTO.roupa.map(k => k.id), c.cores.roupa);
+    }
     if (campo === 'casaNome'){
       const mulher = c.casaQuem ? parentescoEhMulher(c.casaQuem) : Math.random() < .5;
       c.casaNome = outro(mulher ? NOMES_DE_CASA_F : NOMES_DE_CASA_M, c.casaNome);
@@ -142592,8 +143026,6 @@ const UI = {
       c.gostos.tipos.push(Dados.escolher(TIPOS_KANTO));
       c.desgostos.lugares.push(lugares[1]);
     }
-    if (!c.aparencia.trim()) this.crDado('aparencia');
-    if (!c.vestimenta.trim()) this.crDado('vestimenta');
     if (!c.mochila) c.mochila = Dados.escolher(MOCHILAS_DA_FICHA);
     if (!c.retrato) c.retrato = Dados.escolher(RETRATOS_DA_FICHA[c.genero]);
   },
@@ -142606,8 +143038,9 @@ const UI = {
     return `<button type="button" class="cr-dado" data-acao="dado" data-v="${campo}" data-foco="dado-${campo}"
       title="${this.esc(rotulo)}" aria-label="${this.esc(rotulo)}">${svgIcone('dado')}</button>`;
   },
-  crRetratoImg(arq, cls){
-    return `<img class="${cls || 'cr-sprite'}" src="${caminhoNPC(PASTA_DOS_RETRATOS + arq)}" alt="" onerror="this.remove()">`;
+  /* a foto, nas cores escolhidas quando vêm (cores), ou como o desenho tem */
+  crRetratoImg(arq, cls, cores){
+    return `<img class="${cls || 'cr-sprite'}" src="${cores ? FotoJogador.url(arq, cores) : FotoJogador.original(arq)}" alt="" onerror="this.remove()">`;
   },
 
   crSec_voce(c){
@@ -142715,11 +143148,12 @@ const UI = {
   crSec_visual(c){
     const e = s => this.esc(s);
     /* só as fotos do gênero da ficha: as primeiras de cara, as outras no
-       "Mais rostos", que já vem aberto se a foto escolhida é de lá */
+       "Mais rostos", que já vem aberto se a foto escolhida é de lá. Todas
+       nas cores escolhidas: dá pra ver cada corpo com o seu cabelo */
     const foto = arq => `<button type="button" class="cr-op cr-retrato${c.retrato === arq ? ' sel' : ''}"
         data-acao="retrato" data-v="${arq}" data-foco="retrato-${arq}" aria-pressed="${c.retrato === arq}"
         aria-label="Foto: ${e(ROTULO_DO_RETRATO[arq] || arq)}" title="${e(maiuscula(ROTULO_DO_RETRATO[arq] || arq))}">
-        ${this.crRetratoImg(arq)}</button>`;
+        ${this.crRetratoImg(arq, null, c.cores)}</button>`;
     const doGenero = RETRATOS_DA_FICHA[c.genero];
     const aVista = doGenero.slice(0, RETRATOS_A_VISTA), outras = doGenero.slice(RETRATOS_A_VISTA);
     const abertos = c.maisRostos || outras.includes(c.retrato);
@@ -142733,17 +143167,47 @@ const UI = {
     const cartoes = Object.entries(CORES_CARTAO).map(([k, cor]) => `<button type="button" class="cartao-cor${c.corCartao === k ? ' sel' : ''}"
         style="background:${cor[1]}" data-acao="cartao" data-v="${k}" data-foco="cartao-${k}" title="${e(cor[3])}" aria-label="${e(cor[3])}" aria-pressed="${c.corCartao === k}"></button>`).join('');
     return this.crCabeca('Como você é', 'O que os outros veem quando você chega, e o que eles vão contar de você depois.') + `
-      <div class="cr-campo"><label class="cr-rot" for="f-aparencia">Aparência ${this.crDadoBtn('aparencia', 'Sortear uma aparência')}</label>
-        <textarea id="f-aparencia" data-campo="aparencia" data-foco="aparencia" maxlength="240" placeholder="Altura, cabelo, olhos, cicatriz, o que for.">${e(c.aparencia)}</textarea></div>
-      <div class="cr-campo"><label class="cr-rot" for="f-vestimenta">Roupa ${this.crDadoBtn('vestimenta', 'Sortear uma roupa')}</label>
-        <textarea id="f-vestimenta" data-campo="vestimenta" data-foco="vestimenta" maxlength="160" placeholder="Jaqueta velha de casa, tênis furado, um boné.">${e(c.vestimenta)}</textarea></div>
+      <div class="cr-campo"><span class="cr-rot">Foto do cartão</span>
+        <div class="cr-grade cr-retratos" role="group" aria-label="Foto do cartão">${retratos}</div>${mais}</div>
+      ${this.crProvador(c)}
       <div class="cr-campo"><span class="cr-rot">Cor da mochila</span>
         <div class="cr-cores" role="group" aria-label="Cor da mochila">${mochilas}</div>
         <p class="cr-nota">É a cor da mochila na tela, até você comprar outra bolsa.</p></div>
-      <div class="cr-campo"><span class="cr-rot">Foto do cartão</span>
-        <div class="cr-grade cr-retratos" role="group" aria-label="Foto do cartão">${retratos}</div>${mais}</div>
       <div class="cr-campo"><span class="cr-rot">Cor do cartão</span>
         <div class="cartao-cores cr-cartoes" role="group" aria-label="Cor do cartão">${cartoes}</div></div>`;
+  },
+
+  /* As cores da foto escolhida: a foto grande e, do lado, cabelo, pele
+     e roupa. A primeira opção de cada uma é a cor que o desenho tem;
+     foto de boné, capacete ou chapéu não tem cor de cabelo. Embaixo, o
+     que os outros vão dizer de você. Sem foto, nada aqui. */
+  crProvador(c){
+    const arq = c.retrato, f = arq && FOTOS_DO_JOGADOR[arq];
+    if (!f) return '';
+    const e = s => this.esc(s);
+    const desc = descricaoDaFoto(arq, c.cores);
+    const [, gen] = PECA_DO_RETRATO[arq] || ['roupa', 'f'];
+    const linha = ([parte, rot]) => {
+      if (!f[parte]){
+        const cabeca = (CABECA_DO_RETRATO[arq] || 'boné').replace(/ pra trás$/, '');
+        return `<div class="cr-parte sem"><div class="cr-parte-rot"><b>${rot}</b><span>debaixo do ${e(cabeca)}, nesta foto</span></div></div>`;
+      }
+      const atual = c.cores[parte] && corDaFoto(parte, c.cores[parte]) ? c.cores[parte] : null;
+      const nome = id => nomeDaCorDaFoto(parte, id, parte === 'pele' || (parte === 'roupa' && gen === 'f'));
+      const tinta = (id, rotulo, fundo, cls) => `<button type="button" class="cr-tinta${cls || ''}${atual === id ? ' sel' : ''}"
+          data-acao="cor" data-parte="${parte}" data-v="${id || ''}" data-foco="cor-${parte}-${id || 'desenho'}"
+          aria-pressed="${atual === id}" title="${e(maiuscula(rotulo))}" aria-label="${e(rot)}: ${e(rotulo)}"><i style="background:${fundo}"></i>${cls ? `<span>Do desenho</span>` : ''}</button>`;
+      const tintas = [tinta(null, `a do desenho (${nome(f[parte].cor)})`, f[parte].de, ' do-desenho')]
+        .concat(CORES_DA_FOTO[parte].map(k => tinta(k.id, nome(k.id), FotoJogador.amostra(k))));
+      return `<div class="cr-parte"><div class="cr-parte-rot"><b>${rot}</b><span>${e(maiuscula(nome(atual || f[parte].cor)))}</span></div>
+        <div class="cr-tintas" role="group" aria-label="Cor ${parte === 'cabelo' ? 'do' : 'da'} ${rot.toLowerCase()}">${tintas.join('')}</div></div>`;
+    };
+    return `<div class="cr-campo cr-provador"><span class="cr-rot">Cores da foto ${this.crDadoBtn('cores', 'Sortear cabelo e roupa')}</span>
+      <div class="cr-prov">
+        <div class="cr-prov-foto">${this.crRetratoImg(arq, 'cr-prov-sprite', c.cores)}</div>
+        <div class="cr-partes">${PARTES_DA_FOTO.map(linha).join('')}
+          <p class="cr-nota">Quem precisar te descrever vai dizer: <b>${e([desc.aparencia, desc.vestimenta].filter(Boolean).join(', '))}</b>.</p></div>
+      </div></div>`;
   },
 
   crSec_casa(c){
@@ -142805,8 +143269,9 @@ const UI = {
     const linha = (k, v) => `<dt>${e(k)}</dt><dd>${v}</dd>`;
     const vars = varsCartao(c.corCartao);
     const estilo = Object.entries(vars).map(([k, v]) => `${k}:${v}`).join(';');
-    const retrato = c.retrato ? this.crRetratoImg(c.retrato, 'crc-sprite')
+    const retrato = c.retrato ? this.crRetratoImg(c.retrato, 'crc-sprite', c.cores)
       : `<span class="crc-monograma">${e((nome || '?').charAt(0).toUpperCase())}</span>`;
+    const desc = c.retrato ? descricaoDaFoto(c.retrato, c.cores) : {aparencia:'', vestimenta:''};
     return `<div class="crc${inteiro ? ' inteiro' : ''}" style="${estilo}">
       <div class="crc-topo"><span>Inscrição de treinador</span><span>Liga de Kanto</span></div>
       <div class="crc-corpo">
@@ -142823,8 +143288,8 @@ const UI = {
         ${linha('Quer', meta ? `${e(maiuscula(generoDaFicha(meta.nome, g)))}${c.frase.trim() ? `<q>${e(c.frase.trim())}</q>` : ''}` : vago('—'))}
         ${inteiro || gostos ? linha('Gosta de', gostos ? e(gostos) : vago('Nada em especial')) : ''}
         ${inteiro || desgostos ? linha('Não gosta de', desgostos ? e(desgostos) : vago('Nada em especial')) : ''}
-        ${inteiro ? linha('Aparência', c.aparencia.trim() ? e(c.aparencia.trim()) : vago('Nada que chame atenção')) : ''}
-        ${inteiro ? linha('Roupa', c.vestimenta.trim() ? e(c.vestimenta.trim()) : vago('Roupa comum e um casaco')) : ''}
+        ${inteiro ? linha('Aparência', desc.aparencia ? e(maiuscula(desc.aparencia)) : vago('Nada que chame atenção')) : ''}
+        ${inteiro ? linha('Roupa', desc.vestimenta ? e(maiuscula(desc.vestimenta)) : vago('Roupa comum e um casaco')) : ''}
         ${c.mochila ? linha('Mochila', `<i class="crc-cor" style="background:${CORES_MOCHILA[c.mochila]}"></i>${e(maiuscula(c.mochila))}`) : ''}
         ${linha('Em casa', casa)}
         ${linha('Começa com', c.inicial === 'rand' ? 'O que já estava em casa' : 'Um dos três clássicos')}
@@ -142840,8 +143305,11 @@ const UI = {
     const tracos = c.tracos.map(p => tracoNoGenero(this.crPar(p), c.genero));
     const livre = c.tracoLivre.trim();
     const gostos = gostoDaFicha(c.gostos), desgostos = gostoDaFicha(c.desgostos);
+    /* a aparência é a foto: a descrição sai dela, e as cores vão junto */
+    const desc = c.retrato ? descricaoDaFoto(c.retrato, c.cores) : {aparencia:'', vestimenta:''};
+    const cores = c.retrato ? coresDaFotoValidas(c.retrato, c.cores) : {};
     return {
-      nome:c.nome.trim(), genero:c.genero, aparencia:c.aparencia.trim(), vestimenta:c.vestimenta.trim(),
+      nome:c.nome.trim(), genero:c.genero, aparencia:desc.aparencia, vestimenta:desc.vestimenta,
       personalidade:juntarComE(tracos.concat(livre ? [livre] : [])),
       cidade:c.cidade, objetivo:c.frase.trim(), meta:c.meta,
       gosta:gostos.texto, naoGosta:desgostos.texto, gostos, desgostos,
@@ -142849,6 +143317,7 @@ const UI = {
       nascimento:{dia:c.nasc.dia, mes:c.nasc.mes},
       casaNome:c.casaNome.trim(), casaQuem:c.casaQuem,
       forte:c.forte, retrato:c.retrato ? PASTA_DOS_RETRATOS + c.retrato : null,
+      retratoCores:Object.keys(cores).length ? cores : null,
       corMochila:c.mochila, corCartao:c.corCartao
     };
   },
@@ -146203,7 +146672,7 @@ const UI = {
     const nIns = (Array.isArray(d.insignias) ? d.insignias : []).filter(i => i !== 'Título de Campeão' && i !== 'Campeão de Kanto').length;
     const dias = Math.max(1, Math.floor(+(d.relogio || {}).dia || 1));
     const lugar = d.local && typeof LOCAIS !== 'undefined' && LOCAIS[d.local] ? LOCAIS[d.local].nome : '';
-    const rosto = typeof j.retrato === 'string' && /^[\w\/.-]+$/.test(j.retrato) && typeof caminhoNPC === 'function' ? caminhoNPC(j.retrato) : null;
+    const rosto = FotoJogador.doSave(j);
     const time = (d.time || []).slice(0, 6).map(p =>
       `<span class="save-pk" title="${e(nomeExib(p))} · Nv ${e(p.nivel)}">${imgSprite({dex:p.dex, shiny:!!p.shiny}, 'icone')}</span>`).join('');
     const notas = [].concat(nota || []);
@@ -147566,7 +148035,7 @@ const UI = {
     if (k === 'passos') return `
       <h3>A primeira hora, passo a passo</h3>
       <ol class="tut-passos">
-        <li><b>Inscrição.</b> Seis passos: quem você é, o seu jeito, o que você quer, a aparência, quem fica em casa e a conferência. O que pesa no jogo é escolha: o jeito mexe em quem te obedece, o seu forte começa em 2, o objetivo vira o rumo que abre cada capítulo, e lugar ou Pokémon de que você gosta pesa nos dados e na moral. O dado ao lado de um campo sorteia uma sugestão, e "Sortear o resto" preenche o que ficou em branco.</li>
+        <li><b>Inscrição.</b> Seis passos: quem você é, o seu jeito, o que você quer, a aparência, quem fica em casa e a conferência. O que pesa no jogo é escolha: o jeito mexe em quem te obedece, o seu forte começa em 2, o objetivo vira o rumo que abre cada capítulo, e lugar ou Pokémon de que você gosta pesa nos dados e na moral. A aparência é a foto: você escolhe o corpo e a cor do cabelo, da pele e da roupa, e é isso que os outros vão dizer de você. O dado ao lado de um campo sorteia uma sugestão, e "Sortear o resto" preenche o que ficou em branco.</li>
         <li><b>O capítulo 1.</b> Você acorda em casa. Leia a cena e toque numa opção — ou escreva o que quer fazer no campo de baixo. Não tem opção certa: tem o que você fez.</li>
         <li><b>O primeiro Pokémon.</b> Os três iniciais saem da Pokébola na sua frente; escolha um e, se quiser, dê um apelido.</li>
         <li><b>A licença.</b> No Centro Pokémon (em Pallet, no laboratório). Com ela, o Centro cura de graça.</li>
@@ -147593,7 +148062,7 @@ const UI = {
       ${L('No que você é bom', 'um dos seis status começa em 2; os outros, em 1 · Resistência em 2 já começa com HP 32 e Vontade 4')}
       ${L('Objetivo', 'um dos sete rumos, numa frase sua (ou na sugerida) · a frase sai da sua boca na história, e o rumo abre cada capítulo')}
       ${L('Gostos', `até ${GOSTOS_MAX} coisas de que você gosta e ${DESGOSTOS_MAX} de que não gosta, entre lugares, tipos de Pokémon e uma espécie · a mesma coisa não fica nas duas listas · o que cada uma faz está em Objetivo e gostos`)}
-      ${L('Aparência e roupa', 'texto livre · é como os outros te descrevem quando precisam')}
+      ${L('Aparência', 'a foto do cartão, entre as do seu gênero, com a cor do cabelo, da pele e da roupa · o desenho é sempre o mesmo, só a cor muda · cabelo e roupa viram a descrição que os outros fazem de você quando precisam (foto de boné, capacete ou chapéu diz o que está na cabeça) · sem foto, a descrição fica vaga · nada disso mexe em regra')}
       ${L('Mochila e cartão', 'a cor da mochila na tela (até você comprar outra bolsa) e a do Cartão de Treinador · a foto vai no cartão e na Ficha · nada disso mexe em regra')}
       ${L('Gênero', 'o texto inteiro concorda com ele — narração, tratamento, cargo e título')}
       ${L('Quem fica em casa', 'a voz que te acorda e o primeiro número do PokéNav · o parentesco decide como a história fala dessa pessoa · o que ficar em branco é sorteado combinando nome e parentesco')}

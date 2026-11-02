@@ -599,6 +599,8 @@ const Estado = {
         ...(ficha.desgostos ? {desgostos: ficha.desgostos} : {}),
         forte: ficha.forte || null,
         retrato: ficha.retrato || null,
+        /* as cores da foto ({cabelo, pele, roupa}, ids de CORES_DA_FOTO) */
+        ...(ficha.retratoCores ? {retratoCores: ficha.retratoCores} : {}),
         corMochila: ficha.corMochila || null,
         corCartao: ficha.corCartao || 'azul',
         idade: ficha.idade || 15,
