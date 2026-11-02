@@ -1110,19 +1110,134 @@ if (typeof RIVAIS_TORNEIO !== 'undefined') VETERANOS.forEach(v => {
 });
 
 /* ============================================================
-   COPA DOS VETERANOS
-   Depois da cadeira do Campeão. Três rodadas na arena do Planalto,
-   contra quem ficou na estrada tempo demais pra caber em torneio
-   aberto. A final é sempre contra a dona de três Conferências.
+   CONFERÊNCIA DO PLANALTO INDIGO
+   Depois da cadeira do Campeão, aos sábados, na arena do Planalto, na
+   mesma chave de dezesseis do Torneio Aberto (novaChave, em liga.js):
+   oitavas, quartas, semifinal e final, contra quem ficou na estrada
+   tempo demais pra caber em torneio aberto. A Greer, dona de três
+   Conferências, entra sempre, e quem você venceu na estrada também
+   (vem atrás de revanche); o resto sai no dado entre os outros
+   veteranos e os convidados. Ninguém tem vaga marcada: a Greer pode
+   cair antes da final, como qualquer um.
    ============================================================ */
 const INSCRICAO_CONFERENCIA = 5000;
 const PREMIO_CONFERENCIA = [
+  {rodada:'Oitavas',   dinheiro:6000,  rep:0, itens:{'Hyper Potion':2}},
   {rodada:'Quartas',   dinheiro:12000, rep:1, itens:{'Hyper Potion':3}},
   {rodada:'Semifinal', dinheiro:25000, rep:1, itens:{'Full Heal':3, 'Revive':2}},
   {rodada:'Final',     dinheiro:60000, rep:3, itens:{'PP Up':3, 'Elixir':2}}
 ];
-/* piso de nível da Conferência, rodada a rodada */
-const PISO_CONFERENCIA = [66, 68, 72];
+/* nível de cada rodada: os seus três mais fortes + ACIMA_CONFERENCIA +
+   a subida da rodada, nunca abaixo do piso; mais o acerto de cada um */
+const PISO_CONFERENCIA = [64, 66, 68, 72];
+const SUBIDA_CONFERENCIA = [-1, 0, 1, 2];
+/* o acerto de cada um, medido no sim-veteranos --conf: quem o jogador
+   comum quase não vence (os lutadores do Conrad, o gelo do Bryce) vem
+   mais baixo, quem cai fácil vem mais alto, e todos pesam parecido */
+const AJUSTE_NA_CONFERENCIA = {
+  conrad:-10, talia:-4, greer:-1, wendell:-3, quinn:10, maxine:10, harlan:2,
+  cv_bryce:-7, cv_sterling:-7, cv_brenna:-8, cv_orson:-4, cv_astrid:-2
+};
+
+/* Quem só aparece na Conferência: gente de estrada longa que não se
+   acha andando, e que vem ao Planalto pelo sábado. Os campos são os do
+   veterano que a Conferência lê (classe, nome, rosto, lugar, times,
+   golpes, a fala de entrada e as duas de saída). */
+const CONVIDADOS_DA_CONFERENCIA = [
+  {id:'cv_bryce', classe:'Treinador Ás', nome:'Bryce', arq:'acetrainersnow', local:'seafoam',
+   times:[124, 73, 87, 221, 91, 131], golpes:['Blizzard', 'Ice Beam', 'Earthquake', 'Hyper Beam'],
+   torneio:'"Eu treino onde a água congela no meio do golpe. Vim ver se o Planalto ainda esquenta alguém."',
+   vence:'"Volta quando o frio não te deixar com pressa."',
+   perde:'"Fazia frio demais lá fora pra eu perder aqui dentro. Perdi assim mesmo."'},
+  {id:'cv_astrid', classe:'Treinadora Ás', nome:'Astrid', f:true, arq:'acetrainersnowf', local:'rota24',
+   times:[26, 34, 59, 3, 130, 143], golpes:['Thunderbolt', 'Earthquake', 'Body Slam', 'Fire Blast'],
+   torneio:'"Eu atravesso a ponte de Cerulean toda manhã, contra cinco seguidos. Hoje é um de cada vez. Quase descanso."',
+   vence:'"A ponte ensina a não parar no quinto."',
+   perde:'"Na ponte eu sei quem vem depois. Aqui eu não sabia de você."'},
+  {id:'cv_cedric', classe:'Veterano', nome:'Cedric', arq:'veteran_gen4', local:'pewter',
+   times:[97, 128, 115, 103, 76, 68], golpes:['Earthquake', 'Body Slam', 'Psychic', 'Rock Slide'],
+   torneio:'"Eu joguei a primeira Conferência que teve. A arquibancada era de madeira, e a gente sentava nela."',
+   vence:'"Quarenta anos, e eu ainda gosto de ganhar."',
+   perde:'"Quarenta anos. Faz dez que eu não via uma coisa nova aqui dentro."'},
+  {id:'cv_sigrid', classe:'Domadora de Dragões', nome:'Sigrid', f:true, arq:'dragontamer_gen9', local:'rota23',
+   times:[181, 6, 142, 130, 230, 149], golpes:['Dragon Breath', 'Earthquake', 'Fire Blast', 'Hyper Beam'],
+   torneio:'"O Lorne me ensinou tudo o que eu sei. Hoje eu vim ensinar uma coisa pra ele, se ele chegar até mim."',
+   vence:'"Dragão não tem pressa. Eu também não."',
+   perde:'"Eu vou contar pro Lorne que foi você. Ele vai rir de mim um mês."'},
+  {id:'cv_orson', classe:'Paranormal', nome:'Orson', arq:'psychic_gen6', local:'saffron',
+   times:[178, 122, 199, 121, 196, 65], golpes:['Psychic', 'Shadow Ball', 'Thunderbolt', 'Ice Beam'],
+   torneio:'"Eu sonhei com esta arena a semana inteira. Você não estava no sonho."',
+   vence:'"Agora eu sei por que você não estava no sonho."',
+   perde:'"Eu devia ter dormido mais."'},
+  {id:'cv_sterling', classe:'Herdeiro', nome:'Sterling', arq:'richboy_gen6xy', local:'celadon',
+   times:[53, 233, 197, 212, 59, 248], golpes:['Earthquake', 'Return', 'Shadow Ball', 'Swords Dance'],
+   torneio:'"Meu avô ganhou duas Conferências. Meu pai, nenhuma. Eu vim desempatar."',
+   vence:'"Desempatei."',
+   perde:'"Meu pai vai gostar de saber que não foi só com ele."'},
+  {id:'cv_brenna', classe:'Montanhista', nome:'Brenna', f:true, arq:'hiker_gen9', local:'tunel_rocha',
+   times:[185, 139, 232, 141, 208, 112], golpes:['Earthquake', 'Rock Slide', 'Iron Tail', 'Body Slam'],
+   torneio:'"Eu atravesso o túnel no escuro desde os doze anos. Arena com luz é quase trapaça."',
+   vence:'"Com luz eu enxergo melhor ainda."',
+   perde:'"Volto pro escuro. Lá eu entendo o que acontece."'},
+  {id:'cv_linnea', classe:'Aromaterapeuta', nome:'Linnea', f:true, arq:'aromalady_gen6', local:'cerulean',
+   times:[189, 182, 36, 210, 103, 154], golpes:['Giga Drain', 'Psychic', 'Sludge Bomb', 'Body Slam'],
+   torneio:'"Arena tem cheiro de suor e de Potion. Eu trouxe outro."',
+   vence:'"Respira. Passa."',
+   perde:'"Ficou o cheiro, pelo menos. Já é alguma coisa."'}
+];
+CONVIDADOS_DA_CONFERENCIA.forEach(c => {
+  if (typeof NOMES_DA_HISTORIA !== 'undefined') NOMES_DA_HISTORIA.add(c.nome);
+  if (typeof RETRATO_POR_NOME !== 'undefined'){
+    RETRATO_POR_NOME[nomeDeLuta(c)] = 'trainers/' + c.arq;
+    RETRATO_POR_NOME[c.nome] = 'trainers/' + c.arq;
+  }
+});
+/* quem luta na Conferência: veterano ou convidado */
+function daConferencia(id){ return veterano(id) || CONVIDADOS_DA_CONFERENCIA.find(c => c.id === id) || null; }
+
+/* os quinze do sábado: a Greer e quem você já venceu, sempre; o resto
+   sorteado entre os outros veteranos da Conferência e os convidados */
+function inscritosDaConferencia(){
+  const conf = VETERANOS.filter(v => v.conferencia);
+  const sempre = conf.filter(v => v.final || Veteranos.venceu(v.id));
+  const resto = _embaralhar(conf.filter(v => !sempre.includes(v)).concat(CONVIDADOS_DA_CONFERENCIA));
+  return sempre.concat(resto).slice(0, VAGAS_TORNEIO - 1).map(v => ({
+    id:v.id, nome:nomeDeLuta(v), curto:v.nome, f:!!v.f, de:(LOCAIS[v.local] || {}).nome || '', fala:v.torneio}));
+}
+function nivelDaConferencia(rodada, id){
+  return Math.max(PISO_CONFERENCIA[rodada], nivelDeReferencia() + ACIMA_CONFERENCIA + SUBIDA_CONFERENCIA[rodada])
+    + (AJUSTE_NA_CONFERENCIA[id] || 0);
+}
+/* o adversário da rodada: time de 6, no nível da rodada */
+function adversarioDaConferencia(ins, rodada){
+  const v = daConferencia(ins.id);
+  if (!v) return null;
+  return {id:v.id, nome:nomeDeLuta(v), curto:v.nome, f:!!v.f, fala:v.torneio, de:(LOCAIS[v.local] || {}).nome || '',
+    time:timeDeLinhas(v.times, nivelDaConferencia(rodada, v.id), 6, v.golpes, 95)};
+}
+if (typeof CHAVES !== 'undefined') CHAVES.conferencia = {
+  nome:'Conferência do Planalto Indigo',
+  premios: () => PREMIO_CONFERENCIA,
+  inscritos: () => inscritosDaConferencia(),
+  adversario: (ins, rodada) => adversarioDaConferencia(ins, rodada)
+};
+
+/* Luta da Conferência salva antes da chave de dezesseis (três rodadas,
+   uma lista de veteranos): vira chave nova, com a luta de agora nas
+   oitavas, contra quem já estava na sua frente */
+function conferenciaDeAntes(c){
+  if (!c || c.chave || !Array.isArray(c.adversarios)) return c;
+  const novo = novaChave('conferencia');
+  const id = c.adversarios[c.rodada] || c.adversarios[0];
+  const v = id && daConferencia(id);
+  if (!v) return novo;
+  const vaga = vagaDoAdversario(novo);
+  const ja = novo.inscritos.findIndex(x => x.id === id);
+  if (ja >= 0 && ja !== vaga) novo.inscritos[ja] = novo.inscritos[vaga];
+  novo.inscritos[vaga] = {id, nome:nomeDeLuta(v), curto:v.nome, f:!!v.f, de:(LOCAIS[v.local] || {}).nome || '', fala:v.torneio};
+  novo.adv = adversarioDaVez(novo);
+  return novo;
+}
 
 function statusConferencia(){
   const d = Estado.dados;
@@ -1134,20 +1249,6 @@ function statusConferencia(){
   return {estado:'disponivel', texto:`Inscrição: ${INSCRICAO_CONFERENCIA.toLocaleString('pt-BR')} ₽`};
 }
 
-/* Dois adversários antes da final: primeiro quem você já venceu na
-   estrada (eles vêm atrás de revanche), o resto sorteado. */
-function montarConferencia(){
-  const final = VETERANOS.find(v => v.final);
-  const pool = VETERANOS.filter(v => v.conferencia && !v.final);
-  const conhecidos = pool.filter(v => Veteranos.venceu(v.id));
-  const outros = pool.filter(v => !Veteranos.venceu(v.id));
-  const escolhe = lista => lista.splice(Dados.entre(0, lista.length - 1), 1)[0];
-  const lados = [];
-  while (lados.length < 2 && (conhecidos.length || outros.length)) lados.push(escolhe(conhecidos.length ? conhecidos : outros).id);
-  lados.push(final.id);
-  return lados;
-}
-
 const Conferencia = {
   iniciar(){
     const st = statusConferencia();
@@ -1157,7 +1258,7 @@ const Conferencia = {
     if (d.flags.conferencia_paga) d.flags.conferencia_paga = false;
     else d.jogador.dinheiro -= INSCRICAO_CONFERENCIA;
     entrarNaArena('conferencia');
-    Jogo.conferenciaAtual = {rodada:0, adversarios:montarConferencia()};
+    Jogo.conferenciaAtual = novaChave('conferencia');
     Estado.registrar('Inscreveu-se na Conferência do Planalto Indigo.');
     Estado.salvar('auto');
     UI.telaConferencia();
@@ -1166,15 +1267,14 @@ const Conferencia = {
   lutar(){
     const c = Jogo.conferenciaAtual;
     if (!c) return UI.telaLiga();
-    const v = veterano(c.adversarios[c.rodada]);
     if (!Estado.primeiroApto()) return this.resultado({resultado:'derrota'});
-    const nivel = Math.max(PISO_CONFERENCIA[c.rodada], nivelDeReferencia() + ACIMA_CONFERENCIA + c.rodada);
-    const time = timeDeLinhas(v.times, nivel, 6, v.golpes, 95);
-    Veteranos.iniciarLuta(nomeDeLuta(v), time, {id:v.id, tipo:'conferencia', conferencia:true});
-    const conhece = Veteranos.registro(v.id).conheceu;
-    UI.telaBatalha([`${PREMIO_CONFERENCIA[c.rodada].rodada} — ${nomeDeLuta(v)}`,
-      conhece ? `${v.nome}: ${txt(v.torneio)}` : `${v.nome} entra pelo túnel do outro lado. Você nunca viu essa pessoa e a arquibancada inteira sabe o nome dela.`]);
-    Veteranos.registro(v.id).conheceu = true;
+    const adv = c.adv || (c.adv = adversarioDaVez(c));
+    const v = daConferencia(adv.id);
+    Veteranos.iniciarLuta(adv.nome, adv.time, {id:adv.id, tipo:'conferencia', conferencia:true});
+    const conhece = Veteranos.registro(adv.id).conheceu;
+    UI.telaBatalha([`${PREMIO_CONFERENCIA[c.rodada].rodada} — ${adv.nome}`,
+      conhece ? `${v.nome}: ${txt(v.torneio)}` : `${v.nome} entra pelo túnel do outro lado. Você nunca viu essa pessoa e a arquibancada inteira sabe o nome ${v.f ? 'dela' : 'dele'}.`]);
+    Veteranos.registro(adv.id).conheceu = true;
   },
 
   premio(venceu){
@@ -1188,28 +1288,41 @@ const Conferencia = {
     const c = Jogo.conferenciaAtual;
     Jogo.veteranoAtual = null;
     Jogo.batalhaLivre = false;
+    if (!c) return UI.telaLiga();
     if (fim.resultado === 'gameover'){ Jogo.conferenciaAtual = null; return UI.telaGameOver('Você caiu na arena do Planalto, na frente de quatrocentas pessoas.'); }
-    const v = veterano(c.adversarios[c.rodada]);
+    const adv = c.adv || (c.adv = adversarioDaVez(c));
+    const v = daConferencia(adv.id);
+    const R = PREMIO_CONFERENCIA.length;
     const pr = PREMIO_CONFERENCIA[c.rodada];
-    /* a última palavra do veterano é balão dele, com rosto */
-    const diz = t => fala(v.nome, String(txt(t) || '').replace(/^["\u201C]|["\u201D]$/g, ''));
+    /* a última palavra de quem lutou é balão dele, com rosto */
+    const diz = t => fala(v.nome, String(txt(t) || '').replace(/^["“]|["”]$/g, ''));
     const venceu = fim.resultado === 'vitoria';
     const avisos = [];
     const valor = this.premio(venceu);
     Estado.j.dinheiro += valor;
 
     if (!venceu){
+      /* a tarde segue sem você: as outras quadras jogam até o título */
+      const rodada = c.rodada;
+      const campeao = terminarSemVoce(c, rodada);
+      const vice = c.chave[R - 1].map(x => c.inscritos[x]).find(x => x !== campeao && !x.voce) || null;
+      const chave = UI.chaveDoTorneio(c);
       Jogo.conferenciaAtual = null;
       sairDaArena();
       avisos.push({tipo:'item', texto:`Premiação por participação: +${valor.toLocaleString('pt-BR')} ₽`});
-      Estado.registrar(`Eliminado da Conferência do Planalto Indigo por ${v.nome} ${naRodada(pr.rodada)}.`);
+      Estado.registrar(`Eliminado da Conferência do Planalto Indigo por ${v.nome} ${naRodada(pr.rodada)}. O título ficou com ${campeao.curto || campeao.nome}.`);
       Estado.salvar('auto');
+      const levou = rodada === R - 1
+        ? `O título do sábado fica com ${v.nome}. O seu nome fica do lado, no quadro da final.`
+        : campeao.id === adv.id
+          ? `${v.nome} vai até o fim: o título do sábado é ${v.f ? 'dela' : 'dele'}${vice ? `, numa final contra ${vice.curto || vice.nome}` : ''}.`
+          : `A tarde segue sem você. O título fica com ${campeao.curto || campeao.nome}${vice ? `, que ganha de ${vice.curto || vice.nome} na final` : ''}.`;
       return Jogo.resolverPendencias(() => UI.telaResultadoLiga({
         titulo:'Eliminad{o|a}', sub:`Conferência do Planalto Indigo · ${pr.rodada}`,
-        quem:v.nome, falas:[diz(v.vence),
+        quem:v.nome, falas:[diz(v.vence), levou,
           'Na Conferência ninguém vaia quem perde. Quem está na arquibancada já perdeu pra todo mundo que está na arena.',
           'A Conferência é todo sábado. Eles vão estar aqui.'],
-        avisos, venceu:false
+        chave, avisos, venceu:false
       }));
     }
 
@@ -1220,14 +1333,17 @@ const Conferencia = {
       const m = Estado.mudarRep('bom', fama, `Avançou ${naRodada(pr.rodada)} da Conferência do Planalto Indigo`, {rep:{notorio:true, peso:3}});
       if (m && m.mudou) avisos.push({tipo:'rep', texto:`Reputação: ${m.de} → ${m.para}`});
     }
+    /* a sua quadra fecha; as outras também, e a chave anda */
+    fecharRodada(c, c.rodada, true);
     c.rodada++;
     const ganhos = Object.assign({}, pr.itens || {});
     const festa = () => Vitoria.rodada({
-      rodadas: PREMIO_CONFERENCIA.slice(0, c.adversarios.length).map(r => r.rodada), feitas: c.rodada,
+      rodadas: PREMIO_CONFERENCIA.map(r => r.rodada), feitas: c.rodada,
       adversario: v.nome, nome:'Conferência do Planalto Indigo', f:true, cor:'#7fb2ff', metal:'ouro',
       conta: `${Estado.dados.conferenciasVencidas || 1}º título`, ganho: valor, itens: ganhos
     });
-    if (c.rodada >= c.adversarios.length){
+    if (c.rodada >= R){
+      const chave = UI.chaveDoTorneio(c);
       Jogo.conferenciaAtual = null;
       sairDaArena();
       const d = Estado.dados;
@@ -1243,17 +1359,20 @@ const Conferencia = {
       return Jogo.resolverPendencias(() => { UI.telaResultadoLiga({
         titulo:'{CAMPEÃO|CAMPEÃ} DA CONFERÊNCIA', sub:`Conferência do Planalto Indigo · ${d.conferenciasVencidas}º título`,
         quem:v.nome, falas:[diz(v.perde),
-          'A arquibancada da Conferência não levanta pra quem ganha. Ela levanta pra quem aguentou as três.',
+          'A arquibancada da Conferência não levanta pra quem ganha. Ela levanta pra quem aguentou as quatro.',
           'Hoje ela levanta.',
           d.conferenciasVencidas === 1 ? 'No vestiário, alguém escreveu o seu nome a giz na parede, embaixo de outros quarenta e poucos. O de cima é o da Greer, três vezes.' : 'O seu nome na parede do vestiário ganhou mais um risco do lado.'],
-        avisos, venceu:true
+        chave, avisos, venceu:true
       }); Vitoria.mostrar(festa()); });
     }
+    c.adv = adversarioDaVez(c);
+    const tirou = quemOProximoTirou(c);
     Estado.salvar('auto');
     Jogo.resolverPendencias(() => { UI.telaResultadoLiga({
       titulo:`${v.nome} derrotad${v.f ? 'a' : 'o'}`, sub:`Conferência do Planalto Indigo · ${rodadaVencida(pr.rodada)}`,
       quem:v.nome, falas:[diz(v.perde),
-        `Próxima: ${PREMIO_CONFERENCIA[c.rodada].rodada}, contra ${nomeDeLuta(veterano(c.adversarios[c.rodada]))}.`,
+        tirou ? `Na quadra ao lado, ${c.adv.nome} passou por ${tirou.nome}.` : null,
+        `Próxima: ${PREMIO_CONFERENCIA[c.rodada].rodada}, contra ${c.adv.nome}.`,
         'Vinte minutos entre as lutas. Dá pra curar o time.'],
       avisos, venceu:true, conferencia:true
     }); Vitoria.mostrar(festa()); });

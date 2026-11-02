@@ -1372,8 +1372,20 @@ se for à Conferência, de `conferencia:true`. Convite cuja chamada
 marca dia e hora ("sábado, sete da noite") leva `hora:{dia, h}` — abrir
 o convite leva o relógio até lá (`Veteranos.irNaHora`) — e, se o fim
 conta horas ("a manhã inteira"), `dura`. Fato que o relógio não conta
-(lua nova) não entra na chamada. A final da Conferência é sempre quem tem
-`final:true`. A Conferência é **aos sábados** (`DIA_DA_CONFERENCIA`),
+(lua nova) não entra na chamada. A Conferência é a **mesma chave de
+dezesseis do Torneio Aberto** (`novaChave('conferencia')`, registrada
+em `CHAVES` no fim de `veteranos.js`): a Greer (`final:true`) entra
+sempre, quem você venceu na estrada também (vem atrás de revanche), e
+o resto sai no dado entre os outros veteranos com `conferencia:true` e
+os convidados (`CONVIDADOS_DA_CONFERENCIA`), gente que só aparece ali —
+os campos são os do veterano que a Conferência lê, e quem acha um ou
+outro é `daConferencia(id)`, nunca `veterano(id)` direto. A final já
+foi sempre a Greer; hoje ninguém tem vaga marcada. O nível de cada
+rodada é `nivelDaConferencia` (`PISO_CONFERENCIA`, `SUBIDA_CONFERENCIA`
+e o acerto de cada um em `AJUSTE_NA_CONFERENCIA`). Convidado novo entra
+com rosto livre, `local`, as três falas (`torneio`, `vence`, `perde`) e
+passa pelo `sim-veteranos.js --conf` e pelo `chk-lutas`, que roda cada
+um nas quatro rodadas. A Conferência é **aos sábados** (`DIA_DA_CONFERENCIA`),
 uma por semana, na mesma tarde da arena do Torneio Aberto (no dia em
 que se joga um, o outro já fechou), com a reputação de cada rodada só
 na primeira vez (`rep_conferencia_<rodada>`). As falas dela dizem
@@ -1389,14 +1401,15 @@ Scyther) entra na lista **pela forma final** (208, 212): `finalDaLinha`
 não acha o Steelix saindo do Onix.
 
 ## O Torneio Aberto
-É uma **chave de dezesseis, sorteada na inscrição** (`sortearChaveamento`,
-em `js/story/liga.js`): oitavas, quartas, semifinal e final, e foi
+É uma **chave de dezesseis, sorteada na inscrição** (`novaChave`, em
+`js/story/liga.js`; a Conferência usa a mesma, ver "Veteranos e a
+Conferência"): oitavas, quartas, semifinal e final, e foi
 pedido assim — "não fosse decidido desde já quem tá na final". Você é
 uma das vagas (`t.eu`), e ninguém tem vaga marcada: o Ezra ficava
 sempre com a final, e não fica mais. `t.chave[k]` são as vagas de quem
 começa a rodada k, na ordem dos confrontos (a 0 com a 1, a 2 com a 3),
 e `t.chave[4]` é quem levou o título. As outras lutas de cada rodada se
-decidem quando a sua acaba (`fecharRodadaDoTorneio`, `lutaDeFora`): uma
+decidem quando a sua acaba (`fecharRodada`, `lutaDeFora`, `forcaNaChave`): uma
 parada de d6 de cada lado, um dado a cada dez níveis somados do time
 que ele levaria pra arena; a chave mostra quem passou, nunca o placar.
 Caiu, a tarde se joga sem você até o título (`terminarSemVoce`), e a
@@ -1404,11 +1417,18 @@ tela de eliminado mostra a chave inteira e diz quem levou. O
 adversário da vez é montado quando a rodada abre (`t.adv`,
 `adversarioDaVez`), e é ele que a tela mostra e a luta usa.
 
-A chave mora **no save** (`d.torneioAberto`, por um getter e um setter
-de `Jogo.torneioAtual`): recarregar entre uma rodada e outra volta pra
-chave, e luta que começa noutro lugar (`Jogo.torneioAtual = null`) tira
-o torneio de cena junto. Luta salva do torneio de antes (três rodadas,
-`adversarios`) vira chave nova na carga (`torneioDeAntes`).
+Cada competição se registra em `CHAVES` (quem se inscreve, como se
+monta o adversário de uma rodada, o que cada rodada paga), e o resto é
+um motor só: `novaChave`, `adversarioDaVez`, `fecharRodada`,
+`terminarSemVoce`, `chaveAteARodada` (a chave andada até uma rodada,
+pros verificadores). `t.qual` diz de quem é a chave.
+
+A chave mora **no save** (`d.torneioAberto` e `d.conferenciaAberta`,
+por getter e setter de `Jogo.torneioAtual` e `Jogo.conferenciaAtual`):
+recarregar entre uma rodada e outra volta pra chave, e luta que começa
+noutro lugar (`Jogo.torneioAtual = null`) tira o torneio de cena junto.
+Luta salva de antes da chave (três rodadas, `adversarios`) vira chave
+nova na carga (`torneioDeAntes`, `conferenciaDeAntes`).
 
 Todo inscrito (`RIVAIS_TORNEIO`) tem uma chave (`id`, a vaga dele no
 save), nome, nome curto (`curto`, o que cabe na chave), cidade (`de`,
@@ -1416,8 +1436,8 @@ que o quadro da sua luta mostra com a faixa de nível), rosto só dele
 (`arq`, registrado no `RETRATO_POR_NOME` na carga, com o nome curto no
 `NOMES_DA_HISTORIA`) e time montado: `linhas` do mais fraco ao ás,
 `golpes` de TM do dono, `segura` (o item do ás) e `ajuste` (o acerto de
-nível dele). Os de sempre são dezoito, mais que as quinze vagas, então
-a chave de cada dia tem gente diferente. Quem vem da sua história (o
+nível dele). Os de sempre são vinte e quatro, bem mais que as quinze
+vagas, então a chave de cada dia tem gente diferente. Quem vem da sua história (o
 Ezra, o Roque, a Fenna, o Orin, veterano vencido) entra pelo `cond`,
 até quatro por chave (`DA_HISTORIA_NO_TORNEIO`), sorteados. O ás
 acompanha os seus três mais fortes (`nivelDoTorneio`, com
@@ -2302,14 +2322,13 @@ pelo menu numerado, com a porta fechada dizendo o que falta.
 **Placar e prévia de time não aparecem em lugar nenhum** — foi pedido
 assim: o rival te para sem quadro (o placar é coisa que ele diz, se
 quiser), o resultado mostra o lugar, a Ficha e o diário não contam, e
-o time de quem você enfrenta só se vê na arena. O **chaveamento** da
-Conferência (`chaveamentoHTML`) são as três lutas em quadros ligados
-por um trilho — vencida verde, a de agora acesa, a de depois apagada —,
-com rosto, a bola fechada de cada Pokémon (quantos, nunca quais) e o
-prêmio da rodada. O do Torneio Aberto é a chave de dezesseis
-(`chaveDoTorneio`, ver "O Torneio Aberto"), com o quadro da sua luta em
-cima (rosto, cidade, faixa de nível, as bolas fechadas e o prêmio) e a
-escada dos prêmios embaixo. Na **Pokédex**, a casa tem duas linhas
+o time de quem você enfrenta só se vê na arena. O **chaveamento** do
+torneio e da Conferência é a chave de dezesseis (`chaveDoTorneio`, ver
+"O Torneio Aberto"), numa tela só (`telaDaChave`): o quadro da sua luta
+em cima (rosto, de onde vem, a bola fechada de cada Pokémon — quantos,
+nunca quais — e o prêmio; o torneio diz a faixa de nível, a Conferência
+não diz nada, e quem você nunca viu chega sem lugar), a chave e a
+escada dos prêmios embaixo. A Conferência acende em azul (`.conf`). Na **Pokédex**, a casa tem duas linhas
 (número e marca em cima, nome embaixo): na mesma linha, a etiqueta
 "visto" cortava o nome. E `.linha .v` (a conta das linhas de valor) é
 letra do HUD; só a Pokédex e o PC guardam a letra de tela deles (no PC,

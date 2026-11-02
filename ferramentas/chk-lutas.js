@@ -121,9 +121,9 @@ const raiz = path.resolve(__dirname, '..');
     /* torneio: a chave sorteada, andando até cada rodada pelas funções
        do jogo (as outras quadras se decidem no dado), e a luta daquela
        rodada; vencer a final é o título, perder é a tarde sem você */
-    const chaveAte = (rd, quem) => {
-      const t = sortearChaveamento();
-      for (let k = 0; k < rd; k++) fecharRodadaDoTorneio(t, k, true);
+    const chaveAte = (rd, quem, qual = 'torneio') => {
+      const t = novaChave(qual);
+      for (let k = 0; k < rd; k++) fecharRodada(t, k, true);
       t.rodada = rd;
       if (quem){
         /* o inscrito na frente: a vaga do adversário vira a dele */
@@ -166,7 +166,16 @@ const raiz = path.resolve(__dirname, '..');
       Estrada.desafiar(t.id, 'procurar'); })));
     /* veteranos e Conferência */
     VETERANOS.forEach(v => add(`veterano ${v.nome}`, 8, 20, () => Veteranos.lutar(v.id)));
-    if (typeof Conferencia !== 'undefined') add('Conferência', 8, 24, () => { Conferencia.iniciar(); if (!Batalha.ativo) Conferencia.lutar(); });
+    if (typeof Conferencia !== 'undefined'){
+      add('Conferência', 8, 24, d => { d.flags.campeao_de_kanto = true; Conferencia.iniciar(); if (!Batalha.ativo) Conferencia.lutar(); });
+      /* cada um que pode cair na chave da Conferência (os veteranos dela
+         e os convidados), nas quatro rodadas */
+      VETERANOS.filter(v => v.conferencia).concat(CONVIDADOS_DA_CONFERENCIA).forEach(v => PREMIO_CONFERENCIA.forEach((pr, rd) =>
+        add(`Conferência ${nomeDeLuta(v)} (${pr.rodada})`, 8, 24, d => {
+          d.flags.campeao_de_kanto = true;
+          Jogo.conferenciaAtual = chaveAte(rd, {id:v.id, nome:nomeDeLuta(v), curto:v.nome, f:!!v.f, fala:v.torneio}, 'conferencia');
+          Conferencia.lutar(); })));
+    }
     /* barreiras */
     (typeof BARREIRAS_DE_ESCOLHA !== 'undefined' ? BARREIRAS_DE_ESCOLHA : []).filter(x => x.luta)
       .forEach(x => add(`barreira ${x.id}`, 4, 14, () => Barreiras.fazer(x.id)));

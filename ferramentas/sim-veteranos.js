@@ -6,7 +6,9 @@
    e +10 (preparado de propósito). Veterano tem que ser desafio de
    verdade de passagem e vencível com preparo.
 
-   Uso:  node ferramentas/sim-veteranos.js [lutas por caso]
+   Uso:  node ferramentas/sim-veteranos.js [lutas por caso] [--conf]
+         --conf mostra cada um da Conferência (veteranos e convidados)
+         nas quatro rodadas, pra achar quem destoa.
    ============================================================ */
 const fs = require('fs'), vm = require('vm'), path = require('path');
 const raiz = path.resolve(__dirname, '..');
@@ -121,18 +123,26 @@ for (const v of VETERANOS){
   console.log(`${v.id.padEnd(9)} ${c.local.padEnd(16)} vitória ${r.vit}% · caídos ${r.cai} · níveis ${r.amostra.join('/')}`);
 }
 
-console.log('\n--- Conferência do Planalto Indigo, time de 6 ---');
+/* a Conferência é a chave de dezesseis: qualquer um dos veteranos dela
+   ou dos convidados pode cair em qualquer rodada. --conf mostra cada
+   um, rodada a rodada, com o jogador no nível 66, pra achar quem destoa */
+console.log('\n--- Conferência do Planalto Indigo, time de 6, chave de dezesseis ---');
 d.insignias = INS.slice(0, 8); d.flags.campeao_de_kanto = true;
+const naConferencia = VETERANOS.filter(v => v.conferencia).concat(CONVIDADOS_DA_CONFERENCIA);
 for (const nv of [60, 66, 72]){
-  const linha = [0, 1, 2].map(rod => {
-    const ids = rod === 2 ? ['greer'] : VETERANOS.filter(v => v.conferencia && !v.final).map(v => v.id);
-    const r = medir(nv, 'planalto', 6, () => {
-      const v = veterano(ids[Dados.entre(0, ids.length - 1)]);
-      return timeDeLinhas(v.times, Math.max(PISO_CONFERENCIA[rod], nivelDeReferencia() + ACIMA_CONFERENCIA + rod), 6, v.golpes, 95);
-    });
-    return `${PREMIO_CONFERENCIA[rod].rodada} ${r.vit}% (${r.cai})`;
+  const linha = PREMIO_CONFERENCIA.map((pr, rod) => {
+    const r = medir(nv, 'planalto', 6, () =>
+      adversarioDaConferencia({id:naConferencia[Dados.entre(0, naConferencia.length - 1)].id}, rod).time);
+    return `${pr.rodada} ${r.vit}% (${r.cai})`;
   });
   console.log(`jogador nv ${nv}: ${linha.join(' · ')}`);
+}
+if (process.argv.includes('--conf')){
+  console.log(`\n--- cada um da Conferência, jogador nv 66: ${PREMIO_CONFERENCIA.map(r => r.rodada.toLowerCase()).join(' · ')} ---`);
+  for (const v of naConferencia){
+    const res = PREMIO_CONFERENCIA.map((_, rod) => String(medir(66, 'planalto', 6, () => adversarioDaConferencia({id:v.id}, rod).time).vit).padStart(3) + '%');
+    console.log(`${nomeDeLuta(v).padEnd(32)} ${res.join(' · ')}`);
+  }
 }
 
 /* ── a rede (js/story/rede.js): as quatro provas e as brigas de serviço,

@@ -474,37 +474,33 @@ const SUSPEITO = [
      o torneio é a chave de dezesseis: cada rodada (a chave andada pelas
      funções do jogo), a tela de quem caiu nela e a do título, com a
      chave inteira jogada até o fim */
-  const rodadasDaConferencia = await page.evaluate(() => PREMIO_CONFERENCIA.length);
-  for (const rodada of [0, 1, 2, 3]){
+  for (const qual of ['torneio', 'conferencia']) for (const rodada of [0, 1, 2, 3]){
     await restaurar();
-    await tentar('torneio/' + rodada, r => {
-      Estado.dados.local = 'planalto'; Estado.dados.npcs['Ezra'] = {nome:'Ezra', opiniao:2, memorias:[]};
-      const t = sortearChaveamento(); for (let k = 0; k < r; k++) fecharRodadaDoTorneio(t, k, true);
-      t.rodada = r; t.adv = adversarioDaVez(t); Jogo.torneioAtual = t; UI.telaTorneio();
+    await tentar(`${qual}/${rodada}`, ([q, r]) => {
+      const d = Estado.dados;
+      d.local = 'planalto'; d.npcs['Ezra'] = {nome:'Ezra', opiniao:2, memorias:[]}; d.flags.campeao_de_kanto = true;
+      const t = chaveAteARodada(novaChave(q), r);
+      if (q === 'torneio'){ Jogo.torneioAtual = t; UI.telaTorneio(); } else { Jogo.conferenciaAtual = t; UI.telaConferencia(); }
       const app = document.getElementById('app');
       const oitavas = app.querySelectorAll('.c16-col[data-rodada="0"] .c16-quem').length;
       if (oitavas !== VAGAS_TORNEIO) throw new Error(`a chave tem ${oitavas} nomes nas oitavas, e são ${VAGAS_TORNEIO}`);
       const eu = app.querySelectorAll('.c16-quem.voce').length;
       if (eu !== r + 1) throw new Error(`na rodada ${r + 1} a sua vaga aparece ${eu} vezes na chave, e eram ${r + 1}`);
       if (app.querySelectorAll('.c16-jogo.agora').length !== 1) throw new Error('a chave não acende o seu confronto de agora');
-    }, rodada);
+    }, [qual, rodada]);
     await restaurar();
-    await tentar('torneio/eliminado na rodada ' + rodada, r => {
-      Estado.dados.local = 'planalto';
-      const t = sortearChaveamento(); for (let k = 0; k < r; k++) fecharRodadaDoTorneio(t, k, true);
-      t.rodada = r; t.adv = adversarioDaVez(t); Jogo.torneioAtual = t;
-      Jogo.resultadoTorneio({resultado:'derrota'});
+    await tentar(`${qual}/eliminado na rodada ${rodada}`, ([q, r]) => {
+      const d = Estado.dados;
+      d.local = 'planalto'; d.flags.campeao_de_kanto = true;
+      const t = chaveAteARodada(novaChave(q), r);
+      if (q === 'torneio'){ Jogo.torneioAtual = t; Jogo.resultadoTorneio({resultado:'derrota'}); }
+      else { Jogo.conferenciaAtual = t; Jogo.veteranoAtual = {id:t.adv.id, tipo:'conferencia', conferencia:true}; Conferencia.resultado({resultado:'derrota'}); }
       const app = document.getElementById('app');
       if (!app.querySelector('.chave16 .c16-titulo.tem')) throw new Error('quem caiu não vê a chave jogada até o título');
-      if (!/o título fica com|o título do dia (é|fica com)/i.test(app.innerText)) throw new Error('quem caiu não fica sabendo quem levou o título');
+      if (!/o título fica com|o título do (dia|sábado) (é|fica com)/i.test(app.innerText)) throw new Error('quem caiu não fica sabendo quem levou o título');
       if (/undefined|contra\s*\./.test(app.innerText)) throw new Error('o texto de quem caiu ficou sem o nome de alguém');
-      if (Jogo.torneioAtual) throw new Error('o torneio continua aberto depois da derrota');
-    }, rodada);
-    if (rodada >= rodadasDaConferencia) continue;   // a Conferência tem três rodadas
-    await restaurar();
-    await tentar('conferência/' + rodada, r => {
-      Estado.dados.local = 'planalto'; Jogo.conferenciaAtual = {rodada:r, adversarios:montarConferencia()}; UI.telaConferencia();
-    }, rodada);
+      if (Jogo.torneioAtual || Jogo.conferenciaAtual) throw new Error('a chave continua aberta depois da derrota');
+    }, [qual, rodada]);
   }
   await page.evaluate(() => { Jogo.torneioAtual = null; Jogo.conferenciaAtual = null; });
 
@@ -525,12 +521,28 @@ const SUSPEITO = [
       if (new Set(ids).size !== ids.length) falhas.push('alguém se inscreveu duas vezes no mesmo chaveamento: ' + ids.join(', '));
       const ez = t.inscritos.findIndex(x => x.id === 'ezra');
       if (ez >= 0) vagasDoEzra.add(ez);
-      for (let k = 0; k < PREMIO_TORNEIO.length - 1; k++) fecharRodadaDoTorneio(t, k, true);
+      for (let k = 0; k < PREMIO_TORNEIO.length - 1; k++) fecharRodada(t, k, true);
       t.rodada = PREMIO_TORNEIO.length - 1;
       finalistas.add(t.inscritos[vagaDoAdversario(t)].id);
     }
     if (finalistas.size < 4) falhas.push(`em 80 chaveamentos a final teve só ${finalistas.size} adversários diferentes: ${[...finalistas].join(', ')}`);
     if (vagasDoEzra.size && vagasDoEzra.size < 4) falhas.push('o Ezra cai sempre nas mesmas vagas: ' + [...vagasDoEzra].join(', '));
+    /* a Conferência: a Greer sempre na chave, e nunca marcada pra final */
+    d.flags.campeao_de_kanto = true;
+    const finaisConf = new Set();
+    let greerNaFinal = 0;
+    for (let i = 0; i < 80; i++){
+      const c = novaChave('conferencia');
+      if (c.inscritos.length !== VAGAS_TORNEIO) falhas.push(`a Conferência saiu com ${c.inscritos.length} vagas`);
+      const ids = c.inscritos.filter(x => !x.voce).map(x => x.id);
+      if (new Set(ids).size !== ids.length) falhas.push('alguém entrou duas vezes na mesma Conferência: ' + ids.join(', '));
+      if (!ids.includes('greer')) falhas.push('a Greer ficou fora da Conferência');
+      chaveAteARodada(c, PREMIO_CONFERENCIA.length - 1);
+      const f = c.inscritos[vagaDoAdversario(c)].id;
+      finaisConf.add(f); if (f === 'greer') greerNaFinal++;
+    }
+    if (finaisConf.size < 4) falhas.push(`em 80 Conferências a final teve só ${finaisConf.size} adversários diferentes`);
+    if (greerNaFinal === 80) falhas.push('a Greer continua marcada pra final da Conferência');
     return falhas;
   });
   for (const f of sorteio){ onde = 'torneio/sorteio'; anota('torneio', f); }
@@ -547,6 +559,19 @@ const SUSPEITO = [
     if (!document.querySelector('#app .chave16')) throw new Error('recarregou entre rodadas e a chave sumiu');
     Jogo.desistirTorneio();
     if (Jogo.torneioAtual || Estado.dados.torneioAberto) throw new Error('desistiu e o torneio ficou no save');
+  });
+  await restaurar();
+  await tentar('conferência/recarregar entre rodadas', () => {
+    const d = Estado.dados;
+    d.local = 'planalto'; d.capitulo = 26; d.jogador.dinheiro = 90000; d.flags.campeao_de_kanto = true; d.arena = {};
+    Relogio.ateODia(DIA_DA_CONFERENCIA, 10, true);
+    Conferencia.iniciar();
+    if (!Jogo.conferenciaAtual) throw new Error('a inscrição não abriu a Conferência');
+    Estado.salvar('auto');
+    Jogo.continuar();
+    if (!document.querySelector('#app .chave16.conf')) throw new Error('recarregou entre rodadas e a chave da Conferência sumiu');
+    Conferencia.desistir();
+    if (Jogo.conferenciaAtual || Estado.dados.conferenciaAberta) throw new Error('desistiu e a Conferência ficou no save');
   });
 
   /* ---------- viajar com o time inteiro desmaiado ----------
@@ -578,7 +603,7 @@ const SUSPEITO = [
     if (d.relogio.hora !== ARENA_COMECA) falhas.push(`inscrito de manhã, o relógio foi pra ${d.relogio.hora}h, e o chaveamento sai à ${ARENA_COMECA}`);
     if (statusTorneio().estado === 'disponivel') falhas.push('dá pra se inscrever duas vezes no mesmo dia');
     { const t = Jogo.torneioAtual, R = PREMIO_TORNEIO.length - 1;
-      for (let k = 0; k < R; k++) fecharRodadaDoTorneio(t, k, true);
+      for (let k = 0; k < R; k++) fecharRodada(t, k, true);
       t.rodada = R; t.adv = adversarioDaVez(t); }
     const rep = () => d.reputacao.pontosBom;
     d.flags['rep_torneio_' + (PREMIO_TORNEIO.length - 1)] = true; const antes = rep();
@@ -607,8 +632,8 @@ const SUSPEITO = [
       ['ginásio/' + id, `Jogo.ginasioAtual = GINASIOS.find(g => g.id === '${id}'); Jogo.resultadoGinasio({resultado:'vitoria'})`]),
     ...[0, 1, 2, 3].map(i => ['elite/' + i, `Estado.dados.local = 'planalto'; Jogo.eliteAtual = {indice:${i}, campeao:false}; Jogo.resultadoElite({resultado:'vitoria'})`]),
     ['campeão', `Estado.dados.local = 'planalto'; Jogo.eliteAtual = {indice:4, campeao:true}; Jogo.resultadoElite({resultado:'vitoria'})`],
-    ...[0, 1, 2, 3].map(r => ['torneio/' + r, `Estado.dados.local = 'planalto'; { const t = sortearChaveamento(); for (let k = 0; k < ${r}; k++) fecharRodadaDoTorneio(t, k, true); t.rodada = ${r}; t.adv = adversarioDaVez(t); Jogo.torneioAtual = t; } Jogo.resultadoTorneio({resultado:'vitoria'})`]),
-    ...[0, 1, 2].map(r => ['conferência/' + r, `Estado.dados.local = 'planalto'; Jogo.conferenciaAtual = {rodada:${r}, adversarios:montarConferencia()}; Jogo.veteranoAtual = {tipo:'conferencia'}; Conferencia.resultado({resultado:'vitoria'})`])
+    ...[0, 1, 2, 3].map(r => ['torneio/' + r, `Estado.dados.local = 'planalto'; Jogo.torneioAtual = chaveAteARodada(novaChave('torneio'), ${r}); Jogo.resultadoTorneio({resultado:'vitoria'})`]),
+    ...[0, 1, 2, 3].map(r => ['conferência/' + r, `Estado.dados.local = 'planalto'; Estado.dados.flags.campeao_de_kanto = true; Jogo.conferenciaAtual = chaveAteARodada(novaChave('conferencia'), ${r}); Jogo.veteranoAtual = {tipo:'conferencia'}; Conferencia.resultado({resultado:'vitoria'})`])
   ];
   for (const [rot, codigo] of FESTAS){
     await restaurar();

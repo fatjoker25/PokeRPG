@@ -238,8 +238,8 @@ const DA_HISTORIA_NO_TORNEIO = 4;                  // quem te conhece, no máxim
    da rodada. `segura` é o item do ás. `ajuste` é o acerto de nível de
    cada um, medido no sim-torneio: time de tipo que o jogador comum não
    aguenta (a água e o gelo do Ewan) vem mais baixo, o que cai fácil vem mais
-   alto, e todos ficam perto da mesma dureza. Os de sempre são mais que
-   as quinze vagas: o chaveamento de cada dia tem gente diferente. */
+   alto, e todos ficam perto da mesma dureza. Os de sempre são bem mais
+   que as quinze vagas: o chaveamento de cada dia tem gente diferente. */
 const RIVAIS_TORNEIO = [
   {id:'ezra', nome:'Ezra', tipos:['Normal','Voador'], fala:'"A GENTE TÁ NO MESMO CHAVEAMENTO! Cara! Isso é tipo o destino!"',
    cond:d=>!!d.npcs['Ezra'] && d.npcs['Ezra'].opiniao >= 0},
@@ -299,7 +299,7 @@ const RIVAIS_TORNEIO = [
    linhas:[189, 114, 45, 71, 103, 154], golpes:['Giga Drain', 'Sludge Bomb', 'Psychic', 'Body Slam'], segura:'Wise Glasses', ajuste:5},
   {nome:'Aprendiz Ninja Kian', curto:'Kian', arq:'ninjaboy_gen6', de:'de Fuchsia',
    fala:'"Você nem me viu entrar na arena. Isso já é meio caminho."',
-   linhas:[168, 211, 89, 31, 169, 110], golpes:['Sludge Bomb', 'Shadow Ball', 'Earthquake', 'Return'], segura:'Quick Claw', ajuste:3},
+   linhas:[168, 211, 89, 31, 169, 110], golpes:['Sludge Bomb', 'Shadow Ball', 'Earthquake', 'Return'], segura:'Quick Claw', ajuste:5},
   {nome:'Cavalheiro Ambrose', curto:'Ambrose', arq:'gentleman_gen8', de:'de Vermilion',
    fala:'"Eu me inscrevo todo ano desde antes de você nascer. Perdi quase todos. Quase."',
    linhas:[210, 234, 53, 217, 241, 59], golpes:['Body Slam', 'Earthquake', 'Return', 'Fire Blast'], segura:'Focus Band', ajuste:-3},
@@ -308,7 +308,25 @@ const RIVAIS_TORNEIO = [
    linhas:[12, 166, 205, 127, 214, 212], golpes:['Swords Dance', 'Earthquake', 'Fury Cutter', 'Return'], segura:'Muscle Band', ajuste:1},
   {nome:'Pokémaníaco Quincy', curto:'Quincy', arq:'pokemaniac_gen6', de:'de Pewter',
    fala:'"Eu vim pela vitrine. Se eu ganhar, ótimo. Se eu perder, eu vi o seu time de perto."',
-   linhas:[206, 132, 83, 199, 196, 248], golpes:['Psychic', 'Earthquake', 'Rock Slide', 'Shadow Ball'], segura:'Leftovers', ajuste:-2}
+   linhas:[206, 132, 83, 199, 196, 248], golpes:['Psychic', 'Earthquake', 'Rock Slide', 'Shadow Ball'], segura:'Leftovers', ajuste:-2},
+  {nome:'Carvoeiro Dax', curto:'Dax', arq:'kindler_gen6', de:'da Rota 9',
+   fala:'"Eu passo a semana do lado do forno de carvão. Arena é o lugar mais fresco que eu conheço."',
+   linhas:[219, 76, 136, 126, 112, 229], golpes:['Fire Blast', 'Earthquake', 'Rock Slide', 'Body Slam'], segura:'Leftovers', ajuste:2},
+  {nome:'Cozinheiro Remy', curto:'Remy', arq:'cook_gen9', de:'de Celadon',
+   fala:'"Eu fechei a cozinha às duas pra vir. Se eu cair cedo, ainda dá tempo de abrir pro jantar."',
+   linhas:[83, 108, 162, 80, 241, 143], golpes:['Body Slam', 'Earthquake', 'Ice Beam', 'Return'], segura:'Leftovers', ajuste:-7},
+  {nome:'Triatleta Rafe', curto:'Rafe', arq:'triathletebiker_gen6', de:'da Ciclovia',
+   fala:'"Vim pedalando de Fuchsia. Ainda estou aquecido, então é melhor começar logo."',
+   linhas:[101, 22, 85, 78, 135, 169], golpes:['Double-Edge', 'Thunderbolt', 'Return', 'Steel Wing'], segura:'Quick Claw', ajuste:7},
+  {nome:'Dançarina Zara', curto:'Zara', f:true, arq:'dancer_gen7', de:'de Vermilion',
+   fala:'"No cais eu danço pra quem chega de barco. Hoje eu vim ver quem sai daqui de pé."',
+   linhas:[124, 182, 237, 40, 122, 196], golpes:['Psychic', 'Ice Beam', 'Body Slam', 'Dynamic Punch'], segura:'Wise Glasses'},
+  {nome:'Turista Elin', curto:'Elin', f:true, arq:'lady_gen6', de:'de Johto',
+   fala:'"Eu vim de Johto ver o Planalto, e o guarda disse que dava pra entrar no torneio. Ninguém me avisou que era sério."',
+   linhas:[162, 224, 207, 232, 181, 157], golpes:['Earthquake', 'Thunderbolt', 'Fire Blast', 'Return'], segura:'Muscle Band'},
+  {nome:'Beldade Noemi', curto:'Noemi', f:true, arq:'beauty_gen7', de:'de Saffron',
+   fala:'"Não olha pra mim. Olha pros meus. É deles que você tem que ter medo."',
+   linhas:[53, 38, 36, 134, 197, 131], golpes:['Body Slam', 'Ice Beam', 'Psychic', 'Shadow Ball'], segura:'Focus Band'}
 ];
 /* rosto e nome de quem se inscreve: o nome sai do sorteio, como o do
    treinador de estrada, e o rosto é só dele. Cada um tem uma chave
@@ -350,26 +368,52 @@ function inscritoDoTorneio(id){
   return RIVAIS_TORNEIO.find(r => r.id === id && (!r.cond || r.cond(d))) || RIVAIS_TORNEIO.find(r => r.id === id) || null;
 }
 
-/* O sorteio: até quatro que conhecem você (quem, sai no dado), o resto
-   entre os de sempre, e cada um — você também — numa das dezesseis
-   vagas. t.chave[k] são as vagas de quem começa a rodada k, na ordem
-   dos confrontos: a vaga 0 luta com a 1, a 2 com a 3, e assim por
-   diante; t.chave[4] é quem leva o título. */
-function sortearChaveamento(){
+/* ── a chave de dezesseis: o Torneio Aberto e a Conferência ──
+   As duas competições correm na mesma chave. Cada uma diz quem se
+   inscreve (quinze, além de você), como se monta o adversário de uma
+   rodada e o que cada rodada paga; o resto — sorteio, as lutas das
+   outras quadras, a chave que anda — é um só. t.qual diz de quem é a
+   chave; t.chave[k] são as vagas de quem começa a rodada k, na ordem
+   dos confrontos (a vaga 0 luta com a 1, a 2 com a 3), e a última
+   casa é quem levou o título. A Conferência se registra em
+   veteranos.js. */
+const CHAVES = {};
+CHAVES.torneio = {
+  nome:'Torneio Aberto',
+  premios: () => PREMIO_TORNEIO,
+  inscritos: () => inscritosDoTorneio(),
+  adversario(ins, rodada){
+    const r = inscritoDoTorneio(ins.id);
+    return r ? adversarioTorneio(r, rodada) : null;
+  }
+};
+function chaveDe(t){ return CHAVES[(t && t.qual) || 'torneio']; }
+function rodadasDaChave(t){ return chaveDe(t).premios(); }
+const _embaralhar = l => l.map(r => [Math.random(), r]).sort((a, b) => a[0] - b[0]).map(x => x[1]);
+
+/* O sorteio: quinze inscritos e você, cada um numa vaga, no dado */
+function novaChave(qual){
+  const gente = _embaralhar(CHAVES[qual].inscritos()).slice(0, VAGAS_TORNEIO - 1);
+  const eu = Dados.entre(0, gente.length);
+  gente.splice(eu, 0, {voce:true});
+  const t = {qual, rodada:0, inscritos:gente, eu, chave:[gente.map((_, i) => i)]};
+  t.adv = adversarioDaVez(t);
+  return t;
+}
+function sortearChaveamento(){ return novaChave('torneio'); }
+
+/* Quem se inscreve no Torneio Aberto: até quatro que conhecem você
+   (quem, sai no dado), o resto entre os de sempre. Os de sempre são
+   mais que as quinze vagas, então sobram três ou mais. */
+function inscritosDoTorneio(){
   const d = Estado.dados;
   /* o Ezra só entra com o time de rival dele; o resto, com linhas */
   const pode = r => (!r.cond || r.cond(d)) && (r.linhas || r.veterano || (r.id === 'ezra' && d.rival));
-  const embaralha = l => l.map(r => [Math.random(), r]).sort((a, b) => a[0] - b[0]).map(x => x[1]);
   const unicos = l => { const ja = new Set(); return l.filter(r => !ja.has(r.id) && ja.add(r.id)); };
-  const daHistoria = unicos(embaralha(RIVAIS_TORNEIO.filter(r => r.cond && pode(r)))).slice(0, DA_HISTORIA_NO_TORNEIO);
-  const deSempre = embaralha(RIVAIS_TORNEIO.filter(r => !r.cond && pode(r))).slice(0, VAGAS_TORNEIO - 1 - daHistoria.length);
-  const gente = embaralha(daHistoria.concat(deSempre))
+  const daHistoria = unicos(_embaralhar(RIVAIS_TORNEIO.filter(r => r.cond && pode(r)))).slice(0, DA_HISTORIA_NO_TORNEIO);
+  const deSempre = _embaralhar(RIVAIS_TORNEIO.filter(r => !r.cond && pode(r))).slice(0, VAGAS_TORNEIO - 1 - daHistoria.length);
+  return daHistoria.concat(deSempre)
     .map(r => ({id:r.id, nome:r.nome, curto:r.curto || r.nome, f:!!r.f, de:r.de || '', fala:r.fala}));
-  const eu = Dados.entre(0, gente.length);
-  gente.splice(eu, 0, {voce:true});
-  const t = {rodada:0, inscritos:gente, eu, chave:[gente.map((_, i) => i)]};
-  t.adv = adversarioDaVez(t);
-  return t;
 }
 
 /* quem está do outro lado da sua luta, na rodada de agora */
@@ -379,8 +423,16 @@ function vagaDoAdversario(t){
 }
 function adversarioDaVez(t){
   const vaga = vagaDoAdversario(t);
-  const ins = t.inscritos[vaga];
-  const adv = adversarioTorneio(inscritoDoTorneio(ins.id) || ins, t.rodada);
+  let ins = t.inscritos[vaga];
+  let adv = chaveDe(t).adversario(ins, t.rodada);
+  if (!adv){
+    /* quem estava na vaga não existe mais (save de outra versão): a vaga
+       fica com quem sobrou fora da chave */
+    const dentro = new Set(t.inscritos.map(x => x.id));
+    const sobra = chaveDe(t).inscritos().find(x => !dentro.has(x.id));
+    if (sobra){ t.inscritos[vaga] = ins = sobra; adv = chaveDe(t).adversario(ins, t.rodada); }
+  }
+  if (!adv) return null;
   adv.fala = ins.fala || adv.fala;   // a fala do humor de quando se inscreveu
   adv.vaga = vaga;
   return adv;
@@ -390,14 +442,13 @@ function adversarioDaVez(t){
    dado a cada dez níveis somados do time que ele levaria pra arena
    naquela rodada; 4+ é sucesso, quem tirar mais passa e o empate rola
    de novo. Ninguém vê placar: a chave só mostra quem passou. */
-function forcaNoTorneio(ins, rodada){
-  const r = inscritoDoTorneio(ins.id);
-  if (!r) return 1;
-  const time = adversarioTorneio(r, rodada).time;
-  return Math.max(1, Math.round(time.reduce((s, p) => s + p.nivel, 0) / 10));
+function forcaNaChave(t, ins, rodada){
+  const adv = ins && !ins.voce ? chaveDe(t).adversario(ins, rodada) : null;
+  if (!adv || !adv.time || !adv.time.length) return 1;
+  return Math.max(1, Math.round(adv.time.reduce((s, p) => s + p.nivel, 0) / 10));
 }
 function lutaDeFora(t, a, b, rodada){
-  const fa = forcaNoTorneio(t.inscritos[a], rodada), fb = forcaNoTorneio(t.inscritos[b], rodada);
+  const fa = forcaNaChave(t, t.inscritos[a], rodada), fb = forcaNaChave(t, t.inscritos[b], rodada);
   const rola = n => { let s = 0; for (let i = 0; i < n; i++) if (Math.random() * 6 >= 3) s++; return s; };
   for (let vez = 0; vez < 12; vez++){
     const sa = rola(fa), sb = rola(fb);
@@ -408,7 +459,7 @@ function lutaDeFora(t, a, b, rodada){
 
 /* Fecha a rodada: a sua luta já foi (você passou ou não), as outras se
    decidem agora, e quem passa ocupa a vaga dele na rodada seguinte */
-function fecharRodadaDoTorneio(t, rodada, voceGanhou){
+function fecharRodada(t, rodada, voceGanhou){
   const vivos = t.chave[rodada], prox = [];
   for (let m = 0; m < vivos.length; m += 2){
     const a = vivos[m], b = vivos[m + 1];
@@ -419,9 +470,10 @@ function fecharRodadaDoTorneio(t, rodada, voceGanhou){
 }
 /* você caiu: o resto da tarde se joga sem você, até o título */
 function terminarSemVoce(t, rodada){
-  fecharRodadaDoTorneio(t, rodada, false);
-  for (let r = rodada + 1; r < PREMIO_TORNEIO.length; r++) fecharRodadaDoTorneio(t, r, false);
-  return t.inscritos[t.chave[PREMIO_TORNEIO.length][0]];
+  const R = rodadasDaChave(t).length;
+  fecharRodada(t, rodada, false);
+  for (let r = rodada + 1; r < R; r++) fecharRodada(t, r, false);
+  return t.inscritos[t.chave[R][0]];
 }
 /* quem o seu próximo adversário tirou da frente, na quadra ao lado */
 function quemOProximoTirou(t){
@@ -430,13 +482,21 @@ function quemOProximoTirou(t){
   const i = prev.indexOf(vaga);
   return i < 0 ? null : t.inscritos[prev[i ^ 1]];
 }
+/* a chave andada até a rodada r, com você ganhando as suas: pra quem
+   precisa de uma chave no meio (os verificadores, a luta salva velha) */
+function chaveAteARodada(t, r){
+  for (let k = t.rodada; k < r; k++) fecharRodada(t, k, true);
+  t.rodada = r;
+  t.adv = adversarioDaVez(t);
+  return t;
+}
 
 /* Luta de torneio salva antes do chaveamento de dezesseis (três
    rodadas, sem chave): vira chave nova, com a luta de agora nas
    oitavas, contra quem já estava na sua frente */
 function torneioDeAntes(t){
   if (!t || t.chave || !Array.isArray(t.adversarios)) return t;
-  const novo = sortearChaveamento();
+  const novo = novaChave('torneio');
   const adv = t.adversarios[t.rodada] || t.adversarios[0];
   if (!adv) return novo;
   const vaga = vagaDoAdversario(novo);

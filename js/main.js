@@ -76,7 +76,13 @@ const Jogo = {
   veteranoAtual: null,
   /* luta da rede (js/story/rede.js): {tipo:'prova'|'servico', id, i, ramo} */
   redeAtual: null,
-  conferenciaAtual: null,
+  /* a chave da Conferência, do mesmo jeito: no save (d.conferenciaAberta) */
+  get conferenciaAtual(){ const d = Estado.dados; return (d && d.conferenciaAberta) || null; },
+  set conferenciaAtual(c){
+    const d = Estado.dados;
+    if (!d) return;
+    if (c) d.conferenciaAberta = conferenciaDeAntes(c); else delete d.conferenciaAberta;
+  },
   depoisDaEstrada: null,
   capDepoisDaViagem: null,
   destinoDaViagem: null,
@@ -109,6 +115,10 @@ const Jogo = {
     if (this.torneioAtual){
       if (Mundo.id() === 'planalto') return UI.telaTorneio();
       this.torneioAtual = null;
+    }
+    if (this.conferenciaAtual){
+      if (Mundo.id() === 'planalto') return UI.telaConferencia();
+      this.conferenciaAtual = null;
     }
     if (Estado.dados.modo === 'mundo' || !Estado.dados.cena){
       return Exploracao.tela([{tipo:'info', texto:'Você retoma o caminho de onde parou.'}]);
@@ -546,7 +556,7 @@ const Jogo = {
       if (c && fim.resultado !== 'gameover') L('citacao', c);
       if (venceu) dinheiro(Rede.premio());
     } else if (this.veteranoAtual){
-      const a = this.veteranoAtual, v = veterano(a.id);
+      const a = this.veteranoAtual, v = a.tipo === 'conferencia' ? daConferencia(a.id) : veterano(a.id);
       if (a.tipo === 'desafio'){
         const c = Veteranos.citacao(venceu);
         if (c && fim.resultado !== 'gameover') L('citacao', c);
@@ -1584,7 +1594,7 @@ const Jogo = {
     }
 
     /* a sua quadra fecha; as outras também, e a chave anda */
-    fecharRodadaDoTorneio(t, t.rodada, true);
+    fecharRodada(t, t.rodada, true);
     t.rodada++;
     const campeao = t.rodada >= PREMIO_TORNEIO.length;
     const festa = () => Vitoria.rodada({

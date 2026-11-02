@@ -5519,40 +5519,11 @@ h3.sec-conf{--sec:#7fb2ff}
 }
 
 /* ============================================================
-   O CHAVEAMENTO — torneio e Conferência
-   As três lutas até o troféu, uma em cada quadro, ligadas por um
-   trilho: a vencida fica verde com o carimbo, a de agora acende na
-   cor do torneio e a de depois espera apagada. Em cada quadro, o
-   rosto de quem está nela, o time em ícones (na Conferência a bola
-   fica fechada: ninguém mostra o time antes da arena) e o prêmio
-   da rodada. No celular o trilho desce.
+   O QUADRO DA SUA LUTA — as peças dele
+   Quem está do outro lado (rosto, nome, de onde vem), as bolas
+   fechadas (ninguém mostra o time antes da arena) e o prêmio da
+   rodada. O quadro é o .torneio-vez, mais embaixo, junto da chave.
    ============================================================ */
-.chave{
-  --chave:#ff8a3d;
-  list-style:none;margin:6px 0 20px;padding:0;
-  display:grid;grid-template-columns:repeat(3, minmax(0, 1fr));gap:22px;counter-reset:rodada;
-}
-.chave-rodada{
-  position:relative;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;
-  padding:12px 12px 13px;border-radius:16px;
-  background:linear-gradient(180deg, color-mix(in srgb, var(--painel-2) 85%, var(--borda)), var(--bg-2));
-  border:1px solid color-mix(in srgb, var(--borda-forte) 70%, transparent);
-  box-shadow:0 4px 0 color-mix(in srgb, var(--bg) 55%, #000), 0 16px 24px -20px rgba(0,0,0,.9);
-}
-/* o trilho até o próximo quadro */
-.chave-rodada:not(:last-child)::after{
-  content:'';position:absolute;top:50%;right:-22px;width:22px;height:4px;margin-top:-2px;
-  background:linear-gradient(90deg, color-mix(in srgb, var(--borda-forte) 80%, transparent), color-mix(in srgb, var(--borda-forte) 40%, transparent));
-}
-.chave-rodada.vencida:not(:last-child)::after{background:linear-gradient(90deg, #43b581, color-mix(in srgb, #43b581 50%, transparent))}
-.chave-rodada.agora{
-  border-color:color-mix(in srgb, var(--chave) 75%, transparent);
-  background:linear-gradient(180deg, color-mix(in srgb, var(--chave) 20%, var(--painel-2)), color-mix(in srgb, var(--chave) 6%, var(--bg-2)));
-  box-shadow:0 4px 0 color-mix(in srgb, var(--chave) 35%, #05070f), 0 0 0 3px color-mix(in srgb, var(--chave) 22%, transparent),
-             0 18px 28px -18px color-mix(in srgb, var(--chave) 70%, #000);
-}
-.chave-rodada.depois{opacity:.62}
-.chave-rodada.vencida{border-color:color-mix(in srgb, #43b581 55%, transparent)}
 .chave-cab{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;flex-wrap:wrap}
 .chave-cab svg.icone{width:16px;height:16px;color:#ffd166}
 .chave-nome-rodada{font:700 12px/1.2 var(--letra-hud, var(--fonte));letter-spacing:.14em;text-transform:uppercase;color:var(--texto-fraco)}
@@ -5560,9 +5531,6 @@ h3.sec-conf{--sec:#7fb2ff}
   font:700 10.5px/1 var(--letra-hud, var(--fonte));letter-spacing:.06em;text-transform:uppercase;
   padding:3px 8px;border-radius:999px;color:var(--texto-fraco);background:rgba(255,255,255,.07);
 }
-.chave-rodada.agora .chave-selo{color:#1b1206;background:var(--chave);animation:chaveAgora 1.6s ease-in-out infinite}
-.chave-rodada.vencida .chave-selo{color:#0c2416;background:#43b581}
-.chave-rodada.vencida .chave-selo::before{content:'✓ '}
 @keyframes chaveAgora{0%,100%{box-shadow:0 0 0 0 color-mix(in srgb, var(--chave) 60%, transparent)}50%{box-shadow:0 0 0 5px color-mix(in srgb, var(--chave) 0%, transparent)}}
 .chave-rosto{
   width:84px;height:84px;margin-top:2px;border-radius:16px;overflow:hidden;flex:0 0 auto;
@@ -5572,7 +5540,6 @@ h3.sec-conf{--sec:#7fb2ff}
   box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--borda-forte) 70%, transparent), inset 0 -12px 18px -12px rgba(0,0,0,.7);
 }
 .chave-rosto img{width:100%;height:100%;object-fit:contain;object-position:50% 100%;image-rendering:pixelated}
-.chave-rodada.vencida .chave-rosto img{filter:grayscale(.7) brightness(.85)}
 .chave-quem{font:700 15px/1.25 var(--letra-hud, var(--fonte));color:var(--texto);overflow-wrap:anywhere}
 .chave-sub{font:500 12px/1.3 var(--letra-hud, var(--fonte));color:var(--texto-fraco);font-variant-numeric:tabular-nums}
 .chave-time{display:flex;justify-content:center;flex-wrap:wrap;gap:2px;min-height:34px}
@@ -5598,21 +5565,6 @@ h3.sec-conf{--sec:#7fb2ff}
 .chave-din svg.icone{width:15px;height:15px;color:#ffd166}
 .chave-item .item-icone{width:22px;height:22px;margin:-2px 0}
 .chave-item b{font-weight:600}
-@media (max-width:620px){
-  .chave{grid-template-columns:minmax(0,1fr);gap:16px}
-  .chave-rodada{display:grid;grid-template-columns:72px minmax(0,1fr);grid-template-areas:"rosto cab" "rosto quem" "rosto sub" "rosto time" "premio premio";
-    column-gap:12px;row-gap:3px;align-items:center;text-align:left;padding:11px 12px 12px}
-  .chave-cab{grid-area:cab;justify-content:flex-start}
-  .chave-rosto{grid-area:rosto;width:72px;height:72px;align-self:start}
-  .chave-quem{grid-area:quem}
-  .chave-sub{grid-area:sub}
-  .chave-time{grid-area:time;justify-content:flex-start;min-height:0}
-  .chave-premio{grid-area:premio;justify-content:flex-start}
-  .chave-rodada:not(:last-child)::after{top:auto;bottom:-16px;right:auto;left:47px;width:4px;height:16px;margin:0;
-    background:color-mix(in srgb, var(--borda-forte) 70%, transparent)}
-  .chave-rodada.vencida:not(:last-child)::after{background:#43b581}
-}
-@media (prefers-reduced-motion: reduce){ .chave-rodada.agora .chave-selo{animation:none} }
 
 /* ============================================================
    A CHAVE DE DEZESSEIS — o Torneio Aberto
@@ -5632,6 +5584,8 @@ h3.sec-conf{--sec:#7fb2ff}
   margin:6px 0 16px;
 }
 .painel:has(> .cap-cabecalho) > .chave16{max-width:66rem}
+/* a Conferência acende na cor dela, a da festa */
+.chave16.conf,.torneio-vez.conf{--chave:#7fb2ff}
 .c16-lado{display:grid;grid-template-columns:repeat(3, minmax(0, 1fr));column-gap:var(--c16-gap)}
 .c16-lado.b{direction:rtl}
 .c16-col,.c16-final{display:flex;flex-direction:column;min-width:0}
@@ -5685,7 +5639,9 @@ h3.sec-conf{--sec:#7fb2ff}
              color-mix(in srgb, var(--bg) 82%, var(--borda));
 }
 .c16-rosto img{width:175%;height:175%;max-width:none;margin:-6% 0 0 -37.5%;object-fit:contain;image-rendering:pixelated}
-.c16-rosto b{display:grid;place-items:center;width:100%;height:100%;font:700 12px/1 var(--letra-hud, var(--fonte));color:#ffd166}
+/* a inicial de quem joga, quando a foto não vem */
+.c16-rosto b{display:none;place-items:center;width:100%;height:100%;font:700 12px/1 var(--letra-hud, var(--fonte));color:#ffd166}
+.c16-rosto.sem-foto b{display:grid}
 .c16-quem.vaga{color:var(--texto-fraco);font-weight:500;font-style:italic}
 .c16-quem.vaga .c16-rosto{background:none;box-shadow:inset 0 0 0 1px dashed}
 .c16-quem.voce{color:#ffd166}
@@ -5740,7 +5696,8 @@ h3.sec-conf{--sec:#7fb2ff}
 .torneio-vez .chave-premio{width:auto;margin:0;padding:0 0 0 14px;border-top:0;border-left:1px dashed color-mix(in srgb, var(--borda-forte) 60%, transparent);
   flex-direction:column;align-items:flex-start}
 /* a escada dos prêmios, rodada por rodada */
-.tv-escada{display:grid;grid-template-columns:repeat(4, minmax(0, 1fr));gap:8px;margin:0 0 18px}
+.tv-escada{--chave:#ff8a3d;display:grid;grid-template-columns:repeat(4, minmax(0, 1fr));gap:8px;margin:0 0 18px}
+.tv-escada.conf{--chave:#7fb2ff}
 .tv-degrau{
   display:flex;flex-direction:column;align-items:center;gap:2px;padding:7px 6px;border-radius:12px;text-align:center;
   background:rgba(255,255,255,.05);border:1px solid color-mix(in srgb, var(--borda-forte) 50%, transparent);
@@ -5749,12 +5706,9 @@ h3.sec-conf{--sec:#7fb2ff}
 .tv-degrau b{font:700 13px/1.2 var(--letra-hud, var(--fonte));font-variant-numeric:tabular-nums;color:var(--texto)}
 .tv-degrau.feito{border-color:color-mix(in srgb, #43b581 55%, transparent)}
 .tv-degrau.feito b{color:#7fdca9}
-.tv-degrau.agora{border-color:color-mix(in srgb, #ff8a3d 75%, transparent);background:color-mix(in srgb, #ff8a3d 12%, transparent)}
-.tv-degrau.agora small{color:#ff8a3d}
+.tv-degrau.agora{border-color:color-mix(in srgb, var(--chave) 75%, transparent);background:color-mix(in srgb, var(--chave) 12%, transparent)}
+.tv-degrau.agora small{color:var(--chave)}
 @media (max-width:620px){
-  /* as peças são as do quadro antigo, que no celular ganham grid-area:
-     aqui elas voltam pro fluxo da grade do quadro da sua luta */
-  .torneio-vez > *{grid-area:auto}
   .torneio-vez{grid-template-columns:72px minmax(0,1fr);padding:11px 12px}
   .torneio-vez .chave-rosto{width:72px;height:72px;align-self:start}
   .torneio-vez .chave-premio{grid-column:1 / -1;flex-direction:row;flex-wrap:wrap;padding:9px 0 0;border-left:0;
