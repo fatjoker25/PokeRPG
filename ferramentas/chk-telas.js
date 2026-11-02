@@ -484,6 +484,21 @@ const SUSPEITO = [
   }
   await page.evaluate(() => { Jogo.torneioAtual = null; Jogo.conferenciaAtual = null; });
 
+  /* ---------- viajar com o time inteiro desmaiado ----------
+     o selvagem que sai no caminho faz você recuar, e a viagem termina:
+     nada fica pendurado pra próxima luta te levar pro destino velho */
+  await restaurar();
+  const desmaiado = await page.evaluate(() => {
+    const d = Estado.dados, falhas = [], chance = Dados.chance;
+    d.time.forEach(p => { p.hp = 0; }); d.local = 'rota1'; Jogo.depoisDaEstrada = null;
+    Dados.chance = () => true;
+    try { Exploracao.viajar('viridian'); } finally { Dados.chance = chance; }
+    if (d.local !== 'viridian') falhas.push(`com o time desmaiado, a viagem da Rota 1 pra Viridian parou em ${d.local}`);
+    if (Jogo.depoisDaEstrada) falhas.push('a viagem ficou pendurada esperando a próxima luta');
+    return falhas;
+  });
+  for (const f of desmaiado){ onde = 'viagem/time desmaiado'; anota('viagem', f); }
+
   /* ---------- a tarde da arena: um torneio por dia, a Conferência no sábado ----------
      a inscrição de manhã leva o relógio à uma, o fim leva às seis, o
      mesmo dia fecha a porta com o porquê, e o segundo título não dá

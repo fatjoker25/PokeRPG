@@ -162728,7 +162728,13 @@ const Exploracao = {
   encontro(selvagem, intro, opts){
     const meu = Estado.primeiroApto();
     if (!meu){
-      return this.tela([{tipo:'dano', texto:'Um Pokémon se mexe no mato e você não tem ninguém em pé. Você recua devagar até o barulho ficar para trás.'}]);
+      const aviso = [{tipo:'dano', texto:'Um Pokémon se mexe no mato e você não tem ninguém em pé. Você recua devagar até o barulho ficar para trás.'}];
+      /* no meio de uma viagem, recuar é dar a volta e seguir: a viagem
+         que esperava a briga termina aqui. Antes ela ficava pendurada
+         em Jogo.depoisDaEstrada, você ficava na rota, e a próxima luta
+         que acabasse, em qualquer lugar, te levava pro destino velho */
+      if (Jogo.depoisDaEstrada) return Jogo.seguirDaEstrada(aviso);
+      return this.tela(aviso);
     }
     /* lendário que a história já mostrou ronda alguns lugares: de vez
        em quando é ele que sai do mato (lendarios-errantes.js) */

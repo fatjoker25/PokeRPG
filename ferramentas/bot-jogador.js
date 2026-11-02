@@ -206,6 +206,10 @@ const SUSPEITO = [
         /* compra o básico */
         if (afz.includes('loja') && d.jogador.dinheiro > 1500 && (Estado.contaItem('Potion') < 3 || Estado.contaItem('Poké Ball') < 5
             || Estado.contaItem('Ração') < 2)) return {f:'loja'};
+        /* a loja da cidade só aparece pra quem anda por ela (descobertas):
+           sem Ração e com dinheiro, anda até achar */
+        if (L.tipo === 'cidade' && (L.lugares || []).includes('loja') && !afz.includes('loja')
+            && Estado.contaItem('Ração') < 2 && d.jogador.dinheiro > 1500) return {f:'andar'};
         /* quem nasceu longe pega o ônibus da Liga, como a cidade oferece */
         if (afz.includes('onibus')) return {f:'onibus'};
         const destino = Historia.proximoDestino && Historia.proximoDestino();
