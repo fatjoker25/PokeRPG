@@ -453,7 +453,7 @@ const CONTATOS = [
       fala('Koga', 'Você não é ninguém, e ninguém passa por onde autoridade não passa.', 'baixo'),
       fala('Koga', 'Traz um papel. Qualquer papel de lá dentro, com carimbo.')
     ],
-    objetivo:d=>['Ficha técnica de triagem','Relatório de manejo (cópia do Koga)','Ficha do lote 41-C',
+    objetivo:d=>['Ficha técnica de triagem','Relatório de manejo','Ficha do lote 41-C',
                  'Lista do que depende do diretor de área','Anexo técnico do relatório','Ata da 41ª reunião']
                 .some(x => Estado.contaItem(x) > 0),
     entregue:[

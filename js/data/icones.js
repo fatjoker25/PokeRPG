@@ -25,7 +25,7 @@ const ITEM_PIXEL = {
   'Pilha':'pilha', 'Máscara de pó':'mascara', 'Cobertor térmico':'cobertor', 'Câmera descartável':'camera',
   'Caderno de campo':'caderno', 'Isca':'isca', 'Relógio':'relogio',
   /* o que a rede te dá */
-  'Uniforme preto da rede':'uniforme_rede', 'Caderno de lote':'caderno_lote',
+  'Uniforme da rede':'uniforme_rede', 'Caderno de lote':'caderno_lote',
   'Chave do subsolo':'chave_subsolo', 'Broche da letra antiga':'broche',
   /* a cor saiu do nome e foi pro desenho */
   'Crachá da Limptotal':'cracha_verde', 'Caderno do Rook':'caderno_azul',
@@ -57,7 +57,7 @@ function arquivoDoDesenho(nome){
   const m = /^(Mochila|Bolsa) (\S+)/.exec(nome);
   if (m && info && info.tipo === 'bolsa' && _corDeMochila(info.cor)) return m[1].toLowerCase() + '_' + info.cor.toLowerCase();
   if (m && _corDeMochila(m[2])) return m[1].toLowerCase() + '_' + m[2].toLowerCase();
-  /* mochila de história ("Mochila de lona do Dr. Fuji"): a primeira
+  /* mochila de história ("Mochila do Dr. Fuji"): a primeira
      palavra que é cor, ou a bege */
   if (m){
     const cor = nome.split(/[\s-]+/).map(_corDeMochila).find(Boolean);
@@ -82,7 +82,7 @@ function arquivoDoDesenho(nome){
        : /^anilha\b/.test(n) ? 'anilha'
        : /apito/.test(n) ? 'apito'
        : /bin[óo]culo/.test(n) ? 'binoculo'
-       : /^placa(?!.*anotad)|chapa de metal/.test(n) ? (/bronze/.test(n) ? 'placa_bronze' : 'placa')
+       : /^placa(?!.*anotad)|^chapa\b/.test(n) ? (/bronze/.test(n) ? 'placa_bronze' : 'placa')
        : /^fita do|grava[çc][ãa]o/.test(n) ? 'fita'
        : /fita isolante/.test(n) ? 'rolo'
        : /^p[ãa]o\b|sandu[íi]che/.test(n) ? 'lanche'

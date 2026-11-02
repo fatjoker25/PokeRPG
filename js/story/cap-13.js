@@ -878,7 +878,7 @@ c13_fabrica_de_gelo:{
     d=>`"E eu tenho os valores aqui, meu bem, e o consumo dobrou em ${c13_mes(d, 2)}."`
   ],
   ef:{flag:['sabe_da_fabrica','provas_espuma'],
-      itens:{'Contas de luz da fábrica de gelo':1},
+      itens:{'Contas de luz':1},
       npc:{nome:'a secretária da colônia', opiniao:8, memoria:'Te contou que a fábrica de gelo fechada dobrou o consumo de luz.'},
       rep:{eixo:'bom',delta:5,motivo:'Perguntou quem vende gelo quando ninguém compra'},
       instabilidade:1,

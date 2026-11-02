@@ -62,8 +62,7 @@ const INICIAL_DA_CIDADE = {
   Celadon:  [43, 69, 102, 37, 58, 52],
   Fuchsia:  [48, 109, 88, 23, 111, 129],
   Saffron:  [63, 96, 79, 56, 66, 52],
-  Cinnabar: [58, 37, 77, 88, 109, 72],
-  Indigo:   [66, 74, 147, 56, 111, 104]
+  Cinnabar: [58, 37, 77, 88, 109, 72]
 };
 const INICIAL_DO_JEITO = {
   coragem:  [56, 66, 58, 111, 21, 23],

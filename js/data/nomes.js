@@ -349,6 +349,42 @@ function nomeSorteado(rotulo){
   return _livre(f ? NOMES_F : NOMES_M, s, tomados);
 }
 
+/* ============================================================
+   O RÓTULO NO BALÃO
+   Quem não tem nome aparece no balão pelo ofício: "a funcionária da
+   guarita" é "a funcionária" na cena da guarita — o "da guarita" só
+   repetia o que a cena acabou de dizer. O rótulo inteiro continua
+   sendo a pessoa: é ele que a memória, o nome perguntado, o rosto, a
+   agenda do PokéNav e a Ficha usam, e fora da cena ele é o que diz
+   quem é. Só encurta quem é chamado por um ofício (OFICIOS_NO_BALAO);
+   "a mulher da pasta", "o homem do megafone" e "a mãe da Cleo"
+   precisam do resto pra ser alguém. Rótulo que divide a cena com
+   outro do mesmo ofício fica inteiro (BALAO_INTEIRO): o chk-baloes
+   reprova dois rótulos com o mesmo balão na mesma cena.
+   ============================================================ */
+const OFICIOS_NO_BALAO = new Set([
+  'advogado', 'advogada', 'assessor', 'assessora', 'assistente', 'atendente', 'avaliador', 'avaliadora',
+  'balconista', 'barqueiro', 'barqueira', 'bibliotecário', 'bibliotecária', 'brigadista', 'capitão', 'chefe',
+  'comprador', 'compradora', 'contador', 'contadora', 'coordenador', 'coordenadora', 'cozinheiro', 'cozinheira',
+  'delegado', 'delegada', 'diretor', 'diretora', 'editor', 'editora', 'enfermeiro', 'enfermeira', 'entregador',
+  'entregadora', 'estagiário', 'estagiária', 'ex-técnico', 'ex-técnica', 'fotógrafo', 'fotógrafa', 'frentista',
+  'funcionário', 'funcionária', 'gerente', 'jornaleiro', 'jornaleira', 'locutor', 'locutora', 'mecânico', 'mecânica',
+  'médico', 'médica', 'motorista', 'observador', 'observadora', 'oficial', 'pescador', 'pescadora', 'pesquisador',
+  'pesquisadora', 'policial', 'porteiro', 'porteira', 'prefeito', 'prefeita', 'presidente', 'professor', 'professora',
+  'quebrador', 'quebradora', 'recepcionista', 'sargento', 'secretário', 'secretária', 'segurança', 'técnico', 'técnica',
+  'tratador', 'tratadora', 'vendedor', 'vendedora', 'zelador', 'zeladora'
+]);
+const BALAO_INTEIRO = new Set([]);
+function rotuloNoBalao(rotulo){
+  const s = String(rotulo == null ? '' : rotulo);
+  if (BALAO_INTEIRO.has(s)) return s;
+  /* "da guarita", "do Conselho", "de Viridian" dizem onde; "de flores",
+     "de jaleco" e "de turno" dizem o que a pessoa é, e ficam */
+  const m = s.match(/^((?:o|a|os|as) )?(\S+) (?:(?:da|do|das|dos) \S|de (?!Pokémon)[A-ZÁÉÍÓÚ]).*$/);
+  if (!m || !OFICIOS_NO_BALAO.has(m[2].toLowerCase())) return s;
+  return (m[1] || '') + m[2];
+}
+
 const Nomes = {
   /* o que o jogo já sabe */
   sabidos(){

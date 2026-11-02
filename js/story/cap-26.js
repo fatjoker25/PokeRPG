@@ -1689,7 +1689,7 @@ c21_relatorio_22:{
     'Em vinte e duas páginas, quarenta e uma frases inacabadas, e todas param exatamente na palavra antes da informação.'
   ],
   ef:{flag:['leu_o_relatorio_22'], instabilidade:2,
-      itens:{'Relatório de 22 páginas da terceira equipe':1},
+      itens:{'Relatório da terceira equipe':1},
       rep:{eixo:'bom',delta:1,motivo:'Leu as vinte e duas páginas em que nada fecha'},
       registrar:'41 frases inacabadas no relatório da terceira equipe, todas parando antes da informação.'},
   escolhas:[
@@ -1774,7 +1774,7 @@ c21_vai_procurar_nogueira:{
     'Ela abre o caderno e volta a escrever.',
     fala('Maren Kestrel', 'E se {o senhor|a senhora} achar ele, {o senhor|a senhora} não precisa me trazer nada. É só descer e dizer o nome dele em voz alta na portaria, que eu ouço do terceiro andar.')
   ],
-  ef:{flag:['procura_o_nogueira'], itens:{'Bilhete da Maren sobre o Vernon':1}, moral:2,
+  ef:{flag:['procura_o_nogueira'], itens:{'Bilhete da Maren':1}, moral:2,
       npc:{nome:'Maren Kestrel', opiniao:5, memoria:'Te pediu para achar a medalha de natação da filha do Vernon.'},
       rep:{eixo:'bom',delta:2,motivo:'Prometeu procurar um homem que a Liga já parou de procurar'},
       registrar:'Procurar o Vernon. Medalha de natação no bolso de cima.'},

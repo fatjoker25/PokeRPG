@@ -868,7 +868,7 @@ c20_alcina_da:{
     'Ela entrega.',
     fala('Dra. Isolde Yarrow', 'Eu não exagerei. É pior do que eu lembro.')
   ],
-  ef:{flag:['tem_relatorios_alcina','provas_do_viveiro'], itens:{'Oito relatórios mensais do galpão 4':1},
+  ef:{flag:['tem_relatorios_alcina','provas_do_viveiro'], itens:{'Relatórios do galpão 4':1},
       npc:{nome:'Dra. Isolde Yarrow', opiniao:3, memoria:'Te deu os relatórios mensais que levou quando saiu.'},
       rep:{eixo:'bom',delta:2,motivo:'Saiu de Celadon com oito meses de relatório na mão'},
       registrar:'Oito relatórios mensais do galpão 4, guardados por quem renunciou.'},
@@ -970,7 +970,7 @@ c20_pediu_as_anotacoes:{
     'Ela empurra o caderno pela mesa.',
     fala('a conselheira regional', 'Os outros três eu entrego quando alguém me perguntar oficialmente, e eu vou querer que perguntem por escrito.')
   ],
-  ef:{flag:['tem_caderno_da_liga','provas_do_11'], itens:{'Caderno de anotações da conselheira':1},
+  ef:{flag:['tem_caderno_da_liga','provas_do_11'], itens:{'Caderno da conselheira':1},
       npc:{nome:'a conselheira regional', opiniao:3, memoria:'Te entregou um dos quatro cadernos, na frente da mesa inteira.'},
       rep:{eixo:'bom',delta:2,motivo:'Arrancou um caderno de anotações do governo na frente do conselho'},
       registrar:'O caderno mais recente da observadora do governo nas reuniões do conselho.'},

@@ -43,7 +43,7 @@ const ESCALOES = [
   {n:1, nome:'Informante', insignia:'o envelope', uniforme:null,
    conf:0, cap:8, renda:1200, loja:0.75, peso:3},
   {n:2, nome:'Recruta', insignia:'o uniforme preto', uniforme:['rede_recruta_m', 'rede_recruta_f'],
-   conf:3, cap:10, renda:1600, loja:0.75, peso:3, item:'Uniforme preto da rede', prova:'brant'},
+   conf:3, cap:10, renda:1600, loja:0.75, peso:3, item:'Uniforme da rede', prova:'brant'},
   {n:3, nome:'{Contador|Contadora}', insignia:'o caderno do lote', uniforme:['rede_recruta_m', 'rede_recruta_f'],
    conf:7, cap:14, renda:2100, loja:0.72, peso:3, item:'Caderno de lote', prova:'juno'},
   {n:4, nome:'Chefe de turno', insignia:'a chave do subsolo', uniforme:['rede_recruta_m', 'rede_recruta_f'],

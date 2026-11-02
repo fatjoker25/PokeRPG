@@ -484,6 +484,41 @@ const SUSPEITO = [
   }
   await page.evaluate(() => { Jogo.torneioAtual = null; Jogo.conferenciaAtual = null; });
 
+  /* ---------- a tarde da arena: um torneio por dia, a Conferência no sábado ----------
+     a inscrição de manhã leva o relógio à uma, o fim leva às seis, o
+     mesmo dia fecha a porta com o porquê, e o segundo título não dá
+     reputação de novo */
+  await restaurar();
+  const arena = await page.evaluate(() => {
+    const d = Estado.dados, falhas = [];
+    d.local = 'planalto'; d.capitulo = 22; d.jogador.dinheiro = 90000; d.flags.campeao_de_kanto = true;
+    d.relogio.hora = 9; d.relogio.periodo = 'manhã'; d.arena = {};
+    if (statusTorneio().estado !== 'disponivel') falhas.push('de manhã, a inscrição do torneio não abre: ' + statusTorneio().texto);
+    Jogo.iniciarTorneio();
+    if (d.relogio.hora !== ARENA_COMECA) falhas.push(`inscrito de manhã, o relógio foi pra ${d.relogio.hora}h, e o chaveamento sai à ${ARENA_COMECA}`);
+    if (statusTorneio().estado === 'disponivel') falhas.push('dá pra se inscrever duas vezes no mesmo dia');
+    Jogo.torneioAtual.rodada = 2;
+    const rep = () => d.reputacao.pontosBom;
+    d.flags.rep_torneio_2 = true; const antes = rep();
+    Jogo.resultadoTorneio({resultado:'vitoria'});
+    if (rep() !== antes) falhas.push('a final vencida de novo deu reputação de novo');
+    if (d.relogio.hora !== ARENA_FECHA) falhas.push(`o torneio acabou e o relógio ficou em ${d.relogio.hora}h, não nas ${ARENA_FECHA}`);
+    UI.telaLiga();
+    if (!/hoje já foi/.test(document.querySelector('.painel.liga') ? document.querySelector('.painel.liga').innerText : ''))
+      falhas.push('a Liga não diz que o chaveamento de hoje já foi');
+    Relogio.ateODia((DIA_DA_CONFERENCIA + 1) % 7, 10, true);
+    if (statusConferencia().estado !== 'fechado' || !/sábado/.test(statusConferencia().texto)) falhas.push('a Conferência abre fora do sábado');
+    Relogio.ateODia(DIA_DA_CONFERENCIA, 10, true);
+    if (statusConferencia().estado !== 'disponivel') falhas.push('no sábado de manhã a Conferência não abre: ' + statusConferencia().texto);
+    UI.telaLiga();
+    return falhas;
+  });
+  for (const f of arena){ onde = 'liga/arena'; anota('arena', f); }
+  await tentar('liga/arena fechada à noite', () => {
+    const d = Estado.dados; d.relogio.hora = 21; d.relogio.periodo = 'noite'; d.arena = {}; UI.telaLiga();
+  });
+  await page.evaluate(() => { Jogo.torneioAtual = null; Jogo.conferenciaAtual = null; });
+
   /* ---------- a festa da vitória (vitoria.js), adiantada até o fim ---------- */
   const FESTAS = [
     ...['pewter', 'cerulean', 'vermilion', 'celadon', 'fuchsia', 'saffron', 'cinnabar', 'viridian'].map(id =>

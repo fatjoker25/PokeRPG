@@ -590,7 +590,7 @@ c25_pos_tudo_na_mesa:{
     d=>{
       const provas = ['Segunda página do convênio','Folha 19 — recomendação de convocação',
                       'Dezenove folhas com o seu nome','Anotação: ACOMP. ATIVO — 704 — NÍVEL 2',
-                      'Foto de quatro pessoas de jaleco','Sigla e número do bordado, anotados'];
+                      'Foto de quatro pessoas de jaleco','Anotação do bordado'];
       const tem = provas.filter(x => Estado.contaItem(x) > 0);
       return tem.length
         ? `Em cima da mesa: ${tem.join('; ')}. E o resto que você juntou desde que saiu de casa.`

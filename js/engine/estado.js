@@ -51,7 +51,7 @@ function ehInfluente(nome){
   return TITULOS_INFLUENTES.some(t => n.startsWith(t) || n.includes(' ' + t));
 }
 
-const CIDADES = ['Pallet','Viridian','Pewter','Cerulean','Vermilion','Lavender','Celadon','Fuchsia','Saffron','Cinnabar','Indigo'];
+const CIDADES = ['Pallet','Viridian','Pewter','Cerulean','Vermilion','Lavender','Celadon','Fuchsia','Saffron','Cinnabar'];
 
 /* ============================================================
    QUEM FICA EM CASA
@@ -1337,7 +1337,7 @@ const Estado = {
         'Bolsa Rosa':'Bolsa de vitrine',
         'Bolsa Prateada':'Bolsa térmica',
         'Bolsa Dourada':'Bolsa de festa',
-        'Pote de vidro com água verde do rio':'Pote de vidro com água do rio',
+        'Pote de vidro com água verde do rio':'Pote de água do rio',
         'Muda de flor branca':'Muda de flor',
         'Crachá azul reserva':'Crachá reserva',
         'Crachá verde (Limptotal)':'Crachá da Limptotal',
@@ -1345,7 +1345,30 @@ const Estado = {
         'Caixa de ventilador com um bicho dentro':'Caixa de ventilador com um Pokémon dentro',
         'Mapa de nove anos atrás':'Mapa velho de Kanto', 'Caderno do Teco':'Caderno do Toby',
         'Recorte da constituição da CGRB':'Recorte da ata da CGRB', 'Papel com o nome de Maeve Corwin':'Papel com o nome de Maeve Bracken',
-        'Caderno de campo de K. Fuji':'Caderno de campo do Dr. Fuji', 'Anilha 41-C-07':'Anilha 41-C-107'};
+        'Caderno de campo de K. Fuji':'Caderno de campo do Dr. Fuji', 'Anilha 41-C-07':'Anilha 41-C-107',
+        /* o nome de item de história dizia de onde ele veio ("Rádio da
+           companhia", "Medidor com a agulha no fim da escala"): o que a
+           cena já contou sai do nome, e fica o que a coisa é */
+        'Binóculo do pai do Sr. Poplar':'Binóculo', 'Caderninho da lata de biscoito':'Caderninho',
+        'Rádio da companhia':'Rádio', 'Apito da patrulha':'Apito', 'Lata de querosene da origem':'Lata de querosene',
+        'Guardanapo do Palace':'Guardanapo', 'Contas de luz da fábrica de gelo':'Contas de luz',
+        'Cartão de aniversário da Elda':'Cartão de aniversário', 'Bilhete da Maren sobre o Vernon':'Bilhete da Maren',
+        'Relatório de 22 páginas da terceira equipe':'Relatório da terceira equipe',
+        'Protocolo da manifestação do barqueiro':'Protocolo da manifestação', 'Declaração assinada da venda':'Declaração da venda',
+        'Mapa do Orin (no verso do folheto)':'Mapa do Orin', 'Relatório de manejo (cópia do Koga)':'Relatório de manejo',
+        'Pote de vidro com água do rio':'Pote de água do rio', 'Chapa de metal com marca da Silph':'Chapa da Silph',
+        'Mapa da ciclovia com o circuito a lápis':'Mapa da ciclovia', 'Medidor com a agulha no fim da escala':'Medidor',
+        'Uniforme preto da rede':'Uniforme da rede', 'Mochila de lona do Dr. Fuji':'Mochila do Dr. Fuji',
+        'Caderno de anotações da conselheira':'Caderno da conselheira', 'Caderno de bancada da amostra 4':'Caderno da amostra 4',
+        'Oito relatórios mensais do galpão 4':'Relatórios do galpão 4', 'Registro de pesagem das terças':'Registro de pesagem',
+        'Folha única da pasta RED':'Folha da pasta RED', 'Sigla e número do bordado, anotados':'Anotação do bordado',
+        'Nome da empresa e o número da folha':'Anotação da pedreira'};
+      /* Indigo saiu da lista de cidade natal: quem nasceu lá começava em
+         Viridian (o Planalto fica atrás da guarita das oito insígnias),
+         não tinha casa em lugar nenhum e voltava pro Planalto no 21. A
+         casa e a rua viram as de Viridian, onde a jornada já tinha
+         começado. */
+      if (d.jogador && d.jogador.cidade === 'Indigo') d.jogador.cidade = 'Viridian';
       for (const [velho, novo] of Object.entries(ITEM_NOVO)){
         if (d.itens && d.itens[velho]){ d.itens[novo] = (d.itens[novo] || 0) + d.itens[velho]; delete d.itens[velho]; }
         for (const p of [].concat(d.time || [], d.pc || [], d.cemiterio || [])) if (p && p.segurando === velho) p.segurando = novo;

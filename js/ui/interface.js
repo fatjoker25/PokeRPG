@@ -831,7 +831,7 @@ const UI = {
         <span class="cr-op-nome">${e(cid)}</span><span class="cr-op-nota">${e(CIDADES_DA_FICHA[cid] || '')}</span></button>`).join('');
     const natal = c.cidade === 'Pallet'
       ? 'Em Pallet, quem entrega o primeiro Pokémon é o Professor, na rua, na manhã em que você sai. A Pokédex sai da mão dele; o cartão de treinador, só no Centro de Viridian.'
-      : `Fora de Pallet, a perua do laboratório passa uma vez por mês com a caixa térmica. A Pokédex e o cartão saem do Centro Pokémon de ${c.cidade === 'Indigo' ? 'Viridian' : c.cidade}.${c.cidade !== 'Viridian' ? ' E da rodoviária sai o ônibus pra Viridian, uma vez, se você quiser.' : ''}`;
+      : `Fora de Pallet, a perua do laboratório passa uma vez por mês com a caixa térmica. A Pokédex e o cartão saem do Centro Pokémon de ${c.cidade}.${c.cidade !== 'Viridian' ? ' E da rodoviária sai o ônibus pra Viridian, uma vez, se você quiser.' : ''}`;
     return this.crCabeca('Quem é você', 'Como te chamam, como você nasceu e de onde vem.') + `
       <div class="cr-campo"><label class="cr-rot" for="f-nome">Nome</label>
         <div class="cr-linha">
@@ -1434,8 +1434,8 @@ const UI = {
            alinhar com o balão de cima */
         const rosto = meu ? '' : this.retratoFala(f.quem, f.rotulo, f.casa);
         const lugar = rosto ? (repete ? '<span class="fala-retrato vazio" aria-hidden="true"></span>' : rosto) : '';
-        return `<div class="fala${tom}${meu}${repete ? ' segue' : ''}${lugar ? ' com-rosto' : ''}" data-voz="fala"${meu ? '' : estiloCor(f.quem)}>
-          ${lugar}<div class="fala-quem">${this.esc(f.quem)}</div>
+        return `<div class="fala${tom}${meu}${repete ? ' segue' : ''}${lugar ? ' com-rosto' : ''}" data-voz="fala" data-quem="${this.esc(f.quem)}"${meu ? '' : estiloCor(f.quem)}>
+          ${lugar}<div class="fala-quem">${this.esc(meu ? f.quem : rotuloNoBalao(f.quem))}</div>
           <p class="fala-diz">${this.esc(f.diz)}</p>
           ${f.nota ? `<div class="fala-nota">${this.esc(f.nota)}</div>` : ''}
         </div>`;
@@ -1552,8 +1552,8 @@ const UI = {
         const diz = (/,$/.test(pe.texto) && atribuida) ? pe.texto.replace(/,$/, '.')
                   : (/^[,;]/.test(depois) && atribuida && !/[.!?…—–:"”)]$/.test(pe.texto)) ? pe.texto + '.'
                   : pe.texto;
-        html += `<div class="fala${quem ? '' : ' anonima'}${meu}${repete ? ' segue' : ''}${lugar ? ' com-rosto' : ''}" data-voz="${fonte}"${meu ? '' : estiloCor(quem)}>`
-              + lugar + (quem ? `<div class="fala-quem">${this.esc(quem)}</div>` : '')
+        html += `<div class="fala${quem ? '' : ' anonima'}${meu}${repete ? ' segue' : ''}${lugar ? ' com-rosto' : ''}" data-voz="${fonte}"${quem ? ` data-quem="${this.esc(quem)}"` : ''}${meu ? '' : estiloCor(quem)}>`
+              + lugar + (quem ? `<div class="fala-quem">${this.esc(meu ? quem : rotuloNoBalao(quem))}</div>` : '')
               + `<p class="fala-diz">${this.esc(diz)}</p></div>`;
       }
       return html;
@@ -3702,14 +3702,14 @@ const UI = {
     const premios = (lista, extra) => `<div class="liga-premios">${['Quartas', 'Semifinal', 'Final'].map((r, i) =>
       `<span class="lpr"><small>${r}</small><b>${din(lista[i].dinheiro)}</b></span>`).join('')}${extra || ''}</div>`;
     const torneio = `<div class="liga-evento torneio">
-        <p class="sussurro">Chaveamento de oito, três rodadas, o ano inteiro. Qualquer um entra: gente de Kanto inteira, e quem já cruzou com você na estrada.</p>
+        <p class="sussurro">Chaveamento de oito e três rodadas, todo dia, à uma da tarde. Qualquer um entra: gente de Kanto inteira, e quem já cruzou com você na estrada.</p>
         ${premios(PREMIO_TORNEIO, `<span class="lpr"><small>Adversários</small><b>Nv ${nivelDoTorneio(0)}–${nivelDoTorneio(2)}</b></span>`)}
         ${d.torneiosVencidos ? `<span class="liga-titulos">${svgIcone('torneio')}${this.esc(d.torneiosVencidos + '× {campeão|campeã}')}</span>` : ''}
       </div>`;
     const co = campeao ? statusConferencia() : null;
     const conferencia = campeao ? `<h3 class="sec sec-conf">Conferência do Planalto Indigo</h3>
       <div class="liga-evento conf">
-        <p class="sussurro">Três rodadas, times inteiros, e ninguém do outro lado com menos estrada que você.</p>
+        <p class="sussurro">Aos sábados, à uma da tarde. Três rodadas, times inteiros, e ninguém do outro lado com menos estrada que você.</p>
         ${premios(PREMIO_CONFERENCIA)}
         ${d.conferenciasVencidas ? `<span class="liga-titulos">${svgIcone('liga')}${this.esc(d.conferenciasVencidas + '× {campeão|campeã}')}</span>` : ''}
       </div>` : '';
@@ -6318,22 +6318,24 @@ const UI = {
       <div class="linha"><span class="k">Quem volta</span><span class="v">toma a porta de quem sentava nela, com o próprio time, 2 níveis acima do substituto na primeira e na segunda porta e 1 na terceira · com os três de volta, a ala não tem porta vaga pra cargo nenhum</span></div>
 
       <h3>Torneio Aberto</h3>
-      <div class="linha"><span class="k">Quem entra</span><span class="v">qualquer um, a partir do capítulo 2 · inscrição de 2.000 ₽</span></div>
+      <div class="linha"><span class="k">Quem entra</span><span class="v">qualquer um que chegue à arena do Planalto Indigo (a guarita da Rota 23 pede as oito insígnias) · inscrição de 2.000 ₽</span></div>
+      <div class="linha"><span class="k">Quando</span><span class="v">um chaveamento por dia · a inscrição abre de manhã e fecha às seis da tarde · o chaveamento sai à uma, e quem se inscreve antes espera · o torneio toma a tarde: no fim, ganhando, perdendo ou desistindo, são seis horas</span></div>
       <div class="linha"><span class="k">Chaveamento</span><span class="v">três rodadas, uma luta em cada, contra inscritos com nome e cidade · até dois são gente que já cruzou com você (veterano que você venceu também entra) · o Ezra, se entrar, fica com a final</span></div>
       <div class="linha"><span class="k">Nível</span><span class="v">o ás de cada inscrito fica 3 abaixo da média dos seus três mais fortes nas quartas, 2 abaixo na semifinal e no mesmo nível na final, mais o acerto de cada um (de −4 a +4, pra todos pesarem parecido) · o resto do time vai de 3 abaixo do ás até ele</span></div>
       <div class="linha"><span class="k">Tamanho do time</span><span class="v">pelas suas insígnias: 3 com 0–1, 4 com 2–3, 5 com 4–5, 6 com 6 ou mais</span></div>
       <div class="linha"><span class="k">Golpes e item</span><span class="v">os de nível da espécie, o mais fraco trocado por um de TM do dono · o ás segura um item de luta</span></div>
       <div class="linha"><span class="k">Escolha do golpe</span><span class="v">o segundo melhor golpe 12% das vezes nas quartas, 10% na semifinal e 8% na final · gasta Vontade com a chance cheia</span></div>
       <div class="linha"><span class="k">Entre as rodadas</span><span class="v">dá pra curar o time</span></div>
-      <div class="linha"><span class="k">Prêmio</span><span class="v">3.000, 8.000 e 25.000 ₽, com itens · perdendo, 30% do prêmio da rodada</span></div>
+      <div class="linha"><span class="k">Prêmio</span><span class="v">3.000, 8.000 e 25.000 ₽, com itens · perdendo, 30% do prêmio da rodada · a reputação da semifinal e da final vem só na primeira vez que você passa por elas; dinheiro e itens, toda vez</span></div>
       <p class="sussurro">As finais de torneio que acontecem na história, no navio e no Planalto, também vêm com o nível do seu time e item no ás, erram a escolha do golpe 10% a 12% das vezes e gastam Vontade com a chance cheia.</p>
 
       <h3>Conferência do Planalto Indigo</h3>
       <div class="linha"><span class="k">Quem entra</span><span class="v">só quem sentou na cadeira do Campeão · inscrição de 5.000 ₽</span></div>
+      <div class="linha"><span class="k">Quando</span><span class="v">uma por semana, no sábado, com a hora do torneio: inscrição de manhã até as seis, chaveamento à uma, e a tarde inteira na arena · no dia em que você joga um, o outro já fechou</span></div>
       <div class="linha"><span class="k">Chaveamento</span><span class="v">três rodadas · dois veteranos, primeiro os que você já venceu, e na final sempre a dona de três Conferências</span></div>
       <div class="linha"><span class="k">Nível</span><span class="v">a média dos seus três mais fortes + 2 + a rodada, nunca abaixo de 66, 68 e 72 · time de 6</span></div>
       <div class="linha"><span class="k">Entre as rodadas</span><span class="v">dá pra curar o time</span></div>
-      <div class="linha"><span class="k">Prêmio</span><span class="v">12.000, 25.000 e 60.000 ₽, com itens · perdendo, 20% do prêmio da rodada · a primeira Conferência vem com uma Master Ball</span></div>
+      <div class="linha"><span class="k">Prêmio</span><span class="v">12.000, 25.000 e 60.000 ₽, com itens · perdendo, 20% do prêmio da rodada · a reputação de cada rodada vem só na primeira vez · a primeira Conferência vem com uma Master Ball</span></div>
       <h3>Quando o seu Pokémon cai contra um selvagem</h3>
       <p class="sussurro">Se o selvagem tem natureza agressiva (Naughty, Brave, Adamant, Hasty, Impish, Jolly, Naive, Lonely, Rash), ele rola o Instinto dele: com um sucesso, ataca VOCÊ (quem tem mais Instinto vem mais vezes). Dano = Força dele + 2 em d6, e cada sucesso tira 3 do seu HP, que é HP de gente e não de Pokémon. Naturezas passivas não atacam o treinador. A sua barra de vida aparece na arena enquanto isso durar.</p>
       <h3>Nível, golpes e evolução</h3>

@@ -216,7 +216,7 @@ c24_o_uniforme:{
   escolhas:[
     {texto:'Seguir.', vai:'c24_a_terceira'},
     {texto:'Anotar a sigla e o número do bordado.', vai:'c24_anotou_a_sigla',
-     ef:{itens:{'Sigla e número do bordado, anotados':1}, flag:'anotou_a_sigla'}}
+     ef:{itens:{'Anotação do bordado':1}, flag:'anotou_a_sigla'}}
   ]
 },
 

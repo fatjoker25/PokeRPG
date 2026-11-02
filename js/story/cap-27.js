@@ -295,7 +295,7 @@ c22_pediu_binoculo:{
     fala('Sr. Emory Poplar', 'É do meu pai. Volta com ele.'),
     'Você pendura a correia rachada no pescoço e promete voltar com ele, e é a primeira promessa que você faz nesta subida.'
   ],
-  ef:{flag:'tem_o_binoculo', itens:{'Binóculo do pai do Sr. Poplar':1},
+  ef:{flag:'tem_o_binoculo', itens:{'Binóculo':1},
       npc:{nome:'Sr. Emory Poplar', opiniao:3, memoria:'Te emprestou o binóculo do pai dele.'},
       registrar:'Pegou emprestado o binóculo do pai do Sr. Poplar, com promessa de devolver.'},
   escolhas:[
@@ -381,7 +381,7 @@ c22_cavou_o_marco:{
     'A terceira e última tem uma frase: o círculo não é caverna. O círculo é o que sobrou de uma coisa que desceu.'
   ],
   ef:{flag:['achou_a_lata','sabe_do_circulo'], instabilidade:2,
-      itens:{'Caderninho da lata de biscoito':1},
+      itens:{'Caderninho':1},
       rep:{eixo:'bom',delta:2,motivo:'Cavou embaixo de um marco em vez de passar por ele'},
       registrar:'Um caderninho enterrado: o círculo no fundo do vale é o que sobrou de uma coisa que desceu.'},
   escolhas:[
@@ -726,7 +726,7 @@ c22_levou_o_aparelho:{
     'Não serve para nada, porque você não sabe o que ele mede.',
     'Serve para uma coisa, que é esta: quando a agulha cair, você vai saber que saiu.'
   ],
-  ef:{flag:'tem_o_aparelho', itens:{'Medidor com a agulha no fim da escala':1},
+  ef:{flag:'tem_o_aparelho', itens:{'Medidor':1},
       registrar:'Levou o medidor. Quando a agulha cair, você saiu.'},
   escolhas:[
     {texto:'Procurar a equipe.', vai:'c22_procurou_equipe'},
@@ -1178,7 +1178,7 @@ c22_pegou_sucata:{
       : 'Você não sabe o que é e sabe muito bem de onde vem.',
     'Alguma coisa da Silph esteve aqui, e alguma coisa aconteceu com ela.'
   ],
-  ef:{flag:['tem_a_sucata'], itens:{'Chapa de metal com marca da Silph':1}, instabilidade:1,
+  ef:{flag:['tem_a_sucata'], itens:{'Chapa da Silph':1}, instabilidade:1,
       rep:{eixo:'bom',delta:2,motivo:'Trouxe do vale a única prova material que existe'},
       registrar:'Uma chapa com numeração SPH, arrancada do vidro do círculo.'},
   escolhas:[

@@ -42357,7 +42357,7 @@ const ITEM_PIXEL = {
   'Pilha':'pilha', 'Máscara de pó':'mascara', 'Cobertor térmico':'cobertor', 'Câmera descartável':'camera',
   'Caderno de campo':'caderno', 'Isca':'isca', 'Relógio':'relogio',
   /* o que a rede te dá */
-  'Uniforme preto da rede':'uniforme_rede', 'Caderno de lote':'caderno_lote',
+  'Uniforme da rede':'uniforme_rede', 'Caderno de lote':'caderno_lote',
   'Chave do subsolo':'chave_subsolo', 'Broche da letra antiga':'broche',
   /* a cor saiu do nome e foi pro desenho */
   'Crachá da Limptotal':'cracha_verde', 'Caderno do Rook':'caderno_azul',
@@ -42389,7 +42389,7 @@ function arquivoDoDesenho(nome){
   const m = /^(Mochila|Bolsa) (\S+)/.exec(nome);
   if (m && info && info.tipo === 'bolsa' && _corDeMochila(info.cor)) return m[1].toLowerCase() + '_' + info.cor.toLowerCase();
   if (m && _corDeMochila(m[2])) return m[1].toLowerCase() + '_' + m[2].toLowerCase();
-  /* mochila de história ("Mochila de lona do Dr. Fuji"): a primeira
+  /* mochila de história ("Mochila do Dr. Fuji"): a primeira
      palavra que é cor, ou a bege */
   if (m){
     const cor = nome.split(/[\s-]+/).map(_corDeMochila).find(Boolean);
@@ -42414,7 +42414,7 @@ function arquivoDoDesenho(nome){
        : /^anilha\b/.test(n) ? 'anilha'
        : /apito/.test(n) ? 'apito'
        : /bin[óo]culo/.test(n) ? 'binoculo'
-       : /^placa(?!.*anotad)|chapa de metal/.test(n) ? (/bronze/.test(n) ? 'placa_bronze' : 'placa')
+       : /^placa(?!.*anotad)|^chapa\b/.test(n) ? (/bronze/.test(n) ? 'placa_bronze' : 'placa')
        : /^fita do|grava[çc][ãa]o/.test(n) ? 'fita'
        : /fita isolante/.test(n) ? 'rolo'
        : /^p[ãa]o\b|sandu[íi]che/.test(n) ? 'lanche'
@@ -43329,6 +43329,42 @@ function nomeSorteado(rotulo){
   /* guarda e oficial se apresentam pelo sobrenome */
   if (/guarda|oficial|policial|seguran|fiscal|vigia/i.test(rotulo)) return _livre(SOBRENOMES, s, tomados);
   return _livre(f ? NOMES_F : NOMES_M, s, tomados);
+}
+
+/* ============================================================
+   O RÓTULO NO BALÃO
+   Quem não tem nome aparece no balão pelo ofício: "a funcionária da
+   guarita" é "a funcionária" na cena da guarita — o "da guarita" só
+   repetia o que a cena acabou de dizer. O rótulo inteiro continua
+   sendo a pessoa: é ele que a memória, o nome perguntado, o rosto, a
+   agenda do PokéNav e a Ficha usam, e fora da cena ele é o que diz
+   quem é. Só encurta quem é chamado por um ofício (OFICIOS_NO_BALAO);
+   "a mulher da pasta", "o homem do megafone" e "a mãe da Cleo"
+   precisam do resto pra ser alguém. Rótulo que divide a cena com
+   outro do mesmo ofício fica inteiro (BALAO_INTEIRO): o chk-baloes
+   reprova dois rótulos com o mesmo balão na mesma cena.
+   ============================================================ */
+const OFICIOS_NO_BALAO = new Set([
+  'advogado', 'advogada', 'assessor', 'assessora', 'assistente', 'atendente', 'avaliador', 'avaliadora',
+  'balconista', 'barqueiro', 'barqueira', 'bibliotecário', 'bibliotecária', 'brigadista', 'capitão', 'chefe',
+  'comprador', 'compradora', 'contador', 'contadora', 'coordenador', 'coordenadora', 'cozinheiro', 'cozinheira',
+  'delegado', 'delegada', 'diretor', 'diretora', 'editor', 'editora', 'enfermeiro', 'enfermeira', 'entregador',
+  'entregadora', 'estagiário', 'estagiária', 'ex-técnico', 'ex-técnica', 'fotógrafo', 'fotógrafa', 'frentista',
+  'funcionário', 'funcionária', 'gerente', 'jornaleiro', 'jornaleira', 'locutor', 'locutora', 'mecânico', 'mecânica',
+  'médico', 'médica', 'motorista', 'observador', 'observadora', 'oficial', 'pescador', 'pescadora', 'pesquisador',
+  'pesquisadora', 'policial', 'porteiro', 'porteira', 'prefeito', 'prefeita', 'presidente', 'professor', 'professora',
+  'quebrador', 'quebradora', 'recepcionista', 'sargento', 'secretário', 'secretária', 'segurança', 'técnico', 'técnica',
+  'tratador', 'tratadora', 'vendedor', 'vendedora', 'zelador', 'zeladora'
+]);
+const BALAO_INTEIRO = new Set([]);
+function rotuloNoBalao(rotulo){
+  const s = String(rotulo == null ? '' : rotulo);
+  if (BALAO_INTEIRO.has(s)) return s;
+  /* "da guarita", "do Conselho", "de Viridian" dizem onde; "de flores",
+     "de jaleco" e "de turno" dizem o que a pessoa é, e ficam */
+  const m = s.match(/^((?:o|a|os|as) )?(\S+) (?:(?:da|do|das|dos) \S|de (?!Pokémon)[A-ZÁÉÍÓÚ]).*$/);
+  if (!m || !OFICIOS_NO_BALAO.has(m[2].toLowerCase())) return s;
+  return (m[1] || '') + m[2];
 }
 
 const Nomes = {
@@ -44681,8 +44717,7 @@ const CIDADES_DA_FICHA = {
   Celadon:  'A Grande Loja, as luzes e a cidade que não dorme.',
   Fuchsia:  'A Zona Safári do lado e o mar do outro.',
   Saffron:  'A maior cidade de Kanto, com a Silph no meio.',
-  Cinnabar: 'A ilha do vulcão, a uma travessia de barco de tudo.',
-  Indigo:   'O Planalto: a Liga mora na sua rua.'
+  Cinnabar: 'A ilha do vulcão, a uma travessia de barco de tudo.'
 };
 
 /* A foto do cartão. Rostos jovens — quem sai de casa tem quinze anos,
@@ -45561,7 +45596,7 @@ const Mundo = {
   iniciar(cidadeNatal){
     const mapa = {'Pallet':'pallet','Viridian':'viridian','Pewter':'pewter','Cerulean':'cerulean',
       'Vermilion':'vermilion','Lavender':'lavender','Celadon':'celadon','Fuchsia':'fuchsia',
-      'Saffron':'saffron','Cinnabar':'cinnabar','Indigo':'viridian'};
+      'Saffron':'saffron','Cinnabar':'cinnabar'};
     Estado.dados.local = mapa[cidadeNatal] || 'pallet';
     Estado.dados.visitados = {[Estado.dados.local]:true};
     Estado.dados.descobertas = {};
@@ -45820,7 +45855,7 @@ function localDoCapitulo(n){
   if (id === null || id === undefined){
     const mapa = {'Pallet':'pallet','Viridian':'viridian','Pewter':'pewter','Cerulean':'cerulean',
       'Vermilion':'vermilion','Lavender':'lavender','Celadon':'celadon','Fuchsia':'fuchsia',
-      'Saffron':'saffron','Cinnabar':'cinnabar','Indigo':'planalto'};
+      'Saffron':'saffron','Cinnabar':'cinnabar'};
     return mapa[Estado.dados.jogador.cidade] || 'pallet';
   }
   return id;
@@ -46820,7 +46855,7 @@ function ehInfluente(nome){
   return TITULOS_INFLUENTES.some(t => n.startsWith(t) || n.includes(' ' + t));
 }
 
-const CIDADES = ['Pallet','Viridian','Pewter','Cerulean','Vermilion','Lavender','Celadon','Fuchsia','Saffron','Cinnabar','Indigo'];
+const CIDADES = ['Pallet','Viridian','Pewter','Cerulean','Vermilion','Lavender','Celadon','Fuchsia','Saffron','Cinnabar'];
 
 /* ============================================================
    QUEM FICA EM CASA
@@ -48106,7 +48141,7 @@ const Estado = {
         'Bolsa Rosa':'Bolsa de vitrine',
         'Bolsa Prateada':'Bolsa térmica',
         'Bolsa Dourada':'Bolsa de festa',
-        'Pote de vidro com água verde do rio':'Pote de vidro com água do rio',
+        'Pote de vidro com água verde do rio':'Pote de água do rio',
         'Muda de flor branca':'Muda de flor',
         'Crachá azul reserva':'Crachá reserva',
         'Crachá verde (Limptotal)':'Crachá da Limptotal',
@@ -48114,7 +48149,30 @@ const Estado = {
         'Caixa de ventilador com um bicho dentro':'Caixa de ventilador com um Pokémon dentro',
         'Mapa de nove anos atrás':'Mapa velho de Kanto', 'Caderno do Teco':'Caderno do Toby',
         'Recorte da constituição da CGRB':'Recorte da ata da CGRB', 'Papel com o nome de Maeve Corwin':'Papel com o nome de Maeve Bracken',
-        'Caderno de campo de K. Fuji':'Caderno de campo do Dr. Fuji', 'Anilha 41-C-07':'Anilha 41-C-107'};
+        'Caderno de campo de K. Fuji':'Caderno de campo do Dr. Fuji', 'Anilha 41-C-07':'Anilha 41-C-107',
+        /* o nome de item de história dizia de onde ele veio ("Rádio da
+           companhia", "Medidor com a agulha no fim da escala"): o que a
+           cena já contou sai do nome, e fica o que a coisa é */
+        'Binóculo do pai do Sr. Poplar':'Binóculo', 'Caderninho da lata de biscoito':'Caderninho',
+        'Rádio da companhia':'Rádio', 'Apito da patrulha':'Apito', 'Lata de querosene da origem':'Lata de querosene',
+        'Guardanapo do Palace':'Guardanapo', 'Contas de luz da fábrica de gelo':'Contas de luz',
+        'Cartão de aniversário da Elda':'Cartão de aniversário', 'Bilhete da Maren sobre o Vernon':'Bilhete da Maren',
+        'Relatório de 22 páginas da terceira equipe':'Relatório da terceira equipe',
+        'Protocolo da manifestação do barqueiro':'Protocolo da manifestação', 'Declaração assinada da venda':'Declaração da venda',
+        'Mapa do Orin (no verso do folheto)':'Mapa do Orin', 'Relatório de manejo (cópia do Koga)':'Relatório de manejo',
+        'Pote de vidro com água do rio':'Pote de água do rio', 'Chapa de metal com marca da Silph':'Chapa da Silph',
+        'Mapa da ciclovia com o circuito a lápis':'Mapa da ciclovia', 'Medidor com a agulha no fim da escala':'Medidor',
+        'Uniforme preto da rede':'Uniforme da rede', 'Mochila de lona do Dr. Fuji':'Mochila do Dr. Fuji',
+        'Caderno de anotações da conselheira':'Caderno da conselheira', 'Caderno de bancada da amostra 4':'Caderno da amostra 4',
+        'Oito relatórios mensais do galpão 4':'Relatórios do galpão 4', 'Registro de pesagem das terças':'Registro de pesagem',
+        'Folha única da pasta RED':'Folha da pasta RED', 'Sigla e número do bordado, anotados':'Anotação do bordado',
+        'Nome da empresa e o número da folha':'Anotação da pedreira'};
+      /* Indigo saiu da lista de cidade natal: quem nasceu lá começava em
+         Viridian (o Planalto fica atrás da guarita das oito insígnias),
+         não tinha casa em lugar nenhum e voltava pro Planalto no 21. A
+         casa e a rua viram as de Viridian, onde a jornada já tinha
+         começado. */
+      if (d.jogador && d.jogador.cidade === 'Indigo') d.jogador.cidade = 'Viridian';
       for (const [velho, novo] of Object.entries(ITEM_NOVO)){
         if (d.itens && d.itens[velho]){ d.itens[novo] = (d.itens[novo] || 0) + d.itens[velho]; delete d.itens[velho]; }
         for (const p of [].concat(d.time || [], d.pc || [], d.cemiterio || [])) if (p && p.segurando === velho) p.segurando = novo;
@@ -53738,7 +53796,7 @@ const CONTATOS = [
       fala('Koga', 'Você não é ninguém, e ninguém passa por onde autoridade não passa.', 'baixo'),
       fala('Koga', 'Traz um papel. Qualquer papel de lá dentro, com carimbo.')
     ],
-    objetivo:d=>['Ficha técnica de triagem','Relatório de manejo (cópia do Koga)','Ficha do lote 41-C',
+    objetivo:d=>['Ficha técnica de triagem','Relatório de manejo','Ficha do lote 41-C',
                  'Lista do que depende do diretor de área','Anexo técnico do relatório','Ata da 41ª reunião']
                 .some(x => Estado.contaItem(x) > 0),
     entregue:[
@@ -54583,7 +54641,7 @@ const Chamadas = {
 const GINASIO_DE_CASA = {
   'Pallet':'pewter', 'Viridian':'viridian', 'Pewter':'pewter', 'Cerulean':'cerulean',
   'Vermilion':'vermilion', 'Lavender':'saffron', 'Celadon':'celadon', 'Fuchsia':'fuchsia',
-  'Saffron':'saffron', 'Cinnabar':'cinnabar', 'Indigo':'viridian'
+  'Saffron':'saffron', 'Cinnabar':'cinnabar'
 };
 
 /* O título de Campeão fica na mesma lista, mas não é insígnia */
@@ -55517,6 +55575,54 @@ const PREMIO_TORNEIO = [
 
 const INSCRICAO_TORNEIO = 2000;
 
+/* ── a tarde da arena ─────────────────────────────────────
+   O Torneio Aberto tem um chaveamento por dia; a Conferência, um por
+   semana, no sábado. A inscrição abre de manhã e fecha às seis da
+   tarde; o chaveamento sai à uma, e quem se inscreve antes espera. O
+   torneio toma a tarde: no fim, ganhando, perdendo ou desistindo, o
+   relógio vai até as seis. O dia em que cada um foi jogado fica em
+   d.arena (a inscrição já conta: sair no meio não devolve o dia). */
+const ARENA_ABRE = 6, ARENA_COMECA = 13, ARENA_FECHA = 18;
+const DIA_DA_CONFERENCIA = 5;   // sábado (0 = segunda, como o Calendario)
+
+/* null se a inscrição está aberta; senão a porta fechada, com o porquê */
+function tardeDaArena(qual, semanal){
+  const d = Estado.dados, r = d && d.relogio;
+  if (!r) return null;
+  sincronizarHora(r);
+  const hoje = Calendario.hoje();
+  if (semanal != null && hoje.semanaIdx !== semanal)
+    return {estado:'fechado', texto:`A Conferência é aos sábados, à tarde. Hoje é ${hoje.semana}.`};
+  if ((d.arena || {})[qual] === r.dia)
+    return {estado:'fechado', texto: semanal != null ? 'A deste sábado já foi. A próxima é no sábado que vem, à uma da tarde.'
+                                                     : 'O chaveamento de hoje já foi. O próximo sai amanhã, à uma da tarde.'};
+  if (r.hora < ARENA_ABRE || r.hora >= ARENA_FECHA)
+    return {estado:'fechado', texto:'A inscrição abre de manhã e fecha às seis da tarde.'};
+  return null;
+}
+/* a inscrição: marca o dia e, de manhã, espera o chaveamento sair */
+function entrarNaArena(qual){
+  const d = Estado.dados, r = d.relogio;
+  sincronizarHora(r);
+  (d.arena = d.arena || {})[qual] = r.dia;
+  if (r.hora < ARENA_COMECA) Relogio.ate(ARENA_COMECA);
+}
+/* o fim do torneio, como for: a tarde acabou */
+function sairDaArena(){
+  const r = Estado.dados && Estado.dados.relogio;
+  if (!r) return;
+  sincronizarHora(r);
+  if (r.hora < ARENA_FECHA) Relogio.ate(ARENA_FECHA);
+}
+/* a reputação de cada rodada vem só na primeira vez que você passa por
+   ela: repetir o torneio paga dinheiro e itens, não fama de novo */
+function repDaRodada(qual, rodada, rep){
+  const f = `rep_${qual}_${rodada}`;
+  if (!rep || Estado.dados.flags[f]) return 0;
+  Estado.dados.flags[f] = true;
+  return rep;
+}
+
 /* ── disponibilidade ───────────────────────────────────── */
 function statusElite4(){
   const d = Estado.dados;
@@ -55528,6 +55634,8 @@ function statusElite4(){
 function statusTorneio(){
   const d = Estado.dados;
   if (d.capitulo < 2) return {estado:'trancado', texto:'Volte quando tiver estrada'};
+  const tarde = tardeDaArena('torneio');
+  if (tarde) return tarde;
   if (d.jogador.dinheiro < INSCRICAO_TORNEIO) return {estado:'sem_dinheiro', texto:`Inscrição: ${fmtDin(INSCRICAO_TORNEIO)} ₽ (você tem ${fmtDin(d.jogador.dinheiro)})`};
   return {estado:'disponivel', texto:`Inscrição: ${fmtDin(INSCRICAO_TORNEIO)} ₽`};
 }
@@ -57158,13 +57266,13 @@ const VETERANOS = [
     cond:d=>!!d.flags.campeao_de_kanto,
     falas:[
       fala('Lorne', 'Lorne, do Caminho. Eu soube da cadeira.'),
-      fala('Lorne', 'Todo ano, depois que a Elite fecha a temporada, a arena recebe a Conferência do Planalto Indigo. Quem luta lá é quem ficou na estrada tempo demais pra caber em torneio aberto.'),
+      fala('Lorne', 'Todo sábado, à tarde, a arena recebe a Conferência do Planalto Indigo. Quem luta lá é quem ficou na estrada tempo demais pra caber em torneio aberto.'),
       fala('Lorne', 'Eu nunca inscrevi ninguém. Eu queria inscrever você.')
     ],
     aceita:'"Pode inscrever."',
     combinado:[fala('Lorne', 'Já está. A inscrição dessa vez fica por minha conta. Na próxima você paga, como todo mundo.')],
     recusa:'"Eu já tive Liga demais."',
-    recusado:[fala('Lorne', 'Entendo. A Conferência acontece todo ano. Eu também.')]
+    recusado:[fala('Lorne', 'Entendo. A Conferência acontece todo sábado. Eu também.')]
   },
   convite:{
     local:'planalto', titulo:'Aceitar a inscrição que Lorne pagou',
@@ -57621,6 +57729,8 @@ const PISO_CONFERENCIA = [66, 68, 72];
 function statusConferencia(){
   const d = Estado.dados;
   if (!d.flags.campeao_de_kanto) return {estado:'trancado', texto:'Só pra quem sentou na cadeira do Campeão'};
+  const tarde = tardeDaArena('conferencia', DIA_DA_CONFERENCIA);
+  if (tarde) return tarde;
   if (d.flags.conferencia_paga) return {estado:'disponivel', texto:'Inscrição paga por Lorne'};
   if (d.jogador.dinheiro < INSCRICAO_CONFERENCIA) return {estado:'sem_dinheiro', texto:`Inscrição: ${INSCRICAO_CONFERENCIA.toLocaleString('pt-BR')} ₽ (você tem ${d.jogador.dinheiro.toLocaleString('pt-BR')})`};
   return {estado:'disponivel', texto:`Inscrição: ${INSCRICAO_CONFERENCIA.toLocaleString('pt-BR')} ₽`};
@@ -57648,6 +57758,7 @@ const Conferencia = {
     const d = Estado.dados;
     if (d.flags.conferencia_paga) d.flags.conferencia_paga = false;
     else d.jogador.dinheiro -= INSCRICAO_CONFERENCIA;
+    entrarNaArena('conferencia');
     Jogo.conferenciaAtual = {rodada:0, adversarios:montarConferencia()};
     Estado.registrar('Inscreveu-se na Conferência do Planalto Indigo.');
     Estado.salvar('auto');
@@ -57691,6 +57802,7 @@ const Conferencia = {
 
     if (!venceu){
       Jogo.conferenciaAtual = null;
+      sairDaArena();
       avisos.push({tipo:'item', texto:`Premiação por participação: +${valor.toLocaleString('pt-BR')} ₽`});
       Estado.registrar(`Eliminado da Conferência do Planalto Indigo por ${v.nome} nas ${pr.rodada}.`);
       Estado.salvar('auto');
@@ -57698,15 +57810,16 @@ const Conferencia = {
         titulo:'Eliminad{o|a}', sub:`Conferência do Planalto Indigo · ${pr.rodada}`,
         quem:v.nome, falas:[diz(v.vence),
           'Na Conferência ninguém vaia quem perde. Quem está na arquibancada já perdeu pra todo mundo que está na arena.',
-          'A Conferência é todo ano. Eles vão estar aqui.'],
+          'A Conferência é todo sábado. Eles vão estar aqui.'],
         avisos, venceu:false
       }));
     }
 
     avisos.push({tipo:'item', texto:`+${valor.toLocaleString('pt-BR')} ₽`});
     for (const [n, q] of Object.entries(pr.itens || {})){ Estado.darItem(n, q); avisos.push({tipo:'item', texto:`Recebeu ${q}× ${n}.`}); }
-    if (pr.rep){
-      const m = Estado.mudarRep('bom', pr.rep, `Avançou nas ${pr.rodada} da Conferência do Planalto Indigo`, {rep:{notorio:true, peso:3}});
+    const fama = repDaRodada('conferencia', c.rodada, pr.rep);
+    if (fama){
+      const m = Estado.mudarRep('bom', fama, `Avançou nas ${pr.rodada} da Conferência do Planalto Indigo`, {rep:{notorio:true, peso:3}});
       if (m && m.mudou) avisos.push({tipo:'rep', texto:`Reputação: ${m.de} → ${m.para}`});
     }
     c.rodada++;
@@ -57718,6 +57831,7 @@ const Conferencia = {
     });
     if (c.rodada >= c.adversarios.length){
       Jogo.conferenciaAtual = null;
+      sairDaArena();
       const d = Estado.dados;
       d.conferenciasVencidas = (d.conferenciasVencidas || 0) + 1;
       if (d.conferenciasVencidas === 1){
@@ -57754,6 +57868,8 @@ const Conferencia = {
   },
   desistir(){
     Jogo.conferenciaAtual = null;
+    sairDaArena();
+    Estado.salvar('auto');
     UI.telaLiga();
   }
 };
@@ -57805,7 +57921,7 @@ const ESCALOES = [
   {n:1, nome:'Informante', insignia:'o envelope', uniforme:null,
    conf:0, cap:8, renda:1200, loja:0.75, peso:3},
   {n:2, nome:'Recruta', insignia:'o uniforme preto', uniforme:['rede_recruta_m', 'rede_recruta_f'],
-   conf:3, cap:10, renda:1600, loja:0.75, peso:3, item:'Uniforme preto da rede', prova:'brant'},
+   conf:3, cap:10, renda:1600, loja:0.75, peso:3, item:'Uniforme da rede', prova:'brant'},
   {n:3, nome:'{Contador|Contadora}', insignia:'o caderno do lote', uniforme:['rede_recruta_m', 'rede_recruta_f'],
    conf:7, cap:14, renda:2100, loja:0.72, peso:3, item:'Caderno de lote', prova:'juno'},
   {n:4, nome:'Chefe de turno', insignia:'a chave do subsolo', uniforme:['rede_recruta_m', 'rede_recruta_f'],
@@ -60335,7 +60451,7 @@ pewter:[
        fala('o rapaz da pedreira', 'Eu nunca tinha falado isso em voz alta. Soa pior em voz alta.')
      ]},
     {texto:'Anotar o nome da empresa e o número da folha.',
-     ef:{itens:{'Nome da empresa e o número da folha':1},
+     ef:{itens:{'Anotação da pedreira':1},
          flag:'anotou_a_pedreira',
          rep:{eixo:'bom',delta:2,motivo:'Anotou o que estava escrito na folha de pagamento'},
          registrar:'Anotou o nome da empresa da pedreira e a linha da folha onde o Machoke aparece.'},
@@ -60457,7 +60573,7 @@ cerulean:[
   ],
   escolhas:[
     {texto:'Encher um pote e guardar. Isso é prova.',
-     ef:{itens:{'Pote de vidro com água do rio':1}, flag:'guardou_agua_do_rio',
+     ef:{itens:{'Pote de água do rio':1}, flag:'guardou_agua_do_rio',
          rep:{eixo:'bom',delta:2,motivo:'Guardou prova do que todo mundo só reclamava'},
          registrar:'Guardou um pote com a água verde do rio de Cerulean.'},
      resultado:[
@@ -61268,7 +61384,7 @@ cinnabar:[
      ]},
     {texto:'Pedir a cópia do protocolo.',
      cond:d=>!!d.flags.ninguem_ouviu_o_barqueiro,
-     ef:{itens:{'Protocolo da manifestação do barqueiro':1},
+     ef:{itens:{'Protocolo da manifestação':1},
          flag:'tem_o_protocolo_do_barqueiro',
          rep:{eixo:'bom',delta:2,motivo:'Pediu o papel que ninguém tinha pedido', notorio:true},
          npc:{nome:'Barqueiro de Cinnabar', opiniao:4, memoria:'Você foi a primeira pessoa a pedir o protocolo dele.'},
@@ -63319,14 +63435,7 @@ const VIZINHOS = {
     preco:'vinte pokedólares, faz {idade-8} anos', conserto:'eu troquei no mesmo dia, que aqui telha é o que não falta',
     trabalho:'Você rastela a escada inteira. Leva doze minutos. Não tinha cinza.',
     sempre:'A escada está sem cinza. Ela sempre está sem cinza.',
-    parou:'a escada já tá limpa desde as seis, e antes eu rastelava de novo às onze só pra ter o que fazer'},
-  Indigo:{nome:'Sr. Brenn', f:false, trat:'seu Brenn', coisa:'escadaria da pousada', ferr:'a vassoura',
-    faz:'varre a escadaria da pousada do planalto', fazer:'varrer a escadaria',
-    divida:'o letreiro', como:'Você acertou o P com uma pedra, e ficou escrito OUSADA.',
-    preco:'vinte pokedólares, faz {idade-7} anos', conserto:'o letreiro ficou OUSADA dois anos e ninguém reclamou',
-    trabalho:'Você varre os quarenta degraus. Leva doze minutos. Estavam varridos.',
-    sempre:'A escadaria está varrida. Ela sempre está varrida.',
-    parou:'a escadaria já tá varrida desde as seis, e antes eu varria de novo às onze só pra ter o que fazer'}
+    parou:'a escada já tá limpa desde as seis, e antes eu rastelava de novo às onze só pra ter o que fazer'}
 };
 
 /* O vizinho da sua cidade, com as palavras que mudam com o sexo dele.
@@ -66225,7 +66334,7 @@ lei:[
   ],
   escolhas:[
     {texto:`Aceitar o apito.`,
-     ef:{flag:'ln_lei_apito', itens:{'Apito da patrulha':1}, rep:{eixo:'bom', delta:1, motivo:'Ficou com o apito de quem te ensinou a guarita'}},
+     ef:{flag:'ln_lei_apito', itens:{'Apito':1}, rep:{eixo:'bom', delta:1, motivo:'Ficou com o apito de quem te ensinou a guarita'}},
      resultado:[fala('o sargento de Viridian', `Não sopra à toa. Ele tem um som só, e todo mundo da patrulha conhece.`)]},
     {texto:`Pedir que ele fique com o apito e venha tomar café na guarita de vez em quando.`,
      ef:{flag:'ln_lei_cafe', moral:2},
@@ -88224,7 +88333,7 @@ c9_e_legal:{
   escolhas:[
     {texto:'"Então quem decide o recolhimento?"', vai:'c9_proposta_terceira'},
     {texto:'"E quem é H. Colman?"', vai:'c9_proposta_terceira', cond:d=>!!(d.flags.sabe_de_renno || d.flags.sabe_do_renno)},
-    {texto:'Guardar o guardanapo.', vai:'c9_proposta_terceira', ef:{flag:'guardanapo_terceira', itens:{'Guardanapo do Palace':1}}},
+    {texto:'Guardar o guardanapo.', vai:'c9_proposta_terceira', ef:{flag:'guardanapo_terceira', itens:{'Guardanapo':1}}},
     {texto:'Levantar e ir embora com isso na cabeça.', vai:'c9_neutro'}
   ]
 },
@@ -90684,7 +90793,7 @@ c10_armario_14:{
     'Um rádio de bateria de níquel, onze anos num armário fechado, chia quando você aperta.'
   ],
   ef:{flag:['abriu_o_armario','tem_o_radio'],
-      itens:{'Rádio da companhia':1},
+      itens:{'Rádio':1},
       moral:-10,
       rep:{eixo:'ruim',delta:1,motivo:'Arrombou o armário de um morto'},
       registrar:'Abriu o armário do Silas. O rádio da companhia ainda tem carga.'},
@@ -96759,7 +96868,7 @@ c12_koga_relatorio:{
     d=>fala('Koga', `A segunda mata mais e ninguém vai preso. ${c12_saudacao(d)}.`)
   ],
   ef:{flag:['tem_o_relatorio','provas_zona'],
-      itens:{'Relatório de manejo (cópia do Koga)':1},
+      itens:{'Relatório de manejo':1},
       npc:{nome:'Koga', opiniao:6, memoria:'Te entregou a cópia pessoal dele do relatório de manejo, amarrada com barbante.'},
       rep:{eixo:'bom',delta:4,motivo:'Saiu com setenta e duas páginas que provam o erro'},
       registrar:'Recebeu de Koga a cópia do relatório de manejo com anexo técnico e censos.',
@@ -96988,7 +97097,7 @@ c12_mapa_do_nico:{
     '"Diz mesmo."'
   ],
   ef:{flag:['tem_o_mapa_do_nico','protegeu_nico'],
-      itens:{'Mapa do Orin (no verso do folheto)':1},
+      itens:{'Mapa do Orin':1},
       npc:{nome:'Guia Orin', opiniao:6, memoria:'Desenhou o mapa do setor 7 no verso de um folheto e ficou em casa, com a sua permissão.'},
       rep:{eixo:'bom',delta:3,motivo:'Deixou alguém ajudar sem se destruir'},
       moral:8,
@@ -97059,7 +97168,7 @@ c12_pediu_desculpa_nico:{
     'Depois ele entra em casa e volta com o folheto plastificado e uma caneta, e desenha o mapa, e não fala mais nada enquanto desenha.'
   ],
   ef:{flag:['tem_o_mapa_do_nico'], limpaFlag:'afastou_nico',
-      itens:{'Mapa do Orin (no verso do folheto)':1},
+      itens:{'Mapa do Orin':1},
       npc:{nome:'Guia Orin', opiniao:5, memoria:'Você voltou para pedir desculpa. Ele te deu o mapa em silêncio, sentado num degrau.'},
       rep:{eixo:'bom',delta:3,motivo:'Voltou para pedir desculpa'},
       moral:10,
@@ -100029,7 +100138,7 @@ c13_fabrica_de_gelo:{
     d=>`"E eu tenho os valores aqui, meu bem, e o consumo dobrou em ${c13_mes(d, 2)}."`
   ],
   ef:{flag:['sabe_da_fabrica','provas_espuma'],
-      itens:{'Contas de luz da fábrica de gelo':1},
+      itens:{'Contas de luz':1},
       npc:{nome:'a secretária da colônia', opiniao:8, memoria:'Te contou que a fábrica de gelo fechada dobrou o consumo de luz.'},
       rep:{eixo:'bom',delta:5,motivo:'Perguntou quem vende gelo quando ninguém compra'},
       instabilidade:1,
@@ -105036,7 +105145,7 @@ c14_devolveu_a_mochila:{
     d=>c14_blaineNaCratera(d) ? 'Blaine olha você fazer isso e não diz nada.' : ''
   ],
   ef:{flag:'devolveu_a_mochila', limpaFlag:'tem_a_mochila_do_fuji',
-      perdeItens:{'Mochila de lona do Dr. Fuji':1},
+      perdeItens:{'Mochila do Dr. Fuji':1},
       rep:{eixo:'bom',delta:2,motivo:'Devolveu a mochila ao lugar onde foi deixada'},
       registrar:'Devolveu a mochila do Dr. Fuji ao abrigo da cratera.'},
   escolhas:[
@@ -105116,7 +105225,7 @@ c14_levou_a_mochila:{
        'As pedras empilhadas continuam onde estavam.'
   ],
   ef:{flag:['tem_a_mochila_do_fuji'],
-      itens:{'Mochila de lona do Dr. Fuji':1},
+      itens:{'Mochila do Dr. Fuji':1},
       executar:d=>{ Estado.marcar('c14_escola_pelo_blaine', c14_blaineNaCratera(d)); return []; },
       rep:{eixo:'bom',delta:2,motivo:'Trouxe de volta o que estava numa borda de cratera'},
       registrar:'Levou a mochila do Dr. Fuji da borda da cratera.',
@@ -105158,7 +105267,7 @@ c14_escola:{
   ],
   ef:{flag:['entregou_a_mochila','fuji_virou_professor'],
       limpaFlag:'tem_a_mochila_do_fuji',
-      perdeItens:{'Mochila de lona do Dr. Fuji':1},
+      perdeItens:{'Mochila do Dr. Fuji':1},
       /* a descida, e a escola abre das sete às cinco, de segunda a sexta */
       executar:d=>{
         Estado.marcar('c14_blaine_na_cratera', false);
@@ -106317,7 +106426,7 @@ c15_o_trajeto:{
     'Mas na ponta sul dele, do outro lado de trinta quilômetros de mar, tem uma ilha com um vulcão.'
   ],
   ef:{flag:['sabe_do_circuito','caes_olham_cinnabar'],
-      itens:{'Mapa da ciclovia com o circuito a lápis':1},
+      itens:{'Mapa da ciclovia':1},
       npc:c15_npc('Xavi', 6, 'Te deu o mapa com o circuito dos três traçado a lápis.'),
       rep:{eixo:'bom',delta:5,motivo:'Olhou o desenho até entender o que era'},
       instabilidade:1,
@@ -112652,7 +112761,7 @@ c17_contou_pra_ivone:{
       presagio:'Venda documentada é rastreável.'},
   escolhas:[
     {texto:'Escrever e assinar ali mesmo, em cima do telefone.', vai:'c17_fim',
-     ef:{flag:'documentou_a_venda', itens:{'Declaração assinada da venda':1},
+     ef:{flag:'documentou_a_venda', itens:{'Declaração da venda':1},
          registrar:'Escreveu e assinou a venda de Mew, com data, hora e o que lembrava do carro.'}},
     {texto:'Pôr o fone no gancho e ir embora.', vai:'c17_fim'}
   ]
@@ -117236,7 +117345,7 @@ c19_guardou_cartao:{
       ? 'O crachá dessa mulher está no seu bolso.'
       : 'Pelo jeito, a Elda está longe do serviço, e alguém escreveu que a equipe segura até ela voltar.'
   ],
-  ef:{itens:{'Cartão de aniversário da Elda':1}, moral:-1,
+  ef:{itens:{'Cartão de aniversário':1}, moral:-1,
       registrar:'Guardou o cartão de aniversário que dezenove colegas assinaram para a Elda.'},
   escolhas:[
     {texto:'Voltar ao portão.', vai:'c19_cerca'},
@@ -120509,7 +120618,7 @@ c20_alcina_da:{
     'Ela entrega.',
     fala('Dra. Isolde Yarrow', 'Eu não exagerei. É pior do que eu lembro.')
   ],
-  ef:{flag:['tem_relatorios_alcina','provas_do_viveiro'], itens:{'Oito relatórios mensais do galpão 4':1},
+  ef:{flag:['tem_relatorios_alcina','provas_do_viveiro'], itens:{'Relatórios do galpão 4':1},
       npc:{nome:'Dra. Isolde Yarrow', opiniao:3, memoria:'Te deu os relatórios mensais que levou quando saiu.'},
       rep:{eixo:'bom',delta:2,motivo:'Saiu de Celadon com oito meses de relatório na mão'},
       registrar:'Oito relatórios mensais do galpão 4, guardados por quem renunciou.'},
@@ -120611,7 +120720,7 @@ c20_pediu_as_anotacoes:{
     'Ela empurra o caderno pela mesa.',
     fala('a conselheira regional', 'Os outros três eu entrego quando alguém me perguntar oficialmente, e eu vou querer que perguntem por escrito.')
   ],
-  ef:{flag:['tem_caderno_da_liga','provas_do_11'], itens:{'Caderno de anotações da conselheira':1},
+  ef:{flag:['tem_caderno_da_liga','provas_do_11'], itens:{'Caderno da conselheira':1},
       npc:{nome:'a conselheira regional', opiniao:3, memoria:'Te entregou um dos quatro cadernos, na frente da mesa inteira.'},
       rep:{eixo:'bom',delta:2,motivo:'Arrancou um caderno de anotações do governo na frente do conselho'},
       registrar:'O caderno mais recente da observadora do governo nas reuniões do conselho.'},
@@ -123637,7 +123746,7 @@ c23_levou_a_folha_do_red:{
     fala('Blue', 'Se você achar ele, me avisa.', 'frio'),
     fala('Blue', 'Não precisa me levar junto. Só me avisa.')
   ],
-  ef:{itens:{'Folha única da pasta RED':1}, flag:'levou_a_folha_do_red',
+  ef:{itens:{'Folha da pasta RED':1}, flag:'levou_a_folha_do_red',
       npc:{nome:'Blue', opiniao:2, memoria:'Deixou você levar a folha do Red e pediu só pra ser avisado.'},
       registrar:'Levou a folha única da pasta RED.'},
   escolhas:[{texto:'Descer a escada.', vai:'c23_desceu'}]
@@ -123980,7 +124089,7 @@ c24_o_uniforme:{
   escolhas:[
     {texto:'Seguir.', vai:'c24_a_terceira'},
     {texto:'Anotar a sigla e o número do bordado.', vai:'c24_anotou_a_sigla',
-     ef:{itens:{'Sigla e número do bordado, anotados':1}, flag:'anotou_a_sigla'}}
+     ef:{itens:{'Anotação do bordado':1}, flag:'anotou_a_sigla'}}
   ]
 },
 
@@ -124855,7 +124964,7 @@ c25_pos_tudo_na_mesa:{
     d=>{
       const provas = ['Segunda página do convênio','Folha 19 — recomendação de convocação',
                       'Dezenove folhas com o seu nome','Anotação: ACOMP. ATIVO — 704 — NÍVEL 2',
-                      'Foto de quatro pessoas de jaleco','Sigla e número do bordado, anotados'];
+                      'Foto de quatro pessoas de jaleco','Anotação do bordado'];
       const tem = provas.filter(x => Estado.contaItem(x) > 0);
       return tem.length
         ? `Em cima da mesa: ${tem.join('; ')}. E o resto que você juntou desde que saiu de casa.`
@@ -126746,7 +126855,7 @@ c21_relatorio_22:{
     'Em vinte e duas páginas, quarenta e uma frases inacabadas, e todas param exatamente na palavra antes da informação.'
   ],
   ef:{flag:['leu_o_relatorio_22'], instabilidade:2,
-      itens:{'Relatório de 22 páginas da terceira equipe':1},
+      itens:{'Relatório da terceira equipe':1},
       rep:{eixo:'bom',delta:1,motivo:'Leu as vinte e duas páginas em que nada fecha'},
       registrar:'41 frases inacabadas no relatório da terceira equipe, todas parando antes da informação.'},
   escolhas:[
@@ -126831,7 +126940,7 @@ c21_vai_procurar_nogueira:{
     'Ela abre o caderno e volta a escrever.',
     fala('Maren Kestrel', 'E se {o senhor|a senhora} achar ele, {o senhor|a senhora} não precisa me trazer nada. É só descer e dizer o nome dele em voz alta na portaria, que eu ouço do terceiro andar.')
   ],
-  ef:{flag:['procura_o_nogueira'], itens:{'Bilhete da Maren sobre o Vernon':1}, moral:2,
+  ef:{flag:['procura_o_nogueira'], itens:{'Bilhete da Maren':1}, moral:2,
       npc:{nome:'Maren Kestrel', opiniao:5, memoria:'Te pediu para achar a medalha de natação da filha do Vernon.'},
       rep:{eixo:'bom',delta:2,motivo:'Prometeu procurar um homem que a Liga já parou de procurar'},
       registrar:'Procurar o Vernon. Medalha de natação no bolso de cima.'},
@@ -127332,7 +127441,7 @@ c22_pediu_binoculo:{
     fala('Sr. Emory Poplar', 'É do meu pai. Volta com ele.'),
     'Você pendura a correia rachada no pescoço e promete voltar com ele, e é a primeira promessa que você faz nesta subida.'
   ],
-  ef:{flag:'tem_o_binoculo', itens:{'Binóculo do pai do Sr. Poplar':1},
+  ef:{flag:'tem_o_binoculo', itens:{'Binóculo':1},
       npc:{nome:'Sr. Emory Poplar', opiniao:3, memoria:'Te emprestou o binóculo do pai dele.'},
       registrar:'Pegou emprestado o binóculo do pai do Sr. Poplar, com promessa de devolver.'},
   escolhas:[
@@ -127418,7 +127527,7 @@ c22_cavou_o_marco:{
     'A terceira e última tem uma frase: o círculo não é caverna. O círculo é o que sobrou de uma coisa que desceu.'
   ],
   ef:{flag:['achou_a_lata','sabe_do_circulo'], instabilidade:2,
-      itens:{'Caderninho da lata de biscoito':1},
+      itens:{'Caderninho':1},
       rep:{eixo:'bom',delta:2,motivo:'Cavou embaixo de um marco em vez de passar por ele'},
       registrar:'Um caderninho enterrado: o círculo no fundo do vale é o que sobrou de uma coisa que desceu.'},
   escolhas:[
@@ -127763,7 +127872,7 @@ c22_levou_o_aparelho:{
     'Não serve para nada, porque você não sabe o que ele mede.',
     'Serve para uma coisa, que é esta: quando a agulha cair, você vai saber que saiu.'
   ],
-  ef:{flag:'tem_o_aparelho', itens:{'Medidor com a agulha no fim da escala':1},
+  ef:{flag:'tem_o_aparelho', itens:{'Medidor':1},
       registrar:'Levou o medidor. Quando a agulha cair, você saiu.'},
   escolhas:[
     {texto:'Procurar a equipe.', vai:'c22_procurou_equipe'},
@@ -128215,7 +128324,7 @@ c22_pegou_sucata:{
       : 'Você não sabe o que é e sabe muito bem de onde vem.',
     'Alguma coisa da Silph esteve aqui, e alguma coisa aconteceu com ela.'
   ],
-  ef:{flag:['tem_a_sucata'], itens:{'Chapa de metal com marca da Silph':1}, instabilidade:1,
+  ef:{flag:['tem_a_sucata'], itens:{'Chapa da Silph':1}, instabilidade:1,
       rep:{eixo:'bom',delta:2,motivo:'Trouxe do vale a única prova material que existe'},
       registrar:'Uma chapa com numeração SPH, arrancada do vidro do círculo.'},
   escolhas:[
@@ -133168,8 +133277,7 @@ const INICIAL_DA_CIDADE = {
   Celadon:  [43, 69, 102, 37, 58, 52],
   Fuchsia:  [48, 109, 88, 23, 111, 129],
   Saffron:  [63, 96, 79, 56, 66, 52],
-  Cinnabar: [58, 37, 77, 88, 109, 72],
-  Indigo:   [66, 74, 147, 56, 111, 104]
+  Cinnabar: [58, 37, 77, 88, 109, 72]
 };
 const INICIAL_DO_JEITO = {
   coragem:  [56, 66, 58, 111, 21, 23],
@@ -135235,7 +135343,7 @@ cl2_o_certificado:{
     'A empresa tem um caminhão. O caminhão tem registro de pesagem. Nas terças, ele pesa a mesma coisa na ida e na volta da Rota 21.',
     'Ninguém leva nada dali. O saco preto fica.'
   ],
-  ef:{flag:'cm_lei_pesagem', itens:{'Registro de pesagem das terças':1},
+  ef:{flag:'cm_lei_pesagem', itens:{'Registro de pesagem':1},
       rep:{eixo:'bom', delta:1, motivo:'Descobriu que o caminhão de resíduo volta da Estação 4 com o mesmo peso'},
       registrar:'O caminhão de resíduo pesa o mesmo na ida e na volta da Estação 4. O que sai em saco preto fica lá.'},
   escolhas:[
@@ -136561,7 +136669,7 @@ cc2_o_resultado:{
     'Ninguém da Estação 4 escreveu isso em ata. Uma unidade de viveiro não envelhece: ela acaba, aos dois anos, e a Comissão compra a próxima.',
     fala('Professor Oak', 'Isso não é manejo. Isso é assinatura.', 'baixo')
   ],
-  ef:{flag:'cm_ciencia_dois_anos', itens:{'Caderno de bancada da amostra 4':1},
+  ef:{flag:'cm_ciencia_dois_anos', itens:{'Caderno da amostra 4':1},
       rep:{eixo:'bom', delta:2, motivo:'Analisou a amostra 4 e achou o prazo das unidades de viveiro'},
       registrar:'A amostra 4 mostra que unidade de viveiro não passa dos dois anos: acaba, e a Comissão compra a próxima.',
       executar:() => { caminhoAs(5); }},
@@ -136576,7 +136684,7 @@ cc2_o_resultado_parcial:{
     'O que dá pra afirmar é pouco: a unidade é jovem demais pro tamanho que tem, e as células dela trabalham rápido demais.',
     fala('Professor Oak', 'Pouco é muito, quando é verdade. A gente escreve o pouco.', 'baixo')
   ],
-  ef:{flag:'cm_ciencia_pouco', itens:{'Caderno de bancada da amostra 4':1},
+  ef:{flag:'cm_ciencia_pouco', itens:{'Caderno da amostra 4':1},
       rep:{eixo:'bom', delta:1, motivo:'Fez a análise da amostra 4 e escreveu só o que dava pra afirmar'},
       executar:() => { caminhoAs(5); }},
   escolhas:[
@@ -138475,7 +138583,7 @@ ch1_a_causa:{
     fala('a brigadista de Fuchsia', 'Queima de limpeza. O manejo faz pra empurrar Pokémon pro lado da cerca, onde é mais fácil pegar. Sempre do lado de dentro, sempre com vento a favor.', 'baixo'),
     fala('a brigadista de Fuchsia', 'Hoje o vento virou.', 'baixo')
   ],
-  ef:{flag:'cm_heroi_queima_de_limpeza', itens:{'Lata de querosene da origem':1},
+  ef:{flag:'cm_heroi_queima_de_limpeza', itens:{'Lata de querosene':1},
       registrar:'O incêndio da Rota 15 começou numa queima de limpeza do manejo, do lado de dentro da cerca.',
       executar:() => { caminhoEntre(19, 6, 21); }},
   escolhas:[
@@ -143055,7 +143163,7 @@ const UI = {
         <span class="cr-op-nome">${e(cid)}</span><span class="cr-op-nota">${e(CIDADES_DA_FICHA[cid] || '')}</span></button>`).join('');
     const natal = c.cidade === 'Pallet'
       ? 'Em Pallet, quem entrega o primeiro Pokémon é o Professor, na rua, na manhã em que você sai. A Pokédex sai da mão dele; o cartão de treinador, só no Centro de Viridian.'
-      : `Fora de Pallet, a perua do laboratório passa uma vez por mês com a caixa térmica. A Pokédex e o cartão saem do Centro Pokémon de ${c.cidade === 'Indigo' ? 'Viridian' : c.cidade}.${c.cidade !== 'Viridian' ? ' E da rodoviária sai o ônibus pra Viridian, uma vez, se você quiser.' : ''}`;
+      : `Fora de Pallet, a perua do laboratório passa uma vez por mês com a caixa térmica. A Pokédex e o cartão saem do Centro Pokémon de ${c.cidade}.${c.cidade !== 'Viridian' ? ' E da rodoviária sai o ônibus pra Viridian, uma vez, se você quiser.' : ''}`;
     return this.crCabeca('Quem é você', 'Como te chamam, como você nasceu e de onde vem.') + `
       <div class="cr-campo"><label class="cr-rot" for="f-nome">Nome</label>
         <div class="cr-linha">
@@ -143658,8 +143766,8 @@ const UI = {
            alinhar com o balão de cima */
         const rosto = meu ? '' : this.retratoFala(f.quem, f.rotulo, f.casa);
         const lugar = rosto ? (repete ? '<span class="fala-retrato vazio" aria-hidden="true"></span>' : rosto) : '';
-        return `<div class="fala${tom}${meu}${repete ? ' segue' : ''}${lugar ? ' com-rosto' : ''}" data-voz="fala"${meu ? '' : estiloCor(f.quem)}>
-          ${lugar}<div class="fala-quem">${this.esc(f.quem)}</div>
+        return `<div class="fala${tom}${meu}${repete ? ' segue' : ''}${lugar ? ' com-rosto' : ''}" data-voz="fala" data-quem="${this.esc(f.quem)}"${meu ? '' : estiloCor(f.quem)}>
+          ${lugar}<div class="fala-quem">${this.esc(meu ? f.quem : rotuloNoBalao(f.quem))}</div>
           <p class="fala-diz">${this.esc(f.diz)}</p>
           ${f.nota ? `<div class="fala-nota">${this.esc(f.nota)}</div>` : ''}
         </div>`;
@@ -143776,8 +143884,8 @@ const UI = {
         const diz = (/,$/.test(pe.texto) && atribuida) ? pe.texto.replace(/,$/, '.')
                   : (/^[,;]/.test(depois) && atribuida && !/[.!?…—–:"”)]$/.test(pe.texto)) ? pe.texto + '.'
                   : pe.texto;
-        html += `<div class="fala${quem ? '' : ' anonima'}${meu}${repete ? ' segue' : ''}${lugar ? ' com-rosto' : ''}" data-voz="${fonte}"${meu ? '' : estiloCor(quem)}>`
-              + lugar + (quem ? `<div class="fala-quem">${this.esc(quem)}</div>` : '')
+        html += `<div class="fala${quem ? '' : ' anonima'}${meu}${repete ? ' segue' : ''}${lugar ? ' com-rosto' : ''}" data-voz="${fonte}"${quem ? ` data-quem="${this.esc(quem)}"` : ''}${meu ? '' : estiloCor(quem)}>`
+              + lugar + (quem ? `<div class="fala-quem">${this.esc(meu ? quem : rotuloNoBalao(quem))}</div>` : '')
               + `<p class="fala-diz">${this.esc(diz)}</p></div>`;
       }
       return html;
@@ -145926,14 +146034,14 @@ const UI = {
     const premios = (lista, extra) => `<div class="liga-premios">${['Quartas', 'Semifinal', 'Final'].map((r, i) =>
       `<span class="lpr"><small>${r}</small><b>${din(lista[i].dinheiro)}</b></span>`).join('')}${extra || ''}</div>`;
     const torneio = `<div class="liga-evento torneio">
-        <p class="sussurro">Chaveamento de oito, três rodadas, o ano inteiro. Qualquer um entra: gente de Kanto inteira, e quem já cruzou com você na estrada.</p>
+        <p class="sussurro">Chaveamento de oito e três rodadas, todo dia, à uma da tarde. Qualquer um entra: gente de Kanto inteira, e quem já cruzou com você na estrada.</p>
         ${premios(PREMIO_TORNEIO, `<span class="lpr"><small>Adversários</small><b>Nv ${nivelDoTorneio(0)}–${nivelDoTorneio(2)}</b></span>`)}
         ${d.torneiosVencidos ? `<span class="liga-titulos">${svgIcone('torneio')}${this.esc(d.torneiosVencidos + '× {campeão|campeã}')}</span>` : ''}
       </div>`;
     const co = campeao ? statusConferencia() : null;
     const conferencia = campeao ? `<h3 class="sec sec-conf">Conferência do Planalto Indigo</h3>
       <div class="liga-evento conf">
-        <p class="sussurro">Três rodadas, times inteiros, e ninguém do outro lado com menos estrada que você.</p>
+        <p class="sussurro">Aos sábados, à uma da tarde. Três rodadas, times inteiros, e ninguém do outro lado com menos estrada que você.</p>
         ${premios(PREMIO_CONFERENCIA)}
         ${d.conferenciasVencidas ? `<span class="liga-titulos">${svgIcone('liga')}${this.esc(d.conferenciasVencidas + '× {campeão|campeã}')}</span>` : ''}
       </div>` : '';
@@ -148542,22 +148650,24 @@ const UI = {
       <div class="linha"><span class="k">Quem volta</span><span class="v">toma a porta de quem sentava nela, com o próprio time, 2 níveis acima do substituto na primeira e na segunda porta e 1 na terceira · com os três de volta, a ala não tem porta vaga pra cargo nenhum</span></div>
 
       <h3>Torneio Aberto</h3>
-      <div class="linha"><span class="k">Quem entra</span><span class="v">qualquer um, a partir do capítulo 2 · inscrição de 2.000 ₽</span></div>
+      <div class="linha"><span class="k">Quem entra</span><span class="v">qualquer um que chegue à arena do Planalto Indigo (a guarita da Rota 23 pede as oito insígnias) · inscrição de 2.000 ₽</span></div>
+      <div class="linha"><span class="k">Quando</span><span class="v">um chaveamento por dia · a inscrição abre de manhã e fecha às seis da tarde · o chaveamento sai à uma, e quem se inscreve antes espera · o torneio toma a tarde: no fim, ganhando, perdendo ou desistindo, são seis horas</span></div>
       <div class="linha"><span class="k">Chaveamento</span><span class="v">três rodadas, uma luta em cada, contra inscritos com nome e cidade · até dois são gente que já cruzou com você (veterano que você venceu também entra) · o Ezra, se entrar, fica com a final</span></div>
       <div class="linha"><span class="k">Nível</span><span class="v">o ás de cada inscrito fica 3 abaixo da média dos seus três mais fortes nas quartas, 2 abaixo na semifinal e no mesmo nível na final, mais o acerto de cada um (de −4 a +4, pra todos pesarem parecido) · o resto do time vai de 3 abaixo do ás até ele</span></div>
       <div class="linha"><span class="k">Tamanho do time</span><span class="v">pelas suas insígnias: 3 com 0–1, 4 com 2–3, 5 com 4–5, 6 com 6 ou mais</span></div>
       <div class="linha"><span class="k">Golpes e item</span><span class="v">os de nível da espécie, o mais fraco trocado por um de TM do dono · o ás segura um item de luta</span></div>
       <div class="linha"><span class="k">Escolha do golpe</span><span class="v">o segundo melhor golpe 12% das vezes nas quartas, 10% na semifinal e 8% na final · gasta Vontade com a chance cheia</span></div>
       <div class="linha"><span class="k">Entre as rodadas</span><span class="v">dá pra curar o time</span></div>
-      <div class="linha"><span class="k">Prêmio</span><span class="v">3.000, 8.000 e 25.000 ₽, com itens · perdendo, 30% do prêmio da rodada</span></div>
+      <div class="linha"><span class="k">Prêmio</span><span class="v">3.000, 8.000 e 25.000 ₽, com itens · perdendo, 30% do prêmio da rodada · a reputação da semifinal e da final vem só na primeira vez que você passa por elas; dinheiro e itens, toda vez</span></div>
       <p class="sussurro">As finais de torneio que acontecem na história, no navio e no Planalto, também vêm com o nível do seu time e item no ás, erram a escolha do golpe 10% a 12% das vezes e gastam Vontade com a chance cheia.</p>
 
       <h3>Conferência do Planalto Indigo</h3>
       <div class="linha"><span class="k">Quem entra</span><span class="v">só quem sentou na cadeira do Campeão · inscrição de 5.000 ₽</span></div>
+      <div class="linha"><span class="k">Quando</span><span class="v">uma por semana, no sábado, com a hora do torneio: inscrição de manhã até as seis, chaveamento à uma, e a tarde inteira na arena · no dia em que você joga um, o outro já fechou</span></div>
       <div class="linha"><span class="k">Chaveamento</span><span class="v">três rodadas · dois veteranos, primeiro os que você já venceu, e na final sempre a dona de três Conferências</span></div>
       <div class="linha"><span class="k">Nível</span><span class="v">a média dos seus três mais fortes + 2 + a rodada, nunca abaixo de 66, 68 e 72 · time de 6</span></div>
       <div class="linha"><span class="k">Entre as rodadas</span><span class="v">dá pra curar o time</span></div>
-      <div class="linha"><span class="k">Prêmio</span><span class="v">12.000, 25.000 e 60.000 ₽, com itens · perdendo, 20% do prêmio da rodada · a primeira Conferência vem com uma Master Ball</span></div>
+      <div class="linha"><span class="k">Prêmio</span><span class="v">12.000, 25.000 e 60.000 ₽, com itens · perdendo, 20% do prêmio da rodada · a reputação de cada rodada vem só na primeira vez · a primeira Conferência vem com uma Master Ball</span></div>
       <h3>Quando o seu Pokémon cai contra um selvagem</h3>
       <p class="sussurro">Se o selvagem tem natureza agressiva (Naughty, Brave, Adamant, Hasty, Impish, Jolly, Naive, Lonely, Rash), ele rola o Instinto dele: com um sucesso, ataca VOCÊ (quem tem mais Instinto vem mais vezes). Dano = Força dele + 2 em d6, e cada sucesso tira 3 do seu HP, que é HP de gente e não de Pokémon. Naturezas passivas não atacam o treinador. A sua barra de vida aparece na arena enquanto isso durar.</p>
       <h3>Nível, golpes e evolução</h3>
@@ -164131,8 +164241,10 @@ const Jogo = {
     const meu = Estado.primeiroApto();
     if (!meu) return UI.modal('Torneio', '<p class="nada">Nenhum Pokémon em pé. Cure o time antes de se inscrever.</p>');
     Estado.j.dinheiro -= INSCRICAO_TORNEIO;
+    entrarNaArena('torneio');
     this.torneioAtual = {rodada:0, adversarios: montarChaveamento()};
     Estado.registrar('Inscreveu-se no Torneio Aberto do Planalto.');
+    Estado.salvar('auto');
     UI.telaTorneio();
   },
 
@@ -164165,6 +164277,7 @@ const Jogo = {
 
     if (!venceu){
       this.torneioAtual = null;
+      sairDaArena();
       const consolo = premioTorneio(t, false);
       Estado.j.dinheiro += consolo;
       avisos.push({tipo:'item', texto:`Premiação por participação: +${fmtDin(consolo)} ₽`});
@@ -164185,8 +164298,9 @@ const Jogo = {
     Estado.j.dinheiro += ganhoTorneio;
     avisos.push({tipo:'item', texto:`+${fmtDin(ganhoTorneio)} ₽`});
     for (const [n,q] of Object.entries(premio.itens||{})){ Estado.darItem(n,q); avisos.push({tipo:'item', texto:`Recebeu ${q}× ${n}.`}); }
-    if (premio.rep){
-      const r = Estado.mudarRep('bom', premio.rep, `Avançou na ${premio.rodada} do Torneio Aberto`, {rep:{notorio:true, peso:3}});
+    const fama = repDaRodada('torneio', t.rodada, premio.rep);
+    if (fama){
+      const r = Estado.mudarRep('bom', fama, `Avançou na ${premio.rodada} do Torneio Aberto`, {rep:{notorio:true, peso:3}});
       if (r && r.mudou) avisos.push({tipo:'rep', texto:`Reputação: ${r.de} → ${r.para}`});
     }
 
@@ -164199,6 +164313,7 @@ const Jogo = {
     });
     if (campeao){
       this.torneioAtual = null;
+      sairDaArena();
       Estado.dados.torneiosVencidos = (Estado.dados.torneiosVencidos||0) + 1;
       Estado.marcar('venceu_torneio');
       Estado.registrar(`Venceu o Torneio Aberto (${Estado.dados.torneiosVencidos}ª vez).`);
@@ -164239,6 +164354,8 @@ const Jogo = {
 
   desistirTorneio(){
     this.torneioAtual = null;
+    sairDaArena();
+    Estado.salvar('auto');
     UI.telaLiga();
   },
 

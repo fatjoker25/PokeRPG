@@ -257,7 +257,7 @@ cc2_o_resultado:{
     'Ninguém da Estação 4 escreveu isso em ata. Uma unidade de viveiro não envelhece: ela acaba, aos dois anos, e a Comissão compra a próxima.',
     fala('Professor Oak', 'Isso não é manejo. Isso é assinatura.', 'baixo')
   ],
-  ef:{flag:'cm_ciencia_dois_anos', itens:{'Caderno de bancada da amostra 4':1},
+  ef:{flag:'cm_ciencia_dois_anos', itens:{'Caderno da amostra 4':1},
       rep:{eixo:'bom', delta:2, motivo:'Analisou a amostra 4 e achou o prazo das unidades de viveiro'},
       registrar:'A amostra 4 mostra que unidade de viveiro não passa dos dois anos: acaba, e a Comissão compra a próxima.',
       executar:() => { caminhoAs(5); }},
@@ -272,7 +272,7 @@ cc2_o_resultado_parcial:{
     'O que dá pra afirmar é pouco: a unidade é jovem demais pro tamanho que tem, e as células dela trabalham rápido demais.',
     fala('Professor Oak', 'Pouco é muito, quando é verdade. A gente escreve o pouco.', 'baixo')
   ],
-  ef:{flag:'cm_ciencia_pouco', itens:{'Caderno de bancada da amostra 4':1},
+  ef:{flag:'cm_ciencia_pouco', itens:{'Caderno da amostra 4':1},
       rep:{eixo:'bom', delta:1, motivo:'Fez a análise da amostra 4 e escreveu só o que dava pra afirmar'},
       executar:() => { caminhoAs(5); }},
   escolhas:[

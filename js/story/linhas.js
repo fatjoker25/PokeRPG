@@ -641,7 +641,7 @@ lei:[
   ],
   escolhas:[
     {texto:`Aceitar o apito.`,
-     ef:{flag:'ln_lei_apito', itens:{'Apito da patrulha':1}, rep:{eixo:'bom', delta:1, motivo:'Ficou com o apito de quem te ensinou a guarita'}},
+     ef:{flag:'ln_lei_apito', itens:{'Apito':1}, rep:{eixo:'bom', delta:1, motivo:'Ficou com o apito de quem te ensinou a guarita'}},
      resultado:[fala('o sargento de Viridian', `Não sopra à toa. Ele tem um som só, e todo mundo da patrulha conhece.`)]},
     {texto:`Pedir que ele fique com o apito e venha tomar café na guarita de vez em quando.`,
      ef:{flag:'ln_lei_cafe', moral:2},

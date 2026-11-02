@@ -504,7 +504,7 @@ const Mundo = {
   iniciar(cidadeNatal){
     const mapa = {'Pallet':'pallet','Viridian':'viridian','Pewter':'pewter','Cerulean':'cerulean',
       'Vermilion':'vermilion','Lavender':'lavender','Celadon':'celadon','Fuchsia':'fuchsia',
-      'Saffron':'saffron','Cinnabar':'cinnabar','Indigo':'viridian'};
+      'Saffron':'saffron','Cinnabar':'cinnabar'};
     Estado.dados.local = mapa[cidadeNatal] || 'pallet';
     Estado.dados.visitados = {[Estado.dados.local]:true};
     Estado.dados.descobertas = {};
@@ -763,7 +763,7 @@ function localDoCapitulo(n){
   if (id === null || id === undefined){
     const mapa = {'Pallet':'pallet','Viridian':'viridian','Pewter':'pewter','Cerulean':'cerulean',
       'Vermilion':'vermilion','Lavender':'lavender','Celadon':'celadon','Fuchsia':'fuchsia',
-      'Saffron':'saffron','Cinnabar':'cinnabar','Indigo':'planalto'};
+      'Saffron':'saffron','Cinnabar':'cinnabar'};
     return mapa[Estado.dados.jogador.cidade] || 'pallet';
   }
   return id;

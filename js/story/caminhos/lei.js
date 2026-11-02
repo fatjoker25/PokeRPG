@@ -433,7 +433,7 @@ cl2_o_certificado:{
     'A empresa tem um caminhão. O caminhão tem registro de pesagem. Nas terças, ele pesa a mesma coisa na ida e na volta da Rota 21.',
     'Ninguém leva nada dali. O saco preto fica.'
   ],
-  ef:{flag:'cm_lei_pesagem', itens:{'Registro de pesagem das terças':1},
+  ef:{flag:'cm_lei_pesagem', itens:{'Registro de pesagem':1},
       rep:{eixo:'bom', delta:1, motivo:'Descobriu que o caminhão de resíduo volta da Estação 4 com o mesmo peso'},
       registrar:'O caminhão de resíduo pesa o mesmo na ida e na volta da Estação 4. O que sai em saco preto fica lá.'},
   escolhas:[

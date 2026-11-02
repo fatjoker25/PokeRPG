@@ -1278,7 +1278,7 @@ c10_armario_14:{
     'Um rádio de bateria de níquel, onze anos num armário fechado, chia quando você aperta.'
   ],
   ef:{flag:['abriu_o_armario','tem_o_radio'],
-      itens:{'Rádio da companhia':1},
+      itens:{'Rádio':1},
       moral:-10,
       rep:{eixo:'ruim',delta:1,motivo:'Arrombou o armário de um morto'},
       registrar:'Abriu o armário do Silas. O rádio da companhia ainda tem carga.'},

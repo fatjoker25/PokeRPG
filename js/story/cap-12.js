@@ -1104,7 +1104,7 @@ c12_koga_relatorio:{
     d=>fala('Koga', `A segunda mata mais e ninguém vai preso. ${c12_saudacao(d)}.`)
   ],
   ef:{flag:['tem_o_relatorio','provas_zona'],
-      itens:{'Relatório de manejo (cópia do Koga)':1},
+      itens:{'Relatório de manejo':1},
       npc:{nome:'Koga', opiniao:6, memoria:'Te entregou a cópia pessoal dele do relatório de manejo, amarrada com barbante.'},
       rep:{eixo:'bom',delta:4,motivo:'Saiu com setenta e duas páginas que provam o erro'},
       registrar:'Recebeu de Koga a cópia do relatório de manejo com anexo técnico e censos.',
@@ -1333,7 +1333,7 @@ c12_mapa_do_nico:{
     '"Diz mesmo."'
   ],
   ef:{flag:['tem_o_mapa_do_nico','protegeu_nico'],
-      itens:{'Mapa do Orin (no verso do folheto)':1},
+      itens:{'Mapa do Orin':1},
       npc:{nome:'Guia Orin', opiniao:6, memoria:'Desenhou o mapa do setor 7 no verso de um folheto e ficou em casa, com a sua permissão.'},
       rep:{eixo:'bom',delta:3,motivo:'Deixou alguém ajudar sem se destruir'},
       moral:8,
@@ -1404,7 +1404,7 @@ c12_pediu_desculpa_nico:{
     'Depois ele entra em casa e volta com o folheto plastificado e uma caneta, e desenha o mapa, e não fala mais nada enquanto desenha.'
   ],
   ef:{flag:['tem_o_mapa_do_nico'], limpaFlag:'afastou_nico',
-      itens:{'Mapa do Orin (no verso do folheto)':1},
+      itens:{'Mapa do Orin':1},
       npc:{nome:'Guia Orin', opiniao:5, memoria:'Você voltou para pedir desculpa. Ele te deu o mapa em silêncio, sentado num degrau.'},
       rep:{eixo:'bom',delta:3,motivo:'Voltou para pedir desculpa'},
       moral:10,

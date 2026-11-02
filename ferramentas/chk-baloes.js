@@ -14,7 +14,11 @@ const raiz=path.resolve(__dirname,'..');
 const errs=[]; p.on('pageerror',e=>errs.push(e.message));
 await p.goto('file://'+path.join(raiz,'index.html')); await p.waitForTimeout(800);
 const r=await p.evaluate(()=>{
-  const out={nomes:{}, srcs:{}, anonimos:[], cenas:0, falhas:0};
+  const out={nomes:{}, srcs:{}, anonimos:[], cenas:0, falhas:0, mesmoBalao:[]};
+  /* o balão encurta "a funcionária da guarita" pra "a funcionária"
+     (rotuloNoBalao): dois rótulos com o mesmo balão na mesma cena
+     viram uma pessoa só pra quem lê */
+  const porCena={};
   const montar=(gen)=>{ Estado.novo({nome:'Ana',genero:gen,cidade:'Pallet',casaNome:'Delia',casaQuem:'mãe',nascimento:{dia:3,mes:9}});
     const d=Estado.dados; d.time=[criarPokemon(7,30)]; d.flags.tem_pokedex=true; d.capitulo=10; return d; };
   const d=montar('Mulher');
@@ -30,6 +34,11 @@ const r=await p.evaluate(()=>{
       if (e.classList.contains('voce')||e.classList.contains('minha')||e.classList.contains('jogador')) return;
       const q=e.querySelector('.fala-quem'); if(!q) { out.anonimos.push(onde+': (sem .fala-quem) '+e.innerText.slice(0,60)); return; }
       const n=q.innerText.trim();
+      if (n && e.dataset.quem){
+        const cena=onde.replace(/>$/,''), tela=n.toLowerCase(), pc=porCena[cena]=porCena[cena]||{};
+        const quem=(pc[tela]=pc[tela]||new Set()); quem.add(e.dataset.quem);
+        if (quem.size===2) out.mesmoBalao.push(cena+': "'+n+'" é '+[...quem].join(' e '));
+      }
       if(!n){ return; } // repetição do mesmo falante: o balão não repete nome nem rosto
       if (n===meu || /^você$/i.test(n)) return;
       if (/^\?+$/.test(n)) { out.anonimos.push(onde+': ??? '+e.innerText.slice(0,60)); return; }
@@ -69,5 +78,6 @@ console.log('cenas renderizadas:', r.cenas, '| nomes em balão:', Object.keys(r.
 console.log('\nBALÃO SEM ROSTO ('+sem.length+'):'); sem.forEach(([n,o])=>console.log('  '+String(o.n).padStart(3)+'  '+n+'   ['+o.onde.join(', ')+']'));
 console.log('\nROSTO QUE NÃO EXISTE ('+quebrados.length+'):'); quebrados.forEach(s=>console.log('  '+s));
 console.log('\nBALÃO SEM DONO ('+r.anonimos.length+'):'); r.anonimos.slice(0,40).forEach(s=>console.log('  '+s));
+console.log('\nDOIS RÓTULOS NO MESMO BALÃO ('+r.mesmoBalao.length+'):'); r.mesmoBalao.forEach(s=>console.log('  '+s));
 console.log('\nFALHAS:', (r.erros||[]).join('\n  ')); console.log('\nerros de página:', errs.slice(0,5)); await b.close();
-process.exit(sem.length||quebrados.length||r.anonimos.length||errs.length ? 1 : 0);})();
+process.exit(sem.length||quebrados.length||r.anonimos.length||r.mesmoBalao.length||errs.length ? 1 : 0);})();

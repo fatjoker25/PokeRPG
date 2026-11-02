@@ -664,13 +664,13 @@ const VETERANOS = [
     cond:d=>!!d.flags.campeao_de_kanto,
     falas:[
       fala('Lorne', 'Lorne, do Caminho. Eu soube da cadeira.'),
-      fala('Lorne', 'Todo ano, depois que a Elite fecha a temporada, a arena recebe a Conferência do Planalto Indigo. Quem luta lá é quem ficou na estrada tempo demais pra caber em torneio aberto.'),
+      fala('Lorne', 'Todo sábado, à tarde, a arena recebe a Conferência do Planalto Indigo. Quem luta lá é quem ficou na estrada tempo demais pra caber em torneio aberto.'),
       fala('Lorne', 'Eu nunca inscrevi ninguém. Eu queria inscrever você.')
     ],
     aceita:'"Pode inscrever."',
     combinado:[fala('Lorne', 'Já está. A inscrição dessa vez fica por minha conta. Na próxima você paga, como todo mundo.')],
     recusa:'"Eu já tive Liga demais."',
-    recusado:[fala('Lorne', 'Entendo. A Conferência acontece todo ano. Eu também.')]
+    recusado:[fala('Lorne', 'Entendo. A Conferência acontece todo sábado. Eu também.')]
   },
   convite:{
     local:'planalto', titulo:'Aceitar a inscrição que Lorne pagou',
@@ -1127,6 +1127,8 @@ const PISO_CONFERENCIA = [66, 68, 72];
 function statusConferencia(){
   const d = Estado.dados;
   if (!d.flags.campeao_de_kanto) return {estado:'trancado', texto:'Só pra quem sentou na cadeira do Campeão'};
+  const tarde = tardeDaArena('conferencia', DIA_DA_CONFERENCIA);
+  if (tarde) return tarde;
   if (d.flags.conferencia_paga) return {estado:'disponivel', texto:'Inscrição paga por Lorne'};
   if (d.jogador.dinheiro < INSCRICAO_CONFERENCIA) return {estado:'sem_dinheiro', texto:`Inscrição: ${INSCRICAO_CONFERENCIA.toLocaleString('pt-BR')} ₽ (você tem ${d.jogador.dinheiro.toLocaleString('pt-BR')})`};
   return {estado:'disponivel', texto:`Inscrição: ${INSCRICAO_CONFERENCIA.toLocaleString('pt-BR')} ₽`};
@@ -1154,6 +1156,7 @@ const Conferencia = {
     const d = Estado.dados;
     if (d.flags.conferencia_paga) d.flags.conferencia_paga = false;
     else d.jogador.dinheiro -= INSCRICAO_CONFERENCIA;
+    entrarNaArena('conferencia');
     Jogo.conferenciaAtual = {rodada:0, adversarios:montarConferencia()};
     Estado.registrar('Inscreveu-se na Conferência do Planalto Indigo.');
     Estado.salvar('auto');
@@ -1197,6 +1200,7 @@ const Conferencia = {
 
     if (!venceu){
       Jogo.conferenciaAtual = null;
+      sairDaArena();
       avisos.push({tipo:'item', texto:`Premiação por participação: +${valor.toLocaleString('pt-BR')} ₽`});
       Estado.registrar(`Eliminado da Conferência do Planalto Indigo por ${v.nome} nas ${pr.rodada}.`);
       Estado.salvar('auto');
@@ -1204,15 +1208,16 @@ const Conferencia = {
         titulo:'Eliminad{o|a}', sub:`Conferência do Planalto Indigo · ${pr.rodada}`,
         quem:v.nome, falas:[diz(v.vence),
           'Na Conferência ninguém vaia quem perde. Quem está na arquibancada já perdeu pra todo mundo que está na arena.',
-          'A Conferência é todo ano. Eles vão estar aqui.'],
+          'A Conferência é todo sábado. Eles vão estar aqui.'],
         avisos, venceu:false
       }));
     }
 
     avisos.push({tipo:'item', texto:`+${valor.toLocaleString('pt-BR')} ₽`});
     for (const [n, q] of Object.entries(pr.itens || {})){ Estado.darItem(n, q); avisos.push({tipo:'item', texto:`Recebeu ${q}× ${n}.`}); }
-    if (pr.rep){
-      const m = Estado.mudarRep('bom', pr.rep, `Avançou nas ${pr.rodada} da Conferência do Planalto Indigo`, {rep:{notorio:true, peso:3}});
+    const fama = repDaRodada('conferencia', c.rodada, pr.rep);
+    if (fama){
+      const m = Estado.mudarRep('bom', fama, `Avançou nas ${pr.rodada} da Conferência do Planalto Indigo`, {rep:{notorio:true, peso:3}});
       if (m && m.mudou) avisos.push({tipo:'rep', texto:`Reputação: ${m.de} → ${m.para}`});
     }
     c.rodada++;
@@ -1224,6 +1229,7 @@ const Conferencia = {
     });
     if (c.rodada >= c.adversarios.length){
       Jogo.conferenciaAtual = null;
+      sairDaArena();
       const d = Estado.dados;
       d.conferenciasVencidas = (d.conferenciasVencidas || 0) + 1;
       if (d.conferenciasVencidas === 1){
@@ -1260,6 +1266,8 @@ const Conferencia = {
   },
   desistir(){
     Jogo.conferenciaAtual = null;
+    sairDaArena();
+    Estado.salvar('auto');
     UI.telaLiga();
   }
 };

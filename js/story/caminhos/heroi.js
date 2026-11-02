@@ -125,7 +125,7 @@ ch1_a_causa:{
     fala('a brigadista de Fuchsia', 'Queima de limpeza. O manejo faz pra empurrar Pokémon pro lado da cerca, onde é mais fácil pegar. Sempre do lado de dentro, sempre com vento a favor.', 'baixo'),
     fala('a brigadista de Fuchsia', 'Hoje o vento virou.', 'baixo')
   ],
-  ef:{flag:'cm_heroi_queima_de_limpeza', itens:{'Lata de querosene da origem':1},
+  ef:{flag:'cm_heroi_queima_de_limpeza', itens:{'Lata de querosene':1},
       registrar:'O incêndio da Rota 15 começou numa queima de limpeza do manejo, do lado de dentro da cerca.',
       executar:() => { caminhoEntre(19, 6, 21); }},
   escolhas:[

@@ -2125,7 +2125,7 @@ c17_contou_pra_ivone:{
       presagio:'Venda documentada é rastreável.'},
   escolhas:[
     {texto:'Escrever e assinar ali mesmo, em cima do telefone.', vai:'c17_fim',
-     ef:{flag:'documentou_a_venda', itens:{'Declaração assinada da venda':1},
+     ef:{flag:'documentou_a_venda', itens:{'Declaração da venda':1},
          registrar:'Escreveu e assinou a venda de Mew, com data, hora e o que lembrava do carro.'}},
     {texto:'Pôr o fone no gancho e ir embora.', vai:'c17_fim'}
   ]

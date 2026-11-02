@@ -511,7 +511,7 @@ c23_levou_a_folha_do_red:{
     fala('Blue', 'Se você achar ele, me avisa.', 'frio'),
     fala('Blue', 'Não precisa me levar junto. Só me avisa.')
   ],
-  ef:{itens:{'Folha única da pasta RED':1}, flag:'levou_a_folha_do_red',
+  ef:{itens:{'Folha da pasta RED':1}, flag:'levou_a_folha_do_red',
       npc:{nome:'Blue', opiniao:2, memoria:'Deixou você levar a folha do Red e pediu só pra ser avisado.'},
       registrar:'Levou a folha única da pasta RED.'},
   escolhas:[{texto:'Descer a escada.', vai:'c23_desceu'}]

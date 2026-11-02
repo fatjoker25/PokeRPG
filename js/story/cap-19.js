@@ -620,7 +620,7 @@ c19_guardou_cartao:{
       ? 'O crachá dessa mulher está no seu bolso.'
       : 'Pelo jeito, a Elda está longe do serviço, e alguém escreveu que a equipe segura até ela voltar.'
   ],
-  ef:{itens:{'Cartão de aniversário da Elda':1}, moral:-1,
+  ef:{itens:{'Cartão de aniversário':1}, moral:-1,
       registrar:'Guardou o cartão de aniversário que dezenove colegas assinaram para a Elda.'},
   escolhas:[
     {texto:'Voltar ao portão.', vai:'c19_cerca'},

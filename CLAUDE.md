@@ -41,6 +41,19 @@ Quem carrega uma cena e assume risco ganha nome, porque nomear é como o jogo
 diz que aquilo é uma pessoa — e numa história sobre instituição que
 transforma bicho em "lote" e em "recurso", isso importa dentro do texto.
 
+**No balão, o cargo vai sem o "da X"** (`rotuloNoBalao`, em `nomes.js`):
+"a funcionária da guarita" aparece "A FUNCIONÁRIA" na cena da guarita,
+porque o "da guarita" só repetia o que a cena acabou de dizer — foi
+pedido assim. O rótulo inteiro continua sendo a pessoa: memória, nome
+perguntado, rosto, agenda do PokéNav e Ficha usam ele, e fora da cena é
+ele que diz quem é. Só encurta quem é chamado por ofício
+(`OFICIOS_NO_BALAO`) e só o "da/do X" e o "de" com lugar ("de
+Viridian"); "a vendedora de flores", "a técnica de jaleco" e "Chefe de
+turno" dizem o que a pessoa é, e ficam. "A mulher da pasta" e "a mãe
+da Cleo" precisam do resto pra ser alguém. O `chk-baloes` reprova dois
+rótulos com o mesmo balão na mesma cena; rótulo que precisar ficar
+inteiro entra em `BALAO_INTEIRO`.
+
 Três armadilhas que já aconteceram:
 - o personagem **diz o próprio nome na fala** e o balão por cima continua com
   a descrição ("Reika Ando, Correio de Kanto" debaixo de A REPÓRTER);
@@ -383,6 +396,15 @@ o efeito é o dos jogos traduzido pra parada de dados. A lista inteira,
 com o efeito de cada um, está na folha de regras. O `chk-icones` reprova
 segurado sem ícone dos jogos e luta que segura item que não existe, e
 nome que muda entra no `ITEM_NOVO` do `Estado.abrir`.
+
+**Nome de item de história diz o que a coisa é, não de onde ela veio.**
+Era "Rádio da companhia", "Binóculo do pai do Sr. Poplar", "Medidor com a
+agulha no fim da escala": a cena já contou de onde veio, e o nome na
+mochila e no "Recebeu" repetia. Hoje é "Rádio", "Binóculo", "Medidor". O
+"da X" fica quando separa duas coisas que podem estar na mesma mochila
+(Caderno do Rook e do Toby, Chave do subsolo e do portão, as duas
+medalhas de natação) ou quando é o nome da coisa (Crachá da Limptotal,
+Caderno 6 do Dr. Fuji). Nome que muda entra no `ITEM_NOVO`.
 
 **O nome não diz a cor que o desenho mostra.** Era "Mochila Azul" com a
 mochila azul na frente. A bolsa tem nome do que ela é (Mochila
@@ -1351,7 +1373,12 @@ marca dia e hora ("sábado, sete da noite") leva `hora:{dia, h}` — abrir
 o convite leva o relógio até lá (`Veteranos.irNaHora`) — e, se o fim
 conta horas ("a manhã inteira"), `dura`. Fato que o relógio não conta
 (lua nova) não entra na chamada. A final da Conferência é sempre quem tem
-`final:true`.
+`final:true`. A Conferência é **aos sábados** (`DIA_DA_CONFERENCIA`),
+uma por semana, na mesma tarde da arena do Torneio Aberto (no dia em
+que se joga um, o outro já fechou), com a reputação de cada rodada só
+na primeira vez (`rep_conferencia_<rodada>`). As falas dela dizem
+"todo sábado"; já disseram "todo ano", com a Conferência repetindo no
+mesmo minuto.
 
 `node ferramentas/sim-veteranos.js` mede cada um de passagem (lugar + 2),
 treinado (+6) e preparado (+10), os convites e as rodadas da Conferência. O
@@ -1373,6 +1400,18 @@ torneio, e o Ezra fica com a final. O ás acompanha os seus três mais
 fortes (`nivelDoTorneio`, com `NIVEL_TORNEIO` por rodada), o tamanho
 sai das insígnias (`TAM_TORNEIO`) e a escolha de golpe erra
 `ERRO_IA_TORNEIO`.
+
+**Um chaveamento por dia, à tarde** (`tardeDaArena`, em `liga.js`): a
+inscrição abre de manhã e fecha às seis, o chaveamento sai à uma (quem
+se inscreve antes espera: `entrarNaArena` leva o relógio até lá) e o
+torneio toma a tarde — no fim, ganhando, perdendo ou desistindo,
+`sairDaArena` leva o relógio às seis. O dia jogado fica em `d.arena`, e
+a inscrição já conta. A reputação da semifinal e da final vem só na
+primeira vez que você passa por elas (`repDaRodada`, flag
+`rep_torneio_<rodada>`); dinheiro e itens, toda vez. Antes o torneio
+repetia no mesmo minuto, sem o relógio andar, e a reputação de notícia
+subia sem teto. A arena fica no Planalto, atrás da guarita das oito
+insígnias.
 
 Antes era um sorteio do mato por tipo, com forma final em qualquer
 nível: impossível no começo do jogo (6% de vitória) e passeio no fim
@@ -1944,7 +1983,11 @@ prático, ex-treinador, sonhador, durão, atrapalhado, calmo. A mesa do
 café e a despedida do capítulo 1 saem de `falaDaCasa(momento)`. Nenhum
 jeito é medroso; fala nova de casa entra nos oito, não numa só.
 
-A jornada começa na cidade natal. Na cidade natal tem **Sua casa** (cura
+A jornada começa na cidade natal, uma das dez cidades de `CIDADES`.
+Indigo saiu da lista: quem nascia lá começava em Viridian (o Planalto
+fica atrás da guarita das oito insígnias), não tinha casa em lugar
+nenhum e voltava pro Planalto no capítulo 21; o `Estado.abrir` passa
+o save antigo pra Viridian. Na cidade natal tem **Sua casa** (cura
 de graça, `Cidade.casa`) e, pra quem nasceu longe de Pallet e Viridian,
 a **rodoviária** com o ônibus pra Viridian, uma vez, opcional (`Cidade.onibus`).
 **Pallet não tem Centro nem loja**: o cadastro de treinador lá é no

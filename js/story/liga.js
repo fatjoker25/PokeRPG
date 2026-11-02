@@ -321,6 +321,54 @@ const PREMIO_TORNEIO = [
 
 const INSCRICAO_TORNEIO = 2000;
 
+/* ── a tarde da arena ─────────────────────────────────────
+   O Torneio Aberto tem um chaveamento por dia; a Conferência, um por
+   semana, no sábado. A inscrição abre de manhã e fecha às seis da
+   tarde; o chaveamento sai à uma, e quem se inscreve antes espera. O
+   torneio toma a tarde: no fim, ganhando, perdendo ou desistindo, o
+   relógio vai até as seis. O dia em que cada um foi jogado fica em
+   d.arena (a inscrição já conta: sair no meio não devolve o dia). */
+const ARENA_ABRE = 6, ARENA_COMECA = 13, ARENA_FECHA = 18;
+const DIA_DA_CONFERENCIA = 5;   // sábado (0 = segunda, como o Calendario)
+
+/* null se a inscrição está aberta; senão a porta fechada, com o porquê */
+function tardeDaArena(qual, semanal){
+  const d = Estado.dados, r = d && d.relogio;
+  if (!r) return null;
+  sincronizarHora(r);
+  const hoje = Calendario.hoje();
+  if (semanal != null && hoje.semanaIdx !== semanal)
+    return {estado:'fechado', texto:`A Conferência é aos sábados, à tarde. Hoje é ${hoje.semana}.`};
+  if ((d.arena || {})[qual] === r.dia)
+    return {estado:'fechado', texto: semanal != null ? 'A deste sábado já foi. A próxima é no sábado que vem, à uma da tarde.'
+                                                     : 'O chaveamento de hoje já foi. O próximo sai amanhã, à uma da tarde.'};
+  if (r.hora < ARENA_ABRE || r.hora >= ARENA_FECHA)
+    return {estado:'fechado', texto:'A inscrição abre de manhã e fecha às seis da tarde.'};
+  return null;
+}
+/* a inscrição: marca o dia e, de manhã, espera o chaveamento sair */
+function entrarNaArena(qual){
+  const d = Estado.dados, r = d.relogio;
+  sincronizarHora(r);
+  (d.arena = d.arena || {})[qual] = r.dia;
+  if (r.hora < ARENA_COMECA) Relogio.ate(ARENA_COMECA);
+}
+/* o fim do torneio, como for: a tarde acabou */
+function sairDaArena(){
+  const r = Estado.dados && Estado.dados.relogio;
+  if (!r) return;
+  sincronizarHora(r);
+  if (r.hora < ARENA_FECHA) Relogio.ate(ARENA_FECHA);
+}
+/* a reputação de cada rodada vem só na primeira vez que você passa por
+   ela: repetir o torneio paga dinheiro e itens, não fama de novo */
+function repDaRodada(qual, rodada, rep){
+  const f = `rep_${qual}_${rodada}`;
+  if (!rep || Estado.dados.flags[f]) return 0;
+  Estado.dados.flags[f] = true;
+  return rep;
+}
+
 /* ── disponibilidade ───────────────────────────────────── */
 function statusElite4(){
   const d = Estado.dados;
@@ -332,6 +380,8 @@ function statusElite4(){
 function statusTorneio(){
   const d = Estado.dados;
   if (d.capitulo < 2) return {estado:'trancado', texto:'Volte quando tiver estrada'};
+  const tarde = tardeDaArena('torneio');
+  if (tarde) return tarde;
   if (d.jogador.dinheiro < INSCRICAO_TORNEIO) return {estado:'sem_dinheiro', texto:`Inscrição: ${fmtDin(INSCRICAO_TORNEIO)} ₽ (você tem ${fmtDin(d.jogador.dinheiro)})`};
   return {estado:'disponivel', texto:`Inscrição: ${fmtDin(INSCRICAO_TORNEIO)} ₽`};
 }

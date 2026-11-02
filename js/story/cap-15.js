@@ -808,7 +808,7 @@ c15_o_trajeto:{
     'Mas na ponta sul dele, do outro lado de trinta quilômetros de mar, tem uma ilha com um vulcão.'
   ],
   ef:{flag:['sabe_do_circuito','caes_olham_cinnabar'],
-      itens:{'Mapa da ciclovia com o circuito a lápis':1},
+      itens:{'Mapa da ciclovia':1},
       npc:c15_npc('Xavi', 6, 'Te deu o mapa com o circuito dos três traçado a lápis.'),
       rep:{eixo:'bom',delta:5,motivo:'Olhou o desenho até entender o que era'},
       instabilidade:1,

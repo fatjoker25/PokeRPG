@@ -265,7 +265,7 @@ pewter:[
        fala('o rapaz da pedreira', 'Eu nunca tinha falado isso em voz alta. Soa pior em voz alta.')
      ]},
     {texto:'Anotar o nome da empresa e o número da folha.',
-     ef:{itens:{'Nome da empresa e o número da folha':1},
+     ef:{itens:{'Anotação da pedreira':1},
          flag:'anotou_a_pedreira',
          rep:{eixo:'bom',delta:2,motivo:'Anotou o que estava escrito na folha de pagamento'},
          registrar:'Anotou o nome da empresa da pedreira e a linha da folha onde o Machoke aparece.'},
@@ -387,7 +387,7 @@ cerulean:[
   ],
   escolhas:[
     {texto:'Encher um pote e guardar. Isso é prova.',
-     ef:{itens:{'Pote de vidro com água do rio':1}, flag:'guardou_agua_do_rio',
+     ef:{itens:{'Pote de água do rio':1}, flag:'guardou_agua_do_rio',
          rep:{eixo:'bom',delta:2,motivo:'Guardou prova do que todo mundo só reclamava'},
          registrar:'Guardou um pote com a água verde do rio de Cerulean.'},
      resultado:[
@@ -1198,7 +1198,7 @@ cinnabar:[
      ]},
     {texto:'Pedir a cópia do protocolo.',
      cond:d=>!!d.flags.ninguem_ouviu_o_barqueiro,
-     ef:{itens:{'Protocolo da manifestação do barqueiro':1},
+     ef:{itens:{'Protocolo da manifestação':1},
          flag:'tem_o_protocolo_do_barqueiro',
          rep:{eixo:'bom',delta:2,motivo:'Pediu o papel que ninguém tinha pedido', notorio:true},
          npc:{nome:'Barqueiro de Cinnabar', opiniao:4, memoria:'Você foi a primeira pessoa a pedir o protocolo dele.'},

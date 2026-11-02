@@ -2459,7 +2459,7 @@ c9_e_legal:{
   escolhas:[
     {texto:'"Então quem decide o recolhimento?"', vai:'c9_proposta_terceira'},
     {texto:'"E quem é H. Colman?"', vai:'c9_proposta_terceira', cond:d=>!!(d.flags.sabe_de_renno || d.flags.sabe_do_renno)},
-    {texto:'Guardar o guardanapo.', vai:'c9_proposta_terceira', ef:{flag:'guardanapo_terceira', itens:{'Guardanapo do Palace':1}}},
+    {texto:'Guardar o guardanapo.', vai:'c9_proposta_terceira', ef:{flag:'guardanapo_terceira', itens:{'Guardanapo':1}}},
     {texto:'Levantar e ir embora com isso na cabeça.', vai:'c9_neutro'}
   ]
 },

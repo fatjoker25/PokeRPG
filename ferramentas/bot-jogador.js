@@ -43,7 +43,9 @@ const SUSPEITO = [
   page.on('dialog', d => /Soltar|permanente|Vender|Largar/.test(d.message()) ? d.dismiss() : d.accept());
   await page.goto(RAIZ);
   await page.waitForTimeout(400);
-  await page.locator('button:has-text("Começar"), button:has-text("Nova jornada")').first().click();
+  /* o "Começar" do cartão da jornada vazia; a aba "Vazia · começar aqui"
+     só escolhe o lugar, e o has-text casa com ela também */
+  await page.locator('button.tt-principal:has-text("Começar"), .tt-op:has-text("Nova jornada")').first().click();
   await page.waitForTimeout(200);
   /* a inscrição: nome, gênero e cidade no primeiro passo; o resto, sorteado */
   await page.fill('#f-nome', 'Íris');

@@ -65,8 +65,7 @@ const CIDADES_DA_FICHA = {
   Celadon:  'A Grande Loja, as luzes e a cidade que não dorme.',
   Fuchsia:  'A Zona Safári do lado e o mar do outro.',
   Saffron:  'A maior cidade de Kanto, com a Silph no meio.',
-  Cinnabar: 'A ilha do vulcão, a uma travessia de barco de tudo.',
-  Indigo:   'O Planalto: a Liga mora na sua rua.'
+  Cinnabar: 'A ilha do vulcão, a uma travessia de barco de tudo.'
 };
 
 /* A foto do cartão. Rostos jovens — quem sai de casa tem quinze anos,

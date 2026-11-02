@@ -2564,7 +2564,7 @@ c14_devolveu_a_mochila:{
     d=>c14_blaineNaCratera(d) ? 'Blaine olha você fazer isso e não diz nada.' : ''
   ],
   ef:{flag:'devolveu_a_mochila', limpaFlag:'tem_a_mochila_do_fuji',
-      perdeItens:{'Mochila de lona do Dr. Fuji':1},
+      perdeItens:{'Mochila do Dr. Fuji':1},
       rep:{eixo:'bom',delta:2,motivo:'Devolveu a mochila ao lugar onde foi deixada'},
       registrar:'Devolveu a mochila do Dr. Fuji ao abrigo da cratera.'},
   escolhas:[
@@ -2644,7 +2644,7 @@ c14_levou_a_mochila:{
        'As pedras empilhadas continuam onde estavam.'
   ],
   ef:{flag:['tem_a_mochila_do_fuji'],
-      itens:{'Mochila de lona do Dr. Fuji':1},
+      itens:{'Mochila do Dr. Fuji':1},
       executar:d=>{ Estado.marcar('c14_escola_pelo_blaine', c14_blaineNaCratera(d)); return []; },
       rep:{eixo:'bom',delta:2,motivo:'Trouxe de volta o que estava numa borda de cratera'},
       registrar:'Levou a mochila do Dr. Fuji da borda da cratera.',
@@ -2686,7 +2686,7 @@ c14_escola:{
   ],
   ef:{flag:['entregou_a_mochila','fuji_virou_professor'],
       limpaFlag:'tem_a_mochila_do_fuji',
-      perdeItens:{'Mochila de lona do Dr. Fuji':1},
+      perdeItens:{'Mochila do Dr. Fuji':1},
       /* a descida, e a escola abre das sete às cinco, de segunda a sexta */
       executar:d=>{
         Estado.marcar('c14_blaine_na_cratera', false);

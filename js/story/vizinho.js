@@ -84,14 +84,7 @@ const VIZINHOS = {
     preco:'vinte pokedólares, faz {idade-8} anos', conserto:'eu troquei no mesmo dia, que aqui telha é o que não falta',
     trabalho:'Você rastela a escada inteira. Leva doze minutos. Não tinha cinza.',
     sempre:'A escada está sem cinza. Ela sempre está sem cinza.',
-    parou:'a escada já tá limpa desde as seis, e antes eu rastelava de novo às onze só pra ter o que fazer'},
-  Indigo:{nome:'Sr. Brenn', f:false, trat:'seu Brenn', coisa:'escadaria da pousada', ferr:'a vassoura',
-    faz:'varre a escadaria da pousada do planalto', fazer:'varrer a escadaria',
-    divida:'o letreiro', como:'Você acertou o P com uma pedra, e ficou escrito OUSADA.',
-    preco:'vinte pokedólares, faz {idade-7} anos', conserto:'o letreiro ficou OUSADA dois anos e ninguém reclamou',
-    trabalho:'Você varre os quarenta degraus. Leva doze minutos. Estavam varridos.',
-    sempre:'A escadaria está varrida. Ela sempre está varrida.',
-    parou:'a escadaria já tá varrida desde as seis, e antes eu varria de novo às onze só pra ter o que fazer'}
+    parou:'a escada já tá limpa desde as seis, e antes eu rastelava de novo às onze só pra ter o que fazer'}
 };
 
 /* O vizinho da sua cidade, com as palavras que mudam com o sexo dele.

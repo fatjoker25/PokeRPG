@@ -1490,8 +1490,10 @@ const Jogo = {
     const meu = Estado.primeiroApto();
     if (!meu) return UI.modal('Torneio', '<p class="nada">Nenhum Pokémon em pé. Cure o time antes de se inscrever.</p>');
     Estado.j.dinheiro -= INSCRICAO_TORNEIO;
+    entrarNaArena('torneio');
     this.torneioAtual = {rodada:0, adversarios: montarChaveamento()};
     Estado.registrar('Inscreveu-se no Torneio Aberto do Planalto.');
+    Estado.salvar('auto');
     UI.telaTorneio();
   },
 
@@ -1524,6 +1526,7 @@ const Jogo = {
 
     if (!venceu){
       this.torneioAtual = null;
+      sairDaArena();
       const consolo = premioTorneio(t, false);
       Estado.j.dinheiro += consolo;
       avisos.push({tipo:'item', texto:`Premiação por participação: +${fmtDin(consolo)} ₽`});
@@ -1544,8 +1547,9 @@ const Jogo = {
     Estado.j.dinheiro += ganhoTorneio;
     avisos.push({tipo:'item', texto:`+${fmtDin(ganhoTorneio)} ₽`});
     for (const [n,q] of Object.entries(premio.itens||{})){ Estado.darItem(n,q); avisos.push({tipo:'item', texto:`Recebeu ${q}× ${n}.`}); }
-    if (premio.rep){
-      const r = Estado.mudarRep('bom', premio.rep, `Avançou na ${premio.rodada} do Torneio Aberto`, {rep:{notorio:true, peso:3}});
+    const fama = repDaRodada('torneio', t.rodada, premio.rep);
+    if (fama){
+      const r = Estado.mudarRep('bom', fama, `Avançou na ${premio.rodada} do Torneio Aberto`, {rep:{notorio:true, peso:3}});
       if (r && r.mudou) avisos.push({tipo:'rep', texto:`Reputação: ${r.de} → ${r.para}`});
     }
 
@@ -1558,6 +1562,7 @@ const Jogo = {
     });
     if (campeao){
       this.torneioAtual = null;
+      sairDaArena();
       Estado.dados.torneiosVencidos = (Estado.dados.torneiosVencidos||0) + 1;
       Estado.marcar('venceu_torneio');
       Estado.registrar(`Venceu o Torneio Aberto (${Estado.dados.torneiosVencidos}ª vez).`);
@@ -1598,6 +1603,8 @@ const Jogo = {
 
   desistirTorneio(){
     this.torneioAtual = null;
+    sairDaArena();
+    Estado.salvar('auto');
     UI.telaLiga();
   },
 

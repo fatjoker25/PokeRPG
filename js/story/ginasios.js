@@ -9,7 +9,7 @@
 const GINASIO_DE_CASA = {
   'Pallet':'pewter', 'Viridian':'viridian', 'Pewter':'pewter', 'Cerulean':'cerulean',
   'Vermilion':'vermilion', 'Lavender':'saffron', 'Celadon':'celadon', 'Fuchsia':'fuchsia',
-  'Saffron':'saffron', 'Cinnabar':'cinnabar', 'Indigo':'viridian'
+  'Saffron':'saffron', 'Cinnabar':'cinnabar'
 };
 
 /* O título de Campeão fica na mesma lista, mas não é insígnia */
