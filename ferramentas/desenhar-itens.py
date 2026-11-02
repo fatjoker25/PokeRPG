@@ -883,6 +883,17 @@ def bolsa(mat):
     return t
 
 
+
+def ovo():
+    """o ovo da creche: creme, pintas verdes, mais largo embaixo"""
+    t = Tela()
+    t.elipse(15, 16.5, 8.6, 11.2, 'papel')
+    for (cx, cy, r) in ((11.2, 12.5, 2.3), (17.6, 9.6, 1.7), (18.4, 18.6, 2.6), (12.3, 21.2, 1.9), (15.2, 15.2, 1.3)):
+        t.elipse(cx, cy, r, r * .9, 'verde', modo='plano', fixo=1)
+    t.ponto(12, 9, M['papel'][0])
+    t.ponto(11, 10, M['papel'][0])
+    return t
+
 # ---------- as bolsas da loja: cada uma com o desenho do que ela é ----------
 def mochila_escolar(mat='azul'):
     """o alto arredondado, o bolso grande da frente com zíper e dois puxadores"""
@@ -1116,7 +1127,7 @@ DESENHOS = {
     'caderno_lote': caderno_lote, 'chave_subsolo': lambda: chave('ferro', velha=True),
     'broche': broche, 'papel': papel, 'foto': foto, 'mapa': mapa, 'caixa': caixa,
     'chave': chave, 'pacote': pacote, 'medalha': medalha,
-    'cracha': cracha, 'cracha_verde': lambda: cracha('verde'), 'caderno_azul': lambda: caderno('azul'),
+    'ovo': ovo, 'cracha': cracha, 'cracha_verde': lambda: cracha('verde'), 'caderno_azul': lambda: caderno('azul'),
     'prancheta': prancheta, 'pasta': pasta, 'jornal': jornal, 'envelope': envelope,
     'anilha': anilha, 'apito': apito, 'binoculo': binoculo, 'placa': placa,
     'placa_bronze': lambda: placa('dourado'), 'fita': fita, 'rolo': rolo, 'garrafa': garrafa, 'pote': pote,

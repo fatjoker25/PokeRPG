@@ -29,6 +29,8 @@ const ITEM_PIXEL = {
   'Chave do subsolo':'chave_subsolo', 'Broche da letra antiga':'broche',
   /* a cor saiu do nome e foi pro desenho */
   'Crachá da Limptotal':'cracha_verde', 'Caderno do Rook':'caderno_azul',
+  /* o ovo da creche */
+  'Ovo':'ovo',
   /* as bolsas da loja: cada uma com o desenho do que ela é, na cor dela */
   'Mochila escolar':'mochila_escolar', 'Mochila de sinalização':'mochila_sinalizacao',
   'Mochila de resgate':'mochila_resgate', 'Mochila de acampamento':'mochila_acampamento',
@@ -128,6 +130,8 @@ const ICONE = {
   comprar:'<path d="M4 8h16l-1.5 12h-13z"/><path d="M8.5 8a3.5 3.5 0 0 1 7 0"/><path d="M12 11.5v5M9.5 14h5"/>',
   vender:'<circle cx="15.5" cy="7.5" r="3.5"/><path d="M15.5 6v3"/><path d="M3 15h3l3.5-1.5c1-.4 2 .1 2.3 1l.2.5h-4M6 15v5H3M6 19.5h7.5l6-3.5a1.6 1.6 0 0 0-1.7-2.7L13 15.8"/>',
   casa:'<path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-5h4v5"/>',
+  /* a creche: o ovo com a rachadura */
+  ovo:'<path d="M12 3c3.6 0 6.5 5.4 6.5 10a6.5 6.5 0 0 1-13 0C5.5 8.4 8.4 3 12 3z"/><path d="M8 13.5l2 1.6 2-2.2 2 2.2 2-1.6"/>',
   laboratorio:'<path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 2 3h10a2 2 0 0 0 2-3l-5-9V3"/><path d="M7.5 15h9"/>',
   mural:'<rect x="3" y="4" width="18" height="15" rx="1.5"/><path d="M7 8h5M7 12h8M14 8h3"/><circle cx="12" cy="4" r="1.2"/>',
   pc:'<rect x="3" y="4" width="18" height="12" rx="1.5"/><path d="M8 20h8M12 16v4"/>',
@@ -209,7 +213,7 @@ const ICONE = {
    dourado, a sua casa verde), e a ação na cor do que ela é. Quem lê é
    o CSS, pela variável --ac; desenho sem cor fica na cor da linha. */
 const COR_DO_ICONE = {
-  centro:'#ef5350', loja:'#3d8bfd', ginasio:'#e8b923', casa:'#43b581', laboratorio:'#26c6da',
+  centro:'#ef5350', loja:'#3d8bfd', ginasio:'#e8b923', casa:'#43b581', laboratorio:'#26c6da', ovo:'#f0b45a',
   onibus:'#2bb3a3', doar:'#f06292', relembrar:'#9575cd', liga:'#b18cf0', torneio:'#ff8a3d',
   credenciais:'#7e8ce0', rede:'#c2414f', porta:'#8d97bd', ferragem:'#d4893b',
   procurar:'#4caf50', vasculhar:'#f0b429', andar:'#4fc3f7', conversar:'#f48fb1', treinar:'#ff7043',
@@ -237,7 +241,7 @@ function iconeDoAfazer(a){
   const direto = {centro:'centro', loja:'loja', ginasio:'ginasio', casa:'casa', liga:'liga', torneio:'torneio',
     onibus:'onibus', doar:'doar', relembrar:'relembrar', vasculhar:'vasculhar', procurar:'procurar', andar:'andar',
     conversar:'conversar', treinar:'treinar', pescar:'pescar', acampar:'acampar', esperar:'esperar', desafiar:'lutar', troca:'troca',
-    rede:'rede'};
+    rede:'rede', creche:'ovo'};
   if (direto[id]) return direto[id];
   if (/^posto_/.test(id)) return 'credenciais';
   if (/^vet_/.test(id)) return 'lutar';

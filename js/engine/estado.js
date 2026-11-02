@@ -217,6 +217,10 @@ const ITENS_INFO = {
   'Âmbar Antigo':    {tipo:'fossil', cat:'Fóssil', dex:142,
                       ficha:'Fóssil · o laboratório de Cinnabar revive o que tem dentro',
                       desc:'Uma pedra cor de mel, morna na mão, com uma sombra pequena presa lá dentro.'},
+  /* o ovo da creche da Rota 5: a conta mora em d.ovos (js/story/creche.js) */
+  'Ovo':             {tipo:'ovo', cat:'Ovo',
+                      ficha:'Ovo · choca com as horas, andando com você',
+                      desc:'Morno, mais pesado de um lado. De vez em quando alguma coisa se mexe lá dentro.'},
 
   /* ─────────── segurados ───────────
      Os dos jogos, com o nome dos jogos e o ícone deles (ITEM_SPRITE).

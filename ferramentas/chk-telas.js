@@ -479,6 +479,40 @@ const SUSPEITO = [
     }, quem);
   }
 
+  /* ---------- a creche da Rota 5: deixar, o ovo, buscar e o ovo chocando ---------- */
+  for (const [rot, nacional, dexA, dexB] of [['par', false, 25, 26], ['ditto', false, 132, 81], ['bebê de Johto', true, 25, 25]]){
+    await restaurar();
+    await tentar(`creche/${rot}/deixar`, ([nac, x, y]) => {
+      const d = Estado.dados; d.local = LUGAR_DA_CRECHE; d.flags.dex_nacional = nac;
+      const a = criarPokemon(x, 20), b = criarPokemon(y, 20);
+      a.genero = x === 132 ? null : 'm'; b.genero = y === 81 ? null : 'f';
+      d.time = d.time.slice(0, 4).concat([a, b]);
+      Exploracao.tela(); Creche.tela(); Creche.deixar(a.uid); Creche.tela(); Creche.deixar(b.uid); Creche.tela();
+      if (!Creche.par(d.creche.pk[0], d.creche.pk[1])) throw new Error('a creche não viu o par');
+      /* com a Pokédex Nacional, a primeira visita entrega o ovo sem dono (o Togepi) */
+      if (nac !== d.ovos.some(o => o.dex === OVO_GUARDADO)) throw new Error('o ovo sem dono ' + (nac ? 'não veio' : 'veio sem a Pokédex Nacional'));
+    }, [nacional, dexA, dexB]);
+    /* o ovo sem esperar o dado: a senhora entrega, e a mochila mostra quanto falta */
+    await tentar(`creche/${rot}/o ovo`, () => {
+      const d = Estado.dados, c = d.creche, antes = Estado.contaItem(NOME_DO_OVO);
+      c.ovo = {dex:Creche.especieDoOvo(c.pk[0], c.pk[1])};
+      Creche.tela();
+      if (Estado.contaItem(NOME_DO_OVO) !== antes + 1) throw new Error('o ovo não foi pra mochila');
+    });
+    await tentar(`creche/${rot}/ficha do ovo`, () => { UI._mochSel = {n:NOME_DO_OVO, quebrado:false}; UI.modalItens(null, 'chave'); });
+    await tentar(`creche/${rot}/buscar`, () => {
+      UI.fecharModal && UI.fecharModal(true);
+      Estado.j.dinheiro = 50;                       /* sem o bastante: eles ficam com o que tem */
+      Creche.tela(); Creche.buscar(0); Creche.tela(); Creche.buscar(0); Creche.tela();
+    });
+    await tentar(`creche/${rot}/nasceu`, () => {
+      const d = Estado.dados, antes = d.time.length + d.pc.length, ovos = d.ovos.length;
+      UI.fecharModal && UI.fecharModal(true);
+      Relogio.avancar(HORAS_DO_OVO + 1); Exploracao.tela();
+      if (d.time.length + d.pc.length !== antes + ovos || Estado.contaItem(NOME_DO_OVO)) throw new Error('o ovo não chocou');
+    });
+  }
+
   /* ---------- lugares e afazeres ---------- */
   for (const id of await page.evaluate(() => Object.keys(LOCAIS))){
     await restaurar();

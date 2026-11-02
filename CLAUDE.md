@@ -1048,6 +1048,43 @@ bola (`QUEBRA_BOLA`: Mewtwo, Lugia, Ho-Oh, Celebi) rola 2d6 antes de
 tudo, e sem sucesso nenhum ela racha no ar (1 em 4). A rolagem vai pro
 log inteira.
 
+## A creche e os ovos
+Os bebês de Johto (Pichu, Cleffa, Igglybuff, Togepi, Tyrogue,
+Smoochum, Elekid, Magby) não nascem no mato: saem de ovo, e o ovo sai
+da **creche da Rota 5** (`js/story/creche.js`, afazer `creche` em
+`LUGAR_DA_CRECHE`). Um casal de idosos cuida de até dois Pokémon do seu
+cinto (pelo menos um fica com você), cobra a diária na hora de buscar
+(`PRECO_DIA_CRECHE`; sem o bastante, ficam com o que você tem) e
+devolve curado. Ninguém treina lá, e lá ninguém come da sua Ração.
+
+- **Quem dá ovo** (`Creche.par`): mesma linha de evolução, macho e
+  fêmea (`generoDe`), ou qualquer um com Ditto; quem não tem sexo, só
+  com Ditto; bebê e lendário não (`podeCriar`). Nidoran ♂ e ♀ são uma
+  família só (`FAMILIA_DA_LINHA`).
+- **O tempo anda quando alguém olha** (`Creche.atualizar`): um 1d6 por
+  dia que os dois passaram juntos (`OVO_NO_D6`: espécie 3+, linha 4+,
+  Ditto 5+), até sair um ovo, que espera no quintal, um de cada vez. A
+  senhora entrega na próxima visita, antes de qualquer conversa.
+- **O ovo** mora em `d.ovos` (`{dex, choca}`) e aparece na mochila como
+  o item `Ovo`, em Itens-chave (`sincronizarOvos` acerta a conta; o
+  balcão não compra, porque não tem `PRECO_BASE`). Choca
+  `HORAS_DO_OVO` depois, na primeira tela de mapa (`Creche.nascer`, no
+  `Exploracao.tela`), no `NIVEL_DO_OVO` e com moral `MORAL_DO_OVO`. A
+  ficha do ovo na mochila diz quanto falta sem dar a conta
+  (`notaDosOvos`).
+- **Quem nasce** é a primeira forma da linha da mãe (`especieDoOvo`),
+  e com a Pokédex Nacional o bebê da linha (`BEBE_DA_LINHA`). O Togepi
+  não tem pai em Kanto: sai do ovo sem dono que o casal guarda
+  (`OVO_GUARDADO`), entregue uma vez a quem chega com a Pokédex
+  Nacional, como o ovo do Water Labyrinth em FireRed.
+- Pokémon na creche está em `d.creche.pk`, fora do time e do PC: quem
+  procura o seu inicial (`inicialDoJogador`) não acha ele lá, e é isso
+  mesmo — o Célio não vê o que está no quintal.
+
+Os números estão na folha de regras ("Creche e ovos"). `chk-telas`
+deixa um par, um com Ditto e um par com a Pokédex Nacional, entrega o
+ovo, abre a ficha dele, busca sem dinheiro e choca.
+
 ## Ferramenta gasta, e o balcão compra
 `js/engine/desgaste.js`: Machado, Picareta e Lanterna têm `DURABILIDADE` em
 usos; o estado (nova, meio desgastada, desgastada, quebrando, quebrada) sai

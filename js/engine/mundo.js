@@ -725,6 +725,7 @@ function afazeresDoLocal(){
   if (typeof PortasDaIdade !== 'undefined') PortasDaIdade.afazeres(id).forEach(x => lista.push(x));
   /* o laboratório de Cinnabar e o balcão de prêmios do cassino */
   if (typeof Laboratorio !== 'undefined') Laboratorio.afazeres(id).forEach(x => lista.push(x));
+  if (typeof Creche !== 'undefined') Creche.afazeres(id).forEach(x => lista.push(x));
   /* o que tem dia e hora marcados, se for agora */
   if (typeof Agenda !== 'undefined') Agenda.afazeres(id).forEach(x => lista.push(x));
   /* o que a intuição trouxe você pra fazer aqui (a figura de capuz, em Lavender) */

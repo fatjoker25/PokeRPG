@@ -5642,3 +5642,10 @@ h3.sec-conf{--sec:#7fb2ff}
 @media (max-width:520px){
   .bolas-menu{grid-template-columns:minmax(0,1fr)}
 }
+
+/* ---------- a creche da Rota 5 ---------- */
+.creche-pk{display:inline-flex;align-items:center;gap:8px;min-width:0;flex:1 1 auto}
+.creche-pk .icone, .creche-pk img{width:40px;height:30px;object-fit:contain;image-rendering:pixelated}
+.creche-pk small{opacity:.7;margin-left:4px}
+.modal.creche .escolha .esc-custo{margin-left:auto;flex:none}
+.creche-sec{margin:14px 0 6px;font:600 .78rem var(--letra-hud, system-ui);letter-spacing:.08em;text-transform:uppercase;opacity:.75}

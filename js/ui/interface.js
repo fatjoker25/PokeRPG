@@ -4718,6 +4718,7 @@ const UI = {
         acoes.push(btn(rot, 'UI.usarDaMochila(this.dataset.item)', 'usar', info.tipo === 'mapa' ? 'mapa' : info.tipo === 'tm' ? 'brilho' : 'cura'));
       }
       if (info.tipo === 'equipar') acoes.push(btn('Dar pra segurar', 'UI.menuEquiparItem(this.dataset.item)', 'segurar', 'itens'));
+      if (info.tipo === 'ovo' && typeof Creche !== 'undefined') nota = Creche.notaDosOvos();
       if (info.tipo === 'bolsa'){
         if (emUso) nota = 'É a que está nas suas costas.';
         else acoes.push(btn('Usar esta bolsa', 'UI.usarBolsa(this.dataset.item)', 'segurar', 'itens'));
@@ -6503,6 +6504,15 @@ const UI = {
       <div class="linha"><span class="k">O que vale</span><span class="v">o que o outro pede · troca feita não desfaz</span></div>
       <div class="linha"><span class="k">Evolução por troca</span><span class="v">chega já evoluído na sua mão</span></div>
       <p class="sussurro">Quem só evolui trocando evolui no ato da troca: o Machoke que sai da mão do outro chega como Machamp na sua. O que chega entra na Pokédex na hora.</p>
+
+      <h3>Creche e ovos</h3>
+      <div class="linha"><span class="k">Onde</span><span class="v">na Rota 5, numa casa de quintal cercado · cuida de até 2 Pokémon do seu cinto, e pelo menos 1 fica com você</span></div>
+      <div class="linha"><span class="k">Quem dá ovo</span><span class="v">dois da mesma linha de evolução, macho e fêmea · ou qualquer um com Ditto · quem não tem sexo, só com Ditto · bebê e lendário não dão · Nidoran macho e fêmea são uma família só</span></div>
+      <div class="linha"><span class="k">Quando</span><span class="v">1d6 por dia que os dois passam juntos: mesma espécie 3+, mesma linha 4+, com Ditto 5+ · o ovo espera no quintal, um de cada vez, e a senhora entrega quando você passa</span></div>
+      <div class="linha"><span class="k">O ovo</span><span class="v">vai pra mochila e choca 72 horas do relógio depois, na primeira tela de mapa · quem nasce sai no nível 5, com moral 80, e é a primeira forma da linha</span></div>
+      <div class="linha"><span class="k">Bebês de Johto</span><span class="v">com a Pokédex Nacional, a linha que tem bebê dá o bebê · Pichu, Cleffa, Igglybuff, Tyrogue, Smoochum, Elekid e Magby só saem de ovo · o Togepi também, e o primeiro vem de um ovo sem dono que o casal guarda e entrega uma vez, a quem chega com a Pokédex Nacional</span></div>
+      <div class="linha"><span class="k">Diária</span><span class="v">100 ₽ por dia, cobrada quando você busca · sem o bastante, eles ficam com o que você tem · volta curado</span></div>
+      <p class="sussurro">Na creche ninguém treina e ninguém sobe de nível. Ela não come da sua Ração: quem cuida é o casal.</p>
 
       <h3>Item segurado</h3>
       <div class="linha"><span class="k">Quantos</span><span class="v">1 por Pokémon</span></div>
