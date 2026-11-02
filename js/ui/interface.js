@@ -657,9 +657,9 @@ const UI = {
       case 'genero': {
         if (c.genero === ds.v) return;
         c.genero = ds.v;
-        /* a foto escolhida de propósito fica (qualquer rosto serve a qualquer
-           ficha); a que veio de sorteio sai, e o próximo sorteio é do gênero novo */
-        if (c.retrato && (!c.retratoEscolhido || !retratoDaFicha(c.retrato))) c.retrato = null;
+        /* cada gênero tem a sua lista de fotos: a do outro sai, escolhida
+           ou sorteada, e o próximo sorteio é do gênero novo */
+        if (c.retrato && !RETRATOS_DA_FICHA[c.genero].includes(c.retrato)){ c.retrato = null; c.retratoEscolhido = false; }
         if (!c.fraseMexida && c.meta) this.crFraseDoRumo();
         return refaz('voce', 'jeito', 'rumo', 'visual', 'casa');
       }
@@ -671,10 +671,11 @@ const UI = {
         const alvo = c[ds.lista], outra = c[ds.lista === 'gostos' ? 'desgostos' : 'gostos'];
         const max = ds.lista === 'gostos' ? GOSTOS_MAX : DESGOSTOS_MAX;
         const v = ds.cat === 'dex' ? +ds.v : ds.v;
-        if (!alvo[ds.cat].includes(v) && this.crContaGosto(alvo) >= max) return;
+        /* a mesma coisa não fica nas duas listas: o que está marcado numa
+           fica trancado na outra até sair de lá */
+        if (!alvo[ds.cat].includes(v) && (outra[ds.cat].includes(v) || this.crContaGosto(alvo) >= max)) return;
         toggle(alvo[ds.cat], v, 99);
-        /* a mesma coisa não fica nas duas listas */
-        const j = outra[ds.cat].indexOf(v); if (j >= 0 && alvo[ds.cat].includes(v)) outra[ds.cat].splice(j, 1);
+        c.avisoGosto = null;
         return refaz('rumo');
       }
       case 'mochila': c.mochila = c.mochila === ds.v ? null : ds.v; return refaz('visual');
@@ -714,11 +715,11 @@ const UI = {
       const alvo = c[el.dataset.lista], nome = _norm(v);
       const dex = DEX_KANTO_IDS.find(id => _norm(DEX[id].nome) === nome);
       const max = el.dataset.lista === 'gostos' ? GOSTOS_MAX : DESGOSTOS_MAX;
-      if (dex && !alvo.dex.includes(dex) && this.crContaGosto(alvo) < max){
-        alvo.dex.push(dex);
-        const outra = c[el.dataset.lista === 'gostos' ? 'desgostos' : 'gostos'];
-        const j = outra.dex.indexOf(dex); if (j >= 0) outra.dex.splice(j, 1);
-      }
+      const outra = c[el.dataset.lista === 'gostos' ? 'desgostos' : 'gostos'];
+      c.avisoGosto = null;
+      if (dex && outra.dex.includes(dex))
+        c.avisoGosto = {lista: el.dataset.lista, texto: `${DEX[dex].nome} já está na lista do que você ${el.dataset.lista === 'gostos' ? 'não gosta' : 'gosta'}.`};
+      else if (dex && !alvo.dex.includes(dex) && this.crContaGosto(alvo) < max) alvo.dex.push(dex);
       el.value = '';
       this.crSecao(2);
     }
@@ -852,12 +853,17 @@ const UI = {
     }).join('');
     const lista = (qual, rotulo, max, nota) => {
       const g = c[qual], cheio = this.crContaGosto(g) >= max;
+      /* o que está marcado na outra lista fica trancado nesta */
+      const o = c[qual === 'gostos' ? 'desgostos' : 'gostos'];
+      const naOutra = `Já está na lista do que você ${qual === 'gostos' ? 'não gosta' : 'gosta'}`;
       const chip = (cat, v, texto, estilo) => {
-        const sel = g[cat].includes(v);
-        return `<button type="button" class="cr-chip${cat === 'tipos' ? ' cr-tipo' : ''}${sel ? ' sel' : ''}" ${estilo || ''}
+        const sel = g[cat].includes(v), outra = !sel && o[cat].includes(v);
+        return `<button type="button" class="cr-chip${cat === 'tipos' ? ' cr-tipo' : ''}${sel ? ' sel' : ''}${outra ? ' na-outra' : ''}" ${estilo || ''}
           data-acao="gosto" data-lista="${qual}" data-cat="${cat}" data-v="${e(String(v))}" data-foco="${qual}-${cat}-${e(String(v))}"
-          aria-pressed="${sel}" ${!sel && cheio ? 'disabled' : ''}>${e(texto)}</button>`;
+          aria-pressed="${sel}" ${outra ? `disabled title="${naOutra}"` : !sel && cheio ? 'disabled' : ''}>${e(texto)}</button>`;
       };
+      const aviso = c.avisoGosto && c.avisoGosto.lista === qual ? `<p class="cr-nota cr-aviso" role="status">${e(c.avisoGosto.texto)}</p>` : '';
+      const especies = DEX_KANTO_IDS.filter(id => !g.dex.includes(id) && !o.dex.includes(id));
       return `<div class="cr-campo cr-gosto-${qual}"><span class="cr-rot">${e(rotulo)} <span class="cr-conta">${this.crContaGosto(g)} de ${max}</span></span>
         <p class="cr-nota cr-nota-cima">${e(nota)}</p>
         <div class="cr-grupo"><span class="cr-grupo-nome">Lugares</span>
@@ -866,8 +872,9 @@ const UI = {
           <div class="cr-chips">${TIPOS_KANTO.map(t => chip('tipos', t, t, `style="--tc:${COR_TIPO[t] || '#888'}"`)).join('')}</div></div>
         <div class="cr-grupo"><span class="cr-grupo-nome">Um Pokémon em especial</span>
           <div class="cr-chips">${g.dex.map(n => chip('dex', n, DEX[n].nome)).join('')}
-            <input class="cr-especie" data-campo="especie" data-lista="${qual}" data-foco="especie-${qual}" list="cr-especies"
-              maxlength="14" placeholder="${cheio ? 'Lista cheia' : 'Escreva o nome…'}" ${cheio ? 'disabled' : ''} aria-label="Um Pokémon em especial"></div></div>
+            <input class="cr-especie" data-campo="especie" data-lista="${qual}" data-foco="especie-${qual}" list="cr-especies-${qual}"
+              maxlength="14" placeholder="${cheio ? 'Lista cheia' : 'Escreva o nome…'}" ${cheio ? 'disabled' : ''} aria-label="Um Pokémon em especial"></div>${aviso}
+          <datalist id="cr-especies-${qual}">${especies.map(id => `<option value="${e(DEX[id].nome)}">`).join('')}</datalist></div>
       </div>`;
     };
     return this.crCabeca('O que você quer', 'O que te tira de casa, e o que você leva no peito pela estrada.') + `
@@ -877,26 +884,25 @@ const UI = {
         <textarea id="f-objetivo" data-campo="frase" data-foco="frase" rows="2" maxlength="120" placeholder="Escolha um objetivo, ou escreva o seu.">${e(c.frase)}</textarea>
         <p class="cr-nota">É a frase que sai da sua boca quando alguém pergunta por que você vai.</p></div>
       ${lista('gostos', 'Do que você gosta', GOSTOS_MAX, 'O que te alegra: lugar de que você gosta te deixa mais à vontade, e Pokémon de que você gosta chega com mais vontade de ficar e te dá ânimo quando aparece.')}
-      ${lista('desgostos', 'Do que você não gosta', DESGOSTOS_MAX, 'O que te dá medo: lugar e Pokémon que te deixam com o pé atrás.')}
-      <datalist id="cr-especies">${DEX_KANTO_IDS.map(id => `<option value="${e(DEX[id].nome)}">`).join('')}</datalist>`;
+      ${lista('desgostos', 'Do que você não gosta', DESGOSTOS_MAX, 'O que te dá medo: lugar e Pokémon que te deixam com o pé atrás.')}`;
   },
 
   crSec_visual(c){
     const e = s => this.esc(s);
-    /* a lista do gênero da ficha primeiro; a outra abre no "Mais rostos",
-       e já vem aberta se a foto escolhida é de lá */
+    /* só as fotos do gênero da ficha: as primeiras de cara, as outras no
+       "Mais rostos", que já vem aberto se a foto escolhida é de lá */
     const foto = arq => `<button type="button" class="cr-op cr-retrato${c.retrato === arq ? ' sel' : ''}"
         data-acao="retrato" data-v="${arq}" data-foco="retrato-${arq}" aria-pressed="${c.retrato === arq}"
         aria-label="Foto: ${e(ROTULO_DO_RETRATO[arq] || arq)}" title="${e(maiuscula(ROTULO_DO_RETRATO[arq] || arq))}">
         ${this.crRetratoImg(arq)}</button>`;
-    const outra = RETRATOS_DA_FICHA[c.genero === 'Homem' ? 'Mulher' : 'Homem'];
-    const abertos = c.maisRostos || outra.includes(c.retrato);
-    const retratos = RETRATOS_DA_FICHA[c.genero].map(foto).join('')
+    const doGenero = RETRATOS_DA_FICHA[c.genero];
+    const aVista = doGenero.slice(0, RETRATOS_A_VISTA), outras = doGenero.slice(RETRATOS_A_VISTA);
+    const abertos = c.maisRostos || outras.includes(c.retrato);
+    const retratos = aVista.map(foto).join('') + (abertos ? outras.map(foto).join('') : '')
       + `<button type="button" class="cr-op cr-retrato cr-sem${!c.retrato ? ' sel' : ''}" data-acao="retrato" data-v="" data-foco="retrato-sem" aria-pressed="${!c.retrato}">
-        <span class="cr-monograma">${e((c.nome.trim() || '?').charAt(0).toUpperCase())}</span><span class="cr-op-nota">Sem foto</span></button>`
-      + (abertos ? outra.map(foto).join('') : '');
-    const mais = `<button type="button" class="cr-mais" data-acao="maisRostos" data-foco="mais-rostos" aria-expanded="${abertos}">
-        ${abertos ? 'Menos rostos' : `Mais rostos (${outra.length})`}</button>`;
+        <span class="cr-monograma">${e((c.nome.trim() || '?').charAt(0).toUpperCase())}</span><span class="cr-op-nota">Sem foto</span></button>`;
+    const mais = outras.length ? `<button type="button" class="cr-mais" data-acao="maisRostos" data-foco="mais-rostos" aria-expanded="${abertos}">
+        ${abertos ? 'Menos rostos' : `Mais rostos (${outras.length})`}</button>` : '';
     const mochilas = MOCHILAS_DA_FICHA.map(k => `<button type="button" class="cr-cor${c.mochila === k ? ' sel' : ''}" data-acao="mochila" data-v="${k}" data-foco="mochila-${k}"
         aria-pressed="${c.mochila === k}" title="${e(maiuscula(k))}"><i style="background:${CORES_MOCHILA[k]}"></i><span>${e(maiuscula(k))}</span></button>`).join('');
     const cartoes = Object.entries(CORES_CARTAO).map(([k, cor]) => `<button type="button" class="cartao-cor${c.corCartao === k ? ' sel' : ''}"
@@ -4625,7 +4631,7 @@ const UI = {
     return `<div class="moch" style="--bolso:${B.cor}">
       ${cab}${nav}
       <section class="moch-lista" role="tabpanel" aria-label="${this.esc(B.nome)}" onkeydown="UI.mochilaTecla(event)">${aparelhosHTML}${lista}${vazio}</section>
-      <aside class="moch-ficha" aria-live="polite">${sel ? this.fichaMochila(sel[0], sel[2], luta) : this.fichaDaBolsa(bolsa, total, todos.length)}</aside>
+      <aside class="moch-ficha" aria-live="polite">${sel ? this.fichaMochila(sel[0], sel[2], luta) : ''}</aside>
     </div>`;
   },
 
@@ -4734,19 +4740,6 @@ const UI = {
       ${time ? `<div class="mf-time">${time}</div>` : ''}
       ${nota ? `<p class="mf-nota">${this.esc(nota)}</p>` : ''}
       ${acoes.length ? `<div class="mf-acoes">${acoes.join('')}</div>` : ''}
-    </div>`;
-  },
-
-  /* sem item escolhido (bolso vazio, ou só aparelhos): a própria bolsa */
-  fichaDaBolsa(bolsa, total, tipos){
-    return `<div class="mf mf-bolsa">
-      <div class="mf-topo">
-        <span class="mf-pedestal"><img class="item-icone mf-ic" src="${desenhoDaBolsa(bolsa)}" alt=""></span>
-        <div class="mf-tit">
-          <h3 class="mf-nome">${this.esc(bolsa.nome)}</h3>
-          <span class="mf-tags"><span class="mf-tag n">${total} ${total === 1 ? 'unidade' : 'unidades'}</span><span class="mf-tag n">${tipos} ${tipos === 1 ? 'tipo' : 'tipos'}</span></span>
-        </div>
-      </div>
     </div>`;
   },
 

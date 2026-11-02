@@ -4449,6 +4449,9 @@ h3.sec-ir{--sec:#5aa7ff}
   box-shadow:inset 0 0 0 1px var(--moch-linha), 0 10px 22px -14px rgba(0,0,0,.9);
   scrollbar-width:thin;scrollbar-color:var(--moch-linha) transparent;
 }
+/* nada tocado (bolso vazio, ou só aparelhos): o lugar da ficha fica vazio,
+   sem forro; no celular nem o lugar, e a lista fica com a altura toda */
+.moch-ficha:empty{background:none;box-shadow:none}
 .mf{flex:1 0 auto;display:flex;flex-direction:column;gap:12px;animation:aparece .22s var(--suave) backwards}
 .mf-topo{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center}
 .mf-pedestal{
@@ -4551,6 +4554,7 @@ h3.sec-ir{--sec:#5aa7ff}
   .moch-ic{width:38px;height:38px}
   .moch-item-nome{font-size:14.5px}
   .moch-ficha{padding:11px 12px 12px}
+  .moch-ficha:empty{display:none}
   .mf{gap:9px}
   .mf-topo{flex-direction:row;align-items:center;text-align:left;gap:10px}
   .mf-pedestal{width:68px;height:68px}

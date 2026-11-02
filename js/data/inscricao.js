@@ -73,27 +73,38 @@ const CIDADES_DA_FICHA = {
    então nada de criança —, de jeitos e tons de pele diferentes, que
    só o jogador usa: moram em sprites_nds/npcs/jogador/ e nenhum NPC
    tem a mesma cara, senão o rival ou o moço da rua aparecem com a
-   sua. Protagonista dos jogos também não entra. A lista do gênero da
-   ficha vem primeiro e é dela que sai a foto sorteada; a do outro
-   fica a um toque ("Mais rostos"), pra quem quiser. */
+   sua. Protagonista dos jogos também não entra. Cada gênero tem a
+   sua lista, e a ficha só mostra a dela: as RETRATOS_A_VISTA primeiras
+   de cara, as outras a um toque ("Mais rostos"). A foto sorteada sai
+   da lista inteira do gênero. */
 const PASTA_DOS_RETRATOS = 'jogador/';
 const RETRATOS_DA_FICHA = {
   Homem:  ['viajante', 'urbano', 'patinador', 'colecionador', 'terno', 'trilheiro', 'roqueiro', 'chamativo',
-           'lutador', 'mistico', 'piloto', 'naturalista', 'durao', 'criador', 'corredor', 'ciclista'],
+           'lutador', 'mistico', 'piloto', 'naturalista', 'durao', 'criador', 'corredor', 'ciclista',
+           'esportivo', 'surfista', 'artesao', 'prateado', 'violeiro', 'explorador', 'cinegrafista', 'lavrador'],
   Mulher: ['aventureira', 'animada', 'urbana', 'atleta', 'estudante', 'elegante', 'trilheira', 'punk',
-           'gotica', 'lutadora', 'dancarina', 'modelo', 'artista', 'aviadora', 'patinadora', 'ciclista_f']
+           'gotica', 'lutadora', 'dancarina', 'modelo', 'artista', 'aviadora', 'patinadora', 'ciclista_f',
+           'mochileira', 'despojada', 'esportiva', 'descolada', 'fazendeira', 'cantora', 'vidente', 'guitarrista']
 };
+/* quantas a ficha mostra de cara; as outras do mesmo gênero abrem no "Mais rostos" */
+const RETRATOS_A_VISTA = 16;
 /* o nome de cada foto, pra quem lê a tela com leitor (e no toque longo) */
 const ROTULO_DO_RETRATO = {
   viajante:'viajante de mochila', urbano:'urbano de boné', patinador:'patinador', colecionador:'colecionador',
   terno:'de terno', trilheiro:'trilheiro', roqueiro:'roqueiro', chamativo:'de óculos escuros', lutador:'lutador de quimono',
   mistico:'místico', piloto:'piloto', naturalista:'naturalista de rede', durao:'durão de jaqueta', criador:'criador',
   corredor:'corredor', ciclista:'ciclista',
+  esportivo:'esportivo de boné pra trás', surfista:'surfista', artesao:'artesão de avental', prateado:'de cabelo prateado',
+  violeiro:'violeiro de chapéu', explorador:'explorador de jaqueta', cinegrafista:'cinegrafista', lavrador:'lavrador de avental',
   aventureira:'aventureira de boné', animada:'animada', urbana:'urbana de jaqueta', atleta:'atleta de agasalho',
   estudante:'estudante', elegante:'elegante', trilheira:'trilheira', punk:'punk', gotica:'gótica', lutadora:'lutadora',
-  dancarina:'dançarina', modelo:'modelo', artista:'artista', aviadora:'aviadora', patinadora:'patinadora', ciclista_f:'ciclista'
+  dancarina:'dançarina', modelo:'modelo', artista:'artista', aviadora:'aviadora', patinadora:'patinadora', ciclista_f:'ciclista',
+  mochileira:'mochileira', despojada:'de regata e bermuda', esportiva:'esportiva de faixa no cabelo', descolada:'descolada',
+  fazendeira:'fazendeira de chapéu', cantora:'cantora de palco', vidente:'vidente', guitarrista:'guitarrista'
 };
-/* foto que a ficha aceita: qualquer uma das duas listas */
+/* foto que a ficha aceita: qualquer uma das duas listas (save antigo
+   pode ter foto da outra, do tempo em que o "Mais rostos" abria a
+   lista do outro gênero) */
 function retratoDaFicha(arq){
   return !!arq && (RETRATOS_DA_FICHA.Homem.includes(arq) || RETRATOS_DA_FICHA.Mulher.includes(arq));
 }

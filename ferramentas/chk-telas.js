@@ -178,9 +178,9 @@ const SUSPEITO = [
       for (const [k] of LUGARES_DA_FICHA) UI.crAcao('gosto', {lista:'gostos', cat:'lugares', v:k});
       for (const k of MOCHILAS_DA_FICHA) UI.crAcao('mochila', {v:k});
       for (const r of RETRATOS_DA_FICHA[c.genero]) UI.crAcao('retrato', {v:r});
-      /* os outros rostos, a um toque: abre, escolhe um de lá e fecha */
+      /* os outros rostos do mesmo gênero, a um toque: abre, escolhe um de lá e fecha */
       UI.crAcao('maisRostos', {});
-      UI.crAcao('retrato', {v:RETRATOS_DA_FICHA[c.genero === 'Homem' ? 'Mulher' : 'Homem'][0]});
+      UI.crAcao('retrato', {v:RETRATOS_DA_FICHA[c.genero][RETRATOS_A_VISTA]});
       UI.crAcao('maisRostos', {});
       for (const k of Object.keys(CORES_CARTAO)) UI.crAcao('cartao', {v:k});
       for (const q of PARENTESCOS) UI.crAcao('casaQuem', {v:q});
@@ -190,7 +190,29 @@ const SUSPEITO = [
       if (!c.forte) UI.crAcao('forte', {v:'sorte'});
       UI.crAcao('passo', {v:'5'});
     });
-    await tentar(`inscrição/${g}/saiu de casa`, () => UI.crAcao('proximo', {}));
+    /* o "Mais rostos" só abre fotos do gênero da ficha, e o que está marcado
+       numa lista de gosto fica trancado na outra */
+    const regras = await page.evaluate(() => {
+      const c = UI._cr, falhas = [];
+      UI.crAcao('passo', {v:'3'}); UI.crAcao('maisRostos', {});
+      const outro = RETRATOS_DA_FICHA[c.genero === 'Homem' ? 'Mulher' : 'Homem'];
+      const vistas = [...document.querySelectorAll('.cr-retrato[data-v]')].map(b => b.dataset.v).filter(Boolean);
+      if (vistas.some(v => outro.includes(v))) falhas.push('o "Mais rostos" mostra foto do outro gênero');
+      if (vistas.length !== RETRATOS_DA_FICHA[c.genero].length) falhas.push(`o "Mais rostos" aberto mostra ${vistas.length} fotos, e o gênero tem ${RETRATOS_DA_FICHA[c.genero].length}`);
+      UI.crAcao('maisRostos', {});
+      UI.crAcao('passo', {v:'2'});
+      const t = c.desgostos.tipos[0] || TIPOS_KANTO[0];
+      if (!c.desgostos.tipos.includes(t)) UI.crAcao('gosto', {lista:'desgostos', cat:'tipos', v:t});
+      UI.crAcao('gosto', {lista:'gostos', cat:'tipos', v:t});
+      if (c.gostos.tipos.includes(t)) falhas.push(`o tipo ${t} entrou no gosto estando no desgosto`);
+      const chip = document.querySelector(`.cr-gosto-gostos .cr-chip[data-cat="tipos"][data-v="${t}"]`);
+      if (!chip || !chip.disabled) falhas.push(`o tipo ${t} do desgosto não fica trancado no gosto`);
+      for (const cat of ['lugares', 'tipos', 'dex'])
+        for (const v of c.gostos[cat]) if (c.desgostos[cat].includes(v)) falhas.push(`${v} está nas duas listas`);
+      return falhas;
+    });
+    for (const f of regras){ onde = `inscrição/${g}`; anota('inscrição', f); }
+    await tentar(`inscrição/${g}/saiu de casa`, () => { UI.crAcao('passo', {v:'5'}); UI.crAcao('proximo', {}); });
     await tentar(`inscrição/${g}/cartão`, () => { Object.assign(Estado.dados.flags, {tem_pokedex:true, tem_cartao:true}); UI.modalCartao(); });
     await tentar(`inscrição/${g}/ficha`, () => UI.modalFicha('perfil'));
     const ok = await page.evaluate(() => !!(Estado.dados && Estado.j && Estado.j.meta && Estado.j.forte && Estado.j.status[Estado.j.forte] === 2));

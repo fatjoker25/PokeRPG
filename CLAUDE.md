@@ -448,7 +448,10 @@ A **mochila aberta** (`UI.modalItens`, `.modal.mochila-cheia`) é a dos
 jogos de hoje: no alto, o desenho em pixel da bolsa que você carrega
 (`desenhoDaBolsa`: a da loja com o desenho dela, a de casa pela cor
 de `mochilaAtual().corNome`), o nome e o zíper; embaixo, os bolsos (coluna no computador, faixa no celular),
-a lista do bolso e a **ficha do item tocado** (`fichaMochila`): o ícone
+a lista do bolso e a **ficha do item tocado** (`fichaMochila`; sem item
+tocado — bolso vazio, ou só aparelhos — o lugar dela fica vazio, sem
+forro, e no celular nem aparece: ela já mostrou a bolsa ali, com o
+nome, e parecia item): o ícone
 grande no pedestal, a categoria, quantos tem, o desgaste, a conta, a
 descrição e os botões do que dá pra fazer (Usar, Ensinar, Dar pra
 segurar, Usar esta bolsa, Descartar; na luta, Arremessar e Usar, por
@@ -1523,24 +1526,35 @@ não dava afinidade nenhuma. Hoje:
   sugerida em `OBJETIVOS_DA_FICHA` (é ela que o capítulo 1 põe na sua boca);
 - gostos e desgostos saem prontos (`gostoDaFicha`: lugar, tipo, espécie),
   em `j.gostos`/`j.desgostos`; o tipo usa o nome do jogo (`Grama`, nunca
-  "Planta" — esse erro deixou o gosto por grama sem efeito nenhum);
+  "Planta" — esse erro deixou o gosto por grama sem efeito nenhum). O
+  que está marcado numa lista fica **trancado** na outra (riscado,
+  `.na-outra`) até sair de lá, e a espécie escrita que já está na outra
+  não entra (`c.avisoGosto` diz por quê). Antes a marca pulava de uma
+  lista pra outra, e parecia que dava pra gostar e ter medo da mesma
+  coisa;
 - o **forte** (`j.forte`) começa em 2; os outros status, em 1;
 - mochila (`j.corMochila`), cartão (`j.corCartao`) e foto (`j.retrato`,
   rosto de `RETRATOS_DA_FICHA`, no cartão e na Ficha por
   `retratoDoJogador`) são só aparência.
 
-**A foto é só de quem joga.** As 32 fotos (16 por gênero, de jeitos e
+**A foto é só de quem joga.** As 48 fotos (24 por gênero, de jeitos e
 tons de pele diferentes) moram em `sprites_nds/npcs/jogador/`
 (`PASTA_DOS_RETRATOS`) e nenhum NPC tem a mesma cara — senão o rival ou
 o moço da rua aparecem com a sua. Todas jovens, nenhuma criança (quem
-sai de casa tem quinze anos), e nada de protagonista dos jogos. A lista
-do gênero vem primeiro e é dela que sai o sorteio; a outra fica a um
-toque ("Mais rostos", `c.maisRostos`), e qualquer foto serve a qualquer
-ficha (`retratoDaFicha`): a escolhida de propósito fica quando o gênero
-muda, a sorteada sai. Cada foto tem nome em `ROTULO_DO_RETRATO`, pra
-leitor de tela. Save velho com `trainers/…` continua valendo.
-`chk-sprites` confere que cada foto existe e que nenhuma é arquivo de
-NPC; `chk-telas` abre os "Mais rostos" e escolhe um de lá.
+sai de casa tem quinze anos), e nada de protagonista dos jogos. **A
+ficha só mostra as fotos do gênero dela**: as `RETRATOS_A_VISTA` (16)
+primeiras de cara, as outras oito a um toque ("Mais rostos",
+`c.maisRostos`), e o sorteio sai da lista inteira do gênero. O "Mais
+rostos" já abriu a lista do outro gênero, e quem fazia uma treinadora
+via os rapazes ali: trocar o gênero tira a foto que não é do novo.
+`retratoDaFicha` ainda aceita qualquer uma das duas listas, pro save
+velho. Foto nova sai do acervo com o desenho conferido contra todo
+rosto em uso, pelos pixels e não pelos bytes. Cada foto tem nome em
+`ROTULO_DO_RETRATO`, pra leitor de tela. Save velho com `trainers/…`
+continua valendo. `chk-sprites` confere que cada foto existe e que
+nenhuma é arquivo de NPC; `chk-telas` abre os "Mais rostos", escolhe
+um de lá e reprova foto do outro gênero na grade e gosto que fica nas
+duas listas.
 
 Aparência e roupa continuam texto livre, com sugestão sorteada (o dado ao
 lado do campo). Save de antes da inscrição continua sendo lido por

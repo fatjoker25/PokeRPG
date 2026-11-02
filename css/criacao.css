@@ -162,6 +162,9 @@ body.na-criacao #app{max-width:1120px;padding-block:18px 40px}
 .cr-chip:focus-visible{outline:2px solid var(--cr-amarelo);outline-offset:2px}
 .cr-chip.sel{border-color:var(--cr-amarelo);background:rgba(255,203,5,.17);color:#fff}
 .cr-chip:disabled{opacity:.36;cursor:not-allowed}
+/* marcado na outra lista: trancado aqui, riscado pra não parecer lista cheia */
+.cr-chip.na-outra{text-decoration:line-through;text-decoration-thickness:1.5px}
+.cr-aviso{color:var(--cr-nao);font-style:normal}
 .cr-tipo{border-color:color-mix(in srgb, var(--tc) 50%, var(--cr-borda))}
 .cr-tipo.sel{background:var(--tc);border-color:#fff;color:#151a2e;font-weight:700}
 /* do que não gosta: a mesma escolha, de outra cor */
