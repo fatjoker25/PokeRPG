@@ -584,6 +584,23 @@ pro lado de fora e fica lá enquanto o golpe passa
 golpe não chega marca o evento do mesmo jeito, senão a tela mostra o
 acerto e o texto diz que errou.
 
+## O tamanho da letra
+Quem joga escolhe nos Ajustes **Pequena, Normal, Grande ou Maior**
+(`TAMANHOS_DA_LETRA`, `Letra`, em `js/ui/letra.js`), e a escolha fica
+no navegador ('jc-letra'), valendo pras três jornadas. Cresce o que se
+lê — a história e as falas (`.narrativa`, que também é a descrição do
+lugar, o aviso que é fala e a conversa do PokéNav), as opções
+(`#app .escolhas`) e as tarjas de aviso (`.avisos > .aviso`) — pelo
+`zoom: var(--letra-ler)` desses blocos, então o rosto do balão e a
+bolinha da tecla crescem junto. O alto da tela, a luta e as fichas
+ficam do tamanho delas: são de relance.
+
+Duas coisas: bloco com zoom **não entra noutro bloco com zoom** (o
+aviso que é fala já é `.narrativa`, e por isso o zoom pega o `.aviso`,
+não o `.avisos`), e bloco com zoom mede largura na conta dele — a
+coluna de 48rem divide pelo fator (`calc(48rem / var(--letra-ler))`),
+senão a letra maior alargava o texto além da placa.
+
 ## A velocidade da luta
 Quem joga escolhe **1×, 2× ou 3×** no botão do canto de cima à direita
 da arena (`Velocidade.botao()`, desenhado no `atualizarArena`) ou nos
@@ -1526,10 +1543,25 @@ mochila ou flags, Pokémon sem `dex` ou `uid` que preste, formato maior
 que `FORMATO`, e texto com cara de código (etiqueta de HTML, `on…=`,
 `javascript:`) — o save vai pra tela de muitos jeitos e o arquivo pode
 ter vindo de outra pessoa. Antes de trocar, o cartão
-(`UI.cartaoDoSave`, tudo pelo `esc`) mostra de quem é a jornada e diz
-qual sai do navegador. Aceito, o arquivo é gravado no lugar do
-automático (`Estado.gravar`) e quem segue é o `Jogo.continuar()`, como
-num recarregar.
+(`UI.cartaoDoSave`, tudo pelo `esc`) mostra de quem é a jornada, e a
+janela pergunta **em qual dos três lugares** ela entra (`.save-lugar`,
+`UI.alvoDoCarregar`): vem marcado o da jornada em uso se ele está
+vazio, senão o primeiro vazio (`alvoPadraoDoCarregar`), e o aviso diz
+qual jornada sai, se sai alguma. Aceito, o arquivo é gravado naquele
+lugar (`ArquivoSave.usar(dados, finais, jornada)`, que passa a ser a
+jornada em uso) e quem segue é o `Jogo.continuar()`, como num
+recarregar.
+
+**Três jornadas por navegador** (`JORNADAS_NO_NAVEGADOR`). A primeira
+mora na chave de sempre (`pokerpg_save_auto`), as outras em `_auto2` e
+`_auto3` (`Estado.chaveDoSave`). O slot `'auto'` de `salvar`,
+`carregar`, `gravar`, `existeSave` e `apagarSave` quer dizer **a
+jornada em uso** (`Estado.jornada`, lembrada em `pokerpg_jornada`); um
+número fala de uma jornada certa. Por isso nada no jogo mudou de
+`Estado.salvar('auto')`, e o save de antes das três é a Jornada 1. Nova
+jornada (`Jogo.novo`, com o nome no `confirm`) e a tela de fim só
+apagam a jornada em uso. Quem quer o save cru de uma jornada, só pra
+mostrar, pede `Estado.saveCru(n)`; nada de ler `localStorage` à mão.
 
 - **Conversão de save velho mora em `Estado.abrir`**, que o recarregar
   e o arquivo usam. Nada de converter no `carregar` nem no
@@ -1904,6 +1936,11 @@ que cruza de tempos em tempos. No alto o logo; no meio, lado a lado
 no chão, o seu time vivo — ou, sem jornada, Bulbasaur, Charmander,
 Pikachu e Squirtle —, com as GIFs na escala do jogo (`--q` é o quadro).
 
+- No alto do cartão, **uma aba por jornada** (`.tt-slot`): nome e
+  capítulo, ou "Vazia · começar aqui". Tocar escolhe a jornada em uso
+  (`UI.escolherJornada`) e troca só o cartão, o menu e o chão
+  (`partesDaAbertura`): o céu, as estrelas e o Pidgeot continuam, e o
+  cartão novo entra sem a espera da abertura (`.tela-titulo.trocou`).
 - O cartão lê o save do navegador **cru e só pra mostrar**: nome, foto,
   capítulo, lugar, dias, o estojo das oito, catalogados, time e
   dinheiro, tudo pelo `esc` (o save pode ter vindo de arquivo de outra
@@ -1918,7 +1955,8 @@ Pikachu e Squirtle —, com as GIFs na escala do jogo (`--q` é o quadro).
   grande cresce (`zoom`), senão sobra noite em volta. O `.json` do
   Salvar pode ser solto em qualquer lugar dela (`UI.soltarSave`).
 
-`chk-telas` abre a abertura com e sem jornada.
+`chk-telas` abre a abertura com e sem jornada, troca de aba e carrega
+um arquivo noutro lugar sem apagar a jornada que já estava.
 
 ## A festa da vitória
 Luta grande ganha tem festa antes da tela de resultado

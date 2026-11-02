@@ -409,17 +409,62 @@ const UI = {
   telaInicial(){
     this.tom('leve'); this.limpar();
     document.body.classList.add('na-abertura', 'na-titulo');
-    const temSave = Estado.existeSave('auto');
-    /* o save do navegador, só pra mostrar: lido cru, sem converter, e
-       tudo pelo esc (pode ter vindo de arquivo de outra pessoa) */
-    let save = null;
-    if (temSave){
-      try { save = JSON.parse(localStorage.getItem('pokerpg_save_auto')); } catch (e) { save = null; }
-      if (!save || typeof save !== 'object' || !save.jogador) save = null;
-    }
-    const e = x => this.esc(String(x == null ? '' : x));
+    const {jornada, menu, desfile} = this.partesDaAbertura(true);
     const estrelas = Array.from({length:30}, () =>
       `<i class="tt-estrela" style="--x:${(Math.random()*100).toFixed(1)}%;--y:${(Math.random()*46).toFixed(1)}%;--t:${(1.6+Math.random()*2.8).toFixed(2)}s;--a:${(Math.random()*3).toFixed(2)}s;--s:${Math.random() < .25 ? 3 : 2}px"></i>`).join('');
+
+    this.add(`<div class="tela-titulo" ondragover="event.preventDefault()" ondrop="UI.soltarSave(event)"
+        style="--tt-cena:url('${Arenas.caminho('prado.png')}')">
+      <div class="tt-cena" aria-hidden="true"></div>
+      <div class="tt-ceu" aria-hidden="true">${estrelas}</div>
+      <div class="tt-voo" aria-hidden="true">${imgSprite({dex:18, nome:'Pidgeot'}, 'frente', {classe:'tt-voo-arte'})}</div>
+      <header class="tt-topo">
+        <h1 class="tt-logo" aria-label="PokéRPG">
+          <span class="tt-poke" data-t="Poké">Poké</span><span class="tt-rpg" data-t="RPG">RPG</span>
+        </h1>
+        <div class="tt-sub">Sua jornada Pokémon começa agora!</div>
+      </header>
+      <main class="tt-corpo">
+        ${jornada}
+        <nav class="tt-menu tt-e" style="--i:1" aria-label="Opções">${menu}</nav>
+      </main>
+      <div class="tt-desfile" aria-hidden="true">${desfile}</div>
+      <footer class="tt-pe">Jogo de fã · regras do Pokérole 3.0 · arte da PokeAPI e do Pokémon Showdown</footer>
+    </div>`);
+  },
+
+  /* tocar noutra jornada troca só o cartão, o menu e o chão: o céu, as
+     estrelas e o Pidgeot continuam onde estavam */
+  escolherJornada(n){
+    Estado.usarJornada(n);
+    const t = document.querySelector('.tela-titulo');
+    const j = t && t.querySelector('.tt-jornada'), m = t && t.querySelector('.tt-menu'), d = t && t.querySelector('.tt-desfile');
+    if (!j || !m || !d) return this.telaInicial();
+    const p = this.partesDaAbertura(false);
+    t.classList.add('trocou');
+    j.outerHTML = p.jornada; m.innerHTML = p.menu; d.innerHTML = p.desfile;
+    const aba = t.querySelector(`.tt-slot[data-n="${Estado.jornada}"]`);
+    if (aba) aba.focus();
+  },
+
+  /* o cartão da jornada escolhida (com as abas das três), o menu e quem
+     fica no chão. O save é lido cru, sem converter, e tudo vai pelo esc
+     (pode ter vindo de arquivo de outra pessoa) */
+  partesDaAbertura(animar){
+    const temSave = Estado.existeSave('auto');
+    const save = temSave ? Estado.saveCru('auto') : null;
+    const e = x => this.esc(String(x == null ? '' : x));
+    const entra = animar ? ' tt-e' : '';
+
+    /* as três jornadas deste navegador, uma aba cada */
+    const abas = Array.from({length:JORNADAS_NO_NAVEGADOR}, (_, i) => {
+      const n = i + 1, s = Estado.saveCru(n), tem = !!s || Estado.existeSave(n), sel = n === Estado.jornada;
+      const quem = s ? (s.jogador.nome || 'Sem nome') : tem ? 'Salva' : 'Vazia';
+      const onde = s ? this.capituloDoSave(s, true) : tem ? '' : 'começar aqui';
+      return `<button type="button" class="tt-slot${sel ? ' sel' : ''}${tem ? '' : ' vazia'}" role="tab" aria-selected="${sel}"
+          data-n="${n}" onclick="UI.escolherJornada(${n})"><small>Jornada ${n}</small><b>${e(quem)}</b>${onde ? `<span>${e(onde)}</span>` : ''}</button>`;
+    }).join('');
+    const slots = `<div class="tt-slots" role="tablist" aria-label="Jornadas neste navegador">${abas}</div>`;
 
     /* quem fica no chão: o seu time, vivo, ou os de sempre */
     const time = save && Array.isArray(save.time)
@@ -450,7 +495,8 @@ const UI = {
         [time.length, 'no time', 'bola'],
         ['₽ ' + din.toLocaleString('pt-BR'), 'na carteira', 'moeda']]
         .map(([v, k, ic]) => `<span class="tt-num">${svgIcone(ic)}<b>${e(v)}</b><small>${e(k)}</small></span>`).join('');
-      jornada = save ? `<section class="tt-jornada tt-e" style="--i:0" aria-label="Jornada salva">
+      jornada = save ? `<section class="tt-jornada${entra}" style="--i:0" aria-label="Jornada ${Estado.jornada}, salva">
+          ${slots}
           <div class="tt-j-topo">
             <span class="tt-j-rosto${rosto ? '' : ' vazio'}" aria-hidden="true">${rosto ? `<img src="${e(rosto)}" alt="" onerror="this.parentNode.classList.add('vazio');this.remove()">` : ''}<b>${e((j.nome || '?').slice(0, 1).toUpperCase())}</b></span>
             <span class="tt-j-quem">
@@ -463,8 +509,9 @@ const UI = {
           <div class="tt-j-num">${numeros}</div>
           <button class="tt-btn tt-principal" onclick="Jogo.continuar()">Continuar</button>
         </section>`
-        : `<section class="tt-jornada tt-e" style="--i:0" aria-label="Jornada salva">
-          <div class="tt-j-novo"><b>Uma jornada neste navegador</b><span>O save não abriu aqui na abertura, mas pode abrir no jogo.</span></div>
+        : `<section class="tt-jornada${entra}" style="--i:0" aria-label="Jornada ${Estado.jornada}, salva">
+          ${slots}
+          <div class="tt-j-novo"><b>Uma jornada neste lugar</b><span>O save não abriu aqui na abertura, mas pode abrir no jogo.</span></div>
           <button class="tt-btn tt-principal" onclick="Jogo.continuar()">Continuar</button>
         </section>`;
     } else {
@@ -475,7 +522,8 @@ const UI = {
         ['pokedex', `${DEX_KANTO_IDS.length + 1} Pokémon pra encontrar, cada um com o seu jeito`],
         ['dado', 'Batalha no dado, nas regras do Pokérole 3.0']
       ].map(([ic, t]) => `<li>${svgIcone(ic)}<span>${e(t)}</span></li>`).join('');
-      jornada = `<section class="tt-jornada nova tt-e" style="--i:0">
+      jornada = `<section class="tt-jornada nova${entra}" style="--i:0" aria-label="Jornada ${Estado.jornada}, vazia">
+          ${slots}
           <div class="tt-j-novo"><b>Kanto, ano 2000</b><span>Você tem quinze anos, uma mochila nas costas e a estrada que sai da sua cidade.</span></div>
           <ul class="tt-j-sobre">${sobre}</ul>
           <button class="tt-btn tt-principal" onclick="Jogo.novo()">Começar</button>
@@ -486,32 +534,14 @@ const UI = {
     const fins = Estado.finaisDescobertos().filter(ehFinalDeVerdade).length, totalFins = contarFinais().total;
     const op = (ic, rot, nota, acao) => `<button class="tt-op" onclick="${acao}">${svgIcone(ic, 'tt-op-ic')}<span class="tt-op-txt"><b>${rot}</b><small>${nota}</small></span></button>`;
     const menu = [
-      temSave ? op('bandeira', 'Nova jornada', 'a de agora sai deste navegador', 'Jogo.novo()') : '',
+      temSave ? op('bandeira', 'Nova jornada', `no lugar da Jornada ${Estado.jornada}, que sai`, 'Jogo.novo()') : '',
       op('carregar', 'Carregar jogo', 'um arquivo .json do Salvar', 'UI.modalCarregar(true)'),
       op('pergunta', 'Tutorial', 'a primeira hora, passo a passo', 'UI.modalTutorial()'),
       op('dado', 'Regras', 'todas as contas do jogo', 'UI.modalRegras()'),
       op('liga', 'Códice de finais', `${fins} de ${totalFins} descobertos`, 'UI.modalFinais()'),
-      op('engrenagem', 'Ajustes', 'som, cor do jogo e velocidade da luta', 'UI.modalAjustes()')
+      op('engrenagem', 'Ajustes', 'som, cor, letra e velocidade da luta', 'UI.modalAjustes()')
     ].filter(Boolean).join('');
-
-    this.add(`<div class="tela-titulo" ondragover="event.preventDefault()" ondrop="UI.soltarSave(event)"
-        style="--tt-cena:url('${Arenas.caminho('prado.png')}')">
-      <div class="tt-cena" aria-hidden="true"></div>
-      <div class="tt-ceu" aria-hidden="true">${estrelas}</div>
-      <div class="tt-voo" aria-hidden="true">${imgSprite({dex:18, nome:'Pidgeot'}, 'frente', {classe:'tt-voo-arte'})}</div>
-      <header class="tt-topo">
-        <h1 class="tt-logo" aria-label="PokéRPG">
-          <span class="tt-poke" data-t="Poké">Poké</span><span class="tt-rpg" data-t="RPG">RPG</span>
-        </h1>
-        <div class="tt-sub">Sua jornada Pokémon começa agora!</div>
-      </header>
-      <main class="tt-corpo">
-        ${jornada}
-        <nav class="tt-menu tt-e" style="--i:1" aria-label="Opções">${menu}</nav>
-      </main>
-      <div class="tt-desfile" aria-hidden="true">${desfile}</div>
-      <footer class="tt-pe">Jogo de fã · regras do Pokérole 3.0 · arte da PokeAPI e do Pokémon Showdown</footer>
-    </div>`);
+    return {jornada, menu, desfile};
   },
 
   /* ========================================================
@@ -4342,6 +4372,7 @@ const UI = {
         </div>
       </div>
       ${this.ajustesDeSom()}
+      ${typeof Letra !== 'undefined' ? Letra.ajustes() : ''}
       ${Velocidade.ajustes()}
       ${Estado.dados ? `<h3>Salvar</h3>
       <button class="escolha com-icone" onclick="UI.modalSalvar()">${svgIcone('salvar')}<span class="esc-rot">Baixar o save<small class="esc-det">a jornada inteira num arquivo .json · na abertura, Carregar jogo lê de volta</small></span></button>` : ''}
@@ -4410,7 +4441,7 @@ const UI = {
     this.modal('Salvar', `
       ${this.cartaoDoSave(Estado.dados, 'salvo agora')}
       <div id="save-status">${this.statusDoSave(nome)}</div>
-      <p class="sussurro">O jogo também se salva sozinho neste navegador, a cada passo. O arquivo é uma cópia deste momento: pra continuar noutro aparelho ou noutro navegador, abra o jogo lá e escolha <b>Carregar jogo</b>, na abertura.</p>
+      <p class="sussurro">O jogo também se salva sozinho neste navegador, a cada passo, no lugar da Jornada ${Estado.jornada}. O arquivo é uma cópia deste momento: pra continuar noutro aparelho ou noutro navegador, abra o jogo lá e escolha <b>Carregar jogo</b>, na abertura.</p>
       <div class="save-botoes">
         <button class="btn destaque" onclick="UI.salvarDeNovo()">${svgIcone('salvar')}Baixar de novo</button>
         <button class="btn" onclick="UI.copiarSave()">Copiar o texto</button>
@@ -4446,6 +4477,9 @@ const UI = {
      trocar, e a do navegador, se tiver, diz que vai sair. */
   modalCarregar(abrirSeletor){
     this._saveLido = null;
+    /* o lugar onde o arquivo entra: o da jornada em uso, se está vazio;
+       senão o primeiro vazio; sem nenhum vazio, o da jornada em uso */
+    this.alvoPadraoDoCarregar();
     this.janelaCarregar(null);
     if (abrirSeletor){ const i = document.getElementById('save-arquivo'); if (i) i.click(); }
   },
@@ -4460,14 +4494,24 @@ const UI = {
     const entrada = `<input type="file" id="save-arquivo" class="vis-oculto" accept=".json,application/json,text/plain"
       onchange="UI.lerArquivoDeSave(this.files && this.files[0]); this.value=''">`;
     if (lido && lido.dados){
-      const atual = ArquivoSave.doNavegador();
-      const troca = atual ? `<p class="save-troca">${svgIcone('alerta')}<span>A jornada que está neste navegador (<b>${this.esc(atual.jogador.nome || 'sem nome')}</b>, ${this.esc(this.capituloDoSave(atual, true))}) sai, e esta entra no lugar dela. Pra guardar a de agora, feche, entre nela pelo Continuar e use Salvar antes.</span></p>` : '';
+      const alvo = this._alvoCarregar || Estado.jornada;
+      const atual = ArquivoSave.doNavegador(alvo);
+      /* em qual dos três lugares ela entra: tocar escolhe */
+      const lugares = Array.from({length:JORNADAS_NO_NAVEGADOR}, (_, i) => {
+        const n = i + 1, s = Estado.saveCru(n), tem = !!s || Estado.existeSave(n);
+        return `<button type="button" class="save-lugar${n === alvo ? ' sel' : ''}${tem ? '' : ' vazio'}" role="radio" aria-checked="${n === alvo}"
+          onclick="UI.alvoDoCarregar(${n})"><small>Jornada ${n}</small><b>${this.esc(s ? (s.jogador.nome || 'Sem nome') : tem ? 'Salva' : 'Vazia')}</b></button>`;
+      }).join('');
+      const onde = `<div class="save-lugares" role="radiogroup" aria-label="Onde a jornada entra">${lugares}</div>`;
+      const troca = atual ? `<p class="save-troca">${svgIcone('alerta')}<span>A Jornada ${alvo} deste navegador (<b>${this.esc(atual.jogador.nome || 'sem nome')}</b>, ${this.esc(this.capituloDoSave(atual, true))}) sai, e esta entra no lugar dela. Pra guardar as duas, escolha um lugar vazio.</span></p>`
+        : Estado.existeSave(alvo) ? `<p class="save-troca">${svgIcone('alerta')}<span>A jornada que está na Jornada ${alvo} sai, e esta entra no lugar dela.</span></p>` : '';
       /* o códice separa final de epílogo, e a nota também */
       const fins = (lido.finais || []).filter(ehFinalDeVerdade).length, eps = (lido.finais || []).filter(ehEpilogo).length;
       const codice = [fins ? `${fins} ${fins === 1 ? 'final' : 'finais'}` : '', eps ? `${eps} ${eps === 1 ? 'epílogo' : 'epílogos'}` : ''].filter(Boolean);
       const notas = [lido.salvoEm ? 'baixado em ' + this.dataDoSave(lido.salvoEm) : '',
         codice.length ? `${codice.join(' e ')} no códice, que somam com os deste navegador` : ''].filter(Boolean);
-      return `${this.cartaoDoSave(lido.dados, notas)}${troca}
+      return `${this.cartaoDoSave(lido.dados, notas)}
+        <h3 class="save-onde">Onde ela entra</h3>${onde}${troca}
         <div class="save-botoes">
           <button class="btn destaque" onclick="UI.usarSaveLido()">${svgIcone('carregar')}Carregar esta jornada</button>
           <label class="btn" for="save-arquivo">Escolher outro arquivo</label>
@@ -4482,7 +4526,17 @@ const UI = {
         <textarea id="save-colado" class="save-texto" rows="5" spellcheck="false" aria-label="Texto do save"></textarea>
         <button class="btn mini" onclick="UI.lerTextoDeSave(document.getElementById('save-colado').value)">Ler o texto</button>
       </details>
-      <p class="sussurro">Carregar põe a jornada do arquivo no lugar da que está neste navegador, do jeito que ela estava quando foi baixada.</p>`;
+      <p class="sussurro">Carregar põe a jornada do arquivo num dos três lugares deste navegador, do jeito que ela estava quando foi baixada. Depois de ler o arquivo, você escolhe qual.</p>`;
+  },
+  alvoPadraoDoCarregar(){
+    const vazio = n => !Estado.existeSave(n);
+    const lugares = Array.from({length:JORNADAS_NO_NAVEGADOR}, (_, i) => i + 1);
+    this._alvoCarregar = vazio(Estado.jornada) ? Estado.jornada : (lugares.find(vazio) || Estado.jornada);
+  },
+  alvoDoCarregar(n){
+    this._alvoCarregar = n;
+    const caixa = document.getElementById('save-carregar');
+    if (caixa && this._saveLido) caixa.innerHTML = this.corpoCarregar(this._saveLido);
   },
   lerArquivoDeSave(arq){
     if (!arq) return;
@@ -4507,7 +4561,7 @@ const UI = {
     this._saveLido = lido && lido.dados ? lido : null;
     const caixa = document.getElementById('save-carregar');
     if (caixa) caixa.innerHTML = this.corpoCarregar(lido);
-    else this.janelaCarregar(lido);
+    else { this.alvoPadraoDoCarregar(); this.janelaCarregar(lido); }
     /* erro no texto colado: a caixa fica aberta com o texto, pra
        consertar ali mesmo (o valor vai pelo DOM, nunca pelo esc, que
        resolveria as marcas de gênero de dentro do save) */
@@ -4518,7 +4572,7 @@ const UI = {
     const lido = this._saveLido;
     if (!lido) return;
     this._saveLido = null;
-    ArquivoSave.usar(lido.dados, lido.finais);
+    ArquivoSave.usar(lido.dados, lido.finais, this._alvoCarregar || Estado.jornada);
   },
 
   /* ========================================================
@@ -5963,8 +6017,9 @@ const UI = {
       <h3>O que não dá pra desfazer</h3>
       ${L('Salvar', 'automático, a cada passo — não existe voltar atrás, a não ser por um arquivo baixado antes')}
       ${L('Arquivo', 'o Salvar, no alto da tela, baixa a jornada num .json · Carregar jogo, na abertura, lê de volta')}
-      ${L('Nova jornada', 'apaga a atual')}
-      ${L('Carregar jogo', 'troca a atual pela do arquivo')}
+      ${L('Jornadas', 'três por navegador, cada uma no seu lugar · as abas no alto do cartão da abertura escolhem qual')}
+      ${L('Nova jornada', 'apaga a do lugar escolhido · as outras ficam')}
+      ${L('Carregar jogo', 'põe a do arquivo no lugar que você escolher · se ele tinha uma, ela sai')}
       ${L('Insígnia, morte, reputação', 'ficam')}`;
   },
 
@@ -6534,9 +6589,11 @@ const UI = {
 
       <h3>Salvar e carregar</h3>
       <div class="linha"><span class="k">No navegador</span><span class="v">sozinho, a cada passo, por cima do anterior · não tem botão e não tem volta</span></div>
+      <div class="linha"><span class="k">Jornadas</span><span class="v">três por navegador, cada uma no seu lugar · a aba no alto do cartão da abertura escolhe qual o Continuar abre, e o navegador lembra a última · Nova jornada e a tela de fim só apagam a do lugar escolhido</span></div>
       <div class="linha"><span class="k">Salvar</span><span class="v">no alto da tela e nos Ajustes · baixa a jornada inteira num arquivo .json: ficha, time, PC, cemitério, mochila, Pokédex, PokéNav, relógio, quem você conhece e a luta, se você estiver numa · e o códice de finais junto</span></div>
-      <div class="linha"><span class="k">Carregar jogo</span><span class="v">na abertura · escolhe o arquivo, arrasta ele pra tela ou cola o texto · mostra de quem é a jornada antes de trocar</span></div>
-      <div class="linha"><span class="k">O que sai</span><span class="v">a jornada que estava no navegador · o arquivo entra no lugar dela</span></div>
+      <div class="linha"><span class="k">Carregar jogo</span><span class="v">na abertura · escolhe o arquivo, arrasta ele pra tela ou cola o texto · mostra de quem é a jornada e pergunta em qual dos três lugares ela entra (o vazio vem marcado)</span></div>
+      <div class="linha"><span class="k">O que sai</span><span class="v">a jornada que estava no lugar escolhido, se tinha uma · o arquivo entra no lugar dela, e as outras duas ficam</span></div>
+      <div class="linha"><span class="k">Tamanho da letra</span><span class="v">nos Ajustes · Pequena, Normal, Grande ou Maior · cresce a história, as falas, as opções e os avisos; o alto da tela, a luta e as fichas ficam do tamanho delas · fica neste navegador, valendo pras três jornadas</span></div>
       <div class="linha"><span class="k">Códice de finais</span><span class="v">não sai: os finais do arquivo somam com os do navegador, e nenhum some</span></div>
       <div class="linha"><span class="k">Arquivo antigo</span><span class="v">passa pelas mesmas conversões de quem recarrega a página</span></div>
       <div class="linha"><span class="k">Arquivo recusado</span><span class="v">JSON quebrado · sem treinador, time ou mochila · Pokémon danificado · código no meio do texto · feito numa versão mais nova do jogo</span></div>

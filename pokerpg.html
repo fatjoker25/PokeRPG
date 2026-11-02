@@ -3723,6 +3723,19 @@ html[data-moldura="grafite"], body[data-moldura="grafite"]{
 .save-troca > svg.icone{color:var(--destaque)}
 .save-ok b{overflow-wrap:anywhere}
 .save-botoes{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+/* onde a jornada do arquivo entra: os três lugares deste navegador */
+.save-onde{margin:16px 0 8px}
+.save-lugares{display:grid;grid-template-columns:repeat(3, minmax(0, 1fr));gap:6px}
+.save-lugar{
+  display:flex;flex-direction:column;gap:1px;min-width:0;padding:8px 10px;border-radius:var(--raio-sm);cursor:pointer;text-align:left;
+  background:color-mix(in srgb, var(--bg) 55%, transparent);border:1px solid color-mix(in srgb, var(--borda) 80%, transparent);color:var(--texto);
+}
+.save-lugar small{font:700 10px/1.2 var(--letra-hud, var(--fonte));letter-spacing:.1em;text-transform:uppercase;color:var(--texto-fraco)}
+.save-lugar b{font:700 14px/1.25 var(--letra-hud, var(--fonte));white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.save-lugar.vazio b{font-weight:600;color:var(--texto-fraco)}
+.save-lugar.sel{border-color:var(--destaque);box-shadow:inset 0 0 0 1px var(--destaque);background:color-mix(in srgb, var(--destaque) 12%, transparent)}
+.save-lugar.sel small{color:var(--destaque)}
+.save-lugar:focus-visible{outline:2px solid var(--destaque);outline-offset:2px}
 .save-botoes .btn{display:inline-flex;align-items:center;gap:7px;font-family:var(--letra-hud);font-weight:600}
 .save-botoes .btn > svg.icone{width:17px;height:17px}
 label.btn{cursor:pointer}
@@ -3878,6 +3891,13 @@ svg.icone{flex:0 0 auto;width:18px;height:18px;vertical-align:-3px}
 
 /* texto corrido: um pouco maior e com ar, que é onde o jogo passa o tempo */
 .narrativa{font-size:15.5px;line-height:1.68;color:color-mix(in srgb, var(--texto) 92%, var(--texto-fraco))}
+/* o tamanho da letra de ler (Ajustes; js/ui/letra.js): a história, as
+   falas, as opções e os avisos crescem com o desenho em volta. Nada de
+   bloco zoomado dentro de outro (o aviso que é fala já é .narrativa) */
+.narrativa, #app .escolhas, .avisos > .aviso{zoom:var(--letra-ler, 1)}
+/* o bloco com zoom mede a coluna na conta dele: sem dividir, a letra
+   maior alargava o texto além da placa */
+.painel:has(> .cap-cabecalho) > :is(.narrativa, .escolhas){max-width:calc(48rem / var(--letra-ler, 1))}
 .narrativa p{margin-bottom:12px}
 .narrativa strong{color:var(--texto);font-weight:650}
 
@@ -5133,6 +5153,10 @@ h3.sec-ir{--sec:#5aa7ff}
 .vel-opcoes button.sel{background:var(--destaque);color:#11131f;box-shadow:0 2px 0 rgba(0,0,0,.35)}
 .vel-opcoes button:focus-visible{outline:2px solid var(--destaque);outline-offset:2px;box-shadow:none}
 .modal.ajustes .ajuste-vel .sussurro{margin:0;font-size:12.5px;color:var(--texto-fraco)}
+/* a amostra da letra: um parágrafo da história, que cresce na hora */
+.modal.ajustes .letra-amostra{padding:10px 12px;border-radius:10px;background:color-mix(in srgb, var(--bg) 55%, transparent)}
+.modal.ajustes .letra-amostra p{margin:0;animation:none}
+.letra-opcoes button{min-width:0}
 
 /* a rota: a trilha dos capítulos, cada nó na cor do tom do capítulo */
 .modal.rota .rota-via{
@@ -5780,6 +5804,25 @@ body.na-titulo #app{max-width:none;margin:0;padding:0;display:block;min-height:1
   -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
 }
 .tt-jornada{display:flex;flex-direction:column;gap:14px}
+/* as três jornadas deste navegador: uma aba cada, a escolhida acesa */
+.tt-slots{display:grid;grid-template-columns:repeat(3, minmax(0, 1fr));gap:6px;margin:-4px -4px 0}
+.tt-slot{
+  display:flex;flex-direction:column;gap:1px;min-width:0;padding:7px 9px 8px;border-radius:12px;cursor:pointer;text-align:left;
+  border:0;background:rgba(0,0,0,.26);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1);color:#e4ecff;
+  transition:background .15s var(--suave), box-shadow .15s var(--suave);
+}
+.tt-slot:hover{background:rgba(255,255,255,.08)}
+.tt-slot:focus-visible{outline:2px solid var(--tt-amarelo);outline-offset:2px}
+.tt-slot small{font:700 10px/1.2 var(--letra-hud, var(--fonte));letter-spacing:.1em;text-transform:uppercase;color:#a9b8de}
+.tt-slot b{font:700 14.5px/1.25 var(--letra-hud, var(--fonte));color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tt-slot span{font:500 11.5px/1.25 var(--letra-hud, var(--fonte));color:#c9d6f5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tt-slot.vazia b{font-weight:600;color:#a9b8de}
+.tt-slot.sel{background:rgba(255,203,5,.13);box-shadow:inset 0 0 0 2px var(--tt-amarelo), 0 4px 12px -6px rgba(255,203,5,.6)}
+.tt-slot.sel small{color:var(--tt-amarelo)}
+/* trocou de jornada: o cartão novo e o time do chão entram já, sem a
+   espera da abertura (que é pra quem acabou de chegar) */
+.tela-titulo.trocou .tt-btn{animation-delay:0s}
+.tela-titulo.trocou .tt-pk{animation-delay:calc(var(--i, 0) * .08s)}
 .tt-j-topo{display:flex;align-items:center;gap:13px;min-width:0}
 .tt-j-rosto{
   position:relative;flex:0 0 auto;width:64px;height:64px;border-radius:50%;overflow:hidden;display:grid;place-items:center;
@@ -10327,6 +10370,19 @@ html[data-moldura="grafite"], body[data-moldura="grafite"]{
 .save-troca > svg.icone{color:var(--destaque)}
 .save-ok b{overflow-wrap:anywhere}
 .save-botoes{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+/* onde a jornada do arquivo entra: os três lugares deste navegador */
+.save-onde{margin:16px 0 8px}
+.save-lugares{display:grid;grid-template-columns:repeat(3, minmax(0, 1fr));gap:6px}
+.save-lugar{
+  display:flex;flex-direction:column;gap:1px;min-width:0;padding:8px 10px;border-radius:var(--raio-sm);cursor:pointer;text-align:left;
+  background:color-mix(in srgb, var(--bg) 55%, transparent);border:1px solid color-mix(in srgb, var(--borda) 80%, transparent);color:var(--texto);
+}
+.save-lugar small{font:700 10px/1.2 var(--letra-hud, var(--fonte));letter-spacing:.1em;text-transform:uppercase;color:var(--texto-fraco)}
+.save-lugar b{font:700 14px/1.25 var(--letra-hud, var(--fonte));white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.save-lugar.vazio b{font-weight:600;color:var(--texto-fraco)}
+.save-lugar.sel{border-color:var(--destaque);box-shadow:inset 0 0 0 1px var(--destaque);background:color-mix(in srgb, var(--destaque) 12%, transparent)}
+.save-lugar.sel small{color:var(--destaque)}
+.save-lugar:focus-visible{outline:2px solid var(--destaque);outline-offset:2px}
 .save-botoes .btn{display:inline-flex;align-items:center;gap:7px;font-family:var(--letra-hud);font-weight:600}
 .save-botoes .btn > svg.icone{width:17px;height:17px}
 label.btn{cursor:pointer}
@@ -10482,6 +10538,13 @@ svg.icone{flex:0 0 auto;width:18px;height:18px;vertical-align:-3px}
 
 /* texto corrido: um pouco maior e com ar, que é onde o jogo passa o tempo */
 .narrativa{font-size:15.5px;line-height:1.68;color:color-mix(in srgb, var(--texto) 92%, var(--texto-fraco))}
+/* o tamanho da letra de ler (Ajustes; js/ui/letra.js): a história, as
+   falas, as opções e os avisos crescem com o desenho em volta. Nada de
+   bloco zoomado dentro de outro (o aviso que é fala já é .narrativa) */
+.narrativa, #app .escolhas, .avisos > .aviso{zoom:var(--letra-ler, 1)}
+/* o bloco com zoom mede a coluna na conta dele: sem dividir, a letra
+   maior alargava o texto além da placa */
+.painel:has(> .cap-cabecalho) > :is(.narrativa, .escolhas){max-width:calc(48rem / var(--letra-ler, 1))}
 .narrativa p{margin-bottom:12px}
 .narrativa strong{color:var(--texto);font-weight:650}
 
@@ -11737,6 +11800,10 @@ h3.sec-ir{--sec:#5aa7ff}
 .vel-opcoes button.sel{background:var(--destaque);color:#11131f;box-shadow:0 2px 0 rgba(0,0,0,.35)}
 .vel-opcoes button:focus-visible{outline:2px solid var(--destaque);outline-offset:2px;box-shadow:none}
 .modal.ajustes .ajuste-vel .sussurro{margin:0;font-size:12.5px;color:var(--texto-fraco)}
+/* a amostra da letra: um parágrafo da história, que cresce na hora */
+.modal.ajustes .letra-amostra{padding:10px 12px;border-radius:10px;background:color-mix(in srgb, var(--bg) 55%, transparent)}
+.modal.ajustes .letra-amostra p{margin:0;animation:none}
+.letra-opcoes button{min-width:0}
 
 /* a rota: a trilha dos capítulos, cada nó na cor do tom do capítulo */
 .modal.rota .rota-via{
@@ -12384,6 +12451,25 @@ body.na-titulo #app{max-width:none;margin:0;padding:0;display:block;min-height:1
   -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
 }
 .tt-jornada{display:flex;flex-direction:column;gap:14px}
+/* as três jornadas deste navegador: uma aba cada, a escolhida acesa */
+.tt-slots{display:grid;grid-template-columns:repeat(3, minmax(0, 1fr));gap:6px;margin:-4px -4px 0}
+.tt-slot{
+  display:flex;flex-direction:column;gap:1px;min-width:0;padding:7px 9px 8px;border-radius:12px;cursor:pointer;text-align:left;
+  border:0;background:rgba(0,0,0,.26);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1);color:#e4ecff;
+  transition:background .15s var(--suave), box-shadow .15s var(--suave);
+}
+.tt-slot:hover{background:rgba(255,255,255,.08)}
+.tt-slot:focus-visible{outline:2px solid var(--tt-amarelo);outline-offset:2px}
+.tt-slot small{font:700 10px/1.2 var(--letra-hud, var(--fonte));letter-spacing:.1em;text-transform:uppercase;color:#a9b8de}
+.tt-slot b{font:700 14.5px/1.25 var(--letra-hud, var(--fonte));color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tt-slot span{font:500 11.5px/1.25 var(--letra-hud, var(--fonte));color:#c9d6f5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tt-slot.vazia b{font-weight:600;color:#a9b8de}
+.tt-slot.sel{background:rgba(255,203,5,.13);box-shadow:inset 0 0 0 2px var(--tt-amarelo), 0 4px 12px -6px rgba(255,203,5,.6)}
+.tt-slot.sel small{color:var(--tt-amarelo)}
+/* trocou de jornada: o cartão novo e o time do chão entram já, sem a
+   espera da abertura (que é pra quem acabou de chegar) */
+.tela-titulo.trocou .tt-btn{animation-delay:0s}
+.tela-titulo.trocou .tt-pk{animation-delay:calc(var(--i, 0) * .08s)}
 .tt-j-topo{display:flex;align-items:center;gap:13px;min-width:0}
 .tt-j-rosto{
   position:relative;flex:0 0 auto;width:64px;height:64px;border-radius:50%;overflow:hidden;display:grid;place-items:center;
@@ -16931,6 +17017,19 @@ html[data-moldura="grafite"], body[data-moldura="grafite"]{
 .save-troca > svg.icone{color:var(--destaque)}
 .save-ok b{overflow-wrap:anywhere}
 .save-botoes{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+/* onde a jornada do arquivo entra: os três lugares deste navegador */
+.save-onde{margin:16px 0 8px}
+.save-lugares{display:grid;grid-template-columns:repeat(3, minmax(0, 1fr));gap:6px}
+.save-lugar{
+  display:flex;flex-direction:column;gap:1px;min-width:0;padding:8px 10px;border-radius:var(--raio-sm);cursor:pointer;text-align:left;
+  background:color-mix(in srgb, var(--bg) 55%, transparent);border:1px solid color-mix(in srgb, var(--borda) 80%, transparent);color:var(--texto);
+}
+.save-lugar small{font:700 10px/1.2 var(--letra-hud, var(--fonte));letter-spacing:.1em;text-transform:uppercase;color:var(--texto-fraco)}
+.save-lugar b{font:700 14px/1.25 var(--letra-hud, var(--fonte));white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.save-lugar.vazio b{font-weight:600;color:var(--texto-fraco)}
+.save-lugar.sel{border-color:var(--destaque);box-shadow:inset 0 0 0 1px var(--destaque);background:color-mix(in srgb, var(--destaque) 12%, transparent)}
+.save-lugar.sel small{color:var(--destaque)}
+.save-lugar:focus-visible{outline:2px solid var(--destaque);outline-offset:2px}
 .save-botoes .btn{display:inline-flex;align-items:center;gap:7px;font-family:var(--letra-hud);font-weight:600}
 .save-botoes .btn > svg.icone{width:17px;height:17px}
 label.btn{cursor:pointer}
@@ -17086,6 +17185,13 @@ svg.icone{flex:0 0 auto;width:18px;height:18px;vertical-align:-3px}
 
 /* texto corrido: um pouco maior e com ar, que é onde o jogo passa o tempo */
 .narrativa{font-size:15.5px;line-height:1.68;color:color-mix(in srgb, var(--texto) 92%, var(--texto-fraco))}
+/* o tamanho da letra de ler (Ajustes; js/ui/letra.js): a história, as
+   falas, as opções e os avisos crescem com o desenho em volta. Nada de
+   bloco zoomado dentro de outro (o aviso que é fala já é .narrativa) */
+.narrativa, #app .escolhas, .avisos > .aviso{zoom:var(--letra-ler, 1)}
+/* o bloco com zoom mede a coluna na conta dele: sem dividir, a letra
+   maior alargava o texto além da placa */
+.painel:has(> .cap-cabecalho) > :is(.narrativa, .escolhas){max-width:calc(48rem / var(--letra-ler, 1))}
 .narrativa p{margin-bottom:12px}
 .narrativa strong{color:var(--texto);font-weight:650}
 
@@ -18341,6 +18447,10 @@ h3.sec-ir{--sec:#5aa7ff}
 .vel-opcoes button.sel{background:var(--destaque);color:#11131f;box-shadow:0 2px 0 rgba(0,0,0,.35)}
 .vel-opcoes button:focus-visible{outline:2px solid var(--destaque);outline-offset:2px;box-shadow:none}
 .modal.ajustes .ajuste-vel .sussurro{margin:0;font-size:12.5px;color:var(--texto-fraco)}
+/* a amostra da letra: um parágrafo da história, que cresce na hora */
+.modal.ajustes .letra-amostra{padding:10px 12px;border-radius:10px;background:color-mix(in srgb, var(--bg) 55%, transparent)}
+.modal.ajustes .letra-amostra p{margin:0;animation:none}
+.letra-opcoes button{min-width:0}
 
 /* a rota: a trilha dos capítulos, cada nó na cor do tom do capítulo */
 .modal.rota .rota-via{
@@ -18988,6 +19098,25 @@ body.na-titulo #app{max-width:none;margin:0;padding:0;display:block;min-height:1
   -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
 }
 .tt-jornada{display:flex;flex-direction:column;gap:14px}
+/* as três jornadas deste navegador: uma aba cada, a escolhida acesa */
+.tt-slots{display:grid;grid-template-columns:repeat(3, minmax(0, 1fr));gap:6px;margin:-4px -4px 0}
+.tt-slot{
+  display:flex;flex-direction:column;gap:1px;min-width:0;padding:7px 9px 8px;border-radius:12px;cursor:pointer;text-align:left;
+  border:0;background:rgba(0,0,0,.26);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1);color:#e4ecff;
+  transition:background .15s var(--suave), box-shadow .15s var(--suave);
+}
+.tt-slot:hover{background:rgba(255,255,255,.08)}
+.tt-slot:focus-visible{outline:2px solid var(--tt-amarelo);outline-offset:2px}
+.tt-slot small{font:700 10px/1.2 var(--letra-hud, var(--fonte));letter-spacing:.1em;text-transform:uppercase;color:#a9b8de}
+.tt-slot b{font:700 14.5px/1.25 var(--letra-hud, var(--fonte));color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tt-slot span{font:500 11.5px/1.25 var(--letra-hud, var(--fonte));color:#c9d6f5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tt-slot.vazia b{font-weight:600;color:#a9b8de}
+.tt-slot.sel{background:rgba(255,203,5,.13);box-shadow:inset 0 0 0 2px var(--tt-amarelo), 0 4px 12px -6px rgba(255,203,5,.6)}
+.tt-slot.sel small{color:var(--tt-amarelo)}
+/* trocou de jornada: o cartão novo e o time do chão entram já, sem a
+   espera da abertura (que é pra quem acabou de chegar) */
+.tela-titulo.trocou .tt-btn{animation-delay:0s}
+.tela-titulo.trocou .tt-pk{animation-delay:calc(var(--i, 0) * .08s)}
 .tt-j-topo{display:flex;align-items:center;gap:13px;min-width:0}
 .tt-j-rosto{
   position:relative;flex:0 0 auto;width:64px;height:64px;border-radius:50%;overflow:hidden;display:grid;place-items:center;
@@ -23535,6 +23664,19 @@ html[data-moldura="grafite"], body[data-moldura="grafite"]{
 .save-troca > svg.icone{color:var(--destaque)}
 .save-ok b{overflow-wrap:anywhere}
 .save-botoes{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+/* onde a jornada do arquivo entra: os três lugares deste navegador */
+.save-onde{margin:16px 0 8px}
+.save-lugares{display:grid;grid-template-columns:repeat(3, minmax(0, 1fr));gap:6px}
+.save-lugar{
+  display:flex;flex-direction:column;gap:1px;min-width:0;padding:8px 10px;border-radius:var(--raio-sm);cursor:pointer;text-align:left;
+  background:color-mix(in srgb, var(--bg) 55%, transparent);border:1px solid color-mix(in srgb, var(--borda) 80%, transparent);color:var(--texto);
+}
+.save-lugar small{font:700 10px/1.2 var(--letra-hud, var(--fonte));letter-spacing:.1em;text-transform:uppercase;color:var(--texto-fraco)}
+.save-lugar b{font:700 14px/1.25 var(--letra-hud, var(--fonte));white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.save-lugar.vazio b{font-weight:600;color:var(--texto-fraco)}
+.save-lugar.sel{border-color:var(--destaque);box-shadow:inset 0 0 0 1px var(--destaque);background:color-mix(in srgb, var(--destaque) 12%, transparent)}
+.save-lugar.sel small{color:var(--destaque)}
+.save-lugar:focus-visible{outline:2px solid var(--destaque);outline-offset:2px}
 .save-botoes .btn{display:inline-flex;align-items:center;gap:7px;font-family:var(--letra-hud);font-weight:600}
 .save-botoes .btn > svg.icone{width:17px;height:17px}
 label.btn{cursor:pointer}
@@ -23690,6 +23832,13 @@ svg.icone{flex:0 0 auto;width:18px;height:18px;vertical-align:-3px}
 
 /* texto corrido: um pouco maior e com ar, que é onde o jogo passa o tempo */
 .narrativa{font-size:15.5px;line-height:1.68;color:color-mix(in srgb, var(--texto) 92%, var(--texto-fraco))}
+/* o tamanho da letra de ler (Ajustes; js/ui/letra.js): a história, as
+   falas, as opções e os avisos crescem com o desenho em volta. Nada de
+   bloco zoomado dentro de outro (o aviso que é fala já é .narrativa) */
+.narrativa, #app .escolhas, .avisos > .aviso{zoom:var(--letra-ler, 1)}
+/* o bloco com zoom mede a coluna na conta dele: sem dividir, a letra
+   maior alargava o texto além da placa */
+.painel:has(> .cap-cabecalho) > :is(.narrativa, .escolhas){max-width:calc(48rem / var(--letra-ler, 1))}
 .narrativa p{margin-bottom:12px}
 .narrativa strong{color:var(--texto);font-weight:650}
 
@@ -24945,6 +25094,10 @@ h3.sec-ir{--sec:#5aa7ff}
 .vel-opcoes button.sel{background:var(--destaque);color:#11131f;box-shadow:0 2px 0 rgba(0,0,0,.35)}
 .vel-opcoes button:focus-visible{outline:2px solid var(--destaque);outline-offset:2px;box-shadow:none}
 .modal.ajustes .ajuste-vel .sussurro{margin:0;font-size:12.5px;color:var(--texto-fraco)}
+/* a amostra da letra: um parágrafo da história, que cresce na hora */
+.modal.ajustes .letra-amostra{padding:10px 12px;border-radius:10px;background:color-mix(in srgb, var(--bg) 55%, transparent)}
+.modal.ajustes .letra-amostra p{margin:0;animation:none}
+.letra-opcoes button{min-width:0}
 
 /* a rota: a trilha dos capítulos, cada nó na cor do tom do capítulo */
 .modal.rota .rota-via{
@@ -25592,6 +25745,25 @@ body.na-titulo #app{max-width:none;margin:0;padding:0;display:block;min-height:1
   -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
 }
 .tt-jornada{display:flex;flex-direction:column;gap:14px}
+/* as três jornadas deste navegador: uma aba cada, a escolhida acesa */
+.tt-slots{display:grid;grid-template-columns:repeat(3, minmax(0, 1fr));gap:6px;margin:-4px -4px 0}
+.tt-slot{
+  display:flex;flex-direction:column;gap:1px;min-width:0;padding:7px 9px 8px;border-radius:12px;cursor:pointer;text-align:left;
+  border:0;background:rgba(0,0,0,.26);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1);color:#e4ecff;
+  transition:background .15s var(--suave), box-shadow .15s var(--suave);
+}
+.tt-slot:hover{background:rgba(255,255,255,.08)}
+.tt-slot:focus-visible{outline:2px solid var(--tt-amarelo);outline-offset:2px}
+.tt-slot small{font:700 10px/1.2 var(--letra-hud, var(--fonte));letter-spacing:.1em;text-transform:uppercase;color:#a9b8de}
+.tt-slot b{font:700 14.5px/1.25 var(--letra-hud, var(--fonte));color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tt-slot span{font:500 11.5px/1.25 var(--letra-hud, var(--fonte));color:#c9d6f5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tt-slot.vazia b{font-weight:600;color:#a9b8de}
+.tt-slot.sel{background:rgba(255,203,5,.13);box-shadow:inset 0 0 0 2px var(--tt-amarelo), 0 4px 12px -6px rgba(255,203,5,.6)}
+.tt-slot.sel small{color:var(--tt-amarelo)}
+/* trocou de jornada: o cartão novo e o time do chão entram já, sem a
+   espera da abertura (que é pra quem acabou de chegar) */
+.tela-titulo.trocou .tt-btn{animation-delay:0s}
+.tela-titulo.trocou .tt-pk{animation-delay:calc(var(--i, 0) * .08s)}
 .tt-j-topo{display:flex;align-items:center;gap:13px;min-width:0}
 .tt-j-rosto{
   position:relative;flex:0 0 auto;width:64px;height:64px;border-radius:50%;overflow:hidden;display:grid;place-items:center;
@@ -30139,6 +30311,19 @@ html[data-moldura="grafite"], body[data-moldura="grafite"]{
 .save-troca > svg.icone{color:var(--destaque)}
 .save-ok b{overflow-wrap:anywhere}
 .save-botoes{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+/* onde a jornada do arquivo entra: os três lugares deste navegador */
+.save-onde{margin:16px 0 8px}
+.save-lugares{display:grid;grid-template-columns:repeat(3, minmax(0, 1fr));gap:6px}
+.save-lugar{
+  display:flex;flex-direction:column;gap:1px;min-width:0;padding:8px 10px;border-radius:var(--raio-sm);cursor:pointer;text-align:left;
+  background:color-mix(in srgb, var(--bg) 55%, transparent);border:1px solid color-mix(in srgb, var(--borda) 80%, transparent);color:var(--texto);
+}
+.save-lugar small{font:700 10px/1.2 var(--letra-hud, var(--fonte));letter-spacing:.1em;text-transform:uppercase;color:var(--texto-fraco)}
+.save-lugar b{font:700 14px/1.25 var(--letra-hud, var(--fonte));white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.save-lugar.vazio b{font-weight:600;color:var(--texto-fraco)}
+.save-lugar.sel{border-color:var(--destaque);box-shadow:inset 0 0 0 1px var(--destaque);background:color-mix(in srgb, var(--destaque) 12%, transparent)}
+.save-lugar.sel small{color:var(--destaque)}
+.save-lugar:focus-visible{outline:2px solid var(--destaque);outline-offset:2px}
 .save-botoes .btn{display:inline-flex;align-items:center;gap:7px;font-family:var(--letra-hud);font-weight:600}
 .save-botoes .btn > svg.icone{width:17px;height:17px}
 label.btn{cursor:pointer}
@@ -30294,6 +30479,13 @@ svg.icone{flex:0 0 auto;width:18px;height:18px;vertical-align:-3px}
 
 /* texto corrido: um pouco maior e com ar, que é onde o jogo passa o tempo */
 .narrativa{font-size:15.5px;line-height:1.68;color:color-mix(in srgb, var(--texto) 92%, var(--texto-fraco))}
+/* o tamanho da letra de ler (Ajustes; js/ui/letra.js): a história, as
+   falas, as opções e os avisos crescem com o desenho em volta. Nada de
+   bloco zoomado dentro de outro (o aviso que é fala já é .narrativa) */
+.narrativa, #app .escolhas, .avisos > .aviso{zoom:var(--letra-ler, 1)}
+/* o bloco com zoom mede a coluna na conta dele: sem dividir, a letra
+   maior alargava o texto além da placa */
+.painel:has(> .cap-cabecalho) > :is(.narrativa, .escolhas){max-width:calc(48rem / var(--letra-ler, 1))}
 .narrativa p{margin-bottom:12px}
 .narrativa strong{color:var(--texto);font-weight:650}
 
@@ -31549,6 +31741,10 @@ h3.sec-ir{--sec:#5aa7ff}
 .vel-opcoes button.sel{background:var(--destaque);color:#11131f;box-shadow:0 2px 0 rgba(0,0,0,.35)}
 .vel-opcoes button:focus-visible{outline:2px solid var(--destaque);outline-offset:2px;box-shadow:none}
 .modal.ajustes .ajuste-vel .sussurro{margin:0;font-size:12.5px;color:var(--texto-fraco)}
+/* a amostra da letra: um parágrafo da história, que cresce na hora */
+.modal.ajustes .letra-amostra{padding:10px 12px;border-radius:10px;background:color-mix(in srgb, var(--bg) 55%, transparent)}
+.modal.ajustes .letra-amostra p{margin:0;animation:none}
+.letra-opcoes button{min-width:0}
 
 /* a rota: a trilha dos capítulos, cada nó na cor do tom do capítulo */
 .modal.rota .rota-via{
@@ -32196,6 +32392,25 @@ body.na-titulo #app{max-width:none;margin:0;padding:0;display:block;min-height:1
   -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
 }
 .tt-jornada{display:flex;flex-direction:column;gap:14px}
+/* as três jornadas deste navegador: uma aba cada, a escolhida acesa */
+.tt-slots{display:grid;grid-template-columns:repeat(3, minmax(0, 1fr));gap:6px;margin:-4px -4px 0}
+.tt-slot{
+  display:flex;flex-direction:column;gap:1px;min-width:0;padding:7px 9px 8px;border-radius:12px;cursor:pointer;text-align:left;
+  border:0;background:rgba(0,0,0,.26);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1);color:#e4ecff;
+  transition:background .15s var(--suave), box-shadow .15s var(--suave);
+}
+.tt-slot:hover{background:rgba(255,255,255,.08)}
+.tt-slot:focus-visible{outline:2px solid var(--tt-amarelo);outline-offset:2px}
+.tt-slot small{font:700 10px/1.2 var(--letra-hud, var(--fonte));letter-spacing:.1em;text-transform:uppercase;color:#a9b8de}
+.tt-slot b{font:700 14.5px/1.25 var(--letra-hud, var(--fonte));color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tt-slot span{font:500 11.5px/1.25 var(--letra-hud, var(--fonte));color:#c9d6f5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tt-slot.vazia b{font-weight:600;color:#a9b8de}
+.tt-slot.sel{background:rgba(255,203,5,.13);box-shadow:inset 0 0 0 2px var(--tt-amarelo), 0 4px 12px -6px rgba(255,203,5,.6)}
+.tt-slot.sel small{color:var(--tt-amarelo)}
+/* trocou de jornada: o cartão novo e o time do chão entram já, sem a
+   espera da abertura (que é pra quem acabou de chegar) */
+.tela-titulo.trocou .tt-btn{animation-delay:0s}
+.tela-titulo.trocou .tt-pk{animation-delay:calc(var(--i, 0) * .08s)}
 .tt-j-topo{display:flex;align-items:center;gap:13px;min-width:0}
 .tt-j-rosto{
   position:relative;flex:0 0 auto;width:64px;height:64px;border-radius:50%;overflow:hidden;display:grid;place-items:center;
@@ -36743,6 +36958,19 @@ html[data-moldura="grafite"], body[data-moldura="grafite"]{
 .save-troca > svg.icone{color:var(--destaque)}
 .save-ok b{overflow-wrap:anywhere}
 .save-botoes{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+/* onde a jornada do arquivo entra: os três lugares deste navegador */
+.save-onde{margin:16px 0 8px}
+.save-lugares{display:grid;grid-template-columns:repeat(3, minmax(0, 1fr));gap:6px}
+.save-lugar{
+  display:flex;flex-direction:column;gap:1px;min-width:0;padding:8px 10px;border-radius:var(--raio-sm);cursor:pointer;text-align:left;
+  background:color-mix(in srgb, var(--bg) 55%, transparent);border:1px solid color-mix(in srgb, var(--borda) 80%, transparent);color:var(--texto);
+}
+.save-lugar small{font:700 10px/1.2 var(--letra-hud, var(--fonte));letter-spacing:.1em;text-transform:uppercase;color:var(--texto-fraco)}
+.save-lugar b{font:700 14px/1.25 var(--letra-hud, var(--fonte));white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.save-lugar.vazio b{font-weight:600;color:var(--texto-fraco)}
+.save-lugar.sel{border-color:var(--destaque);box-shadow:inset 0 0 0 1px var(--destaque);background:color-mix(in srgb, var(--destaque) 12%, transparent)}
+.save-lugar.sel small{color:var(--destaque)}
+.save-lugar:focus-visible{outline:2px solid var(--destaque);outline-offset:2px}
 .save-botoes .btn{display:inline-flex;align-items:center;gap:7px;font-family:var(--letra-hud);font-weight:600}
 .save-botoes .btn > svg.icone{width:17px;height:17px}
 label.btn{cursor:pointer}
@@ -36898,6 +37126,13 @@ svg.icone{flex:0 0 auto;width:18px;height:18px;vertical-align:-3px}
 
 /* texto corrido: um pouco maior e com ar, que é onde o jogo passa o tempo */
 .narrativa{font-size:15.5px;line-height:1.68;color:color-mix(in srgb, var(--texto) 92%, var(--texto-fraco))}
+/* o tamanho da letra de ler (Ajustes; js/ui/letra.js): a história, as
+   falas, as opções e os avisos crescem com o desenho em volta. Nada de
+   bloco zoomado dentro de outro (o aviso que é fala já é .narrativa) */
+.narrativa, #app .escolhas, .avisos > .aviso{zoom:var(--letra-ler, 1)}
+/* o bloco com zoom mede a coluna na conta dele: sem dividir, a letra
+   maior alargava o texto além da placa */
+.painel:has(> .cap-cabecalho) > :is(.narrativa, .escolhas){max-width:calc(48rem / var(--letra-ler, 1))}
 .narrativa p{margin-bottom:12px}
 .narrativa strong{color:var(--texto);font-weight:650}
 
@@ -38153,6 +38388,10 @@ h3.sec-ir{--sec:#5aa7ff}
 .vel-opcoes button.sel{background:var(--destaque);color:#11131f;box-shadow:0 2px 0 rgba(0,0,0,.35)}
 .vel-opcoes button:focus-visible{outline:2px solid var(--destaque);outline-offset:2px;box-shadow:none}
 .modal.ajustes .ajuste-vel .sussurro{margin:0;font-size:12.5px;color:var(--texto-fraco)}
+/* a amostra da letra: um parágrafo da história, que cresce na hora */
+.modal.ajustes .letra-amostra{padding:10px 12px;border-radius:10px;background:color-mix(in srgb, var(--bg) 55%, transparent)}
+.modal.ajustes .letra-amostra p{margin:0;animation:none}
+.letra-opcoes button{min-width:0}
 
 /* a rota: a trilha dos capítulos, cada nó na cor do tom do capítulo */
 .modal.rota .rota-via{
@@ -38800,6 +39039,25 @@ body.na-titulo #app{max-width:none;margin:0;padding:0;display:block;min-height:1
   -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
 }
 .tt-jornada{display:flex;flex-direction:column;gap:14px}
+/* as três jornadas deste navegador: uma aba cada, a escolhida acesa */
+.tt-slots{display:grid;grid-template-columns:repeat(3, minmax(0, 1fr));gap:6px;margin:-4px -4px 0}
+.tt-slot{
+  display:flex;flex-direction:column;gap:1px;min-width:0;padding:7px 9px 8px;border-radius:12px;cursor:pointer;text-align:left;
+  border:0;background:rgba(0,0,0,.26);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1);color:#e4ecff;
+  transition:background .15s var(--suave), box-shadow .15s var(--suave);
+}
+.tt-slot:hover{background:rgba(255,255,255,.08)}
+.tt-slot:focus-visible{outline:2px solid var(--tt-amarelo);outline-offset:2px}
+.tt-slot small{font:700 10px/1.2 var(--letra-hud, var(--fonte));letter-spacing:.1em;text-transform:uppercase;color:#a9b8de}
+.tt-slot b{font:700 14.5px/1.25 var(--letra-hud, var(--fonte));color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tt-slot span{font:500 11.5px/1.25 var(--letra-hud, var(--fonte));color:#c9d6f5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tt-slot.vazia b{font-weight:600;color:#a9b8de}
+.tt-slot.sel{background:rgba(255,203,5,.13);box-shadow:inset 0 0 0 2px var(--tt-amarelo), 0 4px 12px -6px rgba(255,203,5,.6)}
+.tt-slot.sel small{color:var(--tt-amarelo)}
+/* trocou de jornada: o cartão novo e o time do chão entram já, sem a
+   espera da abertura (que é pra quem acabou de chegar) */
+.tela-titulo.trocou .tt-btn{animation-delay:0s}
+.tela-titulo.trocou .tt-pk{animation-delay:calc(var(--i, 0) * .08s)}
 .tt-j-topo{display:flex;align-items:center;gap:13px;min-width:0}
 .tt-j-rosto{
   position:relative;flex:0 0 auto;width:64px;height:64px;border-radius:50%;overflow:hidden;display:grid;place-items:center;
@@ -46768,6 +47026,9 @@ function fmtDin(n){ return Number(n || 0).toLocaleString('pt-BR'); }
 /* depois da história, quanto vale um capítulo de espera no PokéNav */
 const DIAS_POR_CAPITULO_NAV = 7;
 
+/* quantas jornadas cabem num navegador, cada uma no seu lugar */
+const JORNADAS_NO_NAVEGADOR = 3;
+
 const Estado = {
   dados: null,
 
@@ -47449,24 +47710,55 @@ const Estado = {
     return avisos;
   },
 
-  /* ---------- SAVE / LOAD ---------- */
+  /* ---------- SAVE / LOAD ----------
+     Três jornadas por navegador, cada uma no seu lugar. A primeira mora
+     na chave de sempre (pokerpg_save_auto), as outras em _auto2 e
+     _auto3. 'auto' quer dizer "a jornada em uso" (Estado.jornada, que o
+     navegador lembra em pokerpg_jornada): quem salva, carrega ou apaga
+     com 'auto' fala dela; um número fala de uma jornada certa. */
+  get jornada(){
+    if (!this._jornada){
+      let n = 1;
+      try { n = parseInt(localStorage.getItem('pokerpg_jornada'), 10) || 1; } catch(e){}
+      this._jornada = n >= 1 && n <= JORNADAS_NO_NAVEGADOR ? n : 1;
+    }
+    return this._jornada;
+  },
+  usarJornada(n){
+    n = parseInt(n, 10);
+    if (!(n >= 1 && n <= JORNADAS_NO_NAVEGADOR)) return;
+    this._jornada = n;
+    try { localStorage.setItem('pokerpg_jornada', String(n)); } catch(e){}
+  },
+  chaveDoSave(slot='auto'){
+    const n = slot === 'auto' ? this.jornada : parseInt(slot, 10) || 1;
+    return 'pokerpg_save_' + (n > 1 ? 'auto' + n : 'auto');
+  },
+  /* o save de uma jornada, cru e só pra mostrar (a abertura e o Carregar
+     jogo): sem converter, e quem mostra passa tudo pelo esc */
+  saveCru(slot='auto'){
+    try {
+      const d = JSON.parse(localStorage.getItem(this.chaveDoSave(slot)));
+      return d && typeof d === 'object' && d.jogador && typeof d.jogador === 'object' ? d : null;
+    } catch(e){ return null; }
+  },
   salvar(slot='auto'){
     /* luta em andamento vai junto (js/engine/luta-salva.js) */
     if (typeof LutaSalva !== 'undefined') LutaSalva.anotar(this.dados);
     try {
-      localStorage.setItem('pokerpg_save_' + slot, JSON.stringify(this.dados));
+      localStorage.setItem(this.chaveDoSave(slot), JSON.stringify(this.dados));
       return true;
     } catch(e){ return false; }
   },
   carregar(slot='auto'){
     let raw = null;
-    try { raw = localStorage.getItem('pokerpg_save_' + slot); } catch(e){ return false; }
+    try { raw = localStorage.getItem(this.chaveDoSave(slot)); } catch(e){ return false; }
     return raw ? this.abrir(raw) : false;
   },
   /* grava um save inteiro num slot, do jeito que veio: quem lê e
      converte é o carregar (o arquivo do Carregar jogo entra assim) */
   gravar(dados, slot='auto'){
-    try { localStorage.setItem('pokerpg_save_' + slot, JSON.stringify(dados)); return true; }
+    try { localStorage.setItem(this.chaveDoSave(slot), JSON.stringify(dados)); return true; }
     catch(e){ return false; }
   },
   /* O save (texto ou objeto) vira o jogo. As conversões de save velho
@@ -47667,10 +47959,10 @@ const Estado = {
     } catch(e){ return false; }
   },
   existeSave(slot='auto'){
-    try { return !!localStorage.getItem('pokerpg_save_' + slot); } catch(e){ return false; }
+    try { return !!localStorage.getItem(this.chaveDoSave(slot)); } catch(e){ return false; }
   },
   apagarSave(slot='auto'){
-    try { localStorage.removeItem('pokerpg_save_' + slot); } catch(e){}
+    try { localStorage.removeItem(this.chaveDoSave(slot)); } catch(e){}
   },
 
   /* ---------- CÓDICE DE FINAIS (sobrevive entre partidas) ---------- */
@@ -50123,13 +50415,9 @@ const ArquivoSave = {
     return andar(v, 0);
   },
 
-  /* a jornada que está no navegador agora, pra dizer o que vai sair */
-  doNavegador(){
-    try {
-      const raw = localStorage.getItem('pokerpg_save_auto');
-      const d = raw ? JSON.parse(raw) : null;
-      return d && d.jogador ? d : null;
-    } catch(e){ return null; }
+  /* a jornada que está num lugar do navegador, pra dizer o que vai sair */
+  doNavegador(slot='auto'){
+    return Estado.saveCru(slot);
   },
 
   /* O arquivo entra no lugar do save do navegador e a jornada segue
@@ -50137,7 +50425,8 @@ const ArquivoSave = {
      Navegador que não deixa gravar roda a jornada direto da memória
      (devolve false, e o Jogo.continuar avisa pra salvar antes de
      fechar). */
-  usar(dados, finais){
+  usar(dados, finais, jornada){
+    if (jornada) Estado.usarJornada(jornada);
     Estado.somarFinais(finais);
     const gravou = Estado.gravar(dados);
     if (typeof UI !== 'undefined' && UI.fecharModal) UI.fecharModal(true);
@@ -141439,6 +141728,70 @@ const Velocidade = {
 Velocidade.aplicar();
 
 
+/* ===== js/ui/letra.js ===== */
+/* ============================================================
+   TAMANHO DA LETRA — a letra de ler
+   Quem joga escolhe nos Ajustes (Pequena, Normal, Grande, Maior), e a
+   escolha fica neste navegador ('jc-letra'). Cresce o que se lê: a
+   história, as falas, as opções, a descrição do lugar, os avisos e a
+   conversa do PokéNav. Quem manda é a variável --letra-ler, posta na
+   raiz, que o CSS usa como zoom desses blocos: o rosto do balão e a
+   bolinha da tecla crescem junto, e a caixa não desanda. O alto da
+   tela, a luta, as fichas e as janelas de número ficam do tamanho
+   delas, porque são de relance.
+   ============================================================ */
+const TAMANHOS_DA_LETRA = [
+  {id:'pequena', nome:'Pequena', f:.9},
+  {id:'normal',  nome:'Normal',  f:1},
+  {id:'grande',  nome:'Grande',  f:1.15},
+  {id:'maior',   nome:'Maior',   f:1.3}
+];
+
+const Letra = {
+  atual(){
+    let v = null;
+    try { v = localStorage.getItem('jc-letra'); } catch (e) {}
+    return TAMANHOS_DA_LETRA.some(t => t.id === v) ? v : 'normal';
+  },
+  fator(id){
+    return (TAMANHOS_DA_LETRA.find(t => t.id === (id || this.atual())) || {f:1}).f;
+  },
+  aplicar(){
+    const raiz = typeof document !== 'undefined' && document.documentElement;
+    if (raiz && raiz.style && typeof raiz.style.setProperty === 'function')
+      raiz.style.setProperty('--letra-ler', String(this.fator()));
+  },
+  definir(id){
+    if (!TAMANHOS_DA_LETRA.some(t => t.id === id)) return;
+    try { localStorage.setItem('jc-letra', id); } catch (e) {}
+    this.aplicar();
+    document.querySelectorAll('.letra-opcoes button').forEach(b => {
+      const sel = b.dataset.letra === id;
+      b.classList.toggle('sel', sel);
+      b.setAttribute('aria-checked', String(sel));
+    });
+  },
+  /* a escolha nos Ajustes, com uma amostra que cresce na hora */
+  ajustes(){
+    const a = this.atual();
+    return `<h3>Leitura</h3>
+      <div class="ajuste-vel ajuste-letra">
+        <div class="ajuste-vel-linha">
+          <span class="ajuste-vel-rot" id="letra-rot">Tamanho da letra</span>
+          <div class="vel-opcoes letra-opcoes" role="radiogroup" aria-labelledby="letra-rot">
+            ${TAMANHOS_DA_LETRA.map(t => `<button type="button" role="radio" data-letra="${t.id}" class="${t.id === a ? 'sel' : ''}"
+              aria-checked="${t.id === a}" onclick="Letra.definir('${t.id}')">${t.nome}</button>`).join('')}
+          </div>
+        </div>
+        <div class="narrativa letra-amostra"><p>A Rota 1 sai de Pallet pelo norte, entre cercas baixas e mato alto. Um Pidgey levanta do capim quando você passa.</p></div>
+        <p class="sussurro">Muda a história, as falas, as opções e os avisos. O alto da tela, a luta e as fichas ficam do tamanho delas.</p>
+      </div>`;
+  }
+};
+
+Letra.aplicar();
+
+
 /* ===== js/ui/interface.js ===== */
 /* ============================================================
    INTERFACE
@@ -141851,17 +142204,62 @@ const UI = {
   telaInicial(){
     this.tom('leve'); this.limpar();
     document.body.classList.add('na-abertura', 'na-titulo');
-    const temSave = Estado.existeSave('auto');
-    /* o save do navegador, só pra mostrar: lido cru, sem converter, e
-       tudo pelo esc (pode ter vindo de arquivo de outra pessoa) */
-    let save = null;
-    if (temSave){
-      try { save = JSON.parse(localStorage.getItem('pokerpg_save_auto')); } catch (e) { save = null; }
-      if (!save || typeof save !== 'object' || !save.jogador) save = null;
-    }
-    const e = x => this.esc(String(x == null ? '' : x));
+    const {jornada, menu, desfile} = this.partesDaAbertura(true);
     const estrelas = Array.from({length:30}, () =>
       `<i class="tt-estrela" style="--x:${(Math.random()*100).toFixed(1)}%;--y:${(Math.random()*46).toFixed(1)}%;--t:${(1.6+Math.random()*2.8).toFixed(2)}s;--a:${(Math.random()*3).toFixed(2)}s;--s:${Math.random() < .25 ? 3 : 2}px"></i>`).join('');
+
+    this.add(`<div class="tela-titulo" ondragover="event.preventDefault()" ondrop="UI.soltarSave(event)"
+        style="--tt-cena:url('${Arenas.caminho('prado.png')}')">
+      <div class="tt-cena" aria-hidden="true"></div>
+      <div class="tt-ceu" aria-hidden="true">${estrelas}</div>
+      <div class="tt-voo" aria-hidden="true">${imgSprite({dex:18, nome:'Pidgeot'}, 'frente', {classe:'tt-voo-arte'})}</div>
+      <header class="tt-topo">
+        <h1 class="tt-logo" aria-label="PokéRPG">
+          <span class="tt-poke" data-t="Poké">Poké</span><span class="tt-rpg" data-t="RPG">RPG</span>
+        </h1>
+        <div class="tt-sub">Sua jornada Pokémon começa agora!</div>
+      </header>
+      <main class="tt-corpo">
+        ${jornada}
+        <nav class="tt-menu tt-e" style="--i:1" aria-label="Opções">${menu}</nav>
+      </main>
+      <div class="tt-desfile" aria-hidden="true">${desfile}</div>
+      <footer class="tt-pe">Jogo de fã · regras do Pokérole 3.0 · arte da PokeAPI e do Pokémon Showdown</footer>
+    </div>`);
+  },
+
+  /* tocar noutra jornada troca só o cartão, o menu e o chão: o céu, as
+     estrelas e o Pidgeot continuam onde estavam */
+  escolherJornada(n){
+    Estado.usarJornada(n);
+    const t = document.querySelector('.tela-titulo');
+    const j = t && t.querySelector('.tt-jornada'), m = t && t.querySelector('.tt-menu'), d = t && t.querySelector('.tt-desfile');
+    if (!j || !m || !d) return this.telaInicial();
+    const p = this.partesDaAbertura(false);
+    t.classList.add('trocou');
+    j.outerHTML = p.jornada; m.innerHTML = p.menu; d.innerHTML = p.desfile;
+    const aba = t.querySelector(`.tt-slot[data-n="${Estado.jornada}"]`);
+    if (aba) aba.focus();
+  },
+
+  /* o cartão da jornada escolhida (com as abas das três), o menu e quem
+     fica no chão. O save é lido cru, sem converter, e tudo vai pelo esc
+     (pode ter vindo de arquivo de outra pessoa) */
+  partesDaAbertura(animar){
+    const temSave = Estado.existeSave('auto');
+    const save = temSave ? Estado.saveCru('auto') : null;
+    const e = x => this.esc(String(x == null ? '' : x));
+    const entra = animar ? ' tt-e' : '';
+
+    /* as três jornadas deste navegador, uma aba cada */
+    const abas = Array.from({length:JORNADAS_NO_NAVEGADOR}, (_, i) => {
+      const n = i + 1, s = Estado.saveCru(n), tem = !!s || Estado.existeSave(n), sel = n === Estado.jornada;
+      const quem = s ? (s.jogador.nome || 'Sem nome') : tem ? 'Salva' : 'Vazia';
+      const onde = s ? this.capituloDoSave(s, true) : tem ? '' : 'começar aqui';
+      return `<button type="button" class="tt-slot${sel ? ' sel' : ''}${tem ? '' : ' vazia'}" role="tab" aria-selected="${sel}"
+          data-n="${n}" onclick="UI.escolherJornada(${n})"><small>Jornada ${n}</small><b>${e(quem)}</b>${onde ? `<span>${e(onde)}</span>` : ''}</button>`;
+    }).join('');
+    const slots = `<div class="tt-slots" role="tablist" aria-label="Jornadas neste navegador">${abas}</div>`;
 
     /* quem fica no chão: o seu time, vivo, ou os de sempre */
     const time = save && Array.isArray(save.time)
@@ -141892,7 +142290,8 @@ const UI = {
         [time.length, 'no time', 'bola'],
         ['₽ ' + din.toLocaleString('pt-BR'), 'na carteira', 'moeda']]
         .map(([v, k, ic]) => `<span class="tt-num">${svgIcone(ic)}<b>${e(v)}</b><small>${e(k)}</small></span>`).join('');
-      jornada = save ? `<section class="tt-jornada tt-e" style="--i:0" aria-label="Jornada salva">
+      jornada = save ? `<section class="tt-jornada${entra}" style="--i:0" aria-label="Jornada ${Estado.jornada}, salva">
+          ${slots}
           <div class="tt-j-topo">
             <span class="tt-j-rosto${rosto ? '' : ' vazio'}" aria-hidden="true">${rosto ? `<img src="${e(rosto)}" alt="" onerror="this.parentNode.classList.add('vazio');this.remove()">` : ''}<b>${e((j.nome || '?').slice(0, 1).toUpperCase())}</b></span>
             <span class="tt-j-quem">
@@ -141905,8 +142304,9 @@ const UI = {
           <div class="tt-j-num">${numeros}</div>
           <button class="tt-btn tt-principal" onclick="Jogo.continuar()">Continuar</button>
         </section>`
-        : `<section class="tt-jornada tt-e" style="--i:0" aria-label="Jornada salva">
-          <div class="tt-j-novo"><b>Uma jornada neste navegador</b><span>O save não abriu aqui na abertura, mas pode abrir no jogo.</span></div>
+        : `<section class="tt-jornada${entra}" style="--i:0" aria-label="Jornada ${Estado.jornada}, salva">
+          ${slots}
+          <div class="tt-j-novo"><b>Uma jornada neste lugar</b><span>O save não abriu aqui na abertura, mas pode abrir no jogo.</span></div>
           <button class="tt-btn tt-principal" onclick="Jogo.continuar()">Continuar</button>
         </section>`;
     } else {
@@ -141917,7 +142317,8 @@ const UI = {
         ['pokedex', `${DEX_KANTO_IDS.length + 1} Pokémon pra encontrar, cada um com o seu jeito`],
         ['dado', 'Batalha no dado, nas regras do Pokérole 3.0']
       ].map(([ic, t]) => `<li>${svgIcone(ic)}<span>${e(t)}</span></li>`).join('');
-      jornada = `<section class="tt-jornada nova tt-e" style="--i:0">
+      jornada = `<section class="tt-jornada nova${entra}" style="--i:0" aria-label="Jornada ${Estado.jornada}, vazia">
+          ${slots}
           <div class="tt-j-novo"><b>Kanto, ano 2000</b><span>Você tem quinze anos, uma mochila nas costas e a estrada que sai da sua cidade.</span></div>
           <ul class="tt-j-sobre">${sobre}</ul>
           <button class="tt-btn tt-principal" onclick="Jogo.novo()">Começar</button>
@@ -141928,32 +142329,14 @@ const UI = {
     const fins = Estado.finaisDescobertos().filter(ehFinalDeVerdade).length, totalFins = contarFinais().total;
     const op = (ic, rot, nota, acao) => `<button class="tt-op" onclick="${acao}">${svgIcone(ic, 'tt-op-ic')}<span class="tt-op-txt"><b>${rot}</b><small>${nota}</small></span></button>`;
     const menu = [
-      temSave ? op('bandeira', 'Nova jornada', 'a de agora sai deste navegador', 'Jogo.novo()') : '',
+      temSave ? op('bandeira', 'Nova jornada', `no lugar da Jornada ${Estado.jornada}, que sai`, 'Jogo.novo()') : '',
       op('carregar', 'Carregar jogo', 'um arquivo .json do Salvar', 'UI.modalCarregar(true)'),
       op('pergunta', 'Tutorial', 'a primeira hora, passo a passo', 'UI.modalTutorial()'),
       op('dado', 'Regras', 'todas as contas do jogo', 'UI.modalRegras()'),
       op('liga', 'Códice de finais', `${fins} de ${totalFins} descobertos`, 'UI.modalFinais()'),
-      op('engrenagem', 'Ajustes', 'som, cor do jogo e velocidade da luta', 'UI.modalAjustes()')
+      op('engrenagem', 'Ajustes', 'som, cor, letra e velocidade da luta', 'UI.modalAjustes()')
     ].filter(Boolean).join('');
-
-    this.add(`<div class="tela-titulo" ondragover="event.preventDefault()" ondrop="UI.soltarSave(event)"
-        style="--tt-cena:url('${Arenas.caminho('prado.png')}')">
-      <div class="tt-cena" aria-hidden="true"></div>
-      <div class="tt-ceu" aria-hidden="true">${estrelas}</div>
-      <div class="tt-voo" aria-hidden="true">${imgSprite({dex:18, nome:'Pidgeot'}, 'frente', {classe:'tt-voo-arte'})}</div>
-      <header class="tt-topo">
-        <h1 class="tt-logo" aria-label="PokéRPG">
-          <span class="tt-poke" data-t="Poké">Poké</span><span class="tt-rpg" data-t="RPG">RPG</span>
-        </h1>
-        <div class="tt-sub">Sua jornada Pokémon começa agora!</div>
-      </header>
-      <main class="tt-corpo">
-        ${jornada}
-        <nav class="tt-menu tt-e" style="--i:1" aria-label="Opções">${menu}</nav>
-      </main>
-      <div class="tt-desfile" aria-hidden="true">${desfile}</div>
-      <footer class="tt-pe">Jogo de fã · regras do Pokérole 3.0 · arte da PokeAPI e do Pokémon Showdown</footer>
-    </div>`);
+    return {jornada, menu, desfile};
   },
 
   /* ========================================================
@@ -145784,6 +146167,7 @@ const UI = {
         </div>
       </div>
       ${this.ajustesDeSom()}
+      ${typeof Letra !== 'undefined' ? Letra.ajustes() : ''}
       ${Velocidade.ajustes()}
       ${Estado.dados ? `<h3>Salvar</h3>
       <button class="escolha com-icone" onclick="UI.modalSalvar()">${svgIcone('salvar')}<span class="esc-rot">Baixar o save<small class="esc-det">a jornada inteira num arquivo .json · na abertura, Carregar jogo lê de volta</small></span></button>` : ''}
@@ -145852,7 +146236,7 @@ const UI = {
     this.modal('Salvar', `
       ${this.cartaoDoSave(Estado.dados, 'salvo agora')}
       <div id="save-status">${this.statusDoSave(nome)}</div>
-      <p class="sussurro">O jogo também se salva sozinho neste navegador, a cada passo. O arquivo é uma cópia deste momento: pra continuar noutro aparelho ou noutro navegador, abra o jogo lá e escolha <b>Carregar jogo</b>, na abertura.</p>
+      <p class="sussurro">O jogo também se salva sozinho neste navegador, a cada passo, no lugar da Jornada ${Estado.jornada}. O arquivo é uma cópia deste momento: pra continuar noutro aparelho ou noutro navegador, abra o jogo lá e escolha <b>Carregar jogo</b>, na abertura.</p>
       <div class="save-botoes">
         <button class="btn destaque" onclick="UI.salvarDeNovo()">${svgIcone('salvar')}Baixar de novo</button>
         <button class="btn" onclick="UI.copiarSave()">Copiar o texto</button>
@@ -145888,6 +146272,9 @@ const UI = {
      trocar, e a do navegador, se tiver, diz que vai sair. */
   modalCarregar(abrirSeletor){
     this._saveLido = null;
+    /* o lugar onde o arquivo entra: o da jornada em uso, se está vazio;
+       senão o primeiro vazio; sem nenhum vazio, o da jornada em uso */
+    this.alvoPadraoDoCarregar();
     this.janelaCarregar(null);
     if (abrirSeletor){ const i = document.getElementById('save-arquivo'); if (i) i.click(); }
   },
@@ -145902,14 +146289,24 @@ const UI = {
     const entrada = `<input type="file" id="save-arquivo" class="vis-oculto" accept=".json,application/json,text/plain"
       onchange="UI.lerArquivoDeSave(this.files && this.files[0]); this.value=''">`;
     if (lido && lido.dados){
-      const atual = ArquivoSave.doNavegador();
-      const troca = atual ? `<p class="save-troca">${svgIcone('alerta')}<span>A jornada que está neste navegador (<b>${this.esc(atual.jogador.nome || 'sem nome')}</b>, ${this.esc(this.capituloDoSave(atual, true))}) sai, e esta entra no lugar dela. Pra guardar a de agora, feche, entre nela pelo Continuar e use Salvar antes.</span></p>` : '';
+      const alvo = this._alvoCarregar || Estado.jornada;
+      const atual = ArquivoSave.doNavegador(alvo);
+      /* em qual dos três lugares ela entra: tocar escolhe */
+      const lugares = Array.from({length:JORNADAS_NO_NAVEGADOR}, (_, i) => {
+        const n = i + 1, s = Estado.saveCru(n), tem = !!s || Estado.existeSave(n);
+        return `<button type="button" class="save-lugar${n === alvo ? ' sel' : ''}${tem ? '' : ' vazio'}" role="radio" aria-checked="${n === alvo}"
+          onclick="UI.alvoDoCarregar(${n})"><small>Jornada ${n}</small><b>${this.esc(s ? (s.jogador.nome || 'Sem nome') : tem ? 'Salva' : 'Vazia')}</b></button>`;
+      }).join('');
+      const onde = `<div class="save-lugares" role="radiogroup" aria-label="Onde a jornada entra">${lugares}</div>`;
+      const troca = atual ? `<p class="save-troca">${svgIcone('alerta')}<span>A Jornada ${alvo} deste navegador (<b>${this.esc(atual.jogador.nome || 'sem nome')}</b>, ${this.esc(this.capituloDoSave(atual, true))}) sai, e esta entra no lugar dela. Pra guardar as duas, escolha um lugar vazio.</span></p>`
+        : Estado.existeSave(alvo) ? `<p class="save-troca">${svgIcone('alerta')}<span>A jornada que está na Jornada ${alvo} sai, e esta entra no lugar dela.</span></p>` : '';
       /* o códice separa final de epílogo, e a nota também */
       const fins = (lido.finais || []).filter(ehFinalDeVerdade).length, eps = (lido.finais || []).filter(ehEpilogo).length;
       const codice = [fins ? `${fins} ${fins === 1 ? 'final' : 'finais'}` : '', eps ? `${eps} ${eps === 1 ? 'epílogo' : 'epílogos'}` : ''].filter(Boolean);
       const notas = [lido.salvoEm ? 'baixado em ' + this.dataDoSave(lido.salvoEm) : '',
         codice.length ? `${codice.join(' e ')} no códice, que somam com os deste navegador` : ''].filter(Boolean);
-      return `${this.cartaoDoSave(lido.dados, notas)}${troca}
+      return `${this.cartaoDoSave(lido.dados, notas)}
+        <h3 class="save-onde">Onde ela entra</h3>${onde}${troca}
         <div class="save-botoes">
           <button class="btn destaque" onclick="UI.usarSaveLido()">${svgIcone('carregar')}Carregar esta jornada</button>
           <label class="btn" for="save-arquivo">Escolher outro arquivo</label>
@@ -145924,7 +146321,17 @@ const UI = {
         <textarea id="save-colado" class="save-texto" rows="5" spellcheck="false" aria-label="Texto do save"></textarea>
         <button class="btn mini" onclick="UI.lerTextoDeSave(document.getElementById('save-colado').value)">Ler o texto</button>
       </details>
-      <p class="sussurro">Carregar põe a jornada do arquivo no lugar da que está neste navegador, do jeito que ela estava quando foi baixada.</p>`;
+      <p class="sussurro">Carregar põe a jornada do arquivo num dos três lugares deste navegador, do jeito que ela estava quando foi baixada. Depois de ler o arquivo, você escolhe qual.</p>`;
+  },
+  alvoPadraoDoCarregar(){
+    const vazio = n => !Estado.existeSave(n);
+    const lugares = Array.from({length:JORNADAS_NO_NAVEGADOR}, (_, i) => i + 1);
+    this._alvoCarregar = vazio(Estado.jornada) ? Estado.jornada : (lugares.find(vazio) || Estado.jornada);
+  },
+  alvoDoCarregar(n){
+    this._alvoCarregar = n;
+    const caixa = document.getElementById('save-carregar');
+    if (caixa && this._saveLido) caixa.innerHTML = this.corpoCarregar(this._saveLido);
   },
   lerArquivoDeSave(arq){
     if (!arq) return;
@@ -145949,7 +146356,7 @@ const UI = {
     this._saveLido = lido && lido.dados ? lido : null;
     const caixa = document.getElementById('save-carregar');
     if (caixa) caixa.innerHTML = this.corpoCarregar(lido);
-    else this.janelaCarregar(lido);
+    else { this.alvoPadraoDoCarregar(); this.janelaCarregar(lido); }
     /* erro no texto colado: a caixa fica aberta com o texto, pra
        consertar ali mesmo (o valor vai pelo DOM, nunca pelo esc, que
        resolveria as marcas de gênero de dentro do save) */
@@ -145960,7 +146367,7 @@ const UI = {
     const lido = this._saveLido;
     if (!lido) return;
     this._saveLido = null;
-    ArquivoSave.usar(lido.dados, lido.finais);
+    ArquivoSave.usar(lido.dados, lido.finais, this._alvoCarregar || Estado.jornada);
   },
 
   /* ========================================================
@@ -147405,8 +147812,9 @@ const UI = {
       <h3>O que não dá pra desfazer</h3>
       ${L('Salvar', 'automático, a cada passo — não existe voltar atrás, a não ser por um arquivo baixado antes')}
       ${L('Arquivo', 'o Salvar, no alto da tela, baixa a jornada num .json · Carregar jogo, na abertura, lê de volta')}
-      ${L('Nova jornada', 'apaga a atual')}
-      ${L('Carregar jogo', 'troca a atual pela do arquivo')}
+      ${L('Jornadas', 'três por navegador, cada uma no seu lugar · as abas no alto do cartão da abertura escolhem qual')}
+      ${L('Nova jornada', 'apaga a do lugar escolhido · as outras ficam')}
+      ${L('Carregar jogo', 'põe a do arquivo no lugar que você escolher · se ele tinha uma, ela sai')}
       ${L('Insígnia, morte, reputação', 'ficam')}`;
   },
 
@@ -147976,9 +148384,11 @@ const UI = {
 
       <h3>Salvar e carregar</h3>
       <div class="linha"><span class="k">No navegador</span><span class="v">sozinho, a cada passo, por cima do anterior · não tem botão e não tem volta</span></div>
+      <div class="linha"><span class="k">Jornadas</span><span class="v">três por navegador, cada uma no seu lugar · a aba no alto do cartão da abertura escolhe qual o Continuar abre, e o navegador lembra a última · Nova jornada e a tela de fim só apagam a do lugar escolhido</span></div>
       <div class="linha"><span class="k">Salvar</span><span class="v">no alto da tela e nos Ajustes · baixa a jornada inteira num arquivo .json: ficha, time, PC, cemitério, mochila, Pokédex, PokéNav, relógio, quem você conhece e a luta, se você estiver numa · e o códice de finais junto</span></div>
-      <div class="linha"><span class="k">Carregar jogo</span><span class="v">na abertura · escolhe o arquivo, arrasta ele pra tela ou cola o texto · mostra de quem é a jornada antes de trocar</span></div>
-      <div class="linha"><span class="k">O que sai</span><span class="v">a jornada que estava no navegador · o arquivo entra no lugar dela</span></div>
+      <div class="linha"><span class="k">Carregar jogo</span><span class="v">na abertura · escolhe o arquivo, arrasta ele pra tela ou cola o texto · mostra de quem é a jornada e pergunta em qual dos três lugares ela entra (o vazio vem marcado)</span></div>
+      <div class="linha"><span class="k">O que sai</span><span class="v">a jornada que estava no lugar escolhido, se tinha uma · o arquivo entra no lugar dela, e as outras duas ficam</span></div>
+      <div class="linha"><span class="k">Tamanho da letra</span><span class="v">nos Ajustes · Pequena, Normal, Grande ou Maior · cresce a história, as falas, as opções e os avisos; o alto da tela, a luta e as fichas ficam do tamanho delas · fica neste navegador, valendo pras três jornadas</span></div>
       <div class="linha"><span class="k">Códice de finais</span><span class="v">não sai: os finais do arquivo somam com os do navegador, e nenhum some</span></div>
       <div class="linha"><span class="k">Arquivo antigo</span><span class="v">passa pelas mesmas conversões de quem recarrega a página</span></div>
       <div class="linha"><span class="k">Arquivo recusado</span><span class="v">JSON quebrado · sem treinador, time ou mochila · Pokémon danificado · código no meio do texto · feito numa versão mais nova do jogo</span></div>
@@ -161844,7 +162254,8 @@ const Jogo = {
   },
 
   novo(){
-    if (Estado.existeSave('auto') && !confirm('Isso apaga a jornada atual. Continuar?')) return;
+    const atual = Estado.saveCru('auto');
+    if (Estado.existeSave('auto') && !confirm(`Isso apaga a Jornada ${Estado.jornada}${atual && atual.jogador.nome ? ` (${atual.jogador.nome})` : ''} deste navegador. Continuar?`)) return;
     Estado.apagarSave('auto');
     Estado.dados = null;
     UI.telaCriacao();

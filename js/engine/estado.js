@@ -567,6 +567,9 @@ function fmtDin(n){ return Number(n || 0).toLocaleString('pt-BR'); }
 /* depois da história, quanto vale um capítulo de espera no PokéNav */
 const DIAS_POR_CAPITULO_NAV = 7;
 
+/* quantas jornadas cabem num navegador, cada uma no seu lugar */
+const JORNADAS_NO_NAVEGADOR = 3;
+
 const Estado = {
   dados: null,
 
@@ -1248,24 +1251,55 @@ const Estado = {
     return avisos;
   },
 
-  /* ---------- SAVE / LOAD ---------- */
+  /* ---------- SAVE / LOAD ----------
+     Três jornadas por navegador, cada uma no seu lugar. A primeira mora
+     na chave de sempre (pokerpg_save_auto), as outras em _auto2 e
+     _auto3. 'auto' quer dizer "a jornada em uso" (Estado.jornada, que o
+     navegador lembra em pokerpg_jornada): quem salva, carrega ou apaga
+     com 'auto' fala dela; um número fala de uma jornada certa. */
+  get jornada(){
+    if (!this._jornada){
+      let n = 1;
+      try { n = parseInt(localStorage.getItem('pokerpg_jornada'), 10) || 1; } catch(e){}
+      this._jornada = n >= 1 && n <= JORNADAS_NO_NAVEGADOR ? n : 1;
+    }
+    return this._jornada;
+  },
+  usarJornada(n){
+    n = parseInt(n, 10);
+    if (!(n >= 1 && n <= JORNADAS_NO_NAVEGADOR)) return;
+    this._jornada = n;
+    try { localStorage.setItem('pokerpg_jornada', String(n)); } catch(e){}
+  },
+  chaveDoSave(slot='auto'){
+    const n = slot === 'auto' ? this.jornada : parseInt(slot, 10) || 1;
+    return 'pokerpg_save_' + (n > 1 ? 'auto' + n : 'auto');
+  },
+  /* o save de uma jornada, cru e só pra mostrar (a abertura e o Carregar
+     jogo): sem converter, e quem mostra passa tudo pelo esc */
+  saveCru(slot='auto'){
+    try {
+      const d = JSON.parse(localStorage.getItem(this.chaveDoSave(slot)));
+      return d && typeof d === 'object' && d.jogador && typeof d.jogador === 'object' ? d : null;
+    } catch(e){ return null; }
+  },
   salvar(slot='auto'){
     /* luta em andamento vai junto (js/engine/luta-salva.js) */
     if (typeof LutaSalva !== 'undefined') LutaSalva.anotar(this.dados);
     try {
-      localStorage.setItem('pokerpg_save_' + slot, JSON.stringify(this.dados));
+      localStorage.setItem(this.chaveDoSave(slot), JSON.stringify(this.dados));
       return true;
     } catch(e){ return false; }
   },
   carregar(slot='auto'){
     let raw = null;
-    try { raw = localStorage.getItem('pokerpg_save_' + slot); } catch(e){ return false; }
+    try { raw = localStorage.getItem(this.chaveDoSave(slot)); } catch(e){ return false; }
     return raw ? this.abrir(raw) : false;
   },
   /* grava um save inteiro num slot, do jeito que veio: quem lê e
      converte é o carregar (o arquivo do Carregar jogo entra assim) */
   gravar(dados, slot='auto'){
-    try { localStorage.setItem('pokerpg_save_' + slot, JSON.stringify(dados)); return true; }
+    try { localStorage.setItem(this.chaveDoSave(slot), JSON.stringify(dados)); return true; }
     catch(e){ return false; }
   },
   /* O save (texto ou objeto) vira o jogo. As conversões de save velho
@@ -1466,10 +1500,10 @@ const Estado = {
     } catch(e){ return false; }
   },
   existeSave(slot='auto'){
-    try { return !!localStorage.getItem('pokerpg_save_' + slot); } catch(e){ return false; }
+    try { return !!localStorage.getItem(this.chaveDoSave(slot)); } catch(e){ return false; }
   },
   apagarSave(slot='auto'){
-    try { localStorage.removeItem('pokerpg_save_' + slot); } catch(e){}
+    try { localStorage.removeItem(this.chaveDoSave(slot)); } catch(e){}
   },
 
   /* ---------- CÓDICE DE FINAIS (sobrevive entre partidas) ---------- */

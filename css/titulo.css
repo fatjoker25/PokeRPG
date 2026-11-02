@@ -89,6 +89,25 @@ body.na-titulo #app{max-width:none;margin:0;padding:0;display:block;min-height:1
   -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
 }
 .tt-jornada{display:flex;flex-direction:column;gap:14px}
+/* as três jornadas deste navegador: uma aba cada, a escolhida acesa */
+.tt-slots{display:grid;grid-template-columns:repeat(3, minmax(0, 1fr));gap:6px;margin:-4px -4px 0}
+.tt-slot{
+  display:flex;flex-direction:column;gap:1px;min-width:0;padding:7px 9px 8px;border-radius:12px;cursor:pointer;text-align:left;
+  border:0;background:rgba(0,0,0,.26);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1);color:#e4ecff;
+  transition:background .15s var(--suave), box-shadow .15s var(--suave);
+}
+.tt-slot:hover{background:rgba(255,255,255,.08)}
+.tt-slot:focus-visible{outline:2px solid var(--tt-amarelo);outline-offset:2px}
+.tt-slot small{font:700 10px/1.2 var(--letra-hud, var(--fonte));letter-spacing:.1em;text-transform:uppercase;color:#a9b8de}
+.tt-slot b{font:700 14.5px/1.25 var(--letra-hud, var(--fonte));color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tt-slot span{font:500 11.5px/1.25 var(--letra-hud, var(--fonte));color:#c9d6f5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tt-slot.vazia b{font-weight:600;color:#a9b8de}
+.tt-slot.sel{background:rgba(255,203,5,.13);box-shadow:inset 0 0 0 2px var(--tt-amarelo), 0 4px 12px -6px rgba(255,203,5,.6)}
+.tt-slot.sel small{color:var(--tt-amarelo)}
+/* trocou de jornada: o cartão novo e o time do chão entram já, sem a
+   espera da abertura (que é pra quem acabou de chegar) */
+.tela-titulo.trocou .tt-btn{animation-delay:0s}
+.tela-titulo.trocou .tt-pk{animation-delay:calc(var(--i, 0) * .08s)}
 .tt-j-topo{display:flex;align-items:center;gap:13px;min-width:0}
 .tt-j-rosto{
   position:relative;flex:0 0 auto;width:64px;height:64px;border-radius:50%;overflow:hidden;display:grid;place-items:center;

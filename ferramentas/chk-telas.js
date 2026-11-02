@@ -280,6 +280,23 @@ const SUSPEITO = [
   if (!(await page.evaluate(() => !!(Estado.dados && Estado.dados.jogador.nome === 'Lia' && document.querySelector('.topo'))))){
     onde = 'carregar/usar'; anota('carregar', 'o arquivo carregado não voltou pro jogo');
   }
+  /* as três jornadas: a aba vazia tem o Começar, e o arquivo carregado
+     noutro lugar não apaga a que já estava */
+  await tentar('abertura/jornada 2', () => { UI.fecharModal && UI.fecharModal(true); UI.telaInicial(); UI.escolherJornada(2); });
+  if (!(await page.evaluate(() => Estado.jornada === 2 && [...document.querySelectorAll('.tela-titulo button')].some(b => /Começar/.test(b.textContent))
+      && /Lia/.test((document.querySelector('.tt-slot[data-n="1"]') || {}).textContent || '')))){
+    onde = 'abertura/jornada 2'; anota('jornadas', 'a aba da jornada vazia não tem o Começar, ou a aba da 1 não diz de quem ela é');
+  }
+  await tentar('carregar/noutro lugar', a => { UI.modalCarregar(false); UI.lerTextoDeSave(a); UI.alvoDoCarregar(3); UI.usarSaveLido(); }, arquivo);
+  if (!(await page.evaluate(() => Estado.jornada === 3 && Estado.existeSave(1) && Estado.existeSave(3) && !Estado.existeSave(2)))){
+    onde = 'carregar/noutro lugar'; anota('jornadas', 'carregar na Jornada 3 não ficou na 3, ou apagou a 1');
+  }
+  await tentar('abertura/três abas', () => { Estado.apagarSave(3); Estado.usarJornada(1); UI.telaInicial(); });
+  /* a letra maior na história, no PokéNav e nos Ajustes, e de volta ao normal */
+  await restaurar();
+  await tentar('letra/maior', () => { Letra.definir('maior'); Exploracao.tela([{tipo:'info', texto:fala('a enfermeira', 'Pronto.')}]); UI.modalAjustes(); });
+  await tentar('letra/maior/pokénav', () => UI.modalNav());
+  await page.evaluate(() => { UI.fecharModal && UI.fecharModal(true); Letra.definir('normal'); });
 
   /* ---------- lojas ---------- */
   for (const id of await page.evaluate(() => Object.keys(LOJAS))){

@@ -82,7 +82,8 @@ const Jogo = {
   },
 
   novo(){
-    if (Estado.existeSave('auto') && !confirm('Isso apaga a jornada atual. Continuar?')) return;
+    const atual = Estado.saveCru('auto');
+    if (Estado.existeSave('auto') && !confirm(`Isso apaga a Jornada ${Estado.jornada}${atual && atual.jogador.nome ? ` (${atual.jogador.nome})` : ''} deste navegador. Continuar?`)) return;
     Estado.apagarSave('auto');
     Estado.dados = null;
     UI.telaCriacao();

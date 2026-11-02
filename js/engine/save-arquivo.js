@@ -122,13 +122,9 @@ const ArquivoSave = {
     return andar(v, 0);
   },
 
-  /* a jornada que está no navegador agora, pra dizer o que vai sair */
-  doNavegador(){
-    try {
-      const raw = localStorage.getItem('pokerpg_save_auto');
-      const d = raw ? JSON.parse(raw) : null;
-      return d && d.jogador ? d : null;
-    } catch(e){ return null; }
+  /* a jornada que está num lugar do navegador, pra dizer o que vai sair */
+  doNavegador(slot='auto'){
+    return Estado.saveCru(slot);
   },
 
   /* O arquivo entra no lugar do save do navegador e a jornada segue
@@ -136,7 +132,8 @@ const ArquivoSave = {
      Navegador que não deixa gravar roda a jornada direto da memória
      (devolve false, e o Jogo.continuar avisa pra salvar antes de
      fechar). */
-  usar(dados, finais){
+  usar(dados, finais, jornada){
+    if (jornada) Estado.usarJornada(jornada);
     Estado.somarFinais(finais);
     const gravou = Estado.gravar(dados);
     if (typeof UI !== 'undefined' && UI.fecharModal) UI.fecharModal(true);
