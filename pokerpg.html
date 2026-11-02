@@ -148149,13 +148149,13 @@ const UI = {
       <div class="linha"><span class="k">Par morre</span><span class="v">quem fica perde 20 de moral</span></div>
       <h3>Morte</h3>
       <p class="sussurro">Em combate normal é desmaio — ele volta. Morte permanente só acontece por escolha narrativa: escudo, abandono, sacrifício, treino forçado, não intervir. Treinador com 0 HP = fim de jogo permanente.</p>
-      ${Object.values(Estado.dados.lendarios||{}).some(l=>l.encontros || l.visto) ? `
+      ${Estado.dados && Object.values(Estado.dados.lendarios||{}).some(l=>l.encontros || l.visto) ? `
       <h3>Captura de lendários</h3>
       <div class="linha"><span class="k">Bola</span><span class="v">só Ultra Ball e Master Ball · qualquer outra bate e cai aberta, e gasta${Estado.dados.flags.bola_fraca_em_lendario ? ' — você viu' : ''}</span></div>
       <div class="linha"><span class="k">Ultra Ball</span><span class="v">a mesma regra da captura comum, com o mesmo bônus · lendário conta no mínimo como Ás: pede 10 · com o HP cheio, não tem como</span></div>
       <div class="linha"><span class="k">Master Ball</span><span class="v">fecha sem rolagem</span></div>
       <div class="linha"><span class="k">Insistir</span><span class="v">cada Pokébola que ele rompe conta · na terceira, quem estava neutro fica hostil</span></div>
-      ${Object.values(Estado.dados.lendarios||{}).some(l=>l.quebrouBola) ? '<p class="sussurro">E existem coisas que simplesmente quebram a Pokébola no ar.</p>' : ''}
+      ${Estado.dados && Object.values(Estado.dados.lendarios||{}).some(l=>l.quebrouBola) ? '<p class="sussurro">E existem coisas que simplesmente quebram a Pokébola no ar.</p>' : ''}
       <h3>Lendário no cinto</h3>
       <div class="linha"><span class="k">Alguém viu</span><span class="v">${this.esc('seis vezes em dez, e sempre pra quem já é {Famoso|Famosa} ou {Temido|Temida} · quem era {Respeitado|Respeitada} ou mais vira notícia boa,')} o resto vira notícia ruim, e as duas andam muito · a Patrulha conversa na primeira vez, manda devolver na segunda e emite ordem de detenção na terceira</span></div>
       <div class="linha"><span class="k">Ninguém viu</span><span class="v">a reputação espera · dois capítulos depois alguém fala, e aí conta</span></div>
@@ -148200,7 +148200,7 @@ const UI = {
       <div class="linha"><span class="k">Ordem do time</span><span class="v">em Seu time, toque num Pokémon: "Pôr na frente" leva ele pro primeiro lugar, e "Trocar de lugar" troca ele com o próximo que você tocar · o primeiro do time é quem entra na briga</span></div>
       <div class="linha"><span class="k">Na luta</span><span class="v">Time e Mochila do alto da tela ficam trancados: troca e item são pela barra de ações, e gastam o turno · as Pokébolas na ficha mostram quem de cada lado ainda está de pé</span></div>
       <div class="linha"><span class="k">Comprar</span><span class="v">a loja pergunta antes de cobrar</span></div>
-      <div class="linha"><span class="k">Pokédex de Kanto</span><span class="v">150 casas · o 151 e os lendários de Johto que cruzam Kanto só ganham casa depois que a Pokédex registra um deles · a Nacional mostra os 251</span></div>
+      <div class="linha"><span class="k">Pokédex de Kanto</span><span class="v">150 casas · o 151 e os lendários de Johto que cruzam Kanto só ganham casa depois que a Pokédex registra um deles · a Nacional mostra os 251, e três deles não passam por Kanto: Lugia, Celebi e Unown são de Johto</span></div>
       <div class="linha"><span class="k">O que entra pro seu time</span><span class="v">catalogado na hora</span></div>
       <p class="sussurro">A natureza é do indivíduo, não da espécie. Nos seus, ela aparece sozinha depois de alguns combates juntos, por um teste de Percepção — quanto mais tempo com você, mais fácil. Nos dos outros, só com Percepção 3 ou mais: aí você lê pelo jeito que eles se mexem, sem dado, quando entram. A Pokédex lê espécie, tipo e atributos, não temperamento, e treinador nenhum entrega o temperamento do próprio time.</p>
       <p class="sussurro">O tipo de quem está do outro lado fica escondido até a espécie estar catalogada. Sem Pokédex, só Percepção 4 e Intelecto 4 juntos leem o tipo de um desconhecido. Espécie já catalogada não se cadastra de novo: a Pokédex só abre a ficha.</p>

@@ -1048,6 +1048,15 @@ não ronda: a história nunca põe ele na sua frente. O texto da entrada
 repara no sinal (frio, estalo, calor) e na disposição dele; não conta onde
 mais ele anda.
 
+**Lugia, Celebi e Unown ficam pra Johto**, de propósito (foi pedido
+assim): não têm caminho em Kanto, nem de mato, nem de evento, nem de
+troca. A Pokédex Nacional mostra os 251 e fecha em 248, como a de
+FireRed, que lista quem só sai noutra região, e a folha de regras diz
+isso na linha da Pokédex. Os outros 97 de Johto saem do sorteio de
+Johto depois que a região abre (`sorteioJohto`, um quarto dos
+encontros, pelo tipo do ambiente), da creche e das evoluções da 2ª
+geração. Não é lacuna pra fechar com evento.
+
 **Captura é a do Pokérole 3.0, pra todo Pokémon** (`captura.js`): o
 selo da bola (`SELO_DA_BOLA`: Poké Ball 4d6, Great 6d6, Ultra 8d6) + os
 bônus da condição (`bonusDaCondicao`: metade do HP 1, 1 HP 2, 1 por
@@ -1955,8 +1964,15 @@ Pikachu e Squirtle —, com as GIFs na escala do jogo (`--q` é o quadro).
   grande cresce (`zoom`), senão sobra noite em volta. O `.json` do
   Salvar pode ser solto em qualquer lugar dela (`UI.soltarSave`).
 
-`chk-telas` abre a abertura com e sem jornada, troca de aba e carrega
-um arquivo noutro lugar sem apagar a jornada que já estava.
+Na abertura **ainda não tem jogo** (`Estado.dados` é nulo até o
+Continuar): janela que o menu dela abre (Regras, Tutorial, Códice,
+Ajustes, Carregar) não lê o jogo sem conferir. A folha de regras
+quebrava ali, lendo os lendários de um jogo que não existia, e só abria
+pra quem já tinha entrado numa jornada.
+
+`chk-telas` abre a abertura com e sem jornada, cada janela do menu sem
+jogo carregado, troca de aba e carrega um arquivo noutro lugar sem
+apagar a jornada que já estava.
 
 ## A festa da vitória
 Luta grande ganha tem festa antes da tela de resultado

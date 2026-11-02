@@ -273,6 +273,10 @@ const SUSPEITO = [
   if (!(await page.evaluate(() => [...document.querySelectorAll('.tela-titulo button')].some(b => /Começar/.test(b.textContent))))){
     onde = 'abertura/sem jornada'; anota('abertura', 'sem jornada salva, a abertura não tem o Começar');
   }
+  /* quem acabou de abrir o jogo: nada carregado ainda (Estado.dados nulo),
+     e cada janela do menu da abertura tem que abrir assim */
+  for (const f of ['modalRegras', 'modalTutorial', 'modalFinais', 'modalAjustes'])
+    await tentar('abertura/sem jogo/' + f, x => { UI.fecharModal && UI.fecharModal(true); Estado.dados = null; UI.telaInicial(); UI[x](); }, f);
   await tentar('carregar', () => UI.modalCarregar(false));
   for (const [r, t] of [['quebrado', '{"jogo":"PokéRPG","save":{'], ['outro json', '{"a":1}'], ['save cru', snap], ['arquivo', arquivo]])
     await tentar('carregar/' + r, x => UI.lerTextoDeSave(x), t);
