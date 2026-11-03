@@ -254,6 +254,9 @@ const SUSPEITO = [
       }
       const alvo = {cabelo:'rosa', olhos:'verde', pele:'escura', camisa:'verde', calca:'vermelho', sapatos:'azul', detalhes:'amarelo'};
       for (const [parte, v] of Object.entries(alvo)) UI.crAcao('cor', {parte, v});
+      /* a seção inteira redesenhada (escolher a mesma foto de novo): a
+         grade tem que continuar como o desenho tem */
+      UI.crAcao('retrato', {v:inteira});
       const img = document.querySelector('.cr-prov-sprite');
       const mini = document.querySelector(`.cr-retrato[data-v="${inteira}"] img`);
       if (!img || !/^data:image\/png/.test(img.src)) return falhas.concat('a foto grande não saiu nas cores escolhidas');
