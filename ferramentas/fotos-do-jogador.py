@@ -1,101 +1,88 @@
 #!/usr/bin/env python3
-"""fotos-do-jogador — a foto do cartão com cor de cabelo, pele e roupa.
+"""fotos-do-jogador — a foto do cartão, parte por parte, na cor que você quer.
 
-Escolhido o corpo, quem joga troca a cor do cabelo, da pele e da roupa,
+Escolhido o corpo, quem joga troca a cor do cabelo, dos olhos, da pele,
+da camisa, da calça, dos sapatos e dos detalhes (boné, cinto, faixa…),
 e o desenho continua sendo o do artista: só a paleta muda. Pra isso
 cada foto de sprites_nds/npcs/jogador/ vira um PNG de paleta em que
-cada cor de cabelo, de pele e de roupa tem a sua casa, separada da
-mesma cor usada noutro lugar (o preto do cabelo não é o preto do
-sapato). O jogo troca só essas casas, no próprio PNG (FotoJogador, em
-js/ui/foto-jogador.js): sem canvas, que em file:// suja e não deixa
-ler a imagem, e sem redesenhar pixel nenhum.
+cada cor de cada parte tem a sua casa, separada da mesma cor usada
+noutro lugar (o marrom do cabelo não é o marrom da bota). O jogo troca
+só essas casas, no próprio PNG (FotoJogador, em js/ui/foto-jogador.js):
+sem canvas, que em file:// suja e não deixa ler a imagem, e sem
+redesenhar pixel nenhum.
 
-GRUPOS diz, por foto, quais cores (na ordem de `ordem_das_cores`) são
-cabelo, pele e roupa, e onde: `<parte>_onde` 'cabeca' ou 'corpo' corta
-na altura `corte` da figura (0,30 se não diz), e `<parte>_caixa`
-[x0, y0, x1, y1] fecha num retângulo. Foram anotados à mão, cor por
-cor, numa folha que isola cada cor no lugar dela, e conferidos com
-cabelo rosa, roupa verde e pele clara e escura nas 48 fotos. A cor em
-duas partes é decidida pelo lugar (a da mochileira é cabelo em cima e
-bermuda embaixo); se as duas regiões se cruzam, ganha a primeira de
-PARTES. Cor que está na lista e não aparece no lugar dela (a sombra do
-boné, quando a roupa é só do corpo) não ganha casa, mas conta na escala
-do escuro ao claro, como contou quando a foto foi conferida. `n` é
-quantas cores a foto tem: se o arquivo mudar, o número muda e o
-gerador para, porque os índices deixam de valer.
+Onde fica cada parte foi anotado à mão, pixel a pixel, em
+ferramentas/fotos-partes.py (o formato está lá). A cor nova é uma escala
+(matiz, saturação, do escuro ao claro), e cada cor da parte cai no ponto
+dela, pela claridade, entre a mais escura e a mais clara da parte: a
+sombra e o brilho ficam onde o artista pôs. Parte de uma cor só (a
+pupila preta, quase sempre) cai no meio da escala.
 
 A cor que a foto tem como veio (a que vai na descrição de quem não
-troca) sai da mais perto entre as de CORES_DA_FOTO; `nome_<parte>`
-escolhe à mão quando o olho discorda da conta (o cabelo da gótica é
-azul-violeta na conta e roxo pra quem olha).
+troca) sai da mais perto entre as de CORES_DA_FOTO; NOME_A_MAO escolhe
+quando o olho discorda da conta (o cabelo da gótica é azul-violeta na
+conta e roxo pra quem olha).
 
-As cores novas (CORES_DA_FOTO), a peça de roupa (PECA_DO_RETRATO) e o
-que vai na cabeça de quem não tem cabelo à mostra (CABECA_DO_RETRATO)
-moram em js/data/inscricao.js, e o gerador lê de lá: é ele que diz
-qual daquelas é a cor de cada foto como ela veio.
+As cores (CORES_DA_FOTO), as peças (PECAS_DO_RETRATO) e o porquê da
+parte que a foto não tem (SEM_PARTE_DO_RETRATO) moram em
+js/data/inscricao.js, e o gerador lê de lá e confere que batem com a
+anotação.
 
 Uso: python3 ferramentas/fotos-do-jogador.py                (gera js/data/fotos-jogador.js)
      python3 ferramentas/fotos-do-jogador.py --folha f.png  (e a folha pra conferir no olho)
 """
-import base64, colorsys, io, json, os, struct, subprocess, sys, zlib
+import base64, colorsys, importlib.util, io, json, os, struct, subprocess, sys, zlib
 from PIL import Image, ImageDraw
 
 RAIZ = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
 PASTA = os.path.join(RAIZ, 'sprites_nds', 'npcs', 'jogador')
 INSCRICAO = os.path.join(RAIZ, 'js', 'data', 'inscricao.js')
 SAIDA = os.path.join(RAIZ, 'js', 'data', 'fotos-jogador.js')
-PARTES = ('cabelo', 'roupa', 'pele')
+PARTES = ('cabelo', 'olhos', 'pele', 'camisa', 'calca', 'sapatos', 'detalhes')
+ROUPA = ('camisa', 'calca', 'sapatos', 'detalhes')
 
-GRUPOS = {
-    'viajante': {'n': 29, 'cabelo': [12], 'pele': [13, 14, 15], 'roupa': [18, 20, 23]},
-    'urbano': {'n': 14, 'pele': [6, 7, 8, 9], 'roupa': [12, 1, 2], 'roupa_onde': 'corpo'},
-    'patinador': {'n': 16, 'pele': [7, 8, 10, 11], 'roupa': [12, 13, 14]},
-    'colecionador': {'n': 34, 'cabelo': [16, 19, 20, 21], 'pele': [9, 10, 11, 12, 13, 15], 'roupa': [22, 23, 24]},
-    'terno': {'n': 19, 'cabelo': [12, 13], 'pele': [7, 8, 9, 10], 'roupa': [1, 2]},
-    'trilheiro': {'n': 14, 'cabelo': [9, 10, 11], 'pele': [5, 7, 8], 'roupa': [2, 4, 6], 'cabelo_onde': 'cabeca'},
-    'roqueiro': {'n': 17, 'cabelo': [7, 11, 12], 'pele': [6, 8, 9, 10], 'roupa': [2, 3, 4], 'cabelo_onde': 'cabeca'},
-    'chamativo': {'n': 21, 'cabelo': [17, 18], 'pele': [8, 10, 11, 12], 'roupa': [16, 19, 20]},
-    'lutador': {'n': 22, 'cabelo': [2, 3], 'pele': [11, 12, 14, 16], 'roupa': [4, 5, 6, 7, 8, 9], 'cabelo_onde': 'cabeca'},
-    'mistico': {'n': 15, 'cabelo': [1, 8], 'pele': [3, 4, 5, 6], 'roupa': [9, 10, 11], 'cabelo_onde': 'cabeca'},
-    'piloto': {'n': 17, 'cabelo': [1, 3], 'pele': [8, 9, 10, 11], 'roupa': [12, 13, 14], 'cabelo_caixa': [33, 0, 58, 20]},
-    'naturalista': {'n': 25, 'cabelo': [2], 'pele': [9, 11, 24], 'roupa': [18, 20, 21], 'cabelo_onde': 'cabeca'},
-    'durao': {'n': 27, 'cabelo': [9, 15, 16, 17, 18], 'pele': [10, 11, 12, 13, 14], 'roupa': [24, 25], 'cabelo_onde': 'cabeca'},
-    'criador': {'n': 22, 'pele': [9, 10, 11, 12, 14], 'roupa': [3, 4, 6, 17]},
-    'corredor': {'n': 21, 'cabelo': [7, 8, 10], 'pele': [11, 12, 14, 20], 'roupa': [16, 17, 18]},
-    'ciclista': {'n': 15, 'pele': [7, 8, 9, 14], 'roupa': [5, 6]},
-    'esportivo': {'n': 21, 'pele': [13, 15, 17, 20], 'roupa': [1, 2, 3], 'roupa_onde': 'corpo'},
-    'surfista': {'n': 22, 'cabelo': [1, 2], 'pele': [7, 8, 9], 'roupa': [18, 19], 'cabelo_onde': 'cabeca'},
-    'artesao': {'n': 22, 'cabelo': [6], 'pele': [14, 16, 18, 21], 'roupa': [2, 3, 19], 'cabelo_onde': 'cabeca'},
-    'prateado': {'n': 19, 'cabelo': [2, 5, 14], 'pele': [8, 9, 10, 15], 'roupa': [16, 17, 18], 'cabelo_onde': 'cabeca'},
-    'violeiro': {'n': 24, 'pele': [20, 21, 22], 'roupa': [15, 16, 17]},
-    'explorador': {'n': 15, 'pele': [6, 7, 10, 11], 'roupa': [4, 5, 9]},
-    'cinegrafista': {'n': 22, 'pele': [11, 12, 13, 14, 19], 'roupa': [4, 6, 21]},
-    'lavrador': {'n': 26, 'cabelo': [20, 21], 'pele': [11, 12, 13, 14, 15, 24], 'roupa': [6, 7, 8, 25]},
-    'aventureira': {'n': 23, 'cabelo': [19, 21, 22], 'pele': [6, 7, 8, 9, 10, 11, 12], 'roupa': [13, 14, 15, 16, 17], 'cabelo_onde': 'cabeca'},
-    'animada': {'n': 15, 'cabelo': [6, 7], 'pele': [8, 9, 10, 14], 'roupa': [11, 12, 13], 'cabelo_onde': 'cabeca', 'corte': 0.45},
-    'urbana': {'n': 24, 'cabelo': [9, 10, 11, 23], 'pele': [6, 7, 8, 20, 21, 22], 'roupa': [12, 13, 14, 15], 'cabelo_onde': 'cabeca'},
-    'atleta': {'n': 24, 'cabelo': [7, 19, 22], 'pele': [10, 11, 12, 13, 14], 'roupa': [2, 3, 4, 6], 'cabelo_onde': 'cabeca', 'roupa_onde': 'corpo', 'nome_cabelo': 'rosa'},
-    'estudante': {'n': 23, 'cabelo': [8, 9, 12, 14], 'pele': [10, 11, 13, 18], 'roupa': [19, 20, 21, 22], 'cabelo_onde': 'cabeca', 'corte': 0.5},
-    'elegante': {'n': 18, 'cabelo': [7, 8, 12, 13], 'pele': [5, 9, 10, 11, 17], 'roupa': [1, 2]},
-    'trilheira': {'n': 14, 'cabelo': [9, 10, 11], 'pele': [5, 7, 8], 'roupa': [2, 4, 6], 'cabelo_onde': 'cabeca', 'corte': 0.45},
-    'punk': {'n': 22, 'cabelo': [16, 18, 19, 20], 'pele': [8, 10, 12, 14], 'roupa': [11, 13, 21]},
-    'gotica': {'n': 22, 'cabelo': [14, 15, 16], 'pele': [11, 12, 13], 'roupa': [4, 5, 6], 'cabelo_onde': 'cabeca', 'corte': 0.55, 'nome_cabelo': 'roxo'},
-    'lutadora': {'n': 17, 'cabelo': [1, 2, 9], 'pele': [5, 6, 7, 8, 15], 'roupa': [10, 11, 12]},
-    'dancarina': {'n': 23, 'cabelo': [15, 17, 18, 19], 'pele': [8, 9, 10, 11, 16], 'roupa': [20, 21, 22]},
-    'modelo': {'n': 17, 'cabelo': [1, 2], 'pele': [7, 8, 9, 10], 'roupa': [15, 16], 'cabelo_onde': 'cabeca'},
-    'artista': {'n': 23, 'cabelo': [9, 11, 12], 'pele': [8, 10, 14], 'roupa': [1, 2], 'cabelo_onde': 'cabeca', 'roupa_onde': 'corpo'},
-    'aviadora': {'n': 19, 'pele': [7, 8, 9, 10], 'roupa': [14, 15, 16]},
-    'patinadora': {'n': 15, 'pele': [9, 10, 11, 14], 'roupa': [1, 2, 3], 'roupa_onde': 'corpo'},
-    'ciclista_f': {'n': 15, 'cabelo': [7, 9], 'pele': [8, 10, 11, 14], 'roupa': [5, 6], 'cabelo_onde': 'cabeca'},
-    'mochileira': {'n': 15, 'cabelo': [10, 11], 'pele': [7, 8, 9, 14], 'roupa': [6, 11], 'cabelo_caixa': [38, 0, 60, 26], 'roupa_caixa': [28, 38, 46, 66]},
-    'despojada': {'n': 22, 'cabelo': [1, 2], 'pele': [7, 10, 11], 'roupa': [12, 13, 14, 15], 'cabelo_onde': 'cabeca'},
-    'esportiva': {'n': 17, 'cabelo': [6, 7, 8], 'pele': [9, 11, 12, 16], 'roupa': [13, 14, 15]},
-    'descolada': {'n': 26, 'cabelo': [4, 12], 'pele': [11, 15, 17, 25], 'roupa': [19, 20, 21, 22, 23], 'cabelo_onde': 'cabeca'},
-    'fazendeira': {'n': 15, 'cabelo': [9], 'pele': [7, 8, 10, 14], 'roupa': [11, 12, 13], 'cabelo_caixa': [0, 0, 80, 44]},
-    'cantora': {'n': 15, 'cabelo': [3, 4, 5], 'pele': [6, 8, 9, 12], 'roupa': [13, 14], 'cabelo_onde': 'cabeca'},
-    'vidente': {'n': 15, 'cabelo': [2, 3, 11], 'pele': [7, 8, 9, 14], 'roupa': [4, 13], 'cabelo_onde': 'cabeca'},
-    'guitarrista': {'n': 15, 'cabelo': [2, 3], 'pele': [7, 8, 9, 10], 'roupa': [6, 13, 14], 'cabelo_caixa': [10, 0, 37, 30]},
+# quando a conta da cor mais perto discorda do olho (a parte de duas cores
+# vira cinza na conta: o tênis branco de sola preta, o macacão branco e azul)
+NOME_A_MAO = {
+    'viajante': {'calca': 'azul'},                      # o jeans é azul acinzentado
+    'urbano': {'camisa': 'preto', 'calca': 'preto'},
+    'patinador': {'sapatos': 'preto', 'detalhes': 'branco'},
+    'colecionador': {'calca': 'verde-agua', 'sapatos': 'verde-agua'},
+    'trilheiro': {'calca': 'marrom'},
+    'roqueiro': {'sapatos': 'branco'},
+    'mistico': {'cabelo': 'verde'},                     # verde quase preto, mas verde
+    'piloto': {'camisa': 'branco'},
+    'criador': {'detalhes': 'branco'},
+    'ciclista': {'calca': 'preto', 'sapatos': 'preto', 'detalhes': 'vermelho'},
+    'surfista': {'detalhes': 'azul'},                   # contas de várias cores
+    'violeiro': {'camisa': 'azul', 'detalhes': 'marrom'},
+    'cinegrafista': {'sapatos': 'vermelho'},
+    'aventureira': {'detalhes': 'azul-claro'},
+    'animada': {'camisa': 'branco'},
+    'atleta': {'cabelo': 'rosa'},
+    'estudante': {'calca': 'preto'},
+    'elegante': {'cabelo': 'loiro', 'camisa': 'preto', 'calca': 'preto'},
+    'gotica': {'cabelo': 'roxo', 'camisa': 'roxo', 'calca': 'roxo'},   # azul-violeta na conta
+    'dancarina': {'detalhes': 'preto'},
+    'artista': {'calca': 'preto'},
+    'aviadora': {'camisa': 'branco', 'detalhes': 'azul-claro'},
+    'patinadora': {'camisa': 'preto', 'calca': 'preto', 'sapatos': 'preto'},
+    'mochileira': {'cabelo': 'loiro', 'sapatos': 'verde'},
+    'despojada': {'calca': 'azul', 'sapatos': 'branco'},
+    'esportiva': {'sapatos': 'azul-marinho'},
+    'fazendeira': {'cabelo': 'loiro', 'sapatos': 'marrom'},
+    'cantora': {'cabelo': 'castanho'},
+    'vidente': {'cabelo': 'verde', 'detalhes': 'verde'},
+    'guitarrista': {'sapatos': 'vermelho'},             # a meia preta escurece a conta
 }
+
+
+def carregar_partes():
+    caminho = os.path.join(RAIZ, 'ferramentas', 'fotos-partes.py')
+    spec = importlib.util.spec_from_file_location('fotos_partes', caminho)
+    m = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(m)
+    return m.ANOT
 
 
 def hls(c):
@@ -123,16 +110,37 @@ def ordem_das_cores(im):
     return lista, tot
 
 
-def na_regiao(g, parte, x, y, corte_y):
-    onde = g.get(parte + '_onde')
-    cx = g.get(parte + '_caixa')
-    if onde == 'cabeca' and y >= corte_y:
-        return False
-    if onde == 'corpo' and y < corte_y:
-        return False
-    if cx and not (cx[0] <= x < cx[2] and cx[1] <= y < cx[3]):
-        return False
-    return True
+def dentro(caixa, x, y):
+    return caixa is None or (caixa[0] <= x < caixa[2] and caixa[1] <= y < caixa[3])
+
+
+def partes_de(a, im, lista):
+    """(x, y) -> a parte do pixel, ou None (fica como o desenho tem): o
+    pixel anotado primeiro, depois as caixas fixas, depois as partes na
+    ordem em que a anotação escreve, e a primeira regra que pega ganha"""
+    idx = {c: i for i, c in enumerate(lista)}
+    px = im.load()
+    ordem = [k for k in a if k in PARTES]
+    mapa = {}
+    W, H = im.size
+    for y in range(H):
+        for x in range(W):
+            p = px[x, y]
+            if not p[3]:
+                continue
+            if (x, y) in a.get('px', {}):
+                mapa[(x, y)] = a['px'][(x, y)]
+                continue
+            if any(dentro(b, x, y) for b in a.get('fixo', [])):
+                mapa[(x, y)] = None
+                continue
+            ci, achou = idx[p[:3]], None
+            for parte in ordem:
+                if any(ci in cores and dentro(caixa, x, y) for cores, caixa in a[parte]):
+                    achou = parte
+                    break
+            mapa[(x, y)] = achou
+    return mapa
 
 
 def rampa(alvo, t):
@@ -173,10 +181,13 @@ def ler_inscricao():
     """as listas de js/data/inscricao.js, pela mão do node"""
     js = ("const vm=require('vm'),fs=require('fs');const c={};vm.createContext(c);"
           "vm.runInContext(fs.readFileSync(process.argv[1],'utf8')+"
-          "';this.X={cores:CORES_DA_FOTO,peca:PECA_DO_RETRATO,cabeca:CABECA_DO_RETRATO,fotos:RETRATOS_DA_FICHA};',c);"
+          "';this.X={cores:CORES_DA_FOTO,paleta:PALETA_DA_PARTE,partes:PARTES_DA_FOTO,pecas:PECAS_DO_RETRATO,"
+          "sem:SEM_PARTE_DO_RETRATO,fotos:RETRATOS_DA_FICHA};',c);"
           "process.stdout.write(JSON.stringify(c.X))")
     saida = subprocess.run(['node', '-e', js, INSCRICAO], capture_output=True, text=True, check=True)
-    return json.loads(saida.stdout)
+    info = json.loads(saida.stdout)
+    info['de'] = {p: info['cores'][info['paleta'][p]] for p in PARTES}
+    return info
 
 
 def chunks(dados):
@@ -201,8 +212,7 @@ def trocar_paleta(dados, trocas):
     raise ValueError('PNG sem PLTE')
 
 
-def montar(nome, info):
-    g = GRUPOS[nome]
+def montar(nome, a, info):
     im = Image.open(os.path.join(PASTA, nome + '.png')).convert('RGBA')
     W, H = im.size
     px = im.load()
@@ -210,11 +220,12 @@ def montar(nome, info):
     if not alfas <= {0, 255}:
         sys.exit(f'{nome}: transparência pela metade ({sorted(alfas)[:6]}…): a paleta só sabe ligado e desligado')
     lista, _ = ordem_das_cores(im)
-    if len(lista) != g['n']:
-        sys.exit(f'{nome}: a foto tem {len(lista)} cores e os grupos foram anotados com {g["n"]} — o arquivo mudou, anote de novo')
-    bb = im.getchannel('A').getbbox()
-    corte_y = bb[1] + (bb[3] - bb[1]) * g.get('corte', .30)
-    cores_da = {p: [lista[i] for i in g.get(p) or []] for p in PARTES}
+    if len(lista) != a['n']:
+        sys.exit(f'{nome}: a foto tem {len(lista)} cores e foi anotada com {a["n"]} — o arquivo mudou, anote de novo')
+    for (x, y), v in a.get('px', {}).items():
+        if v is not None and v not in PARTES:
+            sys.exit(f'{nome}: o pixel {x},{y} foi anotado como "{v}", que não é parte')
+    mapa = partes_de(a, im, lista)
 
     # cada pixel: transparente, ou (parte, cor) — parte None é a cor que fica
     chave_px, contagem = [], {}
@@ -224,16 +235,11 @@ def montar(nome, info):
             if not p[3]:
                 chave_px.append(None)
                 continue
-            c = p[:3]
-            k = (None, c)
-            for parte in PARTES:
-                if c in cores_da[parte] and na_regiao(g, parte, x, y, corte_y):
-                    k = (parte, c)
-                    break
+            k = (mapa[(x, y)], p[:3])
             chave_px.append(k)
             contagem[k] = contagem.get(k, 0) + 1
 
-    # a paleta: 0 é o transparente; depois o que fica, e as três partes
+    # a paleta: 0 é o transparente; depois o que fica, e as partes
     pos = {c: i for i, c in enumerate(lista)}
     ordem = sorted(contagem, key=lambda k: ((PARTES.index(k[0]) + 1) if k[0] else 0, pos[k[1]]))
     casa = {k: i + 1 for i, k in enumerate(ordem)}
@@ -248,9 +254,9 @@ def montar(nome, info):
 
     # volta igual ao original, pixel por pixel
     volta = Image.open(io.BytesIO(dados)).convert('RGBA')
-    for i, (a, b) in enumerate(zip(pixels(volta), pixels(im))):
-        if (b[3] == 0 and a[3] != 0) or (b[3] and a != b):
-            sys.exit(f'{nome}: o PNG de paleta não volta igual no pixel {i % W},{i // W}: {a} ≠ {b}')
+    for i, (q, b) in enumerate(zip(pixels(volta), pixels(im))):
+        if (b[3] == 0 and q[3] != 0) or (b[3] and q != b):
+            sys.exit(f'{nome}: o PNG de paleta não volta igual no pixel {i % W},{i // W}: {q} ≠ {b}')
     # e a casa de cada cor tem a cor que tem
     plte = next(dados[p + 8:p + 8 + n] for t, p, n in chunks(dados) if t == b'PLTE')
     for k, i in casa.items():
@@ -259,58 +265,62 @@ def montar(nome, info):
 
     registro = {'png': base64.b64encode(dados).decode('ascii')}
     for parte in PARTES:
-        cores = cores_da[parte]
+        cores = sorted({c for (q, c) in casa if q == parte}, key=lambda c: pos[c])
         if not cores:
             continue
-        ls = [hls(c)[1] for c in cores]
-        lo, hi = min(ls), max(ls)
+        ls = {c: hls(c)[1] for c in cores}
+        lo, hi = min(ls.values()), max(ls.values())
         casas, na_parte = [], {}
-        for c, l in zip(cores, ls):
-            k = (parte, c)
-            if k not in casa:
-                continue
-            t = .5 if hi - lo < 1e-6 else (l - lo) / (hi - lo)
-            casas.append([casa[k], round(t, 3)])
-            na_parte[c] = contagem[k]
-        if not casas:
-            sys.exit(f'{nome}: o {parte} não tem pixel nenhum no lugar dele')
+        for c in cores:
+            t = .5 if hi - lo < 1e-6 else (ls[c] - lo) / (hi - lo)
+            casas.append([casa[(parte, c)], round(t, 3)])
+            na_parte[c] = contagem[(parte, c)]
         mais = max(na_parte, key=na_parte.get)
-        cor = g.get('nome_' + parte) or cor_mais_perto(info['cores'][parte], na_parte)
-        if not any(a['id'] == cor for a in info['cores'][parte]):
-            sys.exit(f'{nome}: nome_{parte} "{cor}" não está em CORES_DA_FOTO.{parte}')
+        cor = NOME_A_MAO.get(nome, {}).get(parte) or cor_mais_perto(info['de'][parte], na_parte)
+        if not any(k['id'] == cor for k in info['de'][parte]):
+            sys.exit(f'{nome}: NOME_A_MAO {parte} "{cor}" não está nas cores de {parte}')
         registro[parte] = {'i': casas, 'cor': cor, 'de': hexa(mais)}
     return registro, dados
 
 
-def conferir_listas(info):
+def conferir_listas(anot, info, feitos):
     fotos = info['fotos']['Homem'] + info['fotos']['Mulher']
     arquivos = sorted(f[:-4] for f in os.listdir(PASTA) if f.endswith('.png'))
     erros = []
-    if sorted(fotos) != sorted(GRUPOS):
-        erros.append(f'RETRATOS_DA_FICHA e GRUPOS não batem: {sorted(set(fotos) ^ set(GRUPOS))}')
-    if sorted(GRUPOS) != arquivos:
-        erros.append(f'GRUPOS e a pasta não batem: {sorted(set(arquivos) ^ set(GRUPOS))}')
-    sem_cabelo = sorted(n for n, g in GRUPOS.items() if not g.get('cabelo'))
-    if sem_cabelo != sorted(info['cabeca']):
-        erros.append(f'CABECA_DO_RETRATO tem que ser as fotos sem cabelo: {sorted(set(sem_cabelo) ^ set(info["cabeca"]))}')
-    falta_peca = sorted(set(GRUPOS) - set(info['peca']))
-    if falta_peca:
-        erros.append(f'PECA_DO_RETRATO não diz a roupa de: {falta_peca}')
-    for n, g in GRUPOS.items():
-        for p in ('pele', 'roupa'):
-            if not g.get(p):
-                erros.append(f'{n} sem {p}')
+    if [p for p, _ in info['partes']] != list(PARTES):
+        erros.append(f'PARTES_DA_FOTO ({[p for p, _ in info["partes"]]}) não é {list(PARTES)}')
+    if sorted(fotos) != sorted(anot):
+        erros.append(f'RETRATOS_DA_FICHA e fotos-partes.py não batem: {sorted(set(fotos) ^ set(anot))}')
+    if sorted(anot) != arquivos:
+        erros.append(f'fotos-partes.py e a pasta não batem: {sorted(set(arquivos) ^ set(anot))}')
+    for n, (registro, _) in feitos.items():
+        if 'pele' not in registro:
+            erros.append(f'{n}: sem pele')
+        pecas, sem = info['pecas'].get(n, {}), info['sem'].get(n, {})
+        for p in PARTES:
+            tem = p in registro
+            if p in ROUPA and tem and p not in pecas:
+                erros.append(f'{n}: PECAS_DO_RETRATO não diz o que é a {p}')
+            if p in ROUPA and not tem and p in pecas:
+                erros.append(f'{n}: PECAS_DO_RETRATO diz a {p}, que a foto não tem')
+            if not tem and p != 'pele' and p not in sem:
+                erros.append(f'{n}: SEM_PARTE_DO_RETRATO não diz por que a foto não tem {p}')
+            if tem and p in sem:
+                erros.append(f'{n}: SEM_PARTE_DO_RETRATO diz que falta {p}, e a foto tem')
+        for p, (texto, forma) in pecas.items():
+            if forma not in ('m', 'f', 'mp', 'fp'):
+                erros.append(f'{n}: a {p} "{texto}" tem a forma "{forma}" (m, f, mp ou fp)')
     if erros:
         sys.exit('\n'.join(erros))
 
 
 TESTES_DA_FOLHA = [
     None,
-    {'cabelo': 'rosa', 'roupa': 'verde'},
-    {'cabelo': 'preto', 'pele': 'escura', 'roupa': 'branco'},
-    {'cabelo': 'loiro', 'pele': 'muito-clara', 'roupa': 'vermelho'},
-    {'cabelo': 'ruivo', 'pele': 'morena', 'roupa': 'azul-marinho'},
-    {'cabelo': 'prateado', 'pele': 'morena-clara', 'roupa': 'amarelo'},
+    {'cabelo': 'rosa', 'olhos': 'verde', 'camisa': 'verde', 'calca': 'vermelho', 'sapatos': 'azul', 'detalhes': 'amarelo'},
+    {'cabelo': 'preto', 'olhos': 'azul', 'pele': 'escura', 'camisa': 'branco', 'calca': 'preto', 'sapatos': 'vermelho', 'detalhes': 'roxo'},
+    {'cabelo': 'loiro', 'olhos': 'castanho', 'pele': 'muito-clara', 'camisa': 'vermelho', 'calca': 'azul-marinho', 'sapatos': 'branco', 'detalhes': 'verde'},
+    {'cabelo': 'ruivo', 'olhos': 'mel', 'pele': 'morena', 'camisa': 'azul-marinho', 'calca': 'bege', 'sapatos': 'marrom', 'detalhes': 'laranja'},
+    {'cabelo': 'prateado', 'olhos': 'violeta', 'pele': 'morena-clara', 'camisa': 'amarelo', 'calca': 'cinza', 'sapatos': 'preto', 'detalhes': 'rosa'},
 ]
 
 
@@ -319,19 +329,37 @@ def recolorir(dados, registro, escolha, info):
     for parte, id_ in escolha.items():
         if parte not in registro:
             continue
-        alvo = next(a for a in info['cores'][parte] if a['id'] == id_)
+        alvo = next(k for k in info['de'][parte] if k['id'] == id_)
         for i, t in registro[parte]['i']:
             trocas[i] = rampa(alvo, t)
     return Image.open(io.BytesIO(trocar_paleta(dados, trocas))).convert('RGBA')
 
 
-def nome_da_cor(info, parte, id_, fem):
-    a = next(a for a in info['cores'][parte] if a['id'] == id_)
-    return a['nome'][1 if fem else 0] if isinstance(a['nome'], list) else a['nome']
+def nome_da_cor(info, parte, id_, forma='m'):
+    k = next(k for k in info['de'][parte] if k['id'] == id_)
+    if not isinstance(k['nome'], list):
+        return k['nome']
+    return k['nome'][{'m': 0, 'f': 1, 'mp': 2, 'fp': 3}[forma]]
+
+
+def descricao(n, registro, info):
+    """a mesma conta do descricaoDaFoto, com as cores que o desenho tem"""
+    cab = []
+    if 'cabelo' in registro:
+        cab.append('cabelo ' + nome_da_cor(info, 'cabelo', registro['cabelo']['cor']))
+    if 'olhos' in registro:
+        cab.append('olhos ' + nome_da_cor(info, 'olhos', registro['olhos']['cor'], 'mp'))
+    roupa = []
+    for p in ROUPA:
+        if p in registro:
+            texto, forma = info['pecas'][n][p]
+            cor = nome_da_cor(info, p, registro[p]['cor'], forma)
+            roupa.append(texto.replace('{cor}', cor) if '{cor}' in texto else f'{texto} {cor}')
+    return ', '.join(cab), ', '.join(roupa)
 
 
 def folha(saida, feitos, info):
-    Q, W = 2, 160
+    W = 160
     nomes = list(feitos)
     out = Image.new('RGB', (W * len(TESTES_DA_FOLHA), (W + 26) * len(nomes)), (38, 42, 60))
     d = ImageDraw.Draw(out)
@@ -342,30 +370,33 @@ def folha(saida, feitos, info):
             v = Image.open(io.BytesIO(dados)).convert('RGBA') if t is None else recolorir(dados, registro, t, info)
             v = v.resize((W, W), Image.NEAREST)
             out.paste(v, (j * W, y0 + 24), v)
-        peca, gen = info['peca'][n]
-        cab = f"cabelo {nome_da_cor(info, 'cabelo', registro['cabelo']['cor'], False)}" if 'cabelo' in registro else info['cabeca'][n]
-        rou = f"{peca} {nome_da_cor(info, 'roupa', registro['roupa']['cor'], gen == 'f')}"
-        d.text((3, y0 + 2), f'{n}: {cab}, {rou}', fill=(255, 230, 120))
-        d.text((3, y0 + 12), f"pele de {registro['pele']['de']} ~ {registro['pele']['cor']}", fill=(170, 180, 210))
+        cab, roupa = descricao(n, registro, info)
+        d.text((3, y0 + 2), f'{n}: {cab}', fill=(255, 230, 120))
+        d.text((3, y0 + 12), f"{roupa} · pele de {registro['pele']['de']} ~ {registro['pele']['cor']}", fill=(170, 180, 210))
     out.save(saida)
 
 
 def main():
+    anot = carregar_partes()
     info = ler_inscricao()
-    conferir_listas(info)
     feitos = {}
     for n in info['fotos']['Homem'] + info['fotos']['Mulher']:
-        feitos[n] = montar(n, info)
+        if n not in anot:
+            sys.exit(f'{n}: está em RETRATOS_DA_FICHA e não foi anotada em fotos-partes.py')
+        feitos[n] = montar(n, anot[n], info)
+    conferir_listas(anot, info, feitos)
     linhas = []
     for n, (registro, _) in feitos.items():
         linhas.append(f'{json.dumps(n)}:{json.dumps(registro, separators=(",", ":"), ensure_ascii=False)}')
     js = ('/* ============================================================\n'
           '   gerado por ferramentas/fotos-do-jogador.py — não editar à mão.\n'
           '   As fotos do jogador em PNG de paleta, com casa própria pra cada\n'
-          '   cor de cabelo, pele e roupa. Em cada parte, i lista [casa, t]:\n'
-          '   a casa da paleta e onde aquela cor fica do escuro (0) ao claro\n'
-          '   (1); cor é a cor de CORES_DA_FOTO que o desenho tem, de é a\n'
-          '   amostra dela. Foto sem cabelo não tem a parte.\n'
+          '   cor de cada parte (cabelo, olhos, pele, camisa, calça, sapatos e\n'
+          '   detalhes), anotadas em ferramentas/fotos-partes.py. Em cada\n'
+          '   parte, i lista [casa, t]: a casa da paleta e onde aquela cor\n'
+          '   fica do escuro (0) ao claro (1); cor é a cor de CORES_DA_FOTO\n'
+          '   que o desenho tem, de é a amostra dela. Parte que a foto não\n'
+          '   tem não aparece.\n'
           '   ============================================================ */\n'
           'const FOTOS_DO_JOGADOR = {\n' + ',\n'.join(linhas) + '\n};\n')
     with open(SAIDA, 'w', encoding='utf-8') as f:

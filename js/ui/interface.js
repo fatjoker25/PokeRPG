@@ -550,9 +550,8 @@ const UI = {
      Seis passos no idioma da abertura: quem você é, o seu jeito, o
      que você quer, a aparência, quem fica em casa e a conferência.
      O que pesa no jogo é escolha (js/data/inscricao.js), e a aparência
-     também: a foto, com a cor do cabelo, da pele e da roupa
-     (FotoJogador), de onde sai a descrição que os outros fazem de
-     você. Ao lado, o
+     também: a foto, com a cor de cada parte dela (FotoJogador), de
+     onde sai a descrição que os outros fazem de você. Ao lado, o
      cartão de inscrição vai se preenchendo; no celular ele aparece
      na conferência. O estado mora em UI._cr até "Sair de casa".
      ======================================================== */
@@ -568,7 +567,8 @@ const UI = {
       cidade:'Pallet', tracos:[], tracoLivre:'', forte:null,
       meta:null, frase:'', fraseMexida:false,
       gostos:{lugares:[], tipos:[], dex:[]}, desgostos:{lugares:[], tipos:[], dex:[]},
-      cores:{cabelo:null, pele:null, roupa:null}, mochila:null, retrato:null, retratoEscolhido:false, maisRostos:false, corCartao:'azul',
+      cores:{cabelo:null, olhos:null, pele:null, camisa:null, calca:null, sapatos:null, detalhes:null}, aba:'cabelo',
+      mochila:null, retrato:null, retratoEscolhido:false, maisRostos:false, corCartao:'azul',
       casaNome:'', casaQuem:'', inicial:'classico', ritmo:'fiel'
     };
     const estrelas = Array.from({length:22}, () =>
@@ -605,6 +605,15 @@ const UI = {
     raiz.addEventListener('input', ev => this.crCampo(ev.target));
     raiz.addEventListener('change', ev => this.crCampo(ev.target, true));
     raiz.addEventListener('keydown', ev => {
+      /* as abas da customização andam com as setas, como abas */
+      if (ev.target.classList && ev.target.classList.contains('cr-aba') && /^(ArrowLeft|ArrowRight|Home|End)$/.test(ev.key)){
+        ev.preventDefault();
+        const abas = PARTES_DA_FOTO.map(([p]) => p), i = abas.indexOf(ev.target.dataset.v);
+        const j = ev.key === 'Home' ? 0 : ev.key === 'End' ? abas.length - 1 : (i + (ev.key === 'ArrowRight' ? 1 : -1) + abas.length) % abas.length;
+        this._cr.aba = abas[j]; this.crRefazProvador();
+        const b = document.getElementById('cr-aba-' + abas[j]); if (b) b.focus({preventScroll:true});
+        return;
+      }
       if (ev.key === 'Enter' && ev.target.id === 'f-objetivo'){ ev.preventDefault(); return; }
       if (ev.key === 'Enter' && ev.target.tagName === 'INPUT' && ev.target.dataset.campo !== 'especie'){
         ev.preventDefault(); this.crAcao('proximo', {});
@@ -713,14 +722,17 @@ const UI = {
       }
       case 'mochila': c.mochila = c.mochila === ds.v ? null : ds.v; return refaz('visual');
       case 'retrato': c.retrato = ds.v || null; c.retratoEscolhido = !!c.retrato; return refaz('visual');
-      case 'cor': if (ds.parte in c.cores){ c.cores[ds.parte] = ds.v || null; } return refaz('visual');
+      /* a cor e a aba mexem só na foto grande e no cartão: a grade fica */
+      case 'cor': if (ds.parte in c.cores){ c.cores[ds.parte] = ds.v || null; } return this.crRefazProvador();
+      case 'aba': if (PARTES_DA_FOTO.some(([p]) => p === ds.v)) c.aba = ds.v; return this.crRefazProvador();
       case 'maisRostos': c.maisRostos = !c.maisRostos; return refaz('visual');
       case 'cartao': c.corCartao = ds.v; return refaz('visual');
       case 'casaQuem': c.casaQuem = c.casaQuem === ds.v ? '' : ds.v; return refaz('casa');
       case 'inicial': c.inicial = ds.v; return refaz('casa');
       case 'ritmo': c.ritmo = ds.v; return refaz('casa');
-      case 'dado': this.crDado(ds.v); return refaz(...{nome:['voce'], cores:['visual'],
-        casaNome:['casa'], tracos:['jeito']}[ds.v] || []);
+      case 'dado': this.crDado(ds.v);
+        if (ds.v === 'cores') return this.crRefazProvador();
+        return refaz(...{nome:['voce'], casaNome:['casa'], tracos:['jeito']}[ds.v] || []);
       case 'editar': c.passo = +ds.v; this.crMostrar(); this.crRolar(); return;
     }
   },
@@ -773,10 +785,11 @@ const UI = {
     /* nome de gente da história não vira o seu: duas Eldas confundem */
     if (campo === 'nome') c.nome = outro((c.genero === 'Mulher' ? NOMES_F : NOMES_M)
       .filter(n => typeof NOMES_DA_HISTORIA === 'undefined' || !NOMES_DA_HISTORIA.has(n)), c.nome);
-    /* o dado das cores sorteia cabelo e roupa; a pele fica como você deixou */
+    /* o dado das cores sorteia tudo o que a foto tem; a pele fica como você deixou */
     if (campo === 'cores'){
-      c.cores.cabelo = outro(CORES_DA_FOTO.cabelo.map(k => k.id), c.cores.cabelo);
-      c.cores.roupa = outro(CORES_DA_FOTO.roupa.map(k => k.id), c.cores.roupa);
+      const f = c.retrato && FOTOS_DO_JOGADOR[c.retrato];
+      for (const [parte] of PARTES_DA_FOTO)
+        if (parte !== 'pele' && (!f || f[parte])) c.cores[parte] = outro(coresDaParte(parte).map(k => k.id), c.cores[parte]);
     }
     if (campo === 'casaNome'){
       const mulher = c.casaQuem ? parentescoEhMulher(c.casaQuem) : Math.random() < .5;
@@ -925,11 +938,12 @@ const UI = {
     const e = s => this.esc(s);
     /* só as fotos do gênero da ficha: as primeiras de cara, as outras no
        "Mais rostos", que já vem aberto se a foto escolhida é de lá. Todas
-       nas cores escolhidas: dá pra ver cada corpo com o seu cabelo */
+       como o desenho tem: a customização é da foto escolhida, e só ela
+       (a grande, ao lado das abas) muda de cor */
     const foto = arq => `<button type="button" class="cr-op cr-retrato${c.retrato === arq ? ' sel' : ''}"
         data-acao="retrato" data-v="${arq}" data-foco="retrato-${arq}" aria-pressed="${c.retrato === arq}"
         aria-label="Foto: ${e(ROTULO_DO_RETRATO[arq] || arq)}" title="${e(maiuscula(ROTULO_DO_RETRATO[arq] || arq))}">
-        ${this.crRetratoImg(arq, null, c.cores)}</button>`;
+        ${this.crRetratoImg(arq)}</button>`;
     const doGenero = RETRATOS_DA_FICHA[c.genero];
     const aVista = doGenero.slice(0, RETRATOS_A_VISTA), outras = doGenero.slice(RETRATOS_A_VISTA);
     const abertos = c.maisRostos || outras.includes(c.retrato);
@@ -953,37 +967,67 @@ const UI = {
         <div class="cartao-cores cr-cartoes" role="group" aria-label="Cor do cartão">${cartoes}</div></div>`;
   },
 
-  /* As cores da foto escolhida: a foto grande e, do lado, cabelo, pele
-     e roupa. A primeira opção de cada uma é a cor que o desenho tem;
-     foto de boné, capacete ou chapéu não tem cor de cabelo. Embaixo, o
-     que os outros vão dizer de você. Sem foto, nada aqui. */
+  /* A customização da foto escolhida: a foto grande e, do lado, uma aba
+     por parte — cabelo, olhos, pele, camisa, calça, sapatos e detalhes.
+     A primeira cor de cada aba é a Padrão, a que o desenho tem; a parte
+     que a foto não tem diz por quê (os óculos escondem os olhos,
+     descalço). Embaixo, o que os outros vão dizer de você, que é tudo o
+     que a foto mostra menos a pele. Sem foto, nada aqui. */
   crProvador(c){
     const arq = c.retrato, f = arq && FOTOS_DO_JOGADOR[arq];
     if (!f) return '';
     const e = s => this.esc(s);
     const desc = descricaoDaFoto(arq, c.cores);
-    const [, gen] = PECA_DO_RETRATO[arq] || ['roupa', 'f'];
-    const linha = ([parte, rot]) => {
-      if (!f[parte]){
-        const cabeca = (CABECA_DO_RETRATO[arq] || 'boné').replace(/ pra trás$/, '');
-        return `<div class="cr-parte sem"><div class="cr-parte-rot"><b>${rot}</b><span>debaixo do ${e(cabeca)}, nesta foto</span></div></div>`;
-      }
-      const atual = c.cores[parte] && corDaFoto(parte, c.cores[parte]) ? c.cores[parte] : null;
-      const nome = id => nomeDaCorDaFoto(parte, id, parte === 'pele' || (parte === 'roupa' && gen === 'f'));
-      const tinta = (id, rotulo, fundo, cls) => `<button type="button" class="cr-tinta${cls || ''}${atual === id ? ' sel' : ''}"
-          data-acao="cor" data-parte="${parte}" data-v="${id || ''}" data-foco="cor-${parte}-${id || 'desenho'}"
-          aria-pressed="${atual === id}" title="${e(maiuscula(rotulo))}" aria-label="${e(rot)}: ${e(rotulo)}"><i style="background:${fundo}"></i>${cls ? `<span>Do desenho</span>` : ''}</button>`;
-      const tintas = [tinta(null, `a do desenho (${nome(f[parte].cor)})`, f[parte].de, ' do-desenho')]
-        .concat(CORES_DA_FOTO[parte].map(k => tinta(k.id, nome(k.id), FotoJogador.amostra(k))));
-      return `<div class="cr-parte"><div class="cr-parte-rot"><b>${rot}</b><span>${e(maiuscula(nome(atual || f[parte].cor)))}</span></div>
-        <div class="cr-tintas" role="group" aria-label="Cor ${parte === 'cabelo' ? 'do' : 'da'} ${rot.toLowerCase()}">${tintas.join('')}</div></div>`;
-    };
-    return `<div class="cr-campo cr-provador"><span class="cr-rot">Cores da foto ${this.crDadoBtn('cores', 'Sortear cabelo e roupa')}</span>
+    const pecas = PECAS_DO_RETRATO[arq] || {}, sem = SEM_PARTE_DO_RETRATO[arq] || {};
+    const aba = PARTES_DA_FOTO.some(([p]) => p === c.aba) ? c.aba : 'cabelo';
+    const forma = parte => parte === 'olhos' ? 'mp' : parte === 'pele' ? 'f' : pecas[parte] ? pecas[parte][1] : 'm';
+    const nome = (parte, id) => nomeDaCorDaFoto(parte, id, forma(parte));
+    const atual = parte => f[parte] && c.cores[parte] && corDaFoto(parte, c.cores[parte]) ? c.cores[parte] : null;
+    const abas = PARTES_DA_FOTO.map(([parte, rot]) => {
+      const tem = !!f[parte], sel = parte === aba, a = atual(parte);
+      const ponto = tem ? `<i style="background:${a ? FotoJogador.amostra(corDaFoto(parte, a)) : f[parte].de}"></i>` : '';
+      return `<button type="button" role="tab" class="cr-aba${sel ? ' sel' : ''}${tem ? '' : ' sem'}" id="cr-aba-${parte}"
+        data-acao="aba" data-v="${parte}" data-foco="aba-${parte}" aria-selected="${sel}" aria-controls="cr-painel-cor"
+        tabindex="${sel ? 0 : -1}"${tem ? '' : ` title="${e(sem[parte] || 'Esta foto não mostra essa parte.')}"`}>${ponto}<span>${rot}</span></button>`;
+    }).join('');
+    const rotulo = PARTES_DA_FOTO.find(([p]) => p === aba)[1];
+    let painel;
+    if (!f[aba]){
+      painel = `<p class="cr-parte-sem">${e(sem[aba] || 'Esta foto não mostra essa parte.')}</p>`;
+    } else {
+      const a = atual(aba), padrao = f[aba].cor;
+      /* a peça como ela se chama, sem o lugar da cor: "faixa na cintura" */
+      const peca = pecas[aba] ? pecas[aba][0].replace(/ ?\{cor\}/, '') : rotulo;
+      const tinta = (id, rot, fundo, cls) => `<button type="button" class="cr-tinta${cls || ''}${a === id ? ' sel' : ''}"
+          data-acao="cor" data-parte="${aba}" data-v="${id || ''}" data-foco="cor-${aba}-${id || 'padrao'}"
+          aria-pressed="${a === id}" title="${e(maiuscula(rot))}" aria-label="${e(peca)}: ${e(rot)}"><i style="background:${fundo}"></i>${cls ? '<span>Padrão</span>' : ''}</button>`;
+      const tintas = [tinta(null, `padrão (${nome(aba, padrao)})`, f[aba].de, ' padrao')]
+        .concat(coresDaParte(aba).map(k => tinta(k.id, nome(aba, k.id), FotoJogador.amostra(k))));
+      painel = `<div class="cr-parte-rot"><b>${e(maiuscula(peca))}</b><span>${e(maiuscula(nome(aba, a || padrao)))}${a ? '' : ' · padrão'}</span></div>
+        <div class="cr-tintas" role="group" aria-label="Cor: ${e(peca)}">${tintas.join('')}</div>`;
+    }
+    const falado = desc.lista.length ? juntarComE(desc.lista) : '';
+    return `<div class="cr-campo cr-provador"><span class="cr-rot">Customização ${this.crDadoBtn('cores', 'Sortear as cores')}</span>
       <div class="cr-prov">
         <div class="cr-prov-foto">${this.crRetratoImg(arq, 'cr-prov-sprite', c.cores)}</div>
-        <div class="cr-partes">${PARTES_DA_FOTO.map(linha).join('')}
-          <p class="cr-nota">Quem precisar te descrever vai dizer: <b>${e([desc.aparencia, desc.vestimenta].filter(Boolean).join(', '))}</b>.</p></div>
+        <div class="cr-partes">
+          <div class="cr-abas" role="tablist" aria-label="Parte da foto">${abas}</div>
+          <div class="cr-painel" id="cr-painel-cor" role="tabpanel" aria-labelledby="cr-aba-${aba}">${painel}</div>
+          ${falado ? `<p class="cr-nota">Quem precisar te descrever vai dizer: <b>${e(falado)}</b>.</p>` : ''}</div>
       </div></div>`;
+  },
+  /* a customização redesenhada sozinha (a grade de fotos fica como
+     está), com o foco onde estava, e o cartão junto */
+  crRefazProvador(){
+    const velho = document.querySelector('#cr-sec-visual .cr-provador');
+    if (!velho){ this.crSecao(this.PASSOS_CRIACAO.findIndex(p => p[0] === 'visual')); this.crPrevia(); return; }
+    const ativo = document.activeElement, chave = ativo && velho.contains(ativo) ? ativo.dataset.foco : null;
+    const tmp = document.createElement('div');
+    tmp.innerHTML = this.crProvador(this._cr);
+    const novo = tmp.firstElementChild;
+    if (novo) velho.replaceWith(novo); else velho.remove();
+    if (chave && novo){ const de = novo.querySelector(`[data-foco="${CSS.escape(chave)}"]`); if (de) de.focus({preventScroll:true}); }
+    this.crPrevia();
   },
 
   crSec_casa(c){
@@ -5852,7 +5896,7 @@ const UI = {
     if (k === 'passos') return `
       <h3>A primeira hora, passo a passo</h3>
       <ol class="tut-passos">
-        <li><b>Inscrição.</b> Seis passos: quem você é, o seu jeito, o que você quer, a aparência, quem fica em casa e a conferência. O que pesa no jogo é escolha: o jeito mexe em quem te obedece, o seu forte começa em 2, o objetivo vira o rumo que abre cada capítulo, e lugar ou Pokémon de que você gosta pesa nos dados e na moral. A aparência é a foto: você escolhe o corpo e a cor do cabelo, da pele e da roupa, e é isso que os outros vão dizer de você. O dado ao lado de um campo sorteia uma sugestão, e "Sortear o resto" preenche o que ficou em branco.</li>
+        <li><b>Inscrição.</b> Seis passos: quem você é, o seu jeito, o que você quer, a aparência, quem fica em casa e a conferência. O que pesa no jogo é escolha: o jeito mexe em quem te obedece, o seu forte começa em 2, o objetivo vira o rumo que abre cada capítulo, e lugar ou Pokémon de que você gosta pesa nos dados e na moral. A aparência é a foto: você escolhe o corpo e, na Customização, a cor do cabelo, dos olhos, da pele, da camisa, da calça, dos sapatos e dos detalhes, e é isso que os outros vão dizer de você. O dado ao lado de um campo sorteia uma sugestão, e "Sortear o resto" preenche o que ficou em branco.</li>
         <li><b>O capítulo 1.</b> Você acorda em casa. Leia a cena e toque numa opção — ou escreva o que quer fazer no campo de baixo. Não tem opção certa: tem o que você fez.</li>
         <li><b>O primeiro Pokémon.</b> Os três iniciais saem da Pokébola na sua frente; escolha um e, se quiser, dê um apelido.</li>
         <li><b>A licença.</b> No Centro Pokémon (em Pallet, no laboratório). Com ela, o Centro cura de graça.</li>
@@ -5879,7 +5923,7 @@ const UI = {
       ${L('No que você é bom', 'um dos seis status começa em 2; os outros, em 1 · Resistência em 2 já começa com HP 32 e Vontade 4')}
       ${L('Objetivo', 'um dos sete rumos, numa frase sua (ou na sugerida) · a frase sai da sua boca na história, e o rumo abre cada capítulo')}
       ${L('Gostos', `até ${GOSTOS_MAX} coisas de que você gosta e ${DESGOSTOS_MAX} de que não gosta, entre lugares, tipos de Pokémon e uma espécie · a mesma coisa não fica nas duas listas · o que cada uma faz está em Objetivo e gostos`)}
-      ${L('Aparência', 'a foto do cartão, entre as do seu gênero, com a cor do cabelo, da pele e da roupa · o desenho é sempre o mesmo, só a cor muda · cabelo e roupa viram a descrição que os outros fazem de você quando precisam (foto de boné, capacete ou chapéu diz o que está na cabeça) · sem foto, a descrição fica vaga · nada disso mexe em regra')}
+      ${L('Aparência', 'a foto do cartão, entre as do seu gênero · na Customização, uma aba por parte (cabelo, olhos, pele, camisa, calça, sapatos e detalhes), cada uma com a cor Padrão, a do desenho, e as outras · o desenho é sempre o mesmo, só a cor muda, e só na foto escolhida · parte que a foto não mostra (olho atrás dos óculos, pé descalço) não tem cor · tudo menos a pele vira a descrição que os outros fazem de você quando precisam, peça por peça · sem foto, a descrição fica vaga · nada disso mexe em regra')}
       ${L('Mochila e cartão', 'a cor da mochila na tela (até você comprar outra bolsa) e a do Cartão de Treinador · a foto vai no cartão e na Ficha · nada disso mexe em regra')}
       ${L('Gênero', 'o texto inteiro concorda com ele — narração, tratamento, cargo e título')}
       ${L('Quem fica em casa', 'a voz que te acorda e o primeiro número do PokéNav · o parentesco decide como a história fala dessa pessoa · o que ficar em branco é sorteado combinando nome e parentesco')}

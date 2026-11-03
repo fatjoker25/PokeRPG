@@ -599,7 +599,10 @@ const Estado = {
         ...(ficha.desgostos ? {desgostos: ficha.desgostos} : {}),
         forte: ficha.forte || null,
         retrato: ficha.retrato || null,
-        /* as cores da foto ({cabelo, pele, roupa}, ids de CORES_DA_FOTO) */
+        /* a foto já nasce com as sete partes: a conversão do Estado.abrir não roda */
+        ...(ficha.retrato ? {fotoPartes: 1} : {}),
+        /* as cores da foto ({cabelo, olhos, pele, camisa, calca, sapatos,
+           detalhes}, ids de CORES_DA_FOTO) */
         ...(ficha.retratoCores ? {retratoCores: ficha.retratoCores} : {}),
         corMochila: ficha.corMochila || null,
         corCartao: ficha.corCartao || 'azul',
@@ -659,12 +662,21 @@ const Estado = {
     /* entra no meio da frase dos outros: sem ponto no fim e sem maiúscula no começo */
     const sem = s => { const t = String(s || '').trim().replace(/[.\s]+$/, '');
                        return /^.[a-zà-ú]/.test(t) ? t.charAt(0).toLowerCase() + t.slice(1) : t; };
-    if (j.aparencia)  partes.push(sem(j.aparencia));
-    if (j.vestimenta) partes.push(sem(j.vestimenta));
+    /* a foto da ficha diz tudo, cada peça na cor que você deu, numa lista
+       só ("cabelo ruivo, olhos verdes, regata preta… e mochila azul");
+       sem ela, o que estiver escrito na aparência e na roupa */
+    const arq = typeof j.retrato === 'string' && typeof PASTA_DOS_RETRATOS !== 'undefined' && j.retrato.startsWith(PASTA_DOS_RETRATOS)
+      ? j.retrato.slice(PASTA_DOS_RETRATOS.length) : null;
+    const daFoto = arq && j.fotoPartes && typeof descricaoDaFoto === 'function' ? descricaoDaFoto(arq, j.retratoCores).lista : [];
+    if (daFoto.length) partes.push(...daFoto);
+    else {
+      if (j.aparencia)  partes.push(sem(j.aparencia));
+      if (j.vestimenta) partes.push(sem(j.vestimenta));
+    }
     /* a mochila da ficha entra na descrição se a roupa não falou de bolsa */
     if (j.corMochila && !/mochila|bolsa|sacola|mala|bornal/i.test(partes.join(' ')))
       partes.push('mochila ' + j.corMochila);
-    return partes.join(', ');
+    return daFoto.length ? juntarComE(partes) : partes.join(', ');
   },
   comoTeVeem(){
     const j = this.j;
@@ -1369,6 +1381,11 @@ const Estado = {
          casa e a rua viram as de Viridian, onde a jornada já tinha
          começado. */
       if (d.jogador && d.jogador.cidade === 'Indigo') d.jogador.cidade = 'Viridian';
+      /* a foto ganhou sete partes (cabelo, olhos, pele, camisa, calça,
+         sapatos e detalhes): a cor da roupa de antes vai pra parte que
+         ela pintava, e a descrição que a foto escreveu é refeita com tudo
+         (converterFotoAntiga, em inscricao.js) */
+      if (d.jogador && typeof converterFotoAntiga === 'function') converterFotoAntiga(d.jogador);
       for (const [velho, novo] of Object.entries(ITEM_NOVO)){
         if (d.itens && d.itens[velho]){ d.itens[novo] = (d.itens[novo] || 0) + d.itens[velho]; delete d.itens[velho]; }
         for (const p of [].concat(d.time || [], d.pc || [], d.cemiterio || [])) if (p && p.segurando === velho) p.segurando = novo;

@@ -1729,34 +1729,62 @@ um de lá e reprova foto do outro gênero na grade e gosto que fica nas
 duas listas.
 
 **A cor é sua, o desenho é do artista.** Escolhido o corpo, quem joga
-troca a cor do cabelo, da pele e da roupa (`CORES_DA_FOTO`, em
-`inscricao.js`), e a aparência, que era texto livre, sai daí: o cabelo
-(ou o que está na cabeça, `CABECA_DO_RETRATO`, nas dez fotos de boné,
-capacete e chapéu, que não oferecem cor de cabelo) e a peça de roupa
-(`PECA_DO_RETRATO`, com o gênero da palavra pra cor concordar: "vestido
-preto", "saia preta"), por `descricaoDaFoto`. É isso que vai em
-`j.aparencia`/`j.vestimenta` (o retrato falado do capítulo 6, a Ficha),
-e as cores ficam em `j.retratoCores`. A pele fica só na foto. Desenho
-novo não tem: cada foto vira um PNG de paleta com casa própria pra cada
-cor de cabelo, pele e roupa (`js/data/fotos-jogador.js`, gerado por
-`python3 ferramentas/fotos-do-jogador.py`; com `--folha f.png` sai a
-folha pra conferir no olho), e o `FotoJogador` (`js/ui/foto-jogador.js`)
-escreve as cores novas nessas casas e refaz o CRC da paleta — sem
-canvas, que em `file://` suja. A cor nova é uma escala (matiz,
-saturação, do escuro ao claro) e cada cor do desenho cai no ponto dela,
-então sombra e brilho ficam onde o artista pôs. Quais cores são cabelo,
-pele e roupa foi anotado à mão, cor por cor (`GRUPOS` no gerador, com
-recorte por altura ou caixa quando a mesma cor está no cabelo e na
-bermuda), e conferido com cores gritantes nas 48: o automático acertava
-quatro em dez. Foto nova ou trocada é anotada de novo (o gerador para
-se o número de cores mudar), e cor nova na lista roda o gerador, que
-diz qual é a cor de cada foto como ela veio (`nome_<parte>` acerta à
-mão quando o olho discorda da conta). Tudo que mostra a sua foto passa
-por `retratoDoJogador` ou `FotoJogador.doSave`: o save de arquivo pode
-trazer cor que não existe, e ela não passa. O `chk-telas` passa cada
-foto por cada cor, reprova foto de boné com cor de cabelo, confere
-pixel a pixel que só mudou o que foi escolhido e que a foto chega
-pintada no alto da tela e na abertura.
+abre a **Customização**: uma aba por parte — cabelo, olhos, pele,
+camisa, calça, sapatos e detalhes (`PARTES_DA_FOTO`; boné, cinto,
+faixa, o que a pessoa veste por cima) —, cada uma com a cor
+**Padrão** (a do desenho) primeiro e as da lista depois
+(`CORES_DA_FOTO`, em `inscricao.js`: cabelo, olhos e pele têm a sua,
+as quatro de roupa dividem `roupa`, por `PALETA_DA_PARTE`). Só a foto
+grande e o cartão mudam: a grade de fotos fica como o desenho tem
+(trocar a cor ou a aba redesenha só a customização, `crRefazProvador`).
+Parte que a foto não mostra (olho atrás dos óculos, pé descalço, o
+cabelo debaixo do capacete do ciclista) fica com a aba tracejada e diz
+por quê (`SEM_PARTE_DO_RETRATO`). A aparência, que era texto livre,
+sai daí por `descricaoDaFoto`: cabelo e olhos em `j.aparencia`, cada
+peça na cor dela em `j.vestimenta` (`PECAS_DO_RETRATO`, a palavra e a
+forma pra cor concordar — "tênis preto", "saia preta", "sapatos
+pretos", "botas pretas", e `{cor}` no meio quando a cor não vai no fim,
+"faixa verde na cintura"), e o retrato falado do capítulo 6 diz tudo
+numa lista só (`Estado.descricaoFisica`). As cores ficam em
+`j.retratoCores`; a pele fica só na foto. Desenho novo não tem: cada
+foto vira um PNG de paleta com casa própria pra cada cor de cada parte
+(`js/data/fotos-jogador.js`, gerado por `python3
+ferramentas/fotos-do-jogador.py`; com `--folha f.png` sai a folha com
+seis combinações por foto, pra conferir no olho), e o `FotoJogador`
+(`js/ui/foto-jogador.js`) escreve as cores novas nessas casas e refaz o
+CRC da paleta — sem canvas, que em `file://` suja. A cor nova é uma
+escala (matiz, saturação, do escuro ao claro) e cada cor da parte cai
+no ponto dela, então sombra e brilho ficam onde o artista pôs; a
+pupila preta, que é quase sempre o olho inteiro, cai no meio da escala
+do olho.
+
+**Onde fica cada parte foi anotado pixel a pixel**, foto por foto, em
+`ferramentas/fotos-partes.py` (o formato e a política estão lá): cores
+por caixa, a primeira regra que pega ganha, pixel avulso (`px`: a
+pupila, o branco do olho, o brinco) e caixa que nunca muda (`fixo`: a
+Pokébola, o violão, a mochila da mochileira). Conta por cor não basta:
+o marrom do cabelo é o da bota, o preto do contorno é o do cabelo da
+guitarrista, o verde do olho da trilheira é o do cabelo dela — a
+primeira versão, por cor e altura, deixava metade do cabelo do
+trilheiro sem mudar e a nuca do prateado parada. Chapéu, boné,
+capacete e viseira são detalhe, e o cabelo que aparece embaixo deles é
+cabelo; o que a pessoa segura fica. Foto nova ou trocada é anotada de
+novo (o gerador para se o número de cores mudar) e conferida com uma
+cor gritante por parte; peça nova entra em `PECAS_DO_RETRATO`, parte
+que falta em `SEM_PARTE_DO_RETRATO`, e o gerador reprova foto em que as
+três não batem. Cor nova na lista roda o gerador, que diz qual é a cor
+de cada parte como ela veio (`NOME_A_MAO` acerta quando o olho discorda
+da conta: parte de duas cores vira cinza na conta). Tudo que mostra a
+sua foto passa por `retratoDoJogador` ou `FotoJogador.doSave`: o save
+de arquivo pode trazer cor que não existe, e ela não passa. Save de
+antes das sete partes (cabelo, pele e roupa) é convertido no
+`Estado.abrir` (`converterFotoAntiga`): a cor da roupa vai pras partes
+que ela pintava (`ROUPA_DE_ANTES`), e a descrição que a foto tinha
+escrito é refeita — a escrita à mão fica. O `chk-telas` abre cada aba
+de cada foto com cada cor, reprova parte que a foto não tem oferecendo
+cor, grade que muda junto com a foto grande, pixel que muda pra cor de
+outra parte (cada parte sozinha, e todas juntas igual à soma delas) e
+confere a descrição peça por peça, no Estado e no alto da tela.
 
 Save de antes da inscrição continua sendo lido por palavra (`rumoDe`,
 `perfilDoJogador`, `corNaDescricao`), e o de antes das cores fica com a

@@ -108,17 +108,22 @@ function retratoDaFicha(arq){
   return !!arq && (RETRATOS_DA_FICHA.Homem.includes(arq) || RETRATOS_DA_FICHA.Mulher.includes(arq));
 }
 
-/* As cores da foto. Escolhido o corpo, o cabelo, a pele e a roupa
-   trocam de cor sem trocar o desenho, que continua sendo o do
-   artista: cada foto tem, em js/data/fotos-jogador.js (gerado por
-   ferramentas/fotos-do-jogador.py), quais cores da paleta dela são
-   cabelo, pele e roupa, e onde cada uma fica do escuro ao claro. A
-   cor nova é uma escala do mesmo jeito — matiz h, saturação s, do
-   escuro l[0] ao claro l[1] —, então a sombra e o brilho ficam onde o
-   artista pôs. Cabelo e roupa viram também a descrição que os outros
-   fazem de você (o retrato falado do capítulo 6); a pele fica só na
-   foto. Cor nova entra aqui e o gerador roda de novo: é ele que diz
-   qual destas é a cor de cada foto como ela veio. */
+/* A customização da foto. Escolhido o corpo, o cabelo, os olhos, a
+   pele, a camisa, a calça, os sapatos e os detalhes (boné, cinto,
+   faixa, o que a pessoa carrega no corpo) trocam de cor sem trocar o
+   desenho, que continua sendo o do artista: cada foto tem, em
+   js/data/fotos-jogador.js (gerado por ferramentas/fotos-do-jogador.py,
+   com as partes anotadas pixel a pixel em ferramentas/fotos-partes.py),
+   quais cores da paleta dela são cada parte, e onde cada uma fica do
+   escuro ao claro. A cor nova é uma escala do mesmo jeito — matiz h,
+   saturação s, do escuro l[0] ao claro l[1] —, então a sombra e o
+   brilho ficam onde o artista pôs. Tudo menos a pele vira a descrição
+   que os outros fazem de você (o retrato falado do capítulo 6). Cor
+   nova entra aqui e o gerador roda de novo: é ele que diz qual destas
+   é a cor de cada foto como ela veio.
+   O nome da cor vai nas quatro formas, [ele, ela, eles, elas], pela
+   palavra da peça (PECAS_DO_RETRATO): "tênis preto", "saia preta",
+   "sapatos pretos", "botas pretas"; nome que não muda é texto só. */
 const CORES_DA_FOTO = {
   cabelo: [
     {id:'preto',           nome:'preto',           h:225, s:.12, l:[.07, .30]},
@@ -134,6 +139,19 @@ const CORES_DA_FOTO = {
     {id:'azul',            nome:'azul',            h:215, s:.60, l:[.22, .62]},
     {id:'verde',           nome:'verde',           h:145, s:.45, l:[.20, .58]}
   ],
+  /* o olho do desenho é quase sempre a pupila preta e, às vezes, a íris:
+     o meio da escala é a cor da íris, o escuro dela é a pupila */
+  olhos: [
+    {id:'castanho',   nome:['castanho', 'castanha', 'castanhos', 'castanhas'],         h:25,  s:.55, l:[.10, .40]},
+    {id:'preto',      nome:['preto', 'preta', 'pretos', 'pretas'],                     h:225, s:.10, l:[.04, .22]},
+    {id:'mel',        nome:['mel', 'mel', 'cor de mel', 'cor de mel'],                 h:38,  s:.75, l:[.18, .55]},
+    {id:'verde',      nome:['verde', 'verde', 'verdes', 'verdes'],                     h:135, s:.50, l:[.12, .48]},
+    {id:'azul',       nome:['azul', 'azul', 'azuis', 'azuis'],                         h:212, s:.70, l:[.14, .54]},
+    {id:'azul-claro', nome:['azul-claro', 'azul-clara', 'azul-claros', 'azul-claras'], h:196, s:.75, l:[.28, .72]},
+    {id:'cinza',      nome:'cinza',                                                    h:210, s:.10, l:[.18, .60]},
+    {id:'violeta',    nome:'violeta',                                                  h:275, s:.50, l:[.14, .52]},
+    {id:'vermelho',   nome:['vermelho', 'vermelha', 'vermelhos', 'vermelhas'],         h:355, s:.65, l:[.14, .48]}
+  ],
   pele: [
     {id:'muito-clara',  nome:'muito clara',  h:22, s:.70, l:[.50, .92]},
     {id:'clara',        nome:'clara',        h:24, s:.62, l:[.42, .86]},
@@ -141,62 +159,123 @@ const CORES_DA_FOTO = {
     {id:'morena',       nome:'morena',       h:22, s:.48, l:[.22, .60]},
     {id:'escura',       nome:'escura',       h:18, s:.42, l:[.13, .46]}
   ],
-  /* roupa: [masculino, feminino], pela palavra da peça (PECA_DO_RETRATO) */
+  /* camisa, calça, sapatos e detalhes tiram a cor daqui */
   roupa: [
-    {id:'vermelho',     nome:['vermelho', 'vermelha'],  h:355, s:.65, l:[.22, .62]},
-    {id:'vinho',        nome:'vinho',                   h:345, s:.50, l:[.12, .42]},
-    {id:'laranja',      nome:'laranja',                 h:25,  s:.80, l:[.30, .70]},
-    {id:'amarelo',      nome:['amarelo', 'amarela'],    h:48,  s:.80, l:[.38, .80]},
-    {id:'verde',        nome:'verde',                   h:130, s:.45, l:[.18, .55]},
-    {id:'verde-agua',   nome:'verde-água',              h:172, s:.50, l:[.20, .70]},
-    {id:'azul-claro',   nome:['azul-claro', 'azul-clara'], h:200, s:.60, l:[.38, .86]},
-    {id:'azul',         nome:'azul',                    h:212, s:.60, l:[.20, .62]},
-    {id:'azul-marinho', nome:'azul-marinho',            h:225, s:.45, l:[.10, .38]},
-    {id:'roxo',         nome:['roxo', 'roxa'],          h:275, s:.45, l:[.22, .62]},
-    {id:'rosa',         nome:'rosa',                    h:330, s:.60, l:[.40, .82]},
-    {id:'marrom',       nome:'marrom',                  h:25,  s:.35, l:[.15, .45]},
-    {id:'bege',         nome:'bege',                    h:38,  s:.30, l:[.45, .85]},
-    {id:'preto',        nome:['preto', 'preta'],        h:230, s:.08, l:[.06, .32]},
-    {id:'cinza',        nome:'cinza',                   h:220, s:.06, l:[.30, .70]},
-    {id:'branco',       nome:['branco', 'branca'],      h:220, s:.08, l:[.62, .96]}
+    {id:'vermelho',     nome:['vermelho', 'vermelha', 'vermelhos', 'vermelhas'],         h:355, s:.65, l:[.22, .62]},
+    {id:'vinho',        nome:'vinho',                                                    h:345, s:.50, l:[.12, .42]},
+    {id:'laranja',      nome:'laranja',                                                  h:25,  s:.80, l:[.30, .70]},
+    {id:'amarelo',      nome:['amarelo', 'amarela', 'amarelos', 'amarelas'],             h:48,  s:.80, l:[.38, .80]},
+    {id:'verde',        nome:['verde', 'verde', 'verdes', 'verdes'],                     h:130, s:.45, l:[.18, .55]},
+    {id:'verde-agua',   nome:'verde-água',                                               h:172, s:.50, l:[.20, .70]},
+    {id:'azul-claro',   nome:['azul-claro', 'azul-clara', 'azul-claros', 'azul-claras'], h:200, s:.60, l:[.38, .86]},
+    {id:'azul',         nome:['azul', 'azul', 'azuis', 'azuis'],                         h:212, s:.60, l:[.20, .62]},
+    {id:'azul-marinho', nome:'azul-marinho',                                             h:225, s:.45, l:[.10, .38]},
+    {id:'roxo',         nome:['roxo', 'roxa', 'roxos', 'roxas'],                         h:275, s:.45, l:[.22, .62]},
+    {id:'rosa',         nome:'rosa',                                                     h:330, s:.60, l:[.40, .82]},
+    {id:'marrom',       nome:['marrom', 'marrom', 'marrons', 'marrons'],                 h:25,  s:.35, l:[.15, .45]},
+    {id:'bege',         nome:'bege',                                                     h:38,  s:.30, l:[.45, .85]},
+    {id:'preto',        nome:['preto', 'preta', 'pretos', 'pretas'],                     h:230, s:.08, l:[.06, .32]},
+    {id:'cinza',        nome:'cinza',                                                    h:220, s:.06, l:[.30, .70]},
+    {id:'branco',       nome:['branco', 'branca', 'brancos', 'brancas'],                 h:220, s:.08, l:[.62, .96]}
   ]
 };
-/* a ordem em que a ficha mostra as três, da cabeça pro pé */
-const PARTES_DA_FOTO = [['cabelo', 'Cabelo'], ['pele', 'Pele'], ['roupa', 'Roupa']];
+/* as abas da customização, da cabeça pro pé, e de que lista cada uma tira a cor */
+const PARTES_DA_FOTO = [['cabelo', 'Cabelo'], ['olhos', 'Olhos'], ['pele', 'Pele'], ['camisa', 'Camisa'],
+                        ['calca', 'Calça'], ['sapatos', 'Sapatos'], ['detalhes', 'Detalhes']];
+const PALETA_DA_PARTE = {cabelo:'cabelo', olhos:'olhos', pele:'pele', camisa:'roupa', calca:'roupa', sapatos:'roupa', detalhes:'roupa'};
 
-/* o que a roupa de cada foto é, e o gênero da palavra, que decide a
-   cor ("vestido preto", "saia preta"): é o que vai na descrição */
-const PECA_DO_RETRATO = {
-  viajante:['calça', 'f'], urbano:['bermuda', 'f'], patinador:['bermuda', 'f'], colecionador:['bermuda', 'f'],
-  terno:['terno', 'm'], trilheiro:['camisa', 'f'], roqueiro:['roupa', 'f'], chamativo:['jaqueta', 'f'],
-  lutador:['quimono', 'm'], mistico:['calça', 'f'], piloto:['macacão', 'm'], naturalista:['camisa', 'f'],
-  durao:['jaqueta', 'f'], criador:['uniforme', 'm'], corredor:['regata', 'f'], ciclista:['camiseta', 'f'],
-  esportivo:['camiseta', 'f'], surfista:['bermuda', 'f'], artesao:['avental', 'm'], prateado:['jaqueta', 'f'],
-  violeiro:['calça', 'f'], explorador:['jaqueta', 'f'], cinegrafista:['jaqueta', 'f'], lavrador:['avental', 'm'],
-  aventureira:['vestido', 'm'], animada:['blusa', 'f'], urbana:['short', 'm'], atleta:['agasalho', 'm'],
-  estudante:['casaco', 'm'], elegante:['casaco', 'm'], trilheira:['blusa', 'f'], punk:['saia', 'f'],
-  gotica:['vestido', 'm'], lutadora:['quimono', 'm'], dancarina:['calça', 'f'], modelo:['casaco', 'm'],
-  artista:['calça', 'f'], aviadora:['macacão', 'm'], patinadora:['roupa', 'f'], ciclista_f:['camiseta', 'f'],
-  mochileira:['bermuda', 'f'], despojada:['regata', 'f'], esportiva:['saia', 'f'], descolada:['macacão', 'm'],
-  fazendeira:['jardineira', 'f'], cantora:['vestido', 'm'], vidente:['túnica', 'f'], guitarrista:['saia', 'f']
+/* O que cada peça da foto é, e a forma da palavra, que decide a cor:
+   m "tênis preto", f "saia preta", mp "sapatos pretos", fp "botas
+   pretas" (peças juntas de gênero diferente vão no masculino plural,
+   "capuz e capa azuis"). {cor} põe a cor no meio ("faixa verde na
+   cintura"); sem ele, a cor vem no fim. É o que vai na descrição, e
+   foto sem a parte não tem a peça (SEM_PARTE_DO_RETRATO diz por quê). */
+const PECAS_DO_RETRATO = {
+  viajante:     {camisa:['regata', 'f'], calca:['calça jeans', 'f'], sapatos:['tênis', 'm'], detalhes:['boné', 'm']},
+  urbano:       {camisa:['regata', 'f'], calca:['bermuda', 'f'], sapatos:['tênis e meias', 'mp'], detalhes:['fones', 'mp']},
+  patinador:    {camisa:['camiseta', 'f'], calca:['bermuda', 'f'], sapatos:['patins', 'mp'], detalhes:['capacete, luva e joelheira', 'mp']},
+  colecionador: {camisa:['jaqueta', 'f'], calca:['bermuda', 'f'], sapatos:['tênis', 'm'], detalhes:['pochete', 'f']},
+  terno:        {camisa:['paletó', 'm'], calca:['calça', 'f'], sapatos:['sapatos', 'mp'], detalhes:['gravata e colete', 'mp']},
+  trilheiro:    {camisa:['camisa', 'f'], calca:['calça', 'f'], sapatos:['botas', 'fp'], detalhes:['cinto', 'm']},
+  roqueiro:     {camisa:['regata', 'f'], calca:['calça', 'f'], sapatos:['tênis', 'm']},
+  chamativo:    {camisa:['jaqueta', 'f'], calca:['calça camuflada', 'f'], sapatos:['tênis', 'm'], detalhes:['óculos e mangas', 'mp']},
+  lutador:      {camisa:['quimono', 'm'], calca:['calça', 'f'], detalhes:['faixa', 'f']},
+  mistico:      {camisa:['túnica', 'f'], calca:['calça', 'f'], sapatos:['chinelos', 'mp'], detalhes:['gola, punhos e faixa', 'mp']},
+  piloto:       {camisa:['macacão', 'm'], calca:['calça', 'f'], detalhes:['capuz e capa', 'mp']},
+  naturalista:  {camisa:['camisa', 'f'], calca:['bermuda', 'f'], sapatos:['tênis', 'm'], detalhes:['chapéu', 'm']},
+  durao:        {camisa:['jaqueta', 'f'], calca:['calça', 'f'], sapatos:['tênis', 'm'], detalhes:['frisos {cor} da jaqueta', 'mp']},
+  criador:      {camisa:['camisa', 'f'], calca:['macacão', 'm'], sapatos:['botas', 'fp'], detalhes:['boné', 'm']},
+  corredor:     {camisa:['regata', 'f'], calca:['short', 'm'], sapatos:['tênis', 'm'], detalhes:['óculos', 'mp']},
+  ciclista:     {camisa:['regata', 'f'], calca:['bermuda', 'f'], sapatos:['tênis', 'm'], detalhes:['capacete', 'm']},
+  esportivo:    {camisa:['camiseta', 'f'], calca:['bermuda', 'f'], sapatos:['tênis', 'm'], detalhes:['boné', 'm']},
+  surfista:     {calca:['bermuda', 'f'], detalhes:['colar e pulseiras', 'mp']},
+  artesao:      {camisa:['camisa xadrez', 'f'], calca:['calça', 'f'], sapatos:['sapatos', 'mp'], detalhes:['avental', 'm']},
+  prateado:     {camisa:['jaqueta', 'f'], calca:['calça', 'f'], sapatos:['tênis', 'm'], detalhes:['lenço e faixa', 'mp']},
+  violeiro:     {camisa:['camisa jeans', 'f'], calca:['calça', 'f'], sapatos:['botas', 'fp'], detalhes:['chapéu', 'm']},
+  explorador:   {camisa:['jaqueta', 'f'], calca:['calça', 'f'], sapatos:['botas', 'fp'], detalhes:['boné', 'm']},
+  cinegrafista: {camisa:['camiseta', 'f'], calca:['calça', 'f'], sapatos:['tênis', 'm'], detalhes:['boné e jaqueta', 'mp']},
+  lavrador:     {camisa:['camiseta', 'f'], calca:['calça', 'f'], sapatos:['botas', 'fp'], detalhes:['touca e avental', 'mp']},
+  aventureira:  {camisa:['vestido', 'm'], calca:['short', 'm'], sapatos:['botas', 'fp'], detalhes:['viseira e luvas', 'fp']},
+  animada:      {camisa:['blusa de marinheiro', 'f'], calca:['saia', 'f'], sapatos:['sapatos', 'mp'], detalhes:['lenço', 'm']},
+  urbana:       {camisa:['jaqueta', 'f'], calca:['short jeans', 'm'], sapatos:['tênis', 'm'], detalhes:['listras {cor} da jaqueta', 'fp']},
+  atleta:       {camisa:['agasalho', 'm'], calca:['calça', 'f'], sapatos:['tênis', 'm'], detalhes:['listras {cor} do agasalho', 'fp']},
+  estudante:    {camisa:['blazer', 'm'], calca:['saia', 'f'], sapatos:['sapatos', 'mp'], detalhes:['gravata', 'f']},
+  elegante:     {camisa:['blazer', 'm'], calca:['saia', 'f'], sapatos:['botas', 'fp'], detalhes:['laço e frisos', 'mp']},
+  trilheira:    {camisa:['blusa', 'f'], calca:['short', 'm'], sapatos:['botas', 'fp'], detalhes:['faixa {cor} na cintura', 'f']},
+  punk:         {camisa:['jaqueta', 'f'], calca:['saia', 'f'], sapatos:['botas', 'fp'], detalhes:['meias e frisos', 'mp']},
+  gotica:       {camisa:['corpete', 'm'], calca:['saia', 'f'], sapatos:['sapatos', 'mp'], detalhes:['tiara e lenço', 'mp']},
+  lutadora:     {camisa:['quimono', 'm'], calca:['calça', 'f'], detalhes:['faixa', 'f']},
+  dancarina:    {camisa:['jaqueta', 'f'], calca:['calça estampada', 'f'], sapatos:['tênis', 'm'], detalhes:['boné e munhequeiras', 'mp']},
+  modelo:       {camisa:['casaco', 'm'], sapatos:['botas {cor} de salto', 'fp'], detalhes:['frisos {cor} do casaco', 'mp']},
+  artista:      {camisa:['blusa', 'f'], calca:['calça', 'f'], sapatos:['sapatos', 'mp'], detalhes:['lenço e faixa', 'mp']},
+  aviadora:     {camisa:['macacão', 'm'], calca:['calça', 'f'], detalhes:['capacete e capa', 'mp']},
+  patinadora:   {camisa:['blusa', 'f'], calca:['saia', 'f'], sapatos:['patins', 'mp'], detalhes:['capacete e joelheira', 'mp']},
+  ciclista_f:   {camisa:['regata', 'f'], calca:['short', 'm'], sapatos:['tênis', 'm'], detalhes:['viseira', 'f']},
+  mochileira:   {calca:['bermuda', 'f'], sapatos:['tênis', 'm'], detalhes:['prendedor e munhequeira', 'mp']},
+  despojada:    {camisa:['regata', 'f'], calca:['bermuda jeans', 'f'], sapatos:['tênis', 'm'], detalhes:['jaqueta {cor} amarrada na cintura', 'f']},
+  esportiva:    {camisa:['camiseta', 'f'], calca:['saia', 'f'], sapatos:['tênis', 'm'], detalhes:['faixa {cor} no cabelo', 'f']},
+  descolada:    {camisa:['blusa {cor} de alcinha', 'f'], calca:['calça jeans', 'f'], sapatos:['sapatos {cor} de salto', 'mp'], detalhes:['óculos e cinto', 'mp']},
+  fazendeira:   {camisa:['camisa', 'f'], calca:['jardineira', 'f'], sapatos:['botas', 'fp'], detalhes:['chapéu, lenço e cinto', 'mp']},
+  cantora:      {camisa:['corpete', 'm'], calca:['saia', 'f'], sapatos:['sapatos', 'mp'], detalhes:['fita, flor e brincos', 'mp']},
+  vidente:      {camisa:['quimono', 'm'], calca:['calça', 'f'], detalhes:['faixa {cor} na cintura', 'f']},
+  guitarrista:  {camisa:['regata', 'f'], calca:['saia xadrez', 'f'], sapatos:['tênis e meias', 'mp'], detalhes:['prendedor e munhequeira', 'mp']}
 };
-/* foto em que o cabelo não aparece ou não se separa do que está por
-   cima: não tem cor de cabelo, e a descrição diz o que tem na cabeça */
-const CABECA_DO_RETRATO = {
-  urbano:'boné', patinador:'capacete', criador:'boné', ciclista:'boné', esportivo:'boné pra trás',
-  violeiro:'chapéu', explorador:'boné', cinegrafista:'boné pra trás', aviadora:'capacete', patinadora:'capacete'
+/* parte que a foto não tem, e o que a aba diz no lugar das cores */
+const SEM_PARTE_DO_RETRATO = {
+  roqueiro:     {olhos:'De olhos fechados nesta foto.', detalhes:'Nenhum acessório nesta foto.'},
+  chamativo:    {olhos:'Os óculos escuros escondem os olhos.'},
+  mistico:      {olhos:'De olhos fechados nesta foto.'},
+  naturalista:  {olhos:'Os óculos escondem os olhos.'},
+  corredor:     {olhos:'Os óculos escondem os olhos.'},
+  violeiro:     {olhos:'Os olhos ficam na sombra do chapéu.'},
+  cinegrafista: {olhos:'Um olho na câmera, o outro fechado.'},
+  ciclista:     {cabelo:'O capacete cobre o cabelo.'},
+  lutador:      {sapatos:'Descalço nesta foto.'},
+  surfista:     {camisa:'Sem camisa nesta foto.', sapatos:'Descalço nesta foto.'},
+  lutadora:     {sapatos:'Descalça nesta foto.'},
+  vidente:      {sapatos:'Descalça nesta foto.'},
+  piloto:       {sapatos:'O macacão cobre os pés.'},
+  aviadora:     {sapatos:'O macacão cobre os pés.'},
+  mochileira:   {camisa:'A mochila cobre a blusa.'},
+  modelo:       {calca:'O casaco vai até a coxa.'}
 };
 
+/* a lista de cores de uma parte, e uma cor dela */
+function coresDaParte(parte){ return CORES_DA_FOTO[PALETA_DA_PARTE[parte] || parte] || []; }
 function corDaFoto(parte, id){
-  return (CORES_DA_FOTO[parte] || []).find(c => c.id === id) || null;
+  return coresDaParte(parte).find(c => c.id === id) || null;
 }
-function nomeDaCorDaFoto(parte, id, feminino){
+/* o nome da cor na forma da peça: 'm', 'f', 'mp' ou 'fp' (true e false,
+   de antes das quatro formas, são 'f' e 'm') */
+function nomeDaCorDaFoto(parte, id, forma){
   const c = corDaFoto(parte, id);
   if (!c) return '';
-  return Array.isArray(c.nome) ? c.nome[feminino ? 1 : 0] : c.nome;
+  if (!Array.isArray(c.nome)) return c.nome;
+  const i = {m:0, f:1, mp:2, fp:3}[forma === true ? 'f' : forma === false || forma == null ? 'm' : forma] || 0;
+  return c.nome[i] || c.nome[0];
 }
 /* só o que existe e que a foto tem: o save pode ter vindo de arquivo de
-   outra pessoa, e cor de cabelo em foto de boné não entra */
+   outra pessoa, e cor de cabelo em foto de capacete não entra */
 function coresDaFotoValidas(arq, cores){
   const f = typeof FOTOS_DO_JOGADOR !== 'undefined' && FOTOS_DO_JOGADOR[arq];
   const ok = {};
@@ -205,16 +284,74 @@ function coresDaFotoValidas(arq, cores){
     if (f[parte] && typeof cores[parte] === 'string' && corDaFoto(parte, cores[parte])) ok[parte] = cores[parte];
   return ok;
 }
-/* a descrição que sai da foto: o cabelo (ou o que está na cabeça) e a
-   roupa, na cor escolhida ou na que o desenho tem */
+/* a peça com a cor no lugar dela: "regata verde", "faixa verde na cintura" */
+function pecaComCor(texto, cor){
+  return texto.includes('{cor}') ? texto.replace('{cor}', cor) : `${texto} ${cor}`;
+}
+/* a descrição que sai da foto, na cor escolhida ou na que o desenho tem:
+   o cabelo e os olhos (aparência) e cada peça (vestimenta); lista é tudo
+   junto, na ordem, pra quem descreve numa frase só */
 function descricaoDaFoto(arq, cores){
   const f = typeof FOTOS_DO_JOGADOR !== 'undefined' && FOTOS_DO_JOGADOR[arq];
-  if (!f) return {aparencia:'', vestimenta:''};
+  if (!f) return {aparencia:'', vestimenta:'', lista:[]};
   const c = coresDaFotoValidas(arq, cores);
-  const aparencia = f.cabelo ? `cabelo ${nomeDaCorDaFoto('cabelo', c.cabelo || f.cabelo.cor)}` : (CABECA_DO_RETRATO[arq] || '');
-  const [peca, gen] = PECA_DO_RETRATO[arq] || ['roupa', 'f'];
-  const vestimenta = f.roupa ? `${peca} ${nomeDaCorDaFoto('roupa', c.roupa || f.roupa.cor, gen === 'f')}` : '';
-  return {aparencia, vestimenta};
+  const cor = (parte, forma) => nomeDaCorDaFoto(parte, c[parte] || f[parte].cor, forma);
+  const cabeca = [f.cabelo ? `cabelo ${cor('cabelo', 'm')}` : '', f.olhos ? `olhos ${cor('olhos', 'mp')}` : ''].filter(Boolean);
+  const pecas = PECAS_DO_RETRATO[arq] || {};
+  const roupa = ['camisa', 'calca', 'sapatos', 'detalhes']
+    .filter(p => f[p] && pecas[p]).map(p => pecaComCor(pecas[p][0], cor(p, pecas[p][1])));
+  return {aparencia:juntarComE(cabeca), vestimenta:juntarComE(roupa), lista:cabeca.concat(roupa)};
+}
+
+/* Save de antes das sete partes: a foto tinha cabelo, pele e roupa, e
+   a roupa pintava uma peça só (ou o macacão, o quimono e o vestido
+   inteiros). A cor dela vai pra parte que ela pintava, e a descrição
+   que a foto tinha escrito ("cabelo ruivo", "bermuda vermelha") é
+   refeita com tudo; a que alguém escreveu à mão, de antes da foto
+   decidir a descrição, fica. */
+const ROUPA_DE_ANTES = {
+  viajante:['calça', 'calca'], urbano:['bermuda', 'camisa', 'calca'], patinador:['bermuda', 'calca'], colecionador:['bermuda', 'calca'],
+  terno:['terno', 'camisa', 'calca'], trilheiro:['camisa', 'camisa', 'calca'], roqueiro:['roupa', 'camisa', 'calca'], chamativo:['jaqueta', 'camisa', 'sapatos'],
+  lutador:['quimono', 'camisa', 'calca'], mistico:['calça', 'calca', 'detalhes'], piloto:['macacão', 'detalhes'],
+  naturalista:['camisa', 'camisa'], durao:['jaqueta', 'camisa'], criador:['uniforme', 'camisa', 'calca'], corredor:['regata', 'camisa'],
+  ciclista:['camiseta', 'camisa'], esportivo:['camiseta', 'camisa', 'calca'], surfista:['bermuda', 'calca'], artesao:['avental', 'camisa', 'detalhes'],
+  prateado:['jaqueta', 'camisa'], violeiro:['calça', 'camisa', 'calca'], explorador:['jaqueta', 'camisa'], cinegrafista:['jaqueta', 'detalhes'],
+  lavrador:['avental', 'detalhes'], aventureira:['vestido', 'camisa', 'sapatos'], animada:['blusa', 'detalhes'], urbana:['short', 'calca', 'detalhes'],
+  atleta:['agasalho', 'camisa', 'calca'], estudante:['casaco', 'camisa'], elegante:['casaco', 'camisa', 'calca', 'sapatos'], trilheira:['blusa', 'camisa', 'calca'],
+  punk:['saia', 'calca'], gotica:['vestido', 'camisa', 'calca'], lutadora:['quimono', 'camisa', 'calca'], dancarina:['calça', 'calca'],
+  modelo:['casaco', 'camisa', 'sapatos'], artista:['calça', 'calca', 'sapatos'], aviadora:['macacão', 'detalhes'], patinadora:['roupa', 'camisa', 'calca'],
+  ciclista_f:['camiseta', 'camisa'], mochileira:['bermuda', 'calca'], despojada:['regata', 'camisa', 'calca'], esportiva:['saia', 'camisa', 'calca'],
+  descolada:['macacão', 'camisa', 'calca'], fazendeira:['jardineira', 'calca'], cantora:['vestido', 'camisa', 'calca'],
+  vidente:['túnica', 'camisa', 'calca'], guitarrista:['saia', 'calca']
+};
+const CABECA_DE_ANTES = {
+  urbano:'boné', patinador:'capacete', criador:'boné', ciclista:'boné', esportivo:'boné pra trás',
+  violeiro:'chapéu', explorador:'boné', cinegrafista:'boné pra trás', aviadora:'capacete', patinadora:'capacete'
+};
+function converterFotoAntiga(j){
+  if (!j || j.fotoPartes || typeof j.retrato !== 'string' || !j.retrato.startsWith(PASTA_DOS_RETRATOS)) return;
+  const arq = j.retrato.slice(PASTA_DOS_RETRATOS.length);
+  if (typeof FOTOS_DO_JOGADOR === 'undefined' || !FOTOS_DO_JOGADOR[arq]) return;
+  const antes = ROUPA_DE_ANTES[arq] || ['roupa'];
+  let cores = j.retratoCores && typeof j.retratoCores === 'object' ? Object.assign({}, j.retratoCores) : null;
+  if (cores && typeof cores.roupa === 'string'){
+    for (const p of antes.slice(1)) if (!cores[p]) cores[p] = cores.roupa;
+    delete cores.roupa;
+  }
+  const ok = coresDaFotoValidas(arq, cores);
+  if (Object.keys(ok).length) j.retratoCores = ok; else delete j.retratoCores;
+  /* a descrição é a que a foto escreveu? cabelo e a cor (ou o que ia na
+     cabeça), e a peça de antes e a cor */
+  const nomes = lista => new Set(lista.flatMap(k => [].concat(k.nome)));
+  const cabelos = nomes(CORES_DA_FOTO.cabelo), roupas = nomes(CORES_DA_FOTO.roupa);
+  const ap = String(j.aparencia || ''), ve = String(j.vestimenta || '');
+  const apDaFoto = !ap || ap === CABECA_DE_ANTES[arq] || (ap.startsWith('cabelo ') && cabelos.has(ap.slice(7)));
+  const veDaFoto = !ve || (ve.startsWith(antes[0] + ' ') && roupas.has(ve.slice(antes[0].length + 1)));
+  if (apDaFoto && veDaFoto){
+    const d = descricaoDaFoto(arq, ok);
+    j.aparencia = d.aparencia; j.vestimenta = d.vestimenta;
+  }
+  j.fotoPartes = 1;
 }
 
 /* a cor da mochila que sai de casa com você: chaves de CORES_MOCHILA */

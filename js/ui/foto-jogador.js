@@ -2,7 +2,8 @@
    A FOTO DO JOGADOR — a mesma foto, nas cores que você escolheu
    A foto (js/data/fotos-jogador.js, gerado por
    ferramentas/fotos-do-jogador.py) é um PNG de paleta em que cada cor
-   de cabelo, pele e roupa tem casa própria. Trocar a cor é escrever
+   de cada parte (cabelo, olhos, pele, camisa, calça, sapatos e
+   detalhes) tem casa própria. Trocar a cor é escrever
    as cores novas nessas casas e refazer o CRC do pedaço da paleta
    (PLTE): o desenho não muda um pixel, e a imagem sai como data: sem
    passar por canvas, que em file:// suja e não deixa ler de volta.
@@ -59,8 +60,9 @@ const FotoJogador = {
     return typeof caminhoNPC === 'function' ? caminhoNPC(PASTA_DOS_RETRATOS + arq) : PASTA_DOS_RETRATOS + arq;
   },
 
-  /* o endereço da foto nas cores escolhidas ({cabelo, pele, roupa}, ids
-     de CORES_DA_FOTO; o que falta fica como o desenho tem) */
+  /* o endereço da foto nas cores escolhidas ({cabelo, olhos, pele, camisa,
+     calca, sapatos, detalhes}, ids de CORES_DA_FOTO; o que falta fica
+     como o desenho tem) */
   url(arq, cores){
     const f = typeof FOTOS_DO_JOGADOR !== 'undefined' && FOTOS_DO_JOGADOR[arq];
     const ok = coresDaFotoValidas(arq, cores);

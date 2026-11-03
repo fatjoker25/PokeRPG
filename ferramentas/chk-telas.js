@@ -177,11 +177,12 @@ const SUSPEITO = [
       for (const t of TIPOS_KANTO) UI.crAcao('gosto', {lista:'desgostos', cat:'tipos', v:t});
       for (const [k] of LUGARES_DA_FICHA) UI.crAcao('gosto', {lista:'gostos', cat:'lugares', v:k});
       for (const k of MOCHILAS_DA_FICHA) UI.crAcao('mochila', {v:k});
-      /* cada foto, e nela cada cor de cada parte e a volta pra do desenho */
+      /* cada foto, e nela cada aba, cada cor de cada parte e a volta pra Padrão */
       for (const r of RETRATOS_DA_FICHA[c.genero]){
         UI.crAcao('retrato', {v:r});
         for (const [parte] of PARTES_DA_FOTO){
-          for (const k of CORES_DA_FOTO[parte]) UI.crAcao('cor', {parte, v:k.id});
+          UI.crAcao('aba', {v:parte});
+          for (const k of coresDaParte(parte)) UI.crAcao('cor', {parte, v:k.id});
           UI.crAcao('cor', {parte, v:''});
         }
       }
@@ -219,56 +220,93 @@ const SUSPEITO = [
       return falhas;
     });
     for (const f of regras){ onde = `inscrição/${g}`; anota('inscrição', f); }
-    /* as cores da foto: foto de boné não oferece cor de cabelo; a foto
-       troca de cor só onde devia, pixel por pixel, e abre no navegador;
-       a descrição sai das cores */
+    /* a customização: uma aba por parte, a Padrão primeiro; parte que a
+       foto não tem diz por quê e não oferece cor; a grade de fotos fica
+       como o desenho tem; cada parte, sozinha, muda só pixel da cor dela,
+       e todas juntas dão o mesmo que cada uma separada; a descrição sai
+       das cores, peça por peça */
     const pintura = await page.evaluate(async () => {
       const c = UI._cr, falhas = [];
       UI.crAcao('passo', {v:'3'});
       const doGenero = RETRATOS_DA_FICHA[c.genero];
-      const semCabelo = doGenero.find(a => !FOTOS_DO_JOGADOR[a].cabelo);
-      const comCabelo = doGenero.find(a => FOTOS_DO_JOGADOR[a].cabelo);
-      UI.crAcao('retrato', {v:semCabelo});
-      if (document.querySelector('.cr-tinta[data-parte="cabelo"]')) falhas.push(`a foto ${semCabelo} (de ${CABECA_DO_RETRATO[semCabelo]}) oferece cor de cabelo`);
-      if (!document.querySelector('.cr-parte.sem')) falhas.push(`a foto ${semCabelo} não diz que o cabelo fica debaixo do ${CABECA_DO_RETRATO[semCabelo]}`);
-      UI.crAcao('retrato', {v:comCabelo});
-      const alvo = {cabelo:'rosa', pele:'escura', roupa:'verde'};
+      const incompleta = doGenero.find(a => PARTES_DA_FOTO.some(([p]) => !FOTOS_DO_JOGADOR[a][p]));
+      const inteira = doGenero.find(a => PARTES_DA_FOTO.every(([p]) => FOTOS_DO_JOGADOR[a][p]));
+      if (!inteira) return ['nenhuma foto do gênero tem as sete partes'];
+      if (incompleta){
+        const falta = PARTES_DA_FOTO.map(([p]) => p).find(p => !FOTOS_DO_JOGADOR[incompleta][p]);
+        UI.crAcao('retrato', {v:incompleta}); UI.crAcao('aba', {v:falta});
+        if (document.querySelector(`.cr-tinta[data-parte="${falta}"]`)) falhas.push(`a foto ${incompleta} oferece cor de ${falta}, que ela não mostra`);
+        const nota = document.querySelector('.cr-painel .cr-parte-sem');
+        if (!nota || nota.textContent !== SEM_PARTE_DO_RETRATO[incompleta][falta]) falhas.push(`a aba ${falta} da foto ${incompleta} não diz por que não tem cor`);
+        if (!document.querySelector(`#cr-aba-${falta}.sem`)) falhas.push(`a aba ${falta} da foto ${incompleta} não aparece como parte que falta`);
+      }
+      UI.crAcao('retrato', {v:inteira});
+      const titulo = document.querySelector('.cr-provador .cr-rot');
+      if (!titulo || !/^Customização/.test(titulo.textContent.trim())) falhas.push('a customização não se chama "Customização"');
+      const abas = [...document.querySelectorAll('.cr-provador .cr-aba')].map(b => b.dataset.v);
+      if (abas.join() !== PARTES_DA_FOTO.map(([p]) => p).join()) falhas.push(`as abas da customização são ${abas.join(', ')}`);
+      for (const [parte] of PARTES_DA_FOTO){
+        UI.crAcao('aba', {v:parte});
+        const pad = document.querySelector('.cr-painel .cr-tinta.padrao');
+        if (!pad || pad.textContent.trim() !== 'Padrão' || pad.dataset.parte !== parte) falhas.push(`a aba ${parte} não começa pela cor Padrão`);
+        if (document.querySelectorAll(`.cr-painel .cr-tinta[data-parte="${parte}"]`).length !== coresDaParte(parte).length + 1)
+          falhas.push(`a aba ${parte} não mostra as ${coresDaParte(parte).length} cores e a Padrão`);
+      }
+      const alvo = {cabelo:'rosa', olhos:'verde', pele:'escura', camisa:'verde', calca:'vermelho', sapatos:'azul', detalhes:'amarelo'};
       for (const [parte, v] of Object.entries(alvo)) UI.crAcao('cor', {parte, v});
       const img = document.querySelector('.cr-prov-sprite');
-      const mini = document.querySelector(`.cr-retrato[data-v="${comCabelo}"] img`);
+      const mini = document.querySelector(`.cr-retrato[data-v="${inteira}"] img`);
       if (!img || !/^data:image\/png/.test(img.src)) return falhas.concat('a foto grande não saiu nas cores escolhidas');
-      if (!mini || mini.src !== img.src) falhas.push('a foto da grade não está nas mesmas cores da grande');
+      if (!mini || /^data:/.test(mini.src)) falhas.push('a foto da grade mudou de cor junto com a grande');
       const abrir = src => new Promise(ok => { const i = new Image(); i.onload = () => ok(i); i.onerror = () => ok(null); i.src = src; });
-      const nova = await abrir(img.src), antes = await abrir('data:image/png;base64,' + FOTOS_DO_JOGADOR[comCabelo].png);
-      if (!nova || nova.naturalWidth !== 80) return falhas.concat('a foto recolorida não abre no navegador');
       const ler = i => { const cv = document.createElement('canvas'); cv.width = cv.height = 80; const x = cv.getContext('2d'); x.drawImage(i, 0, 0); return x.getImageData(0, 0, 80, 80).data; };
-      const a = ler(antes), b = ler(nova);
-      const matiz = (r, g, bl) => { const mx = Math.max(r, g, bl), mn = Math.min(r, g, bl); if (mx === mn) return null;
+      const antes = ler(await abrir('data:image/png;base64,' + FOTOS_DO_JOGADOR[inteira].png));
+      const tudo = await abrir(img.src);
+      if (!tudo || tudo.naturalWidth !== 80) return falhas.concat('a foto recolorida não abre no navegador');
+      const junto = ler(tudo);
+      const matiz = (r, g, bl) => { const mx = Math.max(r, g, bl), mn = Math.min(r, g, bl); if (mx - mn < 8) return null;
         const d = mx - mn; const h = mx === r ? ((g - bl) / d) % 6 : mx === g ? (bl - r) / d + 2 : (r - g) / d + 4; return (h * 60 + 360) % 360; };
-      const matizes = Object.entries(alvo).map(([p, v]) => corDaFoto(p, v).h);
-      let mudou = 0, fora = 0;
-      for (let i = 0; i < a.length; i += 4){
-        if (a[i + 3] !== b[i + 3]){ fora++; continue; }
-        if (a[i] === b[i] && a[i + 1] === b[i + 1] && a[i + 2] === b[i + 2]) continue;
-        mudou++;
-        const h = matiz(b[i], b[i + 1], b[i + 2]);
-        if (h == null || !matizes.some(m => Math.min(Math.abs(h - m), 360 - Math.abs(h - m)) <= 20)) fora++;
+      const separado = new Uint8ClampedArray(antes);
+      for (const [parte, v] of Object.entries(alvo)){
+        const so = ler(await abrir(FotoJogador.url(inteira, {[parte]: v})));
+        const h0 = corDaFoto(parte, v).h;
+        let mudou = 0, fora = 0;
+        for (let i = 0; i < so.length; i += 4){
+          if (so[i + 3] !== antes[i + 3]){ fora++; continue; }
+          if (so[i] === antes[i] && so[i + 1] === antes[i + 1] && so[i + 2] === antes[i + 2]) continue;
+          mudou++;
+          separado[i] = so[i]; separado[i + 1] = so[i + 1]; separado[i + 2] = so[i + 2];
+          const h = matiz(so[i], so[i + 1], so[i + 2]);
+          if (h != null && Math.min(Math.abs(h - h0), 360 - Math.abs(h - h0)) > 22) fora++;
+        }
+        if (!mudou) falhas.push(`a foto ${inteira} não muda quando ${parte} vira ${v}`);
+        if (fora) falhas.push(`a foto ${inteira}, com ${parte} ${v}, tem ${fora} pixels que saíram de outra cor`);
       }
-      if (!mudou) falhas.push(`a foto ${comCabelo} não mudou de cor`);
-      if (fora) falhas.push(`a foto ${comCabelo} tem ${fora} pixels que mudaram pra cor que ninguém escolheu (ou de transparência)`);
-      const d = descricaoDaFoto(comCabelo, alvo);
-      if (d.aparencia !== 'cabelo rosa' || !/ verde$/.test(d.vestimenta)) falhas.push(`a descrição saiu "${d.aparencia}, ${d.vestimenta}"`);
-      if (!document.querySelector('.cr-provador .cr-nota b') || !document.querySelector('.cr-provador .cr-nota b').textContent.includes('cabelo rosa'))
-        falhas.push('o "quem precisar te descrever" não diz o cabelo escolhido');
+      let diferente = 0;
+      for (let i = 0; i < junto.length; i++) if (junto[i] !== separado[i]) diferente++;
+      if (diferente) falhas.push(`a foto ${inteira} com tudo trocado não é a soma das partes trocadas uma por uma (${diferente} canais)`);
+      const pecas = PECAS_DO_RETRATO[inteira];
+      const d = descricaoDaFoto(inteira, alvo);
+      if (d.aparencia !== 'cabelo rosa e olhos verdes') falhas.push(`a aparência saiu "${d.aparencia}"`);
+      for (const p of ['camisa', 'calca', 'sapatos', 'detalhes']){
+        const esperado = pecaComCor(pecas[p][0], nomeDaCorDaFoto(p, alvo[p], pecas[p][1]));
+        if (!d.vestimenta.includes(esperado)) falhas.push(`a roupa saiu "${d.vestimenta}", sem "${esperado}"`);
+      }
+      const nota = document.querySelector('.cr-provador .cr-nota b');
+      if (!nota || !nota.textContent.includes('cabelo rosa') || !nota.textContent.includes('olhos verdes'))
+        falhas.push('o "quem precisar te descrever" não diz o cabelo e os olhos escolhidos');
       return falhas;
     });
     for (const f of pintura){ onde = `inscrição/${g}/cores`; anota('inscrição', f); }
     await tentar(`inscrição/${g}/saiu de casa`, () => { UI.crAcao('passo', {v:'5'}); UI.crAcao('proximo', {}); });
     const pintado = await page.evaluate(() => {
       const j = Estado.j, falhas = [];
-      if (!j.retratoCores || j.retratoCores.cabelo !== 'rosa' || j.retratoCores.pele !== 'escura' || j.retratoCores.roupa !== 'verde')
+      const alvo = {cabelo:'rosa', olhos:'verde', pele:'escura', camisa:'verde', calca:'vermelho', sapatos:'azul', detalhes:'amarelo'};
+      if (!j.retratoCores || Object.entries(alvo).some(([p, v]) => j.retratoCores[p] !== v))
         falhas.push(`as cores da foto não chegaram no Estado: ${JSON.stringify(j.retratoCores)}`);
-      if (j.aparencia !== 'cabelo rosa') falhas.push(`a aparência saiu "${j.aparencia}"`);
+      if (j.aparencia !== 'cabelo rosa e olhos verdes') falhas.push(`a aparência saiu "${j.aparencia}"`);
+      if (!/vermelh/.test(j.vestimenta || '')) falhas.push(`a roupa saiu "${j.vestimenta}"`);
+      if (!Estado.descricaoFisica().includes('olhos verdes')) falhas.push(`quem te descreve diz "${Estado.descricaoFisica()}"`);
       if (!/^data:image\/png/.test(retratoDoJogador() || '')) falhas.push('o rosto do jogador não sai nas cores escolhidas');
       const topo = document.querySelector('.topo-rosto img');
       if (topo && !/^data:image\/png/.test(topo.src)) falhas.push('o rosto do alto da tela não está nas cores escolhidas');
