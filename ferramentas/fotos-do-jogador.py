@@ -49,6 +49,8 @@ NOME_A_MAO = {
     'patinador': {'sapatos': 'preto', 'detalhes': 'branco'},
     'colecionador': {'calca': 'verde-agua', 'sapatos': 'verde-agua'},
     'trilheiro': {'calca': 'marrom'},
+    'durao': {'olhos': 'azul-claro'},                   # a pupila preta puxa a íris pro cinza na conta
+    'esportivo': {'olhos': 'azul-claro'},
     'roqueiro': {'sapatos': 'branco'},
     'mistico': {'cabelo': 'verde'},                     # verde quase preto, mas verde
     'piloto': {'camisa': 'branco'},
@@ -60,7 +62,7 @@ NOME_A_MAO = {
     'aventureira': {'detalhes': 'azul-claro'},
     'animada': {'camisa': 'branco'},
     'atleta': {'cabelo': 'rosa'},
-    'estudante': {'calca': 'preto'},
+    'estudante': {'calca': 'preto', 'olhos': 'azul'},
     'elegante': {'cabelo': 'loiro', 'camisa': 'preto', 'calca': 'preto'},
     'gotica': {'cabelo': 'roxo', 'camisa': 'roxo', 'calca': 'roxo'},   # azul-violeta na conta
     'dancarina': {'detalhes': 'preto'},

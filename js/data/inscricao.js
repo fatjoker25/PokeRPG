@@ -89,7 +89,7 @@ const RETRATOS_DA_FICHA = {
 const RETRATOS_A_VISTA = 16;
 /* o nome de cada foto, pra quem lê a tela com leitor (e no toque longo) */
 const ROTULO_DO_RETRATO = {
-  viajante:'viajante de mochila', urbano:'urbano de boné', patinador:'patinador', colecionador:'colecionador',
+  viajante:'viajante de mochila', urbano:'urbano de fones', patinador:'patinador', colecionador:'colecionador',
   terno:'de terno', trilheiro:'trilheiro', roqueiro:'roqueiro', chamativo:'de óculos escuros', lutador:'lutador de quimono',
   mistico:'místico', piloto:'piloto', naturalista:'naturalista de rede', durao:'durão de jaqueta', criador:'criador',
   corredor:'corredor', ciclista:'ciclista',
@@ -215,7 +215,7 @@ const PECAS_DO_RETRATO = {
   explorador:   {camisa:['jaqueta', 'f'], calca:['calça', 'f'], sapatos:['botas', 'fp'], detalhes:['boné', 'm']},
   cinegrafista: {camisa:['camiseta', 'f'], calca:['calça', 'f'], sapatos:['tênis', 'm'], detalhes:['boné e jaqueta', 'mp']},
   lavrador:     {camisa:['camiseta', 'f'], calca:['calça', 'f'], sapatos:['botas', 'fp'], detalhes:['touca e avental', 'mp']},
-  aventureira:  {camisa:['vestido', 'm'], calca:['short', 'm'], sapatos:['botas', 'fp'], detalhes:['viseira e luvas', 'fp']},
+  aventureira:  {camisa:['vestido', 'm'], calca:['short', 'm'], sapatos:['botas', 'fp'], detalhes:['boné e luvas', 'mp']},
   animada:      {camisa:['blusa de marinheiro', 'f'], calca:['saia', 'f'], sapatos:['sapatos', 'mp'], detalhes:['lenço', 'm']},
   urbana:       {camisa:['jaqueta', 'f'], calca:['short jeans', 'm'], sapatos:['tênis', 'm'], detalhes:['listras {cor} da jaqueta', 'fp']},
   atleta:       {camisa:['agasalho', 'm'], calca:['calça', 'f'], sapatos:['tênis', 'm'], detalhes:['listras {cor} do agasalho', 'fp']},
