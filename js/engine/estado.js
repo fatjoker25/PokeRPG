@@ -662,21 +662,20 @@ const Estado = {
     /* entra no meio da frase dos outros: sem ponto no fim e sem maiúscula no começo */
     const sem = s => { const t = String(s || '').trim().replace(/[.\s]+$/, '');
                        return /^.[a-zà-ú]/.test(t) ? t.charAt(0).toLowerCase() + t.slice(1) : t; };
-    /* a foto da ficha diz tudo, cada peça na cor que você deu, numa lista
-       só ("cabelo ruivo, olhos verdes, regata preta… e mochila azul");
-       sem ela, o que estiver escrito na aparência e na roupa */
+    /* a foto da ficha diz tudo, cada peça na cor que você deu, numa frase
+       só ("cabelo ruivo, olhos verdes, regata preta e tênis branco, com
+       boné azul, de mochila verde", faladoDaFoto); sem ela, o que estiver
+       escrito na aparência e na roupa */
     const arq = typeof j.retrato === 'string' && typeof PASTA_DOS_RETRATOS !== 'undefined' && j.retrato.startsWith(PASTA_DOS_RETRATOS)
       ? j.retrato.slice(PASTA_DOS_RETRATOS.length) : null;
-    const daFoto = arq && j.fotoPartes && typeof descricaoDaFoto === 'function' ? descricaoDaFoto(arq, j.retratoCores).lista : [];
-    if (daFoto.length) partes.push(...daFoto);
-    else {
-      if (j.aparencia)  partes.push(sem(j.aparencia));
-      if (j.vestimenta) partes.push(sem(j.vestimenta));
-    }
+    if (arq && j.fotoPartes && typeof faladoDaFoto === 'function' && typeof FOTOS_DO_JOGADOR !== 'undefined' && FOTOS_DO_JOGADOR[arq])
+      return faladoDaFoto(descricaoDaFoto(arq, j.retratoCores), j.corMochila);
+    if (j.aparencia)  partes.push(sem(j.aparencia));
+    if (j.vestimenta) partes.push(sem(j.vestimenta));
     /* a mochila da ficha entra na descrição se a roupa não falou de bolsa */
     if (j.corMochila && !/mochila|bolsa|sacola|mala|bornal/i.test(partes.join(' ')))
       partes.push('mochila ' + j.corMochila);
-    return daFoto.length ? juntarComE(partes) : partes.join(', ');
+    return partes.join(', ');
   },
   comoTeVeem(){
     const j = this.j;

@@ -93,7 +93,7 @@ const ROTULO_DO_RETRATO = {
   terno:'de terno', trilheiro:'trilheiro', roqueiro:'roqueiro', chamativo:'de óculos escuros', lutador:'lutador de quimono',
   mistico:'místico', piloto:'piloto', naturalista:'naturalista de rede', durao:'durão de jaqueta', criador:'criador',
   corredor:'corredor', ciclista:'ciclista',
-  esportivo:'esportivo de boné pra trás', surfista:'surfista', artesao:'artesão de avental', prateado:'de cabelo prateado',
+  esportivo:'esportivo de boné', surfista:'surfista', artesao:'artesão de avental', prateado:'de cabelo prateado',
   violeiro:'violeiro de chapéu', explorador:'explorador de jaqueta', cinegrafista:'cinegrafista', lavrador:'lavrador de avental',
   aventureira:'aventureira de boné', animada:'animada', urbana:'urbana de jaqueta', atleta:'atleta de agasalho',
   estudante:'estudante', elegante:'elegante', trilheira:'trilheira', punk:'punk', gotica:'gótica', lutadora:'lutadora',
@@ -192,7 +192,7 @@ const PALETA_DA_PARTE = {cabelo:'cabelo', olhos:'olhos', pele:'pele', camisa:'ro
    foto sem a parte não tem a peça (SEM_PARTE_DO_RETRATO diz por quê). */
 const PECAS_DO_RETRATO = {
   viajante:     {camisa:['regata', 'f'], calca:['calça jeans', 'f'], sapatos:['tênis', 'm'], detalhes:['boné', 'm']},
-  urbano:       {camisa:['regata', 'f'], calca:['bermuda', 'f'], sapatos:['tênis e meias', 'mp'], detalhes:['fones', 'mp']},
+  urbano:       {camisa:['regata', 'f'], calca:['bermuda', 'f'], sapatos:['tênis', 'm'], detalhes:['fones', 'mp']},
   patinador:    {camisa:['camiseta', 'f'], calca:['bermuda', 'f'], sapatos:['patins', 'mp'], detalhes:['capacete, luva e joelheira', 'mp']},
   colecionador: {camisa:['jaqueta', 'f'], calca:['bermuda', 'f'], sapatos:['tênis', 'm'], detalhes:['pochete', 'f']},
   terno:        {camisa:['paletó', 'm'], calca:['calça', 'f'], sapatos:['sapatos', 'mp'], detalhes:['gravata e colete', 'mp']},
@@ -208,7 +208,7 @@ const PECAS_DO_RETRATO = {
   corredor:     {camisa:['regata', 'f'], calca:['short', 'm'], sapatos:['tênis', 'm'], detalhes:['óculos', 'mp']},
   ciclista:     {camisa:['regata', 'f'], calca:['bermuda', 'f'], sapatos:['tênis', 'm'], detalhes:['capacete', 'm']},
   esportivo:    {camisa:['camiseta', 'f'], calca:['bermuda', 'f'], sapatos:['tênis', 'm'], detalhes:['boné', 'm']},
-  surfista:     {calca:['bermuda', 'f'], detalhes:['colar e pulseiras', 'mp']},
+  surfista:     {calca:['bermuda', 'f'], detalhes:['pulseiras {cor} e colar', 'fp']},
   artesao:      {camisa:['camisa xadrez', 'f'], calca:['calça', 'f'], sapatos:['sapatos', 'mp'], detalhes:['avental', 'm']},
   prateado:     {camisa:['jaqueta', 'f'], calca:['calça', 'f'], sapatos:['tênis', 'm'], detalhes:['lenço e faixa', 'mp']},
   violeiro:     {camisa:['camisa jeans', 'f'], calca:['calça', 'f'], sapatos:['botas', 'fp'], detalhes:['chapéu', 'm']},
@@ -234,11 +234,11 @@ const PECAS_DO_RETRATO = {
   mochileira:   {calca:['bermuda', 'f'], sapatos:['tênis', 'm'], detalhes:['prendedor e munhequeira', 'mp']},
   despojada:    {camisa:['regata', 'f'], calca:['bermuda jeans', 'f'], sapatos:['tênis', 'm'], detalhes:['jaqueta {cor} amarrada na cintura', 'f']},
   esportiva:    {camisa:['camiseta', 'f'], calca:['saia', 'f'], sapatos:['tênis', 'm'], detalhes:['faixa {cor} no cabelo', 'f']},
-  descolada:    {camisa:['blusa {cor} de alcinha', 'f'], calca:['calça jeans', 'f'], sapatos:['sapatos {cor} de salto', 'mp'], detalhes:['óculos e cinto', 'mp']},
+  descolada:    {camisa:['blusa {cor} de alcinha', 'f'], calca:['calça jeans', 'f'], sapatos:['sapatos {cor} de salto', 'mp'], detalhes:['óculos {cor} e cinto', 'mp']},
   fazendeira:   {camisa:['camisa', 'f'], calca:['jardineira', 'f'], sapatos:['botas', 'fp'], detalhes:['chapéu, lenço e cinto', 'mp']},
-  cantora:      {camisa:['corpete', 'm'], calca:['saia', 'f'], sapatos:['sapatos', 'mp'], detalhes:['fita, flor e brincos', 'mp']},
+  cantora:      {camisa:['corpete', 'm'], calca:['saia', 'f'], sapatos:['sapatos', 'mp'], detalhes:['fita {cor}, flor e brincos', 'f']},
   vidente:      {camisa:['quimono', 'm'], calca:['calça', 'f'], detalhes:['faixa {cor} na cintura', 'f']},
-  guitarrista:  {camisa:['regata', 'f'], calca:['saia xadrez', 'f'], sapatos:['tênis e meias', 'mp'], detalhes:['prendedor e munhequeira', 'mp']}
+  guitarrista:  {camisa:['regata', 'f'], calca:['saia xadrez', 'f'], sapatos:['tênis', 'm'], detalhes:['prendedor e munhequeira', 'mp']}
 };
 /* parte que a foto não tem, e o que a aba diz no lugar das cores */
 const SEM_PARTE_DO_RETRATO = {
@@ -289,18 +289,29 @@ function pecaComCor(texto, cor){
   return texto.includes('{cor}') ? texto.replace('{cor}', cor) : `${texto} ${cor}`;
 }
 /* a descrição que sai da foto, na cor escolhida ou na que o desenho tem:
-   o cabelo e os olhos (aparência) e cada peça (vestimenta); lista é tudo
-   junto, na ordem, pra quem descreve numa frase só */
+   o cabelo e os olhos (aparência) e a roupa (vestimenta), com o detalhe
+   depois de um "com" — "regata preta, bermuda azul e tênis branco, com
+   boné e luvas azuis", e nunca "tênis branco e boné e luvas azuis" */
 function descricaoDaFoto(arq, cores){
   const f = typeof FOTOS_DO_JOGADOR !== 'undefined' && FOTOS_DO_JOGADOR[arq];
-  if (!f) return {aparencia:'', vestimenta:'', lista:[]};
+  if (!f) return {aparencia:'', vestimenta:'', cabeca:[], roupa:[], detalhe:''};
   const c = coresDaFotoValidas(arq, cores);
   const cor = (parte, forma) => nomeDaCorDaFoto(parte, c[parte] || f[parte].cor, forma);
   const cabeca = [f.cabelo ? `cabelo ${cor('cabelo', 'm')}` : '', f.olhos ? `olhos ${cor('olhos', 'mp')}` : ''].filter(Boolean);
   const pecas = PECAS_DO_RETRATO[arq] || {};
-  const roupa = ['camisa', 'calca', 'sapatos', 'detalhes']
-    .filter(p => f[p] && pecas[p]).map(p => pecaComCor(pecas[p][0], cor(p, pecas[p][1])));
-  return {aparencia:juntarComE(cabeca), vestimenta:juntarComE(roupa), lista:cabeca.concat(roupa)};
+  const peca = p => f[p] && pecas[p] ? pecaComCor(pecas[p][0], cor(p, pecas[p][1])) : '';
+  const roupa = ['camisa', 'calca', 'sapatos'].map(peca).filter(Boolean);
+  const detalhe = peca('detalhes');
+  const vestimenta = juntarComE(roupa) + (detalhe ? (roupa.length ? ', com ' : '') + detalhe : '');
+  return {aparencia:juntarComE(cabeca), vestimenta, cabeca, roupa, detalhe};
+}
+/* quem te descreve numa frase só: cabelo, olhos e roupa numa lista, o
+   detalhe com "com" e a mochila da inscrição no fim ("…e tênis branco,
+   com boné vermelho, de mochila verde") */
+function faladoDaFoto(desc, mochila){
+  const d = desc || {};
+  const base = juntarComE((d.cabeca || []).concat(d.roupa || []));
+  return [base, d.detalhe ? 'com ' + d.detalhe : '', mochila ? 'de mochila ' + mochila : ''].filter(Boolean).join(', ');
 }
 
 /* Save de antes das sete partes: a foto tinha cabelo, pele e roupa, e

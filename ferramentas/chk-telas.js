@@ -285,9 +285,52 @@ const SUSPEITO = [
         if (!mudou) falhas.push(`a foto ${inteira} não muda quando ${parte} vira ${v}`);
         if (fora) falhas.push(`a foto ${inteira}, com ${parte} ${v}, tem ${fora} pixels que saíram de outra cor`);
       }
+      /* a mochila nas costas não tem aba: vem da cor da mochila da inscrição,
+         que a foto grande já usa */
+      if (FOTOS_DO_JOGADOR[inteira].mochila && c.mochila){
+        const so = ler(await abrir(FotoJogador.url(inteira, {mochila:c.mochila})));
+        for (let i = 0; i < so.length; i += 4)
+          if (so[i] !== antes[i] || so[i + 1] !== antes[i + 1] || so[i + 2] !== antes[i + 2]){
+            separado[i] = so[i]; separado[i + 1] = so[i + 1]; separado[i + 2] = so[i + 2];
+          }
+      }
       let diferente = 0;
       for (let i = 0; i < junto.length; i++) if (junto[i] !== separado[i]) diferente++;
       if (diferente) falhas.push(`a foto ${inteira} com tudo trocado não é a soma das partes trocadas uma por uma (${diferente} canais)`);
+      /* a mochila que a foto carrega sai na cor da mochila da inscrição, e só ela muda */
+      const comMochila = doGenero.find(a => FOTOS_DO_JOGADOR[a].mochila);
+      if (!comMochila) falhas.push('nenhuma foto do gênero carrega mochila');
+      else {
+        const base = ler(await abrir('data:image/png;base64,' + FOTOS_DO_JOGADOR[comMochila].png));
+        const verde = ler(await abrir(FotoJogador.url(comMochila, {mochila:'verde'})));
+        const hm = FotoJogador.escalaDeHex(CORES_MOCHILA.verde).h;
+        let mudou = 0, fora = 0;
+        for (let i = 0; i < verde.length; i += 4){
+          if (verde[i] === base[i] && verde[i + 1] === base[i + 1] && verde[i + 2] === base[i + 2]) continue;
+          mudou++;
+          const h = matiz(verde[i], verde[i + 1], verde[i + 2]);
+          if (h == null || Math.min(Math.abs(h - hm), 360 - Math.abs(h - hm)) > 22) fora++;
+        }
+        if (!mudou) falhas.push(`a mochila da foto ${comMochila} não muda com a cor da mochila da inscrição`);
+        if (fora) falhas.push(`a foto ${comMochila}, com a mochila verde, tem ${fora} pixels que saíram de outra cor`);
+        UI.crAcao('retrato', {v:comMochila});
+        if (c.mochila !== 'verde') UI.crAcao('mochila', {v:'verde'});
+        const grande = document.querySelector('.cr-prov-sprite');
+        if (!grande || grande.src !== FotoJogador.url(comMochila, Object.assign({}, c.cores, {mochila:'verde'})))
+          falhas.push(`a foto grande da ${comMochila} não sai com a mochila na cor escolhida`);
+        const diz = document.querySelector('.cr-provador .cr-nota b');
+        if (!diz || !diz.textContent.endsWith('de mochila verde')) falhas.push(`quem te descreve não diz a mochila: "${diz && diz.textContent}"`);
+        UI.crAcao('retrato', {v:inteira});
+      }
+      /* as setas andam pelas abas, como abas */
+      UI.crAcao('aba', {v:'cabelo'});
+      document.getElementById('cr-aba-cabelo').focus();
+      for (const [tecla, esperado] of [['ArrowRight', 'olhos'], ['End', 'detalhes'], ['ArrowRight', 'cabelo'], ['ArrowLeft', 'detalhes'], ['Home', 'cabelo']]){
+        document.activeElement.dispatchEvent(new KeyboardEvent('keydown', {key:tecla, bubbles:true}));
+        const foco = document.activeElement && document.activeElement.id;
+        if (c.aba !== esperado || foco !== 'cr-aba-' + esperado)
+          falhas.push(`a tecla ${tecla} levou pra aba ${c.aba} (foco em ${foco}), e devia ir pra ${esperado}`);
+      }
       const pecas = PECAS_DO_RETRATO[inteira];
       const d = descricaoDaFoto(inteira, alvo);
       if (d.aparencia !== 'cabelo rosa e olhos verdes') falhas.push(`a aparência saiu "${d.aparencia}"`);
@@ -316,6 +359,32 @@ const SUSPEITO = [
       return falhas;
     });
     for (const f of pintado){ onde = `inscrição/${g}/saiu de casa`; anota('inscrição', f); }
+    /* save de antes das sete partes, aberto no navegador: a cor da roupa vai
+       pra peça que ela pintava, a descrição que a foto escreveu é refeita, e
+       a escrita à mão fica */
+    const conversao = await page.evaluate(() => {
+      const falhas = [], atual = JSON.stringify(Estado.dados);
+      const velho = JSON.parse(atual), j = velho.jogador;
+      j.retrato = PASTA_DOS_RETRATOS + 'viajante';
+      j.retratoCores = {cabelo:'ruivo', pele:'escura', roupa:'verde'};
+      j.aparencia = 'cabelo ruivo'; j.vestimenta = 'calça verde'; delete j.fotoPartes;
+      const aMao = JSON.parse(JSON.stringify(velho));
+      aMao.jogador.aparencia = 'alto, de cicatriz na mão'; aMao.jogador.vestimenta = 'casaco velho';
+      Estado.abrir(JSON.stringify(velho));
+      const n = Estado.j;
+      if (JSON.stringify(n.retratoCores) !== JSON.stringify({cabelo:'ruivo', pele:'escura', calca:'verde'}))
+        falhas.push(`a cor da roupa de antes foi pra ${JSON.stringify(n.retratoCores)}`);
+      if (n.aparencia !== descricaoDaFoto('viajante', n.retratoCores).aparencia || !n.vestimenta.includes('calça jeans verde'))
+        falhas.push(`a descrição de antes virou "${n.aparencia}" / "${n.vestimenta}"`);
+      if (!n.fotoPartes) falhas.push('o save convertido não ficou marcado');
+      if (!/^data:image\/png/.test(retratoDoJogador() || '')) falhas.push('a foto do save convertido não sai nas cores dele');
+      Estado.abrir(JSON.stringify(aMao));
+      if (Estado.j.aparencia !== 'alto, de cicatriz na mão' || Estado.j.vestimenta !== 'casaco velho')
+        falhas.push(`a descrição escrita à mão virou "${Estado.j.aparencia}" / "${Estado.j.vestimenta}"`);
+      Estado.abrir(atual);
+      return falhas;
+    });
+    for (const f of conversao){ onde = `inscrição/${g}/save de antes`; anota('inscrição', f); }
     await tentar(`inscrição/${g}/cartão`, () => { Object.assign(Estado.dados.flags, {tem_pokedex:true, tem_cartao:true}); UI.modalCartao(); });
     await tentar(`inscrição/${g}/ficha`, () => UI.modalFicha('perfil'));
     const ok = await page.evaluate(() => !!(Estado.dados && Estado.j && Estado.j.meta && Estado.j.forte && Estado.j.status[Estado.j.forte] === 2));

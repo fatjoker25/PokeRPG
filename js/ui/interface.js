@@ -827,6 +827,9 @@ const UI = {
     return `<button type="button" class="cr-dado" data-acao="dado" data-v="${campo}" data-foco="dado-${campo}"
       title="${this.esc(rotulo)}" aria-label="${this.esc(rotulo)}">${svgIcone('dado')}</button>`;
   },
+  /* as cores da foto escolhida, com a da mochila: a mochila que a foto
+     carrega (mochileira, viajante) sai na cor da mochila da inscrição */
+  crCoresDaFoto(c){ return Object.assign({}, c.cores, {mochila: c.mochila}); },
   /* a foto, nas cores escolhidas quando vêm (cores), ou como o desenho tem */
   crRetratoImg(arq, cls, cores){
     return `<img class="${cls || 'cr-sprite'}" src="${cores ? FotoJogador.url(arq, cores) : FotoJogador.original(arq)}" alt="" onerror="this.remove()">`;
@@ -962,7 +965,7 @@ const UI = {
       ${this.crProvador(c)}
       <div class="cr-campo"><span class="cr-rot">Cor da mochila</span>
         <div class="cr-cores" role="group" aria-label="Cor da mochila">${mochilas}</div>
-        <p class="cr-nota">É a cor da mochila na tela, até você comprar outra bolsa.</p></div>
+        <p class="cr-nota">É a cor da mochila na tela, até você comprar outra bolsa, e a da mochila da foto, se ela carrega uma.</p></div>
       <div class="cr-campo"><span class="cr-rot">Cor do cartão</span>
         <div class="cartao-cores cr-cartoes" role="group" aria-label="Cor do cartão">${cartoes}</div></div>`;
   },
@@ -1006,10 +1009,10 @@ const UI = {
       painel = `<div class="cr-parte-rot"><b>${e(maiuscula(peca))}</b><span>${e(maiuscula(nome(aba, a || padrao)))}${a ? '' : ' · padrão'}</span></div>
         <div class="cr-tintas" role="group" aria-label="Cor: ${e(peca)}">${tintas.join('')}</div>`;
     }
-    const falado = desc.lista.length ? juntarComE(desc.lista) : '';
+    const falado = faladoDaFoto(desc, c.mochila);
     return `<div class="cr-campo cr-provador"><span class="cr-rot">Customização ${this.crDadoBtn('cores', 'Sortear as cores')}</span>
       <div class="cr-prov">
-        <div class="cr-prov-foto">${this.crRetratoImg(arq, 'cr-prov-sprite', c.cores)}</div>
+        <div class="cr-prov-foto">${this.crRetratoImg(arq, 'cr-prov-sprite', this.crCoresDaFoto(c))}</div>
         <div class="cr-partes">
           <div class="cr-abas" role="tablist" aria-label="Parte da foto">${abas}</div>
           <div class="cr-painel" id="cr-painel-cor" role="tabpanel" aria-labelledby="cr-aba-${aba}">${painel}</div>
@@ -1089,7 +1092,7 @@ const UI = {
     const linha = (k, v) => `<dt>${e(k)}</dt><dd>${v}</dd>`;
     const vars = varsCartao(c.corCartao);
     const estilo = Object.entries(vars).map(([k, v]) => `${k}:${v}`).join(';');
-    const retrato = c.retrato ? this.crRetratoImg(c.retrato, 'crc-sprite', c.cores)
+    const retrato = c.retrato ? this.crRetratoImg(c.retrato, 'crc-sprite', this.crCoresDaFoto(c))
       : `<span class="crc-monograma">${e((nome || '?').charAt(0).toUpperCase())}</span>`;
     const desc = c.retrato ? descricaoDaFoto(c.retrato, c.cores) : {aparencia:'', vestimenta:''};
     return `<div class="crc${inteiro ? ' inteiro' : ''}" style="${estilo}">
@@ -5923,7 +5926,7 @@ const UI = {
       ${L('No que você é bom', 'um dos seis status começa em 2; os outros, em 1 · Resistência em 2 já começa com HP 32 e Vontade 4')}
       ${L('Objetivo', 'um dos sete rumos, numa frase sua (ou na sugerida) · a frase sai da sua boca na história, e o rumo abre cada capítulo')}
       ${L('Gostos', `até ${GOSTOS_MAX} coisas de que você gosta e ${DESGOSTOS_MAX} de que não gosta, entre lugares, tipos de Pokémon e uma espécie · a mesma coisa não fica nas duas listas · o que cada uma faz está em Objetivo e gostos`)}
-      ${L('Aparência', 'a foto do cartão, entre as do seu gênero · na Customização, uma aba por parte (cabelo, olhos, pele, camisa, calça, sapatos e detalhes), cada uma com a cor Padrão, a do desenho, e as outras · o desenho é sempre o mesmo, só a cor muda, e só na foto escolhida · parte que a foto não mostra (olho atrás dos óculos, pé descalço) não tem cor · tudo menos a pele vira a descrição que os outros fazem de você quando precisam, peça por peça · sem foto, a descrição fica vaga · nada disso mexe em regra')}
+      ${L('Aparência', 'a foto do cartão, entre as do seu gênero · na Customização, uma aba por parte (cabelo, olhos, pele, camisa, calça, sapatos e detalhes), cada uma com a cor Padrão, a do desenho, e as outras · o desenho é sempre o mesmo, só a cor muda, e só na foto escolhida · parte que a foto não mostra (olho atrás dos óculos, pé descalço) não tem cor · a mochila que a foto carrega (a da mochileira, a do viajante) sai na cor da mochila da inscrição · tudo menos a pele vira a descrição que os outros fazem de você quando precisam, peça por peça · sem foto, a descrição fica vaga · nada disso mexe em regra')}
       ${L('Mochila e cartão', 'a cor da mochila na tela (até você comprar outra bolsa) e a do Cartão de Treinador · a foto vai no cartão e na Ficha · nada disso mexe em regra')}
       ${L('Gênero', 'o texto inteiro concorda com ele — narração, tratamento, cargo e título')}
       ${L('Quem fica em casa', 'a voz que te acorda e o primeiro número do PokéNav · o parentesco decide como a história fala dessa pessoa · o que ficar em branco é sorteado combinando nome e parentesco')}

@@ -40,6 +40,10 @@ INSCRICAO = os.path.join(RAIZ, 'js', 'data', 'inscricao.js')
 SAIDA = os.path.join(RAIZ, 'js', 'data', 'fotos-jogador.js')
 PARTES = ('cabelo', 'olhos', 'pele', 'camisa', 'calca', 'sapatos', 'detalhes')
 ROUPA = ('camisa', 'calca', 'sapatos', 'detalhes')
+# parte sem aba: a mochila que a pessoa carrega sai na cor da mochila da
+# inscrição (CORES_MOCHILA), não numa cor de CORES_DA_FOTO
+EXTRAS = ('mochila',)
+TODAS = PARTES + EXTRAS
 
 # quando a conta da cor mais perto discorda do olho (a parte de duas cores
 # vira cinza na conta: o tênis branco de sola preta, o macacão branco e azul)
@@ -74,7 +78,7 @@ NOME_A_MAO = {
     'esportiva': {'sapatos': 'azul-marinho'},
     'fazendeira': {'cabelo': 'loiro', 'sapatos': 'marrom'},
     'cantora': {'cabelo': 'castanho'},
-    'vidente': {'cabelo': 'verde', 'detalhes': 'verde'},
+    'vidente': {'cabelo': 'verde', 'detalhes': 'verde', 'calca': 'roxo'},   # os babados brancos puxam a calça pro cinza
     'guitarrista': {'sapatos': 'vermelho'},             # a meia preta escurece a conta
 }
 
@@ -122,7 +126,7 @@ def partes_de(a, im, lista):
     ordem em que a anotação escreve, e a primeira regra que pega ganha"""
     idx = {c: i for i, c in enumerate(lista)}
     px = im.load()
-    ordem = [k for k in a if k in PARTES]
+    ordem = [k for k in a if k in TODAS]
     mapa = {}
     W, H = im.size
     for y in range(H):
@@ -143,6 +147,16 @@ def partes_de(a, im, lista):
                     break
             mapa[(x, y)] = achou
     return mapa
+
+
+def escala_de_hex(cor):
+    """a escala de uma cor da mochila (hexadecimal): a matiz e a saturação
+    dela, do escuro ao claro em volta da claridade dela — a mesma conta do
+    FotoJogador.escalaDeHex, no jogo"""
+    r, g, b = (int(cor[i:i + 2], 16) / 255 for i in (1, 3, 5))
+    h, l, s = colorsys.rgb_to_hls(r, g, b)
+    lim = lambda v, a, z: min(z, max(a, v))
+    return {'h': h * 360, 's': s, 'l': [lim(l - .18, .05, .9), lim(l + .16, .1, .96)]}
 
 
 def rampa(alvo, t):
@@ -225,7 +239,7 @@ def montar(nome, a, info):
     if len(lista) != a['n']:
         sys.exit(f'{nome}: a foto tem {len(lista)} cores e foi anotada com {a["n"]} — o arquivo mudou, anote de novo')
     for (x, y), v in a.get('px', {}).items():
-        if v is not None and v not in PARTES:
+        if v is not None and v not in TODAS:
             sys.exit(f'{nome}: o pixel {x},{y} foi anotado como "{v}", que não é parte')
     mapa = partes_de(a, im, lista)
 
@@ -243,7 +257,7 @@ def montar(nome, a, info):
 
     # a paleta: 0 é o transparente; depois o que fica, e as partes
     pos = {c: i for i, c in enumerate(lista)}
-    ordem = sorted(contagem, key=lambda k: ((PARTES.index(k[0]) + 1) if k[0] else 0, pos[k[1]]))
+    ordem = sorted(contagem, key=lambda k: ((TODAS.index(k[0]) + 1) if k[0] else 0, pos[k[1]]))
     casa = {k: i + 1 for i, k in enumerate(ordem)}
     if len(ordem) + 1 > 256:
         sys.exit(f'{nome}: {len(ordem) + 1} casas de paleta, o PNG aceita 256')
@@ -266,7 +280,7 @@ def montar(nome, a, info):
             sys.exit(f'{nome}: a casa {i} da paleta saiu {tuple(plte[i * 3:i * 3 + 3])}, esperava {k[1]}')
 
     registro = {'png': base64.b64encode(dados).decode('ascii')}
-    for parte in PARTES:
+    for parte in TODAS:
         cores = sorted({c for (q, c) in casa if q == parte}, key=lambda c: pos[c])
         if not cores:
             continue
@@ -278,6 +292,9 @@ def montar(nome, a, info):
             casas.append([casa[(parte, c)], round(t, 3)])
             na_parte[c] = contagem[(parte, c)]
         mais = max(na_parte, key=na_parte.get)
+        if parte in EXTRAS:
+            registro[parte] = {'i': casas, 'de': hexa(mais)}
+            continue
         cor = NOME_A_MAO.get(nome, {}).get(parte) or cor_mais_perto(info['de'][parte], na_parte)
         if not any(k['id'] == cor for k in info['de'][parte]):
             sys.exit(f'{nome}: NOME_A_MAO {parte} "{cor}" não está nas cores de {parte}')
@@ -318,11 +335,11 @@ def conferir_listas(anot, info, feitos):
 
 TESTES_DA_FOLHA = [
     None,
-    {'cabelo': 'rosa', 'olhos': 'verde', 'camisa': 'verde', 'calca': 'vermelho', 'sapatos': 'azul', 'detalhes': 'amarelo'},
-    {'cabelo': 'preto', 'olhos': 'azul', 'pele': 'escura', 'camisa': 'branco', 'calca': 'preto', 'sapatos': 'vermelho', 'detalhes': 'roxo'},
-    {'cabelo': 'loiro', 'olhos': 'castanho', 'pele': 'muito-clara', 'camisa': 'vermelho', 'calca': 'azul-marinho', 'sapatos': 'branco', 'detalhes': 'verde'},
-    {'cabelo': 'ruivo', 'olhos': 'mel', 'pele': 'morena', 'camisa': 'azul-marinho', 'calca': 'bege', 'sapatos': 'marrom', 'detalhes': 'laranja'},
-    {'cabelo': 'prateado', 'olhos': 'violeta', 'pele': 'morena-clara', 'camisa': 'amarelo', 'calca': 'cinza', 'sapatos': 'preto', 'detalhes': 'rosa'},
+    {'cabelo': 'rosa', 'olhos': 'verde', 'camisa': 'verde', 'calca': 'vermelho', 'sapatos': 'azul', 'detalhes': 'amarelo', 'mochila': '#3d8b56'},
+    {'cabelo': 'preto', 'olhos': 'azul', 'pele': 'escura', 'camisa': 'branco', 'calca': 'preto', 'sapatos': 'vermelho', 'detalhes': 'roxo', 'mochila': '#26262d'},
+    {'cabelo': 'loiro', 'olhos': 'castanho', 'pele': 'muito-clara', 'camisa': 'vermelho', 'calca': 'azul-marinho', 'sapatos': 'branco', 'detalhes': 'verde', 'mochila': '#e9e5db'},
+    {'cabelo': 'ruivo', 'olhos': 'mel', 'pele': 'morena', 'camisa': 'azul-marinho', 'calca': 'bege', 'sapatos': 'marrom', 'detalhes': 'laranja', 'mochila': '#d9b53a'},
+    {'cabelo': 'prateado', 'olhos': 'violeta', 'pele': 'morena-clara', 'camisa': 'amarelo', 'calca': 'cinza', 'sapatos': 'preto', 'detalhes': 'rosa', 'mochila': '#7a4fa3'},
 ]
 
 
@@ -331,7 +348,7 @@ def recolorir(dados, registro, escolha, info):
     for parte, id_ in escolha.items():
         if parte not in registro:
             continue
-        alvo = next(k for k in info['de'][parte] if k['id'] == id_)
+        alvo = escala_de_hex(id_) if parte in EXTRAS else next(k for k in info['de'][parte] if k['id'] == id_)
         for i, t in registro[parte]['i']:
             trocas[i] = rampa(alvo, t)
     return Image.open(io.BytesIO(trocar_paleta(dados, trocas))).convert('RGBA')
@@ -394,7 +411,8 @@ def main():
           '   gerado por ferramentas/fotos-do-jogador.py — não editar à mão.\n'
           '   As fotos do jogador em PNG de paleta, com casa própria pra cada\n'
           '   cor de cada parte (cabelo, olhos, pele, camisa, calça, sapatos e\n'
-          '   detalhes), anotadas em ferramentas/fotos-partes.py. Em cada\n'
+          '   detalhes, e a mochila nas costas de quem carrega uma, que sai na\n'
+          '   cor da mochila da inscrição), anotadas em ferramentas/fotos-partes.py. Em cada\n'
           '   parte, i lista [casa, t]: a casa da paleta e onde aquela cor\n'
           '   fica do escuro (0) ao claro (1); cor é a cor de CORES_DA_FOTO\n'
           '   que o desenho tem, de é a amostra dela. Parte que a foto não\n'

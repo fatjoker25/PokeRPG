@@ -1739,13 +1739,23 @@ grande e o cartão mudam: a grade de fotos fica como o desenho tem
 (trocar a cor ou a aba redesenha só a customização, `crRefazProvador`).
 Parte que a foto não mostra (olho atrás dos óculos, pé descalço, o
 cabelo debaixo do capacete do ciclista) fica com a aba tracejada e diz
-por quê (`SEM_PARTE_DO_RETRATO`). A aparência, que era texto livre,
-sai daí por `descricaoDaFoto`: cabelo e olhos em `j.aparencia`, cada
-peça na cor dela em `j.vestimenta` (`PECAS_DO_RETRATO`, a palavra e a
-forma pra cor concordar — "tênis preto", "saia preta", "sapatos
+por quê (`SEM_PARTE_DO_RETRATO`); as setas andam de aba em aba. A
+mochila que a foto carrega nas costas (a da mochileira, a do viajante)
+é a parte `mochila`, sem aba: sai na cor da mochila da inscrição
+(`CORES_MOCHILA`, em escala por `FotoJogador.escalaDeHex`), e a foto
+grande muda quando se escolhe a mochila (`crCoresDaFoto`). A aparência,
+que era texto livre, sai daí por `descricaoDaFoto`: cabelo e olhos em
+`j.aparencia`, a roupa em `j.vestimenta` (`PECAS_DO_RETRATO`, a palavra
+e a forma pra cor concordar — "tênis preto", "saia preta", "sapatos
 pretos", "botas pretas", e `{cor}` no meio quando a cor não vai no fim,
-"faixa verde na cintura"), e o retrato falado do capítulo 6 diz tudo
-numa lista só (`Estado.descricaoFisica`). As cores ficam em
+"faixa verde na cintura", ou quando o detalhe junta coisas de cores
+diferentes e a cor é de uma só: "fita amarela, flor e brincos", porque
+a flor é rosa), com o detalhe depois de um "com" ("regata
+preta e tênis branco, com boné e luvas azuis": duas peças juntas com
+"e" no meio da lista davam "tênis e meias azuis e prendedor e
+munhequeira vermelhos"), e o retrato falado do capítulo 6 diz tudo numa
+frase só, com a mochila da inscrição no fim (`faladoDaFoto`, lido pelo
+`Estado.descricaoFisica`). As cores ficam em
 `j.retratoCores`; a pele fica só na foto. Desenho novo não tem: cada
 foto vira um PNG de paleta com casa própria pra cada cor de cada parte
 (`js/data/fotos-jogador.js`, gerado por `python3
@@ -1768,7 +1778,9 @@ guitarrista, o verde do olho da trilheira é o do cabelo dela — a
 primeira versão, por cor e altura, deixava metade do cabelo do
 trilheiro sem mudar e a nuca do prateado parada. Chapéu, boné,
 capacete e viseira são detalhe, e o cabelo que aparece embaixo deles é
-cabelo; o que a pessoa segura fica. Foto nova ou trocada é anotada de
+cabelo; o que a pessoa segura fica; acabamento da própria peça (a
+pelúcia da gola e da barra da cantora, os babados da vidente) vai com
+ela, no claro da cor. Foto nova ou trocada é anotada de
 novo (o gerador para se o número de cores mudar) e conferida com uma
 cor gritante por parte; peça nova entra em `PECAS_DO_RETRATO`, parte
 que falta em `SEM_PARTE_DO_RETRATO`, e o gerador reprova foto em que as
@@ -1783,8 +1795,11 @@ que ela pintava (`ROUPA_DE_ANTES`), e a descrição que a foto tinha
 escrito é refeita — a escrita à mão fica. O `chk-telas` abre cada aba
 de cada foto com cada cor, reprova parte que a foto não tem oferecendo
 cor, grade que muda junto com a foto grande, pixel que muda pra cor de
-outra parte (cada parte sozinha, e todas juntas igual à soma delas) e
-confere a descrição peça por peça, no Estado e no alto da tela.
+outra parte (cada parte sozinha, e todas juntas igual à soma delas),
+mochila da foto que não segue a da inscrição e seta que não anda de
+aba, confere a descrição peça por peça, no Estado e no alto da tela, e
+abre no navegador um save de antes das sete partes (a cor da roupa vai
+pra peça certa, e a descrição escrita à mão fica).
 
 Save de antes da inscrição continua sendo lido por palavra (`rumoDe`,
 `perfilDoJogador`, `corNaDescricao`), e o de antes das cores fica com a

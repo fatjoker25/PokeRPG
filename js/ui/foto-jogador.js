@@ -35,6 +35,22 @@ const FotoJogador = {
   naEscala(cor, t){
     return this.rgb(cor.h / 360, cor.l[0] + (cor.l[1] - cor.l[0]) * t, cor.s);
   },
+  /* a escala de uma cor da mochila (CORES_MOCHILA, em hexadecimal): a
+     matiz e a saturação dela, do escuro ao claro em volta da claridade
+     dela — a mesma conta do escala_de_hex do gerador */
+  escalaDeHex(hex){
+    const n = parseInt(String(hex).replace('#', ''), 16);
+    const r = (n >> 16 & 255) / 255, g = (n >> 8 & 255) / 255, b = (n & 255) / 255;
+    const mx = Math.max(r, g, b), mn = Math.min(r, g, b), l = (mx + mn) / 2;
+    let h = 0, s = 0;
+    if (mx !== mn){
+      const d = mx - mn;
+      s = l > .5 ? d / (2 - mx - mn) : d / (mx + mn);
+      h = (mx === r ? (g - b) / d + (g < b ? 6 : 0) : mx === g ? (b - r) / d + 2 : (r - g) / d + 4) * 60;
+    }
+    const lim = (v, a, z) => Math.min(z, Math.max(a, v));
+    return {h, s, l:[lim(l - .18, .05, .9), lim(l + .16, .1, .96)]};
+  },
   /* a amostra da cor na ficha: o claro e o escuro dela, em CSS */
   amostra(cor){
     const css = c => `rgb(${c.join(',')})`;
@@ -62,13 +78,18 @@ const FotoJogador = {
 
   /* o endereço da foto nas cores escolhidas ({cabelo, olhos, pele, camisa,
      calca, sapatos, detalhes}, ids de CORES_DA_FOTO; o que falta fica
-     como o desenho tem) */
+     como o desenho tem). A mochila que a foto carrega (a da mochileira, a
+     do viajante) sai na cor da mochila da inscrição: cores.mochila é a
+     chave de CORES_MOCHILA */
   url(arq, cores){
     const f = typeof FOTOS_DO_JOGADOR !== 'undefined' && FOTOS_DO_JOGADOR[arq];
     const ok = coresDaFotoValidas(arq, cores);
     const partes = PARTES_DA_FOTO.map(([p]) => p).filter(p => ok[p]);
-    if (!f || !partes.length) return this.original(arq);
-    const chave = arq + '|' + partes.map(p => p + ':' + ok[p]).join('|');
+    const mochila = f && f.mochila && cores && typeof cores.mochila === 'string'
+      && typeof CORES_MOCHILA !== 'undefined' && Object.prototype.hasOwnProperty.call(CORES_MOCHILA, cores.mochila)
+      ? CORES_MOCHILA[cores.mochila] : null;
+    if (!f || (!partes.length && !mochila)) return this.original(arq);
+    const chave = arq + '|' + partes.map(p => p + ':' + ok[p]).join('|') + (mochila ? '|mochila:' + mochila : '');
     if (this._cache.has(chave)) return this._cache.get(chave);
     let url = this.original(arq);
     try {
@@ -83,15 +104,16 @@ const FotoJogador = {
         p += 12 + n;
       }
       if (plte < 0) throw new Error('foto sem paleta');
-      for (const parte of partes){
-        const cor = corDaFoto(parte, ok[parte]);
-        for (const [casa, t] of f[parte].i){
+      const pintar = (casas, cor) => {
+        for (const [casa, t] of casas){
           const o = plte + 8 + casa * 3;
           if (o + 2 >= plte + 8 + tam) continue;
           const [r, g, bl] = this.naEscala(cor, t);
           b[o] = r; b[o + 1] = g; b[o + 2] = bl;
         }
-      }
+      };
+      for (const parte of partes) pintar(f[parte].i, corDaFoto(parte, ok[parte]));
+      if (mochila) pintar(f.mochila.i, this.escalaDeHex(mochila));
       const c = this.crc(b, plte + 4, plte + 8 + tam);
       const o = plte + 8 + tam;
       b[o] = c >>> 24; b[o + 1] = (c >>> 16) & 255; b[o + 2] = (c >>> 8) & 255; b[o + 3] = c & 255;
@@ -110,7 +132,8 @@ const FotoJogador = {
   doSave(j){
     if (!j || typeof j.retrato !== 'string' || !/^[\w\/.-]+$/.test(j.retrato)) return null;
     const arq = j.retrato.startsWith(PASTA_DOS_RETRATOS) ? j.retrato.slice(PASTA_DOS_RETRATOS.length) : null;
-    if (arq && retratoDaFicha(arq) && j.retratoCores) return this.url(arq, j.retratoCores);
+    if (arq && retratoDaFicha(arq) && (j.retratoCores || j.corMochila))
+      return this.url(arq, Object.assign({}, j.retratoCores, {mochila: j.corMochila}));
     return typeof caminhoNPC === 'function' ? caminhoNPC(j.retrato) : null;
   }
 };

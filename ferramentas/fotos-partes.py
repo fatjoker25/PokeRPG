@@ -25,8 +25,13 @@ desenho tem (contorno, branco do olho, o que a pessoa segura).
 Política, pra foto nova: chapéu, boné, capacete e viseira são detalhes;
 o cabelo que aparece embaixo deles é cabelo; sobrancelha e barba da cor
 do cabelo são cabelo; a pupila (e a íris, quando tem) é olho, o branco
-fica; o que a pessoa segura fica; roupa por cima de roupa vai pra peça
-que mais aparece, e a de baixo fica ou vira detalhe. Os nomes das peças
+fica; o que a pessoa segura fica (uma Pokébola na cor da camisa não é
+mais Pokébola); roupa por cima de roupa vai pra peça que mais aparece, e
+a de baixo fica ou vira detalhe; acabamento da própria peça (a pelúcia
+da cantora, os babados da vidente) vai com ela e fica no claro da cor.
+A mochila que a pessoa carrega nas costas (a da mochileira, a do
+viajante) é a parte 'mochila', que não tem aba: sai na cor da mochila
+escolhida na inscrição. Os nomes das peças
 moram em PECAS_DO_RETRATO (js/data/inscricao.js), e o porquê da parte
 que falta, em SEM_PARTE_DO_RETRATO.
 """
@@ -49,6 +54,7 @@ ANOT = {
         'camisa':   [([11, 27, 28], (24, 30, 56, 48))],         # a regata
         'calca':    [([18, 20, 23], TUDO), ([24], (30, 45, 60, 80))],   # o jeans (o 24 é o claro dele)
         'sapatos':  [([2, 3, 4, 8, 9], (12, 68, 68, 80))],      # o tênis
+        'mochila':  [([16, 17, 19], TUDO)],                     # a mochila azul e as alças (o fundo cinza e o que vai pendurado ficam)
     },
     'urbano': {'n': 14,
         'olhos':    [([11], (36, 18, 43, 23))],
@@ -415,16 +421,19 @@ ANOT = {
         'calca':    [([3, 7, 9, 12], (36, 34, 52, 46))],                                # o short
         'sapatos':  [([2, 3, 5, 6, 13], (43, 62, 51, 70))],                             # o pé no pedal
     },
-    # a mochileira: a mochila gigante fica como está (tem Pokébola e corda da
-    # cor do cabelo); o peito que aparece entre a alça e o braço é pele — a
-    # mochila cobre a blusa, então não tem camisa pra trocar
+    # a mochileira: o vermelho da mochila gigante é a mochila, que sai na cor
+    # da mochila da inscrição (as duas Pokébolas presas nela, as listras cinza
+    # e as cordas da cor do cabelo ficam); o peito que aparece entre a alça e o
+    # braço é pele — a mochila cobre a blusa, então não tem camisa pra trocar
     'mochileira': {'n': 15,
+        'fixo': [(32, 36, 38, 41), (28, 40, 36, 45)],  # as duas Pokébolas presas na mochila
         'px': {(49, 24): 'olhos', (52, 25): 'olhos'},
         'cabelo': [([6, 10, 11], (39, 4, 52, 17)), ([6, 10, 11], (46, 15, 63, 29))],
         'calca': [([6, 11, 14], (30, 44, 45, 58)), ([6, 11, 14], (38, 58, 45, 64)), ([6, 14], (40, 41, 45, 44))],  # a bermuda
         'sapatos': [([1, 2, 3, 4, 10, 12, 13], (23, 56, 32, 70)), ([1, 2, 3, 4, 10, 12, 13], (36, 72, 50, 80))],
         'detalhes': [([12, 13], (47, 13, 52, 17)), ([12, 13], (61, 34, 66, 40)), ([1, 2], (57, 27, 59, 29))],  # o prendedor, a munhequeira e o brinco
-        'pele': [([7, 8, 9, 14], (46, 17, 80, 42)), ([7, 8, 9, 14], (20, 56, 50, 80))]},
+        'pele': [([7, 8, 9, 14], (46, 17, 80, 42)), ([7, 8, 9, 14], (20, 56, 50, 80))],
+        'mochila': [([3, 4, 5], (6, 16, 52, 51))]},  # o vermelho da mochila (listras cinza e cordas ficam)
     # a despojada: tranças rentes; a jaqueta amarrada na cintura, as contas
     # da trança e o pingente são os detalhes; a sombra do queixo na mão fica
     'despojada': {'n': 22,
@@ -472,8 +481,9 @@ ANOT = {
         'pele': [([7, 8, 10, 14], TUDO)]},
     # a cantora: a fita do cabelo, a flor, os brincos, o laço da gola e o
     # painel amarelo da saia são os detalhes; o vestido vai em cima (camisa)
-    # e na saia com o laço de trás (calça); a pele branca da gola e da barra,
-    # o microfone e o fio ficam; o rosa da bochecha e da língua também
+    # e na saia com o laço de trás (calça), e a pelúcia branca da gola e da
+    # barra vai com eles, no claro da cor; o microfone e o fio ficam, e o rosa
+    # da bochecha e da língua também
     'cantora': {'n': 15,
         'fixo': [(37, 30, 42, 35)],  # o microfone
         'px': {(38, 23): 'olhos', (38, 24): 'olhos', (43, 23): 'olhos', (43, 24): 'olhos',
@@ -482,20 +492,20 @@ ANOT = {
                      ([7], (35, 25, 37, 28)), ([2, 10], (47, 26, 49, 28)),
                      ([7, 10], (43, 30, 45, 34)), ([7, 10], (24, 41, 60, 57))],
         'cabelo': [([3, 4, 5], (32, 10, 57, 31))],
-        'camisa': [([13, 14], (35, 33, 47, 46))],
-        'calca': [([12, 13, 14], (28, 46, 62, 57)), ([12, 13, 14], (47, 36, 62, 46))],
+        'camisa': [([13, 14], (35, 33, 47, 46)), ([1, 2, 11], (33, 28, 37, 32)), ([1, 2, 11], (42, 28, 56, 35))],  # e a pelúcia da gola
+        'calca': [([12, 13, 14], (28, 46, 62, 57)), ([12, 13, 14], (47, 36, 62, 46)), ([1, 2, 11], (27, 53, 62, 62))],  # e a da barra
         'sapatos': [([13, 14], (38, 73, 47, 79)), ([13, 14], (50, 65, 57, 71))],
         'pele': [([6, 8, 9, 12], TUDO)]},
     # a vidente: um olho piscando (só o aberto muda); a faixa da cintura, o
     # forro da manga e a fita do rabo de cavalo são os detalhes; o quimono é a
-    # camisa (a blusa branca da gola fica), a calça vai até os babados, que
-    # ficam; descalça; o brilho e a Pokébola no ar ficam
+    # camisa (a blusa branca da gola fica), e a calça leva os babados da
+    # barra, no claro da cor; descalça; o brilho e a Pokébola no ar ficam
     'vidente': {'n': 15,
         'px': {(35, 24): 'olhos', (35, 25): 'olhos', (26, 26): 'detalhes', (35, 32): 'cabelo'},
         'cabelo': [([1, 2, 3, 11], (17, 14, 48, 32)), ([1, 2, 3], (17, 32, 32, 36))],
         'detalhes': [([1, 3], (33, 46, 47, 51)), ([1, 2], (49, 33, 54, 38))],
         'camisa': [([4, 13], (28, 25, 58, 48))],
-        'calca': [([4, 13], (20, 48, 60, 66))],
+        'calca': [([4, 13], (20, 48, 60, 66)), ([5, 12], (26, 58, 38, 66)), ([5, 12], (48, 57, 59, 65))],  # e os babados da barra
         'pele': [([7, 8, 9, 14], TUDO)]},
     # a guitarrista: o preto do contorno é o do cabelo, então o cabelo vai por
     # caixa (o fio da guitarra que desce pela esquerda fica); o prendedor e a
