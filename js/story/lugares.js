@@ -1140,6 +1140,8 @@ const Cidade = {
     Estado.registrar(`Vendeu ${qtd}× ${nome} por ${fmtDin(v.preco * qtd)} ₽.`);
     this._compra = null;
     Estado.salvar('auto');
+    /* o alto da tela, atrás da loja: o dinheiro, e a foto se a bolsa mudou */
+    UI.atualizarTopo();
     this.loja(this._andar || 0, this._qual || undefined, 'vender');
   },
 
@@ -1299,6 +1301,9 @@ const Cidade = {
     Estado.darItem(nome, qtd);
     this._compra = null;
     Estado.salvar('auto');
+    /* o alto da tela, atrás da loja: o dinheiro, e a foto se a bolsa
+       comprada passou a ser a que você carrega */
+    UI.atualizarTopo();
     this.loja(this._andar || 0, this._qual || undefined);
   },
 

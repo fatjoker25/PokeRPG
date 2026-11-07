@@ -129,11 +129,16 @@ const FotoJogador = {
 
   /* a foto de quem joga, pelo save (que pode ter vindo de arquivo de
      outra pessoa: só passa foto e cor que existem) */
-  doSave(j){
+  doSave(j, d){
     if (!j || typeof j.retrato !== 'string' || !/^[\w\/.-]+$/.test(j.retrato)) return null;
     const arq = j.retrato.startsWith(PASTA_DOS_RETRATOS) ? j.retrato.slice(PASTA_DOS_RETRATOS.length) : null;
-    if (arq && retratoDaFicha(arq) && (j.retratoCores || j.corMochila))
-      return this.url(arq, Object.assign({}, j.retratoCores, {mochila: j.corMochila}));
+    if (arq && retratoDaFicha(arq)){
+      /* a mochila da foto é a bolsa que aquele save carrega (mochilaAtual
+         lê o save inteiro: a da inscrição até comprar outra); sem o save,
+         a da inscrição */
+      const mochila = (d && typeof mochilaAtual === 'function' && mochilaAtual(d).corNome) || j.corMochila;
+      if (j.retratoCores || mochila) return this.url(arq, Object.assign({}, j.retratoCores, {mochila}));
+    }
     return typeof caminhoNPC === 'function' ? caminhoNPC(j.retrato) : null;
   }
 };

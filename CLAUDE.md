@@ -1144,7 +1144,10 @@ de cena que usa a ferramenta — nunca em `cond` nem em texto, que rodam toda
 vez que a tela redesenha. A lanterna também gasta 1 Pilha por uso, e sem
 pilha não acende. A loja tem Comprar e Vender: venda paga metade de
 `PRECO_BASE`, ferramenta gasta vale ¾, ½ ou ¼, quebrada e a mochila em uso
-não vendem. Tudo na folha de regras.
+não vendem. Tudo na folha de regras. Comprar e vender repintam o alto da
+tela, que fica atrás da loja (`UI.atualizarTopo`): sem isso o dinheiro
+e a foto (a bolsa comprada passa a ser a que você carrega) ficavam
+velhos até a próxima tela.
 
 ## TM e mapa
 As TMs são as de Red/Blue e as de Gold/Silver que ensinam golpe que a 1ª
@@ -1741,8 +1744,12 @@ Parte que a foto não mostra (olho atrás dos óculos, pé descalço, o
 cabelo debaixo do capacete do ciclista) fica com a aba tracejada e diz
 por quê (`SEM_PARTE_DO_RETRATO`); as setas andam de aba em aba. A
 mochila que a foto carrega nas costas (a da mochileira, a do viajante)
-é a parte `mochila`, sem aba: sai na cor da mochila da inscrição
-(`CORES_MOCHILA`, em escala por `FotoJogador.escalaDeHex`), e a foto
+é a parte `mochila`, sem aba: sai na cor da bolsa que você carrega, a
+da inscrição até comprar outra (`CORES_MOCHILA`, em escala por
+`FotoJogador.escalaDeHex`). Quem diz qual é a bolsa é o `mochilaAtual`,
+que aceita um save qualquer: o `FotoJogador.doSave(j, d)` lê o save
+inteiro, o do jogo e o cru da abertura, e trocar de bolsa
+(`UI.usarBolsa`) repinta a foto do alto da tela. Na criação, a foto
 grande muda quando se escolhe a mochila (`crCoresDaFoto`). A aparência,
 que era texto livre, sai daí por `descricaoDaFoto`: cabelo e olhos em
 `j.aparencia`, a roupa em `j.vestimenta` (`PECAS_DO_RETRATO`, a palavra
@@ -1754,8 +1761,12 @@ a flor é rosa), com o detalhe depois de um "com" ("regata
 preta e tênis branco, com boné e luvas azuis": duas peças juntas com
 "e" no meio da lista davam "tênis e meias azuis e prendedor e
 munhequeira vermelhos"), e o retrato falado do capítulo 6 diz tudo numa
-frase só, com a mochila da inscrição no fim (`faladoDaFoto`, lido pelo
-`Estado.descricaoFisica`). As cores ficam em
+frase só, com a bolsa que você carrega no fim (`faladoDaFoto`, lido pelo
+`Estado.descricaoFisica`, e `bolsaFalada`, por extenso em
+`bolsaPorExtenso`: "mochila verde", "mochila escolar azul", "bolsa
+dourada de festa" — a cor logo depois da primeira palavra quando o
+resto começa por "de" ou "sem"). A Ficha diz a mesma bolsa na linha
+"Bolsa". As cores ficam em
 `j.retratoCores`; a pele fica só na foto. Desenho novo não tem: cada
 foto vira um PNG de paleta com casa própria pra cada cor de cada parte
 (`js/data/fotos-jogador.js`, gerado por `python3
@@ -1796,8 +1807,10 @@ escrito é refeita — a escrita à mão fica. O `chk-telas` abre cada aba
 de cada foto com cada cor, reprova parte que a foto não tem oferecendo
 cor, grade que muda junto com a foto grande, pixel que muda pra cor de
 outra parte (cada parte sozinha, e todas juntas igual à soma delas),
-mochila da foto que não segue a da inscrição e seta que não anda de
-aba, confere a descrição peça por peça, no Estado e no alto da tela, e
+mochila da foto que não segue a bolsa em uso (a da inscrição e, depois,
+a comprada, no alto da tela e no cartão da abertura) e seta que não
+anda de aba, confere a descrição peça por peça, no Estado e no alto da
+tela, a bolsa comprada na descrição e na Ficha, e
 abre no navegador um save de antes das sete partes (a cor da roupa vai
 pra peça certa, e a descrição escrita à mão fica).
 

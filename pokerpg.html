@@ -45660,12 +45660,13 @@ function descricaoDaFoto(arq, cores){
   return {aparencia:juntarComE(cabeca), vestimenta, cabeca, roupa, detalhe};
 }
 /* quem te descreve numa frase só: cabelo, olhos e roupa numa lista, o
-   detalhe com "com" e a mochila da inscrição no fim ("…e tênis branco,
-   com boné vermelho, de mochila verde") */
-function faladoDaFoto(desc, mochila){
+   detalhe com "com" e a bolsa que você carrega no fim, por extenso
+   (bolsaPorExtenso: "…e tênis branco, com boné vermelho, de mochila
+   verde", "…de bolsa dourada de festa") */
+function faladoDaFoto(desc, bolsa){
   const d = desc || {};
   const base = juntarComE((d.cabeca || []).concat(d.roupa || []));
-  return [base, d.detalhe ? 'com ' + d.detalhe : '', mochila ? 'de mochila ' + mochila : ''].filter(Boolean).join(', ');
+  return [base, d.detalhe ? 'com ' + d.detalhe : '', bolsa ? 'de ' + bolsa : ''].filter(Boolean).join(', ');
 }
 
 /* Save de antes das sete partes: a foto tinha cabelo, pele e roupa, e
@@ -48118,9 +48119,11 @@ function corDaMochila(nome){
   const c = nomeDaCorDaMochila(nome);
   return c ? CORES_MOCHILA[c] : null;
 }
-/* A bolsa que o jogador está carregando agora — a última que ele arranjou. */
-function mochilaAtual(){
-  const d = Estado.dados;
+/* A bolsa que o jogador está carregando agora — a última que ele arranjou.
+   Sem argumento, a do jogo em curso; com um save (o da abertura, o de um
+   arquivo), a daquele save, que só se mostra. */
+function mochilaAtual(dados){
+  const d = dados || Estado.dados;
   /* corNome é a cor por escrito ('azul', 'verde musgo'), pro desenho;
      o nome nunca leva a cor */
   let cor = COR_MOCHILA_PADRAO, nome = 'Mochila', corNome = null;
@@ -48150,6 +48153,33 @@ function mochilaAtual(){
     if (lida){ cor = lida.cor; nome = lida.nome; corNome = lida.corNome; }
   }
   return saida();
+}
+
+/* A cor da bolsa por escrito: as chaves de CORES_MOCHILA vêm sem acento
+   e sem hífen, pra casar com o que a pessoa escreveu */
+const COR_DA_MOCHILA_ESCRITA = {
+  'azul marinho':'azul-marinho', 'azul clara':'azul-clara', 'azul claro':'azul-claro',
+  'verde musgo':'verde-musgo', 'verde escura':'verde-escura', 'verde escuro':'verde-escuro', bordo:'bordô'
+};
+/* A bolsa como os outros falam dela: "mochila verde", "mochila escolar
+   azul", "bolsa dourada de festa", "mochila preta sem marca" — a cor logo
+   depois da primeira palavra quando o resto começa por "de" ou "sem",
+   senão no fim. Nome que já diz a cor (save velho, "Mochila azul") fica
+   como está. Sem cor, null. */
+function bolsaPorExtenso(nome, corNome){
+  if (!corNome) return null;
+  const cor = COR_DA_MOCHILA_ESCRITA[corNome] || corNome;
+  const n = String(nome || 'Mochila').trim().replace(/\s+/g, ' ');
+  const baixa = n.charAt(0).toLowerCase() + n.slice(1);
+  if ((' ' + _semAcento(n).replace(/-/g, ' ') + ' ').includes(' ' + _semAcento(corNome) + ' ')) return baixa;
+  const [cabeca, ...resto] = baixa.split(' ');
+  if (resto.length && /^(de|do|da|dos|das|sem|com)$/.test(resto[0])) return `${cabeca} ${cor} ${resto.join(' ')}`;
+  return `${baixa} ${cor}`;
+}
+/* A bolsa que você carrega, como quem te descreve fala dela */
+function bolsaFalada(dados){
+  const b = mochilaAtual(dados);
+  return bolsaPorExtenso(b.nome, b.corNome);
 }
 
 /* A cor da bolsa numa descrição livre. A cor não vem sempre colada no
@@ -48322,16 +48352,18 @@ const Estado = {
     /* a foto da ficha diz tudo, cada peça na cor que você deu, numa frase
        só ("cabelo ruivo, olhos verdes, regata preta e tênis branco, com
        boné azul, de mochila verde", faladoDaFoto); sem ela, o que estiver
-       escrito na aparência e na roupa */
+       escrito na aparência e na roupa. A bolsa é a que você carrega agora
+       (a da inscrição até comprar outra), não a que tinha quando saiu */
+    const bolsa = bolsaFalada();
     const arq = typeof j.retrato === 'string' && typeof PASTA_DOS_RETRATOS !== 'undefined' && j.retrato.startsWith(PASTA_DOS_RETRATOS)
       ? j.retrato.slice(PASTA_DOS_RETRATOS.length) : null;
     if (arq && j.fotoPartes && typeof faladoDaFoto === 'function' && typeof FOTOS_DO_JOGADOR !== 'undefined' && FOTOS_DO_JOGADOR[arq])
-      return faladoDaFoto(descricaoDaFoto(arq, j.retratoCores), j.corMochila);
+      return faladoDaFoto(descricaoDaFoto(arq, j.retratoCores), bolsa);
     if (j.aparencia)  partes.push(sem(j.aparencia));
     if (j.vestimenta) partes.push(sem(j.vestimenta));
-    /* a mochila da ficha entra na descrição se a roupa não falou de bolsa */
-    if (j.corMochila && !/mochila|bolsa|sacola|mala|bornal/i.test(partes.join(' ')))
-      partes.push('mochila ' + j.corMochila);
+    /* a bolsa entra na descrição se a roupa escrita à mão não falou de bolsa */
+    if (bolsa && !/mochila|bolsa|sacola|mala|bornal/i.test(partes.join(' ')))
+      partes.push(bolsa);
     return partes.join(', ');
   },
   comoTeVeem(){
@@ -61184,6 +61216,8 @@ const Cidade = {
     Estado.registrar(`Vendeu ${qtd}× ${nome} por ${fmtDin(v.preco * qtd)} ₽.`);
     this._compra = null;
     Estado.salvar('auto');
+    /* o alto da tela, atrás da loja: o dinheiro, e a foto se a bolsa mudou */
+    UI.atualizarTopo();
     this.loja(this._andar || 0, this._qual || undefined, 'vender');
   },
 
@@ -61343,6 +61377,9 @@ const Cidade = {
     Estado.darItem(nome, qtd);
     this._compra = null;
     Estado.salvar('auto');
+    /* o alto da tela, atrás da loja: o dinheiro, e a foto se a bolsa
+       comprada passou a ser a que você carrega */
+    UI.atualizarTopo();
     this.loja(this._andar || 0, this._qual || undefined);
   },
 
@@ -143533,11 +143570,16 @@ const FotoJogador = {
 
   /* a foto de quem joga, pelo save (que pode ter vindo de arquivo de
      outra pessoa: só passa foto e cor que existem) */
-  doSave(j){
+  doSave(j, d){
     if (!j || typeof j.retrato !== 'string' || !/^[\w\/.-]+$/.test(j.retrato)) return null;
     const arq = j.retrato.startsWith(PASTA_DOS_RETRATOS) ? j.retrato.slice(PASTA_DOS_RETRATOS.length) : null;
-    if (arq && retratoDaFicha(arq) && (j.retratoCores || j.corMochila))
-      return this.url(arq, Object.assign({}, j.retratoCores, {mochila: j.corMochila}));
+    if (arq && retratoDaFicha(arq)){
+      /* a mochila da foto é a bolsa que aquele save carrega (mochilaAtual
+         lê o save inteiro: a da inscrição até comprar outra); sem o save,
+         a da inscrição */
+      const mochila = (d && typeof mochilaAtual === 'function' && mochilaAtual(d).corNome) || j.corMochila;
+      if (j.retratoCores || mochila) return this.url(arq, Object.assign({}, j.retratoCores, {mochila}));
+    }
     return typeof caminhoNPC === 'function' ? caminhoNPC(j.retrato) : null;
   }
 };
@@ -143593,7 +143635,7 @@ function retratoDoJogador(d){
   d = d || (typeof Estado !== 'undefined' ? Estado.dados : null);
   if (typeof Rede !== 'undefined' && Rede.dentro && d && Rede.dentro(d)){ const r = Rede.retrato(); if (r) return r; }
   const j = d && d.jogador;
-  return j && j.retrato ? FotoJogador.doSave(j) : null;
+  return j && j.retrato ? FotoJogador.doSave(j, d) : null;
 }
 
 /* Os seis status do treinador, na ordem da ficha, com o que cada um
@@ -144027,7 +144069,7 @@ const UI = {
       const nIns = save && Array.isArray(save.insignias) ? save.insignias.filter(i => i !== 'Título de Campeão' && i !== 'Campeão de Kanto') : [];
       const dias = save ? Math.max(1, Math.floor(+(save.relogio || {}).dia || 1)) : 0;
       const lugar = save && save.local && LOCAIS[save.local] ? LOCAIS[save.local].nome : '';
-      const rosto = FotoJogador.doSave(j);
+      const rosto = FotoJogador.doSave(j, save);
       const cap = save ? Historia.capitulo(save.capitulo) : null;
       const caixa = GINASIOS.map(g => {
         const tem = nIns.includes(g.insignia), src = caminhoInsignia(g.id);
@@ -144511,7 +144553,7 @@ const UI = {
       ${this.crProvador(c)}
       <div class="cr-campo"><span class="cr-rot">Cor da mochila</span>
         <div class="cr-cores" role="group" aria-label="Cor da mochila">${mochilas}</div>
-        <p class="cr-nota">É a cor da mochila na tela, até você comprar outra bolsa, e a da mochila da foto, se ela carrega uma.</p></div>
+        <p class="cr-nota">É a cor da mochila na tela e a da mochila da foto, se ela carrega uma, até você comprar outra bolsa.</p></div>
       <div class="cr-campo"><span class="cr-rot">Cor do cartão</span>
         <div class="cartao-cores cr-cartoes" role="group" aria-label="Cor do cartão">${cartoes}</div></div>`;
   },
@@ -144555,7 +144597,7 @@ const UI = {
       painel = `<div class="cr-parte-rot"><b>${e(maiuscula(peca))}</b><span>${e(maiuscula(nome(aba, a || padrao)))}${a ? '' : ' · padrão'}</span></div>
         <div class="cr-tintas" role="group" aria-label="Cor: ${e(peca)}">${tintas.join('')}</div>`;
     }
-    const falado = faladoDaFoto(desc, c.mochila);
+    const falado = faladoDaFoto(desc, c.mochila ? bolsaPorExtenso('Mochila', c.mochila) : '');
     return `<div class="cr-campo cr-provador"><span class="cr-rot">Customização ${this.crDadoBtn('cores', 'Sortear as cores')}</span>
       <div class="cr-prov">
         <div class="cr-prov-foto">${this.crRetratoImg(arq, 'cr-prov-sprite', this.crCoresDaFoto(c))}</div>
@@ -148082,7 +148124,7 @@ const UI = {
     const nIns = (Array.isArray(d.insignias) ? d.insignias : []).filter(i => i !== 'Título de Campeão' && i !== 'Campeão de Kanto').length;
     const dias = Math.max(1, Math.floor(+(d.relogio || {}).dia || 1));
     const lugar = d.local && typeof LOCAIS !== 'undefined' && LOCAIS[d.local] ? LOCAIS[d.local].nome : '';
-    const rosto = FotoJogador.doSave(j);
+    const rosto = FotoJogador.doSave(j, d);
     const time = (d.time || []).slice(0, 6).map(p =>
       `<span class="save-pk" title="${e(nomeExib(p))} · Nv ${e(p.nivel)}">${imgSprite({dex:p.dex, shiny:!!p.shiny}, 'icone')}</span>`).join('');
     const notas = [].concat(nota || []);
@@ -148533,6 +148575,9 @@ const UI = {
     Estado.dados.jogador.bolsa = nome;
     Estado.salvar('auto');
     this.modalItens();
+    /* a mochila da foto do alto da tela é a bolsa que você carrega */
+    const rosto = document.querySelector('.topo-rosto img'), src = retratoDoJogador();
+    if (rosto && src && rosto.getAttribute('src') !== src) rosto.src = src;
   },
 
   /* ---------- TM ----------
@@ -148877,8 +148922,9 @@ const UI = {
         const linha = typeof linhaAtual === 'function' ? linhaAtual(d) : null;
         const casa = typeof casaCompleto === 'function' ? e(casaCompleto()) : '';
         const forte = STATUS_DO_TREINADOR.find(s => s[0] === j.forte);
-        const mochila = j.corMochila && CORES_MOCHILA[j.corMochila]
-          ? `<i class="ficha-cor" style="background:${CORES_MOCHILA[j.corMochila]}"></i>${M(j.corMochila)}` : '';
+        /* a bolsa que você carrega agora, como quem te descreve fala dela */
+        const carrega = mochilaAtual(), bolsa = bolsaPorExtenso(carrega.nome, carrega.corNome);
+        const mochila = bolsa ? `<i class="ficha-cor" style="background:${carrega.cor}"></i>${M(bolsa)}` : '';
         return bloco('Quem você é', dl([
             ['Personalidade', M(j.personalidade || '—')],
             ['No que é bom', forte ? `${e(forte[1])} <span class="ficha-nota">Começou em 2</span>` : ''],
@@ -148889,7 +148935,7 @@ const UI = {
           + bloco('Como te veem', dl([
             ['Aparência', j.aparencia ? M(j.aparencia) : ''],
             ['Roupa', j.vestimenta ? M(j.vestimenta) : ''],
-            ['Mochila', mochila]
+            ['Bolsa', mochila]
           ]))
           + bloco('De onde você vem', dl([
             ['Aniversário', e(textoNascimento(nascimentoDe()))],
@@ -149472,8 +149518,8 @@ const UI = {
       ${L('No que você é bom', 'um dos seis status começa em 2; os outros, em 1 · Resistência em 2 já começa com HP 32 e Vontade 4')}
       ${L('Objetivo', 'um dos sete rumos, numa frase sua (ou na sugerida) · a frase sai da sua boca na história, e o rumo abre cada capítulo')}
       ${L('Gostos', `até ${GOSTOS_MAX} coisas de que você gosta e ${DESGOSTOS_MAX} de que não gosta, entre lugares, tipos de Pokémon e uma espécie · a mesma coisa não fica nas duas listas · o que cada uma faz está em Objetivo e gostos`)}
-      ${L('Aparência', 'a foto do cartão, entre as do seu gênero · na Customização, uma aba por parte (cabelo, olhos, pele, camisa, calça, sapatos e detalhes), cada uma com a cor Padrão, a do desenho, e as outras · o desenho é sempre o mesmo, só a cor muda, e só na foto escolhida · parte que a foto não mostra (olho atrás dos óculos, pé descalço) não tem cor · a mochila que a foto carrega (a da mochileira, a do viajante) sai na cor da mochila da inscrição · tudo menos a pele vira a descrição que os outros fazem de você quando precisam, peça por peça · sem foto, a descrição fica vaga · nada disso mexe em regra')}
-      ${L('Mochila e cartão', 'a cor da mochila na tela (até você comprar outra bolsa) e a do Cartão de Treinador · a foto vai no cartão e na Ficha · nada disso mexe em regra')}
+      ${L('Aparência', 'a foto do cartão, entre as do seu gênero · na Customização, uma aba por parte (cabelo, olhos, pele, camisa, calça, sapatos e detalhes), cada uma com a cor Padrão, a do desenho, e as outras · o desenho é sempre o mesmo, só a cor muda, e só na foto escolhida · parte que a foto não mostra (olho atrás dos óculos, pé descalço) não tem cor · a mochila que a foto carrega (a da mochileira, a do viajante) sai na cor da bolsa que você carrega · tudo menos a pele vira a descrição que os outros fazem de você quando precisam, peça por peça, com a bolsa que você carrega no fim (a da inscrição até comprar outra) · sem foto, a descrição fica vaga · nada disso mexe em regra')}
+      ${L('Mochila e cartão', 'a cor da mochila na tela, na foto e na sua descrição, até você comprar outra bolsa: aí vale a que você carrega · a cor do Cartão de Treinador · a foto vai no cartão e na Ficha · nada disso mexe em regra')}
       ${L('Gênero', 'o texto inteiro concorda com ele — narração, tratamento, cargo e título')}
       ${L('Quem fica em casa', 'a voz que te acorda e o primeiro número do PokéNav · o parentesco decide como a história fala dessa pessoa · o que ficar em branco é sorteado combinando nome e parentesco')}
       ${L('Inicial clássico', 'nasceu em Pallet: o Professor entrega na rua, na manhã da saída · fora de Pallet: a perua do laboratório, uma vez por mês')}

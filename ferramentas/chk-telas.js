@@ -385,6 +385,55 @@ const SUSPEITO = [
       return falhas;
     });
     for (const f of conversao){ onde = `inscrição/${g}/save de antes`; anota('inscrição', f); }
+    /* a bolsa que você carrega: a da inscrição até comprar outra, e daí a
+       comprada (no balcão, que repinta o alto da tela) ou a escolhida na
+       mochila — na descrição, na linha da Ficha e na mochila da foto (a do
+       alto da tela e a do cartão da abertura, que lê o save cru) */
+    const bolsa = await page.evaluate(() => {
+      const falhas = [], d = Estado.dados, j = Estado.j;
+      const guardado = JSON.stringify({itens:d.itens, bolsa:j.bolsa, dinheiro:j.dinheiro});
+      const arq = j.retrato.slice(PASTA_DOS_RETRATOS.length);
+      const comMochila = !!(FOTOS_DO_JOGADOR[arq] && FOTOS_DO_JOGADOR[arq].mochila);
+      const fotoNa = cor => FotoJogador.url(arq, Object.assign({}, j.retratoCores, {mochila:cor}));
+      const topo = () => document.querySelector('.topo-rosto img');
+      const grana = () => (document.querySelector('.topo-chip.grana') || {}).textContent || '';
+      const inscricao = bolsaPorExtenso('Mochila', j.corMochila);
+      if (inscricao && !Estado.descricaoFisica().endsWith('de ' + inscricao))
+        falhas.push(`sem bolsa comprada, a descrição não termina na mochila da inscrição: "${Estado.descricaoFisica()}"`);
+      /* comprada no balcão: passa a ser a que você carrega */
+      j.dinheiro += 5000; UI.atualizarTopo();
+      Cidade._compra = {nome:'Bolsa de festa', preco:100, max:1, qtd:1};
+      Cidade.confirmarCompra('Bolsa de festa', 100);
+      UI.fecharModal(true);
+      if (!grana().includes(fmtDin(j.dinheiro))) falhas.push(`depois da compra, o alto da tela diz "${grana()}" e o dinheiro é ${j.dinheiro}`);
+      if (!Estado.descricaoFisica().endsWith('de bolsa dourada de festa'))
+        falhas.push(`com a Bolsa de festa comprada, quem te descreve diz "${Estado.descricaoFisica()}"`);
+      if (comMochila){
+        if (retratoDoJogador() !== fotoNa('dourada')) falhas.push(`a mochila da foto ${arq} não segue a bolsa comprada`);
+        if (topo() && topo().src !== fotoNa('dourada')) falhas.push('a foto do alto da tela não muda com a bolsa comprada');
+      }
+      /* escolhida na mochila */
+      d.itens['Mochila escolar'] = 1;
+      UI.modalItens(); UI.usarBolsa('Mochila escolar'); UI.fecharModal(true);
+      if (!Estado.descricaoFisica().endsWith('de mochila escolar azul'))
+        falhas.push(`com a Mochila escolar em uso, quem te descreve diz "${Estado.descricaoFisica()}"`);
+      if (comMochila){
+        if (topo() && topo().src !== fotoNa('azul')) falhas.push('a foto do alto da tela não muda quando se troca de bolsa');
+        const cru = JSON.parse(JSON.stringify(d));
+        if (FotoJogador.doSave(cru.jogador, cru) !== fotoNa('azul')) falhas.push('o cartão da abertura não mostra a bolsa em uso na foto');
+      }
+      UI.modalFicha('perfil');
+      const dt = [...document.querySelectorAll('.modal dt')].find(x => x.textContent.trim() === 'Bolsa');
+      const diz = dt && dt.nextElementSibling ? dt.nextElementSibling.textContent.trim() : null;
+      if (diz !== 'Mochila escolar azul') falhas.push(`a Ficha diz a bolsa "${diz}"`);
+      UI.fecharModal(true);
+      const g = JSON.parse(guardado);
+      d.itens = g.itens; j.dinheiro = g.dinheiro;
+      if (g.bolsa === undefined) delete j.bolsa; else j.bolsa = g.bolsa;
+      UI.atualizarTopo();
+      return falhas;
+    });
+    for (const f of bolsa){ onde = `inscrição/${g}/bolsa em uso`; anota('inscrição', f); }
     await tentar(`inscrição/${g}/cartão`, () => { Object.assign(Estado.dados.flags, {tem_pokedex:true, tem_cartao:true}); UI.modalCartao(); });
     await tentar(`inscrição/${g}/ficha`, () => UI.modalFicha('perfil'));
     const ok = await page.evaluate(() => !!(Estado.dados && Estado.j && Estado.j.meta && Estado.j.forte && Estado.j.status[Estado.j.forte] === 2));

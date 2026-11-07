@@ -306,12 +306,13 @@ function descricaoDaFoto(arq, cores){
   return {aparencia:juntarComE(cabeca), vestimenta, cabeca, roupa, detalhe};
 }
 /* quem te descreve numa frase só: cabelo, olhos e roupa numa lista, o
-   detalhe com "com" e a mochila da inscrição no fim ("…e tênis branco,
-   com boné vermelho, de mochila verde") */
-function faladoDaFoto(desc, mochila){
+   detalhe com "com" e a bolsa que você carrega no fim, por extenso
+   (bolsaPorExtenso: "…e tênis branco, com boné vermelho, de mochila
+   verde", "…de bolsa dourada de festa") */
+function faladoDaFoto(desc, bolsa){
   const d = desc || {};
   const base = juntarComE((d.cabeca || []).concat(d.roupa || []));
-  return [base, d.detalhe ? 'com ' + d.detalhe : '', mochila ? 'de mochila ' + mochila : ''].filter(Boolean).join(', ');
+  return [base, d.detalhe ? 'com ' + d.detalhe : '', bolsa ? 'de ' + bolsa : ''].filter(Boolean).join(', ');
 }
 
 /* Save de antes das sete partes: a foto tinha cabelo, pele e roupa, e

@@ -461,9 +461,11 @@ function corDaMochila(nome){
   const c = nomeDaCorDaMochila(nome);
   return c ? CORES_MOCHILA[c] : null;
 }
-/* A bolsa que o jogador está carregando agora — a última que ele arranjou. */
-function mochilaAtual(){
-  const d = Estado.dados;
+/* A bolsa que o jogador está carregando agora — a última que ele arranjou.
+   Sem argumento, a do jogo em curso; com um save (o da abertura, o de um
+   arquivo), a daquele save, que só se mostra. */
+function mochilaAtual(dados){
+  const d = dados || Estado.dados;
   /* corNome é a cor por escrito ('azul', 'verde musgo'), pro desenho;
      o nome nunca leva a cor */
   let cor = COR_MOCHILA_PADRAO, nome = 'Mochila', corNome = null;
@@ -493,6 +495,33 @@ function mochilaAtual(){
     if (lida){ cor = lida.cor; nome = lida.nome; corNome = lida.corNome; }
   }
   return saida();
+}
+
+/* A cor da bolsa por escrito: as chaves de CORES_MOCHILA vêm sem acento
+   e sem hífen, pra casar com o que a pessoa escreveu */
+const COR_DA_MOCHILA_ESCRITA = {
+  'azul marinho':'azul-marinho', 'azul clara':'azul-clara', 'azul claro':'azul-claro',
+  'verde musgo':'verde-musgo', 'verde escura':'verde-escura', 'verde escuro':'verde-escuro', bordo:'bordô'
+};
+/* A bolsa como os outros falam dela: "mochila verde", "mochila escolar
+   azul", "bolsa dourada de festa", "mochila preta sem marca" — a cor logo
+   depois da primeira palavra quando o resto começa por "de" ou "sem",
+   senão no fim. Nome que já diz a cor (save velho, "Mochila azul") fica
+   como está. Sem cor, null. */
+function bolsaPorExtenso(nome, corNome){
+  if (!corNome) return null;
+  const cor = COR_DA_MOCHILA_ESCRITA[corNome] || corNome;
+  const n = String(nome || 'Mochila').trim().replace(/\s+/g, ' ');
+  const baixa = n.charAt(0).toLowerCase() + n.slice(1);
+  if ((' ' + _semAcento(n).replace(/-/g, ' ') + ' ').includes(' ' + _semAcento(corNome) + ' ')) return baixa;
+  const [cabeca, ...resto] = baixa.split(' ');
+  if (resto.length && /^(de|do|da|dos|das|sem|com)$/.test(resto[0])) return `${cabeca} ${cor} ${resto.join(' ')}`;
+  return `${baixa} ${cor}`;
+}
+/* A bolsa que você carrega, como quem te descreve fala dela */
+function bolsaFalada(dados){
+  const b = mochilaAtual(dados);
+  return bolsaPorExtenso(b.nome, b.corNome);
 }
 
 /* A cor da bolsa numa descrição livre. A cor não vem sempre colada no
@@ -665,16 +694,18 @@ const Estado = {
     /* a foto da ficha diz tudo, cada peça na cor que você deu, numa frase
        só ("cabelo ruivo, olhos verdes, regata preta e tênis branco, com
        boné azul, de mochila verde", faladoDaFoto); sem ela, o que estiver
-       escrito na aparência e na roupa */
+       escrito na aparência e na roupa. A bolsa é a que você carrega agora
+       (a da inscrição até comprar outra), não a que tinha quando saiu */
+    const bolsa = bolsaFalada();
     const arq = typeof j.retrato === 'string' && typeof PASTA_DOS_RETRATOS !== 'undefined' && j.retrato.startsWith(PASTA_DOS_RETRATOS)
       ? j.retrato.slice(PASTA_DOS_RETRATOS.length) : null;
     if (arq && j.fotoPartes && typeof faladoDaFoto === 'function' && typeof FOTOS_DO_JOGADOR !== 'undefined' && FOTOS_DO_JOGADOR[arq])
-      return faladoDaFoto(descricaoDaFoto(arq, j.retratoCores), j.corMochila);
+      return faladoDaFoto(descricaoDaFoto(arq, j.retratoCores), bolsa);
     if (j.aparencia)  partes.push(sem(j.aparencia));
     if (j.vestimenta) partes.push(sem(j.vestimenta));
-    /* a mochila da ficha entra na descrição se a roupa não falou de bolsa */
-    if (j.corMochila && !/mochila|bolsa|sacola|mala|bornal/i.test(partes.join(' ')))
-      partes.push('mochila ' + j.corMochila);
+    /* a bolsa entra na descrição se a roupa escrita à mão não falou de bolsa */
+    if (bolsa && !/mochila|bolsa|sacola|mala|bornal/i.test(partes.join(' ')))
+      partes.push(bolsa);
     return partes.join(', ');
   },
   comoTeVeem(){
