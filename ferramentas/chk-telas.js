@@ -484,17 +484,22 @@ const SUSPEITO = [
   const arquivo = await page.evaluate(() => ArquivoSave.texto());
   /* a abertura com a jornada salva (o cartão diz de quem é) e sem ela */
   await tentar('abertura', () => { UI.fecharModal(true); Estado.salvar('auto'); UI.telaInicial(); });
-  /* a foto da jornada sai nas cores dela, e cor que não existe (save de
+  /* a foto da jornada sai nas cores dela, com a mochila na cor da bolsa
+     que aquele save carrega, e cor ou bolsa que não existe (save de
      arquivo de outra pessoa) não passa */
   if (!(await page.evaluate(() => {
-    const j = Estado.j, antes = j.retratoCores;
-    j.retrato = 'jogador/viajante'; j.retratoCores = {cabelo:'rosa', roupa:'"><img src=x onerror=alert(1)>', pele:'escura'};
+    const d = Estado.dados, j = Estado.j, antes = j.retratoCores, bolsa = j.bolsa, falsa = '"><img src=x onerror=alert(1)>';
+    j.retrato = 'jogador/viajante'; j.retratoCores = {cabelo:'rosa', roupa:falsa, pele:'escura'};
+    j.bolsa = falsa; d.itens[falsa] = 1;
     Estado.salvar('auto'); UI.telaInicial();
     const img = document.querySelector('.tt-j-rosto img');
-    const ok = img && /^data:image\/png/.test(img.src) && img.src === FotoJogador.url('viajante', {cabelo:'rosa', pele:'escura'});
+    const carrega = mochilaAtual(d).corNome;
+    const ok = !!carrega && img && /^data:image\/png/.test(img.src)
+      && img.src === FotoJogador.url('viajante', {cabelo:'rosa', pele:'escura', mochila:carrega});
+    delete d.itens[falsa]; if (bolsa === undefined) delete j.bolsa; else j.bolsa = bolsa;
     j.retratoCores = antes; Estado.salvar('auto'); UI.telaInicial();
     return ok;
-  }))){ onde = 'abertura'; anota('abertura', 'o cartão da jornada não mostra a foto nas cores dela, ou deixou passar cor que não existe'); }
+  }))){ onde = 'abertura'; anota('abertura', 'o cartão da jornada não mostra a foto nas cores dela e na bolsa em uso, ou deixou passar cor ou bolsa que não existe'); }
   if (!(await page.evaluate(() => [...document.querySelectorAll('.tela-titulo button')].some(b => /Carregar jogo/.test(b.textContent))))){
     onde = 'abertura'; anota('carregar', 'a abertura não tem o Carregar jogo');
   }

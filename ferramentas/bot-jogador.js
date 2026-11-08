@@ -210,6 +210,14 @@ const SUSPEITO = [
            sem Ração e com dinheiro, anda até achar */
         if (L.tipo === 'cidade' && (L.lugares || []).includes('loja') && !afz.includes('loja')
             && Estado.contaItem('Ração') < 2 && d.jogador.dinheiro > 1500) return {f:'andar'};
+        /* sem Ração, com dinheiro e fora da cidade: vai até a loja mais
+           perto. Sem isso o robô ficou 98 dias na Rota 1 com o time
+           faminto, procurando briga pra subir de nível e perdendo */
+        if (L.tipo !== 'cidade' && Estado.contaItem('Ração') < 1 && d.jogador.dinheiro > 1500){
+          const lojas = Object.keys(LOCAIS).filter(k => (LOCAIS[k].lugares || []).includes('loja') && !travaDaPassagem(id, k))
+            .map(k => caminhoEntre(id, k)).filter(c => c && c[1] && !travaDaPassagem(id, c[1])).sort((x, y) => x.length - y.length);
+          if (lojas.length) return {f:'viajar', id:lojas[0][1]};
+        }
         /* quem nasceu longe pega o ônibus da Liga, como a cidade oferece */
         if (afz.includes('onibus')) return {f:'onibus'};
         const destino = Historia.proximoDestino && Historia.proximoDestino();
