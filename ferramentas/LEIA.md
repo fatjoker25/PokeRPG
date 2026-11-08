@@ -51,6 +51,9 @@ o ônibus da Liga quando nasceu longe e segue a história, e anota todo texto
 quebrado que aparecer — marca de gênero sem resolver, `undefined`, `NaN`,
 HTML vazando, "bicho", "bola" sozinha, balão sem nome — além de erro de
 JavaScript. "Travou no mapa" com `treinar` é a espera do treino, não erro.
+No fim ele lista também o dinheiro que saiu de mil em mil ou mais
+(`GASTOS`), agrupado pela função que tirou: foi assim que apareceu o robô
+comprando Ração sem parar em Saffron, onde a loja não vende Potion.
 
 Em 25 minutos ele chega ao capítulo 4 ou 5. Pro meio e o fim do jogo,
 `CAPITULO=N` faz a inscrição e pula pra antes do capítulo N: o inicial

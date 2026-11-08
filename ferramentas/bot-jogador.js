@@ -151,7 +151,19 @@ const SUSPEITO = [
 
   /* o que aconteceu, pra conferir depois */
   await page.evaluate(() => {
-    window.__reg = {lutas:[], caps:[]};
+    window.__reg = {lutas:[], caps:[], gastos:[]};
+    /* o dinheiro que sai de uma vez (mil ou mais): quanto, onde e quem
+       tirou. Os robôs do meio do jogo perdiam vinte mil numa cidade sem
+       derrota nenhuma, e só a pilha da chamada diz de onde */
+    const jog = Estado.dados.jogador;
+    let din = jog.dinheiro;
+    Object.defineProperty(jog, 'dinheiro', {configurable:true, enumerable:true,
+      get(){ return din; },
+      set(n){
+        if (n - din <= -1000) __reg.gastos.push({de:din, para:n, cap:Estado.dados.capitulo, local:Estado.dados.local, cena:Estado.dados.cena,
+          pilha:(new Error().stack || '').split('\n').slice(2, 6).map(x => x.trim().replace(/\(?file:\/\/\S*\/js\//, '(')).join(' < ')});
+        din = n;
+      }});
     const fb = Jogo.finalizarBatalha.bind(Jogo);
     Jogo.finalizarBatalha = function(fim){
       try { const d = Estado.dados, B = Batalha;
@@ -320,9 +332,15 @@ const SUSPEITO = [
             .map(k => trajeto(id, k)).filter(c => c && c[1] && !travaDaPassagem(id, c[1])).sort((x, y) => x.length - y.length);
           if (centros.length) return {f:'viajar', id:centros[0][1]};
         }
-        /* compra o básico */
-        if (afz.includes('loja') && d.jogador.dinheiro > 1500 && (Estado.contaItem('Potion') < 3 || Estado.contaItem('Poké Ball') < 5
-            || Estado.contaItem('Ração') < 2)) return {f:'loja'};
+        /* compra o básico: só o que falta e só o que a loja daqui vende.
+           Antes ele comprava os três toda vez que entrava, e em Saffron, que
+           não vende Potion nem Poké Ball, voltava ao balcão a cada passo
+           atrás da Potion e saía com mais três Rações: 129 Rações e vinte
+           e cinco mil a menos */
+        const MINIMO = {'Potion':3, 'Poké Ball':5, 'Ração':2};
+        const vende = n => catalogoDaCidade(id).some(([x]) => x === n);
+        const faltam = Object.keys(MINIMO).filter(n => Estado.contaItem(n) < MINIMO[n] && vende(n));
+        if (afz.includes('loja') && d.jogador.dinheiro > 1500 && faltam.length) return {f:'loja', itens:faltam};
         /* a loja da cidade só aparece pra quem anda por ela (descobertas):
            sem Ração e com dinheiro, anda até achar */
         if (L.tipo === 'cidade' && (L.lugares || []).includes('loja') && !afz.includes('loja')
@@ -371,11 +389,11 @@ const SUSPEITO = [
       if (assin !== ultima) parado = 0; ultima = assin;
       if (dec.f === 'loja'){
         await page.evaluate(() => Exploracao.fazer('loja')); await page.waitForTimeout(150);
-        await page.evaluate(() => {
+        await page.evaluate(itens => {
           /* comprar abre a confirmação com a quantidade (Cidade.comprar), e
              só o "Comprar" dela paga: o robô abria a janela e nunca
              confirmava, e andava sem Potion, sem Pokébola e sem Ração */
-          for (const n of ['Potion', 'Poké Ball', 'Ração']){
+          for (const n of itens){
             if (!catalogoDaCidade(Mundo.id()).some(([x]) => x === n)) continue;
             try {
               const p = precoNaCidade(n, Mundo.id());
@@ -385,7 +403,7 @@ const SUSPEITO = [
             } catch(e){}
           }
           UI.fecharModal(true); Exploracao.tela();
-        });
+        }, dec.itens || []);
       } else if (dec.f === 'viajar') await page.evaluate(i => Exploracao.viajar(i), dec.id);
       else if (dec.f === 'arco') await page.evaluate(() => Exploracao.entrarNoArco());
       else if (dec.f === 'centro'){ await page.evaluate(() => Cidade.atenderAqui()); }
@@ -417,6 +435,13 @@ const SUSPEITO = [
   fs.writeFileSync(OUT, JSON.stringify({fim, erros, achados, reg, log}, null, 1));
   console.log('FIM', JSON.stringify(fim));
   console.log('ERROS', erros.length ? erros.slice(0, 8).join('\n') : 'nenhum');
+  if (reg && reg.gastos && reg.gastos.length){
+    console.log('GASTOS de mil ou mais:', reg.gastos.length);
+    const por = {};
+    reg.gastos.forEach(g => { const k = g.pilha.split(' < ')[0]; (por[k] = por[k] || {n:0, total:0, ex:g}).n++; por[k].total += g.de - g.para; });
+    Object.entries(por).sort((a, b) => b[1].total - a[1].total).slice(0, 8)
+      .forEach(([k, v]) => console.log(`  ${v.n}× −${v.total} ₽  ${k}  (ex.: cap ${v.ex.cap}, ${v.ex.local}, ${v.ex.cena || 'mapa'}: ${v.ex.pilha})`));
+  }
   console.log('ACHADOS', Object.keys(achados).length);
   Object.entries(achados).sort((a, b) => b[1] - a[1]).slice(0, 40).forEach(([k, n]) => console.log(' ', n, k));
   await browser.close();
