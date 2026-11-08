@@ -190,6 +190,26 @@ const SUSPEITO = [
       if (await page.locator('#modal').count()) await page.evaluate(() => UI.fecharModal(true));
       const dec = await page.evaluate(() => {
         const d = Estado.dados, L = Mundo.atual(), id = Mundo.id();
+        /* o trajeto no mapa, de lugar em lugar pelas conexões que o
+           jogador conhece e pode atravessar. O caminhoEntre do jogo é
+           outra coisa (a janela de hora dos capítulos de caminho): o robô
+           chamava ele achando que era isto, recebia nada e andava ao
+           acaso, sem nunca achar o Centro, a loja ou o próximo capítulo */
+        const trajeto = (de, ate) => {
+          if (de === ate) return [de];
+          const veio = Object.create(null), fila = [de];
+          veio[de] = null;
+          while (fila.length){
+            const x = fila.shift();
+            for (const y of (LOCAIS[x] && LOCAIS[x].conexoes) || []){
+              if (y in veio || !Mundo.conhecido(y) || travaDaPassagem(x, y)) continue;
+              veio[y] = x;
+              if (y === ate){ const c = [y]; for (let z = x; z !== null; z = veio[z]) c.unshift(z); return c; }
+              fila.push(y);
+            }
+          }
+          return null;
+        };
         const vivos = d.time.filter(p => !p.morto);
         const hp = vivos.reduce((s, p) => s + Math.max(0, p.hp), 0) / Math.max(1, vivos.reduce((s, p) => s + p.hpMax, 0));
         const afz = afazeresDoLocal().map(a => a.id);
@@ -200,7 +220,7 @@ const SUSPEITO = [
           if (ehNoite()) return {f: Estado.contaItem('Ração') >= 1 ? 'acampar' : 'esperar'};
           /* sem cura aqui e de dia: anda até o Centro mais perto */
           const centros = Object.keys(LOCAIS).filter(k => Exploracao.temCentro(LOCAIS[k]) && !travaDaPassagem(id, k))
-            .map(k => caminhoEntre(id, k)).filter(c => c && c[1] && !travaDaPassagem(id, c[1])).sort((x, y) => x.length - y.length);
+            .map(k => trajeto(id, k)).filter(c => c && c[1] && !travaDaPassagem(id, c[1])).sort((x, y) => x.length - y.length);
           if (centros.length) return {f:'viajar', id:centros[0][1]};
         }
         /* compra o básico */
@@ -215,7 +235,7 @@ const SUSPEITO = [
            faminto, procurando briga pra subir de nível e perdendo */
         if (L.tipo !== 'cidade' && Estado.contaItem('Ração') < 1 && d.jogador.dinheiro > 1500){
           const lojas = Object.keys(LOCAIS).filter(k => (LOCAIS[k].lugares || []).includes('loja') && !travaDaPassagem(id, k))
-            .map(k => caminhoEntre(id, k)).filter(c => c && c[1] && !travaDaPassagem(id, c[1])).sort((x, y) => x.length - y.length);
+            .map(k => trajeto(id, k)).filter(c => c && c[1] && !travaDaPassagem(id, c[1])).sort((x, y) => x.length - y.length);
           if (lojas.length) return {f:'viajar', id:lojas[0][1]};
         }
         /* quem nasceu longe pega o ônibus da Liga, como a cidade oferece */
@@ -237,7 +257,7 @@ const SUSPEITO = [
         const g = GINASIOS.find(x => x.id === id && statusGinasio(x).estado === 'disponivel');
         if (g && nivelDeReferencia() >= nivelGinasio(g) - 1 && hp > 0.9) return {f:'ginasio'};
         if (destino && destino.local && destino.local !== '*' && destino.local !== id){
-          const cam = caminhoEntre(id, destino.local);
+          const cam = trajeto(id, destino.local);
           if (cam && cam[1] && !travaDaPassagem(id, cam[1])) return {f:'viajar', id:cam[1]};
         }
         const viz = Mundo.vizinhos().filter(v => !travaDaPassagem(id, v));
