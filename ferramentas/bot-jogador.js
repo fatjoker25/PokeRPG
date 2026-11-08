@@ -3,10 +3,11 @@
    Joga o jogo pela própria tela, como gente: lê a luta e escolhe o
    golpe que mais machuca, troca quem está em desvantagem ou com
    pouco HP (recua), usa Potion, foge de selvagem muito acima, captura
-   pra completar o time, cura no Centro ou em casa, compra Potion e
-   Pokébola quando tem dinheiro, treina quando o time está abaixo do
-   capítulo seguinte e segue a história. Nada de mexer no estado por
-   fora: tudo passa pelas funções que os botões chamam.
+   o que quer, cura no Centro ou em casa, compra o que falta, treina
+   quando o time está abaixo do capítulo seguinte, vai atrás de
+   ginásio quando a história pede insígnia e segue a história. Nada de
+   mexer no estado por fora: tudo passa pelas funções que os botões
+   chamam.
 
    Em cada tela ele lê o texto e anota o que parece quebrado:
    marca de gênero sem resolver, "undefined", "NaN", HTML vazando,
@@ -16,34 +17,100 @@
          CIDADE=Cerulean GENERO=Mulher node ferramentas/bot-jogador.js 20
          CAPITULO=17 NOME=Bento node ferramentas/bot-jogador.js 25
          SAVE=jornada.json node ferramentas/bot-jogador.js 25
+         NOME='?' GENERO='?' CIDADE='?' META=pokedex INICIAL=rand TURBO=20 \
+           node ferramentas/bot-jogador.js 110 r1.json
+         RETOMAR=r1.ponto.json node ferramentas/bot-jogador.js 110 r1.json
 
-   Em 25 minutos o robô chega ao capítulo 4 ou 5, então o meio e o fim
-   do jogo ficavam sem ninguém jogar. CAPITULO=N faz a inscrição de
-   sempre e pula pra antes do capítulo N, como quem jogou até ali:
-   o inicial entregue pela função do jogo e subido pro nível da área,
-   mais cinco no time, os capítulos de antes fechados, as insígnias que
-   o capítulo pede, pontos de status, dinheiro, mochila e PokéNav, no
-   lugar onde o capítulo anterior acaba. As escolhas desses capítulos
-   não aconteceram: as flags ficam vazias, como as de quem disse não a
-   tudo. O capítulo de caminho de cada desvio que ficou pra trás conta
-   como jogado: antes do 26 é depois do 25.06. SAVE= começa de um
-   arquivo do Salvar, carregado pelo mesmo caminho do "Carregar jogo".
+   O JEITO. Cada robô joga do jeito que o objetivo da ficha pede
+   (META=, ou o que a inscrição sortear): o competitivo caça ginásio e
+   tenta a Elite, o colecionador captura toda espécie que falta, o fiel
+   ao time não troca ninguém, o prudente cura cedo e foge antes, o
+   andarilho vasculha e desvia. Os números estão em JEITOS, logo
+   abaixo. O que ele escolhe nas cenas continua no dado, só que a
+   opção que combina com o jeito pesa três vezes mais.
+
+   O INICIAL. INICIAL=rand marca "O que já estava em casa" na inscrição:
+   o jogo sorteia o inicial pela tabela da casa (cidade natal ou jeito),
+   como quem joga e escolhe isso. Sem a variável, fica o padrão da ficha.
+
+   A JOGADA INTEIRA. Uma etapa dura [minutos]. A cada PONTO_MIN minutos,
+   no mapa, e no fim da etapa, ele grava o ponto de parada em
+   <saida>.ponto.json: o save do jogo (o mesmo do Salvar, com a luta se
+   tiver uma), o diário de bordo e o que ele lembra. RETOMAR= começa a
+   etapa seguinte dali, com o diário continuando. A saída diz como a
+   etapa acabou (estado): final, morte, pausa (o tempo), erros ou
+   travou. TURBO=N encena a luta N vezes mais rápido que 1× (o botão do
+   jogo vai até 3×): só a encenação muda, dado e turno são os mesmos.
+
+   Em 25 minutos e 3× o robô chega ao capítulo 4 ou 5. CAPITULO=N faz a
+   inscrição de sempre e pula pra antes do capítulo N, como quem jogou
+   até ali: o inicial entregue pela função do jogo e subido pro nível
+   da área, mais cinco no time, os capítulos de antes fechados, as
+   insígnias que o capítulo pede, pontos de status, dinheiro, mochila e
+   PokéNav, no lugar onde o capítulo anterior acaba. As escolhas desses
+   capítulos não aconteceram: as flags ficam vazias, como as de quem
+   disse não a tudo. O capítulo de caminho de cada desvio que ficou pra
+   trás conta como jogado: antes do 26 é depois do 25.06. SAVE= começa
+   de um arquivo do Salvar, carregado pelo mesmo caminho do "Carregar
+   jogo".
 
    No arquivo de saída vai o diário de bordo (reg.passos: capítulo,
-   escolha de cena, luta com o contexto, viagem, compra, evolução, morte,
-   cena de linha, rival e o final) e a ficha de quem jogou (ficha).
+   escolha de cena, luta com o contexto e a captura, viagem, compra,
+   PC, pedra, evolução, morte, cena de linha, rival e o final) e a
+   ficha de quem jogou (ficha).
    ============================================================ */
 const { chromium } = require('playwright');
 const fs = require('fs');
 const path = require('path');
 const MIN = +(process.argv[2] || 15);
 const OUT = process.argv[3] || path.join(__dirname, '..', 'bot-jogador.json');
+const PONTO = OUT.replace(/\.json$/, '') + '.ponto.json';
+/* '?' deixa o jogo (ou o dado) escolher */
 const CIDADE = process.env.CIDADE || 'Pallet';
 const GENERO = process.env.GENERO || 'Mulher';
 const NOME = process.env.NOME || 'Íris';
+const META = process.env.META || '';
+const INICIAL = process.env.INICIAL || '';
+const TURBO = Math.max(1, +(process.env.TURBO || 3));
+const PONTO_MIN = +(process.env.PONTO_MIN || 5);
 const CAPITULO = +(process.env.CAPITULO || 0);
 const SAVE = process.env.SAVE || '';
+const RETOMAR = process.env.RETOMAR || '';
 const RAIZ = 'file://' + path.resolve(__dirname, '..', 'index.html');
+
+/* O jeito de cada objetivo da ficha (METAS, em rumo.js). Os números:
+   cura   — abaixo dessa fração do HP do time, ele volta pra curar;
+   abaixo — quantos níveis abaixo da área do próximo capítulo ele aceita seguir;
+   moer   — quantas procuras e treinos por capítulo, no máximo, pra chegar lá;
+   foge   — selvagem quantos níveis acima do Pokémon dele faz ele fugir;
+   captura— 'time' (só até ter seis), 'forte' (o que melhora o time),
+            'nova' (toda espécie que a Pokédex ainda não tem);
+   lendario — tenta Pokébola em lendário ferido;
+   troca  — põe no cinto o melhor que tem no PC;
+   pedra  — compra e usa pedra de evolução;
+   ginasio— vai atrás de ginásio mesmo sem o capítulo pedir;
+   liga   — tenta a Elite quando passa pelo Planalto com as oito;
+   desvio — chance de vasculhar ou andar pra um vizinho antes de seguir;
+   bolas  — quantas Pokébolas ele quer na mochila;
+   gosta  — o que pesa três vezes nas escolhas de cena. */
+const JEITOS = {
+  campeao: {nome:'Competitivo', cura:.6, abaixo:0, moer:80, foge:10, captura:'forte', lendario:true, troca:true, pedra:true,
+    ginasio:true, liga:true, desvio:0, bolas:5, gosta:/(lutar|luta|encar|desafi|trein|vencer|enfrent|ganhar)/i},
+  pokedex: {nome:'Colecionador', cura:.6, abaixo:2, moer:60, foge:8, captura:'nova', lendario:true, troca:true, pedra:true,
+    ginasio:false, liga:false, desvio:.1, bolas:12, gosta:/(pokémon|captur|olhar|pergunt|anot|pokédex|examin)/i},
+  heroi: {nome:'Protetor', cura:.7, abaixo:2, moer:60, foge:8, captura:'forte', lendario:false, troca:true, pedra:true,
+    ginasio:false, liga:false, desvio:.05, bolas:6, gosta:/(ajud|proteg|defend|salv|levar|socorr|cuid|devolv|tirar eles)/i},
+  poder: {nome:'Ambicioso', cura:.5, abaixo:3, moer:40, foge:9, captura:'forte', lendario:true, troca:true, pedra:true,
+    ginasio:true, liga:true, desvio:0, bolas:6, gosta:/(aceit|dinheiro|cobr|contrato|negóci|oferta|assin|preço)/i},
+  vinculo: {nome:'Fiel ao time', cura:.75, abaixo:1, moer:80, foge:7, captura:'time', lendario:false, troca:false, pedra:false,
+    ginasio:false, liga:false, desvio:.05, bolas:5, gosta:/(time|cuid|comida|água|junt|ficar|carinho|acalm)/i},
+  explorar: {nome:'Andarilho', cura:.55, abaixo:4, moer:30, foge:8, captura:'nova', lendario:false, troca:true, pedra:true,
+    ginasio:false, liga:false, desvio:.2, bolas:8, gosta:/(olhar|andar|sub|desc|entrar|segu|explor|atravess|caminh)/i},
+  casa: {nome:'Prudente', cura:.8, abaixo:0, moer:90, foge:5, captura:'time', lendario:false, troca:true, pedra:true,
+    ginasio:false, liga:false, desvio:0, bolas:5, gosta:/(voltar|esperar|não|recus|ficar|devagar|pensar|calma)/i}
+};
+const NEUTRO = {nome:'Neutro', cura:.6, abaixo:2, moer:60, foge:8, captura:'time', lendario:false, troca:false, pedra:false,
+  ginasio:false, liga:false, desvio:0, bolas:5, gosta:null};
 
 const SUSPEITO = [
   [/\{[^{}]*\|[^{}]*\}/, 'marca de gênero sem resolver'],
@@ -58,18 +125,33 @@ const SUSPEITO = [
 (async () => {
   const browser = await chromium.launch({ executablePath:'/opt/pw-browsers/chromium', args:['--no-sandbox'] });
   const page = await browser.newPage({ viewport:{width:1000, height:1100} });
-  const erros = [], achados = {}, log = [];
+  const ponto = RETOMAR ? JSON.parse(fs.readFileSync(RETOMAR, 'utf8')) : null;
+  const erros = [], achados = (ponto && ponto.achados) || {}, log = (ponto && ponto.log) || [];
   const anota = (tipo, txt) => { const k = tipo + ' :: ' + txt.slice(0, 140); achados[k] = (achados[k] || 0) + 1; };
   page.on('pageerror', e => erros.push(e.message + ' @ ' + (e.stack || '').split('\n').slice(1, 3).join(' | ')));
   page.on('dialog', d => /Soltar|permanente|Vender|Largar/.test(d.message()) ? d.dismiss() : d.accept());
   await page.goto(RAIZ);
   await page.waitForTimeout(400);
-  /* a luta em 3×, como quem joga pode escolher: só a encenação anda mais
-     rápido, dado e turno são os mesmos. Em 1× o robô do capítulo 22 fez
-     sete lutas em 25 minutos no Caminho da Vitória (de 15 a 23 turnos
-     cada) e nunca chegou ao Planalto */
-  await page.evaluate(() => { try { Velocidade.definir(3); } catch (e) {} });
-  if (SAVE){
+  /* a luta encenada mais rápido: 3× é o que quem joga pode escolher, e
+     TURBO acima disso põe o fator direto (o botão só gira entre 1, 2 e 3).
+     Só a encenação anda: dado e turno são os mesmos. Em 1× o robô do
+     capítulo 22 fez sete lutas em 25 minutos no Caminho da Vitória (de
+     15 a 23 turnos cada) e nunca chegou ao Planalto */
+  const turbo = () => page.evaluate(t => { try {
+    if (t > 3){ Velocidade._f = t; Velocidade.aplicar(); } else Velocidade.definir(t);
+  } catch (e) {} }, TURBO);
+  await turbo();
+  if (ponto){
+    /* a etapa seguinte: o save do ponto, pelo caminho do "Carregar jogo" */
+    const r = await page.evaluate(t => {
+      const r = ArquivoSave.ler(t);
+      if (r.erro) return r.erro;
+      ArquivoSave.usar(r.dados, r.finais, 1);
+      Jogo.continuar();
+      return null;
+    }, ponto.save);
+    if (r){ console.log('PONTO recusado:', r); await browser.close(); return; }
+  } else if (SAVE){
     /* o arquivo do Salvar, pelo caminho do "Carregar jogo": ler confere,
        usar grava na jornada 1, e o Continuar retoma (até a luta) */
     const texto = fs.readFileSync(SAVE, 'utf8');
@@ -86,16 +168,25 @@ const SUSPEITO = [
        só escolhe o lugar, e o has-text casa com ela também */
     await page.locator('button.tt-principal:has-text("Começar"), .tt-op:has-text("Nova jornada")').first().click();
     await page.waitForTimeout(200);
-    /* a inscrição: nome, gênero e cidade no primeiro passo; o resto, sorteado */
-    await page.fill('#f-nome', NOME);
-    await page.locator(`#f-genero button[data-v="${GENERO}"]`).click();
-    await page.locator(`#f-cidade button[data-v="${CIDADE}"]`).click().catch(() => {});
+    /* a inscrição: gênero e cidade no primeiro passo (com '?', no dado),
+       o nome escrito ou sorteado pelo jogo, o objetivo e o inicial se
+       vierem, e o resto pelo "Sortear o resto" */
+    const genero = GENERO === '?' ? (Math.random() < .5 ? 'Homem' : 'Mulher') : GENERO;
+    const cidade = CIDADE === '?' ? await page.evaluate(() => Dados.escolher(CIDADES)) : CIDADE;
+    await page.locator(`#f-genero button[data-v="${genero}"]`).click();
+    if (NOME !== '?') await page.fill('#f-nome', NOME);
+    await page.locator(`#f-cidade button[data-v="${cidade}"]`).click().catch(() => {});
+    await page.evaluate(({meta, inicial}) => {
+      const c = UI._cr; if (!c) return;
+      if (meta) c.meta = meta;
+      if (inicial) c.inicial = inicial;
+    }, {meta:META, inicial:INICIAL});
     await page.locator('#cr-sortear').click();
     await page.waitForTimeout(200);
     await page.locator('button:has-text("Sair de casa")').click();
     await page.waitForTimeout(400);
   }
-  if (CAPITULO > 1 && !SAVE){
+  if (CAPITULO > 1 && !SAVE && !ponto){
     const ff = await page.evaluate(N => {
       const d = Estado.dados, j = Estado.j;
       const cap = Historia.capitulo(N);
@@ -163,9 +254,17 @@ const SUSPEITO = [
     if (ff.erro){ await browser.close(); return; }
   }
 
-  /* o que aconteceu, pra conferir depois */
-  await page.evaluate(() => {
-    window.__reg = {lutas:[], caps:[], gastos:{}, passos:[]};
+  /* o jeito sai do objetivo que ficou na ficha */
+  const meta = await page.evaluate(() => Estado.j.meta || null).catch(() => null);
+  const J = JEITOS[meta] || NEUTRO;
+  console.log('JEITO', meta, J.nome);
+
+  /* o que aconteceu, pra conferir depois (na etapa seguinte, continua) */
+  await page.evaluate(({antes, jeito}) => {
+    window.__reg = (antes && antes.reg) || {lutas:[], caps:[], gastos:{}, passos:[]};
+    window.__treinos = (antes && antes.treinos) || {};
+    window.__extra = (antes && antes.extra) || {};
+    window.__jeito = jeito;
     /* o diário de bordo: um passo por coisa que aconteceu, com capítulo,
        dia, hora e lugar. Passo igual ao anterior (o mesmo afazer no mesmo
        lugar) só soma na conta dele */
@@ -179,8 +278,8 @@ const SUSPEITO = [
     /* de onde é a luta: ginásio, Elite, rival, estrada, veterano, torneio, cena */
     const contexto = () => {
       const J = Jogo, d = Estado.dados;
-      if (J.ginasioAtual) return {de:'ginásio', nome:'Ginásio de ' + J.ginasioAtual.cidade, lider:J.ginasioAtual.lider, insignia:J.ginasioAtual.insignia};
-      if (J.eliteAtual != null) return {de:'Liga', nome:nomeDe(J.eliteAtual) || String(J.eliteAtual)};
+      if (J.ginasioAtual) return {de:'ginásio', nome:'Ginásio de ' + J.ginasioAtual.cidade, lider:J.ginasioAtual.lider, insignia:J.ginasioAtual.insignia, id:J.ginasioAtual.id};
+      if (J.eliteAtual != null) return {de:'Liga', nome:J.eliteAtual.campeao ? 'Campeão' : 'Elite, porta ' + ((J.eliteAtual.indice || 0) + 1)};
       if (J.revancheAtual) return {de:'revanche', nome:nomeDe(J.revancheAtual)};
       if (J.conferenciaAtual) return {de:'Conferência', nome:'rodada ' + ((J.conferenciaAtual.rodada || 0) + 1)};
       if (J.torneioAtual) return {de:'Torneio Aberto', nome:'rodada ' + ((J.torneioAtual.rodada || 0) + 1)};
@@ -206,7 +305,7 @@ const SUSPEITO = [
     const ev0 = window.evoluir;
     window.evoluir = function(p, novo){ const de = p && p.nome; const r = ev0(p, novo); passo('evoluiu', {de, para:DEX[novo] && DEX[novo].nome, nivel:p && p.nivel}); return r; };
     const mt = Estado.matar && Estado.matar.bind(Estado);
-    if (mt) Estado.matar = function(p, causa){ passo('morte', {quem:p && nomeExib(p), causa}); return mt(p, causa); };
+    if (mt) Estado.matar = function(p, causa){ passo('morte', {quem:p && nomeExib(p), especie:p && p.nome, nivel:p && p.nivel, causa}); return mt(p, causa); };
     const vj = Exploracao.viajar.bind(Exploracao);
     Exploracao.viajar = function(id){ const de = Mundo.id(); const r = vj(id); if (Mundo.id() !== de) passo('viagem', {de, para:Mundo.id()}); return r; };
     const tr = UI.telaRival && UI.telaRival.bind(UI);
@@ -238,8 +337,13 @@ const SUSPEITO = [
         __reg.lutas.push({cap:d.capitulo, res:fim.resultado, tipo:B.tipo, ini:B.inimigo ? B.inimigo.nome + ' ' + B.inimigo.nivel : '?',
           top:Math.max(0, ...d.time.map(p => p.nivel)), local:d.local, turnos:B.turno, ctx:cx});
         passo('luta', {res:fim.resultado, tipo:B.tipo, ctx:cx, treinador:B.treinador || null, ultimo:B.inimigo ? B.inimigo.nome + ' ' + B.inimigo.nivel : null,
-          turnos:B.turno, caidos:vivos.filter(p => p.hp <= 0).length, de:vivos.length,
+          turnos:B.turno, caidos:vivos.filter(p => p.hp <= 0).length, de:vivos.length, bolas:(window.__extra || {}).bolasNaLuta || 0,
+          time:vivos.map(p => p.nome + ' ' + p.nivel),
           capturou:fim.resultado === 'captura' && fim.pokemon ? fim.pokemon.nome + ' ' + fim.pokemon.nivel : null});
+        /* ginásio perdido: da próxima vez ele chega mais forte */
+        if (cx.de === 'ginásio' && fim.resultado !== 'vitoria' && cx.id){
+          const X = window.__extra; X.gin = X.gin || {}; X.gin[cx.id] = (X.gin[cx.id] || 0) + 1;
+        }
       } catch(e){}
       return fb(fim);
     };
@@ -249,7 +353,7 @@ const SUSPEITO = [
         time:d.time.map(p => p.nome + ' ' + p.nivel), dinheiro:d.jogador.dinheiro});
         passo('fechou', {num:d.capitulo, time:d.time.map(p => p.nome + ' ' + p.nivel), dinheiro:d.jogador.dinheiro}); } catch(e){}
       return r; };
-  });
+  }, {antes:ponto, jeito:Object.assign({}, J, {gosta:null})});
 
   const lerTela = async () => {
     const t = await page.evaluate(() => {
@@ -265,14 +369,41 @@ const SUSPEITO = [
     if (t.anon) anota('balão sem nome', t.txt.slice(0, 80).replace(/\s+/g, ' '));
   };
 
-  let passos = 0, parado = 0, ultima = '', empacou = 0, ultimoRetrato = '';
+  /* o ponto de parada: o save (o do Salvar, com a luta se tiver uma), o
+     diário e o que o robô lembra, pra a etapa seguinte continuar dali */
   const t0 = Date.now();
-  while ((Date.now() - t0) < MIN * 60000 && passos++ < 20000){
-    if (erros.length > 8) break;
-    await page.waitForTimeout(40);
-    if (await page.evaluate(() => !!(Jogo.encenando || Jogo.animandoBola)).catch(() => false)){ await page.waitForTimeout(120); continue; }
+  const jaJogou = (ponto && ponto.minutos) || 0;
+  let ultimoPonto = Date.now();
+  const gravarPonto = async () => {
+    const x = await page.evaluate(() => {
+      const r = Object.assign({}, window.__reg); delete r.contexto;
+      return {save:ArquivoSave.texto(), reg:r, treinos:window.__treinos || {}, extra:window.__extra || {}};
+    }).catch(() => null);
+    if (!x) return false;
+    fs.writeFileSync(PONTO, JSON.stringify(Object.assign(x, {meta, jeito:J.nome, achados, log:log.slice(-300),
+      quando:new Date().toISOString(), minutos:jaJogou + (Date.now() - t0) / 60000})));
+    ultimoPonto = Date.now();
+    return true;
+  };
+
+  /* os apelidos que ele dá: nada de bicho do nosso mundo, nada repetido */
+  const APELIDOS = ['Faísca', 'Pipoca', 'Brasa', 'Nuvem', 'Pingo', 'Trovão', 'Fubá', 'Cacau', 'Tufão', 'Chuvisco', 'Pedrinha',
+    'Ventania', 'Biscoito', 'Cometa', 'Garoa', 'Sereno', 'Tição', 'Graveto', 'Paçoca', 'Tampinha', 'Neblina', 'Farol'];
+  const apelidosDados = new Set(await page.evaluate(() => [...Estado.dados.time, ...(Estado.dados.pc || [])].map(p => p.apelido).filter(Boolean)).catch(() => []));
+  let passos = 0, parado = 0, ultima = '', empacou = 0, ultimoRetrato = '', estado = 'pausa';
+  const prazo = MIN * 60000;
+  while (passos++ < 2000000){
+    const passou = Date.now() - t0;
+    if (passou >= prazo){
+      /* o tempo acabou: a luta que está andando termina antes (até 3 minutos) */
+      const emLuta = await page.evaluate(() => !!Batalha.ativo).catch(() => false);
+      if (!emLuta || passou >= prazo + 180000) break;
+    }
+    if (erros.length > 8){ estado = 'erros'; break; }
+    await page.waitForTimeout(30);
+    if (await page.evaluate(() => !!(Jogo.encenando || Jogo.animandoBola)).catch(() => false)){ await page.waitForTimeout(60); continue; }
     if (passos % 5 === 0) await lerTela();
-    if (passos % 100 === 0){
+    if (passos % 200 === 0){
       const s = await page.evaluate(() => ({c:Estado.dados.capitulo, l:Estado.dados.local, h:Relogio.texto(),
         t:Estado.dados.time.map(p => p.nivel).join('/'), $:Estado.j.dinheiro, ins:Estado.dados.insignias.length,
         modo:Estado.dados.modo, luta:!!Batalha.ativo, enc:!!Jogo.encenando, bola:!!Jogo.animandoBola,
@@ -293,11 +424,14 @@ const SUSPEITO = [
         anota('empacou', JSON.stringify(dump).slice(0, 140));
         log.push({empacou:dump});
       }
+      /* empacado de vez: fecha o que estiver aberto e redesenha o lugar */
+      if (empacou >= 5){ await page.evaluate(() => { try { UI.fecharModal(true); } catch (e) {} if (!Batalha.ativo && Estado.dados.modo === 'mundo') Exploracao.tela(); }).catch(() => {}); empacou = 0; }
     }
     if (await page.locator('.gameover').count()){
       const t = await page.locator('.gameover').innerText();
       log.push({gameover:t});
       await page.evaluate(x => window.__passo && __passo('fim', {como:'morte', texto:x.slice(0, 300)}), t).catch(() => {});
+      estado = 'morte';
       break;
     }
     if (await page.locator('.final').count()){
@@ -305,13 +439,18 @@ const SUSPEITO = [
       await page.evaluate(() => { const f = document.querySelector('.painel.final');
         window.__passo && __passo('fim', {como:'final', titulo:(f.querySelector('.tit') || {}).innerText || '',
           texto:((f.querySelector('p') || {}).innerText || '').slice(0, 400)}); }).catch(() => {});
+      estado = 'final';
       break;
     }
 
-    /* apelido: às vezes dá, às vezes não */
+    /* apelido: uma vez em quatro, e um nome que o time ainda não tem */
     if (await page.locator('#campo-apelido').count()){
-      if (Math.random() < 0.5){ await page.fill('#campo-apelido', 'Faísca'); await page.locator('#modal button:has-text("Dar o apelido")').click({timeout:3000}).catch(() => {}); }
-      else await page.locator('#modal button:has-text("Não")').click({timeout:3000}).catch(() => {});
+      const nomes = APELIDOS.filter(n => !apelidosDados.has(n));
+      if (nomes.length && Math.random() < 0.25){
+        const n = nomes[Math.floor(Math.random() * nomes.length)];
+        apelidosDados.add(n);
+        await page.fill('#campo-apelido', n); await page.locator('#modal button:has-text("Dar o apelido")').click({timeout:3000}).catch(() => {});
+      } else await page.locator('#modal button:has-text("Não")').click({timeout:3000}).catch(() => {});
       continue;
     }
     if (await page.locator('.aprender-op').count()){ await page.locator('.aprender-op').first().click({timeout:3000}).catch(() => {}); continue; }
@@ -322,7 +461,7 @@ const SUSPEITO = [
        golpe novo abrem por cima dele: com janela aberta, quem responde é
        ela. Antes o robô clicava no Continuar coberto, esperava 3 s e
        tentava de novo pra sempre (20 minutos na evolução do Caterpie) */
-    if (!(await page.locator('#modal').count()) && await page.locator('.continuar-batalha').count()){ await page.locator('.continuar-batalha').first().click({timeout:3000}).catch(() => {}); await page.waitForTimeout(120); continue; }
+    if (!(await page.locator('#modal').count()) && await page.locator('.continuar-batalha').count()){ await page.locator('.continuar-batalha').first().click({timeout:3000}).catch(() => {}); await page.waitForTimeout(80); continue; }
     if (await page.locator('#modal .evo').count()){
       if (await page.locator('#evo-seguir:visible').count()) await page.locator('#evo-seguir').click({timeout:3000}).catch(() => {}); else await page.waitForTimeout(300);
       continue;
@@ -332,7 +471,10 @@ const SUSPEITO = [
     if (await page.evaluate(() => Batalha.ativo && !!document.querySelector('.acoes-combate, #acoes')).catch(() => false)){
       const a = await page.evaluate(() => {
         const B = Batalha, p = B.aliado, alvo = B.inimigo, d = Estado.dados;
+        const J = window.__jeito || {}, X = window.__extra || (window.__extra = {});
         if (!p || !alvo) return null;
+        /* luta nova: zera a conta de Pokébolas jogadas */
+        if (X.lutaUid !== alvo.uid){ X.lutaUid = alvo.uid; X.bolasNaLuta = 0; }
         if (B.fase === 'ameaca') return {tipo:'fugirAmeaca'};
         const golpeBom = (quem) => {
           let melhor = -1, idx = 0;
@@ -344,17 +486,45 @@ const SUSPEITO = [
           });
           return {idx, melhor};
         };
-        /* selvagem muito acima: foge */
-        if (B.tipo === 'selvagem' && alvo.nivel > p.nivel + 8 && B.fuga !== false) return {tipo:'fugir'};
-        /* captura pra completar o time */
-        const bola = ['Ultra Ball', 'Great Ball', 'Poké Ball'].find(n => Estado.contaItem(n) > 0);
-        if (B.tipo === 'selvagem' && bola && d.time.length < 6 && alvo.hp <= alvo.hpMax * 0.5 && !alvo.lendario) return {tipo:'bola', nome:bola};
+        /* selvagem muito acima: foge (o prudente foge antes) */
+        if (B.tipo === 'selvagem' && alvo.nivel > p.nivel + (J.foge || 8) && B.fuga !== false) return {tipo:'fugir'};
+        /* captura: o que ele quer, pelo jeito dele. Todo mundo completa o
+           time; com seis, o colecionador quer a espécie que falta, o
+           competitivo o que é melhor que o pior do cinto, e ninguém joga
+           Pokébola no que tem medo */
+        if (B.tipo === 'selvagem' || B.tipo === 'lendario'){
+          const pd = Estado.pdex();
+          const novo = !(pd.catalogados || {})[alvo.dex];
+          const g = typeof gostoSabido === 'function' ? gostoSabido(alvo) : 0;
+          const vivos = d.time.filter(x => !x.morto);
+          const valor = x => x.nivel + (((DEX[x.dex] || {}).total) || 300) / 40;
+          const pior = vivos.length ? Math.min(...vivos.map(valor)) : 0;
+          let quer = false;
+          if (B.tipo === 'lendario') quer = !!J.lendario && novo;
+          else if (g < 0) quer = false;
+          else if (vivos.length < 6) quer = true;
+          else if (J.captura === 'nova') quer = novo;
+          else if (J.captura === 'forte') quer = valor(alvo) > pior + 3 || (g > 0 && novo);
+          const limite = B.tipo === 'lendario' ? 4 : 6;
+          if (quer && (X.bolasNaLuta || 0) < limite){
+            const lista = B.tipo === 'lendario' ? ['Master Ball', 'Ultra Ball'] : ['Poké Ball', 'Great Ball', 'Ultra Ball'];
+            const tem = lista.filter(n => Estado.contaItem(n) > 0);
+            const ferido = B.tipo === 'lendario' ? alvo.hp <= alvo.hpMax * .25 : alvo.hp <= alvo.hpMax * .5;
+            if (tem.length && ferido){
+              /* a mais barata que dá conta do posto dele, senão a melhor que tem */
+              const pede = (SUCESSOS_DO_POSTO[postoDoNivel(alvo.nivel)] || 4) - (alvo.hp <= 1 ? 2 : 1) - (alvo.status ? 1 : 0);
+              const nome = B.tipo === 'lendario' ? tem[0] : (tem.find(n => (SELO_DA_BOLA[n] || 0) / 2 >= pede) || tem[tem.length - 1]);
+              X.bolasNaLuta = (X.bolasNaLuta || 0) + 1;
+              return {tipo:'bola', nome};
+            }
+          }
+        }
         /* cura quem está quase caindo */
         const pot = ['Hyper Potion', 'Super Potion', 'Potion'].find(n => Estado.contaItem(n) > 0);
         if (pot && p.hp <= p.hpMax * 0.25 && p.hp > 0) return {tipo:'item', nome:pot, alvoUid:p.uid};
-        /* recua: se o golpe dele é ruim e tem alguém melhor no banco */
         /* Vontade: com pouco HP, esquiva o próximo golpe */
         if (p.hp <= p.hpMax * 0.5 && vontadeDe(p) >= 2 && B.podeGastarVontade('esquiva')) B.gastarVontade('esquiva');
+        /* recua: se o golpe dele é ruim e tem alguém melhor no banco */
         const meu = golpeBom(p);
         const banco = d.time.filter(x => x.uid !== p.uid && x.hp > x.hpMax * 0.4 && !x.morto);
         const melhorBanco = banco.map(x => ({x, s:golpeBom(x).melhor})).sort((u, v) => v.s - u.s)[0];
@@ -362,7 +532,7 @@ const SUSPEITO = [
           return {tipo:'trocar', uid:melhorBanco.x.uid};
         return {tipo:'golpe', indice:meu.idx};
       }).catch(() => null);
-      if (a){ await page.evaluate(x => { UI.modoBatalha = 'menu'; Jogo.acaoBatalha(x); }, a).catch(e => erros.push('acao: ' + e.message)); await page.waitForTimeout(150); continue; }
+      if (a){ await page.evaluate(x => { UI.modoBatalha = 'menu'; Jogo.acaoBatalha(x); }, a).catch(e => erros.push('acao: ' + e.message)); await page.waitForTimeout(100); continue; }
     }
     /* troca obrigatória depois de desmaio */
     if (await page.locator('#modal .time-linha:not([disabled])').count() && await page.evaluate(() => Batalha.ativo).catch(() => false)){
@@ -380,8 +550,11 @@ const SUSPEITO = [
     const noMapa = await page.evaluate(() => Estado.dados.modo === 'mundo' && !Batalha.ativo && !!document.querySelector('.porta, button[onclick^="Exploracao.viajar"]')).catch(() => false);
     if (noMapa){
       if (await page.locator('#modal').count()) await page.evaluate(() => UI.fecharModal(true));
+      if (Date.now() - ultimoPonto > PONTO_MIN * 60000) await gravarPonto();
       const dec = await page.evaluate(() => {
         const d = Estado.dados, L = Mundo.atual(), id = Mundo.id();
+        const J = window.__jeito || {}, X = window.__extra || (window.__extra = {});
+        const dia = d.relogio.dia;
         /* o trajeto no mapa, de lugar em lugar pelas conexões que o
            jogador conhece e pode atravessar. O robô chamava o caminhoEntre
            achando que era isto, e era a janela de hora dos capítulos de
@@ -402,28 +575,73 @@ const SUSPEITO = [
           }
           return null;
         };
+        const ir = ate => { const c = trajeto(id, ate); return c && c[1] ? {f:'viajar', id:c[1]} : null; };
         const vivos = d.time.filter(p => !p.morto);
         const hp = vivos.reduce((s, p) => s + Math.max(0, p.hp), 0) / Math.max(1, vivos.reduce((s, p) => s + p.hpMax, 0));
         const afz = afazeresDoLocal().map(a => a.id);
-        if (hp < 0.6 || !Estado.primeiroApto()){
+        const ref = nivelDeReferencia();
+        const centro = Exploracao.temCentro(L);
+        /* curar: em casa, no Centro, acampando, ou andando até um Centro */
+        const curar = () => {
           if (afz.includes('casa')) return {f:'casa'};
           if (afz.includes('centro')) return {f:'centro'};
           /* acampar pede Ração; sem ela, a noite passa esperando */
           if (ehNoite()) return {f: Estado.contaItem('Ração') >= 1 ? 'acampar' : 'esperar'};
-          /* sem cura aqui e de dia: anda até o Centro mais perto */
           const centros = Object.keys(LOCAIS).filter(k => Exploracao.temCentro(LOCAIS[k]) && !travaDaPassagem(id, k))
             .map(k => trajeto(id, k)).filter(c => c && c[1] && !travaDaPassagem(id, c[1])).sort((x, y) => x.length - y.length);
           if (centros.length) return {f:'viajar', id:centros[0][1]};
+          return null;
+        };
+        if (hp < (J.cura || .6) || !Estado.primeiroApto()){ const c = curar(); if (c) return c; }
+
+        /* o PC do Centro: tira o morto do cinto, completa o time e (quem
+           troca) põe no lugar do pior o melhor que tem guardado. Uma vez
+           por dia em cada cidade */
+        if (centro && X.pcDia !== dia + id){
+          X.pcDia = dia + id;
+          const valor = x => x.nivel + (((DEX[x.dex] || {}).total) || 300) / 40 + ((typeof gostoSabido === 'function' && gostoSabido(x) > 0) ? 3 : 0);
+          const guardados = (d.pc || []).filter(x => !x.morto).sort((a, b) => valor(b) - valor(a));
+          const morto = d.time.find(x => x.morto);
+          if (morto) return {f:'pc', guardar:morto.uid, tirar:guardados[0] ? guardados[0].uid : null};
+          if (d.time.length < 6 && guardados.length) return {f:'pc', guardar:null, tirar:guardados[0].uid};
+          if (J.troca && guardados.length && d.time.length >= 6){
+            const inicial = d.jogador.inicialUid;
+            const pior = d.time.filter(x => x.uid !== inicial).sort((a, b) => valor(a) - valor(b))[0];
+            if (pior && valor(guardados[0]) > valor(pior) + 3) return {f:'pc', guardar:pior.uid, tirar:guardados[0].uid};
+          }
         }
-        /* compra o básico: só o que falta e só o que a loja daqui vende.
-           Antes ele comprava os três toda vez que entrava, e em Saffron, que
-           não vende Potion nem Poké Ball, voltava ao balcão a cada passo
-           atrás da Potion e saía com mais três Rações: 129 Rações e vinte
-           e cinco mil a menos */
-        const MINIMO = {'Potion':3, 'Poké Ball':5, 'Ração':2};
+        /* pedra de evolução na mochila e alguém que evolui com ela */
+        if (J.pedra && typeof nomesDePedra === 'function'){
+          for (const nome of nomesDePedra()){
+            if (!Estado.contaItem(nome)) continue;
+            const tab = pedrasDe(nome) || {};
+            const alvo = d.time.find(x => !x.morto && tab[x.dex]);
+            if (alvo) return {f:'pedra', nome, uid:alvo.uid};
+          }
+        }
+
+        /* compra: só o que falta e só o que a loja daqui vende, uma vez por
+           dia em cada cidade. Antes ele comprava os três toda vez que
+           entrava, e em Saffron, que não vende Potion nem Poké Ball,
+           voltava ao balcão a cada passo atrás da Potion e saía com mais
+           três Rações: 129 Rações e vinte e cinco mil a menos */
         const vende = n => catalogoDaCidade(id).some(([x]) => x === n);
-        const faltam = Object.keys(MINIMO).filter(n => Estado.contaItem(n) < MINIMO[n] && vende(n));
-        if (afz.includes('loja') && d.jogador.dinheiro > 1500 && faltam.length) return {f:'loja', itens:faltam};
+        if (afz.includes('loja') && X.lojaDia !== dia + id){
+          /* na ordem de quem passa fome primeiro: Ração, cura, Pokébola */
+          const quero = {};
+          if (vende('Ração')) quero['Ração'] = 3;
+          const melhor = lista => lista.find(vende);
+          const pot = melhor(['Hyper Potion', 'Super Potion', 'Potion']);
+          if (pot) quero[pot] = J.cura >= .7 ? 6 : 4;
+          const bola = melhor(['Ultra Ball', 'Great Ball', 'Poké Ball']);
+          if (bola && (J.captura !== 'time' || d.time.length < 6)) quero[bola] = J.bolas || 5;
+          if (vende('Revive') && J.cura >= .6) quero['Revive'] = 2;
+          if (J.pedra && typeof nomesDePedra === 'function')
+            for (const nome of nomesDePedra()) if (vende(nome) && !Estado.contaItem(nome) && d.time.some(x => !x.morto && (pedrasDe(nome) || {})[x.dex])) quero[nome] = 1;
+          const faltam = {};
+          for (const [n, q] of Object.entries(quero)) if (Estado.contaItem(n) < q) faltam[n] = q - Estado.contaItem(n);
+          if (Object.keys(faltam).length && d.jogador.dinheiro > 1200){ X.lojaDia = dia + id; return {f:'loja', itens:faltam}; }
+        }
         /* a loja da cidade só aparece pra quem anda por ela (descobertas):
            sem Ração e com dinheiro, anda até achar */
         if (L.tipo === 'cidade' && (L.lugares || []).includes('loja') && !afz.includes('loja')
@@ -438,46 +656,108 @@ const SUSPEITO = [
         }
         /* quem nasceu longe pega o ônibus da Liga, como a cidade oferece */
         if (afz.includes('onibus')) return {f:'onibus'};
+
+        /* a Elite, pra quem quer: no Planalto, com as oito, uma vez por dia */
+        if (J.liga && id === 'planalto' && typeof statusElite4 === 'function' && statusElite4().estado === 'disponivel' && X.eliteDia !== dia){
+          const m = (typeof Titulares !== 'undefined' && Titulares.membro(0)) || (typeof ELITE4 !== 'undefined' && ELITE4[0]) || {};
+          if (ref >= (m.nivelBase || 50) - 1){
+            if (hp < .95){ const c = curar(); if (c) return c; }
+            X.eliteDia = dia; return {f:'liga'};
+          }
+        }
+
+        /* um lugar pra treinar: perto, e com o mato perto do nível do time */
+        const lugarDeTreino = () => {
+          const c = Object.keys(LOCAIS).filter(k => LOCAIS[k].tipo !== 'cidade' && Mundo.conhecido(k)
+              && (LOCAIS[k].nivel || 0) >= ref - 7 && (LOCAIS[k].nivel || 0) <= ref + 3)
+            .map(k => trajeto(id, k)).filter(Boolean).sort((a, b) => a.length - b.length);
+          return c[0] || null;
+        };
+        const podeTreinar = d.treinoDia !== d.relogio.dia && Estado.contaItem('Ração') >= TREINO_RACAO
+          && (d.treinoReal || 0) + TREINO_ESPERA_MIN * 60000 <= Date.now();
+        const treinarAqui = () => (podeTreinar && vivos.some(p => p.nivel < (L.nivel || 5) + 5)) ? {f:'treinar'} : {f:'procurar'};
+
+        /* o ginásio: o da cidade, se der; e ir atrás de um quando a história
+           pede insígnia (ou quando o jeito é de quem caça ginásio) */
         const destino = Historia.proximoDestino && Historia.proximoDestino();
         const cap = destino ? Historia.capitulo(destino.num) : null;
+        const travado = !!(destino && (travaDoCapitulo(destino.num)
+          || (destino.local && destino.local !== '*' && destino.local !== id && !trajeto(id, destino.local))));
+        const perdeu = gid => ((X.gin || {})[gid] || 0);
+        const prontoPra = g => ref >= nivelGinasio(g) - (J.ginasio ? 1 : 0) + 2 * perdeu(g.id);
+        const daqui = GINASIOS.find(x => x.id === id && statusGinasio(x).estado === 'disponivel');
+        if (daqui && prontoPra(daqui)){
+          if (hp < .9){ const c = curar(); if (c) return c; }
+          return {f:'ginasio'};
+        }
+        if (travado || J.ginasio){
+          const abertos = GINASIOS.filter(g => ['disponivel', 'fechado'].includes(statusGinasio(g).estado))
+            .map(g => ({g, cam:trajeto(id, g.id)})).filter(x => x.cam)
+            .sort((a, b) => nivelGinasio(a.g) - nivelGinasio(b.g) || a.cam.length - b.cam.length);
+          const alvo = abertos[0];
+          const MOER_GIN = 150;
+          if (alvo){
+            const g = alvo.g;
+            X.moerGin = X.moerGin || {};
+            if (prontoPra(g) || (X.moerGin[g.id] || 0) >= MOER_GIN){
+              if (id === g.id) return statusGinasio(g).estado === 'fechado' ? {f:'esperar'} : (hp < .9 ? (curar() || {f:'ginasio'}) : {f:'ginasio'});
+              if (travado || J.ginasio) return {f:'viajar', id:alvo.cam[1]};
+            } else if (travado || nivelGinasio(g) <= ref + 6){
+              /* fraco demais pro ginásio: treina no lugar mais perto que rende */
+              X.moerGin[g.id] = (X.moerGin[g.id] || 0) + 1;
+              const t = lugarDeTreino();
+              if (t && t.length === 1) return treinarAqui();
+              if (t) return {f:'viajar', id:t[1]};
+              if (L.tipo !== 'cidade') return treinarAqui();
+            }
+          }
+        }
+
+        /* o andarilho desvia, o colecionador procura o que falta aqui */
+        if (J.desvio && Math.random() < J.desvio){
+          if (afz.includes('vasculhar') && Math.random() < .5) return {f:'vasculhar'};
+          const viz = Mundo.vizinhos().filter(v => !travaDaPassagem(id, v));
+          if (viz.length) return {f:'viajar', id:Dados.escolher(viz)};
+        }
+        if (J.captura === 'nova' && L.tipo !== 'cidade' && typeof ENCONTROS !== 'undefined' && ENCONTROS[id]){
+          const pd = Estado.pdex();
+          const falta = ENCONTROS[id].some(([dex]) => !(pd.catalogados || {})[dex]);
+          const k = 'p' + id + d.capitulo;
+          if (falta && (X[k] || 0) < 6 && Estado.contaItem('Poké Ball') + Estado.contaItem('Great Ball') + Estado.contaItem('Ultra Ball') > 0){
+            X[k] = (X[k] || 0) + 1; return {f:'procurar'};
+          }
+        }
+
         /* o alvo é o capítulo que vem, não a rota onde ele está de passagem:
            com o nível da rota, quem nasce em Lavender treinava na Rota 12
            pra sempre */
-        const alvo = cap ? (cap.nivelArea || 0) - 2 : (L.nivel || 5);
-        /* treino pede Ração e o descanso de verdade entre um e outro
-           (TREINO_ESPERA_MIN); sem isso o jogo recusa, e o robô ficava
-           pedindo pra sempre */
-        const podeTreinar = d.treinoDia !== d.relogio.dia && Estado.contaItem('Ração') >= TREINO_RACAO
-          && (d.treinoReal || 0) + TREINO_ESPERA_MIN * 60000 <= Date.now();
+        const alvoNv = cap ? (cap.nivelArea || 0) - (J.abaixo != null ? J.abaixo : 2) : (L.nivel || 5);
         /* treinar só rende onde o mato está perto do nível do time: na Rota
            5 (nível 15) um time de 33 não sobe nunca, e o robô do capítulo
            10 passou quinze minutos ali, procurando selvagem pro 11. Longe
            disso ele segue pro capítulo — a rota de lá é mais forte, e quem
            joga de verdade não fica moendo */
-        const rendeAqui = (L.nivel || 5) >= nivelDeReferencia() - 8;
-        /* e treina por um tempo, não pra sempre: sessenta procuras ou
-           treinos por capítulo e ele segue, mesmo abaixo da área. Os robôs
-           do 26 ficaram o resto da jogada no norte atrás de dois níveis pro
-           27, indo e voltando do Centro de Cerulean */
+        const rendeAqui = (L.nivel || 5) >= ref - 8;
+        /* e treina por um tempo, não pra sempre: o jeito diz quantas
+           procuras ou treinos por capítulo, e ele segue mesmo abaixo da
+           área. Os robôs do 26 ficaram o resto da jogada no norte atrás
+           de dois níveis pro 27, indo e voltando do Centro de Cerulean */
         const T = window.__treinos || (window.__treinos = {});
         const treinou = T[d.capitulo] || 0;
-        const moer = nivelDeReferencia() < alvo && L.tipo !== 'cidade' && rendeAqui && treinou < 60;
-        if (moer) T[d.capitulo] = treinou + 1;
-        if (moer && podeTreinar && vivos.some(p => p.nivel < (L.nivel || 5) + 5)) return {f:'treinar'};
-        if (moer) return {f:'procurar'};
+        const moer = ref < alvoNv && L.tipo !== 'cidade' && rendeAqui && treinou < (J.moer || 60);
+        if (moer){ T[d.capitulo] = treinou + 1; return treinarAqui(); }
         if (Historia.arcoAqui() && !travaDoCapitulo(Historia.arcoAqui().num)) return {f:'arco'};
-        const g = GINASIOS.find(x => x.id === id && statusGinasio(x).estado === 'disponivel');
-        if (g && nivelDeReferencia() >= nivelGinasio(g) - 1 && hp > 0.9) return {f:'ginasio'};
         if (destino && destino.local && destino.local !== '*' && destino.local !== id){
-          const cam = trajeto(id, destino.local);
-          if (cam && cam[1] && !travaDaPassagem(id, cam[1])) return {f:'viajar', id:cam[1]};
+          const v = ir(destino.local);
+          if (v) return v;
         }
         const viz = Mundo.vizinhos().filter(v => !travaDaPassagem(id, v));
         return {f:'viajar', id:Dados.escolher(viz)};
       }).catch(e => ({f:'erro', e:e.message}));
       /* o que ele decidiu no mapa vai pro diário (andar entra pela viagem) */
-      if (dec.f !== 'viajar' && dec.f !== 'erro')
+      if (!['viajar', 'erro', 'pc', 'pedra', 'loja'].includes(dec.f))
         await page.evaluate(x => window.__passo && __passo('mapa', {f:x.f, itens:x.itens || null}), dec).catch(() => {});
+      if (dec.f === 'erro') anota('erro na decisão do mapa', dec.e || '');
       const assin = JSON.stringify(dec) + await page.evaluate(() => Estado.dados.local + Relogio.texto());
       if (assin === ultima && ++parado > 12){ anota('travou no mapa', assin); parado = 0; await page.evaluate(() => Exploracao.fazer('vasculhar')); continue; }
       if (assin !== ultima) parado = 0; ultima = assin;
@@ -487,23 +767,47 @@ const SUSPEITO = [
           /* comprar abre a confirmação com a quantidade (Cidade.comprar), e
              só o "Comprar" dela paga: o robô abria a janela e nunca
              confirmava, e andava sem Potion, sem Pokébola e sem Ração */
-          for (const n of itens){
+          const comprou = [];
+          for (const [n, q] of Object.entries(itens)){
             if (!catalogoDaCidade(Mundo.id()).some(([x]) => x === n)) continue;
             try {
               const p = precoNaCidade(n, Mundo.id());
+              /* guarda mil pra estrada */
+              const cabe = Math.floor((Estado.j.dinheiro - 1000) / Math.max(1, p));
+              if (cabe < 1) continue;
               Cidade.comprar(n, p);
-              if (Cidade._compra) Cidade._compra.qtd = Math.min(3, Cidade._compra.max || 0);
-              if (Cidade._compra && Cidade._compra.qtd) Cidade.confirmarCompra(n, p);
+              if (Cidade._compra) Cidade._compra.qtd = Math.min(q, cabe, Cidade._compra.max || 0);
+              if (Cidade._compra && Cidade._compra.qtd){ const k = Cidade._compra.qtd; Cidade.confirmarCompra(n, p); comprou.push(k + '× ' + n); }
             } catch(e){}
           }
           UI.fecharModal(true); Exploracao.tela();
-          window.__passo && __passo('compra', {itens, dinheiro:Estado.j.dinheiro});
-        }, dec.itens || []);
-      } else if (dec.f === 'viajar') await page.evaluate(i => Exploracao.viajar(i), dec.id);
+          window.__passo && __passo('compra', {itens:comprou, dinheiro:Estado.j.dinheiro});
+        }, dec.itens || {});
+      } else if (dec.f === 'pc'){
+        /* pelos botões do PC: Guardar na caixa e Levar no cinto */
+        await page.evaluate(x => {
+          const todos = [...Estado.dados.time, ...(Estado.dados.pc || [])];
+          const nome = uid => { const p = todos.find(y => y.uid === uid); return p ? nomeExib(p) + ' (' + p.nome + ' ' + p.nivel + ')' : null; };
+          const g = x.guardar ? nome(x.guardar) : null, t = x.tirar ? nome(x.tirar) : null;
+          if (x.guardar) UI.pcGuardar(x.guardar);
+          if (x.tirar) UI.pcTirar(x.tirar);
+          UI.fecharModal(true); Exploracao.tela();
+          window.__passo && __passo('pc', {guardou:g, levou:t});
+        }, dec).catch(e => erros.push('pc: ' + e.message));
+      } else if (dec.f === 'pedra'){
+        await page.evaluate(x => {
+          const p = Estado.dados.time.find(y => y.uid === x.uid);
+          const de = p ? p.nome : null;
+          UI.aplicarPedra(x.nome, x.uid);
+          UI.fecharModal(true); Exploracao.tela();
+          window.__passo && __passo('pedra', {nome:x.nome, de, para:p ? p.nome : null});
+        }, dec).catch(e => erros.push('pedra: ' + e.message));
+      } else if (dec.f === 'liga') await page.evaluate(() => { Exploracao.fazer('liga'); Jogo.iniciarElite4(); });
+      else if (dec.f === 'viajar') await page.evaluate(i => Exploracao.viajar(i), dec.id);
       else if (dec.f === 'arco') await page.evaluate(() => Exploracao.entrarNoArco());
       else if (dec.f === 'centro'){ await page.evaluate(() => Cidade.atenderAqui()); }
       else if (dec.f !== 'erro') await page.evaluate(f => Exploracao.fazer(f), dec.f);
-      await page.waitForTimeout(150);
+      await page.waitForTimeout(100);
       continue;
     }
 
@@ -520,12 +824,18 @@ const SUSPEITO = [
       if (await f.count()){ await f.first().click({timeout:3000}).catch(() => {}); continue; }
       await page.evaluate(() => UI.fecharModal(true)); continue;
     }
-    /* cena: escolhe uma opção (evita soltar e vender) */
+    /* cena: escolhe uma opção (evita soltar e vender). O dado decide, mas
+       o que combina com o jeito pesa três vezes, e o "olhar mais um
+       pouco", que só adia, pesa menos */
     const esc = page.locator('#escolhas .escolha:not([disabled])').filter({hasNotText:/Soltar|Vender|Não atender/});
     const ne = await esc.count();
     if (ne){
-      const k = Math.floor(Math.random() * ne);
-      const t = (await esc.nth(k).innerText().catch(() => '')).replace(/\s+/g, ' ').trim();
+      const textos = await esc.evaluateAll(els => els.map(e => e.innerText.replace(/\s+/g, ' ').trim())).catch(() => []);
+      const pesos = textos.map(t => (J.gosta && J.gosta.test(t) ? 3 : 1) * (/^Parar e olhar mais um pouco/.test(t) ? .5 : 1));
+      let r = Math.random() * pesos.reduce((s, x) => s + x, 0), k = 0;
+      while (k < pesos.length - 1 && (r -= pesos[k]) > 0) k++;
+      if (k >= ne) k = Math.floor(Math.random() * ne);
+      const t = textos[k] || '';
       /* a escolha da cena vai pro diário: qual cena, qual título, o que escolheu */
       await page.evaluate(x => window.__passo && __passo('escolha', {cena:Estado.dados.cena, modo:Estado.dados.modo,
         titulo:((document.querySelector('#app .cap-cabecalho .tit') || {}).innerText || '').trim(), texto:x.slice(0, 200)}), t).catch(() => {});
@@ -533,14 +843,20 @@ const SUSPEITO = [
          virada): com a ligação por cima, o clique esperava 30 s e
          derrubava a jogada. Agora desiste rápido, e a volta seguinte
          atende a janela */
-      await esc.nth(k).click({timeout:3000}).catch(() => {}); await page.waitForTimeout(90); continue;
+      await esc.nth(k).click({timeout:3000}).catch(() => {}); await page.waitForTimeout(70); continue;
     }
     const outros = page.locator('.painel button.btn:not([disabled]), .painel .escolha:not([disabled])');
     if (await outros.count()){ await outros.first().click({timeout:3000}).catch(() => {}); continue; }
     anota('tela sem ação', await page.evaluate(() => document.querySelector('#app').innerText.slice(0, 120)));
     await page.evaluate(() => Exploracao.tela()).catch(() => {});
   }
+  if (passos >= 2000000) estado = 'travou';
 
+  /* fim da etapa: o ponto de parada, pra seguir dali (se a jornada não acabou) */
+  if (estado === 'pausa' || estado === 'erros' || estado === 'travou'){
+    for (let i = 0; i < 40 && await page.evaluate(() => !!(Jogo.encenando || Jogo.animandoBola)).catch(() => false); i++) await page.waitForTimeout(250);
+    await gravarPonto();
+  }
   const reg = await page.evaluate(() => { const r = Object.assign({}, window.__reg); delete r.contexto; return r; }).catch(() => null);
   const fim = await page.evaluate(() => ({cap:Estado.dados.capitulo, ins:Estado.dados.insignias.length, local:Estado.dados.local,
     time:Estado.dados.time.map(p => nomeExib(p) + ' ' + p.nivel), dia:Estado.dados.relogio.dia})).catch(() => null);
@@ -552,19 +868,22 @@ const SUSPEITO = [
     const rep = Estado.nivelRep ? Estado.nivelRep() : null, pd = Estado.pdex();
     return {nome:j.nome, genero:j.genero, cidade:j.cidade, retrato:j.retrato, casa:j.casa, meta:j.meta || null, objetivo:j.objetivo,
       forte:j.forte, status:j.status, gostos:j.gostos || null, desgostos:j.desgostos || null, personalidade:j.personalidade,
+      modoInicial:j.inicial || null,
       inicial:{dex:j.inicialDex, especie:j.inicialDex && DEX[j.inicialDex] ? DEX[j.inicialDex].nome : null,
         agora:ini ? {nome:nomeExib(ini), especie:ini.nome, dex:ini.dex, nivel:ini.nivel} : null},
       time:d.time.map(p => ({dex:p.dex, especie:p.nome, apelido:p.apelido || null, nivel:p.nivel, genero:generoDe(p), natureza:p.natureza,
-        golpes:p.golpes.map(g => g.nome), hp:p.hp, hpMax:p.hpMax, moral:p.moral, shiny:!!p.shiny, segurando:p.segurando || null})),
-      pc:(d.pc || []).map(p => ({dex:p.dex, especie:p.nome, nivel:p.nivel})),
+        golpes:p.golpes.map(g => g.nome), hp:p.hp, hpMax:p.hpMax, moral:p.moral, shiny:!!p.shiny, segurando:p.segurando || null, morto:!!p.morto})),
+      pc:(d.pc || []).map(p => ({dex:p.dex, especie:p.nome, nivel:p.nivel, morto:!!p.morto})),
       cemiterio:(d.cemiterio || []).map(p => ({especie:p.nome, nome:nomeExib(p), causa:p.causaMorte})),
       insignias:d.insignias.slice(), dinheiro:j.dinheiro, reputacao:rep ? rep.nome : null, eixo:d.reputacao && d.reputacao.eixo,
       via:d.via || null, linha:typeof linhaAtual === 'function' ? linhaAtual(d) : null, cargos:(d.cargos || []).slice(),
       capitulo:d.capitulo, fechados:(d.capitulosFechados || []).slice(), dia:d.relogio.dia,
       pokedex:{vistos:Object.keys(pd.vistos || {}).length, catalogados:Object.keys(pd.catalogados || {}).length},
-      itens:Object.assign({}, d.itens), diario:(d.log || []).slice(-250)};
+      itens:Object.assign({}, d.itens), diario:(d.log || []).slice(-400)};
   }).catch(e => ({erro:e.message}));
-  fs.writeFileSync(OUT, JSON.stringify({fim, ficha, erros, achados, reg, log, avanco:global.__avanco || null}, null, 1));
+  const minutos = jaJogou + (Date.now() - t0) / 60000;
+  fs.writeFileSync(OUT, JSON.stringify({estado, minutos, meta, jeito:J.nome, fim, ficha, erros, achados, reg, log, avanco:global.__avanco || null}, null, 1));
+  console.log('ESTADO', estado, Math.round(minutos) + ' min');
   console.log('FIM', JSON.stringify(fim));
   console.log('ERROS', erros.length ? erros.slice(0, 8).join('\n') : 'nenhum');
   if (reg && reg.gastos && Object.keys(reg.gastos).length){

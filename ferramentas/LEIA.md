@@ -47,7 +47,8 @@ Playwright (com o Chromium do ambiente, `/opt/pw-browsers/chromium`):
 | `bot-jogador.js` | o robô que joga pela tela, como gente |
 
 O `bot-jogador.js` escolhe golpe, troca, cura, captura, compra, treina, pega
-o ônibus da Liga quando nasceu longe e segue a história, e anota todo texto
+o ônibus quando nasceu longe, vai atrás de ginásio quando a história pede
+insígnia e segue a história, e anota todo texto
 quebrado que aparecer — marca de gênero sem resolver, `undefined`, `NaN`,
 HTML vazando, "bicho", "bola" sozinha, balão sem nome — além de erro de
 JavaScript. "Travou no mapa" com `treinar` é a espera do treino, não erro.
@@ -56,7 +57,29 @@ pela função que tirou, com onde foi a primeira vez. Dinheiro que some sem
 derrota é o primeiro sinal de laço: o robô já comprou Ração sem parar em
 Saffron, onde a loja não vende Potion, e saiu de lá com 129.
 
-Em 25 minutos ele chega ao capítulo 4 ou 5. Pro meio e o fim do jogo,
+Ele joga do **jeito** que o objetivo da ficha pede (`META=`, ou o que a
+inscrição sortear; os números estão em `JEITOS`): o competitivo caça
+ginásio e tenta a Elite, o colecionador captura toda espécie que a
+Pokédex não tem, o protetor e o ambicioso trocam no PC pelo que é mais
+forte, o fiel ao time fica com os seis primeiros, o andarilho vasculha e
+desvia, o prudente cura cedo e foge antes. As escolhas de cena continuam
+no dado, com o que combina com o jeito pesando três vezes. Todo mundo
+completa o time capturando, ninguém joga Pokébola no que tem medo, e no
+Centro ele usa o PC (tira o morto, completa o cinto, troca o pior) e a
+pedra de evolução que comprou. `INICIAL=rand` marca "O que já estava em
+casa" na inscrição, o inicial sorteado pela tabela da casa, e `'?'` em
+`NOME`, `GENERO` e `CIDADE` deixa o jogo ou o dado escolher.
+
+A jornada inteira não cabe numa etapa: a cada `PONTO_MIN` minutos (5), no
+mapa, e no fim da etapa, ele grava `<saída>.ponto.json` (o save do
+Salvar, com a luta se tiver uma, mais o diário e o que ele lembra), e
+`RETOMAR=` começa a etapa seguinte dali, com o diário continuando. A saída
+diz como a etapa acabou (`estado`: `final`, `morte`, `pausa`, `erros`,
+`travou`). `TURBO=N` encena a luta N vezes mais rápido que 1× (o botão do
+jogo vai até 3×; só a encenação muda, dado e turno são os mesmos). Com
+`TURBO=20` ele chega ao capítulo 4 em seis minutos.
+
+Em 25 minutos e 3× ele chega ao capítulo 4 ou 5. Pro meio e o fim do jogo,
 `CAPITULO=N` faz a inscrição e pula pra antes do capítulo N: o inicial
 entregue e subido pro nível da área, mais cinco no time, os capítulos de
 antes fechados (com o de caminho de cada desvio que ficou pra trás: antes
@@ -79,4 +102,6 @@ node ferramentas/bot-jogador.js 15 saida.json
 CIDADE=Cerulean GENERO=Homem node ferramentas/bot-jogador.js 20
 CAPITULO=17 node ferramentas/bot-jogador.js 25 saida.json
 SAVE=jornada.json node ferramentas/bot-jogador.js 25
+NOME='?' GENERO='?' CIDADE='?' META=pokedex INICIAL=rand TURBO=20 node ferramentas/bot-jogador.js 105 r1.json
+RETOMAR=r1.ponto.json TURBO=20 node ferramentas/bot-jogador.js 105 r1.json
 ```
