@@ -151,17 +151,23 @@ const SUSPEITO = [
 
   /* o que aconteceu, pra conferir depois */
   await page.evaluate(() => {
-    window.__reg = {lutas:[], caps:[], gastos:[]};
-    /* o dinheiro que sai de uma vez (mil ou mais): quanto, onde e quem
-       tirou. Os robôs do meio do jogo perdiam vinte mil numa cidade sem
-       derrota nenhuma, e só a pilha da chamada diz de onde */
+    window.__reg = {lutas:[], caps:[], gastos:{}};
+    /* todo dinheiro que sai, somado pela função que tirou: quantas vezes,
+       quanto e onde foi a primeira. Os robôs do meio do jogo perdiam
+       vinte e cinco mil numa cidade sem derrota nenhuma, de trezentos em
+       trezentos: era o próprio robô comprando Ração na loja de Saffron */
     const jog = Estado.dados.jogador;
     let din = jog.dinheiro;
     Object.defineProperty(jog, 'dinheiro', {configurable:true, enumerable:true,
       get(){ return din; },
       set(n){
-        if (n - din <= -1000) __reg.gastos.push({de:din, para:n, cap:Estado.dados.capitulo, local:Estado.dados.local, cena:Estado.dados.cena,
-          pilha:(new Error().stack || '').split('\n').slice(2, 6).map(x => x.trim().replace(/\(?file:\/\/\S*\/js\//, '(')).join(' < ')});
+        const sai = din - n;
+        if (sai > 0){
+          const pilha = (new Error().stack || '').split('\n').slice(2, 5).map(x => x.trim().replace(/\(?file:\/\/\S*\/js\//, '(')).join(' < ');
+          const k = pilha.split(' < ')[0];
+          const g = __reg.gastos[k] || (__reg.gastos[k] = {n:0, total:0, ex:{cap:Estado.dados.capitulo, local:Estado.dados.local, cena:Estado.dados.cena, pilha}});
+          g.n++; g.total += sai;
+        }
         din = n;
       }});
     const fb = Jogo.finalizarBatalha.bind(Jogo);
@@ -435,12 +441,10 @@ const SUSPEITO = [
   fs.writeFileSync(OUT, JSON.stringify({fim, erros, achados, reg, log}, null, 1));
   console.log('FIM', JSON.stringify(fim));
   console.log('ERROS', erros.length ? erros.slice(0, 8).join('\n') : 'nenhum');
-  if (reg && reg.gastos && reg.gastos.length){
-    console.log('GASTOS de mil ou mais:', reg.gastos.length);
-    const por = {};
-    reg.gastos.forEach(g => { const k = g.pilha.split(' < ')[0]; (por[k] = por[k] || {n:0, total:0, ex:g}).n++; por[k].total += g.de - g.para; });
-    Object.entries(por).sort((a, b) => b[1].total - a[1].total).slice(0, 8)
-      .forEach(([k, v]) => console.log(`  ${v.n}× −${v.total} ₽  ${k}  (ex.: cap ${v.ex.cap}, ${v.ex.local}, ${v.ex.cena || 'mapa'}: ${v.ex.pilha})`));
+  if (reg && reg.gastos && Object.keys(reg.gastos).length){
+    console.log('GASTOS (todo dinheiro que saiu, pela função que tirou):');
+    Object.entries(reg.gastos).sort((x, y) => y[1].total - x[1].total).slice(0, 8)
+      .forEach(([k, v]) => console.log(`  ${v.n}× −${v.total} ₽  ${k}  (a 1ª: cap ${v.ex.cap}, ${v.ex.local}, ${v.ex.cena || 'mapa'})`));
   }
   console.log('ACHADOS', Object.keys(achados).length);
   Object.entries(achados).sort((a, b) => b[1] - a[1]).slice(0, 40).forEach(([k, n]) => console.log(' ', n, k));
