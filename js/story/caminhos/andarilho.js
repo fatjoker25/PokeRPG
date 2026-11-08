@@ -160,7 +160,7 @@ ca2_a_praia:{
            Nomes.apresentar('a mulher do mapa'); return 'Numa pedra entre as fogueiras, uma mulher de cinquenta anos com um mapa dobrado em dezesseis no colo acena pra você. TAMSIN REED, a lápis, na capa do caderno dela.'; },
     'Na primeira, um velho de chapéu de palha. Na segunda, uma moça de macacão azul rasgado. Na terceira, um menino de dez anos com um Magikarp num balde.'
   ],
-  ef:{flag:'cm_andarilho_2', registrar:'Três fogueiras na praia de pedra da Rota 21.', executar:() => { caminhoEntre(19, 5, 21); }},
+  ef:{flag:'cm_andarilho_2', registrar:'Três fogueiras na praia de pedra da Rota 21.', executar:() => { caminhoNaJanela(19, 5, 21); }},
   escolhas:[
     {texto:'Sentar na fogueira do velho.', vai:'ca2_o_velho'},
     {texto:'Sentar na fogueira da moça de macacão.', vai:'ca2_a_moca'},

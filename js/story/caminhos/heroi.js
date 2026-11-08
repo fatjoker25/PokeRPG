@@ -23,7 +23,7 @@ ch1_a_fumaca:{
     fala('a brigadista de Fuchsia', 'Você é {o|a} que ajuda. Todo mundo de Fuchsia falou. Vem.')
   ],
   ef:{flag:'cm_heroi_1', registrar:'Um incêndio no capim da borda da reserva, na Rota 15, ameaça três sítios.',
-      executar:() => { caminhoEntre(8, 14, 11); }},
+      executar:() => { caminhoNaJanela(8, 14, 11); }},
   escolhas:[
     {texto:'Ir pra linha de fogo com a brigada.', vai:'ch1_a_linha'},
     {texto:'Ir direto pros sítios tirar as famílias.', vai:'ch1_os_sitios',
@@ -127,7 +127,7 @@ ch1_a_causa:{
   ],
   ef:{flag:'cm_heroi_queima_de_limpeza', itens:{'Lata de querosene':1},
       registrar:'O incêndio da Rota 15 começou numa queima de limpeza do manejo, do lado de dentro da cerca.',
-      executar:() => { caminhoEntre(19, 6, 21); }},
+      executar:() => { caminhoNaJanela(19, 6, 21); }},
   escolhas:[
     {texto:'Levar a lata ao Koga.', vai:'ch1_fim', cond:d => !!d.npcs['Koga'] || !!d.flags.achou_ginasio_fuchsia,
      ef:{flag:'cm_heroi_lata_koga', rep:{eixo:'bom', delta:2, motivo:'Levou ao Koga a prova da queima de limpeza'},

@@ -4,12 +4,25 @@ const html=fs.readFileSync(path.join(raiz,'index.html'),'utf8');
 const srcs=[...html.matchAll(/<script src="([^"]+)"/g)].map(m=>m[1]);
 global.window={addEventListener(){},removeEventListener(){}}; global.document={addEventListener(){}, getElementById(){return null;}, querySelector(){return null;}, querySelectorAll(){return [];}, body:{}};
 global.localStorage={getItem(){return null;},setItem(){},removeItem(){}};
+/* função global declarada em dois arquivos: o <script> de baixo apaga o
+   de cima calado. O caminhoEntre da janela de hora dos caminhos apagou
+   assim o trajeto no mapa do mundo.js */
+const declarada={}, duplicadas=[];
+for(const s of srcs){
+  if(s.startsWith('http')) continue;
+  fs.readFileSync(path.join(raiz,s),'utf8').split('\n').forEach((l,i)=>{
+    const m=l.match(/^(?:async\s+)?function\s*\*?\s*([A-Za-z_$][\w$]*)\s*\(/);
+    if(!m) return;
+    if(declarada[m[1]]) duplicadas.push(`função ${m[1]} em ${declarada[m[1]]} e ${s}:${i+1}`);
+    else declarada[m[1]]=`${s}:${i+1}`;
+  });
+}
 for(const s of srcs){
   if(s.startsWith('http')) continue;
   const code=fs.readFileSync(path.join(raiz,s),'utf8');
   try{ vm.runInThisContext(code,{filename:s}); }catch(e){ console.log('ERRO AO CARREGAR',s,e.message); process.exit(1); }
 }
-let cenas=0, escolhas=0, erros=[];
+let cenas=0, escolhas=0, erros=[...duplicadas];
 /* ato que vira notícia escreve notorio dentro do rep da cena; um rep
    dentro do outro o mudarRep não lê (CLAUDE.md, "Tudo pesa na reputação") */
 const repAninhado=(ef,onde)=>{ if(ef && typeof ef==='object' && ef.rep && ef.rep.rep) erros.push(`${onde}: rep dentro de rep`); };

@@ -3777,6 +3777,15 @@ label.btn:focus-within{outline:2px solid var(--destaque);outline-offset:2px}
   box-shadow:0 0 0 1px rgba(0,0,0,.6)}
 .bolas-time .pb::after{content:'';position:absolute;left:50%;top:50%;width:4px;height:4px;margin:-2px 0 0 -2px;border-radius:50%;background:#f4f4f4;box-shadow:0 0 0 1px #1b1b1b}
 .bolas-time .pb.caido{filter:grayscale(1) brightness(.55);opacity:.7}
+/* a etiqueta do tipo nunca passa por baixo das Pokébolas do time: a 320 px
+   o "Elétrico" sumia debaixo das seis. Abaixo de 360 as bolas encolhem, e
+   a etiqueta que ainda não couber corta com reticências, dentro da coluna */
+.ficha-hud .linha-tipos .tipo-tag{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media (max-width:359px){
+  .ficha-hud .bolas-time{gap:2px}
+  .ficha-hud .bolas-time .pb{width:8px;height:8px}
+  .ficha-hud .bolas-time .pb::after{width:3px;height:3px;margin:-1.5px 0 0 -1.5px}
+}
 
 /* confirmação de compra */
 .loja-modos{margin-bottom:10px}

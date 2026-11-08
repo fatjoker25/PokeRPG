@@ -57,7 +57,7 @@ cm1_o_manejo:{
     'No meio da noite, um Nidoking enorme sai do capim e fica entre a equipe e a toca dele. Atrás dele, a fêmea e três filhotes.',
     fala('o chefe do manejo', 'Escolta. É pra isso que a gente paga. Tira ele.')
   ],
-  ef:{executar:() => { caminhoEntre(21, 5, 23); }},
+  ef:{executar:() => { caminhoNaJanela(21, 5, 23); }},
   escolhas:[
     {texto:'Lutar com o Nidoking.', vai:'cm1_o_nidoking',
      ef:{rep:{eixo:'ruim', delta:1, motivo:'Lutou com um Nidoking pra equipe de manejo pegar a toca dele'}}},
@@ -408,7 +408,7 @@ cm3_depois:{
     fala('o intermediário', 'Fim de serviço. Você me deve a comissão de praxe. Dez por cento.'),
     fala('o intermediário', 'Ou você pode não pagar, e a gente fica quite de outro jeito.', 'baixo')
   ],
-  ef:{executar:() => { caminhoEntre(19, 4, 21); }},
+  ef:{executar:() => { caminhoNaJanela(19, 4, 21); }},
   escolhas:[
     {texto:d => d.flags.cm_merc_as_duas
        ? 'Pagar os dez por cento e devolver o resto aos dois lados. Você fez de graça.'

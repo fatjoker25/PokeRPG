@@ -84,9 +84,6 @@ const Jogo = {
     if (c) d.conferenciaAberta = conferenciaDeAntes(c); else delete d.conferenciaAberta;
   },
   depoisDaEstrada: null,
-  capDepoisDaViagem: null,
-  destinoDaViagem: null,
-  proxCapPendente: null,
 
   /* ---------- início ---------- */
   iniciar(){
@@ -796,7 +793,6 @@ const Jogo = {
     const enc = rivalDeveAparecer(prox);
     if (enc){
       this.encontroRival = enc;
-      this.proxCapPendente = null;
       return UI.telaRival();
     }
     Estado.salvar('auto');
@@ -809,103 +805,6 @@ const Jogo = {
     Estado.dados.modo = 'mundo';
     Estado.salvar('auto');
     Exploracao.tela();
-  },
-
-  avancarCapitulo(){
-    if (Estado.j.pontos > 0 && !confirm('Você ainda tem pontos para distribuir. Seguir mesmo assim? (Eles ficam guardados.)')) return;
-    const prox = Historia.proximoCapitulo(true);
-    if (!prox){
-      /* não é final: é o fim do que está escrito. O mundo continua aberto
-         (Liga, veteranos, Conferência, revanche), então a tela tem porta de volta */
-      return UI.telaFinal({titulo:'A JORNADA CONTINUA', continua:true, texto:[
-        'Você chegou ao fim do que está escrito. O resto é estrada.',
-        'Kanto continua exatamente do jeito que você deixou — e essa é a parte que importa.'
-      ]});
-    }
-    // um rival aparece na estrada entre um capítulo e outro
-    const enc = rivalDeveAparecer(prox);
-    if (enc){
-      this.encontroRival = enc;
-      this.proxCapPendente = prox;
-      return UI.telaRival();
-    }
-    return this.viajarParaCapitulo(prox);
-  },
-
-  /* O capítulo seguinte acontece em algum lugar. Se você não está
-     nele, existe estrada no meio — e a estrada é contada. */
-  viajarParaCapitulo(prox){
-    /* capítulo que cobra insígnia espera: a tela volta pro lugar onde
-       você está, dizendo o que falta */
-    const trava = travaDoCapitulo(prox);
-    if (trava){
-      Estado.salvar('auto');
-      return Exploracao.tela([{tipo:'info', texto:`O próximo capítulo ainda não começa. ${textoTrava(trava)}`}]);
-    }
-    const destino = localDoCapitulo(prox);
-    const aqui = Estado.dados.local;
-    if (!destino || destino === aqui) return this.entrarNoCapitulo(prox);
-
-    /* o caminho de verdade: você passa por cada lugar do trajeto, e o
-       tempo é o tempo do trajeto e não um número arredondado */
-    const rota = caminhoEntre(aqui, destino) || [aqui, destino];
-    const dias = Math.max(1, rota.length - 1);
-    this.capDepoisDaViagem = prox;
-    this.destinoDaViagem = destino;
-    this.rotaDaViagem = rota;
-    UI.telaViagem(aqui, destino, dias, 'Jogo.chegarDaViagem()', rota);
-  },
-
-  chegarDaViagem(){
-    const prox = this.capDepoisDaViagem;
-    const destino = this.destinoDaViagem;
-    const rota = this.rotaDaViagem;
-    this.capDepoisDaViagem = null; this.destinoDaViagem = null; this.rotaDaViagem = null;
-    if (destino){
-      const caminho = rota || caminhoEntre(Estado.dados.local, destino) || [Estado.dados.local, destino];
-      /* cada trecho andado custa um dia e fica marcado como visitado:
-         você passou por ali, então aquilo passa a existir no seu mapa */
-      for (const id of caminho){
-        Mundo.marcarVisitado(id);
-        Mundo.descobrir('passou_' + id);
-      }
-      Mundo.passar(Math.max(1, caminho.length - 1) * 4);
-      Estado.dados.local = destino;
-      Estado.registrar(caminho.length > 2
-        ? `Viajou até ${(LOCAIS[destino]||{}).nome || destino}, passando por ${caminho.slice(1,-1).map(x=>(LOCAIS[x]||{}).nome||x).join(', ')}.`
-        : `Viajou até ${(LOCAIS[destino]||{}).nome || destino}.`);
-      /* Quem anda pela rota topa com o que vive nela. Uma parada por
-         viagem, no máximo, num trecho de estrada do caminho: você não
-         escolhe, só acontece. Depois da briga, a viagem continua. */
-      const trechos = caminho.filter(id => LOCAIS[id] && LOCAIS[id].tipo !== 'cidade');
-      if (trechos.length && this.pararNaEstrada(Dados.escolher(trechos), () => this.entrarNoCapitulo(prox), destino)) return;
-    }
-    this.entrarNoCapitulo(prox);
-  },
-
-  /* A estrada te para: gente que treina ali, ou um selvagem que sai do
-     mato. Devolve true se parou (a tela é da batalha). `seguir` roda
-     depois da briga; `destino`, se houver, é onde você termina. */
-  pararNaEstrada(trecho, seguir, destino){
-    const L = LOCAIS[trecho];
-    if (!L || !Estado.primeiroApto()) return false;
-    const voltar = () => { if (destino) Estado.dados.local = destino; };
-    const continuar = (avisos) => { voltar(); Estado.salvar('auto'); seguir(avisos); };
-    const antes = Estado.dados.local;
-    Estado.dados.local = trecho;
-    if (Estrada.talvez('viagem', trecho)){ this.depoisDaEstrada = continuar; return true; }
-    const t = Dados.teste(Estado.j.status.intelecto, 5, 'Rota');
-    const risco = {critico:15, sucesso:25, parcial:35, falha:45}[t.grau];
-    if (!Exploracao.repelenteAtivo() && Dados.chance(risco)){
-      const enc = sortearSelvagem(L.ambiente, L.nivel, trecho);
-      this.depoisDaEstrada = continuar;
-      Exploracao.encontro(enc, [Estado.conheceu(enc.dex)
-        ? `No meio da viagem, ${emLocal(trecho)}, um ${enc.nome} sai ${Arenas.terreno(L.ambiente).sai} e não desvia.`
-        : `No meio da viagem, ${emLocal(trecho)}, um Pokémon sai ${Arenas.terreno(L.ambiente).sai} e não desvia.`]);
-      return true;
-    }
-    Estado.dados.local = antes;
-    return false;
   },
 
   entrarNoCapitulo(prox){
@@ -1348,17 +1247,17 @@ const Jogo = {
     this.resolverPendencias(() => UI.telaResultadoRival(venceu, avisos, id, falas));
   },
 
+  /* o rival te para na saída do capítulo (voltarAoMundo); depois dele,
+     o mapa. O capítulo seguinte começa na âncora dele, pelo mapa
+     (Exploracao.entrarNoArco) */
   seguirDepoisDoRival(){
     this.encontroRival = null;
-    const prox = this.proxCapPendente;
-    this.proxCapPendente = null;
-    if (!prox) return Exploracao.tela();
-    this.viajarParaCapitulo(prox);
+    Exploracao.tela();
   },
 
   evitarRival(){
     const enc = this.encontroRival || {tipo:'teo'};
-    const cap = this.proxCapPendente || Estado.dados.capitulo;
+    const cap = Estado.dados.capitulo;
     if (enc.tipo === 'extra'){
       const R = defRival(enc.id);
       const reg = registroRival(enc.id);

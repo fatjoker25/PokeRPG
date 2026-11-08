@@ -173,7 +173,7 @@ cn2_o_envelope:{
     'Distribuição a treinadores iniciantes. O primeiro Pokémon de uma criança.'
   ],
   ef:{flag:'cm_criacao_2', registrar:'A Comissão pediu seu laudo pra distribuir unidades de viveiro como primeiro Pokémon de treinador iniciante.',
-      executar:() => { caminhoEntre(8, 13, 9); }},
+      executar:() => { caminhoNaJanela(8, 13, 9); }},
   escolhas:[
     {texto:'Entrar e avaliar as unidades com honestidade.', vai:'cn2_o_bercario'},
     {texto:'Ligar pra Sra. Linden antes.', vai:'cn2_a_linden'}

@@ -3536,59 +3536,6 @@ const UI = {
   /* ========================================================
      VIAGEM — a estrada entre um capítulo e o outro
      ======================================================== */
-  telaViagem(deId, paraId, dias, aoChegar, rota){
-    this.limpar();
-    this.add(this.topo());
-    const de = LOCAIS[deId] || {nome:'onde você estava'};
-    const para = LOCAIS[paraId] || {nome:'o próximo lugar'};
-    const d = Estado.dados;
-
-    const trechos = [
-      'A estrada é estrada: pedra solta, mato dos dois lados, e horas em que não acontece absolutamente nada.',
-      'Você anda atrás de uma família com carrinho por meio dia e depois eles param pra almoçar e você segue sozinh{o|a}.',
-      'Chove numa parte do caminho e não chove na outra, e dá pra ver a linha exata onde uma coisa vira a outra.',
-      'Um caminhão de carga te dá carona por doze quilômetros e o motorista não fala nada a viagem inteira, e é confortável.',
-      'Você dorme uma noite fora, num acostamento com outras quatro pessoas que também estão indo pra algum lugar.',
-      'Tem um trecho em que a estrada acompanha o rio e você anda mais devagar de propósito.',
-      'Você erra uma bifurcação e perde três horas, e a parte pior é que dá pra ver a estrada certa do outro lado do valo.',
-      'Um grupo de treinadores acampa na curva e te chama pra comer. Você come. Ninguém pergunta o seu nome e isso é uma gentileza.'
-    ];
-    const cansaço = [
-      'Chega com o pé doendo num lugar específico do calcanhar, sempre o mesmo.',
-      'Chega com poeira até dentro da mochila.',
-      'Chega com fome e com aquela irritação de quem andou demais.',
-      'Chega inteir{o|a}, o que é mais do que muita gente consegue.'
-    ];
-
-    const linhas = [];
-    linhas.push(`De ${de.nome} até ${para.nome} são ${dias === 1 ? 'um dia' : dias + ' dias'} de caminho.`);
-    /* o trajeto de verdade, nomeado: você não é teleportado */
-    if (rota && rota.length > 2)
-      linhas.push('Você passa por ' + rota.slice(1, -1).map(x => (LOCAIS[x]||{}).nome || x).join(', ') + '.');
-    const usados = new Set();
-    for (let i = 0; i < Math.min(dias, 3); i++){
-      let t = Dados.escolher(trechos), guarda = 0;
-      while (usados.has(t) && guarda++ < 10) t = Dados.escolher(trechos);
-      usados.add(t); linhas.push(t);
-    }
-    if (d.time.length) linhas.push(
-      `${nomeExib(d.time[0])} anda do seu lado o tempo todo e em nenhum momento pergunta se falta muito.`);
-    linhas.push(Dados.escolher(cansaço));
-
-    this.add(`<div class="painel">
-      <div class="cap-cabecalho">
-        <div class="num">A estrada</div>
-        <div class="tit">${this.esc(de.nome)} → ${this.esc(para.nome)}</div>
-        <div class="loc">${dias === 1 ? 'um dia' : dias + ' dias'} de caminho</div>
-      </div>
-      <div class="narrativa">${this.narrar(linhas)}</div>
-      <div id="escolhas" class="escolhas" style="margin-top:18px">
-        <button class="escolha" onclick="${aoChegar}">Chegar.</button>
-      </div>
-    </div>`);
-    this.rolarTopo();
-  },
-
   /* ========================================================
      GINÁSIOS
      ======================================================== */
@@ -6374,7 +6321,6 @@ const UI = {
 
       <h3>Andar pela rota</h3>
       <div class="linha"><span class="k">Entrar ou sair de uma rota</span><span class="v">30% de um treinador dali te parar · se não, teste de Intelecto (dif. 5) e um selvagem sai do mato: 15% no crítico, 25% no sucesso, 35% no parcial, 45% na falha</span></div>
-      <div class="linha"><span class="k">Viagem entre capítulos</span><span class="v">uma parada no máximo, num trecho de estrada do caminho: 35% de treinador, e senão a mesma conta do selvagem · depois da briga a viagem continua</span></div>
       <div class="linha"><span class="k">Procurar Pokémon</span><span class="v">20% de ser um treinador em vez de um selvagem</span></div>
       <div class="linha"><span class="k">Vasculhar</span><span class="v">22% de treinador · 15% de selvagem que estava debaixo do que você mexeu</span></div>
       <div class="linha"><span class="k">O que se acha vasculhando</span><span class="v">40% de alguma coisa acontecendo ali (o que acontece depende do tipo de lugar) · senão, teste de Percepção (dif. 5): no sucesso, lugar escondido ou achado do ambiente (item pequeno, ou rastro que acende a espécie na Pokédex), e com Sorte crítica, coisa rara · no parcial, só o rastro</span></div>

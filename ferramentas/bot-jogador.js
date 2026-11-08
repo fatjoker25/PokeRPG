@@ -14,6 +14,19 @@
 
    Uso:  node ferramentas/bot-jogador.js [minutos] [saida.json]
          CIDADE=Cerulean GENERO=Mulher node ferramentas/bot-jogador.js 20
+         CAPITULO=17 node ferramentas/bot-jogador.js 25
+         SAVE=jornada.json node ferramentas/bot-jogador.js 25
+
+   Em 25 minutos o robô chega ao capítulo 4 ou 5, então o meio e o fim
+   do jogo ficavam sem ninguém jogar. CAPITULO=N faz a inscrição de
+   sempre e pula pra antes do capítulo N, como quem jogou até ali:
+   o inicial entregue pela função do jogo e subido pro nível da área,
+   mais cinco no time, os capítulos de antes fechados, as insígnias que
+   o capítulo pede, pontos de status, dinheiro, mochila e PokéNav, no
+   lugar onde o capítulo anterior acaba. As escolhas desses capítulos
+   não aconteceram: as flags ficam vazias, como as de quem disse não a
+   tudo. SAVE= começa de um arquivo do Salvar, carregado pelo mesmo
+   caminho do "Carregar jogo".
    ============================================================ */
 const { chromium } = require('playwright');
 const fs = require('fs');
@@ -22,6 +35,8 @@ const MIN = +(process.argv[2] || 15);
 const OUT = process.argv[3] || path.join(__dirname, '..', 'bot-jogador.json');
 const CIDADE = process.env.CIDADE || 'Pallet';
 const GENERO = process.env.GENERO || 'Mulher';
+const CAPITULO = +(process.env.CAPITULO || 0);
+const SAVE = process.env.SAVE || '';
 const RAIZ = 'file://' + path.resolve(__dirname, '..', 'index.html');
 
 const SUSPEITO = [
@@ -43,18 +58,96 @@ const SUSPEITO = [
   page.on('dialog', d => /Soltar|permanente|Vender|Largar/.test(d.message()) ? d.dismiss() : d.accept());
   await page.goto(RAIZ);
   await page.waitForTimeout(400);
-  /* o "Começar" do cartão da jornada vazia; a aba "Vazia · começar aqui"
-     só escolhe o lugar, e o has-text casa com ela também */
-  await page.locator('button.tt-principal:has-text("Começar"), .tt-op:has-text("Nova jornada")').first().click();
-  await page.waitForTimeout(200);
-  /* a inscrição: nome, gênero e cidade no primeiro passo; o resto, sorteado */
-  await page.fill('#f-nome', 'Íris');
-  await page.locator(`#f-genero button[data-v="${GENERO}"]`).click();
-  await page.locator(`#f-cidade button[data-v="${CIDADE}"]`).click().catch(() => {});
-  await page.locator('#cr-sortear').click();
-  await page.waitForTimeout(200);
-  await page.locator('button:has-text("Sair de casa")').click();
-  await page.waitForTimeout(400);
+  /* a luta em 3×, como quem joga pode escolher: só a encenação anda mais
+     rápido, dado e turno são os mesmos. Em 1× o robô do capítulo 22 fez
+     sete lutas em 25 minutos no Caminho da Vitória (de 15 a 23 turnos
+     cada) e nunca chegou ao Planalto */
+  await page.evaluate(() => { try { Velocidade.definir(3); } catch (e) {} });
+  if (SAVE){
+    /* o arquivo do Salvar, pelo caminho do "Carregar jogo": ler confere,
+       usar grava na jornada 1, e o Continuar retoma (até a luta) */
+    const texto = fs.readFileSync(SAVE, 'utf8');
+    const r = await page.evaluate(t => {
+      const r = ArquivoSave.ler(t);
+      if (r.erro) return r.erro;
+      ArquivoSave.usar(r.dados, r.finais, 1);
+      Jogo.continuar();
+      return null;
+    }, texto);
+    if (r){ console.log('SAVE recusado:', r); await browser.close(); return; }
+  } else {
+    /* o "Começar" do cartão da jornada vazia; a aba "Vazia · começar aqui"
+       só escolhe o lugar, e o has-text casa com ela também */
+    await page.locator('button.tt-principal:has-text("Começar"), .tt-op:has-text("Nova jornada")').first().click();
+    await page.waitForTimeout(200);
+    /* a inscrição: nome, gênero e cidade no primeiro passo; o resto, sorteado */
+    await page.fill('#f-nome', 'Íris');
+    await page.locator(`#f-genero button[data-v="${GENERO}"]`).click();
+    await page.locator(`#f-cidade button[data-v="${CIDADE}"]`).click().catch(() => {});
+    await page.locator('#cr-sortear').click();
+    await page.waitForTimeout(200);
+    await page.locator('button:has-text("Sair de casa")').click();
+    await page.waitForTimeout(400);
+  }
+  if (CAPITULO > 1 && !SAVE){
+    const ff = await page.evaluate(N => {
+      const d = Estado.dados, j = Estado.j;
+      const cap = Historia.capitulo(N);
+      if (!cap || cap.caminho) return {erro:'capítulo ' + N + ' não existe ou é de caminho'};
+      /* o inicial, pela entrega do capítulo 1 (Pallet: o Professor) */
+      if (!d.time.length) (d.jogador.cidade === 'Pallet' ? entregarDoProfessor : entregarInicial)(d);
+      const L = cap.nivelArea || 30;
+      const subir = (p, nv) => {
+        const forma = formaNoNivel(p.dex, nv);
+        if (forma !== p.dex) evoluir(p, forma);
+        p.nivel = nv;
+        p.stats = calcularStats(p.dex, nv, p.ivs, p.natureza);
+        p.hpMax = p.stats.hp; p.hp = p.hpMax;
+        p.exp = 0; p.expProx = expNecessaria(nv);
+        p.golpes = criarPokemon(p.dex, nv).golpes;
+        p.moral = 70;
+      };
+      subir(d.time[0], L);
+      /* cinco de linhas diferentes da do inicial, de tipos que se cobrem */
+      const linhaIni = linhaDe(d.time[0].dex);
+      const outros = [16, 74, 60, 43, 25, 129, 66, 92].filter(x => !linhaIni.includes(x)).slice(0, 5);
+      outros.forEach((x, i) => { const p = criarPokemon(formaNoNivel(x, L - 2 - i % 3), L - 2 - i % 3); p.moral = 70; Estado.adicionar(p); });
+      const pd = Estado.pdex();
+      d.time.forEach(p => { pd.vistos[p.dex] = true; pd.catalogados[p.dex] = true; });
+      /* os capítulos de antes, fechados como no fecharCapitulo */
+      const antes = CAPITULOS.filter(c => !c.caminho && !c.requer && c.num < N).map(c => c.num);
+      d.capitulosFechados = antes.slice();
+      d.capitulo = Math.max(...antes);
+      d.cena = null; d.modo = 'mundo';
+      Historia.capAtual = Historia.capitulo(d.capitulo);
+      /* as insígnias que o capítulo pede, na ordem dos ginásios */
+      const pede = Object.entries(INSIGNIAS_DO_CAPITULO).filter(([k]) => +k <= N).reduce((m, [, v]) => Math.max(m, v), 0);
+      d.insignias = GINASIOS.slice(0, pede).map(g => g.insignia);
+      Object.assign(d.flags, {tem_pokedex:true, tem_cartao:true, tem_licenca:true});
+      Estado.ganharPokenav();
+      /* um ponto por capítulo, como no fim de cada um */
+      const chaves = Object.keys(j.status);
+      for (let i = 0; i < antes.length; i++) Estado.subirStatus(chaves[i % chaves.length]);
+      j.dinheiro += 6000 + 900 * N;
+      for (const [n, q] of [['Poké Ball', 10], ['Great Ball', 10], ['Ultra Ball', N >= 17 ? 6 : 2], ['Potion', 4], ['Super Potion', 6],
+        ['Hyper Potion', N >= 17 ? 4 : 0], ['Revive', 3], ['Full Heal', 2], ['Antidote', 2], ['Ração', 8], ['Repelente', 3], ['Mapa de Kanto', 1]])
+        if (q) Estado.darItem(n, q);
+      /* o caminho de quem jogou: a âncora de cada capítulo, pisada */
+      const ancora = n => { const a = ANCORAS[n]; const l = a && (typeof a.local === 'function' ? a.local(d) : a.local); return l && l !== '*' ? l : null; };
+      for (const n of antes){ const l = ancora(n); if (l){ Mundo.marcarVisitado(l); Mundo.descobrir('local_' + l); } }
+      d.relogio.dia += 2 * antes.length;
+      if (typeof Fome !== 'undefined') Fome.alimentarTime();
+      /* termina onde o capítulo anterior espera */
+      d.local = ancora(d.capitulo) || d.local;
+      Estado.salvar('auto');
+      UI.fecharModal && UI.fecharModal(true);
+      Exploracao.tela();
+      return {cap:d.capitulo, prox:Historia.proximoCapitulo(false), local:d.local, ins:d.insignias.length,
+        time:d.time.map(p => p.nome + ' ' + p.nivel), destino:Historia.proximoDestino()};
+    }, CAPITULO);
+    console.log('AVANÇO', JSON.stringify(ff));
+    if (ff.erro){ await browser.close(); return; }
+  }
 
   /* o que aconteceu, pra conferir depois */
   await page.evaluate(() => {
@@ -195,10 +288,10 @@ const SUSPEITO = [
       const dec = await page.evaluate(() => {
         const d = Estado.dados, L = Mundo.atual(), id = Mundo.id();
         /* o trajeto no mapa, de lugar em lugar pelas conexões que o
-           jogador conhece e pode atravessar. O caminhoEntre do jogo é
-           outra coisa (a janela de hora dos capítulos de caminho): o robô
-           chamava ele achando que era isto, recebia nada e andava ao
-           acaso, sem nunca achar o Centro, a loja ou o próximo capítulo */
+           jogador conhece e pode atravessar. O robô chamava o caminhoEntre
+           achando que era isto, e era a janela de hora dos capítulos de
+           caminho (hoje caminhoNaJanela): recebia nada e andava ao acaso,
+           sem nunca achar o Centro, a loja ou o próximo capítulo */
         const trajeto = (de, ate) => {
           if (de === ate) return [de];
           const veio = Object.create(null), fila = [de];
@@ -255,8 +348,14 @@ const SUSPEITO = [
            pedindo pra sempre */
         const podeTreinar = d.treinoDia !== d.relogio.dia && Estado.contaItem('Ração') >= TREINO_RACAO
           && (d.treinoReal || 0) + TREINO_ESPERA_MIN * 60000 <= Date.now();
-        if (nivelDeReferencia() < alvo && L.tipo !== 'cidade' && podeTreinar && vivos.some(p => p.nivel < (L.nivel || 5) + 5)) return {f:'treinar'};
-        if (nivelDeReferencia() < alvo && L.tipo !== 'cidade') return {f:'procurar'};
+        /* treinar só rende onde o mato está perto do nível do time: na Rota
+           5 (nível 15) um time de 33 não sobe nunca, e o robô do capítulo
+           10 passou quinze minutos ali, procurando selvagem pro 11. Longe
+           disso ele segue pro capítulo — a rota de lá é mais forte, e quem
+           joga de verdade não fica moendo */
+        const rendeAqui = (L.nivel || 5) >= nivelDeReferencia() - 8;
+        if (nivelDeReferencia() < alvo && L.tipo !== 'cidade' && rendeAqui && podeTreinar && vivos.some(p => p.nivel < (L.nivel || 5) + 5)) return {f:'treinar'};
+        if (nivelDeReferencia() < alvo && L.tipo !== 'cidade' && rendeAqui) return {f:'procurar'};
         if (Historia.arcoAqui() && !travaDoCapitulo(Historia.arcoAqui().num)) return {f:'arco'};
         const g = GINASIOS.find(x => x.id === id && statusGinasio(x).estado === 'disponivel');
         if (g && nivelDeReferencia() >= nivelGinasio(g) - 1 && hp > 0.9) return {f:'ginasio'};

@@ -309,9 +309,13 @@ body.na-criacao #app{max-width:1120px;padding-block:18px 40px}
   .cr-painel{padding:11px}
   .cr-iniciais img{width:46px;height:34px}
   .cr-sortear span{display:none}
-  .criacao .tt-btn{font-size:9.5px;padding:12px 11px 11px}
+  .criacao .tt-btn{font-size:9.5px;padding:12px 11px 11px;white-space:nowrap}
   .criacao .tt-principal{width:auto}
   .cr-erro{text-align:center}
+}
+/* a 320 px o "‹ Voltar" e o "Próximo ›" quebravam em duas linhas */
+@media (max-width:359px){
+  .criacao .tt-btn{font-size:8.5px;letter-spacing:.03em;padding:11px 8px 10px}
 }
 @media (prefers-reduced-motion: reduce){
   .criacao *, .criacao *::after{animation:none !important;transition:none !important}

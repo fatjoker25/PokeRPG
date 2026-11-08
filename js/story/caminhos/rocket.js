@@ -48,7 +48,7 @@ cr1_a_ligacao:{
     'Ele desliga antes de você responder, que é o jeito dele de dizer que você não ia recusar.'
   ],
   ef:{flag:'cm_rocket_1', registrar:'O envelope sem timbre mandou você contar uma carga na cerca de trás do setor 7.',
-      executar:() => { caminhoEntre(13, 18, 15); }},
+      executar:() => { caminhoNaJanela(13, 18, 15); }},
   escolhas:[
     {texto:'Ir pra cerca na hora marcada.', vai:'cr1_o_rook'},
     {texto:'Ir mais cedo e ver o lugar sozinh{o|a}.', vai:'cr1_antes',
@@ -296,7 +296,7 @@ cr2_o_galpao:{
   ],
   ef:{flag:'cm_rocket_2', npc:{nome:'A Terceira', opiniao:1, memoria:'Te mandou no barco do lote da Rota 21, pra ler a nota.'},
       registrar:'A Terceira te mandou no barco que leva um lote dela pra Estação 4, com nota fiscal.',
-      executar:() => { caminhoEntre(8, 17, 10); }},
+      executar:() => { caminhoNaJanela(8, 17, 10); }},
   escolhas:[
     {texto:'"Por que eu?"', vai:'cr2_por_que'},
     {texto:'Aceitar.', vai:'cr2_o_pier'},
@@ -484,7 +484,7 @@ cr3_o_subsolo:{
     '"O Giovanni foi o primeiro. Teve um segundo. Eu sou a terceira. Alguém vai ser o quarto até a meia-noite."'
   ],
   ef:{flag:'cm_rocket_3', registrar:'A Terceira vai embora. A rede vai ter um quarto até a meia-noite.',
-      executar:() => { caminhoEntre(8, 18, 14); }},
+      executar:() => { caminhoNaJanela(8, 18, 14); }},
   escolhas:[
     {texto:'"Quem?"', vai:'cr3_quem'},
     {texto:'"Eu."', vai:'cr3_eu',

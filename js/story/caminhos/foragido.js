@@ -26,7 +26,7 @@ cf1_o_papel:{
     '**"Não atravessa a ponte. Espera o Corwin no ponto de ônibus velho. Ele cobra caro e não erra."**'
   ],
   ef:{flag:'cm_foragido_1', registrar:'A Patrulha pôs uma guarita na ponte da Rota 15. O seu desenho está nos postes.',
-      executar:() => { caminhoEntre(19, 5, 21); }},
+      executar:() => { caminhoNaJanela(19, 5, 21); }},
   escolhas:[
     {texto:'Esperar o Corwin no ponto de ônibus velho.', vai:'cf1_o_corwin'},
     {texto:'Atravessar a ponte de cabeça erguida, com documento.', vai:'cf1_a_ponte',
@@ -324,7 +324,7 @@ cf3_a_decisao:{
     'Não é a Patrulha. A Patrulha manda carta. Quem estaciona de ré na frente de pensão é quem não quer que você chegue no dia quinze.',
     fala('a dona da pensão', 'Comissão. Eles não querem você na Patrulha. Na Patrulha você fala.', 'frio')
   ],
-  ef:{executar:() => { caminhoEntre(23, 5, 1); }},
+  ef:{executar:() => { caminhoNaJanela(23, 5, 1); }},
   escolhas:[
     {texto:'Sair pela frente e enfrentar o carro.', vai:'cf3_o_carro'},
     {texto:'Sair pelos fundos, pelo cemitério.', vai:'cf3_os_fundos'}

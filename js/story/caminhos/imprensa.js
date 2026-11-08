@@ -67,7 +67,7 @@ ci1_a_assessoria:{
   ],
   ef:{flag:'cm_imprensa_ouviu_reserva', itens:{'Nota oficial da reserva':1},
       registrar:'A assessoria da reserva disse que o portão de serviço é só pra caminhão de ração.',
-      executar:() => { caminhoEntre(8, 18, 9); }},
+      executar:() => { caminhoNaJanela(8, 18, 9); }},
   escolhas:[
     {texto:'Aceitar a visita guiada e anotar o que não mostram.', vai:'ci1_a_visita'},
     {texto:'Ir ao portão de serviço de madrugada.', vai:'ci1_o_portao'}
@@ -370,7 +370,7 @@ ci3_a_grafica:{
     'Ela mostra uma notificação de cartório: se a edição extra circular, a Comissão processa o Jornal por difamação, num valor que é três vezes o que o Jornal vale.'
   ],
   ef:{flag:'cm_imprensa_3', registrar:'A Hazel montou a edição extra sobre a Comissão. Se circular, o Jornal é processado.',
-      executar:() => { caminhoEntre(12, 18, 16); }},
+      executar:() => { caminhoNaJanela(12, 18, 16); }},
   escolhas:[
     {texto:'Revisar as oito páginas, linha por linha, pra não ter erro nenhum.', vai:'ci3_a_revisao'},
     {texto:'Procurar a fonte do berçário pra ver se ela aguenta.', vai:'ci3_a_fonte', cond:d => !!d.flags.cm_imprensa_2,

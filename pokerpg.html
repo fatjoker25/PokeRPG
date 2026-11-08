@@ -3786,6 +3786,15 @@ label.btn:focus-within{outline:2px solid var(--destaque);outline-offset:2px}
   box-shadow:0 0 0 1px rgba(0,0,0,.6)}
 .bolas-time .pb::after{content:'';position:absolute;left:50%;top:50%;width:4px;height:4px;margin:-2px 0 0 -2px;border-radius:50%;background:#f4f4f4;box-shadow:0 0 0 1px #1b1b1b}
 .bolas-time .pb.caido{filter:grayscale(1) brightness(.55);opacity:.7}
+/* a etiqueta do tipo nunca passa por baixo das Pokébolas do time: a 320 px
+   o "Elétrico" sumia debaixo das seis. Abaixo de 360 as bolas encolhem, e
+   a etiqueta que ainda não couber corta com reticências, dentro da coluna */
+.ficha-hud .linha-tipos .tipo-tag{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media (max-width:359px){
+  .ficha-hud .bolas-time{gap:2px}
+  .ficha-hud .bolas-time .pb{width:8px;height:8px}
+  .ficha-hud .bolas-time .pb::after{width:3px;height:3px;margin:-1.5px 0 0 -1.5px}
+}
 
 /* confirmação de compra */
 .loja-modos{margin-bottom:10px}
@@ -6534,9 +6543,13 @@ body.na-criacao #app{max-width:1120px;padding-block:18px 40px}
   .cr-painel{padding:11px}
   .cr-iniciais img{width:46px;height:34px}
   .cr-sortear span{display:none}
-  .criacao .tt-btn{font-size:9.5px;padding:12px 11px 11px}
+  .criacao .tt-btn{font-size:9.5px;padding:12px 11px 11px;white-space:nowrap}
   .criacao .tt-principal{width:auto}
   .cr-erro{text-align:center}
+}
+/* a 320 px o "‹ Voltar" e o "Próximo ›" quebravam em duas linhas */
+@media (max-width:359px){
+  .criacao .tt-btn{font-size:8.5px;letter-spacing:.03em;padding:11px 8px 10px}
 }
 @media (prefers-reduced-motion: reduce){
   .criacao *, .criacao *::after{animation:none !important;transition:none !important}
@@ -10577,6 +10590,15 @@ label.btn:focus-within{outline:2px solid var(--destaque);outline-offset:2px}
   box-shadow:0 0 0 1px rgba(0,0,0,.6)}
 .bolas-time .pb::after{content:'';position:absolute;left:50%;top:50%;width:4px;height:4px;margin:-2px 0 0 -2px;border-radius:50%;background:#f4f4f4;box-shadow:0 0 0 1px #1b1b1b}
 .bolas-time .pb.caido{filter:grayscale(1) brightness(.55);opacity:.7}
+/* a etiqueta do tipo nunca passa por baixo das Pokébolas do time: a 320 px
+   o "Elétrico" sumia debaixo das seis. Abaixo de 360 as bolas encolhem, e
+   a etiqueta que ainda não couber corta com reticências, dentro da coluna */
+.ficha-hud .linha-tipos .tipo-tag{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media (max-width:359px){
+  .ficha-hud .bolas-time{gap:2px}
+  .ficha-hud .bolas-time .pb{width:8px;height:8px}
+  .ficha-hud .bolas-time .pb::after{width:3px;height:3px;margin:-1.5px 0 0 -1.5px}
+}
 
 /* confirmação de compra */
 .loja-modos{margin-bottom:10px}
@@ -13325,9 +13347,13 @@ body.na-criacao #app{max-width:1120px;padding-block:18px 40px}
   .cr-painel{padding:11px}
   .cr-iniciais img{width:46px;height:34px}
   .cr-sortear span{display:none}
-  .criacao .tt-btn{font-size:9.5px;padding:12px 11px 11px}
+  .criacao .tt-btn{font-size:9.5px;padding:12px 11px 11px;white-space:nowrap}
   .criacao .tt-principal{width:auto}
   .cr-erro{text-align:center}
+}
+/* a 320 px o "‹ Voltar" e o "Próximo ›" quebravam em duas linhas */
+@media (max-width:359px){
+  .criacao .tt-btn{font-size:8.5px;letter-spacing:.03em;padding:11px 8px 10px}
 }
 @media (prefers-reduced-motion: reduce){
   .criacao *, .criacao *::after{animation:none !important;transition:none !important}
@@ -17368,6 +17394,15 @@ label.btn:focus-within{outline:2px solid var(--destaque);outline-offset:2px}
   box-shadow:0 0 0 1px rgba(0,0,0,.6)}
 .bolas-time .pb::after{content:'';position:absolute;left:50%;top:50%;width:4px;height:4px;margin:-2px 0 0 -2px;border-radius:50%;background:#f4f4f4;box-shadow:0 0 0 1px #1b1b1b}
 .bolas-time .pb.caido{filter:grayscale(1) brightness(.55);opacity:.7}
+/* a etiqueta do tipo nunca passa por baixo das Pokébolas do time: a 320 px
+   o "Elétrico" sumia debaixo das seis. Abaixo de 360 as bolas encolhem, e
+   a etiqueta que ainda não couber corta com reticências, dentro da coluna */
+.ficha-hud .linha-tipos .tipo-tag{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media (max-width:359px){
+  .ficha-hud .bolas-time{gap:2px}
+  .ficha-hud .bolas-time .pb{width:8px;height:8px}
+  .ficha-hud .bolas-time .pb::after{width:3px;height:3px;margin:-1.5px 0 0 -1.5px}
+}
 
 /* confirmação de compra */
 .loja-modos{margin-bottom:10px}
@@ -20116,9 +20151,13 @@ body.na-criacao #app{max-width:1120px;padding-block:18px 40px}
   .cr-painel{padding:11px}
   .cr-iniciais img{width:46px;height:34px}
   .cr-sortear span{display:none}
-  .criacao .tt-btn{font-size:9.5px;padding:12px 11px 11px}
+  .criacao .tt-btn{font-size:9.5px;padding:12px 11px 11px;white-space:nowrap}
   .criacao .tt-principal{width:auto}
   .cr-erro{text-align:center}
+}
+/* a 320 px o "‹ Voltar" e o "Próximo ›" quebravam em duas linhas */
+@media (max-width:359px){
+  .criacao .tt-btn{font-size:8.5px;letter-spacing:.03em;padding:11px 8px 10px}
 }
 @media (prefers-reduced-motion: reduce){
   .criacao *, .criacao *::after{animation:none !important;transition:none !important}
@@ -24159,6 +24198,15 @@ label.btn:focus-within{outline:2px solid var(--destaque);outline-offset:2px}
   box-shadow:0 0 0 1px rgba(0,0,0,.6)}
 .bolas-time .pb::after{content:'';position:absolute;left:50%;top:50%;width:4px;height:4px;margin:-2px 0 0 -2px;border-radius:50%;background:#f4f4f4;box-shadow:0 0 0 1px #1b1b1b}
 .bolas-time .pb.caido{filter:grayscale(1) brightness(.55);opacity:.7}
+/* a etiqueta do tipo nunca passa por baixo das Pokébolas do time: a 320 px
+   o "Elétrico" sumia debaixo das seis. Abaixo de 360 as bolas encolhem, e
+   a etiqueta que ainda não couber corta com reticências, dentro da coluna */
+.ficha-hud .linha-tipos .tipo-tag{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media (max-width:359px){
+  .ficha-hud .bolas-time{gap:2px}
+  .ficha-hud .bolas-time .pb{width:8px;height:8px}
+  .ficha-hud .bolas-time .pb::after{width:3px;height:3px;margin:-1.5px 0 0 -1.5px}
+}
 
 /* confirmação de compra */
 .loja-modos{margin-bottom:10px}
@@ -26907,9 +26955,13 @@ body.na-criacao #app{max-width:1120px;padding-block:18px 40px}
   .cr-painel{padding:11px}
   .cr-iniciais img{width:46px;height:34px}
   .cr-sortear span{display:none}
-  .criacao .tt-btn{font-size:9.5px;padding:12px 11px 11px}
+  .criacao .tt-btn{font-size:9.5px;padding:12px 11px 11px;white-space:nowrap}
   .criacao .tt-principal{width:auto}
   .cr-erro{text-align:center}
+}
+/* a 320 px o "‹ Voltar" e o "Próximo ›" quebravam em duas linhas */
+@media (max-width:359px){
+  .criacao .tt-btn{font-size:8.5px;letter-spacing:.03em;padding:11px 8px 10px}
 }
 @media (prefers-reduced-motion: reduce){
   .criacao *, .criacao *::after{animation:none !important;transition:none !important}
@@ -30950,6 +31002,15 @@ label.btn:focus-within{outline:2px solid var(--destaque);outline-offset:2px}
   box-shadow:0 0 0 1px rgba(0,0,0,.6)}
 .bolas-time .pb::after{content:'';position:absolute;left:50%;top:50%;width:4px;height:4px;margin:-2px 0 0 -2px;border-radius:50%;background:#f4f4f4;box-shadow:0 0 0 1px #1b1b1b}
 .bolas-time .pb.caido{filter:grayscale(1) brightness(.55);opacity:.7}
+/* a etiqueta do tipo nunca passa por baixo das Pokébolas do time: a 320 px
+   o "Elétrico" sumia debaixo das seis. Abaixo de 360 as bolas encolhem, e
+   a etiqueta que ainda não couber corta com reticências, dentro da coluna */
+.ficha-hud .linha-tipos .tipo-tag{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media (max-width:359px){
+  .ficha-hud .bolas-time{gap:2px}
+  .ficha-hud .bolas-time .pb{width:8px;height:8px}
+  .ficha-hud .bolas-time .pb::after{width:3px;height:3px;margin:-1.5px 0 0 -1.5px}
+}
 
 /* confirmação de compra */
 .loja-modos{margin-bottom:10px}
@@ -33698,9 +33759,13 @@ body.na-criacao #app{max-width:1120px;padding-block:18px 40px}
   .cr-painel{padding:11px}
   .cr-iniciais img{width:46px;height:34px}
   .cr-sortear span{display:none}
-  .criacao .tt-btn{font-size:9.5px;padding:12px 11px 11px}
+  .criacao .tt-btn{font-size:9.5px;padding:12px 11px 11px;white-space:nowrap}
   .criacao .tt-principal{width:auto}
   .cr-erro{text-align:center}
+}
+/* a 320 px o "‹ Voltar" e o "Próximo ›" quebravam em duas linhas */
+@media (max-width:359px){
+  .criacao .tt-btn{font-size:8.5px;letter-spacing:.03em;padding:11px 8px 10px}
 }
 @media (prefers-reduced-motion: reduce){
   .criacao *, .criacao *::after{animation:none !important;transition:none !important}
@@ -37741,6 +37806,15 @@ label.btn:focus-within{outline:2px solid var(--destaque);outline-offset:2px}
   box-shadow:0 0 0 1px rgba(0,0,0,.6)}
 .bolas-time .pb::after{content:'';position:absolute;left:50%;top:50%;width:4px;height:4px;margin:-2px 0 0 -2px;border-radius:50%;background:#f4f4f4;box-shadow:0 0 0 1px #1b1b1b}
 .bolas-time .pb.caido{filter:grayscale(1) brightness(.55);opacity:.7}
+/* a etiqueta do tipo nunca passa por baixo das Pokébolas do time: a 320 px
+   o "Elétrico" sumia debaixo das seis. Abaixo de 360 as bolas encolhem, e
+   a etiqueta que ainda não couber corta com reticências, dentro da coluna */
+.ficha-hud .linha-tipos .tipo-tag{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media (max-width:359px){
+  .ficha-hud .bolas-time{gap:2px}
+  .ficha-hud .bolas-time .pb{width:8px;height:8px}
+  .ficha-hud .bolas-time .pb::after{width:3px;height:3px;margin:-1.5px 0 0 -1.5px}
+}
 
 /* confirmação de compra */
 .loja-modos{margin-bottom:10px}
@@ -40489,9 +40563,13 @@ body.na-criacao #app{max-width:1120px;padding-block:18px 40px}
   .cr-painel{padding:11px}
   .cr-iniciais img{width:46px;height:34px}
   .cr-sortear span{display:none}
-  .criacao .tt-btn{font-size:9.5px;padding:12px 11px 11px}
+  .criacao .tt-btn{font-size:9.5px;padding:12px 11px 11px;white-space:nowrap}
   .criacao .tt-principal{width:auto}
   .cr-erro{text-align:center}
+}
+/* a 320 px o "‹ Voltar" e o "Próximo ›" quebravam em duas linhas */
+@media (max-width:359px){
+  .criacao .tt-btn{font-size:8.5px;letter-spacing:.03em;padding:11px 8px 10px}
 }
 @media (prefers-reduced-motion: reduce){
   .criacao *, .criacao *::after{animation:none !important;transition:none !important}
@@ -46726,33 +46804,6 @@ function emLocal(id){
   if (/^(Monte|Túnel|Caminho|Planalto|Norte)\b/.test(n)) return 'no ' + n;
   if (/^A /.test(n)) return 'n' + n.charAt(0).toLowerCase() + n.slice(1);
   return 'na ' + n;
-}
-
-/* Caminho mais curto pelo mapa de verdade, em número de trechos.
-   Serve para saber quantos dias a viagem come. */
-/* O caminho inteiro, e não só quantos passos ele tem. Sem isso a
-   viagem é um número; com isso o jogador atravessa os lugares. */
-function caminhoEntre(de, para){
-  if (de === para) return [de];
-  const veioDe = {[de]:null};
-  let borda = [de];
-  while (borda.length){
-    const prox = [];
-    for (const id of borda)
-      for (const v of ((LOCAIS[id] || {}).conexoes || [])){
-        if (veioDe[v] !== undefined) continue;
-        veioDe[v] = id;
-        if (v === para){
-          const rota = [v];
-          let cur = id;
-          while (cur){ rota.unshift(cur); cur = veioDe[cur]; }
-          return rota;
-        }
-        prox.push(v);
-      }
-    borda = prox;
-  }
-  return null;   /* lugar sem estrada ligando: quem chega lá chega pela história */
 }
 
 function distanciaEntre(de, para){
@@ -53371,7 +53422,7 @@ const ESCALOES_ESTRADA = [
 const TAM_ESTRADA = [2, 3, 3, 3];
 
 /* chance, em %, de um treinador da rota te parar em cada situação */
-const CHANCE_TREINADOR = {chegar:30, procurar:20, vasculhar:22, treinar:25, viagem:35, esperar:15};
+const CHANCE_TREINADOR = {chegar:30, procurar:20, vasculhar:22, treinar:25, esperar:15};
 /* chance de um selvagem surgir sem você procurar */
 const CHANCE_SELVAGEM_SURGE = {vasculhar:15, treinar:12, acampar:18, pescar:0, esperar:10};
 
@@ -53528,8 +53579,6 @@ const Estrada = {
           `${t.nome} te reconhece de longe e abre um sorriso de quem estava esperando.`,
           `É ${t.nome}, ${emLocal(t.local)} de novo. Te vê, aponta, e já vem com a Pokébola na mão.`,
           `${t.nome} levanta a mão de longe, do jeito de quem lembra exatamente como foi da última vez.`])
-      : situacao === 'viagem'
-      ? `No meio da viagem, ${emLocal(t.local)}, ${t.artigo || 'um'} ${t.classe.toLowerCase()} te vê de longe e já vem com a Pokébola na mão.`
       : situacao === 'chegar'
       ? `No meio do caminho, ${t.artigo || 'um'} ${t.classe.toLowerCase()} te vê de longe e já vem com a Pokébola na mão.`
       : `${t.artigo === 'uma' ? 'Uma' : 'Um'} ${t.classe.toLowerCase()} se levanta de onde estava e vem na sua direção. Na estrada, quem cruza o olhar luta.`;
@@ -137027,7 +137076,7 @@ cr1_a_ligacao:{
     'Ele desliga antes de você responder, que é o jeito dele de dizer que você não ia recusar.'
   ],
   ef:{flag:'cm_rocket_1', registrar:'O envelope sem timbre mandou você contar uma carga na cerca de trás do setor 7.',
-      executar:() => { caminhoEntre(13, 18, 15); }},
+      executar:() => { caminhoNaJanela(13, 18, 15); }},
   escolhas:[
     {texto:'Ir pra cerca na hora marcada.', vai:'cr1_o_rook'},
     {texto:'Ir mais cedo e ver o lugar sozinh{o|a}.', vai:'cr1_antes',
@@ -137275,7 +137324,7 @@ cr2_o_galpao:{
   ],
   ef:{flag:'cm_rocket_2', npc:{nome:'A Terceira', opiniao:1, memoria:'Te mandou no barco do lote da Rota 21, pra ler a nota.'},
       registrar:'A Terceira te mandou no barco que leva um lote dela pra Estação 4, com nota fiscal.',
-      executar:() => { caminhoEntre(8, 17, 10); }},
+      executar:() => { caminhoNaJanela(8, 17, 10); }},
   escolhas:[
     {texto:'"Por que eu?"', vai:'cr2_por_que'},
     {texto:'Aceitar.', vai:'cr2_o_pier'},
@@ -137463,7 +137512,7 @@ cr3_o_subsolo:{
     '"O Giovanni foi o primeiro. Teve um segundo. Eu sou a terceira. Alguém vai ser o quarto até a meia-noite."'
   ],
   ef:{flag:'cm_rocket_3', registrar:'A Terceira vai embora. A rede vai ter um quarto até a meia-noite.',
-      executar:() => { caminhoEntre(8, 18, 14); }},
+      executar:() => { caminhoNaJanela(8, 18, 14); }},
   escolhas:[
     {texto:'"Quem?"', vai:'cr3_quem'},
     {texto:'"Eu."', vai:'cr3_eu',
@@ -137960,7 +138009,7 @@ cc2_o_que_fazer:{
     fala('a mulher do envelope', 'O envelope tem uma proposta de financiamento por três anos. O material vem com a gente, claro.'),
     fala('Professor Oak', 'Eu não sei de onde ela ouviu. Eu sei que foi rápido demais.', 'baixo')
   ],
-  ef:{executar:() => { caminhoEntre(7, 12, 9); }},
+  ef:{executar:() => { caminhoNaJanela(7, 12, 9); }},
   escolhas:[
     {texto:'Publicar tudo no boletim do laboratório, hoje, com o seu nome e o dele.', vai:'cc2_publicou',
      ef:{flag:'cm_ciencia_publicou', rep:{eixo:'bom', delta:3, motivo:'Publicou a análise da amostra 4 com o próprio nome'}}},
@@ -138023,7 +138072,7 @@ cc2_escondeu:{
     'A amostra vai pra lá, com o caderno de bancada por cima.',
     'A mulher do envelope volta à tarde e encontra o laboratório aberto, o Professor dando aula de capim pra três crianças, e nada na bancada.'
   ],
-  ef:{flag:'cm_ciencia_gaveta', executar:() => { caminhoEntre(13, 18, 15); }},
+  ef:{flag:'cm_ciencia_gaveta', executar:() => { caminhoNaJanela(13, 18, 15); }},
   escolhas:[
     {texto:'Fechar o laboratório e dormir.', vai:'cc2_fim'}
   ]
@@ -138068,7 +138117,7 @@ cc3_a_banca:{
           : 'No seu fichário, o que você conseguiu juntar. É menos do que você queria.'
   ],
   ef:{flag:'cm_ciencia_3', registrar:'Defendeu dados contra o manejo e o viveiro numa banca da Fiscalização, com o Dr. Hollis na mesa.',
-      executar:() => { caminhoEntre(9, 17, 14); }},
+      executar:() => { caminhoNaJanela(9, 17, 14); }},
   escolhas:[
     {texto:'Apresentar os números, sem adjetivo.', vai:'cc3_os_numeros',
      ef:{rep:{eixo:'bom', delta:1, motivo:'Apresentou os números na banca da Fiscalização sem adjetivo'}}},
@@ -138304,7 +138353,7 @@ ci1_a_assessoria:{
   ],
   ef:{flag:'cm_imprensa_ouviu_reserva', itens:{'Nota oficial da reserva':1},
       registrar:'A assessoria da reserva disse que o portão de serviço é só pra caminhão de ração.',
-      executar:() => { caminhoEntre(8, 18, 9); }},
+      executar:() => { caminhoNaJanela(8, 18, 9); }},
   escolhas:[
     {texto:'Aceitar a visita guiada e anotar o que não mostram.', vai:'ci1_a_visita'},
     {texto:'Ir ao portão de serviço de madrugada.', vai:'ci1_o_portao'}
@@ -138607,7 +138656,7 @@ ci3_a_grafica:{
     'Ela mostra uma notificação de cartório: se a edição extra circular, a Comissão processa o Jornal por difamação, num valor que é três vezes o que o Jornal vale.'
   ],
   ef:{flag:'cm_imprensa_3', registrar:'A Hazel montou a edição extra sobre a Comissão. Se circular, o Jornal é processado.',
-      executar:() => { caminhoEntre(12, 18, 16); }},
+      executar:() => { caminhoNaJanela(12, 18, 16); }},
   escolhas:[
     {texto:'Revisar as oito páginas, linha por linha, pra não ter erro nenhum.', vai:'ci3_a_revisao'},
     {texto:'Procurar a fonte do berçário pra ver se ela aguenta.', vai:'ci3_a_fonte', cond:d => !!d.flags.cm_imprensa_2,
@@ -138978,7 +139027,7 @@ cn2_o_envelope:{
     'Distribuição a treinadores iniciantes. O primeiro Pokémon de uma criança.'
   ],
   ef:{flag:'cm_criacao_2', registrar:'A Comissão pediu seu laudo pra distribuir unidades de viveiro como primeiro Pokémon de treinador iniciante.',
-      executar:() => { caminhoEntre(8, 13, 9); }},
+      executar:() => { caminhoNaJanela(8, 13, 9); }},
   escolhas:[
     {texto:'Entrar e avaliar as unidades com honestidade.', vai:'cn2_o_bercario'},
     {texto:'Ligar pra Sra. Linden antes.', vai:'cn2_a_linden'}
@@ -139742,7 +139791,7 @@ ch1_a_fumaca:{
     fala('a brigadista de Fuchsia', 'Você é {o|a} que ajuda. Todo mundo de Fuchsia falou. Vem.')
   ],
   ef:{flag:'cm_heroi_1', registrar:'Um incêndio no capim da borda da reserva, na Rota 15, ameaça três sítios.',
-      executar:() => { caminhoEntre(8, 14, 11); }},
+      executar:() => { caminhoNaJanela(8, 14, 11); }},
   escolhas:[
     {texto:'Ir pra linha de fogo com a brigada.', vai:'ch1_a_linha'},
     {texto:'Ir direto pros sítios tirar as famílias.', vai:'ch1_os_sitios',
@@ -139846,7 +139895,7 @@ ch1_a_causa:{
   ],
   ef:{flag:'cm_heroi_queima_de_limpeza', itens:{'Lata de querosene':1},
       registrar:'O incêndio da Rota 15 começou numa queima de limpeza do manejo, do lado de dentro da cerca.',
-      executar:() => { caminhoEntre(19, 6, 21); }},
+      executar:() => { caminhoNaJanela(19, 6, 21); }},
   escolhas:[
     {texto:'Levar a lata ao Koga.', vai:'ch1_fim', cond:d => !!d.npcs['Koga'] || !!d.flags.achou_ginasio_fuchsia,
      ef:{flag:'cm_heroi_lata_koga', rep:{eixo:'bom', delta:2, motivo:'Levou ao Koga a prova da queima de limpeza'},
@@ -140290,7 +140339,7 @@ cm1_o_manejo:{
     'No meio da noite, um Nidoking enorme sai do capim e fica entre a equipe e a toca dele. Atrás dele, a fêmea e três filhotes.',
     fala('o chefe do manejo', 'Escolta. É pra isso que a gente paga. Tira ele.')
   ],
-  ef:{executar:() => { caminhoEntre(21, 5, 23); }},
+  ef:{executar:() => { caminhoNaJanela(21, 5, 23); }},
   escolhas:[
     {texto:'Lutar com o Nidoking.', vai:'cm1_o_nidoking',
      ef:{rep:{eixo:'ruim', delta:1, motivo:'Lutou com um Nidoking pra equipe de manejo pegar a toca dele'}}},
@@ -140641,7 +140690,7 @@ cm3_depois:{
     fala('o intermediário', 'Fim de serviço. Você me deve a comissão de praxe. Dez por cento.'),
     fala('o intermediário', 'Ou você pode não pagar, e a gente fica quite de outro jeito.', 'baixo')
   ],
-  ef:{executar:() => { caminhoEntre(19, 4, 21); }},
+  ef:{executar:() => { caminhoNaJanela(19, 4, 21); }},
   escolhas:[
     {texto:d => d.flags.cm_merc_as_duas
        ? 'Pagar os dez por cento e devolver o resto aos dois lados. Você fez de graça.'
@@ -140739,7 +140788,7 @@ cf1_o_papel:{
     '**"Não atravessa a ponte. Espera o Corwin no ponto de ônibus velho. Ele cobra caro e não erra."**'
   ],
   ef:{flag:'cm_foragido_1', registrar:'A Patrulha pôs uma guarita na ponte da Rota 15. O seu desenho está nos postes.',
-      executar:() => { caminhoEntre(19, 5, 21); }},
+      executar:() => { caminhoNaJanela(19, 5, 21); }},
   escolhas:[
     {texto:'Esperar o Corwin no ponto de ônibus velho.', vai:'cf1_o_corwin'},
     {texto:'Atravessar a ponte de cabeça erguida, com documento.', vai:'cf1_a_ponte',
@@ -141037,7 +141086,7 @@ cf3_a_decisao:{
     'Não é a Patrulha. A Patrulha manda carta. Quem estaciona de ré na frente de pensão é quem não quer que você chegue no dia quinze.',
     fala('a dona da pensão', 'Comissão. Eles não querem você na Patrulha. Na Patrulha você fala.', 'frio')
   ],
-  ef:{executar:() => { caminhoEntre(23, 5, 1); }},
+  ef:{executar:() => { caminhoNaJanela(23, 5, 1); }},
   escolhas:[
     {texto:'Sair pela frente e enfrentar o carro.', vai:'cf3_o_carro'},
     {texto:'Sair pelos fundos, pelo cemitério.', vai:'cf3_os_fundos'}
@@ -141306,7 +141355,7 @@ ca2_a_praia:{
            Nomes.apresentar('a mulher do mapa'); return 'Numa pedra entre as fogueiras, uma mulher de cinquenta anos com um mapa dobrado em dezesseis no colo acena pra você. TAMSIN REED, a lápis, na capa do caderno dela.'; },
     'Na primeira, um velho de chapéu de palha. Na segunda, uma moça de macacão azul rasgado. Na terceira, um menino de dez anos com um Magikarp num balde.'
   ],
-  ef:{flag:'cm_andarilho_2', registrar:'Três fogueiras na praia de pedra da Rota 21.', executar:() => { caminhoEntre(19, 5, 21); }},
+  ef:{flag:'cm_andarilho_2', registrar:'Três fogueiras na praia de pedra da Rota 21.', executar:() => { caminhoNaJanela(19, 5, 21); }},
   escolhas:[
     {texto:'Sentar na fogueira do velho.', vai:'ca2_o_velho'},
     {texto:'Sentar na fogueira da moça de macacão.', vai:'ca2_a_moca'},
@@ -141700,7 +141749,7 @@ function caminhoAs(h){
 }
 /* Cena que só diz "de dia" ou "no meio da tarde" pede a janela, não a
    hora: dentro dela o relógio fica onde está; fora, vai até h. */
-function caminhoEntre(de, ate, h){
+function caminhoNaJanela(de, ate, h){
   const r = Estado.dados && Estado.dados.relogio; if (!r) return;
   sincronizarHora(r);
   const dentro = de <= ate ? (r.hora >= de && r.hora < ate) : (r.hora >= de || r.hora < ate);
@@ -147159,59 +147208,6 @@ const UI = {
   /* ========================================================
      VIAGEM — a estrada entre um capítulo e o outro
      ======================================================== */
-  telaViagem(deId, paraId, dias, aoChegar, rota){
-    this.limpar();
-    this.add(this.topo());
-    const de = LOCAIS[deId] || {nome:'onde você estava'};
-    const para = LOCAIS[paraId] || {nome:'o próximo lugar'};
-    const d = Estado.dados;
-
-    const trechos = [
-      'A estrada é estrada: pedra solta, mato dos dois lados, e horas em que não acontece absolutamente nada.',
-      'Você anda atrás de uma família com carrinho por meio dia e depois eles param pra almoçar e você segue sozinh{o|a}.',
-      'Chove numa parte do caminho e não chove na outra, e dá pra ver a linha exata onde uma coisa vira a outra.',
-      'Um caminhão de carga te dá carona por doze quilômetros e o motorista não fala nada a viagem inteira, e é confortável.',
-      'Você dorme uma noite fora, num acostamento com outras quatro pessoas que também estão indo pra algum lugar.',
-      'Tem um trecho em que a estrada acompanha o rio e você anda mais devagar de propósito.',
-      'Você erra uma bifurcação e perde três horas, e a parte pior é que dá pra ver a estrada certa do outro lado do valo.',
-      'Um grupo de treinadores acampa na curva e te chama pra comer. Você come. Ninguém pergunta o seu nome e isso é uma gentileza.'
-    ];
-    const cansaço = [
-      'Chega com o pé doendo num lugar específico do calcanhar, sempre o mesmo.',
-      'Chega com poeira até dentro da mochila.',
-      'Chega com fome e com aquela irritação de quem andou demais.',
-      'Chega inteir{o|a}, o que é mais do que muita gente consegue.'
-    ];
-
-    const linhas = [];
-    linhas.push(`De ${de.nome} até ${para.nome} são ${dias === 1 ? 'um dia' : dias + ' dias'} de caminho.`);
-    /* o trajeto de verdade, nomeado: você não é teleportado */
-    if (rota && rota.length > 2)
-      linhas.push('Você passa por ' + rota.slice(1, -1).map(x => (LOCAIS[x]||{}).nome || x).join(', ') + '.');
-    const usados = new Set();
-    for (let i = 0; i < Math.min(dias, 3); i++){
-      let t = Dados.escolher(trechos), guarda = 0;
-      while (usados.has(t) && guarda++ < 10) t = Dados.escolher(trechos);
-      usados.add(t); linhas.push(t);
-    }
-    if (d.time.length) linhas.push(
-      `${nomeExib(d.time[0])} anda do seu lado o tempo todo e em nenhum momento pergunta se falta muito.`);
-    linhas.push(Dados.escolher(cansaço));
-
-    this.add(`<div class="painel">
-      <div class="cap-cabecalho">
-        <div class="num">A estrada</div>
-        <div class="tit">${this.esc(de.nome)} → ${this.esc(para.nome)}</div>
-        <div class="loc">${dias === 1 ? 'um dia' : dias + ' dias'} de caminho</div>
-      </div>
-      <div class="narrativa">${this.narrar(linhas)}</div>
-      <div id="escolhas" class="escolhas" style="margin-top:18px">
-        <button class="escolha" onclick="${aoChegar}">Chegar.</button>
-      </div>
-    </div>`);
-    this.rolarTopo();
-  },
-
   /* ========================================================
      GINÁSIOS
      ======================================================== */
@@ -149997,7 +149993,6 @@ const UI = {
 
       <h3>Andar pela rota</h3>
       <div class="linha"><span class="k">Entrar ou sair de uma rota</span><span class="v">30% de um treinador dali te parar · se não, teste de Intelecto (dif. 5) e um selvagem sai do mato: 15% no crítico, 25% no sucesso, 35% no parcial, 45% na falha</span></div>
-      <div class="linha"><span class="k">Viagem entre capítulos</span><span class="v">uma parada no máximo, num trecho de estrada do caminho: 35% de treinador, e senão a mesma conta do selvagem · depois da briga a viagem continua</span></div>
       <div class="linha"><span class="k">Procurar Pokémon</span><span class="v">20% de ser um treinador em vez de um selvagem</span></div>
       <div class="linha"><span class="k">Vasculhar</span><span class="v">22% de treinador · 15% de selvagem que estava debaixo do que você mexeu</span></div>
       <div class="linha"><span class="k">O que se acha vasculhando</span><span class="v">40% de alguma coisa acontecendo ali (o que acontece depende do tipo de lugar) · senão, teste de Percepção (dif. 5): no sucesso, lugar escondido ou achado do ambiente (item pequeno, ou rastro que acende a espécie na Pokédex), e com Sorte crítica, coisa rara · no parcial, só o rastro</span></div>
@@ -163779,9 +163774,11 @@ const Exploracao = {
     const arco = Historia.arcoAqui();
     if (!arco || travaDoCapitulo(arco.num)) return this.tela();
     Estado.dados.modo = 'cena';
-    const cena = Historia.iniciarCapitulo(arco.num);
-    Estado.salvar('auto');
-    UI.telaCena(cena, typeof avisosDeRumo === 'function' ? avisosDeRumo() : []);
+    /* a virada de capítulo inteira (Jogo.entrarNoCapitulo): o que o
+       posto paga, a caixa da Sra. Perla, a cena da sua linha e o
+       telefone. O mapa chamava o iniciarCapitulo direto e nada disso
+       acontecia: as cenas de linha nunca apareciam pra ninguém */
+    Jogo.entrarNoCapitulo(arco.num);
   },
 
   /* ---------- viagem ---------- */
@@ -164235,9 +164232,6 @@ const Jogo = {
     if (c) d.conferenciaAberta = conferenciaDeAntes(c); else delete d.conferenciaAberta;
   },
   depoisDaEstrada: null,
-  capDepoisDaViagem: null,
-  destinoDaViagem: null,
-  proxCapPendente: null,
 
   /* ---------- início ---------- */
   iniciar(){
@@ -164947,7 +164941,6 @@ const Jogo = {
     const enc = rivalDeveAparecer(prox);
     if (enc){
       this.encontroRival = enc;
-      this.proxCapPendente = null;
       return UI.telaRival();
     }
     Estado.salvar('auto');
@@ -164960,103 +164953,6 @@ const Jogo = {
     Estado.dados.modo = 'mundo';
     Estado.salvar('auto');
     Exploracao.tela();
-  },
-
-  avancarCapitulo(){
-    if (Estado.j.pontos > 0 && !confirm('Você ainda tem pontos para distribuir. Seguir mesmo assim? (Eles ficam guardados.)')) return;
-    const prox = Historia.proximoCapitulo(true);
-    if (!prox){
-      /* não é final: é o fim do que está escrito. O mundo continua aberto
-         (Liga, veteranos, Conferência, revanche), então a tela tem porta de volta */
-      return UI.telaFinal({titulo:'A JORNADA CONTINUA', continua:true, texto:[
-        'Você chegou ao fim do que está escrito. O resto é estrada.',
-        'Kanto continua exatamente do jeito que você deixou — e essa é a parte que importa.'
-      ]});
-    }
-    // um rival aparece na estrada entre um capítulo e outro
-    const enc = rivalDeveAparecer(prox);
-    if (enc){
-      this.encontroRival = enc;
-      this.proxCapPendente = prox;
-      return UI.telaRival();
-    }
-    return this.viajarParaCapitulo(prox);
-  },
-
-  /* O capítulo seguinte acontece em algum lugar. Se você não está
-     nele, existe estrada no meio — e a estrada é contada. */
-  viajarParaCapitulo(prox){
-    /* capítulo que cobra insígnia espera: a tela volta pro lugar onde
-       você está, dizendo o que falta */
-    const trava = travaDoCapitulo(prox);
-    if (trava){
-      Estado.salvar('auto');
-      return Exploracao.tela([{tipo:'info', texto:`O próximo capítulo ainda não começa. ${textoTrava(trava)}`}]);
-    }
-    const destino = localDoCapitulo(prox);
-    const aqui = Estado.dados.local;
-    if (!destino || destino === aqui) return this.entrarNoCapitulo(prox);
-
-    /* o caminho de verdade: você passa por cada lugar do trajeto, e o
-       tempo é o tempo do trajeto e não um número arredondado */
-    const rota = caminhoEntre(aqui, destino) || [aqui, destino];
-    const dias = Math.max(1, rota.length - 1);
-    this.capDepoisDaViagem = prox;
-    this.destinoDaViagem = destino;
-    this.rotaDaViagem = rota;
-    UI.telaViagem(aqui, destino, dias, 'Jogo.chegarDaViagem()', rota);
-  },
-
-  chegarDaViagem(){
-    const prox = this.capDepoisDaViagem;
-    const destino = this.destinoDaViagem;
-    const rota = this.rotaDaViagem;
-    this.capDepoisDaViagem = null; this.destinoDaViagem = null; this.rotaDaViagem = null;
-    if (destino){
-      const caminho = rota || caminhoEntre(Estado.dados.local, destino) || [Estado.dados.local, destino];
-      /* cada trecho andado custa um dia e fica marcado como visitado:
-         você passou por ali, então aquilo passa a existir no seu mapa */
-      for (const id of caminho){
-        Mundo.marcarVisitado(id);
-        Mundo.descobrir('passou_' + id);
-      }
-      Mundo.passar(Math.max(1, caminho.length - 1) * 4);
-      Estado.dados.local = destino;
-      Estado.registrar(caminho.length > 2
-        ? `Viajou até ${(LOCAIS[destino]||{}).nome || destino}, passando por ${caminho.slice(1,-1).map(x=>(LOCAIS[x]||{}).nome||x).join(', ')}.`
-        : `Viajou até ${(LOCAIS[destino]||{}).nome || destino}.`);
-      /* Quem anda pela rota topa com o que vive nela. Uma parada por
-         viagem, no máximo, num trecho de estrada do caminho: você não
-         escolhe, só acontece. Depois da briga, a viagem continua. */
-      const trechos = caminho.filter(id => LOCAIS[id] && LOCAIS[id].tipo !== 'cidade');
-      if (trechos.length && this.pararNaEstrada(Dados.escolher(trechos), () => this.entrarNoCapitulo(prox), destino)) return;
-    }
-    this.entrarNoCapitulo(prox);
-  },
-
-  /* A estrada te para: gente que treina ali, ou um selvagem que sai do
-     mato. Devolve true se parou (a tela é da batalha). `seguir` roda
-     depois da briga; `destino`, se houver, é onde você termina. */
-  pararNaEstrada(trecho, seguir, destino){
-    const L = LOCAIS[trecho];
-    if (!L || !Estado.primeiroApto()) return false;
-    const voltar = () => { if (destino) Estado.dados.local = destino; };
-    const continuar = (avisos) => { voltar(); Estado.salvar('auto'); seguir(avisos); };
-    const antes = Estado.dados.local;
-    Estado.dados.local = trecho;
-    if (Estrada.talvez('viagem', trecho)){ this.depoisDaEstrada = continuar; return true; }
-    const t = Dados.teste(Estado.j.status.intelecto, 5, 'Rota');
-    const risco = {critico:15, sucesso:25, parcial:35, falha:45}[t.grau];
-    if (!Exploracao.repelenteAtivo() && Dados.chance(risco)){
-      const enc = sortearSelvagem(L.ambiente, L.nivel, trecho);
-      this.depoisDaEstrada = continuar;
-      Exploracao.encontro(enc, [Estado.conheceu(enc.dex)
-        ? `No meio da viagem, ${emLocal(trecho)}, um ${enc.nome} sai ${Arenas.terreno(L.ambiente).sai} e não desvia.`
-        : `No meio da viagem, ${emLocal(trecho)}, um Pokémon sai ${Arenas.terreno(L.ambiente).sai} e não desvia.`]);
-      return true;
-    }
-    Estado.dados.local = antes;
-    return false;
   },
 
   entrarNoCapitulo(prox){
@@ -165499,17 +165395,17 @@ const Jogo = {
     this.resolverPendencias(() => UI.telaResultadoRival(venceu, avisos, id, falas));
   },
 
+  /* o rival te para na saída do capítulo (voltarAoMundo); depois dele,
+     o mapa. O capítulo seguinte começa na âncora dele, pelo mapa
+     (Exploracao.entrarNoArco) */
   seguirDepoisDoRival(){
     this.encontroRival = null;
-    const prox = this.proxCapPendente;
-    this.proxCapPendente = null;
-    if (!prox) return Exploracao.tela();
-    this.viajarParaCapitulo(prox);
+    Exploracao.tela();
   },
 
   evitarRival(){
     const enc = this.encontroRival || {tipo:'teo'};
-    const cap = this.proxCapPendente || Estado.dados.capitulo;
+    const cap = Estado.dados.capitulo;
     if (enc.tipo === 'extra'){
       const R = defRival(enc.id);
       const reg = registroRival(enc.id);

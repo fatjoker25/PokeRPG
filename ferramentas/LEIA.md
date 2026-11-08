@@ -5,7 +5,7 @@ eles acham o `index.html` sozinhos e carregam os scripts na ordem de lá.
 
 | arquivo | o que ele acusa |
 |---|---|
-| `valida.js` | cena que aponta pra cena que não existe, entrada que não existe, capítulo sem fim |
+| `valida.js` | cena que aponta pra cena que não existe, entrada que não existe, capítulo sem fim, função global declarada em dois arquivos (o `<script>` de baixo apaga o de cima calado) |
 | `orfas.js` | cena que existe e que ninguém alcança |
 | `render.js` | cena que estoura ao ser renderizada (função de texto que quebra) |
 | `chk-efkeys.js` | chave de `ef:{}` que o motor não lê — `ef.cura`, `ef.val`, `ef.item` não existem e não fazem nada |
@@ -43,6 +43,7 @@ Playwright (com o Chromium do ambiente, `/opt/pw-browsers/chromium`):
 | `chk-baloes.js` | balão sem nome, sem rosto ou com rosto que não existe no disco, em toda cena (capítulos, eventos, linhas, PokéNav) |
 | `chk-lutas.js` | luta que não começa, não termina, sai sem fala, sem rosto ou com o time errado, ou que manda pra cena que não existe — ginásios, Elite, rivais, estrada, veteranos, a rede, barreiras, revanches e toda luta de cena |
 | `chk-telas.js` | erro de JavaScript ou texto quebrado (marca sem resolver, `undefined`, `NaN`, `null`, HTML vazando) na inscrição (cada passo e cada opção, nos dois gêneros, até sair de casa) e em toda janela (os cinco bolsos da mochila, time, sumário, Pokédex e as 251 fichas, PokéNav e cada contato, cartão, ficha, diário, rota, finais, credenciais, PC, ajustes, regras, tutorial, mapa, o Salvar e o Carregar jogo com arquivo bom e ruim), em toda loja comprando e vendendo, e em todo lugar do mapa com cada afazer da lista dele — num save cheio do meio do jogo e num save do começo, com a mochila quase vazia |
+| `chk-celular.js` | o `artefato.html` dentro do esqueleto da publicação, a 320, 390 e 360 px: página que rola de lado, coisa pra fora da tela, erro de JavaScript e texto quebrado na abertura, na inscrição, num capítulo, nas janelas, na loja, no Centro, numa luta e na evolução (rodar depois do build) |
 | `bot-jogador.js` | o robô que joga pela tela, como gente |
 
 O `bot-jogador.js` escolhe golpe, troca, cura, captura, compra, treina, pega
@@ -51,8 +52,18 @@ quebrado que aparecer — marca de gênero sem resolver, `undefined`, `NaN`,
 HTML vazando, "bicho", "bola" sozinha, balão sem nome — além de erro de
 JavaScript. "Travou no mapa" com `treinar` é a espera do treino, não erro.
 
+Em 25 minutos ele chega ao capítulo 4 ou 5. Pro meio e o fim do jogo,
+`CAPITULO=N` faz a inscrição e pula pra antes do capítulo N: o inicial
+entregue e subido pro nível da área, mais cinco no time, os capítulos de
+antes fechados, as insígnias que o capítulo pede, pontos, dinheiro,
+mochila e PokéNav, no lugar onde o capítulo anterior acaba (as escolhas
+desses capítulos não aconteceram, e as flags ficam vazias). `SAVE=` começa
+de um arquivo do Salvar, pelo caminho do "Carregar jogo".
+
 ```sh
 node ferramentas/chk-telas.js
 node ferramentas/bot-jogador.js 15 saida.json
 CIDADE=Cerulean GENERO=Homem node ferramentas/bot-jogador.js 20
+CAPITULO=17 node ferramentas/bot-jogador.js 25 saida.json
+SAVE=jornada.json node ferramentas/bot-jogador.js 25
 ```

@@ -357,9 +357,11 @@ const Exploracao = {
     const arco = Historia.arcoAqui();
     if (!arco || travaDoCapitulo(arco.num)) return this.tela();
     Estado.dados.modo = 'cena';
-    const cena = Historia.iniciarCapitulo(arco.num);
-    Estado.salvar('auto');
-    UI.telaCena(cena, typeof avisosDeRumo === 'function' ? avisosDeRumo() : []);
+    /* a virada de capítulo inteira (Jogo.entrarNoCapitulo): o que o
+       posto paga, a caixa da Sra. Perla, a cena da sua linha e o
+       telefone. O mapa chamava o iniciarCapitulo direto e nada disso
+       acontecia: as cenas de linha nunca apareciam pra ninguém */
+    Jogo.entrarNoCapitulo(arco.num);
   },
 
   /* ---------- viagem ---------- */

@@ -1221,15 +1221,15 @@ falta pra ficha aparecer inteira (`mapaInfo(id, tocou)`).
 
 ## A estrada não pede licença
 Andar por rota é estar sujeito a ela: entrar numa rota, sair dela, vasculhar,
-treinar, acampar e a viagem entre capítulos podem virar briga sem o jogador
-escolher. As chances moram no topo de `js/story/estrada.js`
+treinar e acampar podem virar briga sem o jogador escolher. As chances moram no topo de `js/story/estrada.js`
 (`CHANCE_TREINADOR`, `CHANCE_SELVAGEM_SURGE`) e estão na folha de regras.
 Repelente segura selvagem, não gente.
 
 Briga que interrompe outra coisa segue a outra coisa depois: quem a começou
 põe o que vem a seguir em `Jogo.depoisDaEstrada`, e o fim de briga livre
-passa por `Jogo.seguirDaEstrada`. Viagem entre capítulos para no máximo uma
-vez, num trecho de rota do caminho, e entra no capítulo depois.
+passa por `Jogo.seguirDaEstrada`. Não existe viagem entre capítulos: o
+capítulo seguinte espera na âncora dele, e chegar lá é andar pelo mapa,
+rota por rota.
 
 Os **treinadores de estrada** (`js/story/estrada-dados.js`) funcionam como os
 líderes: quatro times, um por escalão de insígnias (0–1, 2–3, 4–5, 6–8), com
@@ -1892,6 +1892,14 @@ ou cena nova entra ali; quem acompanha a linha inteira tem nome em
 Briar), apresentado na primeira cena, e quem não diz está em
 `RECUSAM_O_NOME`. Cena de linha não sabe do futuro como capítulo nenhum.
 
+**Todo capítulo começa pelo `Jogo.entrarNoCapitulo`**, inclusive o que
+se abre no mapa (`Exploracao.entrarNoArco`): é ali que mora a virada —
+o que o posto paga (`Cargos.pagarCapitulo`), a caixa da Sra. Perla, a
+cena da linha e o telefone. O mapa já chamou o `iniciarCapitulo`
+direto, e por semanas nenhuma cena de linha apareceu e nenhum posto
+pagou. Entrada nova de capítulo passa por ele, nunca pelo
+`iniciarCapitulo` solto.
+
 ## O começo do capítulo e o que a ficha pesa
 `js/story/rumo.js`. O começo de cada capítulo (`avisosDeRumo`) era
 lista de chamada: a linha da via, a do objetivo ("três insígnias no
@@ -2212,6 +2220,15 @@ botão da abertura. O save automático é apagado ali.
 - A ordem dos scripts está em `index.html`. Script novo entra lá.
 - `python3 build.py` gera `pokerpg.html` e `artefato.html` (arquivo único
   com sprites, cenários, ícones, rostos, insígnias e gritos embutidos). Rodar depois de qualquer mudança em js/ ou css/.
+- O `artefato.html` é **só o miolo**: o `<meta name="viewport">` e o
+  reset (`img{max-width:100%}`, `[hidden]`, body de 14 px) vêm da
+  publicação. Aberto solto, o celular desenha a página com 980 px e
+  encolhe, e tudo parece caber — o primeiro teste de celular deu 105
+  telas limpas assim. `node ferramentas/chk-celular.js` (depois do
+  build) abre ele dentro do mesmo esqueleto, a 320, 390 e 360 px, e
+  passa pela abertura, pela inscrição, por um capítulo, pelas janelas,
+  pela loja, pelo Centro, por uma luta e pela evolução. Tela nova entra
+  ali.
 - Texto do jogo em português do Brasil. Comentário de código também.
 
 ## Onde as coisas ficam

@@ -64,7 +64,7 @@ function caminhoAs(h){
 }
 /* Cena que só diz "de dia" ou "no meio da tarde" pede a janela, não a
    hora: dentro dela o relógio fica onde está; fora, vai até h. */
-function caminhoEntre(de, ate, h){
+function caminhoNaJanela(de, ate, h){
   const r = Estado.dados && Estado.dados.relogio; if (!r) return;
   sincronizarHora(r);
   const dentro = de <= ate ? (r.hora >= de && r.hora < ate) : (r.hora >= de || r.hora < ate);

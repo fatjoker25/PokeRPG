@@ -287,7 +287,7 @@ cc2_o_que_fazer:{
     fala('a mulher do envelope', 'O envelope tem uma proposta de financiamento por três anos. O material vem com a gente, claro.'),
     fala('Professor Oak', 'Eu não sei de onde ela ouviu. Eu sei que foi rápido demais.', 'baixo')
   ],
-  ef:{executar:() => { caminhoEntre(7, 12, 9); }},
+  ef:{executar:() => { caminhoNaJanela(7, 12, 9); }},
   escolhas:[
     {texto:'Publicar tudo no boletim do laboratório, hoje, com o seu nome e o dele.', vai:'cc2_publicou',
      ef:{flag:'cm_ciencia_publicou', rep:{eixo:'bom', delta:3, motivo:'Publicou a análise da amostra 4 com o próprio nome'}}},
@@ -350,7 +350,7 @@ cc2_escondeu:{
     'A amostra vai pra lá, com o caderno de bancada por cima.',
     'A mulher do envelope volta à tarde e encontra o laboratório aberto, o Professor dando aula de capim pra três crianças, e nada na bancada.'
   ],
-  ef:{flag:'cm_ciencia_gaveta', executar:() => { caminhoEntre(13, 18, 15); }},
+  ef:{flag:'cm_ciencia_gaveta', executar:() => { caminhoNaJanela(13, 18, 15); }},
   escolhas:[
     {texto:'Fechar o laboratório e dormir.', vai:'cc2_fim'}
   ]
@@ -395,7 +395,7 @@ cc3_a_banca:{
           : 'No seu fichário, o que você conseguiu juntar. É menos do que você queria.'
   ],
   ef:{flag:'cm_ciencia_3', registrar:'Defendeu dados contra o manejo e o viveiro numa banca da Fiscalização, com o Dr. Hollis na mesa.',
-      executar:() => { caminhoEntre(9, 17, 14); }},
+      executar:() => { caminhoNaJanela(9, 17, 14); }},
   escolhas:[
     {texto:'Apresentar os números, sem adjetivo.', vai:'cc3_os_numeros',
      ef:{rep:{eixo:'bom', delta:1, motivo:'Apresentou os números na banca da Fiscalização sem adjetivo'}}},
