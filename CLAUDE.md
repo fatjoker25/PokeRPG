@@ -1096,6 +1096,15 @@ bola (`QUEBRA_BOLA`: Mewtwo, Lugia, Ho-Oh, Celebi) rola 2d6 antes de
 tudo, e sem sucesso nenhum ela racha no ar (1 em 4). A rolagem vai pro
 log inteira.
 
+Lendário que a cena já derrubou e continua ali pra Pokébola entra na
+luta **ferido** (`ferido` no `batalha` da cena: a fração do HP, no
+mínimo 1, lida no `iniciarBatalhaDaCena`), e a captura é a de sempre. É
+o Mewtwo de joelhos do 28 (`c23_bola`): o "Jogar a Pokébola" depois da
+vitória voltava pra `c23_batalha`, acendia a câmara de novo e recomeçava
+a luta com ele de HP cheio, e dava pra repetir pra sempre. Opção que
+volta pra uma cena de batalha recomeça a luta inteira: depois de vencer,
+ela vai pra outra cena.
+
 ## A creche e os ovos
 Os bebês de Johto (Pichu, Cleffa, Igglybuff, Togepi, Tyrogue,
 Smoochum, Elekid, Magby) não nascem no mato: saem de ovo, e o ovo sai

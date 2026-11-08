@@ -950,6 +950,15 @@ c23_batalha:{
            vitoria:'c23_venceu', derrota:'c23_perdeu', captura:'c23_capturou', gameover:'gameover'}
 },
 
+c23_bola:{
+  texto:[
+    'Ele não se levanta.',
+    'Olha a Pokébola na sua mão, depois você, e não desvia de nenhuma das duas.'
+  ],
+  batalha:{dex:150, nivel:72, tipo:'lendario', fuga:false, ambiente:'ruina', ferido:0,
+           vitoria:'c23_venceu', derrota:'c23_perdeu', captura:'c23_capturou', gameover:'gameover'}
+},
+
 c23_venceu:{
   texto:[
     'Ele cai de joelhos e a câmara para de brilhar.',
@@ -957,7 +966,10 @@ c23_venceu:{
     'Você tem a Pokébola na mão e ele não vai resistir agora — e os dois sabem disso, e é justamente isso que torna o próximo movimento irreversível.'
   ],
   escolhas:[
-    {texto:'Jogar a Pokébola.', vai:'c23_batalha'},
+    /* era vai:'c23_batalha', que acendia a câmara de novo e recomeçava a
+       luta com ele de HP cheio — e dava pra repetir pra sempre. Ele não
+       se levanta: entra com 1 de HP, e a captura é a de sempre */
+    {texto:'Jogar a Pokébola.', vai:'c23_bola'},
     {texto:'Guardar a Pokébola e estender a mão.', vai:'c23_final_compreensao',
      ef:{rep:{eixo:'bom',delta:3,motivo:'Venceu Mewtwo e não o capturou'}, flag:'poupou_mewtwo',
          executar:d=>{ const L=Estado.lend(150); L.disposicao='passivo'; L.aliado=true; return []; }}},

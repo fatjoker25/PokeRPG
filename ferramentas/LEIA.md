@@ -59,10 +59,19 @@ Saffron, onde a loja não vende Potion, e saiu de lá com 129.
 Em 25 minutos ele chega ao capítulo 4 ou 5. Pro meio e o fim do jogo,
 `CAPITULO=N` faz a inscrição e pula pra antes do capítulo N: o inicial
 entregue e subido pro nível da área, mais cinco no time, os capítulos de
-antes fechados, as insígnias que o capítulo pede, pontos, dinheiro,
-mochila e PokéNav, no lugar onde o capítulo anterior acaba (as escolhas
-desses capítulos não aconteceram, e as flags ficam vazias). `SAVE=` começa
-de um arquivo do Salvar, pelo caminho do "Carregar jogo".
+antes fechados (com o de caminho de cada desvio que ficou pra trás: antes
+do 26 é depois do 25.06), as insígnias que o capítulo pede, pontos,
+dinheiro, mochila e PokéNav, no lugar onde o capítulo anterior acaba (as
+escolhas desses capítulos não aconteceram, e as flags ficam vazias).
+`SAVE=` começa de um arquivo do Salvar, pelo caminho do "Carregar jogo",
+e `NOME=` dá o nome da inscrição. Ele joga a luta em 3×.
+
+O arquivo de saída traz o diário de bordo (`reg.passos`: cada capítulo
+aberto e fechado, cada escolha de cena com o texto, cada luta com o
+contexto — ginásio, Liga, rival, estrada, história, mato —, viagem,
+compra, evolução, morte, cena de linha, rival e o final) e a ficha do fim
+(`ficha`: quem jogou, o inicial, o time com golpes, insígnias, dinheiro,
+reputação, via, linha e o diário do próprio jogo).
 
 ```sh
 node ferramentas/chk-telas.js

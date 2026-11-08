@@ -395,6 +395,9 @@ const Jogo = {
       if (b.aleatorio) inimigo = sortearSelvagem(b.ambiente || Arenas.doCapitulo(Historia.capAtual), b.nivelBase || Historia.capAtual.nivelArea);
       else inimigo = criarPokemon(txt(b.dex), nvBase, Object.assign({selvagem: b.tipo === 'selvagem' || b.tipo === 'lendario',
         segurando: b.segura || null}, b.genero !== undefined ? {genero: txt(b.genero)} : {}));
+      /* quem já caiu na cena e continua ali pra Pokébola (o Mewtwo de
+         joelhos no 28) entra ferido: `ferido` é a fração do HP, no mínimo 1 */
+      if (typeof b.ferido === 'number' && inimigo) inimigo.hp = Math.max(1, Math.round(inimigo.hpMax * b.ferido));
       /* `segura` é o item que o Pokémon leva na luta (o ás de quem compete) */
       timeInimigo = (b.timeExtra||[]).map(x => criarPokemon(x.dex,
         x.nivel !== undefined ? txt(x.nivel) : Math.max(2, nvBase + (x.mais || 0)), {segurando: x.segura || null}));

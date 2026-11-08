@@ -130818,6 +130818,15 @@ c23_batalha:{
            vitoria:'c23_venceu', derrota:'c23_perdeu', captura:'c23_capturou', gameover:'gameover'}
 },
 
+c23_bola:{
+  texto:[
+    'Ele não se levanta.',
+    'Olha a Pokébola na sua mão, depois você, e não desvia de nenhuma das duas.'
+  ],
+  batalha:{dex:150, nivel:72, tipo:'lendario', fuga:false, ambiente:'ruina', ferido:0,
+           vitoria:'c23_venceu', derrota:'c23_perdeu', captura:'c23_capturou', gameover:'gameover'}
+},
+
 c23_venceu:{
   texto:[
     'Ele cai de joelhos e a câmara para de brilhar.',
@@ -130825,7 +130834,10 @@ c23_venceu:{
     'Você tem a Pokébola na mão e ele não vai resistir agora — e os dois sabem disso, e é justamente isso que torna o próximo movimento irreversível.'
   ],
   escolhas:[
-    {texto:'Jogar a Pokébola.', vai:'c23_batalha'},
+    /* era vai:'c23_batalha', que acendia a câmara de novo e recomeçava a
+       luta com ele de HP cheio — e dava pra repetir pra sempre. Ele não
+       se levanta: entra com 1 de HP, e a captura é a de sempre */
+    {texto:'Jogar a Pokébola.', vai:'c23_bola'},
     {texto:'Guardar a Pokébola e estender a mão.', vai:'c23_final_compreensao',
      ef:{rep:{eixo:'bom',delta:3,motivo:'Venceu Mewtwo e não o capturou'}, flag:'poupou_mewtwo',
          executar:d=>{ const L=Estado.lend(150); L.disposicao='passivo'; L.aliado=true; return []; }}},
@@ -164543,6 +164555,9 @@ const Jogo = {
       if (b.aleatorio) inimigo = sortearSelvagem(b.ambiente || Arenas.doCapitulo(Historia.capAtual), b.nivelBase || Historia.capAtual.nivelArea);
       else inimigo = criarPokemon(txt(b.dex), nvBase, Object.assign({selvagem: b.tipo === 'selvagem' || b.tipo === 'lendario',
         segurando: b.segura || null}, b.genero !== undefined ? {genero: txt(b.genero)} : {}));
+      /* quem já caiu na cena e continua ali pra Pokébola (o Mewtwo de
+         joelhos no 28) entra ferido: `ferido` é a fração do HP, no mínimo 1 */
+      if (typeof b.ferido === 'number' && inimigo) inimigo.hp = Math.max(1, Math.round(inimigo.hpMax * b.ferido));
       /* `segura` é o item que o Pokémon leva na luta (o ás de quem compete) */
       timeInimigo = (b.timeExtra||[]).map(x => criarPokemon(x.dex,
         x.nivel !== undefined ? txt(x.nivel) : Math.max(2, nvBase + (x.mais || 0)), {segurando: x.segura || null}));
