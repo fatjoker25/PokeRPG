@@ -1638,8 +1638,14 @@ save, finais}`, com a luta junto se tiver uma — o `montar` passa pelo
 navegador, não da jornada, mas vai no arquivo e, na carga, soma com o
 daqui (`Estado.somarFinais`): nenhum final some. A janela
 (`UI.modalSalvar`) é o recibo: o toque já baixou. Página publicada barra
-download calada, então ela também copia o texto (`ArquivoSave.copiar`;
-sem área de transferência, o texto aparece selecionado).
+download calada, e lá quem entrega o arquivo é a própria publicação: o
+`downloads` (`window.claude.use('downloads')`, declarado no publicar
+com `capabilities: {downloads: true}`), que mostra o nome e pergunta
+antes de salvar (`ArquivoSave.entregar`, que conta como foi: salvo,
+recusado, pergunta já aberta ou o download de sempre). Fora da
+publicação `window.claude` não existe e vale o download do navegador. A
+janela também copia o texto (`ArquivoSave.copiar`; sem área de
+transferência, o texto aparece selecionado).
 
 O **Carregar jogo** da abertura (`UI.modalCarregar`) abre o seletor de
 arquivo junto com a janela, e aceita também o arquivo solto em qualquer

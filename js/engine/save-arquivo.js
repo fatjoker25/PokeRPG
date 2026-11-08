@@ -39,6 +39,41 @@ const ArquivoSave = {
     return `pokerpg-${quem}-cap${cap}-${t.getFullYear()}-${z(t.getMonth() + 1)}-${z(t.getDate())}-${z(t.getHours())}${z(t.getMinutes())}.json`;
   },
 
+  /* Na página publicada o download do navegador sai calado, e quem
+     entrega o arquivo é a própria publicação (o `downloads`, por
+     window.claude.use): ela mostra o nome e pergunta a quem joga antes de
+     salvar. Fora dela window.claude não existe, e vale o download de
+     sempre. Pergunta uma vez só: a resposta não muda na página. */
+  _entrega: null,
+  entregaDaPagina(){
+    if (!this._entrega){
+      const c = typeof window !== 'undefined' ? window.claude : null;
+      let p = null;
+      try { p = c && typeof c.use === 'function' ? c.use('downloads') : null; } catch(e){ p = null; }
+      this._entrega = Promise.resolve(p).catch(() => null);
+    }
+    return this._entrega;
+  },
+  /* Salva e conta como foi: {nome, como}. como é 'pagina' (a publicação
+     entregou, com o sim de quem joga), 'recusou' (a pessoa disse não),
+     'espera' (já tem uma pergunta aberta), 'navegador' (o download de
+     sempre, que pode ser barrado calado) ou null (nem deu pra montar). */
+  async entregar(){
+    let nome, texto;
+    try { nome = this.nomeDoArquivo(); texto = this.texto(); } catch(e){ return {nome:null, como:null}; }
+    const dl = await this.entregaDaPagina();
+    if (dl){
+      try { await dl.save({filename:nome, data:texto}); return {nome, como:'pagina'}; }
+      catch(e){
+        const code = e && e.code;
+        if (code === 'declined') return {nome, como:'recusou'};
+        if (code === 'rate_limited') return {nome, como:'espera'};
+        /* o resto (indisponível, sem permissão): o download de sempre */
+      }
+    }
+    return {nome:this.baixar(), como:'navegador'};
+  },
+
   /* Baixa pelo navegador e devolve o nome do arquivo, ou null se nem
      deu pra montar. O navegador ainda pode barrar o download calado (a
      página publicada barra): por isso a janela também copia o texto. */

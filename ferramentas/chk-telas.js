@@ -481,6 +481,34 @@ const SUSPEITO = [
   await page.evaluate(() => Exploracao.tela());
   await tentar('salvar', () => UI.modalSalvar());
   await tentar('ajustes/salvar', () => { UI.modalAjustes(); UI.modalSalvar(); });
+  /* na página publicada quem entrega o arquivo é a publicação (o
+     downloads, por window.claude.use), que pergunta antes: aceitar salva
+     o save inteiro com o nome dele, recusar diz que não salvou */
+  const naPagina = await page.evaluate(async () => {
+    const falhas = [], tinha = 'claude' in window, antes = window.claude;
+    for (const [caso, save, espera] of [
+      ['aceitando', async r => { window.__entregue = r; return {status:'saved'}; }, /^Salvo: pokerpg-.*\.json\.$/],
+      ['recusando', async () => { throw {code:'declined', message:'não'}; }, /não foi salvo/]]){
+      window.__entregue = null;
+      window.claude = {use: async n => n === 'downloads' ? Object.freeze({save}) : null};
+      ArquivoSave._entrega = null;
+      UI.modalSalvar();
+      await new Promise(ok => setTimeout(ok, 80));
+      const diz = ((document.getElementById('save-status') || {}).textContent || '').trim();
+      if (!espera.test(diz)) falhas.push(`na página publicada, ${caso}, o Salvar diz "${diz}"`);
+      const r = window.__entregue;
+      if (caso === 'aceitando'){
+        let ok = false;
+        try { ok = !!r && /\.json$/.test(r.filename) && JSON.parse(r.data).jogo === 'PokéRPG'; } catch(e){}
+        if (!ok) falhas.push('na página publicada, o arquivo entregue não é o save com o nome dele');
+      }
+      UI.fecharModal(true);
+    }
+    if (tinha) window.claude = antes; else delete window.claude;
+    ArquivoSave._entrega = null;
+    return falhas;
+  });
+  for (const f of naPagina){ onde = 'salvar/página publicada'; anota('salvar', f); }
   const arquivo = await page.evaluate(() => ArquivoSave.texto());
   /* a abertura com a jornada salva (o cartão diz de quem é) e sem ela */
   await tentar('abertura', () => { UI.fecharModal(true); Estado.salvar('auto'); UI.telaInicial(); });

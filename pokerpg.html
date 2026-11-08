@@ -51603,6 +51603,41 @@ const ArquivoSave = {
     return `pokerpg-${quem}-cap${cap}-${t.getFullYear()}-${z(t.getMonth() + 1)}-${z(t.getDate())}-${z(t.getHours())}${z(t.getMinutes())}.json`;
   },
 
+  /* Na página publicada o download do navegador sai calado, e quem
+     entrega o arquivo é a própria publicação (o `downloads`, por
+     window.claude.use): ela mostra o nome e pergunta a quem joga antes de
+     salvar. Fora dela window.claude não existe, e vale o download de
+     sempre. Pergunta uma vez só: a resposta não muda na página. */
+  _entrega: null,
+  entregaDaPagina(){
+    if (!this._entrega){
+      const c = typeof window !== 'undefined' ? window.claude : null;
+      let p = null;
+      try { p = c && typeof c.use === 'function' ? c.use('downloads') : null; } catch(e){ p = null; }
+      this._entrega = Promise.resolve(p).catch(() => null);
+    }
+    return this._entrega;
+  },
+  /* Salva e conta como foi: {nome, como}. como é 'pagina' (a publicação
+     entregou, com o sim de quem joga), 'recusou' (a pessoa disse não),
+     'espera' (já tem uma pergunta aberta), 'navegador' (o download de
+     sempre, que pode ser barrado calado) ou null (nem deu pra montar). */
+  async entregar(){
+    let nome, texto;
+    try { nome = this.nomeDoArquivo(); texto = this.texto(); } catch(e){ return {nome:null, como:null}; }
+    const dl = await this.entregaDaPagina();
+    if (dl){
+      try { await dl.save({filename:nome, data:texto}); return {nome, como:'pagina'}; }
+      catch(e){
+        const code = e && e.code;
+        if (code === 'declined') return {nome, como:'recusou'};
+        if (code === 'rate_limited') return {nome, como:'espera'};
+        /* o resto (indisponível, sem permissão): o download de sempre */
+      }
+    }
+    return {nome:this.baixar(), como:'navegador'};
+  },
+
   /* Baixa pelo navegador e devolve o nome do arquivo, ou null se nem
      deu pra montar. O navegador ainda pode barrar o download calado (a
      página publicada barra): por isso a janela também copia o texto. */
@@ -148149,30 +148184,38 @@ const UI = {
   },
 
   /* Salvar: o toque já baixa o arquivo, e a janela é o recibo, com o
-     que foi nele. O navegador pode barrar o download calado (a página
-     publicada barra): por isso o texto também se copia. */
+     que foi nele. O navegador pode barrar o download calado: na página
+     publicada quem entrega é a publicação, que pergunta antes
+     (ArquivoSave.entregar), e o texto também se copia. */
   modalSalvar(){
     if (!Estado.dados) return;
-    const nome = ArquivoSave.baixar();
     this.modal('Salvar', `
       ${this.cartaoDoSave(Estado.dados, 'salvo agora')}
-      <div id="save-status">${this.statusDoSave(nome)}</div>
+      <div id="save-status"><p class="sussurro" role="status">Salvando…</p></div>
       <p class="sussurro">O jogo também se salva sozinho neste navegador, a cada passo, no lugar da Jornada ${Estado.jornada}. O arquivo é uma cópia deste momento: pra continuar noutro aparelho ou noutro navegador, abra o jogo lá e escolha <b>Carregar jogo</b>, na abertura.</p>
       <div class="save-botoes">
         <button class="btn destaque" onclick="UI.salvarDeNovo()">${svgIcone('salvar')}Baixar de novo</button>
         <button class="btn" onclick="UI.copiarSave()">Copiar o texto</button>
       </div>
       <div id="save-copia"></div>`, false, 'salvar');
+    this.salvarDeNovo();
   },
-  statusDoSave(nome){
+  statusDoSave(r){
+    const nome = r && r.nome, b = nome ? `<b>${this.esc(nome)}</b>` : '';
+    if (r && r.como === 'pagina')
+      return `<p class="save-ok" role="status">${svgIcone('salvar')}<span>Salvo: ${b}.</span></p>`;
+    if (r && r.como === 'recusou')
+      return `<p class="sussurro" role="status">O arquivo não foi salvo. Dá pra baixar de novo ou copiar o texto.</p>`;
+    if (r && r.como === 'espera')
+      return `<p class="sussurro" role="status">Já tem uma pergunta de salvar aberta. Responda ela, ou baixe de novo daqui a pouco.</p>`;
     return nome
-      ? `<p class="save-ok" role="status">${svgIcone('salvar')}<span>Baixado: <b>${this.esc(nome)}</b>. Se ele não aparecer nos downloads, copie o texto e guarde num arquivo .json.</span></p>`
+      ? `<p class="save-ok" role="status">${svgIcone('salvar')}<span>Baixado: ${b}. Se ele não aparecer nos downloads, copie o texto e guarde num arquivo .json.</span></p>`
       : `<p class="save-erro" role="alert">${svgIcone('alerta')}<span>O navegador não deixou montar o arquivo. Copie o texto e guarde num arquivo .json.</span></p>`;
   },
-  salvarDeNovo(){
-    const nome = ArquivoSave.baixar();
+  async salvarDeNovo(){
+    const r = await ArquivoSave.entregar();
     const el = document.getElementById('save-status');
-    if (el) el.innerHTML = this.statusDoSave(nome);
+    if (el) el.innerHTML = this.statusDoSave(r);
   },
   async copiarSave(){
     const texto = ArquivoSave.texto();
