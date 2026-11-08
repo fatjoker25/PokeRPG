@@ -123,8 +123,16 @@ const SUSPEITO = [
 ];
 
 (async () => {
-  const browser = await chromium.launch({ executablePath:'/opt/pw-browsers/chromium', args:['--no-sandbox'] });
-  const page = await browser.newPage({ viewport:{width:1000, height:1100} });
+  /* LEVE=1: o navegador pede "menos movimento" (a regra do jogo pra
+     prefers-reduced-motion corta toda animação de CSS em loop) e pinta sem
+     a GPU emulada. Cinco robôs juntos, sem isso, punham a máquina com
+     carga 15 em quatro núcleos só desenhando o que ninguém olha. A
+     partida é a mesma: muda a pintura, não a conta */
+  const LEVE = process.env.LEVE === '1';
+  const browser = await chromium.launch({ executablePath:'/opt/pw-browsers/chromium', args:['--no-sandbox'].concat(LEVE ? ['--disable-gpu'] : []) });
+  /* a janela menor também pesa: o fundo do lugar é repintado a cada
+     segundo (a luz anda com o relógio), e o custo é por pixel */
+  const page = await browser.newPage(LEVE ? {viewport:{width:800, height:640}, reducedMotion:'reduce'} : {viewport:{width:1000, height:1100}});
   const ponto = RETOMAR ? JSON.parse(fs.readFileSync(RETOMAR, 'utf8')) : null;
   const erros = [], achados = (ponto && ponto.achados) || {}, log = (ponto && ponto.log) || [];
   const anota = (tipo, txt) => { const k = tipo + ' :: ' + txt.slice(0, 140); achados[k] = (achados[k] || 0) + 1; };

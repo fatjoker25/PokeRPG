@@ -77,7 +77,13 @@ Salvar, com a luta se tiver uma, mais o diário e o que ele lembra), e
 diz como a etapa acabou (`estado`: `final`, `morte`, `pausa`, `erros`,
 `travou`). `TURBO=N` encena a luta N vezes mais rápido que 1× (o botão do
 jogo vai até 3×; só a encenação muda, dado e turno são os mesmos). Com
-`TURBO=20` ele chega ao capítulo 4 em seis minutos.
+`TURBO=20` ele chega ao capítulo 4 em seis minutos. `LEVE=1` pede ao
+navegador "menos movimento" (a regra do jogo pra `prefers-reduced-motion`
+corta toda animação de CSS em loop), pinta sem a GPU emulada e usa uma
+janela de 800×640: cinco robôs juntos sem isso punham a máquina com carga
+15 em quatro núcleos, porque o fundo do lugar é repintado a cada segundo
+(a luz anda com o relógio). A partida é a mesma, e com ele o robô chega ao
+capítulo 4 em um minuto. Pra caçar defeito de animação, sem `LEVE`.
 
 Em 25 minutos e 3× ele chega ao capítulo 4 ou 5. Pro meio e o fim do jogo,
 `CAPITULO=N` faz a inscrição e pula pra antes do capítulo N: o inicial
