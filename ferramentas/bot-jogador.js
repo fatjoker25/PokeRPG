@@ -130,7 +130,11 @@ const SUSPEITO = [
     if (await page.locator('#modal .time-linha:not([disabled])').count() && await page.evaluate(() => Batalha.ativo).catch(() => false)){
       await page.locator('#modal .time-linha:not([disabled])').first().click({timeout:3000}).catch(() => {}); continue;
     }
-    if (await page.locator('.continuar-batalha').count()){ await page.locator('.continuar-batalha').first().click({timeout:3000}).catch(() => {}); await page.waitForTimeout(120); continue; }
+    /* o Continuar do fim da luta fica na barra de ações, e a evolução e o
+       golpe novo abrem por cima dele: com janela aberta, quem responde é
+       ela. Antes o robô clicava no Continuar coberto, esperava 3 s e
+       tentava de novo pra sempre (20 minutos na evolução do Caterpie) */
+    if (!(await page.locator('#modal').count()) && await page.locator('.continuar-batalha').count()){ await page.locator('.continuar-batalha').first().click({timeout:3000}).catch(() => {}); await page.waitForTimeout(120); continue; }
     if (await page.locator('#modal .evo').count()){
       if (await page.locator('#evo-seguir:visible').count()) await page.locator('#evo-seguir').click(); else await page.waitForTimeout(300);
       continue;
