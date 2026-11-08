@@ -762,7 +762,7 @@ c1e_despedida_goro:{
     'Ele guarda o caderno numa sacola de pano, dobra o banquinho, fecha o portamalas e bate duas vezes na lataria, que deve ser mania.',
     d=>{
       /* a mesma volta do mural e do PokéNav (agenda.js) */
-      const id = Object.keys(LOCAIS).find(k => LOCAIS[k].nome === d.jogador.cidade);
+      const id = Mundo.idDaCidade(d.jogador.cidade);
       const q = DIA_DA_PERUA[id] || 4;
       return fala('Célio', `Eu volto dia ${q} do mês que vem. Aqui é sempre dia ${q}. Se você ainda estiver na cidade, aparece. Se não estiver, é porque a estrada tá boa.`, 'riso');
     },

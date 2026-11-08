@@ -175,8 +175,7 @@ const Calendario = {
     const d = typeof Estado !== 'undefined' && Estado.dados;
     if (!d || !d.relogio) return 1;
     if (d.relogio.inicio == null){
-      const nome = d.jogador && d.jogador.cidade;
-      const id = Object.keys(LOCAIS).find(k => LOCAIS[k].nome === nome);
+      const id = Mundo.idDaCidade(d.jogador && d.jogador.cidade);
       d.relogio.inicio = (typeof DIA_DA_PERUA !== 'undefined' && DIA_DA_PERUA[id]) || 1;
     }
     return d.relogio.inicio;
@@ -501,11 +500,20 @@ const Mundo = {
   atual(){ return LOCAIS[Estado.dados.local] || LOCAIS.pallet; },
   id(){ return Estado.dados.local; },
 
-  iniciar(cidadeNatal){
+  /* A cidade da ficha é o nome curto ("Cinnabar") e o lugar no mapa
+     pode ter outro ("Ilha Cinnabar"): quem procura a cidade natal no
+     mapa passa por aqui, nunca compara o nome do lugar com o da ficha.
+     Comparando, quem nascia em Cinnabar ficava sem casa e sem o ônibus
+     pra Viridian, preso numa ilha cuja saída é a Rota 19, de nível 36 */
+  idDaCidade(nome){
     const mapa = {'Pallet':'pallet','Viridian':'viridian','Pewter':'pewter','Cerulean':'cerulean',
       'Vermilion':'vermilion','Lavender':'lavender','Celadon':'celadon','Fuchsia':'fuchsia',
       'Saffron':'saffron','Cinnabar':'cinnabar'};
-    Estado.dados.local = mapa[cidadeNatal] || 'pallet';
+    return mapa[nome] || null;
+  },
+
+  iniciar(cidadeNatal){
+    Estado.dados.local = this.idDaCidade(cidadeNatal) || 'pallet';
     Estado.dados.visitados = {[Estado.dados.local]:true};
     Estado.dados.descobertas = {};
     Estado.dados.relogio.periodo = 'manhã';
@@ -670,10 +678,11 @@ function afazeresDoLocal(){
     }
     /* a sua casa, na cidade em que você nasceu: cama, comida e
        {casa:quem ficou|quem ficou} esperando */
-    if (Estado.j && L.nome === Estado.j.cidade)
+    const emCasa = !!Estado.j && id === Mundo.idDaCidade(Estado.j.cidade);
+    if (emCasa)
       lista.push({lugar:true, id:'casa', titulo:'Sua casa'});
     /* quem nasceu longe de Viridian pode pegar o ônibus uma vez */
-    if (Estado.j && L.nome === Estado.j.cidade && !['Pallet','Viridian'].includes(Estado.j.cidade)
+    if (emCasa && !['Pallet','Viridian'].includes(Estado.j.cidade)
         && !d.flags.onibus_da_liga && d.capitulo <= 3)
       lista.push({lugar:true, id:'onibus', titulo:'Rodoviária — ônibus pra Viridian'});
     /* credencial se pega no lugar dela, não no Centro */

@@ -60,7 +60,8 @@ function diaDaSaida(cidadeNome){
     const c = Calendario.de(1);
     return {dia:c.diaMes, mes:((c.mes + 2) % 12) + 1, ano:c.ano};
   }
-  const id = cidadeNome && Object.keys(LOCAIS).find(k => LOCAIS[k].nome === cidadeNome);
+  const id = cidadeNome && (typeof Mundo !== 'undefined' ? Mundo.idDaCidade(cidadeNome)
+    : Object.keys(LOCAIS).find(k => LOCAIS[k].nome === cidadeNome));
   const dia = (id && typeof DIA_DA_PERUA !== 'undefined' && DIA_DA_PERUA[id]) || 1;
   return {dia, mes:3, ano:ANO_DO_JOGO};
 }

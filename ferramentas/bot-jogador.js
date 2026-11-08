@@ -589,12 +589,27 @@ const SUSPEITO = [
         const afz = afazeresDoLocal().map(a => a.id);
         const ref = nivelDeReferencia();
         const centro = Exploracao.temCentro(L);
+        /* o Centro atende quem tem licença de graça; sem ela, cobra 300 ₽
+           mais 250 por ferido, e sem o dinheiro a enfermeira empurra a ficha
+           de volta (Cidade.atender). O robô sem licença pedia de novo no
+           mesmo instante, 3.825 vezes em Pewter */
+        const centroAtende = () => {
+          if (d.flags.tem_licenca || (typeof Cargos !== 'undefined' && Cargos.centroGratis())) return true;
+          const feridos = d.time.filter(p => p.hp < p.hpMax || p.status).length;
+          const ninguemDePe = !d.time.some(p => estaVivo(p) && p.hp > 0);
+          return ninguemDePe || d.jogador.dinheiro >= 300 + 250 * feridos;
+        };
         /* curar: em casa, no Centro, acampando, ou andando até um Centro */
         const curar = () => {
           if (afz.includes('casa')) return {f:'casa'};
-          if (afz.includes('centro')) return {f:'centro'};
+          if (afz.includes('centro') && centroAtende()) return {f:'centro'};
           /* acampar pede Ração; sem ela, a noite passa esperando */
           if (ehNoite()) return {f: Estado.contaItem('Ração') >= 1 ? 'acampar' : 'esperar'};
+          if (!centroAtende()){
+            /* sem dinheiro pro Centro: acampa onde der, ou segue como está */
+            if (L.tipo !== 'cidade' && Estado.contaItem('Ração') >= 1 && afz.includes('acampar')) return {f:'acampar'};
+            return null;
+          }
           const centros = Object.keys(LOCAIS).filter(k => Exploracao.temCentro(LOCAIS[k]) && !travaDaPassagem(id, k))
             .map(k => trajeto(id, k)).filter(c => c && c[1] && !travaDaPassagem(id, c[1])).sort((x, y) => x.length - y.length);
           if (centros.length) return {f:'viajar', id:centros[0][1]};
@@ -643,12 +658,15 @@ const SUSPEITO = [
           if (pot) quero[pot] = J.cura >= .7 ? 6 : 4;
           const bola = melhor(['Ultra Ball', 'Great Ball', 'Poké Ball']);
           if (bola && (J.captura !== 'time' || d.time.length < 6)) quero[bola] = J.bolas || 5;
-          if (vende('Revive') && J.cura >= .6) quero['Revive'] = 2;
+          /* Revive custa caro: só com dinheiro sobrando */
+          if (vende('Revive') && J.cura >= .6 && d.jogador.dinheiro > 8000) quero['Revive'] = 2;
           if (J.pedra && typeof nomesDePedra === 'function')
             for (const nome of nomesDePedra()) if (vende(nome) && !Estado.contaItem(nome) && d.time.some(x => !x.morto && (pedrasDe(nome) || {})[x.dex])) quero[nome] = 1;
+          /* e só entra se der pra comprar alguma coisa guardando mil pra estrada */
           const faltam = {};
-          for (const [n, q] of Object.entries(quero)) if (Estado.contaItem(n) < q) faltam[n] = q - Estado.contaItem(n);
-          if (Object.keys(faltam).length && d.jogador.dinheiro > 1200){ X.lojaDia = dia + id; return {f:'loja', itens:faltam}; }
+          for (const [n, q] of Object.entries(quero))
+            if (Estado.contaItem(n) < q && precoNaCidade(n, id) <= d.jogador.dinheiro - 1000) faltam[n] = q - Estado.contaItem(n);
+          if (Object.keys(faltam).length){ X.lojaDia = dia + id; return {f:'loja', itens:faltam}; }
         }
         /* a loja da cidade só aparece pra quem anda por ela (descobertas):
            sem Ração e com dinheiro, anda até achar */

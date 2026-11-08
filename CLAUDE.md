@@ -2118,6 +2118,12 @@ café e a despedida do capítulo 1 saem de `falaDaCasa(momento)`. Nenhum
 jeito é medroso; fala nova de casa entra nos oito, não numa só.
 
 A jornada começa na cidade natal, uma das dez cidades de `CIDADES`.
+A cidade da ficha é o nome curto e o lugar no mapa pode ter outro
+("Cinnabar" é a `Ilha Cinnabar`): quem procura a cidade natal no mapa
+passa por `Mundo.idDaCidade(j.cidade)`, nunca compara `L.nome` com
+`j.cidade`. Comparando, quem nascia em Cinnabar ficava sem casa e sem o
+ônibus, preso numa ilha cuja saída é a Rota 19, de nível 36, e o
+calendário e o aniversário perdiam o dia da perua.
 Indigo saiu da lista: quem nascia lá começava em Viridian (o Planalto
 fica atrás da guarita das oito insígnias), não tinha casa em lugar
 nenhum e voltava pro Planalto no capítulo 21; o `Estado.abrir` passa
