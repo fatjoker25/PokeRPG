@@ -27,7 +27,8 @@ def histograma(im):
     """fração de cada cor (4 níveis por canal) nos pixels que aparecem"""
     im = im.convert('RGBA').resize((48, 48), Image.NEAREST)
     h, n = {}, 0
-    for r, g, b, a in im.getdata():
+    # getdata sai no Pillow 14; get_flattened_data é o nome novo
+    for r, g, b, a in (im.get_flattened_data() if hasattr(im, 'get_flattened_data') else im.getdata()):
         if a <= 128:
             continue
         k = (r // 64, g // 64, b // 64)

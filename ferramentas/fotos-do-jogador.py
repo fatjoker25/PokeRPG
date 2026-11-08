@@ -73,6 +73,7 @@ NOME_A_MAO = {
     'artista': {'calca': 'preto'},
     'aviadora': {'camisa': 'branco', 'detalhes': 'azul-claro'},
     'patinadora': {'camisa': 'preto', 'calca': 'preto', 'sapatos': 'preto'},
+    'ciclista_f': {'calca': 'marrom'},                  # o laranja do brilho e a faixa branca puxam pro bege
     'mochileira': {'cabelo': 'loiro', 'sapatos': 'verde'},
     'despojada': {'calca': 'azul', 'sapatos': 'branco'},
     'esportiva': {'sapatos': 'azul-marinho'},
