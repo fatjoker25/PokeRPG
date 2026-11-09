@@ -59,11 +59,11 @@ Numeração: A = 33..42, B = 43..52, C = 53..62, na ordem da tabela abaixo.
 ### 5. Criação
 - **A · Os Órfãos do Manejo** — filhotes sem mãe na beira da cerca do Safári, e a Associação não pode recebê-los.
 - **B · O Laudo** — pedem a sua assinatura num laudo que diz que as unidades de viveiro são "saudáveis e aptas".
-- **C · O Selo** — a Associação vota o que fazer com quem assinou. Finais: **O Criadouro Aberto** · **O Laudo Assinado** · **De Volta ao Mato**.
+- **C · O Selo** — a Associação vota se dá o selo dela à unidade de viveiro, como criação legítima, e o seu laudo (ou o seu selo regional) entra na conta. Finais: **O Criadouro Aberto** · **O Laudo Assinado** · **De Volta ao Mato**.
 
 ### 6. Liga
 - **A · A Copa Júnior de Fuchsia** — você apita um torneio de crianças e um pai compra resultado.
-- **B · A Regra Nova** — a Comissão propõe ao Conselho Regional dar unidade de viveiro como "primeiro Pokémon" de quem não tem, e a Liga, que entrega a licença, faz o parecer com um teste na quadra.
+- **B · O Que o Número Não Diz** — a Comissão propõe ao Conselho Regional dar unidade de viveiro como "primeiro Pokémon" de quem não tem, e a Liga, que entrega a licença, faz o parecer com um teste na quadra.
 - **C · A Votação** — o Conselho Regional vota na reunião de quinta, no Planalto (a da convocação do 25), e você fala pela Liga, que fala e não vota. Finais: **O Comitê Técnico** · **A Liga Comprada** · **A Quadra de Terra**.
 
 ### 7. Herói

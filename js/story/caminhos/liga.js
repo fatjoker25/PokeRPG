@@ -157,12 +157,14 @@ cg1_fim:{
 }
 },
 
-/* ── II · A REGRA NOVA (depois do 19) ──────────────────────── */
+/* ── II · O QUE O NÚMERO NÃO DIZ (depois do 19) ─────────────── */
+/* já foi "A Regra Nova": o programa ainda é proposta (quem decide é
+   o Conselho, no III), e o capítulo é o teste e o relatório dele */
 {
 /* na escola de treino de Viridian, não no Planalto: a passagem pro
    Planalto pede oito insígnias, e quem vive de ginásio chega ao 19 com
    seis — o desvio prendia a jornada até mais dois ginásios */
-num:19.06, titulo:'A Regra Nova', local:'Viridian — a escola de treino', ambiente:'cidade', nivelArea:56,
+num:19.06, titulo:'O Que o Número Não Diz', local:'Viridian — a escola de treino', ambiente:'cidade', nivelArea:56,
 tom:'muito sombrio',
 ancora:{local:'viridian', chamada:'Na quadra da escola de treino de Viridian, a Coordenadora Maple te espera com uma pasta que ela não quer abrir.'},
 entradas:['cg2_a_pasta'],
@@ -260,7 +262,7 @@ cg2_fim:{
     d => d.flags.cm_liga_so_o_numero ? fala('a coordenadora da quadra', 'Onze de doze. Bonito. Vão citar o seu nome no Conselho.', 'frio') : fala('a coordenadora da quadra', 'Vão dizer que você exagerou. Deixa dizerem. Exagero assinado vale mais que número sem nome.'),
     'Na saída da quadra, a menina do Rattata desdentado está sentada na escada, dando água pra ele numa tampinha de garrafa.'
   ],
-  fim:true, resumo:'A regra nova: onze de doze, um Rattata desdentado e o que o número não diz.'
+  fim:true, resumo:'O que o número não diz: onze de doze, um Rattata desdentado e onze crianças chorando.'
 }
 
 }

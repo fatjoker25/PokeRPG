@@ -129,11 +129,14 @@ function c11_cenaDeRua(d){
 }
 
 /* ============================================================
-   CAPÍTULO 11 — A TORRE DE VIDRO  (Saffron / Silph Co.)
+   CAPÍTULO 11 — O ANDAR 11  (Saffron / Silph Co.)
+   Já foi "A Torre de Vidro", e o texto nunca chama a Silph de torre:
+   o capítulo é o andar que fica embaixo do subsolo, que todo mundo
+   ali cita pelo número.
    ============================================================ */
 CAPITULOS.push(
 {
-num:11, titulo:'A Torre de Vidro', local:'Saffron / Silph Co.', ambiente:'cidade', nivelArea:38,
+num:11, titulo:'O Andar 11', local:'Saffron / Silph Co.', ambiente:'cidade', nivelArea:38,
 tom:'muito sombrio', entradas:C11_ABERTURAS,
 inicio: d => c11_abertura(d),
 /* Quem já esteve com a Sabrina, com a Fenna ou com a Sra. Odile não é

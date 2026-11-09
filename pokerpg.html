@@ -93816,11 +93816,14 @@ function c11_cenaDeRua(d){
 }
 
 /* ============================================================
-   CAPÍTULO 11 — A TORRE DE VIDRO  (Saffron / Silph Co.)
+   CAPÍTULO 11 — O ANDAR 11  (Saffron / Silph Co.)
+   Já foi "A Torre de Vidro", e o texto nunca chama a Silph de torre:
+   o capítulo é o andar que fica embaixo do subsolo, que todo mundo
+   ali cita pelo número.
    ============================================================ */
 CAPITULOS.push(
 {
-num:11, titulo:'A Torre de Vidro', local:'Saffron / Silph Co.', ambiente:'cidade', nivelArea:38,
+num:11, titulo:'O Andar 11', local:'Saffron / Silph Co.', ambiente:'cidade', nivelArea:38,
 tom:'muito sombrio', entradas:C11_ABERTURAS,
 inicio: d => c11_abertura(d),
 /* Quem já esteve com a Sabrina, com a Fenna ou com a Sra. Odile não é
@@ -139607,12 +139610,12 @@ cn3_a_assembleia:{
   texto:[
     'A assembleia da Associação acontece no galpão do abrigo, com cadeira de plástico e criador de bota de borracha.',
     d => d.flags.cm_criacao_2 ? 'Item um: preço da ração. Item dois: o regulamento novo de órfão. Item três: o laudo do lote 12, com o seu nome do lado.' : 'Item um: preço da ração. Item dois: o regulamento novo de órfão. Item três: unidade de viveiro.',
-    fala('a avaliadora da Associação', 'Depois da audiência de segunda, a Comissão vai pedir à Associação que reconheça unidade de viveiro como criação legítima. Se a gente reconhecer, todo criador de Kanto vira fornecedor deles.'),
+    fala('a avaliadora da Associação', 'Depois da audiência de segunda, a Comissão vai pedir à Associação que reconheça unidade de viveiro como criação legítima, com o selo da Associação na ficha de cada uma. Se a gente der o selo, todo criador de Kanto vira fornecedor deles.'),
     d => d.flags.cm_criacao_assinou ? 'Na terceira fila, alguém olha pra você e fala baixinho com quem está do lado.'
       : Nomes.sabe('a tratadora da Associação') ? 'Na terceira fila, a Mina Bray, de macacão, acena pra você com a caneta do cabelo.'
       : 'Na terceira fila, uma moça de macacão, com uma caneta prendendo o cabelo, olha pra você como quem já ouviu falar.'
   ],
-  ef:{flag:'cm_criacao_3', registrar:'A Associação de Criadores vota se reconhece unidade de viveiro como criação legítima.'},
+  ef:{flag:'cm_criacao_3', registrar:'A Associação de Criadores vota se dá o selo dela a unidade de viveiro, como criação legítima.'},
   escolhas:[
     {texto:'Pedir a palavra.', vai:'cn3_a_palavra'},
     {texto:'Votar em silêncio, como a maioria.', vai:'cn3_o_voto'}
@@ -139916,12 +139919,14 @@ cg1_fim:{
 }
 },
 
-/* ── II · A REGRA NOVA (depois do 19) ──────────────────────── */
+/* ── II · O QUE O NÚMERO NÃO DIZ (depois do 19) ─────────────── */
+/* já foi "A Regra Nova": o programa ainda é proposta (quem decide é
+   o Conselho, no III), e o capítulo é o teste e o relatório dele */
 {
 /* na escola de treino de Viridian, não no Planalto: a passagem pro
    Planalto pede oito insígnias, e quem vive de ginásio chega ao 19 com
    seis — o desvio prendia a jornada até mais dois ginásios */
-num:19.06, titulo:'A Regra Nova', local:'Viridian — a escola de treino', ambiente:'cidade', nivelArea:56,
+num:19.06, titulo:'O Que o Número Não Diz', local:'Viridian — a escola de treino', ambiente:'cidade', nivelArea:56,
 tom:'muito sombrio',
 ancora:{local:'viridian', chamada:'Na quadra da escola de treino de Viridian, a Coordenadora Maple te espera com uma pasta que ela não quer abrir.'},
 entradas:['cg2_a_pasta'],
@@ -140019,7 +140024,7 @@ cg2_fim:{
     d => d.flags.cm_liga_so_o_numero ? fala('a coordenadora da quadra', 'Onze de doze. Bonito. Vão citar o seu nome no Conselho.', 'frio') : fala('a coordenadora da quadra', 'Vão dizer que você exagerou. Deixa dizerem. Exagero assinado vale mais que número sem nome.'),
     'Na saída da quadra, a menina do Rattata desdentado está sentada na escada, dando água pra ele numa tampinha de garrafa.'
   ],
-  fim:true, resumo:'A regra nova: onze de doze, um Rattata desdentado e o que o número não diz.'
+  fim:true, resumo:'O que o número não diz: onze de doze, um Rattata desdentado e onze crianças chorando.'
 }
 
 }

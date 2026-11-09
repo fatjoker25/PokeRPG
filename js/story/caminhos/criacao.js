@@ -329,12 +329,12 @@ cn3_a_assembleia:{
   texto:[
     'A assembleia da Associação acontece no galpão do abrigo, com cadeira de plástico e criador de bota de borracha.',
     d => d.flags.cm_criacao_2 ? 'Item um: preço da ração. Item dois: o regulamento novo de órfão. Item três: o laudo do lote 12, com o seu nome do lado.' : 'Item um: preço da ração. Item dois: o regulamento novo de órfão. Item três: unidade de viveiro.',
-    fala('a avaliadora da Associação', 'Depois da audiência de segunda, a Comissão vai pedir à Associação que reconheça unidade de viveiro como criação legítima. Se a gente reconhecer, todo criador de Kanto vira fornecedor deles.'),
+    fala('a avaliadora da Associação', 'Depois da audiência de segunda, a Comissão vai pedir à Associação que reconheça unidade de viveiro como criação legítima, com o selo da Associação na ficha de cada uma. Se a gente der o selo, todo criador de Kanto vira fornecedor deles.'),
     d => d.flags.cm_criacao_assinou ? 'Na terceira fila, alguém olha pra você e fala baixinho com quem está do lado.'
       : Nomes.sabe('a tratadora da Associação') ? 'Na terceira fila, a Mina Bray, de macacão, acena pra você com a caneta do cabelo.'
       : 'Na terceira fila, uma moça de macacão, com uma caneta prendendo o cabelo, olha pra você como quem já ouviu falar.'
   ],
-  ef:{flag:'cm_criacao_3', registrar:'A Associação de Criadores vota se reconhece unidade de viveiro como criação legítima.'},
+  ef:{flag:'cm_criacao_3', registrar:'A Associação de Criadores vota se dá o selo dela a unidade de viveiro, como criação legítima.'},
   escolhas:[
     {texto:'Pedir a palavra.', vai:'cn3_a_palavra'},
     {texto:'Votar em silêncio, como a maioria.', vai:'cn3_o_voto'}
