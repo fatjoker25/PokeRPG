@@ -534,14 +534,25 @@ const SUSPEITO = [
         if (B.fase === 'ameaca') return {tipo:'fugirAmeaca'};
         /* selvagem que não acaba (os dois lados só com golpe de status): vai embora */
         if (B.tipo === 'selvagem' && B.turno > 60 && B.fuga !== false) return {tipo:'fugir'};
+        /* luta que não acaba: depois de 150 turnos contra treinador, desiste
+           (como gente faria); depois de 60, varia o golpe pra sair do laço */
+        if (B.tipo === 'treinador' && B.turno > 150) return {tipo:'desistir'};
         const golpeBom = (quem) => {
           let melhor = -1, idx = 0;
+          const validos = [];
           quem.golpes.forEach((g, i) => {
             if (g.pp <= 0) return; const G = GOLPES[g.nome] || {}; if (G.c === 'status') return;
+            /* golpe que não funciona agora: o Dream Eater do Haunter da Vera
+               contra um Dragonair acordado, 280 turnos seguidos */
+            const E = G.ef || {};
+            if (E.soDormindo && alvo.status !== 'sono') return;
+            if (E.soSeDormindo && quem.status !== 'sono') return;
+            if (eficacia(G.t, alvo.tipos) > 0) validos.push(i);
             const ef = eficacia(G.t, alvo.tipos); const PR = PR_GOLPE[g.nome] || {};
             const s = ef === 0 ? -1 : ((PR.p || 1) + (quem.tipos.includes(G.t) ? 1 : 0)) * ef * ((G.a || 100) / 100);
             if (s > melhor){ melhor = s; idx = i; }
           });
+          if (B.turno > 60 && validos.length > 1 && quem === p) idx = validos[B.turno % validos.length];
           return {idx, melhor};
         };
         /* selvagem muito acima: foge (o prudente foge antes) */
