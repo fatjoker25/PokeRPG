@@ -6,9 +6,11 @@
    moral do time, quanto a história tirou, quanto a fome tirou, quanto
    entrou, quantas Rações o time comeu e a chance de desobedecer.
 
-   Dois jogadores: o cuidadoso sai de todo Centro com três Rações na
-   mochila; o distraído nunca compra. Entre um capítulo e outro, os
-   dois andam de 4 a 10 horas e param num Centro sete vezes em dez.
+   Três jogadores: o cuidadoso sai de todo Centro com três Rações na
+   mochila; o distraído nunca compra; o parado também não, e ainda fica
+   de 10 a 40 dias parado entre um capítulo e outro, passando no Centro
+   a cada quatro dias e meio. Entre um capítulo e outro, todos andam de
+   4 a 10 horas e param num Centro sete vezes em dez.
 
    Uso:  node ferramentas/sim-moral.js [voltas por jogador]
 
@@ -26,7 +28,10 @@ for (const m of html.matchAll(/<script src="([^"]+)"/g)){ if (m[1].startsWith('h
 
 const VOLTAS = +process.argv[2] || 60;
 Estado.salvar = () => true;
-const PERFIS = {cuidadoso:{racao:3}, distraido:{racao:0}};
+/* o terceiro fica parado de 10 a 40 dias entre um capítulo e outro, sem
+   Ração e passando no Centro a cada quatro dias e meio: é o robô que
+   esperou 405 dias no capítulo 21 e terminou com o time todo em moral 0 */
+const PERFIS = {cuidadoso:{racao:3}, distraido:{racao:0}, parado:{racao:0, espera:[10, 40]}};
 /* insígnias típicas de quem chega a cada capítulo */
 const INSIGNIAS = n => Math.min(8, Math.floor((n + 1) / 2.2));
 const med = a => a.length ? +(a.reduce((x, y) => x + y, 0) / a.length).toFixed(1) : 0;
@@ -95,6 +100,10 @@ for (const nomePerfil in PERFIS){
       try { Historia.fecharCapitulo(); } catch (e){}
       const a0 = media(), r0 = Estado.contaItem('Ração');
       Relogio.avancar(Dados.entre(4, 10));
+      if (perfil.espera){
+        const dias = Dados.entre(perfil.espera[0], perfil.espera[1]);
+        for (let k = 0; k < dias * 2; k++){ Relogio.avancar(12); if (k % 9 === 8) d.time.forEach(x => curarTotal(x)); }
+      }
       if (Math.random() < 0.7){
         d.time.forEach(x => curarTotal(x));
         const falta = perfil.racao - Estado.contaItem('Ração');

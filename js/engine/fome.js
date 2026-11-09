@@ -8,7 +8,12 @@
    luta: com fome (24 h) ele às vezes se distrai e não faz o que você
    mandou; faminto (48 h) se distrai mais e começa a perder moral,
    FOME_MORAL a cada 12 horas, até FOME_TETO por jejum. Comer acaba com
-   tudo isso na hora.
+   tudo isso na hora. E a fome sozinha não derruba ninguém abaixo de
+   FOME_PISO, o mesmo piso da cena: o teto vale por jejum, e quem passava
+   semanas parado sem Ração (cura no Centro, dois dias sem comer, −10, de
+   novo) chegava a moral 0 — a Alba terminou a jornada assim, com uma
+   ordem em cada quatro ignorada no começo do jogo (sim-moral.js, o
+   jogador "parado").
    Come no Centro, em casa, em toda cura completa, nos dias que a
    história conta como vividos, quando volta do PC, com Ração na mão
    (um) ou alimentando o time (uma Ração dá pra todos) e no acampamento.
@@ -18,6 +23,7 @@ const FAMINTO_H = 48;         // dois dias: faminto
 const FOME_PASSO_H = 12;      // faminto, a cada meio dia…
 const FOME_MORAL = 2;         // …a moral cai isto
 const FOME_TETO = 10;         // e um jejum inteiro não tira mais que isto
+const FOME_PISO = 30;         // e a fome sozinha não leva ninguém abaixo disto
 const FOME_DISTRAI = 10;      // % de se distrair na luta, com fome
 const FAMINTO_DISTRAI = 20;   // % de se distrair na luta, faminto
 
@@ -84,9 +90,11 @@ const Fome = {
       const devidos = h < FAMINTO_H ? 0 : Math.min(maxCobrancas, Math.floor((h - FAMINTO_H) / FOME_PASSO_H) + 1);
       const novos = devidos - (p.fomeCobrada || 0);
       if (novos > 0){
-        p.moral = Math.max(0, (p.moral || 0) - novos * FOME_MORAL);
         p.fomeCobrada = devidos;
-        caiu.push(p);
+        /* quem já está no piso (ou abaixo, por outra coisa) não perde mais pela fome */
+        const antes = p.moral || 0;
+        if (antes > FOME_PISO) p.moral = Math.max(FOME_PISO, antes - novos * FOME_MORAL);
+        if (p.moral < antes) caiu.push(p);
       }
     });
     return caiu;

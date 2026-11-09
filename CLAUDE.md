@@ -973,7 +973,11 @@ moral 0 do capítulo 8 ao 12, com uma ordem em cada dez ignorada. Hoje:
   (`racaoNoTopo`) e o aviso da refeição (`Fome.avisos`);
 - sem Ração a fome chega **primeiro na luta** (`Fome.distrai`: 10% com
   fome, 20% faminto, em `Batalha.vontade`) e só o faminto perde moral,
-  `FOME_MORAL` a cada 12 h até `FOME_TETO` por jejum;
+  `FOME_MORAL` a cada 12 h até `FOME_TETO` por jejum, e **nunca abaixo
+  de `FOME_PISO` (30)**, o mesmo piso da cena. O teto vale por jejum, e
+  comer zera a conta: quem passava semanas parado sem Ração (cura no
+  Centro, dois dias sem comer, −10, de novo) chegava a moral 0 — a Alba
+  terminou a primeira rodada assim;
 - pulo de dia que a história conta como vivido **alimenta**: o
   `fecharCapitulo`, o ônibus pra Viridian, `Relogio.viver`. Pulo novo de
   `relogio.dia` escrito à mão chama `Fome.alimentarTime()` junto, senão o
@@ -981,11 +985,15 @@ moral 0 do capítulo 8 ao 12, com uma ordem em cada dez ignorada. Hoje:
 - a moral que **a cena tira** passa por `moralDaCena` (em `motor.js`): no
   máximo `MORAL_CENA_TETO` (10) por cena e nunca abaixo de
   `MORAL_PISO_CENA` (30). O que a cena dá entra inteiro. Abaixo de 30, só
-  o que acontece com o próprio Pokémon (fome, desistir da luta, par solto ou morto).
+  o que acontece com o próprio Pokémon na luta (desistir, par solto ou morto).
 `node ferramentas/sim-moral.js` anda os capítulos 1 a 20 com o motor e
-mede a moral por capítulo, de quem anda com Ração e de quem nunca compra:
-hoje a média fica entre 50 e 85, e a desobediência pela moral abaixo de
-2%. Mexeu em fome, em moral de cena ou na conta de desobedecer, roda ali.
+mede a moral por capítulo de três jogadores: o que anda com Ração, o que
+nunca compra e o parado, que nunca compra e ainda fica de 10 a 40 dias
+parado entre um capítulo e outro. Hoje a média dos dois primeiros fica
+entre 50 e 90 e a desobediência pela moral abaixo de 2%; o parado fica
+no piso, em 30, e desobedece de 4% a 15% (o máximo é no começo, com
+poucas insígnias). Mexeu em fome, em moral de cena ou na conta de
+desobedecer, roda ali.
 
 ## Trocas
 **Cada pessoa troca uma vez só** (`TROCAS`, em `mercado.js`;
