@@ -496,7 +496,20 @@ const SUSPEITO = [
       } else await page.locator('#modal button:has-text("Não")').click({timeout:3000}).catch(() => {});
       continue;
     }
-    if (await page.locator('.aprender-op').count()){ await page.locator('.aprender-op').first().click({timeout:3000}).catch(() => {}); continue; }
+    /* golpe novo com quatro na cabeça: esquece o mais fraco (força vezes
+       precisão; golpe de status vale pouco), ou não aprende se o novo for
+       o pior de todos. Antes ele esquecia sempre o primeiro da lista */
+    if (await page.locator('.aprender-op').count()){
+      await page.evaluate(() => {
+        const valor = n => { const x = GOLPES[n] || {}; return x.c === 'status' ? 10 : (x.p || 40) * ((x.a > 100 ? 100 : (x.a || 100)) / 100); };
+        const nome = el => ((el.querySelector('.gc-nome') || {}).innerText || '').trim();
+        const novo = nome(document.querySelector('.aprender-novo') || document.body);
+        const ops = [...document.querySelectorAll('.aprender-op')].map(nome);
+        let pior = 0; ops.forEach((n, i) => { if (valor(n) < valor(ops[pior])) pior = i; });
+        UI.responderGolpe(novo && valor(novo) <= valor(ops[pior]) ? -1 : pior);
+      }).catch(() => {});
+      continue;
+    }
     if (await page.locator('#modal .time-linha:not([disabled])').count() && await page.evaluate(() => Batalha.ativo).catch(() => false)){
       await page.locator('#modal .time-linha:not([disabled])').first().click({timeout:3000}).catch(() => {}); continue;
     }
@@ -719,6 +732,20 @@ const SUSPEITO = [
           }
           if (vende.length){ X.vendaDia = dia + id; return {f:'vender', itens:vende}; }
         }
+        /* TM de dano na mochila e alguém que aprende e ganha com ela: ensina
+           (uma tentativa por Pokémon e TM). A Alba carregava Thunderbolt e
+           Bubble Beam sem usar */
+        {
+          const valor = n => { const x = GOLPES[n] || {}; return x.c === 'status' ? 10 : (x.p || 40) * ((x.a > 100 ? 100 : (x.a || 100)) / 100); };
+          X.tm = X.tm || {};
+          for (const n of Object.keys(d.itens || {})){
+            const info = ITENS_INFO[n] || {};
+            if (info.tipo !== 'tm' || !Estado.contaItem(n) || !GOLPES[info.golpe] || GOLPES[info.golpe].c === 'status') continue;
+            const quem = d.time.find(p => !p.morto && aprendeTM(p, n) && !p.golpes.some(g => g.nome === info.golpe) && !X.tm[p.uid + n]
+              && (p.golpes.length < 4 || valor(info.golpe) > Math.min(...p.golpes.map(g => valor(g.nome))) * 1.2));
+            if (quem){ X.tm[quem.uid + n] = true; return {f:'tm', uid:quem.uid, nome:n, golpe:info.golpe}; }
+          }
+        }
         /* pedra de evolução na mochila e alguém que evolui com ela */
         if (J.pedra && typeof nomesDePedra === 'function'){
           for (const nome of nomesDePedra()){
@@ -881,7 +908,7 @@ const SUSPEITO = [
         return {f:'viajar', id:Dados.escolher(viz)};
       }).catch(e => ({f:'erro', e:e.message}));
       /* o que ele decidiu no mapa vai pro diário (andar entra pela viagem) */
-      if (!['viajar', 'erro', 'pc', 'pedra', 'loja', 'segurar', 'vender'].includes(dec.f))
+      if (!['viajar', 'erro', 'pc', 'pedra', 'loja', 'segurar', 'vender', 'tm'].includes(dec.f))
         await page.evaluate(x => window.__passo && __passo('mapa', {f:x.f, itens:x.itens || null}), dec).catch(() => {});
       if (dec.f === 'erro') anota('erro na decisão do mapa', dec.e || '');
       const assin = JSON.stringify(dec) + await page.evaluate(() => Estado.dados.local + Relogio.texto());
@@ -920,6 +947,15 @@ const SUSPEITO = [
           UI.fecharModal(true); Exploracao.tela();
           window.__passo && __passo('pc', {guardou:g, levou:t});
         }, dec).catch(e => erros.push('pc: ' + e.message));
+      } else if (dec.f === 'tm'){
+        /* pelo botão da mochila (Ensinar), e a pergunta de qual esquecer
+           responde a volta seguinte do laço */
+        await page.evaluate(x => {
+          const p = Estado.dados.time.find(y => y.uid === x.uid);
+          window.__passo && __passo('tm', {nome:x.nome, golpe:x.golpe, quem:p ? nomeExib(p) + ' (' + p.nome + ' ' + p.nivel + ')' : null});
+          UI.ensinarTMa(x.uid, x.nome);
+          if (!document.querySelector('.aprender-op')){ UI.fecharModal(true); Exploracao.tela(); }
+        }, dec).catch(e => erros.push('tm: ' + e.message));
       } else if (dec.f === 'segurar'){
         await page.evaluate(x => {
           const p = Estado.dados.time.find(y => y.uid === x.uid);
