@@ -813,7 +813,11 @@ const SUSPEITO = [
           if (alvo){
             const g = alvo.g;
             X.moerGin = X.moerGin || {};
-            if (prontoPra(g) || (X.moerGin[g.id] || 0) >= MOER_GIN){
+            /* quem caça ginásio vai quando está pronto; não pronto, segue a
+               história, que também dá nível. Treinar pro ginásio, até 150
+               vezes, é só pra quando a história pede a insígnia: a Vera
+               ficou 20 minutos no capítulo 7 treinando pro Blaine */
+            if (prontoPra(g) || (travado && (X.moerGin[g.id] || 0) >= MOER_GIN)){
               if (id === g.id){
                 if (statusGinasio(g).estado === 'fechado'){
                   /* fechado: cura antes, fora do dia dele, e espera a porta */
@@ -824,7 +828,7 @@ const SUSPEITO = [
                 return (hp < .9 && !g.horario) ? (curar() || {f:'ginasio'}) : {f:'ginasio'};
               }
               if (travado || J.ginasio) return {f:'viajar', id:alvo.cam[1]};
-            } else if (travado || nivelGinasio(g) <= ref + 6){
+            } else if (travado){
               /* fraco demais pro ginásio: treina no lugar mais perto que rende */
               X.moerGin[g.id] = (X.moerGin[g.id] || 0) + 1;
               const t = lugarDeTreino();
