@@ -1086,8 +1086,14 @@ const SUSPEITO = [
          Brock mais de dez vezes seguidas pelo "tentar de novo" */
       const perdeuAqui = await page.evaluate(() => { const g = Jogo.ginasioAtual || GINASIOS.find(x => x.id === Mundo.id());
         return g ? (((window.__extra || {}).gin || {})[g.id] || 0) : 0; }).catch(() => 0);
+      /* o atalho pro Centro no meio da cena só quando o time precisa: o
+         Dino passava pelo balcão de Viridian treze vezes num capítulo,
+         com o time inteiro, e o passo a passo enchia de cura à toa */
+      const precisaCurar = await page.evaluate(() => { const v = Estado.dados.time.filter(p => !p.morto);
+        return v.reduce((s, p) => s + Math.max(0, p.hp), 0) / Math.max(1, v.reduce((s, p) => s + p.hpMax, 0)) < .7; }).catch(() => false);
       const pesos = textos.map(t => (J.gosta && J.gosta.test(t) ? 3 : 1) * (/^Parar e olhar mais um pouco/.test(t) ? .5 : 1)
-        * (perdeuAqui >= 2 && /tentar de novo/i.test(t) ? 0 : 1));
+        * (perdeuAqui >= 2 && /tentar de novo/i.test(t) ? 0 : 1)
+        * (/^Ir ao balcão do Centro/.test(t) ? (precisaCurar ? 3 : 0) : 1));
       if (!pesos.some(x => x > 0)) pesos.fill(1);
       let r = Math.random() * pesos.reduce((s, x) => s + x, 0), k = 0;
       while (k < pesos.length - 1 && (r -= pesos[k]) > 0) k++;
