@@ -319,6 +319,8 @@ const Batalha = {
 
   /* ---------- naturezas: o bicho tem vontade própria ---------- */
   vontade(p, golpeNome, souAliado){
+    /* o Mewtwo que ainda não te aceitou decide sozinho (js/story/mewtwo.js) */
+    if (souAliado && typeof Mewtwo !== 'undefined' && !Mewtwo.aceitou(p)) return Mewtwo.decide(p);
     const nat = NATUREZAS[p.natureza] || {};
     const g = GOLPES[golpeNome];
     const moral = souAliado ? (p.moral !== undefined ? p.moral : 70) : 50;
@@ -633,6 +635,13 @@ const Batalha = {
         if (v.outroGolpe){
           const outros = atacante.golpes.filter((g,i) => i !== indiceGolpe);
           if (outros.length) nome = Dados.escolher(outros).nome;
+        }
+        /* quem decide escolhe o golpe pela conta da IA, sem o erro dela */
+        if (v.decide){
+          const erro = this.erroIA; this.erroIA = 0;
+          const k = this.iaEscolher(atacante, defensor, estAtk, estDef);
+          this.erroIA = erro;
+          if (atacante.golpes[k]) nome = atacante.golpes[k].nome;
         }
       }
     }

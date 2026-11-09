@@ -1110,6 +1110,41 @@ a luta com ele de HP cheio, e dava pra repetir pra sempre. Opção que
 volta pra uma cena de batalha recomeça a luta inteira: depois de vencer,
 ela vai pra outra cena.
 
+## O Mewtwo decide
+Todo Mewtwo do cinto — a Unidade 01, que sai da sala 704 na mão de quem
+venceu a Presidente (capítulo 20), e o que alguém pega no norte — julga
+quem carrega a Pokébola (`js/story/mewtwo.js`, `Mewtwo`). Foi pedido
+assim: estar no time não basta. Até aceitar, ele decide a cada ordem
+(`Mewtwo.decide`, chamado no começo do `Batalha.vontade`): segue na
+chance do juízo, e o que sobra se divide entre escolher o golpe sozinho
+(`decide`, pela conta da IA, sem o erro dela) e não fazer nada
+(`recusa`). A moral dele **não aparece** (`Mewtwo.escondeMoral`: o
+Sumário, o PC e a lista do sacrifício mostram "?"), e a Ração na mão tem
+fala própria.
+
+O juízo (`Mewtwo.juizo`, de 0 a 100) é o que ele vê: as insígnias, a
+força do resto do time (os três mais fortes sem ele, contados como três,
+até `DISTANCIA_DO_MEWTWO` níveis abaixo dele) e as decisões — a
+reputação, a moral dos outros e quem morreu no cinto desde que ele
+entrou (`p.desdeCap`). Ele aceita na tela do mapa (`Mewtwo.conferir`, no
+`Exploracao.tela`) com `INSIGNIAS_PRO_MEWTWO` (8), o resto do time forte
+o bastante (`Mewtwo.forca` em `FORCA_PRO_MEWTWO`, a metade: até 20 níveis
+dele) e o juízo em `JUIZO_PRA_ACEITAR` (70) — as duas primeiras são
+condição, as decisões só pesam no juízo: sai da Pokébola sem ninguém chamar, fica
+olhando e volta (`p.aceitou`, que não se desfaz), e a moral aparece com
+pelo menos o juízo daquele dia. A folha de regras diz o que pesa e não
+dá a conta, como a dos titulares.
+
+A Comissão acha que a Unidade obedece ("A Fase III precisa que ela
+obedeça"), a Presidente diz "Ela vai te obedecer", e as unidades de lote
+dos caminhos obedecem mesmo; a Unidade 01 é a exceção porque é Mewtwo. O
+texto do jogo nunca promete obediência: o aviso de quando ela entra diz
+só que entrou, a história dela diz que "na sala 704, fazia o que
+mandavam", e o 28 lê `unidadeAceitou(d)` pra dizer se ela olha pra você
+ou ainda está decidindo. A Unidade é "ela" pela palavra, sem ter sexo:
+`pron(p)` dá o feminino pra unidade fabricada com apelido de Unidade, e
+o `generoDe` continua sem sexo (ninguém cruza nem se apaixona por isso).
+
 ## A creche e os ovos
 Os bebês de Johto (Pichu, Cleffa, Igglybuff, Togepi, Tyrogue,
 Smoochum, Elekid, Magby) não nascem no mato: saem de ovo, e o ovo sai

@@ -47407,7 +47407,9 @@ function simboloGenero(p){
    gênero da palavra "Pokémon" — o jeito como qualquer um falaria.
    Uso: const g = pron(p); `${g.Ele} está sentad${g.o}`. */
 function pron(p){
-  const f = generoDe(p) === 'f';
+  /* a Unidade da Comissão é "ela" pela palavra, sem ter sexo: a história
+     inteira fala dela assim, e a luta dizia "Unidade 01 está confuso" */
+  const f = generoDe(p) === 'f' || !!(p && p.fabricada && /^Unidade\b/.test(p.apelido || ''));
   return f
     ? {ele:'ela', Ele:'Ela', dele:'dela', nele:'nela', o:'a', um:'uma', do:'da', ao:'à', pro:'pra', f:true}
     : {ele:'ele', Ele:'Ele', dele:'dele', nele:'nele', o:'o', um:'um', do:'do', ao:'ao', pro:'pro', f:false};
@@ -50088,6 +50090,8 @@ const Batalha = {
 
   /* ---------- naturezas: o bicho tem vontade própria ---------- */
   vontade(p, golpeNome, souAliado){
+    /* o Mewtwo que ainda não te aceitou decide sozinho (js/story/mewtwo.js) */
+    if (souAliado && typeof Mewtwo !== 'undefined' && !Mewtwo.aceitou(p)) return Mewtwo.decide(p);
     const nat = NATUREZAS[p.natureza] || {};
     const g = GOLPES[golpeNome];
     const moral = souAliado ? (p.moral !== undefined ? p.moral : 70) : 50;
@@ -50402,6 +50406,13 @@ const Batalha = {
         if (v.outroGolpe){
           const outros = atacante.golpes.filter((g,i) => i !== indiceGolpe);
           if (outros.length) nome = Dados.escolher(outros).nome;
+        }
+        /* quem decide escolhe o golpe pela conta da IA, sem o erro dela */
+        if (v.decide){
+          const erro = this.erroIA; this.erroIA = 0;
+          const k = this.iaEscolher(atacante, defensor, estAtk, estDef);
+          this.erroIA = erro;
+          if (atacante.golpes[k]) nome = atacante.golpes[k].nome;
         }
       }
     }
@@ -64022,6 +64033,127 @@ const Intuicao = {
     return [{tipo:'evolucao', texto:`${antes} passou pela mão da figura de capuz e voltou ${p.nome}. Ninguém sabe explicar por que isso acontece. Todo mundo já viu acontecer.`}];
   }
 };
+
+
+/* ===== js/story/mewtwo.js ===== */
+/* ============================================================
+   O MEWTWO DECIDE
+   Todo Mewtwo do cinto — a Unidade 01, que sai da sala 704 na mão
+   de quem venceu a Presidente, e o que alguém pega no norte — olha
+   quem carrega a Pokébola antes de emprestar o que tem. Estar no
+   time não basta: até aceitar quem joga, ele decide a cada ordem
+   (faz o que você pediu, escolhe o golpe sozinho ou não faz nada),
+   e a moral dele não aparece em lugar nenhum.
+
+   Ele aceita quando você tem as oito insígnias, o resto do time forte
+   o bastante (FORCA_PRO_MEWTWO) e o juízo dele chega a
+   JUIZO_PRA_ACEITAR. O juízo (0 a 100) é o que ele vê:
+   - as insígnias;
+   - a força do resto do time: os três mais fortes sem ele, contados
+     como três (time pequeno não chega), até DISTANCIA_DO_MEWTWO
+     níveis abaixo dele valem tudo. Quem precisa dele pra ganhar não
+     está pronto pra ele;
+   - as decisões: a reputação, como você trata os outros (a moral
+     deles) e quem morreu no seu cinto desde que ele entrou.
+   Antes de aceitar, a chance de seguir a ordem é o próprio juízo; o
+   que sobra se divide entre escolher o golpe (sem errar a conta, que
+   ele não erra) e não fazer nada.
+
+   A folha de regras diz o que pesa e não dá a conta, como a dos
+   titulares da Elite: a moral escondida foi o pedido. Aceitou, fica
+   aceito (p.aceitou), a moral aparece com pelo menos o juízo daquele
+   dia, e daí em diante ele obedece como qualquer outro.
+   ============================================================ */
+const JUIZO_PRA_ACEITAR = 70;
+const INSIGNIAS_PRO_MEWTWO = 8;
+const DISTANCIA_DO_MEWTWO = 15;
+const FORCA_PRO_MEWTWO = 15;          /* de 30: o resto do time a até 20 níveis dele */
+
+const Mewtwo = {
+  eh(p){ return !!p && p.dex === 150; },
+  /* já aceitou; quem não é Mewtwo não tem o que aceitar */
+  aceitou(p){ return !this.eh(p) || !!p.aceitou; },
+  /* a moral dele fica escondida até aceitar */
+  escondeMoral(p){ return this.eh(p) && !p.aceitou && !p.morto; },
+
+  insignias(d){ return (d.insignias || []).filter(i => i !== 'Título de Campeão').length; },
+
+  /* a força do resto do time, de 0 a 30: os três mais fortes sem ele,
+     contados como três, até DISTANCIA_DO_MEWTWO níveis abaixo dele valem
+     tudo, e cada nível a mais de distância tira 3 */
+  forca(p, d){
+    const outros = (d.time || []).filter(x => x && x.uid !== p.uid && !x.morto);
+    const fortes = outros.map(x => x.nivel || 0).sort((a, b) => b - a).slice(0, 3);
+    const doResto = fortes.reduce((s, n) => s + n, 0) / 3;
+    const falta = Math.max(0, (p.nivel - DISTANCIA_DO_MEWTWO) - doResto);
+    return Math.max(0, 30 - 3 * falta);
+  },
+
+  juizo(p, d){
+    d = d || (typeof Estado !== 'undefined' ? Estado.dados : null);
+    if (!p || !d) return 0;
+    if (p.desdeCap == null) p.desdeCap = d.capitulo || 0;
+    const outros = (d.time || []).filter(x => x && x.uid !== p.uid && !x.morto);
+    const forca = this.forca(p, d);
+    const R = d.reputacao || {};
+    const rep = Math.max(-15, Math.min(15, Math.round(((R.pontosBom || 0) - (R.pontosRuim || 0)) / 40)));
+    const morais = outros.map(x => x.moral == null ? 50 : x.moral);
+    const media = morais.length ? morais.reduce((s, n) => s + n, 0) / morais.length : 0;
+    const cuida = media >= 70 ? 15 : media >= 50 ? 8 : media >= 30 ? 0 : -10;
+    const mortes = (d.cemiterio || []).filter(x => (x.morreuNoCap || 0) >= p.desdeCap).length;
+    const ins = Math.min(20, this.insignias(d) * 2.5);
+    return Math.max(0, Math.min(100, Math.round(20 + ins + forca + rep + cuida - 10 * mortes)));
+  },
+
+  /* na luta, antes de aceitar: o que ele faz com a sua ordem. Devolve
+     null (segue), {decide} (escolhe o golpe) ou {recusa} (não faz nada),
+     com o texto, no formato do Batalha.vontade */
+  decide(p){
+    const j = this.juizo(p);
+    const r = Dados.entre(1, 100);
+    if (r <= j) return null;
+    const n = nomeVisivel(p);
+    if (r <= j + (100 - j) / 2)
+      return {decide:true, texto:Dados.escolher([
+        `${n} ouve a ordem e faz o que acha melhor.`,
+        `${n} não usa o que você pediu. Escolhe sozinh${pron(p).o}.`,
+        `${n} olha a ordem como quem lê uma sugestão, e faz outra coisa.`])};
+    return {recusa:true, texto:Dados.escolher([
+      `${n} olha pra você e não se mexe.`,
+      `${n} fica parad${pron(p).o}, olhando o que você vai fazer.`,
+      `${n} deixa a ordem passar.`])};
+  },
+
+  /* na tela do mapa: quem já pode aceitar aceita, e a moral aparece */
+  conferir(){
+    const d = typeof Estado !== 'undefined' ? Estado.dados : null;
+    if (!d || !d.time) return [];
+    const avisos = [];
+    for (const p of d.time){
+      if (!this.eh(p) || p.aceitou || p.morto) continue;
+      if (p.desdeCap == null) p.desdeCap = d.capitulo || 0;
+      /* as oito insígnias e o resto do time forte o bastante (a metade da
+         força) são condição; o resto do juízo é o que ele viu você decidir */
+      if (this.insignias(d) < INSIGNIAS_PRO_MEWTWO || this.forca(p, d) < FORCA_PRO_MEWTWO) continue;
+      const j = this.juizo(p, d);
+      if (j < JUIZO_PRA_ACEITAR) continue;
+      p.aceitou = true;
+      p.moral = Math.max(p.moral || 0, j);
+      Estado.registrar(`${nomeExib(p)} saiu da Pokébola sem ninguém chamar e ficou olhando. Depois voltou sozinh${pron(p).o}.`);
+      avisos.push({tipo:'pokemon', texto: p.fabricada
+        ? `${nomeExib(p)} sai da Pokébola sem ninguém chamar. Fica de pé na sua frente, do jeito que ficava na sala 704, e dessa vez não está esperando nada: está olhando você. Depois de um tempo, volta sozinha.`
+        : `${nomeExib(p)} sai da Pokébola sem ninguém chamar e fica olhando você por um tempo que você não consegue medir. Depois volta sozinho.`});
+    }
+    return avisos;
+  }
+};
+
+/* a Unidade 01 aceitou quem a carrega (pros textos do capítulo 28) */
+function unidadeAceitou(d){
+  d = d || Estado.dados;
+  const u = [...(d.time || []), ...(d.pc || [])].find(p => p && p.dex === 150 && p.fabricada);
+  return !!(u && u.aceitou);
+}
 
 
 /* ===== js/story/titulares.js ===== */
@@ -123216,15 +123348,17 @@ c20_levou_unidade01:{
   texto:[
     'Você tira a Pokébola da mão dela. Ela não impede, e não impedir, aqui, é uma decisão dela.',
     fala('a Presidente', 'Ela vai te obedecer.'),
-    fala('a Presidente', 'É pra isso que ela existe. {O senhor|A senhora} vai descobrir que essa é a pior parte.')
+    fala('a Presidente', 'É pra isso que ela existe. {O senhor|A senhora} vai descobrir que essa é a pior parte.'),
+    'Antes de a Pokébola fechar, a Unidade 01 vira a cabeça e olha pra você. É a primeira coisa que ela faz a manhã inteira sem ninguém mandar.'
   ],
   ef:{flag:'tem_a_unidade01',
       executar:d => {
         const p = unidadeComissao(150, 63, '01');
         p.moral = 0;
-        p.historia = 'Quarta tentativa da Comissão, a primeira que ficou de pé. Não fala, não pergunta, obedece.';
+        p.desdeCap = d.capitulo;
+        p.historia = 'Quarta tentativa da Comissão, a primeira que ficou de pé. Não fala, não pergunta. Na sala 704, fazia o que mandavam.';
         const onde = Estado.adicionar(p);
-        return [{tipo:'pokemon', texto:`${nomeExib(p)} (Nv 63) entrou no seu time. Moral 0. Ela vai obedecer a tudo.${notaDestino(onde)}`}];
+        return [{tipo:'pokemon', texto:`${nomeExib(p)} (Nv 63) entrou no seu time.${notaDestino(onde)}`}];
       },
       rep:{eixo:'ruim',delta:1,motivo:'Saiu da sala 704 com a Unidade 01 na mão'},
       registrar:'Levou a Unidade 01.'},
@@ -130962,7 +131096,7 @@ c23_risco01:{
     '"Eles me numeraram."',
     '"Numeraram."',
     d=>d.flags.viu_a_unidade01
-      ? '"E eles já tentaram te refazer quatro vezes. A quarta funcionou — o corpo funcionou. Ela não fala. Eles disseram que a Fase III não precisa que ela fale, precisa que ela obedeça."'
+      ? '"E eles já tentaram te refazer quatro vezes. A quarta funcionou — o corpo funcionou. Ela não fala. Eles disseram que a Fase III não precisa que ela fale, precisa que ela obedeça.' + (d.flags.tem_a_unidade01 ? ' Nisso eles erraram."' : '"')
       : '"E eles estão tentando te refazer numa escala industrial. Não uma mente. Uma população."'
   ],
   ef:{flag:'contou_da_comissao_a_mewtwo',
@@ -130983,10 +131117,12 @@ c23_mostrou_unidade:{
   texto:[
     'Você solta a Unidade 01 na câmara.',
     'Ela sai da Pokébola, fica de pé, e não faz mais nada. Não olha em volta. Não reage à caverna, ao frio, à altura do teto.',
-    'Espera ordem.',
+    d=>unidadeAceitou(d) ? 'Olha pra você. Desde aquele dia em que saiu da Pokébola sozinha, é pra você que ela olha.'
+      : 'Fica olhando você, do jeito que olha desde a sala 704: como quem ainda não decidiu.',
     'Mewtwo olha para ela por um tempo que você não consegue medir e que você não interrompe por nada no mundo.',
     'Depois ele faz uma coisa: pergunta alguma coisa pra ela. Você não ouve o quê — não foi pra você.',
-    'A Unidade 01 não responde. Continua de pé, esperando.',
+    d=>unidadeAceitou(d) ? 'A Unidade 01 não responde. Vira a cabeça e olha pra você, como se a pergunta tivesse que passar por você primeiro.'
+      : 'A Unidade 01 não responde. Continua de pé, olhando os dois.',
     'Ele pergunta de novo. Você sente a pressão da segunda pergunta atrás dos olhos, e ela é enorme, e ela é gentil.',
     'Nada.',
     'Quando ele finalmente vira pra você, a voz na sua cabeça está diferente de tudo que veio antes:',
@@ -131057,7 +131193,8 @@ c23_final_quinta:{
   vozes:['P','P','N','P','N','N','P','N','N'],
   texto:[
     '"Ela é sua. Faz o que você achar certo."',
-    'Mewtwo olha a Unidade 01, que continua de pé no meio da câmara esperando uma ordem que ninguém vai dar.',
+    d=>unidadeAceitou(d) ? 'Mewtwo olha a Unidade 01, que continua de pé no meio da câmara olhando você, esperando o que você vai decidir.'
+      : 'Mewtwo olha a Unidade 01, que continua de pé no meio da câmara, olhando os dois como olha tudo: sem dizer o que acha.',
     '"Eu não vou fazer nada com ela." Uma pausa longa. "Eu vou ficar com ela."',
     '"E fazer o quê?"',
     '"Perguntar." A voz na sua cabeça é muito quieta. "Todo dia. Pelo tempo que for."',
@@ -145478,7 +145615,7 @@ const UI = {
       } else {
         vivos.forEach(p => {
           c.appendChild(this.el(`<button class="escolha perigo" onclick="Jogo.sacrificar('${p.uid}')">
-            ${this.esc(nomeExib(p))} — Nv ${p.nivel}${p.naturezaVista ? ', ' + this.esc(p.natureza) : ''}, moral ${p.moral}</button>`));
+            ${this.esc(nomeExib(p))} — Nv ${p.nivel}${p.naturezaVista ? ', ' + this.esc(p.natureza) : ''}, moral ${typeof Mewtwo !== 'undefined' && Mewtwo.escondeMoral(p) ? '?' : p.moral}</button>`));
         });
       }
       return;
@@ -147116,6 +147253,8 @@ const UI = {
     const esp = DEX[p.dex] || {};
     const pct = p.hpMax ? Math.max(0, Math.round(p.hp / p.hpMax * 100)) : 0;
     const moral = Math.max(0, Math.min(100, p.moral == null ? 50 : p.moral));
+    /* a moral do Mewtwo que não te aceitou não aparece (js/story/mewtwo.js) */
+    const moralOculta = typeof Mewtwo !== 'undefined' && Mewtwo.escondeMoral(p);
 
     /* o botão diz por que não dá, quando não dá */
     let acao, rotulo, icone, trava = null;
@@ -147150,8 +147289,8 @@ const UI = {
           <span class="pc-barra grossa"><i style="width:${pct}%"></i></span>
           <span class="num mono">${p.hp}/${p.hpMax}</span></div>
         <div class="pc-medida"><span class="rot">Moral</span>
-          <span class="pc-barra grossa moral"><i style="width:${moral}%"></i></span>
-          <span class="num mono">${moral}</span></div>
+          <span class="pc-barra grossa moral"><i style="width:${moralOculta ? 0 : moral}%"></i></span>
+          <span class="num mono">${moralOculta ? '?' : moral}</span></div>
         <div class="pc-sec">Golpes</div>
         <div class="pc-golpes">${golpes}</div>
         ${(() => { const l = (typeof linhaDeAfinidade === 'function') ? linhaDeAfinidade(p) : null;
@@ -148158,14 +148297,16 @@ const UI = {
 
       vinculo: () => {
         const moral = Math.max(0, Math.min(100, p.moral || 0));
-        const palavra = moral >= 90 ? 'Inseparável' : moral >= 70 ? 'Confia em você' : moral >= 50 ? 'Pegando confiança'
+        const oculta = typeof Mewtwo !== 'undefined' && Mewtwo.escondeMoral(p);
+        const palavra = oculta ? 'Não dá pra dizer'
+                      : moral >= 90 ? 'Inseparável' : moral >= 70 ? 'Confia em você' : moral >= 50 ? 'Pegando confiança'
                       : moral >= 30 ? 'Desconfiad' + pron(p).o : 'Distante';
         const af = typeof linhaDeAfinidade === 'function' ? linhaDeAfinidade(p) : null;
         const fome = noTime && !p.morto && typeof Fome !== 'undefined' ? Fome.estado(p) : null;
         const par = noTime && typeof parDe === 'function' ? parDe(p) : null;
         return bloco('Moral', `<div class="sm-moral">
-            <div class="sm-moral-cab"><b>${e(palavra)}</b><span class="mono">${moral}/100</span></div>
-            <div class="rep-barra bom"><i style="width:${moral}%"></i></div>
+            <div class="sm-moral-cab"><b>${e(palavra)}</b><span class="mono">${oculta ? '?' : moral}/100</span></div>
+            <div class="rep-barra bom"><i style="width:${oculta ? 0 : moral}%"></i></div>
           </div>`)
           + bloco('Com você', dl([
             ['Afinidade', af ? M(af) : '<span class="sm-fraco">Ainda não dá pra dizer</span>'],
@@ -148884,7 +149025,9 @@ const UI = {
     } else if (info.tipo === 'moral'){
       Estado.usarItem(nome); p.moral = Math.min(100, p.moral + info.valor);
       if (typeof Fome !== 'undefined') Fome.alimentar(p);
-      msg = `${nomeExib(p)} come devagar e depois encosta em você. É pouco e é alguma coisa.`;
+      msg = typeof Mewtwo !== 'undefined' && Mewtwo.escondeMoral(p)
+        ? `${nomeExib(p)} come o que você deu sem tirar os olhos de você.`
+        : `${nomeExib(p)} come devagar e depois encosta em você. É pouco e é alguma coisa.`;
     } else if (info.tipo === 'vontade'){
       if (vontadeDe(p) >= vontadeMaxDe(p)) msg = `${nomeExib(p)} já está com a Vontade cheia.`;
       else { Estado.usarItem(nome); p.vontade = Math.min(vontadeMaxDe(p), vontadeDe(p) + info.valor);
@@ -149954,6 +150097,7 @@ const UI = {
       <div class="linha"><span class="k">Chance de desobedecer</span><span class="v">(60 − moral) ÷ 2 − insígnias × 3 − Carisma × 1,5</span></div>
       <div class="linha"><span class="k">Afinidade</span><span class="v">soma ou desconta dessa conta</span></div>
       <div class="linha"><span class="k">Par no time</span><span class="v">a chance que sobrar cai pela metade</span></div>
+      <div class="linha"><span class="k">Mewtwo</span><span class="v">estar no cinto não basta: até te aceitar, ele decide a cada ordem (faz o que você pediu, escolhe o golpe sozinho ou não faz nada), e a moral dele não aparece · aceita só com as oito insígnias e o resto do seu time forte o bastante perto dele, e pelo que viu você decidir: a sua reputação, como você trata os outros e quem morreu no seu cinto · aceitou, a moral aparece e ele obedece como qualquer outro</span></div>
       <div class="linha"><span class="k">Moral do inicial</span><span class="v">chega com 50 de 100 · quem já morava na sua casa chega com 100 · o resto vocês constroem juntos</span></div>
       <div class="linha"><span class="k">Fome</span><span class="v">um dia sem comer não muda nada · passou de um dia com Ração na mochila, o time come sozinho: uma Ração por dia que passou, +2 de moral em cada, e o topo da tela mostra quantas sobram · sem Ração: 24 h, com fome · 48 h, faminto</span></div>
       <div class="linha"><span class="k">Fome na luta</span><span class="v">com fome, 10% de chance de se distrair e não fazer o que você mandou · faminto, 20% · comer resolve na hora</span></div>
@@ -163533,6 +163677,9 @@ const Exploracao = {
     /* a intuição avisa quando chega a hora, sem dizer qual é a hora */
     const intu = typeof Intuicao !== 'undefined' ? Intuicao.talvez() : null;
     if (intu) avisos = (avisos || []).concat([intu]);
+    /* o Mewtwo que te olhava o bastante pra te aceitar: a moral aparece */
+    const aceitou = typeof Mewtwo !== 'undefined' ? Mewtwo.conferir() : [];
+    if (aceitou.length) avisos = (avisos || []).concat(aceitou);
     Estado.dados.modo = 'mundo';
     UI.limpar();
     UI.add(UI.topo());

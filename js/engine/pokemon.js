@@ -244,7 +244,9 @@ function simboloGenero(p){
    gênero da palavra "Pokémon" — o jeito como qualquer um falaria.
    Uso: const g = pron(p); `${g.Ele} está sentad${g.o}`. */
 function pron(p){
-  const f = generoDe(p) === 'f';
+  /* a Unidade da Comissão é "ela" pela palavra, sem ter sexo: a história
+     inteira fala dela assim, e a luta dizia "Unidade 01 está confuso" */
+  const f = generoDe(p) === 'f' || !!(p && p.fabricada && /^Unidade\b/.test(p.apelido || ''));
   return f
     ? {ele:'ela', Ele:'Ela', dele:'dela', nele:'nela', o:'a', um:'uma', do:'da', ao:'à', pro:'pra', f:true}
     : {ele:'ele', Ele:'Ele', dele:'dele', nele:'nele', o:'o', um:'um', do:'do', ao:'ao', pro:'pro', f:false};

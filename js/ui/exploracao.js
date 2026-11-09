@@ -23,6 +23,9 @@ const Exploracao = {
     /* a intuição avisa quando chega a hora, sem dizer qual é a hora */
     const intu = typeof Intuicao !== 'undefined' ? Intuicao.talvez() : null;
     if (intu) avisos = (avisos || []).concat([intu]);
+    /* o Mewtwo que te olhava o bastante pra te aceitar: a moral aparece */
+    const aceitou = typeof Mewtwo !== 'undefined' ? Mewtwo.conferir() : [];
+    if (aceitou.length) avisos = (avisos || []).concat(aceitou);
     Estado.dados.modo = 'mundo';
     UI.limpar();
     UI.add(UI.topo());

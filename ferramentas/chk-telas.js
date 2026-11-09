@@ -75,6 +75,8 @@ const SUSPEITO = [
     d.time = [criarPokemon(25, 30), sh, criarPokemon(130, 32), criarPokemon(94, 31), criarPokemon(143, 33), criarPokemon(65, 34)];
     d.time[3].segurando = 'Leftovers';
     d.pc = [criarPokemon(19, 10), criarPokemon(129, 20), criarPokemon(1, 15)];
+    /* a Unidade 01, que ainda não aceitou ninguém: a moral não aparece */
+    if (typeof unidadeComissao === 'function'){ const u = unidadeComissao(150, 63, '01'); u.moral = 37; u.desdeCap = 12; d.pc.push(u); }
     const m = criarPokemon(16, 12); m.morto = true; m.causaMorte = 'Rota 2, contra um Spearow'; d.cemiterio = [m];
     for (const [n, q] of [['Poké Ball', 10], ['Great Ball', 5], ['Ultra Ball', 3], ['Potion', 5], ['Super Potion', 2], ['Revive', 2],
       ['Antidote', 2], ['Full Heal', 1], ['Éter', 1], ['PP Up', 1], ['Bandagem', 2], ['Ração', 6], ['Repelente', 2], ['Moon Stone', 1],
@@ -464,6 +466,29 @@ const SUSPEITO = [
   for (const u of uids) await tentar('pc/' + u, x => UI.modalPC(x), u);
   for (const u of uids.slice(0, 2).concat(uids.slice(-1)))
     await tentar('pc/ver ficha', x => { UI.pcVerFicha(x); UI.sumario(x, 'golpes'); }, u);
+  /* o Mewtwo que ainda não te aceitou: a moral não aparece no Sumário
+     nem no PC; aceitou, aparece (js/story/mewtwo.js) */
+  {
+    const r = await page.evaluate(() => {
+      const u = Estado.dados.pc.find(p => p.dex === 150);
+      if (!u) return null;
+      const ler = () => ((document.querySelector('#modal') || {}).innerText || '');
+      const olha = () => { UI.sumario(u.uid, 'vinculo'); const sm = ler(); UI.fecharModal(true); UI.modalPC(u.uid); const pc = ler(); UI.fecharModal(true); return {sm, pc}; };
+      const antes = olha();
+      u.aceitou = true;
+      const depois = olha();
+      delete u.aceitou;
+      return {antesSm:/\?\/100/.test(antes.sm) && !/\b37\/100/.test(antes.sm), antesPc:/Moral\s*\?/.test(antes.pc),
+              depoisSm:/\b37\/100/.test(depois.sm), depoisPc:/Moral\s*37/.test(depois.pc)};
+    });
+    onde = 'mewtwo/moral';
+    if (!r) anota('mewtwo', 'a Unidade 01 não entrou no save de teste');
+    else {
+      if (!r.antesSm) anota('mewtwo', 'o Sumário mostra a moral do Mewtwo que ainda não aceitou');
+      if (!r.antesPc) anota('mewtwo', 'o PC mostra a moral do Mewtwo que ainda não aceitou');
+      if (!r.depoisSm || !r.depoisPc) anota('mewtwo', 'o Mewtwo aceitou e a moral continua escondida');
+    }
+  }
   /* a velocidade da luta nos Ajustes: as três, e volta pra 1× */
   for (const v of [2, 3, 1]) await tentar('ajustes/velocidade ' + v, x => { UI.modalAjustes(); Velocidade.definir(x); }, v);
   for (const aba of ['perfil', 'status', 'jornada', 'pessoas', 'mundo'])

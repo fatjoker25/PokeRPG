@@ -1026,7 +1026,7 @@ c23_risco01:{
     '"Eles me numeraram."',
     '"Numeraram."',
     d=>d.flags.viu_a_unidade01
-      ? '"E eles já tentaram te refazer quatro vezes. A quarta funcionou — o corpo funcionou. Ela não fala. Eles disseram que a Fase III não precisa que ela fale, precisa que ela obedeça."'
+      ? '"E eles já tentaram te refazer quatro vezes. A quarta funcionou — o corpo funcionou. Ela não fala. Eles disseram que a Fase III não precisa que ela fale, precisa que ela obedeça.' + (d.flags.tem_a_unidade01 ? ' Nisso eles erraram."' : '"')
       : '"E eles estão tentando te refazer numa escala industrial. Não uma mente. Uma população."'
   ],
   ef:{flag:'contou_da_comissao_a_mewtwo',
@@ -1047,10 +1047,12 @@ c23_mostrou_unidade:{
   texto:[
     'Você solta a Unidade 01 na câmara.',
     'Ela sai da Pokébola, fica de pé, e não faz mais nada. Não olha em volta. Não reage à caverna, ao frio, à altura do teto.',
-    'Espera ordem.',
+    d=>unidadeAceitou(d) ? 'Olha pra você. Desde aquele dia em que saiu da Pokébola sozinha, é pra você que ela olha.'
+      : 'Fica olhando você, do jeito que olha desde a sala 704: como quem ainda não decidiu.',
     'Mewtwo olha para ela por um tempo que você não consegue medir e que você não interrompe por nada no mundo.',
     'Depois ele faz uma coisa: pergunta alguma coisa pra ela. Você não ouve o quê — não foi pra você.',
-    'A Unidade 01 não responde. Continua de pé, esperando.',
+    d=>unidadeAceitou(d) ? 'A Unidade 01 não responde. Vira a cabeça e olha pra você, como se a pergunta tivesse que passar por você primeiro.'
+      : 'A Unidade 01 não responde. Continua de pé, olhando os dois.',
     'Ele pergunta de novo. Você sente a pressão da segunda pergunta atrás dos olhos, e ela é enorme, e ela é gentil.',
     'Nada.',
     'Quando ele finalmente vira pra você, a voz na sua cabeça está diferente de tudo que veio antes:',
@@ -1121,7 +1123,8 @@ c23_final_quinta:{
   vozes:['P','P','N','P','N','N','P','N','N'],
   texto:[
     '"Ela é sua. Faz o que você achar certo."',
-    'Mewtwo olha a Unidade 01, que continua de pé no meio da câmara esperando uma ordem que ninguém vai dar.',
+    d=>unidadeAceitou(d) ? 'Mewtwo olha a Unidade 01, que continua de pé no meio da câmara olhando você, esperando o que você vai decidir.'
+      : 'Mewtwo olha a Unidade 01, que continua de pé no meio da câmara, olhando os dois como olha tudo: sem dizer o que acha.',
     '"Eu não vou fazer nada com ela." Uma pausa longa. "Eu vou ficar com ela."',
     '"E fazer o quê?"',
     '"Perguntar." A voz na sua cabeça é muito quieta. "Todo dia. Pelo tempo que for."',

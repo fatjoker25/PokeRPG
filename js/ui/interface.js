@@ -1726,7 +1726,7 @@ const UI = {
       } else {
         vivos.forEach(p => {
           c.appendChild(this.el(`<button class="escolha perigo" onclick="Jogo.sacrificar('${p.uid}')">
-            ${this.esc(nomeExib(p))} — Nv ${p.nivel}${p.naturezaVista ? ', ' + this.esc(p.natureza) : ''}, moral ${p.moral}</button>`));
+            ${this.esc(nomeExib(p))} — Nv ${p.nivel}${p.naturezaVista ? ', ' + this.esc(p.natureza) : ''}, moral ${typeof Mewtwo !== 'undefined' && Mewtwo.escondeMoral(p) ? '?' : p.moral}</button>`));
         });
       }
       return;
@@ -3364,6 +3364,8 @@ const UI = {
     const esp = DEX[p.dex] || {};
     const pct = p.hpMax ? Math.max(0, Math.round(p.hp / p.hpMax * 100)) : 0;
     const moral = Math.max(0, Math.min(100, p.moral == null ? 50 : p.moral));
+    /* a moral do Mewtwo que não te aceitou não aparece (js/story/mewtwo.js) */
+    const moralOculta = typeof Mewtwo !== 'undefined' && Mewtwo.escondeMoral(p);
 
     /* o botão diz por que não dá, quando não dá */
     let acao, rotulo, icone, trava = null;
@@ -3398,8 +3400,8 @@ const UI = {
           <span class="pc-barra grossa"><i style="width:${pct}%"></i></span>
           <span class="num mono">${p.hp}/${p.hpMax}</span></div>
         <div class="pc-medida"><span class="rot">Moral</span>
-          <span class="pc-barra grossa moral"><i style="width:${moral}%"></i></span>
-          <span class="num mono">${moral}</span></div>
+          <span class="pc-barra grossa moral"><i style="width:${moralOculta ? 0 : moral}%"></i></span>
+          <span class="num mono">${moralOculta ? '?' : moral}</span></div>
         <div class="pc-sec">Golpes</div>
         <div class="pc-golpes">${golpes}</div>
         ${(() => { const l = (typeof linhaDeAfinidade === 'function') ? linhaDeAfinidade(p) : null;
@@ -4406,14 +4408,16 @@ const UI = {
 
       vinculo: () => {
         const moral = Math.max(0, Math.min(100, p.moral || 0));
-        const palavra = moral >= 90 ? 'Inseparável' : moral >= 70 ? 'Confia em você' : moral >= 50 ? 'Pegando confiança'
+        const oculta = typeof Mewtwo !== 'undefined' && Mewtwo.escondeMoral(p);
+        const palavra = oculta ? 'Não dá pra dizer'
+                      : moral >= 90 ? 'Inseparável' : moral >= 70 ? 'Confia em você' : moral >= 50 ? 'Pegando confiança'
                       : moral >= 30 ? 'Desconfiad' + pron(p).o : 'Distante';
         const af = typeof linhaDeAfinidade === 'function' ? linhaDeAfinidade(p) : null;
         const fome = noTime && !p.morto && typeof Fome !== 'undefined' ? Fome.estado(p) : null;
         const par = noTime && typeof parDe === 'function' ? parDe(p) : null;
         return bloco('Moral', `<div class="sm-moral">
-            <div class="sm-moral-cab"><b>${e(palavra)}</b><span class="mono">${moral}/100</span></div>
-            <div class="rep-barra bom"><i style="width:${moral}%"></i></div>
+            <div class="sm-moral-cab"><b>${e(palavra)}</b><span class="mono">${oculta ? '?' : moral}/100</span></div>
+            <div class="rep-barra bom"><i style="width:${oculta ? 0 : moral}%"></i></div>
           </div>`)
           + bloco('Com você', dl([
             ['Afinidade', af ? M(af) : '<span class="sm-fraco">Ainda não dá pra dizer</span>'],
@@ -5132,7 +5136,9 @@ const UI = {
     } else if (info.tipo === 'moral'){
       Estado.usarItem(nome); p.moral = Math.min(100, p.moral + info.valor);
       if (typeof Fome !== 'undefined') Fome.alimentar(p);
-      msg = `${nomeExib(p)} come devagar e depois encosta em você. É pouco e é alguma coisa.`;
+      msg = typeof Mewtwo !== 'undefined' && Mewtwo.escondeMoral(p)
+        ? `${nomeExib(p)} come o que você deu sem tirar os olhos de você.`
+        : `${nomeExib(p)} come devagar e depois encosta em você. É pouco e é alguma coisa.`;
     } else if (info.tipo === 'vontade'){
       if (vontadeDe(p) >= vontadeMaxDe(p)) msg = `${nomeExib(p)} já está com a Vontade cheia.`;
       else { Estado.usarItem(nome); p.vontade = Math.min(vontadeMaxDe(p), vontadeDe(p) + info.valor);
@@ -6202,6 +6208,7 @@ const UI = {
       <div class="linha"><span class="k">Chance de desobedecer</span><span class="v">(60 − moral) ÷ 2 − insígnias × 3 − Carisma × 1,5</span></div>
       <div class="linha"><span class="k">Afinidade</span><span class="v">soma ou desconta dessa conta</span></div>
       <div class="linha"><span class="k">Par no time</span><span class="v">a chance que sobrar cai pela metade</span></div>
+      <div class="linha"><span class="k">Mewtwo</span><span class="v">estar no cinto não basta: até te aceitar, ele decide a cada ordem (faz o que você pediu, escolhe o golpe sozinho ou não faz nada), e a moral dele não aparece · aceita só com as oito insígnias e o resto do seu time forte o bastante perto dele, e pelo que viu você decidir: a sua reputação, como você trata os outros e quem morreu no seu cinto · aceitou, a moral aparece e ele obedece como qualquer outro</span></div>
       <div class="linha"><span class="k">Moral do inicial</span><span class="v">chega com 50 de 100 · quem já morava na sua casa chega com 100 · o resto vocês constroem juntos</span></div>
       <div class="linha"><span class="k">Fome</span><span class="v">um dia sem comer não muda nada · passou de um dia com Ração na mochila, o time come sozinho: uma Ração por dia que passou, +2 de moral em cada, e o topo da tela mostra quantas sobram · sem Ração: 24 h, com fome · 48 h, faminto</span></div>
       <div class="linha"><span class="k">Fome na luta</span><span class="v">com fome, 10% de chance de se distrair e não fazer o que você mandou · faminto, 20% · comer resolve na hora</span></div>

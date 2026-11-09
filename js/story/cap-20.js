@@ -2088,15 +2088,17 @@ c20_levou_unidade01:{
   texto:[
     'Você tira a Pokébola da mão dela. Ela não impede, e não impedir, aqui, é uma decisão dela.',
     fala('a Presidente', 'Ela vai te obedecer.'),
-    fala('a Presidente', 'É pra isso que ela existe. {O senhor|A senhora} vai descobrir que essa é a pior parte.')
+    fala('a Presidente', 'É pra isso que ela existe. {O senhor|A senhora} vai descobrir que essa é a pior parte.'),
+    'Antes de a Pokébola fechar, a Unidade 01 vira a cabeça e olha pra você. É a primeira coisa que ela faz a manhã inteira sem ninguém mandar.'
   ],
   ef:{flag:'tem_a_unidade01',
       executar:d => {
         const p = unidadeComissao(150, 63, '01');
         p.moral = 0;
-        p.historia = 'Quarta tentativa da Comissão, a primeira que ficou de pé. Não fala, não pergunta, obedece.';
+        p.desdeCap = d.capitulo;
+        p.historia = 'Quarta tentativa da Comissão, a primeira que ficou de pé. Não fala, não pergunta. Na sala 704, fazia o que mandavam.';
         const onde = Estado.adicionar(p);
-        return [{tipo:'pokemon', texto:`${nomeExib(p)} (Nv 63) entrou no seu time. Moral 0. Ela vai obedecer a tudo.${notaDestino(onde)}`}];
+        return [{tipo:'pokemon', texto:`${nomeExib(p)} (Nv 63) entrou no seu time.${notaDestino(onde)}`}];
       },
       rep:{eixo:'ruim',delta:1,motivo:'Saiu da sala 704 com a Unidade 01 na mão'},
       registrar:'Levou a Unidade 01.'},
