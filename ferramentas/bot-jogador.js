@@ -530,7 +530,7 @@ const SUSPEITO = [
         const J = window.__jeito || {}, X = window.__extra || (window.__extra = {});
         if (!p || !alvo) return null;
         /* luta nova: zera a conta de Pokébolas jogadas e de trocas */
-        if (X.lutaUid !== alvo.uid){ X.lutaUid = alvo.uid; X.bolasNaLuta = 0; X.trocasNaLuta = 0; }
+        if (X.lutaUid !== alvo.uid){ X.lutaUid = alvo.uid; X.bolasNaLuta = 0; X.trocasNaLuta = 0; X.turnoDesde = B.turno; }
         if (B.fase === 'ameaca') return {tipo:'fugirAmeaca'};
         /* selvagem que não acaba (os dois lados só com golpe de status): vai embora */
         if (B.tipo === 'selvagem' && B.turno > 60 && B.fuga !== false) return {tipo:'fugir'};
@@ -610,6 +610,14 @@ const SUSPEITO = [
         if (melhorBanco && ((B.estAliado || {}).precisao || 0) <= -3 && (X.trocasNaLuta || 0) < 3 && !(B.estAliado && B.estAliado.presoTurnos)){
           X.trocasNaLuta = (X.trocasNaLuta || 0) + 1;
           return {tipo:'trocar', uid:melhorBanco.x.uid};
+        }
+        /* luta empacada: 25 turnos contra o mesmo e ele ainda com 60% do
+           HP, quem joga põe o mais forte do banco. O Butterfree da Alba
+           tirava 1 de um Blissey que se curava, e foram cem turnos */
+        if (B.tipo === 'treinador' && B.turno - (X.turnoDesde || 0) >= 25 && alvo.hp >= alvo.hpMax * 0.6
+            && (X.trocasNaLuta || 0) < 3 && !(B.estAliado && B.estAliado.presoTurnos)){
+          const forte = banco.slice().sort((u, v) => v.nivel - u.nivel)[0];
+          if (forte && forte.nivel > p.nivel){ X.trocasNaLuta = (X.trocasNaLuta || 0) + 1; X.turnoDesde = B.turno; return {tipo:'trocar', uid:forte.uid}; }
         }
         if (melhorBanco && (X.trocasNaLuta || 0) < 2 && (meu.melhor < 1 || p.hp <= p.hpMax * 0.2)
             && melhorBanco.s > Math.max(1, meu.melhor * 1.5) && !(B.estAliado && B.estAliado.presoTurnos)){

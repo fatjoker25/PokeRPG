@@ -1276,6 +1276,15 @@ const Batalha = {
       if (G.c === 'status'){
         /* clima que já está valendo não se chama de novo */
         if (G.ef && G.ef.clima) return (this.clima && this.clima.tipo === G.ef.clima) ? 0 : 40;
+        /* cura vale pelo que falta no HP: com ele quase cheio é turno
+           jogado fora. Sem isso o Blissey dava Softboiled com 13 de 14,
+           que era a nota de quem está bem (45), e a luta passava de cem
+           turnos */
+        if (E.cura){
+          const frac = p.hp / p.hpMax;
+          if (frac >= 0.8) return 0;
+          return frac < 0.35 ? 80 : frac < 0.55 ? 50 : 15;
+        }
         /* golpe de estágio que não muda mais nada não se escolhe, e o que
            está perto do limite vale menos. Sem isso a IA repetia
            Smokescreen com a precisão do outro já em −6, ninguém acertava

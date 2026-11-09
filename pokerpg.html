@@ -51037,6 +51037,15 @@ const Batalha = {
       if (G.c === 'status'){
         /* clima que já está valendo não se chama de novo */
         if (G.ef && G.ef.clima) return (this.clima && this.clima.tipo === G.ef.clima) ? 0 : 40;
+        /* cura vale pelo que falta no HP: com ele quase cheio é turno
+           jogado fora. Sem isso o Blissey dava Softboiled com 13 de 14,
+           que era a nota de quem está bem (45), e a luta passava de cem
+           turnos */
+        if (E.cura){
+          const frac = p.hp / p.hpMax;
+          if (frac >= 0.8) return 0;
+          return frac < 0.35 ? 80 : frac < 0.55 ? 50 : 15;
+        }
         /* golpe de estágio que não muda mais nada não se escolhe, e o que
            está perto do limite vale menos. Sem isso a IA repetia
            Smokescreen com a precisão do outro já em −6, ninguém acertava
@@ -149916,6 +149925,7 @@ const UI = {
       <div class="linha"><span class="k">FOR, VIT, ESP, INS, DES</span><span class="v">cada estágio é 1 ponto no atributo · nenhum fica abaixo de 1</span></div>
       <div class="linha"><span class="k">Precisão e evasão</span><span class="v">cada estágio é 1 sucesso a mais ou a menos · a precisão de quem ataca contra a evasão de quem apanha</span></div>
       <div class="linha"><span class="k">No limite</span><span class="v">golpe que sobe ou baixa estágio já em ±6 não faz nada · o adversário não escolhe esse golpe, e quanto mais perto do limite, menos ele escolhe</span></div>
+      <div class="linha"><span class="k">Cura de golpe</span><span class="v">Recover, Softboiled e Synthesis devolvem metade do HP · Rest enche e faz dormir · o adversário não se cura com 80% do HP ou mais, e quanto mais ferido, mais ele escolhe a cura</span></div>
       <div class="linha"><span class="k">Efeito de golpe de dano</span><span class="v">nos dados de chance do livro · golpe sem essa ficha segue a chance dos jogos</span></div>
 
       <h3>Estados que os golpes deixam</h3>
