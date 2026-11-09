@@ -150285,7 +150285,7 @@ const UI = {
       <div class="linha"><span class="k">Enquanto falta</span><span class="v">o capítulo aparece no lugar, fechado, dizendo quantas faltam · ele não começa até você ter as que faltam</span></div>
       <div class="linha"><span class="k">Nível do líder</span><span class="v">pela faixa de insígnias que você tem (base 10 com 0–1, 18 com 2–3, 28 com 4–5, 40 com 6 ou mais, + a dificuldade do ginásio, + 3 por insígnia dentro da faixa) · nunca abaixo da área do capítulo em que você está − 8 · cada Pokémon da fila um nível acima, o ás +2</span></div>
       <div class="linha"><span class="k">Ginásio que não te aceita</span><span class="v">se nenhum ginásio que falta está aberto pra você (recusou, trancado), a porta abre com o que você tem</span></div>
-      <div class="linha"><span class="k">Hora marcada</span><span class="v">o ginásio de Cinnabar só aceita desafio às quintas, das 14h às 18h · fora disso a porta diz o dia de hoje e você volta na quinta · conta como aberto, então não destrava porta nenhuma</span></div>
+      <div class="linha"><span class="k">Hora marcada</span><span class="v">o ginásio de Cinnabar só aceita desafio às quintas, das 14h às 18h · fora disso a porta diz o dia de hoje e você volta na quinta · "Esperar a hora passar" na cidade, na quinta à tarde antes das 14h, espera até a porta abrir · conta como aberto, então não destrava porta nenhuma</span></div>
       <p class="sussurro">Os capítulos condicionais (29 a 32) não cobram insígnia. Ginásio se desafia na porta dele, na cidade, na ordem que você quiser.</p>
 
       <h3>Caminho que a escolha fecha</h3>
@@ -164083,7 +164083,19 @@ const Exploracao = {
   /* sentar e esperar um período: na rota, quem passa pode parar */
   esperar(){
     const L = Mundo.atual();
-    Mundo.passar(1);
+    /* o ginásio daqui abre no meio do período (Cinnabar: quinta, às 14h):
+       esperar leva até a porta abrir, não até o fim da tarde. Pulando de
+       período em período (0h, 6h, 12h, 18h), a janela das 14h às 18h
+       nunca chegava, e quem apertava "Esperar" ao meio-dia de quinta
+       achava a porta fechada às seis */
+    const r0 = Estado.dados.relogio;
+    sincronizarHora(r0);
+    const g = typeof GINASIOS !== 'undefined' ? GINASIOS.find(x => x.id === Mundo.id() && x.horario) : null;
+    const h = g && g.horario, c = typeof Calendario !== 'undefined' ? Calendario.hoje() : null;
+    if (h && c && c.semanaIdx === h.dia && r0.hora < h.de && Math.floor(r0.hora / 6) === Math.floor(h.de / 6)
+        && !Estado.dados.insignias.includes(g.insignia))
+      Mundo.passarHoras(h.de - r0.hora);
+    else Mundo.passar(1);
     if (this.surge('esperar')) return;
     Estado.salvar('auto');
     const r = Estado.dados.relogio;

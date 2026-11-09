@@ -1279,7 +1279,12 @@ capítulo — `requer` pula o capítulo em vez de esperar.
 Ginásio com `horario` (Cinnabar: quinta, das 14h às 18h, como diz a
 folha da porta no capítulo 14) responde `fechado` fora da hora, com o
 dia de hoje no texto. `ginasioAoAlcance` conta `fechado` como aberto:
-é só esperar, então não destrava porta nenhuma.
+é só esperar, então não destrava porta nenhuma. A janela não casa com
+os períodos (fazer coisa pula pro começo do próximo: 0h, 6h, 12h,
+18h), então o "Esperar a hora passar" na cidade dele, no dia certo e
+antes da hora, leva até a porta abrir (`Exploracao.esperar`). Sem isso
+quem esperava ao meio-dia de quinta ia direto pras 18h, e um robô
+esperou 513 vezes em Cinnabar.
 
 O líder também acompanha a estrada: `pisoDoGinasio()` põe o time no
 mínimo em `nivelArea` do capítulo atual − `ABAIXO_DA_AREA` (8). Sem

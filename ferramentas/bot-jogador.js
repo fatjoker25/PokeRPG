@@ -791,7 +791,9 @@ const SUSPEITO = [
         const prontoPra = g => ref >= nivelGinasio(g) - (J.ginasio ? 1 : 0) + 2 * perdeu(g.id);
         const daqui = GINASIOS.find(x => x.id === id && statusGinasio(x).estado === 'disponivel');
         if (daqui && prontoPra(daqui)){
-          if (hp < .9){ const c = curar(); if (c) return c; }
+          /* porta com hora marcada (Cinnabar): curar agora gasta a janela,
+             então entra como está */
+          if (hp < .9 && !daqui.horario){ const c = curar(); if (c) return c; }
           return {f:'ginasio'};
         }
         if (travado || J.ginasio){
@@ -804,7 +806,15 @@ const SUSPEITO = [
             const g = alvo.g;
             X.moerGin = X.moerGin || {};
             if (prontoPra(g) || (X.moerGin[g.id] || 0) >= MOER_GIN){
-              if (id === g.id) return statusGinasio(g).estado === 'fechado' ? {f:'esperar'} : (hp < .9 ? (curar() || {f:'ginasio'}) : {f:'ginasio'});
+              if (id === g.id){
+                if (statusGinasio(g).estado === 'fechado'){
+                  /* fechado: cura antes, fora do dia dele, e espera a porta */
+                  const diaDele = g.horario && Calendario.hoje().semanaIdx === g.horario.dia;
+                  if (hp < .9 && !diaDele){ const c = curar(); if (c) return c; }
+                  return {f:'esperar'};
+                }
+                return (hp < .9 && !g.horario) ? (curar() || {f:'ginasio'}) : {f:'ginasio'};
+              }
               if (travado || J.ginasio) return {f:'viajar', id:alvo.cam[1]};
             } else if (travado || nivelGinasio(g) <= ref + 6){
               /* fraco demais pro ginásio: treina no lugar mais perto que rende */

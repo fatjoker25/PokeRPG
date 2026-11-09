@@ -631,7 +631,19 @@ const Exploracao = {
   /* sentar e esperar um período: na rota, quem passa pode parar */
   esperar(){
     const L = Mundo.atual();
-    Mundo.passar(1);
+    /* o ginásio daqui abre no meio do período (Cinnabar: quinta, às 14h):
+       esperar leva até a porta abrir, não até o fim da tarde. Pulando de
+       período em período (0h, 6h, 12h, 18h), a janela das 14h às 18h
+       nunca chegava, e quem apertava "Esperar" ao meio-dia de quinta
+       achava a porta fechada às seis */
+    const r0 = Estado.dados.relogio;
+    sincronizarHora(r0);
+    const g = typeof GINASIOS !== 'undefined' ? GINASIOS.find(x => x.id === Mundo.id() && x.horario) : null;
+    const h = g && g.horario, c = typeof Calendario !== 'undefined' ? Calendario.hoje() : null;
+    if (h && c && c.semanaIdx === h.dia && r0.hora < h.de && Math.floor(r0.hora / 6) === Math.floor(h.de / 6)
+        && !Estado.dados.insignias.includes(g.insignia))
+      Mundo.passarHoras(h.de - r0.hora);
+    else Mundo.passar(1);
     if (this.surge('esperar')) return;
     Estado.salvar('auto');
     const r = Estado.dados.relogio;
