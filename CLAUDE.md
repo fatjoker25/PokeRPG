@@ -880,6 +880,12 @@ vem mais vezes).
   mínimo da espécie em `PR_ESPECIE`, dá um ponto a cada 7 níveis e manda
   pro atributo de maior peso (atributo base dos jogos, natureza ×1,3/×0,7,
   Vitalidade nunca abaixo da média), sem passar do teto. É determinístico.
+- **Quem ficou pra trás da área ganha mais experiência**
+  (`fatorDeAtraso`, em `pokemon.js`): +10% por nível abaixo da área do
+  capítulo, até o dobro, na luta e no treino. A curva das áreas (36 no
+  14, 46 no 15, 60 no 20) corre mais que qualquer lugar aberto antes da
+  oitava insígnia, e os cinco robôs da primeira rodada chegaram ao 21 de
+  3 a 8 níveis abaixo dela.
 - **`js/data/pokerole.js` é gerado**, não se edita à mão:
   `python3 ferramentas/gerar-pokerole.py <Pokerole-Data>/v3.0`. Golpe novo
   em `GOLPES` precisa rodar o gerador; nome que difere do livro entra em
@@ -1375,6 +1381,17 @@ mínimo em `nivelArea` do capítulo atual − `ABAIXO_DA_AREA` (8). Sem
 isso, quem deixava Misty pra depois achava ela no 17 num capítulo de
 área 30. Ginásio se desafia na porta, na cidade (`Cidade.ginasio`); a
 lista de ginásios não existe mais e não volta.
+
+E não corre na frente dela: `tetoDoGinasio()` põe o time no máximo no
+nível da área e o ás no máximo `ACIMA_DA_AREA` (4) acima. O Blue (sete
+insígnias, dificuldade 8) chegava ao capítulo 21, de área 52, com o ás
+no 60 e vencia três de cada quatro times no nível da área; com
+dificuldade 4 vence pouco menos de dois em três e continua o ginásio
+mais duro. `node ferramentas/sim-ginasios.js` mede cada ginásio no
+capítulo em que costuma cair, com o time 6 e 3 abaixo, no nível e 2
+acima da área. Nível pesa pouco aqui (um ponto de atributo a cada 7
+níveis): o que decide é espécie e forma, e por isso treinar semanas pro
+Blue não adiantava. Mexeu em nível de líder, roda ali.
 
 ## Barreiras de escolha
 `js/story/barreiras.js` fecha passagem do mapa pelo que o jogador fez

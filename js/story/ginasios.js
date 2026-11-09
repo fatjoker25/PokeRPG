@@ -376,7 +376,10 @@ const GINASIOS = [
 /* ── VIRIDIAN — BLUE ────────────────────────────────────── */
 {
   id:'viridian', cidade:'Viridian', lider:'Blue', tipo:'variado',
-  insignia:'Insígnia Terra', dificuldade:8, requerInsignias:7,
+  /* dificuldade 4, não 8: com 8 ele chegava ao capítulo 21 com o time
+     inteiro no teto da área e vencia três de cada quatro times no nível
+     dela; com 4 é o ginásio mais duro sem ser parede (sim-ginasios.js) */
+  insignia:'Insígnia Terra', dificuldade:4, requerInsignias:7,
   escaloes:[
     {min:0, especies:[18, 65, 112, 130, 59, 0], variacoes:[53,85,49,80,113]}       // só existe um escalão: ele só recebe quem tem sete
   ],
@@ -456,6 +459,20 @@ function pisoDoGinasio(){
   const cap = Historia.capitulo(d.capitulo);
   return cap && cap.nivelArea ? cap.nivelArea - ABAIXO_DA_AREA : 0;
 }
+/* Nem corre na frente dela: o time fica no máximo no nível da área do
+   capítulo, e o ás no máximo ACIMA_DA_AREA acima. Sem isso o Blue (sete
+   insígnias, dificuldade 8) chegava ao capítulo 21, de área 52, com o
+   ás no 60 — e antes da oitava insígnia nenhum lugar aberto passa do
+   44, então o treino parava no 49. Os cinco robôs ficaram de 306 a
+   789 dias ali; no simulador, o time no nível da área ganhava dele uma
+   vez em quatro (ferramentas/sim-ginasios.js). */
+const ACIMA_DA_AREA = 4;
+function tetoDoGinasio(){
+  const d = Estado.dados;
+  if (!d || d.capitulo < 2 || typeof Historia === 'undefined') return Infinity;
+  const cap = Historia.capitulo(d.capitulo);
+  return cap && cap.nivelArea ? cap.nivelArea : Infinity;
+}
 
 function timeGinasio(g, nForcado){
   // ginásio ainda trancado mostra o time do momento em que ele abre
@@ -484,6 +501,9 @@ function timeGinasio(g, nForcado){
     const ace = contra[Estado.j.inicialDex] || Dados.escolher([3,6,9]);
     lista[lista.length-1] = {dex:ace, nivel: base + lista.length + 3};
   }
+  /* o teto da área (o piso já entrou no base) */
+  const teto = tetoDoGinasio();
+  if (teto < Infinity) lista.forEach((x, i) => { x.nivel = Math.min(x.nivel, i === lista.length - 1 ? teto + ACIMA_DA_AREA : teto); });
   return lista;
 }
 

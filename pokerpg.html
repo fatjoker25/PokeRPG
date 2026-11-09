@@ -47488,6 +47488,22 @@ function expGanha(vencido, venceu){
   return Math.max(1, Math.floor(bruto));
 }
 
+/* Quem ficou pra trás da área do capítulo aprende mais depressa: +10%
+   de experiência (de luta e de treino) por nível abaixo dela, até o
+   dobro. Os cinco robôs da primeira rodada chegaram ao capítulo 21 de
+   3 a 8 níveis abaixo da área, e a curva das áreas (36 no 14, 46 no 15,
+   60 no 20) corre mais que qualquer lugar aberto antes da oitava
+   insígnia. Quem está no nível da área ou acima ganha o de sempre. */
+const EXP_ATRAS_POR_NIVEL = 0.1, EXP_ATRAS_TETO = 2;
+function fatorDeAtraso(p){
+  const d = typeof Estado !== 'undefined' ? Estado.dados : null;
+  if (!d || !p || typeof Historia === 'undefined' || !Historia.capitulo) return 1;
+  const cap = Historia.capitulo(d.capitulo);
+  const area = cap && cap.nivelArea;
+  if (!area || p.nivel >= area) return 1;
+  return Math.min(EXP_ATRAS_TETO, 1 + EXP_ATRAS_POR_NIVEL * (area - p.nivel));
+}
+
 /* Sobe de nível e recalcula stats. Retorna eventos.
 
    Como nos jogos, o motor não decide nada pelo jogador:
@@ -51434,7 +51450,9 @@ const Batalha = {
       const ganhos = new Map();
       if (quem.length) quem.forEach(p => ganhos.set(p, Math.max(1, Math.floor(metade / quem.length))));
       if (donos.length) donos.forEach(p => ganhos.set(p, (ganhos.get(p) || 0) + Math.max(1, Math.floor((total - metade) / donos.length))));
-      for (const [p, cada] of ganhos){
+      for (const [p, porIgual] of ganhos){
+        /* quem ficou pra trás da área do capítulo ganha mais (fatorDeAtraso) */
+        const cada = Math.max(1, Math.floor(porIgual * fatorDeAtraso(p)));
         /* a barra de experiência anda na tela: o evento leva de onde
            ela saiu, aonde chegou e quantas vezes encheu no meio */
         const pctDe = p.expProx ? Math.min(100, p.exp / p.expProx * 100) : 0, nvDe = p.nivel;
@@ -56123,7 +56141,10 @@ const GINASIOS = [
 /* ── VIRIDIAN — BLUE ────────────────────────────────────── */
 {
   id:'viridian', cidade:'Viridian', lider:'Blue', tipo:'variado',
-  insignia:'Insígnia Terra', dificuldade:8, requerInsignias:7,
+  /* dificuldade 4, não 8: com 8 ele chegava ao capítulo 21 com o time
+     inteiro no teto da área e vencia três de cada quatro times no nível
+     dela; com 4 é o ginásio mais duro sem ser parede (sim-ginasios.js) */
+  insignia:'Insígnia Terra', dificuldade:4, requerInsignias:7,
   escaloes:[
     {min:0, especies:[18, 65, 112, 130, 59, 0], variacoes:[53,85,49,80,113]}       // só existe um escalão: ele só recebe quem tem sete
   ],
@@ -56203,6 +56224,20 @@ function pisoDoGinasio(){
   const cap = Historia.capitulo(d.capitulo);
   return cap && cap.nivelArea ? cap.nivelArea - ABAIXO_DA_AREA : 0;
 }
+/* Nem corre na frente dela: o time fica no máximo no nível da área do
+   capítulo, e o ás no máximo ACIMA_DA_AREA acima. Sem isso o Blue (sete
+   insígnias, dificuldade 8) chegava ao capítulo 21, de área 52, com o
+   ás no 60 — e antes da oitava insígnia nenhum lugar aberto passa do
+   44, então o treino parava no 49. Os cinco robôs ficaram de 306 a
+   789 dias ali; no simulador, o time no nível da área ganhava dele uma
+   vez em quatro (ferramentas/sim-ginasios.js). */
+const ACIMA_DA_AREA = 4;
+function tetoDoGinasio(){
+  const d = Estado.dados;
+  if (!d || d.capitulo < 2 || typeof Historia === 'undefined') return Infinity;
+  const cap = Historia.capitulo(d.capitulo);
+  return cap && cap.nivelArea ? cap.nivelArea : Infinity;
+}
 
 function timeGinasio(g, nForcado){
   // ginásio ainda trancado mostra o time do momento em que ele abre
@@ -56231,6 +56266,9 @@ function timeGinasio(g, nForcado){
     const ace = contra[Estado.j.inicialDex] || Dados.escolher([3,6,9]);
     lista[lista.length-1] = {dex:ace, nivel: base + lista.length + 3};
   }
+  /* o teto da área (o piso já entrou no base) */
+  const teto = tetoDoGinasio();
+  if (teto < Infinity) lista.forEach((x, i) => { x.nivel = Math.min(x.nivel, i === lista.length - 1 ? teto + ACIMA_DA_AREA : teto); });
   return lista;
 }
 
@@ -150504,6 +150542,7 @@ const UI = {
       <div class="linha"><span class="k">Experiência por nocaute</span><span class="v">total de base do vencido × nível dele ÷ 22 · ×1,5 se era de treinador</span></div>
       <div class="linha"><span class="k">Diferença de nível</span><span class="v">× ((2 × nível dele + 10) ÷ (nível dele + o seu + 10))^2,5 · bater em quem é bem mais fraco quase não rende</span></div>
       <div class="linha"><span class="k">Treinar</span><span class="v">uma vez por dia · rende até 5 níveis acima da área e menos a cada nível acima dela · Carisma decide quanto</span></div>
+      <div class="linha"><span class="k">Atrás da área</span><span class="v">quem está abaixo do nível da área do capítulo ganha +10% de experiência, de luta e de treino, por nível abaixo dela, até o dobro · no nível da área ou acima, o de sempre</span></div>
       <div class="linha"><span class="k">Divisão</span><span class="v">por igual entre quem entrou contra aquele adversário e ainda está de pé</span></div>
       <div class="linha"><span class="k">Exp. Share</span><span class="v">quem segura fica com metade, mesmo sem entrar · quem lutou divide a outra metade</span></div>
       <div class="linha"><span class="k">PP Up</span><span class="v">+1 de Vontade máxima num Pokémon, pra sempre · até 3 vezes no mesmo</span></div>
@@ -150690,7 +150729,7 @@ const UI = {
       <div class="linha"><span class="k">Capítulo 22, Planalto Indigo</span><span class="v">8</span></div>
       <div class="linha"><span class="k">Rota 23 → Caminho da Vitória</span><span class="v">8 · as guaritas não deixam subir com menos</span></div>
       <div class="linha"><span class="k">Enquanto falta</span><span class="v">o capítulo aparece no lugar, fechado, dizendo quantas faltam · ele não começa até você ter as que faltam</span></div>
-      <div class="linha"><span class="k">Nível do líder</span><span class="v">pela faixa de insígnias que você tem (base 10 com 0–1, 18 com 2–3, 28 com 4–5, 40 com 6 ou mais, + a dificuldade do ginásio, + 3 por insígnia dentro da faixa) · nunca abaixo da área do capítulo em que você está − 8 · cada Pokémon da fila um nível acima, o ás +2</span></div>
+      <div class="linha"><span class="k">Nível do líder</span><span class="v">pela faixa de insígnias que você tem (base 10 com 0–1, 18 com 2–3, 28 com 4–5, 40 com 6 ou mais, + a dificuldade do ginásio, + 3 por insígnia dentro da faixa) · nunca abaixo da área do capítulo em que você está − 8, e nunca acima dela: o time no máximo no nível da área, o ás no máximo 4 acima · cada Pokémon da fila um nível acima, o ás +2</span></div>
       <div class="linha"><span class="k">Ginásio que não te aceita</span><span class="v">se nenhum ginásio que falta está aberto pra você (recusou, trancado), a porta abre com o que você tem</span></div>
       <div class="linha"><span class="k">Hora marcada</span><span class="v">o ginásio de Cinnabar só aceita desafio às quintas, das 14h às 18h · fora disso a porta diz o dia de hoje e você volta na quinta · "Esperar a hora passar" na cidade, na quinta à tarde antes das 14h, espera até a porta abrir · conta como aberto, então não destrava porta nenhuma</span></div>
       <p class="sussurro">Os capítulos condicionais (29 a 32) não cobram insígnia. Ginásio se desafia na porta dele, na cidade, na ordem que você quiser.</p>
@@ -164445,7 +164484,7 @@ const Exploracao = {
     const xpAntes = aprendem.map(p => ({uid:p.uid, nivel:p.nivel, exp:p.exp, expProx:p.expProx}));
     aprendem.forEach(p => {
       const acima = Math.max(0, p.nivel - L.nivel);
-      let q = Math.round(ganho * Math.max(0.2, 1 - acima / 6));
+      let q = Math.round(ganho * Math.max(0.2, 1 - acima / 6) * fatorDeAtraso(p));
       /* nunca passa do teto num dia só, por maior que seja o ganho */
       let falta = p.expProx - p.exp;
       for (let n = p.nivel + 1; n < teto; n++) falta += expNecessaria(n);

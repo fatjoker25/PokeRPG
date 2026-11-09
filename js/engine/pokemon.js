@@ -319,6 +319,22 @@ function expGanha(vencido, venceu){
   return Math.max(1, Math.floor(bruto));
 }
 
+/* Quem ficou pra trás da área do capítulo aprende mais depressa: +10%
+   de experiência (de luta e de treino) por nível abaixo dela, até o
+   dobro. Os cinco robôs da primeira rodada chegaram ao capítulo 21 de
+   3 a 8 níveis abaixo da área, e a curva das áreas (36 no 14, 46 no 15,
+   60 no 20) corre mais que qualquer lugar aberto antes da oitava
+   insígnia. Quem está no nível da área ou acima ganha o de sempre. */
+const EXP_ATRAS_POR_NIVEL = 0.1, EXP_ATRAS_TETO = 2;
+function fatorDeAtraso(p){
+  const d = typeof Estado !== 'undefined' ? Estado.dados : null;
+  if (!d || !p || typeof Historia === 'undefined' || !Historia.capitulo) return 1;
+  const cap = Historia.capitulo(d.capitulo);
+  const area = cap && cap.nivelArea;
+  if (!area || p.nivel >= area) return 1;
+  return Math.min(EXP_ATRAS_TETO, 1 + EXP_ATRAS_POR_NIVEL * (area - p.nivel));
+}
+
 /* Sobe de nível e recalcula stats. Retorna eventos.
 
    Como nos jogos, o motor não decide nada pelo jogador:

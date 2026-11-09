@@ -6451,6 +6451,7 @@ const UI = {
       <div class="linha"><span class="k">Experiência por nocaute</span><span class="v">total de base do vencido × nível dele ÷ 22 · ×1,5 se era de treinador</span></div>
       <div class="linha"><span class="k">Diferença de nível</span><span class="v">× ((2 × nível dele + 10) ÷ (nível dele + o seu + 10))^2,5 · bater em quem é bem mais fraco quase não rende</span></div>
       <div class="linha"><span class="k">Treinar</span><span class="v">uma vez por dia · rende até 5 níveis acima da área e menos a cada nível acima dela · Carisma decide quanto</span></div>
+      <div class="linha"><span class="k">Atrás da área</span><span class="v">quem está abaixo do nível da área do capítulo ganha +10% de experiência, de luta e de treino, por nível abaixo dela, até o dobro · no nível da área ou acima, o de sempre</span></div>
       <div class="linha"><span class="k">Divisão</span><span class="v">por igual entre quem entrou contra aquele adversário e ainda está de pé</span></div>
       <div class="linha"><span class="k">Exp. Share</span><span class="v">quem segura fica com metade, mesmo sem entrar · quem lutou divide a outra metade</span></div>
       <div class="linha"><span class="k">PP Up</span><span class="v">+1 de Vontade máxima num Pokémon, pra sempre · até 3 vezes no mesmo</span></div>
@@ -6637,7 +6638,7 @@ const UI = {
       <div class="linha"><span class="k">Capítulo 22, Planalto Indigo</span><span class="v">8</span></div>
       <div class="linha"><span class="k">Rota 23 → Caminho da Vitória</span><span class="v">8 · as guaritas não deixam subir com menos</span></div>
       <div class="linha"><span class="k">Enquanto falta</span><span class="v">o capítulo aparece no lugar, fechado, dizendo quantas faltam · ele não começa até você ter as que faltam</span></div>
-      <div class="linha"><span class="k">Nível do líder</span><span class="v">pela faixa de insígnias que você tem (base 10 com 0–1, 18 com 2–3, 28 com 4–5, 40 com 6 ou mais, + a dificuldade do ginásio, + 3 por insígnia dentro da faixa) · nunca abaixo da área do capítulo em que você está − 8 · cada Pokémon da fila um nível acima, o ás +2</span></div>
+      <div class="linha"><span class="k">Nível do líder</span><span class="v">pela faixa de insígnias que você tem (base 10 com 0–1, 18 com 2–3, 28 com 4–5, 40 com 6 ou mais, + a dificuldade do ginásio, + 3 por insígnia dentro da faixa) · nunca abaixo da área do capítulo em que você está − 8, e nunca acima dela: o time no máximo no nível da área, o ás no máximo 4 acima · cada Pokémon da fila um nível acima, o ás +2</span></div>
       <div class="linha"><span class="k">Ginásio que não te aceita</span><span class="v">se nenhum ginásio que falta está aberto pra você (recusou, trancado), a porta abre com o que você tem</span></div>
       <div class="linha"><span class="k">Hora marcada</span><span class="v">o ginásio de Cinnabar só aceita desafio às quintas, das 14h às 18h · fora disso a porta diz o dia de hoje e você volta na quinta · "Esperar a hora passar" na cidade, na quinta à tarde antes das 14h, espera até a porta abrir · conta como aberto, então não destrava porta nenhuma</span></div>
       <p class="sussurro">Os capítulos condicionais (29 a 32) não cobram insígnia. Ginásio se desafia na porta dele, na cidade, na ordem que você quiser.</p>

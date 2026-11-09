@@ -1602,7 +1602,9 @@ const Batalha = {
       const ganhos = new Map();
       if (quem.length) quem.forEach(p => ganhos.set(p, Math.max(1, Math.floor(metade / quem.length))));
       if (donos.length) donos.forEach(p => ganhos.set(p, (ganhos.get(p) || 0) + Math.max(1, Math.floor((total - metade) / donos.length))));
-      for (const [p, cada] of ganhos){
+      for (const [p, porIgual] of ganhos){
+        /* quem ficou pra trás da área do capítulo ganha mais (fatorDeAtraso) */
+        const cada = Math.max(1, Math.floor(porIgual * fatorDeAtraso(p)));
         /* a barra de experiência anda na tela: o evento leva de onde
            ela saiu, aonde chegou e quantas vezes encheu no meio */
         const pctDe = p.expProx ? Math.min(100, p.exp / p.expProx * 100) : 0, nvDe = p.nivel;
