@@ -206,6 +206,16 @@ const ITENS_INFO = {
                       ficha:'Evolui Sunkern e Gloom (→ Bellossom) · consumida no uso',
                       desc:'Laranja e morna por dentro, como seixo que passou o dia inteiro no sol. Não esfria.',
                       sabido:{usou_pedra:'Você já viu uma dessas mudar um corpo inteiro em quatro segundos.'}},
+  /* a troca sem ninguém do outro lado: usado como pedra, evolui quem só
+     evolui trocando (evolucaoPeloCabo) */
+  'Link Cable':      {tipo:'cabo', cat:'Evolução',
+                      /* os de Johto só depois da Pokédex Nacional, como a troca */
+                      get ficha(){ return 'Evolui Kadabra, Machoke, Graveler e Haunter'
+                        + (typeof dexNacional === 'function' && dexNacional()
+                          ? ' · segurando o item da troca, também Onix e Scyther (Metal Coat), Poliwhirl e Slowpoke (King\'s Rock), Seadra (Dragon Scale) e Porygon (Up-Grade), e o item vai junto' : '')
+                        + ' · consumido no uso'; },
+                      desc:'Cabo grosso de duas pontas, com o plugue redondo da máquina de troca do Centro. Encaixado na Pokébola, faz a viagem de uma troca sem ninguém do outro lado. Só aguenta uma viagem.',
+                      sabido:{usou_cabo:'Você já viu a luz correr por um desses e voltar com outro Pokémon dentro da Pokébola.'}},
 
   /* ─────────── fósseis ─────────── */
   'Fóssil de Hélice':{tipo:'fossil', cat:'Fóssil', dex:138,
@@ -255,6 +265,20 @@ const ITENS_INFO = {
   'Amulet Coin':  {tipo:'equipar', cat:'Segurado', efeito:{dinheiro:1.5},
                    ficha:'SEGURADO · +50% de dinheiro em vitórias contra treinador',
                    desc:'Uma moeda dourada num cordão vermelho. Não vale nada como moeda.'},
+  /* os quatro que nos jogos vão segurados na troca que evolui: aqui é
+     com o Link Cable (ITEM_DA_TROCA), e só com a Pokédex Nacional */
+  "King's Rock":  {tipo:'equipar', cat:'Segurado', efeito:{encolhe:1},
+                   ficha:'SEGURADO · golpe de dano que acerta rola 1 dado de chance de fazer o outro se encolher · com o Link Cable, Poliwhirl e Slowpoke evoluem segurando',
+                   desc:'Uma coroa pequena de pontas grossas, que fica torta em qualquer cabeça. Quem usa parece ter certeza de alguma coisa.'},
+  'Metal Coat':   {tipo:'equipar', cat:'Segurado', efeito:{golpeTipo:'Metálico', dadosTipo:1},
+                   ficha:'SEGURADO · +1 dado de dano em golpe Metálico · com o Link Cable, Onix e Scyther evoluem segurando',
+                   desc:'Um frasco de tampa de rosca com uma película de metal dentro que não escorre. Pesa como se estivesse cheio de chumbo.'},
+  'Dragon Scale': {tipo:'equipar', cat:'Segurado', efeito:{golpeTipo:'Dragão', dadosTipo:1},
+                   ficha:'SEGURADO · +1 dado de dano em golpe de Dragão · com o Link Cable, Seadra evolui segurando',
+                   desc:'Uma escama do tamanho de uma mão aberta, dura como casco e fria como pedra de rio. Ninguém diz de quem caiu.'},
+  'Up-Grade':     {tipo:'equipar', cat:'Segurado', efeito:{},
+                   ficha:'SEGURADO · sem efeito na luta · com o Link Cable, Porygon evolui segurando',
+                   desc:'Uma caixinha transparente da Silph com um disco dentro e uma etiqueta que diz só UP. Ninguém na loja sabe explicar pra que serve.'},
 
   /* ─────────── ferramenta ─────────── */
   'Machado':        {tipo:'ferramenta', cat:'Ferramenta', ficha:'Abre mato fechado, cerca viva e tapume de madeira',
@@ -350,6 +374,23 @@ function evoluiPorTroca(dexId){
   if (typeof dexNacional === 'function' && dexNacional() && typeof EVO_JOHTO_TROCA !== 'undefined')
     return EVO_JOHTO_TROCA[dexId] || 0;
   return 0;
+}
+
+/* ============================================================
+   LINK CABLE
+   A troca sem a outra pessoa: o cabo faz a viagem que o Pokémon
+   faria, e quem evolui numa troca evolui com ele. Quem nos jogos
+   evolui trocado segurando um item só evolui segurando o mesmo
+   item, e o item vai na viagem, como na troca. Os de Johto
+   continuam esperando a Pokédex Nacional (evoluiPorTroca).
+   ============================================================ */
+const ITEM_DA_TROCA = {61:"King's Rock", 79:"King's Rock", 95:'Metal Coat', 123:'Metal Coat', 117:'Dragon Scale', 137:'Up-Grade'};
+function evolucaoPeloCabo(p){
+  if (!p || p.morto) return null;
+  const destino = evoluiPorTroca(p.dex);
+  if (!destino || !DEX[destino]) return null;
+  const item = ITEM_DA_TROCA[p.dex] || null;
+  return {destino, item, pronto: !item || p.segurando === item};
 }
 
 /* O que o jogador já aprendeu na prática ou porque alguém contou */

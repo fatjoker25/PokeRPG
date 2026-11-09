@@ -5,7 +5,7 @@
      - presente e luta capturável escritos nas cenas (ef.pokemon,
        criarPokemon com número, batalha selvagem ou lendária);
      - troca (só conta se o que a pessoa pede também dá pra ter);
-   e fecha pelas evoluções: nível, pedra que se compra ou acha, e troca
+   e fecha pelas evoluções: nível, pedra que se compra ou acha, o Link Cable, e troca
    só onde existe quem faça (TROCA_QUE_EVOLUI, abaixo).
    Quem só chega por sorteio de uma vez só (compra do depósito, uma das
    três versões de uma troca) sai como "só na sorte": não é erro, mas
@@ -82,6 +82,9 @@ const pedraExiste = nome => PEDRA_EXISTE[nome];
 const TROCA_QUE_EVOLUI = new Set(
   (texto.match(/TROCA_QUE_EVOLUI_SERVICO\s*=\s*\[([\d,\s]*)\]/) || [, ''])[1].split(',').filter(Boolean).map(Number));
 [64, 93].forEach(d => TROCA_QUE_EVOLUI.add(d));
+/* o Link Cable (evolucaoPeloCabo, em estado.js) faz a troca que evolui
+   sem ninguém do outro lado: conta se alguma loja vende o cabo */
+const CABO_NA_LOJA = /itens:\[[^\]]*'Link Cable'/.test(texto) && /function evolucaoPeloCabo/.test(est);
 
 const trocas = Object.values(TROCAS).flatMap(g => [].concat(g));
 const fechar = () => {
@@ -109,6 +112,7 @@ const fechar = () => {
         for (const [pedra, pares] of Object.entries(PEDRAS))
           if (pares[d] && pedraExiste(pedra)) alvos.push([pares[d], `${pedra} em ${e.nome}`]);
         if (EVO_TROCA[d] && TROCA_QUE_EVOLUI.has(d)) alvos.push([EVO_TROCA[d], `troca de ${e.nome}`]);
+        else if (EVO_TROCA[d] && CABO_NA_LOJA) alvos.push([EVO_TROCA[d], `Link Cable em ${e.nome}`]);
         for (const [a, de] of alvos){
           if (mapa === sorte && certo.has(a)) continue;
           if (!mapa.has(a)){ poe(mapa, a, de); mudou = true; }

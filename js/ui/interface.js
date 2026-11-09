@@ -4840,6 +4840,10 @@ const UI = {
       } else if (info.tipo === 'pedra'){
         const tab = pedrasDe(n) || {};
         time = vivos.map(p => tab[p.dex] ? icone(p, 'sim', 'funciona') : icone(p, 'nao', 'nada')).join('');
+      } else if (info.tipo === 'cabo'){
+        /* quem evolui trocado segurando um item: sem o item, não vai */
+        time = vivos.map(p => { const c = evolucaoPeloCabo(p);
+          return !c ? icone(p, 'nao', 'nada') : c.pronto ? icone(p, 'sim', 'funciona') : icone(p, 'nao', 'falta item'); }).join('');
       } else if (info.tipo === 'equipar'){
         const naoPega = p => info.efeito && info.efeito.soQuemEvolui && !aindaEvolui(p.dex);
         time = vivos.map(p => p.segurando === n ? icone(p, naoPega(p) ? 'nao' : 'ja', naoPega(p) ? 'segura à toa' : 'segura')
@@ -4863,7 +4867,7 @@ const UI = {
       acoes.push(btn('Descartar', 'UI.descartarFerramenta(this.dataset.item)', 'perigo', 'alerta'));
       nota = `Não serve pra nada assim. Dá pra descartar e comprar outr${f ? 'a' : 'o'}.`;
     } else {
-      const usavel = ['pedra','curaJogador','cura','revive','status','moral','repelente','vontade','tm','vontadeMais'].includes(info.tipo)
+      const usavel = ['pedra','cabo','curaJogador','cura','revive','status','moral','repelente','vontade','tm','vontadeMais'].includes(info.tipo)
         || (info.tipo === 'mapa' && d.modo === 'mundo');
       if (usavel){
         const rot = info.tipo === 'tm' ? 'Ensinar' : info.tipo === 'mapa' ? 'Abrir o mapa' : info.tipo === 'curaJogador' ? 'Usar em você' : 'Usar';
@@ -5083,6 +5087,18 @@ const UI = {
       this.modal('', '<p>O cheiro é horrível e funciona. Por uns períodos, o mato em volta fica mais quieto do que devia.</p>', false, 'mochila');
       return;
     }
+    if (info.tipo === 'cabo'){
+      const pelo = d.time.map(p => ({p, c:evolucaoPeloCabo(p)})).filter(x => x.c);
+      if (!pelo.length)
+        return this.modal('', `<p class="nada">Você encaixa o cabo na Pokébola de cada um, um por um, e a luz não corre.
+          Nenhum deles é de evoluir numa troca.</p>`, false, 'mochila');
+      return this.modal('Em quem?', pelo.map(({p, c}) => c.pronto
+        ? `<button class="escolha" data-uid="${p.uid}" onclick="UI.aplicarCabo(this.dataset.uid)">
+            ${this.esc(nomeExib(p))} <span class="pd">vira ${this.esc(DEX[c.destino].nome)} — e não volta</span></button>`
+        : `<button class="escolha" disabled>
+            ${this.esc(nomeExib(p))} <span class="pd">só segurando ${this.esc(c.item)}</span></button>`).join(''),
+        false, 'mochila');
+    }
     if (info.tipo === 'pedra'){
       const tabela = pedrasDe(nome) || {};
       const alvos = d.time.filter(p => !p.morto && tabela[p.dex]);
@@ -5115,6 +5131,25 @@ const UI = {
     this.modal('', `<p>Leva uns quatro segundos e não tem som nenhum.</p>
       <p>${this.esc(antigo)} muda de tamanho, de cor e de peso na sua mão, e quando acaba você está segurando ${this.esc(nomeExib(p))} e a pedra virou pó entre os seus dedos.</p>
       <p class="sussurro">Ele te olha exatamente do mesmo jeito. Isso é a parte que ninguém conta.</p>`, false, 'mochila');
+  },
+
+  /* o cabo: a viagem de uma troca sem ninguém do outro lado. O item
+     que a troca pede vai junto e não volta, como nos jogos */
+  aplicarCabo(uid){
+    const d = Estado.dados, nome = 'Link Cable';
+    const p = d.time.find(x => x.uid === uid);
+    const c = evolucaoPeloCabo(p);
+    if (!p || !c || !c.pronto || !Estado.contaItem(nome)) return;
+    Estado.usarItem(nome);
+    const antigo = nomeExib(p);
+    if (c.item) p.segurando = null;
+    evoluir(p, c.destino);
+    Estado.marcar('usou_cabo');
+    Estado.registrar(`${antigo} virou ${p.nome} pelo ${nome}${c.item ? `, segurando ${c.item}` : ''}.`);
+    Estado.salvar('auto');
+    this.modal('', `<p>Você encaixa as duas pontas na mesma Pokébola. A luz corre pelo cabo de uma ponta à outra, uma vez só, e a Pokébola esquenta na sua mão.</p>
+      <p>Quando ela abre, quem sai é ${this.esc(nomeExib(p))}.${c.item ? ` ${this.esc(c.item === "King's Rock" ? 'A King\'s Rock' : c.item === 'Dragon Scale' ? 'A Dragon Scale' : 'O ' + c.item)} que ${pron(p).ele} segurava não voltou da viagem.` : ''}</p>
+      <p class="sussurro">O cabo esfriou e não acende mais.</p>`, false, 'mochila');
   },
 
   aplicarItemFora(nome, uid){
@@ -6083,7 +6118,8 @@ const UI = {
       ${L('Espécie não catalogada', 'aparece como ???')}
       ${L('O que entra pro time', 'catalogado na hora — captura, troca, presente')}
       ${L('Brilhante', 'cerca de 1 em 1000 · Sorte aperta até 1 em 300')}
-      ${L('Troca', 'quem só evolui trocando chega já evoluído na sua mão')}`;
+      ${L('Troca', 'quem só evolui trocando chega já evoluído na sua mão')}
+      ${L('Link Cable', 'usado como pedra, evolui quem só evolui trocando · quem a troca pede segurando um item, só segurando o item')}`;
 
     if (k === 'pokenav') return `
       <h3>A agenda</h3>
@@ -6252,6 +6288,7 @@ const UI = {
       <div class="linha"><span class="k">Mirror Move · Psych Up · Conversion</span><span class="v">repete o último golpe do outro · copia os estágios dele · vira do tipo de um golpe seu</span></div>
       <div class="linha"><span class="k">Swagger</span><span class="v">Força do outro +2 e confusão</span></div>
       <div class="linha"><span class="k">Sleep Talk · Snore</span><span class="v">só dormindo · Sleep Talk sorteia outro golpe seu · Snore pode fazer encolher (30%)</span></div>
+      <div class="linha"><span class="k">Encolher</span><span class="v">quem se encolhe perde a ação do turno · só pega quem ainda não agiu: quem já tinha agido, passa, e não leva pro turno seguinte</span></div>
       <div class="linha"><span class="k">Fury Cutter</span><span class="v">+1 de poder a cada acerto seguido, até +4</span></div>
       <div class="linha"><span class="k">Self-Destruct · Explosion</span><span class="v">quem usa desmaia no fim do golpe, acertando ou não · se os dois caem juntos, o adversário manda o próximo e você troca o seu</span></div>
       <div class="linha"><span class="k">Return · Frustration</span><span class="v">poder pela moral: 5 com moral 100 · 5 com moral 0 (moral ÷ 20)</span></div>
@@ -6560,7 +6597,7 @@ const UI = {
       <div class="linha"><span class="k">Preço</span><span class="v">base × o multiplicador da cidade</span></div>
       <div class="linha"><span class="k">Mais barato</span><span class="v">Celadon (0,85×) e o cais de Vermilion (0,9×)</span></div>
       <div class="linha"><span class="k">Mais caro</span><span class="v">Saffron (1,3×) e Cinnabar (1,25×)</span></div>
-      <p class="sussurro">Pewter não vende Pokébola barata e Lavender não vende repelente, porque ninguém de Lavender vai pro mato. Pedra evolutiva só em quem tem: Celadon tem quase tudo, Cerulean tem a da Água, Cinnabar tem a do Fogo. O que a Pokédex Nacional destrava também aparece na prateleira depois.</p>
+      <p class="sussurro">Pewter não vende Pokébola barata e Lavender não vende repelente, porque ninguém de Lavender vai pro mato. Pedra evolutiva só em quem tem: Celadon tem quase tudo, Cerulean tem a da Água, Cinnabar tem a do Fogo. O Link Cable fica na vitrine de pedras de Celadon e na Silph. O que a Pokédex Nacional destrava também aparece na prateleira depois.</p>
 
       <h3>Cortar, atravessar, voar, forçar, iluminar</h3>
       <div class="linha"><span class="k">Não existe HM</span><span class="v">nenhum Pokémon aprende "Corte" nem "Surf" neste jogo</span></div>
@@ -6668,6 +6705,7 @@ const UI = {
       <div class="linha"><span class="k">Onde</span><span class="v">algumas cidades e algumas rotas · nunca em todas</span></div>
       <div class="linha"><span class="k">O que vale</span><span class="v">o que o outro pede · troca feita não desfaz</span></div>
       <div class="linha"><span class="k">Evolução por troca</span><span class="v">chega já evoluído na sua mão</span></div>
+      <div class="linha"><span class="k">Link Cable</span><span class="v">usado como pedra, faz a viagem de uma troca sem ninguém do outro lado, e quem só evolui trocando evolui ali · quem evolui trocado segurando um item só evolui segurando o mesmo item, e o item vai junto e não volta · os de Johto, só com a Pokédex Nacional · gasta no uso · ${fmtDin(PRECO_BASE['Link Cable'])} ₽ de tabela, na Grande Loja de Celadon e na Silph de Saffron</span></div>
       <p class="sussurro">Quem só evolui trocando evolui no ato da troca: o Machoke que sai da mão do outro chega como Machamp na sua. O que chega entra na Pokédex na hora.</p>
 
       <h3>Creche e ovos</h3>
@@ -6692,6 +6730,11 @@ const UI = {
       <div class="linha"><span class="k">Soothe Bell</span><span class="v">+3 de moral no fim de cada vitória, pra quem termina de pé</span></div>
       <div class="linha"><span class="k">Amulet Coin</span><span class="v">+50% de dinheiro em vitória contra treinador, se quem segura termina a luta em campo</span></div>
       <div class="linha"><span class="k">Exp. Share</span><span class="v">quem segura divide metade da experiência de cada nocaute, mesmo sem entrar na luta</span></div>
+      <div class="linha"><span class="k">King's Rock</span><span class="v">golpe de dano que acerta rola 1 dado de chance (o 6 pega) de fazer o outro se encolher, se o golpe já não faz isso</span></div>
+      <div class="linha"><span class="k">Metal Coat</span><span class="v">+1 dado de dano em golpe Metálico</span></div>
+      <div class="linha"><span class="k">Dragon Scale</span><span class="v">+1 dado de dano em golpe de Dragão</span></div>
+      <div class="linha"><span class="k">Up-Grade</span><span class="v">nada na luta</span></div>
+      <div class="linha"><span class="k">Esses quatro</span><span class="v">são os que vão segurados na troca que evolui (ver Trocas) · só aparecem na loja com a Pokédex Nacional</span></div>
       <p class="sussurro">Trocar devolve o anterior à mochila. O efeito de cada um também está na ficha técnica do item, em letra de máquina.</p>
 
       <h3>Dados</h3>

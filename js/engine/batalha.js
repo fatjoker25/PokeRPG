@@ -521,7 +521,9 @@ const Batalha = {
     }
     const stab = atk.tipos.includes(g.t) ? 1 : 0;
     const segA = efeitoSegurado(atk);
-    const item = segA ? ((fisico && segA.fis) || (!fisico && segA.esp) || 0) : 0;
+    /* Muscle Band e Wise Glasses pelo jeito do golpe; Metal Coat e
+       Dragon Scale pelo tipo dele */
+    const item = segA ? ((fisico && segA.fis) || (!fisico && segA.esp) || 0) + (segA.golpeTipo === g.t ? (segA.dadosTipo || 0) : 0) : 0;
 
     /* defesa: Vitalidade contra físico, Instinto contra especial.
        Reflect e Light Screen somam 2 — o crítico passa por cima. */
@@ -801,6 +803,14 @@ const Batalha = {
       } else if (!this.salvaguarda(defensor) && this.aplicarStatus(defensor, ef.tipo, ef.grave)){
         this.ev('status', `${nomeVisivel(defensor)} está com ${ef.tipo}!`);
       }
+    }
+    /* King's Rock: golpe de dano que acerta rola o dado de chance (o 6
+       pega) de fazer o outro se encolher, se o golpe já não faz isso */
+    const segK = efeitoSegurado(atacante);
+    if (segK && segK.encolhe && defensor.hp > 0 && ef.tipo !== 'recuo' && !estDef.recuou
+        && Dados.chanceDados(segK.encolhe, `${atacante.segurando} de ${nomeVisivel(atacante)}`)){
+      estDef.recuou = true;
+      this.ev('status', `${nomeVisivel(defensor)} se encolheu de medo!`);
     }
     /* efeito de atributo de golpe de dano: só na chance dos jogos */
     if (ef.baixa && defensor.hp > 0 && this.sorteEfeito(nome, ef.chance || 100))
@@ -1343,8 +1353,10 @@ const Batalha = {
     this.eventos = [];
     if (!this.ativo) return {eventos:[], fim:this.fim};
     this.turno++;
-    /* Protect e Endure valem só pro turno em que foram usados */
-    for (const est of [this.estAliado, this.estInimigo]){ est.protegido = false; est.aguentando = false; }
+    /* Protect e Endure valem só pro turno em que foram usados, e o
+       encolher também: quem já tinha agido quando se encolheu não perde
+       a vez no turno seguinte (nos jogos, só pega quem ainda não agiu) */
+    for (const est of [this.estAliado, this.estInimigo]){ est.protegido = false; est.aguentando = false; est.recuou = false; }
     this.conferirPresos();
 
     if (this.fase === 'ameaca') return this.acaoAmeaca(acao);

@@ -198,12 +198,16 @@ const ITEM_SPRITE = {
   /* evolução */
   'Moon Stone':'moon_stone', 'Pedra do Fogo':'fire_stone', 'Pedra da Água':'water_stone',
   'Pedra do Trovão':'thunder_stone', 'Pedra da Folha':'leaf_stone', 'Pedra do Sol':'sun_stone',
+  /* o cabo: o Linking Cord da pokeemerald-expansion (base de ROM hack),
+     o mesmo desenho em 24×24 no meio do quadro de 30 */
+  'Link Cable':'link_cable',
   /* fósseis */
   'Fóssil de Hélice':'helix_fossil', 'Fóssil de Domo':'dome_fossil', 'Âmbar Antigo':'old_amber',
   /* segurados: os dos jogos, com o ícone deles */
   'Leftovers':'leftovers', 'Focus Band':'focus_band', 'Soothe Bell':'soothe_bell',
   'Amulet Coin':'amulet_coin', 'Muscle Band':'muscle_band', 'Wise Glasses':'wise_glasses',
   'Quick Claw':'quick_claw', 'Eviolite':'eviolite',
+  "King's Rock":'kings_rock', 'Metal Coat':'metal_coat', 'Dragon Scale':'dragon_scale', 'Up-Grade':'up_grade',
   /* o mapa da região: o ícone do Town Map abre o mapa desenhado */
   'Mapa de Kanto':'town_map',
   'PP Up':'pp_up', 'Exp. Share':'exp_share',

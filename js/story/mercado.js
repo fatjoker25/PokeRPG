@@ -14,10 +14,15 @@ const PRECO_BASE = {
   'Câmera descartável':800, 'Caderno de campo':350, 'Mapa de Kanto':600, 'Relógio':1500,
   'Pedra do Fogo':4000, 'Pedra da Água':4000, 'Pedra do Trovão':4000,
   'Pedra da Folha':4000, 'Moon Stone':6000, 'Pedra do Sol':6000,
+  /* o cabo custa o que custa a pedra rara: a troca que ninguém faz com
+     você é um Alakazam, um Gengar, um Machamp ou um Golem */
+  'Link Cable':6000,
   /* segurados */
   'Leftovers':2800, 'Focus Band':3200, 'Muscle Band':2600,
   'Wise Glasses':2600, 'Eviolite':2400, 'Quick Claw':2200,
-  'Soothe Bell':1800, 'Amulet Coin':3600, 'Exp. Share':3000, 'PP Up':9800,
+  'Soothe Bell':1800, 'Amulet Coin':3600, 'Exp. Share':3000,
+  /* os que vão segurados na troca que evolui (com a Pokédex Nacional) */
+  "King's Rock":2400, 'Metal Coat':2400, 'Dragon Scale':2800, 'Up-Grade':3200, 'PP Up':9800,
   /* bolsas */
   'Mochila sem marca':1400, 'Mochila de sinalização':1300, 'Mochila escolar':1200, 'Mochila de acampamento':1200,
   'Mochila de estrada':1300, 'Mochila de carga':1800, 'Mochila de resgate':1500,
@@ -78,10 +83,13 @@ const LOJAS = {
        ar:'Vitrine trancada, luz de cima, e um cartaz explicando que a loja não se responsabiliza por evolução feita por impulso.',
        /* a Pedra do Sol só entra no catálogo com a Pokédex Nacional
           (ESTOQUE_NACIONAL); sem estar num andar, ela nunca aparecia */
-       itens:['Pedra do Fogo','Pedra da Água','Pedra do Trovão','Pedra da Folha','Pedra do Sol']},
+       itens:['Pedra do Fogo','Pedra da Água','Pedra do Trovão','Pedra da Folha','Pedra do Sol','Link Cable']},
       {n:5, nome:'5º · Equipamento',
        ar:'Item segurado, um por Pokémon, cada um numa caixinha com a ficha técnica impressa em letra de máquina.',
-       itens:['Leftovers','Focus Band','Muscle Band','Wise Glasses','Eviolite','Quick Claw','Soothe Bell','Amulet Coin','Exp. Share']},
+       /* King's Rock, Metal Coat, Dragon Scale e Up-Grade só entram com a
+          Pokédex Nacional (ESTOQUE_NACIONAL) */
+       itens:['Leftovers','Focus Band','Muscle Band','Wise Glasses','Eviolite','Quick Claw','Soothe Bell','Amulet Coin','Exp. Share',
+              "King's Rock",'Metal Coat','Dragon Scale','Up-Grade']},
       {n:6, nome:'6º · Lanchonete',
        ar:'Mesa de fórmica, máquina de refrigerante e a melhor vista de Celadon, que não é grande coisa mas é de graça.',
        itens:['Água Fresca','Ração','Cantil','Cobertor térmico']},
@@ -91,7 +99,7 @@ const LOJAS = {
     ],
     itens:['Poké Ball','Great Ball','Potion','Super Potion','Revive','Antidote','Éter','Elixir','Boneco','Repelente','Ração','Mapa de Kanto','Relógio',
            'TM01 Mega Punch','TM05 Mega Kick','TM07 Horn Drill','TM09 Take Down','TM17 Submission','TM18 Counter','TM32 Double Team','TM33 Reflect','TM11 Sunny Day','TM18 Rain Dance','TM37 Sandstorm',
-           'Pedra do Fogo','Pedra da Água','Pedra do Trovão','Pedra da Folha',
+           'Pedra do Fogo','Pedra da Água','Pedra do Trovão','Pedra da Folha','Link Cable',
            'Leftovers','Focus Band','Muscle Band','Wise Glasses','Eviolite','Quick Claw','Soothe Bell','Amulet Coin','Mochila sem marca','Mochila de sinalização','Mochila escolar','Mochila de estrada','Bolsa acetinada','Bolsa de algodão','Bolsa de vitrine','Bolsa de festa','PP Up','Exp. Share']
   },
   fuchsia: {
@@ -104,7 +112,7 @@ const LOJAS = {
     nome:'Conveniência Silph — térreo',
     ar:'Fica no térreo de um prédio comercial e tem fila de gente de crachá na hora do almoço. Tudo é caro e tudo tem nota fiscal.',
     mult:1.3,
-    itens:['Ração','Great Ball','Super Potion','Hyper Potion','Full Heal','Revive','Repelente','Corda','Elixir','Éter','Caderno de campo','Câmera descartável','Relógio','Wise Glasses','Amulet Coin','Mochila sem marca','Bolsa discreta']
+    itens:['Ração','Great Ball','Super Potion','Hyper Potion','Full Heal','Revive','Repelente','Corda','Elixir','Éter','Caderno de campo','Câmera descartável','Relógio','Wise Glasses','Amulet Coin','Link Cable','Mochila sem marca','Bolsa discreta']
   },
   cinnabar: {
     nome:'Vitrine da Sra. Juna',
@@ -135,8 +143,10 @@ function precoNaCidade(nome, idCidade){
    Antes dela, a Pedra do Sol é uma pedra bonita sem uso conhecido
    e ninguém importa pedra bonita sem uso conhecido. */
 const ESTOQUE_NACIONAL = {
-  celadon: ['Pedra do Sol'],
-  cinnabar: ['Pedra do Sol']
+  celadon: ['Pedra do Sol', "King's Rock", 'Metal Coat', 'Dragon Scale', 'Up-Grade'],
+  cinnabar: ['Pedra do Sol'],
+  /* o Up-Grade é coisa da Silph */
+  saffron: ['Up-Grade']
 };
 
 function catalogoDaCidade(idCidade){

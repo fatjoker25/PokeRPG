@@ -685,6 +685,12 @@ const SUSPEITO = [
         const hp = vivos.reduce((s, p) => s + Math.max(0, p.hp), 0) / Math.max(1, vivos.reduce((s, p) => s + p.hpMax, 0));
         const afz = afazeresDoLocal().map(a => a.id);
         const ref = nivelDeReferencia();
+        /* pedra e cabo: o Link Cable é a pedra de quem evolui trocando
+           (evolucaoPeloCabo). Serve = a espécie evolui com ele; se a troca
+           pede item segurado, o item vem antes (ver o uso, mais abaixo) */
+        const PEDRAS_ROBO = () => (typeof nomesDePedra === 'function' ? nomesDePedra() : [])
+          .concat(typeof evolucaoPeloCabo === 'function' ? ['Link Cable'] : []);
+        const serve = (nome, x) => !!x && !x.morto && (nome === 'Link Cable' ? !!evolucaoPeloCabo(x) : !!(pedrasDe(nome) || {})[x.dex]);
         /* o mais forte de pé vai na frente: o Vito entrava no ginásio do
            Blaine com o Graveler 25 (o inicial) na frente do Golbat 65 e
            perdeu dez semanas seguidas */
@@ -745,12 +751,11 @@ const SUSPEITO = [
           const capuzEspera = !!(dj0 && fj.o_curador_entregou && !fj.capuz_completou && !fj.capuz_recusou && evoluiPorTroca(dj0.dex));
           const fica = x => x.uid === inicial0 || (capuzEspera && x.uid === dj0.uid);
           const vaga = () => d.time.length < 6 ? null : (d.time.filter(x => !fica(x) && !x.morto).sort((a, b) => valor(a) - valor(b))[0] || {}).uid;
-          if (J.pedra && typeof nomesDePedra === 'function')
-            for (const nome of nomesDePedra()){
+          if (J.pedra)
+            for (const nome of PEDRAS_ROBO()){
               if (!Estado.contaItem(nome)) continue;
-              const tab = pedrasDe(nome) || {};
-              if (d.time.some(x => !x.morto && tab[x.dex])) continue;
-              const quem = guardados.find(x => tab[x.dex]);
+              if (d.time.some(x => serve(nome, x))) continue;
+              const quem = guardados.find(x => serve(nome, x));
               if (quem && (d.time.length < 6 || vaga())) return {f:'pc', guardar:vaga(), tirar:quem.uid};
             }
           if (capuzEspera && (d.pc || []).includes(dj0) && d.capitulo >= (fj.capuz_cap_entrega || 0) + 2 && (d.time.length < 6 || vaga()))
@@ -822,13 +827,13 @@ const SUSPEITO = [
            capítulo pra cada pedra: chegando lá, a compra é a da loja */
         if (J.pedra && typeof nomesDePedra === 'function' && hp >= .5){
           X.pedraIr = X.pedraIr || {};
-          const usa = nome => [...d.time, ...(d.pc || [])].some(x => !x.morto && (pedrasDe(nome) || {})[x.dex]);
+          const usa = nome => [...d.time, ...(d.pc || [])].some(x => serve(nome, x));
           /* a ida em andamento: segue até a loja, e desiste se a pedra já
              veio, se ninguém mais usa ou se o dinheiro não dá mais */
           const P0 = X.pedraRumo;
           if (P0 && (P0.cap !== d.capitulo || id === P0.para || Estado.contaItem(P0.nome) || !usa(P0.nome) || d.jogador.dinheiro < P0.preco + 1000)) X.pedraRumo = null;
           else if (P0){ const c = ir(P0.para); if (c) return c; X.pedraRumo = null; }
-          for (const nome of nomesDePedra()){
+          for (const nome of PEDRAS_ROBO()){
             if (X.pedraRumo || Estado.contaItem(nome) || !usa(nome) || X.pedraIr[nome] === d.capitulo) continue;
             if (catalogoDaCidade(id).some(([x]) => x === nome)) continue;
             const onde = Object.keys(LOJAS).filter(c => c !== id && Mundo.visitado(c))
@@ -859,9 +864,11 @@ const SUSPEITO = [
           for (const n of Object.keys(d.itens || {})){
             const i = ITENS_INFO[n] || {}, q = Estado.contaItem(n);
             if (!q || !PRECO_BASE[n]) continue;
-            if (i.tipo === 'equipar') vende.push([n, q]);
+            /* o item que a troca pede pra quem vai pelo cabo fica */
+            const pedeNaTroca = typeof evolucaoPeloCabo === 'function' && [...d.time, ...(d.pc || [])].some(x => { const c = evolucaoPeloCabo(x); return c && c.item === n; });
+            if (i.tipo === 'equipar' && !pedeNaTroca) vende.push([n, q]);
             else if (i.tipo === 'tm' && !d.time.some(p => !p.morto && aprendeTM(p, n))) vende.push([n, q]);
-            else if (i.tipo === 'pedra' && !(J.pedra && [...d.time, ...(d.pc || [])].some(p => !p.morto && (pedrasDe(n) || {})[p.dex]))) vende.push([n, q]);
+            else if ((i.tipo === 'pedra' || i.tipo === 'cabo') && !(J.pedra && [...d.time, ...(d.pc || [])].some(p => serve(n, p)))) vende.push([n, q]);
           }
           /* e a sobra do que o mato dá, guardando um tanto de cada: o Vito
              andava com 9 lanternas, 11 cordas e 11 Águas Frescas, 0 ₽ e o
@@ -871,7 +878,7 @@ const SUSPEITO = [
           if (typeof Cidade !== 'undefined' && Cidade.vendaveis)
             for (const v of Cidade.vendaveis()){
               const i = ITENS_INFO[v.nome] || {};
-              if (vende.some(x => x[0] === v.nome) || NUNCA.test(v.nome) || ['equipar', 'tm', 'pedra', 'bolsa', 'bola', 'fossil', 'cura', 'revive', 'vontade', 'repelente', 'ovo', 'moral', 'mapa', 'fuga'].includes(i.tipo)) continue;
+              if (vende.some(x => x[0] === v.nome) || NUNCA.test(v.nome) || ['equipar', 'tm', 'pedra', 'cabo', 'bolsa', 'bola', 'fossil', 'cura', 'revive', 'vontade', 'repelente', 'ovo', 'moral', 'mapa', 'fuga'].includes(i.tipo)) continue;
               const sobra = v.qtd - (FICA[v.nome] != null ? FICA[v.nome] : 3);
               if (sobra > 0) vende.push([v.nome, sobra]);
             }
@@ -892,11 +899,20 @@ const SUSPEITO = [
           }
         }
         /* pedra de evolução na mochila e alguém que evolui com ela */
-        if (J.pedra && typeof nomesDePedra === 'function'){
-          for (const nome of nomesDePedra()){
+        if (J.pedra){
+          for (const nome of PEDRAS_ROBO()){
             if (!Estado.contaItem(nome)) continue;
-            const tab = pedrasDe(nome) || {};
-            const alvo = d.time.find(x => !x.morto && tab[x.dex]);
+            if (nome === 'Link Cable'){
+              /* com o cabo: quem já segura o item da troca (ou não precisa)
+                 evolui; quem precisa e o item está na mochila, segura antes */
+              const pelo = d.time.map(x => ({x, c:evolucaoPeloCabo(x)})).filter(o => o.c);
+              const pronto = pelo.find(o => o.c.pronto);
+              if (pronto) return {f:'pedra', nome, uid:pronto.x.uid};
+              const falta = pelo.find(o => Estado.contaItem(o.c.item));
+              if (falta) return {f:'segurar', uid:falta.x.uid, nome:falta.c.item};
+              continue;
+            }
+            const alvo = d.time.find(x => serve(nome, x));
             if (alvo) return {f:'pedra', nome, uid:alvo.uid};
           }
         }
@@ -913,9 +929,16 @@ const SUSPEITO = [
           /* a pedra vem antes de tudo: comprada por último, com mil
              guardados pra estrada, ela nunca cabia (nenhum robô evoluiu
              ninguém por pedra) */
-          if (J.pedra && typeof nomesDePedra === 'function')
-            for (const nome of nomesDePedra())
-              if (vende(nome) && !Estado.contaItem(nome) && [...d.time, ...(d.pc || [])].some(x => !x.morto && (pedrasDe(nome) || {})[x.dex])) quero[nome] = 1;
+          if (J.pedra){
+            for (const nome of PEDRAS_ROBO())
+              if (vende(nome) && !Estado.contaItem(nome) && [...d.time, ...(d.pc || [])].some(x => serve(nome, x))) quero[nome] = 1;
+            /* e o item que a troca pede, pra quem vai evoluir pelo cabo */
+            if (typeof evolucaoPeloCabo === 'function')
+              for (const x of [...d.time, ...(d.pc || [])]){
+                const c = evolucaoPeloCabo(x);
+                if (c && c.item && !c.pronto && vende(c.item) && !Estado.contaItem(c.item)) quero[c.item] = 1;
+              }
+          }
           if (vende('Ração')) quero['Ração'] = 3;
           const melhor = lista => lista.find(vende);
           const pot = melhor(['Hyper Potion', 'Super Potion', 'Potion']);
@@ -1169,7 +1192,7 @@ const SUSPEITO = [
         await page.evaluate(x => {
           const p = Estado.dados.time.find(y => y.uid === x.uid);
           const de = p ? p.nome : null;
-          UI.aplicarPedra(x.nome, x.uid);
+          if (x.nome === 'Link Cable') UI.aplicarCabo(x.uid); else UI.aplicarPedra(x.nome, x.uid);
           UI.fecharModal(true); Exploracao.tela();
           window.__passo && __passo('pedra', {nome:x.nome, de, para:p ? p.nome : null});
         }, dec).catch(e => erros.push('pedra: ' + e.message));

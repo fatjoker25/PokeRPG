@@ -1056,10 +1056,11 @@ Os que não vêm do mato:
 - **Porygon** está no balcão de prêmios do cassino de Celadon
   (`PRECO_PORYGON`), que aparece em toda cidade com `'cassino'` em
   `lugares`;
-- **evolução por troca** só acontece com quem troca com você: o Arlo
+- **evolução por troca** acontece com quem troca com você — o Arlo
   (Túnel da Rocha) entrega Machamp, a Dara (Rota 9) entrega Golem, os
   dois com `trocaEvolui`; a figura de capuz completa, na neblina de
-  Lavender, só o que ela mesma deu. Diglett e Dugtrio saem nas duas pontas da caverna deles
+  Lavender, só o que ela mesma deu — e com o **Link Cable** (ver "O
+  Link Cable"), que o `chk-obtencao` conta quando alguma loja vende. Diglett e Dugtrio saem nas duas pontas da caverna deles
   (Rotas 2 e 11), que não é lugar do mapa.
 
 Espécie nova numa tabela, troca nova ou fonte nova: roda o verificador.
@@ -1146,6 +1147,40 @@ sala 704, fazia o que mandavam"; e o 28 lê `unidadeAceitou(d)` pra dizer
 se ela olha pra você ou ainda está decidindo. A Unidade é "ela" pela palavra, sem ter sexo:
 `pron(p)` dá o feminino pra unidade fabricada com apelido de Unidade, e
 o `generoDe` continua sem sexo (ninguém cruza nem se apaixona por isso).
+
+## O Link Cable
+Foi pedido assim: um item que se usa **como pedra** e evolui quem só
+evolui numa troca, sem ninguém do outro lado. O cabo faz a viagem que
+o Pokémon faria (`ITENS_INFO['Link Cable']`, `tipo:'cabo'`), e quem
+diz se dá é `evolucaoPeloCabo(p)` (em `estado.js`): `{destino, item,
+pronto}`, pela mesma tabela da troca (`evoluiPorTroca`), então os de
+Johto continuam esperando a Pokédex Nacional. Quem nos jogos evolui
+trocado **segurando um item** só evolui segurando o mesmo item
+(`ITEM_DA_TROCA`: Poliwhirl e Slowpoke com King's Rock, Onix e Scyther
+com Metal Coat, Seadra com Dragon Scale, Porygon com Up-Grade), e o
+item vai na viagem e não volta, como na troca. A mochila mostra o time
+de relance ("funciona", "nada", "falta item"), o "Em quem?" lista
+quem falta segurar desligado, e `UI.aplicarCabo(uid)` gasta o cabo.
+
+- **O preço é o da pedra rara** (6.000 de tabela, como a Moon Stone e a
+  Pedra do Sol): o que sai do cabo é um Alakazam, um Gengar, um Machamp
+  ou um Golem. Vende na vitrine de pedras da Grande Loja de Celadon (4º
+  andar) e na Silph de Saffron.
+- **Os quatro itens** são segurados dos jogos, com o ícone e o efeito
+  deles traduzido pra parada: King's Rock rola 1 dado de chance de
+  fazer o outro se encolher (`encolhe`), Metal Coat e Dragon Scale dão
+  +1 dado de dano no golpe Metálico e no de Dragão (`golpeTipo`,
+  `dadosTipo`), Up-Grade não faz nada na luta. Só entram na loja com a
+  Pokédex Nacional (`ESTOQUE_NACIONAL`: o 5º andar de Celadon, e o
+  Up-Grade também na Silph), porque antes dela não evoluem ninguém.
+- **O ícone do cabo é de ROM hack**: o Linking Cord da
+  pokeemerald-expansion (24×24, no meio do quadro de 30), crédito no
+  README. O de PLA, em HD, destoava dos outros.
+- **Encolher só vale no turno**: o `recuou` zera no começo de cada
+  turno (`Batalha.acao`, junto com Protect e Endure). Antes, quem agia
+  por último e fazia o outro se encolher tirava a ação dele no turno
+  seguinte — com o King's Rock em todo golpe, isso apareceria toda
+  hora.
 
 ## A creche e os ovos
 Os bebês de Johto (Pichu, Cleffa, Igglybuff, Togepi, Tyrogue,
