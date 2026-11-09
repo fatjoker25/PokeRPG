@@ -140,6 +140,8 @@ const SUSPEITO = [
   const anota = (tipo, txt) => { const k = tipo + ' :: ' + txt.slice(0, 140);
     if (!achados[k]) console.log('ACHADO', k);
     achados[k] = (achados[k] || 0) + 1; };
+  /* cena sem saída o jogo não deixa quebrar: avisa no console */
+  page.on('console', m => { if (m.type() === 'error' && /Cena sem saída/.test(m.text())) console.log('ACHADO', m.text()); });
   page.on('pageerror', e => { const m = e.message + ' @ ' + (e.stack || '').split('\n').slice(1, 3).join(' | ');
     erros.push(m); console.log('ERRO JS', m.slice(0, 300)); });
   page.on('dialog', d => /Soltar|permanente|Vender|Largar/.test(d.message()) ? d.dismiss() : d.accept());
@@ -824,10 +826,13 @@ const SUSPEITO = [
           }
         }
 
-        /* um lugar pra treinar: perto, e com o mato perto do nível do time */
+        /* um lugar pra treinar: perto, e com o mato até o nível do time.
+           Até ref + 3 o Dino treinava pra Sabrina (45) na ilha sem nome
+           (50), perdia o time inteiro pra Dodrio e Scyther de 52 e voltava
+           pro Centro de Fuchsia de seis em seis horas */
         const lugarDeTreino = () => {
           const c = Object.keys(LOCAIS).filter(k => LOCAIS[k].tipo !== 'cidade' && Mundo.conhecido(k)
-              && (LOCAIS[k].nivel || 0) >= ref - 7 && (LOCAIS[k].nivel || 0) <= ref + 3)
+              && (LOCAIS[k].nivel || 0) >= ref - 9 && (LOCAIS[k].nivel || 0) <= ref)
             .map(k => trajeto(id, k)).filter(Boolean).sort((a, b) => a.length - b.length);
           return c[0] || null;
         };
@@ -842,7 +847,9 @@ const SUSPEITO = [
         const travado = !!(destino && (travaDoCapitulo(destino.num)
           || (destino.local && destino.local !== '*' && destino.local !== id && !trajeto(id, destino.local))));
         const perdeu = gid => ((X.gin || {})[gid] || 0);
-        const prontoPra = g => ref >= nivelGinasio(g) - (J.ginasio ? 1 : 0) + 2 * perdeu(g.id);
+        /* cada derrota pede 2 níveis a mais, até 8: o Vito tinha 1.452
+           derrotas pro Brock (do laço antigo) e nunca mais estaria pronto */
+        const prontoPra = g => ref >= nivelGinasio(g) - (J.ginasio ? 1 : 0) + 2 * Math.min(4, perdeu(g.id));
         const daqui = GINASIOS.find(x => x.id === id && statusGinasio(x).estado === 'disponivel');
         if (daqui && prontoPra(daqui)){
           /* porta com hora marcada (Cinnabar): curar agora gasta a janela,

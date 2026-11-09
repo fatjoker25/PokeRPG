@@ -67,6 +67,8 @@ const Historia = {
       idCena = entrada;
       aplicarEfeitos = false;
     }
+    /* de onde veio: é pra lá que volta uma cena que ficou sem saída */
+    if (Estado.dados.cena && Estado.dados.cena !== idCena) Estado.dados.cenaDeAntes = Estado.dados.cena;
     Estado.dados.cena = idCena;
     this.cenaAtual = Object.assign({id:idCena}, cena);
     this.avisosCena = [];

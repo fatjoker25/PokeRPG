@@ -2484,6 +2484,14 @@ não esconde e os dois ficam na tela; e quem a animação escala pelo
   vai sem pontuação dentro da aspa, senão vira balão.
 - Presságio (`ef.presagio`) sai em itálico sem aspas em volta: se ele cita uma
   fala, as aspas são dele.
+- Cena em que **toda escolha tem `cond`** precisa de uma que sempre vale
+  (ou de duas que se completam, `x` e `!x`): a lista de pendências de
+  Celadon só tinha opção pra quem trouxe pendência, e quem chegava sem
+  nenhuma ficava no banco de praça pra sempre. Se acontecer de novo, o
+  motor não prende: mostra "Voltar." pra cena de onde a pessoa veio
+  (`d.cenaDeAntes`, gravada no `Historia.ir`) ou pro começo do capítulo,
+  e escreve `Cena sem saída: <cap>:<cena>` no console, que o robô
+  (`bot-jogador.js`) registra como achado.
 - Conversa de cidade (`CONVERSAS`, em `lugares.js`) pode ter linha que é
   função — quem é de lá, quantas insígnias, se o ginásio está fechado — e
   `{cond, texto}` pro que só vale às vezes, com `ef` se a conversa ensina

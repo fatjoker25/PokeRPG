@@ -32,6 +32,22 @@ function c9_subiuNoNavio(d){
   return !!(f.pagou_passagem || f.entrou_pelo_torneio || f.clandestino || f.trabalhou_no_navio || f.jantou_com_o_comandante);
 }
 
+/* o que a lista das pendências pode ter: o filme, a filha da Sibyl, o
+   Elias no hospital e o cartório. Quem não trouxe nada disso de trás
+   chega na lista vazia, e a lista precisa de saída */
+/* a lista aberta na saída da cidade (depois do depósito, do caminhão
+   ou da conversa com a Terceira) fecha saindo; aberta na avenida, volta
+   pra avenida. Quem já passou por uma das três cenas de saída conta como
+   saída, que é o save de antes da marca */
+function c9_naSaida(d){
+  return !!d.flags.c9_pendencia_na_saida || ['c9_neutro', 'c9_saiu_cedo', 'c9_seguiu_caminhao'].some(id => Historia.jaAconteceu(id));
+}
+function c9_temPendencia(d){
+  const f = d.flags;
+  return !!(f.fotografou_o_porao || f.fotografou_o_certificado || f.a_filha_da_marta
+    || f.conhece_o_hideo || f.salvou_treinador_torre || f.cnpj_de_saffron || f.sabe_do_cartorio);
+}
+
 /* ============================================================
    CAPÍTULO 9 — A CIDADE QUE COMPRA  (Celadon)
    PONTO DE VIRADA: aqui a sua rota é definida.
@@ -725,13 +741,18 @@ c9_cidade2:{
 c9_pendencias:{
   texto:[
     'Celadon é a cidade onde as coisas que você carrega encontram onde ser resolvidas.',
-    'Você senta num banco de praça e abre a mochila e o caderno, e faz uma coisa que nunca fez: uma lista.'
+    'Você senta num banco de praça e abre a mochila e o caderno, e faz uma coisa que nunca fez: uma lista.',
+    d=>c9_temPendencia(d) ? '' : 'A lista não passa do título. O que você trouxe de trás ou já se resolveu sozinho, ou não é coisa que se resolva em Celadon.'
   ],
   escolhas:[
     {texto:'Revelar o filme da câmera.', vai:'c9_revelar', cond:d=>!!d.flags.fotografou_o_porao || !!d.flags.fotografou_o_certificado},
     {texto:'Procurar a filha da Sibyl.', vai:'c9_filha_marta', cond:d=>!!d.flags.a_filha_da_marta},
     {texto:'Ir ao hospital ver o Elias.', vai:'c9_hospital', cond:d=>!!d.flags.conhece_o_hideo || !!d.flags.salvou_treinador_torre},
-    {texto:'Tirar certidão do registro comercial no cartório.', vai:'c9_junta', cond:d=>!!d.flags.cnpj_de_saffron || !!d.flags.sabe_do_cartorio}
+    {texto:'Tirar certidão do registro comercial no cartório.', vai:'c9_junta', cond:d=>!!d.flags.cnpj_de_saffron || !!d.flags.sabe_do_cartorio},
+    /* a lista sempre fecha: sem isso, quem chegava sem pendência (ou
+       com todas resolvidas) ficava no banco de praça pra sempre */
+    {texto:'Fechar o caderno e sair de Celadon.', vai:'c9_fim', repetivel:true, cond:d=>c9_naSaida(d)},
+    {texto:'Fechar o caderno e voltar pra avenida.', vai:'c9_cidade2', repetivel:true, cond:d=>!c9_naSaida(d)}
   ]
 },
 
@@ -2616,7 +2637,7 @@ c9_neutro:{
   escolhas:[
     {texto:'Procurar o armazém por conta própria.', vai:'c9_procurar'},
     {texto:'Descer pelo botão sem número.', vai:'c9_botao', cond:d=>!!d.flags.achou_o_subsolo || !!d.flags.sabe_do_lote_unico},
-    {texto:'Resolver as pendências e sair da cidade.', vai:'c9_pendencias'},
+    {texto:'Resolver as pendências e sair da cidade.', vai:'c9_pendencias', ef:{flag:'c9_pendencia_na_saida'}},
     {texto:'Sair de Celadon.', vai:'c9_fim'}
   ]
 },
@@ -3297,7 +3318,7 @@ c9_saiu_cedo:{
       presagio:'Página cinco, quatro parágrafos. É esse o tamanho que a coisa tem pra quem não estava lá.'},
   escolhas:[
     {texto:'Seguir viagem.', vai:'c9_fim'},
-    {texto:'Resolver as pendências antes de sair da cidade.', vai:'c9_pendencias'},
+    {texto:'Resolver as pendências antes de sair da cidade.', vai:'c9_pendencias', ef:{flag:'c9_pendencia_na_saida'}},
     {texto:'Voltar ao cassino e olhar na cara dela.', vai:'c9_cassino'},
     {texto:'Ir à Dra. Cordell.', vai:'c9_ivone', cond:d=>!!d.flags.cartao_ivone}
   ]
@@ -3444,7 +3465,7 @@ c9_seguiu_caminhao:{
     {texto:'Seguir viagem.', vai:'c9_fim'},
     {texto:'Levar a placa à Dra. Cordell.', vai:'c9_ivone', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Levar a placa à Patrulha.', vai:'c9_liga_celadon'},
-    {texto:'Resolver as pendências antes de sair.', vai:'c9_pendencias'}
+    {texto:'Resolver as pendências antes de sair.', vai:'c9_pendencias', ef:{flag:'c9_pendencia_na_saida'}}
   ]
 },
 

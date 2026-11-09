@@ -1741,6 +1741,17 @@ const UI = {
       .filter(x => Historia.disponivel(x.e, id, x.i));
     if (!visiveis.length)
       visiveis = (cena.escolhas||[]).map((e,i)=>({e,i})).filter(x => Historia.disponivel(x.e));
+    /* nem assim: toda escolha da cena pede alguma coisa que você não
+       tem. É erro de texto (a lista de pendências de Celadon prendeu
+       quem chegava sem nenhuma), e o console diz qual; quem joga volta
+       pra cena de onde veio, ou pro começo do capítulo */
+    if (!visiveis.length){
+      console.error('Cena sem saída:', Estado.dados.capitulo + ':' + id);
+      const cap = Historia.capAtual, antes = Estado.dados.cenaDeAntes;
+      const entrada = cap ? (typeof cap.inicio === 'function' ? cap.inicio(Estado.dados) : cap.inicio) : null;
+      const volta = (antes && antes !== id && cap && cap.cenas[antes]) ? antes : (entrada !== id ? entrada : null);
+      if (volta) c.appendChild(this.el(`<button class="escolha" onclick="Jogo.irPara('${volta}')">Voltar.</button>`));
+    }
     visiveis.forEach(({e, i}) => {
       const t = txt(e.texto);
       /* opção que é uma fala sua ("Treina comigo. Agora.") lê como fala */
