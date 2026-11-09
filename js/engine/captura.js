@@ -159,6 +159,11 @@ const Captura = {
       ev('brilhante', `E ${pron(alvo).ele} é brilhante. Você vai contar essa história mal, porque ninguém conta essa história bem.`);
     }
 
+    /* o Mewtwo decide (js/story/mewtwo.js): a Pokébola fecha, a ordem não */
+    if (typeof Mewtwo !== 'undefined' && Mewtwo.eh(alvo)){
+      alvo.desdeCap = Estado.dados.capitulo;
+      ev('info', 'A Pokébola fechou. Isso não quer dizer que ele vai te obedecer: como fazer isso, você vai ter que descobrir.');
+    }
     if (esp.lendario) this.consequenciasLendario(alvo, eventos);
     return {eventos, capturou:true};
   },

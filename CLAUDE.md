@@ -1136,12 +1136,14 @@ pelo menos o juízo daquele dia. A folha de regras diz o que pesa e não
 dá a conta, como a dos titulares.
 
 A Comissão acha que a Unidade obedece ("A Fase III precisa que ela
-obedeça"), a Presidente diz "Ela vai te obedecer", e as unidades de lote
-dos caminhos obedecem mesmo; a Unidade 01 é a exceção porque é Mewtwo. O
-texto do jogo nunca promete obediência: o aviso de quando ela entra diz
-só que entrou, a história dela diz que "na sala 704, fazia o que
-mandavam", e o 28 lê `unidadeAceitou(d)` pra dizer se ela olha pra você
-ou ainda está decidindo. A Unidade é "ela" pela palavra, sem ter sexo:
+obedeça"), e as unidades de lote dos caminhos obedecem mesmo; a Unidade
+01 é a exceção porque é Mewtwo. O texto diz isso sem dar a conta — foi
+pedido assim: a Presidente avisa que ela obedecia a ela, foi feita pra
+obedecer a quem a Comissão mandasse, e que como fazer ela te obedecer
+você vai ter que descobrir; o aviso de quando ela entra e a captura de
+um Mewtwo (`Captura.tentar`) dizem o mesmo; a história dela diz que "na
+sala 704, fazia o que mandavam"; e o 28 lê `unidadeAceitou(d)` pra dizer
+se ela olha pra você ou ainda está decidindo. A Unidade é "ela" pela palavra, sem ter sexo:
 `pron(p)` dá o feminino pra unidade fabricada com apelido de Unidade, e
 o `generoDe` continua sem sexo (ninguém cruza nem se apaixona por isso).
 
