@@ -555,7 +555,12 @@ const SUSPEITO = [
             const lista = B.tipo === 'lendario' ? ['Master Ball', 'Ultra Ball'] : ['Poké Ball', 'Great Ball', 'Ultra Ball'];
             const tem = lista.filter(n => Estado.contaItem(n) > 0);
             const ferido = B.tipo === 'lendario' ? alvo.hp <= alvo.hpMax * .25 : alvo.hp <= alvo.hpMax * .5;
-            if (tem.length && ferido){
+            /* time pequeno, ou o selvagem cai no primeiro golpe: joga logo,
+               com ele inteiro (uma Poké Ball pega o de nível baixo uma vez
+               em três). O Vito, com um Geodude 21, derrubava tudo antes da
+               metade do HP e não jogou uma Pokébola sequer */
+            const jaDe = B.tipo !== 'lendario' && (X.bolasNaLuta || 0) < 3 && (vivos.length < 3 || p.nivel >= alvo.nivel + 8);
+            if (tem.length && (ferido || jaDe)){
               /* a mais barata que dá conta do posto dele, senão a melhor que tem */
               const pede = (SUCESSOS_DO_POSTO[postoDoNivel(alvo.nivel)] || 4) - (alvo.hp <= 1 ? 2 : 1) - (alvo.status ? 1 : 0);
               const nome = B.tipo === 'lendario' ? tem[0] : (tem.find(n => (SELO_DA_BOLA[n] || 0) / 2 >= pede) || tem[tem.length - 1]);
@@ -671,7 +676,10 @@ const SUSPEITO = [
           if (centros.length) return {f:'viajar', id:centros[0][1]};
           return null;
         };
-        if (hp < (J.cura || .6) || !Estado.primeiroApto()){ const c = curar(); if (c) return c; }
+        /* sem licença cada cura no Centro é paga: só volta com o time mal */
+        const limiarCura = (d.flags.tem_licenca || (typeof Cargos !== 'undefined' && Cargos.centroGratis()) || afz.includes('casa'))
+          ? (J.cura || .6) : Math.min(J.cura || .6, .45);
+        if (hp < limiarCura || !Estado.primeiroApto()){ const c = curar(); if (c) return c; }
 
         /* o PC do Centro: tira o morto do cinto, completa o time e (quem
            troca) põe no lugar do pior o melhor que tem guardado. Uma vez
