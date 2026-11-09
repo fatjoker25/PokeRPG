@@ -386,7 +386,11 @@ const SUSPEITO = [
      diário e o que o robô lembra, pra a etapa seguinte continuar dali */
   const t0 = Date.now();
   const jaJogou = (ponto && ponto.minutos) || 0;
-  let ultimoPonto = Date.now();
+  /* o primeiro ponto sai na primeira vez no mapa: quem começa do zero
+     e é interrompido logo não recomeça com outro personagem */
+  let ultimoPonto = ponto ? Date.now() : 0;
+  /* PARAR na pasta da saída: termina a etapa limpo, gravando o ponto */
+  const PARAR = path.join(path.dirname(OUT), 'PARAR');
   const gravarPonto = async () => {
     const x = await page.evaluate(() => {
       const r = Object.assign({}, window.__reg); delete r.contexto;
@@ -414,6 +418,7 @@ const SUSPEITO = [
       if (!emLuta || passou >= prazo + 180000) break;
     }
     if (erros.length > 8){ estado = 'erros'; break; }
+    if (fs.existsSync(PARAR)){ console.log('PARAR pedido'); break; }
     await page.waitForTimeout(30);
     /* um retrato por minuto, aconteça o que acontecer: se ele parar no
        meio de uma encenação, é aqui que aparece (o de 200 em 200 passos
