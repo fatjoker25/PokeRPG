@@ -16,7 +16,9 @@ const CARGOS = [
   id:'treinador', falante:'a atendente das credenciais', nome:'{Treinador licenciado|Treinadora licenciada}', orgao:'Liga Pokémon', peso:1, cap:1,
   onde:'centro', lugar:'Centro Pokémon',
   guardar:'Guardar a licença e seguir.',
-  pede:[{t:'Pedir no balcão de qualquer Centro', ok:d=>true}],
+  /* a licença sai no cadastro, que se faz no balcão de qualquer Centro
+     (Cidade.cadastro): quem saiu de casa sem ela vê o ✗ aqui */
+  pede:[{t:'Licença de treinador: o cadastro, no balcão de qualquer Centro', ok:d=>!!d.flags.tem_licenca}],
   requer:d=>!!d.flags.tem_licenca,
   resumo:'A licença anual. Sem ela você é uma pessoa andando com um Pokémon.',
   beneficios:{centro:true},

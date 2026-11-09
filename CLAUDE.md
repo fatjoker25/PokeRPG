@@ -2218,6 +2218,15 @@ Quem atende é `cadastra(d)` (a assistente do Professor em Pallet, a
 enfermeira no resto); em Pallet a Pokédex sai da mão do Professor e o
 cartão não sai — ele vem na primeira ida ao Centro de Viridian
 (`Cidade.cartaoDeViridian`).
+Quem sai de casa sem cadastro (`c1_sem_cadastro`) faz depois, **no
+balcão de qualquer Centro e a qualquer hora** (`Cidade.cadastro`, com o
+botão no menu do Centro e no cartão da licença do balcão de
+credenciais) — foi pedido assim: a licença não fica trancada no
+capítulo 1. Vem o que vinha no primeiro dia, de graça: a licença, a
+Pokédex e o cartão que faltarem (o Centro tem a máquina, então o de
+Pallet sai ali mesmo) e o kit de cinco Poké Balls e dois Potion. Aberto
+no meio de uma cena, o balcão volta pra ela. O `chk-telas` faz de dia e
+de noite, aperta duas vezes e confere que o Centro deixa de cobrar.
 
 Texto que não pode depender de "mãe": quem ficou em casa é `nomeCasa()`,
 `casaQuem()`, `{casa:ela|ele}` — nunca "sua mãe" escrito à mão.

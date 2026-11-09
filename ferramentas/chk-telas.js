@@ -165,6 +165,43 @@ const SUSPEITO = [
     await tentar('começo/viridian/' + a, x => Exploracao.fazer(x), a);
   }
 
+  /* quem saiu de casa sem cadastro (o save do começo não tem licença) faz
+     no balcão de qualquer Centro, de dia e de noite: o botão no Centro e
+     no balcão de credenciais, a conversa, o que vem com a licença — uma
+     vez só, mesmo apertando duas — e o Centro de graça depois */
+  const temCadastro = () => page.evaluate(() => {
+    const ha = () => [...document.querySelectorAll('#modal .escolha, #modal .btn')].some(b => /cadastro/i.test(b.textContent));
+    Cidade.centro(); const noCentro = ha(); UI.fecharModal(true);
+    UI.modalCredenciais(); const noBalcao = ha(); UI.fecharModal(true);
+    return {noCentro, noBalcao, bolas:Estado.contaItem('Poké Ball'), potion:Estado.contaItem('Potion')};
+  });
+  for (const hora of [10, 23]){
+    await page.evaluate(([s, h]) => { Batalha.ativo = false; UI.fecharModal && UI.fecharModal(true); Estado.dados = JSON.parse(s);
+      /* quem recusou o cadastro já está no capítulo 1 (o save do começo é o de antes dele) */
+      const r = Estado.dados.relogio; r.hora = h; r.periodo = periodoDaHora(h);
+      Estado.dados.capitulo = Math.max(1, Estado.dados.capitulo); Exploracao.tela(); }, [vazio, hora]);
+    const antes = await temCadastro();
+    if (!antes.noCentro) anota('CADASTRO', 'sem licença, o Centro não mostra o cadastro');
+    if (!antes.noBalcao) anota('CADASTRO', 'sem licença, o balcão de credenciais não mostra o cadastro');
+    await tentar(`começo/cadastro às ${hora}h`, () => Cidade.cadastro());
+    if (await page.evaluate(n => ehNoite() !== (n >= 18 || n < 6) || !/a atendente da noite/.test(document.querySelector('#app').innerText) === ehNoite(), hora))
+      anota('CADASTRO', `às ${hora}h o balcão não fala da hora certa`);
+    await tentar(`começo/cadastro às ${hora}h/guardou`, () => Cidade.receberLicenca());
+    await page.evaluate(() => Cidade.receberLicenca());
+    await page.waitForTimeout(120);
+    const depois = await temCadastro();
+    const f = await page.evaluate(() => {
+      const fl = Estado.dados.flags;
+      return {lic:!!fl.tem_licenca, dex:!!fl.tem_pokedex, cartao:!!fl.tem_cartao,
+        cobra:(Cidade.atender().find(a => a.tipo === 'dano') || {}).texto || ''};
+    });
+    if (!f.lic || !f.dex || !f.cartao) anota('CADASTRO', 'faltou: ' + JSON.stringify(f));
+    if (depois.bolas - antes.bolas !== 5 || depois.potion - antes.potion !== 2)
+      anota('CADASTRO', `o kit deu ${depois.bolas - antes.bolas} Poké Balls e ${depois.potion - antes.potion} Potions`);
+    if (depois.noCentro || depois.noBalcao) anota('CADASTRO', 'com licença, ainda aparece o cadastro');
+    if (f.cobra) anota('CADASTRO', 'com licença, o Centro ainda cobra: ' + f.cobra);
+  }
+
   /* ---------- a inscrição: cada passo e cada opção, nos dois gêneros, até sair de casa ---------- */
   for (const g of ['Homem', 'Mulher']){
     await tentar(`inscrição/${g}`, x => { UI.fecharModal && UI.fecharModal(true); Estado.dados = null; UI.telaCriacao(); UI.crAcao('genero', {v:x}); }, g);

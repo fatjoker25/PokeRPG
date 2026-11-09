@@ -773,7 +773,12 @@ const Cidade = {
     const mural = muralDoCentro(Mundo.id()).length ? `<button class="escolha com-icone" onclick="UI.fecharModal(true);Cidade.mural()">${ic('mural')}<span>Mural de recados</span></button>` : '';
     const cargos = (typeof Cargos !== 'undefined')
       ? `<button class="escolha com-icone" onclick="UI.fecharModal(true);UI.modalCredenciais()">${ic('credenciais')}<span>Balcão de credenciais</span></button>` : '';
+    /* quem saiu de casa sem cadastro faz aqui, em qualquer Centro e a
+       qualquer hora (Cidade.cadastro) */
+    const cadastro = d.flags.tem_licenca ? ''
+      : `<button class="escolha com-icone" onclick="UI.fecharModal(true);Cidade.cadastro()">${ic('credenciais')}<span>Fazer o cadastro de treinador</span></button>`;
     UI.modal(`Centro Pokémon de ${L.nome}`, `
+      ${cadastro}
       <button class="escolha com-icone" onclick="UI.fecharModal(true);Cidade.atenderAqui()">${ic(this.dormeNoCentro() ? 'dormir' : 'centro')}<span>Deixar o time com a enfermeira${this.dormeNoCentro() ? ' e dormir' : ''}</span></button>
       <button class="escolha com-icone" onclick="UI.fecharModal(true);UI.modalPC()">${ic('pc')}<span>PC do saguão${d.pc.length ? ` (${d.pc.length})` : ''}</span></button>
       ${cargos}
@@ -796,7 +801,66 @@ const Cidade = {
     Estado.marcar('tem_cartao');
     Estado.registrar('Recebeu o cartão de treinador no Centro Pokémon de Viridian.');
     Estado.salvar('auto');
-    Exploracao.tela([{tipo:'item', texto:'Cartão de treinador na mochila. Ele aparece na aba Cartão.'}]);
+    Exploracao.tela([{tipo:'item', texto:'Cartão de Treinador no bolso de Itens-chave da mochila.'}]);
+    setTimeout(() => this.centro(), 50);
+  },
+
+  /* Quem saiu de casa sem cadastro (capítulo 1, c1_sem_cadastro) faz em
+     qualquer Centro, a qualquer hora: o balcão de credenciais não fecha.
+     Vem o que vinha com a licença no primeiro dia — Pokédex, cartão (o
+     Centro tem a máquina, então o de Pallet sai aqui mesmo) e o kit —, de
+     graça, como teria sido. */
+  cadastro(){
+    const d = Estado.dados, L = Mundo.atual();
+    if (d.flags.tem_licenca) return this.centro();
+    const quem = 'a atendente das credenciais';
+    const p = d.time.find(x => x && !x.morto) || d.time[0];
+    const insignias = (d.insignias || []).filter(i => i !== 'Título de Campeão' && i !== 'Campeão de Kanto').length;
+    UI.telaConversa({num:`Centro Pokémon de ${L.nome}`, titulo:'Cadastro de treinador', loc:'o balcão de credenciais',
+      falas:[
+        ehNoite()
+          ? 'A essa hora o saguão está vazio. O balcão de credenciais, não: a atendente da noite está lá, com uma caneca e uma pilha de formulários.'
+          : 'O balcão de credenciais fica no canto do saguão, com uma impressora velha e uma caneta presa por barbante. Não tem fila.',
+        fala(quem, 'Cadastro de treinador? Atrasado não tem problema. Tem gente que aparece aqui com um ano de estrada e nenhum papel.'),
+        fala(quem, 'Documento com foto e um Pokémon no seu nome. Põe aqui em cima.'),
+        p ? `Você põe ${nomeExib(p)} no balcão. O leitor passa por cima ${pron(p).dele}, e a máquina apita uma vez, seca.`
+          : 'O leitor passa por cima do seu cinto, e a máquina apita uma vez, seca.',
+        'A impressora do fundo trabalha por quase um minuto inteiro e para.',
+        fala(quem, 'Licença de treinador. Válida um ano, renovável no Centro de qualquer cidade.'),
+        ...(d.flags.tem_cartao ? [] : [fala(quem, insignias
+          ? 'Cartão de treinador. As insígnias que você já tem eu passo pra ele agora. Ele não pergunta de onde vieram.'
+          : 'Cartão de treinador. Ele guarda as suas insígnias e o seu histórico. Não perde. Não perde mesmo.')]),
+        ...(d.flags.tem_pokedex ? [] : [
+          fala(quem, 'Pokédex. Ela é emprestada, não é sua. Registra o que você encontrar.'),
+          'A tela tem um risco na diagonal que já estava lá.']),
+        fala(quem, 'E o kit: cinco Poké Balls e dois frascos de Potion. Vem com a licença, chegue ela quando chegar.'),
+        fala(quem, 'Pronto. Agora com papel.', 'riso')
+      ],
+      botoes:[{texto:'Guardar a licença', acao:'Cidade.receberLicenca()'}]});
+  },
+  receberLicenca(){
+    const d = Estado.dados, L = Mundo.atual();
+    const av = [];
+    /* o botão pode ser apertado duas vezes antes de a tela trocar */
+    if (!d.flags.tem_licenca){
+      const veio = ['a licença'];
+      Estado.marcar('tem_licenca');
+      if (!d.flags.tem_cartao){ Estado.marcar('tem_cartao'); veio.push('o cartão'); }
+      if (!d.flags.tem_pokedex){ Estado.marcar('tem_pokedex'); veio.push('a Pokédex'); }
+      Estado.marcar('cadastro_tardio');
+      delete d.flags.sem_licenca;
+      Estado.darItem('Poké Ball', 5);
+      Estado.darItem('Potion', 2);
+      Estado.registrar(`Fez o cadastro de treinador no Centro Pokémon de ${L.nome}, depois de sair de casa sem ele. Recebeu ${juntarComE(veio.concat('o kit inicial'))}.`);
+      Estado.salvar('auto');
+      av.push({tipo:'item', texto:'Licença de treinador no bolso.'});
+      if (veio.length > 1) av.push({tipo:'item', texto:veio.includes('o cartão') && veio.includes('a Pokédex')
+        ? 'Cartão de Treinador e Pokédex no bolso de Itens-chave da mochila.'
+        : `${veio.includes('o cartão') ? 'Cartão de Treinador' : 'Pokédex'} no bolso de Itens-chave da mochila.`});
+      av.push({tipo:'item', texto:'Recebeu 5× Poké Ball.'}, {tipo:'item', texto:'Recebeu 2× Potion.'});
+    }
+    if (d.modo === 'cena' && Historia.cenaAtual) UI.telaCena(Historia.cenaAtual, av);
+    else Exploracao.tela(av);
     setTimeout(() => this.centro(), 50);
   },
 

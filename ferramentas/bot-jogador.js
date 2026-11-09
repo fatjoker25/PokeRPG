@@ -699,6 +699,9 @@ const SUSPEITO = [
           return forte && prim && forte.uid !== prim.uid && forte.nivel >= (prim.nivel || 0) + gap ? {f:'ordem', uid:forte.uid} : null;
         };
         const centro = Exploracao.temCentro(L);
+        /* sem licença o Centro cobra e posto nenhum abre: o cadastro se faz
+           no balcão de qualquer Centro, a qualquer hora (Cidade.cadastro) */
+        if (centro && !d.flags.tem_licenca) return {f:'cadastro'};
         /* o Centro atende quem tem licença de graça; sem ela, cobra 300 ₽
            mais 250 por ferido, e sem o dinheiro a enfermeira empurra a ficha
            de volta (Cidade.atender). O robô sem licença pedia de novo no
@@ -1200,6 +1203,15 @@ const SUSPEITO = [
       else if (dec.f === 'viajar') await page.evaluate(i => Exploracao.viajar(i), dec.id);
       else if (dec.f === 'arco') await page.evaluate(() => Exploracao.entrarNoArco());
       else if (dec.f === 'centro'){ await page.evaluate(() => Cidade.atenderAqui()); }
+      else if (dec.f === 'cadastro'){
+        await page.evaluate(() => {
+          Cidade.cadastro(); Cidade.receberLicenca();
+          window.__passo && __passo('cadastro', {local:Mundo.id()});
+        }).catch(e => erros.push('cadastro: ' + e.message));
+        /* o balcão abre de novo por cima (receberLicenca): fecha e segue */
+        await page.waitForTimeout(120);
+        await page.evaluate(() => { UI.fecharModal(true); Exploracao.tela(); }).catch(() => {});
+      }
       else if (dec.f !== 'erro') await page.evaluate(f => Exploracao.fazer(f), dec.f);
       await page.waitForTimeout(100);
       continue;

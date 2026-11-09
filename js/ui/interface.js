@@ -5828,7 +5828,10 @@ const UI = {
         `<button class="btn destaque" onclick="Jogo.assumirCargo('${x.cargo.id}')">Assumir</button>`)).join('') : '') +
       (fechados.length ? `<h3>Ainda não</h3>` : '') +
       fechados.map(x => cartao(x, `<ul class="cargo-pede">${Cargos.pedidos(x.cargo).map(p =>
-        `<li class="${p.ok ? 'ok' : 'falta'}">${p.ok ? '✓' : '✗'} ${this.esc(p.t)}</li>`).join('')}</ul>`)).join('');
+        `<li class="${p.ok ? 'ok' : 'falta'}">${p.ok ? '✓' : '✗'} ${this.esc(p.t)}</li>`).join('')}</ul>`
+        /* sem licença, o cadastro se faz aqui mesmo, se tem Centro onde você está */
+        + (x.cargo.id === 'treinador' && !Estado.dados.flags.tem_licenca && Exploracao.temCentro(Mundo.atual())
+          ? `<button class="btn destaque" onclick="UI.fecharModal(true);Cidade.cadastro()">Fazer o cadastro</button>` : ''))).join('');
 
     this.modal(lugar || 'Credenciais', corpo, false, 'credencial');
   },
@@ -5942,7 +5945,7 @@ const UI = {
       ${L('Gênero', 'o texto inteiro concorda com ele — narração, tratamento, cargo e título')}
       ${L('Quem fica em casa', 'a voz que te acorda e o primeiro número do PokéNav · o parentesco decide como a história fala dessa pessoa · o que ficar em branco é sorteado combinando nome e parentesco')}
       ${L('Inicial clássico', 'nasceu em Pallet: o Professor entrega na rua, na manhã da saída · fora de Pallet: a perua do laboratório, uma vez por mês')}
-      ${L('Pokédex e cartão', 'fora de Pallet, os dois saem do Centro da sua cidade, no cadastro · em Pallet, a Pokédex sai da mão do Professor, no laboratório, e o cartão só no Centro de Viridian, que é o primeiro do caminho')}
+      ${L('Pokédex e cartão', 'fora de Pallet, os dois saem do Centro da sua cidade, no cadastro · em Pallet, a Pokédex sai da mão do Professor, no laboratório, e o cartão só no Centro de Viridian, que é o primeiro do caminho · quem sai sem cadastro faz depois, em qualquer Centro, e os dois saem ali')}
       ${L('Inicial aleatório', 'já morava na sua casa — vínculo máximo desde o primeiro dia · sai da tabela de inicial: 1d6 escolhe a coluna (1–4, o que vive na sua cidade natal; 5–6, o que combina com o seu jeito) e 1d6 a linha')}
       ${L('Ritmo do combate', 'Pokérole (o HP do livro) ou prolongado (HP base em dobro)')}`;
 
@@ -6033,7 +6036,7 @@ const UI = {
 
     if (k === 'mundo') return `
       <h3>Cidade</h3>
-      ${L('Centro Pokémon', 'com licença é de graça · sem licença, 300 ₽ + 250 por ferido · sem o dinheiro e com o time todo caído, ela atende e fica com o que você tem')}
+      ${L('Centro Pokémon', 'com licença é de graça · sem licença, 300 ₽ + 250 por ferido · sem o dinheiro e com o time todo caído, ela atende e fica com o que você tem · quem saiu de casa sem cadastro faz no balcão de qualquer Centro, a qualquer hora')}
       ${L('PC', 'no saguão do Centro — guarda e retira do cinto de seis')}
       ${L('Loja', 'dez cidades · cada uma vende o que a cidade é')}
       ${L('Ginásio', 'a insígnia é permanente e muda quem te obedece')}
@@ -6309,6 +6312,7 @@ const UI = {
       <h3>Centro Pokémon</h3>
       <div class="linha"><span class="k">Lá dentro</span><span class="v">enfermeira, PC, balcão de credenciais, mapa na parede e mural de recados</span></div>
       <div class="linha"><span class="k">Sem licença</span><span class="v">a enfermeira cobra 300 ₽ + 250 por Pokémon ferido · com licença, de graça · sem o dinheiro e com o time todo caído, ela atende e fica com o que você tem</span></div>
+      <div class="linha"><span class="k">O cadastro depois</span><span class="v">quem saiu de casa sem licença faz o cadastro no balcão de qualquer Centro, a qualquer hora, de graça · vem o que vinha no primeiro dia: a licença, a Pokédex, o cartão, cinco Poké Balls e dois Potion</span></div>
       <div class="linha"><span class="k">Quanto demora</span><span class="v">de noite você dorme lá e acorda às seis · de dia espera o time voltar, e o dia anda um período · em casa, o mesmo, de graça</span></div>
       <div class="linha"><span class="k">No meio de um capítulo</span><span class="v">se ele acontece numa cidade com Centro, dá pra passar lá e voltar pro mesmo ponto da história · ali quem anda com a hora é a história, e o balcão não mexe no relógio</span></div>
       <div class="linha"><span class="k">Atalho pro balcão</span><span class="v">a derrota no ginásio e na Liga, e o rival que te para na saída do capítulo, têm o botão pro Centro da cidade · onde não tem Centro, não tem botão · o rival espera você voltar</span></div>
@@ -6586,7 +6590,7 @@ const UI = {
       <div class="linha"><span class="k">O que já morava na casa</span><span class="v">não passa por ninguém: já é seu</span></div>
       <div class="linha"><span class="k">Onde a jornada começa</span><span class="v">na cidade em que você nasceu · quem nasceu longe de Pallet e Viridian tem, na rodoviária da cidade, o ônibus até Viridian, uma vez, se quiser · com licença a passagem é de graça, sem licença custa 500 ₽</span></div>
       <div class="linha"><span class="k">Sua casa</span><span class="v">na sua cidade natal · cura o time inteiro e você, de graça, e a noite passa</span></div>
-      <div class="linha"><span class="k">Pallet</span><span class="v">não tem Centro Pokémon nem loja · o cadastro de treinador é no laboratório do Professor</span></div>
+      <div class="linha"><span class="k">Pallet</span><span class="v">não tem Centro Pokémon nem loja · o cadastro de treinador é no laboratório do Professor · quem sai sem ele faz no primeiro Centro do caminho, ou em qualquer outro</span></div>
       <p class="sussurro">Bulbasaur, Charmander e Squirtle saem de Pallet numa caixa térmica, uma fileira de cada. Quem assina a inscrição é quem é responsável por você; a espécie ninguém escolhe no papel. Se a manhã acabar sem você na frente da caixa, a Pokébola que o laboratório separou te espera no balcão do Centro (em Pallet, na porta de casa). Quem não aparece vira duas letras no caderno. A volta é mensal e a perua não deixa de passar por chuva.</p>
 
       <h3>Loja</h3>
@@ -6695,7 +6699,7 @@ const UI = {
       <h3>Estrada e tempo</h3>
       <div class="linha"><span class="k">Viagem entre capítulos</span><span class="v">um dia por trecho do caminho real</span></div>
       <div class="linha"><span class="k">O que passa</span><span class="v">quatro horas por trecho · cada lugar do trajeto fica visitado</span></div>
-      <div class="linha"><span class="k">Centro Pokémon</span><span class="v">de graça com licença · sem licença, 300 ₽ + 250 por ferido · sem o dinheiro e com o time todo caído, ela fica com o que você tem</span></div>
+      <div class="linha"><span class="k">Centro Pokémon</span><span class="v">de graça com licença · sem licença, 300 ₽ + 250 por ferido · sem o dinheiro e com o time todo caído, ela fica com o que você tem · a licença sai no cadastro, em qualquer Centro</span></div>
       <div class="linha"><span class="k">Mapa</span><span class="v">com o Mapa de Kanto, no bolso de Itens-chave da mochila, ou na parede de qualquer Centro Pokémon · Kanto inteira, toda cidade e toda rota com nome · lugar que não está em mapa nenhum só aparece depois que você descobre</span></div>
       <div class="linha"><span class="k">Tocar num lugar</span><span class="v">mostra o que ele é, com o que liga, se tem Centro e se você já foi · loja e ginásio só aparecem depois que você acha andando · vizinho: botão de ir · cidade longe onde você já pisou: botão de voar, se der</span></div>
       <div class="linha"><span class="k">Voar pelo mapa</span><span class="v">com um Voador de grande porte que voe de verdade · até qualquer cidade onde você já pisou · um período do dia</span></div>
