@@ -119,7 +119,9 @@ const SUSPEITO = [
   [/\[object /, '[object]'],
   [/<\/?(p|div|span|b)\b/, 'HTML vazando'],
   [/\bbichos?\b/i, '"bicho"'],
-  [/(?<![A-Za-zÀ-ÿ-])bolas?(?![A-Za-zÀ-ÿ-])/i, '"bola" sozinha']
+  /* bola de brinquedo pode (o muro da escola, o menino chutando contra
+     o laboratório): a frase com muro, chute ou brinquedo não conta */
+  [/(?<![A-Za-zÀ-ÿ-])bolas?(?![A-Za-zÀ-ÿ-])/i, '"bola" sozinha', /muro|chut|brinquedo|borracha|jog(a|o|ar|ando|ou) bola/i]
 ];
 
 (async () => {
@@ -385,9 +387,10 @@ const SUSPEITO = [
       const anon = [...document.querySelectorAll('.fala.anonima')].length;
       return {txt:partes.join('\n'), anon};
     }).catch(() => ({txt:'', anon:0}));
-    for (const [re, nome] of SUSPEITO){
-      const m = t.txt.match(re);
-      if (m){ const i = t.txt.indexOf(m[0]); anota(nome, t.txt.slice(Math.max(0, i - 60), i + 60).replace(/\s+/g, ' ')); }
+    for (const [re, nome, menos] of SUSPEITO){
+      const txt = menos ? t.txt.split(/(?<=[.!?])\s+/).filter(f => !menos.test(f)).join(' ') : t.txt;
+      const m = txt.match(re);
+      if (m){ const i = txt.indexOf(m[0]); anota(nome, txt.slice(Math.max(0, i - 60), i + 60).replace(/\s+/g, ' ')); }
     }
     if (t.anon) anota('balão sem nome', t.txt.slice(0, 80).replace(/\s+/g, ' '));
   };

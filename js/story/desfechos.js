@@ -261,7 +261,7 @@ c20_a_cadeira:{
       executar:() => { c20_ateAs(10); },
       presagio:'Sete editais publicados e nenhuma indicação. O buraco na parede sempre esteve aberto.'},
   escolhas:[
-    {texto:'"Tenho." — e você tem, e é a coisa mais improvável do dia.', vai:'c20_fim_sentou',
+    {texto:'"Tenho." — e você tem, por incrível que pareça.', vai:'c20_fim_sentou',
      cond:d=>!!(d.flags.reika_te_abordou || d.flags.conheceu_a_nishino || d.flags.os_trinta_e_nove_juntos ||
                 d.flags.a_manifestacao_do_porto || (typeof Cargos!=='undefined' && Cargos.lista().length >= 2))},
     {texto:'"Não tenho." — e pedir a palavra pelo Art. 27 mesmo assim.', vai:'c20_palavra'},
@@ -308,7 +308,7 @@ c20_fim_sentou:{
     'A carta dá a volta na mesa inteira, onze pessoas, e leva quatro minutos, e ninguém fala nada nos quatro minutos.',
     'A Presidente é a última a receber de volta.',
     fala('a Presidente', 'Está em ordem.'),
-    'Ela diz isso sem nenhuma emoção e com uma precisão que é a coisa mais assustadora da manhã.',
+    'Ela diz isso sem nenhuma emoção e com uma precisão que dá medo.',
     fala('a Presidente', 'Secretária, registre em ata a posse d{o conselheiro|a conselheira} de representação externa.'),
     'E a cadeira vinte centímetros pra trás é puxada pra frente pela primeira vez em um ano.',
     'Por você.'

@@ -1294,7 +1294,7 @@ c13_porque_nao_devolveu:{
   vozes:['P','N','P','N','P','N','N','P','N','N','N'],
   texto:[
     '"Por que você não devolveu?"',
-    'Ele não se irrita, e a falta de irritação é a coisa mais triste da conversa.',
+    'Ele não se irrita. Já desistiu de se irritar.',
     '"Eu tentei duas vezes."',
     '"Duas?"',
     d=>`"Em ${c13_mes(d, 3)} e em ${c13_mes(d, 2)}. Eu botei ele no bote e fui até a metade do caminho nas duas."`,
@@ -2254,7 +2254,7 @@ c13_salvou_o_filhote:{
 c13_deixou_o_filhote:{
   texto:[
     'Você não tem tanque, não tem ração marinha, não tem como manter um filhote de Seel vivo por três horas de travessia e mais um dia depois disso.',
-    'Você sabe disso e é verdade e continua sendo a coisa mais difícil que você fez hoje.',
+    'Você sabe disso, e é verdade, e não fica mais fácil.',
     d=>d.flags.c13_deixou_o_cobertor
       ? 'Você tira o cobertor de flanela da mochila e deixa com ele na reentrância, que não resolve nada e que você faz mesmo assim.'
       : 'Você tira a blusa que estava por baixo da jaqueta e deixa com ele na reentrância, que não resolve nada e que você faz mesmo assim.',
@@ -2857,7 +2857,7 @@ c13_rocha_alta:{
     'O gelo de duzentos quilômetros solta de uma vez.',
     'Não tem onda de cinema. Tem uma coisa pior e mais silenciosa: o mar inteiro sobe uns três metros de uma vez, todo ele, ao mesmo tempo, sem quebrar.',
     'Sobe, fica dois segundos, e desce.',
-    'E quando desce, a água volta a circular, e o barulho que duzentos quilômetros de mar fazem ao voltar a circular é a coisa mais absurda que você já ouviu.',
+    'E quando desce, a água volta a circular, e duzentos quilômetros de mar voltando a circular fazem um barulho que não tem nome.',
     d=>d.flags.foi_de_comboio
       ? 'Os onze botes e o barco do Sr. Dane, que estavam de proa pro mar a quarenta metros, sobem três metros e descem três metros e continuam inteiros, porque ele mandou.'
       : 'O barco do Sr. Dane, que estava a quarenta metros, sobe três metros e desce três metros e continua inteiro, porque ele estava de proa pro mar.',

@@ -153,6 +153,25 @@ function criarPokemon(dexId, nivel, opcoes={}){
   };
 }
 
+/* Põe um Pokémon noutro nível sem mexer no resto: atributos e HP
+   máximo do nível novo, a mesma fração de HP, os golpes como estavam.
+   Quem já evoluiu não desce abaixo do nível em que evoluiu. É o que a
+   dificuldade usa pro lado de lá da luta (dificuldade.js). */
+function renivelar(p, nivel){
+  if (!p || !DEX[p.dex]) return p;
+  const piso = (typeof nivelMinimoDe === 'function') ? nivelMinimoDe(p.dex) : 1;
+  const n = Math.max(piso, 1, Math.min(100, Math.round(nivel)));
+  if (n === p.nivel) return p;
+  const fracao = p.hpMax ? Math.max(0, p.hp) / p.hpMax : 1;
+  p.nivel = n;
+  p.stats = calcularStats(p.dex, n, p.ivs, p.natureza);
+  p.hpMax = p.stats.hp;
+  p.hp = p.hp > 0 ? Math.max(1, Math.round(p.hpMax * fracao)) : 0;
+  p.exp = 0;
+  p.expProx = expNecessaria(n);
+  return p;
+}
+
 /* Nome completo: o que você usa quando conhece a espécie */
 function nomeExib(p){ return p.apelido ? p.apelido + ' (' + p.nome + ')' : p.nome; }
 

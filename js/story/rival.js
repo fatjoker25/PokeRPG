@@ -199,7 +199,7 @@ function timeRival(){
   // o Pico entra por último e é sempre o ás
   const ini = criarPokemon(inicialDoRival(nivel + 2), nivel + 2, {moral: ARCOS_RIVAL[arco].moral, genero: picoGenero()});
   if (d.flags.sabe_do_pico) ini.apelido = 'Pico';
-  if (arco === 'quebrado') ini.nivel = Math.max(5, nivel);
+  if (arco === 'quebrado') renivelar(ini, Math.max(5, nivel));
   time.push(ini);
   return time;
 }

@@ -569,7 +569,7 @@ const UI = {
       gostos:{lugares:[], tipos:[], dex:[]}, desgostos:{lugares:[], tipos:[], dex:[]},
       cores:{cabelo:null, olhos:null, pele:null, camisa:null, calca:null, sapatos:null, detalhes:null}, aba:'cabelo',
       mochila:null, retrato:null, retratoEscolhido:false, maisRostos:false, corCartao:'azul',
-      casaNome:'', casaQuem:'', inicial:'classico', ritmo:'fiel'
+      casaNome:'', casaQuem:'', inicial:'classico', ritmo:'fiel', dificuldade:'normal'
     };
     const estrelas = Array.from({length:22}, () =>
       `<i class="tt-estrela" style="--x:${(Math.random()*100).toFixed(1)}%;--y:${(Math.random()*100).toFixed(1)}%;--t:${(1.6+Math.random()*2.8).toFixed(2)}s;--a:${(Math.random()*3).toFixed(2)}s;--s:${Math.random() < .25 ? 3 : 2}px"></i>`).join('');
@@ -730,6 +730,7 @@ const UI = {
       case 'casaQuem': c.casaQuem = c.casaQuem === ds.v ? '' : ds.v; return refaz('casa');
       case 'inicial': c.inicial = ds.v; return refaz('casa');
       case 'ritmo': c.ritmo = ds.v; return refaz('casa');
+      case 'dificuldade': if (DIFICULDADES[ds.v]) c.dificuldade = ds.v; return refaz('casa');
       case 'dado': this.crDado(ds.v);
         if (ds.v === 'cores') return this.crRefazProvador();
         return refaz(...{nome:['voce'], casaNome:['casa'], tracos:['jeito']}[ds.v] || []);
@@ -1049,6 +1050,8 @@ const UI = {
                    ['longo', 'Combate prolongado', 'O mesmo dado, com o HP de cada espécie em dobro. As lutas duram mais turnos.']]
       .map(([k, nome, nota]) => `<button type="button" class="cr-op${c.ritmo === k ? ' sel' : ''}" data-acao="ritmo" data-v="${k}" data-foco="ritmo-${k}" aria-pressed="${c.ritmo === k}">
         <span class="cr-op-nome">${e(nome)}</span><span class="cr-op-nota">${e(nota)}</span></button>`).join('');
+    const dificuldade = ORDEM_DAS_DIFICULDADES.map(k => `<button type="button" class="cr-op${c.dificuldade === k ? ' sel' : ''}" data-acao="dificuldade" data-v="${k}" data-foco="dif-${k}" aria-pressed="${c.dificuldade === k}">
+        <span class="cr-op-nome">${e(DIFICULDADES[k].nome)}</span><span class="cr-op-nota">${e(DIFICULDADES[k].curta)}</span></button>`).join('');
     return this.crCabeca('Quem fica em casa', 'É essa pessoa que te acorda, te empurra pela porta e fica esperando notícia. Você sabe de quem é a voz.') + `
       <div class="cr-campo"><label class="cr-rot" for="f-casa-nome">Nome</label>
         <div class="cr-linha">
@@ -1062,7 +1065,10 @@ const UI = {
       <div class="cr-campo"><span class="cr-rot">Pokémon inicial</span>
         <div class="cr-grade cr-g2" role="group" aria-label="Pokémon inicial">${inicial}</div></div>
       <div class="cr-campo"><span class="cr-rot">Ritmo do combate</span>
-        <div class="cr-grade cr-g2" role="group" aria-label="Ritmo do combate">${ritmo}</div></div>`;
+        <div class="cr-grade cr-g2" role="group" aria-label="Ritmo do combate">${ritmo}</div></div>
+      <div class="cr-campo"><span class="cr-rot">Dificuldade</span>
+        <div class="cr-grade cr-g3 cr-dif" role="group" aria-label="Dificuldade">${dificuldade}</div>
+        <p class="cr-nota">Dá pra trocar depois, nos Ajustes.</p></div>`;
   },
 
   crSec_conferir(c){
@@ -1117,6 +1123,7 @@ const UI = {
         ${linha('Em casa', casa)}
         ${linha('Começa com', c.inicial === 'rand' ? 'O que já estava em casa' : 'Um dos três clássicos')}
         ${inteiro ? linha('Combate', c.ritmo === 'longo' ? 'Prolongado' : 'Pokérole, do livro') : ''}
+        ${linha('Dificuldade', e(Dificuldade.nome(c.dificuldade)))}
       </dl>
       <div class="crc-pe"><span>Responsável</span><span class="crc-assina">${c.casaNome.trim() ? e(c.casaNome.trim()) : '&nbsp;'}</span></div>
     </div>`;
@@ -1136,7 +1143,7 @@ const UI = {
       personalidade:juntarComE(tracos.concat(livre ? [livre] : [])),
       cidade:c.cidade, objetivo:c.frase.trim(), meta:c.meta,
       gosta:gostos.texto, naoGosta:desgostos.texto, gostos, desgostos,
-      inicial:c.inicial, ritmo:c.ritmo,
+      inicial:c.inicial, ritmo:c.ritmo, dificuldade:c.dificuldade,
       nascimento:{dia:c.nasc.dia, mes:c.nasc.mes},
       casaNome:c.casaNome.trim(), casaQuem:c.casaQuem,
       forte:c.forte, retrato:c.retrato ? PASTA_DOS_RETRATOS + c.retrato : null,
@@ -3689,7 +3696,7 @@ const UI = {
         <span class="lp-placa">${this.esc(String(m.titular || m.nome).toUpperCase())}</span>
         <span class="lp-rosto">${rosto ? `<img src="${rosto}" alt="" onerror="this.remove()">` : '<b aria-hidden="true">?</b>'}</span>
         ${sabeQuemSao ? `<span class="lp-quem">${this.esc(m.nome)}</span>
-          <span class="lp-info">${tipo}<span class="lp-nv">Nv ${m.nivelBase}–${m.nivelBase + m.especies.length + 1}</span></span>
+          <span class="lp-info">${tipo}<span class="lp-nv">Nv ${Dificuldade.nivel(m.nivelBase)}–${Dificuldade.nivel(m.nivelBase + m.especies.length + 1)}</span></span>
           ${outro ? `<span class="lp-cadeira">na cadeira de ${this.esc(m.titular)}</span>` : voltou ? '<span class="lp-cadeira">de volta à porta</span>' : ''}`
           : '<span class="lp-quem lp-fraco">Quem senta aqui?</span>'}
         ${passou ? `<span class="lp-selo">${campeao ? 'Vencida' : 'Você já passou'}</span>` : ''}
@@ -3710,7 +3717,7 @@ const UI = {
       `<span class="lpr"><small>${this.esc(r.rodada)}</small><b>${din(r.dinheiro)}</b></span>`).join('')}${extra || ''}</div>`;
     const torneio = `<div class="liga-evento torneio">
         <p class="sussurro">Dezesseis inscritos, sorteados na hora, todo dia à uma da tarde: oitavas, quartas, semifinal e final. Qualquer um entra: gente de Kanto inteira, e quem já cruzou com você na estrada.</p>
-        ${premios(PREMIO_TORNEIO, `<span class="lpr"><small>Adversários</small><b>Nv ${nivelDoTorneio(0)}–${nivelDoTorneio(PREMIO_TORNEIO.length - 1)}</b></span>`)}
+        ${premios(PREMIO_TORNEIO, `<span class="lpr"><small>Adversários</small><b>Nv ${Dificuldade.nivel(nivelDoTorneio(0))}–${Dificuldade.nivel(nivelDoTorneio(PREMIO_TORNEIO.length - 1))}</b></span>`)}
         ${d.torneiosVencidos ? `<span class="liga-titulos">${svgIcone('torneio')}${this.esc(d.torneiosVencidos + '× {campeão|campeã}')}</span>` : ''}
       </div>`;
     const co = campeao ? statusConferencia() : null;
@@ -3869,7 +3876,7 @@ const UI = {
     if (!t) return this.telaLiga();
     this.telaDaChave(t, {num:'Torneio Aberto',
       sub: adv => {
-        const nv = adv.time.map(p => p.nivel), a = Math.min(...nv), b = Math.max(...nv);
+        const nv = adv.time.map(p => Dificuldade.nivelDe(p)), a = Math.min(...nv), b = Math.max(...nv);
         return [adv.de, a === b ? `Nv ${a}` : `Nv ${a}–${b}`].filter(Boolean).join(' · ');
       },
       lutar:'Jogo.lutarRodadaTorneio()', curar:'Jogo.curarNoTorneio()', desistir:'Jogo.desistirTorneio()', rotDesistir:'Desistir do torneio'});
@@ -4463,6 +4470,7 @@ const UI = {
       </div>
       ${this.ajustesDeSom()}
       ${typeof Letra !== 'undefined' ? Letra.ajustes() : ''}
+      ${typeof Dificuldade !== 'undefined' ? Dificuldade.ajustes() : ''}
       ${Velocidade.ajustes()}
       ${Estado.dados ? `<h3>Salvar</h3>
       <button class="escolha com-icone" onclick="UI.modalSalvar()">${svgIcone('salvar')}<span class="esc-rot">Baixar o save<small class="esc-det">a jornada inteira num arquivo .json · na abertura, Carregar jogo lê de volta</small></span></button>` : ''}
@@ -5913,7 +5921,7 @@ const UI = {
     if (k === 'passos') return `
       <h3>A primeira hora, passo a passo</h3>
       <ol class="tut-passos">
-        <li><b>Inscrição.</b> Seis passos: quem você é, o seu jeito, o que você quer, a aparência, quem fica em casa e a conferência. O que pesa no jogo é escolha: o jeito mexe em quem te obedece, o seu forte começa em 2, o objetivo vira o rumo que abre cada capítulo, e lugar ou Pokémon de que você gosta pesa nos dados e na moral. A aparência é a foto: você escolhe o corpo e, na Customização, a cor do cabelo, dos olhos, da pele, da camisa, da calça, dos sapatos e dos detalhes, e é isso que os outros vão dizer de você. O dado ao lado de um campo sorteia uma sugestão, e "Sortear o resto" preenche o que ficou em branco.</li>
+        <li><b>Inscrição.</b> Seis passos: quem você é, o seu jeito, o que você quer, a aparência, quem fica em casa e a conferência. O que pesa no jogo é escolha: o jeito mexe em quem te obedece, o seu forte começa em 2, o objetivo vira o rumo que abre cada capítulo, e lugar ou Pokémon de que você gosta pesa nos dados e na moral. A aparência é a foto: você escolhe o corpo e, na Customização, a cor do cabelo, dos olhos, da pele, da camisa, da calça, dos sapatos e dos detalhes, e é isso que os outros vão dizer de você. No passo da casa você escolhe também como começa: o inicial, o ritmo do combate e a dificuldade (Fácil, Normal ou Difícil, que dá pra trocar depois nos Ajustes). O dado ao lado de um campo sorteia uma sugestão, e "Sortear o resto" preenche o que ficou em branco.</li>
         <li><b>O capítulo 1.</b> Você acorda em casa. Leia a cena e toque numa opção — ou escreva o que quer fazer no campo de baixo. Não tem opção certa: tem o que você fez.</li>
         <li><b>O primeiro Pokémon.</b> Os três iniciais saem da Pokébola na sua frente; escolha um e, se quiser, dê um apelido.</li>
         <li><b>A licença.</b> No Centro Pokémon (em Pallet, no laboratório). Com ela, o Centro cura de graça.</li>
@@ -5935,7 +5943,7 @@ const UI = {
       ${L('Escrever em vez de escolher', 'o campo embaixo das opções aceita qualquer coisa')}
       <p class="sussurro">O campo livre lê o que você escreveu: se bate com uma saída que já existe, ele segue por ela; se não bate, o jogo improvisa e isso conta igual.</p>
       <h3>Criar o personagem</h3>
-      ${L('Inscrição', 'seis passos: você, seu jeito, o que você quer, aparência, casa e começo, conferência · o dado sorteia a sugestão de um campo · "Sortear o resto" preenche o que está em branco')}
+      ${L('Inscrição', 'seis passos: você, seu jeito, o que você quer, aparência, casa e começo, conferência · o dado sorteia a sugestão de um campo · "Sortear o resto" preenche o que está em branco · a dificuldade, no passo da casa, se troca depois nos Ajustes')}
       ${L('Personalidade', `${TRACOS_MIN} ou ${TRACOS_MAX} traços da lista, mais uma palavra sua se quiser · cada traço é lido nos cinco eixos e pesa como regra, veja Vínculo`)}
       ${L('No que você é bom', 'um dos seis status começa em 2; os outros, em 1 · Resistência em 2 já começa com HP 32 e Vontade 4')}
       ${L('Objetivo', 'um dos sete rumos, numa frase sua (ou na sugerida) · a frase sai da sua boca na história, e o rumo abre cada capítulo')}
@@ -6178,6 +6186,8 @@ const UI = {
       <div class="exemplo-regra">
         <b>Exemplo de teste de cena.</b> Vasculhar pede 2 sucessos de Percepção. Você tem Percepção 2: 2 + 2 de perícia = 4d6 → 1, 5, 3, 2 = 1 sucesso, sucesso parcial. Num lugar de que você gosta seria 5d6, com um dado a mais pra achar o segundo.
       </div>
+
+      ${typeof Dificuldade !== 'undefined' ? Dificuldade.regras() : ''}
 
       <h3>Combate — Pokérole</h3>
       <p class="sussurro">O combate segue o Pokérole 3.0. Tudo é parada de d6: cada 4, 5 ou 6 é um sucesso. A bandeja mostra cada parada com as faces, e o log mostra a conta.</p>

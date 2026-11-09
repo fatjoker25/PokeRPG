@@ -362,7 +362,7 @@ c16_por_cima:{
 
 c16_chegou_voando:{
   texto:[
-    d=>`Noventa milhas ${Campo.voar().como || 'pelo ar'}. Leva quase quatro horas e as quatro horas são a coisa mais silenciosa que já te aconteceu.`,
+    d=>`Noventa milhas ${Campo.voar().como || 'pelo ar'}. Leva quase quatro horas, e nas quatro horas só tem vento.`,
     'Mar aberto visto de cima não tem escala: é a mesma superfície igual em todas as direções, e depois de uma hora você para de tentar medir distância porque não existe nada pra medir contra.',
     'A ilha aparece como uma mancha e vira pedra.',
     'E de cima você vê, antes de pousar, a coisa que quem chega de barco nunca vai ver:',

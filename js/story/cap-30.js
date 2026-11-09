@@ -351,7 +351,7 @@ c30_acendeu:{
     fala('Lorca', 'Pesquisa de campo.'),
     d=>fala(d.jogador.nome, 'Às duas e quarenta da manhã.'),
     fala('Lorca', 'A torre é pública vinte e quatro horas. Está na placa.'),
-    'E está mesmo. É a coisa mais irritante da noite: ele não está fazendo nada de ilegal neste exato momento.',
+    'E está mesmo. E isso irrita: ele não está fazendo nada de ilegal neste exato momento.',
     fala('Lorca', 'Você é quem? Da prefeitura?'),
     'E aí ele te reconhece, e dá pra ver o momento em que reconhece, e a cara dele muda pra uma coisa muito pior que medo: alívio.',
     fala('Lorca', 'Ah. É você.', 'baixo')

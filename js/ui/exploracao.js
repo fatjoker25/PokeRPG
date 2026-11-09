@@ -580,7 +580,7 @@ const Exploracao = {
     const xpAntes = aprendem.map(p => ({uid:p.uid, nivel:p.nivel, exp:p.exp, expProx:p.expProx}));
     aprendem.forEach(p => {
       const acima = Math.max(0, p.nivel - L.nivel);
-      let q = Math.round(ganho * Math.max(0.2, 1 - acima / 6) * fatorDeAtraso(p));
+      let q = Math.round(ganho * Math.max(0.2, 1 - acima / 6) * fatorDeAtraso(p) * (typeof Dificuldade !== 'undefined' ? Dificuldade.xp() : 1));
       /* nunca passa do teto num dia só, por maior que seja o ganho */
       let falta = p.expProx - p.exp;
       for (let n = p.nivel + 1; n < teto; n++) falta += expNecessaria(n);

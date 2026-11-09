@@ -258,7 +258,7 @@ c9_ab_de_cracha:{
 
 c9_ab_requereu_carga:{
   texto:[
-    'Você preenche o formulário na bancada, com a caneta amarrada por barbante, e é a coisa mais adulta que você já fez.',
+    'Você preenche o formulário na bancada, com a caneta amarrada por barbante, e nunca se sentiu tão adult{o|a}.',
     'Campo "objeto do requerimento": você escreve "relação de notas de descarga do terminal de carga da avenida dois, últimos sessenta dias".',
     'O rapaz lê enquanto carimba e o carimbo para no meio do caminho.',
     fala('o rapaz do protocolo', 'Últimos sessenta dias.'),
@@ -352,7 +352,7 @@ c9_compra_se:{
   texto:[
     'É uma loja pequena e limpa, com balcão de vidro, iluminação boa e um homem de camisa polo que te cumprimenta pelo nome do horário.',
     '"Boa tarde. Vender ou avaliar?"',
-    'Atrás dele, na parede, um quadro de avisos com a tabela: espécie, faixa de nível, valor. É datilografado, atualizado a caneta na margem, e é a coisa mais fria que você já viu na vida.',
+    'Atrás dele, na parede, um quadro de avisos com a tabela: espécie, faixa de nível, valor. É datilografado, atualizado a caneta na margem, como tabela de preço de feira.',
     'Tem uma coluna extra à direita, sem título, com números menores.',
     'Você pergunta o que é a coluna sem título.',
     '"Ah, essa é o valor de lote." Ele não hesita nem meio segundo. "Quando o cliente traz mais de quatro."'
@@ -912,7 +912,7 @@ c9_filha_marta:{
   texto:[
     'Você não tem endereço nem nome. Tem o rosto de um porta-retrato, três anos mais nova do que ela está hoje, e a informação de que ela está em Celadon.',
     'Isso, numa cidade de quatrocentos mil habitantes, é nada.',
-    'Você tenta mesmo assim, e leva dois dias, e é a coisa mais idiota e mais teimosa que você faz nessa cidade.',
+    'Você tenta mesmo assim, e leva dois dias, por pura teimosia.',
     'Você acha por acaso: num café do quarto andar do shopping, uma moça de uns dezoito anos com crachá de funcionária e o mesmo jeito de segurar a caneca que a Sibyl tem.',
     'Você fica olhando de longe por quase dez minutos antes de conseguir chegar perto.'
   ],
@@ -1024,7 +1024,7 @@ c9_nao_sei_pra_filha:{
     '"Eu não sei."',
     'Ela te olha.',
     '"Como você não sabe?"',
-    '"Porque eu não sei o que um Pokémon sente." Você fala isso e é a coisa mais honesta que você diz nessa cidade. "Ele parou de respirar devagar e ela tava com a mão nos olhos dele."',
+    '"Porque eu não sei o que um Pokémon sente." Pela primeira vez nessa cidade, você não escolhe as palavras. "Ele parou de respirar devagar e ela tava com a mão nos olhos dele."',
     'Ela absorve isso.',
     '"Tá." Ela faz que sim. "Tá. Isso é melhor do que não. Obrigada por não falar não."'
   ],
@@ -1110,7 +1110,7 @@ c9_silencio_no_cafe:{
     'Vocês {dois|duas} ficam na mesa do café sem falar nada por uns doze minutos.',
     'O shopping continua em volta: música baixa, gente com sacola, um alarme de loja que dispara e ninguém olha.',
     'Em algum momento ela empurra o prato de pão de queijo pro meio da mesa, e você pega um, e ela pega outro.',
-    'É a coisa mais parecida com uma família que essa cidade te ofereceu.'
+    'Pra essa cidade, isso é quase família.'
   ],
   ef:{hp:3, moral:5,
       npc:{nome:'Filha da Sibyl', opiniao:4, memoria:'Vocês dividiram um prato de pão de queijo em silêncio no café do shopping.'}},
@@ -1731,7 +1731,7 @@ c9_copia_das_certidoes:{
 c9_leu_as_certidoes:{
   texto:[
     'Você senta num banco de praça de Celadon e lê trinta e duas páginas de certidão comercial.',
-    'Leva três horas e quarenta minutos e é a coisa mais chata que você já fez na vida.',
+    'Leva três horas e quarenta minutos, e cada minuto se arrasta.',
     'E no meio da página vinte e sete tem uma linha que muda tudo.',
     'É uma alteração contratual de dois anos e meio atrás, e o objeto dela é a inclusão de uma nova atividade econômica secundária na empresa de logística. Está escrito assim:',
     '"Guarda e conservação de espécimes biológicos vivos, para fins de custódia administrativa."',
@@ -1817,7 +1817,7 @@ c9_recuou_na_junta:{
 c9_saiu_da_junta:{
   texto:[
     'Você desce três andares a pé e sai na rua com papel na mochila.',
-    d=>`É estranho. Você atravessou Kanto, entrou em caverna, subiu em torre${c9_subiuNoNavio(d) ? ', embarcou em navio' : ''} — e a coisa mais perigosa que você carrega hoje saiu de uma impressora matricial num prédio público.`
+    d=>`É estranho. Você atravessou Kanto, entrou em caverna, subiu em torre${c9_subiuNoNavio(d) ? ', embarcou em navio' : ''} — e o que você carrega de mais perigoso hoje saiu de uma impressora matricial num prédio público.`
   ],
   escolhas:[
     {texto:'Ir ao depósito.', vai:'c9_deposito'},
@@ -2762,7 +2762,7 @@ c9_prado_conversa:{
       npc:{nome:'Auditora Brill', opiniao:5, memoria:'Te ouviu no corredor e te disse exatamente o que ela precisa para suspender uma alienação.'},
       rep:{eixo:'bom',delta:3,motivo:'Conseguiu que uma servidora da Comissão te ouvisse'},
       registrar:'A Auditora Brill suspende a alienação se houver declaração escrita do tutor, com processo e data.',
-      presagio:'Ela te disse o que precisa. Isso é raro e é a coisa mais útil que aconteceu nessa cidade.'},
+      presagio:'Ela te disse o que precisa.'},
   escolhas:[
     {texto:'Entregar a declaração do Elias agora.', vai:'c9_prado_te_da_o_processo', cond:d=>!!d.flags.copia_do_hideo || !!d.flags.hideo_escreveu},
     {texto:'"Eu volto com isso escrito." E ir ao hospital.', vai:'c9_hospital', cond:d=>!!d.flags.conhece_o_hideo},
@@ -2776,7 +2776,7 @@ c9_prado_te_da_o_processo:{
   vozes:['P','N','N','N'],
   texto:[
     d=>d.flags.copia_do_hideo || d.flags.hideo_escreveu
-      ? '"É do tutor. Com a letra dele." Você entrega a folha. Ela lê duas vezes, a segunda com o dedo acompanhando a linha, do jeito de quem confere número.'
+      ? '"É do tutor. Com a letra dele." Você entrega a folha. Ela lê duas vezes, a segunda com o dedo acompanhando a linha, conferindo número por número.'
       : '"E os outros mil e duzentos?" Ela fica calada tempo demais pra ser uma pausa.',
     d=>d.flags.copia_do_hideo || d.flags.hideo_escreveu
       ? '"Letra de pessoa com a mão ruim, escrita devagar, com data. O número do processo eu mesma ponho." Ela dobra a folha. "Isso é documento."'
@@ -2964,7 +2964,7 @@ c9_deposito:{
     'Dá pra ouvir de fora o gerador. E, por baixo do gerador, um som contínuo que não é máquina — é um som de muitas coisas pequenas se mexendo em espaços pequenos, e ele não para nunca, ele só muda de volume.',
     d=>Historia.via()==='foragido' ? 'Você não veio fechar isso. Você veio pegar isso. É uma diferença que muda tudo o que você faz agora.' :
        Historia.via()==='pesquisador' ? 'Você veio ver. Se você só ver, vai ter que viver com isso. Se você agir, vai perder o que ainda não entendeu.' :
-       Historia.via()==='mercenario' ? 'Você tem a chave, agora. Isso devia deixar a coisa mais fácil e está deixando pior.' :
+       Historia.via()==='mercenario' ? 'Você tem a chave, agora. Isso devia deixar tudo mais fácil e está deixando pior.' :
        'São quatro pessoas lá dentro, no mínimo, contando pelas vozes. Você é {um|uma}.'
   ],
   ef:{flag:'chegou_no_armazem',
@@ -3097,7 +3097,7 @@ c9_verdade_no_armazem:{
     'E a pergunta é honesta. Ele acha normal que apareça alguém procurando um número, porque já aconteceu antes.',
     '"Olha, {garoto|garota}." Ele baixa a mão do outro, a que tem a Pokébola. "Aqui é custódia. A gente guarda, alimenta e entrega. Se tem gente da família, tem que ir na Comissão, não aqui."',
     '"Se você entrar e tirar, eu perco o emprego e o Pokémon volta, porque ele tem número."',
-    'Ele diz isso sem raiva. É a coisa mais difícil de ouvir da noite inteira.'
+    'Ele diz isso sem raiva, e a falta de raiva pesa mais.'
   ],
   ef:{flag:['falou_com_os_funcionarios','sabe_que_volta'],
       rep:{eixo:'bom',delta:2,motivo:'Disse a verdade num lugar onde ninguém diz'},
@@ -3352,7 +3352,7 @@ c9_documentou:{
     'Depois sai sem tocar em nada. Sem soltar ninguém.',
     'Essa é a decisão mais fria que você já tomou, e você sabe exatamente por que tomou: uma noite de caos fecha um armazém e eles abrem outro em trinta dias.',
     'Páginas de destino, com registro comercial e número de processo, fecham uma rede.',
-    'Você fica com isso na consciência do jeito que se fica com uma escolha certa que parece errada.'
+    'Você fica com isso na consciência: uma escolha certa que parece errada.'
   ],
   ef:{flag:['provas_deposito','escolha_fria'],
       rep:{eixo:'bom',delta:2,motivo:'Documentou a rede inteira em vez de agir na hora'},
@@ -3563,7 +3563,7 @@ c9_liga_celadon:{
     '"Isso aqui é bom material." Ele folheia devagar, anotando. "Sério. É melhor do que noventa por cento do que chega aqui."',
     '"Mas eu preciso de mandado pra entrar em armazém credenciado, e mandado pra empresa privada com alvará em ordem leva de quatro a nove meses."',
     '"Quatro a nove meses."',
-    '"Eu sei." Ele te olha nos olhos e não desvia, o que é a coisa mais decente que ele podia fazer. "Eu sei."'
+    '"Eu sei." Ele te olha nos olhos e não desvia. Pelo menos isso. "Eu sei."'
   ],
   ef:{flag:'liga_tem_provas',
       rep:{eixo:'bom',delta:1,motivo:'Levou provas às autoridades'},

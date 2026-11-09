@@ -62,7 +62,7 @@ c29_o_vizinho:{
   texto:[
     d=>c29_hora(d) >= 6 && c29_hora(d) < 10
       ? 'A casa do lado do portão verde tem uma senhora regando vaso na calçada às sete da manhã, que é o horário de quem rega vaso a sério.'
-      : 'A casa do lado do portão verde tem uma senhora regando vaso na calçada, sem pressa, do jeito de quem rega vaso a sério.',
+      : 'A casa do lado do portão verde tem uma senhora regando vaso na calçada, sem pressa, levando o vaso a sério.',
     'O portão dela tem o sobrenome em ferro fundido, do jeito que se fazia em mil novecentos e setenta: VALE.',
     'Ela te vê olhando o portão e fala primeiro, do jeito de quem estava esperando alguém pra falar disso há muito tempo.',
     fala('Sra. Vale', 'Você não é da prefeitura.'),
@@ -117,7 +117,7 @@ c29_as_quatro_ligacoes:{
 c29_pediu_a_agenda:{
   texto:[
     d=>fala(d.jogador.nome, 'A senhora me empresta essa agenda?'),
-    'Ela segura a agenda com as duas mãos, do jeito de quem já perdeu um caderno uma vez e não vai perder outro.',
+    'Ela segura a agenda com as duas mãos. Já perdeu um caderno uma vez e não vai perder outro.',
     fala('Sra. Vale', 'Eu copio pra você.'),
     d=>fala(d.jogador.nome, 'A senhora não precisa.'),
     fala('Sra. Vale', 'Preciso sim, porque eu não vou te dar a minha agenda e você não vai sair daqui sem nada.'),
@@ -206,7 +206,7 @@ c29_bateu:{
     'Ele olha você de cima a baixo em menos de um segundo e chega a uma conclusão.',
     fala('Dario', 'Traz?'),
     d=>fala(d.jogador.nome, 'Trago o quê?'),
-    'Ele suspira, do jeito de quem já explicou isso hoje.',
+    'Ele suspira. Já explicou isso hoje.',
     fala('Dario', 'Pokémon, {moço|moça}. Você bateu no portão certo pelo motivo errado ou pelo motivo certo?'),
     d=>{
       const p = d.time[0];
@@ -236,7 +236,7 @@ c29_dentro:{
     d=>fala(d.jogador.nome, 'C e R.'),
     'Ele toma o café dele.',
     fala('Dario', 'Criação e Recurso.'),
-    'Ele diz as duas palavras sem nenhum peso, do jeito de quem repete uma classificação de manual que ele nunca parou pra ouvir.'
+    'Ele diz as duas palavras sem nenhum peso, uma classificação de manual que ele nunca parou pra ouvir.'
   ],
   ef:{flag:['viu_a_tabela','sabe_do_lote_unico'],
       registrar:'A tabela do portão verde classifica cada espécie como "Criação" ou "Recurso".',
@@ -348,7 +348,7 @@ c29_pegou_o_envelope:{
   texto:[
     'Você abre a gaveta e pega o envelope e fecha a gaveta e sai da sala antes dos quatro minutos.',
     'Do portão, antes de sair, você ouve a descarga.',
-    'Ele calculou o tempo. Ele calculou o tempo de descarga pra você ter o tempo de decidir sozinh{o|a}, e isso é o tipo de cumplicidade que não deixa rastro e que nenhum processo vai conseguir provar.',
+    'Ele calculou o tempo. Ele calculou o tempo de descarga pra você ter o tempo de decidir sozinh{o|a}. É o tipo de cumplicidade que não deixa rastro e que nenhum processo vai conseguir provar.',
     'Na rua, com o envelope pardo na mão, você entende que acabou de receber uma prova de alguém que precisa poder jurar que não deu.'
   ],
   ef:{flag:['tem_o_envelope_do_malote','reika_precisa_de_papel'],
@@ -448,7 +448,7 @@ c29_abriu_a_tranca:{
     'Você puxa a tranca e ela corre fácil, porque tranca de porta usada corre fácil.',
     'A porta abre pra fora e a luz do quintal entra no galpão pela primeira vez no dia.',
     'Trinta e uma gaiolas. Quatro fileiras. Corredor no meio. Ralo no centro do piso.',
-    'E aí você ouve o portão da frente e passos no corredor lateral da casa, e você tem uns doze segundos pra decidir a coisa mais difícil do dia:',
+    'E aí você ouve o portão da frente e passos no corredor lateral da casa, e você tem uns doze segundos pra decidir:',
     'abrir trinta e uma gaiolas leva mais de doze segundos.'
   ],
   ef:{flag:'a_porta_aberta_do_galpao'},
@@ -627,7 +627,7 @@ c29_seguiu_quem_saiu:{
     'Cerulean, às três da manhã, é a segunda.',
     'A caminhonete anda devagar porque a rua é de paralelepípedo e você anda rápido pela calçada, duas quadras atrás, encostad{o|a} no muro.',
     'Ela atravessa a segunda ponte, pega a marginal do rio e para num posto de gasolina de vinte e quatro horas.',
-    'O motorista desce, abastece, entra na conveniência e compra café e um salgado, e fica dez minutos conversando com o frentista do jeito de quem conversa com o mesmo frentista toda terça.',
+    'O motorista desce, abastece, entra na conveniência e compra café e um salgado, e fica dez minutos conversando com o frentista, o mesmo de toda terça.',
     'Você entra na conveniência atrás dele e compra um salgado também, porque comprar um salgado é a coisa mais invisível que existe.',
     'E ouve os dez minutos inteiros.'
   ],

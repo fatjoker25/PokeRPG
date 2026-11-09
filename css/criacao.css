@@ -296,6 +296,8 @@ body.na-criacao #app{max-width:1120px;padding-block:18px 40px}
   .cr-passo.atual button{padding-right:12px;max-width:100%}
   .cr-passo.atual .cr-pnome{display:inline;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .cr-g3, .cr-cidades{grid-template-columns:repeat(2, minmax(0, 1fr))}
+  /* três dificuldades em duas colunas deixariam uma sozinha embaixo */
+  .cr-g3.cr-dif{grid-template-columns:minmax(0, 1fr)}
   .cr-op{padding:10px 11px}
   .cr-op-nome{font-size:14px}
   .cr-genero{flex-direction:column;align-items:center;text-align:center;gap:4px}

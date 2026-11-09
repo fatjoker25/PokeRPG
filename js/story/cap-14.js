@@ -1932,7 +1932,7 @@ c14_ficou_os_dois_dias:{
     'Você fica mais um pouco com os dois, e a sala de quatro por quatro tem cheiro de dois dias de café.',
     'Foram dois dias sem fazer quase nada: buscar café, carregar caixa, segurar a lanterna quando faltou luz na ilha, na primeira noite, às sete e dez.',
     'E ouvir dois velhos discutirem por dezoito horas sobre ordem de publicação, prazo de resposta, competência de órgão e a diferença entre documento público e vazamento.',
-    'Foi a coisa mais chata que você já assistiu na vida.',
+    'Você bocejou mais nesses dois dias que no ano inteiro.',
     'E numa das madrugadas você entendeu que é isso.',
     'Que é essa a coisa.',
     'Que tudo o que você viu desde que saiu de casa não vai ser desfeito por ninguém entrando em lugar nenhum de madrugada.',
@@ -2508,7 +2508,7 @@ c14_garrafa:{
     'A garrafa térmica está fechada e a rosca cede com dificuldade.',
     'Dentro não tem café.',
     'Tem papel.',
-    'Um rolo de papel enfiado dentro de uma garrafa térmica, que é a coisa mais improvisada e mais esperta que alguém podia fazer com um documento numa borda de vulcão: térmica isola, rosca veda, e quatro anos depois o papel está seco e legível.',
+    'Um rolo de papel enfiado dentro de uma garrafa térmica, improviso esperto pra guardar documento numa borda de vulcão: térmica isola, rosca veda, e quatro anos depois o papel está seco e legível.',
     'É uma folha só, arrancada de caderno, escrita dos dois lados.',
     d=>d.flags.leu_caderno ? 'A letra é a mesma dos cadernos.' : 'A letra é miúda e reta, de quem escreveu muito na vida.',
     '**"Dia 252. Subimos. Ele quis subir e eu fui junto porque foi a primeira coisa que ele escolheu sem me perguntar se podia."**',
@@ -2745,7 +2745,7 @@ c14_comida:{
     'Olha a ração. Olha você. E come.',
     'Não porque precisa — uma coisa que se alimenta de calor de vulcão não precisa de ração — mas porque entendeu o que o gesto queria dizer, e responder a um gesto é a única coisa que um gesto pede.',
     'Quando termina, ele levanta voo e volta pra borda do outro lado, e o rastro de calor passa a dois metros de você e não te queima.',
-    'Isso foi escolha dele e foi precisa, e é a coisa mais assustadora do dia: ele controla até o ponto de não te queimar a dois metros.'
+    'Isso foi escolha dele e foi precisa, e é isso que assusta: ele controla até o ponto de não te queimar a dois metros.'
   ],
   ef:{executar:d=>{ Estado.usarItem('Ração'); const L = Estado.lend(146); L.disposicao = 'passivo'; return [{tipo:'mundo', texto:'Moltres aceitou o que você ofereceu.'}]; },
       rep:{eixo:'bom',delta:3,motivo:'Tratou bem uma Ave Lendária'},
@@ -2897,7 +2897,7 @@ c14_fim:{
       return 'E atrás de você fica uma ilha de setecentas pessoas que conhece todos os motores, e agora conhece você.';
     },
     'O mar entre Cinnabar e o continente é o trecho mais fundo de Kanto.',
-    'Você fica na popa olhando a ilha diminuir, e o vulcão é a última coisa a sumir, porque é a coisa mais alta.'
+    'Você fica na popa olhando a ilha diminuir, e o vulcão é o último a sumir, porque é o mais alto.'
   ],
   /* o ferry sai às onze, terça ou sábado, e chega em Fuchsia três horas depois */
   ef:{executar:()=>{ c14_irAoFerry(11); Relogio.avancar(3); return []; }},

@@ -233,6 +233,8 @@ const SUSPEITO = [
       for (const q of PARENTESCOS) UI.crAcao('casaQuem', {v:q});
       for (const k of STATUS_DO_TREINADOR.map(s => s[0])) UI.crAcao('forte', {v:k});
       UI.crAcao('inicial', {v:'rand'}); UI.crAcao('ritmo', {v:'longo'});
+      for (const k of ORDEM_DAS_DIFICULDADES) UI.crAcao('dificuldade', {v:k});
+      UI.crAcao('dificuldade', {v:'normal'});
       for (const f of ['nome', 'cores', 'casaNome', 'tracos']) UI.crAcao('dado', {v:f});
       if (!c.forte) UI.crAcao('forte', {v:'sorte'});
       UI.crAcao('passo', {v:'5'});
@@ -529,6 +531,29 @@ const SUSPEITO = [
   }
   /* a velocidade da luta nos Ajustes: as três, e volta pra 1× */
   for (const v of [2, 3, 1]) await tentar('ajustes/velocidade ' + v, x => { UI.modalAjustes(); Velocidade.definir(x); }, v);
+  /* a dificuldade nos Ajustes: as três, a folha de regras com cada uma, e volta pro Normal */
+  for (const k of ['facil', 'dificil', 'normal']){
+    await tentar('ajustes/dificuldade ' + k, x => { UI.modalAjustes(); Dificuldade.definir(x); }, k);
+    await tentar('regras/dificuldade ' + k, () => UI.modalRegras());
+  }
+  {
+    const r = await page.evaluate(() => {
+      const falhas = [];
+      UI.modalAjustes();
+      for (const k of ORDEM_DAS_DIFICULDADES){
+        const b = document.querySelector(`#modal [data-dif="${k}"]`);
+        if (!b){ falhas.push('os Ajustes não têm o botão ' + k); continue; }
+        b.click();
+        if (Estado.dados.config.dificuldade !== k) falhas.push('o botão ' + k + ' dos Ajustes não troca a dificuldade');
+        const sel = [...document.querySelectorAll('#modal [data-dif].sel')].map(x => x.dataset.dif);
+        if (sel.length !== 1 || sel[0] !== k) falhas.push('os Ajustes marcam ' + sel.join(',') + ' com ' + k + ' escolhida');
+      }
+      Dificuldade.definir('normal');
+      UI.fecharModal(true);
+      return falhas;
+    });
+    r.forEach(f => anota('dificuldade', f));
+  }
   for (const aba of ['perfil', 'status', 'jornada', 'pessoas', 'mundo'])
     await tentar('ficha/' + aba, x => UI.modalFicha(x), aba);
   for (const t of ['passos', 'comeco', 'ficha', 'combate', 'natureza', 'vinculo', 'mundo', 'pokenav', 'risco'])

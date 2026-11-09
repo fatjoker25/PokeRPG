@@ -711,7 +711,7 @@ const Estado = {
       lendarios: {},          // {dex:{estado:'livre|capturado|solto|morto', disposicao:'neutro|hostil|passivo|desconfiado', encontros:n}}
       liga: {avisos:0, ordemDevolucao:false, detencao:false},
       mundo: {clima:'normal', instabilidade:0, eventos:[]},
-      config: {ritmo:'fiel'},   // 'fiel' = HP do Pokérole · 'longo' = HP base em dobro
+      config: {ritmo:'fiel', dificuldade:'normal'},   // ritmo: 'fiel' = HP do Pokérole · 'longo' = HP base em dobro; dificuldade.js
       via: 'neutro',          // heroi | mercenario | foragido | pesquisador
       viaAnterior: null,
       finaisVistos: [],
@@ -1618,6 +1618,10 @@ const Estado = {
       /* o parceiro do Ezra passou a ser sorteado: quem já conhecia o
          Pidgey dele continua com o Pidgey */
       if (d.rival && !d.rival.picoDex) d.rival.picoDex = (d.npcs && d.npcs['Ezra']) ? 16 : 0;
+      /* a dificuldade chegou depois: a jornada de antes dela é Normal,
+         o jogo como ele foi medido */
+      d.config = d.config || {};
+      if (!['facil', 'normal', 'dificil'].includes(d.config.dificuldade)) d.config.dificuldade = 'normal';
       return true;
     } catch(e){ return false; }
   },

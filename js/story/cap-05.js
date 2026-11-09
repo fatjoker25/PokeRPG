@@ -205,7 +205,7 @@ c5_ab_negou:{
     d=>fala(d.jogador.nome, 'Ninguém entra atrás de mim.'),
     'Sai mais duro do que você queria. O mais novo dos três fica vermelho até a orelha.',
     fala('o homem de bota', 'Tá certo.'),
-    'Ele diz isso sem discordar e sem concordar, do jeito de quem já viu isso acontecer com outra pessoa que também achava que tinha autoridade pra dizer.',
+    'Ele diz isso sem discordar e sem concordar. Já viu isso acontecer com outra pessoa que também achava que tinha autoridade pra dizer.',
     'Você entra sozinh{o|a}. Dez minutos depois, lá dentro, você ouve três pares de pé na pedra atrás de você mesmo assim.'
   ],
   ef:{rep:{eixo:'ruim', delta:1, motivo:'Cortou três pessoas na boca da caverna.'},
@@ -427,7 +427,7 @@ c5_cobrou:{
     'O da aliança assobia.',
     '"Quinhentos pra carregar caixa vazia meia hora ladeira abaixo. Você é {ladrão|ladra}."',
     '"Sou caro."',
-    'Ele ri de verdade dessa vez, e tira duas notas do bolso, e são trezentos e não quinhentos, e ele te entrega do jeito que se entrega quando se sabe que a outra pessoa vai aceitar.',
+    'Ele ri de verdade dessa vez, e tira duas notas do bolso, e são trezentos e não quinhentos, e ele te entrega já sabendo que você vai aceitar.',
     'Você carrega a caixa por trinta e cinco minutos, ladeira abaixo, sentindo o calor dos ovos através do plástico na altura da barriga.',
     'A estrada de terra termina numa van branca parada numa curva. Nenhuma placa. Motor ligado.'
   ],
@@ -643,7 +643,7 @@ c5_ligou_com_caixa:{
     'Você fala. Ela não interrompe uma vez. No fim ela faz duas perguntas: "Estão quentes?" e "Você abriu?"',
     '"Quentes. E eu abri."',
     '"Fecha. Fecha agora e não abre mais." Você ouve ela levantando de alguma cadeira. "Eu chego em duas horas. Fica na sombra. Não põe no sol, não põe no chão de pedra, põe em cima da sua mochila."',
-    'Você fica duas horas na sombra com uma caixa de ovos em cima da mochila. É a coisa mais estranha que você já fez.'
+    'Você fica duas horas na sombra com uma caixa de ovos em cima da mochila. Quem passa, olha.'
   ],
   ef:{rep:{eixo:'bom',delta:3,motivo:'Chamou quem sabia, e esperou'},
       flag:'ovos_com_ivone',
@@ -760,7 +760,7 @@ c5_quem_manda:{
     '"Quem manda?"',
     'O da aliança levanta a caixa e não responde na hora. Responde quatro passos depois, já de costas, já descendo:',
     '"Gente que assina papel."',
-    'Ele diz isso do jeito de quem acha graça de si mesmo por ter medo.',
+    'Ele diz isso achando graça de si mesmo por ter medo.',
     '"Gente que assina papel é pior que gente com arma, {moleque|moleca}. Arma acaba. Papel não."'
   ],
   ef:{flag:'gente_que_assina_papel'},
@@ -1175,7 +1175,7 @@ c5_devolveu_pedra:{
 c5_esperou_cratera:{
   texto:[
     'Você senta na borda da cratera, atrás de uma pedra, e espera.',
-    'O dia inteiro. É a coisa mais chata que você já fez e você faz porque em algum lugar, no meio da noite, você decidiu que vale a pena.',
+    'O dia inteiro. O tédio vira dor nas costas, e você fica, porque em algum lugar, no meio da noite, você decidiu que vale a pena.',
     'Às onze e quarenta da noite eles vêm.',
     'Clefairy. Trinta e dois — você conta, porque contar é a única coisa que dá pra fazer quando se está assistindo a uma coisa dessas.',
     'Eles entram na cratera em fila e param em círculo em volta da pedra. E ficam.',
@@ -1233,7 +1233,7 @@ c5_derrubou_escada:{
 c5_entrada:{
   texto:[
     'Você entra.',
-    'Três passos lá dentro e a sua respiração vira a coisa mais alta do mundo. A caverna engole o som de um jeito que você não estava preparad{o|a}: você fala uma palavra pra testar e a palavra não volta.',
+    'Três passos lá dentro e você só ouve a própria respiração. A caverna engole o som de um jeito que você não estava preparad{o|a}: você fala uma palavra pra testar e a palavra não volta.',
     d=>{
       const l = (typeof Campo !== 'undefined') ? Campo.iluminar() : {pode:false};
       if (!l.pode) return 'A nove metros a luz do dia acaba. Você não tem luz nenhuma: anda com a mão na parede, contando os passos, com o pé tateando antes de pisar.';
@@ -1604,7 +1604,7 @@ c5_observou_camara:{
     d=>(d.flags.cruzou_os_cacadores || d.npcs['Caçador Roque'])
       ? 'Terceira: um deles é o Roque. O caçador da floresta.'
       : 'Terceira: um deles é mais velho que os outros, e tem um rolo de fio de aço pendurado num prego da parede.',
-    'Quarta: não tem arma nenhuma à vista, e isso é a coisa mais assustadora, porque quer dizer que eles não acham que precisam.'
+    'Quarta: não tem arma nenhuma à vista. Eles não acham que precisam, e é isso que assusta.'
   ],
   ef:{flag:'observou_a_camara',
       npc:{nome:'Caçador Roque', memoria:'Você o viu de novo, no Monte da Lua, trabalhando numa operação com cinco pessoas.'}},
@@ -1749,7 +1749,7 @@ c5_venceu:{
   falante:'Otto',
   vozes:['N','N'],
   texto:[
-    'Os outros quatro pegam as mochilas e saem pelo túnel de serviço, sem correr, sem falar com você, do jeito de quem bate ponto.',
+    'Os outros quatro pegam as mochilas e saem pelo túnel de serviço, sem correr, sem falar com você, como no fim de um turno.',
     'Otto fica, porque sair na frente de alguém que te venceu é pior do que apanhar.',
     '"Você acha que salvou eles." Ele aponta as gaiolas com o queixo, sentado no chão, com o time recolhido. "Abre. Vai, abre. Metade não sai. Tão aqui há semanas."',
     'Você abre. Ele tem razão sobre a metade.',

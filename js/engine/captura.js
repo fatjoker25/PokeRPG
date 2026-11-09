@@ -149,6 +149,7 @@ const Captura = {
     const ev = (t, txt) => eventos.push({tipo:t, texto:txt});
     const esp = DEX[alvo.dex];
     alvo.selvagem = false;
+    delete alvo.ajusteDif;   // o nível que a dificuldade deu passa a ser o dele
     alvo.capturadoEm = {cap:Estado.dados.capitulo, bola:nomeBola, dia:Estado.dados.relogio.dia};
     alvo.moral = esp.lendario ? 10 : 40;
     const destino = Estado.adicionar(alvo);

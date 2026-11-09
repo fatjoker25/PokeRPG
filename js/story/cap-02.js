@@ -47,7 +47,7 @@ c2_ab_encharcado:{
     'Lá dentro é morno, cheira a café de máquina e tem um ventilador de teto girando devagar em cima de dezesseis pessoas que também chegaram de algum lugar.',
     d=>{
       const p = d.time[0];
-      return p ? `${nomeExib(p)} sacode a água em cima de uma poltrona e um senhor levanta o jornal sem falar nada, do jeito de quem já viu isso duzentas vezes.`
+      return p ? `${nomeExib(p)} sacode a água em cima de uma poltrona e um senhor levanta o jornal sem falar nada. Já viu isso duzentas vezes.`
                : 'Alguém levanta o jornal sem falar nada quando você passa pingando.';
     }
   ],
@@ -274,7 +274,7 @@ c2_recado_da_sua_cidade:{
 c2_botou_na_frente:{
   texto:[
     'Você desprega o próprio cartaz da terceira camada e prega de volta por cima de tudo, no meio do mural, no lugar que todo mundo olha primeiro.',
-    'Leva quatro segundos e é a coisa mais sem-vergonha que você já fez na vida.',
+    'Leva quatro segundos, e a sua cara esquenta inteira.',
     'Uma senhora na fila do balcão vê você fazer isso e não fala nada, e o silêncio dela é ensurdecedor.',
     'Você deixa lá mesmo assim.'
   ],
@@ -639,7 +639,7 @@ c2_batalha_teo:{
     'Vocês saem pro pátio dos fundos do Centro, que existe exatamente pra isso e tem o chão marcado com tinta descascada.',
     'Ezra joga a Pokébola com mais força do que precisa. "VAI!"',
     'O {pico} sai e, em vez de encarar o seu, vira pra trás e olha pro Ezra, esperando, como quem espera comida. Ezra manda ele virar em voz alta, e o {pico} continua olhando pro Ezra.',
-    'Nenhum dos dois faz ideia do que está fazendo. É a coisa mais honesta dessa cidade.'
+    'Nenhum dos dois faz ideia do que está fazendo, e nenhum dos dois finge.'
   ],
   /* o parceiro dele saiu de casa na mesma semana que o seu: um nível na
      frente do seu melhor, nunca mais que nove */

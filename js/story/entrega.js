@@ -190,7 +190,7 @@ c1_professor_entrega:{
                   : 'A Pokébola pesa menos do que parecia.'; },
     d=>{ const p = (d.time || []).slice(-1)[0];
          return fala('o Professor', `${p ? pron(p).Ele : 'Ele'} gostou de você. Dá pra ver. O resto vocês descobrem ${p && generoDe(p) === 'f' ? '{juntos|juntas}' : 'juntos'}.`, 'riso'); },
-    'Ele volta pro laboratório com a bandeja e as duas que sobraram, sem se despedir, do jeito de quem vai estar lá quando você voltar.'
+    'Ele volta pro laboratório com a bandeja e as duas que sobraram, sem se despedir, como se fosse te ver amanhã.'
   ],
   ef:{executar:d => entregarDoProfessor(d)},
   escolhas:[
@@ -768,7 +768,7 @@ c1e_despedida_goro:{
     },
     'Ele abre a porta do motorista e para antes de entrar.',
     d=>fala('Célio', `Ah. Anota o meu número, vai. Todo mundo que eu entrego tem.`),
-    'Ele dita um número de sete dígitos de cor, devagar, do jeito de quem já ditou esse número mil vezes.',
+    'Ele dita um número de sete dígitos de cor, devagar, um número que ele já ditou mil vezes.',
     d=>fala('Célio', `Liga contando quando ${pronReservado(d).ele} evoluir. Eu quero saber.`, 'riso')
   ],
   ef:{executar:d => {

@@ -814,7 +814,7 @@ c16_travessia:{
     'Vocês saem às sete.',
     'A travessia leva onze horas num barco de pesca de sete metros, com motor forte e um toldo de lona.',
     'Onze horas é muito tempo.',
-    'Nas três primeiras vocês conversam. Nas três seguintes o Sr. Tanner dorme sentado com a mão no leme e acorda a cada vinte minutos pra corrigir o rumo, e depois dorme de novo, e isso é a coisa mais tranquilizadora que já te aconteceu num barco.',
+    'Nas três primeiras vocês conversam. Nas três seguintes o Sr. Tanner dorme sentado com a mão no leme e acorda a cada vinte minutos pra corrigir o rumo, e depois dorme de novo, e o barco inteiro parece seguro por causa disso.',
     'Nas cinco últimas ninguém fala nada, e no fim delas o céu clareia atrás de vocês.',
     'A ilha aparece com o dia nascendo: pedra e mato. Sem praia, sem cais, sem enseada.',
     'Um bloco de rocha de uns oitocentos metros de comprimento e uns sessenta de altura, com a face oeste cortada a pique e a leste em rampa de pedregulho.',
@@ -1150,7 +1150,7 @@ c16_esperou_noite:{
 c16_ficou_com_o_ze:{
   texto:[
     'Você rema até o barco e fica.',
-    'Ele não fala nada por uns dez minutos, e depois fala sem parar por uma hora, que é a coisa mais normal do mundo com alguém que passou quarenta anos sem que acreditassem nele.',
+    'Ele não fala nada por uns dez minutos, e depois fala sem parar por uma hora, como faz qualquer um que passou quarenta anos sem que acreditassem nele.',
     'Ele conta do pai. Da mãe, que não deixava ele sair de noite. Do irmão que foi pra Vermilion em cinquenta e nove e nunca mais voltou. De um Growlithe chamado Tampa.',
     'Às duas da manhã ele para de falar no meio de uma frase e olha a ilha.',
     fala('Sr. Tanner', 'Eu vou morrer em uns três anos.'),
@@ -1311,7 +1311,7 @@ c16_quantas_janelas:{
     c16_eu('De trinta e nove a noventa e seis.'),
     'Ela fecha os olhos por um segundo.',
     fala('Chefe da expedição', 'Cinquenta e sete anos de série temporal.'),
-    'E aí ela diz a coisa mais honesta e mais assustadora da conversa:',
+    'E aí ela diz, com toda a honestidade, a parte que assusta:',
     fala('Chefe da expedição', 'Eu daria o meu salário de um ano por essa caixa, e eu ganho muito bem. E eu não vou te oferecer dinheiro, porque já entendi que você não vende.')
   ],
   ef:{flag:['sabe_das_janelas_perdidas','equipe_te_respeita'],
@@ -1777,7 +1777,7 @@ c16_esperou_no_circulo:{
     'E espera.',
     d=>c16_espera(d),
     d=>c16_comAEquipe(d),
-    'Faz frio, venta, a pedra é dura, e você não tem nada pra fazer. É a coisa mais parecida com fazer um pedido que você já fez na vida sem pedir nada.',
+    'Faz frio, venta, a pedra é dura, e você não tem nada pra fazer. É quase como fazer um pedido, sem pedir nada.',
     'Às onze e dez, começa.',
     'A luz não vem do céu.',
     d=>d.flags.viu_o_arco_iris
@@ -1958,7 +1958,7 @@ c16_ajoelhou:{
     'Depois levanta, olha pra você e espera.',
     'Você entende, ajoelhad{o|a}, com as mãos na pedra fria: ele devolveu o gesto.',
     'Ele não quer isso.',
-    'Ele não sabe o que fazer com isso e devolveu, que é a coisa mais educada que dava pra fazer.',
+    'Ele não sabe o que fazer com isso e devolveu, com toda a educação.',
     'Você levanta.',
     'Ele também.'
   ],
@@ -1980,7 +1980,7 @@ c16_ajoelhou:{
 c16_pegou_pena:{
   texto:[
     'Uma pena cai.',
-    'Não é ele largando: é pena caindo, do jeito que pena cai de qualquer Pokémon de pena, porque Pokémon de pena troca pena, e isso é a coisa mais banal do mundo.',
+    'Não é ele largando: é pena caindo, do jeito que pena cai de qualquer Pokémon de pena, porque Pokémon de pena troca pena, todo dia, em todo lugar.',
     'Ela desce planando por uns oito segundos e para na laje a um metro de você.',
     'Tem uns quarenta centímetros, é vermelha na base e dourada na ponta, e não brilha, porque é uma pena.',
     'Você pega.',
@@ -2202,7 +2202,7 @@ c16_deixou_pena:{
   texto:[
     d=>d.flags.c16_tinha_a_pena
       ? 'Você põe a pena de volta no chão do círculo e recua até a borda da laje.'
-      : 'Você não faz nada. Uma pena cai — pena cai de Pokémon de pena, é a coisa mais banal do mundo — e para na laje entre vocês dois. Você não pega, e recua até a borda da laje.',
+      : 'Você não faz nada. Uma pena cai — pena cai de Pokémon de pena, todo dia — e para na laje entre vocês dois. Você não pega, e recua até a borda da laje.',
     'Ele olha a pena no chão.',
     'Depois olha você.',
     'E aí faz uma coisa muito pequena: empurra a pena com o bico, dois centímetros, na sua direção.',

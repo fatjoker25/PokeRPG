@@ -42,6 +42,8 @@ function escolhaJogador(){
 const N = +process.argv[2] || 60;
 const quais = process.argv[3] ? process.argv[3].split(',') : RIVAIS_EXTRA.map(R => R.id);
 Estado.novo({nome:'Sim', genero:'Mulher', cidade:'Pallet', idade:15, casaNome:'Delia', casaQuem:'mãe'});
+/* DIFICULDADE=facil|dificil mede outra dificuldade da jornada (dificuldade.js); sem ela, Normal */
+if (process.env.DIFICULDADE) Estado.dados.config.dificuldade = process.env.DIFICULDADE;
 const d = Estado.dados;
 const INS = ['Insígnia Pedra','Insígnia Cascata','Insígnia Trovão','Insígnia Arco-Íris','Insígnia Alma','Insígnia Pântano','Insígnia Vulcão','Insígnia Terra'];
 /* quantas insígnias o jogador costuma ter chegando no capítulo */

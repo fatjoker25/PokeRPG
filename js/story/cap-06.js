@@ -34,7 +34,7 @@ c6_ab_pela_agua:{
     d=>fala(d.jogador.nome, 'Por que alguém pagaria mais pra ir mais devagar?'),
     fala('o barqueiro', 'Você acabou de sair do Monte da Lua e tá me perguntando isso.'),
     'Você paga os cento e vinte, porque cento e oitenta é dinheiro, e ele vai devagar do mesmo jeito.',
-    'O rio leva quarenta minutos e nos quarenta minutos não acontece absolutamente nada, e isso é a coisa mais generosa que te aconteceu em três dias.',
+    'O rio leva quarenta minutos e nos quarenta minutos não acontece absolutamente nada, e depois de três dias você agradece.',
     'Cerulean aparece de baixo pra cima: primeiro as estacas das pontes, depois as pontes, depois a cidade em cima delas.'
   ],
   ef:{dinheiro:-120, flag:'desceu_de_chata', registrar:'Desceu o rio de chata até Cerulean.'},
@@ -417,8 +417,8 @@ c6_misty_desafio:{
     '"Eu vim desafiar o ginásio."',
     'Misty olha pro Cosmo. O Cosmo olha pro teto.',
     d=>(d.relogio && d.relogio.hora >= 17)
-      ? '"Desafio é de manhã e de tarde, com licença na mão, e hoje já passou das cinco." Ela fala sem nenhuma hostilidade, do jeito de quem repete isso oito vezes por dia. "Você volta amanhã."'
-      : '"Desafio é na porta do ginásio, com licença na mão, não na beira da piscina." Ela fala sem nenhuma hostilidade, do jeito de quem repete isso oito vezes por dia. "Você passa lá."',
+      ? '"Desafio é de manhã e de tarde, com licença na mão, e hoje já passou das cinco." Ela fala sem nenhuma hostilidade. Repete isso oito vezes por dia. "Você volta amanhã."'
+      : '"Desafio é na porta do ginásio, com licença na mão, não na beira da piscina." Ela fala sem nenhuma hostilidade. Repete isso oito vezes por dia. "Você passa lá."',
     'Ela começa a se levantar. E aí para.',
     '"Espera. Você tá com poeira de pedra na mochila."'
   ],
@@ -485,7 +485,7 @@ c6_misty_oficio:{
   texto:[
     '"Que ofício?"',
     'Ela abre a pasta de plástico, folheia, e tira uma folha timbrada.',
-    'Você lê. É educadíssimo. É a coisa mais educada que você já leu.',
+    'Você lê. É educadíssimo, do cabeçalho à assinatura.',
     '"Comunicamos a instauração de procedimento de avaliação de idoneidade de custódia referente aos espécimes registrados sob a titularidade de V.Sa., nos termos do Art. 11 do Estatuto."',
     '"O que isso quer dizer?"',
     '"Quer dizer que alguém abriu um processo pra decidir se eu sou uma boa dona dos meus Pokémon." Ela guarda a folha. "Eu tenho um Starmie há nove anos. Ele dorme na minha cama."',
@@ -970,11 +970,11 @@ c6_quem_carimba:{
     '"Sabe."',
     '"Quantos?"',
     '"Eu não sei quantos. Eu sei que sabe." Ele guarda a nota. "Cada nota minha tem número. Número é sequência. Sequência é contagem."',
-    'Ele olha pra você com uma atenção nova, do jeito de quem reavalia com quem está falando.',
+    'Ele olha pra você com uma atenção nova, reavaliando com quem está falando.',
     '"Você não é {o primeiro|a primeira} a perguntar isso. Mas você é {o primeiro|a primeira} de mochila."'
   ],
   ef:{flag:'sequencia_e_contagem',
-      presagio:'Alguém, em algum lugar, tem a contagem completa. E a contagem completa é a coisa mais perigosa que existe.'},
+      presagio:'Alguém, em algum lugar, tem a contagem completa.'},
   escolhas:[
     {texto:'"Quem mais perguntou?"', vai:'c6_quem_mais'},
     {texto:'Ver os papéis.', vai:'c6_papeis'},
@@ -1492,7 +1492,7 @@ c6_escondeu_estatuto:{
     'Você acha uma árvore caída com o tronco oco e enfia a caixa lá dentro, e cobre com folha, e marca a árvore com uma pedra branca em cima de um toco.',
     'Depois anda trezentos metros, olha pra trás, e não consegue distinguir qual árvore é.',
     'Volta. Refaz a marcação com duas pedras brancas. Anda trezentos metros de novo. Dessa vez dá.',
-    'É a coisa mais paranoica que você já fez, e ainda parece pouco.'
+    'Parece paranoia, e ainda parece pouco.'
   ],
   ef:{flag:'estatuto_escondido',
       presagio:'Tem uma caixa num tronco oco na Rota 25 com duas pedras brancas em cima de um toco.'},
@@ -1892,7 +1892,7 @@ c6_foi_sozinho_tigelas:{
   ],
   ef:{flag:['achou_as_tigelas','sabe_o_veneno'],
       registrar:'Identificou o princípio ativo do veneno das tigelas da Rota 25.',
-      presagio:'Você pegou o nome. Agora o Centro sabe o que fazer, e isso é a diferença entre duas coisas muito diferentes.'},
+      presagio:'Você pegou o nome. Agora o Centro sabe o que fazer.'},
   escolhas:[
     {texto:'Voltar correndo com o pacote.', vai:'c6_voltou_com_pacote'},
     {texto:'Virar todas as tigelas antes de voltar.', vai:'c6_virou_antes'},
@@ -1990,7 +1990,7 @@ c6_levou_pra_casa:{
   texto:[
     'Vocês levam o Vaporeon pro apartamento dela, que fica em cima de uma oficina e tem dezoito degraus de escada externa.',
     'É pequeno e muito limpo. Tem uma toalha velha dobrada num canto da sala que é claramente a cama dele.',
-    'Ela faz café. Você bebe café numa cozinha de estranha às sete da noite e é a coisa mais normal que te acontece em uma semana.',
+    'Ela faz café. Você bebe café numa cozinha de estranha às sete da noite, e pela primeira vez em uma semana nada parece fora do lugar.',
     'Na estante tem um porta-retrato com uma menina de uns quinze anos de uniforme de escola.',
     'Você não pergunta. Ela repara que você não perguntou, e agradece com a cabeça.'
   ],
@@ -2163,7 +2163,7 @@ c6_correu_quase:{
   texto:[
     'Você chega. Tarde, mas chega.',
     'Eles conseguem estabilizar. O Vaporeon vai viver, e não vai voltar a ser o que era — o veneno ficou em algum lugar que não sai, e uma das patas traseiras não responde direito.',
-    'Sibyl agradece muito. Muito demais, do jeito de quem está agradecendo pra não pensar no resto.',
+    'Sibyl agradece muito. Muito demais: está agradecendo pra não pensar no resto.',
     'Na recepção, Sibyl já está combinando com a enfermeira um horário de fisioterapia, e falando de beira de rio, de sol, de quanto tempo ele aguenta andar por dia.'
   ],
   ef:{rep:{eixo:'bom',delta:2,motivo:'Tentou salvar o Vaporeon de Sibyl'}, hp:-5, causa:'Exaustão na Rota 25',
@@ -2277,7 +2277,7 @@ c6_levou_marta_casa:{
 c6_cafe_depois:{
   texto:[
     'Você entra. É pequeno e muito limpo.',
-    'Tem uma toalha velha faltando num canto da sala, e o canto vazio é a coisa mais alta do apartamento.',
+    'Tem uma toalha velha faltando num canto da sala, e o canto vazio ocupa a sala inteira.',
     'Ela faz café. Vocês bebem sem falar. Em algum momento ela chora de novo, curto, e depois pede desculpa, e você diz que não precisa, e ela diz "precisa sim", e vocês voltam a beber café.',
     'Você fica uma hora e quinze.',
     'Na estante tem um porta-retrato com uma menina de uns quinze anos de uniforme de escola.'
@@ -2372,7 +2372,7 @@ c6_entao_para:{
     'Ele põe a décima sexta tigela no chão e não enche.',
     'Fica olhando pra ela vazia.',
     '"Se você virar todas, eu não encho hoje."',
-    'É a coisa mais estranha que já pediram pra você.'
+    'Ninguém nunca te pediu nada parecido.'
   ],
   ef:{flag:'ele_pediu'},
   escolhas:[
@@ -2565,7 +2565,7 @@ c6_outro_jeito:{
     '"Eu tiro eles daqui."',
     '"Você tira os Pokémon de rua da Rota 25." Ele fala devagar, medindo o tamanho da bobagem. "Quantos?"',
     'Você não sabe quantos. Ninguém sabe quantos.',
-    'Mas você passa as quatro horas seguintes tentando, e é a coisa mais idiota e mais honesta que você fez até agora.'
+    'Mas você passa as quatro horas seguintes tentando. É idiota, e é honesto.'
   ],
   escolhas:[
     {texto:'Ir até o fim. Pegar quantos der.', vai:'c6_tentou_tirar'},

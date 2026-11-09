@@ -52,13 +52,42 @@ const EVENTOS_CIDADE = {
 
 /* ─────────────── PALLET ─────────────── */
 pallet:[
+/* cena leve: ninguém ameaça ninguém, nada se descobre em papel */
+{
+  id:'pal_oddish_do_regador', umaVez:true, peso:3,
+  cond:d=>deDia(d),
+  titulo:'O canteiro do laboratório',
+  texto:[
+    'No canteiro da frente do laboratório tem um Oddish dormindo enterrado até as folhas, bem no caminho do regador giratório.',
+    'Uma menina de avental de voluntária muda o regador de lugar a cada dez minutos, pra água não pegar nele, e conta os minutos nos dedos.',
+    fala('a menina do regador', 'Se molhar, ele acorda. Se acordar, vai embora. Ele mora aqui, e eu não deixo ele ir embora.')
+  ],
+  escolhas:[
+    {texto:'Ajudar a mudar o regador de lugar.',
+     ef:{moral:2, rep:{eixo:'bom', delta:1, motivo:'Passou uma manhã mudando um regador de lugar por causa de um Oddish'},
+         registrar:'Ajudou a menina do regador a não acordar o Oddish do canteiro do laboratório.'},
+     resultado:[
+       'Vocês revezam: dez minutos ela, dez minutos você. O canteiro inteiro fica molhado, menos um círculo do tamanho de um Oddish.',
+       'Lá pela quinta volta o Oddish se espreguiça, abre um olho, vê vocês dois e afunda de volta na terra.',
+       fala('a menina do regador', 'Viu? Ele sabe que é com ele.', 'riso')
+     ]},
+    {texto:'Sentar perto do Oddish e esperar ele acordar.',
+     ef:{moral:3, registrar:'Esperou um Oddish acordar no canteiro do laboratório.'},
+     resultado:[
+       'Você senta na borda do canteiro. O sol sobe, a sombra do laboratório encolhe, e o Oddish não acorda.',
+       d=>{ const p = d.time[0]; return p ? `${nomeExib(p)} deita do seu lado e dorme também, o que não estava nos planos de ninguém.` : 'Você quase dorme também.'; },
+       'Quando você levanta, a menina já deixou um regador pequeno do seu lado, pra próxima vez.'
+     ]},
+    {texto:'Seguir.', ef:{}, resultado:['Você segue pela rua. Atrás de você, o regador gira e para, gira e para, sempre do outro lado.']}
+  ]
+},
 {
   id:'pal_cachorro_do_quatorze', umaVez:true, peso:3,
   cond:d=>horaAgora(d) >= 9 && horaAgora(d) <= 12,
   titulo:'O Growlithe do quatorze',
   texto:[
     'Tem um Growlithe velho deitado no meio da rua, na parte quente do asfalto, e ele não sai de lá por nada.',
-    'Uma mulher tenta empurrar com o pé, sem força nenhuma, do jeito de quem faz isso todo dia e já perdeu.',
+    'Uma mulher tenta empurrar com o pé, sem força nenhuma: faz isso todo dia e já perdeu.',
     fala('a mulher do quatorze', 'Ele tem quinze anos. Quinze! Ele não escuta, não vê direito, e escolheu justo o meio da rua.'),
     fala('a mulher do quatorze', 'Passa caminhão de leite às onze. Todo dia às onze.')
   ],
@@ -143,6 +172,44 @@ pallet:[
 
 /* ─────────────── VIRIDIAN ─────────────── */
 viridian:[
+/* cena leve */
+{
+  id:'vir_casulo_da_praca', umaVez:true, peso:3,
+  cond:d=>deDia(d),
+  titulo:'O casulo da praça',
+  texto:[
+    'Uma menina de uns sete anos está parada embaixo da árvore mais alta da praça, olhando pra cima com as duas mãos fechadas.',
+    'Lá em cima, num galho fino, o Caterpie dela faz uma coisa que ela nunca viu: solta fio e vai se enrolando nele.',
+    fala('a menina do Caterpie', 'Ele tá doente? Ele subiu, não quer descer, e agora tá se embrulhando.', 'baixo')
+  ],
+  escolhas:[
+    {texto:'Explicar o que ele está fazendo.',
+     teste:{status:'intelecto', dificuldade:4, nomeStatus:'Intelecto', eixo:'paciencia'},
+     bom:{ef:{moral:2, rep:{eixo:'bom', delta:1, motivo:'Explicou a uma menina que o Caterpie dela estava evoluindo'},
+              registrar:'Viu um Caterpie virar Metapod na praça de Viridian, com a menina dona dele.'},
+          resultado:[
+            'Você explica com as palavras mais simples que acha: ele não está doente, está crescendo, e crescer, pra um Caterpie, é assim.',
+            'Ela não tira os olhos do galho. Leva uns quinze minutos, e no fim o que está pendurado lá em cima é um Metapod verde e duro, balançando de leve no vento.',
+            fala('a menina do Caterpie', 'Ele vai lembrar de mim?'),
+            'Você diz que vai. Ela acredita na hora, e isso basta pros dois.'
+          ]},
+     ruim:{ef:{moral:1, registrar:'Viu um Caterpie virar Metapod na praça de Viridian.'},
+           resultado:[
+             'Você tenta explicar e se enrola na palavra "evolução". Ela não entende nada, mas também não chora.',
+             'Quinze minutos depois tem um Metapod pendurado no galho, e ela entende sozinha, de uma vez, e grita tão alto que a praça inteira olha.'
+           ]}},
+    {texto:'Ficar com ela até ele terminar.',
+     ef:{moral:3, rep:{eixo:'bom', delta:1, motivo:'Esperou com uma menina o Caterpie dela evoluir'},
+         registrar:'Esperou com uma menina, na praça de Viridian, o Caterpie dela virar Metapod.'},
+     resultado:[
+       'Vocês sentam no banco embaixo da árvore e ninguém fala nada por quinze minutos.',
+       'O fio vai fechando, o verde vai endurecendo, e no fim tem um Metapod pendurado no galho, quieto, balançando de leve.',
+       fala('a menina do Caterpie', 'Agora ele desce?'),
+       'Agora ele espera. Ela diz que espera junto, e senta de novo.'
+     ]},
+    {texto:'Seguir.', ef:{}, resultado:['Você segue. Ela continua lá embaixo, olhando pra cima, com as duas mãos fechadas.']}
+  ]
+},
 {
   id:'vir_fila_da_licenca', umaVez:true, peso:3,
   titulo:'A fila da licença',
@@ -223,7 +290,7 @@ viridian:[
          registrar:'Queimou a mão no motor do carro atrás do posto de Viridian.'},
      resultado:[
        'Você põe a mão num lugar que está a noventa graus e tira muito rápido.',
-       'Os quatro homens acham isso a coisa mais engraçada que aconteceu na semana deles.',
+       'Os quatro homens riem disso até perder o fôlego.',
        fala('Dino, o dono do carro', 'Era o terminal, {moço|moça}. Era o terminal desde o começo.', 'riso')
      ]},
     {texto:'Deixar os quatro resolverem.', ef:{}, resultado:['Você segue. A discussão continua audível por dois quarteirões.']}
@@ -233,6 +300,34 @@ viridian:[
 
 /* ─────────────── PEWTER ─────────────── */
 pewter:[
+/* cena leve */
+{
+  id:'pew_forno_de_pedra', umaVez:true, peso:3,
+  cond:d=>horaAgora(d) >= 4 && horaAgora(d) <= 8,
+  titulo:'O forno de pedra',
+  texto:[
+    'Às seis da manhã, Pewter cheira a pão. A fila da padaria da praça é de capacete e bota de pedreira, e ninguém fala, porque ainda é cedo demais pra falar.',
+    'Encostado na parede de fora do forno, onde a pedra fica quente, tem um Geodude dormindo de braços cruzados.',
+    fala('a padeira do forno de pedra', 'Ele chega às quatro, quando eu acendo, e vai embora quando o sol esquenta a rua. Seis anos assim.')
+  ],
+  escolhas:[
+    {texto:'Pagar o pão da fila inteira.', cond:d=>Estado.j.dinheiro >= 120,
+     ef:{dinheiro:-120, rep:{eixo:'bom', delta:1, motivo:'Pagou o pão da fila da pedreira numa manhã de Pewter'},
+         registrar:'Pagou o pão da fila da pedreira, numa manhã de Pewter.'},
+     resultado:[
+       'São onze pessoas e onze pães. A padeira faz a conta de cabeça, e você paga.',
+       'Ninguém agradece em voz alta. O último da fila, um homem de capacete amarelo, levanta o pão na sua direção antes de sair.',
+       'Na pedreira, isso vale um aperto de mão.'
+     ]},
+    {texto:'Sentar do lado do Geodude, na parede quente.',
+     ef:{moral:2, registrar:'Esquentou as costas na parede do forno de Pewter, do lado de um Geodude.'},
+     resultado:[
+       'A pedra está quente como cobertor. O Geodude abre um olho, te avalia e chega um palmo pro lado, pra caber você.',
+       'Vocês ficam ali até o sol pegar a rua. Quando ele vai embora, rolando devagar morro acima, a padeira te dá o pão que sobrou da fornada.'
+     ]},
+    {texto:'Seguir.', ef:{}, resultado:['Você segue. O cheiro de pão vai junto até a saída da cidade.']}
+  ]
+},
 {
   id:'pew_sirene', umaVez:true, peso:3,
   cond:d=>horaAgora(d) >= 6 && horaAgora(d) <= 12,
@@ -328,6 +423,43 @@ pewter:[
 
 /* ─────────────── CERULEAN ─────────────── */
 cerulean:[
+/* cena leve: o Ezra sem luta nenhuma */
+{
+  id:'cer_ezra_na_ponte', umaVez:true, peso:4,
+  cond:d=>deDia(d) && d.capitulo >= 6 && d.capitulo < 17 && !!(d.npcs && d.npcs['Ezra'])
+    && typeof arcoRival === 'function' && ['parceiro', 'rival'].includes(arcoRival()),
+  titulo:'Meio sanduíche na ponte',
+  texto:[
+    'Na ponte do meio, sentado na mureta com as pernas pro lado do rio, tem alguém comendo um sanduíche de ovo e brigando com o {pico} pela casca do pão.',
+    'É o Ezra.',
+    fala('Ezra', 'Ó quem é! Senta aí. Não, sério, senta. Eu tô sozinho faz três dias e já tô conversando com ponte.', 'riso')
+  ],
+  escolhas:[
+    {texto:'Sentar e dividir o lanche.',
+     ef:{moral:3, npc:d=>({nome:'Ezra', opiniao:((Estado.npc('Ezra') || {}).opiniao || 0) + 1, memoria:'Dividiram um sanduíche de ovo na ponte de Cerulean, sem luta nenhuma.'}),
+         registrar:'Dividiu um sanduíche com o Ezra na ponte de Cerulean.'},
+     resultado:[
+       'Ele parte o sanduíche no meio, o meio dele sai maior, e ele troca sem você pedir.',
+       fala('Ezra', 'Sabe o que é engraçado? A gente só se vê pra brigar. Parece que eu só existo com Pokébola na mão.'),
+       'Vocês ficam uma hora falando de nada: do ônibus que atrasou, do Centro que tem a melhor cadeira, de quem cozinha melhor em casa.',
+       'O {pico} come a casca do pão dos dois e dorme no colo dele.'
+     ]},
+    {texto:'Apostar corrida até o fim da ponte.',
+     ef:{moral:2, hp:-1, npc:d=>({nome:'Ezra', opiniao:((Estado.npc('Ezra') || {}).opiniao || 0) + 1, memoria:'Apostaram corrida na ponte de Cerulean, e ninguém sabe quem ganhou.'}),
+         registrar:'Apostou corrida com o Ezra na ponte de Cerulean.'},
+     resultado:[
+       'Ele sai antes do "já", você sai junto, e vocês chegam no fim da ponte ao mesmo tempo, sem fôlego, com uma senhora reclamando dos dois.',
+       fala('Ezra', 'Empate. Empate! Não tem juiz, então é empate.', 'riso'),
+       'O {pico} chega por último, andando, e senta entre vocês dois como se fosse o juiz.'
+     ]},
+    {texto:'Dizer que está com pressa.',
+     ef:{npc:d=>({nome:'Ezra', opiniao:(Estado.npc('Ezra') || {}).opiniao || 0, memoria:'Passou por ele na ponte de Cerulean, com pressa.'})},
+     resultado:[
+       fala('Ezra', 'Beleza. Vai lá. Eu fico aqui com a ponte.'),
+       'Ele acena com o sanduíche. Quando você olha pra trás, ele já voltou a conversar com o {pico}.'
+     ]}
+  ]
+},
 {
   id:'cer_ponte_dos_seis', umaVez:true, peso:3,
   titulo:'A fila da ponte',
@@ -423,6 +555,40 @@ cerulean:[
 
 /* ─────────────── VERMILION ─────────────── */
 vermilion:[
+/* cena leve */
+{
+  id:'ver_corrida_do_pier', umaVez:true, peso:3,
+  cond:d=>deDia(d),
+  titulo:'A corrida do píer',
+  texto:[
+    'No fim do píer de pesca, quatro crianças estão agachadas atrás de uma linha de giz, cada uma segurando um Krabby pelo casco.',
+    'A chegada é outra linha de giz, três metros pro lado, porque Krabby só corre de lado.',
+    fala('o menino do píer', 'Precisa de juiz! O último juiz era o meu irmão, e ele roubou.')
+  ],
+  escolhas:[
+    {texto:'Ser {o juiz|a juíza}.',
+     teste:{status:'percepcao', dificuldade:5, nomeStatus:'Percepção', eixo:'paciencia'},
+     bom:{ef:{moral:2, rep:{eixo:'bom', delta:1, motivo:'Apitou uma corrida de Krabby no píer de Vermilion'},
+              registrar:'Apitou uma corrida de Krabby no píer de Vermilion.'},
+          resultado:[
+            'Três Krabby saem de lado, um sai de frente e para, sem entender. A chegada é por uma garra.',
+            'Você viu qual garra e diz qual foi, e ninguém discute, porque você viu mesmo.',
+            fala('o menino do píer', '{Esse juiz é bom|Essa juíza é boa}. Fica pra próxima?')
+          ]},
+     ruim:{ef:{moral:1},
+           resultado:[
+             'Dois Krabby cruzam a linha juntos, e você não tem a menor ideia de qual chegou primeiro.',
+             'Você declara empate. Os quatro reclamam ao mesmo tempo, depois concordam que empate é justo, e correm de novo.'
+           ]}},
+    {texto:'Torcer pelo menor.',
+     ef:{moral:2, registrar:'Torceu pelo Krabby menor numa corrida no píer de Vermilion.'},
+     resultado:[
+       'O menor Krabby é da menina mais nova. Ele corre na direção errada, depois na certa, e chega em último com uma bolha de espuma na boca.',
+       'Você é a única pessoa do píer que comemora. A menina comemora junto, porque alguém comemorou.'
+     ]},
+    {texto:'Seguir.', ef:{}, resultado:['Você segue pelo píer. Atrás de você alguém grita "larga", e quatro Krabby saem pro lado errado.']}
+  ]
+},
 {
   id:'ver_caixa_de_gelo', umaVez:true, peso:3,
   titulo:'A caixa de gelo',
@@ -505,6 +671,34 @@ vermilion:[
 
 /* ─────────────── LAVENDER ─────────────── */
 lavender:[
+/* cena leve */
+{
+  id:'lav_coroas_de_flor', umaVez:true, peso:3,
+  cond:d=>deDia(d),
+  titulo:'Coroas de flor',
+  texto:[
+    'Atrás da floricultura, sentada num caixote, uma menina faz coroas com as flores que não venderam ontem.',
+    'Ela faz uma, olha, desmancha metade e refaz. No chão, do lado dela, tem três prontas, pequenas demais pra cabeça de gente.',
+    fala('a menina das coroas de flor', 'São pros Pokémon do pátio da Torre. Ninguém traz flor pra eles, só pros de dentro.', 'baixo')
+  ],
+  escolhas:[
+    {texto:'Fazer uma com ela.',
+     ef:{moral:3, rep:{eixo:'bom', delta:1, motivo:'Fez coroas de flor pros Pokémon do pátio da Torre'},
+         registrar:'Fez coroas de flor com uma menina, atrás da floricultura de Lavender.'},
+     resultado:[
+       'A sua sai torta. Ela não fala nada, só refaz o nó do fim.',
+       'Depois vocês levam as quatro pro pátio da Torre. Um Cubone aceita a dele sem tirar os olhos de vocês e fica com ela por cima do capacete de osso o resto da tarde.'
+     ]},
+    {texto:'Pedir uma pro seu Pokémon.',
+     ef:{moral:3, registrar:'Ganhou uma coroa de flor pro time, atrás da floricultura de Lavender.'},
+     resultado:[
+       d=>{ const p = d.time[0];
+            return p ? `Ela olha ${nomeExib(p)} de cima a baixo, escolhe as flores pela cor e faz uma coroa do tamanho exato da cabeça ${pron(p).dele}. ${nomeExib(p)} não deixa ninguém tirar.`
+                     : 'Você não tem quem coroar. Ela te dá uma mesmo assim, pra quando tiver.'; }
+     ]},
+    {texto:'Seguir.', ef:{}, resultado:['Você segue. No portão da Torre, tem um Cubone no pátio com uma coroa de flor meio torta na cabeça.']}
+  ]
+},
 {
   id:'lav_o_caderno_da_porta', umaVez:true, peso:3,
   titulo:'O caderno na porta do abrigo',
@@ -793,6 +987,39 @@ lavender:[
 
 /* ─────────────── CELADON ─────────────── */
 celadon:[
+/* cena leve */
+{
+  id:'cel_cantoria_do_terraco', umaVez:true, peso:3,
+  cond:d=>deDia(d),
+  titulo:'A cantoria do terraço',
+  texto:[
+    'No terraço da Grande Loja, entre as máquinas de refresco e os vasos de planta, tem uma rodinha de gente sentada no chão.',
+    'No meio da roda, em cima de um engradado virado, uma Jigglypuff segura um microfone de brinquedo e espera silêncio.',
+    fala('a dona da Jigglypuff', 'Ela canta toda tarde. Quem dormir antes do fim paga o refresco dela.', 'riso')
+  ],
+  escolhas:[
+    {texto:'Ouvir até o fim sem dormir.',
+     teste:{status:'resistencia', dificuldade:6, nomeStatus:'Resistência', eixo:'coragem'},
+     bom:{ef:{moral:2, rep:{eixo:'bom', delta:1, motivo:'Ouviu a Jigglypuff do terraço até o fim'},
+              registrar:'Foi a única pessoa acordada no fim da cantoria do terraço da Grande Loja.'},
+          resultado:[
+            'A primeira nota derruba metade da roda. Na segunda, a dona da Jigglypuff boceja. Você belisca o próprio braço até ficar roxo.',
+            'Quando a música acaba, você é a única pessoa de olho aberto no terraço. A Jigglypuff desce do engradado, atravessa a roda e te dá a mão, séria. Negócio fechado.'
+          ]},
+     ruim:{ef:{dinheiro:-40, moral:1},
+           resultado:[
+             'Você aguenta a primeira estrofe inteira. Acorda com o sol mais baixo, a roda toda dormindo, e a Jigglypuff sentada no seu joelho, olhando pra você.',
+             'Você paga o refresco dela. É de morango.'
+           ]}},
+    {texto:'Tapar os ouvidos e assistir.',
+     ef:{moral:1, registrar:'Viu a roda inteira dormir na cantoria do terraço da Grande Loja.'},
+     resultado:[
+       'Você tapa os ouvidos e assiste a roda inteira cair no sono, um por um, tombando pro lado.',
+       'No meio da segunda estrofe a Jigglypuff repara nas suas mãos, para de cantar e fica te olhando, ofendida, até você tirar.'
+     ]},
+    {texto:'Seguir.', ef:{}, resultado:['Você desce pela escada rolante. No quarto andar, uma vendedora boceja sem saber por quê.']}
+  ]
+},
 {
   id:'cel_sem_lugar_pra_sentar', umaVez:true, peso:3,
   titulo:'Sete andares e nenhum banco',
@@ -942,6 +1169,36 @@ celadon:[
 
 /* ─────────────── FUCHSIA ─────────────── */
 fuchsia:[
+/* cena leve */
+{
+  id:'fuc_slowpoke_do_ponto', umaVez:true, peso:3,
+  cond:d=>horaAgora(d) >= 12 && horaAgora(d) <= 18,
+  titulo:'O Slowpoke do ponto',
+  texto:[
+    'No ponto de ônibus da avenida tem um Slowpoke sentado no banco, de frente pra rua, com o rabo pendurado pro lado de fora.',
+    'O ônibus da linha 4 encosta. O motorista abre a porta, espera, conta até dez em voz alta, fecha a porta e vai embora.',
+    fala('o motorista da linha 4', 'Amanhã, então!', 'riso'),
+    'O Slowpoke não se mexe.'
+  ],
+  escolhas:[
+    {texto:'Perguntar pra quem está no ponto.',
+     ef:{registrar:'O Slowpoke do ponto da avenida de Fuchsia espera o ônibus da linha 4 todo dia e nunca entra.'},
+     resultado:[
+       fala('a senhora do ponto da avenida', 'Faz dois anos. Todo dia, nesse horário. O motorista para sempre, e ninguém sabe o que ele tá esperando.'),
+       'Ela pensa um pouco.',
+       fala('a senhora do ponto da avenida', 'Eu acho que é o motorista. Mas eu acho muita coisa.', 'riso')
+     ]},
+    {texto:'Sentar do lado dele e esperar o próximo.',
+     ef:{moral:2, registrar:'Esperou o ônibus com o Slowpoke do ponto de Fuchsia.'},
+     resultado:[
+       'O próximo passa quarenta minutos depois. É o mesmo motorista, que já deu a volta inteira.',
+       'Ele abre a porta, vê você do lado do Slowpoke, e sorri.',
+       fala('o motorista da linha 4', 'Agora ele trouxe companhia!'),
+       'O Slowpoke vira a cabeça devagar, olha pra você, olha pro ônibus, e não entra. Você também não.'
+     ]},
+    {texto:'Seguir.', ef:{}, resultado:['Você segue. Na esquina, você olha pra trás: o Slowpoke continua no banco, esperando o de amanhã.']}
+  ]
+},
 {
   id:'fuc_a_placa_corrigida', umaVez:true, peso:3,
   titulo:'O horário de domingo',
@@ -1026,6 +1283,40 @@ fuchsia:[
 
 /* ─────────────── SAFFRON ─────────────── */
 saffron:[
+/* cena leve */
+{
+  id:'saf_parede_da_praca', umaVez:true, peso:3,
+  cond:d=>deDia(d),
+  titulo:'A parede da praça',
+  texto:[
+    'Na praça da estação, um Mr. Mime está construindo uma parede que não existe.',
+    'Ele passa a palma da mão pelo ar, de baixo pra cima, tijolo por tijolo. Quando termina, encosta o ombro nela e cruza os braços.',
+    'Três crianças tentam passar. As três param no mesmo lugar, com a mão espalmada no nada, e caem na risada.',
+    fala('a artista da praça da estação', 'Ninguém atravessa sem pagar o pedágio. O pedágio é uma careta.', 'riso')
+  ],
+  escolhas:[
+    {texto:'Pagar o pedágio com uma careta.',
+     ef:{moral:2, rep:{eixo:'bom', delta:1, motivo:'Fez careta pra passar pela parede de um Mr. Mime na praça de Saffron'},
+         registrar:'Pagou com uma careta o pedágio do Mr. Mime da praça de Saffron.'},
+     resultado:[
+       'Você faz a pior careta que sabe. O Mr. Mime analisa, inclina a cabeça e abre uma porta na parede, com uma maçaneta que também não existe.',
+       'Você atravessa. As crianças aplaudem. Um homem de terno que passava atravessa logo atrás, sem careta nenhuma, e bate a testa na parede.'
+     ]},
+    {texto:'Procurar a fresta da parede.',
+     teste:{status:'percepcao', dificuldade:5, nomeStatus:'Percepção', eixo:'paciencia'},
+     bom:{ef:{moral:1, registrar:'Achou a fresta na parede invisível do Mr. Mime da praça de Saffron.'},
+          resultado:[
+            'Você tateia o ar até sentir, perto do chão, um lugar onde a parede não fecha, e passa agachad{o|a}.',
+            'O Mr. Mime te olha, ofendido, e tapa a fresta com um tijolo invisível a mais.'
+          ]},
+     ruim:{ef:{hp:-1},
+           resultado:[
+             'Você jura que achou a fresta e anda com confiança. Não achou.',
+             'A sua testa encontra a parede, e as crianças decidem que essa foi a melhor parte do dia.'
+           ]}},
+    {texto:'Dar a volta pelo outro lado da praça.', ef:{}, resultado:['Você dá a volta pela calçada. A parede, pelo jeito, só tem um lado.']}
+  ]
+},
 {
   id:'saf_estagiarios_da_escada', umaVez:true, peso:3,
   titulo:'A escada do prédio comercial',
@@ -1040,7 +1331,7 @@ saffron:[
          rep:{eixo:'bom',delta:1,motivo:'Almoçou na escada com seis estagiários de crachá branco'},
          registrar:'Almoçou na escada do prédio comercial de Saffron com seis estagiários.'},
      resultado:[
-       'Eles abrem espaço sem perguntar quem você é, o que é a coisa mais Saffron que já aconteceu com você.',
+       'Eles abrem espaço sem perguntar quem você é. Saffron é assim.',
        'Em trinta e dois minutos você fica sabendo: qual andar tem o bebedouro que gela, qual elevador não para no sexto, e qual gerente some às quintas.',
        fala('o estagiário do fim da escada', 'Anota isso aí, que isso vale mais que o salário.'),
        'Você anota. Duas das três parecem úteis; a terceira você guarda por educação.'
@@ -1115,6 +1406,41 @@ saffron:[
 
 /* ─────────────── CINNABAR ─────────────── */
 cinnabar:[
+/* cena leve */
+{
+  id:'cin_perguntas_do_cais', umaVez:true, peso:3,
+  cond:d=>deDia(d),
+  titulo:'As perguntas do cais',
+  texto:[
+    'No cais velho, um senhor de chapéu de palha pesca com a vara parada há tanto tempo que a linha juntou alga.',
+    'Quando você passa, ele fala sem tirar os olhos da água.',
+    fala('o pescador das perguntas', 'Pergunta de ilha, pra passar o tempo. Acertou, ganha. Errou, ganha também, que eu não sou ruim. Quantas cabeças tem um Dodrio, contando as de mau humor?')
+  ],
+  escolhas:[
+    {texto:'Responder.',
+     teste:{status:'intelecto', dificuldade:4, nomeStatus:'Intelecto', eixo:'paciencia'},
+     bom:{ef:{itens:{'Potion':1}, rep:{eixo:'bom', delta:1, motivo:'Respondeu as perguntas de ilha de um pescador de Cinnabar'},
+              registrar:'Acertou as perguntas de ilha do pescador do cais velho de Cinnabar.'},
+          resultado:[
+            'Três, e as três. Ele concorda com a cabeça, devagar, e faz outra. E outra. Na quinta você responde antes de ele terminar.',
+            fala('o pescador das perguntas', 'Isso é escola ou é estrada?'),
+            'Você diz que é estrada. Ele tira uma Potion do bolso do colete, ainda com areia, e te entrega.'
+          ]},
+     ruim:{ef:{itens:{'Potion':1}},
+           resultado:[
+             'Você erra a primeira, a segunda e a terceira, e ele ri tanto que a vara treme e um Magikarp desiste de morder.',
+             fala('o pescador das perguntas', 'Errou tudo. Ganha igual. Eu avisei que não sou ruim.', 'riso')
+           ]}},
+    {texto:'Fazer uma pergunta pra ele.',
+     ef:{moral:2, registrar:'Perguntou ao pescador do cais velho de Cinnabar o que um Magikarp pensa o dia inteiro.'},
+     resultado:[
+       'Você pergunta o que um Magikarp pensa o dia inteiro.',
+       fala('o pescador das perguntas', 'Em nada. Por isso ele é feliz e a gente não.'),
+       'Ele diz isso tão sério que você não sabe se é piada, e ele não conta.'
+     ]},
+    {texto:'Seguir.', ef:{}, resultado:['Você segue. Atrás de você, ele faz a pergunta pra um Krabby que passa, e o Krabby também não responde.']}
+  ]
+},
 {
   id:'cin_a_janela_acesa', umaVez:true, peso:3,
   titulo:'A janela do laboratório',
@@ -1323,7 +1649,7 @@ const EVENTOS_GERAIS = [
          registrar:'Anotou o número de Célio, da perua do laboratório.'},
      resultado:[
        fala('Célio', 'Anota, vai. Todo mundo que eu entrego tem.'),
-       'Ele dita sete dígitos de cor, devagar, do jeito de quem já ditou esse número mil vezes.',
+       'Ele dita sete dígitos de cor, devagar, sem olhar pra lugar nenhum.',
        fala('Célio', 'Liga contando como vocês estão. Eu gosto de saber.', 'riso')
      ]},
     {texto:d=>conheceOCelio(d) ? 'Acenar e seguir.' : 'Seguir. Não é com você.', ef:{},
@@ -1367,7 +1693,7 @@ const EVENTOS_GERAIS = [
          rep:{eixo:'bom',delta:1,motivo:'Dividiu comida com um Pokémon de rua'},
          registrar:'Dividiu Ração com um Pokémon de rua.'},
      resultado:[
-       'Ele come sem pressa, do jeito de quem não está com fome mas não recusa por educação.',
+       'Ele come sem pressa. Não está com fome, mas não recusa, por educação.',
        'Quando acaba, ele encosta a cabeça na sua perna por exatamente um segundo e sai andando.',
        'Um segundo. Você ficou olhando ele ir embora por bem mais tempo que isso.'
      ]},
@@ -1460,6 +1786,50 @@ const EVENTOS_GERAIS = [
 const EVENTOS_ROTA = {
 
 campo:[
+/* encanto: a migração dos Butterfree, no começo da estrada */
+{
+  id:'enc_migracao_dos_butterfree', umaVez:true, peso:2, ambientes:['campo','floresta'],
+  cond:d=>d.capitulo >= 2 && d.capitulo < 8 && horaAgora(d) >= 16 && horaAgora(d) <= 19,
+  titulo:'A migração',
+  texto:[
+    'No fim da tarde, o céu da estrada começa a piscar.',
+    'Primeiro são dez, depois cem: Butterfree, voando baixo e no mesmo rumo, tão juntos que a luz do sol passa pelas asas deles e chega no chão em pedaços roxos.',
+    'Ninguém na estrada fala. Um homem de bicicleta para no meio do caminho e tira o boné.'
+  ],
+  escolhas:[
+    {texto:'Ficar olhando até passar o último.',
+     ef:{moral:4, executar:d=>{ Estado.viu(12); }, registrar:'Viu a migração dos Butterfree passar por cima da estrada, no fim da tarde.'},
+     resultado:[
+       'Leva quase meia hora. Quando passa o último, o céu fica comum de repente, e a estrada parece maior.',
+       d=>{ const p = d.time[0]; return p ? `${nomeExib(p)} ficou o tempo todo com a cabeça pra cima, sem piscar.` : 'Você ficou o tempo todo com a cabeça pra cima.'; },
+       'No chão, perto do seu pé, ficou uma poeira fina e brilhante que o vento leva em dois minutos.'
+     ]},
+    {texto:'Seguir andando por baixo deles.',
+     ef:{moral:2, executar:d=>{ Estado.viu(12); }},
+     resultado:['Você anda por baixo da nuvem de asas. A sombra deles vai com você por um quilômetro inteiro, e depois vira pro mar.']}
+  ]
+},
+/* encanto: a manada dos Rapidash, no fim da jornada */
+{
+  id:'enc_manada_de_fogo', umaVez:true, peso:2, ambientes:['campo'],
+  cond:d=>d.capitulo >= 18 && (horaAgora(d) >= 20 || horaAgora(d) <= 4),
+  titulo:'A manada de fogo',
+  texto:[
+    'De noite, longe da estrada, o capim acende numa linha comprida, como se alguém riscasse um fósforo de um quilômetro.',
+    'É uma manada de Ponyta, uns trinta, correndo com a crina acesa, e na frente deles, mais alto e mais claro, um Rapidash.',
+    'Eles passam a uns duzentos metros. O capim não queima: só fica claro, e depois escuro de novo.'
+  ],
+  escolhas:[
+    {texto:'Ficar olhando até eles sumirem.',
+     ef:{moral:4, executar:d=>{ [77, 78].forEach(x => Estado.viu(x)); }, registrar:'Viu uma manada de Ponyta correr de noite pelo capim, com um Rapidash na frente.'},
+     resultado:[
+       'Eles somem atrás de um morro, e por um minuto o morro fica com a borda acesa.',
+       'Depois volta o escuro, os grilos, o vento. Você fica um tempo sem querer acender a lanterna.'
+     ]},
+    {texto:'Seguir.', ef:{executar:d=>{ [77, 78].forEach(x => Estado.viu(x)); }},
+     resultado:['Você segue pelo escuro. De vez em quando, longe, o horizonte ainda pisca laranja.']}
+  ]
+},
 {
   /* a perua entre duas cidades da volta: só pra quem o Célio conhece */
   id:'rot_a_perua_no_acostamento', peso:3, ambientes:['campo','floresta','montanha'],
@@ -1698,7 +2068,7 @@ campo:[
      ruim:{ef:{rep:{eixo:'ruim',delta:1,motivo:'Abriu a barraca de um estranho e foi vist{o|a}'},
                registrar:'Foi vist{o|a} abrindo a barraca de outra pessoa.'},
            resultado:[
-             'Você abre o zíper e ouve, atrás de você, alguém limpar a garganta alto, do jeito de quem avisa que chegou.',
+             'Você abre o zíper e ouve, atrás de você, alguém limpar a garganta alto, pra avisar que chegou.',
              fala('a dona da barraca', 'Ô.', 'frio'),
              'Ela não grita. Ela não acusa. Ela só fica ali parada com um balde de água na mão esperando você explicar.',
              'Você explica. Ela aceita a explicação. Ela continua esperando você ir embora.'
@@ -1735,7 +2105,7 @@ floresta:[
             'Duzentos metros depois a fita termina numa clareira pequena com uma gaiola de contenção montada no chão.',
             'A gaiola está vazia, armada, e com a isca podre — o que quer dizer que está armada há muito tempo e ninguém veio conferir.',
             'Tem uma etiqueta de identificação no canto, plastificada, com um número de licença e nenhum nome.',
-            'Você desarma. Leva menos de um minuto e é a coisa mais certa que você faz hoje.'
+            'Você desarma. Leva menos de um minuto, e você não tem dúvida nenhuma.'
           ]},
      ruim:{ef:{hp:-2, registrar:'Se perdeu seguindo uma fita na floresta.'},
            resultado:[
@@ -1852,7 +2222,7 @@ floresta:[
        'Você grita.',
        'O que acontece é que sai um Pidgeot de uma árvore que você nem sabia que tinha Pidgeot, a três metros da sua cabeça, e você cai sentad{o|a}.',
        'A coisa grande do mato, seja lá o que fosse, foi embora no mesmo segundo pelo barulho.',
-       'Você fica com um galho enfiado na panturrilha e com a certeza de que isso foi a coisa mais idiota da semana.'
+       'Você fica com um galho enfiado na panturrilha e com a certeza de que foi idiotice.'
      ]},
     {texto:'Voltar e contornar por fora, mesmo que leve o dobro do tempo.',
      ef:{rep:{eixo:'bom',delta:1,motivo:'Contornou em vez de testar a sorte'},
@@ -1863,6 +2233,27 @@ floresta:[
 ],
 
 montanha:[
+/* encanto: o Pidgeot da serra, no meio da jornada */
+{
+  id:'enc_pidgeot_da_serra', umaVez:true, peso:2,
+  cond:d=>d.capitulo >= 8 && d.capitulo < 17 && deDia(d),
+  titulo:'O vento da serra',
+  texto:[
+    'Do alto da trilha dá pra ver o vale inteiro, e no meio do vale, parado no ar, um Pidgeot.',
+    'Ele não bate as asas. Fica ali, em cima da corrente de vento que sobe da encosta, virando devagar, como se o céu fosse dele e ele estivesse só conferindo.'
+  ],
+  escolhas:[
+    {texto:'Sentar na pedra e olhar.',
+     ef:{moral:3, executar:d=>{ Estado.viu(18); }, registrar:'Viu um Pidgeot planar uma hora inteira no vento da serra sem bater as asas.'},
+     resultado:[
+       'Você senta. Ele não bate as asas uma vez em quarenta minutos.',
+       'Quando ele finalmente vai embora, é com uma batida só, e ele já está do outro lado do vale.',
+       'A sua perna dormiu. Você nem tinha percebido.'
+     ]},
+    {texto:'Seguir subindo.', ef:{executar:d=>{ Estado.viu(18); }},
+     resultado:['Você segue a trilha. Toda vez que olha pro lado, ele continua no mesmo lugar do céu.']}
+  ]
+},
 {
   id:'rot_pedra_solta', peso:2,
   titulo:'A pedra que vai cair',
@@ -2138,6 +2529,70 @@ caverna:[
 ],
 
 agua:[
+/* encanto: as estrelas da arrebentação */
+{
+  id:'enc_estrelas_da_agua', umaVez:true, peso:2,
+  cond:d=>d.capitulo >= 6 && d.capitulo < 14 && (horaAgora(d) >= 20 || horaAgora(d) <= 4),
+  titulo:'As estrelas da água',
+  texto:[
+    'A maré está baixa e a noite está sem lua. Na água rasa, perto da pedra, tem uma luz vermelha piscando.',
+    'Depois outra. Depois vinte. São Staryu, deitados no fundo de areia, e o miolo de cada um acende e apaga num ritmo que não é igual ao do vizinho.',
+    'Parece o céu caído na água, com as estrelas respirando.'
+  ],
+  escolhas:[
+    {texto:'Entrar na água até o tornozelo e olhar de perto.',
+     ef:{moral:3, executar:d=>{ Estado.viu(120); }, registrar:'Viu os Staryu acesos na água rasa, numa noite sem lua.'},
+     resultado:[
+       'A água está gelada. Um deles, o mais perto, para de piscar quando a sua sombra cai em cima dele, e volta quando você sai.',
+       'Você fica até o pé doer de frio, e depois mais um pouco.'
+     ]},
+    {texto:'Seguir pela areia.', ef:{executar:d=>{ Estado.viu(120); }},
+     resultado:['Você segue. Por muito tempo, olhando pra trás, ainda dá pra ver o vermelho piscando na arrebentação.']}
+  ]
+},
+/* encanto: o Dragonair depois da chuva */
+{
+  id:'enc_dragonair_da_chuva', umaVez:true, peso:2,
+  cond:d=>d.capitulo >= 12 && d.capitulo < 21 && deDia(d) && d.local !== 'seafoam',
+  titulo:'Depois da chuva',
+  texto:[
+    'Chove forte há uma hora, chuva de encharcar a mochila, e você se abriga embaixo de uma pedra que avança sobre a água.',
+    'Aí a água na sua frente se abre devagar, sem onda, e sobe um pescoço azul e comprido, com uma pérola na garganta.',
+    'É um Dragonair. Ele olha pro céu, e a chuva para.',
+    'Não diminui: para. A última gota cai, e o sol sai por cima dele como se tivessem combinado.'
+  ],
+  escolhas:[
+    {texto:'Ficar parad{o|a} embaixo da pedra.',
+     ef:{moral:4, executar:d=>{ Estado.viu(148); }, registrar:'Viu um Dragonair sair da água e a chuva parar quando ele olhou pro céu.'},
+     resultado:[
+       'Ele fica um minuto inteiro ao sol, com a água escorrendo pelas escamas, e depois afunda do mesmo jeito que subiu, sem fazer onda.',
+       'No céu, onde ele olhou, sobra um arco-íris pequeno, e a estrada inteira cheira a terra molhada.'
+     ]},
+    {texto:'Sair devagar do abrigo.', ef:{executar:d=>{ Estado.viu(148); }},
+     resultado:['Quando você dá o primeiro passo, ele já está afundando. A água fecha em cima dele sem um barulho, e o sol fica.']}
+  ]
+},
+/* encanto: o canto do Lapras nas Seafoam, depois do degelo */
+{
+  id:'enc_canto_do_lapras', umaVez:true, peso:3,
+  cond:d=>d.local === 'seafoam' && d.capitulo > 13,
+  titulo:'O canto',
+  texto:[
+    'Entre as duas pedras brancas das Seafoam, a água passa por dentro dos furos e faz um barulho de órgão.',
+    'Depois, por cima do barulho, um som que não é da pedra: uma nota comprida, que sobe, para, e desce em três tempos.',
+    'Um Lapras está boiando no canal, de olho fechado, cantando pra ninguém.'
+  ],
+  escolhas:[
+    {texto:'Sentar na pedra e ouvir.',
+     ef:{moral:4, executar:d=>{ Estado.viu(131); }, registrar:'Ouviu um Lapras cantar no canal das Seafoam.'},
+     resultado:[
+       'A música não tem começo nem fim. Ele repete as três notas e muda uma, e repete, e muda outra.',
+       'Quando ele abre o olho e te vê, não para. Só canta um pouco mais baixo, como quem ainda tem companhia.'
+     ]},
+    {texto:'Seguir em silêncio.', ef:{executar:d=>{ Estado.viu(131); }},
+     resultado:['Você passa sem fazer barulho. O canto vai com você pelo canal inteiro, e só acaba quando a pedra acaba.']}
+  ]
+},
 {
   id:'rot_rede_abandonada', peso:2,
   titulo:'Rede presa na pedra',

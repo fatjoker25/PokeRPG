@@ -963,7 +963,7 @@ c7_quantos_ela:{
     '"Então você tem muito giz pela frente."'
   ],
   ef:{flag:'muito_giz_pela_frente',
-      presagio:'Muito giz pela frente. Ela falou isso sem maldade nenhuma e é a coisa mais dura que te disseram hoje.'},
+      presagio:'Muito giz pela frente. Ela falou isso sem maldade nenhuma.'},
   escolhas:[
     {texto:'Procurar o zelador.', vai:'c7_zelador'},
     {texto:'Entrar na torre.', vai:'c7_torre'},
@@ -1477,7 +1477,7 @@ c7_chamou:{
 c7_propria_voz:{
   texto:[
     'Você fica.',
-    'Escutar o formato da própria voz sem o conteúdo é a coisa mais desagradável que já te aconteceu, e você fica.',
+    'Escutar o formato da própria voz sem o conteúdo dá vontade de sair dali, e você fica.',
     'Dura uns quarenta segundos.',
     'O que você aprende: você fala mais rápido do que achava. Você tem um tique de subir o tom no fim das frases. E você fala pouco.',
     'Depois para.',
@@ -1832,7 +1832,7 @@ c7_carregou_o_treinador:{
     'Você carrega o treinador escada abaixo. Seis andares.',
     'Ele pesa mais que qualquer coisa que você já carregou, e escada em espiral é a pior geometria possível pra carregar gente.',
     'Você para duas vezes. Na segunda você senta no degrau com ele em cima de você e fica assim por dois minutos.',
-    d=>d.flags.zelador_subiu_junto ? 'O zelador desce na frente iluminando os degraus com uma vela, e é a coisa mais inútil e mais necessária do mundo.' : '',
+    d=>d.flags.zelador_subiu_junto ? 'O zelador desce na frente iluminando os degraus com uma vela que quase não ilumina nada, e mesmo assim você segue a vela.' : '',
     'No saguão, o zelador chama a van. Ela leva onze minutos.',
     'O Marowak não desceu. Você ouve o osso batendo lá em cima quando a van sai.'
   ],
@@ -2042,7 +2042,7 @@ c7_escudo_resultado:{
     'Você chega no treinador, arrasta ele pelo colarinho até a escada e desce seis andares com ele.',
     'O que ficou pra trás no sexto andar ficou pra trás no sexto andar.',
     'O zelador olha o seu cinto quando você chega embaixo. Conta as Pokébolas com os olhos. Não diz nada.',
-    'O não-dizer-nada dele é a coisa mais alta dessa cidade sem música.'
+    'Nessa cidade sem música, o não-dizer-nada dele faz barulho.'
   ],
   ef:{rep:{eixo:'ruim',delta:4,motivo:'Sacrificou o próprio Pokémon como escudo'},
       moral:-30, flag:['usou_escudo','salvou_treinador_torre'],
@@ -2190,7 +2190,7 @@ c7_sentou_no_circulo:{
   ],
   ef:{flag:'sentou_no_setimo', hp:4, moral:10,
       rep:{eixo:'bom',delta:1,motivo:'Passou quarenta minutos sozinh{o|a} fazendo as contas'},
-      presagio:'Talvez não tenha nada aqui. Isso não deixa de ser a coisa mais importante do prédio.'},
+      presagio:'Talvez não tenha nada aqui.'},
   escolhas:[
     {texto:'Deixar alguma coisa sua no centro.', vai:'c7_deixou_no_centro'},
     {texto:'Descer.', vai:'c7_desceu_do_setimo'}

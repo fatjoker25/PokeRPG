@@ -18,7 +18,9 @@ const MORAL_PISO_CENA = 30;
 function moralDaCena(atual, delta){
   if (delta >= 0) return Math.min(100, atual + delta);
   if (atual <= MORAL_PISO_CENA) return atual;
-  return Math.max(MORAL_PISO_CENA, atual + Math.max(-MORAL_CENA_TETO, delta));
+  /* no Fácil a cena tira menos (dificuldade.js) */
+  const teto = typeof Dificuldade !== 'undefined' ? Dificuldade.moralCenaTeto(MORAL_CENA_TETO) : MORAL_CENA_TETO;
+  return Math.max(MORAL_PISO_CENA, atual + Math.max(-teto, delta));
 }
 
 const Historia = {

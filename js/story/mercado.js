@@ -439,15 +439,15 @@ const TROCAS = {
     quem:'o vendedor do quarto andar',
     onde:'acampado na Rota 13, de férias, com um rádio e um guarda-sol',
     pede:137, da:{dex:132, nivel:[24,28], apelido:'Cópia', natureza:'Hardy'},
-    fala:'"Eu tenho um Ditto e um Ditto é a coisa mais inútil que existe pra quem trabalha com etiqueta."\n"Por quê?"\n"Porque ele copia a etiqueta. Você não faz ideia do prejuízo que isso deu."',
+    fala:'"Eu tenho um Ditto, e Ditto não serve pra nada pra quem trabalha com etiqueta."\n"Por quê?"\n"Porque ele copia a etiqueta. Você não faz ideia do prejuízo que isso deu."',
     depois:'Ele liga o Porygon no terminal da loja e o Porygon organiza o estoque inteiro em quarenta minutos, e ele chora um pouquinho e fala que é do ar-condicionado.',
     memoria:'Trocou o Ditto do vendedor de Celadon pelo seu Porygon.',
     alt:[
       {da:{dex:81, nivel:[24,28], apelido:'Ímã', natureza:'Hardy'},
-       fala:'"Eu tenho um Magnemite e um Magnemite é a coisa mais inútil que existe pra quem trabalha com etiqueta."\n"Por quê?"\n"Porque ele apaga a tarja magnética de tudo que passa perto. Você não faz ideia do prejuízo que isso deu."',
+       fala:'"Eu tenho um Magnemite, e Magnemite não serve pra nada pra quem trabalha com etiqueta."\n"Por quê?"\n"Porque ele apaga a tarja magnética de tudo que passa perto. Você não faz ideia do prejuízo que isso deu."',
        memoria:'Trocou o Magnemite do vendedor de Celadon pelo seu Porygon.'},
       {da:{dex:100, nivel:[24,28], apelido:'Bola', natureza:'Hardy'},
-       fala:'"Eu tenho um Voltorb e um Voltorb é a coisa mais inútil que existe pra quem trabalha com loja de Pokébola."\n"Por quê?"\n"Porque o cliente pega ele pra comprar. Você não faz ideia do prejuízo que isso deu."',
+       fala:'"Eu tenho um Voltorb, e Voltorb não serve pra nada pra quem trabalha com loja de Pokébola."\n"Por quê?"\n"Porque o cliente pega ele pra comprar. Você não faz ideia do prejuízo que isso deu."',
        memoria:'Trocou o Voltorb do vendedor de Celadon pelo seu Porygon.'}
     ]
   }],

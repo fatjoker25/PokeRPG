@@ -406,7 +406,7 @@ c15_ab_de_cracha:{
     'A ciclovia das Rotas 16 a 18 é área de concessão pública, e área de concessão pública tem um livro de ocorrências, e o livro de ocorrências fica numa gaveta da administração em Fuchsia.',
     d=>{
       const c = Cargos.doCracha();
-      return `Com o crachá de ${c ? c.nome : 'serviço'}, a moça da administração — crachá de plástico no cordão, Lina, sete anos de casa — te entrega o livro sem pedir ofício, o que provavelmente é irregular e é a coisa mais útil que te aconteceu no mês.`;
+      return `Com o crachá de ${c ? c.nome : 'serviço'}, a moça da administração — crachá de plástico no cordão, Lina, sete anos de casa — te entrega o livro sem pedir ofício, o que provavelmente é irregular e te poupa uma semana.`;
     },
     'O livro tem uma ocorrência por página, e as páginas são quase todas de coisas pequenas: guarda-corpo amassado, buraco no asfalto, ciclista com torção de tornozelo.',
     'As últimas seis semanas têm onze ocorrências, e as onze são a mesma frase escrita por seis pessoas diferentes:',
@@ -478,7 +478,7 @@ c15_rotas:{
       ? 'Você entra pela ponta de Fuchsia, pela cabine do sul, às sete da manhã, e sobe. A primeira coisa que te incomoda leva vinte minutos pra virar pensamento:'
       : 'Você entra pela cabine de pedágio do norte às sete da manhã, e no primeiro quilômetro tem Pokémon demais: Rattata em cima de Rattata no capim da beira, um bando inteiro de Spearow num poste só, todo mundo apertado no mesmo pedaço de chão e ninguém brigando.',
     d=>d.flags.c15_rotas_do_sul ? 'não tem Pokémon.' : 'Depois do segundo quilômetro, não tem mais nenhum.',
-    'Nada. Nem Spearow no poste, nem Rattata no capim, nem Doduo correndo paralelo à ciclovia, que é a coisa mais clássica que acontece nessa estrada e que vem em todo folheto turístico de Fuchsia.',
+    'Nada. Nem Spearow no poste, nem Rattata no capim, nem Doduo correndo paralelo à ciclovia, que acontece toda tarde nessa estrada e vem em todo folheto turístico de Fuchsia.',
     'Capinzal com fruta madura, quilômetro atrás de quilômetro, e nenhum Pokémon comendo.'
   ],
   ef:{registrar:d=>['fuchsia','sul'].includes(c15_onde(d))
@@ -915,7 +915,7 @@ c15_ciclovia:{
     '**"DODUO — corre paralelo a veículos. Não se aproxime da fêmea com filhote."**',
     '**"PINSIR — ativo ao amanhecer. Não alimente."**',
     'Nove placas em dezenove quilômetros, descrevendo nove espécies que não estão mais aqui.',
-    'Você para na sétima e lê ela inteira duas vezes, sem motivo, e é a coisa mais triste do seu dia.',
+    'Você para na sétima e lê ela inteira duas vezes, sem motivo, e alguma coisa aperta.',
     d=>d.flags.conheceu_otavio ? '' : 'Quando você passa pela cabine de pedágio do norte, tem um homem sentado lá dentro, num banco de madeira, com um binóculo no pescoço, anotando alguma coisa num caderno.',
     d=>d.flags.a_folha_da_contagem ? 'E no quilômetro dois, perto da cabine do norte, tem marca de pneu saindo do asfalto pro mato, e o capim da beira está pisado em roda.' : ''
   ],
@@ -1974,7 +1974,7 @@ c15_encontro:{
     },
     d=>{
       if (c15_presos().length) return 'O que está mais perto dá um passo à frente e abaixa a cabeça — não em submissão. Em posição de investida.';
-      if (d.flags.tem_sangue_nas_maos) return 'Entei dá um passo à frente. O asfalto embaixo da pata dele racha com o calor, e o som da rachadura é a coisa mais alta da noite.';
+      if (d.flags.tem_sangue_nas_maos) return 'Entei dá um passo à frente. O asfalto embaixo da pata dele racha com o calor, e a rachadura estala na noite parada.';
       if (d.flags.viu_a_sala_do_tanque || d.flags.leu_o_sete || d.flags.achou_a_mochila_do_fuji)
         return d.flags.c14_moltres_virou
           ? 'E aí Suicune faz uma coisa: vira a cabeça e olha pro sul, e depois volta pra você, e repete. Duas vezes.\nÉ o mesmo gesto que uma ave lendária fez com você na borda de uma cratera.'
@@ -2259,7 +2259,7 @@ c15_pos_cao:{
     'Ele recua pra junto dos outros.',
     'Os três te olham em silêncio por um tempo desconfortavelmente longo, e depois viram e vão embora juntos — no mesmo passo, sem pressa, com os quatro metros mantidos.',
     'Eles vieram, foram atacados por uma pessoa, e foram embora sem matar essa pessoa.',
-    'Isso é a coisa mais próxima de julgamento que você já recebeu na vida.'
+    'Pareceu um julgamento, e você não sabe qual foi a sentença.'
   ],
   ef:{executar:d=>{
         GRUPO_CAES.forEach(x=>{ const L=Estado.lend(x); L.ataquesSofridos++; if(L.ataquesSofridos>=2) L.disposicao='hostil'; });

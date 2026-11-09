@@ -89,6 +89,10 @@ const Batalha = {
     this.arena = opts.arena || null;
     this.treinador = opts.treinador || null;
     this.timeInimigo = opts.timeInimigo || null;
+    /* a dificuldade da jornada mexe no lado de lá: nível, erro da IA,
+       Vontade com critério e o item do ás (dificuldade.js). No Normal
+       não faz nada */
+    if (typeof Dificuldade !== 'undefined') Dificuldade.ajustarLuta(this, inimigo, opts);
     /* quantos o outro lado trouxe: as Pokébolas da ficha contam daqui */
     this.totalInimigo = 1 + (this.timeInimigo ? this.timeInimigo.length : 0);
     this.estAliado = this.novoEstado();
@@ -337,6 +341,8 @@ const Batalha = {
       : 0;
     /* com o par no mesmo time, ele briga mais perto de você: metade da recusa */
     if (souAliado && desobedienciaBase > 0 && parDe(p)) desobedienciaBase /= 2;
+    /* no Fácil, metade da recusa (dificuldade.js) */
+    if (desobedienciaBase > 0 && typeof Dificuldade !== 'undefined') desobedienciaBase = Dificuldade.desobediencia(desobedienciaBase);
 
     /* o jeito aparece no que ele faz; o nome do jeito, só pra quem já leu */
     const jeito = p.naturezaVista ? ` é ${p.natureza} —` : '';
@@ -1604,7 +1610,7 @@ const Batalha = {
       if (donos.length) donos.forEach(p => ganhos.set(p, (ganhos.get(p) || 0) + Math.max(1, Math.floor((total - metade) / donos.length))));
       for (const [p, porIgual] of ganhos){
         /* quem ficou pra trás da área do capítulo ganha mais (fatorDeAtraso) */
-        const cada = Math.max(1, Math.floor(porIgual * fatorDeAtraso(p)));
+        const cada = Math.max(1, Math.floor(porIgual * fatorDeAtraso(p) * (typeof Dificuldade !== 'undefined' ? Dificuldade.xp() : 1)));
         /* a barra de experiência anda na tela: o evento leva de onde
            ela saiu, aonde chegou e quantas vezes encheu no meio */
         const pctDe = p.expProx ? Math.min(100, p.exp / p.expProx * 100) : 0, nvDe = p.nivel;

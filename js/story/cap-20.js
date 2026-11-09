@@ -264,7 +264,7 @@ c20_ab_sentou_na_banca:{
     'Você fica sentad{o|a} na esquina da Rua do Comércio por uns vinte minutos, olhando a porta do 118.',
     'Nesses vinte minutos entram no prédio: dois entregadores, uma mulher com uma criança de colo, um homem de terno com pasta, três adolescentes de uniforme escolar e um senhor com um saco de pão.',
     'Nenhum deles parece nada.',
-    'Você entende, sentad{o|a} num banquinho emprestado, a coisa mais difícil do dia: você veio preparad{o|a} pra um esconderijo e vai entrar numa reunião.',
+    'Você entende, sentad{o|a} num banquinho emprestado, o que vai ser difícil hoje: você veio preparad{o|a} pra um esconderijo e vai entrar numa reunião.',
     'E não existe treino pra isso.'
   ],
   ef:{flag:'sentou_na_banca', hp:2,
@@ -302,7 +302,7 @@ c20_ab_disse_setimo:{
     fala('a moça do papel', 'Você é do conselho ou é visita?'),
     c20_eu('Visita.'),
     fala('a moça do papel', 'Ah, ótimo. A gente quase nunca tem visita.'),
-    'Ela diz isso com alegria genuína, e isso é a coisa mais desorientadora que te aconteceu em semanas.',
+    'Ela diz isso com alegria genuína, e você perde o chão por um segundo.',
     fala('a moça do papel', 'A pauta de hoje é chata, aviso desde já. Cronograma de liberação e aprovação de ata.'),
     'O elevador passa pelo quarto andar.',
     fala('a moça do papel', 'Mas tem café na porta. O café é bom. É a única coisa que a gente faz bem por unanimidade.'),

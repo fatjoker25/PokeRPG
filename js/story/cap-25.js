@@ -691,7 +691,7 @@ c25_assinou_o_recebimento:{
     'A cópia amarela fica com você.',
     fala('a mulher de crachá azul', 'Quinta, nove horas. Não é aqui, é no Planalto.'),
     fala('a mulher de crachá azul', 'E olha: leva a advogada.', null,
-         'Ela diz isso olhando pro lado de cá da mesa, e é a coisa mais parecida com bondade que saiu da boca dela hoje.')
+         'Ela diz isso olhando pro lado de cá da mesa, e é o mais perto de bondade que ela chega hoje.')
   ],
   ef:{flag:'assinou_a_convocacao_da_liga', moral:3,
       rep:{eixo:'bom',delta:2,motivo:'Assinou para depor na reunião do Conselho'},
@@ -767,8 +767,8 @@ c25_saiu_da_sala:{
 c25_a_rua:{
   texto:[
     d=>d.flags.saiu_da_audiencia
-      ? 'A rua de Saffron às treze e meia de uma segunda-feira é a coisa mais normal do mundo.'
-      : 'A rua de Saffron no meio da manhã de uma segunda-feira é a coisa mais normal do mundo.',
+      ? 'A rua de Saffron às treze e meia de uma segunda-feira não sabe de nada.'
+      : 'A rua de Saffron no meio da manhã de uma segunda-feira não sabe de nada.',
     d=>d.flags.saiu_da_audiencia
       ? 'Tem fila na lanchonete. Tem gente de crachá branco almoçando na escada. Tem uma mulher de terno dizendo "não" no PokéNav com catorze entonações diferentes.'
       : 'Tem fila na padaria. Tem gente de crachá branco tomando café na escada. Tem uma mulher de terno dizendo "não" no PokéNav com catorze entonações diferentes.',

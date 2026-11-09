@@ -1480,7 +1480,7 @@ c21_cinco_minutos:{
     'Você senta no vestiário e solta o time inteiro num lugar que tem espaço para isso.',
     d=>{
       const n = d.time.length;
-      if (!n) return 'E você não tem ninguém para soltar, e isso é uma informação que você só recebe de verdade agora, com um vestiário vazio na frente.';
+      if (!n) return 'E você não tem ninguém para soltar. Você só entende isso de verdade agora, com um vestiário vazio na frente.';
       if (n === 1) return `E é ${nomeExib(d.time[0])}, só. ${generoDe(d.time[0]) === 'f' ? '{Vocês dois|Vocês duas}' : 'Vocês dois'} num vestiário com espaço para dez.`;
       return `São ${['','um','dois','três','quatro','cinco','seis'][n] || n}. Eles ocupam o vestiário inteiro e um deles imediatamente derruba um banco.`;
     },

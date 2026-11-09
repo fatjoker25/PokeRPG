@@ -146,7 +146,7 @@ c4_ab_quem_atravessou:{
     fala('a operária', 'Então tá.'),
     'Ela fica. Não vai embora, o que é uma informação.',
     d=>fala(d.jogador.nome, 'O que a senhora não viu?'),
-    'Ela solta o ar pelo nariz, do jeito de quem se cansa da própria cautela.',
+    'Ela solta o ar pelo nariz, cansada da própria cautela.',
     fala('a operária', 'Eu não vi um caminhão sair do setor quatro numa quarta-feira à noite com o farol apagado até a estrada.'),
     fala('a operária', 'E eu não vi isso três vezes.', 'baixo'),
     'E aí ela vai embora de verdade, e não olha pra trás, e você não segue.'
@@ -174,7 +174,7 @@ c4_chegada:{
     },
     d=>Estado.rep.eixo === 'ruim' && Estado.rep.ruim >= 3
        ? 'Duas pessoas atravessam a rua quando você passa. Notícia corre mais rápido do que gente anda, e Pewter é uma cidade pequena com telefone.'
-       : 'Ninguém te reconhece aqui. Você ainda não é nada pra ninguém, e isso é um tipo de descanso que você só vai valorizar depois.'
+       : 'Ninguém te reconhece aqui. Você ainda não é nada pra ninguém, e há um descanso nisso.'
   ],
   ef:{registrar:'Chegou a Pewter.'},
   escolhas:[
@@ -381,7 +381,7 @@ c4_senhora_cidade:{
     '"Aqui?" Ela acha graça, e a graça é genuína. "Pedra. Tem pedra. Tem o museu, que é pedra velha. Tem a pedreira, que é pedra nova. E tem o resto, que é gente."',
     '"Só isso?"',
     '"Meu bem, uma cidade não precisa de mais do que isso pra durar cento e quarenta anos."',
-    'Ela ajeita a bolsa no colo, do jeito de quem acabou de decidir que vai falar mais do que pretendia.',
+    'Ela ajeita a bolsa no colo. Acabou de decidir que vai falar mais do que pretendia.',
     '"Pewter existe porque alguém em mil oitocentos e alguma coisa descobriu que aqui embaixo tem uma pedra que não racha. Não é bonita, não é cara, não serve pra joia nenhuma. Ela só não racha."',
     '"E isso basta?"',
     '"Isso basta." Ela bate com o nó do dedo no banco. "Metade dos prédios de Saffron tem alicerce daqui. Aquela torre toda envidraçada lá deles, que sai na televisão, tá em cima de pedra que saiu desse buraco, carregada por gente dessa rua."',
@@ -454,7 +454,7 @@ c4_senhora_quem_perguntou:{
   texto:[
     '"Quem perguntou?"',
     '"Gente de carro bom."',
-    'Ela diz isso do jeito que se diz uma categoria inteira, e em Pewter isso é uma categoria inteira.',
+    'Na boca dela, isso é uma categoria inteira, e em Pewter é mesmo.',
     '"Educados. Chamavam todo mundo de senhor e senhora, inclusive gente de vinte anos, o que dá até uma agonia."',
     '"E crachá? Tinham crachá?"',
     'Ela pensa. Pensa de verdade, sem inventar pra agradar.',
@@ -500,7 +500,7 @@ c4_senhora_vai_embora:{
   texto:[
     '"Eu vou embora hoje. Ou amanhã."',
     '"Eu sei," ela diz. "Dá pra ver pela mochila."',
-    'Ela olha a sua mochila com atenção profissional, do jeito de quem já viu muita mochila passar por essa praça.',
+    'Ela olha a sua mochila com atenção profissional. Já viu muita mochila passar por essa praça.',
     '"Fivela quebrada."',
     '"É."',
     '"Conserta em Cerulean. Tem um sapateiro na ponte sul que conserta fivela de mochila e cobra pouco, e o nome dele é Anzai."',
@@ -524,7 +524,7 @@ c4_senhora_gente:{
     '"Gente que mora." Ela dá de ombros como se isso explicasse. "Mil e duzentas pessoas. Todo mundo sabe o nome de todo mundo e a maioria não gosta da maioria, mas ninguém deixa ninguém passar fome."',
     'Uma pausa.',
     '"Ultimamente tem chegado gente de fora também. Gente com carro bom perguntando de pedra. Não de pedra de construção. De pedra antiga."',
-    'Ela fala isso sem dar importância nenhuma, do jeito que se fala uma coisa que a gente já contou pra três pessoas que não acharam interessante.'
+    'Ela fala isso sem dar importância nenhuma; já contou pra três pessoas e nenhuma achou interessante.'
   ],
   ef:{flag:'ouviu_dos_carros', registrar:'Alguém de fora tem perguntado por fósseis em Pewter.'},
   escolhas:[
@@ -611,8 +611,8 @@ c4_teo_relato:{
   texto:[
     '"Me conta como foi. Tudo."',
     d=>c4_veioJunto(d)
-      ? 'Ele conta. Conta demais, com detalhe de tempo e de posição, do jeito de quem reviveu isso umas quarenta vezes no caminho do ginásio até a escada.'
-      : 'Ele conta. Conta demais, com detalhe de tempo e de posição, do jeito de quem reviveu isso umas quarenta vezes deitado no beliche.',
+      ? 'Ele conta. Conta demais, com detalhe de tempo e de posição: reviveu isso umas quarenta vezes no caminho do ginásio até a escada.'
+      : 'Ele conta. Conta demais, com detalhe de tempo e de posição: reviveu isso umas quarenta vezes deitado no beliche.',
     '"Ele tem um Pokémon pequeno primeiro. Parece fácil. Não é fácil, é uma armadilha, porque ele te faz gastar."',
     '"E depois?"',
     '"E depois vem uma coisa do tamanho de um ônibus." Ezra mede com os braços e os braços não chegam. "Do tamanho de um ÔNIBUS, cara."',
@@ -659,7 +659,7 @@ c4_teo_nome:{
     '"Porque era um pico de nada quando eu achei. Cabia numa camiseta." Ele mostra o tamanho com as mãos. "E mexia em tudo, cara. Sapato, canela, tomada. Minha mãe chamava ele de Praga e eu achei que Pico era mais bonito."',
     'O {pico}, ao ouvir o nome duas vezes, para onde está e olha pra cima, esperando.',
     '"Ó ele." A voz do Ezra muda de registro sem ele perceber. "Ele acha que toda vez que eu falo o nome dele é porque eu preciso de alguma coisa."',
-    'Ezra desce e abraça ele sem nenhum constrangimento, que é a coisa mais bonita que essa cidade de pedra vai te mostrar hoje.',
+    'Ezra desce e abraça ele sem nenhum constrangimento, ali no meio da cidade de pedra.',
     '"Ele tá comigo desde antes de tudo isso," ele diz, mais baixo. "Antes de licença, antes de Pokédex, antes de eu saber que dava pra ser treinador de verdade."',
     '"E aí você virou treinador e ele virou time."',
     '"É." Ezra olha pro {pico} e depois pra você, e por um segundo não tem piada nenhuma na cara dele. "Às vezes eu acho que eu transformei o meu amigo em ferramenta e não perguntei pra ele."',
@@ -709,7 +709,7 @@ c4_teo_todo_mundo_faz:{
   vozes:['P','N','N','N','P','N','N','N'],
   texto:[
     '"Todo mundo faz isso. É o que é ter time."',
-    '"É, né." Ele aceita rápido demais, do jeito de quem queria ser convencido.',
+    '"É, né." Ele aceita rápido demais. Queria ser convencido.',
     'Mas continua com a mão no {pico} e não muda de assunto.',
     '"Só que tem uma diferença, cara. O seu veio de um lugar certo. Alguém assinou papel, alguém pesou, alguém anotou numa lista."',
     '"O Pico veio de baixo de uma caixa d\'água. Eu levei ele pra casa numa camiseta e ninguém nunca perguntou nada pra ninguém."',
@@ -799,7 +799,7 @@ c4_teo_volta:{
   falante:'Ezra',
   vozes:['N','P','N','N','N','P','N','N','N','N'],
   texto:[
-    'Vocês andam. Ezra fala o tempo todo e quase nada do que ele fala tem função, e isso é exatamente o ponto.',
+    'Vocês andam. Ezra fala o tempo todo e quase nada do que ele fala tem função. A função é falar.',
     d=>c4_veioJunto(d)
       ? 'Ele já mapeou a cidade numa tarde, perguntando pra todo mundo: onde o pão sai às cinco, qual banco não balança, qual rua pega vento.'
       : 'Ele já mapeou a cidade em dois dias: onde o pão sai às cinco, qual banco não balança, qual rua pega vento.',
@@ -913,7 +913,7 @@ c4_teo_ferido:{
     'Ezra não responde na hora. Fecha o zíper da mochila devagar, com muito mais cuidado do que um zíper precisa.',
     '"É." Ele faz que sim várias vezes, pro chão. "É, pode ser."',
     'Ele chama o {pico}, que vem na terceira vez, olhando pra ele o caminho inteiro.',
-    '"Boa sorte aí," ele diz, e é a voz mais educada que você já ouviu dele, e educado é a coisa mais longe que ele consegue ficar de você agora.',
+    '"Boa sorte aí," ele diz, e é a voz mais educada que você já ouviu dele. Educado, no Ezra, é distância.',
     'Ele entra no Centro. Você fica na escada.'
   ],
   ef:{registrar:'Você disse ao Ezra que talvez ele não servisse pra isso.'},
@@ -1284,7 +1284,7 @@ c4_setor_quatro:{
     d=>fala(d.jogador.nome, 'Mas?'),
     'O mais novo — Falk — responde antes que o outro decida não responder:',
     fala('Falk', 'Mas o quatro é o que dá pedra. O dois e o três é entulho, {moço|moça}. Quem manda parar o setor que dá pedra tem motivo, e o motivo não é estudo.'),
-    'O mais velho olha pra ele do jeito que se olha pra quem falou demais.',
+    'O mais velho olha pra ele: falou demais.',
     fala('o outro operário', 'Ele é novo. Fala o que pensa.', null, 'Ele diz isso pra você, não pro Falk.'),
     d=>fala(d.jogador.nome, 'Isso é ruim?'),
     fala('o outro operário', 'Aqui é.', 'frio')
@@ -1366,7 +1366,7 @@ c4_ivone:{
     '"Extinto é uma palavra otimista," ela diz, sem olhar pra você. "Presume que acabou."',
     '"E não acabou?"',
     '"Ah, acabou." Ela vira uma página. "Eles morreram. Todos. Isso acabou."',
-    'Aí ela fecha o caderno e te olha de verdade pela primeira vez, e diz o nome do jeito de quem cumpre uma formalidade: Ivy Cordell, paleontóloga.',
+    'Aí ela fecha o caderno e te olha de verdade pela primeira vez, e diz o nome, formal como um carimbo: Ivy Cordell, paleontóloga.',
     '"O que não acabou é o que a gente faz com eles depois. Você vai pro Monte da Lua?"'
   ],
   ef:{flag:'cordell_disse_nome', npc:{nome:'Dra. Cordell', opiniao:1, memoria:'Te abordou no museu de Pewter falando de fósseis.'}},
@@ -1658,7 +1658,7 @@ c4_ivone_recusa:{
   vozes:['N'],
   texto:[
     'Você devolve o cartão. Ou nem chega a pegar.',
-    'Ela guarda no bolso do jaleco sem nenhum drama, do jeito de quem já guardou esse cartão de volta várias vezes.',
+    'Ela guarda no bolso do jaleco sem nenhum drama. Não é a primeira vez que esse cartão volta pro bolso.',
     '"Tudo bem."',
     'E é isso. Ela não insiste, não apela, não faz cara. Volta pro caderno.',
     'Você sai do museu com uma sensação irritante de ter feito a coisa razoável.'
@@ -1824,7 +1824,7 @@ c4_delmo_oferta:{
     '"E se alguém oferecesse dinheiro pelo Kabutops?"',
     'Varian para de arrumar os panfletos.',
     '"Ofereceram."',
-    'Ele diz isso do jeito de quem não ia contar e contou porque a pergunta chegou primeiro.',
+    'Ele não ia contar. Contou porque a pergunta chegou primeiro.',
     '"Duas vezes esse ano. Gente de terno, educada. Falaram em empréstimo pra exposição itinerante. Falaram em restauro patrocinado."',
     '"E?"',
     '"E a prefeitura ia aceitar." Ele volta aos panfletos. "Foi a doutora que travou. Ela apareceu na câmara com um calhamaço e fez um barraco. Por isso demitiram ela."'
@@ -1923,7 +1923,7 @@ c4_pedreira_caminho:{
     'A pedreira fica a quarenta minutos a pé, subindo. A estrada é larga e destruída por caminhão.',
     'Na metade do caminho você para porque a estrada abre e você vê.',
     'É um buraco. Um buraco na montanha do tamanho de um bairro, com degraus gigantes descendo em espiral, e lá no fundo, minúsculos, caminhões do tamanho de caminhões que daqui parecem de brinquedo.',
-    'Não é feio. É a coisa mais impressionante que você viu na vida e ao mesmo tempo é um buraco onde antes tinha montanha.'
+    'Não é feio. Você não consegue parar de olhar, e ao mesmo tempo é um buraco onde antes tinha montanha.'
   ],
   ef:{registrar:'Subiu até a pedreira de Pewter.'},
   escolhas:[
@@ -2198,7 +2198,7 @@ c4_nao_justifica:{
     'Na boca da fenda ele para.',
     '"Cê tem quantos anos?"',
     '"{Idade}."',
-    '"Pois é," ele diz, e vai embora, e essa é a coisa mais perto de um insulto que ele consegue.'
+    '"Pois é," ele diz, e vai embora. Pra ele, isso já é insulto.'
   ],
   ef:{flag:'discussao_com_o_rapaz'},
   escolhas:[
@@ -2278,7 +2278,7 @@ c4_comprou_zubat:{
     '"Eu compro. Quanto tem?"',
     'O rapaz abre um sorriso de alívio tão grande que fica claro o quanto ele não queria discutir.',
     '"Tem um vivo. Trinta."',
-    'Você paga. Ele te entrega a gaiola com uma delicadeza estranha, do jeito de quem entrega uma coisa que sabe que não devia ter.',
+    'Você paga. Ele te entrega a gaiola com uma delicadeza estranha, como se a gaiola nunca devesse ter sido dele.',
     'Você solta o Zubat lá mesmo. Ele sobe e some no teto.',
     'O rapaz te olha soltar trinta pokedólares no ar e não diz nada, e o que ele está pensando está escrito na testa dele: esse aqui vai voltar toda semana.'
   ],
@@ -2332,7 +2332,7 @@ c4_perdeu_rapaz:{
     '"Cê tá bem?"',
     'Você faz que sim.',
     '"Então fica quiet{o|a} que eu vou trabalhar."',
-    'E ele trabalha. Na sua frente. Você fica ali sentad{o|a} até acabar, porque não tem mais nada a fazer, e isso é a pior parte do dia.'
+    'E ele trabalha. Na sua frente. Você fica ali sentad{o|a} até acabar, sem nada a fazer, e esperar assim é o pior do dia.'
   ],
   ef:{hp:-4, causa:'Derrota na fenda da pedreira', flag:'perdeu_na_fenda'},
   escolhas:[

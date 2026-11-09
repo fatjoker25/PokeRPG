@@ -221,7 +221,7 @@ c19_ab_o_onibus:{
 
 c19_ab_os_dois_do_fundo:{
   texto:[
-    'Eles te olham do jeito que se olha alguém que ouviu.',
+    'Eles te olham. Você ouviu, e eles sabem.',
     c19_eu('Média de quanto tempo?'),
     'A mulher responde e o homem deixa ela responder.',
     fala('a mulher do banco de trás', 'Sete, oito meses.'),
@@ -2400,7 +2400,7 @@ c19_sena_entra:{
     'Ele diz a palavra e não gosta do som dela na própria boca.',
     fala('Dr. Hollis', 'A gente nunca escalou ninguém à força. Isso foi decisão minha, na terceira reunião, e é a única coisa aqui que eu defendo sem nenhuma reserva.'),
     'Ele volta à prancheta.',
-    fala('Dr. Hollis', 'E é também a coisa mais covarde que eu já fiz, porque eu passei a responsabilidade pra quem tem menos escolha que eu.')
+    fala('Dr. Hollis', 'E é também a maior covardia que eu já fiz, porque eu passei a responsabilidade pra quem tem menos escolha que eu.')
   ],
   ef:{flag:['sabe_dos_voluntarios'], instabilidade:2,
       npc:{nome:'Dr. Hollis', opiniao:2, memoria:'Chamou a própria decisão de a mais covarde da vida dele.'},

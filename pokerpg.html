@@ -6530,6 +6530,8 @@ body.na-criacao #app{max-width:1120px;padding-block:18px 40px}
   .cr-passo.atual button{padding-right:12px;max-width:100%}
   .cr-passo.atual .cr-pnome{display:inline;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .cr-g3, .cr-cidades{grid-template-columns:repeat(2, minmax(0, 1fr))}
+  /* três dificuldades em duas colunas deixariam uma sozinha embaixo */
+  .cr-g3.cr-dif{grid-template-columns:minmax(0, 1fr)}
   .cr-op{padding:10px 11px}
   .cr-op-nome{font-size:14px}
   .cr-genero{flex-direction:column;align-items:center;text-align:center;gap:4px}
@@ -13334,6 +13336,8 @@ body.na-criacao #app{max-width:1120px;padding-block:18px 40px}
   .cr-passo.atual button{padding-right:12px;max-width:100%}
   .cr-passo.atual .cr-pnome{display:inline;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .cr-g3, .cr-cidades{grid-template-columns:repeat(2, minmax(0, 1fr))}
+  /* três dificuldades em duas colunas deixariam uma sozinha embaixo */
+  .cr-g3.cr-dif{grid-template-columns:minmax(0, 1fr)}
   .cr-op{padding:10px 11px}
   .cr-op-nome{font-size:14px}
   .cr-genero{flex-direction:column;align-items:center;text-align:center;gap:4px}
@@ -20138,6 +20142,8 @@ body.na-criacao #app{max-width:1120px;padding-block:18px 40px}
   .cr-passo.atual button{padding-right:12px;max-width:100%}
   .cr-passo.atual .cr-pnome{display:inline;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .cr-g3, .cr-cidades{grid-template-columns:repeat(2, minmax(0, 1fr))}
+  /* três dificuldades em duas colunas deixariam uma sozinha embaixo */
+  .cr-g3.cr-dif{grid-template-columns:minmax(0, 1fr)}
   .cr-op{padding:10px 11px}
   .cr-op-nome{font-size:14px}
   .cr-genero{flex-direction:column;align-items:center;text-align:center;gap:4px}
@@ -26942,6 +26948,8 @@ body.na-criacao #app{max-width:1120px;padding-block:18px 40px}
   .cr-passo.atual button{padding-right:12px;max-width:100%}
   .cr-passo.atual .cr-pnome{display:inline;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .cr-g3, .cr-cidades{grid-template-columns:repeat(2, minmax(0, 1fr))}
+  /* três dificuldades em duas colunas deixariam uma sozinha embaixo */
+  .cr-g3.cr-dif{grid-template-columns:minmax(0, 1fr)}
   .cr-op{padding:10px 11px}
   .cr-op-nome{font-size:14px}
   .cr-genero{flex-direction:column;align-items:center;text-align:center;gap:4px}
@@ -33746,6 +33754,8 @@ body.na-criacao #app{max-width:1120px;padding-block:18px 40px}
   .cr-passo.atual button{padding-right:12px;max-width:100%}
   .cr-passo.atual .cr-pnome{display:inline;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .cr-g3, .cr-cidades{grid-template-columns:repeat(2, minmax(0, 1fr))}
+  /* três dificuldades em duas colunas deixariam uma sozinha embaixo */
+  .cr-g3.cr-dif{grid-template-columns:minmax(0, 1fr)}
   .cr-op{padding:10px 11px}
   .cr-op-nome{font-size:14px}
   .cr-genero{flex-direction:column;align-items:center;text-align:center;gap:4px}
@@ -40550,6 +40560,8 @@ body.na-criacao #app{max-width:1120px;padding-block:18px 40px}
   .cr-passo.atual button{padding-right:12px;max-width:100%}
   .cr-passo.atual .cr-pnome{display:inline;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .cr-g3, .cr-cidades{grid-template-columns:repeat(2, minmax(0, 1fr))}
+  /* três dificuldades em duas colunas deixariam uma sozinha embaixo */
+  .cr-g3.cr-dif{grid-template-columns:minmax(0, 1fr)}
   .cr-op{padding:10px 11px}
   .cr-op-nome{font-size:14px}
   .cr-genero{flex-direction:column;align-items:center;text-align:center;gap:4px}
@@ -46904,7 +46916,8 @@ const Fome = {
   /* % de ele se distrair na luta e não fazer o que você mandou */
   distrai(p){
     const e = this.estado(p);
-    return e === 'faminto' ? FAMINTO_DISTRAI : e === 'com fome' ? FOME_DISTRAI : 0;
+    const fator = typeof Dificuldade !== 'undefined' ? Dificuldade.fomeDistrai() : 1;
+    return (e === 'faminto' ? FAMINTO_DISTRAI : e === 'com fome' ? FOME_DISTRAI : 0) * fator;
   },
   alimentar(p){
     if (!p) return;
@@ -46943,7 +46956,9 @@ const Fome = {
         p.fomeCobrada = devidos;
         /* quem já está no piso (ou abaixo, por outra coisa) não perde mais pela fome */
         const antes = p.moral || 0;
-        if (antes > FOME_PISO) p.moral = Math.max(FOME_PISO, antes - novos * FOME_MORAL);
+        /* no Fácil a fome não tira moral (dificuldade.js) */
+        const tira = typeof Dificuldade === 'undefined' || Dificuldade.fomeTiraMoral();
+        if (tira && antes > FOME_PISO) p.moral = Math.max(FOME_PISO, antes - novos * FOME_MORAL);
         if (p.moral < antes) caiu.push(p);
       }
     });
@@ -47328,6 +47343,25 @@ function criarPokemon(dexId, nivel, opcoes={}){
     naturezaVista: !!opcoes.naturezaVista, // você sabe qual é o jeito dele?
     genero                                 // 'm' | 'f' | null
   };
+}
+
+/* Põe um Pokémon noutro nível sem mexer no resto: atributos e HP
+   máximo do nível novo, a mesma fração de HP, os golpes como estavam.
+   Quem já evoluiu não desce abaixo do nível em que evoluiu. É o que a
+   dificuldade usa pro lado de lá da luta (dificuldade.js). */
+function renivelar(p, nivel){
+  if (!p || !DEX[p.dex]) return p;
+  const piso = (typeof nivelMinimoDe === 'function') ? nivelMinimoDe(p.dex) : 1;
+  const n = Math.max(piso, 1, Math.min(100, Math.round(nivel)));
+  if (n === p.nivel) return p;
+  const fracao = p.hpMax ? Math.max(0, p.hp) / p.hpMax : 1;
+  p.nivel = n;
+  p.stats = calcularStats(p.dex, n, p.ivs, p.natureza);
+  p.hpMax = p.stats.hp;
+  p.hp = p.hp > 0 ? Math.max(1, Math.round(p.hpMax * fracao)) : 0;
+  p.exp = 0;
+  p.expProx = expNecessaria(n);
+  return p;
 }
 
 /* Nome completo: o que você usa quando conhece a espécie */
@@ -48469,7 +48503,7 @@ const Estado = {
       lendarios: {},          // {dex:{estado:'livre|capturado|solto|morto', disposicao:'neutro|hostil|passivo|desconfiado', encontros:n}}
       liga: {avisos:0, ordemDevolucao:false, detencao:false},
       mundo: {clima:'normal', instabilidade:0, eventos:[]},
-      config: {ritmo:'fiel'},   // 'fiel' = HP do Pokérole · 'longo' = HP base em dobro
+      config: {ritmo:'fiel', dificuldade:'normal'},   // ritmo: 'fiel' = HP do Pokérole · 'longo' = HP base em dobro; dificuldade.js
       via: 'neutro',          // heroi | mercenario | foragido | pesquisador
       viaAnterior: null,
       finaisVistos: [],
@@ -49376,6 +49410,10 @@ const Estado = {
       /* o parceiro do Ezra passou a ser sorteado: quem já conhecia o
          Pidgey dele continua com o Pidgey */
       if (d.rival && !d.rival.picoDex) d.rival.picoDex = (d.npcs && d.npcs['Ezra']) ? 16 : 0;
+      /* a dificuldade chegou depois: a jornada de antes dela é Normal,
+         o jogo como ele foi medido */
+      d.config = d.config || {};
+      if (!['facil', 'normal', 'dificil'].includes(d.config.dificuldade)) d.config.dificuldade = 'normal';
       return true;
     } catch(e){ return false; }
   },
@@ -49413,6 +49451,168 @@ const Estado = {
           aqui.push({id:f.id, titulo:String(f.titulo || ''), quando:+f.quando || Date.now()});
       localStorage.setItem('pokerpg_finais', JSON.stringify(aqui));
     } catch(e){}
+  }
+};
+
+
+/* ===== js/engine/dificuldade.js ===== */
+/* ============================================================
+   DIFICULDADE — Fácil, Normal e Difícil
+   Escolhida na inscrição (Casa e começo) e trocada a qualquer hora nos
+   Ajustes; mora na jornada (d.config.dificuldade), e save de antes
+   dela é Normal. Normal é o jogo como ele foi medido: os simuladores e
+   os robôs medem Normal, e nada daqui mexe nele.
+
+   Os sistemas são os mesmos nas três (fome, moral, Vontade, caminhos):
+   o que muda é quanto eles pesam e quem está do outro lado.
+   - Fácil, pra quem quer aproveitar a história: o lado de lá vem mais
+     fraco e mais distraído, a experiência rende mais, e a fome e a
+     moral pesam menos.
+   - Difícil, pra quem quer desafio: o lado de lá vem mais forte, erra
+     menos, gasta Vontade com critério e o ás chega segurando item.
+
+   Toda luta passa por Batalha.iniciar, que chama ajustarLuta: vale pro
+   mato, estrada, ginásio, rival, veterano, torneio, Conferência, Elite,
+   Campeão e luta de cena. Os números estão na folha de regras.
+   ============================================================ */
+const DIFICULDADES = {
+  facil: {
+    nome:'Fácil',
+    curta:'Pra aproveitar a história: lutas mais leves, mais experiência, e a fome e a moral pesam menos.',
+    nota:'Pra quem quer aproveitar a história. O lado de lá vem mais fraco e mais distraído, a experiência rende mais, e a fome e a moral pesam menos.',
+    nivelTreinador:-3, nivelSelvagem:-2,   // níveis no lado de lá
+    erroMais:15, erroVezes:1,              // % a mais de erro na escolha do golpe
+    vontadePeso:false,                     // ninguém gasta Vontade com critério cheio
+    asSegura:false,
+    xp:1.3,                                // experiência de luta e de treino
+    fomeMoral:false, fomeDistrai:0,        // a fome não tira moral nem distrai na luta
+    moralCenaTeto:5,                       // o que uma cena tira, no máximo
+    desobedece:0.5                         // a chance de recusar uma ordem
+  },
+  normal: {
+    nome:'Normal',
+    curta:'A experiência original, do jeito que o jogo foi medido.',
+    nota:'A experiência original: o jogo como ele foi medido e calibrado.',
+    nivelTreinador:0, nivelSelvagem:0, erroMais:0, erroVezes:1, vontadePeso:null, asSegura:false,
+    xp:1, fomeMoral:true, fomeDistrai:1, moralCenaTeto:null, desobedece:1
+  },
+  dificil: {
+    nome:'Difícil',
+    curta:'Pra quem quer desafio: o lado de lá vem mais forte, erra menos e o ás segura item.',
+    nota:'Pra quem quer desafio. O lado de lá vem mais forte, erra menos, todo treinador gasta Vontade com critério e o ás chega segurando item.',
+    nivelTreinador:3, nivelSelvagem:2, erroMais:0, erroVezes:0.5, vontadePeso:true, asSegura:true,
+    xp:1, fomeMoral:true, fomeDistrai:1, moralCenaTeto:null, desobedece:1
+  }
+};
+const ORDEM_DAS_DIFICULDADES = ['facil', 'normal', 'dificil'];
+
+const Dificuldade = {
+  id(){
+    const d = typeof Estado !== 'undefined' ? Estado.dados : null;
+    const v = d && d.config && d.config.dificuldade;
+    return DIFICULDADES[v] ? v : 'normal';
+  },
+  atual(){ return DIFICULDADES[this.id()]; },
+  nome(id){ return (DIFICULDADES[id || this.id()] || DIFICULDADES.normal).nome; },
+  definir(v){
+    const d = typeof Estado !== 'undefined' ? Estado.dados : null;
+    if (!d || !DIFICULDADES[v]) return;
+    d.config = d.config || {};
+    d.config.dificuldade = v;
+    try { Estado.salvar('auto'); } catch (e) {}
+    if (typeof document === 'undefined') return;
+    document.querySelectorAll('.ajuste-dif [data-dif]').forEach(b => {
+      const sel = b.dataset.dif === v;
+      b.classList.toggle('sel', sel); b.setAttribute('aria-checked', sel);
+    });
+    const n = document.getElementById('dif-nota');
+    if (n) n.textContent = DIFICULDADES[v].nota;
+  },
+
+  /* o lado de lá da luta, do jeito da dificuldade. No Normal não faz
+     nada. Cada Pokémon guarda o quanto já subiu ou desceu (ajusteDif):
+     time que volta pra outra luta não sobe de novo, e quem trocou de
+     dificuldade no meio volta pro nível certo. */
+  ajustarLuta(B, inimigo, opts){
+    if (!inimigo) return;
+    const D = this.atual(), normal = this.id() === 'normal';
+    const todos = [inimigo].concat(B.timeInimigo || []).filter(Boolean);
+    const selvagem = B.tipo === 'selvagem' || B.tipo === 'lendario';
+    const delta = selvagem ? D.nivelSelvagem : D.nivelTreinador;
+    let mudou = false;
+    if (typeof renivelar === 'function') todos.forEach(p => {
+      const ja = p.ajusteDif || 0;
+      if (ja === delta) return;
+      renivelar(p, p.nivel - ja + delta);
+      if (delta) p.ajusteDif = delta; else delete p.ajusteDif;
+      mudou = true;
+    });
+    /* a apresentação já vinha escrita com o nível de antes */
+    if (mudou && opts && typeof opts.introducao === 'string')
+      opts.introducao = opts.introducao.replace(/\(Nv \d+/, '(Nv ' + inimigo.nivel);
+    if (normal) return;
+    B.erroIA = Math.max(0, Math.min(70, Math.round(B.erroIA * D.erroVezes + D.erroMais)));
+    if (D.vontadePeso !== null && !selvagem) B.vontadePeso = D.vontadePeso;
+    if (D.asSegura && !selvagem){
+      const as = todos[todos.length - 1];
+      if (as && !as.segurando) as.segurando = this.itemDoAs(as);
+    }
+  },
+  /* o nível que a história diz em voz alta e a tela mostra antes da
+     luta, do jeito da dificuldade (com a espécie, o piso dela) */
+  nivel(n, tipo, dex){
+    const D = this.atual();
+    const delta = (tipo === 'selvagem' || tipo === 'lendario') ? D.nivelSelvagem : D.nivelTreinador;
+    const piso = dex && typeof nivelMinimoDe === 'function' ? nivelMinimoDe(dex) : 1;
+    return Math.max(piso, 1, Math.min(100, Math.round(n + delta)));
+  },
+  /* o de um Pokémon do lado de lá que talvez já tenha sido ajustado */
+  nivelDe(p, tipo){ return this.nivel(p.nivel - (p.ajusteDif || 0), tipo || 'treinador', p.dex); },
+  /* o ás do Difícil segura o item que serve pra ele */
+  itemDoAs(p){
+    if (typeof aindaEvolui === 'function' && aindaEvolui(p)) return 'Eviolite';
+    const s = p.stats || {};
+    return (s.esp || 0) > (s.for || 0) ? 'Wise Glasses' : 'Muscle Band';
+  },
+
+  xp(){ return this.atual().xp; },
+  fomeTiraMoral(){ return this.atual().fomeMoral; },
+  fomeDistrai(){ return this.atual().fomeDistrai; },
+  moralCenaTeto(padrao){ return this.atual().moralCenaTeto || padrao; },
+  desobediencia(x){ return x * this.atual().desobedece; },
+
+  /* a seção da folha de regras, com os números da própria tabela */
+  regras(){
+    const F = DIFICULDADES.facil, X = DIFICULDADES.dificil;
+    const linha = (k, v) => `<div class="linha"><span class="k">${k}</span><span class="v">${v}</span></div>`;
+    const niveis = n => `${Math.abs(n)} ${Math.abs(n) === 1 ? 'nível' : 'níveis'} ${n < 0 ? 'abaixo' : 'acima'}`;
+    const lado = D => `treinador do lado de lá ${niveis(D.nivelTreinador)}, selvagem e lendário ${niveis(D.nivelSelvagem)}`;
+    const vezes = x => String(x).replace('.', ',');
+    const aberta = typeof Estado !== 'undefined' && Estado.dados;
+    return `<h3>Dificuldade</h3>
+      <p class="sussurro">Escolhida na inscrição e trocada a qualquer hora nos Ajustes, da próxima luta em diante. Os sistemas são os mesmos nas três: o que muda é quanto eles pesam e quem está do outro lado. O Normal é o jogo como ele foi medido, e todos os números desta folha são os dele.${aberta ? ` A desta jornada: <b>${this.nome()}</b>.` : ''}</p>
+      ${linha('Fácil', `${lado(F)} · a IA erra ${F.erroMais} pontos a mais na escolha do golpe · nenhum treinador gasta Vontade com critério cheio · experiência de luta e de treino ×${vezes(F.xp)} · a fome não tira moral nem distrai na luta · uma cena tira no máximo ${F.moralCenaTeto} de moral · ${F.desobedece === 0.5 ? 'metade' : vezes(F.desobedece) + '×'} da chance de ignorar uma ordem`)}
+      ${linha('Normal', 'nada muda: os números desta folha')}
+      ${linha('Difícil', `${lado(X)} · a IA erra ${X.erroVezes === 0.5 ? 'metade' : vezes(X.erroVezes) + '×'} do que erraria · todo treinador gasta Vontade com critério cheio · o ás chega segurando item, se não tiver: Eviolite se ainda evolui, senão Wise Glasses ou Muscle Band, pelo que ele bate mais forte · o resto como no Normal`)}
+      ${linha('O que a tela mostra', 'o nível de quem está do lado de lá já vem com a dificuldade: na apresentação da luta, nas portas da Liga e no chaveamento')}`;
+  },
+
+  /* nos Ajustes, com a jornada aberta: as três à vista */
+  ajustes(){
+    if (typeof Estado === 'undefined' || !Estado.dados) return '';
+    const v = this.id();
+    return `<h3>Dificuldade</h3>
+      <div class="ajuste-vel ajuste-dif">
+        <div class="ajuste-vel-linha">
+          <span class="ajuste-vel-rot" id="dif-rot">Dificuldade da jornada</span>
+          <div class="vel-opcoes" role="radiogroup" aria-labelledby="dif-rot">
+            ${ORDEM_DAS_DIFICULDADES.map(k => `<button type="button" role="radio" data-dif="${k}" class="${k === v ? 'sel' : ''}"
+              aria-checked="${k === v}" onclick="Dificuldade.definir('${k}')">${DIFICULDADES[k].nome}</button>`).join('')}
+          </div>
+        </div>
+        <p class="sussurro" id="dif-nota">${DIFICULDADES[v].nota}</p>
+        <p class="sussurro">Vale da próxima luta em diante: a que está andando termina como começou.</p>
+      </div>`;
   }
 };
 
@@ -49675,6 +49875,7 @@ const Captura = {
     const ev = (t, txt) => eventos.push({tipo:t, texto:txt});
     const esp = DEX[alvo.dex];
     alvo.selvagem = false;
+    delete alvo.ajusteDif;   // o nível que a dificuldade deu passa a ser o dele
     alvo.capturadoEm = {cap:Estado.dados.capitulo, bola:nomeBola, dia:Estado.dados.relogio.dia};
     alvo.moral = esp.lendario ? 10 : 40;
     const destino = Estado.adicionar(alvo);
@@ -49945,6 +50146,10 @@ const Batalha = {
     this.arena = opts.arena || null;
     this.treinador = opts.treinador || null;
     this.timeInimigo = opts.timeInimigo || null;
+    /* a dificuldade da jornada mexe no lado de lá: nível, erro da IA,
+       Vontade com critério e o item do ás (dificuldade.js). No Normal
+       não faz nada */
+    if (typeof Dificuldade !== 'undefined') Dificuldade.ajustarLuta(this, inimigo, opts);
     /* quantos o outro lado trouxe: as Pokébolas da ficha contam daqui */
     this.totalInimigo = 1 + (this.timeInimigo ? this.timeInimigo.length : 0);
     this.estAliado = this.novoEstado();
@@ -50193,6 +50398,8 @@ const Batalha = {
       : 0;
     /* com o par no mesmo time, ele briga mais perto de você: metade da recusa */
     if (souAliado && desobedienciaBase > 0 && parDe(p)) desobedienciaBase /= 2;
+    /* no Fácil, metade da recusa (dificuldade.js) */
+    if (desobedienciaBase > 0 && typeof Dificuldade !== 'undefined') desobedienciaBase = Dificuldade.desobediencia(desobedienciaBase);
 
     /* o jeito aparece no que ele faz; o nome do jeito, só pra quem já leu */
     const jeito = p.naturezaVista ? ` é ${p.natureza} —` : '';
@@ -51460,7 +51667,7 @@ const Batalha = {
       if (donos.length) donos.forEach(p => ganhos.set(p, (ganhos.get(p) || 0) + Math.max(1, Math.floor((total - metade) / donos.length))));
       for (const [p, porIgual] of ganhos){
         /* quem ficou pra trás da área do capítulo ganha mais (fatorDeAtraso) */
-        const cada = Math.max(1, Math.floor(porIgual * fatorDeAtraso(p)));
+        const cada = Math.max(1, Math.floor(porIgual * fatorDeAtraso(p) * (typeof Dificuldade !== 'undefined' ? Dificuldade.xp() : 1)));
         /* a barra de experiência anda na tela: o evento leva de onde
            ela saiu, aonde chegou e quantas vezes encheu no meio */
         const pctDe = p.expProx ? Math.min(100, p.exp / p.expProx * 100) : 0, nvDe = p.nivel;
@@ -51968,7 +52175,9 @@ const MORAL_PISO_CENA = 30;
 function moralDaCena(atual, delta){
   if (delta >= 0) return Math.min(100, atual + delta);
   if (atual <= MORAL_PISO_CENA) return atual;
-  return Math.max(MORAL_PISO_CENA, atual + Math.max(-MORAL_CENA_TETO, delta));
+  /* no Fácil a cena tira menos (dificuldade.js) */
+  const teto = typeof Dificuldade !== 'undefined' ? Dificuldade.moralCenaTeto(MORAL_CENA_TETO) : MORAL_CENA_TETO;
+  return Math.max(MORAL_PISO_CENA, atual + Math.max(-teto, delta));
 }
 
 const Historia = {
@@ -52752,7 +52961,7 @@ function timeRival(){
   // o Pico entra por último e é sempre o ás
   const ini = criarPokemon(inicialDoRival(nivel + 2), nivel + 2, {moral: ARCOS_RIVAL[arco].moral, genero: picoGenero()});
   if (d.flags.sabe_do_pico) ini.apelido = 'Pico';
-  if (arco === 'quebrado') ini.nivel = Math.max(5, nivel);
+  if (arco === 'quebrado') renivelar(ini, Math.max(5, nivel));
   time.push(ini);
   return time;
 }
@@ -56599,7 +56808,7 @@ const CAMPEAO = {
     'A sala atrás da última porta não é uma arena. É um salão vazio, sem iluminação de arena, com uma claraboia.',
     'Tem uma pessoa em pé no centro. Boné, jaqueta, mochila. Aparenta uns dezoito anos.',
     'Ele não se apresenta. Não fala. Não estende a mão.',
-    `Ele solta a primeira Pokébola, e é um Pikachu de nível ${porExtenso(CAMPEAO.nivelBase)}.`,
+    `Ele solta a primeira Pokébola, e é um Pikachu de nível ${porExtenso(Dificuldade.nivel(CAMPEAO.nivelBase, 'treinador'))}.`,
     d.flags.leu_caderno || d.flags.viu_os_doze
       ? `Você quer perguntar mil coisas. Sobre Mewtwo, sobre as aves${d.flags.sabe_do_red_no_mirante ? ', sobre o banco do mirante' : ''}. Ele olha pra você de um jeito que fecha todas as perguntas antes delas saírem.`
       : 'Você entende quem é antes de qualquer confirmação, porque só existe uma pessoa em Kanto que entraria num salão desses e não diria nada.',
@@ -57457,15 +57666,15 @@ const TROCAS = {
     quem:'o vendedor do quarto andar',
     onde:'acampado na Rota 13, de férias, com um rádio e um guarda-sol',
     pede:137, da:{dex:132, nivel:[24,28], apelido:'Cópia', natureza:'Hardy'},
-    fala:'"Eu tenho um Ditto e um Ditto é a coisa mais inútil que existe pra quem trabalha com etiqueta."\n"Por quê?"\n"Porque ele copia a etiqueta. Você não faz ideia do prejuízo que isso deu."',
+    fala:'"Eu tenho um Ditto, e Ditto não serve pra nada pra quem trabalha com etiqueta."\n"Por quê?"\n"Porque ele copia a etiqueta. Você não faz ideia do prejuízo que isso deu."',
     depois:'Ele liga o Porygon no terminal da loja e o Porygon organiza o estoque inteiro em quarenta minutos, e ele chora um pouquinho e fala que é do ar-condicionado.',
     memoria:'Trocou o Ditto do vendedor de Celadon pelo seu Porygon.',
     alt:[
       {da:{dex:81, nivel:[24,28], apelido:'Ímã', natureza:'Hardy'},
-       fala:'"Eu tenho um Magnemite e um Magnemite é a coisa mais inútil que existe pra quem trabalha com etiqueta."\n"Por quê?"\n"Porque ele apaga a tarja magnética de tudo que passa perto. Você não faz ideia do prejuízo que isso deu."',
+       fala:'"Eu tenho um Magnemite, e Magnemite não serve pra nada pra quem trabalha com etiqueta."\n"Por quê?"\n"Porque ele apaga a tarja magnética de tudo que passa perto. Você não faz ideia do prejuízo que isso deu."',
        memoria:'Trocou o Magnemite do vendedor de Celadon pelo seu Porygon.'},
       {da:{dex:100, nivel:[24,28], apelido:'Bola', natureza:'Hardy'},
-       fala:'"Eu tenho um Voltorb e um Voltorb é a coisa mais inútil que existe pra quem trabalha com loja de Pokébola."\n"Por quê?"\n"Porque o cliente pega ele pra comprar. Você não faz ideia do prejuízo que isso deu."',
+       fala:'"Eu tenho um Voltorb, e Voltorb não serve pra nada pra quem trabalha com loja de Pokébola."\n"Por quê?"\n"Porque o cliente pega ele pra comprar. Você não faz ideia do prejuízo que isso deu."',
        memoria:'Trocou o Voltorb do vendedor de Celadon pelo seu Porygon.'}
     ]
   }],
@@ -61810,13 +62019,42 @@ const EVENTOS_CIDADE = {
 
 /* ─────────────── PALLET ─────────────── */
 pallet:[
+/* cena leve: ninguém ameaça ninguém, nada se descobre em papel */
+{
+  id:'pal_oddish_do_regador', umaVez:true, peso:3,
+  cond:d=>deDia(d),
+  titulo:'O canteiro do laboratório',
+  texto:[
+    'No canteiro da frente do laboratório tem um Oddish dormindo enterrado até as folhas, bem no caminho do regador giratório.',
+    'Uma menina de avental de voluntária muda o regador de lugar a cada dez minutos, pra água não pegar nele, e conta os minutos nos dedos.',
+    fala('a menina do regador', 'Se molhar, ele acorda. Se acordar, vai embora. Ele mora aqui, e eu não deixo ele ir embora.')
+  ],
+  escolhas:[
+    {texto:'Ajudar a mudar o regador de lugar.',
+     ef:{moral:2, rep:{eixo:'bom', delta:1, motivo:'Passou uma manhã mudando um regador de lugar por causa de um Oddish'},
+         registrar:'Ajudou a menina do regador a não acordar o Oddish do canteiro do laboratório.'},
+     resultado:[
+       'Vocês revezam: dez minutos ela, dez minutos você. O canteiro inteiro fica molhado, menos um círculo do tamanho de um Oddish.',
+       'Lá pela quinta volta o Oddish se espreguiça, abre um olho, vê vocês dois e afunda de volta na terra.',
+       fala('a menina do regador', 'Viu? Ele sabe que é com ele.', 'riso')
+     ]},
+    {texto:'Sentar perto do Oddish e esperar ele acordar.',
+     ef:{moral:3, registrar:'Esperou um Oddish acordar no canteiro do laboratório.'},
+     resultado:[
+       'Você senta na borda do canteiro. O sol sobe, a sombra do laboratório encolhe, e o Oddish não acorda.',
+       d=>{ const p = d.time[0]; return p ? `${nomeExib(p)} deita do seu lado e dorme também, o que não estava nos planos de ninguém.` : 'Você quase dorme também.'; },
+       'Quando você levanta, a menina já deixou um regador pequeno do seu lado, pra próxima vez.'
+     ]},
+    {texto:'Seguir.', ef:{}, resultado:['Você segue pela rua. Atrás de você, o regador gira e para, gira e para, sempre do outro lado.']}
+  ]
+},
 {
   id:'pal_cachorro_do_quatorze', umaVez:true, peso:3,
   cond:d=>horaAgora(d) >= 9 && horaAgora(d) <= 12,
   titulo:'O Growlithe do quatorze',
   texto:[
     'Tem um Growlithe velho deitado no meio da rua, na parte quente do asfalto, e ele não sai de lá por nada.',
-    'Uma mulher tenta empurrar com o pé, sem força nenhuma, do jeito de quem faz isso todo dia e já perdeu.',
+    'Uma mulher tenta empurrar com o pé, sem força nenhuma: faz isso todo dia e já perdeu.',
     fala('a mulher do quatorze', 'Ele tem quinze anos. Quinze! Ele não escuta, não vê direito, e escolheu justo o meio da rua.'),
     fala('a mulher do quatorze', 'Passa caminhão de leite às onze. Todo dia às onze.')
   ],
@@ -61901,6 +62139,44 @@ pallet:[
 
 /* ─────────────── VIRIDIAN ─────────────── */
 viridian:[
+/* cena leve */
+{
+  id:'vir_casulo_da_praca', umaVez:true, peso:3,
+  cond:d=>deDia(d),
+  titulo:'O casulo da praça',
+  texto:[
+    'Uma menina de uns sete anos está parada embaixo da árvore mais alta da praça, olhando pra cima com as duas mãos fechadas.',
+    'Lá em cima, num galho fino, o Caterpie dela faz uma coisa que ela nunca viu: solta fio e vai se enrolando nele.',
+    fala('a menina do Caterpie', 'Ele tá doente? Ele subiu, não quer descer, e agora tá se embrulhando.', 'baixo')
+  ],
+  escolhas:[
+    {texto:'Explicar o que ele está fazendo.',
+     teste:{status:'intelecto', dificuldade:4, nomeStatus:'Intelecto', eixo:'paciencia'},
+     bom:{ef:{moral:2, rep:{eixo:'bom', delta:1, motivo:'Explicou a uma menina que o Caterpie dela estava evoluindo'},
+              registrar:'Viu um Caterpie virar Metapod na praça de Viridian, com a menina dona dele.'},
+          resultado:[
+            'Você explica com as palavras mais simples que acha: ele não está doente, está crescendo, e crescer, pra um Caterpie, é assim.',
+            'Ela não tira os olhos do galho. Leva uns quinze minutos, e no fim o que está pendurado lá em cima é um Metapod verde e duro, balançando de leve no vento.',
+            fala('a menina do Caterpie', 'Ele vai lembrar de mim?'),
+            'Você diz que vai. Ela acredita na hora, e isso basta pros dois.'
+          ]},
+     ruim:{ef:{moral:1, registrar:'Viu um Caterpie virar Metapod na praça de Viridian.'},
+           resultado:[
+             'Você tenta explicar e se enrola na palavra "evolução". Ela não entende nada, mas também não chora.',
+             'Quinze minutos depois tem um Metapod pendurado no galho, e ela entende sozinha, de uma vez, e grita tão alto que a praça inteira olha.'
+           ]}},
+    {texto:'Ficar com ela até ele terminar.',
+     ef:{moral:3, rep:{eixo:'bom', delta:1, motivo:'Esperou com uma menina o Caterpie dela evoluir'},
+         registrar:'Esperou com uma menina, na praça de Viridian, o Caterpie dela virar Metapod.'},
+     resultado:[
+       'Vocês sentam no banco embaixo da árvore e ninguém fala nada por quinze minutos.',
+       'O fio vai fechando, o verde vai endurecendo, e no fim tem um Metapod pendurado no galho, quieto, balançando de leve.',
+       fala('a menina do Caterpie', 'Agora ele desce?'),
+       'Agora ele espera. Ela diz que espera junto, e senta de novo.'
+     ]},
+    {texto:'Seguir.', ef:{}, resultado:['Você segue. Ela continua lá embaixo, olhando pra cima, com as duas mãos fechadas.']}
+  ]
+},
 {
   id:'vir_fila_da_licenca', umaVez:true, peso:3,
   titulo:'A fila da licença',
@@ -61981,7 +62257,7 @@ viridian:[
          registrar:'Queimou a mão no motor do carro atrás do posto de Viridian.'},
      resultado:[
        'Você põe a mão num lugar que está a noventa graus e tira muito rápido.',
-       'Os quatro homens acham isso a coisa mais engraçada que aconteceu na semana deles.',
+       'Os quatro homens riem disso até perder o fôlego.',
        fala('Dino, o dono do carro', 'Era o terminal, {moço|moça}. Era o terminal desde o começo.', 'riso')
      ]},
     {texto:'Deixar os quatro resolverem.', ef:{}, resultado:['Você segue. A discussão continua audível por dois quarteirões.']}
@@ -61991,6 +62267,34 @@ viridian:[
 
 /* ─────────────── PEWTER ─────────────── */
 pewter:[
+/* cena leve */
+{
+  id:'pew_forno_de_pedra', umaVez:true, peso:3,
+  cond:d=>horaAgora(d) >= 4 && horaAgora(d) <= 8,
+  titulo:'O forno de pedra',
+  texto:[
+    'Às seis da manhã, Pewter cheira a pão. A fila da padaria da praça é de capacete e bota de pedreira, e ninguém fala, porque ainda é cedo demais pra falar.',
+    'Encostado na parede de fora do forno, onde a pedra fica quente, tem um Geodude dormindo de braços cruzados.',
+    fala('a padeira do forno de pedra', 'Ele chega às quatro, quando eu acendo, e vai embora quando o sol esquenta a rua. Seis anos assim.')
+  ],
+  escolhas:[
+    {texto:'Pagar o pão da fila inteira.', cond:d=>Estado.j.dinheiro >= 120,
+     ef:{dinheiro:-120, rep:{eixo:'bom', delta:1, motivo:'Pagou o pão da fila da pedreira numa manhã de Pewter'},
+         registrar:'Pagou o pão da fila da pedreira, numa manhã de Pewter.'},
+     resultado:[
+       'São onze pessoas e onze pães. A padeira faz a conta de cabeça, e você paga.',
+       'Ninguém agradece em voz alta. O último da fila, um homem de capacete amarelo, levanta o pão na sua direção antes de sair.',
+       'Na pedreira, isso vale um aperto de mão.'
+     ]},
+    {texto:'Sentar do lado do Geodude, na parede quente.',
+     ef:{moral:2, registrar:'Esquentou as costas na parede do forno de Pewter, do lado de um Geodude.'},
+     resultado:[
+       'A pedra está quente como cobertor. O Geodude abre um olho, te avalia e chega um palmo pro lado, pra caber você.',
+       'Vocês ficam ali até o sol pegar a rua. Quando ele vai embora, rolando devagar morro acima, a padeira te dá o pão que sobrou da fornada.'
+     ]},
+    {texto:'Seguir.', ef:{}, resultado:['Você segue. O cheiro de pão vai junto até a saída da cidade.']}
+  ]
+},
 {
   id:'pew_sirene', umaVez:true, peso:3,
   cond:d=>horaAgora(d) >= 6 && horaAgora(d) <= 12,
@@ -62086,6 +62390,43 @@ pewter:[
 
 /* ─────────────── CERULEAN ─────────────── */
 cerulean:[
+/* cena leve: o Ezra sem luta nenhuma */
+{
+  id:'cer_ezra_na_ponte', umaVez:true, peso:4,
+  cond:d=>deDia(d) && d.capitulo >= 6 && d.capitulo < 17 && !!(d.npcs && d.npcs['Ezra'])
+    && typeof arcoRival === 'function' && ['parceiro', 'rival'].includes(arcoRival()),
+  titulo:'Meio sanduíche na ponte',
+  texto:[
+    'Na ponte do meio, sentado na mureta com as pernas pro lado do rio, tem alguém comendo um sanduíche de ovo e brigando com o {pico} pela casca do pão.',
+    'É o Ezra.',
+    fala('Ezra', 'Ó quem é! Senta aí. Não, sério, senta. Eu tô sozinho faz três dias e já tô conversando com ponte.', 'riso')
+  ],
+  escolhas:[
+    {texto:'Sentar e dividir o lanche.',
+     ef:{moral:3, npc:d=>({nome:'Ezra', opiniao:((Estado.npc('Ezra') || {}).opiniao || 0) + 1, memoria:'Dividiram um sanduíche de ovo na ponte de Cerulean, sem luta nenhuma.'}),
+         registrar:'Dividiu um sanduíche com o Ezra na ponte de Cerulean.'},
+     resultado:[
+       'Ele parte o sanduíche no meio, o meio dele sai maior, e ele troca sem você pedir.',
+       fala('Ezra', 'Sabe o que é engraçado? A gente só se vê pra brigar. Parece que eu só existo com Pokébola na mão.'),
+       'Vocês ficam uma hora falando de nada: do ônibus que atrasou, do Centro que tem a melhor cadeira, de quem cozinha melhor em casa.',
+       'O {pico} come a casca do pão dos dois e dorme no colo dele.'
+     ]},
+    {texto:'Apostar corrida até o fim da ponte.',
+     ef:{moral:2, hp:-1, npc:d=>({nome:'Ezra', opiniao:((Estado.npc('Ezra') || {}).opiniao || 0) + 1, memoria:'Apostaram corrida na ponte de Cerulean, e ninguém sabe quem ganhou.'}),
+         registrar:'Apostou corrida com o Ezra na ponte de Cerulean.'},
+     resultado:[
+       'Ele sai antes do "já", você sai junto, e vocês chegam no fim da ponte ao mesmo tempo, sem fôlego, com uma senhora reclamando dos dois.',
+       fala('Ezra', 'Empate. Empate! Não tem juiz, então é empate.', 'riso'),
+       'O {pico} chega por último, andando, e senta entre vocês dois como se fosse o juiz.'
+     ]},
+    {texto:'Dizer que está com pressa.',
+     ef:{npc:d=>({nome:'Ezra', opiniao:(Estado.npc('Ezra') || {}).opiniao || 0, memoria:'Passou por ele na ponte de Cerulean, com pressa.'})},
+     resultado:[
+       fala('Ezra', 'Beleza. Vai lá. Eu fico aqui com a ponte.'),
+       'Ele acena com o sanduíche. Quando você olha pra trás, ele já voltou a conversar com o {pico}.'
+     ]}
+  ]
+},
 {
   id:'cer_ponte_dos_seis', umaVez:true, peso:3,
   titulo:'A fila da ponte',
@@ -62181,6 +62522,40 @@ cerulean:[
 
 /* ─────────────── VERMILION ─────────────── */
 vermilion:[
+/* cena leve */
+{
+  id:'ver_corrida_do_pier', umaVez:true, peso:3,
+  cond:d=>deDia(d),
+  titulo:'A corrida do píer',
+  texto:[
+    'No fim do píer de pesca, quatro crianças estão agachadas atrás de uma linha de giz, cada uma segurando um Krabby pelo casco.',
+    'A chegada é outra linha de giz, três metros pro lado, porque Krabby só corre de lado.',
+    fala('o menino do píer', 'Precisa de juiz! O último juiz era o meu irmão, e ele roubou.')
+  ],
+  escolhas:[
+    {texto:'Ser {o juiz|a juíza}.',
+     teste:{status:'percepcao', dificuldade:5, nomeStatus:'Percepção', eixo:'paciencia'},
+     bom:{ef:{moral:2, rep:{eixo:'bom', delta:1, motivo:'Apitou uma corrida de Krabby no píer de Vermilion'},
+              registrar:'Apitou uma corrida de Krabby no píer de Vermilion.'},
+          resultado:[
+            'Três Krabby saem de lado, um sai de frente e para, sem entender. A chegada é por uma garra.',
+            'Você viu qual garra e diz qual foi, e ninguém discute, porque você viu mesmo.',
+            fala('o menino do píer', '{Esse juiz é bom|Essa juíza é boa}. Fica pra próxima?')
+          ]},
+     ruim:{ef:{moral:1},
+           resultado:[
+             'Dois Krabby cruzam a linha juntos, e você não tem a menor ideia de qual chegou primeiro.',
+             'Você declara empate. Os quatro reclamam ao mesmo tempo, depois concordam que empate é justo, e correm de novo.'
+           ]}},
+    {texto:'Torcer pelo menor.',
+     ef:{moral:2, registrar:'Torceu pelo Krabby menor numa corrida no píer de Vermilion.'},
+     resultado:[
+       'O menor Krabby é da menina mais nova. Ele corre na direção errada, depois na certa, e chega em último com uma bolha de espuma na boca.',
+       'Você é a única pessoa do píer que comemora. A menina comemora junto, porque alguém comemorou.'
+     ]},
+    {texto:'Seguir.', ef:{}, resultado:['Você segue pelo píer. Atrás de você alguém grita "larga", e quatro Krabby saem pro lado errado.']}
+  ]
+},
 {
   id:'ver_caixa_de_gelo', umaVez:true, peso:3,
   titulo:'A caixa de gelo',
@@ -62263,6 +62638,34 @@ vermilion:[
 
 /* ─────────────── LAVENDER ─────────────── */
 lavender:[
+/* cena leve */
+{
+  id:'lav_coroas_de_flor', umaVez:true, peso:3,
+  cond:d=>deDia(d),
+  titulo:'Coroas de flor',
+  texto:[
+    'Atrás da floricultura, sentada num caixote, uma menina faz coroas com as flores que não venderam ontem.',
+    'Ela faz uma, olha, desmancha metade e refaz. No chão, do lado dela, tem três prontas, pequenas demais pra cabeça de gente.',
+    fala('a menina das coroas de flor', 'São pros Pokémon do pátio da Torre. Ninguém traz flor pra eles, só pros de dentro.', 'baixo')
+  ],
+  escolhas:[
+    {texto:'Fazer uma com ela.',
+     ef:{moral:3, rep:{eixo:'bom', delta:1, motivo:'Fez coroas de flor pros Pokémon do pátio da Torre'},
+         registrar:'Fez coroas de flor com uma menina, atrás da floricultura de Lavender.'},
+     resultado:[
+       'A sua sai torta. Ela não fala nada, só refaz o nó do fim.',
+       'Depois vocês levam as quatro pro pátio da Torre. Um Cubone aceita a dele sem tirar os olhos de vocês e fica com ela por cima do capacete de osso o resto da tarde.'
+     ]},
+    {texto:'Pedir uma pro seu Pokémon.',
+     ef:{moral:3, registrar:'Ganhou uma coroa de flor pro time, atrás da floricultura de Lavender.'},
+     resultado:[
+       d=>{ const p = d.time[0];
+            return p ? `Ela olha ${nomeExib(p)} de cima a baixo, escolhe as flores pela cor e faz uma coroa do tamanho exato da cabeça ${pron(p).dele}. ${nomeExib(p)} não deixa ninguém tirar.`
+                     : 'Você não tem quem coroar. Ela te dá uma mesmo assim, pra quando tiver.'; }
+     ]},
+    {texto:'Seguir.', ef:{}, resultado:['Você segue. No portão da Torre, tem um Cubone no pátio com uma coroa de flor meio torta na cabeça.']}
+  ]
+},
 {
   id:'lav_o_caderno_da_porta', umaVez:true, peso:3,
   titulo:'O caderno na porta do abrigo',
@@ -62551,6 +62954,39 @@ lavender:[
 
 /* ─────────────── CELADON ─────────────── */
 celadon:[
+/* cena leve */
+{
+  id:'cel_cantoria_do_terraco', umaVez:true, peso:3,
+  cond:d=>deDia(d),
+  titulo:'A cantoria do terraço',
+  texto:[
+    'No terraço da Grande Loja, entre as máquinas de refresco e os vasos de planta, tem uma rodinha de gente sentada no chão.',
+    'No meio da roda, em cima de um engradado virado, uma Jigglypuff segura um microfone de brinquedo e espera silêncio.',
+    fala('a dona da Jigglypuff', 'Ela canta toda tarde. Quem dormir antes do fim paga o refresco dela.', 'riso')
+  ],
+  escolhas:[
+    {texto:'Ouvir até o fim sem dormir.',
+     teste:{status:'resistencia', dificuldade:6, nomeStatus:'Resistência', eixo:'coragem'},
+     bom:{ef:{moral:2, rep:{eixo:'bom', delta:1, motivo:'Ouviu a Jigglypuff do terraço até o fim'},
+              registrar:'Foi a única pessoa acordada no fim da cantoria do terraço da Grande Loja.'},
+          resultado:[
+            'A primeira nota derruba metade da roda. Na segunda, a dona da Jigglypuff boceja. Você belisca o próprio braço até ficar roxo.',
+            'Quando a música acaba, você é a única pessoa de olho aberto no terraço. A Jigglypuff desce do engradado, atravessa a roda e te dá a mão, séria. Negócio fechado.'
+          ]},
+     ruim:{ef:{dinheiro:-40, moral:1},
+           resultado:[
+             'Você aguenta a primeira estrofe inteira. Acorda com o sol mais baixo, a roda toda dormindo, e a Jigglypuff sentada no seu joelho, olhando pra você.',
+             'Você paga o refresco dela. É de morango.'
+           ]}},
+    {texto:'Tapar os ouvidos e assistir.',
+     ef:{moral:1, registrar:'Viu a roda inteira dormir na cantoria do terraço da Grande Loja.'},
+     resultado:[
+       'Você tapa os ouvidos e assiste a roda inteira cair no sono, um por um, tombando pro lado.',
+       'No meio da segunda estrofe a Jigglypuff repara nas suas mãos, para de cantar e fica te olhando, ofendida, até você tirar.'
+     ]},
+    {texto:'Seguir.', ef:{}, resultado:['Você desce pela escada rolante. No quarto andar, uma vendedora boceja sem saber por quê.']}
+  ]
+},
 {
   id:'cel_sem_lugar_pra_sentar', umaVez:true, peso:3,
   titulo:'Sete andares e nenhum banco',
@@ -62700,6 +63136,36 @@ celadon:[
 
 /* ─────────────── FUCHSIA ─────────────── */
 fuchsia:[
+/* cena leve */
+{
+  id:'fuc_slowpoke_do_ponto', umaVez:true, peso:3,
+  cond:d=>horaAgora(d) >= 12 && horaAgora(d) <= 18,
+  titulo:'O Slowpoke do ponto',
+  texto:[
+    'No ponto de ônibus da avenida tem um Slowpoke sentado no banco, de frente pra rua, com o rabo pendurado pro lado de fora.',
+    'O ônibus da linha 4 encosta. O motorista abre a porta, espera, conta até dez em voz alta, fecha a porta e vai embora.',
+    fala('o motorista da linha 4', 'Amanhã, então!', 'riso'),
+    'O Slowpoke não se mexe.'
+  ],
+  escolhas:[
+    {texto:'Perguntar pra quem está no ponto.',
+     ef:{registrar:'O Slowpoke do ponto da avenida de Fuchsia espera o ônibus da linha 4 todo dia e nunca entra.'},
+     resultado:[
+       fala('a senhora do ponto da avenida', 'Faz dois anos. Todo dia, nesse horário. O motorista para sempre, e ninguém sabe o que ele tá esperando.'),
+       'Ela pensa um pouco.',
+       fala('a senhora do ponto da avenida', 'Eu acho que é o motorista. Mas eu acho muita coisa.', 'riso')
+     ]},
+    {texto:'Sentar do lado dele e esperar o próximo.',
+     ef:{moral:2, registrar:'Esperou o ônibus com o Slowpoke do ponto de Fuchsia.'},
+     resultado:[
+       'O próximo passa quarenta minutos depois. É o mesmo motorista, que já deu a volta inteira.',
+       'Ele abre a porta, vê você do lado do Slowpoke, e sorri.',
+       fala('o motorista da linha 4', 'Agora ele trouxe companhia!'),
+       'O Slowpoke vira a cabeça devagar, olha pra você, olha pro ônibus, e não entra. Você também não.'
+     ]},
+    {texto:'Seguir.', ef:{}, resultado:['Você segue. Na esquina, você olha pra trás: o Slowpoke continua no banco, esperando o de amanhã.']}
+  ]
+},
 {
   id:'fuc_a_placa_corrigida', umaVez:true, peso:3,
   titulo:'O horário de domingo',
@@ -62784,6 +63250,40 @@ fuchsia:[
 
 /* ─────────────── SAFFRON ─────────────── */
 saffron:[
+/* cena leve */
+{
+  id:'saf_parede_da_praca', umaVez:true, peso:3,
+  cond:d=>deDia(d),
+  titulo:'A parede da praça',
+  texto:[
+    'Na praça da estação, um Mr. Mime está construindo uma parede que não existe.',
+    'Ele passa a palma da mão pelo ar, de baixo pra cima, tijolo por tijolo. Quando termina, encosta o ombro nela e cruza os braços.',
+    'Três crianças tentam passar. As três param no mesmo lugar, com a mão espalmada no nada, e caem na risada.',
+    fala('a artista da praça da estação', 'Ninguém atravessa sem pagar o pedágio. O pedágio é uma careta.', 'riso')
+  ],
+  escolhas:[
+    {texto:'Pagar o pedágio com uma careta.',
+     ef:{moral:2, rep:{eixo:'bom', delta:1, motivo:'Fez careta pra passar pela parede de um Mr. Mime na praça de Saffron'},
+         registrar:'Pagou com uma careta o pedágio do Mr. Mime da praça de Saffron.'},
+     resultado:[
+       'Você faz a pior careta que sabe. O Mr. Mime analisa, inclina a cabeça e abre uma porta na parede, com uma maçaneta que também não existe.',
+       'Você atravessa. As crianças aplaudem. Um homem de terno que passava atravessa logo atrás, sem careta nenhuma, e bate a testa na parede.'
+     ]},
+    {texto:'Procurar a fresta da parede.',
+     teste:{status:'percepcao', dificuldade:5, nomeStatus:'Percepção', eixo:'paciencia'},
+     bom:{ef:{moral:1, registrar:'Achou a fresta na parede invisível do Mr. Mime da praça de Saffron.'},
+          resultado:[
+            'Você tateia o ar até sentir, perto do chão, um lugar onde a parede não fecha, e passa agachad{o|a}.',
+            'O Mr. Mime te olha, ofendido, e tapa a fresta com um tijolo invisível a mais.'
+          ]},
+     ruim:{ef:{hp:-1},
+           resultado:[
+             'Você jura que achou a fresta e anda com confiança. Não achou.',
+             'A sua testa encontra a parede, e as crianças decidem que essa foi a melhor parte do dia.'
+           ]}},
+    {texto:'Dar a volta pelo outro lado da praça.', ef:{}, resultado:['Você dá a volta pela calçada. A parede, pelo jeito, só tem um lado.']}
+  ]
+},
 {
   id:'saf_estagiarios_da_escada', umaVez:true, peso:3,
   titulo:'A escada do prédio comercial',
@@ -62798,7 +63298,7 @@ saffron:[
          rep:{eixo:'bom',delta:1,motivo:'Almoçou na escada com seis estagiários de crachá branco'},
          registrar:'Almoçou na escada do prédio comercial de Saffron com seis estagiários.'},
      resultado:[
-       'Eles abrem espaço sem perguntar quem você é, o que é a coisa mais Saffron que já aconteceu com você.',
+       'Eles abrem espaço sem perguntar quem você é. Saffron é assim.',
        'Em trinta e dois minutos você fica sabendo: qual andar tem o bebedouro que gela, qual elevador não para no sexto, e qual gerente some às quintas.',
        fala('o estagiário do fim da escada', 'Anota isso aí, que isso vale mais que o salário.'),
        'Você anota. Duas das três parecem úteis; a terceira você guarda por educação.'
@@ -62873,6 +63373,41 @@ saffron:[
 
 /* ─────────────── CINNABAR ─────────────── */
 cinnabar:[
+/* cena leve */
+{
+  id:'cin_perguntas_do_cais', umaVez:true, peso:3,
+  cond:d=>deDia(d),
+  titulo:'As perguntas do cais',
+  texto:[
+    'No cais velho, um senhor de chapéu de palha pesca com a vara parada há tanto tempo que a linha juntou alga.',
+    'Quando você passa, ele fala sem tirar os olhos da água.',
+    fala('o pescador das perguntas', 'Pergunta de ilha, pra passar o tempo. Acertou, ganha. Errou, ganha também, que eu não sou ruim. Quantas cabeças tem um Dodrio, contando as de mau humor?')
+  ],
+  escolhas:[
+    {texto:'Responder.',
+     teste:{status:'intelecto', dificuldade:4, nomeStatus:'Intelecto', eixo:'paciencia'},
+     bom:{ef:{itens:{'Potion':1}, rep:{eixo:'bom', delta:1, motivo:'Respondeu as perguntas de ilha de um pescador de Cinnabar'},
+              registrar:'Acertou as perguntas de ilha do pescador do cais velho de Cinnabar.'},
+          resultado:[
+            'Três, e as três. Ele concorda com a cabeça, devagar, e faz outra. E outra. Na quinta você responde antes de ele terminar.',
+            fala('o pescador das perguntas', 'Isso é escola ou é estrada?'),
+            'Você diz que é estrada. Ele tira uma Potion do bolso do colete, ainda com areia, e te entrega.'
+          ]},
+     ruim:{ef:{itens:{'Potion':1}},
+           resultado:[
+             'Você erra a primeira, a segunda e a terceira, e ele ri tanto que a vara treme e um Magikarp desiste de morder.',
+             fala('o pescador das perguntas', 'Errou tudo. Ganha igual. Eu avisei que não sou ruim.', 'riso')
+           ]}},
+    {texto:'Fazer uma pergunta pra ele.',
+     ef:{moral:2, registrar:'Perguntou ao pescador do cais velho de Cinnabar o que um Magikarp pensa o dia inteiro.'},
+     resultado:[
+       'Você pergunta o que um Magikarp pensa o dia inteiro.',
+       fala('o pescador das perguntas', 'Em nada. Por isso ele é feliz e a gente não.'),
+       'Ele diz isso tão sério que você não sabe se é piada, e ele não conta.'
+     ]},
+    {texto:'Seguir.', ef:{}, resultado:['Você segue. Atrás de você, ele faz a pergunta pra um Krabby que passa, e o Krabby também não responde.']}
+  ]
+},
 {
   id:'cin_a_janela_acesa', umaVez:true, peso:3,
   titulo:'A janela do laboratório',
@@ -63081,7 +63616,7 @@ const EVENTOS_GERAIS = [
          registrar:'Anotou o número de Célio, da perua do laboratório.'},
      resultado:[
        fala('Célio', 'Anota, vai. Todo mundo que eu entrego tem.'),
-       'Ele dita sete dígitos de cor, devagar, do jeito de quem já ditou esse número mil vezes.',
+       'Ele dita sete dígitos de cor, devagar, sem olhar pra lugar nenhum.',
        fala('Célio', 'Liga contando como vocês estão. Eu gosto de saber.', 'riso')
      ]},
     {texto:d=>conheceOCelio(d) ? 'Acenar e seguir.' : 'Seguir. Não é com você.', ef:{},
@@ -63125,7 +63660,7 @@ const EVENTOS_GERAIS = [
          rep:{eixo:'bom',delta:1,motivo:'Dividiu comida com um Pokémon de rua'},
          registrar:'Dividiu Ração com um Pokémon de rua.'},
      resultado:[
-       'Ele come sem pressa, do jeito de quem não está com fome mas não recusa por educação.',
+       'Ele come sem pressa. Não está com fome, mas não recusa, por educação.',
        'Quando acaba, ele encosta a cabeça na sua perna por exatamente um segundo e sai andando.',
        'Um segundo. Você ficou olhando ele ir embora por bem mais tempo que isso.'
      ]},
@@ -63218,6 +63753,50 @@ const EVENTOS_GERAIS = [
 const EVENTOS_ROTA = {
 
 campo:[
+/* encanto: a migração dos Butterfree, no começo da estrada */
+{
+  id:'enc_migracao_dos_butterfree', umaVez:true, peso:2, ambientes:['campo','floresta'],
+  cond:d=>d.capitulo >= 2 && d.capitulo < 8 && horaAgora(d) >= 16 && horaAgora(d) <= 19,
+  titulo:'A migração',
+  texto:[
+    'No fim da tarde, o céu da estrada começa a piscar.',
+    'Primeiro são dez, depois cem: Butterfree, voando baixo e no mesmo rumo, tão juntos que a luz do sol passa pelas asas deles e chega no chão em pedaços roxos.',
+    'Ninguém na estrada fala. Um homem de bicicleta para no meio do caminho e tira o boné.'
+  ],
+  escolhas:[
+    {texto:'Ficar olhando até passar o último.',
+     ef:{moral:4, executar:d=>{ Estado.viu(12); }, registrar:'Viu a migração dos Butterfree passar por cima da estrada, no fim da tarde.'},
+     resultado:[
+       'Leva quase meia hora. Quando passa o último, o céu fica comum de repente, e a estrada parece maior.',
+       d=>{ const p = d.time[0]; return p ? `${nomeExib(p)} ficou o tempo todo com a cabeça pra cima, sem piscar.` : 'Você ficou o tempo todo com a cabeça pra cima.'; },
+       'No chão, perto do seu pé, ficou uma poeira fina e brilhante que o vento leva em dois minutos.'
+     ]},
+    {texto:'Seguir andando por baixo deles.',
+     ef:{moral:2, executar:d=>{ Estado.viu(12); }},
+     resultado:['Você anda por baixo da nuvem de asas. A sombra deles vai com você por um quilômetro inteiro, e depois vira pro mar.']}
+  ]
+},
+/* encanto: a manada dos Rapidash, no fim da jornada */
+{
+  id:'enc_manada_de_fogo', umaVez:true, peso:2, ambientes:['campo'],
+  cond:d=>d.capitulo >= 18 && (horaAgora(d) >= 20 || horaAgora(d) <= 4),
+  titulo:'A manada de fogo',
+  texto:[
+    'De noite, longe da estrada, o capim acende numa linha comprida, como se alguém riscasse um fósforo de um quilômetro.',
+    'É uma manada de Ponyta, uns trinta, correndo com a crina acesa, e na frente deles, mais alto e mais claro, um Rapidash.',
+    'Eles passam a uns duzentos metros. O capim não queima: só fica claro, e depois escuro de novo.'
+  ],
+  escolhas:[
+    {texto:'Ficar olhando até eles sumirem.',
+     ef:{moral:4, executar:d=>{ [77, 78].forEach(x => Estado.viu(x)); }, registrar:'Viu uma manada de Ponyta correr de noite pelo capim, com um Rapidash na frente.'},
+     resultado:[
+       'Eles somem atrás de um morro, e por um minuto o morro fica com a borda acesa.',
+       'Depois volta o escuro, os grilos, o vento. Você fica um tempo sem querer acender a lanterna.'
+     ]},
+    {texto:'Seguir.', ef:{executar:d=>{ [77, 78].forEach(x => Estado.viu(x)); }},
+     resultado:['Você segue pelo escuro. De vez em quando, longe, o horizonte ainda pisca laranja.']}
+  ]
+},
 {
   /* a perua entre duas cidades da volta: só pra quem o Célio conhece */
   id:'rot_a_perua_no_acostamento', peso:3, ambientes:['campo','floresta','montanha'],
@@ -63456,7 +64035,7 @@ campo:[
      ruim:{ef:{rep:{eixo:'ruim',delta:1,motivo:'Abriu a barraca de um estranho e foi vist{o|a}'},
                registrar:'Foi vist{o|a} abrindo a barraca de outra pessoa.'},
            resultado:[
-             'Você abre o zíper e ouve, atrás de você, alguém limpar a garganta alto, do jeito de quem avisa que chegou.',
+             'Você abre o zíper e ouve, atrás de você, alguém limpar a garganta alto, pra avisar que chegou.',
              fala('a dona da barraca', 'Ô.', 'frio'),
              'Ela não grita. Ela não acusa. Ela só fica ali parada com um balde de água na mão esperando você explicar.',
              'Você explica. Ela aceita a explicação. Ela continua esperando você ir embora.'
@@ -63493,7 +64072,7 @@ floresta:[
             'Duzentos metros depois a fita termina numa clareira pequena com uma gaiola de contenção montada no chão.',
             'A gaiola está vazia, armada, e com a isca podre — o que quer dizer que está armada há muito tempo e ninguém veio conferir.',
             'Tem uma etiqueta de identificação no canto, plastificada, com um número de licença e nenhum nome.',
-            'Você desarma. Leva menos de um minuto e é a coisa mais certa que você faz hoje.'
+            'Você desarma. Leva menos de um minuto, e você não tem dúvida nenhuma.'
           ]},
      ruim:{ef:{hp:-2, registrar:'Se perdeu seguindo uma fita na floresta.'},
            resultado:[
@@ -63610,7 +64189,7 @@ floresta:[
        'Você grita.',
        'O que acontece é que sai um Pidgeot de uma árvore que você nem sabia que tinha Pidgeot, a três metros da sua cabeça, e você cai sentad{o|a}.',
        'A coisa grande do mato, seja lá o que fosse, foi embora no mesmo segundo pelo barulho.',
-       'Você fica com um galho enfiado na panturrilha e com a certeza de que isso foi a coisa mais idiota da semana.'
+       'Você fica com um galho enfiado na panturrilha e com a certeza de que foi idiotice.'
      ]},
     {texto:'Voltar e contornar por fora, mesmo que leve o dobro do tempo.',
      ef:{rep:{eixo:'bom',delta:1,motivo:'Contornou em vez de testar a sorte'},
@@ -63621,6 +64200,27 @@ floresta:[
 ],
 
 montanha:[
+/* encanto: o Pidgeot da serra, no meio da jornada */
+{
+  id:'enc_pidgeot_da_serra', umaVez:true, peso:2,
+  cond:d=>d.capitulo >= 8 && d.capitulo < 17 && deDia(d),
+  titulo:'O vento da serra',
+  texto:[
+    'Do alto da trilha dá pra ver o vale inteiro, e no meio do vale, parado no ar, um Pidgeot.',
+    'Ele não bate as asas. Fica ali, em cima da corrente de vento que sobe da encosta, virando devagar, como se o céu fosse dele e ele estivesse só conferindo.'
+  ],
+  escolhas:[
+    {texto:'Sentar na pedra e olhar.',
+     ef:{moral:3, executar:d=>{ Estado.viu(18); }, registrar:'Viu um Pidgeot planar uma hora inteira no vento da serra sem bater as asas.'},
+     resultado:[
+       'Você senta. Ele não bate as asas uma vez em quarenta minutos.',
+       'Quando ele finalmente vai embora, é com uma batida só, e ele já está do outro lado do vale.',
+       'A sua perna dormiu. Você nem tinha percebido.'
+     ]},
+    {texto:'Seguir subindo.', ef:{executar:d=>{ Estado.viu(18); }},
+     resultado:['Você segue a trilha. Toda vez que olha pro lado, ele continua no mesmo lugar do céu.']}
+  ]
+},
 {
   id:'rot_pedra_solta', peso:2,
   titulo:'A pedra que vai cair',
@@ -63896,6 +64496,70 @@ caverna:[
 ],
 
 agua:[
+/* encanto: as estrelas da arrebentação */
+{
+  id:'enc_estrelas_da_agua', umaVez:true, peso:2,
+  cond:d=>d.capitulo >= 6 && d.capitulo < 14 && (horaAgora(d) >= 20 || horaAgora(d) <= 4),
+  titulo:'As estrelas da água',
+  texto:[
+    'A maré está baixa e a noite está sem lua. Na água rasa, perto da pedra, tem uma luz vermelha piscando.',
+    'Depois outra. Depois vinte. São Staryu, deitados no fundo de areia, e o miolo de cada um acende e apaga num ritmo que não é igual ao do vizinho.',
+    'Parece o céu caído na água, com as estrelas respirando.'
+  ],
+  escolhas:[
+    {texto:'Entrar na água até o tornozelo e olhar de perto.',
+     ef:{moral:3, executar:d=>{ Estado.viu(120); }, registrar:'Viu os Staryu acesos na água rasa, numa noite sem lua.'},
+     resultado:[
+       'A água está gelada. Um deles, o mais perto, para de piscar quando a sua sombra cai em cima dele, e volta quando você sai.',
+       'Você fica até o pé doer de frio, e depois mais um pouco.'
+     ]},
+    {texto:'Seguir pela areia.', ef:{executar:d=>{ Estado.viu(120); }},
+     resultado:['Você segue. Por muito tempo, olhando pra trás, ainda dá pra ver o vermelho piscando na arrebentação.']}
+  ]
+},
+/* encanto: o Dragonair depois da chuva */
+{
+  id:'enc_dragonair_da_chuva', umaVez:true, peso:2,
+  cond:d=>d.capitulo >= 12 && d.capitulo < 21 && deDia(d) && d.local !== 'seafoam',
+  titulo:'Depois da chuva',
+  texto:[
+    'Chove forte há uma hora, chuva de encharcar a mochila, e você se abriga embaixo de uma pedra que avança sobre a água.',
+    'Aí a água na sua frente se abre devagar, sem onda, e sobe um pescoço azul e comprido, com uma pérola na garganta.',
+    'É um Dragonair. Ele olha pro céu, e a chuva para.',
+    'Não diminui: para. A última gota cai, e o sol sai por cima dele como se tivessem combinado.'
+  ],
+  escolhas:[
+    {texto:'Ficar parad{o|a} embaixo da pedra.',
+     ef:{moral:4, executar:d=>{ Estado.viu(148); }, registrar:'Viu um Dragonair sair da água e a chuva parar quando ele olhou pro céu.'},
+     resultado:[
+       'Ele fica um minuto inteiro ao sol, com a água escorrendo pelas escamas, e depois afunda do mesmo jeito que subiu, sem fazer onda.',
+       'No céu, onde ele olhou, sobra um arco-íris pequeno, e a estrada inteira cheira a terra molhada.'
+     ]},
+    {texto:'Sair devagar do abrigo.', ef:{executar:d=>{ Estado.viu(148); }},
+     resultado:['Quando você dá o primeiro passo, ele já está afundando. A água fecha em cima dele sem um barulho, e o sol fica.']}
+  ]
+},
+/* encanto: o canto do Lapras nas Seafoam, depois do degelo */
+{
+  id:'enc_canto_do_lapras', umaVez:true, peso:3,
+  cond:d=>d.local === 'seafoam' && d.capitulo > 13,
+  titulo:'O canto',
+  texto:[
+    'Entre as duas pedras brancas das Seafoam, a água passa por dentro dos furos e faz um barulho de órgão.',
+    'Depois, por cima do barulho, um som que não é da pedra: uma nota comprida, que sobe, para, e desce em três tempos.',
+    'Um Lapras está boiando no canal, de olho fechado, cantando pra ninguém.'
+  ],
+  escolhas:[
+    {texto:'Sentar na pedra e ouvir.',
+     ef:{moral:4, executar:d=>{ Estado.viu(131); }, registrar:'Ouviu um Lapras cantar no canal das Seafoam.'},
+     resultado:[
+       'A música não tem começo nem fim. Ele repete as três notas e muda uma, e repete, e muda outra.',
+       'Quando ele abre o olho e te vê, não para. Só canta um pouco mais baixo, como quem ainda tem companhia.'
+     ]},
+    {texto:'Seguir em silêncio.', ef:{executar:d=>{ Estado.viu(131); }},
+     resultado:['Você passa sem fazer barulho. O canto vai com você pelo canal inteiro, e só acaba quando a pedra acaba.']}
+  ]
+},
 {
   id:'rot_rede_abandonada', peso:2,
   titulo:'Rede presa na pedra',
@@ -68972,7 +69636,7 @@ c1_comeu_frio:{
       return p ? `${nomeExib(p)} ganha o que sobra, por baixo da bancada, e dessa vez não precisa ser segredo de ninguém.`
                : 'O relógio da parede está três minutos adiantado, como sempre esteve, e ninguém nunca acertou.';
     },
-    'Depois você lava o prato, seca e guarda no lugar, o que é a coisa mais boba e mais necessária que você vai fazer hoje.'
+    'Depois você lava o prato, seca e guarda no lugar, porque é bobo e precisa ser feito.'
   ],
   ef:{moral:2, registrar:'Comeu e lavou o prato numa cozinha vazia.'},
   escolhas:[
@@ -69057,7 +69721,7 @@ c1_voltou_pra_dentro:{
     d=>`Você volta as quatro casas, abre a porta, e ${casaCompleto()}, está em pé na cozinha, de costas, colocando água no fogo.`,
     '{casa:Ela|Ele} não se vira.',
     d=>falaCasa('Eu ouvi a porta.', 'frio'),
-    'O fósforo risca. O fogo pega. {casa:Ela|Ele} ajusta a chama como se aquilo fosse a coisa mais importante da manhã.',
+    'O fósforo risca. O fogo pega. {casa:Ela|Ele} ajusta a chama com um cuidado que a chama não pede.',
     d=>falaCasa('Eu ia deixar você ir assim, se fosse isso que você quisesse. Eu ia ficar aqui e ia deixar.'),
     d=>falaCasa('Senta.'),
     'Você senta.'
@@ -69127,7 +69791,7 @@ c1_sol_no_telhado:{
   texto:[
     'O sol sobe atrás do morro às seis e quarenta e nove e leva uns quatro minutos pra ficar inteiro.',
     'Primeiro as telhas do outro lado da rua ficam laranja. Depois a placa do mercado. Depois o seu joelho.',
-    'Você fica olhando isso e pensa, sem querer pensar, que o sol vai fazer isso todo dia aqui, com ou sem você, e que essa é a coisa mais tranquila e mais insuportável que existe.',
+    'Você fica olhando isso e pensa, sem querer pensar, que o sol vai fazer isso todo dia aqui, com ou sem você, e você não sabe se isso acalma ou dói.',
     'Lá embaixo, a porta da cozinha abre e alguém chama o seu nome sem levantar a voz, do jeito de quem já sabe onde você está.'
   ],
   ef:{moral:3},
@@ -69611,7 +70275,7 @@ c1_procura_pijama:{
 },
 c1_onde_ele_iria:{
   texto:[
-    'Você senta no degrau da escada e pensa, que é a coisa mais difícil de fazer quando o corpo inteiro quer correr.',
+    'Você senta no degrau da escada e pensa, com o corpo inteiro querendo correr.',
     '{pk:Ele|Ela} não gosta da praça. {pk:Ele|Ela} tem medo do carro da Sra. Perla. {pk:Ele nunca foi pro mercado sozinho|Ela nunca foi pro mercado sozinha}.',
     'Mas {pk:ele|ela} te viu arrumando a mochila a noite inteira.'
   ],
@@ -69812,7 +70476,7 @@ c1_levou_foto:{
       const p = d.time[0];
       return p ? `${nomeExib(p)} olha você fazer isso da porta do quarto e não entende nada, o que é justo, porque nem você entende direito.` : 'Ninguém vê você fazer isso.';
     },
-    'É a coisa mais inútil que você vai carregar por Kanto inteira.'
+    'Não serve pra nada numa estrada, e vai assim mesmo.'
   ],
   escolhas:[{texto:'Descer.', vai:'c1_cozinha'}]
 },
@@ -70268,7 +70932,7 @@ c1_fila:{
     d=>fala(cadastra(d), 'Nome completo, cidade, idade. Assina embaixo. E coloca ele aqui em cima, por favor.'),
     d=>{
       const p = d.time[0];
-      return p ? `Você coloca ${nomeExib(p)} na bancada. ${pron(p).Ele} não gosta da bancada. Fica quiet${pron(p).o} assim mesmo, porque é você que está pedindo.` : 'Você não tem nenhum Pokémon para colocar na bancada, e isso é um problema imediato.';
+      return p ? `Você coloca ${nomeExib(p)} na bancada. ${pron(p).Ele} não gosta da bancada. Fica quiet${pron(p).o} assim mesmo, porque é você que está pedindo.` : 'Você não tem nenhum Pokémon para colocar na bancada. Problema imediato.';
     },
     'Ela passa um leitor por cima dele. A máquina apita uma vez, seca.',
     d=>(d.flags.recebeu_do_goro || d.flags.recebeu_do_professor)
@@ -70587,7 +71251,7 @@ c1_primeiro_encontro:{
   texto:[
     'O capim é mais alto do que parecia de longe. Na altura do peito, em alguns trechos.',
     'Alguma coisa se mexe nele a uns quatro passos.',
-    'Não é medo o que você sente. É a coisa mais parecida com medo que já te aconteceu.',
+    'Não é medo o que você sente, mas fica perto.',
     d=>d.flags.tem_licenca ? 'A mão vai sozinha para o cinto, onde tem cinco Poké Balls que há uma hora não existiam.' : 'A sua mão vai para o cinto e não acha nada, porque não tem nada.'
   ],
   batalha:{aleatorio:true, ambiente:'campo', nivelBase:4, tipo:'selvagem',
@@ -70773,7 +71437,7 @@ c2_ab_encharcado:{
     'Lá dentro é morno, cheira a café de máquina e tem um ventilador de teto girando devagar em cima de dezesseis pessoas que também chegaram de algum lugar.',
     d=>{
       const p = d.time[0];
-      return p ? `${nomeExib(p)} sacode a água em cima de uma poltrona e um senhor levanta o jornal sem falar nada, do jeito de quem já viu isso duzentas vezes.`
+      return p ? `${nomeExib(p)} sacode a água em cima de uma poltrona e um senhor levanta o jornal sem falar nada. Já viu isso duzentas vezes.`
                : 'Alguém levanta o jornal sem falar nada quando você passa pingando.';
     }
   ],
@@ -71000,7 +71664,7 @@ c2_recado_da_sua_cidade:{
 c2_botou_na_frente:{
   texto:[
     'Você desprega o próprio cartaz da terceira camada e prega de volta por cima de tudo, no meio do mural, no lugar que todo mundo olha primeiro.',
-    'Leva quatro segundos e é a coisa mais sem-vergonha que você já fez na vida.',
+    'Leva quatro segundos, e a sua cara esquenta inteira.',
     'Uma senhora na fila do balcão vê você fazer isso e não fala nada, e o silêncio dela é ensurdecedor.',
     'Você deixa lá mesmo assim.'
   ],
@@ -71365,7 +72029,7 @@ c2_batalha_teo:{
     'Vocês saem pro pátio dos fundos do Centro, que existe exatamente pra isso e tem o chão marcado com tinta descascada.',
     'Ezra joga a Pokébola com mais força do que precisa. "VAI!"',
     'O {pico} sai e, em vez de encarar o seu, vira pra trás e olha pro Ezra, esperando, como quem espera comida. Ezra manda ele virar em voz alta, e o {pico} continua olhando pro Ezra.',
-    'Nenhum dos dois faz ideia do que está fazendo. É a coisa mais honesta dessa cidade.'
+    'Nenhum dos dois faz ideia do que está fazendo, e nenhum dos dois finge.'
   ],
   /* o parceiro dele saiu de casa na mesma semana que o seu: um nível na
      frente do seu melhor, nunca mais que nove */
@@ -72365,8 +73029,8 @@ c3_caçadores:{
       ? 'Você sai de trás do tronco e entra na clareira.'
       : 'Dois homens vêm pela trilha em sentido contrário.',
     d=>d.flags.esperou_os_cacadores
-      ? 'De perto, a roupa é ainda mais cara do que parecia. O rolo de fio de aço continua no ombro do mais velho, do jeito de quem carrega ferramenta de trabalho.'
-      : 'Roupa boa demais pra floresta. Um deles carrega um rolo de fio de aço no ombro, sem disfarçar, do jeito de quem carrega ferramenta de trabalho.',
+      ? 'De perto, a roupa é ainda mais cara do que parecia. O rolo de fio de aço continua no ombro do mais velho, como ferramenta de trabalho.'
+      : 'Roupa boa demais pra floresta. Um deles carrega um rolo de fio de aço no ombro, sem disfarçar, feito ferramenta de trabalho.',
     'Eles param quando te veem. O da frente olha pras suas mãos, depois pro seu cinto, depois pros seus olhos. Nessa ordem exata, que é a ordem de quem já fez isso muitas vezes.',
     'O mais novo, atrás, diz um nome baixinho, Roque, do jeito de quem avisa. O da frente nem vira a cabeça.',
     d=>{
@@ -72549,7 +73213,7 @@ c3_mentiu_mal:{
     'Você mente, mas o rosto entrega. Ele olha pra você mais um segundo do que seria confortável.',
     '"Certo," ele diz. Não acreditou. Deixou passar mesmo assim — porque não vale o trabalho hoje.',
     '"A gente se vê."',
-    'Ele diz isso do jeito de quem anota um compromisso, e segue trilha adentro com o outro.'
+    'Ele diz isso como se anotasse um compromisso, e segue trilha adentro com o outro.'
   ],
   ef:{flag:'cacadores_seguiram',
       npc:{nome:'Caçador Roque', opiniao:-2, memoria:'Você mentiu mal para ele na floresta.'}},
@@ -72800,7 +73464,7 @@ c4_ab_quem_atravessou:{
     fala('a operária', 'Então tá.'),
     'Ela fica. Não vai embora, o que é uma informação.',
     d=>fala(d.jogador.nome, 'O que a senhora não viu?'),
-    'Ela solta o ar pelo nariz, do jeito de quem se cansa da própria cautela.',
+    'Ela solta o ar pelo nariz, cansada da própria cautela.',
     fala('a operária', 'Eu não vi um caminhão sair do setor quatro numa quarta-feira à noite com o farol apagado até a estrada.'),
     fala('a operária', 'E eu não vi isso três vezes.', 'baixo'),
     'E aí ela vai embora de verdade, e não olha pra trás, e você não segue.'
@@ -72828,7 +73492,7 @@ c4_chegada:{
     },
     d=>Estado.rep.eixo === 'ruim' && Estado.rep.ruim >= 3
        ? 'Duas pessoas atravessam a rua quando você passa. Notícia corre mais rápido do que gente anda, e Pewter é uma cidade pequena com telefone.'
-       : 'Ninguém te reconhece aqui. Você ainda não é nada pra ninguém, e isso é um tipo de descanso que você só vai valorizar depois.'
+       : 'Ninguém te reconhece aqui. Você ainda não é nada pra ninguém, e há um descanso nisso.'
   ],
   ef:{registrar:'Chegou a Pewter.'},
   escolhas:[
@@ -73035,7 +73699,7 @@ c4_senhora_cidade:{
     '"Aqui?" Ela acha graça, e a graça é genuína. "Pedra. Tem pedra. Tem o museu, que é pedra velha. Tem a pedreira, que é pedra nova. E tem o resto, que é gente."',
     '"Só isso?"',
     '"Meu bem, uma cidade não precisa de mais do que isso pra durar cento e quarenta anos."',
-    'Ela ajeita a bolsa no colo, do jeito de quem acabou de decidir que vai falar mais do que pretendia.',
+    'Ela ajeita a bolsa no colo. Acabou de decidir que vai falar mais do que pretendia.',
     '"Pewter existe porque alguém em mil oitocentos e alguma coisa descobriu que aqui embaixo tem uma pedra que não racha. Não é bonita, não é cara, não serve pra joia nenhuma. Ela só não racha."',
     '"E isso basta?"',
     '"Isso basta." Ela bate com o nó do dedo no banco. "Metade dos prédios de Saffron tem alicerce daqui. Aquela torre toda envidraçada lá deles, que sai na televisão, tá em cima de pedra que saiu desse buraco, carregada por gente dessa rua."',
@@ -73108,7 +73772,7 @@ c4_senhora_quem_perguntou:{
   texto:[
     '"Quem perguntou?"',
     '"Gente de carro bom."',
-    'Ela diz isso do jeito que se diz uma categoria inteira, e em Pewter isso é uma categoria inteira.',
+    'Na boca dela, isso é uma categoria inteira, e em Pewter é mesmo.',
     '"Educados. Chamavam todo mundo de senhor e senhora, inclusive gente de vinte anos, o que dá até uma agonia."',
     '"E crachá? Tinham crachá?"',
     'Ela pensa. Pensa de verdade, sem inventar pra agradar.',
@@ -73154,7 +73818,7 @@ c4_senhora_vai_embora:{
   texto:[
     '"Eu vou embora hoje. Ou amanhã."',
     '"Eu sei," ela diz. "Dá pra ver pela mochila."',
-    'Ela olha a sua mochila com atenção profissional, do jeito de quem já viu muita mochila passar por essa praça.',
+    'Ela olha a sua mochila com atenção profissional. Já viu muita mochila passar por essa praça.',
     '"Fivela quebrada."',
     '"É."',
     '"Conserta em Cerulean. Tem um sapateiro na ponte sul que conserta fivela de mochila e cobra pouco, e o nome dele é Anzai."',
@@ -73178,7 +73842,7 @@ c4_senhora_gente:{
     '"Gente que mora." Ela dá de ombros como se isso explicasse. "Mil e duzentas pessoas. Todo mundo sabe o nome de todo mundo e a maioria não gosta da maioria, mas ninguém deixa ninguém passar fome."',
     'Uma pausa.',
     '"Ultimamente tem chegado gente de fora também. Gente com carro bom perguntando de pedra. Não de pedra de construção. De pedra antiga."',
-    'Ela fala isso sem dar importância nenhuma, do jeito que se fala uma coisa que a gente já contou pra três pessoas que não acharam interessante.'
+    'Ela fala isso sem dar importância nenhuma; já contou pra três pessoas e nenhuma achou interessante.'
   ],
   ef:{flag:'ouviu_dos_carros', registrar:'Alguém de fora tem perguntado por fósseis em Pewter.'},
   escolhas:[
@@ -73265,8 +73929,8 @@ c4_teo_relato:{
   texto:[
     '"Me conta como foi. Tudo."',
     d=>c4_veioJunto(d)
-      ? 'Ele conta. Conta demais, com detalhe de tempo e de posição, do jeito de quem reviveu isso umas quarenta vezes no caminho do ginásio até a escada.'
-      : 'Ele conta. Conta demais, com detalhe de tempo e de posição, do jeito de quem reviveu isso umas quarenta vezes deitado no beliche.',
+      ? 'Ele conta. Conta demais, com detalhe de tempo e de posição: reviveu isso umas quarenta vezes no caminho do ginásio até a escada.'
+      : 'Ele conta. Conta demais, com detalhe de tempo e de posição: reviveu isso umas quarenta vezes deitado no beliche.',
     '"Ele tem um Pokémon pequeno primeiro. Parece fácil. Não é fácil, é uma armadilha, porque ele te faz gastar."',
     '"E depois?"',
     '"E depois vem uma coisa do tamanho de um ônibus." Ezra mede com os braços e os braços não chegam. "Do tamanho de um ÔNIBUS, cara."',
@@ -73313,7 +73977,7 @@ c4_teo_nome:{
     '"Porque era um pico de nada quando eu achei. Cabia numa camiseta." Ele mostra o tamanho com as mãos. "E mexia em tudo, cara. Sapato, canela, tomada. Minha mãe chamava ele de Praga e eu achei que Pico era mais bonito."',
     'O {pico}, ao ouvir o nome duas vezes, para onde está e olha pra cima, esperando.',
     '"Ó ele." A voz do Ezra muda de registro sem ele perceber. "Ele acha que toda vez que eu falo o nome dele é porque eu preciso de alguma coisa."',
-    'Ezra desce e abraça ele sem nenhum constrangimento, que é a coisa mais bonita que essa cidade de pedra vai te mostrar hoje.',
+    'Ezra desce e abraça ele sem nenhum constrangimento, ali no meio da cidade de pedra.',
     '"Ele tá comigo desde antes de tudo isso," ele diz, mais baixo. "Antes de licença, antes de Pokédex, antes de eu saber que dava pra ser treinador de verdade."',
     '"E aí você virou treinador e ele virou time."',
     '"É." Ezra olha pro {pico} e depois pra você, e por um segundo não tem piada nenhuma na cara dele. "Às vezes eu acho que eu transformei o meu amigo em ferramenta e não perguntei pra ele."',
@@ -73363,7 +74027,7 @@ c4_teo_todo_mundo_faz:{
   vozes:['P','N','N','N','P','N','N','N'],
   texto:[
     '"Todo mundo faz isso. É o que é ter time."',
-    '"É, né." Ele aceita rápido demais, do jeito de quem queria ser convencido.',
+    '"É, né." Ele aceita rápido demais. Queria ser convencido.',
     'Mas continua com a mão no {pico} e não muda de assunto.',
     '"Só que tem uma diferença, cara. O seu veio de um lugar certo. Alguém assinou papel, alguém pesou, alguém anotou numa lista."',
     '"O Pico veio de baixo de uma caixa d\'água. Eu levei ele pra casa numa camiseta e ninguém nunca perguntou nada pra ninguém."',
@@ -73453,7 +74117,7 @@ c4_teo_volta:{
   falante:'Ezra',
   vozes:['N','P','N','N','N','P','N','N','N','N'],
   texto:[
-    'Vocês andam. Ezra fala o tempo todo e quase nada do que ele fala tem função, e isso é exatamente o ponto.',
+    'Vocês andam. Ezra fala o tempo todo e quase nada do que ele fala tem função. A função é falar.',
     d=>c4_veioJunto(d)
       ? 'Ele já mapeou a cidade numa tarde, perguntando pra todo mundo: onde o pão sai às cinco, qual banco não balança, qual rua pega vento.'
       : 'Ele já mapeou a cidade em dois dias: onde o pão sai às cinco, qual banco não balança, qual rua pega vento.',
@@ -73567,7 +74231,7 @@ c4_teo_ferido:{
     'Ezra não responde na hora. Fecha o zíper da mochila devagar, com muito mais cuidado do que um zíper precisa.',
     '"É." Ele faz que sim várias vezes, pro chão. "É, pode ser."',
     'Ele chama o {pico}, que vem na terceira vez, olhando pra ele o caminho inteiro.',
-    '"Boa sorte aí," ele diz, e é a voz mais educada que você já ouviu dele, e educado é a coisa mais longe que ele consegue ficar de você agora.',
+    '"Boa sorte aí," ele diz, e é a voz mais educada que você já ouviu dele. Educado, no Ezra, é distância.',
     'Ele entra no Centro. Você fica na escada.'
   ],
   ef:{registrar:'Você disse ao Ezra que talvez ele não servisse pra isso.'},
@@ -73938,7 +74602,7 @@ c4_setor_quatro:{
     d=>fala(d.jogador.nome, 'Mas?'),
     'O mais novo — Falk — responde antes que o outro decida não responder:',
     fala('Falk', 'Mas o quatro é o que dá pedra. O dois e o três é entulho, {moço|moça}. Quem manda parar o setor que dá pedra tem motivo, e o motivo não é estudo.'),
-    'O mais velho olha pra ele do jeito que se olha pra quem falou demais.',
+    'O mais velho olha pra ele: falou demais.',
     fala('o outro operário', 'Ele é novo. Fala o que pensa.', null, 'Ele diz isso pra você, não pro Falk.'),
     d=>fala(d.jogador.nome, 'Isso é ruim?'),
     fala('o outro operário', 'Aqui é.', 'frio')
@@ -74020,7 +74684,7 @@ c4_ivone:{
     '"Extinto é uma palavra otimista," ela diz, sem olhar pra você. "Presume que acabou."',
     '"E não acabou?"',
     '"Ah, acabou." Ela vira uma página. "Eles morreram. Todos. Isso acabou."',
-    'Aí ela fecha o caderno e te olha de verdade pela primeira vez, e diz o nome do jeito de quem cumpre uma formalidade: Ivy Cordell, paleontóloga.',
+    'Aí ela fecha o caderno e te olha de verdade pela primeira vez, e diz o nome, formal como um carimbo: Ivy Cordell, paleontóloga.',
     '"O que não acabou é o que a gente faz com eles depois. Você vai pro Monte da Lua?"'
   ],
   ef:{flag:'cordell_disse_nome', npc:{nome:'Dra. Cordell', opiniao:1, memoria:'Te abordou no museu de Pewter falando de fósseis.'}},
@@ -74312,7 +74976,7 @@ c4_ivone_recusa:{
   vozes:['N'],
   texto:[
     'Você devolve o cartão. Ou nem chega a pegar.',
-    'Ela guarda no bolso do jaleco sem nenhum drama, do jeito de quem já guardou esse cartão de volta várias vezes.',
+    'Ela guarda no bolso do jaleco sem nenhum drama. Não é a primeira vez que esse cartão volta pro bolso.',
     '"Tudo bem."',
     'E é isso. Ela não insiste, não apela, não faz cara. Volta pro caderno.',
     'Você sai do museu com uma sensação irritante de ter feito a coisa razoável.'
@@ -74478,7 +75142,7 @@ c4_delmo_oferta:{
     '"E se alguém oferecesse dinheiro pelo Kabutops?"',
     'Varian para de arrumar os panfletos.',
     '"Ofereceram."',
-    'Ele diz isso do jeito de quem não ia contar e contou porque a pergunta chegou primeiro.',
+    'Ele não ia contar. Contou porque a pergunta chegou primeiro.',
     '"Duas vezes esse ano. Gente de terno, educada. Falaram em empréstimo pra exposição itinerante. Falaram em restauro patrocinado."',
     '"E?"',
     '"E a prefeitura ia aceitar." Ele volta aos panfletos. "Foi a doutora que travou. Ela apareceu na câmara com um calhamaço e fez um barraco. Por isso demitiram ela."'
@@ -74577,7 +75241,7 @@ c4_pedreira_caminho:{
     'A pedreira fica a quarenta minutos a pé, subindo. A estrada é larga e destruída por caminhão.',
     'Na metade do caminho você para porque a estrada abre e você vê.',
     'É um buraco. Um buraco na montanha do tamanho de um bairro, com degraus gigantes descendo em espiral, e lá no fundo, minúsculos, caminhões do tamanho de caminhões que daqui parecem de brinquedo.',
-    'Não é feio. É a coisa mais impressionante que você viu na vida e ao mesmo tempo é um buraco onde antes tinha montanha.'
+    'Não é feio. Você não consegue parar de olhar, e ao mesmo tempo é um buraco onde antes tinha montanha.'
   ],
   ef:{registrar:'Subiu até a pedreira de Pewter.'},
   escolhas:[
@@ -74852,7 +75516,7 @@ c4_nao_justifica:{
     'Na boca da fenda ele para.',
     '"Cê tem quantos anos?"',
     '"{Idade}."',
-    '"Pois é," ele diz, e vai embora, e essa é a coisa mais perto de um insulto que ele consegue.'
+    '"Pois é," ele diz, e vai embora. Pra ele, isso já é insulto.'
   ],
   ef:{flag:'discussao_com_o_rapaz'},
   escolhas:[
@@ -74932,7 +75596,7 @@ c4_comprou_zubat:{
     '"Eu compro. Quanto tem?"',
     'O rapaz abre um sorriso de alívio tão grande que fica claro o quanto ele não queria discutir.',
     '"Tem um vivo. Trinta."',
-    'Você paga. Ele te entrega a gaiola com uma delicadeza estranha, do jeito de quem entrega uma coisa que sabe que não devia ter.',
+    'Você paga. Ele te entrega a gaiola com uma delicadeza estranha, como se a gaiola nunca devesse ter sido dele.',
     'Você solta o Zubat lá mesmo. Ele sobe e some no teto.',
     'O rapaz te olha soltar trinta pokedólares no ar e não diz nada, e o que ele está pensando está escrito na testa dele: esse aqui vai voltar toda semana.'
   ],
@@ -74986,7 +75650,7 @@ c4_perdeu_rapaz:{
     '"Cê tá bem?"',
     'Você faz que sim.',
     '"Então fica quiet{o|a} que eu vou trabalhar."',
-    'E ele trabalha. Na sua frente. Você fica ali sentad{o|a} até acabar, porque não tem mais nada a fazer, e isso é a pior parte do dia.'
+    'E ele trabalha. Na sua frente. Você fica ali sentad{o|a} até acabar, sem nada a fazer, e esperar assim é o pior do dia.'
   ],
   ef:{hp:-4, causa:'Derrota na fenda da pedreira', flag:'perdeu_na_fenda'},
   escolhas:[
@@ -75599,7 +76263,7 @@ c5_ab_negou:{
     d=>fala(d.jogador.nome, 'Ninguém entra atrás de mim.'),
     'Sai mais duro do que você queria. O mais novo dos três fica vermelho até a orelha.',
     fala('o homem de bota', 'Tá certo.'),
-    'Ele diz isso sem discordar e sem concordar, do jeito de quem já viu isso acontecer com outra pessoa que também achava que tinha autoridade pra dizer.',
+    'Ele diz isso sem discordar e sem concordar. Já viu isso acontecer com outra pessoa que também achava que tinha autoridade pra dizer.',
     'Você entra sozinh{o|a}. Dez minutos depois, lá dentro, você ouve três pares de pé na pedra atrás de você mesmo assim.'
   ],
   ef:{rep:{eixo:'ruim', delta:1, motivo:'Cortou três pessoas na boca da caverna.'},
@@ -75821,7 +76485,7 @@ c5_cobrou:{
     'O da aliança assobia.',
     '"Quinhentos pra carregar caixa vazia meia hora ladeira abaixo. Você é {ladrão|ladra}."',
     '"Sou caro."',
-    'Ele ri de verdade dessa vez, e tira duas notas do bolso, e são trezentos e não quinhentos, e ele te entrega do jeito que se entrega quando se sabe que a outra pessoa vai aceitar.',
+    'Ele ri de verdade dessa vez, e tira duas notas do bolso, e são trezentos e não quinhentos, e ele te entrega já sabendo que você vai aceitar.',
     'Você carrega a caixa por trinta e cinco minutos, ladeira abaixo, sentindo o calor dos ovos através do plástico na altura da barriga.',
     'A estrada de terra termina numa van branca parada numa curva. Nenhuma placa. Motor ligado.'
   ],
@@ -76037,7 +76701,7 @@ c5_ligou_com_caixa:{
     'Você fala. Ela não interrompe uma vez. No fim ela faz duas perguntas: "Estão quentes?" e "Você abriu?"',
     '"Quentes. E eu abri."',
     '"Fecha. Fecha agora e não abre mais." Você ouve ela levantando de alguma cadeira. "Eu chego em duas horas. Fica na sombra. Não põe no sol, não põe no chão de pedra, põe em cima da sua mochila."',
-    'Você fica duas horas na sombra com uma caixa de ovos em cima da mochila. É a coisa mais estranha que você já fez.'
+    'Você fica duas horas na sombra com uma caixa de ovos em cima da mochila. Quem passa, olha.'
   ],
   ef:{rep:{eixo:'bom',delta:3,motivo:'Chamou quem sabia, e esperou'},
       flag:'ovos_com_ivone',
@@ -76154,7 +76818,7 @@ c5_quem_manda:{
     '"Quem manda?"',
     'O da aliança levanta a caixa e não responde na hora. Responde quatro passos depois, já de costas, já descendo:',
     '"Gente que assina papel."',
-    'Ele diz isso do jeito de quem acha graça de si mesmo por ter medo.',
+    'Ele diz isso achando graça de si mesmo por ter medo.',
     '"Gente que assina papel é pior que gente com arma, {moleque|moleca}. Arma acaba. Papel não."'
   ],
   ef:{flag:'gente_que_assina_papel'},
@@ -76569,7 +77233,7 @@ c5_devolveu_pedra:{
 c5_esperou_cratera:{
   texto:[
     'Você senta na borda da cratera, atrás de uma pedra, e espera.',
-    'O dia inteiro. É a coisa mais chata que você já fez e você faz porque em algum lugar, no meio da noite, você decidiu que vale a pena.',
+    'O dia inteiro. O tédio vira dor nas costas, e você fica, porque em algum lugar, no meio da noite, você decidiu que vale a pena.',
     'Às onze e quarenta da noite eles vêm.',
     'Clefairy. Trinta e dois — você conta, porque contar é a única coisa que dá pra fazer quando se está assistindo a uma coisa dessas.',
     'Eles entram na cratera em fila e param em círculo em volta da pedra. E ficam.',
@@ -76627,7 +77291,7 @@ c5_derrubou_escada:{
 c5_entrada:{
   texto:[
     'Você entra.',
-    'Três passos lá dentro e a sua respiração vira a coisa mais alta do mundo. A caverna engole o som de um jeito que você não estava preparad{o|a}: você fala uma palavra pra testar e a palavra não volta.',
+    'Três passos lá dentro e você só ouve a própria respiração. A caverna engole o som de um jeito que você não estava preparad{o|a}: você fala uma palavra pra testar e a palavra não volta.',
     d=>{
       const l = (typeof Campo !== 'undefined') ? Campo.iluminar() : {pode:false};
       if (!l.pode) return 'A nove metros a luz do dia acaba. Você não tem luz nenhuma: anda com a mão na parede, contando os passos, com o pé tateando antes de pisar.';
@@ -76998,7 +77662,7 @@ c5_observou_camara:{
     d=>(d.flags.cruzou_os_cacadores || d.npcs['Caçador Roque'])
       ? 'Terceira: um deles é o Roque. O caçador da floresta.'
       : 'Terceira: um deles é mais velho que os outros, e tem um rolo de fio de aço pendurado num prego da parede.',
-    'Quarta: não tem arma nenhuma à vista, e isso é a coisa mais assustadora, porque quer dizer que eles não acham que precisam.'
+    'Quarta: não tem arma nenhuma à vista. Eles não acham que precisam, e é isso que assusta.'
   ],
   ef:{flag:'observou_a_camara',
       npc:{nome:'Caçador Roque', memoria:'Você o viu de novo, no Monte da Lua, trabalhando numa operação com cinco pessoas.'}},
@@ -77143,7 +77807,7 @@ c5_venceu:{
   falante:'Otto',
   vozes:['N','N'],
   texto:[
-    'Os outros quatro pegam as mochilas e saem pelo túnel de serviço, sem correr, sem falar com você, do jeito de quem bate ponto.',
+    'Os outros quatro pegam as mochilas e saem pelo túnel de serviço, sem correr, sem falar com você, como no fim de um turno.',
     'Otto fica, porque sair na frente de alguém que te venceu é pior do que apanhar.',
     '"Você acha que salvou eles." Ele aponta as gaiolas com o queixo, sentado no chão, com o time recolhido. "Abre. Vai, abre. Metade não sai. Tão aqui há semanas."',
     'Você abre. Ele tem razão sobre a metade.',
@@ -77502,7 +78166,7 @@ c6_ab_pela_agua:{
     d=>fala(d.jogador.nome, 'Por que alguém pagaria mais pra ir mais devagar?'),
     fala('o barqueiro', 'Você acabou de sair do Monte da Lua e tá me perguntando isso.'),
     'Você paga os cento e vinte, porque cento e oitenta é dinheiro, e ele vai devagar do mesmo jeito.',
-    'O rio leva quarenta minutos e nos quarenta minutos não acontece absolutamente nada, e isso é a coisa mais generosa que te aconteceu em três dias.',
+    'O rio leva quarenta minutos e nos quarenta minutos não acontece absolutamente nada, e depois de três dias você agradece.',
     'Cerulean aparece de baixo pra cima: primeiro as estacas das pontes, depois as pontes, depois a cidade em cima delas.'
   ],
   ef:{dinheiro:-120, flag:'desceu_de_chata', registrar:'Desceu o rio de chata até Cerulean.'},
@@ -77885,8 +78549,8 @@ c6_misty_desafio:{
     '"Eu vim desafiar o ginásio."',
     'Misty olha pro Cosmo. O Cosmo olha pro teto.',
     d=>(d.relogio && d.relogio.hora >= 17)
-      ? '"Desafio é de manhã e de tarde, com licença na mão, e hoje já passou das cinco." Ela fala sem nenhuma hostilidade, do jeito de quem repete isso oito vezes por dia. "Você volta amanhã."'
-      : '"Desafio é na porta do ginásio, com licença na mão, não na beira da piscina." Ela fala sem nenhuma hostilidade, do jeito de quem repete isso oito vezes por dia. "Você passa lá."',
+      ? '"Desafio é de manhã e de tarde, com licença na mão, e hoje já passou das cinco." Ela fala sem nenhuma hostilidade. Repete isso oito vezes por dia. "Você volta amanhã."'
+      : '"Desafio é na porta do ginásio, com licença na mão, não na beira da piscina." Ela fala sem nenhuma hostilidade. Repete isso oito vezes por dia. "Você passa lá."',
     'Ela começa a se levantar. E aí para.',
     '"Espera. Você tá com poeira de pedra na mochila."'
   ],
@@ -77953,7 +78617,7 @@ c6_misty_oficio:{
   texto:[
     '"Que ofício?"',
     'Ela abre a pasta de plástico, folheia, e tira uma folha timbrada.',
-    'Você lê. É educadíssimo. É a coisa mais educada que você já leu.',
+    'Você lê. É educadíssimo, do cabeçalho à assinatura.',
     '"Comunicamos a instauração de procedimento de avaliação de idoneidade de custódia referente aos espécimes registrados sob a titularidade de V.Sa., nos termos do Art. 11 do Estatuto."',
     '"O que isso quer dizer?"',
     '"Quer dizer que alguém abriu um processo pra decidir se eu sou uma boa dona dos meus Pokémon." Ela guarda a folha. "Eu tenho um Starmie há nove anos. Ele dorme na minha cama."',
@@ -78438,11 +79102,11 @@ c6_quem_carimba:{
     '"Sabe."',
     '"Quantos?"',
     '"Eu não sei quantos. Eu sei que sabe." Ele guarda a nota. "Cada nota minha tem número. Número é sequência. Sequência é contagem."',
-    'Ele olha pra você com uma atenção nova, do jeito de quem reavalia com quem está falando.',
+    'Ele olha pra você com uma atenção nova, reavaliando com quem está falando.',
     '"Você não é {o primeiro|a primeira} a perguntar isso. Mas você é {o primeiro|a primeira} de mochila."'
   ],
   ef:{flag:'sequencia_e_contagem',
-      presagio:'Alguém, em algum lugar, tem a contagem completa. E a contagem completa é a coisa mais perigosa que existe.'},
+      presagio:'Alguém, em algum lugar, tem a contagem completa.'},
   escolhas:[
     {texto:'"Quem mais perguntou?"', vai:'c6_quem_mais'},
     {texto:'Ver os papéis.', vai:'c6_papeis'},
@@ -78960,7 +79624,7 @@ c6_escondeu_estatuto:{
     'Você acha uma árvore caída com o tronco oco e enfia a caixa lá dentro, e cobre com folha, e marca a árvore com uma pedra branca em cima de um toco.',
     'Depois anda trezentos metros, olha pra trás, e não consegue distinguir qual árvore é.',
     'Volta. Refaz a marcação com duas pedras brancas. Anda trezentos metros de novo. Dessa vez dá.',
-    'É a coisa mais paranoica que você já fez, e ainda parece pouco.'
+    'Parece paranoia, e ainda parece pouco.'
   ],
   ef:{flag:'estatuto_escondido',
       presagio:'Tem uma caixa num tronco oco na Rota 25 com duas pedras brancas em cima de um toco.'},
@@ -79360,7 +80024,7 @@ c6_foi_sozinho_tigelas:{
   ],
   ef:{flag:['achou_as_tigelas','sabe_o_veneno'],
       registrar:'Identificou o princípio ativo do veneno das tigelas da Rota 25.',
-      presagio:'Você pegou o nome. Agora o Centro sabe o que fazer, e isso é a diferença entre duas coisas muito diferentes.'},
+      presagio:'Você pegou o nome. Agora o Centro sabe o que fazer.'},
   escolhas:[
     {texto:'Voltar correndo com o pacote.', vai:'c6_voltou_com_pacote'},
     {texto:'Virar todas as tigelas antes de voltar.', vai:'c6_virou_antes'},
@@ -79458,7 +80122,7 @@ c6_levou_pra_casa:{
   texto:[
     'Vocês levam o Vaporeon pro apartamento dela, que fica em cima de uma oficina e tem dezoito degraus de escada externa.',
     'É pequeno e muito limpo. Tem uma toalha velha dobrada num canto da sala que é claramente a cama dele.',
-    'Ela faz café. Você bebe café numa cozinha de estranha às sete da noite e é a coisa mais normal que te acontece em uma semana.',
+    'Ela faz café. Você bebe café numa cozinha de estranha às sete da noite, e pela primeira vez em uma semana nada parece fora do lugar.',
     'Na estante tem um porta-retrato com uma menina de uns quinze anos de uniforme de escola.',
     'Você não pergunta. Ela repara que você não perguntou, e agradece com a cabeça.'
   ],
@@ -79631,7 +80295,7 @@ c6_correu_quase:{
   texto:[
     'Você chega. Tarde, mas chega.',
     'Eles conseguem estabilizar. O Vaporeon vai viver, e não vai voltar a ser o que era — o veneno ficou em algum lugar que não sai, e uma das patas traseiras não responde direito.',
-    'Sibyl agradece muito. Muito demais, do jeito de quem está agradecendo pra não pensar no resto.',
+    'Sibyl agradece muito. Muito demais: está agradecendo pra não pensar no resto.',
     'Na recepção, Sibyl já está combinando com a enfermeira um horário de fisioterapia, e falando de beira de rio, de sol, de quanto tempo ele aguenta andar por dia.'
   ],
   ef:{rep:{eixo:'bom',delta:2,motivo:'Tentou salvar o Vaporeon de Sibyl'}, hp:-5, causa:'Exaustão na Rota 25',
@@ -79745,7 +80409,7 @@ c6_levou_marta_casa:{
 c6_cafe_depois:{
   texto:[
     'Você entra. É pequeno e muito limpo.',
-    'Tem uma toalha velha faltando num canto da sala, e o canto vazio é a coisa mais alta do apartamento.',
+    'Tem uma toalha velha faltando num canto da sala, e o canto vazio ocupa a sala inteira.',
     'Ela faz café. Vocês bebem sem falar. Em algum momento ela chora de novo, curto, e depois pede desculpa, e você diz que não precisa, e ela diz "precisa sim", e vocês voltam a beber café.',
     'Você fica uma hora e quinze.',
     'Na estante tem um porta-retrato com uma menina de uns quinze anos de uniforme de escola.'
@@ -79840,7 +80504,7 @@ c6_entao_para:{
     'Ele põe a décima sexta tigela no chão e não enche.',
     'Fica olhando pra ela vazia.',
     '"Se você virar todas, eu não encho hoje."',
-    'É a coisa mais estranha que já pediram pra você.'
+    'Ninguém nunca te pediu nada parecido.'
   ],
   ef:{flag:'ele_pediu'},
   escolhas:[
@@ -80033,7 +80697,7 @@ c6_outro_jeito:{
     '"Eu tiro eles daqui."',
     '"Você tira os Pokémon de rua da Rota 25." Ele fala devagar, medindo o tamanho da bobagem. "Quantos?"',
     'Você não sabe quantos. Ninguém sabe quantos.',
-    'Mas você passa as quatro horas seguintes tentando, e é a coisa mais idiota e mais honesta que você fez até agora.'
+    'Mas você passa as quatro horas seguintes tentando. É idiota, e é honesto.'
   ],
   escolhas:[
     {texto:'Ir até o fim. Pegar quantos der.', vai:'c6_tentou_tirar'},
@@ -81449,7 +82113,7 @@ c7_quantos_ela:{
     '"Então você tem muito giz pela frente."'
   ],
   ef:{flag:'muito_giz_pela_frente',
-      presagio:'Muito giz pela frente. Ela falou isso sem maldade nenhuma e é a coisa mais dura que te disseram hoje.'},
+      presagio:'Muito giz pela frente. Ela falou isso sem maldade nenhuma.'},
   escolhas:[
     {texto:'Procurar o zelador.', vai:'c7_zelador'},
     {texto:'Entrar na torre.', vai:'c7_torre'},
@@ -81963,7 +82627,7 @@ c7_chamou:{
 c7_propria_voz:{
   texto:[
     'Você fica.',
-    'Escutar o formato da própria voz sem o conteúdo é a coisa mais desagradável que já te aconteceu, e você fica.',
+    'Escutar o formato da própria voz sem o conteúdo dá vontade de sair dali, e você fica.',
     'Dura uns quarenta segundos.',
     'O que você aprende: você fala mais rápido do que achava. Você tem um tique de subir o tom no fim das frases. E você fala pouco.',
     'Depois para.',
@@ -82318,7 +82982,7 @@ c7_carregou_o_treinador:{
     'Você carrega o treinador escada abaixo. Seis andares.',
     'Ele pesa mais que qualquer coisa que você já carregou, e escada em espiral é a pior geometria possível pra carregar gente.',
     'Você para duas vezes. Na segunda você senta no degrau com ele em cima de você e fica assim por dois minutos.',
-    d=>d.flags.zelador_subiu_junto ? 'O zelador desce na frente iluminando os degraus com uma vela, e é a coisa mais inútil e mais necessária do mundo.' : '',
+    d=>d.flags.zelador_subiu_junto ? 'O zelador desce na frente iluminando os degraus com uma vela que quase não ilumina nada, e mesmo assim você segue a vela.' : '',
     'No saguão, o zelador chama a van. Ela leva onze minutos.',
     'O Marowak não desceu. Você ouve o osso batendo lá em cima quando a van sai.'
   ],
@@ -82528,7 +83192,7 @@ c7_escudo_resultado:{
     'Você chega no treinador, arrasta ele pelo colarinho até a escada e desce seis andares com ele.',
     'O que ficou pra trás no sexto andar ficou pra trás no sexto andar.',
     'O zelador olha o seu cinto quando você chega embaixo. Conta as Pokébolas com os olhos. Não diz nada.',
-    'O não-dizer-nada dele é a coisa mais alta dessa cidade sem música.'
+    'Nessa cidade sem música, o não-dizer-nada dele faz barulho.'
   ],
   ef:{rep:{eixo:'ruim',delta:4,motivo:'Sacrificou o próprio Pokémon como escudo'},
       moral:-30, flag:['usou_escudo','salvou_treinador_torre'],
@@ -82676,7 +83340,7 @@ c7_sentou_no_circulo:{
   ],
   ef:{flag:'sentou_no_setimo', hp:4, moral:10,
       rep:{eixo:'bom',delta:1,motivo:'Passou quarenta minutos sozinh{o|a} fazendo as contas'},
-      presagio:'Talvez não tenha nada aqui. Isso não deixa de ser a coisa mais importante do prédio.'},
+      presagio:'Talvez não tenha nada aqui.'},
   escolhas:[
     {texto:'Deixar alguma coisa sua no centro.', vai:'c7_deixou_no_centro'},
     {texto:'Descer.', vai:'c7_desceu_do_setimo'}
@@ -83242,7 +83906,7 @@ c8_ab_recusou_o_carro:{
 c8_ab_pelo_portao_de_carga:{
   texto:[
     'Você entra em Vermilion pela linha do trem, não pela estrada, porque a estrada tem um posto na entrada e o posto tem uma lista.',
-    'Andar em leito de linha é ilegal, cansativo e razoavelmente perigoso, e é a coisa mais sensata que você faz hoje.',
+    'Andar em leito de linha é ilegal, cansativo e razoavelmente perigoso, e hoje é a melhor ideia que você tem.',
     'Do leito da linha, o porto aparece de trás: pátio de contêiner, oficina, galpão, e só no fim a água.',
     d=>{
       if (d.via === 'foragido') return 'Você conhece esse tipo de entrada agora. Aprendeu em algum momento dos últimos meses e não lembra exatamente quando, o que é a parte que incomoda.';
@@ -83287,7 +83951,7 @@ c8_olhou_o_porto:{
     'Você senta na mureta de um canteiro e fica olhando.',
     'Um porto é a coisa mais organizada que você já viu. Tudo tem lugar, tudo tem ordem, tudo tem alguém apontando com uma prancheta.',
     'Um contêiner sai do navio, pousa num caminhão, o caminhão anda quarenta metros, para numa balança, e segue. Repete. Repete.',
-    'Depois de quarenta minutos você entende a coisa mais importante do porto: ninguém abre nada.',
+    'Depois de quarenta minutos você entende como o porto funciona: ninguém abre nada.',
     'Nada é aberto. Nada é conferido por dentro. Tudo é conferido por número, por lacre e por peso.',
     'Só um não entra na conta: um contêiner de vinte pés sozinho no canto do pátio, encostado no muro, que em quarenta minutos ninguém tocou.',
     d=>d.flags.conferem_por_numero
@@ -83681,7 +84345,7 @@ c8_carga_viva:{
   vozes:['P','N','N','N'],
   texto:[
     '"Carga viva de quê?"',
-    'O mais novo levanta e vai embora da mesa sem terminar o copo, o que é a coisa mais eloquente da noite.',
+    'O mais novo levanta e vai embora da mesa sem terminar o copo, e isso diz mais que a noite inteira de conversa.',
     'O mais velho fica.',
     '"Ele tem filho pequeno," ele explica. "Eu não tenho mais ninguém, então eu posso falar."',
     'Ele empurra o copo pro meio da mesa.',
@@ -84205,7 +84869,7 @@ c8_vai_junto:{
       flag:'nome_na_parede_da_fritura',
       npc:{nome:'Dona da fritura', opiniao:5, memoria:'Pregou o seu nome na parede da fritura dela, entre as contas a pagar.'},
       registrar:'Seu nome está pregado na parede de uma fritura do porto de Vermilion.',
-      presagio:'"Agora tem registro." É a coisa mais parecida com um contrato que você assinou até hoje.'},
+      presagio:'"Agora tem registro." O seu nome numa folha que não é sua.'},
   escolhas:[
     {texto:'Ir pro cais três.', vai:'c8_cais'},
     {texto:'Ir pro portão cinco às três e quarenta.', vai:'c8_portao_cinco', cond:d=>!!d.flags.portao_cinco}
@@ -84356,7 +85020,7 @@ c8_krabby_licao:{
     'Ele fecha a caixa com as duas mãos e senta em cima, como quem guarda um cofre.',
     '"Como você sabe disso?"',
     '"Eu vi numa banca em Cerulean."',
-    'Ele repete "Cerulean" baixinho, do jeito de quem está guardando.'
+    'Ele repete "Cerulean" baixinho, pra guardar.'
   ],
   escolhas:[
     {texto:'Ir pro cais três.', vai:'c8_cais'},
@@ -84371,7 +85035,7 @@ c8_cais:{
     'O S.S. Anne não parece um navio daqui: parece uma parede. Uma parede branca de nove andares com janelas, encostada num muro de concreto, com uma passarela coberta ligando os dois.',
     'Na entrada da passarela tem uma mesa com duas moças de uniforme, uma fila de gente bem vestida, e um preço numa placa de acrílico.',
     'PASSAGEM — VERMILION / CINNABAR — ₽ 8.000.',
-    'Tem gente pagando isso sem piscar. Um casal na sua frente paga quatro passagens e a mulher reclama do preço do jeito que se reclama de uma coisa que não dói.',
+    'Tem gente pagando isso sem piscar. Um casal na sua frente paga quatro passagens e a mulher reclama do preço, mas reclama de leve, porque não dói.',
     'E, do lado, uma porta de serviço sem placa, com um cabo de energia entrando por baixo.',
     'Mais pra trás, no canto do pátio, um contêiner de vinte pés está sozinho, fora de pilha, encostado no muro.',
     d=>d.flags.aceitou_o_convite
@@ -84669,7 +85333,7 @@ c8_seguiu_caminhao:{
   texto:[
     'Você segue o caminhão a pé pelo pátio, usando as pilhas de contêiner como cobertura.',
     'Ele para embaixo do guindaste do cais três.',
-    'E aí acontece a coisa mais banal do mundo: o guindaste pega o contêiner, gira, e põe no porão do S.S. Anne.',
+    'E aí acontece o que acontece cem vezes por dia no porto: o guindaste pega o contêiner, gira, e põe no porão do S.S. Anne.',
     'Quatro minutos. Dois homens, um operador de guindaste e um conferente com prancheta.',
     'O conferente não abre nada. Ele confere o número, o lacre e o peso, e assina.',
     'Você viu o crime inteiro e o crime inteiro foi legal.'
@@ -85001,7 +85665,7 @@ c8_contou_ao_contramestre:{
   texto:[
     '"Tem três caixa com furo de ventilação no fundo do corredor."',
     'Varo para de escrever.',
-    'Ele vai lá. Você vai junto. Ele olha as três caixas por um tempo longo, e passa a mão nos furos, e cheira, o que é a coisa mais eficiente que dá pra fazer.',
+    'Ele vai lá. Você vai junto. Ele olha as três caixas por um tempo longo, e passa a mão nos furos, e cheira. Não tem jeito mais rápido de saber.',
     'Depois ele endireita as costas.',
     '"Caixa lacrada de carga geral."',
     '"Tem furo."',
@@ -85105,7 +85769,7 @@ c8_bandejas_do_40:{
   vozes:['P','N','P','N','N'],
   texto:[
     '"Quem monta as bandeja do quarenta?"',
-    'A cozinha inteira não para, mas três pessoas olham pra você ao mesmo tempo, e isso é mais eloquente que qualquer resposta.',
+    'A cozinha inteira não para, mas três pessoas olham pra você ao mesmo tempo, e o olhar responde.',
     'Um cozinheiro de uns trinta anos responde sem olhar:',
     '"A Rina monta."',
     '"Quantas?"',
@@ -85219,7 +85883,7 @@ c8_homem_da_cadeira:{
   falante:'Homem do corredor',
   vozes:['P','N'],
   texto:[
-    'Você pergunta a coisa mais inofensiva que consegue pensar.',
+    'Você pergunta a primeira coisa inofensiva que vem à cabeça.',
     '"O senhor quer água?"',
     'Ele levanta a cabeça do livro de bolso.',
     'Tem uns cinquenta anos, camisa social sem gravata, e um jeito de sentar que não é de segurança de balada: é de quem já ficou muito tempo sentado em cadeira dobrável em corredor.',
@@ -85277,7 +85941,7 @@ c8_bordo:{
       if (d.flags.uniforme_tripulacao) return 'De uniforme, você é invisível. Ninguém olha para tripulação — não por desprezo, é mais simples que desprezo: tripulação não é gente que se olha. Dá pra andar por quase tudo.';
       if (d.flags.clandestino) return 'Você está com roupa de rota num salão de smoking. Todo mundo sabe que você não pertence aqui, e ninguém diz nada, que é pior do que se dissessem.';
       if (d.flags.trabalhou_no_navio) return 'Você entra pelo corredor de serviço e ninguém repara. Cansaço nos braços, passagem no bolso, e o direito de estar aqui que você pagou com o corpo.';
-      if (d.flags.entrou_pelo_torneio) return 'Você entrou pela porta da frente com um crachá de participante e a moça do balcão te chamou de "atleta", o que é a coisa mais engraçada que já te falaram.';
+      if (d.flags.entrou_pelo_torneio) return 'Você entrou pela porta da frente com um crachá de participante e a moça do balcão te chamou de "atleta", e você quase riu na cara dela.';
       return 'Você pagou para estar aqui, então você pertence aqui. É assim que funciona, aparentemente, e você acabou de descobrir por oito mil pokedólares.';
     },
     'Num canto do salão, uma arena montada com corda e piso emborrachado. O torneio começa em vinte minutos e tem gente já apostando no balcão.',
@@ -85681,7 +86345,7 @@ c8_sobre_o_que:{
     '"Eu trabalho numa fundação que cuida de bem-estar de espécimes. A gente acompanha treinadores promissores. Bolsa, equipamento, cobertura médica."',
     'Ele não entrega cartão. Ele não insiste.',
     '"Dez minutos numa mesa daquele canto, com o salão inteiro olhando. Não tem nada de sigiloso nisso."',
-    'E ele está certo: não tem. É a coisa mais pública do mundo.',
+    'E ele está certo: não tem. Está tudo à vista do salão inteiro.',
     'É exatamente por isso que é assustador.'
   ],
   ef:{flag:'a_fundacao_se_apresentou',
@@ -85898,7 +86562,7 @@ c8_o_nome_dele:{
 c8_assinou:{
   texto:[
     'Você assina.',
-    'Leva quatro segundos e é a coisa mais fácil que você fez em Kanto.',
+    'Leva quatro segundos. É fácil desse jeito.',
     'Ele guarda a via dele na pasta, te entrega a sua dobrada em três, e aperta a sua mão com as duas mãos.',
     'Ele te entrega um adiantamento num envelope, ali mesmo, e diz que a bolsa cai todo mês. O adiantamento sozinho é mais do que entra na sua casa num mês.',
     'A ficha tem campo pra peso, nível e incidentes. No fim tem uma linha em branco escrita "observações", e é a única parte da folha que ninguém te explica.'
@@ -86775,7 +87439,7 @@ c8_pegou_as_pastas:{
     '"Aquilo é material de trabalho."',
     '"É prova."',
     '"É material de trabalho de uma entidade regularmente constituída e você está cometendo furto." Ele fala sem raiva. "Mas tudo bem. Leva."',
-    'E o "leva" dele é a coisa mais assustadora da noite, porque quer dizer que ele já calculou e que a conta fecha pro lado dele.',
+    'E o "leva" dele assusta mais que qualquer grito, porque quer dizer que ele já calculou e que a conta fecha pro lado dele.',
     'Dentro de uma das pastas, presas com clipe, tem quatro cartas fechadas com selo e endereço, nunca postadas.'
   ],
   ef:{flag:['tem_as_pastas_do_40','papel_com_brasao','as_quatro_cartas'],
@@ -86933,7 +87597,7 @@ c8_continuou_escutando:{
     '"Eu sei, eu sei. Amanhã a gente chega e aí melhora. Alojamento tem janela."',
     'Silêncio.',
     '"Dorian, vira pra cá. Olha. Você assinou por vontade própria, lembra? Eu perguntei três vezes."',
-    'E a coisa mais horrível da noite inteira:',
+    'E aí, o pior da noite:',
     '"Lembro," diz o menino.'
   ],
   ef:{flag:'lembro_disse_o_menino',
@@ -87381,7 +88045,7 @@ c8_chamou_a_capitania:{
     'E chama.',
     'Pelo rádio, na frequência da capitania, às onze e cinquenta da noite, com a voz absolutamente normal de quem faz comunicação de rotina.',
     'Do outro lado, uma voz confirma: a capitania sobe a bordo assim que o navio encostar em Cinnabar.',
-    'Ele desliga o rádio e fica um tempo com a mão em cima dele, do jeito de quem acabou de assinar uma coisa.'
+    'Ele desliga o rádio e fica um tempo com a mão em cima dele, como se tivesse acabado de assinar uma coisa.'
   ],
   ef:{rep:{eixo:'bom',delta:4,motivo:'Fez a capitania lavrar termo'},
       flag:'termo_lavrado',
@@ -87828,7 +88492,7 @@ c9_ab_de_cracha:{
 
 c9_ab_requereu_carga:{
   texto:[
-    'Você preenche o formulário na bancada, com a caneta amarrada por barbante, e é a coisa mais adulta que você já fez.',
+    'Você preenche o formulário na bancada, com a caneta amarrada por barbante, e nunca se sentiu tão adult{o|a}.',
     'Campo "objeto do requerimento": você escreve "relação de notas de descarga do terminal de carga da avenida dois, últimos sessenta dias".',
     'O rapaz lê enquanto carimba e o carimbo para no meio do caminho.',
     fala('o rapaz do protocolo', 'Últimos sessenta dias.'),
@@ -87922,7 +88586,7 @@ c9_compra_se:{
   texto:[
     'É uma loja pequena e limpa, com balcão de vidro, iluminação boa e um homem de camisa polo que te cumprimenta pelo nome do horário.',
     '"Boa tarde. Vender ou avaliar?"',
-    'Atrás dele, na parede, um quadro de avisos com a tabela: espécie, faixa de nível, valor. É datilografado, atualizado a caneta na margem, e é a coisa mais fria que você já viu na vida.',
+    'Atrás dele, na parede, um quadro de avisos com a tabela: espécie, faixa de nível, valor. É datilografado, atualizado a caneta na margem, como tabela de preço de feira.',
     'Tem uma coluna extra à direita, sem título, com números menores.',
     'Você pergunta o que é a coluna sem título.',
     '"Ah, essa é o valor de lote." Ele não hesita nem meio segundo. "Quando o cliente traz mais de quatro."'
@@ -88482,7 +89146,7 @@ c9_filha_marta:{
   texto:[
     'Você não tem endereço nem nome. Tem o rosto de um porta-retrato, três anos mais nova do que ela está hoje, e a informação de que ela está em Celadon.',
     'Isso, numa cidade de quatrocentos mil habitantes, é nada.',
-    'Você tenta mesmo assim, e leva dois dias, e é a coisa mais idiota e mais teimosa que você faz nessa cidade.',
+    'Você tenta mesmo assim, e leva dois dias, por pura teimosia.',
     'Você acha por acaso: num café do quarto andar do shopping, uma moça de uns dezoito anos com crachá de funcionária e o mesmo jeito de segurar a caneca que a Sibyl tem.',
     'Você fica olhando de longe por quase dez minutos antes de conseguir chegar perto.'
   ],
@@ -88594,7 +89258,7 @@ c9_nao_sei_pra_filha:{
     '"Eu não sei."',
     'Ela te olha.',
     '"Como você não sabe?"',
-    '"Porque eu não sei o que um Pokémon sente." Você fala isso e é a coisa mais honesta que você diz nessa cidade. "Ele parou de respirar devagar e ela tava com a mão nos olhos dele."',
+    '"Porque eu não sei o que um Pokémon sente." Pela primeira vez nessa cidade, você não escolhe as palavras. "Ele parou de respirar devagar e ela tava com a mão nos olhos dele."',
     'Ela absorve isso.',
     '"Tá." Ela faz que sim. "Tá. Isso é melhor do que não. Obrigada por não falar não."'
   ],
@@ -88680,7 +89344,7 @@ c9_silencio_no_cafe:{
     'Vocês {dois|duas} ficam na mesa do café sem falar nada por uns doze minutos.',
     'O shopping continua em volta: música baixa, gente com sacola, um alarme de loja que dispara e ninguém olha.',
     'Em algum momento ela empurra o prato de pão de queijo pro meio da mesa, e você pega um, e ela pega outro.',
-    'É a coisa mais parecida com uma família que essa cidade te ofereceu.'
+    'Pra essa cidade, isso é quase família.'
   ],
   ef:{hp:3, moral:5,
       npc:{nome:'Filha da Sibyl', opiniao:4, memoria:'Vocês dividiram um prato de pão de queijo em silêncio no café do shopping.'}},
@@ -89301,7 +89965,7 @@ c9_copia_das_certidoes:{
 c9_leu_as_certidoes:{
   texto:[
     'Você senta num banco de praça de Celadon e lê trinta e duas páginas de certidão comercial.',
-    'Leva três horas e quarenta minutos e é a coisa mais chata que você já fez na vida.',
+    'Leva três horas e quarenta minutos, e cada minuto se arrasta.',
     'E no meio da página vinte e sete tem uma linha que muda tudo.',
     'É uma alteração contratual de dois anos e meio atrás, e o objeto dela é a inclusão de uma nova atividade econômica secundária na empresa de logística. Está escrito assim:',
     '"Guarda e conservação de espécimes biológicos vivos, para fins de custódia administrativa."',
@@ -89387,7 +90051,7 @@ c9_recuou_na_junta:{
 c9_saiu_da_junta:{
   texto:[
     'Você desce três andares a pé e sai na rua com papel na mochila.',
-    d=>`É estranho. Você atravessou Kanto, entrou em caverna, subiu em torre${c9_subiuNoNavio(d) ? ', embarcou em navio' : ''} — e a coisa mais perigosa que você carrega hoje saiu de uma impressora matricial num prédio público.`
+    d=>`É estranho. Você atravessou Kanto, entrou em caverna, subiu em torre${c9_subiuNoNavio(d) ? ', embarcou em navio' : ''} — e o que você carrega de mais perigoso hoje saiu de uma impressora matricial num prédio público.`
   ],
   escolhas:[
     {texto:'Ir ao depósito.', vai:'c9_deposito'},
@@ -90332,7 +90996,7 @@ c9_prado_conversa:{
       npc:{nome:'Auditora Brill', opiniao:5, memoria:'Te ouviu no corredor e te disse exatamente o que ela precisa para suspender uma alienação.'},
       rep:{eixo:'bom',delta:3,motivo:'Conseguiu que uma servidora da Comissão te ouvisse'},
       registrar:'A Auditora Brill suspende a alienação se houver declaração escrita do tutor, com processo e data.',
-      presagio:'Ela te disse o que precisa. Isso é raro e é a coisa mais útil que aconteceu nessa cidade.'},
+      presagio:'Ela te disse o que precisa.'},
   escolhas:[
     {texto:'Entregar a declaração do Elias agora.', vai:'c9_prado_te_da_o_processo', cond:d=>!!d.flags.copia_do_hideo || !!d.flags.hideo_escreveu},
     {texto:'"Eu volto com isso escrito." E ir ao hospital.', vai:'c9_hospital', cond:d=>!!d.flags.conhece_o_hideo},
@@ -90346,7 +91010,7 @@ c9_prado_te_da_o_processo:{
   vozes:['P','N','N','N'],
   texto:[
     d=>d.flags.copia_do_hideo || d.flags.hideo_escreveu
-      ? '"É do tutor. Com a letra dele." Você entrega a folha. Ela lê duas vezes, a segunda com o dedo acompanhando a linha, do jeito de quem confere número.'
+      ? '"É do tutor. Com a letra dele." Você entrega a folha. Ela lê duas vezes, a segunda com o dedo acompanhando a linha, conferindo número por número.'
       : '"E os outros mil e duzentos?" Ela fica calada tempo demais pra ser uma pausa.',
     d=>d.flags.copia_do_hideo || d.flags.hideo_escreveu
       ? '"Letra de pessoa com a mão ruim, escrita devagar, com data. O número do processo eu mesma ponho." Ela dobra a folha. "Isso é documento."'
@@ -90534,7 +91198,7 @@ c9_deposito:{
     'Dá pra ouvir de fora o gerador. E, por baixo do gerador, um som contínuo que não é máquina — é um som de muitas coisas pequenas se mexendo em espaços pequenos, e ele não para nunca, ele só muda de volume.',
     d=>Historia.via()==='foragido' ? 'Você não veio fechar isso. Você veio pegar isso. É uma diferença que muda tudo o que você faz agora.' :
        Historia.via()==='pesquisador' ? 'Você veio ver. Se você só ver, vai ter que viver com isso. Se você agir, vai perder o que ainda não entendeu.' :
-       Historia.via()==='mercenario' ? 'Você tem a chave, agora. Isso devia deixar a coisa mais fácil e está deixando pior.' :
+       Historia.via()==='mercenario' ? 'Você tem a chave, agora. Isso devia deixar tudo mais fácil e está deixando pior.' :
        'São quatro pessoas lá dentro, no mínimo, contando pelas vozes. Você é {um|uma}.'
   ],
   ef:{flag:'chegou_no_armazem',
@@ -90667,7 +91331,7 @@ c9_verdade_no_armazem:{
     'E a pergunta é honesta. Ele acha normal que apareça alguém procurando um número, porque já aconteceu antes.',
     '"Olha, {garoto|garota}." Ele baixa a mão do outro, a que tem a Pokébola. "Aqui é custódia. A gente guarda, alimenta e entrega. Se tem gente da família, tem que ir na Comissão, não aqui."',
     '"Se você entrar e tirar, eu perco o emprego e o Pokémon volta, porque ele tem número."',
-    'Ele diz isso sem raiva. É a coisa mais difícil de ouvir da noite inteira.'
+    'Ele diz isso sem raiva, e a falta de raiva pesa mais.'
   ],
   ef:{flag:['falou_com_os_funcionarios','sabe_que_volta'],
       rep:{eixo:'bom',delta:2,motivo:'Disse a verdade num lugar onde ninguém diz'},
@@ -90922,7 +91586,7 @@ c9_documentou:{
     'Depois sai sem tocar em nada. Sem soltar ninguém.',
     'Essa é a decisão mais fria que você já tomou, e você sabe exatamente por que tomou: uma noite de caos fecha um armazém e eles abrem outro em trinta dias.',
     'Páginas de destino, com registro comercial e número de processo, fecham uma rede.',
-    'Você fica com isso na consciência do jeito que se fica com uma escolha certa que parece errada.'
+    'Você fica com isso na consciência: uma escolha certa que parece errada.'
   ],
   ef:{flag:['provas_deposito','escolha_fria'],
       rep:{eixo:'bom',delta:2,motivo:'Documentou a rede inteira em vez de agir na hora'},
@@ -91133,7 +91797,7 @@ c9_liga_celadon:{
     '"Isso aqui é bom material." Ele folheia devagar, anotando. "Sério. É melhor do que noventa por cento do que chega aqui."',
     '"Mas eu preciso de mandado pra entrar em armazém credenciado, e mandado pra empresa privada com alvará em ordem leva de quatro a nove meses."',
     '"Quatro a nove meses."',
-    '"Eu sei." Ele te olha nos olhos e não desvia, o que é a coisa mais decente que ele podia fazer. "Eu sei."'
+    '"Eu sei." Ele te olha nos olhos e não desvia. Pelo menos isso. "Eu sei."'
   ],
   ef:{flag:'liga_tem_provas',
       rep:{eixo:'bom',delta:1,motivo:'Levou provas às autoridades'},
@@ -92019,7 +92683,7 @@ c10_perimetro:{
     'Anota quatro coisas.',
     'Uma: o arame farpado está inclinado pra dentro no perímetro inteiro, sem exceção. Isso custa mais caro que inclinar pra fora e alguém pagou de propósito.',
     'Duas: tem três buracos na tela, todos do mesmo tamanho, todos com a borda derretida e não cortada. Ninguém cortou essa tela com alicate. Alguma coisa passou por ela.',
-    'Três: a grama em volta dos três buracos é diferente. Mais alta, mais verde, num raio de uns dois metros. Terra com corrente cresce planta melhor — isso é fato agrícola e é a coisa mais tranquila e mais assustadora que você viu hoje.',
+    'Três: a grama em volta dos três buracos é diferente. Mais alta, mais verde, num raio de uns dois metros. Terra com corrente cresce planta melhor — isso é fato agrícola, e é tranquilo, e assusta.',
     'Quatro: na parte de trás, perto da subestação, o alambrado simplesmente não existe num trecho de oito metros. Os postes estão lá. A tela não.'
   ],
   ef:{flag:['viu_os_buracos','conhece_o_perimetro'],
@@ -92370,7 +93034,7 @@ c10_sentou_com_eloi:{
     'Depois de muito tempo ele fala uma coisa só:',
     '"Meu pai também trabalhou nessa usina. Ele ajudou a construir, em cinquenta e oito."',
     '"Três gerações de uma família olhando pro mesmo prédio e nenhuma delas entendeu o que tem dentro."',
-    'E depois vocês voltam a não falar nada, e é confortável, e é a coisa mais calma que aconteceu com você em muitas semanas.'
+    'E depois vocês voltam a não falar nada, e é confortável, de um sossego que você tinha esquecido.'
   ],
   ef:{flag:'noite_com_eloi', moral:12, hp:3,
       npc:{nome:'Sr. Edric', opiniao:7, memoria:'Passaram quarenta minutos em silêncio na brita, tomando café com açúcar demais.'},
@@ -92906,7 +93570,7 @@ c10_desligou:{
     d=>Estado.contaItem('Luva de eletricista')>0 ? 'Você calça a luva classe 2 antes, que sobra três dedos e é a melhor decisão da noite.' : 'Você não tem luva. Você pega numa alavanca de seccionadora de alta tensão com as mãos que tem.',
     'Puxa com as duas mãos e o corpo inteiro. Ela cede com um clique de catraca e depois um estouro surdo.',
     'O zumbido para.',
-    'O silêncio depois dele é a coisa mais alta que você já ouviu na vida.',
+    'O silêncio depois dele enche os ouvidos.',
     'Dura dois segundos e meio.',
     'E então, do outro lado do pátio, alguma coisa grita — e o grito é elétrico, literalmente: você sente nos dentes e nos ossos do braço antes de ouvir com o ouvido.',
     'Você acabou de desligar o que alguma coisa ali estava comendo.'
@@ -93176,7 +93840,7 @@ c10_convite:{
     'É o gesto mais idiota que existe e você sabe: Pokébola não convida, Pokébola prende.',
     'Ela desce.',
     'Pousa no chão a uns quatro metros da Pokébola aberta e olha ela por muito tempo. Anda em volta. Olha você. Olha a Pokébola.',
-    'Depois encosta o bico na Pokébola aberta, com cuidado, do jeito que se encosta em coisa que se sabe que morde.',
+    'Depois encosta o bico na Pokébola aberta, com cuidado, desconfiado.',
     'A Pokébola dispara o mecanismo de captura e fecha, vazia, porque ela não entrou.',
     'Ela olha a Pokébola fechada no chão, olha você, e volta pra viga.',
     'Não foi recusa. Foi resposta: ela experimentou, entendeu o que é, e devolveu.'
@@ -93444,7 +94108,7 @@ c10_saiu:{
       return 'Nenhum dos Voltorb reage à sua saída. Eles nem sabiam direito que você estava lá — ou sabiam e isso nunca foi o ponto.'; },
     'No portão, você olha pra trás uma última vez e entende uma coisa:',
     'Aquilo não estava escondido. Estava só num lugar onde ninguém vai.',
-    'Onze anos, oitocentos metros de uma trilha usada por gente todo fim de semana, e a coisa mais estranha de Kanto estava ali com o cadeado enferrujado aberto.'
+    'Onze anos, oitocentos metros de uma trilha usada por gente todo fim de semana, e o lugar mais estranho de Kanto estava ali com o cadeado enferrujado aberto.'
   ],
   ef:{flag:'saiu_da_usina', rep:{eixo:'bom',delta:1,motivo:'Saiu da usina sem mexer no que vive lá'}},
   escolhas:[{texto:'Seguir.', vai:'c10_depois'}]
@@ -93847,7 +94511,7 @@ c11_ab_o_acampamento:{
     fala('Milo', 'Chegou agora?'),
     d=>fala(d.jogador.nome, 'Agora.'),
     fala('Milo', 'Nome, data de chegada e insígnias que você já tem.'),
-    'Ele diz isso do jeito de quem faz isso há semanas.',
+    'Ele diz isso com a prática de semanas.',
     fala('Milo', 'Quando abrir, a ordem é essa. A gente combinou.')
   ],
   ef:{flag:'o_caderno_da_fila',
@@ -94230,7 +94894,7 @@ c11_teve_porta:{
     'Ele responde tão rápido que você entende que ele esperava alguém perguntar isso um dia.',
     '"Teve porta aí, ó, mais ou menos no meio. Porta de ferro, de duas folhas, larga. Passava caminhão pequeno."',
     '"E fecharam quando?"',
-    'Ele pensa com a mão no queixo, do jeito de quem tem prazer em ser consultado.',
+    'Ele pensa com a mão no queixo, contente de ser consultado.',
     '"Noventa e seis. Fecharam com bloco e rebocaram por cima. Demorou umas duas semanas a obra."',
     '"E você lembra do que passava por ela?"',
     '"Caminhão-baú branco. Uma, duas vezes por mês. E ambulância."',
@@ -94388,7 +95052,7 @@ c11_sabrina_oque:{
   vozes:['N','N','N','N','N','N','N'],
   texto:[
     '"Onze."',
-    'Ela diz o número devagar, do jeito que se diz número que se contou muitas vezes.',
+    'Ela diz o número devagar, um número contado muitas vezes.',
     '"Onze mentes que acham que são uma."',
     '"Eles não sabem que são onze. Cada um acha que é o único, e que os outros dez são lembrança dele mesmo."',
     '"Imagina acordar e achar que todo mundo que você ouve é você lembrando de coisas que você fez. Não dá medo. Dá solidão de um tipo que não existe nome."',
@@ -95057,7 +95721,7 @@ c11_cracha_azul:{
       ? 'Quando você diz "andar onze", ela levanta a cabeça.'
       : 'Quando você pergunta do prédio, do que ninguém ali comenta, ela levanta a cabeça.',
     '"Quem te falou disso?"',
-    'Você responde. Ela ouve, fecha o PokéNav, olha pros dois lados da rua, e fala muito baixo e muito rápido — do jeito de quem já ensaiou essa conversa sozinha no chuveiro.',
+    'Você responde. Ela ouve, fecha o PokéNav, olha pros dois lados da rua, e fala muito baixo e muito rápido — uma conversa que ela já ensaiou sozinha no chuveiro.',
     '"Eu trabalho no 9. Eu assino requisição de material biológico."',
     '"Eu assino há dois anos. Eu assinei quatrocentas e onze requisições e eu nunca vi o material."',
     '"Eu recebo uma planilha, eu confiro se o código bate com a nota, eu assino. Isso é o meu trabalho inteiro e eu ganho bem pra isso."',
@@ -95843,7 +96507,7 @@ c11_anotou_placas:{
     'Você anota as quatro placas no caderno, e o modelo, e a cor.',
     'Um sedã prata de meia-idade com cadeirinha de bebê no banco de trás. Uma perua com adesivo de faculdade no vidro. Um carro popular com uma pasta no banco do carona. E um utilitário com o para-choque amassado e uma caixa de papelão no porta-malas, aberta, com pastas dentro.',
     'Quatro pessoas. Uma tem filho pequeno. Uma faz pós-graduação.',
-    'É a coisa mais desconcertante da semana até aqui: você veio procurar monstro e achou estacionamento.',
+    'Você veio procurar monstro e achou estacionamento.',
     'A caixa aberta no porta-malas do utilitário tem um lombo de pasta virado pra cima e dá pra ler, se você chegar perto do vidro:',
     '**PROJ. 11 — SÉRIE 3 — ENCERRAMENTO**'
   ],
@@ -96254,7 +96918,7 @@ c11_levou_a_caixa:{
     'Ela é grande, branca, absurdamente visível, e você atravessa Saffron às vinte e uma horas carregando uma caixa de material biológico de um metro e meio.',
     'Ninguém te para.',
     'Três pessoas olham. Uma delas segura a porta do prédio pra você porque você está com as mãos ocupadas.',
-    'É a coisa mais engraçada e mais deprimente da semana: você roubou propriedade de Kanto, com carimbo e tudo, e o que a cidade fez foi segurar a porta.'
+    'É engraçado e é deprimente: você roubou propriedade de Kanto, com carimbo e tudo, e o que a cidade fez foi segurar a porta.'
   ],
   ef:{flag:['tem_a_caixa_de_cinnabar','provas_do_11'],
       itens:{'Caixa carimbada de Cinnabar':1},
@@ -96351,7 +97015,7 @@ c11_levou_um_ditto:{
   texto:[
     'Você pega o que virou a caixa branca, porque é o único que não está com a sua cara e você não consegue carregar uma cópia sua no colo.',
     'Ele volta ao normal no seu braço em uns dez segundos, e é mole e morno e absurdamente leve pro tamanho.',
-    'Os outros seis somem pela rua em direções diferentes, e dois deles ainda estão com a sua cara, e isso é um problema que você não tem como resolver hoje.',
+    'Os outros seis somem pela rua em direções diferentes, e dois deles ainda estão com a sua cara, e hoje não tem o que fazer quanto a isso.',
     'Ou nunca.'
   ],
   ef:{flag:'tem_um_ditto',
@@ -96848,7 +97512,7 @@ c11_abriu_os_seis:{
     'Você abre seis.',
     'O painel de dreno é analógico e tem uma alavanca por tanque, numeradas de 1 a 12 com etiqueta de máquina de escrever. Você abre as seis que mandaram "fora" e deixa as cinco fechadas.',
     'Leva noventa segundos pra drenar cada um.',
-    'Dos seis, dois não se mexem quando o líquido acaba — mandaram "fora" e não conseguem levantar, o que é a coisa mais cruel que esse andar já fez.',
+    'Dos seis, dois não se mexem quando o líquido acaba — mandaram "fora" e não conseguem levantar.',
     'Três conseguem sentar.',
     'Um fica de pé.',
     'E aí você olha pros cinco tanques que continuam cheios, e os cinco continuam mandando a mesma coisa pesada e longa, e você entendeu ela da primeira vez e continua entendendo, e não vai fazer nada a respeito.',
@@ -96870,8 +97534,8 @@ c11_tirou_os_seis:{
   texto:[
     d=>d.flags.fechou_a_porta_do_11 ? 'Você volta antes da porta fechar, e fica.' : 'Você fica.',
     d=>c11_quantosTira(d) === 6
-      ? 'Leva duas horas e quarenta minutos e é a coisa mais difícil que você já fez fisicamente.'
-      : 'Leva quase duas horas e é a coisa mais difícil que você já fez fisicamente.',
+      ? 'Leva duas horas e quarenta minutos, e no fim os seus braços tremem sozinhos.'
+      : 'Leva quase duas horas, e no fim os seus braços tremem sozinhos.',
     d=>`Quatro lances de escada, ${porExtenso(c11_quantosTira(d))} vezes, com um corpo de mais ou menos o seu tamanho e o seu peso, molhado, que não sabe ajudar porque nunca usou o próprio corpo.`,
     d=>{ const n = c11_quantosTira(d), dela = n === 6 ? 'três' : 'dois';
          return c11_sorrelNoAndar(d)
@@ -96952,7 +97616,7 @@ c11_abrir_tanques:{
     'O painel de dreno é analógico e tem uma alavanca por tanque, com etiqueta de máquina de escrever.',
     'Isso é projeto de gente que não achava que alguém fosse querer abrir — analógico é mais barato e ninguém gasta com senha numa coisa que ninguém vai mexer.',
     'Você abre os onze.',
-    'O líquido desce em noventa segundos por tanque e vai pro ralo central com um barulho absolutamente normal de água indo pro ralo, que é a coisa mais obscena da noite.',
+    'O líquido desce em noventa segundos por tanque e vai pro ralo central com um barulho absolutamente normal de água indo pro ralo. É o normal que ofende.',
     'Sete não se mexem. Nunca iam se mexer, e você entende isso ao olhar, e não é culpa de nada que você fez.',
     'Três se mexem e não conseguem ficar de pé.',
     'Um fica de pé.',
@@ -97704,7 +98368,7 @@ c12_ab_onde_pararam:{
     'As três bicicletas estão encostadas numa parede na lateral de um prédio baixo da avenida principal.',
     'O prédio é uma padaria. Tem cheiro de pão saindo e tem uma placa de "ABERTO" virada pro certo.',
     'Três homens de bicicleta com uma caixa térmica entraram numa padaria e as bicicletas estão do lado de fora e a caixa térmica não está.',
-    'Você fica olhando a padaria por uns quatro minutos e uma senhora sai de lá com um saco de pão e um cumprimento pro balconista, e é a coisa mais normal que existe.'
+    'Você fica olhando a padaria por uns quatro minutos e uma senhora sai de lá com um saco de pão e um cumprimento pro balconista, como em qualquer manhã de qualquer cidade.'
   ],
   ef:{flag:'a_padaria_da_avenida',
       registrar:'Os três da caixa térmica entraram numa padaria da avenida principal de Fuchsia. Saíram sem a caixa.'},
@@ -98428,7 +99092,7 @@ c12_derrubar_relatorio:{
            : '"Eu convoco reunião extraordinária do conselho. Leva onze dias entre convocação e realização, por regimento."'; },
     d=>`"${c12_Dias(c12_diasPraReuniao(d))}."`,
     d=>`"${c12_Dias(c12_diasPraReuniao(d))}." Ele te olha. "Eu faço a parte que leva ${c12_dias(c12_diasPraReuniao(d))}. Alguém tem que fazer a parte de hoje à noite."`,
-    'E ele diz isso sem nenhum peso, sem nenhuma insinuação heroica, do jeito que se distribui tarefa.',
+    'E ele diz isso sem nenhum peso, sem nenhuma insinuação heroica: tarefa distribuída, e só.',
     '"Eu tenho sessenta e dois anos e um assento em conselho. Você tem {idade} anos e nada a perder num regimento."',
     '"A gente é bem complementar."'
   ],
@@ -99281,7 +99945,7 @@ c12_parou_a_triagem:{
     'Silêncio.',
     'O rádio continua tocando.',
     'Um dos rapazes de luva olha pro outro. A Dra. Pia não levanta a cabeça.',
-    'E o mais velho dos dois — o que conversa com os Pokémon — responde, sem agressividade nenhuma, e a resposta dele é a coisa mais devastadora da semana:',
+    'E o mais velho dos dois — o que conversa com os Pokémon — responde, sem agressividade nenhuma, e a resposta dele te desmonta:',
     '"Eu sei."',
     '"Eu sei qual é a mãe de qual há quatro anos, {moço|moça}. Eu sei todas."',
     'Ele ajeita a luva.',
@@ -100316,7 +100980,7 @@ c12_conversa_plantao:{
   vozes:['N','P','N','N','P','N','P','N','N'],
   texto:[
     'Você senta na segunda cadeira e ele te dá café sem perguntar se você quer.',
-    'É café com muito açúcar, do jeito que se faz café pra passar a noite.',
+    'É café com muito açúcar, café de virar a noite.',
     'Vocês ficam uns quarenta minutos ali, com o rádio tocando, e ele fala de coisa nenhuma — da Liga, do preço do gás, da neta que passou em concurso.',
     'Depois, sem mudar o tom, ele fala:',
     '"Você quer abrir."',
@@ -100346,7 +101010,7 @@ c12_conversa_plantao:{
 c12_jorge_ajuda:{
   texto:[
     d=>fala(d.jogador.nome, 'Então me ajuda a arrumar pra onde levar.'),
-    'Ele demora muito tempo pra responder, e no meio do tempo ele desliga o rádio, o que é a coisa mais séria que ele faz a noite inteira.',
+    'Ele demora muito tempo pra responder, e no meio do tempo ele desliga o rádio. É o único gesto sério dele na noite inteira.',
     fala('Sr. Ulric', 'Os caminhão de soltura tão no galpão de máquinas.'),
     d=>fala(d.jogador.nome, d.flags.sabe_dos_caminhoes ? 'Eu sei.' : 'Que caminhões?'),
     d=>d.flags.sabe_dos_caminhoes ? '' : fala('Sr. Ulric', 'Dois. A reserva tinha soltura, antes. A soltura parou e os caminhão ficou.'),
@@ -100385,8 +101049,7 @@ c12_amarrou:{
     '"O quê?"',
     '"Aperta mais o pulso. Se ficar frouxo demais, eles vão dizer que eu deixei."',
     'Você aperta mais o pulso de um homem de setenta e um anos porque ele pediu, pra ele não perder o emprego.',
-    'E ele agradece.',
-    'E essa é a coisa mais difícil que aconteceu com você em Fuchsia.'
+    'E ele agradece.'
   ],
   ef:{flag:'amarrou_o_jorge',
       npc:{nome:'Sr. Ulric', opiniao:3, memoria:'Pediu para você apertar mais a corda, para não perderem o emprego dele.'},
@@ -100480,7 +101143,7 @@ c12_abriu_curral:{
       ? 'E você fica parad{o|a} no meio do curral vazio sabendo o que o Sr. Ulric te disse: que em três dias metade volta, porque é aqui que tem comida, e que o Pokémon que sai e volta não é o mesmo.'
       : d.flags.sabe_que_voltam
       ? 'E você fica parad{o|a} no meio do curral vazio sabendo o que os guardas do bar te disseram: que em três dias metade volta, porque é aqui que tem comida.'
-      : 'Você fica parad{o|a} no meio do curral vazio com a sensação de ter feito a coisa mais certa da sua vida.',
+      : 'Você fica parad{o|a} no meio do curral vazio com a certeza de que fez o certo.',
     d=>d.flags.sabe_do_beto ? 'Em noventa e nove um guarda chamado Garth fez exatamente isso, sozinho, às três da manhã. Metade voltou.' : ''
   ],
   ef:{flag:['abriu_o_curral','esvaziou_o_setor7'],
@@ -102274,7 +102937,7 @@ c13_porque_nao_devolveu:{
   vozes:['P','N','P','N','P','N','N','P','N','N','N'],
   texto:[
     '"Por que você não devolveu?"',
-    'Ele não se irrita, e a falta de irritação é a coisa mais triste da conversa.',
+    'Ele não se irrita. Já desistiu de se irritar.',
     '"Eu tentei duas vezes."',
     '"Duas?"',
     d=>`"Em ${c13_mes(d, 3)} e em ${c13_mes(d, 2)}. Eu botei ele no bote e fui até a metade do caminho nas duas."`,
@@ -103234,7 +103897,7 @@ c13_salvou_o_filhote:{
 c13_deixou_o_filhote:{
   texto:[
     'Você não tem tanque, não tem ração marinha, não tem como manter um filhote de Seel vivo por três horas de travessia e mais um dia depois disso.',
-    'Você sabe disso e é verdade e continua sendo a coisa mais difícil que você fez hoje.',
+    'Você sabe disso, e é verdade, e não fica mais fácil.',
     d=>d.flags.c13_deixou_o_cobertor
       ? 'Você tira o cobertor de flanela da mochila e deixa com ele na reentrância, que não resolve nada e que você faz mesmo assim.'
       : 'Você tira a blusa que estava por baixo da jaqueta e deixa com ele na reentrância, que não resolve nada e que você faz mesmo assim.',
@@ -103837,7 +104500,7 @@ c13_rocha_alta:{
     'O gelo de duzentos quilômetros solta de uma vez.',
     'Não tem onda de cinema. Tem uma coisa pior e mais silenciosa: o mar inteiro sobe uns três metros de uma vez, todo ele, ao mesmo tempo, sem quebrar.',
     'Sobe, fica dois segundos, e desce.',
-    'E quando desce, a água volta a circular, e o barulho que duzentos quilômetros de mar fazem ao voltar a circular é a coisa mais absurda que você já ouviu.',
+    'E quando desce, a água volta a circular, e duzentos quilômetros de mar voltando a circular fazem um barulho que não tem nome.',
     d=>d.flags.foi_de_comboio
       ? 'Os onze botes e o barco do Sr. Dane, que estavam de proa pro mar a quarenta metros, sobem três metros e descem três metros e continuam inteiros, porque ele mandou.'
       : 'O barco do Sr. Dane, que estava a quarenta metros, sobe três metros e desce três metros e continua inteiro, porque ele estava de proa pro mar.',
@@ -106233,7 +106896,7 @@ c14_ficou_os_dois_dias:{
     'Você fica mais um pouco com os dois, e a sala de quatro por quatro tem cheiro de dois dias de café.',
     'Foram dois dias sem fazer quase nada: buscar café, carregar caixa, segurar a lanterna quando faltou luz na ilha, na primeira noite, às sete e dez.',
     'E ouvir dois velhos discutirem por dezoito horas sobre ordem de publicação, prazo de resposta, competência de órgão e a diferença entre documento público e vazamento.',
-    'Foi a coisa mais chata que você já assistiu na vida.',
+    'Você bocejou mais nesses dois dias que no ano inteiro.',
     'E numa das madrugadas você entendeu que é isso.',
     'Que é essa a coisa.',
     'Que tudo o que você viu desde que saiu de casa não vai ser desfeito por ninguém entrando em lugar nenhum de madrugada.',
@@ -106809,7 +107472,7 @@ c14_garrafa:{
     'A garrafa térmica está fechada e a rosca cede com dificuldade.',
     'Dentro não tem café.',
     'Tem papel.',
-    'Um rolo de papel enfiado dentro de uma garrafa térmica, que é a coisa mais improvisada e mais esperta que alguém podia fazer com um documento numa borda de vulcão: térmica isola, rosca veda, e quatro anos depois o papel está seco e legível.',
+    'Um rolo de papel enfiado dentro de uma garrafa térmica, improviso esperto pra guardar documento numa borda de vulcão: térmica isola, rosca veda, e quatro anos depois o papel está seco e legível.',
     'É uma folha só, arrancada de caderno, escrita dos dois lados.',
     d=>d.flags.leu_caderno ? 'A letra é a mesma dos cadernos.' : 'A letra é miúda e reta, de quem escreveu muito na vida.',
     '**"Dia 252. Subimos. Ele quis subir e eu fui junto porque foi a primeira coisa que ele escolheu sem me perguntar se podia."**',
@@ -107046,7 +107709,7 @@ c14_comida:{
     'Olha a ração. Olha você. E come.',
     'Não porque precisa — uma coisa que se alimenta de calor de vulcão não precisa de ração — mas porque entendeu o que o gesto queria dizer, e responder a um gesto é a única coisa que um gesto pede.',
     'Quando termina, ele levanta voo e volta pra borda do outro lado, e o rastro de calor passa a dois metros de você e não te queima.',
-    'Isso foi escolha dele e foi precisa, e é a coisa mais assustadora do dia: ele controla até o ponto de não te queimar a dois metros.'
+    'Isso foi escolha dele e foi precisa, e é isso que assusta: ele controla até o ponto de não te queimar a dois metros.'
   ],
   ef:{executar:d=>{ Estado.usarItem('Ração'); const L = Estado.lend(146); L.disposicao = 'passivo'; return [{tipo:'mundo', texto:'Moltres aceitou o que você ofereceu.'}]; },
       rep:{eixo:'bom',delta:3,motivo:'Tratou bem uma Ave Lendária'},
@@ -107198,7 +107861,7 @@ c14_fim:{
       return 'E atrás de você fica uma ilha de setecentas pessoas que conhece todos os motores, e agora conhece você.';
     },
     'O mar entre Cinnabar e o continente é o trecho mais fundo de Kanto.',
-    'Você fica na popa olhando a ilha diminuir, e o vulcão é a última coisa a sumir, porque é a coisa mais alta.'
+    'Você fica na popa olhando a ilha diminuir, e o vulcão é o último a sumir, porque é o mais alto.'
   ],
   /* o ferry sai às onze, terça ou sábado, e chega em Fuchsia três horas depois */
   ef:{executar:()=>{ c14_irAoFerry(11); Relogio.avancar(3); return []; }},
@@ -107744,7 +108407,7 @@ c15_ab_de_cracha:{
     'A ciclovia das Rotas 16 a 18 é área de concessão pública, e área de concessão pública tem um livro de ocorrências, e o livro de ocorrências fica numa gaveta da administração em Fuchsia.',
     d=>{
       const c = Cargos.doCracha();
-      return `Com o crachá de ${c ? c.nome : 'serviço'}, a moça da administração — crachá de plástico no cordão, Lina, sete anos de casa — te entrega o livro sem pedir ofício, o que provavelmente é irregular e é a coisa mais útil que te aconteceu no mês.`;
+      return `Com o crachá de ${c ? c.nome : 'serviço'}, a moça da administração — crachá de plástico no cordão, Lina, sete anos de casa — te entrega o livro sem pedir ofício, o que provavelmente é irregular e te poupa uma semana.`;
     },
     'O livro tem uma ocorrência por página, e as páginas são quase todas de coisas pequenas: guarda-corpo amassado, buraco no asfalto, ciclista com torção de tornozelo.',
     'As últimas seis semanas têm onze ocorrências, e as onze são a mesma frase escrita por seis pessoas diferentes:',
@@ -107816,7 +108479,7 @@ c15_rotas:{
       ? 'Você entra pela ponta de Fuchsia, pela cabine do sul, às sete da manhã, e sobe. A primeira coisa que te incomoda leva vinte minutos pra virar pensamento:'
       : 'Você entra pela cabine de pedágio do norte às sete da manhã, e no primeiro quilômetro tem Pokémon demais: Rattata em cima de Rattata no capim da beira, um bando inteiro de Spearow num poste só, todo mundo apertado no mesmo pedaço de chão e ninguém brigando.',
     d=>d.flags.c15_rotas_do_sul ? 'não tem Pokémon.' : 'Depois do segundo quilômetro, não tem mais nenhum.',
-    'Nada. Nem Spearow no poste, nem Rattata no capim, nem Doduo correndo paralelo à ciclovia, que é a coisa mais clássica que acontece nessa estrada e que vem em todo folheto turístico de Fuchsia.',
+    'Nada. Nem Spearow no poste, nem Rattata no capim, nem Doduo correndo paralelo à ciclovia, que acontece toda tarde nessa estrada e vem em todo folheto turístico de Fuchsia.',
     'Capinzal com fruta madura, quilômetro atrás de quilômetro, e nenhum Pokémon comendo.'
   ],
   ef:{registrar:d=>['fuchsia','sul'].includes(c15_onde(d))
@@ -108253,7 +108916,7 @@ c15_ciclovia:{
     '**"DODUO — corre paralelo a veículos. Não se aproxime da fêmea com filhote."**',
     '**"PINSIR — ativo ao amanhecer. Não alimente."**',
     'Nove placas em dezenove quilômetros, descrevendo nove espécies que não estão mais aqui.',
-    'Você para na sétima e lê ela inteira duas vezes, sem motivo, e é a coisa mais triste do seu dia.',
+    'Você para na sétima e lê ela inteira duas vezes, sem motivo, e alguma coisa aperta.',
     d=>d.flags.conheceu_otavio ? '' : 'Quando você passa pela cabine de pedágio do norte, tem um homem sentado lá dentro, num banco de madeira, com um binóculo no pescoço, anotando alguma coisa num caderno.',
     d=>d.flags.a_folha_da_contagem ? 'E no quilômetro dois, perto da cabine do norte, tem marca de pneu saindo do asfalto pro mato, e o capim da beira está pisado em roda.' : ''
   ],
@@ -109312,7 +109975,7 @@ c15_encontro:{
     },
     d=>{
       if (c15_presos().length) return 'O que está mais perto dá um passo à frente e abaixa a cabeça — não em submissão. Em posição de investida.';
-      if (d.flags.tem_sangue_nas_maos) return 'Entei dá um passo à frente. O asfalto embaixo da pata dele racha com o calor, e o som da rachadura é a coisa mais alta da noite.';
+      if (d.flags.tem_sangue_nas_maos) return 'Entei dá um passo à frente. O asfalto embaixo da pata dele racha com o calor, e a rachadura estala na noite parada.';
       if (d.flags.viu_a_sala_do_tanque || d.flags.leu_o_sete || d.flags.achou_a_mochila_do_fuji)
         return d.flags.c14_moltres_virou
           ? 'E aí Suicune faz uma coisa: vira a cabeça e olha pro sul, e depois volta pra você, e repete. Duas vezes.\nÉ o mesmo gesto que uma ave lendária fez com você na borda de uma cratera.'
@@ -109597,7 +110260,7 @@ c15_pos_cao:{
     'Ele recua pra junto dos outros.',
     'Os três te olham em silêncio por um tempo desconfortavelmente longo, e depois viram e vão embora juntos — no mesmo passo, sem pressa, com os quatro metros mantidos.',
     'Eles vieram, foram atacados por uma pessoa, e foram embora sem matar essa pessoa.',
-    'Isso é a coisa mais próxima de julgamento que você já recebeu na vida.'
+    'Pareceu um julgamento, e você não sabe qual foi a sentença.'
   ],
   ef:{executar:d=>{
         GRUPO_CAES.forEach(x=>{ const L=Estado.lend(x); L.ataquesSofridos++; if(L.ataquesSofridos>=2) L.disposicao='hostil'; });
@@ -110613,7 +111276,7 @@ c16_travessia:{
     'Vocês saem às sete.',
     'A travessia leva onze horas num barco de pesca de sete metros, com motor forte e um toldo de lona.',
     'Onze horas é muito tempo.',
-    'Nas três primeiras vocês conversam. Nas três seguintes o Sr. Tanner dorme sentado com a mão no leme e acorda a cada vinte minutos pra corrigir o rumo, e depois dorme de novo, e isso é a coisa mais tranquilizadora que já te aconteceu num barco.',
+    'Nas três primeiras vocês conversam. Nas três seguintes o Sr. Tanner dorme sentado com a mão no leme e acorda a cada vinte minutos pra corrigir o rumo, e depois dorme de novo, e o barco inteiro parece seguro por causa disso.',
     'Nas cinco últimas ninguém fala nada, e no fim delas o céu clareia atrás de vocês.',
     'A ilha aparece com o dia nascendo: pedra e mato. Sem praia, sem cais, sem enseada.',
     'Um bloco de rocha de uns oitocentos metros de comprimento e uns sessenta de altura, com a face oeste cortada a pique e a leste em rampa de pedregulho.',
@@ -110949,7 +111612,7 @@ c16_esperou_noite:{
 c16_ficou_com_o_ze:{
   texto:[
     'Você rema até o barco e fica.',
-    'Ele não fala nada por uns dez minutos, e depois fala sem parar por uma hora, que é a coisa mais normal do mundo com alguém que passou quarenta anos sem que acreditassem nele.',
+    'Ele não fala nada por uns dez minutos, e depois fala sem parar por uma hora, como faz qualquer um que passou quarenta anos sem que acreditassem nele.',
     'Ele conta do pai. Da mãe, que não deixava ele sair de noite. Do irmão que foi pra Vermilion em cinquenta e nove e nunca mais voltou. De um Growlithe chamado Tampa.',
     'Às duas da manhã ele para de falar no meio de uma frase e olha a ilha.',
     fala('Sr. Tanner', 'Eu vou morrer em uns três anos.'),
@@ -111110,7 +111773,7 @@ c16_quantas_janelas:{
     c16_eu('De trinta e nove a noventa e seis.'),
     'Ela fecha os olhos por um segundo.',
     fala('Chefe da expedição', 'Cinquenta e sete anos de série temporal.'),
-    'E aí ela diz a coisa mais honesta e mais assustadora da conversa:',
+    'E aí ela diz, com toda a honestidade, a parte que assusta:',
     fala('Chefe da expedição', 'Eu daria o meu salário de um ano por essa caixa, e eu ganho muito bem. E eu não vou te oferecer dinheiro, porque já entendi que você não vende.')
   ],
   ef:{flag:['sabe_das_janelas_perdidas','equipe_te_respeita'],
@@ -111576,7 +112239,7 @@ c16_esperou_no_circulo:{
     'E espera.',
     d=>c16_espera(d),
     d=>c16_comAEquipe(d),
-    'Faz frio, venta, a pedra é dura, e você não tem nada pra fazer. É a coisa mais parecida com fazer um pedido que você já fez na vida sem pedir nada.',
+    'Faz frio, venta, a pedra é dura, e você não tem nada pra fazer. É quase como fazer um pedido, sem pedir nada.',
     'Às onze e dez, começa.',
     'A luz não vem do céu.',
     d=>d.flags.viu_o_arco_iris
@@ -111757,7 +112420,7 @@ c16_ajoelhou:{
     'Depois levanta, olha pra você e espera.',
     'Você entende, ajoelhad{o|a}, com as mãos na pedra fria: ele devolveu o gesto.',
     'Ele não quer isso.',
-    'Ele não sabe o que fazer com isso e devolveu, que é a coisa mais educada que dava pra fazer.',
+    'Ele não sabe o que fazer com isso e devolveu, com toda a educação.',
     'Você levanta.',
     'Ele também.'
   ],
@@ -111779,7 +112442,7 @@ c16_ajoelhou:{
 c16_pegou_pena:{
   texto:[
     'Uma pena cai.',
-    'Não é ele largando: é pena caindo, do jeito que pena cai de qualquer Pokémon de pena, porque Pokémon de pena troca pena, e isso é a coisa mais banal do mundo.',
+    'Não é ele largando: é pena caindo, do jeito que pena cai de qualquer Pokémon de pena, porque Pokémon de pena troca pena, todo dia, em todo lugar.',
     'Ela desce planando por uns oito segundos e para na laje a um metro de você.',
     'Tem uns quarenta centímetros, é vermelha na base e dourada na ponta, e não brilha, porque é uma pena.',
     'Você pega.',
@@ -112001,7 +112664,7 @@ c16_deixou_pena:{
   texto:[
     d=>d.flags.c16_tinha_a_pena
       ? 'Você põe a pena de volta no chão do círculo e recua até a borda da laje.'
-      : 'Você não faz nada. Uma pena cai — pena cai de Pokémon de pena, é a coisa mais banal do mundo — e para na laje entre vocês dois. Você não pega, e recua até a borda da laje.',
+      : 'Você não faz nada. Uma pena cai — pena cai de Pokémon de pena, todo dia — e para na laje entre vocês dois. Você não pega, e recua até a borda da laje.',
     'Ele olha a pena no chão.',
     'Depois olha você.',
     'E aí faz uma coisa muito pequena: empurra a pena com o bico, dois centímetros, na sua direção.',
@@ -112952,7 +113615,7 @@ c17_nao_foi_merda:{
   texto:[
     c17_eu('Não foi merda.'),
     fala('Ezra', 'Foi.'),
-    c17_eu('Você tirou nove fotos de uma coisa que ninguém nunca fotografou e mostrou pra gente que você achou que ia gostar. Isso é a coisa mais normal do mundo.'),
+    c17_eu('Você tirou nove fotos de uma coisa que ninguém nunca fotografou e mostrou pra gente que você achou que ia gostar. Qualquer um faria isso.'),
     'Ele não olha pra você.',
     c17_eu('Merda foi ter gente num grupo de treinadores que ganha com informação.'),
     'Ele fica quieto um tempo.',
@@ -113523,7 +114186,7 @@ c17_replantou:{
   texto:[
     'Você replanta.',
     'Cava o buraco com as mãos, põe a muda, aperta a terra em volta e rega com a água da sua garrafa.',
-    'Leva dez minutos, e é a coisa mais idiota que dá pra fazer com uma descoberta científica de primeira grandeza.',
+    'Leva dez minutos, e é um jeito bem idiota de tratar uma descoberta científica de primeira grandeza.',
     'Você senta do lado dela depois, com as mãos sujas.',
     d=>d.flags.teo_leva ? 'O Ezra senta do seu lado.' : 'E fica ali, sozinh{o|a}, no meio de vinte metros de grama alta, com as mãos sujas de terra.',
     d=>d.flags.teo_leva ? fala('Ezra', 'O que era aquilo?') : '',
@@ -113946,7 +114609,7 @@ c17_esperou_mew:{
 c17_mew_brinca:{
   texto:[
     'Você fica parad{o|a}, e ela se aproxima.',
-    'O que acontece nos vinte minutos seguintes é a coisa mais absurda da sua jornada inteira, e a sua jornada não foi pouca coisa:',
+    'O que acontece nos vinte minutos seguintes não tem paralelo na sua jornada inteira, e a sua jornada não foi pouca coisa:',
     'Mew brinca.',
     'Ela copia.',
     'Você coça o nariz, ela coça o nariz. Você cruza os braços, ela cruza os braços — com as patinhas, do jeito errado, porque as patinhas dela não cruzam direito, e ela tenta três vezes até ficar mais ou menos.',
@@ -114140,8 +114803,8 @@ c17_ate_escurecer:{
     'É um lugar de onde tudo saiu, porque ela é o jardim de alguém, e jardim é um lugar onde não deixam Pokémon entrar.',
     d=>d.flags.contou_as_especies ? 'Quarenta e uma espécies de planta e nenhuma de Pokémon.' : 'Um jardim inteiro de planta, e nenhum Pokémon.',
     d=>d.flags.viu_as_fotos
-      ? 'É a coisa mais solitária que você já viu, e foi feita de propósito, por uma coisa que estava aqui antes de tudo e que passou dois minutos chegando perto de um garoto que apareceu porque se perdeu.'
-      : 'É a coisa mais solitária que você já viu, e foi feita de propósito, por uma coisa que estava aqui antes de tudo e que ainda acha graça em quem aparece.'
+      ? 'Nada que você já viu é tão sozinho, e foi feito de propósito, por uma coisa que estava aqui antes de tudo e que passou dois minutos chegando perto de um garoto que apareceu porque se perdeu.'
+      : 'Nada que você já viu é tão sozinho, e foi feito de propósito, por uma coisa que estava aqui antes de tudo e que ainda acha graça em quem aparece.'
   ],
   ef:{flag:['ficou_ate_escurecer','entendeu_o_jardim'],
       rep:{eixo:'bom',delta:4,motivo:'Ficou até escurecer e entendeu o que era'},
@@ -114224,7 +114887,7 @@ c17_capturou_mew:{
     'Isso é o assustador de Mew: capturar ela não quebra nada.',
     'O mundo não reage.',
     d=>d.flags.teo_leva ? 'O Ezra olha a Pokébola no chão. Depois olha você.' : 'A clareira fica exatamente igual. A grama, a borda redonda, a goiabeira com fruta caída.',
-    d=>d.flags.teo_leva ? 'Ele não fala nada, e não falar nada é a coisa mais alta que ele já fez na vida.' : '',
+    d=>d.flags.teo_leva ? 'Ele não fala nada, e nunca o silêncio dele disse tanto.' : '',
     'Mas um Mew numa Pokébola é uma coisa que alguém, em algum lugar, está pagando pra saber onde está.'
   ],
   ef:{flag:'capturou_mew', moral:-20, instabilidade:2,
@@ -114829,7 +115492,7 @@ c18_ab_os_dez_anos:{
     fala('o gerente', 'Isso aqui não é reajuste.'),
     c18_eu('Não.'),
     fala('o gerente', 'Reajuste é dez por cento, quinze por cento.'),
-    'Ele fecha a pasta do ano passado com cuidado, do jeito que se fecha uma coisa que assusta.',
+    'Ele fecha a pasta do ano passado com cuidado, como se ela pudesse abrir sozinha.',
     fala('o gerente', 'Isso multiplicou por mil em sete anos, passou por essa agência, e eu assinei o recebimento de todas.', 'baixo')
   ],
   ef:{flag:['oito_anos_de_convenio','reika_precisa_de_papel','tem_a_linha_do_convenio'],
@@ -115137,8 +115800,8 @@ c18_fio:{
     'Ninguém fala assim de uma quadrilha. Ninguém diz o pessoal, a turma, aqueles caras. Todo mundo que te contou alguma coisa falou como quem fala de uma instituição.',
     'Instituição tem endereço. Tem registro. Tem papel.',
     d=>c18_sabiaComissao(d)
-      ? 'Você decide fazer a coisa mais óbvia que ninguém fez até agora: ler o que eles mesmos escreveram, no lugar onde isso fica guardado.'
-      : 'Você decide fazer a coisa mais óbvia que ninguém fez até agora: procurar o nome.'
+      ? 'Você decide fazer o óbvio, que ninguém fez até agora: ler o que eles mesmos escreveram, no lugar onde isso fica guardado.'
+      : 'Você decide fazer o óbvio, que ninguém fez até agora: procurar o nome.'
   ],
   ef:{registrar:'Decidiu procurar o papel da organização em vez de procurar o esconderijo dela.'},
   escolhas:[
@@ -115632,7 +116295,7 @@ c18_704_sei_o_que_fazem:{
     fala('a mulher de tailleur', 'Então {o senhor|a senhora} sabe mais que a maior parte das pessoas pra quem a gente tenta explicar.'),
     'Ela puxa uma cadeira com o pé.',
     fala('a mulher de tailleur', 'Senta. A pauta de hoje é orçamento de viveiro e a gente está atrasado. Se {o senhor|a senhora} souber mesmo, vai achar chato.'),
-    'E é essa a coisa mais assustadora que já te disseram: senta.'
+    'E nada que já te disseram assustou tanto: senta.'
   ],
   ef:{flag:'foi_convidado_a_sentar', instabilidade:1,
       registrar:'A presidente te ofereceu uma cadeira no meio da reunião.'},
@@ -115862,7 +116525,7 @@ c18_ivone:{
   texto:[
     'A Dra. Cordell agora trabalha numa sala emprestada em Saffron, em cima de uma loja de tecidos, com uma mesa, um arquivo de aço e uma pilha de pastas que chega na altura da janela.',
     'Ela te reconhece na porta e não faz cerimônia, como quem lembra de quem ficou de voltar.',
-    'Ela ouve você por quatro minutos sem interromper, o que é a coisa mais rara que alguém com doutorado faz.',
+    'Ela ouve você por quatro minutos sem interromper, coisa rara em quem tem doutorado.',
     fala('Dra. Cordell', 'CGRB.'),
     'Ela diz a sigla antes de você terminar.',
     fala('Dra. Cordell', 'Eu sei o que é.'),
@@ -117335,7 +117998,7 @@ c18_isaura:{
     d=>d.flags.contato_isaura
       ? 'Livia Gale tem vinte e dois anos de redação e uma mesa com quatro pilhas e nenhum enfeite.'
       : 'A editora de cidades se chama Livia Gale, está há vinte e dois anos na redação e tem uma mesa com quatro pilhas e nenhum enfeite.',
-    'Ela lê por quarenta minutos sem falar com você, o que é a coisa mais educada que alguém fez por você em meses.',
+    'Ela lê por quarenta minutos sem falar com você, e faz meses que ninguém te trata com tanta educação.',
     'Depois fecha o bloco e faz três perguntas seguidas.',
     fala('Livia Gale', 'Isso é público?'),
     c18_eu('É.'),
@@ -117977,7 +118640,7 @@ c18_nona_foto:{
     'Na parede do fundo tem um quadro branco, e no quadro, em três colunas, os cabeçalhos: LOTE / MOTIVO / DATA.',
     'A coluna do motivo está preenchida até embaixo, sempre com abreviação: MALF., AGR., DOEN., N/VIÁV.',
     'A última linha diz N/VIÁV, e a data é de anteontem.',
-    'Não tem Pokémon nenhum na foto. É uma sala limpa e organizada, e é a coisa mais insuportável que você viu em toda a sua vida, e você já viu coisas.'
+    'Não tem Pokémon nenhum na foto. É uma sala limpa e organizada, e você não aguenta olhar, e você já viu coisas.'
   ],
   ef:{instabilidade:2, moral:-4,
       registrar:'A foto do galpão do fundo: uma sala limpa, com ralo, mangueira e um quadro de lote, motivo e data.'},
@@ -118666,7 +119329,7 @@ c19_ab_o_onibus:{
 
 c19_ab_os_dois_do_fundo:{
   texto:[
-    'Eles te olham do jeito que se olha alguém que ouviu.',
+    'Eles te olham. Você ouviu, e eles sabem.',
     c19_eu('Média de quanto tempo?'),
     'A mulher responde e o homem deixa ela responder.',
     fala('a mulher do banco de trás', 'Sete, oito meses.'),
@@ -120845,7 +121508,7 @@ c19_sena_entra:{
     'Ele diz a palavra e não gosta do som dela na própria boca.',
     fala('Dr. Hollis', 'A gente nunca escalou ninguém à força. Isso foi decisão minha, na terceira reunião, e é a única coisa aqui que eu defendo sem nenhuma reserva.'),
     'Ele volta à prancheta.',
-    fala('Dr. Hollis', 'E é também a coisa mais covarde que eu já fiz, porque eu passei a responsabilidade pra quem tem menos escolha que eu.')
+    fala('Dr. Hollis', 'E é também a maior covardia que eu já fiz, porque eu passei a responsabilidade pra quem tem menos escolha que eu.')
   ],
   ef:{flag:['sabe_dos_voluntarios'], instabilidade:2,
       npc:{nome:'Dr. Hollis', opiniao:2, memoria:'Chamou a própria decisão de a mais covarde da vida dele.'},
@@ -121734,7 +122397,7 @@ c20_ab_sentou_na_banca:{
     'Você fica sentad{o|a} na esquina da Rua do Comércio por uns vinte minutos, olhando a porta do 118.',
     'Nesses vinte minutos entram no prédio: dois entregadores, uma mulher com uma criança de colo, um homem de terno com pasta, três adolescentes de uniforme escolar e um senhor com um saco de pão.',
     'Nenhum deles parece nada.',
-    'Você entende, sentad{o|a} num banquinho emprestado, a coisa mais difícil do dia: você veio preparad{o|a} pra um esconderijo e vai entrar numa reunião.',
+    'Você entende, sentad{o|a} num banquinho emprestado, o que vai ser difícil hoje: você veio preparad{o|a} pra um esconderijo e vai entrar numa reunião.',
     'E não existe treino pra isso.'
   ],
   ef:{flag:'sentou_na_banca', hp:2,
@@ -121772,7 +122435,7 @@ c20_ab_disse_setimo:{
     fala('a moça do papel', 'Você é do conselho ou é visita?'),
     c20_eu('Visita.'),
     fala('a moça do papel', 'Ah, ótimo. A gente quase nunca tem visita.'),
-    'Ela diz isso com alegria genuína, e isso é a coisa mais desorientadora que te aconteceu em semanas.',
+    'Ela diz isso com alegria genuína, e você perde o chão por um segundo.',
     fala('a moça do papel', 'A pauta de hoje é chata, aviso desde já. Cronograma de liberação e aprovação de ata.'),
     'O elevador passa pelo quarto andar.',
     fala('a moça do papel', 'Mas tem café na porta. O café é bom. É a única coisa que a gente faz bem por unanimidade.'),
@@ -126787,7 +127450,7 @@ c25_assinou_o_recebimento:{
     'A cópia amarela fica com você.',
     fala('a mulher de crachá azul', 'Quinta, nove horas. Não é aqui, é no Planalto.'),
     fala('a mulher de crachá azul', 'E olha: leva a advogada.', null,
-         'Ela diz isso olhando pro lado de cá da mesa, e é a coisa mais parecida com bondade que saiu da boca dela hoje.')
+         'Ela diz isso olhando pro lado de cá da mesa, e é o mais perto de bondade que ela chega hoje.')
   ],
   ef:{flag:'assinou_a_convocacao_da_liga', moral:3,
       rep:{eixo:'bom',delta:2,motivo:'Assinou para depor na reunião do Conselho'},
@@ -126863,8 +127526,8 @@ c25_saiu_da_sala:{
 c25_a_rua:{
   texto:[
     d=>d.flags.saiu_da_audiencia
-      ? 'A rua de Saffron às treze e meia de uma segunda-feira é a coisa mais normal do mundo.'
-      : 'A rua de Saffron no meio da manhã de uma segunda-feira é a coisa mais normal do mundo.',
+      ? 'A rua de Saffron às treze e meia de uma segunda-feira não sabe de nada.'
+      : 'A rua de Saffron no meio da manhã de uma segunda-feira não sabe de nada.',
     d=>d.flags.saiu_da_audiencia
       ? 'Tem fila na lanchonete. Tem gente de crachá branco almoçando na escada. Tem uma mulher de terno dizendo "não" no PokéNav com catorze entonações diferentes.'
       : 'Tem fila na padaria. Tem gente de crachá branco tomando café na escada. Tem uma mulher de terno dizendo "não" no PokéNav com catorze entonações diferentes.',
@@ -128368,7 +129031,7 @@ c21_cinco_minutos:{
     'Você senta no vestiário e solta o time inteiro num lugar que tem espaço para isso.',
     d=>{
       const n = d.time.length;
-      if (!n) return 'E você não tem ninguém para soltar, e isso é uma informação que você só recebe de verdade agora, com um vestiário vazio na frente.';
+      if (!n) return 'E você não tem ninguém para soltar. Você só entende isso de verdade agora, com um vestiário vazio na frente.';
       if (n === 1) return `E é ${nomeExib(d.time[0])}, só. ${generoDe(d.time[0]) === 'f' ? '{Vocês dois|Vocês duas}' : 'Vocês dois'} num vestiário com espaço para dez.`;
       return `São ${['','um','dois','três','quatro','cinco','seis'][n] || n}. Eles ocupam o vestiário inteiro e um deles imediatamente derruba um banco.`;
     },
@@ -129471,7 +130134,7 @@ c22_contra_a_luz:{
 
 c22_as_barracas:{
   texto:[
-    'As três barracas estão fechadas por dentro do jeito que se fecha quando se vai voltar: zíper subido até em cima e o duplo puxador pendurado.',
+    'As três barracas estão fechadas por dentro, prontas pra quem volta: zíper subido até em cima e o duplo puxador pendurado.',
     'Na primeira: saco de dormir aberto, uma muda de roupa dobrada, um livro de bolso marcado na página 140.',
     'Na segunda: saco de dormir enrolado e amarrado, mochila fechada, tudo arrumado como quem foi criado assim.',
     'Na terceira: saco de dormir aberto, uma foto presa com fita na parede da barraca, e um rádio portátil desligado com pilha nova.',
@@ -129513,7 +130176,7 @@ c22_deixou_ligado:{
   texto:[
     'Você liga de novo, aumenta um pouco o volume e deixa em cima da mesa dobrável, virado para o vale.',
     'Não faz sentido nenhum e você faz mesmo assim.',
-    'Durante o resto do dia, de onde você estiver, vai dar para ouvir um chiado com voz humana no meio do nada, e isso vai ser a coisa mais útil que você trouxe.'
+    'Durante o resto do dia, de onde você estiver, vai dar para ouvir um chiado com voz humana no meio do nada.'
   ],
   ef:{flag:'deixou_o_radio_ligado', moral:2,
       rep:{eixo:'bom',delta:1,motivo:'Deixou uma voz humana tocando num acampamento vazio'},
@@ -130733,7 +131396,7 @@ c23_procurou_o_homem:{
     'Você atravessa a câmara sem falar com ele e procura, e ele deixa, e não ajuda.',
     'Atrás do monte de coisas, num canto que não dá para ver da entrada da rampa, tem um homem sentado no chão, encostado na parede.',
     'Está vivo. Está com as pernas cruzadas, as mãos no colo, e uma jaqueta de lã dobrada do lado, em cima de uma bota.',
-    'Está magro e está limpo, o que é a coisa mais incompreensível de tudo.',
+    'Está magro e está limpo, e é isso que você não entende.',
     'Ele levanta os olhos quando você chega e sorri de um jeito educado e distraído, como quem é interrompido lendo.',
     '"Oi."'
   ],
@@ -130947,7 +131610,7 @@ c23_nao_sei:{
   vozes:['N','N','P','N'],
   texto:[
     'Ele te olha por um tempo desconfortável.',
-    '"Não sei." Ele quase ri — não é riso, é a coisa mais próxima que ele tem. "Duzentos e quarenta e um dias de cientistas e a melhor resposta veio de {um|uma} adolescente que disse não sei."',
+    '"Não sei." Ele quase ri — não é riso, mas é o que ele tem. "Duzentos e quarenta e um dias de cientistas e a melhor resposta veio de {um|uma} adolescente que disse não sei."',
     '"Eles também não sabiam. A diferença é que eles escreveram outra coisa no relatório."',
     'Ele senta de novo na pedra. O ar na câmara fica um pouco menos pesado.',
     '"Pergunta certa: o que você veio fazer aqui?"'
@@ -131111,7 +131774,7 @@ c23_entender:{
     'Ele te conta o que lembra do tanque. Você conta o que viu na Torre de Lavender. Ele pergunta sobre coisas absurdamente pequenas — como é o gosto de comida quente, por que as pessoas põem nome nos Pokémon, se dói envelhecer.',
     'Em algum momento você percebe que está falando com alguém de dois anos de idade que sabe tudo e não viveu nada.',
     'Quando você levanta pra ir embora, ele diz: "Volta?"',
-    'E essa é a coisa mais assustadora que aconteceu com você na jornada inteira.'
+    'Nenhuma luta da jornada te assustou como essa palavra.'
   ],
   ef:{flag:'escolheu_entender', rep:{eixo:'bom',delta:3,motivo:'Tratou Mewtwo como alguém, não como troféu'},
       executar:d=>{ const L=Estado.lend(150); L.disposicao='passivo'; L.aliado=true; return []; },
@@ -131610,7 +132273,7 @@ c23_final_tratado_frio:{
     'A temperatura da câmara não muda, mas alguma coisa muda.',
     '"Ah." Ele volta pra pedra. "Então não é comigo que você está falando. É com eles, e eu sou a pauta."',
     'Ele não te ataca, não te expulsa e não te impede de sair.',
-    'Ele só para de falar com você — e a ausência da voz na sua cabeça, depois de tanto tempo com ela lá, é a coisa mais solitária que você já sentiu.'
+    'Ele só para de falar com você — e a ausência da voz na sua cabeça, depois de tanto tempo com ela lá, deixa um vazio do tamanho da caverna.'
   ],
   final:{id:'tratado_frio', titulo:'A PAUTA', texto:[
     'O acordo é assinado. Só que é assinado por uma parte só.',
@@ -131662,8 +132325,8 @@ c23_final_socio:{
     'Você pega nove anos. Cumpre cinco.',
     'Na prisão, você recebe uma visita que não estava na lista e que ninguém registrou na portaria. Ela dura quarenta segundos e acontece de madrugada, e o que é dito nela você nunca conta pra ninguém.',
     'Quando você sai, você não volta pro negócio. Não por arrependimento.',
-    'Por causa dos dois segundos. Você passou cinco anos pensando nos dois segundos em que a coisa mais poderosa do mundo considerou a sua oferta porque estava sozinha demais pra recusar de cara.',
-    'E você entendeu, em algum momento do quarto ano, que aquilo não foi uma vitória sua. Foi a coisa mais cruel que você já fez.'
+    'Por causa dos dois segundos. Você passou cinco anos pensando nos dois segundos em que o Pokémon mais poderoso do mundo considerou a sua oferta porque estava sozinha demais pra recusar de cara.',
+    'E você entendeu, em algum momento do quarto ano, que aquilo não foi uma vitória sua. Foi crueldade, e foi sua.'
   ]}
 },
 
@@ -131703,7 +132366,7 @@ c23_final_posse:{
     'Kanto passa a ter um clima que os meteorologistas param de tentar prever. Incêndios em Cinnabar. Gelo na Rota 11 em pleno verão. Duas cidades evacuadas parcialmente.',
     'Você fica com ele. É a única coisa que você tem depois de um tempo — as pessoas vão saindo, uma por uma, do jeito que as pessoas saem: sem anúncio.',
     'Ele nunca fala com você. Nem uma vez, depois da Pokébola. Ele sabe falar. Escolhe não falar.',
-    'Você passa o resto da vida com a coisa mais poderosa do mundo na mão e ninguém pra contar isso.',
+    'Você passa o resto da vida com o Pokémon mais poderoso do mundo na mão e ninguém pra contar isso.',
     'Isso não é vitória. Tem nome, mas não é esse.'
   ]}
 },
@@ -131815,7 +132478,7 @@ c23_trinta_e_dois:{
   texto:[
     'Você conta da cratera. Da areia cinza. Da pedra morna do tamanho de uma cabeça.',
     'Dos trinta e dois em círculo, parados, em silêncio, por quarenta minutos, olhando uma pedra ficar azul.',
-    'E de você atrás de uma rocha, sem entender nada, sem poder perguntar nada, achando aquilo a coisa mais bonita do mundo.',
+    'E de você atrás de uma rocha, sem entender nada, sem poder perguntar nada, achando aquilo lindo.',
     'Mewtwo escuta inteiro.',
     '"Eles sabiam que você estava lá."',
     '"Sabiam?"',
@@ -131890,7 +132553,7 @@ c23_final_a_porta:{
     'Você desce e conta pro zelador, que escuta em pé, com a caixa de fósforo na mão, e não diz nada por um tempo muito longo.',
     'Depois ele senta no banco de concreto do saguão e chora um choro de homem de sessenta e um anos que perdeu uma coisa que tinha há vinte e três.',
     'Ele agradece. Três vezes.',
-    'Na terceira você entende que ele está agradecendo de verdade, e é a coisa mais difícil que você já teve que aceitar.'
+    'Na terceira você entende que ele está agradecendo de verdade, e aceitar isso custa mais que qualquer luta.'
   ]}
 },
 
@@ -131933,7 +132596,7 @@ c23_final_papelada:{
     'Em quatro meses, cópias autenticadas de mil cento e oitenta e quatro guias de remessa chegam, por via postal, a onze endereços residenciais.',
     'Cada envelope contém apenas os documentos assinados por aquela pessoa. Nada mais. Sem bilhete, sem ameaça, sem exigência.',
     'Sete dos onze pedem exoneração em seis semanas. Dois adoecem. Um processa a Comissão e ganha.',
-    'O décimo primeiro, a Presidente Hester Colman, dá uma entrevista de trinta e dois minutos em que defende cada página, com serenidade, sem levantar a voz, e é a coisa mais assustadora que já foi ao ar em Kanto.',
+    'O décimo primeiro, a Presidente Hester Colman, dá uma entrevista de trinta e dois minutos em que defende cada página, com serenidade, sem levantar a voz, e Kanto inteira assiste sem conseguir desligar.',
     'A Comissão continua existindo. Menor, mais devagar, com outro nome.',
     'Mas em quatro cidades, quando chega um ofício com brasão de balança, agora tem gente que vira o papel.',
     'Você ensinou isso a Kanto inteira sem nunca ter subido num palco.'
@@ -131976,7 +132639,7 @@ c23_final_os_nomes:{
       'Depois diz obrigado, e sobe a escada da câmara na sua frente, e sai da caverna do norte pela primeira vez em dois anos, e ninguém na boca da caverna precisa avisar ninguém, porque tem uma pessoa do lado dele.'),
     'Vocês descem a montanha juntos, e ele não fala mais nada o caminho inteiro.',
     'Na estrada, ele vira pro sul e você vira pro sul também, e é assim, e ninguém combinou.',
-    'Nos anos seguintes, em Kanto, gente vai contar que viu uma coisa grande e clara andando na estrada com {um treinador|uma treinadora}, sem coleira, sem bola, sem nada.',
+    'Nos anos seguintes, em Kanto, gente vai contar que viu uma coisa grande e clara andando na estrada com {um treinador|uma treinadora}, sem coleira, sem Pokébola, sem nada.',
     'Ninguém vai acreditar em ninguém.',
     'E na Torre Pokémon de Lavender, num mural preto de doze metros, uma linha nova aparece num dia qualquer, escrita com giz, com uma letra que ninguém reconhece:',
     'os onze, e embaixo, menor: "eu sei os nomes".'
@@ -132074,7 +132737,7 @@ c23_final_a_troca:{
     'Em Cerulean tem uma professora de natação que até hoje não entende por que você recusou um Seel.',
     'Em Pewter tem um homem da pedreira que conta pra todo mundo que já ofereceu um Machoke pra você e que você falou que não.',
     'E numa caverna do norte de Kanto tem alguém que nunca vai saber que uma pergunta idiota, feita por {um garoto|uma garota} de {idade} anos sem saber o que estava fazendo, mudou uma coisa pequena e permanente no mundo.',
-    'Foi a coisa mais barata que você fez na vida. Não custou nada.',
+    'Não te custou nada. Nem um centavo, nem um Pokémon.',
     'Isso não desconta.'
   ]}
 },
@@ -132087,7 +132750,7 @@ c23_sentou:{
     'Senta no chão de pedra da câmara, de pernas cruzadas, com as mãos no colo, e espera.',
     'Ele espera também.',
     'Doze minutos.',
-    'É a coisa mais difícil que você fez nessa jornada inteira e você tem consciência disso enquanto está fazendo.',
+    'Nada na jornada pesou tanto, e você sabe disso enquanto está fazendo.',
     'No décimo terceiro minuto, ele fala:',
     '"Ninguém nunca ficou calado perto de mim."',
     'E depois, mais baixo:',
@@ -132163,7 +132826,7 @@ c23_final_ir_embora:{
     'A Comissão continua existindo e continua mandando ofício, e você continua sem ter poder nenhum sobre isso.',
     'E uma vez por ano, mais ou menos, você pensa numa caverna no norte e numa conversa que você interrompeu no meio pra ir embora.',
     'E toda vez você chega na mesma conclusão, que é a conclusão certa e que não conforta nada:',
-    'você tinha {idade} anos, e ninguém devia ter deixado aquilo na sua mão, e o fato de você ter ido embora é a coisa mais saudável que aconteceu nessa história inteira.',
+    'você tinha {idade} anos, e ninguém devia ter deixado aquilo na sua mão, e ir embora foi sensato, talvez a única coisa sensata dessa história inteira.',
     'Quem devia ter resolvido isso eram os adultos.',
     'Eles sabiam. Eles tinham o endereço, o número do processo e a data da reunião.',
     'Eles só não tinham {idade} anos.'
@@ -132458,7 +133121,7 @@ c23_final_nao_precisa:{
   ],
   final:{id:'nao_precisa', titulo:'NÃO PRECISA VOLTAR COM NADA', texto:[
     'Você sobe sem nada.',
-    'Sem bola, sem prova, sem acordo, sem criatura, sem relatório. A Liga pergunta o que houve e você diz a verdade, que é a coisa mais decepcionante possível: uma conversa.',
+    'Sem bola, sem prova, sem acordo, sem criatura, sem relatório. A Liga pergunta o que houve e você diz a verdade, que decepciona: uma conversa.',
     'O Sr. Waldo escreve missão cumprida no campo próprio, porque a ordem era ir, observar, não intervir e voltar.',
     d=>`Você pega um ônibus para ${d.jogador.cidade} no mês seguinte.`,
     'A escola tem uma sala nova, um muro pintado e a mesma professora, que está mais velha e que te reconhece antes de você chegar no portão.',
@@ -132611,7 +133274,7 @@ c29_o_vizinho:{
   texto:[
     d=>c29_hora(d) >= 6 && c29_hora(d) < 10
       ? 'A casa do lado do portão verde tem uma senhora regando vaso na calçada às sete da manhã, que é o horário de quem rega vaso a sério.'
-      : 'A casa do lado do portão verde tem uma senhora regando vaso na calçada, sem pressa, do jeito de quem rega vaso a sério.',
+      : 'A casa do lado do portão verde tem uma senhora regando vaso na calçada, sem pressa, levando o vaso a sério.',
     'O portão dela tem o sobrenome em ferro fundido, do jeito que se fazia em mil novecentos e setenta: VALE.',
     'Ela te vê olhando o portão e fala primeiro, do jeito de quem estava esperando alguém pra falar disso há muito tempo.',
     fala('Sra. Vale', 'Você não é da prefeitura.'),
@@ -132666,7 +133329,7 @@ c29_as_quatro_ligacoes:{
 c29_pediu_a_agenda:{
   texto:[
     d=>fala(d.jogador.nome, 'A senhora me empresta essa agenda?'),
-    'Ela segura a agenda com as duas mãos, do jeito de quem já perdeu um caderno uma vez e não vai perder outro.',
+    'Ela segura a agenda com as duas mãos. Já perdeu um caderno uma vez e não vai perder outro.',
     fala('Sra. Vale', 'Eu copio pra você.'),
     d=>fala(d.jogador.nome, 'A senhora não precisa.'),
     fala('Sra. Vale', 'Preciso sim, porque eu não vou te dar a minha agenda e você não vai sair daqui sem nada.'),
@@ -132755,7 +133418,7 @@ c29_bateu:{
     'Ele olha você de cima a baixo em menos de um segundo e chega a uma conclusão.',
     fala('Dario', 'Traz?'),
     d=>fala(d.jogador.nome, 'Trago o quê?'),
-    'Ele suspira, do jeito de quem já explicou isso hoje.',
+    'Ele suspira. Já explicou isso hoje.',
     fala('Dario', 'Pokémon, {moço|moça}. Você bateu no portão certo pelo motivo errado ou pelo motivo certo?'),
     d=>{
       const p = d.time[0];
@@ -132785,7 +133448,7 @@ c29_dentro:{
     d=>fala(d.jogador.nome, 'C e R.'),
     'Ele toma o café dele.',
     fala('Dario', 'Criação e Recurso.'),
-    'Ele diz as duas palavras sem nenhum peso, do jeito de quem repete uma classificação de manual que ele nunca parou pra ouvir.'
+    'Ele diz as duas palavras sem nenhum peso, uma classificação de manual que ele nunca parou pra ouvir.'
   ],
   ef:{flag:['viu_a_tabela','sabe_do_lote_unico'],
       registrar:'A tabela do portão verde classifica cada espécie como "Criação" ou "Recurso".',
@@ -132897,7 +133560,7 @@ c29_pegou_o_envelope:{
   texto:[
     'Você abre a gaveta e pega o envelope e fecha a gaveta e sai da sala antes dos quatro minutos.',
     'Do portão, antes de sair, você ouve a descarga.',
-    'Ele calculou o tempo. Ele calculou o tempo de descarga pra você ter o tempo de decidir sozinh{o|a}, e isso é o tipo de cumplicidade que não deixa rastro e que nenhum processo vai conseguir provar.',
+    'Ele calculou o tempo. Ele calculou o tempo de descarga pra você ter o tempo de decidir sozinh{o|a}. É o tipo de cumplicidade que não deixa rastro e que nenhum processo vai conseguir provar.',
     'Na rua, com o envelope pardo na mão, você entende que acabou de receber uma prova de alguém que precisa poder jurar que não deu.'
   ],
   ef:{flag:['tem_o_envelope_do_malote','reika_precisa_de_papel'],
@@ -132997,7 +133660,7 @@ c29_abriu_a_tranca:{
     'Você puxa a tranca e ela corre fácil, porque tranca de porta usada corre fácil.',
     'A porta abre pra fora e a luz do quintal entra no galpão pela primeira vez no dia.',
     'Trinta e uma gaiolas. Quatro fileiras. Corredor no meio. Ralo no centro do piso.',
-    'E aí você ouve o portão da frente e passos no corredor lateral da casa, e você tem uns doze segundos pra decidir a coisa mais difícil do dia:',
+    'E aí você ouve o portão da frente e passos no corredor lateral da casa, e você tem uns doze segundos pra decidir:',
     'abrir trinta e uma gaiolas leva mais de doze segundos.'
   ],
   ef:{flag:'a_porta_aberta_do_galpao'},
@@ -133176,7 +133839,7 @@ c29_seguiu_quem_saiu:{
     'Cerulean, às três da manhã, é a segunda.',
     'A caminhonete anda devagar porque a rua é de paralelepípedo e você anda rápido pela calçada, duas quadras atrás, encostad{o|a} no muro.',
     'Ela atravessa a segunda ponte, pega a marginal do rio e para num posto de gasolina de vinte e quatro horas.',
-    'O motorista desce, abastece, entra na conveniência e compra café e um salgado, e fica dez minutos conversando com o frentista do jeito de quem conversa com o mesmo frentista toda terça.',
+    'O motorista desce, abastece, entra na conveniência e compra café e um salgado, e fica dez minutos conversando com o frentista, o mesmo de toda terça.',
     'Você entra na conveniência atrás dele e compra um salgado também, porque comprar um salgado é a coisa mais invisível que existe.',
     'E ouve os dez minutos inteiros.'
   ],
@@ -133594,7 +134257,7 @@ c30_acendeu:{
     fala('Lorca', 'Pesquisa de campo.'),
     d=>fala(d.jogador.nome, 'Às duas e quarenta da manhã.'),
     fala('Lorca', 'A torre é pública vinte e quatro horas. Está na placa.'),
-    'E está mesmo. É a coisa mais irritante da noite: ele não está fazendo nada de ilegal neste exato momento.',
+    'E está mesmo. E isso irrita: ele não está fazendo nada de ilegal neste exato momento.',
     fala('Lorca', 'Você é quem? Da prefeitura?'),
     'E aí ele te reconhece, e dá pra ver o momento em que reconhece, e a cara dele muda pra uma coisa muito pior que medo: alívio.',
     fala('Lorca', 'Ah. É você.', 'baixo')
@@ -135142,7 +135805,7 @@ c1_professor_entrega:{
                   : 'A Pokébola pesa menos do que parecia.'; },
     d=>{ const p = (d.time || []).slice(-1)[0];
          return fala('o Professor', `${p ? pron(p).Ele : 'Ele'} gostou de você. Dá pra ver. O resto vocês descobrem ${p && generoDe(p) === 'f' ? '{juntos|juntas}' : 'juntos'}.`, 'riso'); },
-    'Ele volta pro laboratório com a bandeja e as duas que sobraram, sem se despedir, do jeito de quem vai estar lá quando você voltar.'
+    'Ele volta pro laboratório com a bandeja e as duas que sobraram, sem se despedir, como se fosse te ver amanhã.'
   ],
   ef:{executar:d => entregarDoProfessor(d)},
   escolhas:[
@@ -135720,7 +136383,7 @@ c1e_despedida_goro:{
     },
     'Ele abre a porta do motorista e para antes de entrar.',
     d=>fala('Célio', `Ah. Anota o meu número, vai. Todo mundo que eu entrego tem.`),
-    'Ele dita um número de sete dígitos de cor, devagar, do jeito de quem já ditou esse número mil vezes.',
+    'Ele dita um número de sete dígitos de cor, devagar, um número que ele já ditou mil vezes.',
     d=>fala('Célio', `Liga contando quando ${pronReservado(d).ele} evoluir. Eu quero saber.`, 'riso')
   ],
   ef:{executar:d => {
@@ -136040,7 +136703,7 @@ c20_a_cadeira:{
       executar:() => { c20_ateAs(10); },
       presagio:'Sete editais publicados e nenhuma indicação. O buraco na parede sempre esteve aberto.'},
   escolhas:[
-    {texto:'"Tenho." — e você tem, e é a coisa mais improvável do dia.', vai:'c20_fim_sentou',
+    {texto:'"Tenho." — e você tem, por incrível que pareça.', vai:'c20_fim_sentou',
      cond:d=>!!(d.flags.reika_te_abordou || d.flags.conheceu_a_nishino || d.flags.os_trinta_e_nove_juntos ||
                 d.flags.a_manifestacao_do_porto || (typeof Cargos!=='undefined' && Cargos.lista().length >= 2))},
     {texto:'"Não tenho." — e pedir a palavra pelo Art. 27 mesmo assim.', vai:'c20_palavra'},
@@ -136087,7 +136750,7 @@ c20_fim_sentou:{
     'A carta dá a volta na mesa inteira, onze pessoas, e leva quatro minutos, e ninguém fala nada nos quatro minutos.',
     'A Presidente é a última a receber de volta.',
     fala('a Presidente', 'Está em ordem.'),
-    'Ela diz isso sem nenhuma emoção e com uma precisão que é a coisa mais assustadora da manhã.',
+    'Ela diz isso sem nenhuma emoção e com uma precisão que dá medo.',
     fala('a Presidente', 'Secretária, registre em ata a posse d{o conselheiro|a conselheira} de representação externa.'),
     'E a cadeira vinte centímetros pra trás é puxada pra frente pela primeira vez em um ano.',
     'Por você.'
@@ -137480,10 +138143,10 @@ cr1_o_armario:{
     'Dentro, um bilhete datilografado e um boné sem logotipo.',
     '**"SETOR 7, CERCA DE TRÁS. DUAS DA MANHÃ. O ROOK LEVA. VOCÊ CONTA."**',
     d => d.flags.ln_rocket_contou
-      ? 'Contar, pra quem manda o bilhete, é a coisa mais importante que existe. Você aprendeu isso num Centro Pokémon, contando gente depois das dez da noite.'
+      ? 'Contar, pra quem manda o bilhete, é o que mais importa. Você aprendeu isso num Centro Pokémon, contando gente depois das dez da noite.'
       : d.flags.ln_rocket_mentiu
-        ? 'Contar, pra quem manda o bilhete, é a coisa mais importante que existe. Você aprendeu isso dizendo onze quando eram três.'
-        : 'Contar, pra quem manda o bilhete, parece ser a coisa mais importante que existe.'
+        ? 'Contar, pra quem manda o bilhete, é o que mais importa. Você aprendeu isso dizendo onze quando eram três.'
+        : 'Contar, pra quem manda o bilhete, parece ser o que mais importa.'
   ],
   ef:{flag:'cm_rocket_1', registrar:'O envelope sem timbre mandou você contar uma carga na cerca de trás do setor 7.'},
   escolhas:[
@@ -142616,7 +143279,7 @@ c16_por_cima:{
 
 c16_chegou_voando:{
   texto:[
-    d=>`Noventa milhas ${Campo.voar().como || 'pelo ar'}. Leva quase quatro horas e as quatro horas são a coisa mais silenciosa que já te aconteceu.`,
+    d=>`Noventa milhas ${Campo.voar().como || 'pelo ar'}. Leva quase quatro horas, e nas quatro horas só tem vento.`,
     'Mar aberto visto de cima não tem escala: é a mesma superfície igual em todas as direções, e depois de uma hora você para de tentar medir distância porque não existe nada pra medir contra.',
     'A ilha aparece como uma mancha e vira pedra.',
     'E de cima você vê, antes de pousar, a coisa que quem chega de barco nunca vai ver:',
@@ -144685,7 +145348,7 @@ const UI = {
       gostos:{lugares:[], tipos:[], dex:[]}, desgostos:{lugares:[], tipos:[], dex:[]},
       cores:{cabelo:null, olhos:null, pele:null, camisa:null, calca:null, sapatos:null, detalhes:null}, aba:'cabelo',
       mochila:null, retrato:null, retratoEscolhido:false, maisRostos:false, corCartao:'azul',
-      casaNome:'', casaQuem:'', inicial:'classico', ritmo:'fiel'
+      casaNome:'', casaQuem:'', inicial:'classico', ritmo:'fiel', dificuldade:'normal'
     };
     const estrelas = Array.from({length:22}, () =>
       `<i class="tt-estrela" style="--x:${(Math.random()*100).toFixed(1)}%;--y:${(Math.random()*100).toFixed(1)}%;--t:${(1.6+Math.random()*2.8).toFixed(2)}s;--a:${(Math.random()*3).toFixed(2)}s;--s:${Math.random() < .25 ? 3 : 2}px"></i>`).join('');
@@ -144846,6 +145509,7 @@ const UI = {
       case 'casaQuem': c.casaQuem = c.casaQuem === ds.v ? '' : ds.v; return refaz('casa');
       case 'inicial': c.inicial = ds.v; return refaz('casa');
       case 'ritmo': c.ritmo = ds.v; return refaz('casa');
+      case 'dificuldade': if (DIFICULDADES[ds.v]) c.dificuldade = ds.v; return refaz('casa');
       case 'dado': this.crDado(ds.v);
         if (ds.v === 'cores') return this.crRefazProvador();
         return refaz(...{nome:['voce'], casaNome:['casa'], tracos:['jeito']}[ds.v] || []);
@@ -145165,6 +145829,8 @@ const UI = {
                    ['longo', 'Combate prolongado', 'O mesmo dado, com o HP de cada espécie em dobro. As lutas duram mais turnos.']]
       .map(([k, nome, nota]) => `<button type="button" class="cr-op${c.ritmo === k ? ' sel' : ''}" data-acao="ritmo" data-v="${k}" data-foco="ritmo-${k}" aria-pressed="${c.ritmo === k}">
         <span class="cr-op-nome">${e(nome)}</span><span class="cr-op-nota">${e(nota)}</span></button>`).join('');
+    const dificuldade = ORDEM_DAS_DIFICULDADES.map(k => `<button type="button" class="cr-op${c.dificuldade === k ? ' sel' : ''}" data-acao="dificuldade" data-v="${k}" data-foco="dif-${k}" aria-pressed="${c.dificuldade === k}">
+        <span class="cr-op-nome">${e(DIFICULDADES[k].nome)}</span><span class="cr-op-nota">${e(DIFICULDADES[k].curta)}</span></button>`).join('');
     return this.crCabeca('Quem fica em casa', 'É essa pessoa que te acorda, te empurra pela porta e fica esperando notícia. Você sabe de quem é a voz.') + `
       <div class="cr-campo"><label class="cr-rot" for="f-casa-nome">Nome</label>
         <div class="cr-linha">
@@ -145178,7 +145844,10 @@ const UI = {
       <div class="cr-campo"><span class="cr-rot">Pokémon inicial</span>
         <div class="cr-grade cr-g2" role="group" aria-label="Pokémon inicial">${inicial}</div></div>
       <div class="cr-campo"><span class="cr-rot">Ritmo do combate</span>
-        <div class="cr-grade cr-g2" role="group" aria-label="Ritmo do combate">${ritmo}</div></div>`;
+        <div class="cr-grade cr-g2" role="group" aria-label="Ritmo do combate">${ritmo}</div></div>
+      <div class="cr-campo"><span class="cr-rot">Dificuldade</span>
+        <div class="cr-grade cr-g3 cr-dif" role="group" aria-label="Dificuldade">${dificuldade}</div>
+        <p class="cr-nota">Dá pra trocar depois, nos Ajustes.</p></div>`;
   },
 
   crSec_conferir(c){
@@ -145233,6 +145902,7 @@ const UI = {
         ${linha('Em casa', casa)}
         ${linha('Começa com', c.inicial === 'rand' ? 'O que já estava em casa' : 'Um dos três clássicos')}
         ${inteiro ? linha('Combate', c.ritmo === 'longo' ? 'Prolongado' : 'Pokérole, do livro') : ''}
+        ${linha('Dificuldade', e(Dificuldade.nome(c.dificuldade)))}
       </dl>
       <div class="crc-pe"><span>Responsável</span><span class="crc-assina">${c.casaNome.trim() ? e(c.casaNome.trim()) : '&nbsp;'}</span></div>
     </div>`;
@@ -145252,7 +145922,7 @@ const UI = {
       personalidade:juntarComE(tracos.concat(livre ? [livre] : [])),
       cidade:c.cidade, objetivo:c.frase.trim(), meta:c.meta,
       gosta:gostos.texto, naoGosta:desgostos.texto, gostos, desgostos,
-      inicial:c.inicial, ritmo:c.ritmo,
+      inicial:c.inicial, ritmo:c.ritmo, dificuldade:c.dificuldade,
       nascimento:{dia:c.nasc.dia, mes:c.nasc.mes},
       casaNome:c.casaNome.trim(), casaQuem:c.casaQuem,
       forte:c.forte, retrato:c.retrato ? PASTA_DOS_RETRATOS + c.retrato : null,
@@ -147805,7 +148475,7 @@ const UI = {
         <span class="lp-placa">${this.esc(String(m.titular || m.nome).toUpperCase())}</span>
         <span class="lp-rosto">${rosto ? `<img src="${rosto}" alt="" onerror="this.remove()">` : '<b aria-hidden="true">?</b>'}</span>
         ${sabeQuemSao ? `<span class="lp-quem">${this.esc(m.nome)}</span>
-          <span class="lp-info">${tipo}<span class="lp-nv">Nv ${m.nivelBase}–${m.nivelBase + m.especies.length + 1}</span></span>
+          <span class="lp-info">${tipo}<span class="lp-nv">Nv ${Dificuldade.nivel(m.nivelBase)}–${Dificuldade.nivel(m.nivelBase + m.especies.length + 1)}</span></span>
           ${outro ? `<span class="lp-cadeira">na cadeira de ${this.esc(m.titular)}</span>` : voltou ? '<span class="lp-cadeira">de volta à porta</span>' : ''}`
           : '<span class="lp-quem lp-fraco">Quem senta aqui?</span>'}
         ${passou ? `<span class="lp-selo">${campeao ? 'Vencida' : 'Você já passou'}</span>` : ''}
@@ -147826,7 +148496,7 @@ const UI = {
       `<span class="lpr"><small>${this.esc(r.rodada)}</small><b>${din(r.dinheiro)}</b></span>`).join('')}${extra || ''}</div>`;
     const torneio = `<div class="liga-evento torneio">
         <p class="sussurro">Dezesseis inscritos, sorteados na hora, todo dia à uma da tarde: oitavas, quartas, semifinal e final. Qualquer um entra: gente de Kanto inteira, e quem já cruzou com você na estrada.</p>
-        ${premios(PREMIO_TORNEIO, `<span class="lpr"><small>Adversários</small><b>Nv ${nivelDoTorneio(0)}–${nivelDoTorneio(PREMIO_TORNEIO.length - 1)}</b></span>`)}
+        ${premios(PREMIO_TORNEIO, `<span class="lpr"><small>Adversários</small><b>Nv ${Dificuldade.nivel(nivelDoTorneio(0))}–${Dificuldade.nivel(nivelDoTorneio(PREMIO_TORNEIO.length - 1))}</b></span>`)}
         ${d.torneiosVencidos ? `<span class="liga-titulos">${svgIcone('torneio')}${this.esc(d.torneiosVencidos + '× {campeão|campeã}')}</span>` : ''}
       </div>`;
     const co = campeao ? statusConferencia() : null;
@@ -147985,7 +148655,7 @@ const UI = {
     if (!t) return this.telaLiga();
     this.telaDaChave(t, {num:'Torneio Aberto',
       sub: adv => {
-        const nv = adv.time.map(p => p.nivel), a = Math.min(...nv), b = Math.max(...nv);
+        const nv = adv.time.map(p => Dificuldade.nivelDe(p)), a = Math.min(...nv), b = Math.max(...nv);
         return [adv.de, a === b ? `Nv ${a}` : `Nv ${a}–${b}`].filter(Boolean).join(' · ');
       },
       lutar:'Jogo.lutarRodadaTorneio()', curar:'Jogo.curarNoTorneio()', desistir:'Jogo.desistirTorneio()', rotDesistir:'Desistir do torneio'});
@@ -148579,6 +149249,7 @@ const UI = {
       </div>
       ${this.ajustesDeSom()}
       ${typeof Letra !== 'undefined' ? Letra.ajustes() : ''}
+      ${typeof Dificuldade !== 'undefined' ? Dificuldade.ajustes() : ''}
       ${Velocidade.ajustes()}
       ${Estado.dados ? `<h3>Salvar</h3>
       <button class="escolha com-icone" onclick="UI.modalSalvar()">${svgIcone('salvar')}<span class="esc-rot">Baixar o save<small class="esc-det">a jornada inteira num arquivo .json · na abertura, Carregar jogo lê de volta</small></span></button>` : ''}
@@ -150029,7 +150700,7 @@ const UI = {
     if (k === 'passos') return `
       <h3>A primeira hora, passo a passo</h3>
       <ol class="tut-passos">
-        <li><b>Inscrição.</b> Seis passos: quem você é, o seu jeito, o que você quer, a aparência, quem fica em casa e a conferência. O que pesa no jogo é escolha: o jeito mexe em quem te obedece, o seu forte começa em 2, o objetivo vira o rumo que abre cada capítulo, e lugar ou Pokémon de que você gosta pesa nos dados e na moral. A aparência é a foto: você escolhe o corpo e, na Customização, a cor do cabelo, dos olhos, da pele, da camisa, da calça, dos sapatos e dos detalhes, e é isso que os outros vão dizer de você. O dado ao lado de um campo sorteia uma sugestão, e "Sortear o resto" preenche o que ficou em branco.</li>
+        <li><b>Inscrição.</b> Seis passos: quem você é, o seu jeito, o que você quer, a aparência, quem fica em casa e a conferência. O que pesa no jogo é escolha: o jeito mexe em quem te obedece, o seu forte começa em 2, o objetivo vira o rumo que abre cada capítulo, e lugar ou Pokémon de que você gosta pesa nos dados e na moral. A aparência é a foto: você escolhe o corpo e, na Customização, a cor do cabelo, dos olhos, da pele, da camisa, da calça, dos sapatos e dos detalhes, e é isso que os outros vão dizer de você. No passo da casa você escolhe também como começa: o inicial, o ritmo do combate e a dificuldade (Fácil, Normal ou Difícil, que dá pra trocar depois nos Ajustes). O dado ao lado de um campo sorteia uma sugestão, e "Sortear o resto" preenche o que ficou em branco.</li>
         <li><b>O capítulo 1.</b> Você acorda em casa. Leia a cena e toque numa opção — ou escreva o que quer fazer no campo de baixo. Não tem opção certa: tem o que você fez.</li>
         <li><b>O primeiro Pokémon.</b> Os três iniciais saem da Pokébola na sua frente; escolha um e, se quiser, dê um apelido.</li>
         <li><b>A licença.</b> No Centro Pokémon (em Pallet, no laboratório). Com ela, o Centro cura de graça.</li>
@@ -150051,7 +150722,7 @@ const UI = {
       ${L('Escrever em vez de escolher', 'o campo embaixo das opções aceita qualquer coisa')}
       <p class="sussurro">O campo livre lê o que você escreveu: se bate com uma saída que já existe, ele segue por ela; se não bate, o jogo improvisa e isso conta igual.</p>
       <h3>Criar o personagem</h3>
-      ${L('Inscrição', 'seis passos: você, seu jeito, o que você quer, aparência, casa e começo, conferência · o dado sorteia a sugestão de um campo · "Sortear o resto" preenche o que está em branco')}
+      ${L('Inscrição', 'seis passos: você, seu jeito, o que você quer, aparência, casa e começo, conferência · o dado sorteia a sugestão de um campo · "Sortear o resto" preenche o que está em branco · a dificuldade, no passo da casa, se troca depois nos Ajustes')}
       ${L('Personalidade', `${TRACOS_MIN} ou ${TRACOS_MAX} traços da lista, mais uma palavra sua se quiser · cada traço é lido nos cinco eixos e pesa como regra, veja Vínculo`)}
       ${L('No que você é bom', 'um dos seis status começa em 2; os outros, em 1 · Resistência em 2 já começa com HP 32 e Vontade 4')}
       ${L('Objetivo', 'um dos sete rumos, numa frase sua (ou na sugerida) · a frase sai da sua boca na história, e o rumo abre cada capítulo')}
@@ -150294,6 +150965,8 @@ const UI = {
       <div class="exemplo-regra">
         <b>Exemplo de teste de cena.</b> Vasculhar pede 2 sucessos de Percepção. Você tem Percepção 2: 2 + 2 de perícia = 4d6 → 1, 5, 3, 2 = 1 sucesso, sucesso parcial. Num lugar de que você gosta seria 5d6, com um dado a mais pra achar o segundo.
       </div>
+
+      ${typeof Dificuldade !== 'undefined' ? Dificuldade.regras() : ''}
 
       <h3>Combate — Pokérole</h3>
       <p class="sussurro">O combate segue o Pokérole 3.0. Tudo é parada de d6: cada 4, 5 ou 6 é um sucesso. A bandeja mostra cada parada com as faces, e o log mostra a conta.</p>
@@ -164509,7 +165182,7 @@ const Exploracao = {
     const xpAntes = aprendem.map(p => ({uid:p.uid, nivel:p.nivel, exp:p.exp, expProx:p.expProx}));
     aprendem.forEach(p => {
       const acima = Math.max(0, p.nivel - L.nivel);
-      let q = Math.round(ganho * Math.max(0.2, 1 - acima / 6) * fatorDeAtraso(p));
+      let q = Math.round(ganho * Math.max(0.2, 1 - acima / 6) * fatorDeAtraso(p) * (typeof Dificuldade !== 'undefined' ? Dificuldade.xp() : 1));
       /* nunca passa do teto num dia só, por maior que seja o ganho */
       let falta = p.expProx - p.exp;
       for (let n = p.nivel + 1; n < teto; n++) falta += expNecessaria(n);
@@ -164819,6 +165492,7 @@ const Jogo = {
 
     Estado.novo(f);
     Estado.dados.config.ritmo = f.ritmo;
+    Estado.dados.config.dificuldade = ['facil', 'normal', 'dificil'].includes(f.dificuldade) ? f.dificuldade : 'normal';
 
     Mundo.iniciar(f.cidade);
     Estado.dados.itens = {};                     // a mochila começa vazia
@@ -165778,9 +166452,9 @@ const Jogo = {
     } else if (c.rivalExtra){
       const R = defRival(c.rivalExtra);
       if (!R) return;
-      time = timeRivalExtra(R).map(p => { p.nivel += 2; return p; });
+      time = timeRivalExtra(R).map(p => renivelar(p, p.nivel + 2));
     } else if (c.rival === 'teo'){
-      time = timeRival().map(p => { p.nivel += 2; return p; });
+      time = timeRival().map(p => renivelar(p, p.nivel + 2));
     } else if (c.id === 'nadia' && typeof timeDaNadia === 'function'){
       time = timeDaNadia();
     } else if (c.estrada){
@@ -165983,7 +166657,8 @@ const Jogo = {
     const nivel = alvo.nivelBase;
     const time = alvo.especies.map((dex,i) =>
       criarPokemon(dex, nivel + i, {apelido: (alvo.apelidos||{})[dex] || null}));
-    if (time.length) time[time.length-1].nivel += 2;
+    /* o ás dois acima, com os atributos do nível novo */
+    if (time.length) renivelar(time[time.length-1], time[time.length-1].nivel + 2);
     time.forEach(x => { x.nomeAnunciado = true; });
 
     this.cenaBatalha = null; this.ginasioAtual = null; this.torneioAtual = null; this.redeAtual = null;

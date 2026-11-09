@@ -144,6 +144,7 @@ const Jogo = {
 
     Estado.novo(f);
     Estado.dados.config.ritmo = f.ritmo;
+    Estado.dados.config.dificuldade = ['facil', 'normal', 'dificil'].includes(f.dificuldade) ? f.dificuldade : 'normal';
 
     Mundo.iniciar(f.cidade);
     Estado.dados.itens = {};                     // a mochila começa vazia
@@ -1103,9 +1104,9 @@ const Jogo = {
     } else if (c.rivalExtra){
       const R = defRival(c.rivalExtra);
       if (!R) return;
-      time = timeRivalExtra(R).map(p => { p.nivel += 2; return p; });
+      time = timeRivalExtra(R).map(p => renivelar(p, p.nivel + 2));
     } else if (c.rival === 'teo'){
-      time = timeRival().map(p => { p.nivel += 2; return p; });
+      time = timeRival().map(p => renivelar(p, p.nivel + 2));
     } else if (c.id === 'nadia' && typeof timeDaNadia === 'function'){
       time = timeDaNadia();
     } else if (c.estrada){
@@ -1308,7 +1309,8 @@ const Jogo = {
     const nivel = alvo.nivelBase;
     const time = alvo.especies.map((dex,i) =>
       criarPokemon(dex, nivel + i, {apelido: (alvo.apelidos||{})[dex] || null}));
-    if (time.length) time[time.length-1].nivel += 2;
+    /* o ás dois acima, com os atributos do nível novo */
+    if (time.length) renivelar(time[time.length-1], time[time.length-1].nivel + 2);
     time.forEach(x => { x.nomeAnunciado = true; });
 
     this.cenaBatalha = null; this.ginasioAtual = null; this.torneioAtual = null; this.redeAtual = null;

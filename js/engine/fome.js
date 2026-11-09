@@ -54,7 +54,8 @@ const Fome = {
   /* % de ele se distrair na luta e não fazer o que você mandou */
   distrai(p){
     const e = this.estado(p);
-    return e === 'faminto' ? FAMINTO_DISTRAI : e === 'com fome' ? FOME_DISTRAI : 0;
+    const fator = typeof Dificuldade !== 'undefined' ? Dificuldade.fomeDistrai() : 1;
+    return (e === 'faminto' ? FAMINTO_DISTRAI : e === 'com fome' ? FOME_DISTRAI : 0) * fator;
   },
   alimentar(p){
     if (!p) return;
@@ -93,7 +94,9 @@ const Fome = {
         p.fomeCobrada = devidos;
         /* quem já está no piso (ou abaixo, por outra coisa) não perde mais pela fome */
         const antes = p.moral || 0;
-        if (antes > FOME_PISO) p.moral = Math.max(FOME_PISO, antes - novos * FOME_MORAL);
+        /* no Fácil a fome não tira moral (dificuldade.js) */
+        const tira = typeof Dificuldade === 'undefined' || Dificuldade.fomeTiraMoral();
+        if (tira && antes > FOME_PISO) p.moral = Math.max(FOME_PISO, antes - novos * FOME_MORAL);
         if (p.moral < antes) caiu.push(p);
       }
     });

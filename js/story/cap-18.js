@@ -244,7 +244,7 @@ c18_ab_os_dez_anos:{
     fala('o gerente', 'Isso aqui não é reajuste.'),
     c18_eu('Não.'),
     fala('o gerente', 'Reajuste é dez por cento, quinze por cento.'),
-    'Ele fecha a pasta do ano passado com cuidado, do jeito que se fecha uma coisa que assusta.',
+    'Ele fecha a pasta do ano passado com cuidado, como se ela pudesse abrir sozinha.',
     fala('o gerente', 'Isso multiplicou por mil em sete anos, passou por essa agência, e eu assinei o recebimento de todas.', 'baixo')
   ],
   ef:{flag:['oito_anos_de_convenio','reika_precisa_de_papel','tem_a_linha_do_convenio'],
@@ -552,8 +552,8 @@ c18_fio:{
     'Ninguém fala assim de uma quadrilha. Ninguém diz o pessoal, a turma, aqueles caras. Todo mundo que te contou alguma coisa falou como quem fala de uma instituição.',
     'Instituição tem endereço. Tem registro. Tem papel.',
     d=>c18_sabiaComissao(d)
-      ? 'Você decide fazer a coisa mais óbvia que ninguém fez até agora: ler o que eles mesmos escreveram, no lugar onde isso fica guardado.'
-      : 'Você decide fazer a coisa mais óbvia que ninguém fez até agora: procurar o nome.'
+      ? 'Você decide fazer o óbvio, que ninguém fez até agora: ler o que eles mesmos escreveram, no lugar onde isso fica guardado.'
+      : 'Você decide fazer o óbvio, que ninguém fez até agora: procurar o nome.'
   ],
   ef:{registrar:'Decidiu procurar o papel da organização em vez de procurar o esconderijo dela.'},
   escolhas:[
@@ -1047,7 +1047,7 @@ c18_704_sei_o_que_fazem:{
     fala('a mulher de tailleur', 'Então {o senhor|a senhora} sabe mais que a maior parte das pessoas pra quem a gente tenta explicar.'),
     'Ela puxa uma cadeira com o pé.',
     fala('a mulher de tailleur', 'Senta. A pauta de hoje é orçamento de viveiro e a gente está atrasado. Se {o senhor|a senhora} souber mesmo, vai achar chato.'),
-    'E é essa a coisa mais assustadora que já te disseram: senta.'
+    'E nada que já te disseram assustou tanto: senta.'
   ],
   ef:{flag:'foi_convidado_a_sentar', instabilidade:1,
       registrar:'A presidente te ofereceu uma cadeira no meio da reunião.'},
@@ -1277,7 +1277,7 @@ c18_ivone:{
   texto:[
     'A Dra. Cordell agora trabalha numa sala emprestada em Saffron, em cima de uma loja de tecidos, com uma mesa, um arquivo de aço e uma pilha de pastas que chega na altura da janela.',
     'Ela te reconhece na porta e não faz cerimônia, como quem lembra de quem ficou de voltar.',
-    'Ela ouve você por quatro minutos sem interromper, o que é a coisa mais rara que alguém com doutorado faz.',
+    'Ela ouve você por quatro minutos sem interromper, coisa rara em quem tem doutorado.',
     fala('Dra. Cordell', 'CGRB.'),
     'Ela diz a sigla antes de você terminar.',
     fala('Dra. Cordell', 'Eu sei o que é.'),
@@ -2750,7 +2750,7 @@ c18_isaura:{
     d=>d.flags.contato_isaura
       ? 'Livia Gale tem vinte e dois anos de redação e uma mesa com quatro pilhas e nenhum enfeite.'
       : 'A editora de cidades se chama Livia Gale, está há vinte e dois anos na redação e tem uma mesa com quatro pilhas e nenhum enfeite.',
-    'Ela lê por quarenta minutos sem falar com você, o que é a coisa mais educada que alguém fez por você em meses.',
+    'Ela lê por quarenta minutos sem falar com você, e faz meses que ninguém te trata com tanta educação.',
     'Depois fecha o bloco e faz três perguntas seguidas.',
     fala('Livia Gale', 'Isso é público?'),
     c18_eu('É.'),
@@ -3392,7 +3392,7 @@ c18_nona_foto:{
     'Na parede do fundo tem um quadro branco, e no quadro, em três colunas, os cabeçalhos: LOTE / MOTIVO / DATA.',
     'A coluna do motivo está preenchida até embaixo, sempre com abreviação: MALF., AGR., DOEN., N/VIÁV.',
     'A última linha diz N/VIÁV, e a data é de anteontem.',
-    'Não tem Pokémon nenhum na foto. É uma sala limpa e organizada, e é a coisa mais insuportável que você viu em toda a sua vida, e você já viu coisas.'
+    'Não tem Pokémon nenhum na foto. É uma sala limpa e organizada, e você não aguenta olhar, e você já viu coisas.'
   ],
   ef:{instabilidade:2, moral:-4,
       registrar:'A foto do galpão do fundo: uma sala limpa, com ralo, mangueira e um quadro de lote, motivo e data.'},

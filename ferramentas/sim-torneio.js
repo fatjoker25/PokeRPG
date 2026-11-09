@@ -47,6 +47,8 @@ if (process.env.EXTRA) lista(process.env.EXTRA).forEach((x, i) => { TAM_EXTRA_TO
 if (process.env.ERRO) lista(process.env.ERRO).forEach((x, i) => { ERRO_IA_TORNEIO[i] = x; });
 if (process.env.SEM_ITEM) RIVAIS_TORNEIO.forEach(r => { delete r.segura; });
 Estado.novo({nome:'Sim', genero:'Mulher', cidade:'Pallet', casaNome:'Delia', casaQuem:'mãe', nascimento:{dia:3, mes:9}});
+/* DIFICULDADE=facil|dificil mede outra dificuldade da jornada (dificuldade.js); sem ela, Normal */
+if (process.env.DIFICULDADE) Estado.dados.config.dificuldade = process.env.DIFICULDADE;
 const d = Estado.dados;
 const INS = ['Insígnia Pedra','Insígnia Cascata','Insígnia Trovão','Insígnia Arco-Íris','Insígnia Alma','Insígnia Pântano','Insígnia Vulcão','Insígnia Terra'];
 

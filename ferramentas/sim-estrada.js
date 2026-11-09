@@ -44,6 +44,8 @@ global.escolhaJogador = function(){
 
 const N = +process.argv[2] || 40;
 Estado.novo({nome:'Sim', genero:'Mulher', cidade:'Pallet', idade:15, casaNome:'Delia', casaQuem:'mãe'});
+/* DIFICULDADE=facil|dificil mede outra dificuldade da jornada (dificuldade.js); sem ela, Normal */
+if (process.env.DIFICULDADE) Estado.dados.config.dificuldade = process.env.DIFICULDADE;
 const d = Estado.dados;
 const INS = ['Insígnia Pedra','Insígnia Cascata','Insígnia Trovão','Insígnia Arco-Íris','Insígnia Alma','Insígnia Pântano','Insígnia Vulcão','Insígnia Terra'];
 /* insígnias típicas de quem passa por uma rota, pelo nível dela */

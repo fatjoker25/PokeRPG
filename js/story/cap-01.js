@@ -303,7 +303,7 @@ c1_comeu_frio:{
       return p ? `${nomeExib(p)} ganha o que sobra, por baixo da bancada, e dessa vez não precisa ser segredo de ninguém.`
                : 'O relógio da parede está três minutos adiantado, como sempre esteve, e ninguém nunca acertou.';
     },
-    'Depois você lava o prato, seca e guarda no lugar, o que é a coisa mais boba e mais necessária que você vai fazer hoje.'
+    'Depois você lava o prato, seca e guarda no lugar, porque é bobo e precisa ser feito.'
   ],
   ef:{moral:2, registrar:'Comeu e lavou o prato numa cozinha vazia.'},
   escolhas:[
@@ -388,7 +388,7 @@ c1_voltou_pra_dentro:{
     d=>`Você volta as quatro casas, abre a porta, e ${casaCompleto()}, está em pé na cozinha, de costas, colocando água no fogo.`,
     '{casa:Ela|Ele} não se vira.',
     d=>falaCasa('Eu ouvi a porta.', 'frio'),
-    'O fósforo risca. O fogo pega. {casa:Ela|Ele} ajusta a chama como se aquilo fosse a coisa mais importante da manhã.',
+    'O fósforo risca. O fogo pega. {casa:Ela|Ele} ajusta a chama com um cuidado que a chama não pede.',
     d=>falaCasa('Eu ia deixar você ir assim, se fosse isso que você quisesse. Eu ia ficar aqui e ia deixar.'),
     d=>falaCasa('Senta.'),
     'Você senta.'
@@ -458,7 +458,7 @@ c1_sol_no_telhado:{
   texto:[
     'O sol sobe atrás do morro às seis e quarenta e nove e leva uns quatro minutos pra ficar inteiro.',
     'Primeiro as telhas do outro lado da rua ficam laranja. Depois a placa do mercado. Depois o seu joelho.',
-    'Você fica olhando isso e pensa, sem querer pensar, que o sol vai fazer isso todo dia aqui, com ou sem você, e que essa é a coisa mais tranquila e mais insuportável que existe.',
+    'Você fica olhando isso e pensa, sem querer pensar, que o sol vai fazer isso todo dia aqui, com ou sem você, e você não sabe se isso acalma ou dói.',
     'Lá embaixo, a porta da cozinha abre e alguém chama o seu nome sem levantar a voz, do jeito de quem já sabe onde você está.'
   ],
   ef:{moral:3},
@@ -942,7 +942,7 @@ c1_procura_pijama:{
 },
 c1_onde_ele_iria:{
   texto:[
-    'Você senta no degrau da escada e pensa, que é a coisa mais difícil de fazer quando o corpo inteiro quer correr.',
+    'Você senta no degrau da escada e pensa, com o corpo inteiro querendo correr.',
     '{pk:Ele|Ela} não gosta da praça. {pk:Ele|Ela} tem medo do carro da Sra. Perla. {pk:Ele nunca foi pro mercado sozinho|Ela nunca foi pro mercado sozinha}.',
     'Mas {pk:ele|ela} te viu arrumando a mochila a noite inteira.'
   ],
@@ -1143,7 +1143,7 @@ c1_levou_foto:{
       const p = d.time[0];
       return p ? `${nomeExib(p)} olha você fazer isso da porta do quarto e não entende nada, o que é justo, porque nem você entende direito.` : 'Ninguém vê você fazer isso.';
     },
-    'É a coisa mais inútil que você vai carregar por Kanto inteira.'
+    'Não serve pra nada numa estrada, e vai assim mesmo.'
   ],
   escolhas:[{texto:'Descer.', vai:'c1_cozinha'}]
 },
@@ -1599,7 +1599,7 @@ c1_fila:{
     d=>fala(cadastra(d), 'Nome completo, cidade, idade. Assina embaixo. E coloca ele aqui em cima, por favor.'),
     d=>{
       const p = d.time[0];
-      return p ? `Você coloca ${nomeExib(p)} na bancada. ${pron(p).Ele} não gosta da bancada. Fica quiet${pron(p).o} assim mesmo, porque é você que está pedindo.` : 'Você não tem nenhum Pokémon para colocar na bancada, e isso é um problema imediato.';
+      return p ? `Você coloca ${nomeExib(p)} na bancada. ${pron(p).Ele} não gosta da bancada. Fica quiet${pron(p).o} assim mesmo, porque é você que está pedindo.` : 'Você não tem nenhum Pokémon para colocar na bancada. Problema imediato.';
     },
     'Ela passa um leitor por cima dele. A máquina apita uma vez, seca.',
     d=>(d.flags.recebeu_do_goro || d.flags.recebeu_do_professor)
@@ -1918,7 +1918,7 @@ c1_primeiro_encontro:{
   texto:[
     'O capim é mais alto do que parecia de longe. Na altura do peito, em alguns trechos.',
     'Alguma coisa se mexe nele a uns quatro passos.',
-    'Não é medo o que você sente. É a coisa mais parecida com medo que já te aconteceu.',
+    'Não é medo o que você sente, mas fica perto.',
     d=>d.flags.tem_licenca ? 'A mão vai sozinha para o cinto, onde tem cinco Poké Balls que há uma hora não existiam.' : 'A sua mão vai para o cinto e não acha nada, porque não tem nada.'
   ],
   batalha:{aleatorio:true, ambiente:'campo', nivelBase:4, tipo:'selvagem',

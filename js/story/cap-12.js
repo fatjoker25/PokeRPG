@@ -220,7 +220,7 @@ c12_ab_onde_pararam:{
     'As três bicicletas estão encostadas numa parede na lateral de um prédio baixo da avenida principal.',
     'O prédio é uma padaria. Tem cheiro de pão saindo e tem uma placa de "ABERTO" virada pro certo.',
     'Três homens de bicicleta com uma caixa térmica entraram numa padaria e as bicicletas estão do lado de fora e a caixa térmica não está.',
-    'Você fica olhando a padaria por uns quatro minutos e uma senhora sai de lá com um saco de pão e um cumprimento pro balconista, e é a coisa mais normal que existe.'
+    'Você fica olhando a padaria por uns quatro minutos e uma senhora sai de lá com um saco de pão e um cumprimento pro balconista, como em qualquer manhã de qualquer cidade.'
   ],
   ef:{flag:'a_padaria_da_avenida',
       registrar:'Os três da caixa térmica entraram numa padaria da avenida principal de Fuchsia. Saíram sem a caixa.'},
@@ -944,7 +944,7 @@ c12_derrubar_relatorio:{
            : '"Eu convoco reunião extraordinária do conselho. Leva onze dias entre convocação e realização, por regimento."'; },
     d=>`"${c12_Dias(c12_diasPraReuniao(d))}."`,
     d=>`"${c12_Dias(c12_diasPraReuniao(d))}." Ele te olha. "Eu faço a parte que leva ${c12_dias(c12_diasPraReuniao(d))}. Alguém tem que fazer a parte de hoje à noite."`,
-    'E ele diz isso sem nenhum peso, sem nenhuma insinuação heroica, do jeito que se distribui tarefa.',
+    'E ele diz isso sem nenhum peso, sem nenhuma insinuação heroica: tarefa distribuída, e só.',
     '"Eu tenho sessenta e dois anos e um assento em conselho. Você tem {idade} anos e nada a perder num regimento."',
     '"A gente é bem complementar."'
   ],
@@ -1797,7 +1797,7 @@ c12_parou_a_triagem:{
     'Silêncio.',
     'O rádio continua tocando.',
     'Um dos rapazes de luva olha pro outro. A Dra. Pia não levanta a cabeça.',
-    'E o mais velho dos dois — o que conversa com os Pokémon — responde, sem agressividade nenhuma, e a resposta dele é a coisa mais devastadora da semana:',
+    'E o mais velho dos dois — o que conversa com os Pokémon — responde, sem agressividade nenhuma, e a resposta dele te desmonta:',
     '"Eu sei."',
     '"Eu sei qual é a mãe de qual há quatro anos, {moço|moça}. Eu sei todas."',
     'Ele ajeita a luva.',
@@ -2832,7 +2832,7 @@ c12_conversa_plantao:{
   vozes:['N','P','N','N','P','N','P','N','N'],
   texto:[
     'Você senta na segunda cadeira e ele te dá café sem perguntar se você quer.',
-    'É café com muito açúcar, do jeito que se faz café pra passar a noite.',
+    'É café com muito açúcar, café de virar a noite.',
     'Vocês ficam uns quarenta minutos ali, com o rádio tocando, e ele fala de coisa nenhuma — da Liga, do preço do gás, da neta que passou em concurso.',
     'Depois, sem mudar o tom, ele fala:',
     '"Você quer abrir."',
@@ -2862,7 +2862,7 @@ c12_conversa_plantao:{
 c12_jorge_ajuda:{
   texto:[
     d=>fala(d.jogador.nome, 'Então me ajuda a arrumar pra onde levar.'),
-    'Ele demora muito tempo pra responder, e no meio do tempo ele desliga o rádio, o que é a coisa mais séria que ele faz a noite inteira.',
+    'Ele demora muito tempo pra responder, e no meio do tempo ele desliga o rádio. É o único gesto sério dele na noite inteira.',
     fala('Sr. Ulric', 'Os caminhão de soltura tão no galpão de máquinas.'),
     d=>fala(d.jogador.nome, d.flags.sabe_dos_caminhoes ? 'Eu sei.' : 'Que caminhões?'),
     d=>d.flags.sabe_dos_caminhoes ? '' : fala('Sr. Ulric', 'Dois. A reserva tinha soltura, antes. A soltura parou e os caminhão ficou.'),
@@ -2901,8 +2901,7 @@ c12_amarrou:{
     '"O quê?"',
     '"Aperta mais o pulso. Se ficar frouxo demais, eles vão dizer que eu deixei."',
     'Você aperta mais o pulso de um homem de setenta e um anos porque ele pediu, pra ele não perder o emprego.',
-    'E ele agradece.',
-    'E essa é a coisa mais difícil que aconteceu com você em Fuchsia.'
+    'E ele agradece.'
   ],
   ef:{flag:'amarrou_o_jorge',
       npc:{nome:'Sr. Ulric', opiniao:3, memoria:'Pediu para você apertar mais a corda, para não perderem o emprego dele.'},
@@ -2996,7 +2995,7 @@ c12_abriu_curral:{
       ? 'E você fica parad{o|a} no meio do curral vazio sabendo o que o Sr. Ulric te disse: que em três dias metade volta, porque é aqui que tem comida, e que o Pokémon que sai e volta não é o mesmo.'
       : d.flags.sabe_que_voltam
       ? 'E você fica parad{o|a} no meio do curral vazio sabendo o que os guardas do bar te disseram: que em três dias metade volta, porque é aqui que tem comida.'
-      : 'Você fica parad{o|a} no meio do curral vazio com a sensação de ter feito a coisa mais certa da sua vida.',
+      : 'Você fica parad{o|a} no meio do curral vazio com a certeza de que fez o certo.',
     d=>d.flags.sabe_do_beto ? 'Em noventa e nove um guarda chamado Garth fez exatamente isso, sozinho, às três da manhã. Metade voltou.' : ''
   ],
   ef:{flag:['abriu_o_curral','esvaziou_o_setor7'],

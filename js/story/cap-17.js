@@ -596,7 +596,7 @@ c17_nao_foi_merda:{
   texto:[
     c17_eu('Não foi merda.'),
     fala('Ezra', 'Foi.'),
-    c17_eu('Você tirou nove fotos de uma coisa que ninguém nunca fotografou e mostrou pra gente que você achou que ia gostar. Isso é a coisa mais normal do mundo.'),
+    c17_eu('Você tirou nove fotos de uma coisa que ninguém nunca fotografou e mostrou pra gente que você achou que ia gostar. Qualquer um faria isso.'),
     'Ele não olha pra você.',
     c17_eu('Merda foi ter gente num grupo de treinadores que ganha com informação.'),
     'Ele fica quieto um tempo.',
@@ -1167,7 +1167,7 @@ c17_replantou:{
   texto:[
     'Você replanta.',
     'Cava o buraco com as mãos, põe a muda, aperta a terra em volta e rega com a água da sua garrafa.',
-    'Leva dez minutos, e é a coisa mais idiota que dá pra fazer com uma descoberta científica de primeira grandeza.',
+    'Leva dez minutos, e é um jeito bem idiota de tratar uma descoberta científica de primeira grandeza.',
     'Você senta do lado dela depois, com as mãos sujas.',
     d=>d.flags.teo_leva ? 'O Ezra senta do seu lado.' : 'E fica ali, sozinh{o|a}, no meio de vinte metros de grama alta, com as mãos sujas de terra.',
     d=>d.flags.teo_leva ? fala('Ezra', 'O que era aquilo?') : '',
@@ -1590,7 +1590,7 @@ c17_esperou_mew:{
 c17_mew_brinca:{
   texto:[
     'Você fica parad{o|a}, e ela se aproxima.',
-    'O que acontece nos vinte minutos seguintes é a coisa mais absurda da sua jornada inteira, e a sua jornada não foi pouca coisa:',
+    'O que acontece nos vinte minutos seguintes não tem paralelo na sua jornada inteira, e a sua jornada não foi pouca coisa:',
     'Mew brinca.',
     'Ela copia.',
     'Você coça o nariz, ela coça o nariz. Você cruza os braços, ela cruza os braços — com as patinhas, do jeito errado, porque as patinhas dela não cruzam direito, e ela tenta três vezes até ficar mais ou menos.',
@@ -1784,8 +1784,8 @@ c17_ate_escurecer:{
     'É um lugar de onde tudo saiu, porque ela é o jardim de alguém, e jardim é um lugar onde não deixam Pokémon entrar.',
     d=>d.flags.contou_as_especies ? 'Quarenta e uma espécies de planta e nenhuma de Pokémon.' : 'Um jardim inteiro de planta, e nenhum Pokémon.',
     d=>d.flags.viu_as_fotos
-      ? 'É a coisa mais solitária que você já viu, e foi feita de propósito, por uma coisa que estava aqui antes de tudo e que passou dois minutos chegando perto de um garoto que apareceu porque se perdeu.'
-      : 'É a coisa mais solitária que você já viu, e foi feita de propósito, por uma coisa que estava aqui antes de tudo e que ainda acha graça em quem aparece.'
+      ? 'Nada que você já viu é tão sozinho, e foi feito de propósito, por uma coisa que estava aqui antes de tudo e que passou dois minutos chegando perto de um garoto que apareceu porque se perdeu.'
+      : 'Nada que você já viu é tão sozinho, e foi feito de propósito, por uma coisa que estava aqui antes de tudo e que ainda acha graça em quem aparece.'
   ],
   ef:{flag:['ficou_ate_escurecer','entendeu_o_jardim'],
       rep:{eixo:'bom',delta:4,motivo:'Ficou até escurecer e entendeu o que era'},
@@ -1868,7 +1868,7 @@ c17_capturou_mew:{
     'Isso é o assustador de Mew: capturar ela não quebra nada.',
     'O mundo não reage.',
     d=>d.flags.teo_leva ? 'O Ezra olha a Pokébola no chão. Depois olha você.' : 'A clareira fica exatamente igual. A grama, a borda redonda, a goiabeira com fruta caída.',
-    d=>d.flags.teo_leva ? 'Ele não fala nada, e não falar nada é a coisa mais alta que ele já fez na vida.' : '',
+    d=>d.flags.teo_leva ? 'Ele não fala nada, e nunca o silêncio dele disse tanto.' : '',
     'Mas um Mew numa Pokébola é uma coisa que alguém, em algum lugar, está pagando pra saber onde está.'
   ],
   ef:{flag:'capturou_mew', moral:-20, instabilidade:2,

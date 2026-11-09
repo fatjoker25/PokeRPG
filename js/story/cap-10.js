@@ -787,7 +787,7 @@ c10_perimetro:{
     'Anota quatro coisas.',
     'Uma: o arame farpado está inclinado pra dentro no perímetro inteiro, sem exceção. Isso custa mais caro que inclinar pra fora e alguém pagou de propósito.',
     'Duas: tem três buracos na tela, todos do mesmo tamanho, todos com a borda derretida e não cortada. Ninguém cortou essa tela com alicate. Alguma coisa passou por ela.',
-    'Três: a grama em volta dos três buracos é diferente. Mais alta, mais verde, num raio de uns dois metros. Terra com corrente cresce planta melhor — isso é fato agrícola e é a coisa mais tranquila e mais assustadora que você viu hoje.',
+    'Três: a grama em volta dos três buracos é diferente. Mais alta, mais verde, num raio de uns dois metros. Terra com corrente cresce planta melhor — isso é fato agrícola, e é tranquilo, e assusta.',
     'Quatro: na parte de trás, perto da subestação, o alambrado simplesmente não existe num trecho de oito metros. Os postes estão lá. A tela não.'
   ],
   ef:{flag:['viu_os_buracos','conhece_o_perimetro'],
@@ -1138,7 +1138,7 @@ c10_sentou_com_eloi:{
     'Depois de muito tempo ele fala uma coisa só:',
     '"Meu pai também trabalhou nessa usina. Ele ajudou a construir, em cinquenta e oito."',
     '"Três gerações de uma família olhando pro mesmo prédio e nenhuma delas entendeu o que tem dentro."',
-    'E depois vocês voltam a não falar nada, e é confortável, e é a coisa mais calma que aconteceu com você em muitas semanas.'
+    'E depois vocês voltam a não falar nada, e é confortável, de um sossego que você tinha esquecido.'
   ],
   ef:{flag:'noite_com_eloi', moral:12, hp:3,
       npc:{nome:'Sr. Edric', opiniao:7, memoria:'Passaram quarenta minutos em silêncio na brita, tomando café com açúcar demais.'},
@@ -1674,7 +1674,7 @@ c10_desligou:{
     d=>Estado.contaItem('Luva de eletricista')>0 ? 'Você calça a luva classe 2 antes, que sobra três dedos e é a melhor decisão da noite.' : 'Você não tem luva. Você pega numa alavanca de seccionadora de alta tensão com as mãos que tem.',
     'Puxa com as duas mãos e o corpo inteiro. Ela cede com um clique de catraca e depois um estouro surdo.',
     'O zumbido para.',
-    'O silêncio depois dele é a coisa mais alta que você já ouviu na vida.',
+    'O silêncio depois dele enche os ouvidos.',
     'Dura dois segundos e meio.',
     'E então, do outro lado do pátio, alguma coisa grita — e o grito é elétrico, literalmente: você sente nos dentes e nos ossos do braço antes de ouvir com o ouvido.',
     'Você acabou de desligar o que alguma coisa ali estava comendo.'
@@ -1944,7 +1944,7 @@ c10_convite:{
     'É o gesto mais idiota que existe e você sabe: Pokébola não convida, Pokébola prende.',
     'Ela desce.',
     'Pousa no chão a uns quatro metros da Pokébola aberta e olha ela por muito tempo. Anda em volta. Olha você. Olha a Pokébola.',
-    'Depois encosta o bico na Pokébola aberta, com cuidado, do jeito que se encosta em coisa que se sabe que morde.',
+    'Depois encosta o bico na Pokébola aberta, com cuidado, desconfiado.',
     'A Pokébola dispara o mecanismo de captura e fecha, vazia, porque ela não entrou.',
     'Ela olha a Pokébola fechada no chão, olha você, e volta pra viga.',
     'Não foi recusa. Foi resposta: ela experimentou, entendeu o que é, e devolveu.'
@@ -2212,7 +2212,7 @@ c10_saiu:{
       return 'Nenhum dos Voltorb reage à sua saída. Eles nem sabiam direito que você estava lá — ou sabiam e isso nunca foi o ponto.'; },
     'No portão, você olha pra trás uma última vez e entende uma coisa:',
     'Aquilo não estava escondido. Estava só num lugar onde ninguém vai.',
-    'Onze anos, oitocentos metros de uma trilha usada por gente todo fim de semana, e a coisa mais estranha de Kanto estava ali com o cadeado enferrujado aberto.'
+    'Onze anos, oitocentos metros de uma trilha usada por gente todo fim de semana, e o lugar mais estranho de Kanto estava ali com o cadeado enferrujado aberto.'
   ],
   ef:{flag:'saiu_da_usina', rep:{eixo:'bom',delta:1,motivo:'Saiu da usina sem mexer no que vive lá'}},
   escolhas:[{texto:'Seguir.', vai:'c10_depois'}]

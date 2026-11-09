@@ -25,10 +25,10 @@ cr1_o_armario:{
     'Dentro, um bilhete datilografado e um boné sem logotipo.',
     '**"SETOR 7, CERCA DE TRÁS. DUAS DA MANHÃ. O ROOK LEVA. VOCÊ CONTA."**',
     d => d.flags.ln_rocket_contou
-      ? 'Contar, pra quem manda o bilhete, é a coisa mais importante que existe. Você aprendeu isso num Centro Pokémon, contando gente depois das dez da noite.'
+      ? 'Contar, pra quem manda o bilhete, é o que mais importa. Você aprendeu isso num Centro Pokémon, contando gente depois das dez da noite.'
       : d.flags.ln_rocket_mentiu
-        ? 'Contar, pra quem manda o bilhete, é a coisa mais importante que existe. Você aprendeu isso dizendo onze quando eram três.'
-        : 'Contar, pra quem manda o bilhete, parece ser a coisa mais importante que existe.'
+        ? 'Contar, pra quem manda o bilhete, é o que mais importa. Você aprendeu isso dizendo onze quando eram três.'
+        : 'Contar, pra quem manda o bilhete, parece ser o que mais importa.'
   ],
   ef:{flag:'cm_rocket_1', registrar:'O envelope sem timbre mandou você contar uma carga na cerca de trás do setor 7.'},
   escolhas:[

@@ -660,6 +660,50 @@ Medido numa luta de líder: a abertura vai de ~6,1 s a ~3,3 s e ~2,3 s,
 e um turno de dois golpes de ~2,9 s a ~1,7 s e ~1,1 s — a 3× sobra a
 latência de quadro entre um passo e outro.
 
+## A dificuldade
+Foi pedido assim: os sistemas ficam (fome, moral, Vontade, caminhos), e
+quem joga escolhe quanto eles pesam — **Fácil** (pra quem quer
+aproveitar a história), **Normal** (a experiência original) e
+**Difícil** (pra quem quer desafio, com o lado de lá mais competitivo).
+Escolhida na inscrição (passo da casa, `c.dificuldade`) e trocada nos
+Ajustes (`Dificuldade.ajustes()`), mora na jornada
+(`d.config.dificuldade`; save de antes dela é Normal, no
+`Estado.abrir`). Tabela e motor em `js/engine/dificuldade.js`
+(`DIFICULDADES`, `Dificuldade`), e a folha de regras lê os números da
+própria tabela (`Dificuldade.regras()`).
+
+- **O Normal não mexe em nada.** É o jogo como os simuladores e os
+  robôs mediram, e número de balanceamento novo se mede nele. Os
+  simuladores aceitam `DIFICULDADE=facil|dificil` na frente do comando
+  pra medir as outras, e o `chk-lutas` também.
+- **Toda luta passa por `Batalha.iniciar`**, que chama
+  `Dificuldade.ajustarLuta`: o nível do lado de lá (`renivelar`, que
+  refaz atributos e HP do nível novo e guarda a fração de HP), o erro
+  da IA, a Vontade com critério e, no Difícil, o item do ás
+  (`itemDoAs`). Luta nova não precisa fazer nada. Cada Pokémon guarda o
+  quanto subiu (`ajusteDif`): time reaproveitado não sobe duas vezes,
+  quem trocou de dificuldade volta pro nível certo, e a captura apaga a
+  marca.
+- **O nível que aparece antes da luta passa por `Dificuldade.nivel`**
+  (ou `nivelDe(p)`, pra quem já pode ter sido ajustado): as portas da
+  Liga, a faixa do torneio, o chaveamento e o nível que a história diz
+  em voz alta (o Pikachu do Red). A apresentação da luta (`(Nv N)`) é
+  reescrita no `ajustarLuta`. Tela nova que mostra nível do lado de lá
+  antes da luta passa por ali.
+- O resto é peso: experiência (`Dificuldade.xp()`, na luta e no
+  treino), fome (`fomeTiraMoral`, `fomeDistrai`), moral de cena
+  (`moralCenaTeto`, no `moralDaCena`) e a chance de ignorar ordem
+  (`desobediencia`). Peso novo entra na tabela, na folha e aqui.
+- `renivelar` é também quem põe o ás dois acima depois de criado:
+  `p.nivel += 2` sem refazer os atributos deixava o Red, o rival na
+  revanche e o Pico do arco quebrado com o nível de um e a força de
+  outro.
+
+Medido no `sim-ginasios.js` (50 lutas por caso, jogador no nível da
+área): Brock 64% / 42% / 24% (Fácil / Normal / Difícil), Misty 64 /
+44 / 40, Sabrina 68 / 48 / 40, Blue 66 / 44 / 24; Surge, Erika, Koga
+e Blaine ficam perto do teto nas três.
+
 ## O corpo do Pokémon na luta
 O que o **lutador** faz com o próprio corpo mora em
 `js/ui/animador-sprite.js` (`AnimadorSprite`; os nomes da especificação,
@@ -1058,6 +1102,24 @@ Evento com `encadeado:true` não entra no sorteio do lugar: só chega por
 
 A Pokédex de Kanto tem 150 casas (`DEX_KANTO_IDS`); Mew e os lendários
 de Johto entram por `idsKanto()` só depois de vistos ou catalogados.
+
+## Cena leve e encanto
+A história pesa (instituição, lote, morte), e o jogo precisava de
+respiro que não fosse só descanso de menu. Por isso **toda cidade tem
+uma cena leve** no começo da lista dela em `EVENTOS_CIDADE`: ninguém
+ameaça ninguém, nada se descobre em papel, e a escolha é pequena (ajudar
+a mudar um regador, apitar corrida de Krabby, ficar até o Caterpie virar
+Metapod). Uma delas é o Ezra numa ponte de Cerulean, sem luta, que só
+aparece com o arco dele bom (`parceiro` ou `rival`) e antes do 17.
+
+E **cada trecho da jornada tem um encanto** em `EVENTOS_ROTA` (a
+migração dos Butterfree no começo, os Staryu acesos na água, o Pidgeot
+da serra, o Dragonair que para a chuva, o Lapras cantando nas Seafoam
+depois do degelo, a manada de Ponyta de noite no fim): Pokémon de Kanto
+fazendo o que faz, sem luta e sem captura. O `executar` marca a espécie
+como vista na Pokédex. Encanto não explica o que viu e não diz o que
+vai acontecer; repara e para ali, como o presságio. Cena nova desse
+tipo passa pelo `chk-baloes` e pelo `chk-tiques`.
 
 ## Todo Pokémon de Kanto tem caminho
 Os 151 têm que dar pra ter, e `node ferramentas/chk-obtencao.js` confere:
@@ -2585,6 +2647,16 @@ não esconde e os dois ficam na tela; e quem a animação escala pelo
 `bot-jogador` segue pelo `#evo-seguir:visible`.
 
 ## Convenções de texto
+- **Tique de frase tem teto** (`ferramentas/chk-tiques.js`): "é a coisa
+  mais X que você já…", ", e isso é…" no fim da frase e "do jeito de
+  quem/que se…" chegaram a 195, 33 e 150 no jogo (dezessete "a coisa
+  mais" só no 28), e de tanto voltar viraram muleta. Hoje cada um tem
+  teto por arquivo e no jogo inteiro. Quase sempre o fecho sai sem fazer
+  falta: "Leva quatro segundos e é a coisa mais fácil que você fez em
+  Kanto" é "Leva quatro segundos. É fácil desse jeito." Refrão de
+  propósito (o Ezra e a "coisa mais importante que já aconteceu")
+  entra em `permitidos`. O "como quem" e o "de um jeito que" estão de
+  olho, sem teto.
 - Fala de NPC: `fala(quem, diz, tom, nota)`. Tons válidos: `grita`, `baixo`, `riso`,
   `frio`. Frase inteira entre aspas numa linha de narração também vira balão sozinha.
 - Aspas de ironia ("análise jurídica") continuam narração porque não terminam em

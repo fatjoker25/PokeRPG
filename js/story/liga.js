@@ -172,7 +172,7 @@ const CAMPEAO = {
     'A sala atrás da última porta não é uma arena. É um salão vazio, sem iluminação de arena, com uma claraboia.',
     'Tem uma pessoa em pé no centro. Boné, jaqueta, mochila. Aparenta uns dezoito anos.',
     'Ele não se apresenta. Não fala. Não estende a mão.',
-    `Ele solta a primeira Pokébola, e é um Pikachu de nível ${porExtenso(CAMPEAO.nivelBase)}.`,
+    `Ele solta a primeira Pokébola, e é um Pikachu de nível ${porExtenso(Dificuldade.nivel(CAMPEAO.nivelBase, 'treinador'))}.`,
     d.flags.leu_caderno || d.flags.viu_os_doze
       ? `Você quer perguntar mil coisas. Sobre Mewtwo, sobre as aves${d.flags.sabe_do_red_no_mirante ? ', sobre o banco do mirante' : ''}. Ele olha pra você de um jeito que fecha todas as perguntas antes delas saírem.`
       : 'Você entende quem é antes de qualquer confirmação, porque só existe uma pessoa em Kanto que entraria num salão desses e não diria nada.',

@@ -17,6 +17,9 @@
        marca de gênero sem resolver ({o|a}, {casa:…}).
    Gating (insígnia, ordem dos ginásios) é desligado de propósito: aqui
    se testa a fala e o time, não a porta.
+   DIFICULDADE=facil|dificil roda tudo na outra dificuldade da jornada
+   (dificuldade.js): o nível da apresentação tem que bater com o do
+   Pokémon, e o item que o ás do Difícil segura tem que existir.
    Precisa do playwright: NODE_PATH=<onde ele está> node ferramentas/chk-lutas.js */
 const {chromium} = require('playwright');
 const fs = require('fs'), path = require('path');
@@ -30,6 +33,7 @@ const raiz = path.resolve(__dirname, '..');
   p.on('console', m => { if (/Cena inexistente/.test(m.text())) cenaInexistente.push(m.text()); });
   await p.goto('file://' + path.join(raiz, 'index.html'));
   await p.waitForTimeout(800);
+  await p.evaluate(x => { window.__DIF = x; }, process.env.DIFICULDADE || '');
 
   const r = await p.evaluate(() => {
     const out = {casos:0, problemas:[], rostos:{}, falas:0};
@@ -50,6 +54,7 @@ const raiz = path.resolve(__dirname, '..');
     const preparar = (gen, ins, cap) => {
       Estado.novo({nome: gen === 'Homem' ? 'Davi' : 'Ana', genero:gen, cidade:'Pallet', casaNome:'Delia', casaQuem:'mãe', nascimento:{dia:3, mes:9}});
       const d = Estado.dados;
+      if (window.__DIF) d.config.dificuldade = window.__DIF;
       d.modo = 'mundo'; d.flags.tem_pokedex = true; d.flags.tem_licenca = true;
       d.capitulo = cap; d.insignias = GINASIOS.slice(0, ins).map(g => g.insignia || g.id);
       d.time = [6, 9, 3, 65, 94, 149].map(x => criarPokemon(x, 70));
@@ -67,7 +72,13 @@ const raiz = path.resolve(__dirname, '..');
         if (!x.golpes || !x.golpes.length) prob(caso, `${DEX[x.dex].nome} sem golpe`);
         for (const g of (x.golpes || [])) if (!GOLPES[g.nome]) prob(caso, `${DEX[x.dex].nome} com golpe inexistente: ${g.nome}`);
         if (!(x.nivel >= 1 && x.nivel <= 100)) prob(caso, `${DEX[x.dex].nome} com nível ${x.nivel}`);
+        if (x.segurando && !ITENS_INFO[x.segurando]) prob(caso, `${DEX[x.dex].nome} segura um item que não existe: ${x.segurando}`);
+        if (x.hpMax !== x.stats.hp) prob(caso, `${DEX[x.dex].nome} com HP máximo ${x.hpMax} e atributo ${x.stats.hp}`);
       }
+      /* a apresentação diz o nível de quem entra, depois da dificuldade */
+      const ini = (Batalha.eventos || []).find(e => e.tipo === 'inicio');
+      const nv = ini && /\(Nv (\d+)/.exec(ini.texto || '');
+      if (nv && Batalha.inimigo && +nv[1] !== Batalha.inimigo.nivel) prob(caso, `a apresentação diz Nv ${nv[1]} e quem entra é Nv ${Batalha.inimigo.nivel}`);
     };
 
     const umaLuta = (caso, gen, ins, cap, iniciar, resultado) => {

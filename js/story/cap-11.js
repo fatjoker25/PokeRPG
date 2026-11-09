@@ -160,7 +160,7 @@ c11_ab_o_acampamento:{
     fala('Milo', 'Chegou agora?'),
     d=>fala(d.jogador.nome, 'Agora.'),
     fala('Milo', 'Nome, data de chegada e insígnias que você já tem.'),
-    'Ele diz isso do jeito de quem faz isso há semanas.',
+    'Ele diz isso com a prática de semanas.',
     fala('Milo', 'Quando abrir, a ordem é essa. A gente combinou.')
   ],
   ef:{flag:'o_caderno_da_fila',
@@ -543,7 +543,7 @@ c11_teve_porta:{
     'Ele responde tão rápido que você entende que ele esperava alguém perguntar isso um dia.',
     '"Teve porta aí, ó, mais ou menos no meio. Porta de ferro, de duas folhas, larga. Passava caminhão pequeno."',
     '"E fecharam quando?"',
-    'Ele pensa com a mão no queixo, do jeito de quem tem prazer em ser consultado.',
+    'Ele pensa com a mão no queixo, contente de ser consultado.',
     '"Noventa e seis. Fecharam com bloco e rebocaram por cima. Demorou umas duas semanas a obra."',
     '"E você lembra do que passava por ela?"',
     '"Caminhão-baú branco. Uma, duas vezes por mês. E ambulância."',
@@ -701,7 +701,7 @@ c11_sabrina_oque:{
   vozes:['N','N','N','N','N','N','N'],
   texto:[
     '"Onze."',
-    'Ela diz o número devagar, do jeito que se diz número que se contou muitas vezes.',
+    'Ela diz o número devagar, um número contado muitas vezes.',
     '"Onze mentes que acham que são uma."',
     '"Eles não sabem que são onze. Cada um acha que é o único, e que os outros dez são lembrança dele mesmo."',
     '"Imagina acordar e achar que todo mundo que você ouve é você lembrando de coisas que você fez. Não dá medo. Dá solidão de um tipo que não existe nome."',
@@ -1370,7 +1370,7 @@ c11_cracha_azul:{
       ? 'Quando você diz "andar onze", ela levanta a cabeça.'
       : 'Quando você pergunta do prédio, do que ninguém ali comenta, ela levanta a cabeça.',
     '"Quem te falou disso?"',
-    'Você responde. Ela ouve, fecha o PokéNav, olha pros dois lados da rua, e fala muito baixo e muito rápido — do jeito de quem já ensaiou essa conversa sozinha no chuveiro.',
+    'Você responde. Ela ouve, fecha o PokéNav, olha pros dois lados da rua, e fala muito baixo e muito rápido — uma conversa que ela já ensaiou sozinha no chuveiro.',
     '"Eu trabalho no 9. Eu assino requisição de material biológico."',
     '"Eu assino há dois anos. Eu assinei quatrocentas e onze requisições e eu nunca vi o material."',
     '"Eu recebo uma planilha, eu confiro se o código bate com a nota, eu assino. Isso é o meu trabalho inteiro e eu ganho bem pra isso."',
@@ -2156,7 +2156,7 @@ c11_anotou_placas:{
     'Você anota as quatro placas no caderno, e o modelo, e a cor.',
     'Um sedã prata de meia-idade com cadeirinha de bebê no banco de trás. Uma perua com adesivo de faculdade no vidro. Um carro popular com uma pasta no banco do carona. E um utilitário com o para-choque amassado e uma caixa de papelão no porta-malas, aberta, com pastas dentro.',
     'Quatro pessoas. Uma tem filho pequeno. Uma faz pós-graduação.',
-    'É a coisa mais desconcertante da semana até aqui: você veio procurar monstro e achou estacionamento.',
+    'Você veio procurar monstro e achou estacionamento.',
     'A caixa aberta no porta-malas do utilitário tem um lombo de pasta virado pra cima e dá pra ler, se você chegar perto do vidro:',
     '**PROJ. 11 — SÉRIE 3 — ENCERRAMENTO**'
   ],
@@ -2567,7 +2567,7 @@ c11_levou_a_caixa:{
     'Ela é grande, branca, absurdamente visível, e você atravessa Saffron às vinte e uma horas carregando uma caixa de material biológico de um metro e meio.',
     'Ninguém te para.',
     'Três pessoas olham. Uma delas segura a porta do prédio pra você porque você está com as mãos ocupadas.',
-    'É a coisa mais engraçada e mais deprimente da semana: você roubou propriedade de Kanto, com carimbo e tudo, e o que a cidade fez foi segurar a porta.'
+    'É engraçado e é deprimente: você roubou propriedade de Kanto, com carimbo e tudo, e o que a cidade fez foi segurar a porta.'
   ],
   ef:{flag:['tem_a_caixa_de_cinnabar','provas_do_11'],
       itens:{'Caixa carimbada de Cinnabar':1},
@@ -2664,7 +2664,7 @@ c11_levou_um_ditto:{
   texto:[
     'Você pega o que virou a caixa branca, porque é o único que não está com a sua cara e você não consegue carregar uma cópia sua no colo.',
     'Ele volta ao normal no seu braço em uns dez segundos, e é mole e morno e absurdamente leve pro tamanho.',
-    'Os outros seis somem pela rua em direções diferentes, e dois deles ainda estão com a sua cara, e isso é um problema que você não tem como resolver hoje.',
+    'Os outros seis somem pela rua em direções diferentes, e dois deles ainda estão com a sua cara, e hoje não tem o que fazer quanto a isso.',
     'Ou nunca.'
   ],
   ef:{flag:'tem_um_ditto',
@@ -3161,7 +3161,7 @@ c11_abriu_os_seis:{
     'Você abre seis.',
     'O painel de dreno é analógico e tem uma alavanca por tanque, numeradas de 1 a 12 com etiqueta de máquina de escrever. Você abre as seis que mandaram "fora" e deixa as cinco fechadas.',
     'Leva noventa segundos pra drenar cada um.',
-    'Dos seis, dois não se mexem quando o líquido acaba — mandaram "fora" e não conseguem levantar, o que é a coisa mais cruel que esse andar já fez.',
+    'Dos seis, dois não se mexem quando o líquido acaba — mandaram "fora" e não conseguem levantar.',
     'Três conseguem sentar.',
     'Um fica de pé.',
     'E aí você olha pros cinco tanques que continuam cheios, e os cinco continuam mandando a mesma coisa pesada e longa, e você entendeu ela da primeira vez e continua entendendo, e não vai fazer nada a respeito.',
@@ -3183,8 +3183,8 @@ c11_tirou_os_seis:{
   texto:[
     d=>d.flags.fechou_a_porta_do_11 ? 'Você volta antes da porta fechar, e fica.' : 'Você fica.',
     d=>c11_quantosTira(d) === 6
-      ? 'Leva duas horas e quarenta minutos e é a coisa mais difícil que você já fez fisicamente.'
-      : 'Leva quase duas horas e é a coisa mais difícil que você já fez fisicamente.',
+      ? 'Leva duas horas e quarenta minutos, e no fim os seus braços tremem sozinhos.'
+      : 'Leva quase duas horas, e no fim os seus braços tremem sozinhos.',
     d=>`Quatro lances de escada, ${porExtenso(c11_quantosTira(d))} vezes, com um corpo de mais ou menos o seu tamanho e o seu peso, molhado, que não sabe ajudar porque nunca usou o próprio corpo.`,
     d=>{ const n = c11_quantosTira(d), dela = n === 6 ? 'três' : 'dois';
          return c11_sorrelNoAndar(d)
@@ -3265,7 +3265,7 @@ c11_abrir_tanques:{
     'O painel de dreno é analógico e tem uma alavanca por tanque, com etiqueta de máquina de escrever.',
     'Isso é projeto de gente que não achava que alguém fosse querer abrir — analógico é mais barato e ninguém gasta com senha numa coisa que ninguém vai mexer.',
     'Você abre os onze.',
-    'O líquido desce em noventa segundos por tanque e vai pro ralo central com um barulho absolutamente normal de água indo pro ralo, que é a coisa mais obscena da noite.',
+    'O líquido desce em noventa segundos por tanque e vai pro ralo central com um barulho absolutamente normal de água indo pro ralo. É o normal que ofende.',
     'Sete não se mexem. Nunca iam se mexer, e você entende isso ao olhar, e não é culpa de nada que você fez.',
     'Três se mexem e não conseguem ficar de pé.',
     'Um fica de pé.',

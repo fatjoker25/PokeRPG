@@ -379,7 +379,7 @@ c8_ab_recusou_o_carro:{
 c8_ab_pelo_portao_de_carga:{
   texto:[
     'Você entra em Vermilion pela linha do trem, não pela estrada, porque a estrada tem um posto na entrada e o posto tem uma lista.',
-    'Andar em leito de linha é ilegal, cansativo e razoavelmente perigoso, e é a coisa mais sensata que você faz hoje.',
+    'Andar em leito de linha é ilegal, cansativo e razoavelmente perigoso, e hoje é a melhor ideia que você tem.',
     'Do leito da linha, o porto aparece de trás: pátio de contêiner, oficina, galpão, e só no fim a água.',
     d=>{
       if (d.via === 'foragido') return 'Você conhece esse tipo de entrada agora. Aprendeu em algum momento dos últimos meses e não lembra exatamente quando, o que é a parte que incomoda.';
@@ -424,7 +424,7 @@ c8_olhou_o_porto:{
     'Você senta na mureta de um canteiro e fica olhando.',
     'Um porto é a coisa mais organizada que você já viu. Tudo tem lugar, tudo tem ordem, tudo tem alguém apontando com uma prancheta.',
     'Um contêiner sai do navio, pousa num caminhão, o caminhão anda quarenta metros, para numa balança, e segue. Repete. Repete.',
-    'Depois de quarenta minutos você entende a coisa mais importante do porto: ninguém abre nada.',
+    'Depois de quarenta minutos você entende como o porto funciona: ninguém abre nada.',
     'Nada é aberto. Nada é conferido por dentro. Tudo é conferido por número, por lacre e por peso.',
     'Só um não entra na conta: um contêiner de vinte pés sozinho no canto do pátio, encostado no muro, que em quarenta minutos ninguém tocou.',
     d=>d.flags.conferem_por_numero
@@ -818,7 +818,7 @@ c8_carga_viva:{
   vozes:['P','N','N','N'],
   texto:[
     '"Carga viva de quê?"',
-    'O mais novo levanta e vai embora da mesa sem terminar o copo, o que é a coisa mais eloquente da noite.',
+    'O mais novo levanta e vai embora da mesa sem terminar o copo, e isso diz mais que a noite inteira de conversa.',
     'O mais velho fica.',
     '"Ele tem filho pequeno," ele explica. "Eu não tenho mais ninguém, então eu posso falar."',
     'Ele empurra o copo pro meio da mesa.',
@@ -1342,7 +1342,7 @@ c8_vai_junto:{
       flag:'nome_na_parede_da_fritura',
       npc:{nome:'Dona da fritura', opiniao:5, memoria:'Pregou o seu nome na parede da fritura dela, entre as contas a pagar.'},
       registrar:'Seu nome está pregado na parede de uma fritura do porto de Vermilion.',
-      presagio:'"Agora tem registro." É a coisa mais parecida com um contrato que você assinou até hoje.'},
+      presagio:'"Agora tem registro." O seu nome numa folha que não é sua.'},
   escolhas:[
     {texto:'Ir pro cais três.', vai:'c8_cais'},
     {texto:'Ir pro portão cinco às três e quarenta.', vai:'c8_portao_cinco', cond:d=>!!d.flags.portao_cinco}
@@ -1493,7 +1493,7 @@ c8_krabby_licao:{
     'Ele fecha a caixa com as duas mãos e senta em cima, como quem guarda um cofre.',
     '"Como você sabe disso?"',
     '"Eu vi numa banca em Cerulean."',
-    'Ele repete "Cerulean" baixinho, do jeito de quem está guardando.'
+    'Ele repete "Cerulean" baixinho, pra guardar.'
   ],
   escolhas:[
     {texto:'Ir pro cais três.', vai:'c8_cais'},
@@ -1508,7 +1508,7 @@ c8_cais:{
     'O S.S. Anne não parece um navio daqui: parece uma parede. Uma parede branca de nove andares com janelas, encostada num muro de concreto, com uma passarela coberta ligando os dois.',
     'Na entrada da passarela tem uma mesa com duas moças de uniforme, uma fila de gente bem vestida, e um preço numa placa de acrílico.',
     'PASSAGEM — VERMILION / CINNABAR — ₽ 8.000.',
-    'Tem gente pagando isso sem piscar. Um casal na sua frente paga quatro passagens e a mulher reclama do preço do jeito que se reclama de uma coisa que não dói.',
+    'Tem gente pagando isso sem piscar. Um casal na sua frente paga quatro passagens e a mulher reclama do preço, mas reclama de leve, porque não dói.',
     'E, do lado, uma porta de serviço sem placa, com um cabo de energia entrando por baixo.',
     'Mais pra trás, no canto do pátio, um contêiner de vinte pés está sozinho, fora de pilha, encostado no muro.',
     d=>d.flags.aceitou_o_convite
@@ -1806,7 +1806,7 @@ c8_seguiu_caminhao:{
   texto:[
     'Você segue o caminhão a pé pelo pátio, usando as pilhas de contêiner como cobertura.',
     'Ele para embaixo do guindaste do cais três.',
-    'E aí acontece a coisa mais banal do mundo: o guindaste pega o contêiner, gira, e põe no porão do S.S. Anne.',
+    'E aí acontece o que acontece cem vezes por dia no porto: o guindaste pega o contêiner, gira, e põe no porão do S.S. Anne.',
     'Quatro minutos. Dois homens, um operador de guindaste e um conferente com prancheta.',
     'O conferente não abre nada. Ele confere o número, o lacre e o peso, e assina.',
     'Você viu o crime inteiro e o crime inteiro foi legal.'
@@ -2138,7 +2138,7 @@ c8_contou_ao_contramestre:{
   texto:[
     '"Tem três caixa com furo de ventilação no fundo do corredor."',
     'Varo para de escrever.',
-    'Ele vai lá. Você vai junto. Ele olha as três caixas por um tempo longo, e passa a mão nos furos, e cheira, o que é a coisa mais eficiente que dá pra fazer.',
+    'Ele vai lá. Você vai junto. Ele olha as três caixas por um tempo longo, e passa a mão nos furos, e cheira. Não tem jeito mais rápido de saber.',
     'Depois ele endireita as costas.',
     '"Caixa lacrada de carga geral."',
     '"Tem furo."',
@@ -2242,7 +2242,7 @@ c8_bandejas_do_40:{
   vozes:['P','N','P','N','N'],
   texto:[
     '"Quem monta as bandeja do quarenta?"',
-    'A cozinha inteira não para, mas três pessoas olham pra você ao mesmo tempo, e isso é mais eloquente que qualquer resposta.',
+    'A cozinha inteira não para, mas três pessoas olham pra você ao mesmo tempo, e o olhar responde.',
     'Um cozinheiro de uns trinta anos responde sem olhar:',
     '"A Rina monta."',
     '"Quantas?"',
@@ -2356,7 +2356,7 @@ c8_homem_da_cadeira:{
   falante:'Homem do corredor',
   vozes:['P','N'],
   texto:[
-    'Você pergunta a coisa mais inofensiva que consegue pensar.',
+    'Você pergunta a primeira coisa inofensiva que vem à cabeça.',
     '"O senhor quer água?"',
     'Ele levanta a cabeça do livro de bolso.',
     'Tem uns cinquenta anos, camisa social sem gravata, e um jeito de sentar que não é de segurança de balada: é de quem já ficou muito tempo sentado em cadeira dobrável em corredor.',
@@ -2414,7 +2414,7 @@ c8_bordo:{
       if (d.flags.uniforme_tripulacao) return 'De uniforme, você é invisível. Ninguém olha para tripulação — não por desprezo, é mais simples que desprezo: tripulação não é gente que se olha. Dá pra andar por quase tudo.';
       if (d.flags.clandestino) return 'Você está com roupa de rota num salão de smoking. Todo mundo sabe que você não pertence aqui, e ninguém diz nada, que é pior do que se dissessem.';
       if (d.flags.trabalhou_no_navio) return 'Você entra pelo corredor de serviço e ninguém repara. Cansaço nos braços, passagem no bolso, e o direito de estar aqui que você pagou com o corpo.';
-      if (d.flags.entrou_pelo_torneio) return 'Você entrou pela porta da frente com um crachá de participante e a moça do balcão te chamou de "atleta", o que é a coisa mais engraçada que já te falaram.';
+      if (d.flags.entrou_pelo_torneio) return 'Você entrou pela porta da frente com um crachá de participante e a moça do balcão te chamou de "atleta", e você quase riu na cara dela.';
       return 'Você pagou para estar aqui, então você pertence aqui. É assim que funciona, aparentemente, e você acabou de descobrir por oito mil pokedólares.';
     },
     'Num canto do salão, uma arena montada com corda e piso emborrachado. O torneio começa em vinte minutos e tem gente já apostando no balcão.',
@@ -2818,7 +2818,7 @@ c8_sobre_o_que:{
     '"Eu trabalho numa fundação que cuida de bem-estar de espécimes. A gente acompanha treinadores promissores. Bolsa, equipamento, cobertura médica."',
     'Ele não entrega cartão. Ele não insiste.',
     '"Dez minutos numa mesa daquele canto, com o salão inteiro olhando. Não tem nada de sigiloso nisso."',
-    'E ele está certo: não tem. É a coisa mais pública do mundo.',
+    'E ele está certo: não tem. Está tudo à vista do salão inteiro.',
     'É exatamente por isso que é assustador.'
   ],
   ef:{flag:'a_fundacao_se_apresentou',
@@ -3035,7 +3035,7 @@ c8_o_nome_dele:{
 c8_assinou:{
   texto:[
     'Você assina.',
-    'Leva quatro segundos e é a coisa mais fácil que você fez em Kanto.',
+    'Leva quatro segundos. É fácil desse jeito.',
     'Ele guarda a via dele na pasta, te entrega a sua dobrada em três, e aperta a sua mão com as duas mãos.',
     'Ele te entrega um adiantamento num envelope, ali mesmo, e diz que a bolsa cai todo mês. O adiantamento sozinho é mais do que entra na sua casa num mês.',
     'A ficha tem campo pra peso, nível e incidentes. No fim tem uma linha em branco escrita "observações", e é a única parte da folha que ninguém te explica.'
@@ -3912,7 +3912,7 @@ c8_pegou_as_pastas:{
     '"Aquilo é material de trabalho."',
     '"É prova."',
     '"É material de trabalho de uma entidade regularmente constituída e você está cometendo furto." Ele fala sem raiva. "Mas tudo bem. Leva."',
-    'E o "leva" dele é a coisa mais assustadora da noite, porque quer dizer que ele já calculou e que a conta fecha pro lado dele.',
+    'E o "leva" dele assusta mais que qualquer grito, porque quer dizer que ele já calculou e que a conta fecha pro lado dele.',
     'Dentro de uma das pastas, presas com clipe, tem quatro cartas fechadas com selo e endereço, nunca postadas.'
   ],
   ef:{flag:['tem_as_pastas_do_40','papel_com_brasao','as_quatro_cartas'],
@@ -4070,7 +4070,7 @@ c8_continuou_escutando:{
     '"Eu sei, eu sei. Amanhã a gente chega e aí melhora. Alojamento tem janela."',
     'Silêncio.',
     '"Dorian, vira pra cá. Olha. Você assinou por vontade própria, lembra? Eu perguntei três vezes."',
-    'E a coisa mais horrível da noite inteira:',
+    'E aí, o pior da noite:',
     '"Lembro," diz o menino.'
   ],
   ef:{flag:'lembro_disse_o_menino',
@@ -4518,7 +4518,7 @@ c8_chamou_a_capitania:{
     'E chama.',
     'Pelo rádio, na frequência da capitania, às onze e cinquenta da noite, com a voz absolutamente normal de quem faz comunicação de rotina.',
     'Do outro lado, uma voz confirma: a capitania sobe a bordo assim que o navio encostar em Cinnabar.',
-    'Ele desliga o rádio e fica um tempo com a mão em cima dele, do jeito de quem acabou de assinar uma coisa.'
+    'Ele desliga o rádio e fica um tempo com a mão em cima dele, como se tivesse acabado de assinar uma coisa.'
   ],
   ef:{rep:{eixo:'bom',delta:4,motivo:'Fez a capitania lavrar termo'},
       flag:'termo_lavrado',

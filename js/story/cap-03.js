@@ -701,8 +701,8 @@ c3_caçadores:{
       ? 'Você sai de trás do tronco e entra na clareira.'
       : 'Dois homens vêm pela trilha em sentido contrário.',
     d=>d.flags.esperou_os_cacadores
-      ? 'De perto, a roupa é ainda mais cara do que parecia. O rolo de fio de aço continua no ombro do mais velho, do jeito de quem carrega ferramenta de trabalho.'
-      : 'Roupa boa demais pra floresta. Um deles carrega um rolo de fio de aço no ombro, sem disfarçar, do jeito de quem carrega ferramenta de trabalho.',
+      ? 'De perto, a roupa é ainda mais cara do que parecia. O rolo de fio de aço continua no ombro do mais velho, como ferramenta de trabalho.'
+      : 'Roupa boa demais pra floresta. Um deles carrega um rolo de fio de aço no ombro, sem disfarçar, feito ferramenta de trabalho.',
     'Eles param quando te veem. O da frente olha pras suas mãos, depois pro seu cinto, depois pros seus olhos. Nessa ordem exata, que é a ordem de quem já fez isso muitas vezes.',
     'O mais novo, atrás, diz um nome baixinho, Roque, do jeito de quem avisa. O da frente nem vira a cabeça.',
     d=>{
@@ -885,7 +885,7 @@ c3_mentiu_mal:{
     'Você mente, mas o rosto entrega. Ele olha pra você mais um segundo do que seria confortável.',
     '"Certo," ele diz. Não acreditou. Deixou passar mesmo assim — porque não vale o trabalho hoje.',
     '"A gente se vê."',
-    'Ele diz isso do jeito de quem anota um compromisso, e segue trilha adentro com o outro.'
+    'Ele diz isso como se anotasse um compromisso, e segue trilha adentro com o outro.'
   ],
   ef:{flag:'cacadores_seguiram',
       npc:{nome:'Caçador Roque', opiniao:-2, memoria:'Você mentiu mal para ele na floresta.'}},

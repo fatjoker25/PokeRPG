@@ -453,7 +453,7 @@ c23_procurou_o_homem:{
     'Você atravessa a câmara sem falar com ele e procura, e ele deixa, e não ajuda.',
     'Atrás do monte de coisas, num canto que não dá para ver da entrada da rampa, tem um homem sentado no chão, encostado na parede.',
     'Está vivo. Está com as pernas cruzadas, as mãos no colo, e uma jaqueta de lã dobrada do lado, em cima de uma bota.',
-    'Está magro e está limpo, o que é a coisa mais incompreensível de tudo.',
+    'Está magro e está limpo, e é isso que você não entende.',
     'Ele levanta os olhos quando você chega e sorri de um jeito educado e distraído, como quem é interrompido lendo.',
     '"Oi."'
   ],
@@ -667,7 +667,7 @@ c23_nao_sei:{
   vozes:['N','N','P','N'],
   texto:[
     'Ele te olha por um tempo desconfortável.',
-    '"Não sei." Ele quase ri — não é riso, é a coisa mais próxima que ele tem. "Duzentos e quarenta e um dias de cientistas e a melhor resposta veio de {um|uma} adolescente que disse não sei."',
+    '"Não sei." Ele quase ri — não é riso, mas é o que ele tem. "Duzentos e quarenta e um dias de cientistas e a melhor resposta veio de {um|uma} adolescente que disse não sei."',
     '"Eles também não sabiam. A diferença é que eles escreveram outra coisa no relatório."',
     'Ele senta de novo na pedra. O ar na câmara fica um pouco menos pesado.',
     '"Pergunta certa: o que você veio fazer aqui?"'
@@ -831,7 +831,7 @@ c23_entender:{
     'Ele te conta o que lembra do tanque. Você conta o que viu na Torre de Lavender. Ele pergunta sobre coisas absurdamente pequenas — como é o gosto de comida quente, por que as pessoas põem nome nos Pokémon, se dói envelhecer.',
     'Em algum momento você percebe que está falando com alguém de dois anos de idade que sabe tudo e não viveu nada.',
     'Quando você levanta pra ir embora, ele diz: "Volta?"',
-    'E essa é a coisa mais assustadora que aconteceu com você na jornada inteira.'
+    'Nenhuma luta da jornada te assustou como essa palavra.'
   ],
   ef:{flag:'escolheu_entender', rep:{eixo:'bom',delta:3,motivo:'Tratou Mewtwo como alguém, não como troféu'},
       executar:d=>{ const L=Estado.lend(150); L.disposicao='passivo'; L.aliado=true; return []; },
@@ -1330,7 +1330,7 @@ c23_final_tratado_frio:{
     'A temperatura da câmara não muda, mas alguma coisa muda.',
     '"Ah." Ele volta pra pedra. "Então não é comigo que você está falando. É com eles, e eu sou a pauta."',
     'Ele não te ataca, não te expulsa e não te impede de sair.',
-    'Ele só para de falar com você — e a ausência da voz na sua cabeça, depois de tanto tempo com ela lá, é a coisa mais solitária que você já sentiu.'
+    'Ele só para de falar com você — e a ausência da voz na sua cabeça, depois de tanto tempo com ela lá, deixa um vazio do tamanho da caverna.'
   ],
   final:{id:'tratado_frio', titulo:'A PAUTA', texto:[
     'O acordo é assinado. Só que é assinado por uma parte só.',
@@ -1382,8 +1382,8 @@ c23_final_socio:{
     'Você pega nove anos. Cumpre cinco.',
     'Na prisão, você recebe uma visita que não estava na lista e que ninguém registrou na portaria. Ela dura quarenta segundos e acontece de madrugada, e o que é dito nela você nunca conta pra ninguém.',
     'Quando você sai, você não volta pro negócio. Não por arrependimento.',
-    'Por causa dos dois segundos. Você passou cinco anos pensando nos dois segundos em que a coisa mais poderosa do mundo considerou a sua oferta porque estava sozinha demais pra recusar de cara.',
-    'E você entendeu, em algum momento do quarto ano, que aquilo não foi uma vitória sua. Foi a coisa mais cruel que você já fez.'
+    'Por causa dos dois segundos. Você passou cinco anos pensando nos dois segundos em que o Pokémon mais poderoso do mundo considerou a sua oferta porque estava sozinha demais pra recusar de cara.',
+    'E você entendeu, em algum momento do quarto ano, que aquilo não foi uma vitória sua. Foi crueldade, e foi sua.'
   ]}
 },
 
@@ -1423,7 +1423,7 @@ c23_final_posse:{
     'Kanto passa a ter um clima que os meteorologistas param de tentar prever. Incêndios em Cinnabar. Gelo na Rota 11 em pleno verão. Duas cidades evacuadas parcialmente.',
     'Você fica com ele. É a única coisa que você tem depois de um tempo — as pessoas vão saindo, uma por uma, do jeito que as pessoas saem: sem anúncio.',
     'Ele nunca fala com você. Nem uma vez, depois da Pokébola. Ele sabe falar. Escolhe não falar.',
-    'Você passa o resto da vida com a coisa mais poderosa do mundo na mão e ninguém pra contar isso.',
+    'Você passa o resto da vida com o Pokémon mais poderoso do mundo na mão e ninguém pra contar isso.',
     'Isso não é vitória. Tem nome, mas não é esse.'
   ]}
 },
@@ -1535,7 +1535,7 @@ c23_trinta_e_dois:{
   texto:[
     'Você conta da cratera. Da areia cinza. Da pedra morna do tamanho de uma cabeça.',
     'Dos trinta e dois em círculo, parados, em silêncio, por quarenta minutos, olhando uma pedra ficar azul.',
-    'E de você atrás de uma rocha, sem entender nada, sem poder perguntar nada, achando aquilo a coisa mais bonita do mundo.',
+    'E de você atrás de uma rocha, sem entender nada, sem poder perguntar nada, achando aquilo lindo.',
     'Mewtwo escuta inteiro.',
     '"Eles sabiam que você estava lá."',
     '"Sabiam?"',
@@ -1610,7 +1610,7 @@ c23_final_a_porta:{
     'Você desce e conta pro zelador, que escuta em pé, com a caixa de fósforo na mão, e não diz nada por um tempo muito longo.',
     'Depois ele senta no banco de concreto do saguão e chora um choro de homem de sessenta e um anos que perdeu uma coisa que tinha há vinte e três.',
     'Ele agradece. Três vezes.',
-    'Na terceira você entende que ele está agradecendo de verdade, e é a coisa mais difícil que você já teve que aceitar.'
+    'Na terceira você entende que ele está agradecendo de verdade, e aceitar isso custa mais que qualquer luta.'
   ]}
 },
 
@@ -1653,7 +1653,7 @@ c23_final_papelada:{
     'Em quatro meses, cópias autenticadas de mil cento e oitenta e quatro guias de remessa chegam, por via postal, a onze endereços residenciais.',
     'Cada envelope contém apenas os documentos assinados por aquela pessoa. Nada mais. Sem bilhete, sem ameaça, sem exigência.',
     'Sete dos onze pedem exoneração em seis semanas. Dois adoecem. Um processa a Comissão e ganha.',
-    'O décimo primeiro, a Presidente Hester Colman, dá uma entrevista de trinta e dois minutos em que defende cada página, com serenidade, sem levantar a voz, e é a coisa mais assustadora que já foi ao ar em Kanto.',
+    'O décimo primeiro, a Presidente Hester Colman, dá uma entrevista de trinta e dois minutos em que defende cada página, com serenidade, sem levantar a voz, e Kanto inteira assiste sem conseguir desligar.',
     'A Comissão continua existindo. Menor, mais devagar, com outro nome.',
     'Mas em quatro cidades, quando chega um ofício com brasão de balança, agora tem gente que vira o papel.',
     'Você ensinou isso a Kanto inteira sem nunca ter subido num palco.'
@@ -1696,7 +1696,7 @@ c23_final_os_nomes:{
       'Depois diz obrigado, e sobe a escada da câmara na sua frente, e sai da caverna do norte pela primeira vez em dois anos, e ninguém na boca da caverna precisa avisar ninguém, porque tem uma pessoa do lado dele.'),
     'Vocês descem a montanha juntos, e ele não fala mais nada o caminho inteiro.',
     'Na estrada, ele vira pro sul e você vira pro sul também, e é assim, e ninguém combinou.',
-    'Nos anos seguintes, em Kanto, gente vai contar que viu uma coisa grande e clara andando na estrada com {um treinador|uma treinadora}, sem coleira, sem bola, sem nada.',
+    'Nos anos seguintes, em Kanto, gente vai contar que viu uma coisa grande e clara andando na estrada com {um treinador|uma treinadora}, sem coleira, sem Pokébola, sem nada.',
     'Ninguém vai acreditar em ninguém.',
     'E na Torre Pokémon de Lavender, num mural preto de doze metros, uma linha nova aparece num dia qualquer, escrita com giz, com uma letra que ninguém reconhece:',
     'os onze, e embaixo, menor: "eu sei os nomes".'
@@ -1794,7 +1794,7 @@ c23_final_a_troca:{
     'Em Cerulean tem uma professora de natação que até hoje não entende por que você recusou um Seel.',
     'Em Pewter tem um homem da pedreira que conta pra todo mundo que já ofereceu um Machoke pra você e que você falou que não.',
     'E numa caverna do norte de Kanto tem alguém que nunca vai saber que uma pergunta idiota, feita por {um garoto|uma garota} de {idade} anos sem saber o que estava fazendo, mudou uma coisa pequena e permanente no mundo.',
-    'Foi a coisa mais barata que você fez na vida. Não custou nada.',
+    'Não te custou nada. Nem um centavo, nem um Pokémon.',
     'Isso não desconta.'
   ]}
 },
@@ -1807,7 +1807,7 @@ c23_sentou:{
     'Senta no chão de pedra da câmara, de pernas cruzadas, com as mãos no colo, e espera.',
     'Ele espera também.',
     'Doze minutos.',
-    'É a coisa mais difícil que você fez nessa jornada inteira e você tem consciência disso enquanto está fazendo.',
+    'Nada na jornada pesou tanto, e você sabe disso enquanto está fazendo.',
     'No décimo terceiro minuto, ele fala:',
     '"Ninguém nunca ficou calado perto de mim."',
     'E depois, mais baixo:',
@@ -1883,7 +1883,7 @@ c23_final_ir_embora:{
     'A Comissão continua existindo e continua mandando ofício, e você continua sem ter poder nenhum sobre isso.',
     'E uma vez por ano, mais ou menos, você pensa numa caverna no norte e numa conversa que você interrompeu no meio pra ir embora.',
     'E toda vez você chega na mesma conclusão, que é a conclusão certa e que não conforta nada:',
-    'você tinha {idade} anos, e ninguém devia ter deixado aquilo na sua mão, e o fato de você ter ido embora é a coisa mais saudável que aconteceu nessa história inteira.',
+    'você tinha {idade} anos, e ninguém devia ter deixado aquilo na sua mão, e ir embora foi sensato, talvez a única coisa sensata dessa história inteira.',
     'Quem devia ter resolvido isso eram os adultos.',
     'Eles sabiam. Eles tinham o endereço, o número do processo e a data da reunião.',
     'Eles só não tinham {idade} anos.'
@@ -2178,7 +2178,7 @@ c23_final_nao_precisa:{
   ],
   final:{id:'nao_precisa', titulo:'NÃO PRECISA VOLTAR COM NADA', texto:[
     'Você sobe sem nada.',
-    'Sem bola, sem prova, sem acordo, sem criatura, sem relatório. A Liga pergunta o que houve e você diz a verdade, que é a coisa mais decepcionante possível: uma conversa.',
+    'Sem bola, sem prova, sem acordo, sem criatura, sem relatório. A Liga pergunta o que houve e você diz a verdade, que decepciona: uma conversa.',
     'O Sr. Waldo escreve missão cumprida no campo próprio, porque a ordem era ir, observar, não intervir e voltar.',
     d=>`Você pega um ônibus para ${d.jogador.cidade} no mês seguinte.`,
     'A escola tem uma sala nova, um muro pintado e a mesma professora, que está mais velha e que te reconhece antes de você chegar no portão.',

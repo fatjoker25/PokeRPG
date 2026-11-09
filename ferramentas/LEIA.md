@@ -11,6 +11,7 @@ eles acham o `index.html` sozinhos e carregam os scripts na ordem de lá.
 | `chk-efkeys.js` | chave de `ef:{}` que o motor não lê — `ef.cura`, `ef.val`, `ef.item` não existem e não fazem nada |
 | `chk-estrutura.js` | quantos capítulos abrem sempre na mesma cena, onde estão os finais, quantas ramificações |
 | `chk-gramatica.js` | palavra repetida, espaço duplo, vírgula solta |
+| `chk-tiques.js` | fórmula de frase que virou tique: "é a coisa mais X que você já…", ", e isso é…", "do jeito de quem/que se…", com teto por arquivo e no jogo inteiro; refrão de propósito entra em `permitidos` |
 | `chk-canon.js` | tipo, ginásio, líder, golpe ou nível que briga com o cânone de Kanto |
 | `chk-flags.js` | gancho morto: flag que alguma cena lê e nenhuma escreve, então a cena condicional nunca aparece |
 | `chk-finais.js` | todo final do jogo, onde mora, id repetido e final que nenhuma escolha alcança |
@@ -41,7 +42,7 @@ Playwright (com o Chromium do ambiente, `/opt/pw-browsers/chromium`):
 | arquivo | o que ele acusa |
 |---|---|
 | `chk-baloes.js` | balão sem nome, sem rosto ou com rosto que não existe no disco, em toda cena (capítulos, eventos, linhas, PokéNav) |
-| `chk-lutas.js` | luta que não começa, não termina, sai sem fala, sem rosto ou com o time errado, ou que manda pra cena que não existe — ginásios, Elite, rivais, estrada, veteranos, a rede, barreiras, revanches e toda luta de cena |
+| `chk-lutas.js` | luta que não começa, não termina, sai sem fala, sem rosto ou com o time errado, ou que manda pra cena que não existe — ginásios, Elite, rivais, estrada, veteranos, a rede, barreiras, revanches e toda luta de cena; com `DIFICULDADE=facil|dificil`, na outra dificuldade, conferindo o nível da apresentação e o item do ás |
 | `chk-telas.js` | erro de JavaScript ou texto quebrado (marca sem resolver, `undefined`, `NaN`, `null`, HTML vazando) na inscrição (cada passo e cada opção, nos dois gêneros, até sair de casa) e em toda janela (os cinco bolsos da mochila, time, sumário, Pokédex e as 251 fichas, PokéNav e cada contato, cartão, ficha, diário, rota, finais, credenciais, PC, ajustes, regras, tutorial, mapa, o Salvar e o Carregar jogo com arquivo bom e ruim), em toda loja comprando e vendendo, e em todo lugar do mapa com cada afazer da lista dele — num save cheio do meio do jogo e num save do começo, com a mochila quase vazia |
 | `chk-celular.js` | o `artefato.html` dentro do esqueleto da publicação, a 320, 390 e 360 px: página que rola de lado, coisa pra fora da tela, erro de JavaScript e texto quebrado na abertura, na inscrição, num capítulo, nas janelas, na loja, no Centro, numa luta e na evolução (rodar depois do build) |
 | `bot-jogador.js` | o robô que joga pela tela, como gente |

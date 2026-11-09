@@ -603,7 +603,7 @@ c22_contra_a_luz:{
 
 c22_as_barracas:{
   texto:[
-    'As três barracas estão fechadas por dentro do jeito que se fecha quando se vai voltar: zíper subido até em cima e o duplo puxador pendurado.',
+    'As três barracas estão fechadas por dentro, prontas pra quem volta: zíper subido até em cima e o duplo puxador pendurado.',
     'Na primeira: saco de dormir aberto, uma muda de roupa dobrada, um livro de bolso marcado na página 140.',
     'Na segunda: saco de dormir enrolado e amarrado, mochila fechada, tudo arrumado como quem foi criado assim.',
     'Na terceira: saco de dormir aberto, uma foto presa com fita na parede da barraca, e um rádio portátil desligado com pilha nova.',
@@ -645,7 +645,7 @@ c22_deixou_ligado:{
   texto:[
     'Você liga de novo, aumenta um pouco o volume e deixa em cima da mesa dobrável, virado para o vale.',
     'Não faz sentido nenhum e você faz mesmo assim.',
-    'Durante o resto do dia, de onde você estiver, vai dar para ouvir um chiado com voz humana no meio do nada, e isso vai ser a coisa mais útil que você trouxe.'
+    'Durante o resto do dia, de onde você estiver, vai dar para ouvir um chiado com voz humana no meio do nada.'
   ],
   ef:{flag:'deixou_o_radio_ligado', moral:2,
       rep:{eixo:'bom',delta:1,motivo:'Deixou uma voz humana tocando num acampamento vazio'},
