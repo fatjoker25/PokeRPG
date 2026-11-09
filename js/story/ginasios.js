@@ -465,11 +465,23 @@ function pisoDoGinasio(){
    ás no 60 — e antes da oitava insígnia nenhum lugar aberto passa do
    44, então o treino parava no 49. Os cinco robôs ficaram de 306 a
    789 dias ali; no simulador, o time no nível da área ganhava dele uma
-   vez em quatro (ferramentas/sim-ginasios.js). */
+   vez em quatro (ferramentas/sim-ginasios.js).
+   O teto é de quem anda com a história: luta por insígnia que o próximo
+   capítulo com trava ainda pede (insigniasEsperadas). Quem está
+   adiantado enfrenta o líder no nível que as insígnias pedem, que é o
+   freio de quem caça ginásio: com o teto valendo pra todo mundo, o
+   robô ambicioso levou cinco insígnias no capítulo 4 com um time de 14
+   a 23, a Sabrina incluída (o teto da área anulava a escalada). */
 const ACIMA_DA_AREA = 4;
-function tetoDoGinasio(){
+function insigniasEsperadas(num){
+  const travas = Object.keys(INSIGNIAS_DO_CAPITULO).map(Number).sort((a, b) => a - b);
+  const prox = travas.find(c => c > num);
+  return prox ? INSIGNIAS_DO_CAPITULO[prox] : 8;
+}
+function tetoDoGinasio(n){
   const d = Estado.dados;
   if (!d || d.capitulo < 2 || typeof Historia === 'undefined') return Infinity;
+  if (n != null && n >= insigniasEsperadas(Math.floor(d.capitulo))) return Infinity;
   const cap = Historia.capitulo(d.capitulo);
   return cap && cap.nivelArea ? cap.nivelArea : Infinity;
 }
@@ -502,7 +514,7 @@ function timeGinasio(g, nForcado){
     lista[lista.length-1] = {dex:ace, nivel: base + lista.length + 3};
   }
   /* o teto da área (o piso já entrou no base) */
-  const teto = tetoDoGinasio();
+  const teto = tetoDoGinasio(n);
   if (teto < Infinity) lista.forEach((x, i) => { x.nivel = Math.min(x.nivel, i === lista.length - 1 ? teto + ACIMA_DA_AREA : teto); });
   return lista;
 }

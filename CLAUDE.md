@@ -1391,7 +1391,13 @@ isso, quem deixava Misty pra depois achava ela no 17 num capítulo de
 lista de ginásios não existe mais e não volta.
 
 E não corre na frente dela: `tetoDoGinasio()` põe o time no máximo no
-nível da área e o ás no máximo `ACIMA_DA_AREA` (4) acima. O Blue (sete
+nível da área e o ás no máximo `ACIMA_DA_AREA` (4) acima. O teto é de
+quem anda com a história: só vale na luta por insígnia que o próximo
+capítulo com trava ainda pede (`insigniasEsperadas`). Quem está
+adiantado enfrenta o nível que as insígnias pedem, e é isso que freia
+quem caça ginásio: com o teto pra todo mundo, o robô ambicioso levou
+cinco insígnias no capítulo 4 com um time de 14 a 23, a Sabrina
+incluída. O Blue (sete
 insígnias, dificuldade 8) chegava ao capítulo 21, de área 52, com o ás
 no 60 e vencia três de cada quatro times no nível da área; com
 dificuldade 4 vence pouco menos de dois em três e continua o ginásio

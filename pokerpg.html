@@ -56238,11 +56238,23 @@ function pisoDoGinasio(){
    ás no 60 — e antes da oitava insígnia nenhum lugar aberto passa do
    44, então o treino parava no 49. Os cinco robôs ficaram de 306 a
    789 dias ali; no simulador, o time no nível da área ganhava dele uma
-   vez em quatro (ferramentas/sim-ginasios.js). */
+   vez em quatro (ferramentas/sim-ginasios.js).
+   O teto é de quem anda com a história: luta por insígnia que o próximo
+   capítulo com trava ainda pede (insigniasEsperadas). Quem está
+   adiantado enfrenta o líder no nível que as insígnias pedem, que é o
+   freio de quem caça ginásio: com o teto valendo pra todo mundo, o
+   robô ambicioso levou cinco insígnias no capítulo 4 com um time de 14
+   a 23, a Sabrina incluída (o teto da área anulava a escalada). */
 const ACIMA_DA_AREA = 4;
-function tetoDoGinasio(){
+function insigniasEsperadas(num){
+  const travas = Object.keys(INSIGNIAS_DO_CAPITULO).map(Number).sort((a, b) => a - b);
+  const prox = travas.find(c => c > num);
+  return prox ? INSIGNIAS_DO_CAPITULO[prox] : 8;
+}
+function tetoDoGinasio(n){
   const d = Estado.dados;
   if (!d || d.capitulo < 2 || typeof Historia === 'undefined') return Infinity;
+  if (n != null && n >= insigniasEsperadas(Math.floor(d.capitulo))) return Infinity;
   const cap = Historia.capitulo(d.capitulo);
   return cap && cap.nivelArea ? cap.nivelArea : Infinity;
 }
@@ -56275,7 +56287,7 @@ function timeGinasio(g, nForcado){
     lista[lista.length-1] = {dex:ace, nivel: base + lista.length + 3};
   }
   /* o teto da área (o piso já entrou no base) */
-  const teto = tetoDoGinasio();
+  const teto = tetoDoGinasio(n);
   if (teto < Infinity) lista.forEach((x, i) => { x.nivel = Math.min(x.nivel, i === lista.length - 1 ? teto + ACIMA_DA_AREA : teto); });
   return lista;
 }
@@ -150737,7 +150749,7 @@ const UI = {
       <div class="linha"><span class="k">Capítulo 22, Planalto Indigo</span><span class="v">8</span></div>
       <div class="linha"><span class="k">Rota 23 → Caminho da Vitória</span><span class="v">8 · as guaritas não deixam subir com menos</span></div>
       <div class="linha"><span class="k">Enquanto falta</span><span class="v">o capítulo aparece no lugar, fechado, dizendo quantas faltam · ele não começa até você ter as que faltam</span></div>
-      <div class="linha"><span class="k">Nível do líder</span><span class="v">pela faixa de insígnias que você tem (base 10 com 0–1, 18 com 2–3, 28 com 4–5, 40 com 6 ou mais, + a dificuldade do ginásio, + 3 por insígnia dentro da faixa) · nunca abaixo da área do capítulo em que você está − 8, e nunca acima dela: o time no máximo no nível da área, o ás no máximo 4 acima · cada Pokémon da fila um nível acima, o ás +2</span></div>
+      <div class="linha"><span class="k">Nível do líder</span><span class="v">pela faixa de insígnias que você tem (base 10 com 0–1, 18 com 2–3, 28 com 4–5, 40 com 6 ou mais, + a dificuldade do ginásio, + 3 por insígnia dentro da faixa) · nunca abaixo da área do capítulo em que você está − 8 · e, na luta por uma insígnia que a história ainda vai pedir (as que o próximo capítulo com trava exige), nunca acima dela: o time no máximo no nível da área, o ás no máximo 4 acima; com mais insígnias que isso, vale o nível que elas pedem · cada Pokémon da fila um nível acima, o ás +2</span></div>
       <div class="linha"><span class="k">Ginásio que não te aceita</span><span class="v">se nenhum ginásio que falta está aberto pra você (recusou, trancado), a porta abre com o que você tem</span></div>
       <div class="linha"><span class="k">Hora marcada</span><span class="v">o ginásio de Cinnabar só aceita desafio às quintas, das 14h às 18h · fora disso a porta diz o dia de hoje e você volta na quinta · "Esperar a hora passar" na cidade, na quinta à tarde antes das 14h, espera até a porta abrir · conta como aberto, então não destrava porta nenhuma</span></div>
       <p class="sussurro">Os capítulos condicionais (29 a 32) não cobram insígnia. Ginásio se desafia na porta dele, na cidade, na ordem que você quiser.</p>
