@@ -6221,7 +6221,7 @@ const UI = {
       <div class="linha"><span class="k">FOR, VIT, ESP, INS, DES</span><span class="v">cada estágio é 1 ponto no atributo · nenhum fica abaixo de 1</span></div>
       <div class="linha"><span class="k">Precisão e evasão</span><span class="v">cada estágio é 1 sucesso a mais ou a menos · a precisão de quem ataca contra a evasão de quem apanha</span></div>
       <div class="linha"><span class="k">No limite</span><span class="v">golpe que sobe ou baixa estágio já em ±6 não faz nada · o adversário não escolhe esse golpe, e quanto mais perto do limite, menos ele escolhe</span></div>
-      <div class="linha"><span class="k">Cura de golpe</span><span class="v">Recover, Softboiled e Synthesis devolvem metade do HP · Rest enche e faz dormir · o adversário não se cura com 80% do HP ou mais, e quanto mais ferido, mais ele escolhe a cura</span></div>
+      <div class="linha"><span class="k">Cura de golpe</span><span class="v">Recover, Softboiled e Synthesis devolvem metade do HP · Rest enche e faz dormir · acertou, a cura só ativa gastando 1 de Vontade, e sem Vontade não cura · o adversário não se cura com 80% do HP ou mais, e quanto mais ferido, mais ele escolhe a cura</span></div>
       <div class="linha"><span class="k">Efeito de golpe de dano</span><span class="v">nos dados de chance do livro · golpe sem essa ficha segue a chance dos jogos</span></div>
 
       <h3>Estados que os golpes deixam</h3>

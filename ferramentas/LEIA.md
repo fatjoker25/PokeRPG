@@ -75,7 +75,9 @@ mapa, e no fim da etapa, ele grava `<saída>.ponto.json` (o save do
 Salvar, com a luta se tiver uma, mais o diário e o que ele lembra), e
 `RETOMAR=` começa a etapa seguinte dali, com o diário continuando. A saída
 diz como a etapa acabou (`estado`: `final`, `morte`, `pausa`, `erros`,
-`travou`). `TURBO=N` encena a luta N vezes mais rápido que 1× (o botão do
+`travou`). Um arquivo `PARAR` na pasta da saída termina a etapa de todos
+os robôs dali, limpo e com o ponto gravado; `PARAR_<saída sem .json>`
+(`PARAR_r3`) termina só a daquele. `TURBO=N` encena a luta N vezes mais rápido que 1× (o botão do
 jogo vai até 3×; só a encenação muda, dado e turno são os mesmos). Com
 `TURBO=20` ele chega ao capítulo 4 em seis minutos. `LEVE=1` pede ao
 navegador "menos movimento" (a regra do jogo pra `prefers-reduced-motion`

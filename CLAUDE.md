@@ -912,6 +912,11 @@ sucesso na precisão), Arriscar (rerrola um dado que falhou), Esquivar
 (a adaptação: Destreza + Evasão contra a precisão do outro) — um deles
 por turno, armado antes do golpe (`Batalha.gastarVontade`, válido em
 `vontadeDoTurno()`) — e Aguentar a dor (`Batalha.semDor`, a luta inteira).
+Golpe de cura (Recover, Softboiled, Synthesis, Rest) também gasta: acertou,
+a cura só ativa com 1 de Vontade (é o texto do golpe no SRD), e sem ela não
+cura. Sem PP, era isso que faltava pra um Blissey não se curar pra sempre:
+a Vera perdeu uma luta de 152 turnos assim, e a IA ainda se curava de HP
+cheio (hoje a cura vale pelo que falta, e nada com 80% ou mais).
 Quem zera numa luta desmaia no `encerrar`. `curarTotal` enche, treino
 devolve 2, vitória 1. **Todo adversário gasta**, selvagem também: `iaGastarVontade` roda no
 começo de todo turno — Aguentar a dor com dor 2, Esquivar na metade do

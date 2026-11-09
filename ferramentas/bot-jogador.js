@@ -397,6 +397,8 @@ const SUSPEITO = [
   let ultimoPonto = ponto ? Date.now() : 0;
   /* PARAR na pasta da saída: termina a etapa limpo, gravando o ponto */
   const PARAR = path.join(path.dirname(OUT), 'PARAR');
+  /* PARAR_<nome da saída> para só este robô */
+  const PARAR_ESTE = path.join(path.dirname(OUT), 'PARAR_' + path.basename(OUT, '.json'));
   const gravarPonto = async () => {
     const x = await page.evaluate(() => {
       const r = Object.assign({}, window.__reg); delete r.contexto;
@@ -424,7 +426,7 @@ const SUSPEITO = [
       if (!emLuta || passou >= prazo + 180000) break;
     }
     if (erros.length > 8){ estado = 'erros'; break; }
-    if (fs.existsSync(PARAR)){ console.log('PARAR pedido'); break; }
+    if (fs.existsSync(PARAR) || fs.existsSync(PARAR_ESTE)){ console.log('PARAR pedido'); break; }
     await page.waitForTimeout(30);
     /* um retrato por minuto, aconteça o que acontecer: se ele parar no
        meio de uma encenação, é aqui que aparece (o de 200 em 200 passos
@@ -829,10 +831,13 @@ const SUSPEITO = [
         /* um lugar pra treinar: perto, e com o mato até o nível do time.
            Até ref + 3 o Dino treinava pra Sabrina (45) na ilha sem nome
            (50), perdia o time inteiro pra Dodrio e Scyther de 52 e voltava
-           pro Centro de Fuchsia de seis em seis horas */
+           pro Centro de Fuchsia de seis em seis horas. O mato vai até 3
+           acima do lugar quase sempre (e 9 de vez em quando), então o
+           lugar fica 3 abaixo do time: até ref, o Dino (51) ainda treinava
+           na ilha (50) e voltava pro Centro com 4 caídos */
         const lugarDeTreino = () => {
           const c = Object.keys(LOCAIS).filter(k => LOCAIS[k].tipo !== 'cidade' && Mundo.conhecido(k)
-              && (LOCAIS[k].nivel || 0) >= ref - 9 && (LOCAIS[k].nivel || 0) <= ref)
+              && (LOCAIS[k].nivel || 0) >= ref - 12 && (LOCAIS[k].nivel || 0) <= ref - 3)
             .map(k => trajeto(id, k)).filter(Boolean).sort((a, b) => a.length - b.length);
           return c[0] || null;
         };

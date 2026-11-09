@@ -867,10 +867,16 @@ const Batalha = {
     }
     if (e.cura){
       if (atacante.hp >= atacante.hpMax){ this.ev('erro', `O HP de ${nomeVisivel(atacante)} já está cheio.`); return; }
+      /* Pokérole 3.0: a cura do golpe (Recover, Softboiled, Synthesis,
+         Rest) só ativa gastando 1 de Vontade. Sem esse custo, e sem PP,
+         um Blissey se curava pra sempre: a Vera perdeu uma luta de 152
+         turnos pra uma Treinadora Ás de Blissey */
+      if (vontadeDe(atacante) < 1){ this.ev('erro', `${nomeVisivel(atacante)} não tem Vontade pra se curar.`); return; }
+      atacante.vontade = vontadeDe(atacante) - 1;
       const antes = atacante.hp;
       atacante.hp = Math.min(atacante.hpMax, atacante.hp + Math.round(atacante.hpMax * e.cura));
       if (e.dorme){ atacante.status = 'sono'; atacante.statusTurnos = 2; }   // Rest: 2 sucessos pra acordar
-      this.ev('cura', `${nomeVisivel(atacante)} recuperou ${atacante.hp - antes} de HP.`);
+      this.ev('cura', `${nomeVisivel(atacante)} gasta 1 de Vontade e recupera ${atacante.hp - antes} de HP. (Vontade ${atacante.vontade}/${vontadeMaxDe(atacante)})`);
       return;
     }
     if (e.sobe){ this.mudarEstagio(atacante, estAtk, e.sobe, e.forte ? 2 : 1, false); return; }
@@ -1282,7 +1288,7 @@ const Batalha = {
            turnos */
         if (E.cura){
           const frac = p.hp / p.hpMax;
-          if (frac >= 0.8) return 0;
+          if (frac >= 0.8 || vontadeDe(p) < 1) return 0;
           return frac < 0.35 ? 80 : frac < 0.55 ? 50 : 15;
         }
         /* golpe de estágio que não muda mais nada não se escolhe, e o que
