@@ -5742,7 +5742,15 @@ const UI = {
       return m ? `<p class="da-linha"><span class="da-k">${this.esc(m[1])}</span><span class="da-v">${this.esc(m[2])}</span></p>`
                : `<p class="${i ? 'da-solta' : 'da-quem'}">${this.esc(l)}</p>`;
     }).join('');
+    /* o fio do capítulo grande: a pergunta e as pontas que você já puxou (fio.js) */
+    const F = typeof Fio !== 'undefined' ? Fio.doCapitulo(Estado.dados) : null;
+    const fio = F ? `<h3>O fio do capítulo</h3><div class="diario-agora diario-fio">
+        <p class="da-solta df-pergunta">${this.esc(F.pergunta)}</p>
+        ${F.pontas.length ? F.pontas.map(p => `<p class="da-linha"><span class="da-k">${this.esc(p.nome)}</span><span class="da-v">${this.esc(p.texto)}</span></p>`).join('')
+                          : '<p class="da-solta nada">Nenhuma ponta puxada ainda.</p>'}
+      </div>` : '';
     this.modal('Diário de campanha', `
+      ${fio}
       <h3>Onde você está</h3><div class="diario-agora">${resumo}</div>
       <h3>O que aconteceu</h3>
       ${log.length ? `<ol class="diario-lista">${log.map(l=>`<li><span class="dl-quando">Cap ${l.cap} · dia ${l.dia}</span><span class="dl-texto">${this.esc(l.texto)}</span></li>`).join('')}</ol>`

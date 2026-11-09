@@ -972,7 +972,53 @@ c18_atendente_encomenda:{
   ef:{flag:'sabe_terca_e_sexta',
       registrar:'Sai carga viva para a Estação 4 toda terça e sexta, às 11h.'},
   escolhas:[
+    {texto:'Voltar no dia da carga e ver sair às onze.', vai:'c18_as_onze'},
     {texto:'Agradecer e ir ler as atas.', vai:'c18_leitura', cond:d=>!!d.flags.tem_as_atas},
+    ...c18_aoCartorio('Ir ao cartório atrás das atas.', 'Ir ao cartório buscar as atas.')
+  ]
+},
+
+/* a carga das onze: o que o balcão disse, visto da calçada da frente */
+c18_as_onze:{
+  texto:[
+    'No dia da carga, às onze em ponto, você está no banco de concreto do outro lado da rua da transportadora.',
+    'Um caminhão-baú branco encosta de ré na porta lateral. Não tem nome na lataria: tem um retângulo de tinta mais nova no lugar onde antes tinha um.',
+    'Dois homens passam as caixas do depósito pro caminhão. Papelão com furo lateral, de três em três, cada uma com uma fita verde de lacre.',
+    'De uma delas sai um som que você conhece: o chiado curto de um Rattata com medo e sem pra onde ir.',
+    'Ninguém olha. O atendente confere o lacre de cada caixa, uma por uma, e assina a prancheta do motorista.',
+    'Pra carregar a última pilha, o motorista tira a jaqueta. A camisa de trabalho tem um S bordado em azul no peito, o mesmo S do prédio mais alto de Saffron.',
+    'Ele percebe que você viu. Veste a jaqueta de novo, sem pressa, e fecha o zíper até o pescoço.'
+  ],
+  ef:{flag:['viu_a_carga','silph_financia','sabe_da_estacao4'], instabilidade:1,
+      registrar:'Viu a carga das onze sair pra Estação 4: caixas com furo e lacre verde, e o motorista com a camisa da Silph por baixo da jaqueta.',
+      /* a próxima terça ou sexta, às onze */
+      executar:()=>{
+        const r = Estado.dados.relogio; sincronizarHora(r);
+        const hoje = Calendario.hoje().semanaIdx;
+        const falta = s => { let n = (s - hoje + 7) % 7; if (n === 0 && r.hora > 11) n = 7; return n; };
+        Relogio.ateODia(falta(1) <= falta(4) ? 1 : 4, 11);
+        return [];
+      }},
+  escolhas:[
+    {texto:'Atravessar a rua antes de ele fechar o baú.', vai:'c18_o_motorista'},
+    {texto:'Ir ler as atas.', vai:'c18_leitura', cond:d=>!!d.flags.tem_as_atas},
+    ...c18_aoCartorio('Ir ao cartório atrás das atas.', 'Ir ao cartório buscar as atas.')
+  ]
+},
+
+c18_o_motorista:{
+  texto:[
+    c18_eu('Isso vai pra Rota 21?'),
+    fala('o motorista do baú branco', 'Vai pra onde a nota manda.'),
+    c18_eu('E a camisa?'),
+    'Ele olha pro próprio peito, como se tivesse esquecido o que estava vestindo.',
+    fala('o motorista do baú branco', 'A camisa é de quem me paga, {moço|moça}. E quem me paga eu não escolho. Dá licença.'),
+    'Ele passa o cadeado no baú e sai sem olhar no retrovisor. Na calçada, o atendente da transportadora te olha pela vitrine e volta a carimbar.'
+  ],
+  ef:{flag:'falou_com_o_motorista', instabilidade:1,
+      registrar:'O motorista da carga de terça e sexta veste a camisa da Silph e diz que a camisa é de quem paga.'},
+  escolhas:[
+    {texto:'Ir ler as atas.', vai:'c18_leitura', cond:d=>!!d.flags.tem_as_atas},
     ...c18_aoCartorio('Ir ao cartório atrás das atas.', 'Ir ao cartório buscar as atas.')
   ]
 },

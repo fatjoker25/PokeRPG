@@ -531,6 +531,33 @@ const SUSPEITO = [
   }
   /* a velocidade da luta nos Ajustes: as três, e volta pra 1× */
   for (const v of [2, 3, 1]) await tentar('ajustes/velocidade ' + v, x => { UI.modalAjustes(); Velocidade.definir(x); }, v);
+  /* o fio dos capítulos grandes no Diário: cada cena da lista existe e
+     escreveu no diário, e o Diário abre com nenhuma ponta e com todas */
+  {
+    const r = await page.evaluate(() => {
+      const falhas = [], d = Estado.dados, antes = {cap:d.capitulo, cenas:d.cenasAplicadas};
+      for (const [n, F] of Object.entries(FIO_DOS_CAPITULOS)){
+        const cap = Historia.capitulo(+n);
+        if (!cap){ falhas.push('o fio fala do capítulo ' + n + ', que não existe'); continue; }
+        for (const p of F.pontas) for (const id of p.cenas){
+          if (!cap.cenas[id]) falhas.push(`fio do ${n}: a ponta "${p.nome}" cita a cena ${id}, que não existe`);
+          else if (!(cap.cenas[id].ef || {}).registrar) falhas.push(`fio do ${n}: a cena ${id} não escreve no diário`);
+        }
+        d.capitulo = +n; d.cenasAplicadas = {};
+        UI.modalDiario();
+        if (!document.querySelector('.diario-fio')) falhas.push('o Diário do capítulo ' + n + ' não mostra o fio');
+        UI.fecharModal(true);
+        F.pontas.forEach(p => p.cenas.forEach(id => { d.cenasAplicadas[n + ':' + id] = 1; }));
+        UI.modalDiario();
+        const linhas = document.querySelectorAll('.diario-fio .da-linha').length;
+        if (linhas !== F.pontas.length) falhas.push(`o Diário do capítulo ${n} mostra ${linhas} pontas de ${F.pontas.length}`);
+        UI.fecharModal(true);
+      }
+      d.capitulo = antes.cap; d.cenasAplicadas = antes.cenas;
+      return falhas;
+    });
+    r.forEach(f => anota('fio', f));
+  }
   /* a dificuldade nos Ajustes: as três, a folha de regras com cada uma, e volta pro Normal */
   for (const k of ['facil', 'dificil', 'normal']){
     await tentar('ajustes/dificuldade ' + k, x => { UI.modalAjustes(); Dificuldade.definir(x); }, k);

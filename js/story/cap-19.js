@@ -1035,6 +1035,9 @@ c19_caminhao:{
       ? 'O caminhão de insumos já tinha passado hoje. Você volta no dia seguinte e espera perto da guarita, antes das onze.'
       : 'Você espera perto da guarita.',
     'O caminhão de insumos chega às onze em ponto. Ração, meio de cultura, embalagem, dois engradados de material de limpeza.',
+    d => d.flags.viu_a_carga
+      ? 'Atrás dele encosta um baú branco que você já viu em Saffron, com o retângulo de tinta nova na lataria. Desce caixa com furo e lacre verde, e aqui ninguém confere lacre nenhum.'
+      : '',
     'O motorista desce, entrega o canhoto na guarita, acende um cigarro e espera, porque a descarga é feita pelo pessoal de dentro e ele não ajuda, porque não é a função dele.',
     'Você tem entre três e quatro minutos.'
   ],

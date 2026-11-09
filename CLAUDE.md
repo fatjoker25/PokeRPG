@@ -1103,6 +1103,27 @@ Evento com `encadeado:true` não entra no sorteio do lugar: só chega por
 A Pokédex de Kanto tem 150 casas (`DEX_KANTO_IDS`); Mew e os lendários
 de Johto entram por `idsKanto()` só depois de vistos ou catalogados.
 
+## O fio dos capítulos grandes
+Capítulo de cento e tantas cenas (o 4, o 6, o 8, o 9, o 11 e o 18)
+espalha a investigação pela cidade, e quem volta depois de três dias
+não lembra onde estava. O Diário abre com **o fio do capítulo**
+(`js/story/fio.js`, `FIO_DOS_CAPITULOS`, `Fio.doCapitulo`): a pergunta
+do capítulo e as pontas que você já puxou, cada uma com a linha de
+diário da cena mais adiantada a que você chegou nela. É memória, não
+mapa: ponta que você não tocou não aparece, nada diz o que fazer, e o
+nome da ponta sai da primeira cena dela ("O torneio", nunca "A
+fundação" que só aparece no fim dele). Cena nova que avança uma ponta
+entra na lista dela, na ordem da história, e precisa de `registrar`;
+o `chk-telas` confere as duas coisas.
+
+Pelo mesmo motivo, descoberta grande do meio do jogo não vem só de
+papel. O 18 é o capítulo das atas e continua sendo, mas o atendente da
+transportadora que diz "se quiser ver, é só estar aqui às onze" agora
+deixa ver (`c18_as_onze`, `c18_o_motorista`): você vê a carga sair, ouve
+o Rattata dentro da caixa e repara na camisa do motorista, e no 19 o
+mesmo baú branco encosta na doca do viveiro (`viu_a_carga`). Deixa
+dessas ("dá pra ver", "ele passa às onze") ganha a cena de ver.
+
 ## Cena leve e encanto
 A história pesa (instituição, lote, morte), e o jogo precisava de
 respiro que não fosse só descanso de menu. Por isso **toda cidade tem

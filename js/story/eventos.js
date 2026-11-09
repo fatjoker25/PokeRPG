@@ -1824,7 +1824,7 @@ campo:[
      ef:{moral:4, executar:d=>{ [77, 78].forEach(x => Estado.viu(x)); }, registrar:'Viu uma manada de Ponyta correr de noite pelo capim, com um Rapidash na frente.'},
      resultado:[
        'Eles somem atrás de um morro, e por um minuto o morro fica com a borda acesa.',
-       'Depois volta o escuro, os grilos, o vento. Você fica um tempo sem querer acender a lanterna.'
+       'Depois volta o escuro, o barulho do capim, o vento. Você fica um tempo sem querer acender a lanterna.'
      ]},
     {texto:'Seguir.', ef:{executar:d=>{ [77, 78].forEach(x => Estado.viu(x)); }},
      resultado:['Você segue pelo escuro. De vez em quando, longe, o horizonte ainda pisca laranja.']}
@@ -2578,7 +2578,7 @@ agua:[
   cond:d=>d.local === 'seafoam' && d.capitulo > 13,
   titulo:'O canto',
   texto:[
-    'Entre as duas pedras brancas das Seafoam, a água passa por dentro dos furos e faz um barulho de órgão.',
+    'Entre as duas pedras brancas das Seafoam, a água passa por dentro dos furos e faz um sopro grave, comprido.',
     'Depois, por cima do barulho, um som que não é da pedra: uma nota comprida, que sobe, para, e desce em três tempos.',
     'Um Lapras está boiando no canal, de olho fechado, cantando pra ninguém.'
   ],

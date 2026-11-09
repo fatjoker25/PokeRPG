@@ -5217,6 +5217,8 @@ h3.sec-ir{--sec:#5aa7ff}
 }
 .diario-agora p{margin:0;padding:6px 0;font-size:14px;line-height:1.5}
 .diario-agora p + p{border-top:1px solid color-mix(in srgb, var(--borda) 70%, transparent)}
+/* o fio do capítulo: a pergunta em destaque, como quem lê a capa do caderno */
+.diario-fio .df-pergunta{font-style:italic;font-size:15px;color:var(--texto)}
 .diario-agora .da-quem{font-family:var(--letra-hud, var(--fonte));font-size:17px;font-weight:700;padding-top:2px}
 .diario-agora .da-linha{display:grid;grid-template-columns:minmax(7.5em, 30%) 1fr;gap:12px}
 .diario-agora .da-k{font-family:var(--letra-hud, var(--fonte));font-weight:600;font-size:13px;color:color-mix(in srgb, var(--ac, var(--destaque)) 55%, var(--texto))}
