@@ -399,6 +399,7 @@ const SUSPEITO = [
     'Ventania', 'Biscoito', 'Cometa', 'Garoa', 'Sereno', 'Tição', 'Graveto', 'Paçoca', 'Tampinha', 'Neblina', 'Farol'];
   const apelidosDados = new Set(await page.evaluate(() => [...Estado.dados.time, ...(Estado.dados.pc || [])].map(p => p.apelido).filter(Boolean)).catch(() => []));
   let passos = 0, parado = 0, ultima = '', empacou = 0, ultimoRetrato = '', estado = 'pausa';
+  let ultimoMinuto = Date.now(), ultimoMinutoK = '', mesmoMinuto = 0, ultimaAcao = '';
   const prazo = MIN * 60000;
   while (passos++ < 2000000){
     const passou = Date.now() - t0;
@@ -409,6 +410,26 @@ const SUSPEITO = [
     }
     if (erros.length > 8){ estado = 'erros'; break; }
     await page.waitForTimeout(30);
+    /* um retrato por minuto, aconteça o que acontecer: se ele parar no
+       meio de uma encenação, é aqui que aparece (o de 200 em 200 passos
+       fica depois da espera e não sai) */
+    if (Date.now() - ultimoMinuto > 60000){
+      ultimoMinuto = Date.now();
+      const m = await page.evaluate(() => ({c:Estado.dados.capitulo, l:Estado.dados.local, modo:Estado.dados.modo, cena:Estado.dados.cena,
+        luta:!!Batalha.ativo, enc:!!Jogo.encenando, bola:!!Jogo.animandoBola, modal:!!document.querySelector('#modal'),
+        tela:(document.querySelector('#modal') || document.querySelector('#app') || {innerText:''}).innerText.replace(/\s+/g, ' ').slice(0, 110)})).catch(e => ({erro:e.message}));
+      const k = JSON.stringify(m);
+      mesmoMinuto = k === ultimoMinutoK ? mesmoMinuto + 1 : 0; ultimoMinutoK = k;
+      console.log(`[min ${Math.round((Date.now() - t0) / 60000)}] ${k}${mesmoMinuto ? ' (igual há ' + mesmoMinuto + ' min)' : ''}`);
+      if (mesmoMinuto === 3) anota('parado 3 minutos', k.slice(0, 140));
+      /* parado: o que tem na tela pra apertar */
+      if (mesmoMinuto === 1) console.log('  BOTÕES', JSON.stringify(await page.evaluate(() => ({
+        arena:!!document.querySelector('#arena'), acoes:!!document.querySelector('.acoes-combate, #acoes'),
+        fase:Batalha.fase, tipo:Batalha.tipo, aliado:Batalha.aliado && (Batalha.aliado.nome + ' ' + Batalha.aliado.hp),
+        inimigo:Batalha.inimigo && (Batalha.inimigo.nome + ' ' + Batalha.inimigo.hp), ativo:Batalha.ativo, fimPendente:!!Jogo.fimPendente,
+        botoes:[...document.querySelectorAll('#app button, #modal button')].map(b => (b.className.split(' ')[0] || '') + ':' + b.innerText.replace(/\s+/g, ' ').trim().slice(0, 30) + (b.disabled ? '(off)' : '')).slice(0, 30)
+      })).catch(e => ({erro:e.message}))), 'ÚLTIMA AÇÃO', ultimaAcao);
+    }
     if (await page.evaluate(() => !!(Jogo.encenando || Jogo.animandoBola)).catch(() => false)){ await page.waitForTimeout(60); continue; }
     if (passos % 5 === 0) await lerTela();
     if (passos % 200 === 0){
@@ -481,9 +502,11 @@ const SUSPEITO = [
         const B = Batalha, p = B.aliado, alvo = B.inimigo, d = Estado.dados;
         const J = window.__jeito || {}, X = window.__extra || (window.__extra = {});
         if (!p || !alvo) return null;
-        /* luta nova: zera a conta de Pokébolas jogadas */
-        if (X.lutaUid !== alvo.uid){ X.lutaUid = alvo.uid; X.bolasNaLuta = 0; }
+        /* luta nova: zera a conta de Pokébolas jogadas e de trocas */
+        if (X.lutaUid !== alvo.uid){ X.lutaUid = alvo.uid; X.bolasNaLuta = 0; X.trocasNaLuta = 0; }
         if (B.fase === 'ameaca') return {tipo:'fugirAmeaca'};
+        /* selvagem que não acaba (os dois lados só com golpe de status): vai embora */
+        if (B.tipo === 'selvagem' && B.turno > 60 && B.fuga !== false) return {tipo:'fugir'};
         const golpeBom = (quem) => {
           let melhor = -1, idx = 0;
           quem.golpes.forEach((g, i) => {
@@ -532,15 +555,28 @@ const SUSPEITO = [
         if (pot && p.hp <= p.hpMax * 0.25 && p.hp > 0) return {tipo:'item', nome:pot, alvoUid:p.uid};
         /* Vontade: com pouco HP, esquiva o próximo golpe */
         if (p.hp <= p.hpMax * 0.5 && vontadeDe(p) >= 2 && B.podeGastarVontade('esquiva')) B.gastarVontade('esquiva');
-        /* recua: se o golpe dele é ruim e tem alguém melhor no banco */
+        /* recua: se o golpe dele é ruim e tem alguém melhor no banco. Duas
+           trocas por luta, no máximo: o Metapod (só Harden) e o Oddish
+           (fraco contra Spearow) trocaram de lugar 184 turnos seguidos,
+           com o Spearow só usando Leer, e a luta nunca acabava */
         const meu = golpeBom(p);
         const banco = d.time.filter(x => x.uid !== p.uid && x.hp > x.hpMax * 0.4 && !x.morto);
         const melhorBanco = banco.map(x => ({x, s:golpeBom(x).melhor})).sort((u, v) => v.s - u.s)[0];
-        if (melhorBanco && (meu.melhor < 1 || p.hp <= p.hpMax * 0.2) && melhorBanco.s > meu.melhor * 1.5 && !(B.estAliado && B.estAliado.presoTurnos))
+        if (melhorBanco && (X.trocasNaLuta || 0) < 2 && (meu.melhor < 1 || p.hp <= p.hpMax * 0.2)
+            && melhorBanco.s > Math.max(1, meu.melhor * 1.5) && !(B.estAliado && B.estAliado.presoTurnos)){
+          X.trocasNaLuta = (X.trocasNaLuta || 0) + 1;
           return {tipo:'trocar', uid:melhorBanco.x.uid};
+        }
         return {tipo:'golpe', indice:meu.idx};
       }).catch(() => null);
-      if (a){ await page.evaluate(x => { UI.modoBatalha = 'menu'; Jogo.acaoBatalha(x); }, a).catch(e => erros.push('acao: ' + e.message)); await page.waitForTimeout(100); continue; }
+      if (a){
+        const antes = await page.evaluate(() => Batalha.turno + ':' + (Batalha.eventos || []).length).catch(() => '');
+        await page.evaluate(x => { UI.modoBatalha = 'menu'; Jogo.acaoBatalha(x); }, a).catch(e => erros.push('acao: ' + e.message));
+        await page.waitForTimeout(100);
+        ultimaAcao = JSON.stringify(a) + ' ' + antes + ' -> ' + await page.evaluate(() => Batalha.turno + ':' + (Batalha.eventos || []).length + ' ' +
+          ((Batalha.eventos || []).slice(-2).map(e => e.tipo + ':' + String(e.texto || '').slice(0, 60)).join(' | '))).catch(() => '');
+        continue;
+      }
     }
     /* troca obrigatória depois de desmaio */
     if (await page.locator('#modal .time-linha:not([disabled])').count() && await page.evaluate(() => Batalha.ativo).catch(() => false)){
@@ -873,6 +909,20 @@ const SUSPEITO = [
     }
     const outros = page.locator('.painel button.btn:not([disabled]), .painel .escolha:not([disabled])');
     if (await outros.count()){ await outros.first().click({timeout:3000}).catch(() => {}); continue; }
+    /* luta andando sem botão nenhum: é a abertura entrando, e se espera.
+       Desenhar o mapa por cima deixava a luta órfã (o motor esperando o
+       golpe, a tela sem golpe pra apertar), e três robôs ficaram parados
+       assim no Monte da Lua. Se a arena já sumiu, a luta volta pela tela
+       do recarregar */
+    if (await page.evaluate(() => !!Batalha.ativo).catch(() => false)){
+      const voltou = await page.evaluate(() => {
+        if (document.querySelector('#arena')) return false;
+        UI.telaBatalha(['A luta continua de onde parou.']); return true;
+      }).catch(() => false);
+      if (voltou) anota('luta sem arena, recolocada na tela', await page.evaluate(() => Estado.dados.local).catch(() => ''));
+      await page.waitForTimeout(150);
+      continue;
+    }
     anota('tela sem ação', await page.evaluate(() => document.querySelector('#app').innerText.slice(0, 120)));
     await page.evaluate(() => Exploracao.tela()).catch(() => {});
   }
