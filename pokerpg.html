@@ -51037,6 +51037,18 @@ const Batalha = {
       if (G.c === 'status'){
         /* clima que já está valendo não se chama de novo */
         if (G.ef && G.ef.clima) return (this.clima && this.clima.tipo === G.ef.clima) ? 0 : 40;
+        /* golpe de estágio que não muda mais nada não se escolhe, e o que
+           está perto do limite vale menos. Sem isso a IA repetia
+           Smokescreen com a precisão do outro já em −6, ninguém acertava
+           ninguém e a luta passava de cem turnos */
+        if (E.baixa || E.sobe){
+          const ladoAlvo = this.lados && this.lados[p === this.aliado ? 'inimigo' : 'aliado'];
+          if (E.baixa && ladoAlvo && ladoAlvo.nevoa > 0) return 0;
+          const resta = E.baixa ? 6 + (estAlvo[E.baixa] || 0) : 6 - (estP[E.sobe] || 0);
+          if (resta <= 0) return 0;
+          const base = alvo.status ? 5 : (p.hp / p.hpMax > 0.6) ? 45 : 20;
+          return base * Math.max(0.3, resta / 6);
+        }
         if (alvo.status || (G.ef && G.ef.tipo && alvo.status)) return 5;
         return (p.hp / p.hpMax > 0.6) ? 45 : 20;
       }
@@ -149903,6 +149915,7 @@ const UI = {
       <div class="linha"><span class="k">Faixa</span><span class="v">de −6 a +6 · aparece na ficha de HP durante a luta</span></div>
       <div class="linha"><span class="k">FOR, VIT, ESP, INS, DES</span><span class="v">cada estágio é 1 ponto no atributo · nenhum fica abaixo de 1</span></div>
       <div class="linha"><span class="k">Precisão e evasão</span><span class="v">cada estágio é 1 sucesso a mais ou a menos · a precisão de quem ataca contra a evasão de quem apanha</span></div>
+      <div class="linha"><span class="k">No limite</span><span class="v">golpe que sobe ou baixa estágio já em ±6 não faz nada · o adversário não escolhe esse golpe, e quanto mais perto do limite, menos ele escolhe</span></div>
       <div class="linha"><span class="k">Efeito de golpe de dano</span><span class="v">nos dados de chance do livro · golpe sem essa ficha segue a chance dos jogos</span></div>
 
       <h3>Estados que os golpes deixam</h3>

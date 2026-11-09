@@ -354,8 +354,12 @@ const SUSPEITO = [
           time:vivos.map(p => p.nome + ' ' + p.nivel),
           capturou:fim.resultado === 'captura' && fim.pokemon ? fim.pokemon.nome + ' ' + fim.pokemon.nivel : null});
         /* ginásio perdido: da próxima vez ele chega mais forte */
+        /* e treina de novo antes de voltar: a conta de treino do ginásio
+           zera. Com ela parada no teto, o Vito desafiou o Brock 1.225
+           vezes seguidas com um Geodude só */
         if (cx.de === 'ginásio' && fim.resultado !== 'vitoria' && cx.id){
           const X = window.__extra; X.gin = X.gin || {}; X.gin[cx.id] = (X.gin[cx.id] || 0) + 1;
+          X.moerGin = X.moerGin || {}; X.moerGin[cx.id] = 0;
         }
       } catch(e){}
       return fb(fim);
@@ -572,6 +576,12 @@ const SUSPEITO = [
         const meu = golpeBom(p);
         const banco = d.time.filter(x => x.uid !== p.uid && x.hp > x.hpMax * 0.4 && !x.morto);
         const melhorBanco = banco.map(x => ({x, s:golpeBom(x).melhor})).sort((u, v) => v.s - u.s)[0];
+        /* precisão no chão (Smokescreen, Sand Attack): quem joga troca pra
+           zerar os estágios, como nos jogos */
+        if (melhorBanco && ((B.estAliado || {}).precisao || 0) <= -3 && (X.trocasNaLuta || 0) < 3 && !(B.estAliado && B.estAliado.presoTurnos)){
+          X.trocasNaLuta = (X.trocasNaLuta || 0) + 1;
+          return {tipo:'trocar', uid:melhorBanco.x.uid};
+        }
         if (melhorBanco && (X.trocasNaLuta || 0) < 2 && (meu.melhor < 1 || p.hp <= p.hpMax * 0.2)
             && melhorBanco.s > Math.max(1, meu.melhor * 1.5) && !(B.estAliado && B.estAliado.presoTurnos)){
           X.trocasNaLuta = (X.trocasNaLuta || 0) + 1;
@@ -678,6 +688,28 @@ const SUSPEITO = [
             const pior = d.time.filter(x => x.uid !== inicial).sort((a, b) => valor(a) - valor(b))[0];
             if (pior && valor(guardados[0]) > valor(pior) + 3) return {f:'pc', guardar:pior.uid, tirar:guardados[0].uid};
           }
+        }
+        /* mão livre e item de segurar parado na mochila: dá pra segurar,
+           o mais útil primeiro (o Eviolite só pra quem ainda evolui). O
+           Vito perdia pro Brock com Leftovers e Eviolite na mochila */
+        const ORDEM_SEGURAR = ['Leftovers', 'Eviolite', 'Focus Band', 'Muscle Band', 'Wise Glasses', 'Quick Claw', 'Exp. Share', 'Soothe Bell', 'Amulet Coin'];
+        for (const n of ORDEM_SEGURAR){
+          if (!Estado.contaItem(n)) continue;
+          const livre = d.time.find(p => !p.morto && !p.segurando && (n !== 'Eviolite' || aindaEvolui(p.dex)));
+          if (livre) return {f:'segurar', uid:livre.uid, nome:n};
+        }
+        /* sem dinheiro: vende o que sobra — item de segurar que ninguém
+           segura e TM que ninguém do time aprende — como quem joga faz */
+        if (afz.includes('loja') && d.jogador.dinheiro < 600 && X.vendaDia !== dia + id){
+          const vende = [];
+          for (const n of Object.keys(d.itens || {})){
+            const i = ITENS_INFO[n] || {}, q = Estado.contaItem(n);
+            if (!q || !PRECO_BASE[n]) continue;
+            if (i.tipo === 'equipar') vende.push([n, q]);
+            else if (i.tipo === 'tm' && !d.time.some(p => !p.morto && aprendeTM(p, n))) vende.push([n, q]);
+            else if (i.tipo === 'pedra' && !d.time.some(p => !p.morto && (pedrasDe(n) || {})[p.dex])) vende.push([n, q]);
+          }
+          if (vende.length){ X.vendaDia = dia + id; return {f:'vender', itens:vende}; }
         }
         /* pedra de evolução na mochila e alguém que evolui com ela */
         if (J.pedra && typeof nomesDePedra === 'function'){
@@ -827,7 +859,7 @@ const SUSPEITO = [
         return {f:'viajar', id:Dados.escolher(viz)};
       }).catch(e => ({f:'erro', e:e.message}));
       /* o que ele decidiu no mapa vai pro diário (andar entra pela viagem) */
-      if (!['viajar', 'erro', 'pc', 'pedra', 'loja'].includes(dec.f))
+      if (!['viajar', 'erro', 'pc', 'pedra', 'loja', 'segurar', 'vender'].includes(dec.f))
         await page.evaluate(x => window.__passo && __passo('mapa', {f:x.f, itens:x.itens || null}), dec).catch(() => {});
       if (dec.f === 'erro') anota('erro na decisão do mapa', dec.e || '');
       const assin = JSON.stringify(dec) + await page.evaluate(() => Estado.dados.local + Relogio.texto());
@@ -866,6 +898,27 @@ const SUSPEITO = [
           UI.fecharModal(true); Exploracao.tela();
           window.__passo && __passo('pc', {guardou:g, levou:t});
         }, dec).catch(e => erros.push('pc: ' + e.message));
+      } else if (dec.f === 'segurar'){
+        await page.evaluate(x => {
+          const p = Estado.dados.time.find(y => y.uid === x.uid);
+          UI.equipar(x.uid, x.nome);
+          UI.fecharModal(true); Exploracao.tela();
+          window.__passo && __passo('segurar', {nome:x.nome, quem:p ? nomeExib(p) + ' (' + p.nome + ' ' + p.nivel + ')' : null});
+        }, dec).catch(e => erros.push('segurar: ' + e.message));
+      } else if (dec.f === 'vender'){
+        /* pelo balcão da loja: Vender, a quantidade e o Vender da confirmação */
+        await page.evaluate(() => Exploracao.fazer('loja')); await page.waitForTimeout(120);
+        await page.evaluate(itens => {
+          const vendeu = [];
+          for (const [n, q] of itens){
+            try {
+              Cidade.vender(n);
+              if (Cidade._compra && Cidade._compra.venda){ Cidade._compra.qtd = q; Cidade.confirmarVenda(n); vendeu.push(q + '× ' + n); }
+            } catch(e){}
+          }
+          UI.fecharModal(true); Exploracao.tela();
+          window.__passo && __passo('venda', {itens:vendeu, dinheiro:Estado.j.dinheiro});
+        }, dec.itens || []).catch(e => erros.push('vender: ' + e.message));
       } else if (dec.f === 'pedra'){
         await page.evaluate(x => {
           const p = Estado.dados.time.find(y => y.uid === x.uid);
@@ -903,7 +956,14 @@ const SUSPEITO = [
     const ne = await esc.count();
     if (ne){
       const textos = await esc.evaluateAll(els => els.map(e => e.innerText.replace(/\s+/g, ' ').trim())).catch(() => []);
-      const pesos = textos.map(t => (J.gosta && J.gosta.test(t) ? 3 : 1) * (/^Parar e olhar mais um pouco/.test(t) ? .5 : 1));
+      /* perdeu duas vezes no mesmo ginásio: não tenta de novo na hora,
+         vai treinar antes. O Vito, com um Geodude só, perdeu do Onix do
+         Brock mais de dez vezes seguidas pelo "tentar de novo" */
+      const perdeuAqui = await page.evaluate(() => { const g = Jogo.ginasioAtual || GINASIOS.find(x => x.id === Mundo.id());
+        return g ? (((window.__extra || {}).gin || {})[g.id] || 0) : 0; }).catch(() => 0);
+      const pesos = textos.map(t => (J.gosta && J.gosta.test(t) ? 3 : 1) * (/^Parar e olhar mais um pouco/.test(t) ? .5 : 1)
+        * (perdeuAqui >= 2 && /tentar de novo/i.test(t) ? 0 : 1));
+      if (!pesos.some(x => x > 0)) pesos.fill(1);
       let r = Math.random() * pesos.reduce((s, x) => s + x, 0), k = 0;
       while (k < pesos.length - 1 && (r -= pesos[k]) > 0) k++;
       if (k >= ne) k = Math.floor(Math.random() * ne);

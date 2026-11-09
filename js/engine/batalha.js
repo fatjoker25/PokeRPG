@@ -1276,6 +1276,18 @@ const Batalha = {
       if (G.c === 'status'){
         /* clima que já está valendo não se chama de novo */
         if (G.ef && G.ef.clima) return (this.clima && this.clima.tipo === G.ef.clima) ? 0 : 40;
+        /* golpe de estágio que não muda mais nada não se escolhe, e o que
+           está perto do limite vale menos. Sem isso a IA repetia
+           Smokescreen com a precisão do outro já em −6, ninguém acertava
+           ninguém e a luta passava de cem turnos */
+        if (E.baixa || E.sobe){
+          const ladoAlvo = this.lados && this.lados[p === this.aliado ? 'inimigo' : 'aliado'];
+          if (E.baixa && ladoAlvo && ladoAlvo.nevoa > 0) return 0;
+          const resta = E.baixa ? 6 + (estAlvo[E.baixa] || 0) : 6 - (estP[E.sobe] || 0);
+          if (resta <= 0) return 0;
+          const base = alvo.status ? 5 : (p.hp / p.hpMax > 0.6) ? 45 : 20;
+          return base * Math.max(0.3, resta / 6);
+        }
         if (alvo.status || (G.ef && G.ef.tipo && alvo.status)) return 5;
         return (p.hp / p.hpMax > 0.6) ? 45 : 20;
       }
