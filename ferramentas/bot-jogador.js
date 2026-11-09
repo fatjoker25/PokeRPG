@@ -685,6 +685,13 @@ const SUSPEITO = [
         const hp = vivos.reduce((s, p) => s + Math.max(0, p.hp), 0) / Math.max(1, vivos.reduce((s, p) => s + p.hpMax, 0));
         const afz = afazeresDoLocal().map(a => a.id);
         const ref = nivelDeReferencia();
+        /* o mais forte de pé vai na frente: o Vito entrava no ginásio do
+           Blaine com o Graveler 25 (o inicial) na frente do Golbat 65 e
+           perdeu dez semanas seguidas */
+        const naFrente = (gap) => {
+          const forte = vivos.filter(p => p.hp > 0).sort((a, b) => b.nivel - a.nivel)[0], prim = d.time[0];
+          return forte && prim && forte.uid !== prim.uid && forte.nivel >= (prim.nivel || 0) + gap ? {f:'ordem', uid:forte.uid} : null;
+        };
         const centro = Exploracao.temCentro(L);
         /* o Centro atende quem tem licença de graça; sem ela, cobra 300 ₽
            mais 250 por ferido, e sem o dinheiro a enfermeira empurra a ficha
@@ -874,7 +881,7 @@ const SUSPEITO = [
           /* porta com hora marcada (Cinnabar): curar agora gasta a janela,
              então entra como está */
           if (hp < .9 && !daqui.horario){ const c = curar(); if (c) return c; }
-          return {f:'ginasio'};
+          return naFrente(3) || {f:'ginasio'};
         }
         if (travado || J.ginasio){
           const abertos = GINASIOS.filter(g => ['disponivel', 'fechado'].includes(statusGinasio(g).estado))
@@ -897,7 +904,7 @@ const SUSPEITO = [
                   if (hp < .9 && !diaDele){ const c = curar(); if (c) return c; }
                   return {f:'esperar'};
                 }
-                return (hp < .9 && !g.horario) ? (curar() || {f:'ginasio'}) : {f:'ginasio'};
+                return (hp < .9 && !g.horario) ? (curar() || naFrente(3) || {f:'ginasio'}) : (naFrente(3) || {f:'ginasio'});
               }
               if (travado || J.ginasio) return {f:'viajar', id:alvo.cam[1]};
             } else if (travado){
@@ -1001,6 +1008,13 @@ const SUSPEITO = [
           UI.ensinarTMa(x.uid, x.nome);
           if (!document.querySelector('.aprender-op')){ UI.fecharModal(true); Exploracao.tela(); }
         }, dec).catch(e => erros.push('tm: ' + e.message));
+      } else if (dec.f === 'ordem'){
+        await page.evaluate(x => {
+          const d = Estado.dados, p = d.time.find(y => y.uid === x.uid), antes = d.time[0];
+          UI.trocarNoTime(x.uid, antes.uid);
+          UI.fecharModal(true); Exploracao.tela();
+          window.__passo && __passo('ordem', {quem:p ? nomeExib(p) + ' (' + p.nome + ' ' + p.nivel + ')' : null, saiu:antes ? nomeExib(antes) : null});
+        }, dec).catch(e => erros.push('ordem: ' + e.message));
       } else if (dec.f === 'racao'){
         await page.evaluate(x => {
           const p = Estado.dados.time.find(y => y.uid === x.uid);
