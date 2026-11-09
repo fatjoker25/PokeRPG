@@ -478,8 +478,9 @@ const SUSPEITO = [
       u.aceitou = true;
       const depois = olha();
       delete u.aceitou;
-      return {antesSm:/\?\/100/.test(antes.sm) && !/\b37\/100/.test(antes.sm), antesPc:/Moral\s*\?/.test(antes.pc),
-              depoisSm:/\b37\/100/.test(depois.sm), depoisPc:/Moral\s*37/.test(depois.pc)};
+      /* o rótulo vem em caixa alta na tela (o innerText lê o text-transform) */
+      return {antesSm:/\?\/100/.test(antes.sm) && !/\b37\/100/.test(antes.sm), antesPc:/moral\s*\?/i.test(antes.pc),
+              depoisSm:/\b37\/100/.test(depois.sm), depoisPc:/moral\s*37/i.test(depois.pc)};
     });
     onde = 'mewtwo/moral';
     if (!r) anota('mewtwo', 'a Unidade 01 não entrou no save de teste');
