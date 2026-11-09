@@ -49139,6 +49139,15 @@ const Estado = {
          casa e a rua viram as de Viridian, onde a jornada já tinha
          começado. */
       if (d.jogador && d.jogador.cidade === 'Indigo') d.jogador.cidade = 'Viridian';
+      /* o inicial que já morava na casa saía sem o uid gravado, e o jogo
+         achava o seu pela espécie: outro Oddish no cinto virava o
+         inicial, e o de verdade, morto, deixava o lugar pro novo. A
+         história dele é só dele, e é por ela que se acha qual é */
+      if (d.jogador && d.jogador.inicialDex && !d.jogador.inicialUid){
+        const daCasa = [].concat(d.time || [], d.pc || [], d.cemiterio || [])
+          .find(p => p && /^Já morava na sua casa/.test(p.historia || ''));
+        if (daCasa) d.jogador.inicialUid = daCasa.uid;
+      }
       /* a foto ganhou sete partes (cabelo, olhos, pele, camisa, calça,
          sapatos e detalhes): a cor da roupa de antes vai pra parte que
          ela pintava, e a descrição que a foto escreveu é refeita com tudo
@@ -61582,8 +61591,10 @@ function inicialDoJogador(d){
   d = d || Estado.dados;
   const vivos = (d.time || []).concat(d.pc || []).filter(p => !p.morto);
   const j = d.jogador || {};
-  return vivos.find(p => j.inicialUid && p.uid === j.inicialUid)
-      || vivos.find(p => j.inicialDex && typeof linhaDe === 'function' && linhaDe(p.dex).includes(j.inicialDex))
+  /* com o uid gravado é ele ou ninguém: morto ou trocado, outro da
+     mesma linha no cinto não toma o lugar dele */
+  if (j.inicialUid) return vivos.find(p => p.uid === j.inicialUid) || null;
+  return vivos.find(p => j.inicialDex && typeof linhaDe === 'function' && linhaDe(p.dex).includes(j.inicialDex))
       || null;
 }
 
@@ -164585,6 +164596,7 @@ const Jogo = {
     }
     Estado.adicionar(inicial);
     Estado.j.inicialDex = inicial.dex;          // Blue escolhe o contra do seu inicial
+    Estado.j.inicialUid = inicial.uid;          // e é por ele que o jogo acha o seu, mesmo com outro da mesma linha no cinto
     iniciarRival();                             // e o rival escolhe o contra do seu também
     Estado.registrar(`${Estado.j.nome} saiu de ${Estado.j.cidade} com ${inicial.nome}.`);
     Estado.salvar('auto');

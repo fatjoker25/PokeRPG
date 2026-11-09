@@ -733,10 +733,31 @@ const SUSPEITO = [
           const guardados = (d.pc || []).filter(x => !x.morto).sort((a, b) => valor(b) - valor(a));
           const morto = d.time.find(x => x.morto);
           if (morto) return {f:'pc', guardar:morto.uid, tirar:guardados[0] ? guardados[0].uid : null};
+          /* quem vai evoluir sai do PC: pedra na mochila que só serve pra
+             alguém guardado (o Gloom, o Weepinbell e o Pikachu da Vera
+             ficaram no PC a jornada inteira), e o Haunter ou o Kadabra
+             que a figura de capuz deu, quando é hora dela completar */
+          /* o inicial pelo jogo (inicialDoJogador): o uid, ou a linha em save velho */
+          const inicial0 = ((typeof inicialDoJogador === 'function' && inicialDoJogador(d)) || {}).uid || d.jogador.inicialUid;
+          /* o que a figura de capuz deu e ainda vai completar não volta pro
+             PC: guardado, a intuição não chama, e ele ia e vinha do cinto */
+          const fj = d.flags, dj0 = J.troca && typeof pokemonDoJuniper === 'function' ? pokemonDoJuniper(d) : null;
+          const capuzEspera = !!(dj0 && fj.o_curador_entregou && !fj.capuz_completou && !fj.capuz_recusou && evoluiPorTroca(dj0.dex));
+          const fica = x => x.uid === inicial0 || (capuzEspera && x.uid === dj0.uid);
+          const vaga = () => d.time.length < 6 ? null : (d.time.filter(x => !fica(x) && !x.morto).sort((a, b) => valor(a) - valor(b))[0] || {}).uid;
+          if (J.pedra && typeof nomesDePedra === 'function')
+            for (const nome of nomesDePedra()){
+              if (!Estado.contaItem(nome)) continue;
+              const tab = pedrasDe(nome) || {};
+              if (d.time.some(x => !x.morto && tab[x.dex])) continue;
+              const quem = guardados.find(x => tab[x.dex]);
+              if (quem && (d.time.length < 6 || vaga())) return {f:'pc', guardar:vaga(), tirar:quem.uid};
+            }
+          if (capuzEspera && (d.pc || []).includes(dj0) && d.capitulo >= (fj.capuz_cap_entrega || 0) + 2 && (d.time.length < 6 || vaga()))
+            return {f:'pc', guardar:vaga(), tirar:dj0.uid};
           if (d.time.length < 6 && guardados.length) return {f:'pc', guardar:null, tirar:guardados[0].uid};
           if (J.troca && guardados.length && d.time.length >= 6){
-            const inicial = d.jogador.inicialUid;
-            const pior = d.time.filter(x => x.uid !== inicial).sort((a, b) => valor(a) - valor(b))[0];
+            const pior = d.time.filter(x => !fica(x)).sort((a, b) => valor(a) - valor(b))[0];
             if (pior && valor(guardados[0]) > valor(pior) + 3) return {f:'pc', guardar:pior.uid, tirar:guardados[0].uid};
           }
         }
@@ -748,6 +769,79 @@ const SUSPEITO = [
           X.naMao = X.naMao || {};
           const triste = vivos.filter(p => (p.moral || 0) < 30 && X.naMao[p.uid] !== dia).sort((u, v) => (u.moral || 0) - (v.moral || 0))[0];
           if (triste){ X.naMao[triste.uid] = dia; return {f:'racao', uid:triste.uid}; }
+        }
+        /* troca no mapa: quem troca (o jeito diz) aceita quando o que vem é
+           melhor do que o que vai, e nunca entrega o inicial. É assim que
+           sai o Machamp do Arlo e o Golem da Dara: o Pokémon deles chega
+           evoluído (trocaEvolui) */
+        if (J.troca && afz.includes('troca') && typeof Trocas !== 'undefined' && X.trocaDia !== dia + id){
+          X.trocaDia = dia + id;
+          /* o valor é o nível mais a força da forma final que cada um
+             alcança sozinho: o Graveler, o Machoke, o Kadabra e o Haunter
+             param ali (só a troca evolui), e o que vem evoluído pela
+             troca já chega no fim da linha */
+          const totalDe = x => ((DEX[x] || {}).total) || 300;
+          const finalSozinho = x => {
+            let e = x;
+            for (let k = 0; k < 3; k++){
+              const D = DEX[e] || {};
+              if (!D.evo || typeof D.evo !== 'number' || !(D.nivelEvo > 0)) break;
+              e = D.evo;
+            }
+            return e;
+          };
+          const valorT = (dex, nv) => nv + totalDe(finalSozinho(dex)) / 20;
+          for (const t of Trocas.disponiveis(id)){
+            if (Trocas.jaFez(t.id)) continue;
+            const te = Trocas.efetiva(t);
+            let vem = te.da.dex;
+            if (t.trocaEvolui && evoluiPorTroca(vem)) vem = evoluiPorTroca(vem);
+            const nv = Math.round((te.da.nivel[0] + te.da.nivel[1]) / 2);
+            const ini = ((typeof inicialDoJogador === 'function' && inicialDoJogador(d)) || {}).uid || d.jogador.inicialUid;
+            const vai = Trocas.candidatos(te).filter(x => x.uid !== ini).sort((a, b) => a.nivel - b.nivel)[0];
+            if (!vai) continue;
+            /* quem só evolui por troca e recebe um que já chegou no fim
+               aceita até dez níveis abaixo: o que fica aqui não cresce mais */
+            const parado = !!evoluiPorTroca(vai.dex) && totalDe(vem) > totalDe(vai.dex) && nv >= vai.nivel - 10;
+            if (parado || valorT(vem, nv) > valorT(vai.dex, vai.nivel) + 2) return {f:'trocar', uid:vai.uid, tid:t.id};
+          }
+        }
+        /* a intuição chama de volta a Lavender: quem troca vai, e lá segue
+           a intuição até a porta do abrigo (a entrega, e dois capítulos
+           depois o Haunter ou o Kadabra que ela deu, completo) */
+        if (J.troca && typeof Intuicao !== 'undefined'){
+          const pend = Intuicao.pendente(d);
+          if (pend && afz.includes('intu_' + pend)) return {f:'intu_' + pend};
+          const dst = Historia.proximoDestino && Historia.proximoDestino();
+          const preso = !!(dst && travaDoCapitulo(dst.num));
+          if (pend && id !== 'lavender' && !preso && hp >= .5){ const c = ir('lavender'); if (c) return c; }
+        }
+        /* pedra que a loja daqui não vende: com o dinheiro dela e mil
+           sobrando, vai até a cidade já visitada que vende (a Grande Loja
+           de Celadon tem quase todas; Cinnabar, a do Fogo). Uma ida por
+           capítulo pra cada pedra: chegando lá, a compra é a da loja */
+        if (J.pedra && typeof nomesDePedra === 'function' && hp >= .5){
+          X.pedraIr = X.pedraIr || {};
+          const usa = nome => [...d.time, ...(d.pc || [])].some(x => !x.morto && (pedrasDe(nome) || {})[x.dex]);
+          /* a ida em andamento: segue até a loja, e desiste se a pedra já
+             veio, se ninguém mais usa ou se o dinheiro não dá mais */
+          const P0 = X.pedraRumo;
+          if (P0 && (P0.cap !== d.capitulo || id === P0.para || Estado.contaItem(P0.nome) || !usa(P0.nome) || d.jogador.dinheiro < P0.preco + 1000)) X.pedraRumo = null;
+          else if (P0){ const c = ir(P0.para); if (c) return c; X.pedraRumo = null; }
+          for (const nome of nomesDePedra()){
+            if (X.pedraRumo || Estado.contaItem(nome) || !usa(nome) || X.pedraIr[nome] === d.capitulo) continue;
+            if (catalogoDaCidade(id).some(([x]) => x === nome)) continue;
+            const onde = Object.keys(LOJAS).filter(c => c !== id && Mundo.visitado(c))
+              .map(c => [c, (catalogoDaCidade(c).find(([x]) => x === nome) || [])[1]])
+              .filter(([c, preco]) => preco && d.jogador.dinheiro >= preco + 1000)
+              .map(([c, preco]) => ({c, preco, t:trajeto(id, c)})).filter(o => o.t && o.t[1] && !travaDaPassagem(id, o.t[1]))
+              .sort((a, b) => a.t.length - b.t.length)[0];
+            if (onde){
+              X.pedraIr[nome] = d.capitulo;
+              X.pedraRumo = {nome, para:onde.c, preco:onde.preco, cap:d.capitulo};
+              return {f:'viajar', id:onde.t[1]};
+            }
+          }
         }
         /* mão livre e item de segurar parado na mochila: dá pra segurar,
            o mais útil primeiro (o Eviolite só pra quem ainda evolui). O
@@ -767,8 +861,20 @@ const SUSPEITO = [
             if (!q || !PRECO_BASE[n]) continue;
             if (i.tipo === 'equipar') vende.push([n, q]);
             else if (i.tipo === 'tm' && !d.time.some(p => !p.morto && aprendeTM(p, n))) vende.push([n, q]);
-            else if (i.tipo === 'pedra' && !d.time.some(p => !p.morto && (pedrasDe(n) || {})[p.dex])) vende.push([n, q]);
+            else if (i.tipo === 'pedra' && !(J.pedra && [...d.time, ...(d.pc || [])].some(p => !p.morto && (pedrasDe(n) || {})[p.dex]))) vende.push([n, q]);
           }
+          /* e a sobra do que o mato dá, guardando um tanto de cada: o Vito
+             andava com 9 lanternas, 11 cordas e 11 Águas Frescas, 0 ₽ e o
+             time faminto. Ração, Pokébola e o que cura HP não saem */
+          const FICA = {'Lanterna':1, 'Machado':1, 'Picareta':1, 'Corda':2, 'Máscara de pó':1, 'Pilha':3};
+          const NUNCA = /Ração|Ball|Potion|Revive|Restore|Éter|Elixir|Ether|PP Up|Rare Candy|Repel|^Ovo$/;
+          if (typeof Cidade !== 'undefined' && Cidade.vendaveis)
+            for (const v of Cidade.vendaveis()){
+              const i = ITENS_INFO[v.nome] || {};
+              if (vende.some(x => x[0] === v.nome) || NUNCA.test(v.nome) || ['equipar', 'tm', 'pedra', 'bolsa', 'bola', 'fossil', 'cura', 'revive', 'vontade', 'repelente', 'ovo', 'moral', 'mapa', 'fuga'].includes(i.tipo)) continue;
+              const sobra = v.qtd - (FICA[v.nome] != null ? FICA[v.nome] : 3);
+              if (sobra > 0) vende.push([v.nome, sobra]);
+            }
           if (vende.length){ X.vendaDia = dia + id; return {f:'vender', itens:vende}; }
         }
         /* TM de dano na mochila e alguém que aprende e ganha com ela: ensina
@@ -804,6 +910,12 @@ const SUSPEITO = [
         if (afz.includes('loja') && X.lojaDia !== dia + id){
           /* na ordem de quem passa fome primeiro: Ração, cura, Pokébola */
           const quero = {};
+          /* a pedra vem antes de tudo: comprada por último, com mil
+             guardados pra estrada, ela nunca cabia (nenhum robô evoluiu
+             ninguém por pedra) */
+          if (J.pedra && typeof nomesDePedra === 'function')
+            for (const nome of nomesDePedra())
+              if (vende(nome) && !Estado.contaItem(nome) && [...d.time, ...(d.pc || [])].some(x => !x.morto && (pedrasDe(nome) || {})[x.dex])) quero[nome] = 1;
           if (vende('Ração')) quero['Ração'] = 3;
           const melhor = lista => lista.find(vende);
           const pot = melhor(['Hyper Potion', 'Super Potion', 'Potion']);
@@ -812,8 +924,6 @@ const SUSPEITO = [
           if (bola && (J.captura !== 'time' || d.time.length < 6)) quero[bola] = J.bolas || 5;
           /* Revive custa caro: só com dinheiro sobrando */
           if (vende('Revive') && J.cura >= .6 && d.jogador.dinheiro > 8000) quero['Revive'] = 2;
-          if (J.pedra && typeof nomesDePedra === 'function')
-            for (const nome of nomesDePedra()) if (vende(nome) && !Estado.contaItem(nome) && d.time.some(x => !x.morto && (pedrasDe(nome) || {})[x.dex])) quero[nome] = 1;
           /* e só entra se der pra comprar alguma coisa guardando mil pra estrada */
           const faltam = {};
           for (const [n, q] of Object.entries(quero))
@@ -960,7 +1070,7 @@ const SUSPEITO = [
         return {f:'viajar', id:Dados.escolher(viz)};
       }).catch(e => ({f:'erro', e:e.message}));
       /* o que ele decidiu no mapa vai pro diário (andar entra pela viagem) */
-      if (!['viajar', 'erro', 'pc', 'pedra', 'loja', 'segurar', 'vender', 'tm'].includes(dec.f))
+      if (!['viajar', 'erro', 'pc', 'pedra', 'loja', 'segurar', 'vender', 'tm', 'trocar', 'ordem', 'racao'].includes(dec.f))
         await page.evaluate(x => window.__passo && __passo('mapa', {f:x.f, itens:x.itens || null}), dec).catch(() => {});
       if (dec.f === 'erro') anota('erro na decisão do mapa', dec.e || '');
       const assin = JSON.stringify(dec) + await page.evaluate(() => Estado.dados.local + Relogio.texto());
@@ -1008,6 +1118,17 @@ const SUSPEITO = [
           UI.ensinarTMa(x.uid, x.nome);
           if (!document.querySelector('.aprender-op')){ UI.fecharModal(true); Exploracao.tela(); }
         }, dec).catch(e => erros.push('tm: ' + e.message));
+      } else if (dec.f === 'trocar'){
+        await page.evaluate(x => {
+          const d = Estado.dados, p = d.time.find(y => y.uid === x.uid);
+          const antes = new Set(d.time.map(y => y.uid));
+          const fmt = y => (y.apelido ? y.apelido + ', ' : '') + y.nome + ' ' + y.nivel;
+          const deu = p ? fmt(p) : null;
+          Trocas.fazer(x.uid, x.tid, 0);
+          const veio = d.time.concat(d.pc || []).find(y => !antes.has(y.uid) && y.trocado);
+          window.__passo && __passo('troca', {deu, veio:veio ? fmt(veio) : null, com:(Trocas.porId(x.tid) || {}).quem});
+          UI.fecharModal(true); if (!document.querySelector('#escolhas .escolha')) Exploracao.tela();
+        }, dec).catch(e => erros.push('trocar: ' + e.message));
       } else if (dec.f === 'ordem'){
         await page.evaluate(x => {
           const d = Estado.dados, p = d.time.find(y => y.uid === x.uid), antes = d.time[0];
@@ -1093,7 +1214,10 @@ const SUSPEITO = [
         return v.reduce((s, p) => s + Math.max(0, p.hp), 0) / Math.max(1, v.reduce((s, p) => s + p.hpMax, 0)) < .7; }).catch(() => false);
       const pesos = textos.map(t => (J.gosta && J.gosta.test(t) ? 3 : 1) * (/^Parar e olhar mais um pouco/.test(t) ? .5 : 1)
         * (perdeuAqui >= 2 && /tentar de novo/i.test(t) ? 0 : 1)
-        * (/^Ir ao balcão do Centro/.test(t) ? (precisaCurar ? 3 : 0) : 1));
+        * (/^Ir ao balcão do Centro/.test(t) ? (precisaCurar ? 3 : 0) : 1)
+        /* a figura de capuz pede a Pokébola pra completar o que ela deu:
+           quem troca entrega, quem é fiel ao time fecha a mão */
+        * (/^"Toma\."/.test(t) ? (J.troca ? 6 : 1) : 1) * (/^Fechar a mão em volta da Pokébola/.test(t) ? (J.troca ? .2 : 3) : 1));
       if (!pesos.some(x => x > 0)) pesos.fill(1);
       let r = Math.random() * pesos.reduce((s, x) => s + x, 0), k = 0;
       while (k < pesos.length - 1 && (r -= pesos[k]) > 0) k++;

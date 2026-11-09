@@ -1411,6 +1411,15 @@ const Estado = {
          casa e a rua viram as de Viridian, onde a jornada já tinha
          começado. */
       if (d.jogador && d.jogador.cidade === 'Indigo') d.jogador.cidade = 'Viridian';
+      /* o inicial que já morava na casa saía sem o uid gravado, e o jogo
+         achava o seu pela espécie: outro Oddish no cinto virava o
+         inicial, e o de verdade, morto, deixava o lugar pro novo. A
+         história dele é só dele, e é por ela que se acha qual é */
+      if (d.jogador && d.jogador.inicialDex && !d.jogador.inicialUid){
+        const daCasa = [].concat(d.time || [], d.pc || [], d.cemiterio || [])
+          .find(p => p && /^Já morava na sua casa/.test(p.historia || ''));
+        if (daCasa) d.jogador.inicialUid = daCasa.uid;
+      }
       /* a foto ganhou sete partes (cabelo, olhos, pele, camisa, calça,
          sapatos e detalhes): a cor da roupa de antes vai pra parte que
          ela pintava, e a descrição que a foto escreveu é refeita com tudo

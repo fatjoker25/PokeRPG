@@ -24,8 +24,10 @@ function inicialDoJogador(d){
   d = d || Estado.dados;
   const vivos = (d.time || []).concat(d.pc || []).filter(p => !p.morto);
   const j = d.jogador || {};
-  return vivos.find(p => j.inicialUid && p.uid === j.inicialUid)
-      || vivos.find(p => j.inicialDex && typeof linhaDe === 'function' && linhaDe(p.dex).includes(j.inicialDex))
+  /* com o uid gravado é ele ou ninguém: morto ou trocado, outro da
+     mesma linha no cinto não toma o lugar dele */
+  if (j.inicialUid) return vivos.find(p => p.uid === j.inicialUid) || null;
+  return vivos.find(p => j.inicialDex && typeof linhaDe === 'function' && linhaDe(p.dex).includes(j.inicialDex))
       || null;
 }
 

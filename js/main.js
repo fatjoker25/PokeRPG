@@ -180,6 +180,7 @@ const Jogo = {
     }
     Estado.adicionar(inicial);
     Estado.j.inicialDex = inicial.dex;          // Blue escolhe o contra do seu inicial
+    Estado.j.inicialUid = inicial.uid;          // e é por ele que o jogo acha o seu, mesmo com outro da mesma linha no cinto
     iniciarRival();                             // e o rival escolhe o contra do seu também
     Estado.registrar(`${Estado.j.nome} saiu de ${Estado.j.cidade} com ${inicial.nome}.`);
     Estado.salvar('auto');

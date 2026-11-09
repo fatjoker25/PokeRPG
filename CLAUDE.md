@@ -2187,6 +2187,15 @@ cartão não sai — ele vem na primeira ida ao Centro de Viridian
 Texto que não pode depender de "mãe": quem ficou em casa é `nomeCasa()`,
 `casaQuem()`, `{casa:ela|ele}` — nunca "sua mãe" escrito à mão.
 
+**O inicial é achado pelo uid** (`inicialUid`, lido por
+`inicialDoJogador`), gravado nas três entregas: a do Célio, a do
+Professor e a do que já morava na casa. Com o uid gravado é ele ou
+ninguém: morto ou trocado, outro da mesma linha no cinto não vira o
+inicial (o Célio perguntava pelo Oddish novo como se fosse o dele). A
+linha (`inicialDex`) só vale pra save sem uid; o do que já morava na
+casa saía sem, e ganha o uid na carga pela história dele
+(`Estado.abrir`).
+
 **Quem ficou em casa fala por `falaCasa(diz, tom, nota)`**, nunca por
 `fala(nomeCasa(), …)`: o balão leva o nome da ficha e o rosto do
 parentesco (`retratoDaCasa()`, de `RETRATO_DA_CASA`), e o contato da casa
