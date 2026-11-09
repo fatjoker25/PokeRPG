@@ -733,6 +733,15 @@ const SUSPEITO = [
             if (pior && valor(guardados[0]) > valor(pior) + 3) return {f:'pc', guardar:pior.uid, tirar:guardados[0].uid};
           }
         }
+        /* moral no chão e Ração sobrando: dá na mão (+10 de moral), um por
+           dia cada, guardando duas pro time comer sozinho. O Vito andou o
+           capítulo 16 inteiro com o time em moral 0, faminto, ignorando
+           uma ordem em três, e perdeu cinco vezes pro Blaine */
+        if (Estado.contaItem('Ração') >= 3){
+          X.naMao = X.naMao || {};
+          const triste = vivos.filter(p => (p.moral || 0) < 30 && X.naMao[p.uid] !== dia).sort((u, v) => (u.moral || 0) - (v.moral || 0))[0];
+          if (triste){ X.naMao[triste.uid] = dia; return {f:'racao', uid:triste.uid}; }
+        }
         /* mão livre e item de segurar parado na mochila: dá pra segurar,
            o mais útil primeiro (o Eviolite só pra quem ainda evolui). O
            Vito perdia pro Brock com Leftovers e Eviolite na mochila */
@@ -843,7 +852,12 @@ const SUSPEITO = [
         };
         const podeTreinar = d.treinoDia !== d.relogio.dia && Estado.contaItem('Ração') >= TREINO_RACAO
           && (d.treinoReal || 0) + TREINO_ESPERA_MIN * 60000 <= Date.now();
-        const treinarAqui = () => (podeTreinar && vivos.some(p => p.nivel < (L.nivel || 5) + 5)) ? {f:'treinar'} : {f:'procurar'};
+        /* treinador de rota esperando luta paga e ensina mais que o mato:
+           quem joga sem dinheiro vai atrás dele. O Vito, sem licença e sem
+           um tostão, só procurava no mato, que não paga nada */
+        const temTreinador = afz.includes('desafiar') && hp >= .6;
+        const treinarAqui = () => temTreinador && (d.jogador.dinheiro < 1500 || Math.random() < .5) ? {f:'desafiar'}
+          : (podeTreinar && vivos.some(p => p.nivel < (L.nivel || 5) + 5)) ? {f:'treinar'} : {f:'procurar'};
 
         /* o ginásio: o da cidade, se der; e ir atrás de um quando a história
            pede insígnia (ou quando o jeito é de quem caça ginásio) */
@@ -987,6 +1001,14 @@ const SUSPEITO = [
           UI.ensinarTMa(x.uid, x.nome);
           if (!document.querySelector('.aprender-op')){ UI.fecharModal(true); Exploracao.tela(); }
         }, dec).catch(e => erros.push('tm: ' + e.message));
+      } else if (dec.f === 'racao'){
+        await page.evaluate(x => {
+          const p = Estado.dados.time.find(y => y.uid === x.uid);
+          const antes = p ? p.moral : null;
+          UI.aplicarItemFora('Ração', x.uid);
+          UI.fecharModal(true); Exploracao.tela();
+          window.__passo && __passo('racao', {quem:p ? nomeExib(p) + ' (' + p.nome + ' ' + p.nivel + ')' : null, moral:[antes, p ? p.moral : null]});
+        }, dec).catch(e => erros.push('racao: ' + e.message));
       } else if (dec.f === 'segurar'){
         await page.evaluate(x => {
           const p = Estado.dados.time.find(y => y.uid === x.uid);
