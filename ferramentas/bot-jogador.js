@@ -1144,7 +1144,7 @@ const SUSPEITO = [
         agora:ini ? {nome:nomeExib(ini), especie:ini.nome, dex:ini.dex, nivel:ini.nivel} : null},
       time:d.time.map(p => ({dex:p.dex, especie:p.nome, apelido:p.apelido || null, nivel:p.nivel, genero:generoDe(p), natureza:p.natureza,
         golpes:p.golpes.map(g => g.nome), hp:p.hp, hpMax:p.hpMax, moral:p.moral, shiny:!!p.shiny, segurando:p.segurando || null, morto:!!p.morto})),
-      pc:(d.pc || []).map(p => ({dex:p.dex, especie:p.nome, nivel:p.nivel, morto:!!p.morto})),
+      pc:(d.pc || []).map(p => ({dex:p.dex, especie:p.nome, apelido:p.apelido || null, nivel:p.nivel, genero:p.genero || null, shiny:!!p.shiny, morto:!!p.morto})),
       cemiterio:(d.cemiterio || []).map(p => ({especie:p.nome, nome:nomeExib(p), causa:p.causaMorte})),
       insignias:d.insignias.slice(), dinheiro:j.dinheiro, reputacao:rep ? rep.nome : null, eixo:d.reputacao && d.reputacao.eixo,
       via:d.via || null, linha:typeof linhaAtual === 'function' ? linhaAtual(d) : null, cargos:(d.cargos || []).slice(),
