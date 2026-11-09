@@ -494,6 +494,32 @@ const SUSPEITO = [
       break;
     }
 
+    /* o PokéNav tocando: atende e guarda o aparelho antes de qualquer
+       outra coisa. Com a chamada aberta por cima do mapa o robô decidia o
+       mapa por baixo e nunca chegava na janela: na segunda rodada três
+       ficaram dez minutos com o aparelho tocando. O clique é pela página,
+       sem a espera do Playwright, e só nas respostas da ligação
+       (.nav-respostas não existe fora dela) */
+    const ligacao = await page.evaluate(() => {
+      const r = document.querySelector('#modal .nav-respostas');
+      if (!r) return null;
+      const fim = r.querySelector('.nav-fim');
+      if (fim){ fim.click(); return {fim:true}; }
+      const ops = [...r.querySelectorAll('.nav-acao')];
+      if (!ops.length) return null;
+      const atende = ops.filter(b => !b.classList.contains('recusar'));
+      const pool = atende.length ? atende : ops;
+      const b = pool[Math.floor(Math.random() * pool.length)];
+      const t = b.innerText.replace(/\s+/g, ' ').trim();
+      b.click();
+      return {resposta:t};
+    }).catch(() => null);
+    if (ligacao){
+      if (ligacao.resposta) await page.evaluate(x => window.__passo && __passo('chamada', {resposta:x.slice(0, 120)}), ligacao.resposta).catch(() => {});
+      await page.waitForTimeout(80);
+      continue;
+    }
+
     /* apelido: uma vez em quatro, e um nome que o time ainda não tem */
     if (await page.locator('#campo-apelido').count()){
       const nomes = APELIDOS.filter(n => !apelidosDados.has(n));
@@ -545,6 +571,19 @@ const SUSPEITO = [
         /* luta que não acaba: depois de 150 turnos contra treinador, desiste
            (como gente faria); depois de 60, varia o golpe pra sair do laço */
         if (B.tipo === 'treinador' && B.turno > 150) return {tipo:'desistir'};
+        /* ninguém fere ninguém (golpe Normal contra Fantasma dos dois
+           lados: o Meowth de um robô e um Gastly ficaram oitenta turnos sem
+           tirar um ponto de HP). Doze turnos com os dois HP parados e os
+           mesmos dois em campo, quem joga desiste da luta de treinador e
+           foge da selvagem; a troca pra quem acerta, se tiver, vem antes,
+           pela regra do banco lá embaixo */
+        const marca = [p.uid, p.hp, alvo.uid, alvo.hp].join('/');
+        if (X.marcaLuta !== marca){ X.marcaLuta = marca; X.marcaTurno = B.turno; }
+        else if (B.turno - (X.marcaTurno || B.turno) >= 12){
+          X.marcaTurno = B.turno;
+          if (B.tipo === 'treinador') return {tipo:'desistir'};
+          if (B.fuga !== false) return {tipo:'fugir'};
+        }
         const golpeBom = (quem) => {
           let melhor = -1, idx = 0;
           const validos = [];
