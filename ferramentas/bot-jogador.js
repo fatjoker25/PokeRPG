@@ -141,7 +141,9 @@ const SUSPEITO = [
     if (!achados[k]) console.log('ACHADO', k);
     achados[k] = (achados[k] || 0) + 1; };
   /* cena sem saída o jogo não deixa quebrar: avisa no console */
-  page.on('console', m => { if (m.type() === 'error' && /Cena sem saída/.test(m.text())) console.log('ACHADO', m.text()); });
+  page.on('console', m => { if (m.type() === 'error' && /Cena sem saída/.test(m.text())) console.log('ACHADO', m.text());
+    /* luta de ginásio e da Elite saem na hora, pra quem vigia a jogada */
+    else if (m.type() === 'info' && /^LUTA /.test(m.text())) console.log(m.text()); });
   page.on('pageerror', e => { const m = e.message + ' @ ' + (e.stack || '').split('\n').slice(1, 3).join(' | ');
     erros.push(m); console.log('ERRO JS', m.slice(0, 300)); });
   page.on('dialog', d => /Soltar|permanente|Vender|Largar/.test(d.message()) ? d.dismiss() : d.accept());
@@ -355,6 +357,8 @@ const SUSPEITO = [
           turnos:B.turno, caidos:vivos.filter(p => p.hp <= 0).length, de:vivos.length, bolas:(window.__extra || {}).bolasNaLuta || 0,
           time:vivos.map(p => p.nome + ' ' + p.nivel),
           capturou:fim.resultado === 'captura' && fim.pokemon ? fim.pokemon.nome + ' ' + fim.pokemon.nivel : null});
+        if (cx.de === 'ginásio' || cx.de === 'Liga')
+          console.info(`LUTA ${cx.de} · ${cx.lider || cx.nome} · ${fim.resultado} · cap ${d.capitulo} · dia ${d.relogio.dia} · ${vivos.map(p => p.nivel).join('/')}`);
         /* ginásio perdido: da próxima vez ele chega mais forte */
         /* e treina de novo antes de voltar: a conta de treino do ginásio
            zera. Com ela parada no teto, o Vito desafiou o Brock 1.225
@@ -971,12 +975,26 @@ const SUSPEITO = [
         /* quem nasceu longe pega o ônibus da Liga, como a cidade oferece */
         if (afz.includes('onibus')) return {f:'onibus'};
 
-        /* a Elite, pra quem quer: no Planalto, com as oito, uma vez por dia */
-        if (J.liga && id === 'planalto' && typeof statusElite4 === 'function' && statusElite4().estado === 'disponivel' && X.eliteDia !== dia){
+        /* a Elite: quem tem o jeito vai desde as oito; do 26 em diante,
+           todo mundo, porque a jornada fecha no Campeão e o 28 acaba a
+           história. Uma tentativa por dia, com o time curado, até
+           ELITE_VEZES; antes de abrir o 28 o robô sobe o Planalto pra
+           tentar, e depois de cada derrota a história segue. Nível pesa
+           pouco no Pokérole (um ponto a cada 7), então a porta abre com o
+           time até 6 abaixo da primeira cadeira, não 1: na primeira rodada
+           nenhum dos cinco chegou à ala */
+        const ELITE_VEZES = 6;
+        const querElite = (J.liga || d.capitulo >= 26) && typeof statusElite4 === 'function'
+          && statusElite4().estado === 'disponivel' && (X.eliteVezes || 0) < ELITE_VEZES && X.eliteDia !== dia;
+        if (querElite){
           const m = (typeof Titulares !== 'undefined' && Titulares.membro(0)) || (typeof ELITE4 !== 'undefined' && ELITE4[0]) || {};
-          if (ref >= (m.nivelBase || 50) - 1){
-            if (hp < .95){ const c = curar(); if (c) return c; }
-            X.eliteDia = dia; return {f:'liga'};
+          if (ref >= (m.nivelBase || 50) - 6){
+            if (id === 'planalto'){
+              if (hp < .95){ const c = curar(); if (c) return c; }
+              X.eliteDia = dia; X.eliteVezes = (X.eliteVezes || 0) + 1; return {f:'liga'};
+            }
+            const prox = Historia.proximoDestino && Historia.proximoDestino();
+            if (prox && Math.floor(prox.num) === 28){ const v = ir('planalto'); if (v) return v; }
           }
         }
 
@@ -1009,9 +1027,12 @@ const SUSPEITO = [
         const travado = !!(destino && (travaDoCapitulo(destino.num)
           || (destino.local && destino.local !== '*' && destino.local !== id && !trajeto(id, destino.local))));
         const perdeu = gid => ((X.gin || {})[gid] || 0);
-        /* cada derrota pede 2 níveis a mais, até 8: o Vito tinha 1.452
-           derrotas pro Brock (do laço antigo) e nunca mais estaria pronto */
-        const prontoPra = g => ref >= nivelGinasio(g) - (J.ginasio ? 1 : 0) + 2 * Math.min(4, perdeu(g.id));
+        /* cada derrota pede um nível a mais, até 3. Já foram 2 por derrota,
+           até 8, mas nível pesa pouco no Pokérole (um ponto de atributo a
+           cada 7): no 21 os robôs ficavam semanas treinando pro Blue atrás
+           de oito níveis que não mudavam a luta. O teto segura o Vito, que
+           tinha 1.452 derrotas pro Brock (do laço antigo) */
+        const prontoPra = g => ref >= nivelGinasio(g) - (J.ginasio ? 1 : 0) + Math.min(3, perdeu(g.id));
         const daqui = GINASIOS.find(x => x.id === id && statusGinasio(x).estado === 'disponivel');
         if (daqui && prontoPra(daqui)){
           /* porta com hora marcada (Cinnabar): curar agora gasta a janela,
@@ -1237,6 +1258,46 @@ const SUSPEITO = [
     const ne = await esc.count();
     if (ne){
       const textos = await esc.evaluateAll(els => els.map(e => e.innerText.replace(/\s+/g, ' ').trim())).catch(() => []);
+      /* a porta que só leva a um final, antes do 28: na primeira rodada os
+         cinco pararam no 25 ou no terceiro capítulo do caminho, num
+         desfecho antecipado, e ninguém chegou à Elite. A opção que, seguida
+         cena a cena (escolha, teste, luta, desvio), só chega em cena com
+         final e nunca no "Encerrar o capítulo" pesa quase nada quando a
+         cena tem outra. null é o botão que não é da história (Centro,
+         olhar) */
+      const soFinal = await esc.evaluateAll(els => {
+        const d = Estado.dados, cap = Historia.capAtual, cena = Historia.cenaAtual || {};
+        if (!cap || !cap.cenas || Math.floor(d.capitulo) === 28) return els.map(() => null);
+        const seguintes = (cid, c) => {
+          const s = [];
+          (c.escolhas || []).forEach(e => { if (typeof e.vai === 'string') s.push(e.vai); });
+          if (c.teste) ['critico', 'sucesso', 'parcial', 'falha'].forEach(k => { if (typeof c.teste[k] === 'string') s.push(c.teste[k]); });
+          if (c.batalha) ['vitoria', 'derrota', 'captura', 'fuga', 'fuga2'].forEach(k => { if (typeof c.batalha[k] === 'string') s.push(c.batalha[k]); });
+          if (c.sacrificio && typeof c.sacrificio.vai === 'string') s.push(c.sacrificio.vai);
+          const dv = cap.desvios && cap.desvios[cid];
+          if (dv && typeof dv.vai === 'string') s.push(dv.vai);
+          return s;
+        };
+        const leva = ini => {
+          const visto = new Set([ini]), fila = [ini];
+          let final = false, fim = false;
+          while (fila.length){
+            const cid = fila.shift(), c = cap.cenas[cid];
+            if (!c) continue;
+            if (c.final) { final = true; continue; }
+            if (c.fim) { fim = true; continue; }
+            for (const y of seguintes(cid, c)) if (!visto.has(y)){ visto.add(y); fila.push(y); }
+          }
+          return final && !fim;
+        };
+        return els.map(el => {
+          const m = /Jogo\.escolher\((\d+)\)/.exec(el.getAttribute('onclick') || '');
+          if (!m) return null;
+          const e = (cena.escolhas || [])[+m[1]];
+          return !!(e && typeof e.vai === 'string' && leva(e.vai));
+        });
+      }).catch(() => []);
+      const temOutra = soFinal.some(x => x === false);
       /* perdeu duas vezes no mesmo ginásio: não tenta de novo na hora,
          vai treinar antes. O Vito, com um Geodude só, perdeu do Onix do
          Brock mais de dez vezes seguidas pelo "tentar de novo" */
@@ -1247,7 +1308,8 @@ const SUSPEITO = [
          com o time inteiro, e o passo a passo enchia de cura à toa */
       const precisaCurar = await page.evaluate(() => { const v = Estado.dados.time.filter(p => !p.morto);
         return v.reduce((s, p) => s + Math.max(0, p.hp), 0) / Math.max(1, v.reduce((s, p) => s + p.hpMax, 0)) < .7; }).catch(() => false);
-      const pesos = textos.map(t => (J.gosta && J.gosta.test(t) ? 3 : 1) * (/^Parar e olhar mais um pouco/.test(t) ? .5 : 1)
+      const pesos = textos.map((t, i) => (J.gosta && J.gosta.test(t) ? 3 : 1) * (/^Parar e olhar mais um pouco/.test(t) ? .5 : 1)
+        * (soFinal[i] && temOutra ? .03 : 1)
         * (perdeuAqui >= 2 && /tentar de novo/i.test(t) ? 0 : 1)
         * (/^Ir ao balcão do Centro/.test(t) ? (precisaCurar ? 3 : 0) : 1)
         /* a figura de capuz pede a Pokébola pra completar o que ela deu:
@@ -1313,7 +1375,7 @@ const SUSPEITO = [
       cemiterio:(d.cemiterio || []).map(p => ({especie:p.nome, nome:nomeExib(p), causa:p.causaMorte})),
       insignias:d.insignias.slice(), dinheiro:j.dinheiro, reputacao:rep ? rep.nome : null, eixo:d.reputacao && d.reputacao.eixo,
       via:d.via || null, linha:typeof linhaAtual === 'function' ? linhaAtual(d) : null, cargos:(d.cargos || []).slice(),
-      capitulo:d.capitulo, fechados:(d.capitulosFechados || []).slice(), dia:d.relogio.dia,
+      capitulo:d.capitulo, fechados:(d.capitulosFechados || []).slice(), dia:d.relogio.dia, campeao:!!d.flags.campeao_de_kanto,
       pokedex:{vistos:Object.keys(pd.vistos || {}).length, catalogados:Object.keys(pd.catalogados || {}).length},
       itens:Object.assign({}, d.itens), diario:(d.log || []).slice(-400)};
   }).catch(e => ({erro:e.message}));
