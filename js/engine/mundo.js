@@ -709,6 +709,14 @@ function afazeresDoLocal(){
     }
   }
 
+  /* lugar que não é cidade e tem Centro (o Planalto) tem a mesma porta.
+     O mapa já dizia que o Planalto tinha Centro, mas a porta só saía em
+     cidade: a Alba chegou pelo Caminho da Vitória com o time caído e
+     ficou indo e voltando entre a montanha e o Planalto sem ter onde curar */
+  if (L.tipo !== 'cidade' && (L.lugares||[]).includes('centro'))
+    lista.push({lugar:true, id:'centro', titulo:'Centro Pokémon',
+      sub:'Enfermeira, PC, balcão de credenciais e mapa na parede.'});
+
   if (id === 'planalto'){
     lista.push({lugar:true, id:'relembrar', titulo:'Relembrador de Golpes', sub:RELEMBRADOR.planalto.sub});
     lista.push({lugar:true, id:'liga', titulo:'A ala dos quatro',
