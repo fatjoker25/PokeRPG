@@ -63,8 +63,8 @@ Numeração: A = 33..42, B = 43..52, C = 53..62, na ordem da tabela abaixo.
 
 ### 6. Liga
 - **A · A Copa Júnior de Fuchsia** — você apita um torneio de crianças e um pai compra resultado.
-- **B · A Regra Nova** — a Liga estuda dar unidade de viveiro como "primeiro Pokémon" de quem não tem.
-- **C · A Votação** — você vota e fala no plenário. Finais: **O Plenário** · **A Liga Comprada** · **A Quadra de Terra**.
+- **B · A Regra Nova** — a Comissão propõe ao Conselho Regional dar unidade de viveiro como "primeiro Pokémon" de quem não tem, e a Liga, que entrega a licença, faz o parecer com um teste na quadra.
+- **C · A Votação** — o Conselho Regional vota na reunião de quinta, no Planalto (a da convocação do 25), e você fala pela Liga, que fala e não vota. Finais: **O Comitê Técnico** · **A Liga Comprada** · **A Quadra de Terra**.
 
 ### 7. Herói
 - **A · O Fogo no Capim** — queimada na borda do Safári, Pokémon e gente presos.

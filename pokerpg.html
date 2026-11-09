@@ -139700,11 +139700,15 @@ cn3_final_mato:{
 
 /* ===== js/story/caminhos/liga.js ===== */
 /* ============================================================
-   CAMINHO DA LIGA — quadra, torneio, plenário
+   CAMINHO DA LIGA — quadra, torneio, Conselho
    Pra quem é da Liga (instrutor, líder, elite, conselheiro) ou, sem
    lado nenhum, vive de ginásio (4 insígnias ou mais). Quem acompanha:
    a Coordenadora Maple, que organiza torneio de criança e não aguenta
    pai de criança.
+   A Liga é do esporte e não vota política: o Programa Primeiro Pokémon
+   é proposta da Comissão ao Conselho Regional, a Liga (que entrega a
+   licença) dá o parecer, e quem vota são os quinze conselheiros, na
+   reunião de quinta no Planalto — a da convocação do capítulo 25.
    ============================================================ */
 
 /* ── I · A COPA JÚNIOR DE FUCHSIA (depois do 12) ───────────── */
@@ -139869,11 +139873,11 @@ cenas:{
 cg2_a_pasta:{
   texto:[
     d => { Nomes.apresentar('a coordenadora da quadra'); return 'A Coordenadora Maple está sentada na arquibancada vazia da quadra da escola de treino, com uma pasta no colo e o apito no pescoço.'; },
-    fala('a coordenadora da quadra', 'Programa Primeiro Pokémon. A Comissão propôs à Liga: toda criança de Kanto sem condição de pegar um inicial recebe uma unidade de viveiro, com laudo, de graça.'),
+    fala('a coordenadora da quadra', 'Programa Primeiro Pokémon. A Comissão propôs ao Conselho Regional: toda criança de Kanto sem condição de pegar um inicial recebe uma unidade de viveiro, com laudo, de graça, junto com a licença.'),
     fala('a coordenadora da quadra', 'De graça. A Liga adora de graça.', 'frio'),
-    fala('a coordenadora da quadra', 'Eles querem um teste na quadra antes da votação. Criança da escola de treino contra unidade. Eu preciso de alguém que apite e que diga o que viu.')
+    fala('a coordenadora da quadra', 'Quem vota é o Conselho, mas quem entrega é a Liga, então eles pediram o parecer da Liga. E o parecer pede um teste na quadra: criança da escola de treino contra unidade. Eu preciso de alguém que apite e que diga o que viu.')
   ],
-  ef:{flag:'cm_liga_2', registrar:'A Comissão propôs à Liga dar unidades de viveiro como primeiro Pokémon de criança.'},
+  ef:{flag:'cm_liga_2', registrar:'A Comissão propôs ao Conselho Regional dar unidades de viveiro como primeiro Pokémon de criança, entregues pela Liga junto com a licença.'},
   escolhas:[
     {texto:'Apitar o teste.', vai:'cg2_o_teste'},
     {texto:'"E se o teste for bom?"', vai:'cg2_e_se'}
@@ -139938,7 +139942,7 @@ cg2_perdeu:{
 
 cg2_o_relatorio:{
   texto:[
-    'O relatório é pra comissão técnica da Liga, que vai ler antes de votar.',
+    'O relatório vai no parecer da Liga, que o Conselho Regional lê antes de votar.',
     'Onze de doze. Esse é o número que todo mundo vai citar.',
     'O que o número não diz: que a única que perdeu, perdeu pra um Rattata que mordeu por conta própria. E que onze crianças choraram e nenhuma unidade olhou.'
   ],
@@ -139954,7 +139958,7 @@ cg2_o_relatorio:{
 
 cg2_fim:{
   texto:[
-    d => d.flags.cm_liga_so_o_numero ? fala('a coordenadora da quadra', 'Onze de doze. Bonito. Vão citar o seu nome no plenário.', 'frio') : fala('a coordenadora da quadra', 'Vão dizer que você exagerou. Deixa dizerem. Exagero assinado vale mais que número sem nome.'),
+    d => d.flags.cm_liga_so_o_numero ? fala('a coordenadora da quadra', 'Onze de doze. Bonito. Vão citar o seu nome no Conselho.', 'frio') : fala('a coordenadora da quadra', 'Vão dizer que você exagerou. Deixa dizerem. Exagero assinado vale mais que número sem nome.'),
     'Na saída da quadra, a menina do Rattata desdentado está sentada na escada, dando água pra ele numa tampinha de garrafa.'
   ],
   fim:true, resumo:'A regra nova: onze de doze, um Rattata desdentado e o que o número não diz.'
@@ -139965,21 +139969,29 @@ cg2_fim:{
 
 /* ── III · A VOTAÇÃO (depois do 25) ────────────────────────── */
 {
-num:25.06, titulo:'A Votação', local:'Planalto Indigo — o plenário da Liga', ambiente:'montanha', nivelArea:58,
+num:25.06, titulo:'A Votação', local:'Planalto Indigo — a reunião do Conselho Regional', ambiente:'montanha', nivelArea:58,
 tom:'muito sombrio',
-ancora:{local:'planalto', chamada:'O plenário da Liga abre as portas às nove, e a pauta do dia tem uma linha só: Programa Primeiro Pokémon.'},
+ancora:{local:'planalto', chamada:'A reunião ordinária do Conselho Regional é na quinta, às nove, numa sala do Planalto, e a pauta tem uma linha só: Programa Primeiro Pokémon.'},
 entradas:['cg3_o_plenario'],
 inicio: d => 'cg3_o_plenario',
 cenas:{
 
+/* o id é de quando a votação era num plenário da Liga: fica, porque o
+   save guarda a cena pelo id */
 cg3_o_plenario:{
   texto:[
-    'O plenário da Liga é uma sala redonda com quarenta cadeiras de vinil verde e um painel de votação que ninguém sabe ligar direito.',
-    'Lance não está. Ele assina os documentos da Liga e não vem a plenário. Na cadeira dele, uma placa: AUSENTE.',
-    fala('a coordenadora da quadra', 'Depois da audiência de segunda, a Comissão precisa disso aprovado mais do que nunca. É o jeito deles de virarem coisa boa no jornal.'),
-    fala('a coordenadora da quadra', 'Você tem voz. Eu tenho voto. Usa a sua antes de eu usar o meu.')
+    'O Conselho Regional se reúne às quintas, às nove, numa sala do Planalto que a Liga empresta: quinze cadeiras de madeira, desconfortáveis de propósito, em volta de uma mesa redonda, e um painel de votação que ninguém sabe ligar direito.',
+    d => `Na cadeira do meio, ${typeof c25_conheceAMargot === 'function' && c25_conheceAMargot() ? Nomes.comoChamar('a conselheira regional') : 'a senhora da audiência'}, com o broche do Conselho no colarinho.`,
+    'Atrás da mesa, uma fileira de cadeiras sem painel é das partes, que falam e não votam: a Comissão, de terno, e a Liga. A cadeira da Liga devia ser do Lance, que assina os documentos da Liga e não vem às reuniões do Conselho. Nela, uma placa: AUSENTE.',
+    /* quem chega ao III sem ter passado pelo I e pelo II conhece ela aqui */
+    d => { Nomes.apresentar('a coordenadora da quadra'); return 'Do lado da placa, a Coordenadora Maple, com o parecer da Liga numa pasta e o apito no pescoço.'; },
+    fala('a coordenadora da quadra', 'Depois daquela audiência, a Comissão precisa disso aprovado mais do que nunca. É o jeito deles de virarem coisa boa no jornal.'),
+    d => d.flags.assinou_a_convocacao_da_liga
+      ? fala('a coordenadora da quadra', 'Aqui a Liga fala e não vota. Eu leio o parecer. E você ainda tem a convocação de depoente que assinou: cinco minutos de microfone, com voz e sem voto. Usa.')
+      : fala('a coordenadora da quadra', 'Aqui a Liga fala e não vota. Eu leio o parecer, e os cinco minutos de microfone eu pedi no seu nome. Usa.')
   ],
-  ef:{flag:'cm_liga_3', registrar:'O plenário da Liga vota o Programa Primeiro Pokémon.', executar:() => { caminhoAs(9); }},
+  /* a reunião ordinária é na quinta, às nove (a convocação do 25) */
+  ef:{flag:'cm_liga_3', registrar:'O Conselho Regional vota o Programa Primeiro Pokémon, numa quinta, no Planalto.', executar:() => { Relogio.ateODia(3, 9); }},
   escolhas:[
     {texto:'Pedir a palavra.', vai:'cg3_a_palavra'}
   ]
@@ -139987,7 +139999,7 @@ cg3_o_plenario:{
 
 cg3_a_palavra:{
   texto:[
-    'Você tem cinco minutos no microfone do plenário. O relógio na parede é de ponteiro e anda alto.',
+    'Você tem cinco minutos no microfone das partes. O relógio na parede é de ponteiro e anda alto.',
     d => d.flags.cm_liga_relatorio_inteiro ? 'Você tem o relatório inteiro do teste da quadra, com o Rattata e as onze crianças.'
       : d.flags.cm_liga_so_o_numero ? 'Você tem o relatório que você assinou: onze de doze. Os conselheiros já citaram o seu nome duas vezes, a favor.'
       : d.flags.cm_liga_1 ? 'Você tem o que viu numa quadra de escola, numa copa de criança, com um Ledyba de plástico.'
@@ -139999,10 +140011,10 @@ cg3_a_palavra:{
 
 cg3_convenceu:{
   texto:[
-    'Você fala quatro minutos e para antes do quinto. O silêncio do plenário dura o minuto que sobrou.',
+    'Você fala quatro minutos e para antes do quinto. O silêncio da sala dura o minuto que sobrou.',
     'Um conselheiro velho, de gravata torta, pede a palavra e diz que começou a jornada com um Rattata que não obedecia nada, e que é o melhor Pokémon que ele já teve.'
   ],
-  ef:{flag:'cm_liga_convenceu', rep:{eixo:'bom', delta:2, motivo:'Falou no plenário da Liga contra o Programa Primeiro Pokémon'}},
+  ef:{flag:'cm_liga_convenceu', rep:{eixo:'bom', delta:2, motivo:'Falou no Conselho Regional contra o Programa Primeiro Pokémon'}},
   escolhas:[
     {texto:'Esperar a votação.', vai:'cg3_o_corredor'}
   ]
@@ -140013,7 +140025,7 @@ cg3_meio:{
     'Você fala, mas a voz sai baixa e o relógio de ponteiro fala mais alto.',
     'Os conselheiros anotam. Uns anotam o que você disse; outros, a hora.'
   ],
-  ef:{rep:{eixo:'bom', delta:1, motivo:'Falou no plenário da Liga, mesmo sem convencer'}},
+  ef:{rep:{eixo:'bom', delta:1, motivo:'Falou no Conselho Regional, mesmo sem convencer'}},
   escolhas:[
     {texto:'Esperar a votação.', vai:'cg3_o_corredor'}
   ]
@@ -140024,14 +140036,14 @@ cg3_o_corredor:{
     d => d.flags.cm_liga_1
       ? 'No intervalo, no corredor, um homem de terno claro te espera do lado do bebedouro. Você já viu ele numa arquibancada de escola.'
       : 'No intervalo, no corredor, um homem de terno claro te espera do lado do bebedouro, com crachá de patrocinador e um menino de doze anos do lado.',
-    fala('o pai do patrocínio', 'Eu sou do conselho de patrocinadores da Liga agora. O programa tem um rosto de campanha, e o rosto ainda não foi escolhido.'),
+    fala('o pai do patrocínio', 'Eu sou do conselho de patrocinadores da Liga agora. Se o programa passar, quem paga a entrega das unidades somos nós, e ele precisa de um rosto de campanha.'),
     fala('o pai do patrocínio', 'Alguém jovem, com insígnia, que fale bonito no microfone. Paga bem. Muito bem.')
   ],
   escolhas:[
-    {texto:'Recusar e voltar pro plenário.', vai:'cg3_a_votacao',
+    {texto:'Recusar e voltar pra sala.', vai:'cg3_a_votacao',
      ef:{rep:{eixo:'bom', delta:1, motivo:'Recusou ser o rosto do Programa Primeiro Pokémon'}}},
     {texto:'Desafiar ele ali: se você ganhar, ele retira o patrocínio do programa.', vai:'cg3_desafio',
-     ef:{rep:{eixo:'bom', delta:1, motivo:'Desafiou o patrocinador do programa no corredor do plenário'}}},
+     ef:{rep:{eixo:'bom', delta:1, motivo:'Desafiou o patrocinador do programa no corredor do Conselho'}}},
     {texto:'Aceitar ser o rosto do programa.', vai:'cg3_final_comprada',
      ef:{rep:{eixo:'ruim', delta:4, motivo:'Virou o rosto do programa que dá unidade de viveiro pra criança'}}}
   ]
@@ -140046,36 +140058,38 @@ cg3_desafio:{
 
 cg3_retirou:{
   texto:[
-    'O Dragonite dele cai no tapete do corredor do plenário e o bebedouro balança.',
+    'O Dragonite dele cai no tapete do corredor e o bebedouro balança.',
     'Ele cumpre. Ele é desse tipo: compra tudo, mas paga o que perde.',
     d => fala('o pai do patrocínio', d.flags.cm_liga_1 ? 'Retirado. O meu filho ainda fala daquela menina do Oddish, sabia? Toda semana.' : 'Retirado. Só não conta pro meu filho que eu perdi.', 'baixo')
   ],
   ef:{flag:'cm_liga_retirou_patrocinio', rep:{eixo:'bom', delta:2, motivo:'Venceu o patrocinador e ele retirou o dinheiro do programa'}},
   escolhas:[
-    {texto:'Voltar pro plenário.', vai:'cg3_a_votacao'}
+    {texto:'Voltar pra sala.', vai:'cg3_a_votacao'}
   ]
 },
 
 cg3_a_votacao:{
   texto:[
     'O painel de votação liga na terceira tentativa.',
-    d => (d.flags.cm_liga_convenceu || d.flags.cm_liga_retirou_patrocinio) ? 'Vinte e dois contra, quinze a favor, três abstenções. O Programa Primeiro Pokémon não passa.' : 'Vinte e um a favor, dezoito contra, uma abstenção. O Programa Primeiro Pokémon passa.',
+    d => (d.flags.cm_liga_convenceu || d.flags.cm_liga_retirou_patrocinio) ? 'Nove contra, cinco a favor, uma abstenção. O Programa Primeiro Pokémon não passa.' : 'Oito a favor, seis contra, uma abstenção. O Programa Primeiro Pokémon passa.',
+    /* quem se abstém é a conselheira que assinou o anexo técnico em 1996 (capítulo 25) */
+    d => `A abstenção é ${typeof c25_conheceAMargot === 'function' && c25_conheceAMargot() ? 'da ' + Nomes.comoChamar('a conselheira regional') : 'da senhora da audiência'}, que declara impedimento no microfone e não diz por quê.${d.flags.a_conselheira_assinou ? ' Você sabe por quê: a folha sete.' : ''}`,
     fala('a coordenadora da quadra', 'Pronto. E agora a parte que não tem painel.', 'baixo')
   ],
   ef:{executar:d => { if (d.flags.cm_liga_convenceu || d.flags.cm_liga_retirou_patrocinio) d.flags.cm_liga_programa_caiu = true; else d.flags.cm_liga_programa_passou = true; return []; }},
   escolhas:[
-    {texto:'Ficar no plenário, como {conselheiro|conselheira}, {instrutor|instrutora} ou o que te deixarem ser.', vai:'cg3_final_plenario', cond:d => !!d.flags.cm_liga_programa_caiu,
+    {texto:'Ficar na Liga, no comitê técnico, como {instrutor|instrutora} ou o que te deixarem ser.', vai:'cg3_final_plenario', cond:d => !!d.flags.cm_liga_programa_caiu,
      ef:{rep:{eixo:'bom', delta:3, motivo:'Ficou na Liga pra mudar ela por dentro'}}},
     {texto:'Largar o Planalto e ir dar aula numa quadra de terra.', vai:'cg3_final_quadra',
      ef:{rep:{eixo:'bom', delta:2, motivo:'Largou o Planalto pra dar aula a criança numa quadra de terra'}}},
-    {texto:'Seguir pro que te espera no Planalto, que não é o plenário.', vai:'cg3_seguir',
+    {texto:'Seguir pro que te espera no Planalto, que não é sala de reunião.', vai:'cg3_seguir',
      ef:{rep:{eixo:'bom', delta:1, motivo:'Seguiu a jornada depois da votação'}}}
   ]
 },
 
 cg3_seguir:{
   texto:[
-    fala('a coordenadora da quadra', 'Vai. Plenário tem toda semana. Você não.', 'riso'),
+    fala('a coordenadora da quadra', 'Vai. Reunião tem toda quinta. Você não.', 'riso'),
     'No corredor, o painel de votação desliga sozinho e ninguém liga de novo.'
   ],
   ef:{flag:'cm_liga_seguiu'},
@@ -140085,11 +140099,12 @@ cg3_seguir:{
 cg3_final_plenario:{
   texto:[
     d => d.flags.cm_liga_1
-      ? 'Você fica. A Coordenadora Maple te apresenta pra cada conselheiro pelo nome, e diz o nome de cada criança da Copa Júnior junto.'
-      : 'Você fica. A Coordenadora Maple te apresenta pra cada conselheiro pelo nome, e diz junto o nome de cada ginásio que você venceu.',
-    'A cadeira que te dão é a de vinil verde mais rasgada do plenário. Você não pede outra.'
+      ? 'Você fica. A Coordenadora Maple te leva pro comitê técnico da Liga, dois andares acima, te apresenta pra cada um pelo nome, e diz o nome de cada criança da Copa Júnior junto.'
+      : 'Você fica. A Coordenadora Maple te leva pro comitê técnico da Liga, dois andares acima, te apresenta pra cada um pelo nome, e diz junto o nome de cada ginásio que você venceu.',
+    'A cadeira que te dão é a de vinil verde mais rasgada da sala. Você não pede outra.'
   ],
-  final:{id:'liga_plenario', titulo:'O PLENÁRIO', texto:[
+  /* o id é de quando o final era o plenário: o códice guarda pelo id */
+  final:{id:'liga_plenario', titulo:'O COMITÊ TÉCNICO', texto:[
     'Em cinco anos, a Liga muda três regras: criança escolhe o primeiro Pokémon que pega, não o que recebe; árbitro de torneio júnior não pode ser pago por patrocinador; e todo relatório técnico vem com o que o número não diz.',
     'Nenhuma das três tem o seu nome. Todas três têm a sua letra, em algum rascunho.',
     d => !d.flags.cm_liga_1
@@ -140103,7 +140118,7 @@ cg3_final_plenario:{
 cg3_final_comprada:{
   texto:[
     'O contrato de rosto de campanha tem doze páginas e uma foto sua de agasalho da Liga, sorrindo, com um Eevee de lote no colo.',
-    'A Coordenadora Maple vê o cartaz no corredor do plenário e não arranca. Ela só para de te cumprimentar.'
+    'A Coordenadora Maple vê o cartaz no corredor do Planalto e não arranca. Ela só para de te cumprimentar.'
   ],
   final:{id:'liga_comprada', titulo:'A LIGA COMPRADA', texto:[
     'O seu rosto aparece em cartaz em todo Centro Pokémon de Kanto, do lado de uma frase: "TODA CRIANÇA MERECE UM PRIMEIRO AMIGO."',

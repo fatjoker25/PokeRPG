@@ -149,6 +149,13 @@ um governo sem ninguém dizer. Quem manda é o **governo de Kanto**:
   estatuto dele dá cadeira extraordinária ao Campeão;
 - a **Auditoria de Kanto**, a do posto de Investigador.
 
+O Programa Primeiro Pokémon (caminho da Liga, 19.06 e 25.06) mostra
+a divisão: a Comissão propõe, a Liga, que entrega a licença, dá o
+parecer (o teste da quadra), e quem vota são os quinze conselheiros,
+na reunião de quinta do Conselho no Planalto — a da convocação do 25,
+numa sala que a Liga empresta. A Liga fala e não vota. Já foi um
+plenário da Liga com quarenta cadeiras.
+
 E **"da Liga" não é enfeite**: a mochila é a Mochila, o cartão é o
 Cartão de Treinador, o ônibus é o ônibus. Escreve "da Liga" quando a
 Liga é o assunto, e uma vez, não em cada objeto da cena. Rótulo de quem
