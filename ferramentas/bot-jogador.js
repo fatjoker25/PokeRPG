@@ -616,7 +616,18 @@ const SUSPEITO = [
         if (X.marcaLuta !== marca){ X.marcaLuta = marca; X.marcaTurno = B.turno; }
         else if (B.turno - (X.marcaTurno || B.turno) >= 12){
           X.marcaTurno = B.turno;
-          if (B.tipo === 'treinador') return {tipo:'desistir'};
+          if (B.tipo === 'treinador'){
+            /* desistir custa 5 de moral ao time inteiro e conta derrota, e
+               quem te parou na estrada para de novo: o r2 desistiu sete
+               vezes da Veronica (o Ditto dele virava Blissey e os dois se
+               curavam) e o time foi a moral 7. Antes, troca por quem ainda
+               não tentou contra esse adversário; só sem ninguém, desiste */
+            const tentou = X.tentouContra = (X.tentouContra && X.tentouContra.uid === alvo.uid) ? X.tentouContra : {uid:alvo.uid, quem:[]};
+            if (!tentou.quem.includes(p.uid)) tentou.quem.push(p.uid);
+            const outro = d.time.find(x => estaVivo(x) && x.uid !== p.uid && !tentou.quem.includes(x.uid));
+            if (outro){ X.trocasNaLuta = (X.trocasNaLuta || 0) + 1; X.turnoDesde = B.turno; return {tipo:'trocar', uid:outro.uid}; }
+            return {tipo:'desistir'};
+          }
           if (B.fuga !== false) return {tipo:'fugir'};
         }
         const golpeBom = (quem) => {
