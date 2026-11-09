@@ -523,6 +523,38 @@ const SUSPEITO = [
       continue;
     }
 
+    /* entre uma porta da Elite e outra não tem Centro: quem joga abre a
+       mochila (Revive em quem caiu, a Potion mais forte em quem está
+       abaixo de 60%, Full Heal ou Antidote na condição) e só então abre a
+       porta seguinte. Sem isso o robô entrava na segunda porta com o time
+       que sobrou da primeira, e caía sempre nela */
+    const entrePortas = await page.evaluate(() => {
+      const b = document.querySelector('#app [onclick="Jogo.continuarElite()"]');
+      if (!b || document.querySelector('#modal')) return null;
+      const usados = [], tem = n => Estado.contaItem(n) > 0;
+      const usa = (n, p) => { UI.aplicarItemFora(n, p.uid); UI.fecharModal(true); usados.push(n); };
+      for (const p of Estado.dados.time){
+        if (p.morto) continue;
+        if (p.hp <= 0 && tem('Revive')) usa('Revive', p);
+        if (p.hp > 0 && p.status){
+          const s = tem('Full Heal') ? 'Full Heal' : (p.status === 'veneno' && tem('Antidote')) ? 'Antidote' : null;
+          if (s) usa(s, p);
+        }
+        for (let v = 0; v < 6 && p.hp > 0 && p.hp < p.hpMax * 0.6; v++){
+          const pot = ['Hyper Potion', 'Super Potion', 'Potion'].find(tem);
+          if (!pot) break;
+          usa(pot, p);
+        }
+      }
+      b.click();
+      return usados;
+    }).catch(() => null);
+    if (entrePortas){
+      if (entrePortas.length) await page.evaluate(x => window.__passo && __passo('mochila', {entre_portas:x.join(', ')}), entrePortas).catch(() => {});
+      await page.waitForTimeout(120);
+      continue;
+    }
+
     /* apelido: uma vez em quatro, e um nome que o time ainda não tem */
     if (await page.locator('#campo-apelido').count()){
       const nomes = APELIDOS.filter(n => !apelidosDados.has(n));
