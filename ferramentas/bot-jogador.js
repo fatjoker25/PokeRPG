@@ -135,8 +135,13 @@ const SUSPEITO = [
   const page = await browser.newPage(LEVE ? {viewport:{width:800, height:640}, reducedMotion:'reduce'} : {viewport:{width:1000, height:1100}});
   const ponto = RETOMAR ? JSON.parse(fs.readFileSync(RETOMAR, 'utf8')) : null;
   const erros = [], achados = (ponto && ponto.achados) || {}, log = (ponto && ponto.log) || [];
-  const anota = (tipo, txt) => { const k = tipo + ' :: ' + txt.slice(0, 140); achados[k] = (achados[k] || 0) + 1; };
-  page.on('pageerror', e => erros.push(e.message + ' @ ' + (e.stack || '').split('\n').slice(1, 3).join(' | ')));
+  /* o que ele acha vai pro registro na hora, não só no fim da etapa:
+     quem vigia a jogada conserta enquanto ela anda */
+  const anota = (tipo, txt) => { const k = tipo + ' :: ' + txt.slice(0, 140);
+    if (!achados[k]) console.log('ACHADO', k);
+    achados[k] = (achados[k] || 0) + 1; };
+  page.on('pageerror', e => { const m = e.message + ' @ ' + (e.stack || '').split('\n').slice(1, 3).join(' | ');
+    erros.push(m); console.log('ERRO JS', m.slice(0, 300)); });
   page.on('dialog', d => /Soltar|permanente|Vender|Largar/.test(d.message()) ? d.dismiss() : d.accept());
   await page.goto(RAIZ);
   await page.waitForTimeout(400);
