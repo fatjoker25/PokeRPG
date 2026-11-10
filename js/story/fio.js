@@ -79,6 +79,8 @@ const Fio = {
   doCapitulo(d){
     d = d || (typeof Estado !== 'undefined' ? Estado.dados : null);
     if (!d) return null;
+    /* depois do fim não tem capítulo em aberto */
+    if (d.depoisDoFim) return null;
     const F = FIO_DOS_CAPITULOS[d.capitulo];
     const cap = typeof Historia !== 'undefined' ? Historia.capitulo(d.capitulo) : null;
     if (!F || !cap) return null;

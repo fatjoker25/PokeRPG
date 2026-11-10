@@ -661,7 +661,7 @@ function afazeresDoLocal(){
       const abertas = Trocas.disponiveis(id);
       lista.push({id:'troca',
         titulo: abertas.length ? 'Tem alguém aqui querendo trocar' : 'Quem estava querendo trocar',
-        sub: abertas.length ? abertas[0].onde : 'Já está feito.'});
+        sub: abertas.length ? abertas[0].onde : 'Já está feito.', fechada:(typeof Depois !== 'undefined' ? Depois.semTroca() : null)});
     }
   }
 
@@ -680,7 +680,7 @@ function afazeresDoLocal(){
        {casa:quem ficou|quem ficou} esperando */
     const emCasa = !!Estado.j && id === Mundo.idDaCidade(Estado.j.cidade);
     if (emCasa)
-      lista.push({lugar:true, id:'casa', titulo:'Sua casa'});
+      lista.push({lugar:true, id:'casa', titulo:'Sua casa', fechada:(typeof Depois !== 'undefined' ? Depois.casaFechada() : null)});
     /* quem nasceu longe de Viridian pode pegar o ônibus uma vez */
     if (emCasa && !['Pallet','Viridian'].includes(Estado.j.cidade)
         && !d.flags.onibus_da_liga && d.capitulo <= 3)
@@ -698,14 +698,14 @@ function afazeresDoLocal(){
       lista.push({lugar:true, id:'doar', titulo:'Tem uma coisa aqui que falta dinheiro',
         sub:'E você tem dinheiro.'});
     if (tem('ginasio_'+id)) lista.push({lugar:true, id:'ginasio', titulo:'Ginásio',
-      sub:'Você sabe onde fica. Não sabe o que tem dentro.'});
+      sub:'Você sabe onde fica. Não sabe o que tem dentro.', fechada:(typeof Depois !== 'undefined' ? Depois.portaDoGinasio(id) : null)});
     /* (a troca de cidade é montada aqui; a de rota, no bloco de rota) */
     if (tem('troca_'+id) && typeof Trocas !== 'undefined' && Trocas.lista(id).length){
       const abertas = Trocas.disponiveis(id);
       lista.push({id:'troca',
         titulo: abertas.length > 1 ? `Quem está querendo trocar (${abertas.length})`
               : abertas.length ? 'Tem alguém aqui querendo trocar' : 'Quem estava querendo trocar',
-        sub: abertas.length ? abertas[0].onde : 'Já está feito. Dá pra passar e cumprimentar.'});
+        sub: abertas.length ? abertas[0].onde : 'Já está feito. Dá pra passar e cumprimentar.', fechada:(typeof Depois !== 'undefined' ? Depois.semTroca() : null)});
     }
   }
 
@@ -719,10 +719,12 @@ function afazeresDoLocal(){
 
   if (id === 'planalto'){
     lista.push({lugar:true, id:'relembrar', titulo:'Relembrador de Golpes', sub:RELEMBRADOR.planalto.sub});
+    /* depois do fim, quem parou de competir acha as duas fechadas (depois.js) */
+    const semLiga = (typeof Depois !== 'undefined' ? Depois.ligaFechada() : null);
     lista.push({lugar:true, id:'liga', titulo:'A ala dos quatro',
-      sub:'Um corredor com quatro portas seguidas. Ninguém explica o que tem atrás delas.'});
+      sub:'Um corredor com quatro portas seguidas. Ninguém explica o que tem atrás delas.', fechada:semLiga});
     lista.push({lugar:true, id:'torneio', titulo:'Arena aberta',
-      sub:'Tem chaveamento afixado na parede e inscrição no balcão. Qualquer um entra.'});
+      sub:'Tem chaveamento afixado na parede e inscrição no balcão. Qualquer um entra.', fechada:semLiga});
   }
 
   /* revanche marcada pelo PokéNav: a pessoa está aqui esperando */

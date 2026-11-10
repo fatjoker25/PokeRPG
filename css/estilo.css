@@ -2803,6 +2803,11 @@ details.nav-novos[open] .nav-novos-ver{transform:rotate(225deg) translate(-2px,-
 .porta:active{transform:translateY(3px);
   box-shadow:0 1px 0 color-mix(in srgb, var(--ac) 30%, #05070f), inset 0 1px 0 rgba(255,255,255,.1)}
 .porta:focus-visible{outline:2px solid #fff;outline-offset:2px}
+/* porta que o final fechou (depois.js): fica na tela, apagada, com o motivo */
+.porta.fechada,.porta.fechada:hover,.porta.fechada:active{cursor:not-allowed;filter:saturate(.3) brightness(.82);transform:none;
+  box-shadow:0 2px 0 color-mix(in srgb, var(--ac) 20%, #05070f), inset 0 1px 0 rgba(255,255,255,.08)}
+.porta.fechada::after{display:none}
+.porta-nome small.porta-trava{color:#ffd59a}
 @media (max-width:620px){
   .portas{gap:8px}
   .porta{flex-basis:calc((100% - (min(var(--cols), 2) - 1) * 8px) / min(var(--cols), 2));

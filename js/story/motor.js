@@ -331,6 +331,8 @@ const Historia = {
        proximo: d => numero   (desvio explícito, decidido pelas escolhas)
        requer:  d => bool     (capítulo só existe em certas rotas) */
   proximoCapitulo(registrando){
+    /* depois do fim a história está fechada: não tem próximo (depois.js) */
+    if (Estado.dados && Estado.dados.depoisDoFim) return null;
     const atual = this.capitulo(Estado.dados.capitulo);
     if (atual && typeof atual.proximo === 'function'){
       let alvo = null;

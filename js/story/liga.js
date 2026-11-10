@@ -609,8 +609,17 @@ function repDaRodada(qual, rodada, rep){
 }
 
 /* ── disponibilidade ───────────────────────────────────── */
+/* depois do fim, quem parou de competir (ou está com a licença
+   suspensa) acha a Liga fechada: o motivo vem de depois.js */
+function ligaFechadaDepoisDoFim(){
+  const m = typeof Depois !== 'undefined' ? Depois.ligaFechada() : null;
+  return m ? {estado:'trancado', texto:m} : null;
+}
+
 function statusElite4(){
   const d = Estado.dados;
+  const fim = ligaFechadaDepoisDoFim();
+  if (fim && !d.flags.campeao_de_kanto) return fim;
   if (d.flags.campeao_de_kanto) return {estado:'concluido', texto:'Você é {o Campeão|a Campeã} de Kanto'};
   if (numInsignias() < 8) return {estado:'trancado', texto:`Exige as 8 insígnias (você tem ${numInsignias()})`};
   return {estado:'disponivel', texto:'Ala da Elite 4 aberta'};
@@ -618,6 +627,8 @@ function statusElite4(){
 
 function statusTorneio(){
   const d = Estado.dados;
+  const fim = ligaFechadaDepoisDoFim();
+  if (fim) return fim;
   if (d.capitulo < 2) return {estado:'trancado', texto:'Volte quando tiver estrada'};
   const tarde = tardeDaArena('torneio');
   if (tarde) return tarde;

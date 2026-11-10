@@ -585,6 +585,9 @@ function faltaInsignias(pedidas){
 }
 function travaDoCapitulo(n){ return faltaInsignias(INSIGNIAS_DO_CAPITULO[n]); }
 function travaDaPassagem(de, para){
+  /* o lugar que o final fechou (depois.js): o Planalto, Celadon */
+  const fim = (typeof Depois !== 'undefined') ? Depois.trava(de, para) : null;
+  if (fim) return {texto:fim};
   const b = (typeof Barreiras !== 'undefined') ? Barreiras.entre(de, para) : null;
   if (b) return {barreira:b, texto:b.texto};
   return faltaInsignias(INSIGNIAS_DA_PASSAGEM[de + '>' + para]);

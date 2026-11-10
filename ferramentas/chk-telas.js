@@ -558,6 +558,40 @@ const SUSPEITO = [
     });
     r.forEach(f => anota('fio', f));
   }
+  /* depois do fim (depois.js): cada final mostra o bloco e o botão,
+     continua pela estrada sem capítulo pela frente, e a casa fecha pra
+     quem saiu procurado ou jurado */
+  {
+    const r = await page.evaluate(() => {
+      const falhas = [], guardado = JSON.stringify(Estado.dados);
+      const QUEBRA = /undefined|NaN|\[object|\{[a-zà-úA-Z ]*\|[^}]*\}|\{IDADE|\{idade/;
+      for (const c of CAPITULOS) for (const [id, ce] of Object.entries(c.cenas || {})){
+        if (!ce.final) continue;
+        Estado.dados = JSON.parse(guardado);
+        const d = Estado.dados;
+        delete d.depoisDoFim; d.capitulo = c.num; d.modo = 'cena';
+        Historia.capAtual = c;
+        try {
+          Historia.ir(id, false); Jogo.mostrarFinal();
+          const t = document.getElementById('app').innerText;
+          if (!/Depois do fim/.test(t) || !/Continuar pela estrada/.test(t)) falhas.push(`o final ${ce.final.id} não mostra o depois do fim`);
+          const m = t.match(QUEBRA); if (m) falhas.push(`o final ${ce.final.id}: texto quebrado "${m[0]}"`);
+          Jogo.continuarPelaEstrada();
+          if (!d.depoisDoFim || d.modo !== 'mundo') falhas.push(`o final ${ce.final.id} não continua pela estrada`);
+          if (Historia.proximoCapitulo(false) !== null) falhas.push(`depois do final ${ce.final.id} ainda tem capítulo`);
+          Mundo.viajar(Mundo.idDaCidade(d.jogador.cidade)); Exploracao.tela();
+          const porta = [...document.querySelectorAll('#app .porta')].find(p => /Sua casa/.test(p.textContent));
+          if (!porta) falhas.push(`depois do final ${ce.final.id}, a cidade natal não tem a porta de casa`);
+          else if (!!d.depoisDoFim.semCasa !== porta.disabled) falhas.push(`depois do final ${ce.final.id}, a casa está ${porta.disabled ? 'fechada' : 'aberta'}`);
+          const m2 = document.getElementById('app').innerText.match(QUEBRA);
+          if (m2) falhas.push(`depois do final ${ce.final.id}: texto quebrado "${m2[0]}" no mapa`);
+        } catch (e){ falhas.push(`o final ${ce.final.id}: ${e.message}`); }
+      }
+      Estado.dados = JSON.parse(guardado);
+      return falhas;
+    });
+    r.forEach(f => anota('depois do fim', f));
+  }
   /* a dificuldade nos Ajustes: as três, a folha de regras com cada uma, e volta pro Normal */
   for (const k of ['facil', 'dificil', 'normal']){
     await tentar('ajustes/dificuldade ' + k, x => { UI.modalAjustes(); Dificuldade.definir(x); }, k);

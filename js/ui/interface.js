@@ -482,7 +482,8 @@ const UI = {
       const dias = save ? Math.max(1, Math.floor(+(save.relogio || {}).dia || 1)) : 0;
       const lugar = save && save.local && LOCAIS[save.local] ? LOCAIS[save.local].nome : '';
       const rosto = FotoJogador.doSave(j, save);
-      const cap = save ? Historia.capitulo(save.capitulo) : null;
+      const cap = save && !save.depoisDoFim ? Historia.capitulo(save.capitulo) : null;
+      const posFim = save && save.depoisDoFim && save.depoisDoFim.titulo ? String(save.depoisDoFim.titulo) : '';
       const caixa = GINASIOS.map(g => {
         const tem = nIns.includes(g.insignia), src = caminhoInsignia(g.id);
         return `<span class="tt-casa${tem ? ' tem' : ''}">${tem && src ? `<img src="${src}" alt="${e(g.insignia)}">` : ''}</span>`;
@@ -502,7 +503,7 @@ const UI = {
             <span class="tt-j-rosto${rosto ? '' : ' vazio'}" aria-hidden="true">${rosto ? `<img src="${e(rosto)}" alt="" onerror="this.parentNode.classList.add('vazio');this.remove()">` : ''}<b>${e((j.nome || '?').slice(0, 1).toUpperCase())}</b></span>
             <span class="tt-j-quem">
               <b>${e(j.nome || 'Sem nome')}</b>
-              <span>${e(this.capituloDoSave(save, true))}${cap && cap.titulo ? ` · ${e(cap.titulo)}` : ''}</span>
+              <span>${e(this.capituloDoSave(save, true))}${cap && cap.titulo ? ` · ${e(cap.titulo)}` : posFim ? ` · ${e(posFim)}` : ''}</span>
             </span>
           </div>
           ${fatos.length ? `<div class="tt-j-fatos">${fatos.map(([t, ic]) => `<span>${svgIcone(ic)}${e(t)}</span>`).join('')}</div>` : ''}
@@ -3961,6 +3962,8 @@ const UI = {
     const ep = (typeof epilogoDaJornada === 'function') ? epilogoDaJornada() : null;
     const rodape = (typeof rodapeDaJornada === 'function') ? rodapeDaJornada() : [];
     if (ep) Estado.registrarFinal('ep_' + ep.id, 'Epílogo: ' + ep.titulo);
+    /* o que o final deixa pra quem continua pela estrada (depois.js) */
+    const depois = (typeof Depois !== 'undefined') ? Depois.linhas(final, d) : [];
 
     this.add(`<div class="painel final">
       <div class="tit">${this.esc(final.titulo)}</div>
@@ -3985,8 +3988,13 @@ const UI = {
         ${codice.map(f=>`<div class="linha longa"><span class="k">${this.esc(f.titulo)}</span><span class="v">${f.titulo===final.titulo?'agora':'✓'}</span></div>`).join('')}
         <p class="sussurro">Escolhas diferentes levam a finais diferentes. A campanha tem ${totalFinais}.</p>
       </div>
+      ${depois.length ? `<div class="final-bloco depois-do-fim">
+        <h3>Depois do fim</h3>
+        <p class="sussurro">A história acaba aqui. A estrada, não: dá pra voltar pro mapa com o time e a mochila, do jeito que o final te deixou.</p>
+        ${depois.map(([k, v]) => `<div class="linha longa"><span class="k">${this.esc(k)}</span><span class="v">${this.esc(v)}</span></div>`).join('')}
+      </div>` : ''}
       <div id="escolhas" class="escolhas final-bloco">
-        ${final.continua ? `<button class="escolha com-icone" onclick="Jogo.continuarPelaEstrada()">${svgIcone('seta')}<span class="esc-rot">Continuar pela estrada</span></button>` : ''}
+        <button class="escolha com-icone" onclick="Jogo.continuarPelaEstrada()">${svgIcone('seta')}<span class="esc-rot">Continuar pela estrada</span></button>
         <button class="escolha com-icone" onclick="Jogo.novo()">${svgIcone('bola')}<span class="esc-rot">Nova jornada</span></button>
         <button class="escolha com-icone" onclick="UI.modalDiario()">${svgIcone('diario')}<span class="esc-rot">Ler o diário completo</span></button>
         <button class="escolha com-icone" onclick="UI.modalRota()">${svgIcone('mapa')}<span class="esc-rot">Ver a rota que você percorreu</span></button>
@@ -4487,6 +4495,8 @@ const UI = {
      ======================================================== */
   /* "Capítulo 12 · O título" de um save qualquer; curto, só o número */
   capituloDoSave(d, curto){
+    /* depois do fim: não tem capítulo, tem o final que você viveu */
+    if (d.depoisDoFim) return 'Depois do fim' + (!curto && d.depoisDoFim.titulo ? ' · ' + String(d.depoisDoFim.titulo) : '');
     const cap = typeof Historia !== 'undefined' ? Historia.capitulo(d.capitulo) : null;
     if (cap && typeof numeroDoCapitulo === 'function') return numeroDoCapitulo(cap) + (cap.titulo && !curto ? ' · ' + cap.titulo : '');
     return 'Capítulo ' + Math.max(1, Math.floor(+d.capitulo || 0));
@@ -4511,7 +4521,8 @@ const UI = {
       `<span class="save-pk" title="${e(nomeExib(p))} · Nv ${e(p.nivel)}">${imgSprite({dex:p.dex, shiny:!!p.shiny}, 'icone')}</span>`).join('');
     const notas = [].concat(nota || []);
     if (d.lutaSalva) notas.push('no meio de uma luta, que volta junto');
-    const cap = typeof Historia !== 'undefined' ? Historia.capitulo(d.capitulo) : null;
+    const cap = typeof Historia !== 'undefined' && !d.depoisDoFim ? Historia.capitulo(d.capitulo) : null;
+    const titulo = cap ? cap.titulo : d.depoisDoFim && d.depoisDoFim.titulo;
     /* cada fato num chip, como no alto da tela: a linha quebra entre um
        e outro, nunca no meio */
     const fatos = [[lugar, 'alfinete'], [`${dias} ${dias === 1 ? 'dia' : 'dias'} de estrada`, 'relogio'],
@@ -4522,7 +4533,7 @@ const UI = {
       <div class="save-quem">
         <b class="save-nome">${e(j.nome || 'Sem nome')}</b>
         <span class="save-capnum">${e(this.capituloDoSave(d, true))}</span>
-        ${cap && cap.titulo ? `<span class="save-cap">${e(cap.titulo)}</span>` : ''}
+        ${titulo ? `<span class="save-cap">${e(titulo)}</span>` : ''}
       </div>
       <div class="save-fatos">${fatos.map(([t, ic]) => `<span>${svgIcone(ic)}${e(t)}</span>`).join('')}</div>
       ${time ? `<div class="save-time" aria-label="Time">${time}</div>` : ''}
@@ -5468,13 +5479,16 @@ const UI = {
       },
 
       mundo: () => {
+        /* o que o final deixou, pra quem continuou pela estrada (depois.js) */
+        const fim = typeof Depois !== 'undefined' ? Depois.ficha() : [];
+        const depois = fim.length ? bloco('Depois do fim', dl(fim.map(([k, v]) => [k, e(v)]))) : '';
         const campo = typeof Campo !== 'undefined' ? dl(Campo.resumo().map(([nome, r]) =>
           [nome, r.pode ? M(r.como || 'sim') : `<span class="ficha-falta">Falta ${e(r.falta)}</span>`])) : '';
         const lend = Object.values(d.lendarios || {});
         const lendarios = lend.length ? dl(lend.map(l => [DEX[l.dex].nome,
           `${M(l.estado)} · ${e(l.disposicao)}${l.caçandoVoce ? ' · <b class="ficha-falta">te caçando</b>' : ''}`])) : '';
         const liga = `${d.liga.avisos}${d.liga.detencao ? ' · detenção ativa' : d.liga.ordemDevolucao ? ' · ordem de devolução' : ''}`;
-        return bloco('O que dá pra fazer no mundo', campo)
+        return depois + bloco('O que dá pra fazer no mundo', campo)
           + (lendarios ? bloco('Lendários', lendarios) : '')
           + bloco('Kanto', dl([
             ['Clima', M(d.mundo.clima)],
@@ -6108,7 +6122,7 @@ const UI = {
       <div class="linha"><span class="k">Rodapé</span><span class="v">quem ficou pelo caminho, promessa cumprida, Pokédex, credenciais, lendário no cinto</span></div>
       <div class="linha"><span class="k">Onde a história fecha</span><span class="v">a caverna do norte é um dos nove lugares, não o único</span></div>
       ${(F => `<p class="sussurro">São ${F.total} finais e ${F.epilogos} epílogos, e os dois se combinam: a mesma cena termina diferente pra quem é Líder de Ginásio, pra quem carrega o envelope sem timbre e pra quem não virou nada. O códice guarda os dois em listas separadas.</p>
-      <p class="sussurro">${F.caverna} finais estão na caverna do norte e ${F.antes} estão antes dela: ${F.historia} espalhados por ${F.capsHistoria} capítulos da história e ${F.caminhos} no terceiro capítulo de cada caminho. Os de antes da caverna não são derrota nem desistência: são escolhas escritas, que só aparecem quando o seu caminho pagou por elas, e que encerram a campanha ali com epílogo e tudo. Assinar um contrato, sentar numa cadeira vazia, assumir um ginásio, voltar pra casa e não sair mais — cada um desses é um fim de verdade, e o jogo não avisa antes qual escolha é qual.</p>`)(contarFinais())}
+      <p class="sussurro">${F.caverna} finais estão na caverna do norte e ${F.antes} estão antes dela: ${F.historia} espalhados por ${F.capsHistoria} capítulos da história e ${F.caminhos} no terceiro capítulo de cada caminho. Os de antes da caverna não são derrota nem desistência: são escolhas escritas, que só aparecem quando o seu caminho pagou por elas, e que encerram a campanha ali com epílogo e tudo. Assinar um contrato, sentar numa cadeira vazia, assumir um ginásio, voltar pra casa e não sair mais — cada um desses é um fim de verdade, e o jogo não avisa antes qual escolha é qual. Depois de qualquer um, dá pra continuar pela estrada, do jeito que o final te deixou.</p>`)(contarFinais())}
 
       <h3>O que o crachá muda na história</h3>
       <div class="linha"><span class="k">Opção que só existe com posto</span><span class="v">cais de Vermilion · recepção da Silph · cerca de Fuchsia</span></div>
@@ -6684,6 +6698,15 @@ const UI = {
       <div class="linha"><span class="k">Onde a história fecha</span><span class="v">a caverna do norte é um dos nove lugares, não o único</span></div>
       ${(F => `<p class="sussurro">São ${F.total} finais e ${F.epilogos} epílogos, e os dois se combinam: a mesma cena termina diferente pra quem é Líder de Ginásio, pra quem carrega o envelope sem timbre e pra quem não virou nada. O códice guarda os dois em listas separadas.</p>
       <p class="sussurro">${F.caverna} finais estão na caverna do norte e ${F.antes} estão antes dela: ${F.historia} espalhados por ${F.capsHistoria} capítulos da história e ${F.caminhos} no terceiro capítulo de cada caminho. Os de antes da caverna não são derrota nem desistência: são escolhas escritas, que só aparecem quando o seu caminho pagou por elas, e que encerram a campanha ali com epílogo e tudo. Assinar um contrato, sentar numa cadeira vazia, assumir um ginásio, voltar pra casa e não sair mais — cada um desses é um fim de verdade, e o jogo não avisa antes qual escolha é qual.</p>`)(contarFinais())}
+      <h3>Depois do fim</h3>
+      <div class="linha"><span class="k">Continuar</span><span class="v">todo final tem "Continuar pela estrada": a história fecha (não tem mais capítulo nem chamado no mapa) e você volta pro mapa com o time, a mochila e o dinheiro · o final fica no códice do mesmo jeito</span></div>
+      <div class="linha"><span class="k">O que o final deixa</span><span class="v">a tela do fim diz a sua situação, onde você recomeça e o que fechou pra você · as portas fechadas ficam na tela, com o motivo</span></div>
+      <div class="linha"><span class="k">Procurado</span><span class="v">a Patrulha tem ordem de detenção no seu nome e vigia a sua rua: a sua casa fecha · quem chega ao fim com ordem de detenção (lendário preso na frente de testemunha, mandado aberto) sai do fim procurado, seja qual for o final, menos nos que resolvem isso</span></div>
+      <div class="linha"><span class="k">Quem você enganou</span><span class="v">sabe onde fica a sua casa: ela fecha</span></div>
+      <div class="linha"><span class="k">Parou de competir</span><span class="v">ginásio, ala da Elite, arena e Conferência fecham, e você recomeça em casa</span></div>
+      <div class="linha"><span class="k">Licença suspensa</span><span class="v">até ela voltar, o Centro cobra como de quem não tem licença, o balcão não emite outra e a Liga não te inscreve · ela volta sozinha no dia</span></div>
+      <div class="linha"><span class="k">Lugar fechado</span><span class="v">quem disse que não volta a um lugar não volta: a passagem pra ele fica trancada</span></div>
+      <div class="linha"><span class="k">Cargo</span><span class="v">o que você virou aparece na Ficha · o ginásio que é seu não se desafia</span></div>
 
       <h3>O que o crachá muda na história</h3>
       <div class="linha"><span class="k">Opção que só existe com posto</span><span class="v">cais de Vermilion · recepção da Silph · cerca de Fuchsia</span></div>

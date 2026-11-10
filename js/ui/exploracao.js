@@ -23,6 +23,9 @@ const Exploracao = {
     /* a intuição avisa quando chega a hora, sem dizer qual é a hora */
     const intu = typeof Intuicao !== 'undefined' ? Intuicao.talvez() : null;
     if (intu) avisos = (avisos || []).concat([intu]);
+    /* depois do fim: a licença suspensa volta no dia dela (depois.js) */
+    const licenca = typeof Depois !== 'undefined' ? Depois.conferir() : [];
+    if (licenca.length) avisos = (avisos || []).concat(licenca);
     /* o Mewtwo que te olhava o bastante pra te aceitar: a moral aparece */
     const aceitou = typeof Mewtwo !== 'undefined' ? Mewtwo.conferir() : [];
     if (aceitou.length) avisos = (avisos || []).concat(aceitou);
@@ -44,6 +47,9 @@ const Exploracao = {
       const ic = iconeDoAfazer(a);
       /* "Rodoviária — ônibus pra Viridian": o nome na placa, o resto embaixo */
       const [nome, mais] = String(a.titulo).split(' — ');
+      /* porta que o final fechou (depois.js): fica na tela, fechada, com o motivo */
+      if (a.fechada) return `<button class="porta fechada"${cor(ic)} disabled>
+        ${svgIcone('trancado', 'porta-icone')}<span class="porta-nome">${UI.esc(nome)}<small class="porta-trava">${UI.esc(a.fechada)}</small></span></button>`;
       return `<button class="porta"${cor(ic)} onclick="Exploracao.fazer('${a.id}')">
         ${svgIcone(ic, 'porta-icone')}<span class="porta-nome">${UI.esc(nome)}${mais ? `<small>${UI.esc(mais)}</small>` : ''}</span></button>`;
     }).join('');
@@ -52,6 +58,8 @@ const Exploracao = {
     const afazeres = todos.filter(a => !a.lugar).map(a => {
       const ic = iconeDoAfazer(a);
       const [rot, custo] = String(a.titulo).split(' — ');
+      if (a.fechada) return `<button class="escolha menu com-icone"${cor(ic)} disabled>
+        ${svgIcone('trancado')}<span class="esc-rot">${UI.esc(rot)}<span class="esc-trava">${UI.esc(a.fechada)}</span></span></button>`;
       return `<button class="escolha menu com-icone"${cor(ic)} onclick="Exploracao.fazer('${a.id}')">
         ${svgIcone(ic)}<span class="esc-rot">${UI.esc(rot)}</span>${
           custo ? `<span class="esc-custo">${/Ração/.test(custo) ? svgIcone('tigela') : ''}${UI.esc(custo)}</span>` : ''}</button>`;
@@ -434,6 +442,11 @@ const Exploracao = {
   fazer(acao){
     const L = Mundo.atual();
     const d = Estado.dados;
+    /* a porta que o final fechou não abre por atalho nenhum (depois.js) */
+    if (typeof Depois !== 'undefined' && Depois.ativo()){
+      const a = afazeresDoLocal().find(x => x.id === acao);
+      if (a && a.fechada) return this.tela([{tipo:'info', texto:a.fechada}]);
+    }
 
     if (acao === 'troca'){ return Trocas.tela(); }
     if (acao.startsWith('vet_'))  return Veteranos.abordar(acao.slice(4));

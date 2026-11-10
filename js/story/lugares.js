@@ -814,6 +814,14 @@ const Cidade = {
     const d = Estado.dados, L = Mundo.atual();
     if (d.flags.tem_licenca) return this.centro();
     const quem = 'a atendente das credenciais';
+    /* licença suspensa depois do fim (depois.js): o balcão não emite outra */
+    if (typeof Depois !== 'undefined' && Depois.licencaSuspensa())
+      return UI.telaConversa({num:`Centro Pokémon de ${L.nome}`, titulo:'Cadastro de treinador', loc:'o balcão de credenciais',
+        falas:[
+          fala(quem, 'O seu nome está no sistema com uma suspensão. Enquanto ela correr, este balcão não emite licença nova.'),
+          fala(quem, `Ela acaba no dia ${Depois.dados().licencaVolta} da sua jornada. Volta depois disso.`)
+        ],
+        quem, botoes:[{texto:'Voltar ao balcão', acao:'Cidade.centro()'}]});
     const p = d.time.find(x => x && !x.morto) || d.time[0];
     const insignias = (d.insignias || []).filter(i => i !== 'Título de Campeão' && i !== 'Campeão de Kanto').length;
     UI.telaConversa({num:`Centro Pokémon de ${L.nome}`, titulo:'Cadastro de treinador', loc:'o balcão de credenciais',

@@ -834,9 +834,12 @@ const Jogo = {
 
   /* depois do último capítulo: de volta ao mapa, sem capítulo na frente */
   continuarPelaEstrada(){
+    /* depois do fim: a situação que o final deixou (depois.js) */
+    const cena = Historia.cenaAtual;
+    const av = (typeof Depois !== 'undefined' && cena && cena.final) ? Depois.continuar(cena.final) : [];
     Estado.dados.modo = 'mundo';
     Estado.salvar('auto');
-    Exploracao.tela();
+    Exploracao.tela(av);
   },
 
   entrarNoCapitulo(prox){

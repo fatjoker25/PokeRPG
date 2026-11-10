@@ -1242,6 +1242,8 @@ function conferenciaDeAntes(c){
 function statusConferencia(){
   const d = Estado.dados;
   if (!d.flags.campeao_de_kanto) return {estado:'trancado', texto:'Só pra quem sentou na cadeira do Campeão'};
+  const fim = typeof ligaFechadaDepoisDoFim === 'function' ? ligaFechadaDepoisDoFim() : null;
+  if (fim) return fim;
   const tarde = tardeDaArena('conferencia', DIA_DA_CONFERENCIA);
   if (tarde) return tarde;
   if (d.flags.conferencia_paga) return {estado:'disponivel', texto:'Inscrição paga por Lorne'};

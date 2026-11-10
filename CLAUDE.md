@@ -2469,6 +2469,42 @@ diálogo, o resumo em quadros (capítulo, dias, insígnias, reputação), os
 ícones de quem ficou no time e de quem morreu antes (com a causa), e o
 botão da abertura. O save automático é apagado ali.
 
+## Depois do fim
+Foi pedido assim: depois do fim do modo história dá pra continuar, mas
+do jeito que a pessoa escolheu — quem é procurado não volta pra casa.
+Todo final tem "Continuar pela estrada" (`UI.telaFinal`,
+`Jogo.continuarPelaEstrada`): a história fecha (`d.depoisDoFim`;
+`Historia.proximoCapitulo` devolve `null`, então não tem chamado no
+mapa, e o fio do Diário some) e o jogador volta pro mapa com o time, a
+mochila e o dinheiro. Os finais contam anos; o que se joga é o tempo
+logo depois do fim. O final continua no códice.
+
+A situação mora em `js/story/depois.js` (`DEPOIS_DO_FIM`, pelo id do
+final; quem não está lá é `livre`), e a tela do fim mostra o bloco
+"Depois do fim" com ela antes do botão:
+- **procurado** (`d.liga.detencao`): a casa fecha. Quem chega ao fim
+  com ordem de detenção (lendário visto, o mandado do Foragido,
+  `cm_foragido_3`) sai procurado em qualquer final, menos nos que
+  resolvem isso (`limpa`: a rendição, o arrependimento);
+- **jurado** (o calote do Mercenário): a casa fecha, sem a Patrulha;
+- **em casa** (`semLiga`): ginásio, ala, arena e Conferência fecham, e
+  ele recomeça em casa;
+- **licença suspensa** (a rendição do Foragido, um ano): Centro cobra
+  como sem licença, o balcão não emite outra (`Cidade.cadastro`), a
+  Liga não inscreve, e ela volta sozinha no dia (`Depois.conferir`, na
+  tela do mapa);
+- **lugar fechado** (`fecha`): o Planalto pra quem ficou na pedra da
+  guarita, Celadon pra quem fugiu pela porta dos fundos — pela
+  `travaDaPassagem`, e o mapa continua conexo sem eles;
+- **cargo**, na Ficha, e o ginásio que é seu (`ginasio`) não se
+  desafia; **sem troca** pra quem parou de trocar.
+Porta fechada fica na tela, apagada, com o motivo (`fechada` no
+afazer, desenhada em `Exploracao.tela`), e o `Exploracao.fazer` não
+abre por atalho. Final novo que muda a vida de quem joga entra na
+tabela; a folha de regras ("Depois do fim") diz as regras, sem dizer
+qual final faz o quê. `chk-telas` roda os finais um por um: o bloco, o
+botão, o mapa sem capítulo e a porta de casa.
+
 ## Como o projeto é montado
 - HTML/CSS/JS puro, `<script>` comum, sem módulo ES: tem que abrir em `file://`
   offline. Nada de `import`/`export`.
