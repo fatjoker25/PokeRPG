@@ -1757,6 +1757,25 @@ com os três; `chk-telas` abre a pista de cada cidade, cada jeito de
 cada visita com cada escolha (o teste pros dois lados) e a Liga com
 titulares de volta.
 
+**O poço do capítulo 26 é a mesma Elite.** Quem recusa as três ofertas
+desce ao poço da arena, e ali lutam as quatro cadeiras da ala, uma
+depois da outra (`c21_luta_elite`, `c21_poco_segunda`, `_terceira`,
+`_quarta`), com o time de quem senta nelas hoje: a luta de cena com
+`batalha:{elite:i}` monta o time pelo `timeDaElite(Titulares.membro(i))`,
+o mesmo da ala, com a Vontade e a natureza da ala, sem prêmio por
+cadeira, com a festa da cadeira e a música da Elite. Cada um tem a linha
+de quando sai da fila e de quando perde em `C26_POCO`, pelo id (o
+titular que voltou e o substituto, e a Agatha com raiva). Perder volta
+pra primeira e cura toda vez (`c21_perdeu_elite` e `c21_treinou` são
+`repetivel`, e as Hyper Potion vêm uma vez só). Já foi uma luta só de
+três Pokémon em nível fixo, que o texto chamava de "quatro times
+seguidos", e o título dali não dava a Pokédex Nacional: como a ala
+fecha pra quem é Campeão, quem ganhava no poço ficava sem Johto pra
+sempre — um robô ganhou assim. Hoje quem coroa é `coroarCampeao`
+(`liga.js`), a mesma função depois do Red e depois do Lance no poço:
+título, prêmio, reputação e o registro nacional. Quem já é Campeão não
+vê a opção de descer.
+
 ## Sexo do Pokémon
 Todo Pokémon ganha `genero` (`'m'`, `'f'` ou `null`) no `criarPokemon`,
 na proporção dos jogos (`chanceDeMacho`, em `js/engine/pokemon.js`). Save

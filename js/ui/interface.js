@@ -6437,6 +6437,7 @@ const UI = {
       <h3>Elite dos Quatro</h3>
       <div class="linha"><span class="k">Quem entra</span><span class="v">quem tem as 8 insígnias · quatro salas seguidas, sem Centro Pokémon entre elas · perdeu uma, a ala recomeça da primeira porta</span></div>
       <div class="linha"><span class="k">Nível</span><span class="v">o de cada porta, um a mais por Pokémon do time, e o último 2 acima disso · a quarta porta é sempre a mais alta</span></div>
+      <div class="linha"><span class="k">Fora da ala</span><span class="v">quando a história leva a Elite pra outro lugar, são as mesmas quatro cadeiras, com os mesmos times e a mesma regra: uma depois da outra, sem cura no meio, e perder de uma volta pra primeira · vencer as quatro ali dá a cadeira do Campeão, com o mesmo prêmio da ala</span></div>
       <div class="linha"><span class="k">Os titulares</span><span class="v">Lorelei, Bruno e Agatha estão em casa desde antes do capítulo 17, cada um na sua cidade · quem senta na cadeira de cada um conta onde, ganhando ou perdendo, e a cidade também conta, pra quem anda e conversa</span></div>
       <div class="linha"><span class="k">Voltar ou não</span><span class="v">cada titular pesa uma coisa que você fez antes, na cidade dele, e o resto se decide na visita: o que você diz, o que você faz e, às vezes, um teste · o jogo não diz o que cada um pesa</span></div>
       <div class="linha"><span class="k">A visita</span><span class="v">abre depois do capítulo 17, pra quem sabe onde a pessoa está, e só até a cadeira do Campeão · ir embora sem decidir deixa a porta pra outro dia; o que se decide nela não se desfaz</span></div>
@@ -6495,7 +6496,8 @@ const UI = {
       <div class="linha"><span class="k">Torneio</span><span class="v">o prêmio da rodada · perdendo, 30% dele</span></div>
       <div class="linha"><span class="k">Rival da Rota 1</span><span class="v">perder custa 800 ₽ · às vezes ganhar rende 3.000</span></div>
       <div class="linha"><span class="k">Rival que você fez na estrada</span><span class="v">perder custa 700 ₽, ou 1.200</span></div>
-      <div class="linha"><span class="k">Campeão</span><span class="v">80.000 ₽</span></div>
+      <div class="linha"><span class="k">Elite dos Quatro</span><span class="v">nenhuma porta paga · o prêmio é o do título</span></div>
+      <div class="linha"><span class="k">Campeão</span><span class="v">${fmtDin(PREMIO_CAMPEAO)} ₽, Master Ball, 5 Hyper Potion e 5 Full Heal · e a Pokédex Nacional, com os 251 registros e Johto aberto</span></div>
       <div class="linha"><span class="k">Treinador de cena</span><span class="v">valor da classe × nível do último Pokémon dele · se a cena já te paga, é esse o prêmio</span></div>
       <div class="linha"><span class="k">Treinador de estrada</span><span class="v">a mesma conta · perdendo, você paga a ele o que ele te pagaria</span></div>
       <div class="linha"><span class="k">Veterano</span><span class="v">a mesma conta × 3, só na primeira vitória · perdendo, nada</span></div>

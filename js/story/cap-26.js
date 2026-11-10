@@ -31,6 +31,125 @@ function c26_oferta(d){
 }
 /* quantos titulares a visita trouxe de volta (titulares.js) */
 function c26_titularesDeVolta(d){ return typeof Titulares !== 'undefined' ? Titulares.quantos(d) : 0; }
+
+/* O poço: as quatro cadeiras da ala, uma depois da outra, com o time de
+   quem senta nelas hoje (Titulares.membro), o mesmo da ala. Ninguém
+   cura ninguém no meio, e perder de um manda de volta pro começo. Quem
+   perde sobe a escadinha e vai embora; no fim só sobra o Sr. Mervin.
+   Cada um tem a linha de quando sai da fila (`desce`) e de quando
+   perde (`sobe`); a do Lance perdendo mora em c21_venceu_elite. */
+const C26_POCO = {
+  giselle:{
+    desce:d=>[
+      'A primeira a sair da fila é a mais nova dos quatro: vinte e poucos anos e um caderno aberto na mão. Presa na capa, você reconhece a sua ficha.',
+      fala('Giselle', 'Giselle. A cadeira é da Lorelei. O caderno é meu.'),
+      fala('Giselle', 'A regra aqui embaixo é a da ala: você sai vencendo os quatro ou perdendo de um. Ninguém cura ninguém no meio.'),
+      'Ela anota a hora antes de soltar a primeira Pokébola.'
+    ],
+    sobe:d=>[
+      'O Rhydon dela cai sentado, e o chão do poço treme debaixo da sua sola.',
+      fala('Giselle', 'Anotado.', null, 'Ela fecha o caderno com as duas mãos.'),
+      fala('Giselle', 'Eu odiei isso. Vou registrar direito mesmo assim: dado torto não serve pra nada.'),
+      'Ela sobe a escadinha sem olhar pra trás.'
+    ]
+  },
+  lorelei:{
+    desce:d=>[
+      'A primeira a sair da fila é a Lorelei: cabelo vermelho preso, óculos, terno escuro. O frio do poço não muda nada nela.',
+      fala('Lorelei', 'Aqui embaixo a regra é a da ala: você sai vencendo os quatro ou perdendo de um. Ninguém cura ninguém no meio.'),
+      fala('Lorelei', 'E não precisa olhar pra borda. O Sr. Mervin não dá dica pra ninguém.', null, 'Ela não olha pra lá.')
+    ],
+    sobe:d=>[
+      'O Lapras dela é o último a cair, e cai devagar.',
+      fala('Lorelei', 'Correto.', null, 'Ela tira os óculos e limpa na manga do terno.'),
+      fala('Lorelei', 'Eu queria um erro novo pra estudar. Você me deu dois.'),
+      'Ela sobe a escadinha sem segurar no corrimão.'
+    ]
+  },
+  aj:{
+    desce:d=>[
+      'O segundo da fila é o homem de chicote enrolado no cinto. Ele vem até o meio se alongando, sem pressa nenhuma.',
+      fala('A.J.', 'A.J. A cadeira é do Bruno, que me ganhou duas vezes e foi embora carregar pedra antes da terceira.'),
+      d.flags.conheceu_o_da_terceira
+        ? fala('A.J.', 'No vestiário eu era um homem. Aqui embaixo eu sou a segunda cadeira.', null, 'Ele assente uma vez, sem sorrir.')
+        : '',
+      fala('A.J.', 'Então hoje quem paga a conta dele é {o senhor|a senhora}.')
+    ],
+    sobe:d=>[
+      'O Golem dele cai de lado, e o poço devolve o barulho três vezes.',
+      fala('A.J.', 'Cansad{o|a} e de pé. É assim que se passa daqui.'),
+      'Ele sobe a escadinha de dois em dois degraus.'
+    ]
+  },
+  bruno:{
+    desce:d=>[
+      'O segundo é o Bruno, sem camisa, com a calça branca de treino suja de pó de pedra na barra. Do lado dele, a escadinha parece de brinquedo.',
+      fala('Bruno', 'POÇO! Faz anos que eu não desço aqui!', 'grita', 'A voz dele bate nas quatro paredes e volta.'),
+      fala('Bruno', 'Depois a gente come junto. Ganhe quem ganhar.')
+    ],
+    sobe:d=>[
+      'O Machamp cai de costas e fica olhando a luz lá de cima, com as quatro mãos abertas.',
+      'O Bruno solta uma gargalhada que não tem nada de derrota e te dá um tapa nas costas que quase te derruba.',
+      fala('Bruno', 'Vai, vai! Não para agora!', 'grita'),
+      'Ele sobe a escadinha de três em três degraus, e ela reclama em cada um.'
+    ]
+  },
+  mandi:{
+    desce:d=>[
+      'O terceiro abre os braços antes de sair da fila, pra uma plateia que o poço não tem.',
+      fala('Mandi', 'MANDI! O ESPANTOSO!', 'grita'),
+      'Ninguém aplaude. Ele baixa os braços e olha a luz única lá em cima.',
+      fala('Mandi', 'Na ala eu tenho refletor e música. Aqui embaixo não tem nem tomada.', null, 'Agora ele fala em tom normal, e assusta mais.')
+    ],
+    sobe:d=>[
+      'O Gengar dele some no ar sem barulho nenhum.',
+      fala('Mandi', 'Sem refletor eu perco mais rápido. Isso não sai daqui, combinado?'),
+      'No último degrau da escadinha ele faz uma reverência pra ninguém, e vai embora.'
+    ]
+  },
+  agatha:{
+    desce:d=> d.flags.agatha_com_raiva ? [
+      'A terceira é a Agatha, e ela não confere o seu cinto. Ela já sabe o que tem nele.',
+      d.flags.usou_escudo
+        ? fala('Agatha', 'Você desceu a Torre com uma Pokébola a menos. Eu contei. Os meus também.')
+        : fala('Agatha', 'Aquele Marowak chamou quatro dias. Subiu uma pessoa só, e bateu nele.'),
+      fala('Agatha', 'Eu desci neste poço por sua causa. Não fica lisonjead{o|a}.')
+    ] : [
+      'A terceira é a Agatha. Ela sai da fila apoiada na bengala, pequena dentro do xale verde, e confere o seu cinto Pokébola por Pokébola.',
+      fala('Agatha', `${cap1(porExtenso(Titulares.minutos(d)))} minutos.`),
+      fala('Agatha', 'Eu errava pouco. Vem, e não chora se perder: os meus preferem medo.')
+    ],
+    sobe:d=> d.flags.agatha_com_raiva ? [
+      'O Gengar dela cai sem rir.',
+      fala('Agatha', 'Você ganhou. Isso não muda o que aconteceu no sexto andar. Muda o que eu sei de você.'),
+      'Ela sobe a escadinha sem olhar pra você.'
+    ] : [
+      'O Gengar dela ri antes de cair.',
+      fala('Agatha', 'Errei o tempo. Faz trinta anos que eu não erro o tempo.', null, 'Ela olha você de cima a baixo de novo.'),
+      'Ela sobe a escadinha degrau por degrau, e não aceita a mão de ninguém.'
+    ]
+  },
+  lance:{
+    desce:d=>[
+      'Sobra um na fila. É o Lance, de capa, e quando ele vem até o meio o poço parece menor.',
+      d.flags.elite_passou_lance
+        ? fala('Lance', 'Você já passou por mim na ala. Hoje eu descubro se foi acidente.')
+        : fala('Lance', 'Aqui embaixo eu nunca perdi. Não é orgulho. É registro.'),
+      'Ele solta a primeira Pokébola sem cerimônia, e o Gyarados que sai dela ocupa metade do poço.',
+      fala('Lance', 'Vem.')
+    ]
+  }
+};
+/* as linhas de quem senta na cadeira i, uma função por linha (a cena
+   resolve uma linha de cada vez); a que não existe sai vazia */
+const C26_LINHAS_DO_POCO = 5;
+function c26_poco(qual, i){
+  return Array.from({length:C26_LINHAS_DO_POCO}, (_, k) => d => {
+    const alvo = Titulares.membro(i, d);
+    const t = (C26_POCO[alvo.id] || {})[qual];
+    return (t ? t(d) : [])[k] || '';
+  });
+}
 const C26_CARGO = {elite:'Membro da Elite 4', acordo:'{Assessor|Assessora} do Planalto',
                    pesquisa:'{Pesquisador|Pesquisadora} do Planalto', instrutor:'{Instrutor|Instrutora} do Planalto'};
 
@@ -1121,7 +1240,8 @@ c21_ofertas:{
     {texto:'Aceitar o cargo formal.', vai:'c21_cargo'},
     {texto:'Aceitar o contrato de campo.', vai:'c21_contrato'},
     {texto:'"Me fala do norte."', vai:'c21_norte_conversa'},
-    {texto:'Recusar as três e enfrentar a Elite 4.', vai:'c21_desafio_elite'}
+    /* quem já é Campeão (pela ala) não desce pra ganhar o título de novo */
+    {texto:'Recusar as três e enfrentar a Elite 4.', vai:'c21_desafio_elite', cond:d=>!d.flags.campeao_de_kanto}
   ]
 },
 
@@ -1503,16 +1623,37 @@ c21_luta_elite:{
   texto:[
     'Você desce a escadinha de ferro e o chão de pedra é frio através da sola.',
     'A luz vem de um ponto só, lá de cima, e não tem torcida, e não tem anúncio, e não tem música.',
-    'Tem quatro pessoas em fila do outro lado do poço e um velho sentado na borda.'
+    'Tem quatro pessoas em fila do outro lado do poço e um velho sentado na borda.',
+    ...c26_poco('desce', 0)
   ],
-  batalha:{dex:65, nivel:58, tipo:'treinador', treinador:'Elite 4', fuga:false,
-           timeExtra:[{dex:94, nivel:59},{dex:149, nivel:62}],
+  batalha:{elite:0, tipo:'treinador', fuga:false,
+           vitoria:'c21_poco_segunda', derrota:'c21_perdeu_elite', gameover:'gameover'}
+},
+
+c21_poco_segunda:{
+  texto:[...c26_poco('sobe', 0), ...c26_poco('desce', 1)],
+  batalha:{elite:1, tipo:'treinador', fuga:false,
+           vitoria:'c21_poco_terceira', derrota:'c21_perdeu_elite', gameover:'gameover'}
+},
+
+c21_poco_terceira:{
+  texto:[...c26_poco('sobe', 1), ...c26_poco('desce', 2)],
+  batalha:{elite:2, tipo:'treinador', fuga:false,
+           vitoria:'c21_poco_quarta', derrota:'c21_perdeu_elite', gameover:'gameover'}
+},
+
+c21_poco_quarta:{
+  texto:[...c26_poco('sobe', 2), ...c26_poco('desce', 3)],
+  batalha:{elite:3, tipo:'treinador', fuga:false,
            vitoria:'c21_venceu_elite', derrota:'c21_perdeu_elite', gameover:'gameover'}
 },
 
 c21_venceu_elite:{
   texto:[
-    'Você vence quatro times seguidos num poço de pedra sem plateia nenhuma.',
+    'O Dragonite do Lance cai de joelhos primeiro e só depois de lado.',
+    fala('Lance', 'A cadeira do Campeão está vaga faz dois anos. Hoje ela tem dono.', null, 'Ele recolhe os cinco sem pressa.'),
+    'Ele sobe a escadinha sem virar, e o poço volta ao tamanho que tinha.',
+    'Você venceu quatro times seguidos num poço de pedra sem plateia nenhuma.',
     'Não tem confete, não tem hino, não tem foto imediata.',
     'Tem um homem de setenta e poucos anos sentado na borda do poço que desce a escadinha devagar e aperta a sua mão com as duas dele.',
     fala('Sr. Mervin', 'Muita gente chega aqui. Quase ninguém chega aqui sabendo o que custou.'),
@@ -1521,18 +1662,13 @@ c21_venceu_elite:{
       : fala('Sr. Mervin', 'E {o senhor|a senhora} não perdeu nenhum. Isso é mais raro que vencer.', null, 'Ele olha a lista que trouxeram.'),
     'Depois ele solta a sua mão e volta a subir a escadinha, devagar, e senta de novo na borda.',
     'E fica lá, olhando, enquanto você fica sozinh{o|a} no meio do poço.',
-    'Não é solidão. É a diferença inteira entre quarenta e nove e hoje.'
+    'Não é solidão. É a diferença inteira entre quarenta e nove e hoje.',
+    'No seu bolso, a Pokédex apita duas vezes curtas, do jeito errado, e trava.'
   ],
-  ef:{flag:['venceu_a_elite','campeao_de_kanto'],
-      /* o mesmo título de quem vence pela Liga (main.js): conta como
-         título, não como insígnia */
-      executar:d=>{
-        d.jogador.cargo='{Campeão|Campeã} de Kanto';
-        if (!d.insignias.includes('Título de Campeão')) d.insignias.push('Título de Campeão');
-        return [{tipo:'insignia', texto:'Você é {Campeão|Campeã} de Kanto.'}];
-      },
-      rep:{eixo:'bom',delta:3,motivo:'Venceu a Elite 4 do Planalto Indigo'},
-      dinheiro:50000,
+  ef:{flag:['venceu_a_elite'],
+      /* o mesmo título de quem vence pela ala (coroarCampeao, em
+         liga.js): prêmio, reputação e o registro nacional da Pokédex */
+      executar:d=>coroarCampeao('Venceu a Elite 4 no poço e assumiu a cadeira de Campeão de Kanto'),
       curaTime:true,
       registrar:'Venceu a Elite 4 e tornou-se {Campeão|Campeã} de Kanto.'},
   escolhas:[
@@ -1580,18 +1716,34 @@ c21_sentou_na_borda:{
   escolhas:[{texto:'"E o norte?"', vai:'c21_norte_conversa'}]
 },
 
+/* perder de novo cura de novo: cada volta ao poço começa com o time
+   inteiro, e quem te parou (poco_parou, a cadeira) sai no texto */
 c21_perdeu_elite:{
+  repetivel:true,
   texto:[
-    'Você perde. Não tem vergonha nisso — perder aqui é o resultado padrão.',
+    d=>{
+      const quem = d.flags.poco_parou ? Titulares.membro(d.flags.poco_parou - 1, d) : null;
+      return quem ? `Você perde ${quem.f ? 'pra' : 'pro'} ${quem.nome}. Não tem vergonha nisso: perder aqui é o resultado padrão.`
+                  : 'Você perde. Não tem vergonha nisso: perder aqui é o resultado padrão.';
+    },
     'Eles curam o seu time, te dão água e te deixam sentar na borda do poço o tempo que você precisar.',
-    fala('Sr. Mervin', 'Volta. Eu perdi quatro vezes antes de sentar desse lado.'),
-    d=>fala(d.jogador.nome, 'Quatro?'),
-    fala('Sr. Mervin', 'Quatro, e a terceira foi feia.', null, 'Ele coça o joelho.'),
-    fala('Sr. Mervin', 'Na quarta eu mudei uma coisa só e ganhei, e eu te conto qual foi se {o senhor|a senhora} quiser ouvir.')
+    d=>(d.flags.poco_derrotas || 0) > 1
+      ? fala('Sr. Mervin', `${cap1(porExtensoF(d.flags.poco_derrotas))} vezes. Eu perdi quatro antes de sentar desse lado.`, null, 'Ele não tira os olhos do poço.')
+      : fala('Sr. Mervin', 'Volta. Eu perdi quatro vezes antes de sentar desse lado.'),
+    d=>(d.flags.poco_derrotas || 0) > 1 ? '' : fala(d.jogador.nome, 'Quatro?'),
+    d=>(d.flags.poco_derrotas || 0) > 1 ? '' : fala('Sr. Mervin', 'Quatro, e a terceira foi feia.', null, 'Ele coça o joelho.'),
+    d=>(d.flags.poco_derrotas || 0) > 1 ? '' : fala('Sr. Mervin', 'Na quarta eu mudei uma coisa só e ganhei, e eu te conto qual foi se {o senhor|a senhora} quiser ouvir.')
   ],
-  ef:{curaTime:true, flag:'perdeu_a_elite', itens:{'Hyper Potion':3}},
+  ef:{curaTime:true, flag:'perdeu_a_elite',
+      /* a conta das derrotas, e as três Hyper Potion só na primeira */
+      executar:d=>{
+        d.flags.poco_derrotas = (d.flags.poco_derrotas || 0) + 1;
+        if (d.flags.poco_deu_potion) return [];
+        d.flags.poco_deu_potion = true;
+        return Historia.aplicar({itens:{'Hyper Potion':3}});
+      }},
   escolhas:[
-    {texto:'"Eu quero ouvir."', vai:'c21_o_que_ele_mudou'},
+    {texto:'"Eu quero ouvir."', vai:'c21_o_que_ele_mudou', cond:d=>!d.flags.conselho_do_quintino},
     {texto:'Treinar e tentar de novo.', vai:'c21_treinou'},
     {texto:'"Deixa a Elite para lá. Me fala do norte."', vai:'c21_norte_conversa'}
   ]
@@ -1617,7 +1769,9 @@ c21_o_que_ele_mudou:{
   ]
 },
 
+/* repetível: quem perde de novo treina de novo, e o time sai curado */
 c21_treinou:{
+  repetivel:true,
   texto:[
     'Você fica no Planalto por três semanas.',
     'Treina das seis às nove com a Sra. Nettle, que não te cobra nada e não te elogia nunca, e come no refeitório do subsolo com o pessoal da manutenção.',

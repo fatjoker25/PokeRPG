@@ -221,25 +221,34 @@ const Vitoria = {
       frase:`Você recebeu a <b>${UI.esc(g.insignia)}</b> de <b>${UI.esc(g.lider)}</b>!`
     };
   },
-  elite(alvo){
+  /* `poco`: a mesma cadeira vencida no poço do capítulo 26, onde não
+     tem porta, tem quatro pessoas em fila */
+  elite(alvo, o = {}){
     const titular = alvo.titular || alvo.nome;
+    const peca = o.poco ? 'cadeira' : 'porta';
+    const faltam = 4 - alvo.ordem;
     return {
       tipo:'elite', cor:COR_TIPO[alvo.tipo] || '#a884d4',
       quem:alvo.nome, sub:`Elite 4 · ${alvo.ordem} de 4`, rosto:retratoDe(alvo.nome),
-      placa:{nome:titular, ordem:`${['Primeira', 'Segunda', 'Terceira', 'Quarta'][alvo.ordem - 1] || ''} porta`},
-      legenda:`A porta de ${titular}`, conta:alvo.ordem >= 4 ? 'A do fundo está aberta' : `${alvo.ordem} de 4`,
+      placa:{nome:titular, ordem:`${['Primeira', 'Segunda', 'Terceira', 'Quarta'][alvo.ordem - 1] || ''} ${peca}`},
+      legenda:`A ${peca} de ${titular}`, conta:alvo.ordem >= 4 ? 'A do fundo está aberta' : `${alvo.ordem} de 4`,
       frase: alvo.ordem >= 4
         ? `A última porta da ala fica para trás. <b>O Salão do Campeão</b> está aberto.`
-        : `<b>${UI.esc(alvo.nome)}</b> está fora do caminho. Faltam ${['', 'três', 'duas', 'uma'][alvo.ordem]} ${alvo.ordem === 3 ? 'porta' : 'portas'}.`
+        : o.poco
+          ? `<b>${UI.esc(alvo.nome)}</b> sobe a escadinha. ${faltam === 1 ? 'Falta um' : `Faltam ${['', '', 'dois', 'três'][faltam]}`} na fila.`
+          : `<b>${UI.esc(alvo.nome)}</b> está fora do caminho. ${faltam === 1 ? 'Falta uma porta' : `Faltam ${['', '', 'duas', 'três'][faltam]} portas`}.`
     };
   },
-  campeao(ganho, itens){
+  /* `o` troca quem perdeu e o lugar: no poço do 26, o título vem
+     depois do Lance, não do Red */
+  campeao(ganho, itens, o = {}){
+    const quem = o.quem || CAMPEAO.nome;
     return {
       tipo:'campeao', cor:'#e8b923', titulo:'{Campeão|Campeã}!',
-      quem:CAMPEAO.nome, sub:'Salão do Campeão', rosto:retratoDe(CAMPEAO.nome),
+      quem, sub:o.sub || 'Salão do Campeão', rosto:retratoDe(quem),
       trofeu:'ouro', legenda:'{Campeão|Campeã} de Kanto',
       premios:this.premios(ganho, itens),
-      frase:'A cadeira do Salão do Campeão tem dono de novo. <b>É você.</b>'
+      frase:o.frase || 'A cadeira do Salão do Campeão tem dono de novo. <b>É você.</b>'
     };
   },
   /* final de torneio da história (luta de cena com festa:{…} no

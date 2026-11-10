@@ -210,6 +210,44 @@ const CAMPEAO = {
   ]
 };
 
+/* O time de quem senta numa cadeira da Elite, o mesmo na ala e no poço
+   do capítulo 26: um nível a mais por Pokémon a partir da base, e o ás
+   dois acima, com os atributos do nível novo. */
+function timeDaElite(alvo){
+  const time = alvo.especies.map((dex, i) =>
+    criarPokemon(dex, alvo.nivelBase + i, {apelido:(alvo.apelidos || {})[dex] || null}));
+  if (time.length) renivelar(time[time.length - 1], time[time.length - 1].nivel + 2);
+  time.forEach(x => { x.nomeAnunciado = true; });
+  return time;
+}
+
+/* Quem vira Campeão leva a mesma coisa, venha pela ala (depois do Red)
+   ou pelo poço do capítulo 26 (depois do Lance): o título, o prêmio e o
+   registro nacional da Pokédex. O poço já deu o título sem a Pokédex
+   Nacional, e quem ganhava ali ficava sem Johto pra sempre, porque a
+   ala fecha pra quem é Campeão. */
+const ITENS_DO_CAMPEAO = {'Master Ball':1, 'Hyper Potion':5, 'Full Heal':5};
+function coroarCampeao(motivo){
+  const d = Estado.dados, avisos = [];
+  Estado.marcar('campeao_de_kanto');
+  Estado.j.cargo = '{Campeão|Campeã} de Kanto';
+  if (!d.insignias.includes('Título de Campeão')) d.insignias.push('Título de Campeão');
+  Estado.j.dinheiro += PREMIO_CAMPEAO;
+  Object.entries(ITENS_DO_CAMPEAO).forEach(([nome, n]) => Estado.darItem(nome, n));
+  const r = Estado.mudarRep('bom', 3, motivo, {rep:{notorio:true, peso:8}});
+  avisos.push({tipo:'insignia', texto:'Você é {o Campeão|a Campeã} de Kanto. A cadeira estava vaga há dois anos.'});
+  avisos.push({tipo:'item', texto:`+${fmtDin(PREMIO_CAMPEAO)} ₽ · ` + Object.entries(ITENS_DO_CAMPEAO).map(([nome, n]) => (n > 1 ? n + '× ' : '') + nome).join(' · ')});
+  /* a carta de atualização: a última coisa que a Liga faz por você como
+     desafiante e a primeira que faz como Campeão */
+  Estado.marcar('dex_nacional');
+  Estado.marcar('johto_liberado');
+  avisos.push({tipo:'pokedex', texto:'A Pokédex trava por quatro segundos e reinicia sozinha. Quando volta, a lista não termina mais no 151.'});
+  avisos.push({tipo:'mundo', texto:'Cem registros novos, todos vazios. E a passagem do norte, que ninguém subia sem autorização da Liga, agora é sua para autorizar.'});
+  Estado.registrar('Pokédex Nacional liberada: 251 registros. Johto aberto.');
+  if (r && r.mudou) avisos.push({tipo:'rep', texto:`Reputação: ${r.de} → ${r.para}`});
+  return avisos;
+}
+
 /* ============================================================
    TORNEIO ABERTO DA LIGA
    Chaveamento de dezesseis, sorteado na inscrição: oitavas, quartas,

@@ -327,6 +327,8 @@ const Som = {
       if (/\bDiana\b/.test(t)) return 'faixa:' + FAIXA_DO_RIVAL.diana;
     }
     if (J.eliteAtual || J.torneioAtual || J.conferenciaAtual) return 'elite';
+    /* a Elite fora da ala (o poço do capítulo 26) toca a mesma */
+    if (J.cenaBatalha && J.cenaBatalha.elite !== undefined) return 'elite';
     if (J.ginasioAtual) return 'lider:' + J.ginasioAtual.id;
     if (J.rivalAtual) return 'rival';
     if (J.revancheAtual && J.revancheAtual.ginasio) return 'lider:' + J.revancheAtual.ginasio;

@@ -56858,6 +56858,44 @@ const CAMPEAO = {
   ]
 };
 
+/* O time de quem senta numa cadeira da Elite, o mesmo na ala e no poço
+   do capítulo 26: um nível a mais por Pokémon a partir da base, e o ás
+   dois acima, com os atributos do nível novo. */
+function timeDaElite(alvo){
+  const time = alvo.especies.map((dex, i) =>
+    criarPokemon(dex, alvo.nivelBase + i, {apelido:(alvo.apelidos || {})[dex] || null}));
+  if (time.length) renivelar(time[time.length - 1], time[time.length - 1].nivel + 2);
+  time.forEach(x => { x.nomeAnunciado = true; });
+  return time;
+}
+
+/* Quem vira Campeão leva a mesma coisa, venha pela ala (depois do Red)
+   ou pelo poço do capítulo 26 (depois do Lance): o título, o prêmio e o
+   registro nacional da Pokédex. O poço já deu o título sem a Pokédex
+   Nacional, e quem ganhava ali ficava sem Johto pra sempre, porque a
+   ala fecha pra quem é Campeão. */
+const ITENS_DO_CAMPEAO = {'Master Ball':1, 'Hyper Potion':5, 'Full Heal':5};
+function coroarCampeao(motivo){
+  const d = Estado.dados, avisos = [];
+  Estado.marcar('campeao_de_kanto');
+  Estado.j.cargo = '{Campeão|Campeã} de Kanto';
+  if (!d.insignias.includes('Título de Campeão')) d.insignias.push('Título de Campeão');
+  Estado.j.dinheiro += PREMIO_CAMPEAO;
+  Object.entries(ITENS_DO_CAMPEAO).forEach(([nome, n]) => Estado.darItem(nome, n));
+  const r = Estado.mudarRep('bom', 3, motivo, {rep:{notorio:true, peso:8}});
+  avisos.push({tipo:'insignia', texto:'Você é {o Campeão|a Campeã} de Kanto. A cadeira estava vaga há dois anos.'});
+  avisos.push({tipo:'item', texto:`+${fmtDin(PREMIO_CAMPEAO)} ₽ · ` + Object.entries(ITENS_DO_CAMPEAO).map(([nome, n]) => (n > 1 ? n + '× ' : '') + nome).join(' · ')});
+  /* a carta de atualização: a última coisa que a Liga faz por você como
+     desafiante e a primeira que faz como Campeão */
+  Estado.marcar('dex_nacional');
+  Estado.marcar('johto_liberado');
+  avisos.push({tipo:'pokedex', texto:'A Pokédex trava por quatro segundos e reinicia sozinha. Quando volta, a lista não termina mais no 151.'});
+  avisos.push({tipo:'mundo', texto:'Cem registros novos, todos vazios. E a passagem do norte, que ninguém subia sem autorização da Liga, agora é sua para autorizar.'});
+  Estado.registrar('Pokédex Nacional liberada: 251 registros. Johto aberto.');
+  if (r && r.mudou) avisos.push({tipo:'rep', texto:`Reputação: ${r.de} → ${r.para}`});
+  return avisos;
+}
+
 /* ============================================================
    TORNEIO ABERTO DA LIGA
    Chaveamento de dezesseis, sorteado na inscrição: oitavas, quartas,
@@ -127743,6 +127781,125 @@ function c26_oferta(d){
 }
 /* quantos titulares a visita trouxe de volta (titulares.js) */
 function c26_titularesDeVolta(d){ return typeof Titulares !== 'undefined' ? Titulares.quantos(d) : 0; }
+
+/* O poço: as quatro cadeiras da ala, uma depois da outra, com o time de
+   quem senta nelas hoje (Titulares.membro), o mesmo da ala. Ninguém
+   cura ninguém no meio, e perder de um manda de volta pro começo. Quem
+   perde sobe a escadinha e vai embora; no fim só sobra o Sr. Mervin.
+   Cada um tem a linha de quando sai da fila (`desce`) e de quando
+   perde (`sobe`); a do Lance perdendo mora em c21_venceu_elite. */
+const C26_POCO = {
+  giselle:{
+    desce:d=>[
+      'A primeira a sair da fila é a mais nova dos quatro: vinte e poucos anos e um caderno aberto na mão. Presa na capa, você reconhece a sua ficha.',
+      fala('Giselle', 'Giselle. A cadeira é da Lorelei. O caderno é meu.'),
+      fala('Giselle', 'A regra aqui embaixo é a da ala: você sai vencendo os quatro ou perdendo de um. Ninguém cura ninguém no meio.'),
+      'Ela anota a hora antes de soltar a primeira Pokébola.'
+    ],
+    sobe:d=>[
+      'O Rhydon dela cai sentado, e o chão do poço treme debaixo da sua sola.',
+      fala('Giselle', 'Anotado.', null, 'Ela fecha o caderno com as duas mãos.'),
+      fala('Giselle', 'Eu odiei isso. Vou registrar direito mesmo assim: dado torto não serve pra nada.'),
+      'Ela sobe a escadinha sem olhar pra trás.'
+    ]
+  },
+  lorelei:{
+    desce:d=>[
+      'A primeira a sair da fila é a Lorelei: cabelo vermelho preso, óculos, terno escuro. O frio do poço não muda nada nela.',
+      fala('Lorelei', 'Aqui embaixo a regra é a da ala: você sai vencendo os quatro ou perdendo de um. Ninguém cura ninguém no meio.'),
+      fala('Lorelei', 'E não precisa olhar pra borda. O Sr. Mervin não dá dica pra ninguém.', null, 'Ela não olha pra lá.')
+    ],
+    sobe:d=>[
+      'O Lapras dela é o último a cair, e cai devagar.',
+      fala('Lorelei', 'Correto.', null, 'Ela tira os óculos e limpa na manga do terno.'),
+      fala('Lorelei', 'Eu queria um erro novo pra estudar. Você me deu dois.'),
+      'Ela sobe a escadinha sem segurar no corrimão.'
+    ]
+  },
+  aj:{
+    desce:d=>[
+      'O segundo da fila é o homem de chicote enrolado no cinto. Ele vem até o meio se alongando, sem pressa nenhuma.',
+      fala('A.J.', 'A.J. A cadeira é do Bruno, que me ganhou duas vezes e foi embora carregar pedra antes da terceira.'),
+      d.flags.conheceu_o_da_terceira
+        ? fala('A.J.', 'No vestiário eu era um homem. Aqui embaixo eu sou a segunda cadeira.', null, 'Ele assente uma vez, sem sorrir.')
+        : '',
+      fala('A.J.', 'Então hoje quem paga a conta dele é {o senhor|a senhora}.')
+    ],
+    sobe:d=>[
+      'O Golem dele cai de lado, e o poço devolve o barulho três vezes.',
+      fala('A.J.', 'Cansad{o|a} e de pé. É assim que se passa daqui.'),
+      'Ele sobe a escadinha de dois em dois degraus.'
+    ]
+  },
+  bruno:{
+    desce:d=>[
+      'O segundo é o Bruno, sem camisa, com a calça branca de treino suja de pó de pedra na barra. Do lado dele, a escadinha parece de brinquedo.',
+      fala('Bruno', 'POÇO! Faz anos que eu não desço aqui!', 'grita', 'A voz dele bate nas quatro paredes e volta.'),
+      fala('Bruno', 'Depois a gente come junto. Ganhe quem ganhar.')
+    ],
+    sobe:d=>[
+      'O Machamp cai de costas e fica olhando a luz lá de cima, com as quatro mãos abertas.',
+      'O Bruno solta uma gargalhada que não tem nada de derrota e te dá um tapa nas costas que quase te derruba.',
+      fala('Bruno', 'Vai, vai! Não para agora!', 'grita'),
+      'Ele sobe a escadinha de três em três degraus, e ela reclama em cada um.'
+    ]
+  },
+  mandi:{
+    desce:d=>[
+      'O terceiro abre os braços antes de sair da fila, pra uma plateia que o poço não tem.',
+      fala('Mandi', 'MANDI! O ESPANTOSO!', 'grita'),
+      'Ninguém aplaude. Ele baixa os braços e olha a luz única lá em cima.',
+      fala('Mandi', 'Na ala eu tenho refletor e música. Aqui embaixo não tem nem tomada.', null, 'Agora ele fala em tom normal, e assusta mais.')
+    ],
+    sobe:d=>[
+      'O Gengar dele some no ar sem barulho nenhum.',
+      fala('Mandi', 'Sem refletor eu perco mais rápido. Isso não sai daqui, combinado?'),
+      'No último degrau da escadinha ele faz uma reverência pra ninguém, e vai embora.'
+    ]
+  },
+  agatha:{
+    desce:d=> d.flags.agatha_com_raiva ? [
+      'A terceira é a Agatha, e ela não confere o seu cinto. Ela já sabe o que tem nele.',
+      d.flags.usou_escudo
+        ? fala('Agatha', 'Você desceu a Torre com uma Pokébola a menos. Eu contei. Os meus também.')
+        : fala('Agatha', 'Aquele Marowak chamou quatro dias. Subiu uma pessoa só, e bateu nele.'),
+      fala('Agatha', 'Eu desci neste poço por sua causa. Não fica lisonjead{o|a}.')
+    ] : [
+      'A terceira é a Agatha. Ela sai da fila apoiada na bengala, pequena dentro do xale verde, e confere o seu cinto Pokébola por Pokébola.',
+      fala('Agatha', `${cap1(porExtenso(Titulares.minutos(d)))} minutos.`),
+      fala('Agatha', 'Eu errava pouco. Vem, e não chora se perder: os meus preferem medo.')
+    ],
+    sobe:d=> d.flags.agatha_com_raiva ? [
+      'O Gengar dela cai sem rir.',
+      fala('Agatha', 'Você ganhou. Isso não muda o que aconteceu no sexto andar. Muda o que eu sei de você.'),
+      'Ela sobe a escadinha sem olhar pra você.'
+    ] : [
+      'O Gengar dela ri antes de cair.',
+      fala('Agatha', 'Errei o tempo. Faz trinta anos que eu não erro o tempo.', null, 'Ela olha você de cima a baixo de novo.'),
+      'Ela sobe a escadinha degrau por degrau, e não aceita a mão de ninguém.'
+    ]
+  },
+  lance:{
+    desce:d=>[
+      'Sobra um na fila. É o Lance, de capa, e quando ele vem até o meio o poço parece menor.',
+      d.flags.elite_passou_lance
+        ? fala('Lance', 'Você já passou por mim na ala. Hoje eu descubro se foi acidente.')
+        : fala('Lance', 'Aqui embaixo eu nunca perdi. Não é orgulho. É registro.'),
+      'Ele solta a primeira Pokébola sem cerimônia, e o Gyarados que sai dela ocupa metade do poço.',
+      fala('Lance', 'Vem.')
+    ]
+  }
+};
+/* as linhas de quem senta na cadeira i, uma função por linha (a cena
+   resolve uma linha de cada vez); a que não existe sai vazia */
+const C26_LINHAS_DO_POCO = 5;
+function c26_poco(qual, i){
+  return Array.from({length:C26_LINHAS_DO_POCO}, (_, k) => d => {
+    const alvo = Titulares.membro(i, d);
+    const t = (C26_POCO[alvo.id] || {})[qual];
+    return (t ? t(d) : [])[k] || '';
+  });
+}
 const C26_CARGO = {elite:'Membro da Elite 4', acordo:'{Assessor|Assessora} do Planalto',
                    pesquisa:'{Pesquisador|Pesquisadora} do Planalto', instrutor:'{Instrutor|Instrutora} do Planalto'};
 
@@ -128833,7 +128990,8 @@ c21_ofertas:{
     {texto:'Aceitar o cargo formal.', vai:'c21_cargo'},
     {texto:'Aceitar o contrato de campo.', vai:'c21_contrato'},
     {texto:'"Me fala do norte."', vai:'c21_norte_conversa'},
-    {texto:'Recusar as três e enfrentar a Elite 4.', vai:'c21_desafio_elite'}
+    /* quem já é Campeão (pela ala) não desce pra ganhar o título de novo */
+    {texto:'Recusar as três e enfrentar a Elite 4.', vai:'c21_desafio_elite', cond:d=>!d.flags.campeao_de_kanto}
   ]
 },
 
@@ -129215,16 +129373,37 @@ c21_luta_elite:{
   texto:[
     'Você desce a escadinha de ferro e o chão de pedra é frio através da sola.',
     'A luz vem de um ponto só, lá de cima, e não tem torcida, e não tem anúncio, e não tem música.',
-    'Tem quatro pessoas em fila do outro lado do poço e um velho sentado na borda.'
+    'Tem quatro pessoas em fila do outro lado do poço e um velho sentado na borda.',
+    ...c26_poco('desce', 0)
   ],
-  batalha:{dex:65, nivel:58, tipo:'treinador', treinador:'Elite 4', fuga:false,
-           timeExtra:[{dex:94, nivel:59},{dex:149, nivel:62}],
+  batalha:{elite:0, tipo:'treinador', fuga:false,
+           vitoria:'c21_poco_segunda', derrota:'c21_perdeu_elite', gameover:'gameover'}
+},
+
+c21_poco_segunda:{
+  texto:[...c26_poco('sobe', 0), ...c26_poco('desce', 1)],
+  batalha:{elite:1, tipo:'treinador', fuga:false,
+           vitoria:'c21_poco_terceira', derrota:'c21_perdeu_elite', gameover:'gameover'}
+},
+
+c21_poco_terceira:{
+  texto:[...c26_poco('sobe', 1), ...c26_poco('desce', 2)],
+  batalha:{elite:2, tipo:'treinador', fuga:false,
+           vitoria:'c21_poco_quarta', derrota:'c21_perdeu_elite', gameover:'gameover'}
+},
+
+c21_poco_quarta:{
+  texto:[...c26_poco('sobe', 2), ...c26_poco('desce', 3)],
+  batalha:{elite:3, tipo:'treinador', fuga:false,
            vitoria:'c21_venceu_elite', derrota:'c21_perdeu_elite', gameover:'gameover'}
 },
 
 c21_venceu_elite:{
   texto:[
-    'Você vence quatro times seguidos num poço de pedra sem plateia nenhuma.',
+    'O Dragonite do Lance cai de joelhos primeiro e só depois de lado.',
+    fala('Lance', 'A cadeira do Campeão está vaga faz dois anos. Hoje ela tem dono.', null, 'Ele recolhe os cinco sem pressa.'),
+    'Ele sobe a escadinha sem virar, e o poço volta ao tamanho que tinha.',
+    'Você venceu quatro times seguidos num poço de pedra sem plateia nenhuma.',
     'Não tem confete, não tem hino, não tem foto imediata.',
     'Tem um homem de setenta e poucos anos sentado na borda do poço que desce a escadinha devagar e aperta a sua mão com as duas dele.',
     fala('Sr. Mervin', 'Muita gente chega aqui. Quase ninguém chega aqui sabendo o que custou.'),
@@ -129233,18 +129412,13 @@ c21_venceu_elite:{
       : fala('Sr. Mervin', 'E {o senhor|a senhora} não perdeu nenhum. Isso é mais raro que vencer.', null, 'Ele olha a lista que trouxeram.'),
     'Depois ele solta a sua mão e volta a subir a escadinha, devagar, e senta de novo na borda.',
     'E fica lá, olhando, enquanto você fica sozinh{o|a} no meio do poço.',
-    'Não é solidão. É a diferença inteira entre quarenta e nove e hoje.'
+    'Não é solidão. É a diferença inteira entre quarenta e nove e hoje.',
+    'No seu bolso, a Pokédex apita duas vezes curtas, do jeito errado, e trava.'
   ],
-  ef:{flag:['venceu_a_elite','campeao_de_kanto'],
-      /* o mesmo título de quem vence pela Liga (main.js): conta como
-         título, não como insígnia */
-      executar:d=>{
-        d.jogador.cargo='{Campeão|Campeã} de Kanto';
-        if (!d.insignias.includes('Título de Campeão')) d.insignias.push('Título de Campeão');
-        return [{tipo:'insignia', texto:'Você é {Campeão|Campeã} de Kanto.'}];
-      },
-      rep:{eixo:'bom',delta:3,motivo:'Venceu a Elite 4 do Planalto Indigo'},
-      dinheiro:50000,
+  ef:{flag:['venceu_a_elite'],
+      /* o mesmo título de quem vence pela ala (coroarCampeao, em
+         liga.js): prêmio, reputação e o registro nacional da Pokédex */
+      executar:d=>coroarCampeao('Venceu a Elite 4 no poço e assumiu a cadeira de Campeão de Kanto'),
       curaTime:true,
       registrar:'Venceu a Elite 4 e tornou-se {Campeão|Campeã} de Kanto.'},
   escolhas:[
@@ -129292,18 +129466,34 @@ c21_sentou_na_borda:{
   escolhas:[{texto:'"E o norte?"', vai:'c21_norte_conversa'}]
 },
 
+/* perder de novo cura de novo: cada volta ao poço começa com o time
+   inteiro, e quem te parou (poco_parou, a cadeira) sai no texto */
 c21_perdeu_elite:{
+  repetivel:true,
   texto:[
-    'Você perde. Não tem vergonha nisso — perder aqui é o resultado padrão.',
+    d=>{
+      const quem = d.flags.poco_parou ? Titulares.membro(d.flags.poco_parou - 1, d) : null;
+      return quem ? `Você perde ${quem.f ? 'pra' : 'pro'} ${quem.nome}. Não tem vergonha nisso: perder aqui é o resultado padrão.`
+                  : 'Você perde. Não tem vergonha nisso: perder aqui é o resultado padrão.';
+    },
     'Eles curam o seu time, te dão água e te deixam sentar na borda do poço o tempo que você precisar.',
-    fala('Sr. Mervin', 'Volta. Eu perdi quatro vezes antes de sentar desse lado.'),
-    d=>fala(d.jogador.nome, 'Quatro?'),
-    fala('Sr. Mervin', 'Quatro, e a terceira foi feia.', null, 'Ele coça o joelho.'),
-    fala('Sr. Mervin', 'Na quarta eu mudei uma coisa só e ganhei, e eu te conto qual foi se {o senhor|a senhora} quiser ouvir.')
+    d=>(d.flags.poco_derrotas || 0) > 1
+      ? fala('Sr. Mervin', `${cap1(porExtensoF(d.flags.poco_derrotas))} vezes. Eu perdi quatro antes de sentar desse lado.`, null, 'Ele não tira os olhos do poço.')
+      : fala('Sr. Mervin', 'Volta. Eu perdi quatro vezes antes de sentar desse lado.'),
+    d=>(d.flags.poco_derrotas || 0) > 1 ? '' : fala(d.jogador.nome, 'Quatro?'),
+    d=>(d.flags.poco_derrotas || 0) > 1 ? '' : fala('Sr. Mervin', 'Quatro, e a terceira foi feia.', null, 'Ele coça o joelho.'),
+    d=>(d.flags.poco_derrotas || 0) > 1 ? '' : fala('Sr. Mervin', 'Na quarta eu mudei uma coisa só e ganhei, e eu te conto qual foi se {o senhor|a senhora} quiser ouvir.')
   ],
-  ef:{curaTime:true, flag:'perdeu_a_elite', itens:{'Hyper Potion':3}},
+  ef:{curaTime:true, flag:'perdeu_a_elite',
+      /* a conta das derrotas, e as três Hyper Potion só na primeira */
+      executar:d=>{
+        d.flags.poco_derrotas = (d.flags.poco_derrotas || 0) + 1;
+        if (d.flags.poco_deu_potion) return [];
+        d.flags.poco_deu_potion = true;
+        return Historia.aplicar({itens:{'Hyper Potion':3}});
+      }},
   escolhas:[
-    {texto:'"Eu quero ouvir."', vai:'c21_o_que_ele_mudou'},
+    {texto:'"Eu quero ouvir."', vai:'c21_o_que_ele_mudou', cond:d=>!d.flags.conselho_do_quintino},
     {texto:'Treinar e tentar de novo.', vai:'c21_treinou'},
     {texto:'"Deixa a Elite para lá. Me fala do norte."', vai:'c21_norte_conversa'}
   ]
@@ -129329,7 +129519,9 @@ c21_o_que_ele_mudou:{
   ]
 },
 
+/* repetível: quem perde de novo treina de novo, e o time sai curado */
 c21_treinou:{
+  repetivel:true,
   texto:[
     'Você fica no Planalto por três semanas.',
     'Treina das seis às nove com a Sra. Nettle, que não te cobra nada e não te elogia nunca, e come no refeitório do subsolo com o pessoal da manutenção.',
@@ -144089,6 +144281,8 @@ const Som = {
       if (/\bDiana\b/.test(t)) return 'faixa:' + FAIXA_DO_RIVAL.diana;
     }
     if (J.eliteAtual || J.torneioAtual || J.conferenciaAtual) return 'elite';
+    /* a Elite fora da ala (o poço do capítulo 26) toca a mesma */
+    if (J.cenaBatalha && J.cenaBatalha.elite !== undefined) return 'elite';
     if (J.ginasioAtual) return 'lider:' + J.ginasioAtual.id;
     if (J.rivalAtual) return 'rival';
     if (J.revancheAtual && J.revancheAtual.ginasio) return 'lider:' + J.revancheAtual.ginasio;
@@ -151377,6 +151571,7 @@ const UI = {
       <h3>Elite dos Quatro</h3>
       <div class="linha"><span class="k">Quem entra</span><span class="v">quem tem as 8 insígnias · quatro salas seguidas, sem Centro Pokémon entre elas · perdeu uma, a ala recomeça da primeira porta</span></div>
       <div class="linha"><span class="k">Nível</span><span class="v">o de cada porta, um a mais por Pokémon do time, e o último 2 acima disso · a quarta porta é sempre a mais alta</span></div>
+      <div class="linha"><span class="k">Fora da ala</span><span class="v">quando a história leva a Elite pra outro lugar, são as mesmas quatro cadeiras, com os mesmos times e a mesma regra: uma depois da outra, sem cura no meio, e perder de uma volta pra primeira · vencer as quatro ali dá a cadeira do Campeão, com o mesmo prêmio da ala</span></div>
       <div class="linha"><span class="k">Os titulares</span><span class="v">Lorelei, Bruno e Agatha estão em casa desde antes do capítulo 17, cada um na sua cidade · quem senta na cadeira de cada um conta onde, ganhando ou perdendo, e a cidade também conta, pra quem anda e conversa</span></div>
       <div class="linha"><span class="k">Voltar ou não</span><span class="v">cada titular pesa uma coisa que você fez antes, na cidade dele, e o resto se decide na visita: o que você diz, o que você faz e, às vezes, um teste · o jogo não diz o que cada um pesa</span></div>
       <div class="linha"><span class="k">A visita</span><span class="v">abre depois do capítulo 17, pra quem sabe onde a pessoa está, e só até a cadeira do Campeão · ir embora sem decidir deixa a porta pra outro dia; o que se decide nela não se desfaz</span></div>
@@ -151435,7 +151630,8 @@ const UI = {
       <div class="linha"><span class="k">Torneio</span><span class="v">o prêmio da rodada · perdendo, 30% dele</span></div>
       <div class="linha"><span class="k">Rival da Rota 1</span><span class="v">perder custa 800 ₽ · às vezes ganhar rende 3.000</span></div>
       <div class="linha"><span class="k">Rival que você fez na estrada</span><span class="v">perder custa 700 ₽, ou 1.200</span></div>
-      <div class="linha"><span class="k">Campeão</span><span class="v">80.000 ₽</span></div>
+      <div class="linha"><span class="k">Elite dos Quatro</span><span class="v">nenhuma porta paga · o prêmio é o do título</span></div>
+      <div class="linha"><span class="k">Campeão</span><span class="v">${fmtDin(PREMIO_CAMPEAO)} ₽, Master Ball, 5 Hyper Potion e 5 Full Heal · e a Pokédex Nacional, com os 251 registros e Johto aberto</span></div>
       <div class="linha"><span class="k">Treinador de cena</span><span class="v">valor da classe × nível do último Pokémon dele · se a cena já te paga, é esse o prêmio</span></div>
       <div class="linha"><span class="k">Treinador de estrada</span><span class="v">a mesma conta · perdendo, você paga a ele o que ele te pagaria</span></div>
       <div class="linha"><span class="k">Veterano</span><span class="v">a mesma conta × 3, só na primeira vitória · perdendo, nada</span></div>
@@ -151982,25 +152178,34 @@ const Vitoria = {
       frase:`Você recebeu a <b>${UI.esc(g.insignia)}</b> de <b>${UI.esc(g.lider)}</b>!`
     };
   },
-  elite(alvo){
+  /* `poco`: a mesma cadeira vencida no poço do capítulo 26, onde não
+     tem porta, tem quatro pessoas em fila */
+  elite(alvo, o = {}){
     const titular = alvo.titular || alvo.nome;
+    const peca = o.poco ? 'cadeira' : 'porta';
+    const faltam = 4 - alvo.ordem;
     return {
       tipo:'elite', cor:COR_TIPO[alvo.tipo] || '#a884d4',
       quem:alvo.nome, sub:`Elite 4 · ${alvo.ordem} de 4`, rosto:retratoDe(alvo.nome),
-      placa:{nome:titular, ordem:`${['Primeira', 'Segunda', 'Terceira', 'Quarta'][alvo.ordem - 1] || ''} porta`},
-      legenda:`A porta de ${titular}`, conta:alvo.ordem >= 4 ? 'A do fundo está aberta' : `${alvo.ordem} de 4`,
+      placa:{nome:titular, ordem:`${['Primeira', 'Segunda', 'Terceira', 'Quarta'][alvo.ordem - 1] || ''} ${peca}`},
+      legenda:`A ${peca} de ${titular}`, conta:alvo.ordem >= 4 ? 'A do fundo está aberta' : `${alvo.ordem} de 4`,
       frase: alvo.ordem >= 4
         ? `A última porta da ala fica para trás. <b>O Salão do Campeão</b> está aberto.`
-        : `<b>${UI.esc(alvo.nome)}</b> está fora do caminho. Faltam ${['', 'três', 'duas', 'uma'][alvo.ordem]} ${alvo.ordem === 3 ? 'porta' : 'portas'}.`
+        : o.poco
+          ? `<b>${UI.esc(alvo.nome)}</b> sobe a escadinha. ${faltam === 1 ? 'Falta um' : `Faltam ${['', '', 'dois', 'três'][faltam]}`} na fila.`
+          : `<b>${UI.esc(alvo.nome)}</b> está fora do caminho. ${faltam === 1 ? 'Falta uma porta' : `Faltam ${['', '', 'duas', 'três'][faltam]} portas`}.`
     };
   },
-  campeao(ganho, itens){
+  /* `o` troca quem perdeu e o lugar: no poço do 26, o título vem
+     depois do Lance, não do Red */
+  campeao(ganho, itens, o = {}){
+    const quem = o.quem || CAMPEAO.nome;
     return {
       tipo:'campeao', cor:'#e8b923', titulo:'{Campeão|Campeã}!',
-      quem:CAMPEAO.nome, sub:'Salão do Campeão', rosto:retratoDe(CAMPEAO.nome),
+      quem, sub:o.sub || 'Salão do Campeão', rosto:retratoDe(quem),
       trofeu:'ouro', legenda:'{Campeão|Campeã} de Kanto',
       premios:this.premios(ganho, itens),
-      frase:'A cadeira do Salão do Campeão tem dono de novo. <b>É você.</b>'
+      frase:o.frase || 'A cadeira do Salão do Campeão tem dono de novo. <b>É você.</b>'
     };
   },
   /* final de torneio da história (luta de cena com festa:{…} no
@@ -165537,6 +165742,8 @@ function premioTorneio(t, venceu){
    bolso, o envelope do torneio), o prêmio é esse — não paga em dobro. */
 function premioCena(b){
   if (!b || b.tipo !== 'treinador') return {valor:0};
+  /* a Elite não paga por cadeira, nem na ala nem no poço: o prêmio é o do título */
+  if (b.elite !== undefined) return {valor:0};
   const cap = (typeof Historia !== 'undefined') ? Historia.capAtual : null;
   const v = cap && cap.cenas ? cap.cenas[b.vitoria] : null;
   const d = v && v.ef ? v.ef.dinheiro : null;
@@ -165898,8 +166105,16 @@ const Jogo = {
         [{tipo:'dano', texto:'Você não tem nenhum Pokémon em pé. Não dá para lutar.'}]);
     }
 
-    let inimigo, timeInimigo;
-    if (b.comissao){
+    let inimigo, timeInimigo, daElite = null;
+    if (b.elite !== undefined){
+      /* uma cadeira da Elite fora da ala (o poço do capítulo 26): quem
+         senta nela hoje (o titular que voltou ou o substituto), com o
+         time da ala */
+      daElite = Titulares.membro(b.elite);
+      const time = timeDaElite(daElite);
+      inimigo = time[0];
+      timeInimigo = time.slice(1);
+    } else if (b.comissao){
       // time de unidades fabricadas da Comissão
       const nvC = txt(b.nivel) || Historia.capAtual.nivelArea;
       const unidades = timeComissao(b.comissao, nvC);
@@ -165929,14 +166144,16 @@ const Jogo = {
     Batalha.iniciar(meu, inimigo, {
       tipo: b.tipo || 'selvagem',
       fuga: permiteFuga,
-      treinador: b.treinador,
+      treinador: daElite ? daElite.nome : b.treinador,
       timeInimigo,
-      introducao: b.intro,
+      introducao: daElite ? `${daElite.nome} enviou ${nomeVisivel(inimigo)} (Nv ${inimigo.nivel})!` : b.intro,
       arena: b.arena || null,
-      /* quem compete de verdade (as finais de torneio) escolhe melhor o
-         golpe e gasta Vontade com a chance cheia */
+      /* quem compete de verdade (as finais de torneio, a Elite) escolhe
+         melhor o golpe e gasta Vontade com a chance cheia */
       erroIA: b.erroIA,
-      vontadeIA: !!b.vontadeIA
+      vontadeIA: !!(b.vontadeIA || daElite),
+      /* a Elite fala do próprio time, como na ala */
+      revelarNatureza: !!daElite
     });
     UI.telaBatalha();
   },
@@ -166226,9 +166443,24 @@ const Jogo = {
       this.seguirDaEstrada(avisos);
       return;
     }
+    /* cadeira da Elite vencida fora da ala (o poço do 26): a porta dela
+       ganha o carimbo na tela da Liga, como se fosse lá */
+    const daElite = b.elite !== undefined ? Titulares.membro(b.elite) : null;
+    if (daElite && fim.resultado === 'vitoria'){
+      Estado.marcar('elite_passou_' + daElite.id);
+      Estado.registrar(`Venceu ${daElite.nome} no poço da arena.`);
+    }
+    /* quem te parou: a cena da derrota diz o nome (a cadeira, de 1 a 4) */
+    if (daElite && fim.resultado === 'derrota') Estado.dados.flags.poco_parou = b.elite + 1;
     this.irPara(destino, [aviso].filter(Boolean));
     /* final de torneio da história: a festa por cima da cena de vitória */
     if (fim.resultado === 'vitoria' && b.festa) Vitoria.mostrar(Vitoria.daCena(b.festa, b));
+    /* a Elite no poço: a festa da cadeira, e a do título depois do Lance
+       (a cena de vitória dele já coroou) */
+    if (daElite && fim.resultado === 'vitoria') Vitoria.mostrar(daElite.ordem >= 4
+      ? Vitoria.campeao(PREMIO_CAMPEAO, ITENS_DO_CAMPEAO, {quem:daElite.nome, sub:'O poço da arena',
+          frase:'A cadeira do Campeão tem dono de novo. <b>É você.</b>'})
+      : Vitoria.elite(daElite, {poco:true}));
   },
 
   /* Depois de uma briga que não é de cena (selvagem que surgiu, gente
@@ -166823,12 +167055,7 @@ const Jogo = {
 
     /* quem senta atrás da porta hoje: o titular que voltou, ou o substituto */
     const alvo = e.campeao ? CAMPEAO : Titulares.membro(e.indice);
-    const nivel = alvo.nivelBase;
-    const time = alvo.especies.map((dex,i) =>
-      criarPokemon(dex, nivel + i, {apelido: (alvo.apelidos||{})[dex] || null}));
-    /* o ás dois acima, com os atributos do nível novo */
-    if (time.length) renivelar(time[time.length-1], time[time.length-1].nivel + 2);
-    time.forEach(x => { x.nomeAnunciado = true; });
+    const time = timeDaElite(alvo);
 
     this.cenaBatalha = null; this.ginasioAtual = null; this.torneioAtual = null; this.redeAtual = null;
     UI.limparDados();
@@ -166872,31 +167099,14 @@ const Jogo = {
     if (e.campeao){
       // CAMPEÃO DE KANTO
       this.eliteAtual = null;
-      Estado.marcar('campeao_de_kanto');
-      Estado.j.cargo = '{Campeão|Campeã} de Kanto';
-      Estado.dados.insignias.push('Título de Campeão');
-      Estado.j.dinheiro += PREMIO_CAMPEAO;
-      Estado.darItem('Master Ball', 1);
-      Estado.darItem('Hyper Potion', 5);
-      Estado.darItem('Full Heal', 5);
-      const r = Estado.mudarRep('bom', 3, 'Venceu Red e assumiu a cadeira de Campeão de Kanto', {rep:{notorio:true, peso:8}});
-      avisos.push({tipo:'insignia', texto:'Você é {o Campeão|a Campeã} de Kanto. A cadeira estava vaga há dois anos.'});
-      avisos.push({tipo:'item', texto:'+80.000 ₽ · Master Ball · 5× Hyper Potion · 5× Full Heal'});
-      /* A carta de atualização. Ela é a última coisa que a Liga faz
-         por você como desafiante e a primeira que faz como Campeão. */
-      Estado.marcar('dex_nacional');
-      Estado.marcar('johto_liberado');
-      avisos.push({tipo:'pokedex', texto:'A Pokédex trava por quatro segundos e reinicia sozinha. Quando volta, a lista não termina mais no 151.'});
-      avisos.push({tipo:'mundo', texto:'Cem registros novos, todos vazios. E a passagem do norte, que ninguém subia sem autorização da Liga, agora é sua para autorizar.'});
-      Estado.registrar('Pokédex Nacional liberada: 251 registros. Johto aberto.');
-      if (r && r.mudou) avisos.push({tipo:'rep', texto:`Reputação: ${r.de} → ${r.para}`});
+      coroarCampeao('Venceu Red e assumiu a cadeira de Campeão de Kanto').forEach(a => avisos.push(a));
       Estado.registrar('Venceu Red. Tornou-se {Campeão|Campeã} de Kanto.');
       Estado.salvar('auto');
       UI.telaResultadoLiga({
         titulo:'{CAMPEÃO|CAMPEÃ} DE KANTO', sub:'Salão do Campeão',
         falas: CAMPEAO.vitoria(Estado.dados), avisos, venceu:true, campeao:true
       });
-      return Vitoria.mostrar(Vitoria.campeao(PREMIO_CAMPEAO, {'Master Ball':1, 'Hyper Potion':5, 'Full Heal':5}));
+      return Vitoria.mostrar(Vitoria.campeao(PREMIO_CAMPEAO, ITENS_DO_CAMPEAO));
     }
 
     // próximo membro da Elite 4

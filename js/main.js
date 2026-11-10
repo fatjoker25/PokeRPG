@@ -20,6 +20,8 @@ function premioTorneio(t, venceu){
    bolso, o envelope do torneio), o prêmio é esse — não paga em dobro. */
 function premioCena(b){
   if (!b || b.tipo !== 'treinador') return {valor:0};
+  /* a Elite não paga por cadeira, nem na ala nem no poço: o prêmio é o do título */
+  if (b.elite !== undefined) return {valor:0};
   const cap = (typeof Historia !== 'undefined') ? Historia.capAtual : null;
   const v = cap && cap.cenas ? cap.cenas[b.vitoria] : null;
   const d = v && v.ef ? v.ef.dinheiro : null;
@@ -381,8 +383,16 @@ const Jogo = {
         [{tipo:'dano', texto:'Você não tem nenhum Pokémon em pé. Não dá para lutar.'}]);
     }
 
-    let inimigo, timeInimigo;
-    if (b.comissao){
+    let inimigo, timeInimigo, daElite = null;
+    if (b.elite !== undefined){
+      /* uma cadeira da Elite fora da ala (o poço do capítulo 26): quem
+         senta nela hoje (o titular que voltou ou o substituto), com o
+         time da ala */
+      daElite = Titulares.membro(b.elite);
+      const time = timeDaElite(daElite);
+      inimigo = time[0];
+      timeInimigo = time.slice(1);
+    } else if (b.comissao){
       // time de unidades fabricadas da Comissão
       const nvC = txt(b.nivel) || Historia.capAtual.nivelArea;
       const unidades = timeComissao(b.comissao, nvC);
@@ -412,14 +422,16 @@ const Jogo = {
     Batalha.iniciar(meu, inimigo, {
       tipo: b.tipo || 'selvagem',
       fuga: permiteFuga,
-      treinador: b.treinador,
+      treinador: daElite ? daElite.nome : b.treinador,
       timeInimigo,
-      introducao: b.intro,
+      introducao: daElite ? `${daElite.nome} enviou ${nomeVisivel(inimigo)} (Nv ${inimigo.nivel})!` : b.intro,
       arena: b.arena || null,
-      /* quem compete de verdade (as finais de torneio) escolhe melhor o
-         golpe e gasta Vontade com a chance cheia */
+      /* quem compete de verdade (as finais de torneio, a Elite) escolhe
+         melhor o golpe e gasta Vontade com a chance cheia */
       erroIA: b.erroIA,
-      vontadeIA: !!b.vontadeIA
+      vontadeIA: !!(b.vontadeIA || daElite),
+      /* a Elite fala do próprio time, como na ala */
+      revelarNatureza: !!daElite
     });
     UI.telaBatalha();
   },
@@ -709,9 +721,24 @@ const Jogo = {
       this.seguirDaEstrada(avisos);
       return;
     }
+    /* cadeira da Elite vencida fora da ala (o poço do 26): a porta dela
+       ganha o carimbo na tela da Liga, como se fosse lá */
+    const daElite = b.elite !== undefined ? Titulares.membro(b.elite) : null;
+    if (daElite && fim.resultado === 'vitoria'){
+      Estado.marcar('elite_passou_' + daElite.id);
+      Estado.registrar(`Venceu ${daElite.nome} no poço da arena.`);
+    }
+    /* quem te parou: a cena da derrota diz o nome (a cadeira, de 1 a 4) */
+    if (daElite && fim.resultado === 'derrota') Estado.dados.flags.poco_parou = b.elite + 1;
     this.irPara(destino, [aviso].filter(Boolean));
     /* final de torneio da história: a festa por cima da cena de vitória */
     if (fim.resultado === 'vitoria' && b.festa) Vitoria.mostrar(Vitoria.daCena(b.festa, b));
+    /* a Elite no poço: a festa da cadeira, e a do título depois do Lance
+       (a cena de vitória dele já coroou) */
+    if (daElite && fim.resultado === 'vitoria') Vitoria.mostrar(daElite.ordem >= 4
+      ? Vitoria.campeao(PREMIO_CAMPEAO, ITENS_DO_CAMPEAO, {quem:daElite.nome, sub:'O poço da arena',
+          frase:'A cadeira do Campeão tem dono de novo. <b>É você.</b>'})
+      : Vitoria.elite(daElite, {poco:true}));
   },
 
   /* Depois de uma briga que não é de cena (selvagem que surgiu, gente
@@ -1306,12 +1333,7 @@ const Jogo = {
 
     /* quem senta atrás da porta hoje: o titular que voltou, ou o substituto */
     const alvo = e.campeao ? CAMPEAO : Titulares.membro(e.indice);
-    const nivel = alvo.nivelBase;
-    const time = alvo.especies.map((dex,i) =>
-      criarPokemon(dex, nivel + i, {apelido: (alvo.apelidos||{})[dex] || null}));
-    /* o ás dois acima, com os atributos do nível novo */
-    if (time.length) renivelar(time[time.length-1], time[time.length-1].nivel + 2);
-    time.forEach(x => { x.nomeAnunciado = true; });
+    const time = timeDaElite(alvo);
 
     this.cenaBatalha = null; this.ginasioAtual = null; this.torneioAtual = null; this.redeAtual = null;
     UI.limparDados();
@@ -1355,31 +1377,14 @@ const Jogo = {
     if (e.campeao){
       // CAMPEÃO DE KANTO
       this.eliteAtual = null;
-      Estado.marcar('campeao_de_kanto');
-      Estado.j.cargo = '{Campeão|Campeã} de Kanto';
-      Estado.dados.insignias.push('Título de Campeão');
-      Estado.j.dinheiro += PREMIO_CAMPEAO;
-      Estado.darItem('Master Ball', 1);
-      Estado.darItem('Hyper Potion', 5);
-      Estado.darItem('Full Heal', 5);
-      const r = Estado.mudarRep('bom', 3, 'Venceu Red e assumiu a cadeira de Campeão de Kanto', {rep:{notorio:true, peso:8}});
-      avisos.push({tipo:'insignia', texto:'Você é {o Campeão|a Campeã} de Kanto. A cadeira estava vaga há dois anos.'});
-      avisos.push({tipo:'item', texto:'+80.000 ₽ · Master Ball · 5× Hyper Potion · 5× Full Heal'});
-      /* A carta de atualização. Ela é a última coisa que a Liga faz
-         por você como desafiante e a primeira que faz como Campeão. */
-      Estado.marcar('dex_nacional');
-      Estado.marcar('johto_liberado');
-      avisos.push({tipo:'pokedex', texto:'A Pokédex trava por quatro segundos e reinicia sozinha. Quando volta, a lista não termina mais no 151.'});
-      avisos.push({tipo:'mundo', texto:'Cem registros novos, todos vazios. E a passagem do norte, que ninguém subia sem autorização da Liga, agora é sua para autorizar.'});
-      Estado.registrar('Pokédex Nacional liberada: 251 registros. Johto aberto.');
-      if (r && r.mudou) avisos.push({tipo:'rep', texto:`Reputação: ${r.de} → ${r.para}`});
+      coroarCampeao('Venceu Red e assumiu a cadeira de Campeão de Kanto').forEach(a => avisos.push(a));
       Estado.registrar('Venceu Red. Tornou-se {Campeão|Campeã} de Kanto.');
       Estado.salvar('auto');
       UI.telaResultadoLiga({
         titulo:'{CAMPEÃO|CAMPEÃ} DE KANTO', sub:'Salão do Campeão',
         falas: CAMPEAO.vitoria(Estado.dados), avisos, venceu:true, campeao:true
       });
-      return Vitoria.mostrar(Vitoria.campeao(PREMIO_CAMPEAO, {'Master Ball':1, 'Hyper Potion':5, 'Full Heal':5}));
+      return Vitoria.mostrar(Vitoria.campeao(PREMIO_CAMPEAO, ITENS_DO_CAMPEAO));
     }
 
     // próximo membro da Elite 4
