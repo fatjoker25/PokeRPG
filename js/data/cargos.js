@@ -11,6 +11,18 @@
    da tela do posto: o que a cena te entregou (licença, colete,
    distintivo); sem ele, só "Seguir".
    ============================================================ */
+/* Quem a rede conhece: quem carregou carga pra ela no Monte da Lua
+   (capítulo 5, trabalhou_rocket) ou quem já tem a reputação ruim.
+   "Você já fez de graça. A gente só está formalizando o que já era."
+   Só a reputação não bastava: fazer mal rende pouco na história (de 1 a
+   3 pontos quase sempre) e cada ginásio vale 15 de notícia do lado bom,
+   então no capítulo 8 ninguém que segue a história chega a Indesejado,
+   e na terceira rodada de robôs o que buscava o envelope chegou ao 19
+   com a reputação boa, escolhendo o mal sempre que podia */
+function aRedeConhece(d){
+  return !!(d && (d.flags.trabalhou_rocket || (d.reputacao.eixo === 'ruim' && d.reputacao.ruim >= 3)));
+}
+
 const CARGOS = [
 {
   id:'treinador', falante:'a atendente das credenciais', nome:'{Treinador licenciado|Treinadora licenciada}', orgao:'Liga Pokémon', peso:1, cap:1,
@@ -101,10 +113,10 @@ const CARGOS = [
   get peso(){ return typeof Rede !== 'undefined' ? Rede.atual().peso : 3; },
   onde:'vermilion', lugar:'Armários do Centro',
   guardar:'Fechar o armário e seguir.',
-  pede:[{t:'reputação ruim: {Indesejado|Indesejada} ou pior', ok:d=>d.reputacao.eixo === 'ruim' && d.reputacao.ruim >= 3},
+  pede:[{t:'a rede te conhecer: ter carregado carga pra ela, ou reputação ruim ({Indesejado|Indesejada} ou pior)', ok:d=>aRedeConhece(d)},
         {t:'a rede nunca ter parado de te ligar', ok:d=>!d.flags.largou_rocket}],
   /* ninguém sai: quem largou o envelope não recebe outro */
-  requer:d=>d.reputacao.eixo === 'ruim' && d.reputacao.ruim >= 3 && !d.flags.largou_rocket,
+  requer:d=>aRedeConhece(d) && !d.flags.largou_rocket,
   veta:['guarda_rota','policial','investigador','comissao','instrutor','lider','elite','professor','conselheiro'],
   resumo:'Ninguém assina nada. O dinheiro chega e as perguntas não.',
   get beneficios(){ return typeof Rede !== 'undefined' ? Rede.beneficios() : {renda:1200, loja:0.75, repRuim:1}; },

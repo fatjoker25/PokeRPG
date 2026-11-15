@@ -44447,6 +44447,18 @@ const Campo = {
    da tela do posto: o que a cena te entregou (licença, colete,
    distintivo); sem ele, só "Seguir".
    ============================================================ */
+/* Quem a rede conhece: quem carregou carga pra ela no Monte da Lua
+   (capítulo 5, trabalhou_rocket) ou quem já tem a reputação ruim.
+   "Você já fez de graça. A gente só está formalizando o que já era."
+   Só a reputação não bastava: fazer mal rende pouco na história (de 1 a
+   3 pontos quase sempre) e cada ginásio vale 15 de notícia do lado bom,
+   então no capítulo 8 ninguém que segue a história chega a Indesejado,
+   e na terceira rodada de robôs o que buscava o envelope chegou ao 19
+   com a reputação boa, escolhendo o mal sempre que podia */
+function aRedeConhece(d){
+  return !!(d && (d.flags.trabalhou_rocket || (d.reputacao.eixo === 'ruim' && d.reputacao.ruim >= 3)));
+}
+
 const CARGOS = [
 {
   id:'treinador', falante:'a atendente das credenciais', nome:'{Treinador licenciado|Treinadora licenciada}', orgao:'Liga Pokémon', peso:1, cap:1,
@@ -44537,10 +44549,10 @@ const CARGOS = [
   get peso(){ return typeof Rede !== 'undefined' ? Rede.atual().peso : 3; },
   onde:'vermilion', lugar:'Armários do Centro',
   guardar:'Fechar o armário e seguir.',
-  pede:[{t:'reputação ruim: {Indesejado|Indesejada} ou pior', ok:d=>d.reputacao.eixo === 'ruim' && d.reputacao.ruim >= 3},
+  pede:[{t:'a rede te conhecer: ter carregado carga pra ela, ou reputação ruim ({Indesejado|Indesejada} ou pior)', ok:d=>aRedeConhece(d)},
         {t:'a rede nunca ter parado de te ligar', ok:d=>!d.flags.largou_rocket}],
   /* ninguém sai: quem largou o envelope não recebe outro */
-  requer:d=>d.reputacao.eixo === 'ruim' && d.reputacao.ruim >= 3 && !d.flags.largou_rocket,
+  requer:d=>aRedeConhece(d) && !d.flags.largou_rocket,
   veta:['guarda_rota','policial','investigador','comissao','instrutor','lider','elite','professor','conselheiro'],
   resumo:'Ninguém assina nada. O dinheiro chega e as perguntas não.',
   get beneficios(){ return typeof Rede !== 'undefined' ? Rede.beneficios() : {renda:1200, loja:0.75, repRuim:1}; },
@@ -152012,7 +152024,7 @@ const UI = {
       <div class="linha"><span class="k">Onde se assume</span><span class="v">no lugar de cada um: licença de treinador no balcão do Centro · Auxiliar, Pesquisador e Professor no laboratório de Pallet · Guarda de rota no posto da Patrulha, em Viridian · Criador na Associação, em Cerulean · Repórter na redação, em Fuchsia · Policial na delegacia, Investigador na Auditoria e Perito na Comissão, em Saffron · Conselheiro na prefeitura de Celadon · Instrutor, Líder e Elite no Planalto · o envelope sem timbre, nos armários do Centro de Vermilion</span></div>
       <div class="linha"><span class="k">O que cada um pede</span><span class="v">a lista aparece no lugar, com ✓ no que você já tem e ✗ no que falta</span></div>
       <div class="linha"><span class="k">Policial de Kanto</span><span class="v">${this.esc('3 insígnias · reputação boa {Reconhecido|Reconhecida} ou mais · ter sido Guarda de rota · 800 ₽ por capítulo, Centro sem custo, passagem e Força +1')}</span></div>
-      <p class="sussurro">Quinze postos, de licença de treinador a conselheiro regional. Cada um pede uma coisa diferente — espécies catalogadas, insígnias, reputação, o time que você leva — e alguns só existem depois de muita estrada. Quem carrega o envelope sem timbre não recebe crachá da Liga, e vice-versa; e esse envelope piora a sua reputação sozinho, todo capítulo.</p>
+      <p class="sussurro">Quinze postos, de licença de treinador a conselheiro regional. Cada um pede uma coisa diferente — espécies catalogadas, insígnias, reputação, o time que você leva, o que você já fez — e alguns só existem depois de muita estrada. O envelope sem timbre chega a quem a rede conhece: quem carregou carga pra ela, ou quem já tem a reputação ruim. Quem carrega o envelope sem timbre não recebe crachá da Liga, e vice-versa; e esse envelope piora a sua reputação sozinho, todo capítulo.</p>
 
       <h3>Estrada e tempo</h3>
       ${L('Viagem', 'um dia por trecho do caminho real — não existe teleporte')}
@@ -152604,7 +152616,7 @@ const UI = {
       <div class="linha"><span class="k">Onde se assume</span><span class="v">no lugar de cada um: licença de treinador no balcão do Centro · Auxiliar, Pesquisador e Professor no laboratório de Pallet · Guarda de rota no posto da Patrulha, em Viridian · Criador na Associação, em Cerulean · Repórter na redação, em Fuchsia · Policial na delegacia, Investigador na Auditoria e Perito na Comissão, em Saffron · Conselheiro na prefeitura de Celadon · Instrutor, Líder e Elite no Planalto · o envelope sem timbre, nos armários do Centro de Vermilion</span></div>
       <div class="linha"><span class="k">O que cada um pede</span><span class="v">a lista aparece no lugar, com ✓ no que você já tem e ✗ no que falta</span></div>
       <div class="linha"><span class="k">Policial de Kanto</span><span class="v">${this.esc('3 insígnias · reputação boa {Reconhecido|Reconhecida} ou mais · ter sido Guarda de rota · 800 ₽ por capítulo, Centro sem custo, passagem e Força +1')}</span></div>
-      <p class="sussurro">Quinze postos, de licença de treinador a conselheiro regional. Cada um pede uma coisa diferente — espécies catalogadas, insígnias, reputação, o time que você leva — e alguns só existem depois de muita estrada. Quem carrega o envelope sem timbre não recebe crachá da Liga, e vice-versa; e esse envelope piora a sua reputação sozinho, todo capítulo.</p>
+      <p class="sussurro">Quinze postos, de licença de treinador a conselheiro regional. Cada um pede uma coisa diferente — espécies catalogadas, insígnias, reputação, o time que você leva, o que você já fez — e alguns só existem depois de muita estrada. O envelope sem timbre chega a quem a rede conhece: quem carregou carga pra ela, ou quem já tem a reputação ruim. Quem carrega o envelope sem timbre não recebe crachá da Liga, e vice-versa; e esse envelope piora a sua reputação sozinho, todo capítulo.</p>
 
       <h3>A rede</h3>
       <div class="linha"><span class="k">O que é</span><span class="v">o que sobrou da Rocket; quem entra é quem carrega o envelope sem timbre</span></div>

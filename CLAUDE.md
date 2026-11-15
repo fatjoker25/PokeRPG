@@ -2209,6 +2209,15 @@ por getter — `nome`, `peso`, `beneficios` —, então o cartão, a renda,
 o desconto e o peso da linha sobem junto; quem promove atualiza
 `Estado.j.cargo`.
 
+- **Entrar** é abrir o armário 14 a partir do capítulo 8, e o envelope
+  só está lá pra quem a rede conhece (`aRedeConhece`, em `cargos.js`):
+  quem carregou carga pra ela no Monte da Lua (`trabalhou_rocket`) ou
+  quem já tem a reputação ruim no nível 3. Era só a reputação, e ninguém
+  que segue a história chegava: fazer mal rende de 1 a 3 pontos quase
+  sempre, cada ginásio vale 15 de notícia do lado bom, e o ruim só sobe
+  depois de pagar o bom. Na terceira rodada o robô que buscava o
+  envelope escolheu o mal sempre que pôde e chegou ao 19 com a
+  reputação boa. O veto com os postos da lei continua.
 - **Subir** pede confiança, o capítulo do degrau e vencer a **prova**
   (`PROVAS_DA_REDE`: Brant, Juno, Mercer, Corbin, cada um no ponto
   dele). O preto também vem da voz, sem prova, no "lugar à mesa" da

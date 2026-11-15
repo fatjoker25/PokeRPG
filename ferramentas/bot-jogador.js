@@ -139,7 +139,7 @@ const JEITOS = {
     ginasio:false, liga:false, desvio:.25, andar:.4, bolas:8, extras:.2, gosta:/(olhar|andar|sub|desc|entrar|segu|explor|atravess|caminh)/i},
   oportunista: {nome:'Oportunista', cura:.5, abaixo:3, moer:40, foge:9, captura:'forte', lendario:true, troca:true, pedra:true,
     ginasio:true, liga:false, desvio:0, bolas:6, rep:'ruim', via:['mercenario', 'foragido'], extras:.6,
-    gosta:/(aceit|dinheiro|cobr|vend|pegar|roub|mentir|escond|ameaç|guardar pra|ficar com)/i},
+    gosta:/(aceit|dinheiro|cobr|vend|pegar|roub|mentir|escond|ameaç|guardar pra|ficar com|descer e conversar|apertar a mão|precisam de gente|carreg)/i},
   curioso: {nome:'Curioso', cura:.6, abaixo:2, moer:50, foge:8, captura:'forte', lendario:false, troca:true, pedra:true,
     ginasio:true, liga:false, desvio:.1, bolas:6, rep:'bom', via:['pesquisador', 'heroi'], extras:.1, gosta:/(pergunt|investig|olhar|entrar|segu|descobr|ler|abrir|conferir)/i},
   pragmatico: {nome:'Pragmático', cura:.6, abaixo:2, moer:50, foge:8, captura:'forte', lendario:false, troca:true, pedra:true,
