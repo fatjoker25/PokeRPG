@@ -20,6 +20,8 @@ const Exploracao = {
     /* o ovo da mochila choca quando dá a hora, na primeira tela de mapa */
     const nasceu = typeof Creche !== 'undefined' ? Creche.nascer() : null;
     if (nasceu) avisos = (avisos || []).concat(nasceu);
+    /* o pedido que passou do prazo fecha, e a pessoa manda mensagem (pedidos.js) */
+    if (typeof Pedidos !== 'undefined') Pedidos.conferir();
     /* a intuição avisa quando chega a hora, sem dizer qual é a hora */
     const intu = typeof Intuicao !== 'undefined' ? Intuicao.talvez() : null;
     if (intu) avisos = (avisos || []).concat([intu]);
@@ -471,6 +473,7 @@ const Exploracao = {
     if (acao.startsWith('tit_'))  return Titulares.fazer(acao.slice(4));
     if (acao === 'dexnac')        return DexNacional.fazer();
     if (acao.startsWith('recado_')) return Recados.encontrar(acao.slice(7));
+    if (acao.startsWith('pedido_')) return Pedidos.fazer(acao.slice(7));
     if (acao === 'rede')          return Rede.tela();
     if (acao === 'esperar')       return this.esperar();
     if (acao.startsWith('posto_')){

@@ -297,11 +297,13 @@ const Recados = {
     if (r) return opiniaoDe(r);
     return AFINIDADE_DA_ESTRADA + laco;
   },
-  mudarAfinidade(c, delta){
+  /* teto: até onde isso aproxima (o telefone, AFINIDADE_TETO_LIGACAO;
+     o pedido cumprido no mundo vai mais alto, pedidos.js) */
+  mudarAfinidade(c, delta, teto = AFINIDADE_TETO_LIGACAO){
     if (!c || !delta) return 0;
     const atual = this.afinidade(c);
     let novo;
-    if (delta > 0) novo = atual >= AFINIDADE_TETO_LIGACAO ? atual : Math.min(AFINIDADE_TETO_LIGACAO, atual + delta);
+    if (delta > 0) novo = atual >= teto ? atual : Math.min(teto, atual + delta);
     else novo = atual <= AFINIDADE_PISO_LIGACAO ? atual : Math.max(AFINIDADE_PISO_LIGACAO, atual + delta);
     const mudou = novo - atual;
     if (!mudou) return 0;
@@ -343,7 +345,7 @@ const Recados = {
 
   /* o PokéNav tocou (o dado do Jogo.talvezToque deu 6) e não tem
      chamada escrita esperando: quem liga é alguém da agenda, e a pessoa
-     ou liga à toa ou manda recado. Quem é se decide agora; o que ela diz
+     liga à toa, manda recado ou pede um favor (pedidos.js). Quem é se decide agora; o que ela diz
      só na hora de abrir o aparelho (mostrar), porque o toque que cai no
      meio da luta espera ela acabar, e até lá o time pode ter mudado.
      Devolve o toque ({recados, de}) pro Jogo abrir ou guardar. */
@@ -352,16 +354,21 @@ const Recados = {
     const c = this.quemLiga();
     if (!c) return null;
     this.doContato(c.id).ultimoDia = Estado.dados.relogio.dia;
-    const recado = this.podeMandarPresente(c) && Dados.chance(this.chanceDoPresente(c)) && !!this.separarPresente(c);
+    let tipo = 'ligacao';
+    if (this.podeMandarPresente(c) && Dados.chance(this.chanceDoPresente(c)) && this.separarPresente(c)) tipo = 'recado';
+    else if (typeof Pedidos !== 'undefined' && Pedidos.podePedir(c) && Dados.chance(CHANCE_DO_PEDIDO)) tipo = 'pedido';
     Estado.salvar('auto');
-    return {recados:recado ? 'recado' : 'ligacao', de:c.id};
+    return {recados:tipo, de:c.id};
   },
-  /* abre o aparelho com o toque: o recado, ou a ligação à toa montada agora */
-  mostrar(id, tipo){
+  /* abre o aparelho com o toque: o recado, a mensagem de quando o
+     pedido venceu, ou a ligação montada agora — o pedido, se ainda der
+     pra montar um, senão a ligação à toa */
+  mostrar(id, tipo, toque){
     const c = contatoPorId(id);
     if (!c || !Estado.temPokenav()) return false;
     if (tipo === 'recado'){ UI.telaRecado(c); return true; }
-    const ch = this.montarLigacao(c);
+    if (tipo === 'prazo') return typeof Pedidos !== 'undefined' && Pedidos.mostrarPrazo(c, toque);
+    const ch = (tipo === 'pedido' && typeof Pedidos !== 'undefined' && Pedidos.podePedir(c) && Pedidos.montar(c)) || this.montarLigacao(c);
     if (!ch) return false;
     UI.telaChamada(ch);
     return true;
@@ -447,7 +454,9 @@ const Recados = {
     this.atual = null;
     const c = contatoPorId(ch.de);
     this.mudarAfinidade(c, esc.afeto || 0);
-    if (c) Estado.registrar(`Conversou com ${this.nomeNaNarracao(c)} pelo PokéNav.`);
+    /* a ligação que pedia um favor: aceitar abre o pedido (pedidos.js) */
+    if (ch.pedido && typeof Pedidos !== 'undefined') Pedidos.responder(c, ch.pedido, esc);
+    else if (c) Estado.registrar(`Conversou com ${this.nomeNaNarracao(c)} pelo PokéNav.`);
     Estado.salvar('auto');
     return {chamada:ch, esc, avisos:[]};
   },
@@ -525,6 +534,8 @@ const Recados = {
         ? {id:'recado_' + cid, titulo:`Buscar o que ${nome} separou`, sub:'Em cima da mesa, segundo o recado.'}
         : {id:'recado_' + cid, titulo:`Encontrar ${nome}`, sub:'O recado dizia que ia estar pela cidade.'});
     }
+    /* o pedido aberto: o passo dele que é aqui */
+    if (typeof Pedidos !== 'undefined') out.push(...Pedidos.afazeres(localId));
     return out;
   },
 
@@ -539,7 +550,7 @@ const Recados = {
     this.doContato(cid).ultimoPresente = Estado.dados.relogio.dia;
     Estado.darItem(p.item, p.qtd);
     Estado.registrar(`Encontrou ${x.nome} ${emLocal(Mundo.id())} e saiu com ${p.qtd}× ${p.item}.`);
-    const onde = Dados.escolher(ONDE_ACHA[tipo] || ONDE_ACHA.outro)(x);
+    const onde = this.ondeAcha(x, tipo);
     const falas = [onde].concat(Dados.escolher(ENTREGA[tipo])(x));
     Estado.salvar('auto');
     const L = Mundo.atual();
@@ -547,6 +558,14 @@ const Recados = {
       avisos:[{tipo:'item', texto:`Recebeu ${p.qtd}× ${p.item}.`}],
       botoes:[{texto:'Agradecer e seguir.', acao:'Exploracao.tela()'},
               {texto:'Ficar mais um período conversando.', acao:`Recados.ficar('${cid}')`}]});
+  },
+  /* onde você acha a pessoa, sem Centro nem loja onde a cidade não tem
+     (Pallet tem a praça e a padaria) */
+  ondeAcha(x, tipo){
+    const L = Mundo.atual() || {}, tem = q => (L.lugares || []).includes(q);
+    const linhas = (ONDE_ACHA[tipo] || ONDE_ACHA.outro).map(f => f(x))
+      .filter(t => (tem('centro') || !/\bCentro\b/.test(t)) && (tem('loja') || !/\bloja\b/.test(t)));
+    return linhas.length ? Dados.escolher(linhas) : ONDE_ACHA.outro[1](x);
   },
   ficar(cid){
     const c = contatoPorId(cid);
@@ -613,6 +632,7 @@ const Recados = {
       const tipo = this.tipoDe(x);
       RECADO_DE_PRESENTE[tipo].forEach((f, i) => out.push({onde:`recado/${c.id}/msg${i}`, dono, linhas:f(x)}));
       ENTREGA[tipo].forEach((f, i) => out.push({onde:`recado/${c.id}/entrega${i}`, dono, linhas:f(x)}));
+      if (typeof Pedidos !== 'undefined') out.push(...Pedidos.amostras(c));
     }
     return out;
   }

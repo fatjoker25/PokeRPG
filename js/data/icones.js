@@ -222,7 +222,9 @@ const COR_DO_ICONE = {
   mural:'#ffb74d', pc:'#4dd0e1', mapa:'#66bb6a', dormir:'#7986cb', diario:'#e8b923',
   bola:'#4cc38a', pokedex:'#ef5350', itens:'#d9a35b', telefone:'#43b581', lua:'#b39ddb',
   seta:'#5aa7ff', voar:'#9fa8ff', alfinete:'#ffd54f', olho:'#90caf9', pergunta:'#8c9eff', dado:'#4dd0e1', chama:'#a77bff', tigela:'#d9a35b',
-  salvar:'#64b5f6', carregar:'#81c784', patrulha:'#9fb3c8'
+  salvar:'#64b5f6', carregar:'#81c784', patrulha:'#9fb3c8',
+  /* o pedido de quem tem o seu número, na cor da missão do PokéNav */
+  bandeira:'#4fc3f7'
 };
 
 /* estilo: mais alguma coisa inline (a seta da placa gira por ele) */
@@ -255,6 +257,7 @@ function iconeDoAfazer(a){
   if (/^intu_/.test(id)) return 'lua';
   if (/^tit_/.test(id)) return 'porta';
   if (/^recado_/.test(id)) return 'convite';
+  if (/^pedido_/.test(id)) return 'bandeira';
   const t = String(a.titulo || '').toLowerCase();
   if (/laborat/.test(t)) return 'laboratorio';
   if (/ferragem/.test(t)) return 'ferragem';

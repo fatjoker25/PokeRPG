@@ -3050,9 +3050,14 @@ const UI = {
     if (!c || !Estado.temPokenav()) return;
     /* chega no meio da luta: o aparelho espera ela acabar, como a chamada */
     if (emLuta()){ Jogo.chamadaAdiada = {recados:'recado', de:c.id}; return; }
+    this.telaMensagem(c, Recados.textoDoRecado(c));
+  },
+  /* mensagem de alguém da agenda, no aparelho (o recado, o pedido que venceu) */
+  telaMensagem(c, falas){
+    if (!c || !Estado.temPokenav()) return;
     const nome = textoContato(c, 'nome');
     this.navTela(c, nome, 'mensagem', `
-      <div class="nav-conversa narrativa">${this.narrar(Recados.textoDoRecado(c), nome)}</div>
+      <div class="nav-conversa narrativa">${this.narrar(falas || [], nome)}</div>
       <div id="avisos-nav" class="avisos"></div>
       <div class="nav-respostas">${this.navFim('Guardar o aparelho', 'Jogo.voltarDaLigacao()')}</div>`);
   },
@@ -3111,8 +3116,8 @@ const UI = {
     const linha = c => {
       const nome = nomeDe(c);
       const sub = [textoContato(c,'papel'), textoContato(c,'cidade')].filter(Boolean).join(' · ');
-      /* missão cumprida e ainda não contada: um ponto, como mensagem não lida */
-      const pronta = c.missao && Estado.faseDaMissao(c.id) === 'entregar';
+      /* missão ou pedido cumprido e ainda não contado: um ponto, como mensagem não lida */
+      const pronta = (c.missao && Estado.faseDaMissao(c.id) === 'entregar') || (typeof Pedidos !== 'undefined' && Pedidos.temPronto(c.id));
       return `<button class="nav-contato${c.id===this.navSel?' sel':''}" data-busca="${this.esc(this.navChave(nome + ' ' + (textoContato(c,'cidade') || '')))}" onclick="UI.modalNav('${c.id}')">
         ${this.navRosto(c)}
         <span class="nav-linha-txt">
@@ -3232,9 +3237,14 @@ const UI = {
         ${svgIcone(ic, '', est)}
         <span class="na-rot">${this.esc(ROTULO[serv]||serv)}${r.ok ? '' : `<small class="na-trava">${this.esc(r.motivo)}</small>`}</span>
       </button>`;
-    }).join('');
+    }).join('') + (typeof Pedidos !== 'undefined' ? Pedidos.linhasDaFicha(c) : []).map(l =>
+      /* o pedido que a pessoa fez quando ligou (pedidos.js): contar, e largar */
+      `<button class="nav-acao${l.pronta ? ' pronta' : ''}" ${l.ok ? `onclick="UI.navLigarPedido('${c.id}','${l.acao}')"` : 'disabled'}>
+        ${l.acao === 'contar' ? svgIcone('bandeira', '', '--ac:#4fc3f7') : svgIcone('alerta', '', '--ac:#e57373')}
+        <span class="na-rot">${this.esc(l.rot)}${l.ok || !l.motivo ? '' : `<small class="na-trava">${this.esc(l.motivo)}</small>`}</span>
+      </button>`).join('');
 
-    const SERVICO = {revanche:'revanche', favor:'favor', missao:'missão', prova:'notícia'};
+    const SERVICO = {revanche:'revanche', favor:'favor', missao:'missão', prova:'notícia', pedido:'pedido'};
     const hist = (Estado.nav().ligacoes||[]).filter(l => l.id === c.id).slice(-3).reverse();
     const papel = textoContato(c,'papel');
     const meta = [textoContato(c,'cidade'), reg.desdeCap >= 1 ? `na agenda desde o ${this.navCapitulo(reg.desdeCap)}` : ''].filter(Boolean);
@@ -3287,6 +3297,10 @@ const UI = {
   navLigar(id, servico){
     this.fecharModal(true);
     Jogo.ligarPara(id, servico);
+  },
+  navLigarPedido(id, acao){
+    this.fecharModal(true);
+    Pedidos.ligar(id, acao);
   },
 
   /* ========================================================
@@ -6636,10 +6650,13 @@ const UI = {
       <div class="linha"><span class="k">Notícia</span><span class="v">não rende nada material · muda o que a pessoa pensa de você</span></div>
       <div class="linha"><span class="k">Gente da estrada</span><span class="v">19 dos treinadores de rota passam o número na primeira vez que perdem pra você · a revanche vem com o time de quem tem duas insígnias a mais, e +2 de nível</span></div>
       <div class="linha"><span class="k">Gente da história</span><span class="v">quem gostou de você o bastante passa o número depois do capítulo em que vocês se conheceram</span></div>
-      <div class="linha"><span class="k">Quando toca</span><span class="v">cada ação no mapa rola ${DADOS_DO_TOQUE === 1 ? '1 dado' : DADOS_DO_TOQUE + ' dados'} de chance, e o 6 faz o PokéNav tocar: entrar num lugar, andar pela cidade, conversar com os moradores, procurar Pokémon, ir atrás de quem treina, vasculhar, treinar, pescar, esperar a hora passar, acampar e começar um capítulo · toca primeiro a ligação da história que estiver esperando; sem ela, alguém da agenda liga à toa ou manda recado · sem ninguém que possa ligar, não rola · no meio da luta ou com uma janela aberta, toca depois · toda chamada tem "Não atender"</span></div>
+      <div class="linha"><span class="k">Quando toca</span><span class="v">cada ação no mapa rola ${DADOS_DO_TOQUE === 1 ? '1 dado' : DADOS_DO_TOQUE + ' dados'} de chance, e o 6 faz o PokéNav tocar: entrar num lugar, andar pela cidade, conversar com os moradores, procurar Pokémon, ir atrás de quem treina, vasculhar, treinar, pescar, esperar a hora passar, acampar e começar um capítulo · toca primeiro a ligação da história que estiver esperando; sem ela, alguém da agenda liga à toa, manda recado ou pede um favor · sem ninguém que possa ligar, não rola · no meio da luta ou com uma janela aberta, toca depois · toda chamada tem "Não atender"</span></div>
       <div class="linha"><span class="k">Ligação à toa</span><span class="v">alguém da agenda liga só pra conversar · a mesma pessoa não procura de novo antes de ${RECADO_POR_CONTATO_DIAS} dias · quem gosta mais de você liga mais · resposta boa aproxima (+1 de afinidade, até ${AFINIDADE_TETO_LIGACAO}) · resposta ruim ou não atender afasta (−1, até ${String(AFINIDADE_PISO_LIGACAO).replace('-', '−')})</span></div>
       <div class="linha"><span class="k">Afinidade</span><span class="v">é o que a pessoa pensa de você · gente da história guarda o que viveu com você nas cenas · quem só te deu o número começa em ${AFINIDADE_DA_ESTRADA} · quem ficou em casa, em ${AFINIDADE_DE_CASA} · acima de ${AFINIDADE_TETO_LIGACAO}, só pelo que acontece entre vocês fora do telefone</span></div>
       <div class="linha"><span class="k">Recado</span><span class="v">com afinidade ${PRESENTE_MIN_AFINIDADE} ou mais, o contato pode ser recado de que a pessoa separou alguma coisa pra você (quanto mais afinidade, mais vezes) · ela espera na cidade dela (quem vive na estrada, na cidade mais perto da estrada dela) e aparece "Encontrar" no que fazer de lá · um por pessoa de cada vez, e outro só ${PRESENTE_ESPERA_DIAS} dias depois de buscar · ficar um período conversando no encontro aproxima (+1)</span></div>
+      <div class="linha"><span class="k">Pedido</span><span class="v">com afinidade ${PEDIDO_MIN_AFINIDADE} ou mais, a ligação à toa pode ser um pedido de favor (${CHANCE_DO_PEDIDO}% das vezes): achar um Pokémon que fugiu numa rota e deixar no Centro da cidade do lado, levar uma encomenda de uma cidade pra outra, ou contar se vir uma espécie que você nunca viu · aceitar, dizer que não dá (não custa nada) ou não atender (−1) · um pedido aberto por vez, e a mesma pessoa pede de novo só ${PEDIDO_ESPERA_DIAS} dias depois</span></div>
+      <div class="linha"><span class="k">Cumprir o pedido</span><span class="v">o que fazer aparece no lugar certo · procurar o Pokémon leva um período e é teste de Percepção (${Dados.sucessosPedidos(DIFICULDADE_DA_PROCURA)} sucessos), e a estrada pode te parar no meio · achar o rastro dá +1 dado nas próximas procuras · contar é ligar de volta pela ficha da pessoa: +${AFINIDADE_DO_PEDIDO} de afinidade (até ${AFINIDADE_TETO_PEDIDO}, acima do teto do telefone), um presente do degrau novo e +${REP_DO_PEDIDO} de reputação boa · largar o pedido pela ficha: −1</span></div>
+      <div class="linha"><span class="k">Prazo do pedido</span><span class="v">o Pokémon que fugiu, ${PRAZO_DO_PEDIDO.perdido} dias · a encomenda, ${PRAZO_DO_PEDIDO.entrega} · a espécie, ${PRAZO_DO_PEDIDO.avistar} · passou do prazo, a pessoa manda mensagem e fica −1 · com a encomenda na mochila ou o Pokémon atrás de você, o prazo para e o pedido não se larga · cumprido, espera você ligar</span></div>
       ${PRESENTES_POR_AFINIDADE.map((t, i, l) => `<div class="linha"><span class="k">${this.esc(t.nome.charAt(0).toUpperCase() + t.nome.slice(1))} (${i ? t.min + '–' + (l[i - 1].min - 1) : t.min + ' ou mais'})</span><span class="v">${t.itens.map(([n, q]) => this.esc((q > 1 ? q + '× ' : '') + n)).join(' · ')}${t.min >= 5 ? ' · o líder de ginásio pode separar a pedra do ginásio dele' : ''}</span></div>`).join('')}
       <p class="sussurro">Missão entregue não se pede de novo, e missão aberta não se entrega antes da hora. Algumas pessoas ligam pra você primeiro — atender custa tempo e não atender custa outra coisa. Quem te dá o número não explica quem é: isso está na conversa em que você conheceu a pessoa.</p>
 

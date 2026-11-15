@@ -1041,7 +1041,7 @@ const Jogo = {
   tocarOuGuardar(toque){
     if (!toque || !Estado.temPokenav()) return false;
     if (emLuta() || document.getElementById('modal')){ this.chamadaAdiada = toque; return false; }
-    if (toque.recados) return typeof Recados !== 'undefined' && Recados.mostrar(toque.de, toque.recados);
+    if (toque.recados) return typeof Recados !== 'undefined' && Recados.mostrar(toque.de, toque.recados, toque);
     if (Chamadas.jaAtendeu(toque.id)) return false;
     try { if (toque.cond && !toque.cond(Estado.dados)) return false; } catch(e){ return false; }
     UI.telaChamada(toque);

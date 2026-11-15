@@ -1037,6 +1037,148 @@ const SUSPEITO = [
   await page.waitForTimeout(300);
   if (!(await aparelho()).recado) anota('telefone', 'o recado que esperou a luta não chegou depois');
   await olhar('telefone/recado depois da luta');
+
+  /* ---------- o pedido de favor (pedidos.js) ----------
+     cada jeito com cada tipo de contato: a ligação, aceitar, cada passo
+     no lugar dele (o afazer tem que estar lá), a ficha com a bolinha e
+     o contar; a procura nos quatro graus; e com um contato só, não
+     aceitar, não atender, largar, o prazo que vence (a mensagem chega)
+     e o que trava com a encomenda na mochila */
+  const comPedidos = async () => { const ids = await comAgenda(); await page.evaluate(lista => {
+    const d = Estado.dados;
+    d.estrada = d.estrada || {}; d.veteranos = d.veteranos || {}; d.trocasFeitas = d.trocasFeitas || {};
+    for (const id of lista){
+      const c = contatoPorId(id);
+      if (c.estrada) d.estrada[c.estrada] = Object.assign({vencidos:[]}, d.estrada[c.estrada] || {}, {numero:true});
+      if (c.rivalExtra) d.rivaisExtra = (d.rivaisExtra || []).concat(c.rivalExtra);
+      if (c.veterano) d.veteranos[c.veterano] = Object.assign(d.veteranos[c.veterano] || {}, {vitorias:1});
+      if (/^tr_/.test(id)) d.trocasFeitas[id.slice(3)] = {cidade:'viridian', deu:16, recebeu:19};
+    }
+    /* o save cheio viu as 251: sem espécie nunca vista, o avistar não
+       tem o que pedir (e não pede). Um terço volta a não ser visto */
+    const pd = Estado.pdex();
+    for (let i = 3; i <= 151; i += 3){ delete pd.vistos[i]; delete pd.catalogados[i]; }
+    Jogo.chamadaAdiada = null; d.local = 'celadon';
+  }, ids); return ids; };
+  const quemPede = await comPedidos();
+  const semRequer = await page.evaluate(lista => lista.filter(id => { const c = contatoPorId(id); try { return c.requer && !c.requer(Estado.dados); } catch(e){ return true; } }), quemPede);
+  if (semRequer.length) anota('pedido', 'contato do teste sem requer: ' + semRequer.join(', '));
+  for (const id of quemPede) for (const tipo of ['perdido', 'entrega', 'avistar']){
+    await comPedidos();
+    const rot = `pedido/${id}/${tipo}`;
+    await tentar(rot, ([x, t]) => { const ch = Pedidos.montar(contatoPorId(x), t); if (!ch) throw new Error('sem plano'); UI.telaChamada(ch); }, [id, tipo]);
+    await tentar(rot + '/aceitar', () => {
+      if (!Recados.atual || !Recados.atual.pedido) throw new Error('a ligação do pedido sumiu');
+      Jogo.responderChamada(Recados.atual.id, 0);
+      if (!Pedidos.atual()) throw new Error('aceitar não abriu o pedido');
+    });
+    for (let k = 0; k < 3; k++){
+      const passo = await page.evaluate(() => { UI.fecharModal(true); return Pedidos.passoNoMapa(Pedidos.atual()); });
+      if (!passo) break;
+      await tentar(`${rot}/${passo.id}`, ps => {
+        Estado.dados.local = ps.lugar; Exploracao.tela();
+        if (!afazeresDoLocal().some(a => a.id === 'pedido_' + ps.id)) throw new Error(`sem o afazer ${ps.id} em ${ps.lugar}`);
+        Pedidos.fazer(ps.id, 'sucesso');
+      }, passo);
+    }
+    await tentar(rot + '/ficha', t => {
+      UI.fecharModal(true);
+      const p = Pedidos.atual();
+      if (t === 'avistar') Estado.pdex().vistos[p.dex] = true;
+      if (!Pedidos.pronto(p)) throw new Error('os passos não deixaram o pedido pronto');
+      UI.modalNav(p.quem);
+      if (!document.querySelector('#modal .nav-ponto')) throw new Error('sem a bolinha na agenda');
+      if (![...document.querySelectorAll('#modal .nav-acao')].some(b => /^Contar/.test(b.innerText.trim()) && !b.disabled)) throw new Error('sem a linha de contar ligada');
+    }, tipo);
+    await tentar(rot + '/contar', x => {
+      const c = contatoPorId(x), af = Recados.afinidade(c), itens = Object.values(Estado.dados.itens).reduce((a, b) => a + b, 0);
+      UI.navLigarPedido(x, 'contar');
+      if (Pedidos.atual()) throw new Error('o pedido continuou aberto depois de contar');
+      if (Recados.afinidade(c) <= af && af < AFINIDADE_TETO_PEDIDO) throw new Error('a afinidade não subiu');
+      if (Object.values(Estado.dados.itens).reduce((a, b) => a + b, 0) <= itens) throw new Error('o presente não chegou');
+      if (Pedidos.podePedir(c)) throw new Error('a mesma pessoa pode pedir de novo no mesmo dia');
+    }, id);
+  }
+  /* a procura em cada grau, e uma de verdade (o dado e a estrada) */
+  for (const g of ['critico', 'parcial', 'falha', null]){
+    await comPedidos();
+    await tentar('pedido/procurar/' + (g || 'dado'), gr => {
+      Recados.atual = null;
+      const ch = Pedidos.montar(contatoPorId('zelador'), 'perdido');
+      Jogo.responderChamada(ch.id, 0); UI.fecharModal(true);
+      const p = Pedidos.atual();
+      Estado.dados.local = p.onde; Exploracao.tela();
+      if (gr) Pedidos.fazer('procurar', gr); else Exploracao.fazer('pedido_procurar');
+      if (gr === 'parcial' && !p.rastro) throw new Error('o rastro não ficou');
+      if (gr === 'falha' && (p.achou || p.rastro)) throw new Error('a falha achou alguma coisa');
+      if (gr === 'critico' && !p.achou) throw new Error('o crítico não achou');
+    }, g);
+    await page.evaluate(() => { if (typeof Batalha !== 'undefined') Batalha.ativo = false; });
+  }
+  /* não aceitar, não atender e largar: com o zelador */
+  await comPedidos();
+  await tentar('pedido/não aceitar', () => {
+    const c = contatoPorId('zelador'), ch = Pedidos.montar(c, 'entrega'), af = Recados.afinidade(c);
+    UI.telaChamada(ch); Jogo.responderChamada(ch.id, 1);
+    if (Pedidos.atual()) throw new Error('não aceitar abriu o pedido');
+    if (Recados.afinidade(c) !== af) throw new Error('não aceitar mexeu na afinidade');
+    if (Pedidos.podePedir(c)) throw new Error('quem ouviu não pode pedir de novo no mesmo dia');
+  });
+  await comPedidos();
+  await tentar('pedido/não atender', () => {
+    const c = contatoPorId('zelador'), ch = Pedidos.montar(c, 'perdido'), af = Recados.afinidade(c);
+    UI.telaChamada(ch); Jogo.recusarChamada(ch.id);
+    if (Pedidos.atual()) throw new Error('não atender abriu o pedido');
+    if (Recados.afinidade(c) !== af - 1) throw new Error('não atender não custou 1');
+  });
+  await comPedidos();
+  await tentar('pedido/largar', () => {
+    const c = contatoPorId('zelador'), ch = Pedidos.montar(c, 'avistar');
+    Jogo.responderChamada(ch.id, 0); UI.fecharModal(true);
+    const af = Recados.afinidade(c);
+    UI.modalNav('zelador');
+    if (![...document.querySelectorAll('#modal .nav-acao')].some(b => /não vai dar/.test(b.innerText))) throw new Error('sem a linha de largar');
+    UI.navLigarPedido('zelador', 'desistir');
+    if (Pedidos.atual()) throw new Error('largar não fechou');
+    if (Recados.afinidade(c) !== af - 1) throw new Error('largar não custou 1');
+  });
+  /* o prazo: vence, fecha com −1 e a pessoa manda mensagem */
+  await comPedidos();
+  await tentar('pedido/prazo', () => {
+    const c = contatoPorId('zelador'), ch = Pedidos.montar(c, 'perdido');
+    Jogo.responderChamada(ch.id, 0); UI.fecharModal(true);
+    window.__afPrazo = Recados.afinidade(c);
+    Estado.dados.relogio.dia += PRAZO_DO_PEDIDO.perdido + 1;
+    Exploracao.tela();
+    if (Pedidos.atual()) throw new Error('o prazo não fechou o pedido');
+  });
+  await page.waitForTimeout(300);
+  if (!(await aparelho()).recado) anota('pedido', 'o prazo vencido não mandou mensagem');
+  await olhar('pedido/prazo/mensagem');
+  await tentar('pedido/prazo/afinidade', () => { if (Recados.afinidade(contatoPorId('zelador')) !== window.__afPrazo - 1) throw new Error('o prazo não custou 1'); });
+  /* com a encomenda na mochila: não vence e não se larga */
+  await comPedidos();
+  await tentar('pedido/com a encomenda', () => {
+    const c = contatoPorId('zelador'), ch = Pedidos.montar(c, 'entrega');
+    Jogo.responderChamada(ch.id, 0); UI.fecharModal(true);
+    const p = Pedidos.atual();
+    Estado.dados.local = p.pega; Exploracao.tela(); Pedidos.fazer('pegar');
+    if (Estado.contaItem(p.item) < 1) throw new Error('a encomenda não entrou na mochila');
+    Estado.dados.relogio.dia += PRAZO_DO_PEDIDO.entrega + 5;
+    UI.fecharModal(true); Exploracao.tela();
+    if (!Pedidos.atual()) throw new Error('o pedido venceu com a encomenda na mochila');
+    UI.modalNav('zelador');
+    if ([...document.querySelectorAll('#modal .nav-acao')].some(b => /não vai dar/.test(b.innerText))) throw new Error('deu pra largar com a encomenda na mochila');
+    UI.modalItens(null, 'chave');
+  });
+  /* o pedido pelo toque: o aparelho abre a ligação que pede */
+  await comPedidos();
+  await tentar('pedido/pelo toque', () => {
+    Recados.atual = null;
+    Exploracao.tela();
+    Recados.mostrar('brock', 'pedido');
+    if (!Recados.atual || !Recados.atual.pedido) throw new Error('o toque do pedido não montou o pedido');
+  });
   for (const car of [1, 2, 3, 4, 5]) for (const g of ['sucesso', 'critico']){
     await restaurar();
     await tentar(`presente da cidade/${car}/${g}`, ([c, gr]) => {

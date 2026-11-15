@@ -1311,6 +1311,22 @@ const SUSPEITO = [
             X.recadoIr[pend[0]] = d.capitulo;
           }
         }
+        /* o pedido aceito (pedidos.js): o passo que é aqui, ele faz; o
+           lugar do passo, ele vai uma vez por capítulo; pronto, ele liga
+           pra contar */
+        if (typeof Pedidos !== 'undefined'){
+          const ped = afz.find(a => /^pedido_/.test(a));
+          if (ped) return {f:ped};
+          const pd = Pedidos.atual();
+          if (pd && Pedidos.pronto(pd)) return {f:'contar_pedido', id:pd.quem};
+          X.pedidoIr = X.pedidoIr || {};
+          const lugar = Pedidos.proximoLugar(), chave = pd && (pd.quem + ':' + pd.dia);
+          if (lugar && lugar !== id && X.pedidoIr[chave] !== d.capitulo && hp >= .5){
+            const v = ir(lugar);
+            if (v) return v;
+            X.pedidoIr[chave] = d.capitulo;
+          }
+        }
         if (typeof DexNacional !== 'undefined' && !DexNacional.tem() && DexNacional.pode()){
           if (afz.includes('dexnac')) return {f:'dexnac'};
           X.nacCap = X.nacCap || {};
@@ -1598,6 +1614,9 @@ const SUSPEITO = [
           UI.fecharModal(true); Exploracao.tela();
           window.__passo && __passo('pedra', {nome:x.nome, de, para:p ? p.nome : null});
         }, dec).catch(e => erros.push('pedra: ' + e.message));
+      } else if (dec.f === 'contar_pedido'){
+        await page.evaluate(i => { UI.fecharModal && UI.fecharModal(true); Pedidos.ligar(i, 'contar');
+          window.__passo && __passo('pedido', {fim:'contou', quem:i}); }, dec.id).catch(e => erros.push('pedido: ' + e.message));
       } else if (dec.f === 'assumir'){
         await page.evaluate(c => { UI.fecharModal && UI.fecharModal(true); Jogo.assumirCargo(c); }, dec.cargo).catch(e => erros.push('assumir: ' + e.message));
       } else if (dec.f === 'liga') await page.evaluate(() => { Exploracao.fazer('liga'); Jogo.iniciarElite4(); });

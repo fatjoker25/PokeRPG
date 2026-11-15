@@ -1909,6 +1909,39 @@ Carisma. Mora tudo em `js/story/recados.js` (`Recados`).
   `cidadeMaisPerto`, de preferência uma já pisada). O encontro
   (`Recados.encontrar`) é cena de conversa, com "Ficar mais um período
   conversando" (+1).
+- **O pedido de favor** (`js/story/pedidos.js`, `Pedidos`) — foi pedido
+  assim: quem liga às vezes pede ajuda, e o favor vira missão no jeito
+  do PokéNav (pedir, cumprir no mundo, ligar de volta pra contar). O
+  `escolherToque` sorteia `CHANCE_DO_PEDIDO` pra quem pode pedir
+  (`podePedir`: afinidade `PEDIDO_MIN_AFINIDADE`, ninguém de
+  `NPC_DO_CRIME`, a mesma pessoa a cada `PEDIDO_ESPERA_DIAS`, e um
+  pedido aberto por vez, em `nav.recados.pedido`), e a ligação é montada
+  na hora de abrir (`Pedidos.montar`, id `rec_…` como a à toa): aceitar
+  ou "não dá" (o `Recados.atender` manda pro `Pedidos.responder`). Três
+  jeitos, cada um planejado só com lugar onde você já pisou e dá pra
+  chegar (`alcancavel`, e a distância anda só pelo que você conhece):
+  **perdido** (o Pokémon que fugiu numa rota perto da pessoa; procurar
+  é Percepção, o rastro soma um dado, e ele vai pro Centro da cidade do
+  lado), **entrega** (pegar com a pessoa na cidade dela e levar até uma
+  casa de outra cidade; o item é de enredo, com o desenho que o nome
+  dá) e **avistar** (uma espécie que você nunca viu e que vive perto;
+  pronto quando a Pokédex marca vista). O passo da vez é afazer
+  `pedido_<passo>` só no lugar dele (`Pedidos.afazeres`, pelo
+  `Recados.afazeres`), a ficha do contato ganha a linha de contar
+  (apagada com o que falta e os dias) e a de largar, e a agenda acende
+  a bolinha quando está pronto (`temPronto`). Contar (`Pedidos.ligar`)
+  dá +`AFINIDADE_DO_PEDIDO` até `AFINIDADE_TETO_PEDIDO` (acima do teto
+  do telefone: o favor é feito fora dele), um presente do degrau novo e
+  reputação boa (menos com `NPC_NO_MEIO`), como as missões, que
+  entregam pelo telefone. Largar custa 1; o prazo
+  (`PRAZO_DO_PEDIDO`, olhado no `Exploracao.tela` por
+  `Pedidos.conferir`) também, e a pessoa manda mensagem
+  (`UI.telaMensagem`). Com a encomenda na mochila ou o Pokémon atrás de
+  você, o pedido trava (`travado`): não vence nem se larga. Texto de
+  quem pede não diz o gênero de quem fala (o jogo não sabe de todo
+  mundo), e quem recebe a encomenda não fala: a cena conta o que ela
+  disse. Onde se acha a pessoa passa por `Recados.ondeAcha`, que tira
+  Centro e loja de cidade que não tem.
 - **O presente de morador** (`presenteDaConversa`, no
   `Exploracao.conversar`): quem falou na conversa (o primeiro balão com
   dono) dá alguma coisa num teste de Carisma
@@ -1925,9 +1958,13 @@ resposta, manda o recado em cada degrau, acha a pessoa na cidade, fica
 conversando, faz cada ação do mapa com o dado do PokéNav forçado no 6
 (uma rolagem por ação, a ligação à toa sem chamada escrita esperando e
 a escrita com, o toque que espera a luta e a janela, e o não atender)
-e dá o presente de morador em cada Carisma; o `chk-baloes` confere as
-falas pelo `Recados.amostras`. O robô grava os números que oferecem,
-vai buscar o presente e, uma vez em seis, não atende a ligação à toa.
+faz cada pedido com cada tipo de contato do toque ao contar, a procura
+em cada grau, não aceitar, não atender, largar, o prazo com a mensagem
+e o pedido travado, e dá o presente de morador em cada Carisma; o
+`chk-baloes` confere as falas pelo `Recados.amostras` (o pedido entra
+por `Pedidos.amostras`). O robô grava os números que oferecem, vai
+buscar o presente, cumpre o pedido que aceitou e, uma vez em seis, não
+atende a ligação à toa.
 
 ## A luta não acaba no recarregar
 `Estado.salvar` chama `LutaSalva.anotar` (`js/engine/luta-salva.js`): com
