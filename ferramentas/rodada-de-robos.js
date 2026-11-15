@@ -99,7 +99,9 @@ function lancar(r){
     NOME:'?', GENERO:'?', CIDADE:'?', META:r.meta, JEITO:r.jeito, CARGO:r.cargo, INICIAL:r.inicial,
     TURBO:'20', LEVE:'1', DEPOIS:'1', PONTO_MIN:'4'
   });
-  if (k > 1 && fs.existsSync(ponto)) env.RETOMAR = ponto;
+  /* tem ponto de parada: retoma dali, mesmo na primeira etapa (o
+     contêiner já caiu no meio de uma, e o robô recomeçava do zero) */
+  if (fs.existsSync(ponto)) env.RETOMAR = ponto;
   /* depois do fim é uma etapa só, e mais curta */
   const min = r.depois ? Math.min(ETAPA, 30) : ETAPA;
   const log = fs.openSync(path.join(PASTA, `${r.cargo}.e${k}.log`), 'w');

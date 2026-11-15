@@ -782,6 +782,10 @@ const SUSPEITO = [
           const validos = [];
           quem.golpes.forEach((g, i) => {
             if (g.pp <= 0) return; const G = GOLPES[g.nome] || {}; if (G.c === 'status') return;
+            /* golpe desabilitado (Disable) a tela trava; o robô chama o
+               motor direto e perdia a vez: o Gengar do robô Líder tentou
+               o Lick travado dezenas de vezes contra o Muk do Koga */
+            if (quem === p && B.estAliado && B.estAliado.desabilitado && B.estAliado.desabilitado.nome === g.nome) return;
             /* golpe que não funciona agora: o Dream Eater do Haunter da Vera
                contra um Dragonair acordado, 280 turnos seguidos */
             const E = G.ef || {};
