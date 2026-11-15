@@ -1298,6 +1298,22 @@ const SUSPEITO = [
            Fuchsia): o serviço da vez e a prova pra subir de degrau. Sem
            isso o robô que pegou o envelope nunca fazia nada pela rede */
         if (afz.includes('rede') && X.redeDia !== dia + id && hp >= .5){ X.redeDia = dia + id; return {f:'rede'}; }
+        /* quem busca o envelope vai até o ponto: o primeiro (o armário de
+           Vermilion) pra conhecer a rede, depois onde tiver serviço ou
+           prova esperando. Três idas por capítulo, no máximo. A rede 3
+           chegou ao 14 Informante sem nunca ter passado no armário */
+        if (window.__cargo === 'rocket' && typeof Rede !== 'undefined' && Rede.dentro(d) && hp >= .5){
+          X.redeCap = X.redeCap || {};
+          if ((X.redeCap[d.capitulo] || 0) < 3){
+            let alvos = [];
+            if (!d.rede) alvos = ['vermilion'];
+            else alvos = Object.keys(PONTOS_DA_REDE).filter(k => Rede.escalao(d) >= PONTOS_DA_REDE[k].desde
+              && ((Rede.servicosAqui(k).length && Rede.esperaServico() === 0) || Rede.provaAqui(k)));
+            if (alvos.includes(id)){ X.redeCap[d.capitulo] = (X.redeCap[d.capitulo] || 0) + 1; X.redeDia = dia + id; return {f:'rede'}; }
+            const cams = alvos.map(k => trajeto(id, k)).filter(c => c && c[1]).sort((u, v) => u.length - v.length);
+            if (cams.length) return {f:'viajar', id:cams[0][1]};
+          }
+        }
         /* quem precisa de descoberta (o repórter anda) passeia pela cidade */
         if (J.andar && L.tipo === 'cidade' && afz.includes('andar') && Math.random() < J.andar) return {f:'andar'};
 
