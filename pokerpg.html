@@ -43411,7 +43411,7 @@ function iconeDoAfazer(a){
   const direto = {centro:'centro', loja:'loja', ginasio:'ginasio', casa:'casa', liga:'liga', torneio:'torneio',
     onibus:'onibus', doar:'doar', relembrar:'relembrar', vasculhar:'vasculhar', procurar:'procurar', andar:'andar',
     conversar:'conversar', treinar:'treinar', pescar:'pescar', acampar:'acampar', esperar:'esperar', desafiar:'lutar', troca:'troca',
-    rede:'rede', creche:'ovo'};
+    rede:'rede', creche:'ovo', dexnac:'pokedex'};
   if (direto[id]) return direto[id];
   if (/^posto_/.test(id)) return 'credenciais';
   if (/^vet_/.test(id)) return 'lutar';
@@ -44714,7 +44714,7 @@ const Cargos = {
     if (this.tem(id)) return {ok:false, tem:true, motivo:'Você já tem.'};
     const v = this.vetadoPor(id);
     if (v) return {ok:false, motivo:'Não com ' + v.nome + ' no bolso.'};
-    if (d.capitulo < c.cap) return {ok:false, motivo:'Ainda não é hora disso.'};
+    if (capNaJornada(d) < c.cap) return {ok:false, motivo:'Ainda não é hora disso.'};
     let pode = false;
     try { pode = !!c.requer(d) && this.pedidos(c).every(x => x.ok); } catch(e){ pode = false; }
     if (!pode) return {ok:false, motivo:'Você ainda não preenche o que eles pedem.'};
@@ -44805,7 +44805,7 @@ const Cargos = {
     const d = Estado.dados;
     const vistos = {};
     CARGOS.forEach(c => {
-      if (c.onde !== localId || this.tem(c.id) || d.capitulo < c.cap - 1) return;
+      if (c.onde !== localId || this.tem(c.id) || capNaJornada(d) < c.cap - 1) return;
       if (this.vetadoPor(c.id)) return;
       (vistos[c.lugar] = vistos[c.lugar] || []).push(c);
     });
@@ -44818,7 +44818,7 @@ const Cargos = {
     return CARGOS.map(c => {
       const e = this.estado(c.id);
       return {cargo:c, tem:this.tem(c.id), ok:e.ok, motivo:e.motivo,
-              cedo: d.capitulo < c.cap};
+              cedo: capNaJornada(d) < c.cap};
     });
   }
 };
@@ -46544,8 +46544,8 @@ rota23:{
     'A Rota 23 é a última antes do Caminho da Vitória: nove quilômetros de trilha entre duas paredes de rocha, com quatro postos de controle de alvenaria.',
     /* os postos esvaziam pouco antes da convocação (capítulo 17) e
        voltam com cancela nova no 24 */
-    d=>d.capitulo >= 24 ? 'Tem guarita nova com cancela na trilha, e gente dentro.'
-      : (d.capitulo >= 17 || d.flags.entrou_na_rota_23) ? 'Os postos estão vazios: porta aberta, luz apagada, cadeira virada pra fora.'
+    d=>capNaJornada(d) >= 24 ? 'Tem guarita nova com cancela na trilha, e gente dentro.'
+      : (capNaJornada(d) >= 17 || d.flags.entrou_na_rota_23) ? 'Os postos estão vazios: porta aberta, luz apagada, cadeira virada pra fora.'
       : 'Em cada posto tem alguém de plantão, que pede pra ver o estojo de insígnias de quem passa.'
   ]
 },
@@ -46767,7 +46767,7 @@ function afazeresDoLocal(){
       lista.push({lugar:true, id:'casa', titulo:'Sua casa', fechada:(typeof Depois !== 'undefined' ? Depois.casaFechada() : null)});
     /* quem nasceu longe de Viridian pode pegar o ônibus uma vez */
     if (emCasa && !['Pallet','Viridian'].includes(Estado.j.cidade)
-        && !d.flags.onibus_da_liga && d.capitulo <= 3)
+        && !d.flags.onibus_da_liga && capNaJornada(d) <= 3)
       lista.push({lugar:true, id:'onibus', titulo:'Rodoviária — ônibus pra Viridian'});
     /* credencial se pega no lugar dela, não no Centro */
     if (typeof Cargos !== 'undefined') Cargos.lugaresEm(id).forEach((x, i) =>
@@ -46835,6 +46835,8 @@ function afazeresDoLocal(){
   if (typeof Intuicao !== 'undefined') Intuicao.afazeres(id).forEach(x => lista.push(x));
   /* a porta de casa de um titular da Elite, pra quem sabe onde ele está */
   if (typeof Titulares !== 'undefined') Titulares.afazeres(id).forEach(x => lista.push(x));
+  /* o Professor, em Pallet, que atualiza a Pokédex pra Nacional (dex-nacional.js) */
+  if (typeof DexNacional !== 'undefined') DexNacional.afazeres(id).forEach(x => lista.push(x));
   /* deixar o tempo passar: é assim que se chega na hora marcada */
   lista.push({id:'esperar', titulo:'Esperar a hora passar'});
   return lista;
@@ -53540,7 +53542,7 @@ const RIVAIS_EXTRA = [
   formasFixas:true,     // o time dela já é o que é, em qualquer nível
   aceFixo:true,
   origem:'A mulher do Rhydon. Ela escolheu você, e não disse por quê.',
-  gatilho:d => d.capitulo >= 9,
+  gatilho:d => capNaJornada(d) >= 9,
   nascimento:'',
   pool:[131, 136, 85, 125, 106],             // Lapras, Flareon, Dodrio, Electabuzz, Hitmonlee
   ace:112, nivelExtra:1, moral:85,          // o Rhydon é o primeiro dela
@@ -55376,7 +55378,7 @@ const CONTATOS = [
    despedida, não no meio da conversa. */
 {
   id:'cosmo', tipo:'figura', nome:'Sr. Cosmo', papel:'', cidade:'Cerulean',
-  requer:d=>opiniaoDe('Sr. Cosmo') >= 3 && d.capitulo > 6,
+  requer:d=>opiniaoDe('Sr. Cosmo') >= 3 && capNaJornada(d) > 6,
   oferece:['prova','missao'],
   prova:{
     rotulo:'Perguntar se ele pegou alguma coisa',
@@ -55413,7 +55415,7 @@ const CONTATOS = [
 },
 {
   id:'zelador', tipo:'figura', nome:'Zelador da Torre', falaComo:'Zelador da Torre', papel:'', cidade:'Lavender',
-  requer:d=>opiniaoDe('Zelador da Torre') >= 4 && d.capitulo > 7,
+  requer:d=>opiniaoDe('Zelador da Torre') >= 4 && capNaJornada(d) > 7,
   oferece:['favor','prova'],
   favor:{
     rotulo:'Perguntar como está a Torre',
@@ -55437,7 +55439,7 @@ const CONTATOS = [
 },
 {
   id:'elias', tipo:'figura', nome:'Elias', papel:'', cidade:'Celadon',
-  requer:d=>opiniaoDe('Elias') >= 6 && d.capitulo > 9,
+  requer:d=>opiniaoDe('Elias') >= 6 && capNaJornada(d) > 9,
   oferece:['prova','favor'],
   prova:{
     rotulo:'Perguntar como ele está',
@@ -55462,7 +55464,7 @@ const CONTATOS = [
 },
 {
   id:'edric', tipo:'figura', nome:'Sr. Edric', papel:'', cidade:'Rota 10',
-  requer:d=>opiniaoDe('Sr. Edric') >= 5 && d.capitulo > 10,
+  requer:d=>opiniaoDe('Sr. Edric') >= 5 && capNaJornada(d) > 10,
   oferece:['prova','favor'],
   prova:{
     rotulo:'Perguntar se ele foi no primeiro sábado',
@@ -55487,7 +55489,7 @@ const CONTATOS = [
 },
 {
   id:'rhea', tipo:'figura', nome:'Rhea Ashford', papel:'', cidade:'Saffron',
-  requer:d=>opiniaoDe('Rhea Ashford') >= 2 && d.capitulo > 11,
+  requer:d=>opiniaoDe('Rhea Ashford') >= 2 && capNaJornada(d) > 11,
   oferece:['prova','favor'],
   prova:{
     rotulo:'Contar uma coisa que você viu',
@@ -55513,7 +55515,7 @@ const CONTATOS = [
 },
 {
   id:'pia', tipo:'figura', nome:'Dra. Pia', papel:'', cidade:'Fuchsia',
-  requer:d=>opiniaoDe('Dra. Pia') >= 5 && d.capitulo > 12,
+  requer:d=>opiniaoDe('Dra. Pia') >= 5 && capNaJornada(d) > 12,
   oferece:['favor','prova'],
   favor:{
     rotulo:'Pedir remédio pro time',
@@ -55540,7 +55542,7 @@ const CONTATOS = [
 },
 {
   id:'wilma', tipo:'figura', nome:'Sra. Wilma', papel:'', cidade:'Cinnabar',
-  requer:d=>opiniaoDe('Sra. Wilma') >= 5 && d.capitulo > 14,
+  requer:d=>opiniaoDe('Sra. Wilma') >= 5 && capNaJornada(d) > 14,
   oferece:['prova','favor'],
   prova:{
     rotulo:'Ligar pra conversar',
@@ -55565,7 +55567,7 @@ const CONTATOS = [
 },
 {
   id:'xavi', tipo:'figura', nome:'Xavi', papel:'', cidade:'Rota 16',
-  requer:d=>opiniaoDe('Xavi') >= 4 && d.capitulo > 15,
+  requer:d=>opiniaoDe('Xavi') >= 4 && capNaJornada(d) > 15,
   oferece:['prova','favor'],
   prova:{
     rotulo:'Contar quantas espécies você registrou',
@@ -55590,7 +55592,7 @@ const CONTATOS = [
 },
 {
   id:'greta', tipo:'treinador', nome:'Sra. Greta Nettle', papel:'', cidade:'Planalto Indigo',
-  requer:d=>opiniaoDe('Sra. Greta Nettle') >= 3 && d.capitulo > 26,
+  requer:d=>opiniaoDe('Sra. Greta Nettle') >= 3 && capNaJornada(d) > 26,
   oferece:['revanche','favor'],
   timeRevanche:d=>{
     const nv = Math.max(50, Math.round(Estado.timeVivo().reduce((a,p)=>a+p.nivel,0) / Math.max(1, Estado.timeVivo().length)) + 2);
@@ -55745,7 +55747,7 @@ const CHAMADAS = [
 {
   id:'cha_casa_primeira',
   de:'casa',
-  cond:d=>Estado.temNumero('casa') && d.capitulo >= 3 && !d.flags.voltou_pra_casa,
+  cond:d=>Estado.temNumero('casa') && capNaJornada(d) >= 3 && !d.flags.voltou_pra_casa,
   peso:3,
   falas:d=>[
     d=>falaCasa('Oi! Oi, é você? É você mesm{o|a}?', 'grita'),
@@ -55772,7 +55774,7 @@ const CHAMADAS = [
 {
   id:'cha_ushio_cobra',
   de:'ushio',
-  cond:d=>Estado.temNumero('ushio') && !!d.flags.divida_pendente && d.capitulo >= 5,
+  cond:d=>Estado.temNumero('ushio') && !!d.flags.divida_pendente && capNaJornada(d) >= 5,
   peso:2,
   falas:d=>[
     fala(vz().nome, 'Não é cobrança.'),
@@ -55910,7 +55912,7 @@ CHAMADAS.push(
 {
   id:'cha_kelsey_rio',
   de:'rt_kelsey',
-  cond:d=>Estado.temNumero('rt_kelsey') && d.capitulo >= 9,
+  cond:d=>Estado.temNumero('rt_kelsey') && capNaJornada(d) >= 9,
   peso:2,
   falas:d=>[
     fala('Kelsey', 'O rio subiu! Eu falei que eu sabia antes. Eu sabia.'),
@@ -55963,7 +55965,7 @@ CHAMADAS.push(
 {
   id:'cha_pia_terca',
   de:'pia',
-  cond:d=>Estado.temNumero('pia') && d.capitulo >= 14,
+  cond:d=>Estado.temNumero('pia') && capNaJornada(d) >= 14,
   peso:2,
   falas:d=>[
     fala('Dra. Pia', 'Terça-feira. Eu atendi, preenchi, e escrevi no campo de observação.'),
@@ -56320,7 +56322,7 @@ const GINASIOS = [
     /* Antes da terceira insígnia a Rocket ainda não pôs o pé na Silph,
        e Sabrina recebe quem aparecer. Da terceira em diante a torre de
        vidro está tomada, o ginásio fecha e só reabre depois da Silph. */
-    if (numInsignias() >= 3 && d.capitulo < 12 && !d.flags.entrou_no_ginasio_saffron && !d.flags.viu_os_doze && !d.flags.sabrina_aliada)
+    if (numInsignias() >= 3 && capNaJornada(d) < 12 && !d.flags.entrou_no_ginasio_saffron && !d.flags.viu_os_doze && !d.flags.sabrina_aliada)
       return ['O ginásio está trancado. Tem um papel colado na porta, escrito à mão:',
               '**SUSPENSO POR TEMPO INDETERMINADO — S.**',
               'A luz interna está acesa. Duas quadras pra cima, tem homem de terno escuro na porta da Silph, e nenhum deles é da Silph.'];
@@ -56515,7 +56517,7 @@ function insigniasEsperadas(num){
 function tetoDoGinasio(n){
   const d = Estado.dados;
   if (!d || d.capitulo < 2 || typeof Historia === 'undefined') return Infinity;
-  if (n != null && n >= insigniasEsperadas(Math.floor(d.capitulo))) return Infinity;
+  if (n != null && n >= insigniasEsperadas(Math.floor(capNaJornada(d)))) return Infinity;
   const cap = Historia.capitulo(d.capitulo);
   return cap && cap.nivelArea ? cap.nivelArea : Infinity;
 }
@@ -56929,12 +56931,14 @@ function coroarCampeao(motivo){
   avisos.push({tipo:'insignia', texto:'Você é {o Campeão|a Campeã} de Kanto. A cadeira estava vaga há dois anos.'});
   avisos.push({tipo:'item', texto:`+${fmtDin(PREMIO_CAMPEAO)} ₽ · ` + Object.entries(ITENS_DO_CAMPEAO).map(([nome, n]) => (n > 1 ? n + '× ' : '') + nome).join(' · ')});
   /* a carta de atualização: a última coisa que a Liga faz por você como
-     desafiante e a primeira que faz como Campeão */
-  Estado.marcar('dex_nacional');
-  Estado.marcar('johto_liberado');
-  avisos.push({tipo:'pokedex', texto:'A Pokédex trava por quatro segundos e reinicia sozinha. Quando volta, a lista não termina mais no 151.'});
-  avisos.push({tipo:'mundo', texto:'Cem registros novos, todos vazios. E a passagem do norte, que ninguém subia sem autorização da Liga, agora é sua para autorizar.'});
-  Estado.registrar('Pokédex Nacional liberada: 251 registros. Johto aberto.');
+     desafiante e a primeira que faz como Campeão. Quem já trouxe a
+     Nacional do laboratório (dex-nacional.js) não recebe de novo */
+  const nova = typeof DexNacional !== 'undefined' ? DexNacional.liberar('com o título de Campeão')
+    : (!d.flags.dex_nacional && (Estado.marcar('dex_nacional'), Estado.marcar('johto_liberado'), true));
+  if (nova){
+    avisos.push({tipo:'pokedex', texto:'A Pokédex trava por quatro segundos e reinicia sozinha. Quando volta, a lista não termina mais no 151.'});
+    avisos.push({tipo:'mundo', texto:'Cem registros novos, todos vazios. E a passagem do norte, que ninguém subia sem autorização da Liga, agora é sua para autorizar.'});
+  } else avisos.push({tipo:'mundo', texto:'E a passagem do norte, que ninguém subia sem autorização da Liga, agora é sua para autorizar.'});
   if (r && r.mudou) avisos.push({tipo:'rep', texto:`Reputação: ${r.de} → ${r.para}`});
   return avisos;
 }
@@ -60290,7 +60294,7 @@ const Rede = {
     if (!p || !this.dentro(d)) return {ok:false, p};
     const falta = [];
     if (this.confianca(d) < p.conf) falta.push('confianca');
-    if (d.capitulo < p.cap) falta.push('cap');
+    if (capNaJornada(d) < p.cap) falta.push('cap');
     return {ok:!falta.length, p, falta};
   },
   /* a voz pode dar o preto sem prova (o lugar à mesa, na linha) */
@@ -60777,7 +60781,7 @@ vermilion:[
   /* o navio fica três semanas por ano, e as três semanas são as do
      capítulo 8: chega quando ele é o próximo e vai embora com ele */
   {chave:'vm_cais', cond:d=>!(d.capitulosFechados || []).includes(8) && (d.capitulo === 8 || Historia.proximoCapitulo(false) === 8), texto:['No cais três, um navio do tamanho de um prédio deitado. Tem fila na roleta da passarela, e o preço da visitação está numa placa de acrílico em quatro idiomas.']},
-  {chave:'vm_cais_vazio', cond:d=>d.capitulo < 8 && Historia.proximoCapitulo(false) !== 8, texto:['O cais três é o mais largo do porto e está vazio. Tem uma placa da companhia do navio grande presa no poste, e os Wingull usam a placa de poleiro.']}
+  {chave:'vm_cais_vazio', cond:d=>capNaJornada(d) < 8 && Historia.proximoCapitulo(false) !== 8, texto:['O cais três é o mais largo do porto e está vazio. Tem uma placa da companhia do navio grande presa no poste, e os Wingull usam a placa de poleiro.']}
 ],
 lavender:[
   {chave:'troca_lavender', texto:[
@@ -62507,7 +62511,7 @@ cerulean:[
 /* cena leve: o Ezra sem luta nenhuma */
 {
   id:'cer_ezra_na_ponte', umaVez:true, peso:4,
-  cond:d=>deDia(d) && d.capitulo >= 6 && d.capitulo < 17 && !!(d.npcs && d.npcs['Ezra'])
+  cond:d=>deDia(d) && capNaJornada(d) >= 6 && capNaJornada(d) < 17 && !!(d.npcs && d.npcs['Ezra'])
     && typeof arcoRival === 'function' && ['parceiro', 'rival'].includes(arcoRival()),
   titulo:'Meio sanduíche na ponte',
   texto:[
@@ -63870,7 +63874,7 @@ campo:[
 /* encanto: a migração dos Butterfree, no começo da estrada */
 {
   id:'enc_migracao_dos_butterfree', umaVez:true, peso:2, ambientes:['campo','floresta'],
-  cond:d=>d.capitulo >= 2 && d.capitulo < 8 && horaAgora(d) >= 16 && horaAgora(d) <= 19,
+  cond:d=>d.capitulo >= 2 && capNaJornada(d) < 8 && horaAgora(d) >= 16 && horaAgora(d) <= 19,
   titulo:'A migração',
   texto:[
     'No fim da tarde, o céu da estrada começa a piscar.',
@@ -63893,7 +63897,7 @@ campo:[
 /* encanto: a manada dos Rapidash, no fim da jornada */
 {
   id:'enc_manada_de_fogo', umaVez:true, peso:2, ambientes:['campo'],
-  cond:d=>d.capitulo >= 18 && (horaAgora(d) >= 20 || horaAgora(d) <= 4),
+  cond:d=>capNaJornada(d) >= 18 && (horaAgora(d) >= 20 || horaAgora(d) <= 4),
   titulo:'A manada de fogo',
   texto:[
     'De noite, longe da estrada, o capim acende numa linha comprida, como se alguém riscasse um fósforo de um quilômetro.',
@@ -64317,7 +64321,7 @@ montanha:[
 /* encanto: o Pidgeot da serra, no meio da jornada */
 {
   id:'enc_pidgeot_da_serra', umaVez:true, peso:2,
-  cond:d=>d.capitulo >= 8 && d.capitulo < 17 && deDia(d),
+  cond:d=>capNaJornada(d) >= 8 && capNaJornada(d) < 17 && deDia(d),
   titulo:'O vento da serra',
   texto:[
     'Do alto da trilha dá pra ver o vale inteiro, e no meio do vale, parado no ar, um Pidgeot.',
@@ -64613,7 +64617,7 @@ agua:[
 /* encanto: as estrelas da arrebentação */
 {
   id:'enc_estrelas_da_agua', umaVez:true, peso:2,
-  cond:d=>d.capitulo >= 6 && d.capitulo < 14 && (horaAgora(d) >= 20 || horaAgora(d) <= 4),
+  cond:d=>capNaJornada(d) >= 6 && capNaJornada(d) < 14 && (horaAgora(d) >= 20 || horaAgora(d) <= 4),
   titulo:'As estrelas da água',
   texto:[
     'A maré está baixa e a noite está sem lua. Na água rasa, perto da pedra, tem uma luz vermelha piscando.',
@@ -64634,7 +64638,7 @@ agua:[
 /* encanto: o Dragonair depois da chuva */
 {
   id:'enc_dragonair_da_chuva', umaVez:true, peso:2,
-  cond:d=>d.capitulo >= 12 && d.capitulo < 21 && deDia(d) && d.local !== 'seafoam',
+  cond:d=>capNaJornada(d) >= 12 && capNaJornada(d) < 21 && deDia(d) && d.local !== 'seafoam',
   titulo:'Depois da chuva',
   texto:[
     'Chove forte há uma hora, chuva de encharcar a mochila, e você se abriga embaixo de uma pedra que avança sobre a água.',
@@ -64656,7 +64660,7 @@ agua:[
 /* encanto: o canto do Lapras nas Seafoam, depois do degelo */
 {
   id:'enc_canto_do_lapras', umaVez:true, peso:3,
-  cond:d=>d.local === 'seafoam' && d.capitulo > 13,
+  cond:d=>d.local === 'seafoam' && capNaJornada(d) > 13,
   titulo:'O canto',
   texto:[
     'Entre as duas pedras brancas das Seafoam, a água passa por dentro dos furos e faz um sopro grave, comprido.',
@@ -65047,7 +65051,7 @@ const Intuicao = {
     if (f.o_curador_entregou && !f.capuz_completou && !f.capuz_recusou){
       const p = pokemonDoJuniper(d);
       const noCinto = p && (d.time || []).includes(p);
-      if (noCinto && evoluiPorTroca(p.dex) && d.capitulo >= (f.capuz_cap_entrega || 0) + CAPS_ATE_COMPLETAR) return 'completa';
+      if (noCinto && evoluiPorTroca(p.dex) && capNaJornada(d) >= Math.floor(capNaJornada({capitulo:f.capuz_cap_entrega || 0})) + CAPS_ATE_COMPLETAR) return 'completa';
     }
     return null;
   },
@@ -65059,8 +65063,8 @@ const Intuicao = {
     if (!p) return null;
     const reg = d.intuicao || (d.intuicao = {});
     const visto = reg[p];
-    if (visto != null && visto >= Math.floor(d.capitulo)) return null;
-    reg[p] = Math.floor(d.capitulo);
+    if (visto != null && capNaJornada({capitulo:visto}) >= capNaJornada(d)) return null;
+    reg[p] = capNaJornada(d);
     const primeira = visto == null;
     const TEXTO = {
       entrega: primeira
@@ -65102,7 +65106,7 @@ const Intuicao = {
     const onde = Estado.adicionar(p);
     Estado.marcar('o_curador_entregou');
     Estado.marcar(guarda ? 'ganhou_do_curador_guardando' : 'ganhou_do_curador_passando');
-    d.flags.capuz_cap_entrega = Math.floor(d.capitulo);
+    d.flags.capuz_cap_entrega = Math.floor(capNaJornada(d));
     Estado.registrar('Voltou a Lavender seguindo a intuição. A figura de capuz deixou uma Pokébola velha na sua mão.');
     return [{tipo:'pokemon', texto:`Uma Pokébola velha no cinto: ${nomeExib(p)} (Nv ${p.nivel}).${notaDestino(onde)}`},
             {tipo:'eco', texto: guarda ? 'Coisa que fica, fica como está.' : 'Tem coisa que só se completa passando por outra mão.'}];
@@ -65453,7 +65457,7 @@ const Titulares = {
      nem pista nem visita, senão a notícia chegava velha. */
   liberado(d){
     d = d || Estado.dados;
-    return (d.capitulosFechados || []).includes(17) || Math.floor(d.capitulo) >= 18;
+    return (d.capitulosFechados || []).includes(17) || Math.floor(capNaJornada(d)) >= 18;
   },
   /* a cidade ainda pode contar onde a pessoa está */
   pistaAberta(id, d){
@@ -68308,13 +68312,13 @@ const Reencontros = {
     const d = Estado.dados, n = q.n;
     if (!this.pesa(n) || this.tem_cena_propria(q.nome)) return null;
     const mem = n.memorias || [];
-    const ultimaCap = mem.length ? Math.max(...mem.map(m => m.cap || 0)) : 0;
+    const ultimaCap = mem.length ? Math.max(...mem.map(m => capNaJornada({capitulo:m.cap || 0}))) : 0;
     const reg = d.reencontros[q.nome];
     /* já saudou neste capítulo, noutra cena */
     if (reg && reg.cap === d.capitulo && reg.cena !== chave) return null;
     /* ainda é o capítulo em que se conheceram */
-    if (!reg && ultimaCap >= d.capitulo) return null;
-    if (reg && reg.cena !== chave && ultimaCap >= d.capitulo) return null;
+    if (!reg && ultimaCap >= capNaJornada(d)) return null;
+    if (reg && reg.cena !== chave && ultimaCap >= capNaJornada(d)) return null;
     /* a cena já trata você como conhecido, ou é uma apresentação */
     if ((meu && contexto.includes(meu)) || JA_TE_CONHECE.test(contexto)) return null;
     if (/\b(prazer|me chamo|meu nome é|sou (o|a) )/i.test(contexto)) return null;
@@ -69521,7 +69525,7 @@ const Linhas = {
     const lista = CENAS_DE_LINHA[agora] || [];
     const i = d.linhas[agora] || 0;
     const c = lista[i];
-    if (!c || d.capitulo < c.cap) return false;
+    if (!c || capNaJornada(d) < c.cap) return false;
     /* uma cena por virada de capítulo, e nunca duas seguidas na mesma */
     if (d.linhaCapVisto === d.capitulo) return false;
     d.linhaCapVisto = d.capitulo;
@@ -143253,17 +143257,35 @@ ca3_final_junto:{
    O `requer` de cada capítulo condicional mora no arquivo dele.
    Aqui só fica a ligação, pra caber tudo numa tela.
    ============================================================ */
+/* de qual capítulo sai o desvio, e pra qual ele devolve */
+const DESVIOS_CONDICIONAIS = [
+  {de: 6,  desvio: 29, volta: 7},   // Cerulean → o portão verde
+  {de: 7,  desvio: 30, volta: 8},   // Lavender → as onze linhas do livro
+  {de: 9,  desvio: 31, volta: 10},  // Celadon  → quem assina o fax
+  {de: 11, desvio: 32, volta: 12}   // Saffron  → o galpão da zona norte
+];
+
+/* Onde a jornada está. O número do capítulo condicional não diz isso:
+   o 29 roda entre o 6 e o 7, e com ele valendo 29 toda conta que
+   compara capítulo com número achava que a jornada estava no fim — o
+   posto de Elite e o de Professor entravam na conta, os contatos do
+   PokéNav do fim do jogo ligavam, a Rota 23 ganhava a guarita nova e a
+   Pokédex Nacional abria no meio da jornada. Aqui o 29 vale 6,5, entre
+   o anfitrião e a volta; os capítulos de caminho (12.01…) já são a
+   posição deles. Conta que compara capítulo com número (porta, evento,
+   texto que muda com a história, memória de capítulo) passa por aqui;
+   capítulo de caminho comparado pelo número dele mesmo, não. Serve
+   também pra número guardado: capNaJornada({capitulo:m.cap}). */
+function capNaJornada(d){
+  d = d || (typeof Estado !== 'undefined' ? Estado.dados : null);
+  const n = (d && d.capitulo) || 0;
+  const x = DESVIOS_CONDICIONAIS.find(v => v.desvio === n);
+  return x ? x.de + .5 : n;
+}
+
 (function(){
 
-  /* de qual capítulo sai o desvio, e pra qual ele devolve */
-  const DESVIOS = [
-    {de: 6,  desvio: 29, volta: 7},   // Cerulean → o portão verde
-    {de: 7,  desvio: 30, volta: 8},   // Lavender → as onze linhas do livro
-    {de: 9,  desvio: 31, volta: 10},  // Celadon  → quem assina o fax
-    {de: 11, desvio: 32, volta: 12}   // Saffron  → o galpão da zona norte
-  ];
-
-  DESVIOS.forEach(({de, desvio, volta}) => {
+  DESVIOS_CONDICIONAIS.forEach(({de, desvio, volta}) => {
     const anfitriao = CAPITULOS.find(c => c.num === de);
     const cond      = CAPITULOS.find(c => c.num === desvio);
     if (!anfitriao || !cond) return;
@@ -144586,6 +144608,82 @@ const Patrulha = {
       fala(OFICIAL_DA_ESTRADA, 'Vai. A ordem continua no seu nome, agora com mais uma linha.'),
       'Você passa pela viatura atravessada. Ninguém te segue, hoje.'
     ], avisos:av, botoes:[{texto:'Seguir', acao:'Exploracao.tela()'}]}));
+  }
+};
+
+
+/* ===== js/story/dex-nacional.js ===== */
+/* ============================================================
+   A POKÉDEX NACIONAL — o Professor atualiza quem anda
+   O registro nacional (os 251, Johto no mato, as evoluções da 2ª
+   geração, os bebês da creche e o que a loja guarda pra quem tem a
+   Nacional) só vinha com o título de Campeão (coroarCampeao, em
+   liga.js). Quem não passava da Elite ficava sem Johto pra sempre, e a
+   segunda rodada de robôs terminou a história assim, quatro de cinco.
+
+   Agora tem um segundo caminho, o do laboratório: o Professor, em
+   Pallet, atualiza a Pokédex de quem traz CATALOGADAS_PRA_NACIONAL
+   espécies de Kanto catalogadas, depois que a jornada chega ao
+   Planalto (as oito insígnias, ou o capítulo 22, que abre mesmo pra
+   quem os ginásios recusaram). Antes disso o afazer nem aparece; com a
+   história lá e a Pokédex curta, ele fica na tela, fechado, com o que o
+   Professor pede. Catalogar é capturar ou apontar a Pokédex na luta.
+   O registro é o mesmo do Campeão, e quem já tem não recebe de novo.
+   Está na folha de regras; mudou número, muda lá.
+   ============================================================ */
+const CATALOGADAS_PRA_NACIONAL = 60;
+const CAPITULO_DA_NACIONAL = 22;
+
+const DexNacional = {
+  tem(d){ d = d || Estado.dados; return !!(d && d.flags.dex_nacional); },
+  /* a jornada chegou ao Planalto: as oito, ou o capítulo que abre pra
+     quem ficou sem (faltaInsignias deixa entrar no 22 com o que tem) */
+  chegou(d){
+    d = d || Estado.dados;
+    return !!(d.flags.oito_insignias || capNaJornada(d) >= CAPITULO_DA_NACIONAL || d.depoisDoFim);
+  },
+  /* só Kanto conta: Mew e os lendários de Johto que cruzam a história
+     não entram na conta do Professor */
+  deKanto(){
+    const pd = Estado.pdex();
+    return Object.keys(pd.catalogados || {}).map(Number).filter(x => x >= 1 && x <= 150).length;
+  },
+  pode(d){ return this.chegou(d) && this.deKanto() >= CATALOGADAS_PRA_NACIONAL; },
+
+  /* o registro, venha de onde vier (o Professor ou o título de Campeão) */
+  liberar(como){
+    if (this.tem()) return false;
+    Estado.marcar('dex_nacional');
+    Estado.marcar('johto_liberado');
+    Estado.registrar(`Pokédex Nacional liberada${como ? ' ' + como : ''}: 251 registros. Johto aberto.`);
+    return true;
+  },
+
+  afazeres(id){
+    const d = Estado.dados;
+    if (id !== 'pallet' || !d.flags.tem_pokedex || this.tem() || !this.chegou()) return [];
+    const n = this.deKanto();
+    return [{id:'dexnac', titulo:'Mostrar a Pokédex ao Professor', sub:'No laboratório, no alto da subida.',
+      fechada: n >= CATALOGADAS_PRA_NACIONAL ? null
+        : `O Professor quer ${porExtensoF(CATALOGADAS_PRA_NACIONAL)} espécies de Kanto catalogadas antes de mexer na Pokédex. A sua tem ${n === 1 ? 'uma' : porExtensoF(n)}.`}];
+  },
+
+  fazer(){
+    if (this.tem() || !this.pode()) return Exploracao.tela();
+    const n = this.deKanto(), Q = 'Professor Oak';
+    this.liberar('no laboratório de Pallet');
+    Estado.salvar('auto');
+    UI.telaConversa({num:'Pallet', titulo:'A Pokédex Nacional', loc:'Laboratório do Professor', quem:Q, falas:[
+      'O Professor pega a Pokédex com as duas mãos e liga no computador do fundo do laboratório.',
+      fala(Q, `${cap1(porExtensoF(n))}.`, null, 'Ele confere a lista com o dedo, linha por linha.'),
+      fala(Q, 'Essa lista parava no cento e cinquenta porque Kanto parava ali. Kanto não para mais ali.'),
+      'A Pokédex trava por quatro segundos e reinicia sozinha. Quando volta, a lista não termina mais em Kanto.',
+      fala(Q, 'Tem gente vendo Pokémon de Johto descendo pelas serras do norte faz um tempo. Agora você tem onde anotar.'),
+      fala(Q, 'Cem registros novos, todos vazios. Vazio é a parte boa.', 'riso')
+    ], avisos:[
+      {tipo:'pokedex', texto:'Pokédex Nacional: a lista vai até o 251.'},
+      {tipo:'mundo', texto:'Pokémon de Johto passam a aparecer no mato de Kanto.'}
+    ], botoes:[{texto:'Seguir', acao:'Exploracao.tela()'}]});
   }
 };
 
@@ -152284,7 +152382,7 @@ const UI = {
       <div class="linha"><span class="k">Rival da Rota 1</span><span class="v">perder custa 800 ₽ · às vezes ganhar rende 3.000</span></div>
       <div class="linha"><span class="k">Rival que você fez na estrada</span><span class="v">perder custa 700 ₽, ou 1.200</span></div>
       <div class="linha"><span class="k">Elite dos Quatro</span><span class="v">nenhuma porta paga · o prêmio é o do título</span></div>
-      <div class="linha"><span class="k">Campeão</span><span class="v">${fmtDin(PREMIO_CAMPEAO)} ₽, Master Ball, 5 Hyper Potion e 5 Full Heal · e a Pokédex Nacional, com os 251 registros e Johto aberto</span></div>
+      <div class="linha"><span class="k">Campeão</span><span class="v">${fmtDin(PREMIO_CAMPEAO)} ₽, Master Ball, 5 Hyper Potion e 5 Full Heal · e a Pokédex Nacional, com os 251 registros e Johto aberto, pra quem ainda não trouxe ela do laboratório</span></div>
       <div class="linha"><span class="k">Treinador de cena</span><span class="v">valor da classe × nível do último Pokémon dele · se a cena já te paga, é esse o prêmio</span></div>
       <div class="linha"><span class="k">Treinador de estrada</span><span class="v">a mesma conta · perdendo, você paga a ele o que ele te pagaria</span></div>
       <div class="linha"><span class="k">Veterano</span><span class="v">a mesma conta × 3, só na primeira vitória · perdendo, nada</span></div>
@@ -152371,6 +152469,7 @@ const UI = {
       <div class="linha"><span class="k">Comprar</span><span class="v">a loja pergunta antes de cobrar</span></div>
       <div class="linha"><span class="k">Pokédex de Kanto</span><span class="v">150 casas · o 151 e os lendários de Johto que cruzam Kanto só ganham casa depois que a Pokédex registra um deles · a Nacional mostra os 251, e três deles não passam por Kanto: Lugia, Celebi e Unown são de Johto</span></div>
       <div class="linha"><span class="k">O que entra pro seu time</span><span class="v">catalogado na hora</span></div>
+      <div class="linha"><span class="k">Pokédex Nacional</span><span class="v">vem com o título de Campeão, ou com o Professor, no laboratório de Pallet: ${porExtensoF(CATALOGADAS_PRA_NACIONAL)} espécies de Kanto catalogadas, depois das oito insígnias (ou do capítulo ${CAPITULO_DA_NACIONAL}) · catalogar é capturar ou apontar a Pokédex na luta · com ela, Johto entra no mato de Kanto, as evoluções da 2ª geração valem, a creche dá os bebês e a loja abre o que guardava</span></div>
       <p class="sussurro">A natureza é do indivíduo, não da espécie. Nos seus, ela aparece sozinha depois de alguns combates juntos, por um teste de Percepção — quanto mais tempo com você, mais fácil. Nos dos outros, só com Percepção 3 ou mais: aí você lê pelo jeito que eles se mexem, sem dado, quando entram. A Pokédex lê espécie, tipo e atributos, não temperamento, e treinador nenhum entrega o temperamento do próprio time.</p>
       <p class="sussurro">O tipo de quem está do outro lado fica escondido até a espécie estar catalogada. Sem Pokédex, só Percepção 4 e Intelecto 4 juntos leem o tipo de um desconhecido. Espécie já catalogada não se cadastra de novo: a Pokédex só abre a ficha.</p>
 
@@ -166108,6 +166207,7 @@ const Exploracao = {
     if (acao === 'creche')        return Creche.tela();
     if (acao.startsWith('intu_')) return Intuicao.fazer(acao.slice(5));
     if (acao.startsWith('tit_'))  return Titulares.fazer(acao.slice(4));
+    if (acao === 'dexnac')        return DexNacional.fazer();
     if (acao === 'rede')          return Rede.tela();
     if (acao === 'esperar')       return this.esperar();
     if (acao.startsWith('posto_')){

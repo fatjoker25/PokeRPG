@@ -104,7 +104,7 @@ vermilion:[
   /* o navio fica três semanas por ano, e as três semanas são as do
      capítulo 8: chega quando ele é o próximo e vai embora com ele */
   {chave:'vm_cais', cond:d=>!(d.capitulosFechados || []).includes(8) && (d.capitulo === 8 || Historia.proximoCapitulo(false) === 8), texto:['No cais três, um navio do tamanho de um prédio deitado. Tem fila na roleta da passarela, e o preço da visitação está numa placa de acrílico em quatro idiomas.']},
-  {chave:'vm_cais_vazio', cond:d=>d.capitulo < 8 && Historia.proximoCapitulo(false) !== 8, texto:['O cais três é o mais largo do porto e está vazio. Tem uma placa da companhia do navio grande presa no poste, e os Wingull usam a placa de poleiro.']}
+  {chave:'vm_cais_vazio', cond:d=>capNaJornada(d) < 8 && Historia.proximoCapitulo(false) !== 8, texto:['O cais três é o mais largo do porto e está vazio. Tem uma placa da companhia do navio grande presa no poste, e os Wingull usam a placa de poleiro.']}
 ],
 lavender:[
   {chave:'troca_lavender', texto:[

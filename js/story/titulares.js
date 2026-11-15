@@ -207,7 +207,7 @@ const Titulares = {
      nem pista nem visita, senão a notícia chegava velha. */
   liberado(d){
     d = d || Estado.dados;
-    return (d.capitulosFechados || []).includes(17) || Math.floor(d.capitulo) >= 18;
+    return (d.capitulosFechados || []).includes(17) || Math.floor(capNaJornada(d)) >= 18;
   },
   /* a cidade ainda pode contar onde a pessoa está */
   pistaAberta(id, d){

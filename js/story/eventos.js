@@ -426,7 +426,7 @@ cerulean:[
 /* cena leve: o Ezra sem luta nenhuma */
 {
   id:'cer_ezra_na_ponte', umaVez:true, peso:4,
-  cond:d=>deDia(d) && d.capitulo >= 6 && d.capitulo < 17 && !!(d.npcs && d.npcs['Ezra'])
+  cond:d=>deDia(d) && capNaJornada(d) >= 6 && capNaJornada(d) < 17 && !!(d.npcs && d.npcs['Ezra'])
     && typeof arcoRival === 'function' && ['parceiro', 'rival'].includes(arcoRival()),
   titulo:'Meio sanduíche na ponte',
   texto:[
@@ -1789,7 +1789,7 @@ campo:[
 /* encanto: a migração dos Butterfree, no começo da estrada */
 {
   id:'enc_migracao_dos_butterfree', umaVez:true, peso:2, ambientes:['campo','floresta'],
-  cond:d=>d.capitulo >= 2 && d.capitulo < 8 && horaAgora(d) >= 16 && horaAgora(d) <= 19,
+  cond:d=>d.capitulo >= 2 && capNaJornada(d) < 8 && horaAgora(d) >= 16 && horaAgora(d) <= 19,
   titulo:'A migração',
   texto:[
     'No fim da tarde, o céu da estrada começa a piscar.',
@@ -1812,7 +1812,7 @@ campo:[
 /* encanto: a manada dos Rapidash, no fim da jornada */
 {
   id:'enc_manada_de_fogo', umaVez:true, peso:2, ambientes:['campo'],
-  cond:d=>d.capitulo >= 18 && (horaAgora(d) >= 20 || horaAgora(d) <= 4),
+  cond:d=>capNaJornada(d) >= 18 && (horaAgora(d) >= 20 || horaAgora(d) <= 4),
   titulo:'A manada de fogo',
   texto:[
     'De noite, longe da estrada, o capim acende numa linha comprida, como se alguém riscasse um fósforo de um quilômetro.',
@@ -2236,7 +2236,7 @@ montanha:[
 /* encanto: o Pidgeot da serra, no meio da jornada */
 {
   id:'enc_pidgeot_da_serra', umaVez:true, peso:2,
-  cond:d=>d.capitulo >= 8 && d.capitulo < 17 && deDia(d),
+  cond:d=>capNaJornada(d) >= 8 && capNaJornada(d) < 17 && deDia(d),
   titulo:'O vento da serra',
   texto:[
     'Do alto da trilha dá pra ver o vale inteiro, e no meio do vale, parado no ar, um Pidgeot.',
@@ -2532,7 +2532,7 @@ agua:[
 /* encanto: as estrelas da arrebentação */
 {
   id:'enc_estrelas_da_agua', umaVez:true, peso:2,
-  cond:d=>d.capitulo >= 6 && d.capitulo < 14 && (horaAgora(d) >= 20 || horaAgora(d) <= 4),
+  cond:d=>capNaJornada(d) >= 6 && capNaJornada(d) < 14 && (horaAgora(d) >= 20 || horaAgora(d) <= 4),
   titulo:'As estrelas da água',
   texto:[
     'A maré está baixa e a noite está sem lua. Na água rasa, perto da pedra, tem uma luz vermelha piscando.',
@@ -2553,7 +2553,7 @@ agua:[
 /* encanto: o Dragonair depois da chuva */
 {
   id:'enc_dragonair_da_chuva', umaVez:true, peso:2,
-  cond:d=>d.capitulo >= 12 && d.capitulo < 21 && deDia(d) && d.local !== 'seafoam',
+  cond:d=>capNaJornada(d) >= 12 && capNaJornada(d) < 21 && deDia(d) && d.local !== 'seafoam',
   titulo:'Depois da chuva',
   texto:[
     'Chove forte há uma hora, chuva de encharcar a mochila, e você se abriga embaixo de uma pedra que avança sobre a água.',
@@ -2575,7 +2575,7 @@ agua:[
 /* encanto: o canto do Lapras nas Seafoam, depois do degelo */
 {
   id:'enc_canto_do_lapras', umaVez:true, peso:3,
-  cond:d=>d.local === 'seafoam' && d.capitulo > 13,
+  cond:d=>d.local === 'seafoam' && capNaJornada(d) > 13,
   titulo:'O canto',
   texto:[
     'Entre as duas pedras brancas das Seafoam, a água passa por dentro dos furos e faz um sopro grave, comprido.',

@@ -1174,7 +1174,7 @@ const Linhas = {
     const lista = CENAS_DE_LINHA[agora] || [];
     const i = d.linhas[agora] || 0;
     const c = lista[i];
-    if (!c || d.capitulo < c.cap) return false;
+    if (!c || capNaJornada(d) < c.cap) return false;
     /* uma cena por virada de capítulo, e nunca duas seguidas na mesma */
     if (d.linhaCapVisto === d.capitulo) return false;
     d.linhaCapVisto = d.capitulo;

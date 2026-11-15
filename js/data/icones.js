@@ -241,7 +241,7 @@ function iconeDoAfazer(a){
   const direto = {centro:'centro', loja:'loja', ginasio:'ginasio', casa:'casa', liga:'liga', torneio:'torneio',
     onibus:'onibus', doar:'doar', relembrar:'relembrar', vasculhar:'vasculhar', procurar:'procurar', andar:'andar',
     conversar:'conversar', treinar:'treinar', pescar:'pescar', acampar:'acampar', esperar:'esperar', desafiar:'lutar', troca:'troca',
-    rede:'rede', creche:'ovo'};
+    rede:'rede', creche:'ovo', dexnac:'pokedex'};
   if (direto[id]) return direto[id];
   if (/^posto_/.test(id)) return 'credenciais';
   if (/^vet_/.test(id)) return 'lutar';

@@ -50,5 +50,22 @@ for(const cap of CAPITULOS){
 const listasDeEvento=[].concat(...Object.values(typeof EVENTOS_CIDADE!=='undefined'?EVENTOS_CIDADE:{}),
   ...Object.values(typeof EVENTOS_ROTA!=='undefined'?EVENTOS_ROTA:{}), typeof EVENTOS_GERAIS!=='undefined'?EVENTOS_GERAIS:[]);
 listasDeEvento.forEach(ev=>{ if(!ev) return; repAninhado(ev.ef, `evento ${ev.id}`); (ev.escolhas||[]).forEach(o=>repAninhado(o.ef, `evento ${ev.id} (escolha)`)); });
+/* conta de capítulo com número cru, fora dos capítulos: o condicional
+   (29 a 32) roda no meio da jornada, e a conta passa por capNaJornada
+   (condicionais.js). Só "< 2", ">= 2" e "> 1" ficam crus: valem igual */
+{
+  const fsx=require('fs'), px=require('path'), raiz=px.join(__dirname,'..','js');
+  const andar=dir=>fsx.readdirSync(dir,{withFileTypes:true}).flatMap(f=>f.isDirectory()?andar(px.join(dir,f.name)):[px.join(dir,f.name)]);
+  andar(raiz).filter(f=>/\.js$/.test(f) && !/[\\/]story[\\/](cap-\d+|caminhos[\\/])/.test(f)).forEach(f=>{
+    fsx.readFileSync(f,'utf8').split('\n').forEach((l,i)=>{
+      const re=/\bcapitulo\)?\s*(>=|<=|<|>)\s*([\w.(]+)/g; let m;
+      while((m=re.exec(l))){
+        if(/capNaJornada\(/.test(l.slice(Math.max(0,m.index-40),m.index))) continue;
+        if((m[1]==='<'||m[1]==='>=') && m[2]==='2' || m[1]==='>' && m[2]==='1') continue;
+        erros.push(`${px.relative(px.join(__dirname,'..'),f)}:${i+1}: capítulo comparado sem capNaJornada (${m[0]})`);
+      }
+    });
+  });
+}
 console.log(`Total: ${CAPITULOS.length} capítulos | ${cenas} cenas | ${escolhas} escolhas`);
 console.log(erros.length? 'ERROS: '+erros.join(' ; ') : 'ERROS: nenhum');

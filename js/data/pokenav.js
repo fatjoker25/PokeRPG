@@ -631,7 +631,7 @@ const CONTATOS = [
    despedida, não no meio da conversa. */
 {
   id:'cosmo', tipo:'figura', nome:'Sr. Cosmo', papel:'', cidade:'Cerulean',
-  requer:d=>opiniaoDe('Sr. Cosmo') >= 3 && d.capitulo > 6,
+  requer:d=>opiniaoDe('Sr. Cosmo') >= 3 && capNaJornada(d) > 6,
   oferece:['prova','missao'],
   prova:{
     rotulo:'Perguntar se ele pegou alguma coisa',
@@ -668,7 +668,7 @@ const CONTATOS = [
 },
 {
   id:'zelador', tipo:'figura', nome:'Zelador da Torre', falaComo:'Zelador da Torre', papel:'', cidade:'Lavender',
-  requer:d=>opiniaoDe('Zelador da Torre') >= 4 && d.capitulo > 7,
+  requer:d=>opiniaoDe('Zelador da Torre') >= 4 && capNaJornada(d) > 7,
   oferece:['favor','prova'],
   favor:{
     rotulo:'Perguntar como está a Torre',
@@ -692,7 +692,7 @@ const CONTATOS = [
 },
 {
   id:'elias', tipo:'figura', nome:'Elias', papel:'', cidade:'Celadon',
-  requer:d=>opiniaoDe('Elias') >= 6 && d.capitulo > 9,
+  requer:d=>opiniaoDe('Elias') >= 6 && capNaJornada(d) > 9,
   oferece:['prova','favor'],
   prova:{
     rotulo:'Perguntar como ele está',
@@ -717,7 +717,7 @@ const CONTATOS = [
 },
 {
   id:'edric', tipo:'figura', nome:'Sr. Edric', papel:'', cidade:'Rota 10',
-  requer:d=>opiniaoDe('Sr. Edric') >= 5 && d.capitulo > 10,
+  requer:d=>opiniaoDe('Sr. Edric') >= 5 && capNaJornada(d) > 10,
   oferece:['prova','favor'],
   prova:{
     rotulo:'Perguntar se ele foi no primeiro sábado',
@@ -742,7 +742,7 @@ const CONTATOS = [
 },
 {
   id:'rhea', tipo:'figura', nome:'Rhea Ashford', papel:'', cidade:'Saffron',
-  requer:d=>opiniaoDe('Rhea Ashford') >= 2 && d.capitulo > 11,
+  requer:d=>opiniaoDe('Rhea Ashford') >= 2 && capNaJornada(d) > 11,
   oferece:['prova','favor'],
   prova:{
     rotulo:'Contar uma coisa que você viu',
@@ -768,7 +768,7 @@ const CONTATOS = [
 },
 {
   id:'pia', tipo:'figura', nome:'Dra. Pia', papel:'', cidade:'Fuchsia',
-  requer:d=>opiniaoDe('Dra. Pia') >= 5 && d.capitulo > 12,
+  requer:d=>opiniaoDe('Dra. Pia') >= 5 && capNaJornada(d) > 12,
   oferece:['favor','prova'],
   favor:{
     rotulo:'Pedir remédio pro time',
@@ -795,7 +795,7 @@ const CONTATOS = [
 },
 {
   id:'wilma', tipo:'figura', nome:'Sra. Wilma', papel:'', cidade:'Cinnabar',
-  requer:d=>opiniaoDe('Sra. Wilma') >= 5 && d.capitulo > 14,
+  requer:d=>opiniaoDe('Sra. Wilma') >= 5 && capNaJornada(d) > 14,
   oferece:['prova','favor'],
   prova:{
     rotulo:'Ligar pra conversar',
@@ -820,7 +820,7 @@ const CONTATOS = [
 },
 {
   id:'xavi', tipo:'figura', nome:'Xavi', papel:'', cidade:'Rota 16',
-  requer:d=>opiniaoDe('Xavi') >= 4 && d.capitulo > 15,
+  requer:d=>opiniaoDe('Xavi') >= 4 && capNaJornada(d) > 15,
   oferece:['prova','favor'],
   prova:{
     rotulo:'Contar quantas espécies você registrou',
@@ -845,7 +845,7 @@ const CONTATOS = [
 },
 {
   id:'greta', tipo:'treinador', nome:'Sra. Greta Nettle', papel:'', cidade:'Planalto Indigo',
-  requer:d=>opiniaoDe('Sra. Greta Nettle') >= 3 && d.capitulo > 26,
+  requer:d=>opiniaoDe('Sra. Greta Nettle') >= 3 && capNaJornada(d) > 26,
   oferece:['revanche','favor'],
   timeRevanche:d=>{
     const nv = Math.max(50, Math.round(Estado.timeVivo().reduce((a,p)=>a+p.nivel,0) / Math.max(1, Estado.timeVivo().length)) + 2);
@@ -1000,7 +1000,7 @@ const CHAMADAS = [
 {
   id:'cha_casa_primeira',
   de:'casa',
-  cond:d=>Estado.temNumero('casa') && d.capitulo >= 3 && !d.flags.voltou_pra_casa,
+  cond:d=>Estado.temNumero('casa') && capNaJornada(d) >= 3 && !d.flags.voltou_pra_casa,
   peso:3,
   falas:d=>[
     d=>falaCasa('Oi! Oi, é você? É você mesm{o|a}?', 'grita'),
@@ -1027,7 +1027,7 @@ const CHAMADAS = [
 {
   id:'cha_ushio_cobra',
   de:'ushio',
-  cond:d=>Estado.temNumero('ushio') && !!d.flags.divida_pendente && d.capitulo >= 5,
+  cond:d=>Estado.temNumero('ushio') && !!d.flags.divida_pendente && capNaJornada(d) >= 5,
   peso:2,
   falas:d=>[
     fala(vz().nome, 'Não é cobrança.'),
@@ -1165,7 +1165,7 @@ CHAMADAS.push(
 {
   id:'cha_kelsey_rio',
   de:'rt_kelsey',
-  cond:d=>Estado.temNumero('rt_kelsey') && d.capitulo >= 9,
+  cond:d=>Estado.temNumero('rt_kelsey') && capNaJornada(d) >= 9,
   peso:2,
   falas:d=>[
     fala('Kelsey', 'O rio subiu! Eu falei que eu sabia antes. Eu sabia.'),
@@ -1218,7 +1218,7 @@ CHAMADAS.push(
 {
   id:'cha_pia_terca',
   de:'pia',
-  cond:d=>Estado.temNumero('pia') && d.capitulo >= 14,
+  cond:d=>Estado.temNumero('pia') && capNaJornada(d) >= 14,
   peso:2,
   falas:d=>[
     fala('Dra. Pia', 'Terça-feira. Eu atendi, preenchi, e escrevi no campo de observação.'),

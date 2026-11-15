@@ -238,12 +238,14 @@ function coroarCampeao(motivo){
   avisos.push({tipo:'insignia', texto:'Você é {o Campeão|a Campeã} de Kanto. A cadeira estava vaga há dois anos.'});
   avisos.push({tipo:'item', texto:`+${fmtDin(PREMIO_CAMPEAO)} ₽ · ` + Object.entries(ITENS_DO_CAMPEAO).map(([nome, n]) => (n > 1 ? n + '× ' : '') + nome).join(' · ')});
   /* a carta de atualização: a última coisa que a Liga faz por você como
-     desafiante e a primeira que faz como Campeão */
-  Estado.marcar('dex_nacional');
-  Estado.marcar('johto_liberado');
-  avisos.push({tipo:'pokedex', texto:'A Pokédex trava por quatro segundos e reinicia sozinha. Quando volta, a lista não termina mais no 151.'});
-  avisos.push({tipo:'mundo', texto:'Cem registros novos, todos vazios. E a passagem do norte, que ninguém subia sem autorização da Liga, agora é sua para autorizar.'});
-  Estado.registrar('Pokédex Nacional liberada: 251 registros. Johto aberto.');
+     desafiante e a primeira que faz como Campeão. Quem já trouxe a
+     Nacional do laboratório (dex-nacional.js) não recebe de novo */
+  const nova = typeof DexNacional !== 'undefined' ? DexNacional.liberar('com o título de Campeão')
+    : (!d.flags.dex_nacional && (Estado.marcar('dex_nacional'), Estado.marcar('johto_liberado'), true));
+  if (nova){
+    avisos.push({tipo:'pokedex', texto:'A Pokédex trava por quatro segundos e reinicia sozinha. Quando volta, a lista não termina mais no 151.'});
+    avisos.push({tipo:'mundo', texto:'Cem registros novos, todos vazios. E a passagem do norte, que ninguém subia sem autorização da Liga, agora é sua para autorizar.'});
+  } else avisos.push({tipo:'mundo', texto:'E a passagem do norte, que ninguém subia sem autorização da Liga, agora é sua para autorizar.'});
   if (r && r.mudou) avisos.push({tipo:'rep', texto:`Reputação: ${r.de} → ${r.para}`});
   return avisos;
 }

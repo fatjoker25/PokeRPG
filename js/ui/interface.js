@@ -6511,7 +6511,7 @@ const UI = {
       <div class="linha"><span class="k">Rival da Rota 1</span><span class="v">perder custa 800 ₽ · às vezes ganhar rende 3.000</span></div>
       <div class="linha"><span class="k">Rival que você fez na estrada</span><span class="v">perder custa 700 ₽, ou 1.200</span></div>
       <div class="linha"><span class="k">Elite dos Quatro</span><span class="v">nenhuma porta paga · o prêmio é o do título</span></div>
-      <div class="linha"><span class="k">Campeão</span><span class="v">${fmtDin(PREMIO_CAMPEAO)} ₽, Master Ball, 5 Hyper Potion e 5 Full Heal · e a Pokédex Nacional, com os 251 registros e Johto aberto</span></div>
+      <div class="linha"><span class="k">Campeão</span><span class="v">${fmtDin(PREMIO_CAMPEAO)} ₽, Master Ball, 5 Hyper Potion e 5 Full Heal · e a Pokédex Nacional, com os 251 registros e Johto aberto, pra quem ainda não trouxe ela do laboratório</span></div>
       <div class="linha"><span class="k">Treinador de cena</span><span class="v">valor da classe × nível do último Pokémon dele · se a cena já te paga, é esse o prêmio</span></div>
       <div class="linha"><span class="k">Treinador de estrada</span><span class="v">a mesma conta · perdendo, você paga a ele o que ele te pagaria</span></div>
       <div class="linha"><span class="k">Veterano</span><span class="v">a mesma conta × 3, só na primeira vitória · perdendo, nada</span></div>
@@ -6598,6 +6598,7 @@ const UI = {
       <div class="linha"><span class="k">Comprar</span><span class="v">a loja pergunta antes de cobrar</span></div>
       <div class="linha"><span class="k">Pokédex de Kanto</span><span class="v">150 casas · o 151 e os lendários de Johto que cruzam Kanto só ganham casa depois que a Pokédex registra um deles · a Nacional mostra os 251, e três deles não passam por Kanto: Lugia, Celebi e Unown são de Johto</span></div>
       <div class="linha"><span class="k">O que entra pro seu time</span><span class="v">catalogado na hora</span></div>
+      <div class="linha"><span class="k">Pokédex Nacional</span><span class="v">vem com o título de Campeão, ou com o Professor, no laboratório de Pallet: ${porExtensoF(CATALOGADAS_PRA_NACIONAL)} espécies de Kanto catalogadas, depois das oito insígnias (ou do capítulo ${CAPITULO_DA_NACIONAL}) · catalogar é capturar ou apontar a Pokédex na luta · com ela, Johto entra no mato de Kanto, as evoluções da 2ª geração valem, a creche dá os bebês e a loja abre o que guardava</span></div>
       <p class="sussurro">A natureza é do indivíduo, não da espécie. Nos seus, ela aparece sozinha depois de alguns combates juntos, por um teste de Percepção — quanto mais tempo com você, mais fácil. Nos dos outros, só com Percepção 3 ou mais: aí você lê pelo jeito que eles se mexem, sem dado, quando entram. A Pokédex lê espécie, tipo e atributos, não temperamento, e treinador nenhum entrega o temperamento do próprio time.</p>
       <p class="sussurro">O tipo de quem está do outro lado fica escondido até a espécie estar catalogada. Sem Pokédex, só Percepção 4 e Intelecto 4 juntos leem o tipo de um desconhecido. Espécie já catalogada não se cadastra de novo: a Pokédex só abre a ficha.</p>
 

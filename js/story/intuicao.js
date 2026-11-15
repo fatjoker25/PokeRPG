@@ -34,7 +34,7 @@ const Intuicao = {
     if (f.o_curador_entregou && !f.capuz_completou && !f.capuz_recusou){
       const p = pokemonDoJuniper(d);
       const noCinto = p && (d.time || []).includes(p);
-      if (noCinto && evoluiPorTroca(p.dex) && d.capitulo >= (f.capuz_cap_entrega || 0) + CAPS_ATE_COMPLETAR) return 'completa';
+      if (noCinto && evoluiPorTroca(p.dex) && capNaJornada(d) >= Math.floor(capNaJornada({capitulo:f.capuz_cap_entrega || 0})) + CAPS_ATE_COMPLETAR) return 'completa';
     }
     return null;
   },
@@ -46,8 +46,8 @@ const Intuicao = {
     if (!p) return null;
     const reg = d.intuicao || (d.intuicao = {});
     const visto = reg[p];
-    if (visto != null && visto >= Math.floor(d.capitulo)) return null;
-    reg[p] = Math.floor(d.capitulo);
+    if (visto != null && capNaJornada({capitulo:visto}) >= capNaJornada(d)) return null;
+    reg[p] = capNaJornada(d);
     const primeira = visto == null;
     const TEXTO = {
       entrega: primeira
@@ -89,7 +89,7 @@ const Intuicao = {
     const onde = Estado.adicionar(p);
     Estado.marcar('o_curador_entregou');
     Estado.marcar(guarda ? 'ganhou_do_curador_guardando' : 'ganhou_do_curador_passando');
-    d.flags.capuz_cap_entrega = Math.floor(d.capitulo);
+    d.flags.capuz_cap_entrega = Math.floor(capNaJornada(d));
     Estado.registrar('Voltou a Lavender seguindo a intuição. A figura de capuz deixou uma Pokébola velha na sua mão.');
     return [{tipo:'pokemon', texto:`Uma Pokébola velha no cinto: ${nomeExib(p)} (Nv ${p.nivel}).${notaDestino(onde)}`},
             {tipo:'eco', texto: guarda ? 'Coisa que fica, fica como está.' : 'Tem coisa que só se completa passando por outra mão.'}];

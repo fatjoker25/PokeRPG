@@ -278,7 +278,7 @@ const Cargos = {
     if (this.tem(id)) return {ok:false, tem:true, motivo:'Você já tem.'};
     const v = this.vetadoPor(id);
     if (v) return {ok:false, motivo:'Não com ' + v.nome + ' no bolso.'};
-    if (d.capitulo < c.cap) return {ok:false, motivo:'Ainda não é hora disso.'};
+    if (capNaJornada(d) < c.cap) return {ok:false, motivo:'Ainda não é hora disso.'};
     let pode = false;
     try { pode = !!c.requer(d) && this.pedidos(c).every(x => x.ok); } catch(e){ pode = false; }
     if (!pode) return {ok:false, motivo:'Você ainda não preenche o que eles pedem.'};
@@ -369,7 +369,7 @@ const Cargos = {
     const d = Estado.dados;
     const vistos = {};
     CARGOS.forEach(c => {
-      if (c.onde !== localId || this.tem(c.id) || d.capitulo < c.cap - 1) return;
+      if (c.onde !== localId || this.tem(c.id) || capNaJornada(d) < c.cap - 1) return;
       if (this.vetadoPor(c.id)) return;
       (vistos[c.lugar] = vistos[c.lugar] || []).push(c);
     });
@@ -382,7 +382,7 @@ const Cargos = {
     return CARGOS.map(c => {
       const e = this.estado(c.id);
       return {cargo:c, tem:this.tem(c.id), ok:e.ok, motivo:e.motivo,
-              cedo: d.capitulo < c.cap};
+              cedo: capNaJornada(d) < c.cap};
     });
   }
 };

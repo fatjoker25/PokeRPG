@@ -463,6 +463,7 @@ const Exploracao = {
     if (acao === 'creche')        return Creche.tela();
     if (acao.startsWith('intu_')) return Intuicao.fazer(acao.slice(5));
     if (acao.startsWith('tit_'))  return Titulares.fazer(acao.slice(4));
+    if (acao === 'dexnac')        return DexNacional.fazer();
     if (acao === 'rede')          return Rede.tela();
     if (acao === 'esperar')       return this.esperar();
     if (acao.startsWith('posto_')){

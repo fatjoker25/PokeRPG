@@ -460,8 +460,8 @@ rota23:{
     'A Rota 23 é a última antes do Caminho da Vitória: nove quilômetros de trilha entre duas paredes de rocha, com quatro postos de controle de alvenaria.',
     /* os postos esvaziam pouco antes da convocação (capítulo 17) e
        voltam com cancela nova no 24 */
-    d=>d.capitulo >= 24 ? 'Tem guarita nova com cancela na trilha, e gente dentro.'
-      : (d.capitulo >= 17 || d.flags.entrou_na_rota_23) ? 'Os postos estão vazios: porta aberta, luz apagada, cadeira virada pra fora.'
+    d=>capNaJornada(d) >= 24 ? 'Tem guarita nova com cancela na trilha, e gente dentro.'
+      : (capNaJornada(d) >= 17 || d.flags.entrou_na_rota_23) ? 'Os postos estão vazios: porta aberta, luz apagada, cadeira virada pra fora.'
       : 'Em cada posto tem alguém de plantão, que pede pra ver o estojo de insígnias de quem passa.'
   ]
 },
@@ -683,7 +683,7 @@ function afazeresDoLocal(){
       lista.push({lugar:true, id:'casa', titulo:'Sua casa', fechada:(typeof Depois !== 'undefined' ? Depois.casaFechada() : null)});
     /* quem nasceu longe de Viridian pode pegar o ônibus uma vez */
     if (emCasa && !['Pallet','Viridian'].includes(Estado.j.cidade)
-        && !d.flags.onibus_da_liga && d.capitulo <= 3)
+        && !d.flags.onibus_da_liga && capNaJornada(d) <= 3)
       lista.push({lugar:true, id:'onibus', titulo:'Rodoviária — ônibus pra Viridian'});
     /* credencial se pega no lugar dela, não no Centro */
     if (typeof Cargos !== 'undefined') Cargos.lugaresEm(id).forEach((x, i) =>
@@ -751,6 +751,8 @@ function afazeresDoLocal(){
   if (typeof Intuicao !== 'undefined') Intuicao.afazeres(id).forEach(x => lista.push(x));
   /* a porta de casa de um titular da Elite, pra quem sabe onde ele está */
   if (typeof Titulares !== 'undefined') Titulares.afazeres(id).forEach(x => lista.push(x));
+  /* o Professor, em Pallet, que atualiza a Pokédex pra Nacional (dex-nacional.js) */
+  if (typeof DexNacional !== 'undefined') DexNacional.afazeres(id).forEach(x => lista.push(x));
   /* deixar o tempo passar: é assim que se chega na hora marcada */
   lista.push({id:'esperar', titulo:'Esperar a hora passar'});
   return lista;

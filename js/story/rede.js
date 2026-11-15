@@ -594,7 +594,7 @@ const Rede = {
     if (!p || !this.dentro(d)) return {ok:false, p};
     const falta = [];
     if (this.confianca(d) < p.conf) falta.push('confianca');
-    if (d.capitulo < p.cap) falta.push('cap');
+    if (capNaJornada(d) < p.cap) falta.push('cap');
     return {ok:!falta.length, p, falta};
   },
   /* a voz pode dar o preto sem prova (o lugar à mesa, na linha) */

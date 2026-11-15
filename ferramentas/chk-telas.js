@@ -730,6 +730,48 @@ const SUSPEITO = [
     falhas.forEach(f => anota('patrulha', f));
     await page.evaluate(s => { Batalha.ativo = false; Jogo.patrulhaAtual = null; UI.fecharModal && UI.fecharModal(true); Estado.dados = JSON.parse(s); }, antes);
   }
+  /* a Pokédex Nacional pelo Professor (dex-nacional.js): antes do
+     Planalto não tem afazer; com a história lá e 59 catalogadas ele fica
+     fechado com o que o Professor pede; com 60 abre, a tela fala e o
+     registro vem; e quem vira Campeão depois não recebe de novo */
+  {
+    const antes = await page.evaluate(() => JSON.stringify(Estado.dados));
+    const falhas = [];
+    const base = await page.evaluate(s => {
+      Estado.dados = JSON.parse(s);
+      const d = Estado.dados;
+      ['dex_nacional', 'johto_liberado', 'campeao_de_kanto', 'oito_insignias'].forEach(f => { delete d.flags[f]; });
+      delete d.depoisDoFim;
+      d.capitulo = 12; d.modo = 'mundo'; d.local = 'pallet'; d.flags.tem_pokedex = true;
+      const pd = Estado.pdex(); pd.catalogados = {};
+      for (let i = 1; i <= 59; i++) pd.catalogados[i] = true;
+      pd.catalogados[151] = true; pd.catalogados[243] = true;   /* Mew e o Raikou não contam */
+      return JSON.stringify(d);
+    }, snap);
+    const botao = () => { const b = [...document.querySelectorAll('#app .escolha')].find(x => /Mostrar a Pokédex ao Professor/.test(x.textContent));
+      return b ? (b.disabled ? 'fechado' : 'aberto') : 'sem'; };
+    const passo = async (rotulo, fn, teste) => {
+      await tentar('nacional/' + rotulo, fn);
+      const r = await page.evaluate(teste);
+      if (r) falhas.push(`${rotulo}: ${r}`);
+    };
+    await page.evaluate(s => { UI.fecharModal && UI.fecharModal(true); Estado.dados = JSON.parse(s); }, base);
+    await passo('antes do Planalto', () => Exploracao.tela(), new Function('return (' + botao.toString() + ')() === "sem" ? null : "o Professor oferece a Nacional antes do Planalto"'));
+    await passo('pouca Pokédex', () => { Estado.dados.capitulo = 22; Exploracao.tela(); },
+      new Function('return (' + botao.toString() + ')() === "fechado" ? (/sessenta espécies de Kanto/.test(document.getElementById("app").innerText) ? null : "a porta fechada não diz o que o Professor pede") : "com 59 de Kanto o Professor não fica fechado"'));
+    await passo('sessenta', () => { Estado.pdex().catalogados[60] = true; Exploracao.tela(); },
+      new Function('return (' + botao.toString() + ')() === "aberto" ? null : "com 60 de Kanto o Professor não abre"'));
+    await passo('o laboratório', () => Exploracao.fazer('dexnac'), () => {
+      const d = Estado.dados;
+      if (!d.flags.dex_nacional || !d.flags.johto_liberado) return 'o Professor não liberou a Nacional';
+      return /A Pokédex Nacional/.test(document.getElementById('app').innerText) ? null : 'a tela do laboratório não abriu';
+    });
+    await passo('depois', () => Exploracao.tela(), new Function('return (' + botao.toString() + ')() === "sem" ? null : "o Professor continua oferecendo a Nacional"'));
+    await passo('Campeão depois', () => { window.__av = coroarCampeao('teste'); }, () =>
+      (window.__av || []).some(a => /reinicia sozinha/.test(a.texto)) ? 'a coroação liberou a Nacional de novo' : null);
+    falhas.forEach(f => anota('pokédex nacional', f));
+    await page.evaluate(s => { UI.fecharModal && UI.fecharModal(true); Estado.dados = JSON.parse(s); }, antes);
+  }
   /* a dificuldade nos Ajustes: as três, a folha de regras com cada uma, e volta pro Normal */
   for (const k of ['facil', 'dificil', 'normal']){
     await tentar('ajustes/dificuldade ' + k, x => { UI.modalAjustes(); Dificuldade.definir(x); }, k);

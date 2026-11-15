@@ -286,7 +286,7 @@ const GINASIOS = [
     /* Antes da terceira insígnia a Rocket ainda não pôs o pé na Silph,
        e Sabrina recebe quem aparecer. Da terceira em diante a torre de
        vidro está tomada, o ginásio fecha e só reabre depois da Silph. */
-    if (numInsignias() >= 3 && d.capitulo < 12 && !d.flags.entrou_no_ginasio_saffron && !d.flags.viu_os_doze && !d.flags.sabrina_aliada)
+    if (numInsignias() >= 3 && capNaJornada(d) < 12 && !d.flags.entrou_no_ginasio_saffron && !d.flags.viu_os_doze && !d.flags.sabrina_aliada)
       return ['O ginásio está trancado. Tem um papel colado na porta, escrito à mão:',
               '**SUSPENSO POR TEMPO INDETERMINADO — S.**',
               'A luz interna está acesa. Duas quadras pra cima, tem homem de terno escuro na porta da Silph, e nenhum deles é da Silph.'];
@@ -481,7 +481,7 @@ function insigniasEsperadas(num){
 function tetoDoGinasio(n){
   const d = Estado.dados;
   if (!d || d.capitulo < 2 || typeof Historia === 'undefined') return Infinity;
-  if (n != null && n >= insigniasEsperadas(Math.floor(d.capitulo))) return Infinity;
+  if (n != null && n >= insigniasEsperadas(Math.floor(capNaJornada(d)))) return Infinity;
   const cap = Historia.capitulo(d.capitulo);
   return cap && cap.nivelArea ? cap.nivelArea : Infinity;
 }

@@ -726,7 +726,7 @@ const RIVAIS_EXTRA = [
   formasFixas:true,     // o time dela já é o que é, em qualquer nível
   aceFixo:true,
   origem:'A mulher do Rhydon. Ela escolheu você, e não disse por quê.',
-  gatilho:d => d.capitulo >= 9,
+  gatilho:d => capNaJornada(d) >= 9,
   nascimento:'',
   pool:[131, 136, 85, 125, 106],             // Lapras, Flareon, Dodrio, Electabuzz, Hitmonlee
   ace:112, nivelExtra:1, moral:85,          // o Rhydon é o primeiro dela

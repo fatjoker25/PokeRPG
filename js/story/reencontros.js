@@ -75,13 +75,13 @@ const Reencontros = {
     const d = Estado.dados, n = q.n;
     if (!this.pesa(n) || this.tem_cena_propria(q.nome)) return null;
     const mem = n.memorias || [];
-    const ultimaCap = mem.length ? Math.max(...mem.map(m => m.cap || 0)) : 0;
+    const ultimaCap = mem.length ? Math.max(...mem.map(m => capNaJornada({capitulo:m.cap || 0}))) : 0;
     const reg = d.reencontros[q.nome];
     /* já saudou neste capítulo, noutra cena */
     if (reg && reg.cap === d.capitulo && reg.cena !== chave) return null;
     /* ainda é o capítulo em que se conheceram */
-    if (!reg && ultimaCap >= d.capitulo) return null;
-    if (reg && reg.cena !== chave && ultimaCap >= d.capitulo) return null;
+    if (!reg && ultimaCap >= capNaJornada(d)) return null;
+    if (reg && reg.cena !== chave && ultimaCap >= capNaJornada(d)) return null;
     /* a cena já trata você como conhecido, ou é uma apresentação */
     if ((meu && contexto.includes(meu)) || JA_TE_CONHECE.test(contexto)) return null;
     if (/\b(prazer|me chamo|meu nome é|sou (o|a) )/i.test(contexto)) return null;

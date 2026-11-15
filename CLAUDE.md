@@ -29,6 +29,17 @@ Ele repara no que está na cena e para ali. O jogador descobre jogando.
 Isso não dá pra conferir com script: nome de lugar citado antes é normal e
 fato citado antes não é detectável. Confere na leitura.
 
+E o número do capítulo condicional **não é a posição dele**: o 29 roda
+entre o 6 e o 7 (`DESVIOS_CONDICIONAIS`, em `condicionais.js`). Conta
+que compara capítulo com número — porta de posto, evento de cidade,
+contato do PokéNav, texto que muda com a história, capítulo guardado na
+memória de alguém — passa por `capNaJornada(d)` (o 29 vale 6,5; número
+guardado, `capNaJornada({capitulo:n})`), nunca por `d.capitulo` cru.
+Com o número cru, o posto de Professor, os contatos do fim do jogo, os
+titulares da Elite, a guarita nova da Rota 23 e a Pokédex Nacional
+abriam no meio da jornada. O `valida.js` reprova a conta crua fora dos
+capítulos (só `< 2`, `>= 2` e `> 1` passam: valem igual).
+
 ## Nome de personagem
 **Registro: o das localizações dos jogos.** Samuel Oak, Giovanni, Célio, Bill,
 Lorelei, Lance. Nem japonês, nem brasileiro — internacional, curto, fácil de
@@ -2556,6 +2567,27 @@ Os números estão na folha de regras ("Lendário no cinto" e "Depois do
 fim"). `chk-telas` para na estrada em cada degrau, devolve, recusa, se
 entrega, briga e perde, abre e fecha a casa, solta o caçador e o clima;
 `chk-lutas` roda a briga com a Patrulha nas duas fichas.
+
+## A Pokédex Nacional
+O registro nacional (os 251, Johto no mato pelo `sorteioJohto`, as
+evoluções da 2ª geração, os bebês da creche e o `ESTOQUE_NACIONAL` das
+lojas) são duas marcas, `dex_nacional` e `johto_liberado`, e quem
+liga as duas é `DexNacional.liberar` (`js/story/dex-nacional.js`),
+nunca `Estado.marcar` solto. Vem por dois caminhos:
+- **o título de Campeão** (`coroarCampeao`), como sempre;
+- **o Professor, em Pallet** (afazer `dexnac`): com
+  `CATALOGADAS_PRA_NACIONAL` espécies de Kanto (1 a 150) catalogadas,
+  depois que a jornada chega ao Planalto (`oito_insignias` ou o
+  capítulo `CAPITULO_DA_NACIONAL`, que abre até pra quem os ginásios
+  recusaram). Antes disso o afazer não aparece; com a história lá e a
+  Pokédex curta, ele fica fechado com o que o Professor pede.
+
+Foi pedido assim depois da segunda rodada de robôs: a Elite virou o
+muro, e só o Campeão tinha Johto. Catalogar é capturar ou apontar a
+Pokédex na luta (`Batalha.escanear`, uma vez por luta, sem gastar o
+turno) — os robôs que não apontavam terminaram com 8 a 25 catalogadas
+e mais de cem vistas. Quem já trouxe a Nacional do laboratório e vira
+Campeão não recebe de novo: a coroação só diz da passagem do norte.
 
 ## Como o projeto é montado
 - HTML/CSS/JS puro, `<script>` comum, sem módulo ES: tem que abrir em `file://`
