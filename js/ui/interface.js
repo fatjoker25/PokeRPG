@@ -6714,7 +6714,7 @@ const UI = {
       <div class="linha"><span class="k">Parou de competir</span><span class="v">ginásio, ala da Elite, arena e Conferência fecham, e você recomeça em casa</span></div>
       <div class="linha"><span class="k">Licença suspensa</span><span class="v">até ela voltar, o Centro cobra como de quem não tem licença, o balcão não emite outra e a Liga não te inscreve · ela volta sozinha no dia</span></div>
       <div class="linha"><span class="k">Lugar fechado</span><span class="v">quem disse que não volta a um lugar não volta: a passagem pra ele fica trancada</span></div>
-      <div class="linha"><span class="k">Cargo</span><span class="v">o que você virou aparece na Ficha · o ginásio que é seu não se desafia</span></div>
+      <div class="linha"><span class="k">Cargo</span><span class="v">o que você virou aparece na Ficha · o ginásio que é seu não se desafia · posto que esperava um capítulo da história abre depois do fim (ela já passou dele), e o resto do que ele pede continua valendo</span></div>
 
       <h3>O que o crachá muda na história</h3>
       <div class="linha"><span class="k">Opção que só existe com posto</span><span class="v">cais de Vermilion · recepção da Silph · cerca de Fuchsia</span></div>

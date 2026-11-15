@@ -19,6 +19,13 @@
    então no capítulo 8 ninguém que segue a história chega a Indesejado,
    e na terceira rodada de robôs o que buscava o envelope chegou ao 19
    com a reputação boa, escolhendo o mal sempre que podia */
+/* o capítulo que o posto espera, contado na jornada. Depois do fim a
+   história já passou de todos: quem terminou num final do 25 (os
+   caminhos) ficava com o capítulo parado ali, e o Conselheiro (28), a
+   Elite e o Professor (27) nunca abriam. O resto do que o posto pede
+   continua valendo */
+function capDoPosto(d){ return d && d.depoisDoFim ? Infinity : capNaJornada(d); }
+
 function aRedeConhece(d){
   return !!(d && (d.flags.trabalhou_rocket || (d.reputacao.eixo === 'ruim' && d.reputacao.ruim >= 3)));
 }
@@ -290,7 +297,7 @@ const Cargos = {
     if (this.tem(id)) return {ok:false, tem:true, motivo:'Você já tem.'};
     const v = this.vetadoPor(id);
     if (v) return {ok:false, motivo:'Não com ' + v.nome + ' no bolso.'};
-    if (capNaJornada(d) < c.cap) return {ok:false, motivo:'Ainda não é hora disso.'};
+    if (capDoPosto(d) < c.cap) return {ok:false, motivo:'Ainda não é hora disso.'};
     let pode = false;
     try { pode = !!c.requer(d) && this.pedidos(c).every(x => x.ok); } catch(e){ pode = false; }
     if (!pode) return {ok:false, motivo:'Você ainda não preenche o que eles pedem.'};
@@ -381,7 +388,7 @@ const Cargos = {
     const d = Estado.dados;
     const vistos = {};
     CARGOS.forEach(c => {
-      if (c.onde !== localId || this.tem(c.id) || capNaJornada(d) < c.cap - 1) return;
+      if (c.onde !== localId || this.tem(c.id) || capDoPosto(d) < c.cap - 1) return;
       if (this.vetadoPor(c.id)) return;
       (vistos[c.lugar] = vistos[c.lugar] || []).push(c);
     });
@@ -394,7 +401,7 @@ const Cargos = {
     return CARGOS.map(c => {
       const e = this.estado(c.id);
       return {cargo:c, tem:this.tem(c.id), ok:e.ok, motivo:e.motivo,
-              cedo: capNaJornada(d) < c.cap};
+              cedo: capDoPosto(d) < c.cap};
     });
   }
 };

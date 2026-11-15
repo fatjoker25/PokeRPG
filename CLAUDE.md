@@ -2520,7 +2520,10 @@ final; quem não está lá é `livre`), e a tela do fim mostra o bloco
   guarita, Celadon pra quem fugiu pela porta dos fundos — pela
   `travaDaPassagem`, e o mapa continua conexo sem eles;
 - **cargo**, na Ficha, e o ginásio que é seu (`ginasio`) não se
-  desafia; **sem troca** pra quem parou de trocar.
+  desafia; **sem troca** pra quem parou de trocar. Posto que espera um
+  capítulo (`cap` em `CARGOS`) abre depois do fim (`capDoPosto`): quem
+  terminou num final do 25 ficava com o capítulo parado ali, e
+  Conselheiro, Elite e Professor nunca abriam.
 Porta fechada fica na tela, apagada, com o motivo (`fechada` no
 afazer, desenhada em `Exploracao.tela`), e o `Exploracao.fazer` não
 abre por atalho. Final novo que muda a vida de quem joga entra na
