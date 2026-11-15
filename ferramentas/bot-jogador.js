@@ -689,7 +689,12 @@ const SUSPEITO = [
     /* golpe novo com quatro na cabeça: esquece o mais fraco (força vezes
        precisão; golpe de status vale pouco), ou não aprende se o novo for
        o pior de todos. Antes ele esquecia sempre o primeiro da lista */
-    if (await page.locator('.aprender-op').count()){
+    /* só a pergunta que ainda espera resposta: respondida, os botões
+       ficam na barra da luta até ela ser redesenhada, e com a troca
+       obrigatória aberta por cima (o Pidgey do Guarda de rota caiu no
+       mesmo turno em que o Dugtrio quis o Earthquake) o robô respondia
+       a pergunta morta pra sempre e nunca chegava na troca */
+    if (await page.locator('.aprender-op').count() && await page.evaluate(() => !!UI._respostaGolpe).catch(() => false)){
       await page.evaluate(() => {
         const valor = n => { const x = GOLPES[n] || {}; return x.c === 'status' ? 10 : (x.p || 40) * ((x.a > 100 ? 100 : (x.a || 100)) / 100); };
         const nome = el => ((el.querySelector('.gc-nome') || {}).innerText || '').trim();
