@@ -2,8 +2,10 @@
    RECADOS — quem tem o seu número também procura você
    As ligações escritas (CHAMADAS, em pokenav.js) tocam uma vez cada.
    Aqui mora o resto do telefone:
-   - de vez em quando alguém da agenda liga à toa, pra conversar, e o
-     que você responde aproxima ou afasta (a afinidade);
+   - cada ação no mapa rola o PokéNav (DADOS_DO_TOQUE, rolado no
+     Jogo.talvezToque): no 6, ele toca, e sem chamada escrita
+     esperando, alguém da agenda liga à toa, pra conversar, e o que
+     você responde aproxima ou afasta (a afinidade);
    - quem gosta de você às vezes manda recado de que separou alguma
      coisa, e espera na cidade dele até você passar ("Encontrar", no
      que fazer do lugar);
@@ -14,9 +16,8 @@
    tem id começando com 'rec_'.
    ============================================================ */
 
-const RECADO_INTERVALO_DIAS = 2;        // entre um contato à toa e outro, de qualquer pessoa
+const DADOS_DO_TOQUE = 1;               // dados de chance que cada ação no mapa rola: no 6, o PokéNav toca
 const RECADO_POR_CONTATO_DIAS = 7;      // a mesma pessoa não procura de novo antes disso
-const CHANCE_RECADO_NA_CHEGADA = 30;    // chegando num lugar, o telefone pode tocar
 const AFINIDADE_TETO_LIGACAO = 6;       // conversa de telefone aproxima até aqui; acima, só a história
 const AFINIDADE_PISO_LIGACAO = -3;      // e afasta até aqui
 const AFINIDADE_DA_ESTRADA = 1;         // quem te deu o número sem cena com você começa aqui
@@ -269,7 +270,7 @@ const Recados = {
   /* ---------- o registro, dentro do PokéNav ---------- */
   reg(){
     const nav = Estado.nav();
-    if (!nav.recados) nav.recados = {ultimoDia:null, contatos:{}, presentes:{}};
+    if (!nav.recados) nav.recados = {contatos:{}, presentes:{}};
     if (!nav.recados.contatos) nav.recados.contatos = {};
     if (!nav.recados.presentes) nav.recados.presentes = {};
     return nav.recados;
@@ -340,30 +341,29 @@ const Recados = {
   },
   chanceDoPresente(c){ return Math.min(60, 20 + 5 * Math.max(0, this.afinidade(c))); },
 
-  /* chegando num lugar: o telefone pode tocar */
-  talvezNaChegada(){ return Dados.chance(CHANCE_RECADO_NA_CHEGADA) && this.talvez(); },
-
-  /* o telefone toca, ou chega recado: no máximo um contato à toa a cada
-     RECADO_INTERVALO_DIAS dias. Abre por cima da tela, depois que ela
-     desenha, como as chamadas escritas. */
-  talvez(){
-    if (typeof Estado === 'undefined' || !Estado.dados || !Estado.temPokenav() || emLuta()) return false;
-    const d = Estado.dados;
-    const r = this.reg();
-    if (r.ultimoDia != null && d.relogio.dia - r.ultimoDia < RECADO_INTERVALO_DIAS) return false;
+  /* o PokéNav tocou (o dado do Jogo.talvezToque deu 6) e não tem
+     chamada escrita esperando: quem liga é alguém da agenda, e a pessoa
+     ou liga à toa ou manda recado. Quem é se decide agora; o que ela diz
+     só na hora de abrir o aparelho (mostrar), porque o toque que cai no
+     meio da luta espera ela acabar, e até lá o time pode ter mudado.
+     Devolve o toque ({recados, de}) pro Jogo abrir ou guardar. */
+  escolherToque(){
+    if (typeof Estado === 'undefined' || !Estado.dados || !Estado.temPokenav()) return null;
     const c = this.quemLiga();
-    if (!c) return false;
-    r.ultimoDia = d.relogio.dia;
-    this.doContato(c.id).ultimoDia = d.relogio.dia;
-    if (this.podeMandarPresente(c) && Dados.chance(this.chanceDoPresente(c)) && this.separarPresente(c)){
-      Estado.salvar('auto');
-      setTimeout(() => UI.telaRecado(c), 80);
-      return true;
-    }
+    if (!c) return null;
+    this.doContato(c.id).ultimoDia = Estado.dados.relogio.dia;
+    const recado = this.podeMandarPresente(c) && Dados.chance(this.chanceDoPresente(c)) && !!this.separarPresente(c);
+    Estado.salvar('auto');
+    return {recados:recado ? 'recado' : 'ligacao', de:c.id};
+  },
+  /* abre o aparelho com o toque: o recado, ou a ligação à toa montada agora */
+  mostrar(id, tipo){
+    const c = contatoPorId(id);
+    if (!c || !Estado.temPokenav()) return false;
+    if (tipo === 'recado'){ UI.telaRecado(c); return true; }
     const ch = this.montarLigacao(c);
     if (!ch) return false;
-    Estado.salvar('auto');
-    setTimeout(() => UI.telaChamada(ch), 80);
+    UI.telaChamada(ch);
     return true;
   },
 

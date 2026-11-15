@@ -639,7 +639,11 @@ const SUSPEITO = [
       const ops = [...r.querySelectorAll('.nav-acao')];
       if (!ops.length) return null;
       const atende = ops.filter(b => !b.classList.contains('recusar'));
-      const pool = atende.length ? atende : ops;
+      /* quem joga também deixa tocar: a ligação à toa (id rec_), uma vez
+         em seis; a da história ele atende sempre */
+      const recusa = ops.find(b => b.classList.contains('recusar'));
+      const aToa = !!r.querySelector('[onclick*="rec_"]');
+      const pool = (aToa && recusa && Math.random() < 1 / 6) ? [recusa] : (atende.length ? atende : ops);
       const b = pool[Math.floor(Math.random() * pool.length)];
       const t = b.innerText.replace(/\s+/g, ' ').trim();
       b.click();

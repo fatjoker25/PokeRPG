@@ -907,9 +907,9 @@ const SUSPEITO = [
      um contato de cada tipo (casa, líder, gente da história, estrada,
      veterano, troca, rival) com cada tópico de ligação, cada resposta e
      o não atender; o recado em cada degrau de afinidade, o "Encontrar"
-     na cidade, o encontro e o ficar conversando; o telefone tocando pelo
-     sorteio de verdade; e o presente de quem mora na cidade em cada
-     degrau de Carisma, comum e crítico */
+     na cidade, o encontro e o ficar conversando; o telefone tocando pela
+     rolagem de cada ação do mapa; e o presente de quem mora na cidade em
+     cada degrau de Carisma, comum e crítico */
   const comAgenda = async () => page.evaluate(s => {
     if (typeof Batalha !== 'undefined') Batalha.ativo = false;
     UI.fecharModal && UI.fecharModal(true);
@@ -955,12 +955,88 @@ const SUSPEITO = [
       await tentar(`recado/${id}/ficar ${af}`, x => Recados.ficar(x), id);
     }
   }
-  for (let k = 0; k < 8; k++){
+  /* o telefone pela rolagem de verdade: cada ação do mapa rola o dado do
+     PokéNav uma vez (aqui forçado no 6), e o aparelho abre por cima da
+     tela, ou espera a luta (ou a janela) que a ação abriu e toca depois.
+     Sem chamada escrita esperando, liga quem tem o seu número; com uma,
+     toca a escrita. E toda chamada deixa não atender. */
+  const ACOES_QUE_TOCAM = [['andar', 'celadon'], ['conversar', 'celadon'], ['esperar', 'celadon'], ['viajar', 'celadon'],
+    ['vasculhar', 'rota7'], ['procurar', 'rota7'], ['pescar', 'rota7'], ['acampar', 'rota7'], ['treinar', 'rota7']];
+  const aparelho = () => page.evaluate(() => {
+    const r = document.querySelector('#modal .nav-respostas');
+    return {nav:!!r, aToa:!!(r && r.querySelector('[onclick*="rec_"]')), recado:!!(r && /Mensage/.test((document.querySelector('#modal .nav-marca') || {}).textContent || '')),
+      adiada:!!Jogo.chamadaAdiada, luta:emLuta()};
+  });
+  let tocouEscrita = 0;
+  for (const [acao, local] of ACOES_QUE_TOCAM) for (const escrita of [false, true]){
     await comAgenda();
-    await tentar('recado/tocou ' + k, () => { Recados.reg().ultimoDia = null; Exploracao.tela(); if (!Recados.talvez()) throw new Error('o telefone não tocou'); });
-    await page.waitForTimeout(200);
-    await olhar('recado/tocou ' + k);
+    const rot = `telefone/${acao}${escrita ? '/chamada escrita' : ''}`;
+    onde = rot;
+    const r0 = await page.evaluate(([a, l, esc]) => {
+      const d = Estado.dados;
+      d.local = l; Jogo.chamadaAdiada = null;
+      if (!esc) CHAMADAS.forEach(c => { Chamadas.atendidas()[c.id] = {cap:d.capitulo, escolha:0}; });
+      else if (!Chamadas.disponiveis().length) return {semEscrita:true};
+      if (a === 'acampar') Relogio.ate(20);
+      if (a === 'treinar'){ d.treinoDia = null; d.treinoReal = 0; d.time.forEach(p => { p.nivel = Math.min(p.nivel, 12); }); }
+      Exploracao.tela();
+      const orig = Dados.chanceDados; let rolou = 0;
+      Dados.chanceDados = function(n, m){ if (m === 'PokéNav'){ rolou++; return true; } return orig.call(this, n, m); };
+      try {
+        if (a === 'viajar') Exploracao.viajar(LOCAIS[l].conexoes.find(x => !travaDaPassagem(l, x)));
+        else Exploracao.fazer(a);
+      } finally { Dados.chanceDados = orig; }
+      return {rolou};
+    }, [acao, local, escrita]);
+    if (r0.semEscrita) continue;
+    if (r0.rolou !== 1) anota('telefone', `${acao}: rolou o PokéNav ${r0.rolou} vez(es) numa ação só`);
+    await page.waitForTimeout(250);
+    let r = await aparelho();
+    /* a ação começou uma luta ou abriu janela: o toque esperou. Acaba a
+       luta, fecha a janela e volta pro mapa, que é quando ele toca */
+    if (!r.nav && r.adiada){
+      await page.evaluate(() => { Batalha.ativo = false; UI.fecharModal(true); Exploracao.tela(); });
+      await page.waitForTimeout(300);
+      r = await aparelho();
+    }
+    if (!r.nav){ anota('telefone', `${acao}: o PokéNav não tocou`); continue; }
+    if (!escrita && !r.aToa && !r.recado) anota('telefone', `${acao}: sem chamada escrita esperando, tocou uma escrita`);
+    if (escrita && (r.aToa || r.recado)) anota('telefone', `${acao}: com chamada escrita esperando, tocou a ligação à toa`);
+    if (escrita) tocouEscrita++;
+    await olhar(rot);
+    await tentar(rot + (r.recado ? '/guardar o aparelho' : '/não atender'), rec => {
+      const b = document.querySelector(rec ? '#modal .nav-respostas .nav-fim' : '#modal .nav-respostas .recusar');
+      if (!b) throw new Error(rec ? 'sem "Guardar o aparelho" no recado' : 'sem "Não atender"');
+      b.click();
+    }, r.recado);
   }
+  if (!tocouEscrita) anota('telefone', 'nenhuma chamada escrita esperando no save cheio: a escrita não foi tocada pela rolagem');
+  /* com uma janela aberta, o toque espera: abrir por cima fechava ela */
+  await comAgenda();
+  await tentar('telefone/com a mochila aberta', () => {
+    Jogo.chamadaAdiada = null;
+    Exploracao.tela(); UI.modalItens();
+    Jogo.tocarOuGuardar({recados:'ligacao', de:'casa'});
+    if (!Jogo.chamadaAdiada) throw new Error('o toque não esperou a mochila');
+    if (document.querySelector('#modal .nav-respostas')) throw new Error('o PokéNav abriu por cima da mochila');
+  });
+  await tentar('telefone/depois da mochila', () => { UI.fecharModal(true); Exploracao.tela(); });
+  await page.waitForTimeout(300);
+  if (!(await aparelho()).nav) anota('telefone', 'o toque que esperou a mochila não tocou depois');
+  /* o recado que chega no meio da luta espera ela acabar */
+  await comAgenda();
+  await tentar('telefone/recado na luta', () => {
+    Jogo.chamadaAdiada = null; Exploracao.tela();
+    Batalha.ativo = true;
+    const c = contatoPorId('brock');
+    if (!Recados.separarPresente(c)) throw new Error('não separou presente');
+    UI.telaRecado(c);
+    if (!Jogo.chamadaAdiada || Jogo.chamadaAdiada.recados !== 'recado') throw new Error('o recado da luta não esperou');
+    Batalha.ativo = false; Exploracao.tela();
+  });
+  await page.waitForTimeout(300);
+  if (!(await aparelho()).recado) anota('telefone', 'o recado que esperou a luta não chegou depois');
+  await olhar('telefone/recado depois da luta');
   for (const car of [1, 2, 3, 4, 5]) for (const g of ['sucesso', 'critico']){
     await restaurar();
     await tentar(`presente da cidade/${car}/${g}`, ([c, gr]) => {

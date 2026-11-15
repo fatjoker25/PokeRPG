@@ -384,6 +384,9 @@ const Exploracao = {
     Estado.salvar('auto');
     const primeiraVez = !Estado.dados.visitados['__v_'+id];
     Estado.dados.visitados['__v_'+id] = true;
+    /* entrar num lugar é uma ação: rola o PokéNav antes da estrada, e
+       se vier luta o toque espera ela acabar */
+    this.toque();
     /* Andar por rota é estar sujeito a ela: quem treina ali te para, e
        o que vive no mato sai sem pedir licença. Vale entrando numa rota
        e saindo dela — o trecho andado é o mesmo. Quem sabe ler a
@@ -411,8 +414,6 @@ const Exploracao = {
       }
       if (onde) Estado.dados.local = id;
     }
-    /* chegou: às vezes quem tem o seu número liga ou manda recado (recados.js) */
-    if (typeof Recados !== 'undefined') Recados.talvezNaChegada();
     this.tela(primeiraVez ? [{tipo:'info', texto:'Você nunca esteve aqui.'}] : null);
   },
 
@@ -435,6 +436,9 @@ const Exploracao = {
   },
 
   /* ---------- ações ---------- */
+  /* cada ação no mapa rola o PokéNav (Jogo.talvezToque): no 6, ele toca */
+  toque(){ if (typeof Jogo !== 'undefined' && Jogo.talvezToque) Jogo.talvezToque(); },
+
   repelenteAtivo(){
     const d = Estado.dados;
     if (!d.repelenteAte) return false;
@@ -478,11 +482,13 @@ const Exploracao = {
       const pend = Estrada.pendentes();
       if (!pend.length) return this.tela([{tipo:'info', texto:'Quem treinava por aqui já lutou com você. Com mais insígnias, eles voltam a querer.'}]);
       Mundo.passar(1);
+      this.toque();
       return Estrada.desafiar(Dados.escolher(pend).id, 'procurar');
     }
 
     if (acao === 'procurar'){
       Mundo.passar(1);
+      this.toque();
       if (Estrada.talvez('procurar')) return;
       if (Exploracao.repelenteAtivo()){
         return this.tela([
@@ -524,6 +530,7 @@ const Exploracao = {
   vasculhar(){
     const L = Mundo.atual();
     Mundo.passar(1);
+    this.toque();
     if (this.surge('vasculhar')) return;
     /* estrada também tem situação acontecendo, e nela o temperamento
        do seu time pesa mais do que em cidade */
@@ -584,6 +591,7 @@ const Exploracao = {
     const aprendem = vivos.filter(p => p.nivel < teto);
     if (!aprendem.length)
       return this.tela([{tipo:'info', texto:'Não tem mais o que aprender aqui. O que vive neste mato não desafia o seu time: pra render, só lugar mais difícil.'}]);
+    this.toque();
     /* treino em rota é barulho, e barulho chama gente e bicho: se
        alguém aparece, a luta é o treino do dia */
     if (this.surge('treinar')){ d.treinoDia = d.relogio.dia; d.treinoReal = Date.now(); Mundo.passar(1); return; }
@@ -632,6 +640,7 @@ const Exploracao = {
 
   pescar(){
     Mundo.passar(1);
+    this.toque();
     const L = Mundo.atual();
     /* Pescar é sorte com vara na mão. A Sorte decide se fisga e o
        quanto vale o que veio. */
@@ -668,6 +677,7 @@ const Exploracao = {
         && !Estado.dados.insignias.includes(g.insignia))
       Mundo.passarHoras(h.de - r0.hora);
     else Mundo.passar(1);
+    this.toque();
     if (this.surge('esperar')) return;
     Estado.salvar('auto');
     const r = Estado.dados.relogio;
@@ -688,6 +698,7 @@ const Exploracao = {
     /* dorme até o sol: acorda às seis */
     const r = Estado.dados.relogio;
     Mundo.passarHoras(r.hora >= 18 ? 30 - r.hora : 6 - r.hora);
+    this.toque();
     if (this.surge('acampar')) return;
     /* Dormir no chão é um teste de corpo. Resistência decide quanto
        do dia seguinte você recupera de verdade. */
@@ -707,7 +718,7 @@ const Exploracao = {
     Mundo.passar(1);
     const id = Mundo.id();
     Mundo.descobrir('andou_' + id);
-    if (typeof Jogo !== 'undefined' && Jogo.talvezToque && Dados.chance(30)) Jogo.talvezToque();
+    this.toque();
     /* Cidade não é cenário: tem gente no meio de alguma coisa. Antes de
        procurar lugar, vê se tem situação acontecendo. */
     if (typeof Eventos !== 'undefined' && Dados.chance(55)){
@@ -729,6 +740,7 @@ const Exploracao = {
 
   conversar(){
     Mundo.passar(1);
+    this.toque();
     const falas = Conversas.sortear(Mundo.id());
     /* quem falou com você pode te dar alguma coisa antes de você ir:
        teste de Carisma (recados.js) */

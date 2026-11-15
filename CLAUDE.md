@@ -1865,15 +1865,28 @@ pessoa andando pela cidade; o que ela dá depende da afinidade. E quem
 mora na cidade, depois de uma conversa, pode dar alguma coisa pelo seu
 Carisma. Mora tudo em `js/story/recados.js` (`Recados`).
 
-- **A ligação à toa** não é CHAMADA: é montada na hora
-  (`Recados.montarLigacao`: um tópico de `TOPICOS_DE_LIGACAO` que serve
-  pro tipo do contato — casa, líder, treinador, figura — e nunca o da
-  última vez com ele), com id `rec_…`, e o `Chamadas` manda pra cá o que
-  tem esse id (`porId`, `atender`, `recusar`). A tela é a da chamada
-  (`telaChamada`, `telaResultadoChamada`). Toca pelo `Jogo.talvezToque`,
-  quando não tem chamada escrita pra tocar, e na chegada a um lugar
-  (`Recados.talvezNaChegada`, no `Exploracao.viajar`): no máximo um
-  contato à toa a cada `RECADO_INTERVALO_DIAS`, a mesma pessoa a cada
+- **O telefone toca por rolagem, uma por ação** — foi pedido assim:
+  cada ação de mapa que passa o tempo (o `Exploracao.toque()` em
+  `viajar`, `andar`, `conversar`, `vasculhar`, `procurar`, `desafiar`,
+  `treinar`, `pescar`, `esperar` e `acampar`) e o começo de capítulo
+  (`entrarNoCapitulo`) rolam `DADOS_DO_TOQUE` dados de chance no
+  `Jogo.talvezToque`, e no 6 ele toca: a chamada escrita que estiver
+  esperando, senão quem tem o seu número (`Recados.escolherToque`). Sem
+  ninguém que possa ligar, nem rola. O aparelho abre 80 ms depois, por
+  `Jogo.tocarOuGuardar`, e no meio da luta ou com janela aberta (a
+  pergunta do golpe novo, a do apelido) o toque fica em
+  `Jogo.chamadaAdiada` até a próxima tela de mapa ou de cena
+  (`tocarAdiada`) — abrir por cima fechava a janela de baixo. Toda
+  chamada tem "Não atender". Ação nova de mapa que passa o tempo chama
+  `this.toque()`; a que abre janela (Centro, loja, PC) não.
+- **A ligação à toa** não é CHAMADA: é montada na hora de abrir o
+  aparelho (`Recados.mostrar` → `montarLigacao`: um tópico de
+  `TOPICOS_DE_LIGACAO` que serve pro tipo do contato — casa, líder,
+  treinador, figura — e nunca o da última vez com ele), com id `rec_…`,
+  e o `Chamadas` manda pra cá o que tem esse id (`porId`, `atender`,
+  `recusar`). Montar na hora é de propósito: o toque que esperou a luta
+  não pergunta pelo Pokémon que caiu nela. A tela é a da chamada
+  (`telaChamada`, `telaResultadoChamada`). A mesma pessoa liga a cada
   `RECADO_POR_CONTATO_DIAS`, e quem a história tirou do mundo (`requer`
   falso) não liga. Tópico novo entra com `para`, `falas` e três
   respostas com `afeto`; o seu Pokémon concorda por `x.pr`, e a pessoa
@@ -1887,7 +1900,7 @@ Carisma. Mora tudo em `js/story/recados.js` (`Recados`).
   disso, só a história.
 - **O recado** (`separarPresente`): com afinidade 1+, na chance de
   `chanceDoPresente`, o contato vira mensagem no PokéNav
-  (`UI.telaRecado`). O presente sai do degrau
+  (`UI.telaRecado`, que espera a luta como a chamada). O presente sai do degrau
   (`PRESENTES_POR_AFINIDADE`; o líder no degrau das pedras pode trocar
   pela dele, `PEDRA_DO_CONTATO`) e espera em
   `nav.recados.presentes[id]`: "Encontrar …" no que fazer da cidade
@@ -1909,10 +1922,12 @@ Carisma. Mora tudo em `js/story/recados.js` (`Recados`).
 
 `chk-telas` liga com cada tipo de contato, cada tópico e cada
 resposta, manda o recado em cada degrau, acha a pessoa na cidade, fica
-conversando, deixa o telefone tocar pelo sorteio e dá o presente de
-morador em cada Carisma; o `chk-baloes` confere as falas pelo
-`Recados.amostras`. O robô grava os números que oferecem e vai buscar
-o presente.
+conversando, faz cada ação do mapa com o dado do PokéNav forçado no 6
+(uma rolagem por ação, a ligação à toa sem chamada escrita esperando e
+a escrita com, o toque que espera a luta e a janela, e o não atender)
+e dá o presente de morador em cada Carisma; o `chk-baloes` confere as
+falas pelo `Recados.amostras`. O robô grava os números que oferecem,
+vai buscar o presente e, uma vez em seis, não atende a ligação à toa.
 
 ## A luta não acaba no recarregar
 `Estado.salvar` chama `LutaSalva.anotar` (`js/engine/luta-salva.js`): com

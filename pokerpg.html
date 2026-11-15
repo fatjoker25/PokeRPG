@@ -144728,8 +144728,10 @@ const DexNacional = {
    RECADOS — quem tem o seu número também procura você
    As ligações escritas (CHAMADAS, em pokenav.js) tocam uma vez cada.
    Aqui mora o resto do telefone:
-   - de vez em quando alguém da agenda liga à toa, pra conversar, e o
-     que você responde aproxima ou afasta (a afinidade);
+   - cada ação no mapa rola o PokéNav (DADOS_DO_TOQUE, rolado no
+     Jogo.talvezToque): no 6, ele toca, e sem chamada escrita
+     esperando, alguém da agenda liga à toa, pra conversar, e o que
+     você responde aproxima ou afasta (a afinidade);
    - quem gosta de você às vezes manda recado de que separou alguma
      coisa, e espera na cidade dele até você passar ("Encontrar", no
      que fazer do lugar);
@@ -144740,9 +144742,8 @@ const DexNacional = {
    tem id começando com 'rec_'.
    ============================================================ */
 
-const RECADO_INTERVALO_DIAS = 2;        // entre um contato à toa e outro, de qualquer pessoa
+const DADOS_DO_TOQUE = 1;               // dados de chance que cada ação no mapa rola: no 6, o PokéNav toca
 const RECADO_POR_CONTATO_DIAS = 7;      // a mesma pessoa não procura de novo antes disso
-const CHANCE_RECADO_NA_CHEGADA = 30;    // chegando num lugar, o telefone pode tocar
 const AFINIDADE_TETO_LIGACAO = 6;       // conversa de telefone aproxima até aqui; acima, só a história
 const AFINIDADE_PISO_LIGACAO = -3;      // e afasta até aqui
 const AFINIDADE_DA_ESTRADA = 1;         // quem te deu o número sem cena com você começa aqui
@@ -144995,7 +144996,7 @@ const Recados = {
   /* ---------- o registro, dentro do PokéNav ---------- */
   reg(){
     const nav = Estado.nav();
-    if (!nav.recados) nav.recados = {ultimoDia:null, contatos:{}, presentes:{}};
+    if (!nav.recados) nav.recados = {contatos:{}, presentes:{}};
     if (!nav.recados.contatos) nav.recados.contatos = {};
     if (!nav.recados.presentes) nav.recados.presentes = {};
     return nav.recados;
@@ -145066,30 +145067,29 @@ const Recados = {
   },
   chanceDoPresente(c){ return Math.min(60, 20 + 5 * Math.max(0, this.afinidade(c))); },
 
-  /* chegando num lugar: o telefone pode tocar */
-  talvezNaChegada(){ return Dados.chance(CHANCE_RECADO_NA_CHEGADA) && this.talvez(); },
-
-  /* o telefone toca, ou chega recado: no máximo um contato à toa a cada
-     RECADO_INTERVALO_DIAS dias. Abre por cima da tela, depois que ela
-     desenha, como as chamadas escritas. */
-  talvez(){
-    if (typeof Estado === 'undefined' || !Estado.dados || !Estado.temPokenav() || emLuta()) return false;
-    const d = Estado.dados;
-    const r = this.reg();
-    if (r.ultimoDia != null && d.relogio.dia - r.ultimoDia < RECADO_INTERVALO_DIAS) return false;
+  /* o PokéNav tocou (o dado do Jogo.talvezToque deu 6) e não tem
+     chamada escrita esperando: quem liga é alguém da agenda, e a pessoa
+     ou liga à toa ou manda recado. Quem é se decide agora; o que ela diz
+     só na hora de abrir o aparelho (mostrar), porque o toque que cai no
+     meio da luta espera ela acabar, e até lá o time pode ter mudado.
+     Devolve o toque ({recados, de}) pro Jogo abrir ou guardar. */
+  escolherToque(){
+    if (typeof Estado === 'undefined' || !Estado.dados || !Estado.temPokenav()) return null;
     const c = this.quemLiga();
-    if (!c) return false;
-    r.ultimoDia = d.relogio.dia;
-    this.doContato(c.id).ultimoDia = d.relogio.dia;
-    if (this.podeMandarPresente(c) && Dados.chance(this.chanceDoPresente(c)) && this.separarPresente(c)){
-      Estado.salvar('auto');
-      setTimeout(() => UI.telaRecado(c), 80);
-      return true;
-    }
+    if (!c) return null;
+    this.doContato(c.id).ultimoDia = Estado.dados.relogio.dia;
+    const recado = this.podeMandarPresente(c) && Dados.chance(this.chanceDoPresente(c)) && !!this.separarPresente(c);
+    Estado.salvar('auto');
+    return {recados:recado ? 'recado' : 'ligacao', de:c.id};
+  },
+  /* abre o aparelho com o toque: o recado, ou a ligação à toa montada agora */
+  mostrar(id, tipo){
+    const c = contatoPorId(id);
+    if (!c || !Estado.temPokenav()) return false;
+    if (tipo === 'recado'){ UI.telaRecado(c); return true; }
     const ch = this.montarLigacao(c);
     if (!ch) return false;
-    Estado.salvar('auto');
-    setTimeout(() => UI.telaChamada(ch), 80);
+    UI.telaChamada(ch);
     return true;
   },
 
@@ -149575,7 +149575,9 @@ const UI = {
      aparelho como mensagem, com o rosto de quem mandou e o lugar onde
      a pessoa vai estar */
   telaRecado(c){
-    if (!c || !Estado.temPokenav() || emLuta()) return;
+    if (!c || !Estado.temPokenav()) return;
+    /* chega no meio da luta: o aparelho espera ela acabar, como a chamada */
+    if (emLuta()){ Jogo.chamadaAdiada = {recados:'recado', de:c.id}; return; }
     const nome = textoContato(c, 'nome');
     this.navTela(c, nome, 'mensagem', `
       <div class="nav-conversa narrativa">${this.narrar(Recados.textoDoRecado(c), nome)}</div>
@@ -153152,7 +153154,7 @@ const UI = {
       <div class="linha"><span class="k">No aparelho</span><span class="v">chamada recebida, ligação que você faz, mensagem e recado de quem é do seu lado acontecem dentro do PokéNav, por cima da tela · guardar o aparelho volta pra onde você estava</span></div>
       <div class="linha"><span class="k">Desistir</span><span class="v">contra treinador não se foge: desiste · conta como derrota (com o que a derrota já custa ali) · multa de arena de 60 ₽ por nível de quem está em campo do lado de lá · −5 de moral no time inteiro</span></div>
       <div class="linha"><span class="k">Recarregar</span><span class="v">a luta continua de onde parou, no mesmo turno · recarregar na tela do Continuar mostra o mesmo resultado de novo</span></div>
-      <div class="linha"><span class="k">Na luta</span><span class="v">não dá pra ligar · chamada que toca no meio da luta espera ela acabar e toca depois · item só pela Mochila da barra de ações, gastando o turno</span></div>
+      <div class="linha"><span class="k">Na luta</span><span class="v">não dá pra ligar · chamada ou recado que chega no meio da luta espera ela acabar e toca depois · item só pela Mochila da barra de ações, gastando o turno</span></div>
       <div class="linha"><span class="k">Agenda</span><span class="v">só entra número que te deram · você grava na hora ou depois</span></div>
       <div class="linha"><span class="k">Revanche</span><span class="v">ninguém luta pelo telefone: a ligação marca o lugar (a rota de quem é de rota, o ginásio do líder, a cidade de quem mora nela, uma rota do lado de onde você está pra quem vive na estrada) · chegando lá, aparece "Procurar" · o time vem subido junto com você · vencer dá +1 de reputação</span></div>
       <div class="linha"><span class="k">Ligação que você faz</span><span class="v">acontece dentro do PokéNav, por cima do que você estava fazendo · desligar volta pra agenda</span></div>
@@ -153162,7 +153164,8 @@ const UI = {
       <div class="linha"><span class="k">Notícia</span><span class="v">não rende nada material · muda o que a pessoa pensa de você</span></div>
       <div class="linha"><span class="k">Gente da estrada</span><span class="v">19 dos treinadores de rota passam o número na primeira vez que perdem pra você · a revanche vem com o time de quem tem duas insígnias a mais, e +2 de nível</span></div>
       <div class="linha"><span class="k">Gente da história</span><span class="v">quem gostou de você o bastante passa o número depois do capítulo em que vocês se conheceram</span></div>
-      <div class="linha"><span class="k">Ligação à toa</span><span class="v">de vez em quando alguém da agenda liga só pra conversar, ou chegando num lugar, ou andando pela cidade · no mínimo ${RECADO_INTERVALO_DIAS} dias entre um contato e outro, e ${RECADO_POR_CONTATO_DIAS} pra mesma pessoa · quem gosta mais de você liga mais · resposta boa aproxima (+1 de afinidade, até ${AFINIDADE_TETO_LIGACAO}) · resposta ruim ou não atender afasta (−1, até ${String(AFINIDADE_PISO_LIGACAO).replace('-', '−')})</span></div>
+      <div class="linha"><span class="k">Quando toca</span><span class="v">cada ação no mapa rola ${DADOS_DO_TOQUE === 1 ? '1 dado' : DADOS_DO_TOQUE + ' dados'} de chance, e o 6 faz o PokéNav tocar: entrar num lugar, andar pela cidade, conversar com os moradores, procurar Pokémon, ir atrás de quem treina, vasculhar, treinar, pescar, esperar a hora passar, acampar e começar um capítulo · toca primeiro a ligação da história que estiver esperando; sem ela, alguém da agenda liga à toa ou manda recado · sem ninguém que possa ligar, não rola · no meio da luta ou com uma janela aberta, toca depois · toda chamada tem "Não atender"</span></div>
+      <div class="linha"><span class="k">Ligação à toa</span><span class="v">alguém da agenda liga só pra conversar · a mesma pessoa não procura de novo antes de ${RECADO_POR_CONTATO_DIAS} dias · quem gosta mais de você liga mais · resposta boa aproxima (+1 de afinidade, até ${AFINIDADE_TETO_LIGACAO}) · resposta ruim ou não atender afasta (−1, até ${String(AFINIDADE_PISO_LIGACAO).replace('-', '−')})</span></div>
       <div class="linha"><span class="k">Afinidade</span><span class="v">é o que a pessoa pensa de você · gente da história guarda o que viveu com você nas cenas · quem só te deu o número começa em ${AFINIDADE_DA_ESTRADA} · quem ficou em casa, em ${AFINIDADE_DE_CASA} · acima de ${AFINIDADE_TETO_LIGACAO}, só pelo que acontece entre vocês fora do telefone</span></div>
       <div class="linha"><span class="k">Recado</span><span class="v">com afinidade ${PRESENTE_MIN_AFINIDADE} ou mais, o contato pode ser recado de que a pessoa separou alguma coisa pra você (quanto mais afinidade, mais vezes) · ela espera na cidade dela (quem vive na estrada, na cidade mais perto da estrada dela) e aparece "Encontrar" no que fazer de lá · um por pessoa de cada vez, e outro só ${PRESENTE_ESPERA_DIAS} dias depois de buscar · ficar um período conversando no encontro aproxima (+1)</span></div>
       ${PRESENTES_POR_AFINIDADE.map((t, i, l) => `<div class="linha"><span class="k">${this.esc(t.nome.charAt(0).toUpperCase() + t.nome.slice(1))} (${i ? t.min + '–' + (l[i - 1].min - 1) : t.min + ' ou mais'})</span><span class="v">${t.itens.map(([n, q]) => this.esc((q > 1 ? q + '× ' : '') + n)).join(' · ')}${t.min >= 5 ? ' · o líder de ginásio pode separar a pedra do ginásio dele' : ''}</span></div>`).join('')}
@@ -166806,6 +166809,9 @@ const Exploracao = {
     Estado.salvar('auto');
     const primeiraVez = !Estado.dados.visitados['__v_'+id];
     Estado.dados.visitados['__v_'+id] = true;
+    /* entrar num lugar é uma ação: rola o PokéNav antes da estrada, e
+       se vier luta o toque espera ela acabar */
+    this.toque();
     /* Andar por rota é estar sujeito a ela: quem treina ali te para, e
        o que vive no mato sai sem pedir licença. Vale entrando numa rota
        e saindo dela — o trecho andado é o mesmo. Quem sabe ler a
@@ -166833,8 +166839,6 @@ const Exploracao = {
       }
       if (onde) Estado.dados.local = id;
     }
-    /* chegou: às vezes quem tem o seu número liga ou manda recado (recados.js) */
-    if (typeof Recados !== 'undefined') Recados.talvezNaChegada();
     this.tela(primeiraVez ? [{tipo:'info', texto:'Você nunca esteve aqui.'}] : null);
   },
 
@@ -166857,6 +166861,9 @@ const Exploracao = {
   },
 
   /* ---------- ações ---------- */
+  /* cada ação no mapa rola o PokéNav (Jogo.talvezToque): no 6, ele toca */
+  toque(){ if (typeof Jogo !== 'undefined' && Jogo.talvezToque) Jogo.talvezToque(); },
+
   repelenteAtivo(){
     const d = Estado.dados;
     if (!d.repelenteAte) return false;
@@ -166900,11 +166907,13 @@ const Exploracao = {
       const pend = Estrada.pendentes();
       if (!pend.length) return this.tela([{tipo:'info', texto:'Quem treinava por aqui já lutou com você. Com mais insígnias, eles voltam a querer.'}]);
       Mundo.passar(1);
+      this.toque();
       return Estrada.desafiar(Dados.escolher(pend).id, 'procurar');
     }
 
     if (acao === 'procurar'){
       Mundo.passar(1);
+      this.toque();
       if (Estrada.talvez('procurar')) return;
       if (Exploracao.repelenteAtivo()){
         return this.tela([
@@ -166946,6 +166955,7 @@ const Exploracao = {
   vasculhar(){
     const L = Mundo.atual();
     Mundo.passar(1);
+    this.toque();
     if (this.surge('vasculhar')) return;
     /* estrada também tem situação acontecendo, e nela o temperamento
        do seu time pesa mais do que em cidade */
@@ -167006,6 +167016,7 @@ const Exploracao = {
     const aprendem = vivos.filter(p => p.nivel < teto);
     if (!aprendem.length)
       return this.tela([{tipo:'info', texto:'Não tem mais o que aprender aqui. O que vive neste mato não desafia o seu time: pra render, só lugar mais difícil.'}]);
+    this.toque();
     /* treino em rota é barulho, e barulho chama gente e bicho: se
        alguém aparece, a luta é o treino do dia */
     if (this.surge('treinar')){ d.treinoDia = d.relogio.dia; d.treinoReal = Date.now(); Mundo.passar(1); return; }
@@ -167054,6 +167065,7 @@ const Exploracao = {
 
   pescar(){
     Mundo.passar(1);
+    this.toque();
     const L = Mundo.atual();
     /* Pescar é sorte com vara na mão. A Sorte decide se fisga e o
        quanto vale o que veio. */
@@ -167090,6 +167102,7 @@ const Exploracao = {
         && !Estado.dados.insignias.includes(g.insignia))
       Mundo.passarHoras(h.de - r0.hora);
     else Mundo.passar(1);
+    this.toque();
     if (this.surge('esperar')) return;
     Estado.salvar('auto');
     const r = Estado.dados.relogio;
@@ -167110,6 +167123,7 @@ const Exploracao = {
     /* dorme até o sol: acorda às seis */
     const r = Estado.dados.relogio;
     Mundo.passarHoras(r.hora >= 18 ? 30 - r.hora : 6 - r.hora);
+    this.toque();
     if (this.surge('acampar')) return;
     /* Dormir no chão é um teste de corpo. Resistência decide quanto
        do dia seguinte você recupera de verdade. */
@@ -167129,7 +167143,7 @@ const Exploracao = {
     Mundo.passar(1);
     const id = Mundo.id();
     Mundo.descobrir('andou_' + id);
-    if (typeof Jogo !== 'undefined' && Jogo.talvezToque && Dados.chance(30)) Jogo.talvezToque();
+    this.toque();
     /* Cidade não é cenário: tem gente no meio de alguma coisa. Antes de
        procurar lugar, vê se tem situação acontecendo. */
     if (typeof Eventos !== 'undefined' && Dados.chance(55)){
@@ -167151,6 +167165,7 @@ const Exploracao = {
 
   conversar(){
     Mundo.passar(1);
+    this.toque();
     const falas = Conversas.sortear(Mundo.id());
     /* quem falou com você pode te dar alguma coisa antes de você ir:
        teste de Carisma (recados.js) */
@@ -167303,6 +167318,8 @@ const Jogo = {
      não deixou gravar no lugar do automático — a jornada roda da memória */
   continuar(deArquivo){
     if (!(deArquivo ? Estado.abrir(deArquivo) : Estado.carregar('auto'))) return UI.telaInicial();
+    /* o toque guardado era da jornada de antes */
+    this.chamadaAdiada = null;
     if (deArquivo) setTimeout(() => UI.avisar([{tipo:'perigo', texto:'Este navegador não deixou guardar a jornada: ela só existe aberta aqui. Use Salvar, no alto da tela, antes de fechar.', dura:9000}]), 600);
     /* recarregou no meio da luta: volta pra ela */
     if (Estado.dados.lutaSalva && typeof LutaSalva !== 'undefined' && LutaSalva.retomar()) return;
@@ -168054,7 +168071,8 @@ const Jogo = {
     /* quem é do seu lado te acha na virada (js/story/linhas.js) */
     /* o capítulo de caminho já é a cena da sua linha: não chama outra por cima */
     if (typeof Linhas !== 'undefined' && !(Historia.capAtual && Historia.capAtual.caminho) && Linhas.talvez(cena, abertura)) return;
-    /* telefone toca na hora errada, que é quando telefone toca */
+    /* começar o capítulo também rola o PokéNav, e telefone toca na hora
+       errada, que é quando telefone toca */
     this.talvezToque();
     UI.telaCena(cena, abertura);
   },
@@ -168204,17 +168222,39 @@ const Jogo = {
     UI.telaResultadoChamada(r);
   },
 
-  /* o telefone toca na virada de capítulo e ao andar pela cidade. A
-     chamada abre no PokéNav por cima da tela, depois que ela desenha:
-     quem chamou segue o próprio caminho, e desligar volta pra ela. */
+  /* O telefone: cada ação no mapa (entrar num lugar, andar pela cidade,
+     conversar, vasculhar, procurar, desafiar, treinar, pescar, esperar,
+     acampar) e cada começo de capítulo rola DADOS_DO_TOQUE dados de
+     chance, e no 6 o PokéNav toca. Toca a chamada escrita que estiver
+     esperando; sem ela, quem tem o seu número liga à toa ou manda recado
+     (recados.js). Sem ninguém que possa ligar, nem rola. O aparelho abre
+     por cima da tela, depois que ela desenha: quem chamou segue o
+     próprio caminho, e desligar volta pra ela. */
   talvezToque(){
     if (typeof Chamadas === 'undefined' || !Estado.temPokenav()) return false;
-    if (!Dados.chance(38)) return false;
-    const c = Chamadas.sortear();
-    /* sem chamada escrita pra tocar, quem tem o seu número pode ligar à
-       toa ou mandar recado (recados.js) */
-    if (!c) return typeof Recados !== 'undefined' && Recados.talvez();
-    setTimeout(() => UI.telaChamada(c), 80);
+    /* um toque esperando a luta acabar já é o telefone tocando */
+    if (this.chamadaAdiada) return false;
+    const escrita = Chamadas.disponiveis().length > 0;
+    const aToa = typeof Recados !== 'undefined' && Recados.candidatos().length > 0;
+    if (!escrita && !aToa) return false;
+    if (!Dados.chanceDados(DADOS_DO_TOQUE, 'PokéNav')) return false;
+    const toque = (escrita && Chamadas.sortear()) || (aToa ? Recados.escolherToque() : null);
+    if (!toque) return false;
+    setTimeout(() => this.tocarOuGuardar(toque), 80);
+    return true;
+  },
+  /* abre o aparelho agora, ou guarda pra próxima tela de mapa ou de cena
+     (tocarAdiada): no meio da luta, ou com janela aberta — a pergunta do
+     golpe novo, a do apelido, a Mochila —, o aparelho abriria fechando a
+     janela de baixo. O toque ({recados, de}) é a ligação à toa ou o
+     recado; o resto é chamada escrita, que confere se ainda vale. */
+  tocarOuGuardar(toque){
+    if (!toque || !Estado.temPokenav()) return false;
+    if (emLuta() || document.getElementById('modal')){ this.chamadaAdiada = toque; return false; }
+    if (toque.recados) return typeof Recados !== 'undefined' && Recados.mostrar(toque.de, toque.recados);
+    if (Chamadas.jaAtendeu(toque.id)) return false;
+    try { if (toque.cond && !toque.cond(Estado.dados)) return false; } catch(e){ return false; }
+    UI.telaChamada(toque);
     return true;
   },
 
@@ -168238,12 +168278,12 @@ const Jogo = {
     UI.atualizarTopo();
   },
 
-  /* a chamada que tocou no meio da luta toca agora, por cima da tela */
+  /* o toque que esperou a luta (ou a janela) toca agora, por cima da tela */
   tocarAdiada(){
     const c = this.chamadaAdiada;
     if (!c || emLuta()) return;
     this.chamadaAdiada = null;
-    setTimeout(() => UI.telaChamada(c), 120);
+    setTimeout(() => this.tocarOuGuardar(c), 120);
   },
 
   ligarPara(id, servico){

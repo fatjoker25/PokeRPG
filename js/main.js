@@ -108,6 +108,8 @@ const Jogo = {
      não deixou gravar no lugar do automático — a jornada roda da memória */
   continuar(deArquivo){
     if (!(deArquivo ? Estado.abrir(deArquivo) : Estado.carregar('auto'))) return UI.telaInicial();
+    /* o toque guardado era da jornada de antes */
+    this.chamadaAdiada = null;
     if (deArquivo) setTimeout(() => UI.avisar([{tipo:'perigo', texto:'Este navegador não deixou guardar a jornada: ela só existe aberta aqui. Use Salvar, no alto da tela, antes de fechar.', dura:9000}]), 600);
     /* recarregou no meio da luta: volta pra ela */
     if (Estado.dados.lutaSalva && typeof LutaSalva !== 'undefined' && LutaSalva.retomar()) return;
@@ -859,7 +861,8 @@ const Jogo = {
     /* quem é do seu lado te acha na virada (js/story/linhas.js) */
     /* o capítulo de caminho já é a cena da sua linha: não chama outra por cima */
     if (typeof Linhas !== 'undefined' && !(Historia.capAtual && Historia.capAtual.caminho) && Linhas.talvez(cena, abertura)) return;
-    /* telefone toca na hora errada, que é quando telefone toca */
+    /* começar o capítulo também rola o PokéNav, e telefone toca na hora
+       errada, que é quando telefone toca */
     this.talvezToque();
     UI.telaCena(cena, abertura);
   },
@@ -1009,17 +1012,39 @@ const Jogo = {
     UI.telaResultadoChamada(r);
   },
 
-  /* o telefone toca na virada de capítulo e ao andar pela cidade. A
-     chamada abre no PokéNav por cima da tela, depois que ela desenha:
-     quem chamou segue o próprio caminho, e desligar volta pra ela. */
+  /* O telefone: cada ação no mapa (entrar num lugar, andar pela cidade,
+     conversar, vasculhar, procurar, desafiar, treinar, pescar, esperar,
+     acampar) e cada começo de capítulo rola DADOS_DO_TOQUE dados de
+     chance, e no 6 o PokéNav toca. Toca a chamada escrita que estiver
+     esperando; sem ela, quem tem o seu número liga à toa ou manda recado
+     (recados.js). Sem ninguém que possa ligar, nem rola. O aparelho abre
+     por cima da tela, depois que ela desenha: quem chamou segue o
+     próprio caminho, e desligar volta pra ela. */
   talvezToque(){
     if (typeof Chamadas === 'undefined' || !Estado.temPokenav()) return false;
-    if (!Dados.chance(38)) return false;
-    const c = Chamadas.sortear();
-    /* sem chamada escrita pra tocar, quem tem o seu número pode ligar à
-       toa ou mandar recado (recados.js) */
-    if (!c) return typeof Recados !== 'undefined' && Recados.talvez();
-    setTimeout(() => UI.telaChamada(c), 80);
+    /* um toque esperando a luta acabar já é o telefone tocando */
+    if (this.chamadaAdiada) return false;
+    const escrita = Chamadas.disponiveis().length > 0;
+    const aToa = typeof Recados !== 'undefined' && Recados.candidatos().length > 0;
+    if (!escrita && !aToa) return false;
+    if (!Dados.chanceDados(DADOS_DO_TOQUE, 'PokéNav')) return false;
+    const toque = (escrita && Chamadas.sortear()) || (aToa ? Recados.escolherToque() : null);
+    if (!toque) return false;
+    setTimeout(() => this.tocarOuGuardar(toque), 80);
+    return true;
+  },
+  /* abre o aparelho agora, ou guarda pra próxima tela de mapa ou de cena
+     (tocarAdiada): no meio da luta, ou com janela aberta — a pergunta do
+     golpe novo, a do apelido, a Mochila —, o aparelho abriria fechando a
+     janela de baixo. O toque ({recados, de}) é a ligação à toa ou o
+     recado; o resto é chamada escrita, que confere se ainda vale. */
+  tocarOuGuardar(toque){
+    if (!toque || !Estado.temPokenav()) return false;
+    if (emLuta() || document.getElementById('modal')){ this.chamadaAdiada = toque; return false; }
+    if (toque.recados) return typeof Recados !== 'undefined' && Recados.mostrar(toque.de, toque.recados);
+    if (Chamadas.jaAtendeu(toque.id)) return false;
+    try { if (toque.cond && !toque.cond(Estado.dados)) return false; } catch(e){ return false; }
+    UI.telaChamada(toque);
     return true;
   },
 
@@ -1043,12 +1068,12 @@ const Jogo = {
     UI.atualizarTopo();
   },
 
-  /* a chamada que tocou no meio da luta toca agora, por cima da tela */
+  /* o toque que esperou a luta (ou a janela) toca agora, por cima da tela */
   tocarAdiada(){
     const c = this.chamadaAdiada;
     if (!c || emLuta()) return;
     this.chamadaAdiada = null;
-    setTimeout(() => UI.telaChamada(c), 120);
+    setTimeout(() => this.tocarOuGuardar(c), 120);
   },
 
   ligarPara(id, servico){
