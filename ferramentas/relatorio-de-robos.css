@@ -29,6 +29,7 @@ table.comparar{width:100%;border-collapse:collapse;font:500 14px/1.4 var(--hud);
 .comparar tbody tr:last-child th,.comparar tbody tr:last-child td{border-bottom:0}
 .comparar td.final{color:var(--amarelo)}
 .comparar td.tempo{color:var(--fraco)}
+.comparar td.quebra{white-space:normal;min-width:16rem}
 .robo{margin-top:44px;padding-top:26px;border-top:2px solid var(--borda)}
 .robo-cab{display:flex;flex-wrap:wrap;gap:18px 28px;justify-content:space-between;align-items:flex-end}
 .robo-id{min-width:0;flex:1 1 26rem}

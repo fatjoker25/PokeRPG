@@ -14,8 +14,9 @@
    Uso:  node ferramentas/relatorio-de-robos.js <pasta> <saida.html> [notas.json]
 
    notas.json é o que quem vigiou a rodada escreveu à mão, tudo
-   opcional: {titulo, eyebrow, intro:[html], geral:[html], defeitos:[html],
-   longas:{<chave>:'classe'}, robos:{<posto>:{dificuldades:[html], nota:html}}}.
+   opcional: {titulo, eyebrow, h1, intro:[html], geralTitulo, geral:[html],
+   defeitos:[html], longasNota:[html], robos:{<posto>:{dificuldades:[html],
+   nota:html}}, rodape}.
    ============================================================ */
 const fs = require('fs');
 const path = require('path');
@@ -72,6 +73,24 @@ function descreveJeito(J){
   return p.join(', ') + '.';
 }
 
+/* as provas da rede, pelo nome de quem testa: "provas vencidas: Brant,
+   Juno, Mercer e Corbin" */
+const provasDaRede = pv => {
+  const nome = k => k.replace(/^./, c => c.toUpperCase());
+  const lista = ks => ks.length > 1 ? ks.slice(0, -1).join(', ') + ' e ' + ks[ks.length - 1] : ks.join('');
+  const v = Object.keys(pv).filter(k => pv[k] && pv[k].venceu).map(nome), p = Object.keys(pv).filter(k => !(pv[k] && pv[k].venceu)).map(nome);
+  return [v.length ? `${v.length > 1 ? 'provas vencidas' : 'prova vencida'}: ${lista(v)}` : '', p.length ? `${p.length > 1 ? 'provas perdidas' : 'prova perdida'}: ${lista(p)}` : ''].filter(Boolean).join('; ');
+};
+
+/* os degraus da rede (ESCALOES, em rede.js) */
+const DEGRAU_DA_REDE = [null, 'Informante', 'Recruta', '{Contador|Contadora}', 'Chefe de turno', '{Executivo|Executiva}'];
+
+/* o robô pelo posto que buscou, curto */
+const ROTULO_DO_ROBO = {treinador:'{Treinador|Treinadora}', auxiliar:'Auxiliar', guarda_rota:'Guarda de rota', policial:'Policial',
+  criador:'{Criador|Criadora}', reporter:'Repórter', rocket:'Informante', investigador:'{Investigador|Investigadora}',
+  pesquisador:'{Pesquisador|Pesquisadora}', comissao:'{Perito|Perita}', instrutor:'{Instrutor|Instrutora}', lider:'Líder',
+  elite:'Elite', professor:'{Professor|Professora}', conselheiro:'{Conselheiro|Conselheira}'};
+
 /* ---------- leitura dos passos ---------- */
 function metricas(x){
   const ps = (x.out.reg && x.out.reg.passos) || [];
@@ -100,7 +119,16 @@ function metricas(x){
     if (i === 1 || !entradas.length) entradas.push({cap:l.cap, dia:l.dia, portas:[]});
     entradas[entradas.length - 1].portas.push({i, quem:l.treinador || nome, res:l.res, turnos:l.turnos, caidos:l.caidos, de:l.de});
   });
-  const longas = ps.filter(p => p.t === 'luta30');
+  /* a luta longa sai do registro da luta (quantos turnos ela teve); o
+     retrato de 30, 60 e 100 turnos (luta30) vai junto quando o robô
+     tirou, e ele não tira em toda luta: na etapa retomada no meio de
+     uma luta, o contador de lutas não armava */
+  const longas = [];
+  let marcas = [];
+  ps.forEach(p => {
+    if (p.t === 'luta30') marcas.push(p);
+    else if (p.t === 'luta'){ if (p.turnos > 30) longas.push(Object.assign({}, p, {marcas})); marcas = []; }
+  });
   return {ps, lutas, sel, V, D, capturas, curas, fugas, caps, fechou, ginasios, entradas, longas,
     racao:ps.filter(p => p.t === 'racao').length, trocas:ps.filter(p => p.t === 'troca'), pedras:ps.filter(p => p.t === 'pedra'),
     mortes:ps.filter(p => p.t === 'morte'), postos:ps.filter(p => p.t === 'posto'), largou:ps.filter(p => p.t === 'largou'),
@@ -108,15 +136,17 @@ function metricas(x){
     rivais:ps.filter(p => p.t === 'rival'), linhas:ps.filter(p => p.t === 'linha')};
 }
 
-/* a luta longa, pelo retrato: por que ela durou */
-function porQueDurou(l){
-  const a = l.aliado || {}, i = l.inimigo || {};
-  const k = (NOTAS.longas || {})[`${l.cap}|${l.dia}|${a.nome}|${i.nome}`];
-  if (k) return k;
-  const so = (a.golpes || []).length && (a.golpes || []).every(g => /^(Harden|Growl|Tail Whip|Leer|String Shot|Sand Attack|Defense Curl|Withdraw|Splash|Screech|Thunder Wave|Sleep Powder|Poison Powder|Stun Spore|Supersonic|Smokescreen|Agility|Teleport|Kinesis|Focus Energy|Minimize|Double Team|Barrier|Amnesia|Reflect|Light Screen|Haze|Mist|Rest|Recover|Softboiled|Transform|Conversion|Substitute|Sweet Scent|Charm|Swords Dance|Growth|Sing|Hypnosis|Glare|Confuse Ray|Disable|Roar|Whirlwind|Mimic|Metronome|Lovely Kiss|Spore|Flash|Meditate|Sharpen|Acid Armor|Calm Mind|Bulk Up|Iron Defense|Cotton Spore|Scary Face|Spite|Protect|Detect|Endure|Sandstorm|Rain Dance|Sunny Day|Safeguard|Baton Pass|Encore|Attract|Curse|Belly Drum|Mean Look|Spider Web|Lock-On|Mind Reader|Foresight|Perish Song|Synthesis|Moonlight|Morning Sun|Psych Up|Heal Bell|Milk Drink|Nightmare|Pain Split|Sleep Talk|Destiny Bond|Defense Curl)$/.test(g));
-  if (so) return 'ninguém fere';
-  if ((a.nv || 0) <= (i.nv || 0) - 6) return 'fora de nível';
-  return 'dano mínimo';
+/* de onde veio a luta longa, pela tabela */
+function deOnde(l){
+  const c = l.ctx || {};
+  if (c.de === 'ginásio') return 'Ginásio · ' + (c.lider || '?');
+  if (c.de === 'Liga') return 'Elite · ' + (l.treinador || c.nome || '?');
+  if (c.de === 'rival') return 'Rival · ' + (l.treinador || '?');
+  if (c.de === 'estrada') return 'Treinador de estrada';
+  if (c.de === 'mato' || l.tipo === 'selvagem') return 'Selvagem';
+  if (c.de === 'história') return 'Luta de cena';
+  if (l.tipo === 'lendario') return 'Lendário';
+  return (c.de || l.tipo || '?').replace(/^./, s => s.toUpperCase());
 }
 
 /* ---------- a página ---------- */
@@ -173,6 +203,9 @@ function porQueDurou(l){
     x.J = JEITOS[x.r.jeito] || {};
     x.mulher = x.out.ficha.genero === 'Mulher';
     x.g = t => String(t || '').replace(/\{([^{}|]*)\|([^{}|]*)\}/g, (m, a, b) => x.mulher ? b : a);
+    /* os nomes saem do dado e se repetem (três Hugos, três Aldos): onde
+       o robô aparece fora da seção dele, vai junto o posto que buscou */
+    x.rotulo = x.g(ROTULO_DO_ROBO[x.r.cargo] || x.r.cargo);
     x.id = x.r.cargo;
   }
 
@@ -193,7 +226,7 @@ function porQueDurou(l){
       const nomeP = quem ? quem.g(c.nome) : String(c.nome).replace(/\{([^{}|]*)\|([^{}|]*)\}/g, '$1');
       /* a licença todo mundo tira: ali vai só a conta */
       const passagem = !outros.length ? '—' : c.id === 'treinador' ? `${outros.length} dos outros ${robos.length - 1}`
-        : outros.map(o => { const t = postoTomado(o, c.id); return `<a href="#${o.id}">${esc(o.out.ficha.nome)}</a> <small>(cap. ${esc(String(t.cap))}, dia ${num(t.dia)})</small>`; }).join(', ');
+        : outros.map(o => { const t = postoTomado(o, c.id); return `<a href="#${o.id}">${esc(o.out.ficha.nome)}</a> <small>(${esc(o.rotulo)} · cap. ${esc(String(t.cap))}, dia ${num(t.dia)})</small>`; }).join(', ');
       return `<tr><th scope="row">${esc(nomeP)}<small class="r-det">${esc(c.orgao || '')} · capítulo ${c.cap}</small></th>
         <td>${quem ? `<a href="#${quem.id}">${esc(quem.out.ficha.nome)}</a><span class="r-det">${esc(quem.J.nome || quem.r.jeito)}</span>` : '—'}</td>${res}
         <td class="passagem">${passagem}</td></tr>`;
@@ -286,24 +319,37 @@ function porQueDurou(l){
     <p class="nota">Desde esta rodada a Nacional vem por dois caminhos: o título de Campeão, como antes, e o Professor, em Pallet, pra quem traz sessenta espécies de Kanto catalogadas depois das oito insígnias (ou do capítulo 22). Todo robô aponta a Pokédex pra espécie que ainda não catalogou, e vai a Pallet quando a conta fecha.</p>
     <div class="tabela"><table class="comparar"><thead><tr><th scope="col">Robô</th><th scope="col">Kanto catalogadas</th><th scope="col">Catalogadas</th><th scope="col">Vistas</th><th scope="col">Nacional</th></tr></thead><tbody>
     ${robos.slice().sort((a, b) => (b.out.ficha.pokedex || {}).deKanto - (a.out.ficha.pokedex || {}).deKanto).map(x => { const p = x.out.ficha.pokedex || {}, n = x.m.nacional[0];
-      return `<tr><th scope="row"><a href="#${x.id}">${esc(x.out.ficha.nome)}</a></th><td>${p.deKanto || 0}</td><td>${p.catalogados || 0}</td><td>${p.vistos || 0}</td>
+      return `<tr><th scope="row"><a href="#${x.id}">${esc(x.out.ficha.nome)}</a> <small>${esc(x.rotulo)}</small></th><td>${p.deKanto || 0}</td><td>${p.catalogados || 0}</td><td>${p.vistos || 0}</td>
       <td class="${p.nacional ? 'final' : ''}">${p.nacional ? `✓ ${esc(n && n.como ? n.como : '')}${n ? ` · cap. ${esc(String(n.cap))}, dia ${num(n.dia)}` : ''}` : '—'}</td></tr>`; }).join('')}
     </tbody></table></div>${comNac.length ? '' : '<p class="nota">Ninguém chegou à Nacional nesta rodada.</p>'}</section>`;
 
   /* ---------- as lutas longas ---------- */
   const longas = [];
-  robos.forEach(x => x.m.longas.forEach(l => longas.push({x, l, por:porQueDurou(l)})));
-  const POR = {'ninguém fere':'O lado do robô não tinha golpe que ferisse o de lá (só golpe de status, ou tipo que não pega)',
-    'fora de nível':'O robô em campo estava seis níveis ou mais abaixo do de lá', 'dano mínimo':'Paradas pequenas dos dois lados: golpe que erra e dano mínimo de 1'};
+  robos.forEach(x => x.m.longas.forEach(l => longas.push({x, l})));
+  const todas = robos.reduce((s, x) => s + x.m.lutas.length, 0);
+  const comRetrato = longas.filter(z => z.l.marcas.length).length;
   const grupos = {};
-  longas.forEach(z => (grupos[z.por] = grupos[z.por] || []).push(z));
+  longas.forEach(z => (grupos[deOnde(z.l)] = grupos[deOnde(z.l)] || []).push(z));
+  /* quem mais aparece num grupo: o treinador (estrada) ou a espécie (selvagem) */
+  const quemMais = (k, zs) => {
+    if (!/^(Treinador de estrada|Selvagem)$/.test(k)) return '';
+    const c = {};
+    zs.forEach(z => { const n = k === 'Selvagem' ? String(z.l.ultimo || '?').replace(/ \d+$/, '') : (z.l.treinador || '?'); c[n] = (c[n] || 0) + 1; });
+    return Object.entries(c).sort((a, b) => b[1] - a[1]).slice(0, 4).map(([n, q]) => `${esc(n)} (${q})`).join(', ');
+  };
+  const perdeu = l => l.res === 'derrota' || l.res === 'desistiu' || l.res === 'gameover';
+  const retrato = l => { const r = l.marcas.slice().reverse().find(m => m.aliado && m.inimigo); return r ? `${r.aliado.nome} ${r.aliado.nv} contra ${r.inimigo.nome} ${r.inimigo.nv}` : null; };
+  const RES = {vitoria:'vitória', derrota:'derrota', desistiu:'desistiu', fuga:'fugiu', escapou:'escapou', captura:'captura', gameover:'fim de jogo'};
   const blocoLongas = `<section class="bloco longas"><h3>As lutas que passaram de 30 turnos</h3>
-    <p class="nota">O robô avisa quando uma luta passa de 30, 60 e 100 turnos, com o retrato dos dois lados e os últimos eventos, e cada aviso foi olhado durante a rodada. ${uma(longas.filter(z => z.l.marca === 30).length, 'luta')} passaram de 30 turnos, ${longas.filter(z => z.l.marca === 60).length} de 60 e ${longas.filter(z => z.l.marca === 100).length} de 100.</p>
-    ${Object.entries(grupos).map(([k, zs]) => `<h4 class="sub-pc">${esc(POR[k] || k)} <small>${uma(zs.filter(z => z.l.marca === 30).length, 'luta')}</small></h4>
-      <ol class="elite-l">${zs.filter(z => z.l.marca === 30 || !zs.some(w => w.x === z.x && w.l.cap === z.l.cap && w.l.dia === z.l.dia && w.l.marca === 30 && (w.l.aliado || {}).nome === (z.l.aliado || {}).nome)).slice(0, 40).map(z => {
-        const mais = zs.filter(w => w.x === z.x && w.l.dia === z.l.dia && w.l.cap === z.l.cap && w.l.marca > z.l.marca && (w.l.inimigo || {}).nome === (z.l.inimigo || {}).nome).map(w => w.l.marca);
-        return `<li><span class="quando">${esc(z.x.out.ficha.nome)} · cap. ${esc(String(z.l.cap))}, dia ${num(z.l.dia)}</span><span>${esc(z.l.aliado ? z.l.aliado.nome + ' ' + z.l.aliado.nv : '?')} contra ${esc(z.l.inimigo ? z.l.inimigo.nome + ' ' + z.l.inimigo.nv : '?')}
-          <span class="onde">${esc(z.l.treinador || z.l.tipo)} · ${esc(String(z.l.ctx || ''))}${mais.length ? ' · passou de ' + Math.max(...mais) : ''}</span></span></li>`; }).join('')}</ol>`).join('')}
+    <p class="nota">${uma(longas.length, 'luta')} das ${num(todas)} passaram de 30 turnos (${pct(longas.length, todas)}), ${longas.filter(z => z.l.turnos > 60).length} de 60 e ${longas.filter(z => z.l.turnos > 100).length} de 100. A conta sai do registro de cada luta. O robô também avisa na hora, com o retrato dos dois lados e os últimos eventos, e cada aviso foi olhado durante a rodada; ${num(comRetrato)} tiveram o aviso. O aviso falhou nas etapas que começavam no meio de uma luta: o contador de lutas não armava, e cada uma dessas etapas avisava uma vez só. As outras foram conferidas depois, pelo registro.</p>
+    <div class="tabela"><table class="comparar"><thead><tr><th scope="col">De onde</th><th scope="col">Lutas</th><th scope="col">Perdidas</th><th scope="col">A mais longa</th><th scope="col">Quem mais</th></tr></thead><tbody>
+    ${Object.entries(grupos).sort((a, b) => b[1].length - a[1].length).map(([k, zs]) => `<tr><th scope="row">${esc(k)}</th><td>${num(zs.length)}</td><td>${num(zs.filter(z => perdeu(z.l)).length)}</td><td>${Math.max(...zs.map(z => z.l.turnos))} turnos</td><td class="quebra">${quemMais(k, zs)}</td></tr>`).join('')}
+    </tbody></table></div>
+    <h4 class="sub-pc">As que passaram de 60 <small>${uma(longas.filter(z => z.l.turnos > 60).length, 'luta')}</small></h4>
+    <ol class="elite-l">${longas.filter(z => z.l.turnos > 60).sort((a, b) => b.l.turnos - a.l.turnos).map(z => {
+      const r = retrato(z.l);
+      return `<li><span class="quando"><a href="#${z.x.id}">${esc(z.x.out.ficha.nome)}</a> (${esc(z.x.rotulo)}) · cap. ${esc(String(z.l.cap))}, dia ${num(z.l.dia)}</span><span>${r ? esc(r) : `o último de lá: ${esc(z.l.ultimo || '?')}`}
+        <span class="onde">${esc(z.l.treinador || deOnde(z.l))} · ${z.l.turnos} turnos · ${esc(RES[z.l.res] || z.l.res)}</span></span></li>`; }).join('')}</ol>
     ${(NOTAS.longasNota || []).map(n => `<p class="nota">${n}</p>`).join('')}</section>`;
 
   /* ---------- a seção de cada robô ---------- */
@@ -428,7 +474,7 @@ function porQueDurou(l){
       ${postoQ ? `<ul class="j-itens">${postoQ.pedidos.map(p => `<li class="${p.ok ? 'sim' : 'nao'}"><span class="marca">${p.ok ? '✓' : '✗'}</span><span>${esc(x.g(p.t))}</span></li>`).join('')}${!t && postoQ.motivo ? `<li class="nao"><span class="marca">✗</span><span>${esc(postoQ.motivo)}</span></li>` : ''}</ul>` : ''}
       ${outrosP.length ? `<p class="nota">Outros postos: ${outrosP.map(p => `${esc(x.g(cargoDe(p.cargo).nome))} (cap. ${esc(String(p.cap))}, dia ${num(p.dia)})`).join('; ')}.</p>` : ''}
       ${m.largou.length ? `<p class="nota">Largou: ${m.largou.map(p => `${esc(x.g(cargoDe(p.cargo).nome))} (dia ${num(p.dia)})`).join('; ')}.</p>` : ''}
-      ${rede ? `<p class="nota">Na rede: degrau ${rede.escalao}, ${rede.pontos || 0} pontos de serviço${rede.fora ? ', e já não é mais dela' : ''}${rede.provas && Object.keys(rede.provas).length ? ` · provas: ${Object.entries(rede.provas).map(([k, v]) => `${k} ${v && v.venceu ? 'vencida' : 'perdida'}`).join(', ')}` : ''}.</p>` : ''}
+      ${rede ? `<p class="nota">Na rede: degrau ${rede.escalao}${DEGRAU_DA_REDE[rede.escalao] ? ' (' + esc(x.g(DEGRAU_DA_REDE[rede.escalao])) + ')' : ''}, ${rede.pontos || 0} pontos de serviço${rede.fora ? ', e já não é mais dela' : ''}${rede.provas && Object.keys(rede.provas).length ? ` · ${provasDaRede(rede.provas)}` : ''}.</p>` : ''}
       ${f.lei && (f.lei.avisos || f.lei.ordem || f.lei.detencao) ? `<p class="nota">Com a Patrulha: ${uma(f.lei.avisos, 'aviso')}${f.lei.ordem ? ', ordem de devolução' : ''}${f.lei.detencao ? ', ordem de detenção' : ''}.</p>` : ''}
     </div>`;
     const elite = m.entradas.length ? `<div class="bloco elite${f.campeao ? ' campeao' : ''}"><h3>A Elite</h3>
@@ -449,7 +495,7 @@ function porQueDurou(l){
     const piores = Object.entries(derrotas).sort((u, v) => v[1] - u[1]).slice(0, 3);
     if (piores.length && piores[0][1] >= 2) dif.push(`<b>Quem mais venceu ${x.mulher ? 'ela' : 'ele'}:</b> ${piores.map(([k, n]) => `${esc(k)} (${n})`).join(', ')}.`);
     if (m.mortes.length) dif.push(`<b>${uma(m.mortes.length, 'morte')}:</b> ${m.mortes.map(p => `${esc(p.quem)} (${esc(p.especie)} ${p.nivel}, cap. ${esc(String(p.cap))})`).join(', ')}.`);
-    if (m.longas.length) dif.push(`<b>${uma(m.longas.filter(l => l.marca === 30).length, 'luta')} de mais de 30 turnos</b>${m.longas.some(l => l.marca >= 60) ? `, ${m.longas.filter(l => l.marca === 60).length} de mais de 60` : ''}.`);
+    if (m.longas.length) dif.push(`<b>${uma(m.longas.length, 'luta')} de mais de 30 turnos</b>${m.longas.some(l => l.turnos > 60) ? `, ${m.longas.filter(l => l.turnos > 60).length} de mais de 60` : ''}.`);
     ((NOTAS.robos || {})[x.id] || {}).dificuldades && dif.push(...NOTAS.robos[x.id].dificuldades);
     const gostos = jg.gostos || (f.gostos && f.gostos.texto) || '';
     const desgostos = jg.desgostos || (f.desgostos && f.desgostos.texto) || '';
@@ -536,7 +582,7 @@ ${css}${extra}</style>
   ${NOTAS.geral ? `<section class="bloco geral"><h3>${esc(NOTAS.geralTitulo || 'O que os quinze mostraram')}</h3><ul>${NOTAS.geral.map(g => `<li>${g}</li>`).join('')}</ul></section>` : ''}
   ${blocoNacional}
   ${blocoLongas}
-  ${NOTAS.defeitos ? `<section class="bloco geral"><h3>Defeitos achados e consertados durante a rodada</h3><ul>${NOTAS.defeitos.map(g => `<li>${g}</li>`).join('')}</ul></section>` : ''}
+  ${NOTAS.defeitos ? `<section class="bloco geral"><h3>Defeitos achados e consertados</h3><ul>${NOTAS.defeitos.map(g => `<li>${g}</li>`).join('')}</ul></section>` : ''}
   ${robos.map(secao).join('\n')}
   <footer>${NOTAS.rodape || 'Gerado por ferramentas/relatorio-de-robos.js a partir das saídas dos robôs (ferramentas/rodada-de-robos.js).'}</footer>
 </div>`;
