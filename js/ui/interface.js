@@ -5491,7 +5491,7 @@ const UI = {
         return depois + bloco('O que dá pra fazer no mundo', campo)
           + (lendarios ? bloco('Lendários', lendarios) : '')
           + bloco('Kanto', dl([
-            ['Clima', M(d.mundo.clima)],
+            ['Clima', M(typeof NOME_DO_CLIMA !== 'undefined' && NOME_DO_CLIMA[d.mundo.clima] || d.mundo.clima)],
             ['Instabilidade', `<span class="mono">${d.mundo.instabilidade}</span>`],
             ['Avisos da Patrulha', `<span class="mono">${e(liga)}</span>`]
           ]));
@@ -6549,9 +6549,14 @@ const UI = {
       ${Estado.dados && Object.values(Estado.dados.lendarios||{}).some(l=>l.quebrouBola) ? '<p class="sussurro">E existem coisas que simplesmente quebram a Pokébola no ar.</p>' : ''}
       <h3>Lendário no cinto</h3>
       <div class="linha"><span class="k">Alguém viu</span><span class="v">${this.esc('seis vezes em dez, e sempre pra quem já é {Famoso|Famosa} ou {Temido|Temida} · quem era {Respeitado|Respeitada} ou mais vira notícia boa,')} o resto vira notícia ruim, e as duas andam muito · a Patrulha conversa na primeira vez, manda devolver na segunda e emite ordem de detenção na terceira</span></div>
-      <div class="linha"><span class="k">Ninguém viu</span><span class="v">a reputação espera · dois capítulos depois alguém fala, e aí conta</span></div>
+      <div class="linha"><span class="k">Ninguém viu</span><span class="v">a reputação espera · dois capítulos depois alguém fala, e aí conta, e a Patrulha fica sabendo</span></div>
+      <div class="linha"><span class="k">A Patrulha na estrada</span><span class="v">com lendário preso que alguém viu, ou com ordem de detenção, o oficial pode te parar num trecho de rota, uma vez por dia no máximo: ${CHANCE_PATRULHA.conversa} em 100 trechos na conversa, ${CHANCE_PATRULHA.devolucao} com a ordem de devolução, ${CHANCE_PATRULHA.detencao} com a de detenção · devolver fecha a ocorrência ou a ordem · não devolver sobe um degrau</span></div>
+      <div class="linha"><span class="k">Detenção</span><span class="v">se entregar: ${porExtenso(DIAS_DE_CUSTODIA)} dias de custódia, ${fmtDin(MULTA_PATRULHA)} ₽ de multa (ou o que você tiver) e o lendário apreendido, solto longe · devolvendo antes, ou já tendo soltado: um dia e metade da multa · lutar com o oficial (três Pokémon no nível do seu time): vencendo, você passa, com a ordem aberta e a fama pior · perdendo ou desistindo, é a custódia (perdendo, com a multa em dobro) · a custódia cura você e o time e fecha a ordem</span></div>
+      <div class="linha"><span class="k">Sua casa</span><span class="v">com ordem de detenção no seu nome, a Patrulha vigia a sua rua e a casa fecha até a ordem fechar</span></div>
       <div class="linha"><span class="k">Enquanto estiver preso</span><span class="v">a cada dois capítulos a reputação piora e Kanto fica mais instável · com a moral abaixo de 30 ele pode romper a Pokébola numa virada de capítulo e sumir, hostil</span></div>
       <div class="linha"><span class="k">O grupo dele</span><span class="v">preso um do trio lendário ou das três aves, os outros do grupo passam a caçar você · o grupo inteiro preso quebra o clima de Kanto</span></div>
+      <div class="linha"><span class="k">Quem te caça</span><span class="v">aparece em qualquer rota ou área especial, sem esperar a história: ${CHANCE_CACANDO} em 100 encontros selvagens, ${CHANCE_CACANDO_ULTIMO} em 100 o último solto de um grupo que já perdeu dois · vem três níveis acima do seu time (seis, o último), nunca abaixo do lugar nem acima do nível dele</span></div>
+      <div class="linha"><span class="k">Clima de Kanto</span><span class="v">uma das aves presa deixa o clima instável: ${CHANCE_CLIMA_NA_LUTA.instavel} em 100 lutas com selvagem começam com chuva, sol forte ou tempestade de areia, pelas regras de clima de sempre · as três aves, ou o trio lendário inteiro: ${CHANCE_CLIMA_NA_LUTA.caotico} em 100 · sol só de dia · caverna e vulcão não têm céu</span></div>
       <div class="linha"><span class="k">Soltar</span><span class="v">ele vai embora sem atacar · Kanto acalma um pouco · os do grupo param de caçar</span></div>
       <div class="linha"><span class="k">Kanto instável</span><span class="v">o número da aba Mundo, na Ficha · sobe com lendário preso e com o que se descobre no norte, e muda o que o norte faz com você</span></div>` : ''}
       <h3>Perícias</h3>
@@ -6701,7 +6706,9 @@ const UI = {
       <h3>Depois do fim</h3>
       <div class="linha"><span class="k">Continuar</span><span class="v">todo final tem "Continuar pela estrada": a história fecha (não tem mais capítulo nem chamado no mapa) e você volta pro mapa com o time, a mochila e o dinheiro · o final fica no códice do mesmo jeito</span></div>
       <div class="linha"><span class="k">O que o final deixa</span><span class="v">a tela do fim diz a sua situação, onde você recomeça e o que fechou pra você · as portas fechadas ficam na tela, com o motivo</span></div>
-      <div class="linha"><span class="k">Procurado</span><span class="v">a Patrulha tem ordem de detenção no seu nome e vigia a sua rua: a sua casa fecha · quem chega ao fim com ordem de detenção (lendário preso na frente de testemunha, mandado aberto) sai do fim procurado, seja qual for o final, menos nos que resolvem isso</span></div>
+      <div class="linha"><span class="k">Procurado</span><span class="v">a Patrulha tem ordem de detenção no seu nome e vigia a sua rua: a sua casa fecha até a ordem fechar · quem chega ao fim com ordem de detenção (lendário preso na frente de testemunha, mandado aberto) sai do fim procurado, seja qual for o final, menos nos que resolvem isso</span></div>
+      <div class="linha"><span class="k">A custódia do fim</span><span class="v">na estrada a Patrulha te para como em qualquer detenção · quem saiu do fim procurado e se entrega fica ${porExtenso(DIAS_DE_CUSTODIA_DO_FIM)} dias na custódia, com ${fmtDin(MULTA_PATRULHA * 2)} ₽ de multa (dez dias e metade, devolvendo antes o lendário preso) · cumprida, a ordem fecha e a casa abre</span></div>
+      <div class="linha"><span class="k">Lendário preso</span><span class="v">sem virada de capítulo, o que ele pesava a cada capítulo passa a pesar a cada ${DIAS_DO_TICK_DEPOIS} dias</span></div>
       <div class="linha"><span class="k">Quem você enganou</span><span class="v">sabe onde fica a sua casa: ela fecha</span></div>
       <div class="linha"><span class="k">Parou de competir</span><span class="v">ginásio, ala da Elite, arena e Conferência fecham, e você recomeça em casa</span></div>
       <div class="linha"><span class="k">Licença suspensa</span><span class="v">até ela voltar, o Centro cobra como de quem não tem licença, o balcão não emite outra e a Liga não te inscreve · ela volta sozinha no dia</span></div>

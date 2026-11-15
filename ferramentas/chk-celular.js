@@ -159,6 +159,19 @@ const SUSPEITO = [
     await tentar('liga', () => { UI.fecharModal(true); Jogo.abrirLiga(); });
     await tentar('loja', () => { UI.fecharModal(true); Exploracao.tela(); Cidade.loja(); });
     await tentar('centro', () => { UI.fecharModal(true); Cidade.atenderAqui(); });
+    /* a Patrulha na estrada (patrulha.js): a parada com a ordem de
+       detenção, com o Zapdos visto na Pokébola, e a custódia */
+    await tentar('patrulha', () => {
+      UI.fecharModal(true);
+      const d = Estado.dados;
+      d.pc.push(criarPokemon(145, 50));
+      const L = Estado.lend(145); L.estado = 'capturado'; L.disposicao = 'prisioneiro';
+      Estado.marcar('captura_vista_145');
+      Object.assign(d.liga, {avisos:3, ordemDevolucao:true, detencao:true, paradaDia:-1});
+      const ch = Dados.chance; Dados.chance = () => true;
+      try { Patrulha.talvez('rota7'); } finally { Dados.chance = ch; }
+    });
+    await tentar('patrulha-custodia', () => Patrulha.custodia('entregou'));
     /* a luta, assentada, com os golpes, a mochila e um turno */
     await tentar('luta', () => {
       UI.fecharModal(true); Estado.dados.local = 'rota7';

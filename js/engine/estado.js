@@ -1316,7 +1316,11 @@ const Estado = {
         this.marcar('captura_vista_' + L.dex);
         avisos.push(`Alguém falou. A captura de ${DEX[L.dex].nome} deixou de ser segredo.`);
         this.mudarRep('ruim', 2, `Descobriram ${DEX[L.dex].nome} com você`);
-        this.dados.liga.avisos++;
+        /* e a Patrulha fica sabendo: o degrau de sempre (conversa, ordem
+           de devolução, detenção), como na captura vista */
+        const ev = [];
+        if (typeof Captura !== 'undefined') Captura.ligaReage(ev); else this.dados.liga.avisos++;
+        ev.forEach(e => avisos.push(e.texto));
       } else if (L.turnosPreso % 2 === 0){
         avisos.push(`${DEX[L.dex].nome} continua na sua Pokébola. O mundo continua pagando por isso.`);
         this.mudarRep('ruim', 1, `Mantém ${DEX[L.dex].nome} em cativeiro`);

@@ -49152,7 +49152,11 @@ const Estado = {
         this.marcar('captura_vista_' + L.dex);
         avisos.push(`Alguém falou. A captura de ${DEX[L.dex].nome} deixou de ser segredo.`);
         this.mudarRep('ruim', 2, `Descobriram ${DEX[L.dex].nome} com você`);
-        this.dados.liga.avisos++;
+        /* e a Patrulha fica sabendo: o degrau de sempre (conversa, ordem
+           de devolução, detenção), como na captura vista */
+        const ev = [];
+        if (typeof Captura !== 'undefined') Captura.ligaReage(ev); else this.dados.liga.avisos++;
+        ev.forEach(e => avisos.push(e.texto));
       } else if (L.turnosPreso % 2 === 0){
         avisos.push(`${DEX[L.dex].nome} continua na sua Pokébola. O mundo continua pagando por isso.`);
         this.mudarRep('ruim', 1, `Mantém ${DEX[L.dex].nome} em cativeiro`);
@@ -50205,8 +50209,10 @@ const Batalha = {
     /* o que vale pro lado inteiro, e fica mesmo se trocar de Pokémon:
        Reflect, Light Screen, Mist e Safeguard, cinco turnos cada */
     this.lados = {aliado:{reflexo:0, tela:0, nevoa:0, salva:0}, inimigo:{reflexo:0, tela:0, nevoa:0, salva:0}};
-    /* chuva ou areia: dura cinco turnos, como na 2ª geração */
-    this.clima = null;
+    /* chuva ou areia: dura cinco turnos, como na 2ª geração. A luta
+       pode já começar com ele (o clima que o lendário preso quebrou,
+       lendarios-errantes.js) */
+    this.clima = opts.clima && CLIMA_TEXTO[opts.clima] ? {tipo:opts.clima, turnos:5} : null;
     /* quem viu o par cair nesta luta e ainda não entrou: uid → nome do par */
     this.viuOParCair = {};
     /* A cena que vem depois quer saber se sobrou pra você. */
@@ -51936,7 +51942,7 @@ const Batalha = {
    ============================================================ */
 const LutaSalva = {
   CONTEXTOS: ['cenaBatalha','ginasioAtual','eliteAtual','torneioAtual','rivalAtual','revancheAtual',
-              'veteranoAtual','conferenciaAtual','estradaAtual','redeAtual','batalhaLivre'],
+              'veteranoAtual','conferenciaAtual','estradaAtual','redeAtual','patrulhaAtual','batalhaLivre'],
 
   foto(){
     const B = Batalha, d = Estado.dados;
@@ -52331,7 +52337,7 @@ const Historia = {
     if (d.via && d.via !== 'neutro') linhas.push(`Kanto te trata como: ${NOME_VIA[d.via] || d.via}.`);
     if (d.liga.detencao) linhas.push('A Patrulha tem uma ordem de detenção com o seu nome.');
     else if (d.liga.ordemDevolucao) linhas.push('A Patrulha exigiu formalmente a devolução do que você pegou.');
-    if (d.mundo.clima !== 'normal') linhas.push(`O clima de Kanto está ${d.mundo.clima}.`);
+    if (d.mundo.clima !== 'normal') linhas.push(`O clima de Kanto está ${typeof NOME_DO_CLIMA !== 'undefined' && NOME_DO_CLIMA[d.mundo.clima] || d.mundo.clima}.`);
     const nomesNPC = Object.keys(d.npcs);
     if (nomesNPC.length) linhas.push(`Gente que lembra de você: ${nomesNPC.join(', ')}.`);
     return linhas;
@@ -53973,7 +53979,7 @@ const Estrada = {
     r.encontros++;
     Jogo.cenaBatalha = null; Jogo.ginasioAtual = null; Jogo.eliteAtual = null;
     Jogo.torneioAtual = null; Jogo.rivalAtual = null; Jogo.revancheAtual = null;
-    Jogo.veteranoAtual = null; Jogo.conferenciaAtual = null; Jogo.redeAtual = null;
+    Jogo.veteranoAtual = null; Jogo.conferenciaAtual = null; Jogo.redeAtual = null; Jogo.patrulhaAtual = null;
     Jogo.estradaAtual = {id, escalao: escalaoEstradaDe(numInsignias())};
     Jogo.batalhaLivre = true;
     UI.limparDados();
@@ -59195,7 +59201,7 @@ const Veteranos = {
     Jogo.cenaBatalha = null; Jogo.ginasioAtual = null; Jogo.eliteAtual = null;
     Jogo.torneioAtual = null; Jogo.rivalAtual = null; Jogo.revancheAtual = null; Jogo.estradaAtual = null;
     Jogo.conferenciaAtual = atual.conferencia ? Jogo.conferenciaAtual : null;
-    Jogo.redeAtual = null;
+    Jogo.redeAtual = null; Jogo.patrulhaAtual = null;
     Jogo.veteranoAtual = atual;
     Jogo.batalhaLivre = true;
     UI.limparDados();
@@ -60555,7 +60561,7 @@ const Rede = {
     time.forEach(x => { x.nomeAnunciado = true; });
     Jogo.cenaBatalha = null; Jogo.ginasioAtual = null; Jogo.eliteAtual = null;
     Jogo.torneioAtual = null; Jogo.rivalAtual = null; Jogo.revancheAtual = null; Jogo.estradaAtual = null;
-    Jogo.conferenciaAtual = null; Jogo.veteranoAtual = null;
+    Jogo.conferenciaAtual = null; Jogo.veteranoAtual = null; Jogo.patrulhaAtual = null;
     Jogo.redeAtual = {tipo:a.tipo, id:a.id, i:a.i, ramo:a.ramo || null, avisos:a.avisos || [], vilao:a.tipo === 'prova' || !!L.vilao};
     Jogo.batalhaLivre = true;
     UI.limparDados();
@@ -68089,9 +68095,34 @@ const Creche = {
    tem o peso de sempre (captura.js).
 
    Lugar é só rota e área especial: cidade não tem mato.
+
+   Quem te CAÇA é outra coisa (caçandoVoce: você prendeu um do grupo
+   dele, captura.js): não espera a história, não fica nos lugares dele
+   e vem no nível do seu time. Todo encontro selvagem, em qualquer rota
+   ou área especial, tem CHANCE_CACANDO % de ser ele — CHANCE_CACANDO_
+   ULTIMO pro último solto de um grupo que já perdeu dois, que "vai
+   abrir caminho até você". Soltar o que você prendeu (ou a Patrulha
+   apreender) acalma o grupo.
+
+   E o clima que o lendário preso quebrou entra na briga: com Kanto
+   instável, CHANCE_CLIMA_NA_LUTA % das lutas com selvagem começam com
+   chuva, sol forte ou tempestade de areia (sol só de dia; caverna e
+   vulcão não têm céu), pelas regras de clima de sempre.
    Está na folha de regras; mudou número, muda lá.
    ============================================================ */
 const CHANCE_ERRANTE = 1;
+const CHANCE_CACANDO = 5;
+const CHANCE_CACANDO_ULTIMO = 10;
+const CHANCE_CLIMA_NA_LUTA = {instavel:20, caotico:40, 'permanentemente instável':40};
+const SEM_CEU_NA_LUTA = ['caverna', 'vulcao'];
+const LINHA_DO_CLIMA = {
+  chuva:'O céu fecha de uma vez, sem nuvem chegando de lado nenhum, e a chuva desaba.',
+  sol:'O sol aperta fora de hora, quente demais pra estação.',
+  areia:'Um vento seco levanta a terra do chão e não assenta mais.'
+};
+/* o nome do clima de Kanto na tela (o campo guarda sem acento) */
+const NOME_DO_CLIMA = {normal:'normal', instavel:'instável', caotico:'caótico',
+  'permanentemente instável':'permanentemente instável'};
 
 const LENDARIOS_ERRANTES = {
   144:{lugares:['seafoam', 'rota19', 'rota21'], nivel:56,
@@ -68115,11 +68146,25 @@ const LENDARIOS_ERRANTES = {
 };
 
 const Errantes = {
+  solto(L){ return !['capturado', 'morto', 'vendido'].includes(L.estado) && L.disposicao !== 'prisioneiro'; },
   /* a história já te pôs na frente dele, e ele está solto */
   ronda(dex){
     const L = Estado.dados.lendarios && Estado.dados.lendarios[dex];
     if (!L || !(L.visto || L.encontros > 0)) return false;
-    return !['capturado', 'morto', 'vendido'].includes(L.estado) && L.disposicao !== 'prisioneiro';
+    return this.solto(L);
+  },
+  /* quem te caça agora: solto, e com um do grupo dele na sua Pokébola */
+  cacando(){
+    const lend = Estado.dados.lendarios || {};
+    return Object.keys(LENDARIOS_ERRANTES).map(Number).filter(dex => lend[dex] && lend[dex].caçandoVoce && this.solto(lend[dex]));
+  },
+  /* o último solto de um grupo que já perdeu dois */
+  ultimoDoGrupo(dex){
+    const g = [GRUPO_AVES, GRUPO_CAES].find(x => x.includes(dex));
+    /* sem Estado.lend: ele cria a ficha de quem você nunca viu, e a Ficha
+       mostraria o lendário que a história ainda não te mostrou */
+    const lend = Estado.dados.lendarios || {};
+    return !!g && g.filter(x => lend[x] && lend[x].estado === 'capturado').length >= 2;
   },
 
   /* quem ronda este lugar agora */
@@ -68128,8 +68173,16 @@ const Errantes = {
       .filter(dex => LENDARIOS_ERRANTES[dex].lugares.includes(localId) && this.ronda(dex));
   },
 
-  /* a rolagem do encontro: devolve o Pokémon e a entrada, ou null */
+  /* a rolagem do encontro: devolve o Pokémon e a entrada, ou null.
+     Primeiro quem te caça (em qualquer lugar), depois quem ronda ali */
   talvez(localId){
+    const local = LOCAIS[localId];
+    const cacam = local && local.tipo !== 'cidade' ? this.cacando() : [];
+    if (cacam.length){
+      /* uma rolagem só: sorteia quem, e rola a chance dele */
+      const dex = Dados.escolher(cacam);
+      if (Dados.chance(this.ultimoDoGrupo(dex) ? CHANCE_CACANDO_ULTIMO : CHANCE_CACANDO)) return this.cacador(dex, localId);
+    }
     const lista = this.aqui(localId);
     if (!lista.length || !Dados.chance(CHANCE_ERRANTE)) return null;
     const dex = Dados.escolher(lista);
@@ -68142,6 +68195,37 @@ const Errantes = {
       : 'Ele não estava te esperando. Você também não.';
     Estado.registrar(`Cruzou com ${DEX[dex].nome} ${emLocal(localId)}, longe de qualquer história.`);
     return {p, intro:[E.sinal, jeito]};
+  },
+
+  /* quem te caça vem no nível do seu time (três acima, seis o último
+     do grupo), nunca abaixo do lugar nem acima do nível dele */
+  nivelDoCacador(dex, localId){
+    const E = LENDARIOS_ERRANTES[dex], ultimo = this.ultimoDoGrupo(dex);
+    const teto = E.nivel + (ultimo ? 4 : 0);
+    const lugar = (LOCAIS[localId] || {}).nivel || 5;
+    return Math.max(5, Math.min(teto, Math.max(lugar, nivelDeReferencia() + (ultimo ? 6 : 3))));
+  },
+  cacador(dex, localId){
+    const E = LENDARIOS_ERRANTES[dex], L = Estado.lend(dex);
+    L.errante = (L.errante || 0) + 1;
+    L.visto = true;
+    const p = criarPokemon(dex, this.nivelDoCacador(dex, localId), {selvagem:true});
+    const intro = [E.sinal, 'Não é acaso. Ele veio atrás de você.'];
+    if (this.ultimoDoGrupo(dex)) intro.push('Ele não para na beira do mato. Vem reto, pelo meio do que estiver na frente.');
+    Estado.registrar(`O ${DEX[dex].nome} veio atrás de você ${emLocal(localId)}.`);
+    return {p, intro};
+  },
+
+  /* o clima quebrado entra na luta com selvagem: null, ou o tipo e a
+     linha da entrada */
+  climaDaLuta(localId){
+    const d = Estado.dados, ch = CHANCE_CLIMA_NA_LUTA[d && d.mundo && d.mundo.clima];
+    const L = LOCAIS[localId];
+    if (!ch || !L || SEM_CEU_NA_LUTA.includes(L.ambiente) || !Dados.chance(ch)) return null;
+    const h = d.relogio ? d.relogio.hora : 12;
+    const tipos = h >= 6 && h < 18 ? ['chuva', 'sol', 'areia'] : ['chuva', 'areia'];
+    const tipo = Dados.escolher(tipos);
+    return {tipo, linha:LINHA_DO_CLIMA[tipo]};
   }
 };
 
@@ -144024,7 +144108,9 @@ function rodapeDaJornada(){
    fecha as portas que ele fechou — sempre na tela, fechadas, com o
    motivo, nunca escondidas:
    - procurado: a Patrulha tem ordem de detenção no seu nome
-     (d.liga.detencao) e vigia a sua rua, e a casa fecha;
+     (d.liga.detencao) e vigia a sua rua, e a casa fecha enquanto a
+     ordem durar — na estrada ela te para (patrulha.js), e a custódia
+     de quem se entrega fecha a ordem e abre a casa;
    - jurado: quem você enganou sabe onde fica a sua casa;
    - em casa: você parou de competir (ginásio, ala da Elite, arena e
      Conferência fecham) e recomeça em casa;
@@ -144039,7 +144125,13 @@ function rodapeDaJornada(){
    com ordem de detenção (o lendário preso na frente de testemunha, o
    mandado do Foragido) sai do fim procurado, seja qual for o final —
    menos nos finais que resolvem isso (`limpa`).
+   Lendário preso continua pesando sem virada de capítulo: o que
+   Estado.tickLendarios fazia a cada capítulo passa a valer a cada
+   DIAS_DO_TICK_DEPOIS dias (conferir).
    ============================================================ */
+const DIAS_DO_TICK_DEPOIS = 15;
+const CASA_VIGIADA = 'A Patrulha vigia a sua rua. Bater nessa porta é entregar quem ficou em casa.';
+const CASA_JURADA = 'Quem você enganou sabe onde fica a sua casa. Voltar lá é levar eles junto.';
 
 const DEPOIS_DO_FIM = {
   /* capítulo 19 */
@@ -144088,7 +144180,7 @@ const DEPOIS_DO_FIM = {
 
 const NOME_DA_SITUACAO = {
   livre:'Na estrada', procurado:'{Procurado|Procurada} pela Patrulha', jurado:'{Jurado|Jurada}',
-  em_casa:'Em casa', suspenso:'Licença suspensa'
+  em_casa:'Em casa', suspenso:'Licença suspensa', cumpriu:'Cumpriu a custódia'
 };
 
 const Depois = {
@@ -144108,8 +144200,8 @@ const Depois = {
     if (ordem) s = 'procurado';
     const r = {s, herdou, cargo:b.cargo || null, ginasio:b.ginasio || null, semTroca:b.semTroca || null,
       fecha:Object.assign({}, b.fecha || {}), semCasa:null, semLiga:null, dias:0, comeca:b.comeca || null, linha:b.linha || null};
-    if (s === 'procurado') r.semCasa = 'A Patrulha vigia a sua rua. Bater nessa porta é entregar quem ficou em casa.';
-    if (s === 'jurado' || b.s === 'jurado') r.semCasa = 'Quem você enganou sabe onde fica a sua casa. Voltar lá é levar eles junto.';
+    if (s === 'procurado') r.semCasa = CASA_VIGIADA;
+    if (s === 'jurado' || b.s === 'jurado'){ r.semCasa = CASA_JURADA; r.jurado = true; }
     if (b.semLiga) r.semLiga = b.semLiga;
     if (b.s === 'suspenso') r.dias = b.dias || 365;
     /* quem não pode voltar pra casa não recomeça nela */
@@ -144147,7 +144239,7 @@ const Depois = {
     const r = this.situacao(final.id, d);
     d.depoisDoFim = {final:final.id, titulo:concordaJogador(String(txt(final.titulo) || '')), s:r.s,
       cargo:r.cargo ? concordaJogador(r.cargo) : null, ginasio:r.ginasio, semTroca:r.semTroca, fecha:r.fecha,
-      semCasa:r.semCasa, semLiga:r.semLiga, desde:d.relogio.dia};
+      semCasa:r.semCasa, jurado:!!r.jurado, semLiga:r.semLiga, desde:d.relogio.dia, tickDia:d.relogio.dia};
     if (b.limpa){ d.liga.detencao = false; d.liga.ordemDevolucao = false; }
     if (r.s === 'procurado') d.liga.detencao = true;
     if (r.dias){
@@ -144163,19 +144255,51 @@ const Depois = {
     return av;
   },
 
-  /* a cada tela do mapa: a licença suspensa volta no dia dela */
+  /* a cada tela do mapa: a licença suspensa volta no dia dela, e o
+     lendário preso pesa a cada DIAS_DO_TICK_DEPOIS dias */
   conferir(){
-    const d = Estado.dados, x = d && d.depoisDoFim;
-    if (!x || !x.licencaVolta || d.relogio.dia < x.licencaVolta) return [];
-    delete x.licencaVolta;
-    /* o final diz que ela volta pelo correio: volta, tivesse ou não antes */
-    d.flags.tem_licenca = true;
-    Estado.registrar('A licença de treinador voltou, pelo correio.');
-    return [{tipo:'item', texto:'A licença volta num dia de chuva, pelo correio, dentro de um envelope que ninguém abriu.'}];
+    const d = Estado.dados, x = d && d.depoisDoFim, av = [];
+    if (!x) return av;
+    if (x.licencaVolta && d.relogio.dia >= x.licencaVolta){
+      delete x.licencaVolta;
+      /* o final diz que ela volta pelo correio: volta, tivesse ou não antes */
+      d.flags.tem_licenca = true;
+      Estado.registrar('A licença de treinador voltou, pelo correio.');
+      av.push({tipo:'item', texto:'A licença volta num dia de chuva, pelo correio, dentro de um envelope que ninguém abriu.'});
+    }
+    if (x.tickDia == null) x.tickDia = x.desde || d.relogio.dia;
+    while (d.relogio.dia - x.tickDia >= DIAS_DO_TICK_DEPOIS){
+      x.tickDia += DIAS_DO_TICK_DEPOIS;
+      Estado.tickLendarios().forEach(t => av.push({tipo:'mundo', texto:t}));
+    }
+    return av;
+  },
+
+  /* a custódia de quem saiu do fim procurado: a ordem fechou */
+  cumpriu(){
+    const d = Estado.dados, x = this.dados();
+    if (!x || x.s !== 'procurado') return;
+    x.s = 'cumpriu';
+    x.cumpriuDia = d.relogio.dia;
+  },
+  /* a situação de hoje: a ordem nova depois do fim também é procurado */
+  situacaoAgora(){
+    const d = Estado.dados, x = this.dados();
+    if (!x) return null;
+    if (d.liga.detencao && x.s !== 'jurado') return 'procurado';
+    return x.s === 'procurado' ? 'cumpriu' : x.s;
   },
 
   /* ── as portas que o final fechou (o motivo, ou null) ── */
-  casaFechada(){ const x = this.dados(); return x && x.semCasa || null; },
+  /* a casa fecha pra quem enganou quem não esquece (o jurado, pra
+     sempre) e enquanto a Patrulha tiver ordem de detenção no seu nome
+     — na história ou depois dela; a custódia fecha a ordem e abre a casa */
+  casaFechada(){
+    const d = Estado.dados, x = this.dados();
+    if (x && x.jurado) return CASA_JURADA;
+    if (d && d.liga && d.liga.detencao) return CASA_VIGIADA;
+    return null;
+  },
   licencaSuspensa(){
     const d = Estado.dados, x = this.dados();
     return x && x.licencaVolta && d.relogio.dia < x.licencaVolta
@@ -144195,15 +144319,273 @@ const Depois = {
   ficha(){
     const d = Estado.dados, x = this.dados();
     if (!x) return [];
-    const L = [['O final', x.titulo], ['Situação', NOME_DA_SITUACAO[x.s] || NOME_DA_SITUACAO.livre],
+    const s = this.situacaoAgora();
+    const L = [['O final', x.titulo], ['Situação', NOME_DA_SITUACAO[s] || NOME_DA_SITUACAO.livre],
       ['Desde', `o dia ${x.desde} da jornada`]];
+    if (s === 'cumpriu' && x.cumpriuDia) L.push(['Custódia', `cumprida no dia ${x.cumpriuDia}`]);
     if (x.cargo) L.push(['O que você virou', x.cargo]);
-    if (x.semCasa) L.push(['Sua casa', 'fechada']);
+    if (this.casaFechada()) L.push(['Sua casa', 'fechada']);
     if (x.semLiga) L.push(['Liga', 'não compete mais']);
     if (this.licencaSuspensa()) L.push(['Licença', `suspensa até o dia ${x.licencaVolta}`]);
     for (const id of Object.keys(x.fecha || {})) L.push([(LOCAIS[id] || {}).nome || id, 'fechado pra você']);
     if (x.semTroca) L.push(['Trocas', 'parou de trocar']);
     return L;
+  }
+};
+
+
+/* ===== js/story/patrulha.js ===== */
+/* ============================================================
+   A PATRULHA NA ESTRADA — o que está na sua ficha vem te buscar
+   Os avisos da Patrulha de Kanto (d.liga: o campo ainda se chama
+   assim, de quando era a Liga) eram só uma linha da Ficha. Agora,
+   andando por rota (Exploracao.viajar), o oficial te para, na chance
+   do que a ficha diz (CHANCE_PATRULHA), uma vez por dia no máximo, e
+   nunca onde não tem ninguém (SEM_PATRULHA):
+   - conversa: lendário preso que alguém viu entrar na Pokébola.
+     Devolver fecha a ocorrência; recusar vira ordem de devolução;
+   - ordem de devolução: devolver fecha a ordem; recusar vira ordem
+     de detenção;
+   - detenção: a ordem de prender (Captura.ligaReage, ou quem saiu do
+     fim procurado, depois.js). Se entregar é a custódia: dias numa
+     sala (DIAS_DE_CUSTODIA; DIAS_DE_CUSTODIA_DO_FIM pra quem saiu do
+     fim com a ordem), a multa e o lendário preso apreendido; devolver
+     antes de se entregar encurta a custódia e corta a multa pela
+     metade. Lutar com o oficial: vencendo, você passa, com a ordem
+     ainda aberta e a fama pior; perdendo, é a custódia com a multa em
+     dobro.
+   A custódia fecha a ordem, e com ela a casa volta a abrir.
+   Só pesa o lendário que alguém viu: o segredo a Patrulha não sabe,
+   até alguém falar (Estado.tickLendarios).
+   Está na folha de regras; mudou número, muda lá.
+   ============================================================ */
+const CHANCE_PATRULHA = {conversa:8, devolucao:12, detencao:18};   // % por trecho de rota andado
+const MULTA_PATRULHA = 2000;          // metade pra quem devolve, o dobro pra quem perde a briga
+const DIAS_DE_CUSTODIA = 3;           // um terço pra quem devolve (ou já tinha soltado) antes
+const DIAS_DE_CUSTODIA_DO_FIM = 30;   // a ordem que veio do fim: a ficha é mais grossa
+const LINHAS_DA_PATRULHA = [58, 66, 75];   // Growlithe, Machop e Geodude, pela linha, no nível do seu time
+const SEM_PATRULHA = ['norte', 'ilha_sem_nome'];
+const OFICIAL_DA_ESTRADA = 'o oficial da viatura';
+
+const Patrulha = {
+  /* os lendários presos que a Patrulha sabe que estão com você */
+  conhecidos(){
+    const d = Estado.dados;
+    return Estado.lendariosCapturados().filter(L => Estado.tem('captura_vista_' + L.dex))
+      .map(L => [...d.time, ...d.pc].find(p => p.dex === L.dex && !p.morto)).filter(Boolean);
+  },
+  /* "Zapdos e Moltres"; com artigo, "o Zapdos e o Moltres" */
+  nomes(ps, artigo){
+    const n = ps.map(p => (artigo ? 'o ' : '') + DEX[p.dex].nome);
+    return n.length > 1 ? n.slice(0, -1).join(', ') + ' e ' + n[n.length - 1] : (n[0] || '');
+  },
+  /* o que a ficha pede hoje: null quando não tem nada pra cobrar */
+  tipo(){
+    const l = Estado.dados.liga;
+    if (l.detencao) return 'detencao';
+    if (!this.conhecidos().length) return null;
+    return l.ordemDevolucao ? 'devolucao' : 'conversa';
+  },
+  /* a ordem veio do fim (depois.js): a custódia é a do fim */
+  doFim(){ return typeof Depois !== 'undefined' && Depois.ativo() && Depois.dados().s === 'procurado'; },
+
+  /* no meio de um trecho de rota: devolve true se a tela virou a parada */
+  talvez(localId){
+    const d = Estado.dados;
+    if (!d || d.modo === 'cena' || SEM_PATRULHA.includes(localId)) return false;
+    const t = this.tipo();
+    if (!t || d.liga.paradaDia === d.relogio.dia || !Dados.chance(CHANCE_PATRULHA[t])) return false;
+    d.liga.paradaDia = d.relogio.dia;
+    this.onde = localId;
+    Estado.registrar(t === 'detencao' ? 'A Patrulha te parou na estrada, com a ordem de detenção.' : 'A Patrulha te parou na estrada.');
+    Estado.salvar('auto');
+    this.tela(t);
+    return true;
+  },
+
+  conversa(o){
+    const L = LOCAIS[this.onde] || Mundo.atual();
+    UI.telaConversa(Object.assign({num:'A Patrulha', titulo:'Na estrada', loc:L.nome, quem:OFICIAL_DA_ESTRADA}, o));
+  },
+
+  tela(t){
+    const ps = this.conhecidos(), nomes = this.nomes(ps), oNome = this.nomes(ps, true), Q = OFICIAL_DA_ESTRADA, varios = ps.length > 1;
+    const falas = {
+      conversa:[
+        'No meio do trecho, uma viatura cinza parada no acostamento e um oficial sozinho, de braços cruzados, esperando você chegar.',
+        fala(Q, `Tem uma ocorrência no seu nome. ${cap1(oNome)} ${varios ? 'foram vistos entrando' : 'foi visto entrando'} numa Pokébola sua.`),
+        fala(Q, 'Hoje é conversa. Devolvendo agora, a ocorrência fecha aqui, e ninguém sobe com papel nenhum.')
+      ],
+      devolucao:[
+        'A viatura cinza está parada no meio da estrada, e o oficial tem uma prancheta. Na prancheta está o seu nome.',
+        fala(Q, `Ordem de devolução: ${nomes}. Por escrito, assinada.`),
+        fala(Q, 'Devolvendo agora, a ordem fecha. Não devolvendo, a próxima folha é de detenção.')
+      ],
+      detencao:[
+        'Uma viatura atravessada na estrada, dois oficiais de cinza e nenhuma pressa.',
+        fala(Q, 'Tem ordem de detenção no seu nome. Dá pra vir andando.', null, 'Ele não põe a mão no cinto. Não precisa.'),
+        ps.length ? fala(Q, `E ${oNome} ${varios ? 'vão junto, apreendidos' : 'vai junto, apreendido'}.`) : ''
+      ]
+    }[t].filter(Boolean);
+    const botoes = t === 'detencao' ? [
+      ...(ps.length ? [{texto:`Devolver ${oNome} e se entregar`, acao:"Patrulha.custodia('devolveu')"}] : []),
+      {texto:'Se entregar', acao:"Patrulha.custodia('entregou')"},
+      {texto:'Lutar pra passar', acao:'Patrulha.lutar()'}
+    ] : [
+      {texto:`Devolver ${oNome}`, acao:`Patrulha.devolver('${t}')`},
+      {texto:'Não devolver', acao:'Patrulha.recusar()'}
+    ];
+    this.conversa({falas, botoes});
+  },
+
+  devolver(t){
+    const d = Estado.dados, ps = this.conhecidos(), av = [];
+    ps.forEach(p => Captura.soltar(p).forEach(e => av.push({tipo:e.tipo, texto:e.texto})));
+    d.liga.ordemDevolucao = false;
+    Estado.registrar(`Devolveu ${this.nomes(ps, true)} na frente da Patrulha.`);
+    Estado.salvar('auto');
+    this.conversa({falas:[
+      ps.length > 1 ? 'Você abre as Pokébolas ali mesmo, na frente da viatura.' : 'Você abre a Pokébola ali mesmo, na frente da viatura.',
+      fala(OFICIAL_DA_ESTRADA, 'Fechado.', null, 'Ele risca uma linha na prancheta.'),
+      fala(OFICIAL_DA_ESTRADA, t === 'devolucao' ? 'A ocorrência fica no sistema. A ordem, não.' : 'Fica a ocorrência no sistema, e só.')
+    ], avisos:av, botoes:[{texto:'Seguir', acao:'Exploracao.tela()'}]});
+  },
+
+  recusar(){
+    const l = Estado.dados.liga, av = [];
+    this.subir(av);
+    Estado.registrar(l.detencao ? 'Não devolveu, e a Patrulha emitiu ordem de detenção.' : 'Não devolveu, e a Patrulha emitiu ordem de devolução.');
+    Estado.salvar('auto');
+    this.conversa({falas:[
+      fala(OFICIAL_DA_ESTRADA, 'Anotado.', null, 'Ele não discute. Ele escreve.'),
+      'A viatura sai devagar, e você fica na estrada com a Pokébola no cinto.'
+    ], avisos:av, botoes:[{texto:'Seguir', acao:'Exploracao.tela()'}]});
+  },
+
+  /* recusar sobe um degrau: da conversa pra ordem de devolução, da
+     ordem pra detenção (as mesmas marcas do Captura.ligaReage) */
+  subir(av){
+    const l = Estado.dados.liga;
+    l.avisos++;
+    if (!l.ordemDevolucao){
+      l.ordemDevolucao = true;
+      Estado.marcar('liga_aviso_2');
+      av.push({tipo:'lei', texto:'Ordem formal de devolução, por escrito, com o seu nome.'});
+      return;
+    }
+    l.detencao = true;
+    Estado.marcar('liga_detencao');
+    av.push({tipo:'lei', texto:'Ordem de detenção emitida. Qualquer oficial da Patrulha pode te deter.'});
+    Estado.mudarRep('ruim', 1, 'Ordem de detenção da Patrulha', {rep:{notorio:true, peso:4}});
+  },
+
+  /* o lendário que a Patrulha leva: solto longe, e sem fama pra você */
+  apreender(p, av){
+    const d = Estado.dados;
+    Estado.removerDoTime(p.uid);
+    const i = d.pc.findIndex(x => x.uid === p.uid);
+    if (i >= 0) d.pc.splice(i, 1);
+    const L = Estado.lend(p.dex);
+    L.estado = 'solto';
+    L.disposicao = 'desconfiado';
+    d.mundo.instabilidade = Math.max(0, d.mundo.instabilidade - 1);
+    /* os do grupo param de caçar, como quando você solta (Captura.soltar) */
+    [...GRUPO_CAES, ...GRUPO_AVES].forEach(dx => {
+      const o = d.lendarios[dx];
+      if (o && o.caçandoVoce && Estado.lend(dx).estado !== 'capturado'){ o.caçandoVoce = false; o.disposicao = 'desconfiado'; }
+    });
+    av.push({tipo:'mundo', texto:`O ${DEX[p.dex].nome} sai numa caixa com o distintivo da Patrulha. Soltam longe, num lugar que ninguém te conta.`});
+    Estado.registrar(`O ${DEX[p.dex].nome} foi apreendido pela Patrulha.`);
+  },
+
+  /* quantos dias e quanto de multa, pelo jeito que você chegou na sala */
+  conta(como){
+    const doFim = this.doFim();
+    const base = doFim ? DIAS_DE_CUSTODIA_DO_FIM : DIAS_DE_CUSTODIA;
+    const multa = doFim ? MULTA_PATRULHA * 2 : MULTA_PATRULHA;
+    return {
+      dias: como === 'devolveu' ? Math.max(1, Math.round(base / 3)) : base,
+      multa: como === 'devolveu' ? multa / 2 : como === 'perdeu' ? multa * 2 : multa
+    };
+  },
+
+  /* como: 'devolveu' (devolveu e se entregou), 'entregou' ou 'perdeu' (a briga) */
+  custodia(como){
+    const d = Estado.dados, ps = this.conhecidos(), av = [];
+    /* já soltou o que a Patrulha queria: vale o mesmo que devolver */
+    if (como === 'entregou' && !ps.length && !this.doFim()) como = 'devolveu';
+    const c = this.conta(como);
+    const multa = Math.min(d.jogador.dinheiro, c.multa);
+    if (como === 'devolveu') ps.forEach(p => Captura.soltar(p).forEach(e => av.push({tipo:e.tipo, texto:e.texto})));
+    else ps.forEach(p => this.apreender(p, av));
+    d.jogador.dinheiro -= multa;
+    if (multa) av.push({tipo:'dano', texto:`−${fmtDin(multa)} ₽ de multa da Patrulha`});
+    /* os dias na sala contam como vividos: o time come */
+    Relogio.viver(c.dias * 24);
+    d.time.forEach(curarTotal);
+    Estado.curarJogador(30);
+    d.liga.detencao = false;
+    d.liga.ordemDevolucao = false;
+    d.liga.custodias = (d.liga.custodias || 0) + 1;
+    const vez = d.liga.custodias > 1 ? ` (${d.liga.custodias}ª vez)` : '';
+    const quanto = c.dias === 1 ? 'um dia' : `${porExtenso(c.dias)} dias`;
+    const r = Estado.mudarRep('ruim', 1, `Passou ${quanto} na custódia da Patrulha${vez}`);
+    if (r && r.mudou) av.push({tipo:'rep', texto:`Reputação: ${r.de} → ${r.para}`});
+    if (this.doFim()) Depois.cumpriu();
+    av.push({tipo:'lei', texto:'A ordem de detenção está fechada.'});
+    Estado.registrar(`Saiu da custódia da Patrulha depois de ${quanto}. A ordem está fechada.`);
+    Estado.salvar('auto');
+    this.conversa({titulo:'A custódia', loc:'Uma sala da Patrulha', falas:[
+      `${cap1(quanto)} numa sala com uma janela alta e um banco de concreto.`,
+      'O time fica numa sala do lado, e alguém de cinza cuida dele com mais cuidado do que você esperava.',
+      'No fim, alguém assina um papel, devolve o seu cinto e diz que a ordem está fechada.',
+      fala(OFICIAL_DA_ESTRADA, 'A ficha continua. A ordem, não. Não volta pra ela.')
+    ], avisos:av, botoes:[{texto:'Sair', acao:'Exploracao.tela()'}]});
+  },
+
+  lutar(){
+    const meu = Estado.primeiroApto();
+    /* ninguém em pé no cinto: a viatura leva */
+    if (!meu) return this.custodia('perdeu');
+    const nv = Math.min(85, nivelDeReferencia() + 2);
+    const time = timeDeLinhas(LINHAS_DA_PATRULHA, nv, LINHAS_DA_PATRULHA.length, [], 80);
+    time.forEach(x => { x.nomeAnunciado = true; });
+    Jogo.cenaBatalha = null; Jogo.ginasioAtual = null; Jogo.eliteAtual = null; Jogo.torneioAtual = null;
+    Jogo.rivalAtual = null; Jogo.revancheAtual = null; Jogo.estradaAtual = null; Jogo.conferenciaAtual = null;
+    Jogo.veteranoAtual = null; Jogo.redeAtual = null;
+    Jogo.patrulhaAtual = {local:Mundo.id()};
+    Jogo.batalhaLivre = true;
+    UI.limparDados();
+    Batalha.iniciar(meu, time[0], {
+      tipo:'treinador', fuga:false, treinador:'Oficial da Patrulha',
+      erroIA:ERRO_IA_VETERANO, vontadeIA:true,
+      timeInimigo:time.slice(1),
+      introducao:`Oficial da Patrulha enviou ${nomeVisivel(time[0])} (Nv ${time[0].nivel})!`
+    });
+    UI.telaBatalha(['O oficial solta a primeira Pokébola sem tirar o olho de você.']);
+  },
+
+  resultado(fim){
+    Jogo.patrulhaAtual = null;
+    Jogo.batalhaLivre = false;
+    if (fim.resultado === 'gameover') return UI.telaGameOver('Você caiu na estrada, brigando com a Patrulha.');
+    /* desistir no meio é levantar a mão: a custódia de quem se entrega */
+    if (fim.desistiu) return Jogo.resolverPendencias(() => this.custodia('entregou'));
+    if (fim.resultado !== 'vitoria') return Jogo.resolverPendencias(() => this.custodia('perdeu'));
+    const d = Estado.dados, av = [];
+    d.liga.avisos++;
+    d.liga.brigas = (d.liga.brigas || 0) + 1;
+    const vez = d.liga.brigas > 1 ? ` (${d.liga.brigas}ª vez)` : '';
+    const r = Estado.mudarRep('ruim', 1, `Brigou com a Patrulha pra passar${vez}`, {rep:{notorio:true}});
+    if (r && r.mudou) av.push({tipo:'rep', texto:`Reputação: ${r.de} → ${r.para}`});
+    av.push({tipo:'lei', texto:'A ordem de detenção continua no seu nome.'});
+    Estado.registrar('Brigou com a Patrulha e passou. A ordem de detenção continua.');
+    Estado.salvar('auto');
+    Jogo.resolverPendencias(() => this.conversa({falas:[
+      'O último Pokémon do oficial cai, e ele recolhe sem pressa.',
+      fala(OFICIAL_DA_ESTRADA, 'Vai. A ordem continua no seu nome, agora com mais uma linha.'),
+      'Você passa pela viatura atravessada. Ninguém te segue, hoje.'
+    ], avisos:av, botoes:[{texto:'Seguir', acao:'Exploracao.tela()'}]}));
   }
 };
 
@@ -150882,7 +151264,7 @@ const UI = {
         return depois + bloco('O que dá pra fazer no mundo', campo)
           + (lendarios ? bloco('Lendários', lendarios) : '')
           + bloco('Kanto', dl([
-            ['Clima', M(d.mundo.clima)],
+            ['Clima', M(typeof NOME_DO_CLIMA !== 'undefined' && NOME_DO_CLIMA[d.mundo.clima] || d.mundo.clima)],
             ['Instabilidade', `<span class="mono">${d.mundo.instabilidade}</span>`],
             ['Avisos da Patrulha', `<span class="mono">${e(liga)}</span>`]
           ]));
@@ -151940,9 +152322,14 @@ const UI = {
       ${Estado.dados && Object.values(Estado.dados.lendarios||{}).some(l=>l.quebrouBola) ? '<p class="sussurro">E existem coisas que simplesmente quebram a Pokébola no ar.</p>' : ''}
       <h3>Lendário no cinto</h3>
       <div class="linha"><span class="k">Alguém viu</span><span class="v">${this.esc('seis vezes em dez, e sempre pra quem já é {Famoso|Famosa} ou {Temido|Temida} · quem era {Respeitado|Respeitada} ou mais vira notícia boa,')} o resto vira notícia ruim, e as duas andam muito · a Patrulha conversa na primeira vez, manda devolver na segunda e emite ordem de detenção na terceira</span></div>
-      <div class="linha"><span class="k">Ninguém viu</span><span class="v">a reputação espera · dois capítulos depois alguém fala, e aí conta</span></div>
+      <div class="linha"><span class="k">Ninguém viu</span><span class="v">a reputação espera · dois capítulos depois alguém fala, e aí conta, e a Patrulha fica sabendo</span></div>
+      <div class="linha"><span class="k">A Patrulha na estrada</span><span class="v">com lendário preso que alguém viu, ou com ordem de detenção, o oficial pode te parar num trecho de rota, uma vez por dia no máximo: ${CHANCE_PATRULHA.conversa} em 100 trechos na conversa, ${CHANCE_PATRULHA.devolucao} com a ordem de devolução, ${CHANCE_PATRULHA.detencao} com a de detenção · devolver fecha a ocorrência ou a ordem · não devolver sobe um degrau</span></div>
+      <div class="linha"><span class="k">Detenção</span><span class="v">se entregar: ${porExtenso(DIAS_DE_CUSTODIA)} dias de custódia, ${fmtDin(MULTA_PATRULHA)} ₽ de multa (ou o que você tiver) e o lendário apreendido, solto longe · devolvendo antes, ou já tendo soltado: um dia e metade da multa · lutar com o oficial (três Pokémon no nível do seu time): vencendo, você passa, com a ordem aberta e a fama pior · perdendo ou desistindo, é a custódia (perdendo, com a multa em dobro) · a custódia cura você e o time e fecha a ordem</span></div>
+      <div class="linha"><span class="k">Sua casa</span><span class="v">com ordem de detenção no seu nome, a Patrulha vigia a sua rua e a casa fecha até a ordem fechar</span></div>
       <div class="linha"><span class="k">Enquanto estiver preso</span><span class="v">a cada dois capítulos a reputação piora e Kanto fica mais instável · com a moral abaixo de 30 ele pode romper a Pokébola numa virada de capítulo e sumir, hostil</span></div>
       <div class="linha"><span class="k">O grupo dele</span><span class="v">preso um do trio lendário ou das três aves, os outros do grupo passam a caçar você · o grupo inteiro preso quebra o clima de Kanto</span></div>
+      <div class="linha"><span class="k">Quem te caça</span><span class="v">aparece em qualquer rota ou área especial, sem esperar a história: ${CHANCE_CACANDO} em 100 encontros selvagens, ${CHANCE_CACANDO_ULTIMO} em 100 o último solto de um grupo que já perdeu dois · vem três níveis acima do seu time (seis, o último), nunca abaixo do lugar nem acima do nível dele</span></div>
+      <div class="linha"><span class="k">Clima de Kanto</span><span class="v">uma das aves presa deixa o clima instável: ${CHANCE_CLIMA_NA_LUTA.instavel} em 100 lutas com selvagem começam com chuva, sol forte ou tempestade de areia, pelas regras de clima de sempre · as três aves, ou o trio lendário inteiro: ${CHANCE_CLIMA_NA_LUTA.caotico} em 100 · sol só de dia · caverna e vulcão não têm céu</span></div>
       <div class="linha"><span class="k">Soltar</span><span class="v">ele vai embora sem atacar · Kanto acalma um pouco · os do grupo param de caçar</span></div>
       <div class="linha"><span class="k">Kanto instável</span><span class="v">o número da aba Mundo, na Ficha · sobe com lendário preso e com o que se descobre no norte, e muda o que o norte faz com você</span></div>` : ''}
       <h3>Perícias</h3>
@@ -152092,7 +152479,9 @@ const UI = {
       <h3>Depois do fim</h3>
       <div class="linha"><span class="k">Continuar</span><span class="v">todo final tem "Continuar pela estrada": a história fecha (não tem mais capítulo nem chamado no mapa) e você volta pro mapa com o time, a mochila e o dinheiro · o final fica no códice do mesmo jeito</span></div>
       <div class="linha"><span class="k">O que o final deixa</span><span class="v">a tela do fim diz a sua situação, onde você recomeça e o que fechou pra você · as portas fechadas ficam na tela, com o motivo</span></div>
-      <div class="linha"><span class="k">Procurado</span><span class="v">a Patrulha tem ordem de detenção no seu nome e vigia a sua rua: a sua casa fecha · quem chega ao fim com ordem de detenção (lendário preso na frente de testemunha, mandado aberto) sai do fim procurado, seja qual for o final, menos nos que resolvem isso</span></div>
+      <div class="linha"><span class="k">Procurado</span><span class="v">a Patrulha tem ordem de detenção no seu nome e vigia a sua rua: a sua casa fecha até a ordem fechar · quem chega ao fim com ordem de detenção (lendário preso na frente de testemunha, mandado aberto) sai do fim procurado, seja qual for o final, menos nos que resolvem isso</span></div>
+      <div class="linha"><span class="k">A custódia do fim</span><span class="v">na estrada a Patrulha te para como em qualquer detenção · quem saiu do fim procurado e se entrega fica ${porExtenso(DIAS_DE_CUSTODIA_DO_FIM)} dias na custódia, com ${fmtDin(MULTA_PATRULHA * 2)} ₽ de multa (dez dias e metade, devolvendo antes o lendário preso) · cumprida, a ordem fecha e a casa abre</span></div>
+      <div class="linha"><span class="k">Lendário preso</span><span class="v">sem virada de capítulo, o que ele pesava a cada capítulo passa a pesar a cada ${DIAS_DO_TICK_DEPOIS} dias</span></div>
       <div class="linha"><span class="k">Quem você enganou</span><span class="v">sabe onde fica a sua casa: ela fecha</span></div>
       <div class="linha"><span class="k">Parou de competir</span><span class="v">ginásio, ala da Elite, arena e Conferência fecham, e você recomeça em casa</span></div>
       <div class="linha"><span class="k">Licença suspensa</span><span class="v">até ela voltar, o Centro cobra como de quem não tem licença, o balcão não emite outra e a Liga não te inscreve · ela volta sozinha no dia</span></div>
@@ -165645,6 +166034,9 @@ const Exploracao = {
        e saindo dela — o trecho andado é o mesmo. Quem sabe ler a
        estrada escolhe melhor a hora de passar e topa com menos coisa. */
     const naRota = novo.tipo !== 'cidade' ? id : (velho && velho.tipo !== 'cidade' ? de : null);
+    /* a Patrulha também anda pela estrada: com a ficha cobrando, o
+       oficial te para no meio do trecho (patrulha.js) */
+    if (naRota && typeof Patrulha !== 'undefined' && Patrulha.talvez(naRota)) return;
     if (naRota){
       const L = LOCAIS[naRota];
       const onde = naRota === id ? null : naRota;
@@ -165698,8 +166090,9 @@ const Exploracao = {
   fazer(acao){
     const L = Mundo.atual();
     const d = Estado.dados;
-    /* a porta que o final fechou não abre por atalho nenhum (depois.js) */
-    if (typeof Depois !== 'undefined' && Depois.ativo()){
+    /* a porta fechada (pelo final, pela ordem da Patrulha) não abre
+       por atalho nenhum (depois.js) */
+    {
       const a = afazeresDoLocal().find(x => x.id === acao);
       if (a && a.fechada) return this.tela([{tipo:'info', texto:a.fechada}]);
     }
@@ -166000,13 +166393,16 @@ const Exploracao = {
     const errante = !(opts && opts.fixo) && typeof Errantes !== 'undefined' ? Errantes.talvez(Mundo.id()) : null;
     if (errante){ selvagem = errante.p; intro = errante.intro; tipo = 'lendario'; }
     Jogo.cenaBatalha = null; Jogo.ginasioAtual = null; Jogo.eliteAtual = null;
-    Jogo.torneioAtual = null; Jogo.rivalAtual = null; Jogo.redeAtual = null;
+    Jogo.torneioAtual = null; Jogo.rivalAtual = null; Jogo.redeAtual = null; Jogo.patrulhaAtual = null;
     Jogo.batalhaLivre = true;
     UI.limparDados();
     /* Um brilhante muda a entrada da cena antes de mudar a batalha. */
     const linhas = (intro || []).slice();
     if (selvagem.shiny) linhas.push('E aí você para, porque tem alguma coisa errada com a cor.');
-    Batalha.iniciar(meu, selvagem, {tipo, fuga:true});
+    /* Kanto instável: a luta pode começar com o tempo virado */
+    const clima = typeof Errantes !== 'undefined' ? Errantes.climaDaLuta(Mundo.id()) : null;
+    if (clima) linhas.push(clima.linha);
+    Batalha.iniciar(meu, selvagem, {tipo, fuga:true, clima:clima && clima.tipo});
     UI.telaBatalha(linhas);
   }
 };
@@ -166093,6 +166489,8 @@ const Jogo = {
   veteranoAtual: null,
   /* luta da rede (js/story/rede.js): {tipo:'prova'|'servico', id, i, ramo} */
   redeAtual: null,
+  /* briga com a Patrulha na estrada (js/story/patrulha.js): {local} */
+  patrulhaAtual: null,
   /* a chave da Conferência, do mesmo jeito: no save (d.conferenciaAberta) */
   get conferenciaAtual(){ const d = Estado.dados; return (d && d.conferenciaAberta) || null; },
   set conferenciaAtual(c){
@@ -166389,7 +166787,7 @@ const Jogo = {
     const cena = Historia.cenaAtual;
     const b = cena.batalha;
     this.cenaBatalha = b;
-    this.redeAtual = null;
+    this.redeAtual = null; this.patrulhaAtual = null;
 
     const meu = Estado.primeiroApto();
     if (!meu){
@@ -166692,6 +167090,7 @@ const Jogo = {
 
   finalizarBatalha(fim){
     this.fimPendente = null;
+    if (this.patrulhaAtual) return Patrulha.resultado(fim);
     if (this.redeAtual)     return Rede.resultado(fim);
     if (this.veteranoAtual) return this.veteranoAtual.tipo === 'conferencia' ? Conferencia.resultado(fim) : Veteranos.resultado(fim);
     if (this.estradaAtual)  return Estrada.resultado(fim);
@@ -166941,7 +167340,7 @@ const Jogo = {
     /* o líder grita o nome ao soltar a bola — a entrada já sai com o nome certo */
     time.forEach(x => { x.nomeAnunciado = true; });
     this.ginasioAtual = g;
-    this.cenaBatalha = null; this.redeAtual = null;
+    this.cenaBatalha = null; this.redeAtual = null; this.patrulhaAtual = null;
     /* entrou uma vez, viu o time: a ficha do ginásio abre daqui pra frente */
     Estado.marcar('enfrentou_' + g.id);
     Estado.registrar(`Desafiou ${g.lider} no Ginásio de ${g.cidade}.`);
@@ -167167,7 +167566,7 @@ const Jogo = {
 
     this.revancheAtual = {id:c.id, nome};
     this.ginasioAtual = null; this.eliteAtual = null; this.torneioAtual = null;
-    this.rivalAtual = null; this.cenaBatalha = null; this.veteranoAtual = null; this.estradaAtual = null; this.redeAtual = null;
+    this.rivalAtual = null; this.cenaBatalha = null; this.veteranoAtual = null; this.estradaAtual = null; this.redeAtual = null; this.patrulhaAtual = null;
     Mundo.passar(1);
     UI.limparDados();
     Batalha.iniciar(meu, time[0], {
@@ -167219,7 +167618,7 @@ const Jogo = {
     const time = R ? timeRivalExtra(R) : timeRival();
     this.rivalAtual = R ? {extra:R.id} : {arco: arcoRival()};
     this.cenaBatalha = null; this.ginasioAtual = null; this.eliteAtual = null; this.torneioAtual = null;
-    this.redeAtual = null;
+    this.redeAtual = null; this.patrulhaAtual = null;
     UI.limparDados();
     Batalha.iniciar(meu, time[0], {
       tipo:'treinador', fuga:false, treinador:nome, vontadeIA:true,
@@ -167353,7 +167752,7 @@ const Jogo = {
     const alvo = e.campeao ? CAMPEAO : Titulares.membro(e.indice);
     const time = timeDaElite(alvo);
 
-    this.cenaBatalha = null; this.ginasioAtual = null; this.torneioAtual = null; this.redeAtual = null;
+    this.cenaBatalha = null; this.ginasioAtual = null; this.torneioAtual = null; this.redeAtual = null; this.patrulhaAtual = null;
     UI.limparDados();
     Batalha.iniciar(meu, time[0], {
       tipo:'treinador', fuga:false, vontadeIA:true,
@@ -167456,7 +167855,7 @@ const Jogo = {
     if (!meu) return this.resultadoTorneio({resultado:'derrota'});
     const adv = t.adv || (t.adv = adversarioDaVez(t));
     adv.time.forEach(x => { x.nomeAnunciado = true; });
-    this.cenaBatalha = null; this.ginasioAtual = null; this.eliteAtual = null; this.redeAtual = null;
+    this.cenaBatalha = null; this.ginasioAtual = null; this.eliteAtual = null; this.redeAtual = null; this.patrulhaAtual = null;
     UI.limparDados();
     Batalha.iniciar(meu, adv.time[0], {
       tipo:'treinador', fuga:false, treinador: adv.nome, vontadeIA:true, erroIA: ERRO_IA_TORNEIO[t.rodada],

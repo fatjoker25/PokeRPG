@@ -389,6 +389,9 @@ const Exploracao = {
        e saindo dela — o trecho andado é o mesmo. Quem sabe ler a
        estrada escolhe melhor a hora de passar e topa com menos coisa. */
     const naRota = novo.tipo !== 'cidade' ? id : (velho && velho.tipo !== 'cidade' ? de : null);
+    /* a Patrulha também anda pela estrada: com a ficha cobrando, o
+       oficial te para no meio do trecho (patrulha.js) */
+    if (naRota && typeof Patrulha !== 'undefined' && Patrulha.talvez(naRota)) return;
     if (naRota){
       const L = LOCAIS[naRota];
       const onde = naRota === id ? null : naRota;
@@ -442,8 +445,9 @@ const Exploracao = {
   fazer(acao){
     const L = Mundo.atual();
     const d = Estado.dados;
-    /* a porta que o final fechou não abre por atalho nenhum (depois.js) */
-    if (typeof Depois !== 'undefined' && Depois.ativo()){
+    /* a porta fechada (pelo final, pela ordem da Patrulha) não abre
+       por atalho nenhum (depois.js) */
+    {
       const a = afazeresDoLocal().find(x => x.id === acao);
       if (a && a.fechada) return this.tela([{tipo:'info', texto:a.fechada}]);
     }
@@ -744,13 +748,16 @@ const Exploracao = {
     const errante = !(opts && opts.fixo) && typeof Errantes !== 'undefined' ? Errantes.talvez(Mundo.id()) : null;
     if (errante){ selvagem = errante.p; intro = errante.intro; tipo = 'lendario'; }
     Jogo.cenaBatalha = null; Jogo.ginasioAtual = null; Jogo.eliteAtual = null;
-    Jogo.torneioAtual = null; Jogo.rivalAtual = null; Jogo.redeAtual = null;
+    Jogo.torneioAtual = null; Jogo.rivalAtual = null; Jogo.redeAtual = null; Jogo.patrulhaAtual = null;
     Jogo.batalhaLivre = true;
     UI.limparDados();
     /* Um brilhante muda a entrada da cena antes de mudar a batalha. */
     const linhas = (intro || []).slice();
     if (selvagem.shiny) linhas.push('E aí você para, porque tem alguma coisa errada com a cor.');
-    Batalha.iniciar(meu, selvagem, {tipo, fuga:true});
+    /* Kanto instável: a luta pode começar com o tempo virado */
+    const clima = typeof Errantes !== 'undefined' ? Errantes.climaDaLuta(Mundo.id()) : null;
+    if (clima) linhas.push(clima.linha);
+    Batalha.iniciar(meu, selvagem, {tipo, fuga:true, clima:clima && clima.tipo});
     UI.telaBatalha(linhas);
   }
 };

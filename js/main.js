@@ -78,6 +78,8 @@ const Jogo = {
   veteranoAtual: null,
   /* luta da rede (js/story/rede.js): {tipo:'prova'|'servico', id, i, ramo} */
   redeAtual: null,
+  /* briga com a Patrulha na estrada (js/story/patrulha.js): {local} */
+  patrulhaAtual: null,
   /* a chave da Conferência, do mesmo jeito: no save (d.conferenciaAberta) */
   get conferenciaAtual(){ const d = Estado.dados; return (d && d.conferenciaAberta) || null; },
   set conferenciaAtual(c){
@@ -374,7 +376,7 @@ const Jogo = {
     const cena = Historia.cenaAtual;
     const b = cena.batalha;
     this.cenaBatalha = b;
-    this.redeAtual = null;
+    this.redeAtual = null; this.patrulhaAtual = null;
 
     const meu = Estado.primeiroApto();
     if (!meu){
@@ -677,6 +679,7 @@ const Jogo = {
 
   finalizarBatalha(fim){
     this.fimPendente = null;
+    if (this.patrulhaAtual) return Patrulha.resultado(fim);
     if (this.redeAtual)     return Rede.resultado(fim);
     if (this.veteranoAtual) return this.veteranoAtual.tipo === 'conferencia' ? Conferencia.resultado(fim) : Veteranos.resultado(fim);
     if (this.estradaAtual)  return Estrada.resultado(fim);
@@ -926,7 +929,7 @@ const Jogo = {
     /* o líder grita o nome ao soltar a bola — a entrada já sai com o nome certo */
     time.forEach(x => { x.nomeAnunciado = true; });
     this.ginasioAtual = g;
-    this.cenaBatalha = null; this.redeAtual = null;
+    this.cenaBatalha = null; this.redeAtual = null; this.patrulhaAtual = null;
     /* entrou uma vez, viu o time: a ficha do ginásio abre daqui pra frente */
     Estado.marcar('enfrentou_' + g.id);
     Estado.registrar(`Desafiou ${g.lider} no Ginásio de ${g.cidade}.`);
@@ -1152,7 +1155,7 @@ const Jogo = {
 
     this.revancheAtual = {id:c.id, nome};
     this.ginasioAtual = null; this.eliteAtual = null; this.torneioAtual = null;
-    this.rivalAtual = null; this.cenaBatalha = null; this.veteranoAtual = null; this.estradaAtual = null; this.redeAtual = null;
+    this.rivalAtual = null; this.cenaBatalha = null; this.veteranoAtual = null; this.estradaAtual = null; this.redeAtual = null; this.patrulhaAtual = null;
     Mundo.passar(1);
     UI.limparDados();
     Batalha.iniciar(meu, time[0], {
@@ -1204,7 +1207,7 @@ const Jogo = {
     const time = R ? timeRivalExtra(R) : timeRival();
     this.rivalAtual = R ? {extra:R.id} : {arco: arcoRival()};
     this.cenaBatalha = null; this.ginasioAtual = null; this.eliteAtual = null; this.torneioAtual = null;
-    this.redeAtual = null;
+    this.redeAtual = null; this.patrulhaAtual = null;
     UI.limparDados();
     Batalha.iniciar(meu, time[0], {
       tipo:'treinador', fuga:false, treinador:nome, vontadeIA:true,
@@ -1338,7 +1341,7 @@ const Jogo = {
     const alvo = e.campeao ? CAMPEAO : Titulares.membro(e.indice);
     const time = timeDaElite(alvo);
 
-    this.cenaBatalha = null; this.ginasioAtual = null; this.torneioAtual = null; this.redeAtual = null;
+    this.cenaBatalha = null; this.ginasioAtual = null; this.torneioAtual = null; this.redeAtual = null; this.patrulhaAtual = null;
     UI.limparDados();
     Batalha.iniciar(meu, time[0], {
       tipo:'treinador', fuga:false, vontadeIA:true,
@@ -1441,7 +1444,7 @@ const Jogo = {
     if (!meu) return this.resultadoTorneio({resultado:'derrota'});
     const adv = t.adv || (t.adv = adversarioDaVez(t));
     adv.time.forEach(x => { x.nomeAnunciado = true; });
-    this.cenaBatalha = null; this.ginasioAtual = null; this.eliteAtual = null; this.redeAtual = null;
+    this.cenaBatalha = null; this.ginasioAtual = null; this.eliteAtual = null; this.redeAtual = null; this.patrulhaAtual = null;
     UI.limparDados();
     Batalha.iniciar(meu, adv.time[0], {
       tipo:'treinador', fuga:false, treinador: adv.nome, vontadeIA:true, erroIA: ERRO_IA_TORNEIO[t.rodada],

@@ -592,6 +592,144 @@ const SUSPEITO = [
     });
     r.forEach(f => anota('depois do fim', f));
   }
+  /* o lendário preso cobra (patrulha.js, lendarios-errantes.js): a
+     Patrulha para na estrada em cada degrau, devolve, recusa, se
+     entrega, briga, vence e perde; a casa fecha com a detenção e abre
+     com a custódia; depois do fim a custódia é a do fim e o lendário
+     preso pesa por dias; quem te caça vem, o clima entra na luta, e a
+     folha de regras e a Ficha dizem tudo isso */
+  {
+    const antes = await page.evaluate(() => JSON.stringify(Estado.dados));
+    const comZapdos = await page.evaluate(s => {
+      Estado.dados = JSON.parse(s);
+      const d = Estado.dados;
+      d.time[5] = criarPokemon(145, 50);
+      const L = Estado.lend(145); L.estado = 'capturado'; L.disposicao = 'prisioneiro'; L.visto = true;
+      Object.values(d.lendarios).forEach(x => { x.caçandoVoce = false; });
+      Estado.marcar('captura_vista_145');
+      Object.assign(d.liga, {avisos:1, detencao:false, ordemDevolucao:false});
+      delete d.depoisDoFim;
+      d.mundo.clima = 'normal'; d.modo = 'mundo'; d.local = 'rota6'; d.jogador.dinheiro = 9000; d.relogio.hora = 12;
+      return JSON.stringify(d);
+    }, snap);
+    const comDetencao = await page.evaluate(s => {
+      const d = JSON.parse(s); Object.assign(d.liga, {avisos:3, ordemDevolucao:true, detencao:true}); return JSON.stringify(d);
+    }, comZapdos);
+    const falhas = [];
+    const volta = x => page.evaluate(s => {
+      Batalha.ativo = false; Jogo.patrulhaAtual = null; Jogo.fimPendente = null;
+      UI.fecharModal && UI.fecharModal(true); Estado.dados = JSON.parse(s);
+    }, x);
+    const passo = async (rotulo, fn, arg, teste) => {
+      await tentar('patrulha/' + rotulo, fn, arg);
+      const r = teste ? await page.evaluate(teste, arg) : null;
+      if (r) falhas.push(`${rotulo}: ${r}`);
+    };
+    const parar = t => {
+      const d = Estado.dados;
+      d.liga.ordemDevolucao = t !== 'conversa'; d.liga.detencao = t === 'detencao'; d.liga.paradaDia = -1;
+      const ch = Dados.chance; Dados.chance = () => true;
+      try { if (!Patrulha.talvez('rota6')) throw new Error('a Patrulha não parou'); } finally { Dados.chance = ch; }
+    };
+    const portaDeCasa = () => {
+      Mundo.viajar(Mundo.idDaCidade(Estado.j.cidade)); Exploracao.tela();
+      const p = [...document.querySelectorAll('#app .porta')].find(x => /Sua casa/.test(x.textContent));
+      return p ? (p.disabled ? 'fechada' : 'aberta') : 'sem porta';
+    };
+    for (const t of ['conversa', 'devolucao', 'detencao']){
+      await volta(comZapdos);
+      await passo('parada/' + t, parar, t, x => {
+        const app = document.getElementById('app').innerText;
+        const quer = x === 'detencao' ? [/Se entregar/, /Lutar pra passar/, /Devolver o Zapdos e se entregar/] : [/Devolver o Zapdos/, /Não devolver/];
+        const falta = quer.filter(re => !re.test(app));
+        return falta.length ? `a tela não tem ${falta.join(', ')}` : null;
+      });
+    }
+    await volta(comZapdos);
+    await passo('devolver', () => { Patrulha.tela('conversa'); Patrulha.devolver('conversa'); }, null, () =>
+      Estado.dados.time.some(p => p.dex === 145) || Estado.dados.lendarios[145].estado !== 'solto' ? 'o Zapdos não foi devolvido'
+      : Patrulha.tipo() ? 'a Patrulha continua cobrando depois de devolver' : null);
+    await volta(comZapdos);
+    await passo('recusar a conversa', () => { Patrulha.tela('conversa'); Patrulha.recusar(); }, null, () =>
+      !Estado.dados.liga.ordemDevolucao || Estado.dados.liga.detencao ? 'recusar a conversa não deu (só) a ordem de devolução' : null);
+    await passo('recusar a ordem', () => { Patrulha.tela('devolucao'); Patrulha.recusar(); }, null, () =>
+      !Estado.dados.liga.detencao ? 'recusar a ordem de devolução não deu detenção' : null);
+    await passo('casa com detenção', portaDeCasa, null, () => {
+      const p = [...document.querySelectorAll('#app .porta')].find(x => /Sua casa/.test(x.textContent));
+      return !p ? 'a cidade natal não tem a porta de casa' : !p.disabled ? 'a casa abre com ordem de detenção' : null; });
+    await passo('atalho de casa', () => Exploracao.fazer('casa'), null, () =>
+      /vigia a sua rua/.test(document.getElementById('app').innerText) ? null : 'o atalho abriu a casa com ordem de detenção');
+    for (const [como, dias, multa] of [['devolveu', 1, 1000], ['entregou', 3, 2000]]){
+      await volta(comDetencao);
+      await passo('custódia ' + como, c => { window.__antes = {dia:Estado.dados.relogio.dia, din:Estado.dados.jogador.dinheiro}; Patrulha.custodia(c); }, como, c => {
+        const d = Estado.dados, a = window.__antes, quer = c === 'devolveu' ? [1, 1000] : [3, 2000];
+        if (d.liga.detencao || d.liga.ordemDevolucao) return 'a custódia não fechou a ordem';
+        if (d.relogio.dia - a.dia !== quer[0]) return `a custódia durou ${d.relogio.dia - a.dia} dias, não ${quer[0]}`;
+        if (a.din - d.jogador.dinheiro !== quer[1]) return `a multa foi ${a.din - d.jogador.dinheiro}, não ${quer[1]}`;
+        if (d.time.some(p => p.dex === 145) || d.lendarios[145].estado !== 'solto') return 'o Zapdos continua no cinto';
+        return null; });
+      await passo('casa depois da custódia ' + como, portaDeCasa, null, () => {
+        const p = [...document.querySelectorAll('#app .porta')].find(x => /Sua casa/.test(x.textContent));
+        return p && p.disabled ? 'a casa continua fechada depois da custódia' : null; });
+    }
+    for (const res of ['vitoria', 'derrota']){
+      await volta(comDetencao);
+      await passo('briga', () => Patrulha.lutar(), null, () =>
+        !Batalha.ativo ? 'a briga não começou' : Batalha.treinador !== 'Oficial da Patrulha' ? 'outro treinador: ' + Batalha.treinador
+        : Batalha.totalInimigo !== 3 ? `o oficial veio com ${Batalha.totalInimigo}` : !Jogo.patrulhaAtual ? 'a briga começou sem o contexto' : null);
+      await passo('briga/' + res, r => { window.__dia = Estado.dados.relogio.dia; Batalha.ativo = false; Jogo.finalizarBatalha({resultado:r}); }, res, r => {
+        const d = Estado.dados;
+        if (Jogo.patrulhaAtual) return 'o contexto da briga ficou depois dela';
+        if (r === 'vitoria') return d.liga.detencao ? null : 'vencer a Patrulha fechou a ordem';
+        return d.liga.detencao ? 'perder pra Patrulha não levou à custódia' : d.relogio.dia - window.__dia !== 3 ? 'a custódia de quem perde não durou três dias' : null; });
+    }
+    /* depois do fim: a custódia de quem saiu procurado */
+    await volta(comDetencao);
+    await passo('custódia do fim', () => {
+      const d = Estado.dados;
+      d.depoisDoFim = {final:'posse', titulo:'Posse', s:'procurado', fecha:{}, desde:d.relogio.dia, tickDia:d.relogio.dia};
+      window.__dia = d.relogio.dia; Patrulha.custodia('entregou');
+    }, null, () => {
+      const d = Estado.dados;
+      if (d.relogio.dia - window.__dia !== DIAS_DE_CUSTODIA_DO_FIM) return `a custódia do fim durou ${d.relogio.dia - window.__dia} dias`;
+      if (Depois.situacaoAgora() !== 'cumpriu') return 'a situação não virou "cumpriu a custódia"';
+      if (Depois.casaFechada()) return 'a casa continua fechada depois da custódia do fim';
+      return null; });
+    await tentar('patrulha/ficha depois da custódia', () => UI.modalFicha('mundo'));
+    /* o lendário preso pesa por dias depois do fim */
+    await volta(comZapdos);
+    await passo('tick depois do fim', () => {
+      const d = Estado.dados;
+      d.depoisDoFim = {final:'posse', titulo:'Posse', s:'livre', fecha:{}, desde:d.relogio.dia - 20, tickDia:d.relogio.dia - 16};
+      Exploracao.tela();
+    }, null, () => (Estado.dados.lendarios[145].turnosPreso || 0) === 1 ? null : 'depois do fim o lendário preso não pesou com os dias');
+    /* quem te caça vem, em qualquer rota, no nível do seu time */
+    await volta(comZapdos);
+    await passo('caçador', () => {
+      const d = Estado.dados;
+      [144, 146].forEach(x => { const L = Estado.lend(x); L.caçandoVoce = true; L.disposicao = 'hostil'; });
+      const ch = Dados.chance; Dados.chance = () => true;
+      try { Exploracao.encontro(sortearSelvagem('campo', 20), ['Um Pokémon sai do mato.']); } finally { Dados.chance = ch; }
+    }, null, () => !Batalha.ativo || ![144, 146].includes(Batalha.inimigo.dex) ? 'quem te caça não veio'
+      : Batalha.tipo !== 'lendario' ? 'quem te caça veio sem ser luta de lendário'
+      : Batalha.inimigo.nivel > LENDARIOS_ERRANTES[Batalha.inimigo.dex].nivel ? 'quem te caça veio acima do nível dele' : null);
+    /* o clima quebrado entra na luta */
+    await volta(comZapdos);
+    await passo('clima na luta', () => {
+      Estado.dados.mundo.clima = 'instavel';
+      const ch = Dados.chance; Dados.chance = () => true;
+      try { Exploracao.encontro(sortearSelvagem('campo', 20), ['Um Pokémon sai do mato.']); } finally { Dados.chance = ch; }
+    }, null, () => !Batalha.clima ? 'a luta não começou com o clima' : !document.querySelector('.arena > .clima-camada') ? 'a arena não desenhou o clima' : null);
+    await volta(comZapdos);
+    await passo('regras', () => UI.modalRegras(), null, () => {
+      const t = (document.querySelector('#modal') || {}).innerText || '';
+      const falta = ['A Patrulha na estrada', 'Detenção', 'Quem te caça', 'Clima de Kanto', 'A custódia do fim'].filter(x => !t.includes(x));
+      return falta.length ? 'a folha de regras não tem ' + falta.join(', ') : null; });
+    await passo('ficha/clima', () => { Estado.dados.mundo.clima = 'instavel'; UI.modalFicha('mundo'); }, null, () =>
+      /Instável/.test((document.querySelector('#modal') || {}).innerText || '') ? null : 'a Ficha não diz o clima com acento');
+    falhas.forEach(f => anota('patrulha', f));
+    await page.evaluate(s => { Batalha.ativo = false; Jogo.patrulhaAtual = null; UI.fecharModal && UI.fecharModal(true); Estado.dados = JSON.parse(s); }, antes);
+  }
   /* a dificuldade nos Ajustes: as três, a folha de regras com cada uma, e volta pro Normal */
   for (const k of ['facil', 'dificil', 'normal']){
     await tentar('ajustes/dificuldade ' + k, x => { UI.modalAjustes(); Dificuldade.definir(x); }, k);

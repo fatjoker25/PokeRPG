@@ -865,7 +865,7 @@ const Rede = {
     time.forEach(x => { x.nomeAnunciado = true; });
     Jogo.cenaBatalha = null; Jogo.ginasioAtual = null; Jogo.eliteAtual = null;
     Jogo.torneioAtual = null; Jogo.rivalAtual = null; Jogo.revancheAtual = null; Jogo.estradaAtual = null;
-    Jogo.conferenciaAtual = null; Jogo.veteranoAtual = null;
+    Jogo.conferenciaAtual = null; Jogo.veteranoAtual = null; Jogo.patrulhaAtual = null;
     Jogo.redeAtual = {tipo:a.tipo, id:a.id, i:a.i, ramo:a.ramo || null, avisos:a.avisos || [], vilao:a.tipo === 'prova' || !!L.vilao};
     Jogo.batalhaLivre = true;
     UI.limparDados();

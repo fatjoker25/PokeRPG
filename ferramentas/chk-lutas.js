@@ -61,7 +61,7 @@ const raiz = path.resolve(__dirname, '..');
       d.relogio.hora = 12;
       Mundo.viajar('viridian');
       Jogo.cenaBatalha = Jogo.ginasioAtual = Jogo.eliteAtual = Jogo.torneioAtual = Jogo.rivalAtual = null;
-      Jogo.revancheAtual = Jogo.veteranoAtual = Jogo.estradaAtual = Jogo.redeAtual = null; Jogo.batalhaLivre = false;
+      Jogo.revancheAtual = Jogo.veteranoAtual = Jogo.estradaAtual = Jogo.redeAtual = Jogo.patrulhaAtual = null; Jogo.batalhaLivre = false;
       return d;
     };
 
@@ -210,6 +210,17 @@ const raiz = path.resolve(__dirname, '..');
       add(`rede ${s.id} ${i}${ramo ? ' ' + ramo : ''}`, 4, ESCALOES[s.escalao - 1].cap, d => {
         naRede(d, s.escalao, s.local); Rede.lutar({tipo:'servico', id:s.id, i, ramo}); tamanhoCerto(L); });
     })));
+    /* a Patrulha na estrada (patrulha.js): a detenção, com o Zapdos
+       visto na Pokébola, no começo e no fim do jogo, e a do fim */
+    const naDetencao = (d, doFim) => {
+      const z = criarPokemon(145, 50); d.time[5] = z;
+      const L = Estado.lend(145); L.estado = 'capturado'; L.disposicao = 'prisioneiro';
+      d.flags.captura_vista_145 = true; d.liga.avisos = 3; d.liga.detencao = true;
+      if (doFim) d.depoisDoFim = {final:'posse', titulo:'Posse', s:'procurado', fecha:{}, desde:d.relogio.dia, tickDia:d.relogio.dia};
+      Mundo.viajar('rota6'); Patrulha.onde = 'rota6';
+    };
+    [[2, 6], [8, 22]].forEach(([ins, cap]) => add(`Patrulha (${ins} insígnias)`, ins, cap, d => { naDetencao(d); Patrulha.lutar(); }));
+    add('Patrulha (procurado do fim)', 8, 28, d => { naDetencao(d, true); Patrulha.lutar(); });
     /* revanches */
     CONTATOS.filter(c => c.ginasio || c.rivalExtra || c.revanche).forEach(c => add(`revanche ${c.id}`, 6, 16, d => {
       d.revanches = {[c.id]: {local: Mundo.id()}}; Jogo.lutarRevanche(c.id); }));

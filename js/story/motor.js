@@ -130,7 +130,7 @@ const Historia = {
     if (d.via && d.via !== 'neutro') linhas.push(`Kanto te trata como: ${NOME_VIA[d.via] || d.via}.`);
     if (d.liga.detencao) linhas.push('A Patrulha tem uma ordem de detenção com o seu nome.');
     else if (d.liga.ordemDevolucao) linhas.push('A Patrulha exigiu formalmente a devolução do que você pegou.');
-    if (d.mundo.clima !== 'normal') linhas.push(`O clima de Kanto está ${d.mundo.clima}.`);
+    if (d.mundo.clima !== 'normal') linhas.push(`O clima de Kanto está ${typeof NOME_DO_CLIMA !== 'undefined' && NOME_DO_CLIMA[d.mundo.clima] || d.mundo.clima}.`);
     const nomesNPC = Object.keys(d.npcs);
     if (nomesNPC.length) linhas.push(`Gente que lembra de você: ${nomesNPC.join(', ')}.`);
     return linhas;

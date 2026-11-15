@@ -104,8 +104,10 @@ const Batalha = {
     /* o que vale pro lado inteiro, e fica mesmo se trocar de Pokémon:
        Reflect, Light Screen, Mist e Safeguard, cinco turnos cada */
     this.lados = {aliado:{reflexo:0, tela:0, nevoa:0, salva:0}, inimigo:{reflexo:0, tela:0, nevoa:0, salva:0}};
-    /* chuva ou areia: dura cinco turnos, como na 2ª geração */
-    this.clima = null;
+    /* chuva ou areia: dura cinco turnos, como na 2ª geração. A luta
+       pode já começar com ele (o clima que o lendário preso quebrou,
+       lendarios-errantes.js) */
+    this.clima = opts.clima && CLIMA_TEXTO[opts.clima] ? {tipo:opts.clima, turnos:5} : null;
     /* quem viu o par cair nesta luta e ainda não entrou: uid → nome do par */
     this.viuOParCair = {};
     /* A cena que vem depois quer saber se sobrou pra você. */

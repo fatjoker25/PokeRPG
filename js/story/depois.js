@@ -10,7 +10,9 @@
    fecha as portas que ele fechou — sempre na tela, fechadas, com o
    motivo, nunca escondidas:
    - procurado: a Patrulha tem ordem de detenção no seu nome
-     (d.liga.detencao) e vigia a sua rua, e a casa fecha;
+     (d.liga.detencao) e vigia a sua rua, e a casa fecha enquanto a
+     ordem durar — na estrada ela te para (patrulha.js), e a custódia
+     de quem se entrega fecha a ordem e abre a casa;
    - jurado: quem você enganou sabe onde fica a sua casa;
    - em casa: você parou de competir (ginásio, ala da Elite, arena e
      Conferência fecham) e recomeça em casa;
@@ -25,7 +27,13 @@
    com ordem de detenção (o lendário preso na frente de testemunha, o
    mandado do Foragido) sai do fim procurado, seja qual for o final —
    menos nos finais que resolvem isso (`limpa`).
+   Lendário preso continua pesando sem virada de capítulo: o que
+   Estado.tickLendarios fazia a cada capítulo passa a valer a cada
+   DIAS_DO_TICK_DEPOIS dias (conferir).
    ============================================================ */
+const DIAS_DO_TICK_DEPOIS = 15;
+const CASA_VIGIADA = 'A Patrulha vigia a sua rua. Bater nessa porta é entregar quem ficou em casa.';
+const CASA_JURADA = 'Quem você enganou sabe onde fica a sua casa. Voltar lá é levar eles junto.';
 
 const DEPOIS_DO_FIM = {
   /* capítulo 19 */
@@ -74,7 +82,7 @@ const DEPOIS_DO_FIM = {
 
 const NOME_DA_SITUACAO = {
   livre:'Na estrada', procurado:'{Procurado|Procurada} pela Patrulha', jurado:'{Jurado|Jurada}',
-  em_casa:'Em casa', suspenso:'Licença suspensa'
+  em_casa:'Em casa', suspenso:'Licença suspensa', cumpriu:'Cumpriu a custódia'
 };
 
 const Depois = {
@@ -94,8 +102,8 @@ const Depois = {
     if (ordem) s = 'procurado';
     const r = {s, herdou, cargo:b.cargo || null, ginasio:b.ginasio || null, semTroca:b.semTroca || null,
       fecha:Object.assign({}, b.fecha || {}), semCasa:null, semLiga:null, dias:0, comeca:b.comeca || null, linha:b.linha || null};
-    if (s === 'procurado') r.semCasa = 'A Patrulha vigia a sua rua. Bater nessa porta é entregar quem ficou em casa.';
-    if (s === 'jurado' || b.s === 'jurado') r.semCasa = 'Quem você enganou sabe onde fica a sua casa. Voltar lá é levar eles junto.';
+    if (s === 'procurado') r.semCasa = CASA_VIGIADA;
+    if (s === 'jurado' || b.s === 'jurado'){ r.semCasa = CASA_JURADA; r.jurado = true; }
     if (b.semLiga) r.semLiga = b.semLiga;
     if (b.s === 'suspenso') r.dias = b.dias || 365;
     /* quem não pode voltar pra casa não recomeça nela */
@@ -133,7 +141,7 @@ const Depois = {
     const r = this.situacao(final.id, d);
     d.depoisDoFim = {final:final.id, titulo:concordaJogador(String(txt(final.titulo) || '')), s:r.s,
       cargo:r.cargo ? concordaJogador(r.cargo) : null, ginasio:r.ginasio, semTroca:r.semTroca, fecha:r.fecha,
-      semCasa:r.semCasa, semLiga:r.semLiga, desde:d.relogio.dia};
+      semCasa:r.semCasa, jurado:!!r.jurado, semLiga:r.semLiga, desde:d.relogio.dia, tickDia:d.relogio.dia};
     if (b.limpa){ d.liga.detencao = false; d.liga.ordemDevolucao = false; }
     if (r.s === 'procurado') d.liga.detencao = true;
     if (r.dias){
@@ -149,19 +157,51 @@ const Depois = {
     return av;
   },
 
-  /* a cada tela do mapa: a licença suspensa volta no dia dela */
+  /* a cada tela do mapa: a licença suspensa volta no dia dela, e o
+     lendário preso pesa a cada DIAS_DO_TICK_DEPOIS dias */
   conferir(){
-    const d = Estado.dados, x = d && d.depoisDoFim;
-    if (!x || !x.licencaVolta || d.relogio.dia < x.licencaVolta) return [];
-    delete x.licencaVolta;
-    /* o final diz que ela volta pelo correio: volta, tivesse ou não antes */
-    d.flags.tem_licenca = true;
-    Estado.registrar('A licença de treinador voltou, pelo correio.');
-    return [{tipo:'item', texto:'A licença volta num dia de chuva, pelo correio, dentro de um envelope que ninguém abriu.'}];
+    const d = Estado.dados, x = d && d.depoisDoFim, av = [];
+    if (!x) return av;
+    if (x.licencaVolta && d.relogio.dia >= x.licencaVolta){
+      delete x.licencaVolta;
+      /* o final diz que ela volta pelo correio: volta, tivesse ou não antes */
+      d.flags.tem_licenca = true;
+      Estado.registrar('A licença de treinador voltou, pelo correio.');
+      av.push({tipo:'item', texto:'A licença volta num dia de chuva, pelo correio, dentro de um envelope que ninguém abriu.'});
+    }
+    if (x.tickDia == null) x.tickDia = x.desde || d.relogio.dia;
+    while (d.relogio.dia - x.tickDia >= DIAS_DO_TICK_DEPOIS){
+      x.tickDia += DIAS_DO_TICK_DEPOIS;
+      Estado.tickLendarios().forEach(t => av.push({tipo:'mundo', texto:t}));
+    }
+    return av;
+  },
+
+  /* a custódia de quem saiu do fim procurado: a ordem fechou */
+  cumpriu(){
+    const d = Estado.dados, x = this.dados();
+    if (!x || x.s !== 'procurado') return;
+    x.s = 'cumpriu';
+    x.cumpriuDia = d.relogio.dia;
+  },
+  /* a situação de hoje: a ordem nova depois do fim também é procurado */
+  situacaoAgora(){
+    const d = Estado.dados, x = this.dados();
+    if (!x) return null;
+    if (d.liga.detencao && x.s !== 'jurado') return 'procurado';
+    return x.s === 'procurado' ? 'cumpriu' : x.s;
   },
 
   /* ── as portas que o final fechou (o motivo, ou null) ── */
-  casaFechada(){ const x = this.dados(); return x && x.semCasa || null; },
+  /* a casa fecha pra quem enganou quem não esquece (o jurado, pra
+     sempre) e enquanto a Patrulha tiver ordem de detenção no seu nome
+     — na história ou depois dela; a custódia fecha a ordem e abre a casa */
+  casaFechada(){
+    const d = Estado.dados, x = this.dados();
+    if (x && x.jurado) return CASA_JURADA;
+    if (d && d.liga && d.liga.detencao) return CASA_VIGIADA;
+    return null;
+  },
   licencaSuspensa(){
     const d = Estado.dados, x = this.dados();
     return x && x.licencaVolta && d.relogio.dia < x.licencaVolta
@@ -181,10 +221,12 @@ const Depois = {
   ficha(){
     const d = Estado.dados, x = this.dados();
     if (!x) return [];
-    const L = [['O final', x.titulo], ['Situação', NOME_DA_SITUACAO[x.s] || NOME_DA_SITUACAO.livre],
+    const s = this.situacaoAgora();
+    const L = [['O final', x.titulo], ['Situação', NOME_DA_SITUACAO[s] || NOME_DA_SITUACAO.livre],
       ['Desde', `o dia ${x.desde} da jornada`]];
+    if (s === 'cumpriu' && x.cumpriuDia) L.push(['Custódia', `cumprida no dia ${x.cumpriuDia}`]);
     if (x.cargo) L.push(['O que você virou', x.cargo]);
-    if (x.semCasa) L.push(['Sua casa', 'fechada']);
+    if (this.casaFechada()) L.push(['Sua casa', 'fechada']);
     if (x.semLiga) L.push(['Liga', 'não compete mais']);
     if (this.licencaSuspensa()) L.push(['Licença', `suspensa até o dia ${x.licencaVolta}`]);
     for (const id of Object.keys(x.fecha || {})) L.push([(LOCAIS[id] || {}).nome || id, 'fechado pra você']);

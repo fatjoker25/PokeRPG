@@ -2482,10 +2482,13 @@ logo depois do fim. O final continua no códice.
 A situação mora em `js/story/depois.js` (`DEPOIS_DO_FIM`, pelo id do
 final; quem não está lá é `livre`), e a tela do fim mostra o bloco
 "Depois do fim" com ela antes do botão:
-- **procurado** (`d.liga.detencao`): a casa fecha. Quem chega ao fim
-  com ordem de detenção (lendário visto, o mandado do Foragido,
-  `cm_foragido_3`) sai procurado em qualquer final, menos nos que
-  resolvem isso (`limpa`: a rendição, o arrependimento);
+- **procurado** (`d.liga.detencao`): a casa fecha enquanto a ordem
+  durar. Quem chega ao fim com ordem de detenção (lendário visto, o
+  mandado do Foragido, `cm_foragido_3`) sai procurado em qualquer
+  final, menos nos que resolvem isso (`limpa`: a rendição, o
+  arrependimento). A Patrulha te para na estrada (ver "O lendário
+  preso cobra"), e a custódia de quem se entrega fecha a ordem e abre
+  a casa (`Depois.cumpriu`, situação `cumpriu`);
 - **jurado** (o calote do Mercenário): a casa fecha, sem a Patrulha;
 - **em casa** (`semLiga`): ginásio, ala, arena e Conferência fecham, e
   ele recomeça em casa;
@@ -2504,6 +2507,55 @@ abre por atalho. Final novo que muda a vida de quem joga entra na
 tabela; a folha de regras ("Depois do fim") diz as regras, sem dizer
 qual final faz o quê. `chk-telas` roda os finais um por um: o bloco, o
 botão, o mapa sem capítulo e a porta de casa.
+
+## O lendário preso cobra
+Foi perguntado se capturar o Zapdos punia, e a resposta era quase só
+reputação e texto: a ordem de detenção, os lendários "te caçando" e o
+clima quebrado eram uma linha da Ficha. Hoje cada um morde:
+
+- **A Patrulha te para na estrada** (`js/story/patrulha.js`): num
+  trecho de rota (`Exploracao.viajar`, antes do treinador e do
+  selvagem), na chance de `CHANCE_PATRULHA` pelo que a ficha cobra,
+  uma vez por dia (`d.liga.paradaDia`), nunca em `SEM_PATRULHA`. Só
+  com lendário que alguém viu entrar na Pokébola (`captura_vista_<dex>`)
+  ou com ordem de detenção. Conversa e ordem de devolução: devolver
+  fecha, recusar sobe um degrau (`Patrulha.subir`, com as marcas do
+  `Captura.ligaReage`). Detenção: se entregar é a custódia
+  (`Patrulha.custodia`: os dias vividos, a multa, o lendário
+  apreendido — `apreender`, solto longe, o grupo para de caçar, sem
+  fama pra você —, o time curado e a ordem fechada); lutar é
+  `Jogo.patrulhaAtual`, olhado antes de tudo no `finalizarBatalha`,
+  salvo pela `LutaSalva` e zerado em toda luta que começa, junto com
+  o `redeAtual`. Desistir da briga é se entregar. Quem fala é `'o
+  oficial da viatura'`, nunca `'o oficial de cinza'`: esse é o do
+  capítulo 17, com memória e opinião.
+- **A casa fecha com ordem de detenção**, na história também
+  (`Depois.casaFechada`, lido pela porta e pelo `Exploracao.fazer`,
+  que não abre porta fechada por atalho em hora nenhuma). O jurado
+  fica de fora pra sempre; o procurado, até a custódia.
+- **O segredo que alguém conta chega na Patrulha**: no
+  `tickLendarios` a descoberta passa pelo `Captura.ligaReage`, e
+  depois do fim o tick roda a cada `DIAS_DO_TICK_DEPOIS` dias
+  (`Depois.conferir`), porque não tem mais virada de capítulo.
+- **Quem te caça vem** (`Errantes.cacando`, em
+  `lendarios-errantes.js`): solto e com `caçandoVoce`, em qualquer
+  rota ou área especial, sem esperar a história, `CHANCE_CACANDO` por
+  encontro (`CHANCE_CACANDO_ULTIMO` o último solto de um grupo que
+  perdeu dois), no nível do seu time (`nivelDoCacador`). Quem confere
+  lendário que você nunca viu lê `d.lendarios` direto: o
+  `Estado.lend` cria a ficha dele, e a Ficha mostraria o lendário que
+  a história ainda não mostrou.
+- **O clima quebrado entra na luta com selvagem**
+  (`Errantes.climaDaLuta`, `CHANCE_CLIMA_NA_LUTA`): o
+  `Batalha.iniciar` aceita `clima`, e a luta começa com ele, pelas
+  regras de sempre (cinco turnos). Sol só de dia; caverna e vulcão
+  não têm céu. O nome do clima na tela sai de `NOME_DO_CLIMA` (o
+  campo guarda `instavel` e `caotico`, sem acento).
+
+Os números estão na folha de regras ("Lendário no cinto" e "Depois do
+fim"). `chk-telas` para na estrada em cada degrau, devolve, recusa, se
+entrega, briga e perde, abre e fecha a casa, solta o caçador e o clima;
+`chk-lutas` roda a briga com a Patrulha nas duas fichas.
 
 ## Como o projeto é montado
 - HTML/CSS/JS puro, `<script>` comum, sem módulo ES: tem que abrir em `file://`
