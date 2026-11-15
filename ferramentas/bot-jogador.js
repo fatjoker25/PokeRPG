@@ -31,7 +31,33 @@
 
    O INICIAL. INICIAL=rand marca "O que já estava em casa" na inscrição:
    o jogo sorteia o inicial pela tabela da casa (cidade natal ou jeito),
-   como quem joga e escolhe isso. Sem a variável, fica o padrão da ficha.
+   como quem joga e escolhe isso. INICIAL=classico é um dos três
+   clássicos, escolhido no capítulo 1. Sem a variável, fica o padrão da
+   ficha.
+
+   O CARGO. CARGO=<id> (um dos CARGOS, em js/data/cargos.js) é o posto
+   que o robô quer: quando ele abre (Cargos.estado), o robô anda até o
+   lugar dele e assume (Jogo.assumirCargo). O policial pede ter sido
+   guarda de rota antes, e ele vai nos dois, na ordem. Outro posto que
+   abrir na cidade em que ele está entra na chance do jeito (extras),
+   do bem ou do mal, desde que não feche a porta do posto dele.
+
+   O JEITO. JEITO=<chave de JEITOS> escolhe o jeito por fora do objetivo
+   da ficha. Além dos números de sempre, o jeito pode puxar a reputação
+   nas cenas (rep: a opção que mexe pro lado dele pesa mais, a do outro
+   lado pesa menos), a via (via: a opção que define uma delas), dar
+   Ração na mão abaixo de uma moral (racaoMoral), andar pela cidade
+   (andar) e tentar a Elite mais vezes (eliteVezes). Todo jeito aponta a
+   Pokédex pra espécie que ainda não catalogou (escaneia), que não gasta
+   o turno, como quem joga faz.
+
+   DEPOIS=1: no final ele aperta "Continuar pela estrada" e segue a
+   etapa depois do fim (estado 'depois'), e a etapa retomada de quem já
+   passou do fim continua lá.
+
+   A LUTA LONGA. Luta que passa de 30 turnos sai no console (LUTA30, com
+   o retrato dos dois lados e os últimos eventos) e no diário (luta30),
+   pra quem vigia a jogada olhar se está tudo bem.
 
    A JOGADA INTEIRA. Uma etapa dura [minutos]. A cada PONTO_MIN minutos,
    no mapa, e no fim da etapa, ele grava o ponto de parada em
@@ -73,9 +99,12 @@ const META = process.env.META || '';
 const INICIAL = process.env.INICIAL || '';
 const TURBO = Math.max(1, +(process.env.TURBO || 3));
 const PONTO_MIN = +(process.env.PONTO_MIN || 5);
+const DEPOIS = process.env.DEPOIS === '1';
 const CAPITULO = +(process.env.CAPITULO || 0);
 const SAVE = process.env.SAVE || '';
 const RETOMAR = process.env.RETOMAR || '';
+const CARGO = process.env.CARGO || '';
+const JEITO = process.env.JEITO || '';
 const RAIZ = 'file://' + path.resolve(__dirname, '..', 'index.html');
 
 /* O jeito de cada objetivo da ficha (METAS, em rumo.js). Os números:
@@ -94,6 +123,37 @@ const RAIZ = 'file://' + path.resolve(__dirname, '..', 'index.html');
    bolas  — quantas Pokébolas ele quer na mochila;
    gosta  — o que pesa três vezes nas escolhas de cena. */
 const JEITOS = {
+  /* os da terceira rodada, um por cargo: rep puxa a reputação nas cenas,
+     via a via, racaoMoral a Ração na mão, andar o passeio pela cidade,
+     extras a chance de assumir outro posto que abrir, eliteVezes as
+     idas à ala */
+  estudioso: {nome:'Estudioso', cura:.65, abaixo:2, moer:50, foge:8, captura:'nova', lendario:false, troca:true, pedra:true,
+    ginasio:false, liga:false, desvio:.1, bolas:10, extras:.1, gosta:/(olhar|pergunt|anot|examin|ler|estud|pokédex|caderno)/i},
+  vigilante: {nome:'Vigilante', cura:.65, abaixo:1, moer:60, foge:8, captura:'forte', lendario:false, troca:true, pedra:true,
+    ginasio:true, liga:false, desvio:0, bolas:5, rep:'bom', extras:.15, gosta:/(ajud|proteg|vigi|patrulh|avis|denunc|chamar|segur)/i},
+  justiceiro: {nome:'Justiceiro', cura:.6, abaixo:1, moer:60, foge:9, captura:'forte', lendario:false, troca:true, pedra:true,
+    ginasio:true, liga:false, desvio:0, bolas:5, rep:'bom', via:['heroi'], extras:0, gosta:/(proteg|defend|prend|denunc|enfrent|parar|impedir|salv)/i},
+  cuidadoso: {nome:'Cuidadoso', cura:.75, abaixo:1, moer:70, foge:6, captura:'time', lendario:false, troca:false, pedra:false,
+    ginasio:false, liga:false, desvio:.05, bolas:5, racaoMoral:72, racao:10, extras:.1, gosta:/(cuid|comida|água|carinho|acalm|time|junt|descans)/i},
+  andarilho: {nome:'Andarilho', cura:.55, abaixo:4, moer:30, foge:8, captura:'nova', lendario:false, troca:true, pedra:true,
+    ginasio:false, liga:false, desvio:.25, andar:.4, bolas:8, extras:.2, gosta:/(olhar|andar|sub|desc|entrar|segu|explor|atravess|caminh)/i},
+  oportunista: {nome:'Oportunista', cura:.5, abaixo:3, moer:40, foge:9, captura:'forte', lendario:true, troca:true, pedra:true,
+    ginasio:true, liga:false, desvio:0, bolas:6, rep:'ruim', via:['mercenario', 'foragido'], extras:.6,
+    gosta:/(aceit|dinheiro|cobr|vend|pegar|roub|mentir|escond|ameaç|guardar pra|ficar com)/i},
+  curioso: {nome:'Curioso', cura:.6, abaixo:2, moer:50, foge:8, captura:'forte', lendario:false, troca:true, pedra:true,
+    ginasio:true, liga:false, desvio:.1, bolas:6, rep:'bom', via:['pesquisador', 'heroi'], extras:.1, gosta:/(pergunt|investig|olhar|entrar|segu|descobr|ler|abrir|conferir)/i},
+  pragmatico: {nome:'Pragmático', cura:.6, abaixo:2, moer:50, foge:8, captura:'forte', lendario:false, troca:true, pedra:true,
+    ginasio:true, liga:false, desvio:0, bolas:6, rep:'bom', via:['heroi', 'pesquisador'], extras:.3, gosta:/(aceit|assin|acord|negoci|contrato|proposta|conversar|ouvir)/i},
+  disciplinado: {nome:'Disciplinado', cura:.65, abaixo:0, moer:110, foge:8, captura:'forte', lendario:false, troca:true, pedra:true,
+    ginasio:true, liga:false, desvio:0, bolas:5, extras:.1, gosta:/(trein|ensin|mostr|explic|aula|repet|insist)/i},
+  orgulhoso: {nome:'Orgulhoso', cura:.55, abaixo:0, moer:90, foge:10, captura:'forte', lendario:true, troca:true, pedra:true,
+    ginasio:true, liga:true, desvio:0, bolas:5, rep:'bom', extras:.1, eliteVezes:8, gosta:/(desafi|enfrent|ganhar|vencer|aceit|mostrar)/i},
+  obstinado: {nome:'Obstinado', cura:.6, abaixo:-2, moer:140, foge:10, captura:'forte', lendario:true, troca:true, pedra:true,
+    ginasio:true, liga:true, desvio:0, bolas:6, rep:'bom', extras:0, eliteVezes:20, gosta:/(lutar|luta|encar|desafi|trein|vencer|enfrent|ganhar)/i},
+  obsessivo: {nome:'Obsessivo', cura:.6, abaixo:2, moer:70, foge:7, captura:'nova', lendario:true, troca:true, pedra:true,
+    ginasio:false, liga:false, desvio:.15, bolas:15, extras:.1, gosta:/(pokémon|captur|olhar|anot|pokédex|examin|registr|catalog)/i},
+  diplomatico: {nome:'Diplomático', cura:.65, abaixo:1, moer:60, foge:8, captura:'forte', lendario:false, troca:true, pedra:true,
+    ginasio:true, liga:false, desvio:.05, bolas:5, rep:'bom', extras:.1, gosta:/(conversa|explic|acalm|negoci|ouvir|convencer|propor|pedir|agradec)/i},
   campeao: {nome:'Competitivo', cura:.6, abaixo:0, moer:80, foge:10, captura:'forte', lendario:true, troca:true, pedra:true,
     ginasio:true, liga:true, desvio:0, bolas:5, gosta:/(lutar|luta|encar|desafi|trein|vencer|enfrent|ganhar)/i},
   pokedex: {nome:'Colecionador', cura:.6, abaixo:2, moer:60, foge:8, captura:'nova', lendario:true, troca:true, pedra:true,
@@ -273,10 +333,10 @@ const SUSPEITO = [
     if (ff.erro){ await browser.close(); return; }
   }
 
-  /* o jeito sai do objetivo que ficou na ficha */
+  /* o jeito sai do objetivo que ficou na ficha, ou de JEITO= */
   const meta = await page.evaluate(() => Estado.j.meta || null).catch(() => null);
-  const J = JEITOS[meta] || NEUTRO;
-  console.log('JEITO', meta, J.nome);
+  const J = JEITOS[JEITO] || JEITOS[meta] || NEUTRO;
+  console.log('JEITO', meta, JEITO || '-', J.nome, CARGO ? 'cargo ' + CARGO : '');
 
   /* o que aconteceu, pra conferir depois (na etapa seguinte, continua) */
   await page.evaluate(({antes, jeito}) => {
@@ -379,6 +439,41 @@ const SUSPEITO = [
         passo('fechou', {num:d.capitulo, time:d.time.map(p => p.nome + ' ' + p.nivel), dinheiro:d.jogador.dinheiro}); } catch(e){}
       return r; };
   }, {antes:ponto, jeito:Object.assign({}, J, {gosta:null})});
+  /* o posto que ele quer, e a conta das lutas (pra o aviso da luta longa) */
+  await page.evaluate(c => {
+    window.__cargo = c || null;
+    window.__lutaN = window.__lutaN || 0;
+    if (!Batalha.__contando){
+      const bi = Batalha.iniciar.bind(Batalha);
+      Batalha.iniciar = function(){ window.__lutaN++; return bi.apply(Batalha, arguments); };
+      Batalha.__contando = true;
+    }
+    /* de onde a luta veio, pro retrato da luta longa */
+    window.__contextoDaLuta = () => {
+      const J = Jogo, d = Estado.dados;
+      if (J.ginasioAtual) return 'ginásio ' + J.ginasioAtual.id;
+      if (J.patrulhaAtual) return 'patrulha';
+      if (J.redeAtual) return 'rede ' + J.redeAtual.tipo + ' ' + J.redeAtual.id;
+      if (J.veteranoAtual) return 'veterano ' + (J.veteranoAtual.tipo || '') + ' ' + (J.veteranoAtual.id || '');
+      if (J.torneioAtual) return 'torneio';
+      if (J.conferenciaAtual) return 'conferência';
+      if (J.eliteAtual) return J.eliteAtual.campeao ? 'campeão' : 'elite ' + J.eliteAtual.indice;
+      if (d.modo === 'cena') return 'cena ' + d.capitulo + ':' + d.cena;
+      return 'mapa ' + d.local;
+    };
+    /* o posto que ele assumiu (por ele ou por cena) vai pro diário */
+    const ca = Cargos.assumir.bind(Cargos);
+    Cargos.assumir = function(id){ const r = ca(id);
+      if (r && r.ok) window.__passo && __passo('posto', {cargo:id, nome:(Cargos.porId(id) || {}).nome, alvo:id === window.__cargo});
+      return r; };
+    const cl = Cargos.largar.bind(Cargos);
+    Cargos.largar = function(id){ const r = cl(id); if (r) window.__passo && __passo('largou', {cargo:id}); return r; };
+    /* a Pokédex Nacional, por onde vier */
+    if (typeof DexNacional !== 'undefined'){
+      const dl = DexNacional.liberar.bind(DexNacional);
+      DexNacional.liberar = function(como){ const r = dl(como); if (r) window.__passo && __passo('nacional', {como:como || null}); return r; };
+    }
+  }, CARGO).catch(e => console.log('ERRO no cargo', e.message));
 
   const lerTela = async () => {
     const t = await page.evaluate(() => {
@@ -422,7 +517,9 @@ const SUSPEITO = [
   const APELIDOS = ['Faísca', 'Pipoca', 'Brasa', 'Nuvem', 'Pingo', 'Trovão', 'Fubá', 'Cacau', 'Tufão', 'Chuvisco', 'Pedrinha',
     'Ventania', 'Biscoito', 'Cometa', 'Garoa', 'Sereno', 'Tição', 'Graveto', 'Paçoca', 'Tampinha', 'Neblina', 'Farol'];
   const apelidosDados = new Set(await page.evaluate(() => [...Estado.dados.time, ...(Estado.dados.pc || [])].map(p => p.apelido).filter(Boolean)).catch(() => []));
-  let passos = 0, parado = 0, ultima = '', empacou = 0, ultimoRetrato = '', estado = 'pausa';
+  let passos = 0, parado = 0, ultima = '', empacou = 0, ultimoRetrato = '', estado = 'pausa', depoisFeito = false;
+  /* quem já está depois do fim (etapa retomada) segue nele */
+  if (await page.evaluate(() => !!(Estado.dados && Estado.dados.depoisDoFim)).catch(() => false)){ depoisFeito = true; estado = 'depois'; }
   let ultimoMinuto = Date.now(), ultimoMinutoK = '', mesmoMinuto = 0, ultimaAcao = '';
   const prazo = MIN * 60000;
   while (passos++ < 2000000){
@@ -493,6 +590,18 @@ const SUSPEITO = [
       await page.evaluate(() => { const f = document.querySelector('.painel.final');
         window.__passo && __passo('fim', {como:'final', titulo:(f.querySelector('.tit') || {}).innerText || '',
           texto:((f.querySelector('p') || {}).innerText || '').slice(0, 400)}); }).catch(() => {});
+      /* DEPOIS=1: o final tem "Continuar pela estrada", e ele continua,
+         como quem quer ver o que o fim deixou (a casa fechada, a licença
+         suspensa, a Patrulha). A etapa segue no mapa, e a saída diz
+         'depois' */
+      if (DEPOIS && !depoisFeito && await page.evaluate(() => !!document.querySelector('.final [onclick*="continuarPelaEstrada"]')).catch(() => false)){
+        depoisFeito = true; estado = 'depois';
+        await page.evaluate(() => Jogo.continuarPelaEstrada()).catch(e => erros.push('continuar pela estrada: ' + e.message));
+        await page.evaluate(() => { const s = typeof Depois !== 'undefined' && Depois.situacaoAgora ? Depois.situacaoAgora() : null;
+          window.__passo && __passo('depois', {situacao:s, dados:Estado.dados.depoisDoFim || null}); }).catch(() => {});
+        await page.waitForTimeout(200);
+        continue;
+      }
       estado = 'final';
       break;
     }
@@ -592,8 +701,34 @@ const SUSPEITO = [
       continue;
     }
 
-    /* luta: lê a situação e decide */
-    if (await page.evaluate(() => Batalha.ativo && !!document.querySelector('.acoes-combate, #acoes')).catch(() => false)){
+    /* a leitura da Pokédex tem tela própria, que se anima e depois mostra
+       a ficha com o "Fechar a Pokédex": espera a ficha */
+    if (await page.locator('#modal #dex-scan').count()){ await page.waitForTimeout(150); continue; }
+    /* luta que passa de 30, 60 e 100 turnos: o retrato sai no console e no
+       diário, uma vez por marca, pra quem vigia olhar se está tudo bem */
+    const longa = await page.evaluate(() => {
+      const B = Batalha, X = window.__extra || (window.__extra = {});
+      if (!B.ativo) return null;
+      const marca = B.turno >= 100 ? 100 : B.turno >= 60 ? 60 : B.turno >= 30 ? 30 : 0;
+      const k = window.__lutaN + ':' + marca;
+      if (!marca || (X.longas || []).includes(k)) return null;
+      X.longas = (X.longas || []).slice(-20).concat(k);
+      const f = p => p ? {nome:p.nome, nv:p.nivel, hp:p.hp + '/' + p.hpMax, st:p.status || null, vontade:typeof vontadeDe === 'function' ? vontadeDe(p) : null,
+        golpes:(p.golpes || []).map(g => g.nome)} : null;
+      const r = {marca, turno:B.turno, tipo:B.tipo, ctx:window.__contextoDaLuta ? window.__contextoDaLuta() : null, treinador:B.treinador || null,
+        aliado:f(B.aliado), inimigo:f(B.inimigo), restamDeLa:(B.timeInimigo || []).filter(x => x.hp > 0).length,
+        restamDeCa:Estado.dados.time.filter(x => !x.morto && x.hp > 0).length, clima:B.clima ? B.clima.tipo : null,
+        ultimos:(B.eventos || []).slice(-8).map(e => e.tipo + ': ' + String(e.texto || '').slice(0, 110))};
+      window.__passo && __passo('luta30', r);
+      return r;
+    }).catch(() => null);
+    if (longa){
+      console.log('LUTA' + longa.marca, JSON.stringify(longa));
+      anota('luta passou de ' + longa.marca + ' turnos', `${longa.tipo} ${longa.treinador || ''} · ${longa.aliado && longa.aliado.nome} x ${longa.inimigo && longa.inimigo.nome}`);
+    }
+
+    /* luta: lê a situação e decide (com janela aberta, quem responde é ela) */
+    if (await page.evaluate(() => Batalha.ativo && !!document.querySelector('.acoes-combate, #acoes') && !document.querySelector('#modal')).catch(() => false)){
       const a = await page.evaluate(() => {
         const B = Batalha, p = B.aliado, alvo = B.inimigo, d = Estado.dados;
         const J = window.__jeito || {}, X = window.__extra || (window.__extra = {});
@@ -601,6 +736,9 @@ const SUSPEITO = [
         /* luta nova: zera a conta de Pokébolas jogadas e de trocas */
         if (X.lutaUid !== alvo.uid){ X.lutaUid = alvo.uid; X.bolasNaLuta = 0; X.trocasNaLuta = 0; X.turnoDesde = B.turno; }
         if (B.fase === 'ameaca') return {tipo:'fugirAmeaca'};
+        /* a Pokédex na espécie que ainda não catalogou: não gasta o turno,
+           e é assim que a Pokédex enche sem capturar tudo */
+        if (J.escaneia !== false && d.flags.tem_pokedex && !B.pdexUsada && !Estado.conheceu(alvo.dex)) return {tipo:'pokedex'};
         /* selvagem que não acaba (os dois lados só com golpe de status): vai embora */
         if (B.tipo === 'selvagem' && B.turno > 60 && B.fuga !== false) return {tipo:'fugir'};
         /* luta que não acaba: depois de 150 turnos contra treinador, desiste
@@ -864,7 +1002,7 @@ const SUSPEITO = [
            uma ordem em três, e perdeu cinco vezes pro Blaine */
         if (Estado.contaItem('Ração') >= 3){
           X.naMao = X.naMao || {};
-          const triste = vivos.filter(p => (p.moral || 0) < 30 && X.naMao[p.uid] !== dia).sort((u, v) => (u.moral || 0) - (v.moral || 0))[0];
+          const triste = vivos.filter(p => (p.moral || 0) < (J.racaoMoral || 30) && X.naMao[p.uid] !== dia).sort((u, v) => (u.moral || 0) - (v.moral || 0))[0];
           if (triste){ X.naMao[triste.uid] = dia; return {f:'racao', uid:triste.uid}; }
         }
         /* troca no mapa: quem troca (o jeito diz) aceita quando o que vem é
@@ -1031,7 +1169,7 @@ const SUSPEITO = [
                 if (c && c.item && !c.pronto && vende(c.item) && !Estado.contaItem(c.item)) quero[c.item] = 1;
               }
           }
-          if (vende('Ração')) quero['Ração'] = 3;
+          if (vende('Ração')) quero['Ração'] = J.racao || 3;
           const melhor = lista => lista.find(vende);
           const pot = melhor(['Hyper Potion', 'Super Potion', 'Potion']);
           if (pot) quero[pot] = J.cura >= .7 ? 6 : 4;
@@ -1068,7 +1206,44 @@ const SUSPEITO = [
            pouco no Pokérole (um ponto a cada 7), então a porta abre com o
            time até 6 abaixo da primeira cadeira, não 1: na primeira rodada
            nenhum dos cinco chegou à ala */
-        const ELITE_VEZES = 6;
+        /* o posto do robô (CARGO=): quando abre, vai até o lugar dele e
+           assume. O policial pede ter sido guarda de rota: vai nos dois, na
+           ordem. Outro posto que abrir na cidade em que ele está entra na
+           chance do jeito (extras), do bem ou do mal, desde que não feche
+           a porta do posto dele (veta, nos dois sentidos) */
+        /* a Pokédex Nacional: com a conta do Professor feita, quem cuida
+           da Pokédex vai a Pallet buscar; os outros, num capítulo sim e
+           noutro não, na chance */
+        if (typeof DexNacional !== 'undefined' && !DexNacional.tem() && DexNacional.pode()){
+          if (afz.includes('dexnac')) return {f:'dexnac'};
+          X.nacCap = X.nacCap || {};
+          if (X.nacCap[d.capitulo] === undefined) X.nacCap[d.capitulo] = J.captura === 'nova' || Math.random() < .35;
+          if (X.nacCap[d.capitulo] && hp >= .4){ const v = ir('pallet'); if (v) return v; }
+        }
+        const ALVO = window.__cargo;
+        if (ALVO && typeof Cargos !== 'undefined'){
+          const fila = ALVO === 'policial' && !d.flags.cargo_guarda_rota ? ['guarda_rota', 'policial'] : [ALVO];
+          for (const cid of fila){
+            const c = Cargos.porId(cid);
+            if (!c || Cargos.tem(cid) || !Cargos.estado(cid).ok) continue;
+            /* a licença (treinador) se guarda no balcão de qualquer Centro */
+            if (c.onde === 'centro'){ if (Exploracao.temCentro(L)) return {f:'assumir', cargo:cid}; continue; }
+            if (id === c.onde) return {f:'assumir', cargo:cid};
+            if (hp >= .4){ const v = ir(c.onde); if (v) return v; }
+          }
+          const alvoC = Cargos.porId(ALVO) || {};
+          X.extraDia = X.extraDia || {};
+          if (J.extras && X.extraDia[id] !== dia){
+            X.extraDia[id] = dia;
+            const outro = CARGOS.find(c => c.id !== ALVO && (c.onde === id || c.onde === 'centro' && Exploracao.temCentro(L)) && !Cargos.tem(c.id) && Cargos.estado(c.id).ok
+              && !(c.veta || []).includes(ALVO) && !(alvoC.veta || []).includes(c.id));
+            if (outro && Math.random() < J.extras) return {f:'assumir', cargo:outro.id};
+          }
+        }
+        /* quem precisa de descoberta (o repórter anda) passeia pela cidade */
+        if (J.andar && L.tipo === 'cidade' && afz.includes('andar') && Math.random() < J.andar) return {f:'andar'};
+
+        const ELITE_VEZES = J.eliteVezes || 6;
         const querElite = (J.liga || d.capitulo >= 26) && typeof statusElite4 === 'function'
           && statusElite4().estado === 'disponivel' && (X.eliteVezes || 0) < ELITE_VEZES && X.eliteDia !== dia;
         if (querElite){
@@ -1305,6 +1480,8 @@ const SUSPEITO = [
           UI.fecharModal(true); Exploracao.tela();
           window.__passo && __passo('pedra', {nome:x.nome, de, para:p ? p.nome : null});
         }, dec).catch(e => erros.push('pedra: ' + e.message));
+      } else if (dec.f === 'assumir'){
+        await page.evaluate(c => { UI.fecharModal && UI.fecharModal(true); Jogo.assumirCargo(c); }, dec.cargo).catch(e => erros.push('assumir: ' + e.message));
       } else if (dec.f === 'liga') await page.evaluate(() => { Exploracao.fazer('liga'); Jogo.iniciarElite4(); });
       else if (dec.f === 'viajar') await page.evaluate(i => Exploracao.viajar(i), dec.id);
       else if (dec.f === 'arco') await page.evaluate(() => Exploracao.entrarNoArco());
@@ -1383,6 +1560,29 @@ const SUSPEITO = [
         });
       }).catch(() => []);
       const temOutra = soFinal.some(x => x === false);
+      /* o lado do jeito: a escolha que mexe na reputação pro eixo que o
+         jeito quer pesa mais (quanto mais mexe, mais pesa), a do eixo
+         contrário pesa um quarto; a que define a via (capítulo 9) pesa
+         seis vezes se for a do jeito, um quinto se for outra. É assim que
+         o vigilante chega com reputação pra guarda de rota e o oportunista
+         chega aos armários de Vermilion */
+      const lado = (J.rep || J.via) ? await esc.evaluateAll((els, q) => {
+        const cena = Historia.cenaAtual || {};
+        return els.map(el => {
+          const m = /Jogo\.escolher\((\d+)\)/.exec(el.getAttribute('onclick') || '');
+          const e = m && (cena.escolhas || [])[+m[1]];
+          if (!e || !e.ef) return 1;
+          let w = 1;
+          const r = e.ef.rep;
+          if (q.rep && r && r.eixo){
+            const dl = Math.abs(+r.delta || 1);
+            w *= r.eixo === q.rep ? 1 + 1.5 * dl : (r.eixo === 'bom' || r.eixo === 'ruim') ? .25 : 1;
+          }
+          const vm = /definirVia\(\s*['"](\w+)['"]/.exec(String(e.ef.executar || ''));
+          if (q.via && vm) w *= q.via.includes(vm[1]) ? 6 : .2;
+          return w;
+        });
+      }, {rep:J.rep || null, via:J.via || null}).catch(() => []) : [];
       /* perdeu duas vezes no mesmo ginásio: não tenta de novo na hora,
          vai treinar antes. O Vito, com um Geodude só, perdeu do Onix do
          Brock mais de dez vezes seguidas pelo "tentar de novo" */
@@ -1394,7 +1594,7 @@ const SUSPEITO = [
       const precisaCurar = await page.evaluate(() => { const v = Estado.dados.time.filter(p => !p.morto);
         return v.reduce((s, p) => s + Math.max(0, p.hp), 0) / Math.max(1, v.reduce((s, p) => s + p.hpMax, 0)) < .7; }).catch(() => false);
       const pesos = textos.map((t, i) => (J.gosta && J.gosta.test(t) ? 3 : 1) * (/^Parar e olhar mais um pouco/.test(t) ? .5 : 1)
-        * (soFinal[i] && temOutra ? .03 : 1)
+        * (soFinal[i] && temOutra ? .03 : 1) * (lado[i] || 1)
         * (perdeuAqui >= 2 && /tentar de novo/i.test(t) ? 0 : 1)
         * (/^Ir ao balcão do Centro/.test(t) ? (precisaCurar ? 3 : 0) : 1)
         /* a figura de capuz pede a Pokébola pra completar o que ela deu:
@@ -1458,10 +1658,20 @@ const SUSPEITO = [
         golpes:p.golpes.map(g => g.nome), hp:p.hp, hpMax:p.hpMax, moral:p.moral, shiny:!!p.shiny, segurando:p.segurando || null, morto:!!p.morto})),
       pc:(d.pc || []).map(p => ({dex:p.dex, especie:p.nome, apelido:p.apelido || null, nivel:p.nivel, genero:p.genero || null, shiny:!!p.shiny, morto:!!p.morto})),
       cemiterio:(d.cemiterio || []).map(p => ({especie:p.nome, nome:nomeExib(p), causa:p.causaMorte})),
-      insignias:d.insignias.slice(), dinheiro:j.dinheiro, reputacao:rep ? rep.nome : null, eixo:d.reputacao && d.reputacao.eixo,
+      insignias:d.insignias.slice(), dinheiro:j.dinheiro, reputacao:rep ? (typeof concordaJogador === "function" ? concordaJogador(rep.nome) : rep.nome) : null, eixo:d.reputacao && d.reputacao.eixo,
       via:d.via || null, linha:typeof linhaAtual === 'function' ? linhaAtual(d) : null, cargos:(d.cargos || []).slice(),
       capitulo:d.capitulo, fechados:(d.capitulosFechados || []).slice(), dia:d.relogio.dia, campeao:!!d.flags.campeao_de_kanto,
-      pokedex:{vistos:Object.keys(pd.vistos || {}).length, catalogados:Object.keys(pd.catalogados || {}).length},
+      pokedex:{vistos:Object.keys(pd.vistos || {}).length, catalogados:Object.keys(pd.catalogados || {}).length,
+        deKanto:Object.keys(pd.catalogados || {}).map(Number).filter(x => x >= 1 && x <= 150).length,
+        nacional:!!d.flags.dex_nacional, johto:!!d.flags.johto_liberado},
+      alvo:window.__cargo || null, cargo:j.cargo || null, postos:Object.keys(d.flags).filter(k => /^cargo_/.test(k)).map(k => k.slice(6)),
+      largou:Object.keys(d.flags).filter(k => /^largou_/.test(k)).map(k => k.slice(7)),
+      rede:d.rede ? {escalao:d.rede.escalao, pontos:d.rede.pontos, provas:d.rede.provas || null, fora:!!d.rede.fora, servicos:d.rede.feitos || d.rede.servicos || null} : null,
+      lei:d.liga ? {avisos:d.liga.avisos || 0, ordem:!!d.liga.ordemDevolucao, detencao:!!d.liga.detencao} : null,
+      lendarios:Object.entries(d.lendarios || {}).filter(([, l]) => l && (l.capturado || l.encontros || l.visto))
+        .map(([k, l]) => ({dex:+k, nome:DEX[k] ? DEX[k].nome : k, capturado:!!l.capturado, encontros:l.encontros || 0, cacando:!!l.caçandoVoce})),
+      descobertas:Object.keys(d.descobertas || {}).length, depoisDoFim:d.depoisDoFim || null,
+      lutas:window.__lutaN || 0, dificuldade:d.config && d.config.dificuldade || 'normal',
       itens:Object.assign({}, d.itens), diario:(d.log || []).slice(-400)};
   }).catch(e => ({erro:e.message}));
   const minutos = jaJogou + (Date.now() - t0) / 60000;
