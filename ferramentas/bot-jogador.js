@@ -451,11 +451,18 @@ const SUSPEITO = [
   /* o posto que ele quer, e a conta das lutas (pra o aviso da luta longa) */
   await page.evaluate(c => {
     window.__cargo = c || null;
-    window.__lutaN = window.__lutaN || 0;
-    if (!Batalha.__contando){
+    /* a conta segue de uma etapa pra outra, porque as marcas da luta
+       longa guardadas no __extra usam ela, e a marca de "já contando"
+       mora na janela. No Batalha ela ia junto na foto da luta salva:
+       a etapa que começava no meio de uma luta achava a marca, não
+       armava o contador, e todas as lutas dela tinham o mesmo número,
+       então a luta longa avisava uma vez por etapa (255 de 484 sem
+       aviso na terceira rodada) */
+    window.__lutaN = window.__lutaN || (window.__extra || {}).lutaN || 0;
+    if (!window.__contandoLutas){
       const bi = Batalha.iniciar.bind(Batalha);
-      Batalha.iniciar = function(){ window.__lutaN++; return bi.apply(Batalha, arguments); };
-      Batalha.__contando = true;
+      Batalha.iniciar = function(){ (window.__extra || (window.__extra = {})).lutaN = ++window.__lutaN; return bi.apply(Batalha, arguments); };
+      window.__contandoLutas = true;
     }
     /* de onde a luta veio, pro retrato da luta longa */
     window.__contextoDaLuta = () => {
@@ -751,7 +758,11 @@ const SUSPEITO = [
         const J = window.__jeito || {}, X = window.__extra || (window.__extra = {});
         if (!p || !alvo) return null;
         /* luta nova: zera a conta de Pokébolas jogadas e de trocas */
-        if (X.lutaUid !== alvo.uid){ X.lutaUid = alvo.uid; X.bolasNaLuta = 0; X.trocasNaLuta = 0; X.turnoDesde = B.turno; }
+        /* se a espécie era nova vale pela entrada dela, antes da Pokédex
+           apontada catalogar: lida depois, ela nunca era nova, e o robô
+           não jogava Pokébola em espécie nova nem em lendário */
+        if (X.lutaUid !== alvo.uid){ X.lutaUid = alvo.uid; X.bolasNaLuta = 0; X.trocasNaLuta = 0; X.turnoDesde = B.turno;
+          X.novoNaLuta = !((Estado.pdex().catalogados || {})[alvo.dex]); }
         if (B.fase === 'ameaca') return {tipo:'fugirAmeaca'};
         /* a Pokédex na espécie que ainda não catalogou: não gasta o turno,
            e é assim que a Pokédex enche sem capturar tudo */
@@ -815,13 +826,16 @@ const SUSPEITO = [
            Pokébola no que tem medo */
         if (B.tipo === 'selvagem' || B.tipo === 'lendario'){
           const pd = Estado.pdex();
-          const novo = !(pd.catalogados || {})[alvo.dex];
+          const novo = X.lutaUid === alvo.uid && X.novoNaLuta !== undefined ? X.novoNaLuta : !(pd.catalogados || {})[alvo.dex];
           const g = typeof gostoSabido === 'function' ? gostoSabido(alvo) : 0;
           const vivos = d.time.filter(x => !x.morto);
           const valor = x => x.nivel + (((DEX[x.dex] || {}).total) || 300) / 40;
           const pior = vivos.length ? Math.min(...vivos.map(valor)) : 0;
           let quer = false;
-          if (B.tipo === 'lendario') quer = !!J.lendario && novo;
+          /* lendário é um só: tenta enquanto não for seu, e não só no
+             primeiro encontro (na terceira rodada, 137 lutas com lendário
+             e nenhuma Pokébola) */
+          if (B.tipo === 'lendario') quer = !!J.lendario && !((d.lendarios || {})[alvo.dex] || {}).capturado;
           else if (g < 0) quer = false;
           else if (vivos.length < 6) quer = true;
           else if (J.captura === 'nova') quer = novo;
