@@ -350,7 +350,9 @@ function porQueDurou(l){
   /* um capítulo por bloco: luta comum seguida no mato vira uma linha, e
      viagem seguida vira um trajeto */
   const passoAPasso = x => {
-    const ps = x.m.ps.filter(p => p.t !== 'luta30');
+    /* as linhas "no mapa" (procurar, treinar, curar) contam pouco e pesam
+       um oitavo da página: ficam só as que dizem alguma coisa */
+    const ps = x.m.ps.filter(p => p.t !== 'luta30' && !(p.t === 'mapa' && !['liga', 'dexnac', 'rede', 'assumir', 'cadastro'].includes(p.f)));
     const blocos = [];
     let atual = {cab:{titulo:'Capítulo 1 · a inscrição e a última manhã'}, itens:[]};
     for (const p of ps){
