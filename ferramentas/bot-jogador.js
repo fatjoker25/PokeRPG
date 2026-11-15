@@ -862,6 +862,23 @@ const SUSPEITO = [
              contra o Onix, o Kakuna sozinho contra o Rattata): desiste */
           if (!quemFere && B.tipo === 'treinador' && B.turno >= 6) return {tipo:'desistir'};
         }
+        /* evasão de lá em +4 ou mais (Minimize, Double Team): cada estágio
+           tira um sucesso da precisão, e a parada de oito dados zera. O
+           Blissey da Veronica, com Minimize e Softboiled, segurou o Gengar
+           do robô Líder três lutas seguidas de sessenta turnos. Quem joga
+           troca pra quem tem golpe que não erra (Swift) e, sem ninguém
+           assim, desiste da luta de treinador */
+        const evaDeLa = ((B.estInimigo || {}).evasao || 0) - ((B.estInimigo || {}).identificado ? Math.max(0, (B.estInimigo || {}).evasao || 0) : 0);
+        if (evaDeLa >= 4 && B.turno >= 12 && !(B.estAliado && B.estAliado.presoTurnos)){
+          const naoErra = x => (x.golpes || []).some(g => { const G = GOLPES[g.nome] || {}, P = PR_GOLPE[g.nome] || {};
+            return G.c !== 'status' && (P.nunca || (G.a || 0) >= 999) && eficacia(G.t, alvo.tipos) > 0; });
+          if (!naoErra(p)){
+            const quem = d.time.find(x => x.uid !== p.uid && estaVivo(x) && x.hp > 0 && naoErra(x));
+            if (quem && (X.trocasNaLuta || 0) < 5){ X.trocasNaLuta = (X.trocasNaLuta || 0) + 1; X.turnoDesde = B.turno; return {tipo:'trocar', uid:quem.uid}; }
+            if (B.tipo === 'treinador' && B.turno >= 30) return {tipo:'desistir'};
+            if (B.tipo !== 'treinador' && B.fuga !== false) return {tipo:'fugir'};
+          }
+        }
         /* luta de treinador perdida de vez: trinta turnos, o de lá com
            mais da metade do HP e todo mundo de pé seis níveis ou mais
            abaixo dele. O Pidgey 2 e o Caterpie 3 contra o Onix 11 do Brock
