@@ -1599,20 +1599,28 @@ const SUSPEITO = [
          seis vezes se for a do jeito, um quinto se for outra. É assim que
          o vigilante chega com reputação pra guarda de rota e o oportunista
          chega aos armários de Vermilion */
+      /* a reputação e a via quase nunca moram na escolha: moram na cena
+         pra onde ela leva (2.798 escolhas levam a cena com rep, 310 têm a
+         rep nelas). Lia só a escolha, e o robô da rede chegou ao 26
+         Admirado, com 795 pontos do lado bom e nenhum do ruim */
       const lado = (J.rep || J.via) ? await esc.evaluateAll((els, q) => {
-        const cena = Historia.cenaAtual || {};
+        const cena = Historia.cenaAtual || {}, cs = (Historia.capAtual && Historia.capAtual.cenas) || {};
         return els.map(el => {
           const m = /Jogo\.escolher\((\d+)\)/.exec(el.getAttribute('onclick') || '');
           const e = m && (cena.escolhas || [])[+m[1]];
-          if (!e || !e.ef) return 1;
+          if (!e) return 1;
+          const efs = [e.ef || {}];
+          if (typeof e.vai === 'string' && cs[e.vai] && cs[e.vai].ef) efs.push(cs[e.vai].ef);
           let w = 1;
-          const r = e.ef.rep;
-          if (q.rep && r && r.eixo){
-            const dl = Math.abs(+r.delta || 1);
-            w *= r.eixo === q.rep ? 1 + 1.5 * dl : (r.eixo === 'bom' || r.eixo === 'ruim') ? .25 : 1;
+          for (const ef of efs){
+            const r = ef.rep;
+            if (q.rep && r && r.eixo){
+              const dl = Math.abs(+r.delta || 1);
+              w *= r.eixo === q.rep ? 1 + 2 * dl : (r.eixo === 'bom' || r.eixo === 'ruim') ? .15 : 1;
+            }
+            const vm = /definirVia\(\s*['"](\w+)['"]/.exec(String(ef.executar || ''));
+            if (q.via && vm) w *= q.via.includes(vm[1]) ? 6 : .2;
           }
-          const vm = /definirVia\(\s*['"](\w+)['"]/.exec(String(e.ef.executar || ''));
-          if (q.via && vm) w *= q.via.includes(vm[1]) ? 6 : .2;
           return w;
         });
       }, {rep:J.rep || null, via:J.via || null}).catch(() => []) : [];
