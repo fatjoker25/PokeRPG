@@ -1293,6 +1293,11 @@ const SUSPEITO = [
             if (outro && Math.random() < J.extras) return {f:'assumir', cargo:outro.id};
           }
         }
+        /* a rede: quem carrega o envelope passa no ponto dela uma vez por dia
+           (o armário 14 em Vermilion, o subsolo em Celadon, o galpão em
+           Fuchsia): o serviço da vez e a prova pra subir de degrau. Sem
+           isso o robô que pegou o envelope nunca fazia nada pela rede */
+        if (afz.includes('rede') && X.redeDia !== dia + id && hp >= .5){ X.redeDia = dia + id; return {f:'rede'}; }
         /* quem precisa de descoberta (o repórter anda) passeia pela cidade */
         if (J.andar && L.tipo === 'cidade' && afz.includes('andar') && Math.random() < J.andar) return {f:'andar'};
 
