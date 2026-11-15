@@ -903,6 +903,78 @@ const SUSPEITO = [
     await tentar('loja/' + id + '/vender', x => Cidade.loja(0, undefined, 'vender'), id);
   }
 
+  /* ---------- quem tem o seu número procura você (recados.js) ----------
+     um contato de cada tipo (casa, líder, gente da história, estrada,
+     veterano, troca, rival) com cada tópico de ligação, cada resposta e
+     o não atender; o recado em cada degrau de afinidade, o "Encontrar"
+     na cidade, o encontro e o ficar conversando; o telefone tocando pelo
+     sorteio de verdade; e o presente de quem mora na cidade em cada
+     degrau de Carisma, comum e crítico */
+  const comAgenda = async () => page.evaluate(s => {
+    if (typeof Batalha !== 'undefined') Batalha.ativo = false;
+    UI.fecharModal && UI.fecharModal(true);
+    Estado.dados = JSON.parse(s);
+    const ids = ['brock', 'zelador'];
+    for (const re of [/^rt_/, /^vt_/, /^tr_/, /^rival_/]){ const c = todosContatos().find(x => re.test(x.id)); if (c) ids.push(c.id); }
+    ids.forEach(id => { Estado.nav().contatos[id] = {id, desdeCap:Estado.dados.capitulo, usos:{}}; });
+    Estado.lembrarNPC('Zelador da Torre', {opiniao:5});
+    return ['casa'].concat(ids);
+  }, snap);
+  for (const id of await comAgenda()){
+    const tops = await page.evaluate(x => Recados.topicosDe(contatoPorId(x)).map(t => t.id), id);
+    for (const t of tops) for (const i of [0, 1, 2, -1]){
+      await comAgenda();
+      await tentar(`recado/${id}/${t}`, ([x, y]) => UI.telaChamada(Recados.montarLigacao(contatoPorId(x), y)), [id, t]);
+      await tentar(`recado/${id}/${t}/${i < 0 ? 'não atendeu' : i}`, i0 => {
+        const ch = Recados.atual;
+        if (!ch) throw new Error('a ligação à toa sumiu antes da resposta');
+        if (i0 < 0) Jogo.recusarChamada(ch.id); else Jogo.responderChamada(ch.id, i0);
+      }, i);
+    }
+    for (const af of [1, 3, 5, 8]){
+      await comAgenda();
+      await tentar(`recado/${id}/recado ${af}`, ([x, a]) => {
+        const c = contatoPorId(x), r = Recados.rotuloNPC(c);
+        if (r) Estado.lembrarNPC(r, {opiniao:a});
+        else Recados.doContato(x).laco = a - (x === 'casa' ? AFINIDADE_DE_CASA : AFINIDADE_DA_ESTRADA);
+        if (Recados.afinidade(c) !== a) throw new Error(`afinidade ${Recados.afinidade(c)} em vez de ${a}`);
+        if (!Recados.separarPresente(c)) throw new Error('não separou presente');
+        UI.telaRecado(c);
+      }, [id, af]);
+      await tentar(`recado/${id}/encontro ${af}`, x => {
+        UI.fecharModal(true);
+        const p = Recados.reg().presentes[x];
+        Estado.dados.local = p.onde;
+        Exploracao.tela();
+        if (!afazeresDoLocal().some(a => a.id === 'recado_' + x)) throw new Error('sem "Encontrar" em ' + p.onde);
+        const antes = Estado.contaItem(p.item);
+        Exploracao.fazer('recado_' + x);
+        if (Estado.contaItem(p.item) !== antes + p.qtd) throw new Error('o presente não chegou na mochila');
+        if (afazeresDoLocal().some(a => a.id === 'recado_' + x)) throw new Error('o "Encontrar" ficou depois do encontro');
+      }, id);
+      await tentar(`recado/${id}/ficar ${af}`, x => Recados.ficar(x), id);
+    }
+  }
+  for (let k = 0; k < 8; k++){
+    await comAgenda();
+    await tentar('recado/tocou ' + k, () => { Recados.reg().ultimoDia = null; Exploracao.tela(); if (!Recados.talvez()) throw new Error('o telefone não tocou'); });
+    await page.waitForTimeout(200);
+    await olhar('recado/tocou ' + k);
+  }
+  for (const car of [1, 2, 3, 4, 5]) for (const g of ['sucesso', 'critico']){
+    await restaurar();
+    await tentar(`presente da cidade/${car}/${g}`, ([c, gr]) => {
+      Estado.j.status.carisma = c; Estado.dados.local = 'celadon';
+      const conversa = CONVERSAS.celadon.map(x => Array.isArray(x) ? x : x.texto)
+        .find(l => l.some(y => y && typeof y === 'object' && y.quem && y.diz));
+      const av = Recados.presenteDaConversa('celadon', conversa, gr);
+      if (!av.length) throw new Error('sem presente');
+      Exploracao.tela(conversa.map(x => ({tipo:'info', texto:x})).concat(av));
+    }, [car, g]);
+  }
+  await restaurar();
+  await tentar('presente da cidade/conversar', () => { Estado.dados.local = 'celadon'; Exploracao.conversar(); });
+
   /* ---------- a rede: cada degrau, cada ponto, cada serviço e escolha ---------- */
   const naRede = async (n, local) => page.evaluate(([n, local, s]) => {
     if (typeof Batalha !== 'undefined') Batalha.ativo = false;

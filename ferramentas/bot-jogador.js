@@ -1286,6 +1286,27 @@ const SUSPEITO = [
         /* a Pokédex Nacional: com a conta do Professor feita, quem cuida
            da Pokédex vai a Pallet buscar; os outros, num capítulo sim e
            noutro não, na chance */
+        /* número que te deram: grava, como quem aperta "Gravar os N". Até a
+           terceira rodada nenhum robô gravou ninguém, e a agenda terminava
+           só com a casa */
+        if (Estado.temPokenav() && Estado.numerosDisponiveis().length){
+          const novos = Estado.numerosDisponiveis();
+          novos.forEach(c => Estado.registrarNumero(c.id));
+          window.__passo && __passo('numeros', {n:novos.length, quem:novos.map(c => c.id).join(',')});
+        }
+        /* quem mandou recado de que separou alguma coisa (recados.js): aqui,
+           vai encontrar; noutra cidade, vai até lá uma vez por capítulo */
+        if (typeof Recados !== 'undefined'){
+          const rec = afz.find(a => /^recado_/.test(a));
+          if (rec) return {f:rec};
+          X.recadoIr = X.recadoIr || {};
+          const pend = Object.entries(Recados.reg().presentes).find(([cid, pr]) => pr.onde !== id && X.recadoIr[cid] !== d.capitulo);
+          if (pend && hp >= .5){
+            const v = ir(pend[1].onde);
+            if (v) return v;
+            X.recadoIr[pend[0]] = d.capitulo;
+          }
+        }
         if (typeof DexNacional !== 'undefined' && !DexNacional.tem() && DexNacional.pode()){
           if (afz.includes('dexnac')) return {f:'dexnac'};
           X.nacCap = X.nacCap || {};

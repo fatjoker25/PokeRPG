@@ -1016,7 +1016,9 @@ const Jogo = {
     if (typeof Chamadas === 'undefined' || !Estado.temPokenav()) return false;
     if (!Dados.chance(38)) return false;
     const c = Chamadas.sortear();
-    if (!c) return false;
+    /* sem chamada escrita pra tocar, quem tem o seu número pode ligar à
+       toa ou mandar recado (recados.js) */
+    if (!c) return typeof Recados !== 'undefined' && Recados.talvez();
     setTimeout(() => UI.telaChamada(c), 80);
     return true;
   },

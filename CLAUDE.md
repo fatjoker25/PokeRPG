@@ -1858,6 +1858,62 @@ aparelho eles são refeitos com seletor mais forte (`.modal.nav
 .nav-conversa .fala…`), senão a sua fala e a fala sem dono saíam faixa
 preta com letra preta.
 
+## Quem tem o seu número procura você
+Foi pedido assim: quem está no PokéNav liga de vez em quando pra
+conversar, ou manda recado de que separou alguma coisa, e você acha a
+pessoa andando pela cidade; o que ela dá depende da afinidade. E quem
+mora na cidade, depois de uma conversa, pode dar alguma coisa pelo seu
+Carisma. Mora tudo em `js/story/recados.js` (`Recados`).
+
+- **A ligação à toa** não é CHAMADA: é montada na hora
+  (`Recados.montarLigacao`: um tópico de `TOPICOS_DE_LIGACAO` que serve
+  pro tipo do contato — casa, líder, treinador, figura — e nunca o da
+  última vez com ele), com id `rec_…`, e o `Chamadas` manda pra cá o que
+  tem esse id (`porId`, `atender`, `recusar`). A tela é a da chamada
+  (`telaChamada`, `telaResultadoChamada`). Toca pelo `Jogo.talvezToque`,
+  quando não tem chamada escrita pra tocar, e na chegada a um lugar
+  (`Recados.talvezNaChegada`, no `Exploracao.viajar`): no máximo um
+  contato à toa a cada `RECADO_INTERVALO_DIAS`, a mesma pessoa a cada
+  `RECADO_POR_CONTATO_DIAS`, e quem a história tirou do mundo (`requer`
+  falso) não liga. Tópico novo entra com `para`, `falas` e três
+  respostas com `afeto`; o seu Pokémon concorda por `x.pr`, e a pessoa
+  fala por `x.diz`, que pra casa é o `falaCasa`.
+- **Afinidade** (`Recados.afinidade`): pra quem a história conhece, a
+  opinião de `d.npcs` (`rotuloNPC`: o `falaComo` ou o nome), e o
+  telefone mexe nela; quem só te deu o número guarda o laço no registro
+  (`nav.recados.contatos[id].laco`), a partir de `AFINIDADE_DA_ESTRADA`;
+  a casa parte de `AFINIDADE_DE_CASA`. O telefone aproxima até
+  `AFINIDADE_TETO_LIGACAO` e afasta até `AFINIDADE_PISO_LIGACAO`: acima
+  disso, só a história.
+- **O recado** (`separarPresente`): com afinidade 1+, na chance de
+  `chanceDoPresente`, o contato vira mensagem no PokéNav
+  (`UI.telaRecado`). O presente sai do degrau
+  (`PRESENTES_POR_AFINIDADE`; o líder no degrau das pedras pode trocar
+  pela dele, `PEDRA_DO_CONTATO`) e espera em
+  `nav.recados.presentes[id]`: "Encontrar …" no que fazer da cidade
+  (`Recados.afazeres`, afazer `recado_<id>`, desenho do envelope), que é
+  a cidade da pessoa ou a mais perto da estrada dela (`ondeEncontrar`,
+  `cidadeMaisPerto`, de preferência uma já pisada). O encontro
+  (`Recados.encontrar`) é cena de conversa, com "Ficar mais um período
+  conversando" (+1).
+- **O presente de morador** (`presenteDaConversa`, no
+  `Exploracao.conversar`): quem falou na conversa (o primeiro balão com
+  dono) dá alguma coisa num teste de Carisma
+  (`PRESENTE_DA_CIDADE_DIFICULDADE`), uma vez por dia em cada cidade e a
+  mesma pessoa a cada `PRESENTE_DA_CIDADE_ESPERA_DIAS`. O degrau sai do
+  Carisma (`PRESENTES_DA_CIDADE`), e o crítico sobe um.
+- Nome no meio da frase passa por `nomeNaNarracao` (quem é chamado
+  pelo cargo vai com artigo: "o zelador da Torre"), e nada na cena diz
+  por que alguém deu o que deu: a regra está na folha (PokéNav e
+  "Presente de quem mora na cidade"), que lê as tabelas daqui.
+
+`chk-telas` liga com cada tipo de contato, cada tópico e cada
+resposta, manda o recado em cada degrau, acha a pessoa na cidade, fica
+conversando, deixa o telefone tocar pelo sorteio e dá o presente de
+morador em cada Carisma; o `chk-baloes` confere as falas pelo
+`Recados.amostras`. O robô grava os números que oferecem e vai buscar
+o presente.
+
 ## A luta não acaba no recarregar
 `Estado.salvar` chama `LutaSalva.anotar` (`js/engine/luta-salva.js`): com
 luta ativa, ou com resultado esperando o Continuar (`Jogo.fimPendente`),

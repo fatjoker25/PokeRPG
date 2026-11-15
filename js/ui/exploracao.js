@@ -411,6 +411,8 @@ const Exploracao = {
       }
       if (onde) Estado.dados.local = id;
     }
+    /* chegou: às vezes quem tem o seu número liga ou manda recado (recados.js) */
+    if (typeof Recados !== 'undefined') Recados.talvezNaChegada();
     this.tela(primeiraVez ? [{tipo:'info', texto:'Você nunca esteve aqui.'}] : null);
   },
 
@@ -464,6 +466,7 @@ const Exploracao = {
     if (acao.startsWith('intu_')) return Intuicao.fazer(acao.slice(5));
     if (acao.startsWith('tit_'))  return Titulares.fazer(acao.slice(4));
     if (acao === 'dexnac')        return DexNacional.fazer();
+    if (acao.startsWith('recado_')) return Recados.encontrar(acao.slice(7));
     if (acao === 'rede')          return Rede.tela();
     if (acao === 'esperar')       return this.esperar();
     if (acao.startsWith('posto_')){
@@ -727,8 +730,11 @@ const Exploracao = {
   conversar(){
     Mundo.passar(1);
     const falas = Conversas.sortear(Mundo.id());
+    /* quem falou com você pode te dar alguma coisa antes de você ir:
+       teste de Carisma (recados.js) */
+    const presente = typeof Recados !== 'undefined' ? Recados.presenteDaConversa(Mundo.id(), falas) : [];
     Estado.salvar('auto');
-    this.tela(falas.map(x => ({tipo:'info', texto:x})));
+    this.tela(falas.map(x => ({tipo:'info', texto:x})).concat(presente));
   },
 
   /* ---------- encontro selvagem ---------- */

@@ -1242,7 +1242,11 @@ const Chamadas = {
     return nav.chamadas;
   },
   jaAtendeu(id){ return !!this.atendidas()[id]; },
-  porId(id){ return CHAMADAS.find(c => c.id === id) || null; },
+  /* a ligação à toa (recados.js) não mora em CHAMADAS: id que começa com rec_ é de lá */
+  porId(id){
+    if (typeof Recados !== 'undefined' && Recados.ehDaqui(id)) return Recados.chamada(id);
+    return CHAMADAS.find(c => c.id === id) || null;
+  },
 
   disponiveis(){
     if (!Estado.temPokenav()) return [];
@@ -1263,6 +1267,7 @@ const Chamadas = {
   },
 
   atender(id, indice){
+    if (typeof Recados !== 'undefined' && Recados.ehDaqui(id)) return Recados.atender(id, indice);
     const c = this.porId(id);
     if (!c) return null;
     const esc = (c.escolhas || [])[indice];
@@ -1275,6 +1280,7 @@ const Chamadas = {
   },
   /* não atender também é uma escolha, e custa */
   recusar(id){
+    if (typeof Recados !== 'undefined' && Recados.ehDaqui(id)) return Recados.recusar(id);
     const c = this.porId(id);
     if (!c) return null;
     this.atendidas()[id] = {cap:Estado.dados.capitulo, escolha:null, recusada:true};

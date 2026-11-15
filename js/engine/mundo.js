@@ -753,6 +753,8 @@ function afazeresDoLocal(){
   if (typeof Titulares !== 'undefined') Titulares.afazeres(id).forEach(x => lista.push(x));
   /* o Professor, em Pallet, que atualiza a Pokédex pra Nacional (dex-nacional.js) */
   if (typeof DexNacional !== 'undefined') DexNacional.afazeres(id).forEach(x => lista.push(x));
+  /* quem mandou recado de que separou alguma coisa e está nesta cidade (recados.js) */
+  if (typeof Recados !== 'undefined') Recados.afazeres(id).forEach(x => lista.push(x));
   /* deixar o tempo passar: é assim que se chega na hora marcada */
   lista.push({id:'esperar', titulo:'Esperar a hora passar'});
   return lista;

@@ -57,7 +57,7 @@ const STATUS_DO_TREINADOR = [
   ['forca',       'Força',       'Escapar de quem te encurralou · os testes de cena que pedem braço'],
   ['percepcao',   'Percepção',   'Vasculhar · observar · ler a natureza do seu time e, com 3, a de quem está do outro lado'],
   ['intelecto',   'Intelecto',   'A hora de pegar a estrada · andar pela cidade · com Percepção, ler o tipo de um desconhecido (os dois em 4)'],
-  ['carisma',     'Carisma',     'Treinar · encarar um selvagem · ser obedecido com a moral baixa'],
+  ['carisma',     'Carisma',     'Treinar · encarar um selvagem · ser obedecido com a moral baixa · o presente de quem conversa com você na cidade'],
   ['sorte',       'Sorte',       'O que o vasculho acha · pescaria · chance de brilhante'],
   ['resistencia', 'Resistência', 'HP máximo (+2 por ponto) · Vontade (2 + Resistência) · aguentar o golpe que sobra pra você']
 ];
@@ -3041,6 +3041,18 @@ const UI = {
       <div id="avisos-nav" class="avisos"></div>
       <div class="nav-respostas">${this.navFim('Guardar o aparelho', 'Jogo.voltarDaLigacao()')}</div>`, true, svgIcone('convite'));
     if (avisos && avisos.length) this.avisos(avisos, 'avisos-nav');
+  },
+
+  /* recado de quem separou alguma coisa pra você (recados.js): chega no
+     aparelho como mensagem, com o rosto de quem mandou e o lugar onde
+     a pessoa vai estar */
+  telaRecado(c){
+    if (!c || !Estado.temPokenav() || emLuta()) return;
+    const nome = textoContato(c, 'nome');
+    this.navTela(c, nome, 'mensagem', `
+      <div class="nav-conversa narrativa">${this.narrar(Recados.textoDoRecado(c), nome)}</div>
+      <div id="avisos-nav" class="avisos"></div>
+      <div class="nav-respostas">${this.navFim('Guardar o aparelho', 'Jogo.voltarDaLigacao()')}</div>`);
   },
 
   /* só o alto da tela: dinheiro, HP e relógio depois de uma ligação */
@@ -6622,7 +6634,16 @@ const UI = {
       <div class="linha"><span class="k">Notícia</span><span class="v">não rende nada material · muda o que a pessoa pensa de você</span></div>
       <div class="linha"><span class="k">Gente da estrada</span><span class="v">19 dos treinadores de rota passam o número na primeira vez que perdem pra você · a revanche vem com o time de quem tem duas insígnias a mais, e +2 de nível</span></div>
       <div class="linha"><span class="k">Gente da história</span><span class="v">quem gostou de você o bastante passa o número depois do capítulo em que vocês se conheceram</span></div>
+      <div class="linha"><span class="k">Ligação à toa</span><span class="v">de vez em quando alguém da agenda liga só pra conversar, ou chegando num lugar, ou andando pela cidade · no mínimo ${RECADO_INTERVALO_DIAS} dias entre um contato e outro, e ${RECADO_POR_CONTATO_DIAS} pra mesma pessoa · quem gosta mais de você liga mais · resposta boa aproxima (+1 de afinidade, até ${AFINIDADE_TETO_LIGACAO}) · resposta ruim ou não atender afasta (−1, até ${String(AFINIDADE_PISO_LIGACAO).replace('-', '−')})</span></div>
+      <div class="linha"><span class="k">Afinidade</span><span class="v">é o que a pessoa pensa de você · gente da história guarda o que viveu com você nas cenas · quem só te deu o número começa em ${AFINIDADE_DA_ESTRADA} · quem ficou em casa, em ${AFINIDADE_DE_CASA} · acima de ${AFINIDADE_TETO_LIGACAO}, só pelo que acontece entre vocês fora do telefone</span></div>
+      <div class="linha"><span class="k">Recado</span><span class="v">com afinidade ${PRESENTE_MIN_AFINIDADE} ou mais, o contato pode ser recado de que a pessoa separou alguma coisa pra você (quanto mais afinidade, mais vezes) · ela espera na cidade dela (quem vive na estrada, na cidade mais perto da estrada dela) e aparece "Encontrar" no que fazer de lá · um por pessoa de cada vez, e outro só ${PRESENTE_ESPERA_DIAS} dias depois de buscar · ficar um período conversando no encontro aproxima (+1)</span></div>
+      ${PRESENTES_POR_AFINIDADE.map((t, i, l) => `<div class="linha"><span class="k">${this.esc(t.nome.charAt(0).toUpperCase() + t.nome.slice(1))} (${i ? t.min + '–' + (l[i - 1].min - 1) : t.min + ' ou mais'})</span><span class="v">${t.itens.map(([n, q]) => this.esc((q > 1 ? q + '× ' : '') + n)).join(' · ')}${t.min >= 5 ? ' · o líder de ginásio pode separar a pedra do ginásio dele' : ''}</span></div>`).join('')}
       <p class="sussurro">Missão entregue não se pede de novo, e missão aberta não se entrega antes da hora. Algumas pessoas ligam pra você primeiro — atender custa tempo e não atender custa outra coisa. Quem te dá o número não explica quem é: isso está na conversa em que você conheceu a pessoa.</p>
+
+      <h3>Presente de quem mora na cidade</h3>
+      <div class="linha"><span class="k">Quando</span><span class="v">depois de conversar com alguém na cidade · teste de Carisma, ${Dados.sucessosPedidos(PRESENTE_DA_CIDADE_DIFICULDADE)} sucessos · uma vez por dia em cada cidade · a mesma pessoa, só depois de ${PRESENTE_DA_CIDADE_ESPERA_DIAS} dias</span></div>
+      <div class="linha"><span class="k">O que vem</span><span class="v">sobe com o seu Carisma · o crítico sobe um degrau</span></div>
+      ${PRESENTES_DA_CIDADE.map((t, i, l) => `<div class="linha"><span class="k">Carisma ${i ? t.min + (l[i - 1].min - 1 > t.min ? '–' + (l[i - 1].min - 1) : '') : t.min + ' ou mais'}</span><span class="v">${t.itens.map(([n]) => this.esc(n)).join(' · ')}</span></div>`).join('')}
 
       <h3>De onde vem o seu primeiro</h3>
       <div class="linha"><span class="k">Qual dos três</span><span class="v">você escolhe na hora, com os três fora da Pokébola, na sua frente · nenhuma vem escolhida</span></div>

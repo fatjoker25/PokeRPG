@@ -70,6 +70,12 @@ const r=await p.evaluate(()=>{
     const onde='nav/'+ch.id; varre(lista(ch.falas), onde, dono, null, null);
     for(const e of (ch.escolhas||[])) if(e.resultado) varre(lista(e.resultado), onde+'>', dono, null, null);
   }
+  /* quem liga à toa, o recado e o encontro (recados.js), com um contato de cada tipo */
+  if(typeof Recados!=='undefined'){
+    const ids=['casa','brock','zelador'];
+    for(const re of [/^rt_/,/^vt_/,/^tr_/,/^rival_/]){ const c=todosContatos().find(x=>re.test(x.id)); if(c) ids.push(c.id); }
+    for(const a of Recados.amostras(ids.map(contatoPorId).filter(Boolean))) varre(lista(a.linhas), a.onde, a.dono, null, null);
+  }
   return out;
 });
 const sem=Object.entries(r.nomes).filter(([n,o])=>o.rosto===0).sort((a,b)=>b[1].n-a[1].n);

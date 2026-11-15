@@ -1035,7 +1035,10 @@ const Estado = {
         return {ok:false, motivo:`Vocês falaram faz pouco. Deixa passar ${faltaDias} dia${faltaDias===1?'':'s'}.`};
       return {ok:true};
     }
-    const falta = (u.ultimoCap + espera) - this.dados.capitulo;
+    /* pela posição na jornada: favor pedido no 29 (entre o 6 e o 7)
+       travava até o 30, e o pedido num capítulo de caminho (12.04)
+       travava o 13 inteiro; a parte inteira, pra conta sair em capítulos */
+    const falta = (Math.floor(capNaJornada({capitulo:u.ultimoCap})) + espera) - Math.floor(capNaJornada(this.dados));
     if (falta > 0 && !acabou)
       return {ok:false, motivo:`Vocês falaram faz pouco. Deixa passar ${falta} capítulo${falta===1?'':'s'}.`};
     return {ok:true};
