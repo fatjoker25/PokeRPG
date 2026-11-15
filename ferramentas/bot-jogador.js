@@ -546,8 +546,11 @@ const SUSPEITO = [
        fica depois da espera e não sai) */
     if (Date.now() - ultimoMinuto > 60000){
       ultimoMinuto = Date.now();
+      /* o turno entra no retrato: luta longa andando não é tela parada
+         (a Comissão 2 deu "parado 3 minutos" no turno 29 de uma luta que
+         seguia, e o retrato só tinha o alto da tela) */
       const m = await page.evaluate(() => ({c:Estado.dados.capitulo, l:Estado.dados.local, modo:Estado.dados.modo, cena:Estado.dados.cena,
-        luta:!!Batalha.ativo, enc:!!Jogo.encenando, bola:!!Jogo.animandoBola, modal:!!document.querySelector('#modal'),
+        luta:!!Batalha.ativo, turno:Batalha.ativo ? Batalha.turno : null, enc:!!Jogo.encenando, bola:!!Jogo.animandoBola, modal:!!document.querySelector('#modal'),
         tela:(document.querySelector('#modal') || document.querySelector('#app') || {innerText:''}).innerText.replace(/\s+/g, ' ').slice(0, 110)})).catch(e => ({erro:e.message}));
       const k = JSON.stringify(m);
       mesmoMinuto = k === ultimoMinutoK ? mesmoMinuto + 1 : 0; ultimoMinutoK = k;
