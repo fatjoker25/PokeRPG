@@ -191,7 +191,12 @@ const SUSPEITO = [
      carga 15 em quatro núcleos só desenhando o que ninguém olha. A
      partida é a mesma: muda a pintura, não a conta */
   const LEVE = process.env.LEVE === '1';
-  const browser = await chromium.launch({ executablePath:'/opt/pw-browsers/chromium', args:['--no-sandbox'].concat(LEVE ? ['--disable-gpu'] : []) });
+  /* o headless shell é o navegador sem a casca de janela: no LEVE, com
+     quinze robôs na fila, metade da máquina ia pros processos de GPU
+     recompondo tela que ninguém vê */
+  const SHELL = '/opt/pw-browsers/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell';
+  const browser = await chromium.launch({ executablePath:LEVE && fs.existsSync(SHELL) ? SHELL : '/opt/pw-browsers/chromium',
+    args:['--no-sandbox'].concat(LEVE ? ['--disable-gpu'] : []) });
   /* a janela menor também pesa: o fundo do lugar é repintado a cada
      segundo (a luz anda com o relógio), e o custo é por pixel */
   const page = await browser.newPage(LEVE ? {viewport:{width:800, height:640}, reducedMotion:'reduce'} : {viewport:{width:1000, height:1100}});
@@ -210,6 +215,10 @@ const SUSPEITO = [
     erros.push(m); console.log('ERRO JS', m.slice(0, 300)); });
   page.on('dialog', d => /Soltar|permanente|Vender|Largar/.test(d.message()) ? d.dismiss() : d.accept());
   await page.goto(RAIZ);
+  /* no LEVE a arte é a parada, como no artefato: a GIF animada da luta
+     repinta a arena o tempo todo, e com seis robôs a máquina parava. O
+     jogo cai sozinho na arte parada quando não tem GIF (imgSprite) */
+  if (LEVE) await page.evaluate(() => { window.caminhoSpriteAni = () => null; }).catch(() => {});
   await page.waitForTimeout(400);
   /* a luta encenada mais rápido: 3× é o que quem joga pode escolher, e
      TURBO acima disso põe o fator direto (o botão só gira entre 1, 2 e 3).
@@ -836,6 +845,26 @@ const SUSPEITO = [
         const meu = golpeBom(p);
         const banco = d.time.filter(x => x.uid !== p.uid && x.hp > x.hpMax * 0.4 && !x.morto);
         const melhorBanco = banco.map(x => ({x, s:golpeBom(x).melhor})).sort((u, v) => v.s - u.s)[0];
+        /* quem não fere ninguém não fica em campo: o Kakuna do repórter,
+           só com Harden, ficou sessenta turnos contra um Rattata, as duas
+           trocas da luta já gastas. Troca por quem fere (até quatro vezes)
+           e, sem ninguém, vai embora da selvagem */
+        if (meu.melhor < 0 && !(B.estAliado && B.estAliado.presoTurnos)){
+          const quemFere = d.time.filter(x => x.uid !== p.uid && estaVivo(x) && x.hp > 0)
+            .map(x => ({x, s:golpeBom(x).melhor})).filter(o => o.s > 0).sort((u, v) => v.s - u.s)[0];
+          if (quemFere && (X.trocasNaLuta || 0) < 4){ X.trocasNaLuta = (X.trocasNaLuta || 0) + 1; X.turnoDesde = B.turno; return {tipo:'trocar', uid:quemFere.x.uid}; }
+          if (B.tipo === 'selvagem' && B.fuga !== false) return {tipo:'fugir'};
+          /* treinador, e ninguém de pé fere o de lá (o Pikachu sozinho
+             contra o Onix, o Kakuna sozinho contra o Rattata): desiste */
+          if (!quemFere && B.tipo === 'treinador' && B.turno >= 6) return {tipo:'desistir'};
+        }
+        /* luta de treinador perdida de vez: trinta turnos, o de lá com
+           mais da metade do HP e todo mundo de pé seis níveis ou mais
+           abaixo dele. O Pidgey 2 e o Caterpie 3 contra o Onix 11 do Brock
+           levavam trinta turnos de Potion. Quem joga desiste e volta
+           treinado */
+        if (B.tipo === 'treinador' && B.turno >= 30 && alvo.hp > alvo.hpMax * .5
+            && d.time.filter(x => estaVivo(x) && x.hp > 0).every(x => x.nivel <= alvo.nivel - 6)) return {tipo:'desistir'};
         /* precisão no chão (Smokescreen, Sand Attack): quem joga troca pra
            zerar os estágios, como nos jogos */
         if (melhorBanco && ((B.estAliado || {}).precisao || 0) <= -3 && (X.trocasNaLuta || 0) < 3 && !(B.estAliado && B.estAliado.presoTurnos)){
@@ -1664,7 +1693,7 @@ const SUSPEITO = [
       pokedex:{vistos:Object.keys(pd.vistos || {}).length, catalogados:Object.keys(pd.catalogados || {}).length,
         deKanto:Object.keys(pd.catalogados || {}).map(Number).filter(x => x >= 1 && x <= 150).length,
         nacional:!!d.flags.dex_nacional, johto:!!d.flags.johto_liberado},
-      alvo:window.__cargo || null, cargo:j.cargo || null, postos:Object.keys(d.flags).filter(k => /^cargo_/.test(k)).map(k => k.slice(6)),
+      alvo:window.__cargo || null, cargo:j.cargo ? (typeof concordaJogador === "function" ? concordaJogador(j.cargo) : j.cargo) : null, postos:Object.keys(d.flags).filter(k => /^cargo_/.test(k)).map(k => k.slice(6)),
       largou:Object.keys(d.flags).filter(k => /^largou_/.test(k)).map(k => k.slice(7)),
       rede:d.rede ? {escalao:d.rede.escalao, pontos:d.rede.pontos, provas:d.rede.provas || null, fora:!!d.rede.fora, servicos:d.rede.feitos || d.rede.servicos || null} : null,
       lei:d.liga ? {avisos:d.liga.avisos || 0, ordem:!!d.liga.ordemDevolucao, detencao:!!d.liga.detencao} : null,

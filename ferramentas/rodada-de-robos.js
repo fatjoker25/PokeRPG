@@ -61,7 +61,7 @@ const diz = (...a) => { const l = `[${new Date().toISOString().slice(11, 19)}] `
    erro de JavaScript, tela que não anda, luta longa, cena sem saída e o
    que o robô acha de texto quebrado. A luta longa sai uma vez por marca */
 const ALERTA_ARQ = path.join(PASTA, 'alertas.log');
-const ALERTA = /^(ERRO JS|EMPACOU|LUTA(30|60|100) |ACHADO|PARAR)/;
+const ALERTA = /^(ERRO JS|EMPACOU|LUTA(30|60|100) |ACHADO )/;
 const alerta = (cargo, l) => {
   if (/^ACHADO luta passou de/.test(l)) return;   // a linha LUTA30 já diz
   const t = `[${new Date().toISOString().slice(11, 19)}] ${cargo} ${l.slice(0, 700)}`;
