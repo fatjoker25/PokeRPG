@@ -60374,8 +60374,12 @@ const Rede = {
     return Math.max(0, r.ultimoServico + SERVICO_ESPERA_DIAS - dia);
   },
   provaAqui(localId){
+    /* a prova só aparece quando o degrau está aberto: confiança e
+       capítulo. Antes ela aparecia sempre, com o "ainda não é hora"
+       escrito em cima do botão, e a vitória promovia: a robô da rede
+       da terceira rodada virou Executiva no 17, e o degrau pede o 22 */
     const s = this.podeSubir();
-    if (!s.p || !s.p.prova) return null;
+    if (!s.ok || !s.p || !s.p.prova) return null;
     const pv = provaDaRede(s.p.prova);
     return pv && pv.local === localId ? pv : null;
   },

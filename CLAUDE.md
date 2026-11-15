@@ -2220,7 +2220,10 @@ o desconto e o peso da linha sobem junto; quem promove atualiza
   reputação boa. O veto com os postos da lei continua.
 - **Subir** pede confiança, o capítulo do degrau e vencer a **prova**
   (`PROVAS_DA_REDE`: Brant, Juno, Mercer, Corbin, cada um no ponto
-  dele). O preto também vem da voz, sem prova, no "lugar à mesa" da
+  dele), e a prova só aparece com as duas primeiras cumpridas
+  (`provaAqui` pergunta `podeSubir`): ela já apareceu sempre, com o
+  "ainda não é hora" escrito em cima do botão, e a robô da terceira
+  rodada virou Executiva no 17. O preto também vem da voz, sem prova, no "lugar à mesa" da
   linha (`Rede.promoverPelaVoz`, chamado pelo `executar` da cena do 17);
   por isso texto de prova que cita o Brant pergunta `provaVencida`.
 - **Confiança** = `CONFIANCA_DAS_MARCAS` (flags da história, lidas
