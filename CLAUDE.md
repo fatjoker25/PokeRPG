@@ -2588,9 +2588,19 @@ Showdown — jaqueta vermelha, rabo de cavalo, em posição de luta); faixa:
 `bw2-kanto-gym-leader`, que nenhum ginásio pegou.
 
 A força foi medida com `node ferramentas/sim-rivais.js` (cada rival
-extra em cada passagem, jogador ingênuo na área do capítulo): a Diana
-fica entre 50% e 63% até o 18 e entre 34% e 48% do 24 em diante — mais
-difícil que líder, que é a ideia. Rival novo passa por ali, pelo
+extra em cada passagem, jogador ingênuo na área do capítulo, com o
+inicial e o resto do time sorteado de toda a jornada; `MODO=conta`
+escolhe o golpe pela conta de dano, como o robô): a Diana fica entre
+42% e 51% até o 18 e entre 21% e 37% do 24 em diante (com a conta, de
+49% a 55% e de 43% a 57%) — mais difícil que líder, que é a ideia. O
+time do jogador já saiu todo do primeiro lugar com o nível da área, e
+no 16 e no 22 esse lugar era o Planalto: Pedra, Lutador e Terrestre
+contra a Água do Nolan, que parecia imbatível, e contra o Veneno e o
+Fogo do Rory, que parecia de graça. O Nolan do 22 era parede mesmo com
+o time da jornada (4%): o Cloyster dele (Vitalidade 8, 12 de HP, Clamp)
+saiu dos três arcos, e o time acompanha a média do seu sem o +1. Hoje
+o 22 fica em 20% (39% com a conta), onde a Diana fica no 24. O Rory e
+o Otto ficam fáceis do 15 em diante (de 83% a 99%). Rival novo passa por ali, pelo
 `chk-lutas` (cada arco, nas duas fichas) e pelo `chk-telas` (a estreia,
 a volta depois de passar reto, o placar e o resultado).
 

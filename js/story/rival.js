@@ -471,8 +471,14 @@ const RIVAIS_EXTRA = [
   origem:'O menino do cais de Vermilion. Você tratou ele como gente e ele resolveu que ia ser treinador.',
   gatilho:d => { const n = d.npcs['Menino do cais']; return !!n && n.opiniao >= 4; },
   nascimento:'Nolan saiu do cais de Vermilion com o Krabby e uma mochila emprestada. A carta da mãe dele continua sem resposta.',
-  pool:[99, 73, 117, 55, 91, 131],           // Kingler, Tentacruel, Seadra, Golduck, Cloyster, Lapras
-  ace:121, nivelExtra:1, moral:85,          // o Starmie veio depois e é o orgulho dele
+  pool:[99, 73, 117, 55, 131, 119],          // Kingler, Tentacruel, Seadra, Golduck, Lapras, Seaking
+  ace:121, nivelExtra:0, moral:85,          // o Starmie veio depois e é o orgulho dele
+  /* O Cloyster saiu dos três arcos, e o time acompanha a média do seu
+     sem o +1: com o Cloyster (Vitalidade 8, 12 de HP, Clamp) no sexto
+     lugar, ninguém ganhava dele no 22 (de 12% a 20% de vitória, com o
+     time de toda a jornada e o golpe escolhido pela conta de dano), e
+     no arco de vendedor ele já vinha no 11. Assim o 22 fica entre 31% e
+     40%, onde a Diana fica no 24 (sim-rivais, MODO=conta). */
   cor:'var(--destaque-3)',
 
   /* ele copia quem ele admira: se você ajudou com a carta, ele foi
@@ -485,9 +491,9 @@ const RIVAIS_EXTRA = [
   arcos:{
     orgulhoso:{nome:'Orgulhoso', resumo:'Saiu do cais e conta isso pra todo mundo.'},
     esperanca:{nome:'Esperança', resumo:'Respondeu a carta da mãe, e luta mais calmo por isso.',
-      pool:[131, 119, 55, 117, 91], ace:121, nivelExtra:1, moral:95},
+      pool:[131, 119, 55, 117, 130], ace:121, nivelExtra:0, moral:95},
     vendedor:{nome:'Vendedor', resumo:'Aprendeu com você que Pokémon também é negócio.',
-      pool:[73, 91, 99, 130, 117], ace:121, nivelExtra:2, moral:50}
+      pool:[73, 130, 99, 117, 131], ace:121, nivelExtra:1, moral:50}
   },
 
   fala:(d, r, arco) => {

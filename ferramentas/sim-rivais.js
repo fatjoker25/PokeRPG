@@ -10,10 +10,17 @@
 
    Uso:  node ferramentas/sim-rivais.js [lutas por caso] [ids]
          node ferramentas/sim-rivais.js 200 diana
+         MODO=conta node ferramentas/sim-rivais.js 200
 
-   O jogador simulado é ingênuo, como nos outros simuladores: time
-   sorteado da área, sem item nem troca, o golpe de dano que mais
-   machuca. O número é o piso.
+   O jogador simulado é ingênuo, como nos outros simuladores: sem item
+   nem troca, o golpe de dano que mais machuca pelo poder. MODO=conta
+   escolhe pela conta de dano da IA (Batalha.danoEsperado), como o
+   bot-jogador. O time é o inicial e o resto sorteado, cada um de um
+   lugar de mato que a jornada já passou (nível do lugar até o da
+   área). Antes ele saía todo do primeiro lugar com o nível da área: no
+   16 e no 22 era o Planalto, de Pedra, Lutador e Terrestre, e o Nolan,
+   de Água, parecia imbatível enquanto o Rory, de Veneno e Fogo,
+   parecia de graça.
    ============================================================ */
 const fs = require('fs'), vm = require('vm'), path = require('path');
 const raiz = path.resolve(__dirname, '..');
@@ -32,12 +39,14 @@ function escolhaJogador(){
     if (G.c === 'status') return;
     const ef = eficacia(G.t, alvo.tipos);
     const PR = PR_GOLPE[g.nome] || {};
-    const s = ef === 0 ? -1 : ((PR.p || 1) + (p.tipos.includes(G.t) ? 1 : 0)) * ef * ((G.a || 100) / 100);
+    const s = ef === 0 ? -1 : CONTA ? B.danoEsperado(p, alvo, B.estAliado, B.estInimigo, g.nome)
+      : ((PR.p || 1) + (p.tipos.includes(G.t) ? 1 : 0)) * ef * ((G.a || 100) / 100);
     if (s > melhor){ melhor = s; idx = i; }
   });
-  if (melhor < 0) return B.iaEscolher(p, alvo, B.estAliado, B.estInimigo);
+  if (melhor < (CONTA ? 1e-9 : 0)) return B.iaEscolher(p, alvo, B.estAliado, B.estInimigo);
   return idx;
 }
+const CONTA = process.env.MODO === 'conta';
 
 const N = +process.argv[2] || 60;
 const quais = process.argv[3] ? process.argv[3].split(',') : RIVAIS_EXTRA.map(R => R.id);
@@ -49,11 +58,14 @@ const INS = ['Insígnia Pedra','Insígnia Cascata','Insígnia Trovão','Insígni
 /* quantas insígnias o jogador costuma ter chegando no capítulo */
 const insDoCap = c => c >= 22 ? 8 : c >= 18 ? 7 : c >= 15 ? 6 : c >= 12 ? 5 : c >= 10 ? 4 : c >= 7 ? 3 : 2;
 
-function timeJogador(nivel, localId, tam){
-  const L = LOCAIS[localId];
+/* o time da jornada: o inicial e cada um dos outros de um lugar de mato
+   que ela já passou (nível do lugar até o da área) */
+function timeJogador(nivel, area, tam){
+  const lugares = Object.keys(LOCAIS).filter(k => LOCAIS[k].tipo !== 'cidade' && LOCAIS[k].nivel && LOCAIS[k].nivel <= Math.max(10, area));
   const t = [criarPokemon(formaAteONivel([3,6,9][Dados.entre(0,2)], nivel), nivel, {moral:80})];
   for (let i = 0; i < tam - 1; i++){
-    const w = sortearSelvagem(L.ambiente, Math.max(3, nivel - 2), localId);
+    const loc = Dados.escolher(lugares);
+    const w = sortearSelvagem(LOCAIS[loc].ambiente, Math.max(3, nivel - 2), loc);
     t.push(criarPokemon(formaAteONivel(finalDaLinha(w.dex), nivel - 1), nivel - 1, {moral:70}));
   }
   return t;
@@ -85,14 +97,13 @@ for (const id of quais){
   for (const cap of R.caps){
     const c = Historia.capitulo(cap);
     const area = (c && c.nivelArea) || 20 + cap * 2;
-    const local = Object.keys(LOCAIS).find(k => LOCAIS[k].nivel >= area - 3) || 'celadon';
     const ins = insDoCap(cap);
     d.insignias = INS.slice(0, ins);
     const tam = Math.min(6, 3 + Math.floor(ins / 2));
     const res = [0, 4].map(dn => {
       let v = 0, cai = 0, time = null;
       for (let k = 0; k < N; k++){
-        const r = lutar(timeJogador(Math.max(5, area + dn), local, tam), R);
+        const r = lutar(timeJogador(Math.max(5, area + dn), area, tam), R);
         v += r.venceu ? 1 : 0; cai += r.caidos; time = time || r.time;
       }
       return {vit: Math.round(100 * v / N), cai: (cai / N).toFixed(1), time};

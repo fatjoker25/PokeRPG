@@ -53600,8 +53600,14 @@ const RIVAIS_EXTRA = [
   origem:'O menino do cais de Vermilion. Você tratou ele como gente e ele resolveu que ia ser treinador.',
   gatilho:d => { const n = d.npcs['Menino do cais']; return !!n && n.opiniao >= 4; },
   nascimento:'Nolan saiu do cais de Vermilion com o Krabby e uma mochila emprestada. A carta da mãe dele continua sem resposta.',
-  pool:[99, 73, 117, 55, 91, 131],           // Kingler, Tentacruel, Seadra, Golduck, Cloyster, Lapras
-  ace:121, nivelExtra:1, moral:85,          // o Starmie veio depois e é o orgulho dele
+  pool:[99, 73, 117, 55, 131, 119],          // Kingler, Tentacruel, Seadra, Golduck, Lapras, Seaking
+  ace:121, nivelExtra:0, moral:85,          // o Starmie veio depois e é o orgulho dele
+  /* O Cloyster saiu dos três arcos, e o time acompanha a média do seu
+     sem o +1: com o Cloyster (Vitalidade 8, 12 de HP, Clamp) no sexto
+     lugar, ninguém ganhava dele no 22 (de 12% a 20% de vitória, com o
+     time de toda a jornada e o golpe escolhido pela conta de dano), e
+     no arco de vendedor ele já vinha no 11. Assim o 22 fica entre 31% e
+     40%, onde a Diana fica no 24 (sim-rivais, MODO=conta). */
   cor:'var(--destaque-3)',
 
   /* ele copia quem ele admira: se você ajudou com a carta, ele foi
@@ -53614,9 +53620,9 @@ const RIVAIS_EXTRA = [
   arcos:{
     orgulhoso:{nome:'Orgulhoso', resumo:'Saiu do cais e conta isso pra todo mundo.'},
     esperanca:{nome:'Esperança', resumo:'Respondeu a carta da mãe, e luta mais calmo por isso.',
-      pool:[131, 119, 55, 117, 91], ace:121, nivelExtra:1, moral:95},
+      pool:[131, 119, 55, 117, 130], ace:121, nivelExtra:0, moral:95},
     vendedor:{nome:'Vendedor', resumo:'Aprendeu com você que Pokémon também é negócio.',
-      pool:[73, 91, 99, 130, 117], ace:121, nivelExtra:2, moral:50}
+      pool:[73, 130, 99, 117, 131], ace:121, nivelExtra:1, moral:50}
   },
 
   fala:(d, r, arco) => {
@@ -154260,7 +154266,7 @@ const UI = {
       <div class="linha"><span class="k">Pico</span><span class="v">o parceiro do Ezra é sorteado no começo, pela mesma tabela do inicial aleatório (1d6 de coluna, 1d6 de linha, da sua cidade), nunca da sua espécie · é o último e o mais forte do time dele, e evolui com o nível</span></div>
       <div class="linha"><span class="k">Onde o Ezra aparece</span><span class="v">ele é da sua cidade · quem nasceu em Pallet ou Viridian conhece ele no Centro de Viridian · o resto, na saída da própria cidade, no fim do primeiro capítulo, e reencontra ele em Viridian</span></div>
       <div class="linha"><span class="k">Lior</span><span class="v">Teimoso · Inspirado (opinião 6+ ou reputação boa 3+; fósseis no time, +1 nível) · Desconfiado (lado Rocket, Mercenário ou Foragido, ou reputação ruim 3+; +2) · Cansado (perdeu 3 sem ganhar nenhuma; −2)</span></div>
-      <div class="linha"><span class="k">Nolan</span><span class="v">Orgulhoso · Esperança (ajudou com a carta da mãe, ou opinião 8+) · Vendedor (lado Rocket, Mercenário ou Foragido, ou reputação ruim 3+; +2)</span></div>
+      <div class="linha"><span class="k">Nolan</span><span class="v">Orgulhoso · Esperança (ajudou com a carta da mãe, ou opinião 8+) · Vendedor (lado Rocket, Mercenário ou Foragido, ou reputação ruim 3+; +1)</span></div>
       <div class="linha"><span class="k">Rory</span><span class="v">pelo que você fez no corredor do Anne: Devedor (deu o prêmio) · Quase (deu cinco mil) · Companhia (perdeu e ficou com ele) · Ressentido (o resto; time venenoso, +3)</span></div>
       <div class="linha"><span class="k">Otto</span><span class="v">Caçador · Colega (lado Rocket, Mercenário ou Foragido; +4) · Cansado (opinião acima de −3, ou reputação boa 6+; larga a rede, +1)</span></div>
       <div class="linha"><span class="k">Diana</span><span class="v">não vem de escolha sua: ela é que escolhe, e se apresenta na estrada · o time já está na forma final, e ninguém abaixo do nível em que a forma chega nos jogos (o Rhydon, 42) · o Rhydon sai por último · Desafio (+1) · Respeito (perdeu 2+ e mais do que ganhou; +2) · Desdém (ganhou 2+ sem perder nenhuma, ou opinião −2 ou menos; +0) · Contra (lado Rocket, Mercenário ou Foragido, ou reputação ruim 4+; +2)</span></div>
