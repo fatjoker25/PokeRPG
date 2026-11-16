@@ -1948,6 +1948,43 @@ Carisma. Mora tudo em `js/story/recados.js` (`Recados`).
   (`PRESENTE_DA_CIDADE_DIFICULDADE`), uma vez por dia em cada cidade e a
   mesma pessoa a cada `PRESENTE_DA_CIDADE_ESPERA_DIAS`. O degrau sai do
   Carisma (`PRESENTES_DA_CIDADE`), e o crítico sobe um.
+- **A ligação sabe o que aconteceu** (`Recados.eventoPara`): cada
+  contato guarda o retrato de quando falou com você por último
+  (`sabe`, no registro dele: os mortos do cemitério, as insígnias sem o
+  título e `d.liga.custodias`), que nasce quando o número entra na
+  agenda (`Estado.registrarNumero` → `Recados.conhecer`; save velho
+  ganha na primeira olhada, `sabeDe`) e fica em dia quando você atende
+  (`emDia`). O que mudou é a notícia, e o tópico dela (`noticia:` em
+  `TOPICOS_DE_LIGACAO`) passa na frente do assunto à toa
+  (`montarLigacao`): a morte, pra casa e pra quem tem
+  `AFINIDADE_DA_NOTICIA`; a custódia, pra casa e pra quem não é
+  treinador; a insígnia nova, pra todo mundo menos o líder que deu.
+  A casa com morte ou custódia é `urgente`: liga no mesmo dia, sem os
+  sete, uma vez por dia até você atender, e de madrugada também.
+  Notícia nova entra no `retrato`, no `eventoPara` e com tópico.
+- **De madrugada ninguém liga à toa**: o `Jogo.talvezToque` passa a
+  madrugada pro `candidatos` e pro `escolherToque`. A chamada escrita
+  toca, e de resto só a casa urgente, sem recado nem pedido.
+- **A chamada perdida** (`reg().perdidas`, uma por contato, só de quem
+  está na agenda): não atender (`Recados.recusar`, e o
+  `Chamadas.recusar` da escrita) guarda o que custou (`custou`) e o
+  assunto (o `topico`, o `pedido`, a `chamada` escrita), e ela fica até
+  a meia-noite (`conferirPerdidas`, na agenda e na tela do mapa).
+  Retornar (`Recados.retornar`, pela linha da ficha, `UI.navRecado`)
+  devolve o custo e abre a mesma conversa já em linha
+  (`telaChamada(ch, {retorno:true})`, sem "Não atender"), com a fala de
+  quem atende na frente (`ABRE_O_RETORNO`): a escrita recusada desfaz a
+  recusa, e o pedido volta pelo `Pedidos.montar(c, null, plano)` se
+  ainda der pra cumprir (`aindaServe`).
+- **O silencioso** (`nav.silencioso`, o sino na barra da agenda,
+  `UI.navSilencio`): o `Jogo.tocarOuGuardar` não abre nada e manda o
+  toque pro `Recados.guardarNoSilencio`. A ligação vira chamada perdida
+  sem custo, o recado e o prazo viram mensagem por ler
+  (`reg().naoLidas`, "Ler a mensagem" na ficha, `Recados.ler`), e a
+  chamada escrita não se gasta: a pessoa tenta de novo. A tela do mapa
+  tem a linha do PokéNav (`#nav-aviso`, `Recados.htmlDaNotificacao`),
+  que o toque chegado depois da tela repinta no lugar
+  (`pintarNotificacao`), e a agenda marca quem ligou e quem mandou.
 - Nome no meio da frase passa por `nomeNaNarracao` (quem é chamado
   pelo cargo vai com artigo: "o zelador da Torre"), e nada na cena diz
   por que alguém deu o que deu: a regra está na folha (PokéNav e
@@ -1960,11 +1997,21 @@ conversando, faz cada ação do mapa com o dado do PokéNav forçado no 6
 a escrita com, o toque que espera a luta e a janela, e o não atender)
 faz cada pedido com cada tipo de contato do toque ao contar, a procura
 em cada grau, não aceitar, não atender, largar, o prazo com a mensagem
-e o pedido travado, e dá o presente de morador em cada Carisma; o
-`chk-baloes` confere as falas pelo `Recados.amostras` (o pedido entra
-por `Pedidos.amostras`). O robô grava os números que oferecem, vai
-buscar o presente, cumpre o pedido que aceitou e, uma vez em seis, não
-atende a ligação à toa.
+e o pedido travado, e dá o presente de morador em cada Carisma. Não
+atende e confere a marca na agenda, a linha da ficha e a do mapa,
+retorna (o −1 volta, sem "Não atender", e a resposta continua a
+conversa), passa da meia-noite (a chamada some e o −1 fica), retorna a
+escrita recusada e o pedido (o mesmo pedido), confere a madrugada (ninguém
+liga, e a casa liga com a morte uma vez só), liga o silencioso (a
+ligação, o recado, a escrita que não se gasta, a rolagem de verdade e a
+linha do mapa) e dá cada notícia pra cada tipo de contato (e o líder não
+liga pela insígnia dele). O `chk-baloes` confere as falas pelo
+`Recados.amostras` (o pedido entra por `Pedidos.amostras`, e as
+notícias com a madrugada e a fala do retorno também). O robô grava os
+números que oferecem, vai buscar o presente, cumpre o pedido que
+aceitou, uma vez em seis não atende a ligação à toa, retorna a chamada
+perdida duas vezes em três, lê a mensagem e anda um capítulo em oito no
+silencioso.
 
 ## A luta não acaba no recarregar
 `Estado.salvar` chama `LutaSalva.anotar` (`js/engine/luta-salva.js`): com

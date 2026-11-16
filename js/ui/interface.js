@@ -2983,22 +2983,26 @@ const UI = {
     try { conv.scrollTo({top:Math.max(0, el.offsetTop - 8), behavior:'smooth'}); } catch(e){ conv.scrollTop = el.offsetTop; }
   },
 
-  /* O telefone tocando: você atende ou não, e não atender custa. */
-  telaChamada(c){
+  /* O telefone tocando: você atende ou não, e não atender custa. A
+     ligação de volta (o retorno da chamada perdida, recados.js) já está
+     em linha: quem ligou foi você, e não tem o que recusar. */
+  telaChamada(c, o){
     /* toca no meio da luta: espera ela acabar e toca depois */
     if (emLuta()){ Jogo.chamadaAdiada = c; return; }
+    const retorno = !!(o && o.retorno);
     const contato = contatoPorId(c.de);
     const falas = (typeof c.falas === 'function' ? c.falas(Estado.dados) : c.falas) || [];
     const opcoes = (c.escolhas || []).map((o, i) => ({o, i}))
       .filter(({o}) => { try { return !o.cond || o.cond(Estado.dados); } catch(e){ return false; } });
     const nome = contato ? textoContato(contato,'nome') : 'Número desconhecido';
-    const ficha = this.navTela(contato, nome, 'chamada recebida', `
+    const ficha = this.navTela(contato, nome, retorno ? 'em linha' : 'chamada recebida', `
       <div class="nav-conversa narrativa">${this.narrar(falas, contato ? nome : null)}</div>
       <div id="avisos-nav" class="avisos"></div>
       <div class="nav-respostas">
         ${opcoes.map(({o, i}) => this.navResposta(txt(o.texto), `Jogo.responderChamada('${c.id}',${i})`)).join('')}
-        ${this.navResposta('Não atender.', `Jogo.recusarChamada('${c.id}')`, 'recusar')}
-      </div>`, true);
+        ${retorno ? (opcoes.length ? '' : this.navFim('Desligar', 'Jogo.voltarDaLigacao()', true))
+          : this.navResposta('Não atender.', `Jogo.recusarChamada('${c.id}')`, 'recusar')}
+      </div>`, !retorno);
     if (ficha) ficha.dataset.chamada = c.id;
   },
 
@@ -3103,6 +3107,7 @@ const UI = {
 
   modalNav(sel){
     if (!Estado.temPokenav()) return;
+    if (typeof Recados !== 'undefined') Recados.conferirPerdidas();
     const escolheu = sel !== undefined;
     if (escolheu) this.navSel = sel;
     const nomeDe = c => textoContato(c, 'nome') || '';
@@ -3118,12 +3123,17 @@ const UI = {
       const sub = [textoContato(c,'papel'), textoContato(c,'cidade')].filter(Boolean).join(' · ');
       /* missão ou pedido cumprido e ainda não contado: um ponto, como mensagem não lida */
       const pronta = (c.missao && Estado.faseDaMissao(c.id) === 'entregar') || (typeof Pedidos !== 'undefined' && Pedidos.temPronto(c.id));
+      /* quem ligou e você não falou, e a mensagem por ler (recados.js) */
+      const perdida = typeof Recados !== 'undefined' && Recados.temPerdida(c.id);
+      const msg = typeof Recados !== 'undefined' && Recados.temMensagem(c.id);
       return `<button class="nav-contato${c.id===this.navSel?' sel':''}" data-busca="${this.esc(this.navChave(nome + ' ' + (textoContato(c,'cidade') || '')))}" onclick="UI.modalNav('${c.id}')">
         ${this.navRosto(c)}
         <span class="nav-linha-txt">
           <span class="nav-nome">${this.esc(nome)}</span>
           ${sub ? `<span class="nav-papel">${this.esc(sub)}</span>` : ''}
         </span>
+        ${perdida ? `<span class="nav-marca-linha perdida" title="Chamada perdida">${svgIcone('telefone')}</span>` : ''}
+        ${msg ? `<span class="nav-marca-linha msg" title="Mensagem nova">${svgIcone('convite')}</span>` : ''}
         ${pronta ? '<span class="nav-ponto" title="Tem o que contar"></span>' : ''}
       </button>`;
     };
@@ -3163,6 +3173,7 @@ const UI = {
       <div class="nav-topo">
         <span class="nav-antena"></span>
         <span class="nav-marca">Agenda</span>
+        ${this.navBotaoSilencio()}
         <span class="nav-sinal">${agenda.length} contato${agenda.length===1?'':'s'}</span>
       </div>
       ${pendentes}
@@ -3244,7 +3255,13 @@ const UI = {
         <span class="na-rot">${this.esc(l.rot)}${l.ok || !l.motivo ? '' : `<small class="na-trava">${this.esc(l.motivo)}</small>`}</span>
       </button>`).join('');
 
-    const SERVICO = {revanche:'revanche', favor:'favor', missao:'missão', prova:'notícia', pedido:'pedido'};
+    /* a mensagem por ler e a chamada perdida (recados.js), em cima de tudo */
+    const recados = (typeof Recados !== 'undefined' ? Recados.linhasDaFicha(c) : []).map(l =>
+      `<button class="nav-acao${l.acao === 'retornar' ? ' retornar' : ' ler'}" ${l.ok ? `onclick="UI.navRecado('${c.id}','${l.acao}')"` : 'disabled'}>
+        ${l.acao === 'retornar' ? svgIcone('telefone', '', '--ac:#e57373') : svgIcone('convite', '', '--ac:#4fc3f7')}
+        <span class="na-rot">${this.esc(l.rot)}<small class="na-nota">${this.esc(l.ok || !l.motivo ? l.nota : l.motivo)}</small></span>
+      </button>`).join('');
+    const SERVICO = {revanche:'revanche', favor:'favor', missao:'missão', prova:'notícia', pedido:'pedido', retorno:'retorno'};
     const hist = (Estado.nav().ligacoes||[]).filter(l => l.id === c.id).slice(-3).reverse();
     const papel = textoContato(c,'papel');
     const meta = [textoContato(c,'cidade'), reg.desdeCap >= 1 ? `na agenda desde o ${this.navCapitulo(reg.desdeCap)}` : ''].filter(Boolean);
@@ -3260,7 +3277,7 @@ const UI = {
         </span>
       </div>
       <div class="nav-titulo">Ligar</div>
-      <div class="nav-acoes">${acoes || '<span class="nav-nota">Nada a pedir agora.</span>'}</div>
+      <div class="nav-acoes">${recados + acoes || '<span class="nav-nota">Nada a pedir agora.</span>'}</div>
       ${hist.length ? `<div class="nav-titulo">Últimas ligações</div>
       <div class="nav-hist">${hist.map(l =>
         `<span>${this.esc(this.navCapitulo(l.cap))} · ${this.esc(SERVICO[l.servico] || l.servico)}</span>`).join('')}</div>` : ''}`;
@@ -3301,6 +3318,25 @@ const UI = {
   navLigarPedido(id, acao){
     this.fecharModal(true);
     Pedidos.ligar(id, acao);
+  },
+  /* ler a mensagem que chegou no silencioso, retornar a chamada perdida */
+  navRecado(id, acao){
+    this.fecharModal(true);
+    if (acao === 'ler') Recados.ler(id);
+    else Recados.retornar(id);
+  },
+  /* o silencioso: o sino na barra da agenda, que muda no lugar */
+  navBotaoSilencio(){
+    const on = typeof Recados !== 'undefined' && Recados.silencioso();
+    return `<button class="nav-silencio${on ? ' on' : ''}" aria-pressed="${on}" onclick="UI.navSilencio()" title="${on ? 'O aparelho não toca' : 'O aparelho toca'}">${
+      svgIcone(on ? 'sino_mudo' : 'sino')}<span>${on ? 'Silencioso' : 'Som'}</span></button>`;
+  },
+  navSilencio(){
+    if (typeof Recados === 'undefined') return;
+    Recados.alternarSilencio();
+    const b = document.querySelector('#modal .nav-silencio');
+    if (b) b.outerHTML = this.navBotaoSilencio();
+    Recados.pintarNotificacao();
   },
 
   /* ========================================================
@@ -6652,6 +6688,10 @@ const UI = {
       <div class="linha"><span class="k">Gente da história</span><span class="v">quem gostou de você o bastante passa o número depois do capítulo em que vocês se conheceram</span></div>
       <div class="linha"><span class="k">Quando toca</span><span class="v">cada ação no mapa rola ${DADOS_DO_TOQUE === 1 ? '1 dado' : DADOS_DO_TOQUE + ' dados'} de chance, e o 6 faz o PokéNav tocar: entrar num lugar, andar pela cidade, conversar com os moradores, procurar Pokémon, ir atrás de quem treina, vasculhar, treinar, pescar, esperar a hora passar, acampar e começar um capítulo · toca primeiro a ligação da história que estiver esperando; sem ela, alguém da agenda liga à toa, manda recado ou pede um favor · sem ninguém que possa ligar, não rola · no meio da luta ou com uma janela aberta, toca depois · toda chamada tem "Não atender"</span></div>
       <div class="linha"><span class="k">Ligação à toa</span><span class="v">alguém da agenda liga só pra conversar · a mesma pessoa não procura de novo antes de ${RECADO_POR_CONTATO_DIAS} dias · quem gosta mais de você liga mais · resposta boa aproxima (+1 de afinidade, até ${AFINIDADE_TETO_LIGACAO}) · resposta ruim ou não atender afasta (−1, até ${String(AFINIDADE_PISO_LIGACAO).replace('-', '−')})</span></div>
+      <div class="linha"><span class="k">De madrugada</span><span class="v">da meia-noite às seis só toca a ligação da história · ninguém liga à toa, manda recado nem pede favor · a exceção é quem ficou em casa, com notícia que não espera</span></div>
+      <div class="linha"><span class="k">O que mudou</span><span class="v">quem liga sabe o que aconteceu desde a última conversa com você e fala disso antes de qualquer outro assunto: a insígnia nova (todo mundo, menos o líder que deu), os dias com a Patrulha (quem ficou em casa e quem não é treinador) e o Pokémon que morreu (quem ficou em casa e quem tem afinidade ${AFINIDADE_DA_NOTICIA} ou mais) · atender deixa a pessoa em dia, e a mesma notícia não volta · depois de uma morte ou da custódia, quem ficou em casa liga no mesmo dia, sem esperar os ${RECADO_POR_CONTATO_DIAS}, uma vez por dia até você atender, e de madrugada também</span></div>
+      <div class="linha"><span class="k">Chamada perdida</span><span class="v">quem você não atendeu fica na agenda até a meia-noite · retornar no mesmo dia, pela ficha da pessoa, devolve o −1, e ela continua o assunto de onde parou (a notícia, o pedido, a ligação da história) · virou o dia, a chamada some e o −1 fica</span></div>
+      <div class="linha"><span class="k">Silencioso</span><span class="v">o sino na barra da agenda · o dado do toque rola igual, mas nada toca · a ligação vira chamada perdida, sem o −1 · o recado e a mensagem do prazo viram mensagem por ler na ficha de quem mandou, e ficam até você ler · a ligação da história não se gasta: a pessoa tenta de novo outro dia · a tela do mapa mostra numa linha quem ligou e o que chegou</span></div>
       <div class="linha"><span class="k">Afinidade</span><span class="v">é o que a pessoa pensa de você · gente da história guarda o que viveu com você nas cenas · quem só te deu o número começa em ${AFINIDADE_DA_ESTRADA} · quem ficou em casa, em ${AFINIDADE_DE_CASA} · acima de ${AFINIDADE_TETO_LIGACAO}, só pelo que acontece entre vocês fora do telefone</span></div>
       <div class="linha"><span class="k">Recado</span><span class="v">com afinidade ${PRESENTE_MIN_AFINIDADE} ou mais, o contato pode ser recado de que a pessoa separou alguma coisa pra você (quanto mais afinidade, mais vezes) · ela espera na cidade dela (quem vive na estrada, na cidade mais perto da estrada dela) e aparece "Encontrar" no que fazer de lá · um por pessoa de cada vez, e outro só ${PRESENTE_ESPERA_DIAS} dias depois de buscar · ficar um período conversando no encontro aproxima (+1)</span></div>
       <div class="linha"><span class="k">Pedido</span><span class="v">com afinidade ${PEDIDO_MIN_AFINIDADE} ou mais, a ligação à toa pode ser um pedido de favor (${CHANCE_DO_PEDIDO}% das vezes): achar um Pokémon que fugiu numa rota e deixar no Centro da cidade do lado, levar uma encomenda de uma cidade pra outra, ou contar se vir uma espécie que você nunca viu · aceitar, dizer que não dá (não custa nada) ou não atender (−1) · um pedido aberto por vez, e a mesma pessoa pede de novo só ${PEDIDO_ESPERA_DIAS} dias depois</span></div>

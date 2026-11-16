@@ -935,6 +935,8 @@ const Estado = {
     const c = (typeof contatoPorId === 'function') ? contatoPorId(id) : null;
     if (!c) return false;
     nav.contatos[id] = {id, desdeCap: this.dados.capitulo, usos:{}};
+    /* o que a pessoa sabe de você começa aqui: a notícia é o que vem depois (recados.js) */
+    if (typeof Recados !== 'undefined' && Recados.conhecer) Recados.conhecer(id);
     this.registrar(`Registrou o número de ${textoContato(c, 'nome')} no PokéNav.`);
     return true;
   },

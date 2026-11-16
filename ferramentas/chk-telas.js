@@ -1179,6 +1179,229 @@ const SUSPEITO = [
     Recados.mostrar('brock', 'pedido');
     if (!Recados.atual || !Recados.atual.pedido) throw new Error('o toque do pedido não montou o pedido');
   });
+
+  /* ---------- a chamada perdida, a madrugada, o silencioso e a notícia (recados.js) ----------
+     não atender deixa a chamada perdida (a marca na agenda, a linha na
+     ficha e a linha no mapa); retornar no mesmo dia devolve o −1 e abre
+     já em linha, sem "Não atender"; virou o dia, ela some e o −1 fica.
+     A escrita recusada e o pedido também voltam. De madrugada só liga a
+     casa com notícia; no silencioso nada toca (a ligação fica perdida sem
+     custo, o recado fica por ler, a escrita não se gasta). E cada notícia
+     com cada tipo de contato. */
+  await comAgenda();
+  await tentar('perdida/não atender', () => {
+    const c = contatoPorId('zelador'); window.__af = Recados.afinidade(c);
+    const ch = Recados.montarLigacao(c); UI.telaChamada(ch); Jogo.recusarChamada(ch.id);
+    if (!Recados.temPerdida('zelador')) throw new Error('não atender não deixou chamada perdida');
+    if (Recados.afinidade(c) !== window.__af - 1) throw new Error('não atender não custou 1');
+    UI.fecharModal(true); Exploracao.tela();
+    if (!document.querySelector('#nav-aviso.nav-aviso-mapa')) throw new Error('sem a linha do PokéNav no mapa');
+    UI.modalNav('zelador');
+    if (!document.querySelector('#modal .nav-marca-linha.perdida')) throw new Error('sem a marca da chamada perdida na agenda');
+    if (![...document.querySelectorAll('#modal .nav-acao')].some(b => /Retornar a ligação/.test(b.innerText) && !b.disabled)) throw new Error('sem "Retornar a ligação" na ficha');
+  });
+  await tentar('perdida/mapa', () => { UI.fecharModal(true); Exploracao.tela(); });
+  await tentar('perdida/retornar', () => {
+    UI.modalNav('zelador');
+    UI.navRecado('zelador', 'retornar');
+    const c = contatoPorId('zelador');
+    if (Recados.afinidade(c) !== window.__af) throw new Error('retornar não devolveu o −1');
+    if (Recados.temPerdida('zelador')) throw new Error('a chamada perdida ficou depois de retornar');
+    if (!document.querySelector('#modal .nav-respostas .nav-acao')) throw new Error('o retorno não abriu a ligação');
+    if (document.querySelector('#modal .nav-respostas .recusar')) throw new Error('o retorno tem "Não atender"');
+    if (document.querySelector('#modal .modal.nav.chamando')) throw new Error('o retorno ficou tocando');
+  });
+  await tentar('perdida/retornar/responder', () => {
+    Jogo.responderChamada(Recados.atual.id, 0);
+    if (!document.querySelector('#modal .nav-resposta')) throw new Error('a resposta do retorno não entrou na conversa');
+  });
+  await comAgenda();
+  await tentar('perdida/outro dia', () => {
+    const c = contatoPorId('zelador'), af = Recados.afinidade(c);
+    const ch = Recados.montarLigacao(c); UI.telaChamada(ch); Jogo.recusarChamada(ch.id);
+    UI.fecharModal(true);
+    Estado.dados.relogio.dia += 1; Exploracao.tela();
+    if (Recados.temPerdida('zelador') || Recados.reg().perdidas.zelador) throw new Error('a chamada perdida passou da meia-noite');
+    if (document.querySelector('#nav-aviso.nav-aviso-mapa')) throw new Error('a linha do mapa ficou depois da meia-noite');
+    if (Recados.afinidade(c) !== af - 1) throw new Error('o −1 não ficou');
+  });
+  /* a chamada escrita recusada: a recusa se desfaz no retorno */
+  await comAgenda();
+  await tentar('perdida/chamada escrita', () => {
+    const d = Estado.dados;
+    const ch = CHAMADAS.find(c => { if (Chamadas.jaAtendeu(c.id) || !contatoPorId(c.de)) return false; try { return !c.cond || c.cond(d); } catch(e){ return false; } });
+    if (!ch) throw new Error('nenhuma chamada escrita esperando no save cheio');
+    if (!Estado.nav().contatos[ch.de]) Estado.nav().contatos[ch.de] = {id:ch.de, desdeCap:d.capitulo, usos:{}};
+    window.__esc = ch.id;
+    UI.telaChamada(ch); Jogo.recusarChamada(ch.id);
+    if (!Recados.temPerdida(ch.de)) throw new Error('a escrita recusada não deixou chamada perdida');
+    UI.fecharModal(true);
+    if (!Recados.retornar(ch.de)) throw new Error('o retorno da escrita não abriu');
+    if (Chamadas.jaAtendeu(ch.id)) throw new Error('o retorno não desfez a recusa');
+    if (document.querySelector('#modal .nav-respostas .recusar')) throw new Error('o retorno da escrita tem "Não atender"');
+  });
+  await tentar('perdida/chamada escrita/responder', () => {
+    const b = document.querySelector('#modal .nav-respostas .nav-acao');
+    if (!b) throw new Error('o retorno da escrita não tem resposta');
+    b.click();
+    if (!Chamadas.jaAtendeu(window.__esc)) throw new Error('responder no retorno não gastou a escrita');
+  });
+  /* o pedido: o retorno pede a mesma coisa */
+  await comPedidos();
+  await tentar('perdida/pedido', () => {
+    const c = contatoPorId('zelador'), ch = Pedidos.montar(c, 'entrega');
+    UI.telaChamada(ch); Jogo.recusarChamada(ch.id); UI.fecharModal(true);
+    if (!Recados.retornar('zelador')) throw new Error('o retorno do pedido não abriu');
+    const novo = Recados.atual;
+    if (!novo || !novo.pedido) throw new Error('o retorno do pedido não pediu de novo');
+    if (novo.pedido.pega !== ch.pedido.pega || novo.pedido.leva !== ch.pedido.leva || novo.pedido.item !== ch.pedido.item) throw new Error('o retorno pediu outra coisa');
+    Jogo.responderChamada(novo.id, 0);
+    if (!Pedidos.atual()) throw new Error('aceitar no retorno não abriu o pedido');
+  });
+
+  /* de madrugada ninguém liga à toa; a casa liga com a morte, e só uma vez no dia */
+  await comAgenda();
+  await tentar('madrugada/ninguém liga à toa', () => {
+    const d = Estado.dados;
+    Relogio.ate(2);
+    if (d.relogio.periodo !== 'madrugada') throw new Error('o relógio não chegou na madrugada: ' + d.relogio.periodo);
+    CHAMADAS.forEach(c => { Chamadas.atendidas()[c.id] = {cap:d.capitulo, escolha:0}; });
+    /* o save cheio mata o Pidgey depois de gravar a casa: com a agenda em dia, ninguém tem notícia */
+    Estado.contatosNaAgenda().forEach(c => Recados.emDia(c));
+    if (Recados.candidatos(true).length) throw new Error('de madrugada tem quem ligue à toa: ' + Recados.candidatos(true).map(c => c.id).join(', '));
+    Jogo.chamadaAdiada = null;
+    const orig = Dados.chanceDados;
+    Dados.chanceDados = function(n, m){ return m === 'PokéNav' ? true : orig.call(this, n, m); };
+    try { if (Jogo.talvezToque()) throw new Error('de madrugada o PokéNav tocou'); } finally { Dados.chanceDados = orig; }
+  });
+  await tentar('madrugada/a casa com a morte', () => {
+    const d = Estado.dados, casa = contatoPorId('casa');
+    Recados.sabeDe(casa);
+    Recados.doContato('casa').ultimoDia = d.relogio.dia - 1;
+    Estado.matar(d.time[d.time.length - 1], 'teste da madrugada');
+    const cs = Recados.candidatos(true);
+    if (cs.length !== 1 || cs[0].id !== 'casa') throw new Error('de madrugada, quem pode ligar: ' + cs.map(c => c.id).join(', '));
+    const t = Recados.escolherToque(true);
+    if (!t || t.de !== 'casa' || t.recados !== 'ligacao') throw new Error('o toque da madrugada não foi a ligação da casa');
+    Recados.mostrar('casa', 'ligacao', t);
+    if (!Recados.atual || Recados.atual.topico !== 'noticia_morte') throw new Error('a casa não falou da morte: ' + (Recados.atual && Recados.atual.topico));
+  });
+  await tentar('madrugada/a casa com a morte/atender', () => {
+    Jogo.responderChamada(Recados.atual.id, 0);
+    if (Recados.eventoPara(contatoPorId('casa'))) throw new Error('atender não deixou a casa em dia');
+    if (Recados.candidatos(true).length) throw new Error('a casa ligou de novo de madrugada');
+  });
+
+  /* o silencioso: o sino da agenda, o toque que não toca, a mensagem por ler */
+  await comAgenda();
+  await tentar('silencioso/ligar', () => {
+    UI.modalNav();
+    const b = document.querySelector('#modal .nav-silencio');
+    if (!b) throw new Error('sem o sino na agenda');
+    b.click();
+    if (!Recados.silencioso()) throw new Error('o sino não ligou o silencioso');
+    if (!document.querySelector('#modal .nav-silencio.on')) throw new Error('o sino não acendeu');
+  });
+  await tentar('silencioso/a ligação', () => {
+    UI.fecharModal(true); Exploracao.tela();
+    const c = contatoPorId('zelador'); window.__af = Recados.afinidade(c);
+    Jogo.tocarOuGuardar({recados:'ligacao', de:'zelador'});
+    if (document.querySelector('#modal .nav-respostas')) throw new Error('o silencioso tocou');
+    const pe = Recados.reg().perdidas.zelador;
+    if (!pe) throw new Error('a ligação do silencioso não ficou como chamada perdida');
+    if (pe.custou) throw new Error('a chamada perdida do silencioso custou');
+    if (Recados.afinidade(c) !== window.__af) throw new Error('o silencioso mexeu na afinidade');
+    if (!document.querySelector('#nav-aviso.nav-aviso-mapa')) throw new Error('a linha do mapa não apareceu no lugar');
+  });
+  await tentar('silencioso/o recado', () => {
+    const c = contatoPorId('brock');
+    if (!Recados.separarPresente(c)) throw new Error('não separou presente');
+    Jogo.tocarOuGuardar({recados:'recado', de:'brock'});
+    if (document.querySelector('#modal .nav-respostas')) throw new Error('o recado abriu no silencioso');
+    if (!Recados.temMensagem('brock')) throw new Error('o recado não ficou por ler');
+    if (!/mensage/i.test((document.querySelector('#nav-aviso') || {}).textContent || '')) throw new Error('a linha do mapa não fala da mensagem');
+    UI.modalNav('brock');
+    if (!document.querySelector('#modal .nav-marca-linha.msg')) throw new Error('sem a marca da mensagem na agenda');
+    if (![...document.querySelectorAll('#modal .nav-acao')].some(b => /Ler a mensagem/.test(b.innerText) && !b.disabled)) throw new Error('sem "Ler a mensagem" na ficha');
+  });
+  await tentar('silencioso/ler', () => {
+    UI.navRecado('brock', 'ler');
+    if (Recados.temMensagem('brock')) throw new Error('a mensagem continuou por ler');
+    if (!/Mensage/.test((document.querySelector('#modal .nav-marca') || {}).textContent || '')) throw new Error('ler não abriu a mensagem');
+  });
+  await tentar('silencioso/a escrita não se gasta', () => {
+    UI.fecharModal(true);
+    const d = Estado.dados;
+    const ch = CHAMADAS.find(c => { if (Chamadas.jaAtendeu(c.id) || !contatoPorId(c.de)) return false; try { return !c.cond || c.cond(d); } catch(e){ return false; } });
+    if (!ch) throw new Error('nenhuma chamada escrita esperando no save cheio');
+    if (!Estado.nav().contatos[ch.de]) Estado.nav().contatos[ch.de] = {id:ch.de, desdeCap:d.capitulo, usos:{}};
+    Jogo.tocarOuGuardar(ch);
+    if (document.querySelector('#modal .nav-respostas')) throw new Error('a escrita tocou no silencioso');
+    if (Chamadas.jaAtendeu(ch.id)) throw new Error('a escrita se gastou no silencioso');
+    if (!Recados.temPerdida(ch.de)) throw new Error('a escrita do silencioso não ficou como chamada perdida');
+  });
+  await tentar('silencioso/pela rolagem', () => {
+    const d = Estado.dados; Relogio.ate(9);
+    CHAMADAS.forEach(c => { Chamadas.atendidas()[c.id] = {cap:d.capitulo, escolha:0}; });
+    Recados.reg().perdidas = {}; Recados.reg().naoLidas = {};
+    Object.values(Recados.reg().contatos).forEach(x => { x.ultimoDia = null; });
+    Jogo.chamadaAdiada = null; Exploracao.tela();
+    const orig = Dados.chanceDados;
+    Dados.chanceDados = function(n, m){ return m === 'PokéNav' ? true : orig.call(this, n, m); };
+    try { if (!Jogo.talvezToque()) throw new Error('a rolagem não tocou'); } finally { Dados.chanceDados = orig; }
+  });
+  await page.waitForTimeout(300);
+  await tentar('silencioso/pela rolagem/depois', () => {
+    if (document.querySelector('#modal .nav-respostas')) throw new Error('o silencioso tocou pela rolagem');
+    if (!Recados.notificacao()) throw new Error('o toque do silencioso não deixou nada');
+    if (!document.querySelector('#nav-aviso.nav-aviso-mapa')) throw new Error('a linha do mapa não apareceu');
+  });
+  await tentar('silencioso/desligar', () => {
+    UI.modalNav();
+    document.querySelector('#modal .nav-silencio').click();
+    if (Recados.silencioso()) throw new Error('o sino não desligou o silencioso');
+  });
+
+  /* cada notícia com cada tipo de contato: quem fala dela, e a notícia não volta depois de atender */
+  for (const id of await comAgenda()) for (const ev of ['morte', 'custodia', 'insignia']){
+    await comAgenda();
+    await tentar(`notícia/${id}/${ev}`, ([x, e]) => {
+      const d = Estado.dados, c = contatoPorId(x);
+      const r = Recados.rotuloNPC(c);
+      if (r) Estado.lembrarNPC(r, {opiniao:AFINIDADE_DA_NOTICIA + 1});
+      else Recados.doContato(x).laco = AFINIDADE_DA_NOTICIA + 1 - (x === 'casa' ? AFINIDADE_DE_CASA : AFINIDADE_DA_ESTRADA);
+      const lista = Recados.insigniasDe(d), ult = lista[lista.length - 1];
+      if (e === 'insignia') d.insignias = d.insignias.filter(i => i !== ult);
+      Recados.emDia(c);
+      if (e === 'morte') Estado.matar(d.time[d.time.length - 1], 'teste da notícia');
+      if (e === 'custodia'){ d.liga = d.liga || {}; d.liga.custodias = (d.liga.custodias || 0) + 1; }
+      if (e === 'insignia') d.insignias.push(ult);
+      const g = c.ginasio ? GINASIOS.find(z => z.id === c.ginasio) : null;
+      const espera = e === 'morte' ? true : e === 'custodia' ? (x === 'casa' || c.tipo !== 'treinador') : !(g && g.insignia === ult);
+      const ch = Recados.montarLigacao(c);
+      if (!ch) throw new Error('sem ligação');
+      if (espera && ch.topico !== 'noticia_' + e) throw new Error(`não falou da notícia (${ch.topico})`);
+      if (!espera && /^noticia_/.test(ch.topico)) throw new Error(`falou de notícia que não é dela (${ch.topico})`);
+      UI.telaChamada(ch);
+      window.__espera = espera;
+    }, [id, ev]);
+    await tentar(`notícia/${id}/${ev}/atender`, x => {
+      Jogo.responderChamada(Recados.atual.id, 0);
+      const ch = Recados.montarLigacao(contatoPorId(x));
+      if (ch && /^noticia_/.test(ch.topico)) throw new Error('a notícia voltou depois de atender');
+      Recados.atual = null;
+    }, id);
+  }
+  /* o líder não liga pra dar a notícia da insígnia que ele mesmo deu */
+  await comAgenda();
+  await tentar('notícia/brock/a insígnia dele', () => {
+    const d = Estado.dados, c = contatoPorId('brock'), g = GINASIOS.find(z => z.id === c.ginasio);
+    if (!g) throw new Error('o Brock sem ginásio na agenda');
+    d.insignias = d.insignias.filter(i => i !== g.insignia);
+    Recados.emDia(c);
+    d.insignias.push(g.insignia);
+    if (Recados.eventoPara(c)) throw new Error('o líder tem notícia da insígnia dele');
+  });
   for (const car of [1, 2, 3, 4, 5]) for (const g of ['sucesso', 'critico']){
     await restaurar();
     await tentar(`presente da cidade/${car}/${g}`, ([c, gr]) => {

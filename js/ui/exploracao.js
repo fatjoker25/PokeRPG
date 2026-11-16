@@ -90,6 +90,7 @@ const Exploracao = {
         (() => { const r = (typeof comoOlugarTeRecebe === 'function') ? comoOlugarTeRecebe() : null;
                  return r ? `<p class="recepcao">${UI.esc(r)}</p>` : ''; })()}</div>
       <div id="avisos" class="avisos"></div>
+      ${typeof Recados !== 'undefined' ? Recados.htmlDaNotificacao() : ''}
 
       ${arco ? `<h3 class="sec sec-aqui">Aqui</h3>
         <div id="escolhas" class="escolhas">

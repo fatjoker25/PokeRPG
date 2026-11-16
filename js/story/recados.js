@@ -18,6 +18,7 @@
 
 const DADOS_DO_TOQUE = 1;               // dados de chance que cada ação no mapa rola: no 6, o PokéNav toca
 const RECADO_POR_CONTATO_DIAS = 7;      // a mesma pessoa não procura de novo antes disso
+const AFINIDADE_DA_NOTICIA = 3;         // quem gosta assim de você liga quando um Pokémon seu morre
 const AFINIDADE_TETO_LIGACAO = 6;       // conversa de telefone aproxima até aqui; acima, só a história
 const AFINIDADE_PISO_LIGACAO = -3;      // e afasta até aqui
 const AFINIDADE_DA_ESTRADA = 1;         // quem te deu o número sem cena com você começa aqui
@@ -93,6 +94,52 @@ const NOTICIA_DE_CASA = [
 ];
 
 const TOPICOS_DE_LIGACAO = [
+/* As notícias: o que mudou desde a última conversa com a pessoa
+   (Recados.eventoPara). Têm a vez na frente dos assuntos à toa, e quem
+   atende conta: a pessoa não liga de novo pela mesma notícia. */
+{
+  id:'noticia_morte', noticia:'morte', para:x => !!x.evento && x.evento.tipo === 'morte',
+  falas:x => {
+    const p = x.evento.p, de = `${pron(p).do} ${nomeExib(p)}`;
+    if (x.casa) return (x.madrugada ? [x.diz('Desculpa a hora. Eu não consegui dormir.')] : [])
+      .concat([x.diz(`Me contaram ${de}.`), x.diz('Eu não vou perguntar como foi. Só queria ouvir a sua voz.', 'baixo')]);
+    if (x.lider) return [x.diz(`Fiquei sabendo ${de}.`), x.diz('Quem treina aprende a perder luta. Isso não se aprende.', 'baixo')];
+    if (x.treinador) return [x.diz(`Soube ${de}. Na estrada todo mundo sabe de todo mundo.`), x.diz('Eu sinto muito. De verdade.')];
+    return [x.diz(`Me disseram ${de}.`), x.diz('Eu não sei o que se diz numa hora dessas. Liguei assim mesmo.')];
+  },
+  escolhas:x => [
+    {texto:'Contar como foi.', afeto:1, resultado:[x.diz('Fico contente que você contou. Ninguém devia carregar isso sozinh{o|a}.')]},
+    {texto:'"Agora não dá pra falar disso."', afeto:0, resultado:[x.diz('Tudo bem. Eu fico aqui.')]},
+    {texto:'"Acontece."', afeto:0, resultado:[x.diz('Não precisa fingir comigo.', 'baixo')]}
+  ]
+},
+{
+  id:'noticia_custodia', noticia:'custodia', para:x => !!x.evento && x.evento.tipo === 'custodia',
+  falas:x => x.casa
+    ? (x.madrugada ? [x.diz('Desculpa a hora. Eu não ia aguentar esperar o dia.')] : [])
+      .concat([x.diz('Disseram que a Patrulha te segurou.'), x.diz('Eu não vou gritar. Já gritei com a parede a noite inteira.')])
+    : [x.diz('Soube que a Patrulha te segurou uns dias.'), x.diz('Não vou perguntar o que foi. Só queria saber se você saiu inteir{o|a}.')],
+  escolhas:x => [
+    {texto:'"Saí. Estou bem."', afeto:1, resultado:[x.diz('Então está bom. Cuida pra não voltar lá.')]},
+    {texto:'Contar o que aconteceu.', afeto:1, resultado:[x.diz('Eu ouvi. Agora vai descansar.')]},
+    {texto:'"Não é da sua conta."', afeto:-1, resultado:[x.diz('Tá bom.', 'frio')]}
+  ]
+},
+{
+  id:'noticia_insignia', noticia:'insignia', para:x => !!x.evento && x.evento.tipo === 'insignia',
+  falas:x => {
+    const n = x.evento.nome;
+    if (x.casa) return [x.diz(`Saiu no jornal daqui: a ${n}.`), x.diz('Eu recortei. Está presa na porta da geladeira.')];
+    if (x.lider) return [x.diz(`Soube da ${n}. Notícia de ginásio corre rápido entre a gente.`), x.diz('Quero ver como você chega na próxima.')];
+    if (x.treinador) return [x.diz(`Vi que você pegou a ${n}.`), x.diz('Tem gente aqui na estrada que nunca passou dessa.')];
+    return [x.diz(`Me contaram da ${n}.`), x.diz('Eu não entendo nada de ginásio, mas fiquei contente.')];
+  },
+  escolhas:x => [
+    {texto:'"Foi apertado."', afeto:1, resultado:[x.diz('O apertado é o que ensina.')]},
+    {texto:'"Ainda falta muito."', afeto:1, resultado:[x.diz('Falta. Mas uma de cada vez, e essa já foi.')]},
+    {texto:'"Foi fácil."', afeto:0, resultado:[x.diz('Então a próxima vai ser difícil. Sempre é.')]}
+  ]
+},
 {
   id:'o_time', para:x => !!x.p,
   falas:x => [x.diz(`Lembrei ${x.pr.do} ${x.chamado} hoje. Como ${x.pr.ele} tá?`)],
@@ -263,6 +310,17 @@ const DA_A_COISA = [
   (Q, q, c) => `${Q} tira ${c} do bolso e põe na sua mão sem dizer nada.`
 ];
 
+/* quem atende a ligação de volta: a primeira coisa que a pessoa diz */
+const ABRE_O_RETORNO = {
+  casa:[x => x.diz('Ah, é você. Eu tinha te ligado.'), x => x.diz('Achei que você ia esquecer de retornar.')],
+  lider:[x => x.diz('Você retornou. Bom.'), x => x.diz('Liguei mais cedo. É coisa rápida.')],
+  treinador:[x => x.diz('Ah, é você! Te liguei mais cedo.'), x => x.diz('Achei que você estava no meio de uma luta.')],
+  figura:[x => x.diz('Ah, é você. Eu tinha te ligado.'), x => x.diz('Que bom que você ligou de volta.')]
+};
+/* a notícia que pesa (a morte, a custódia) não começa com pressa nem com festa */
+const ABRE_O_RETORNO_GRAVE = x => x.diz('Que bom que você ligou de volta.', 'baixo');
+const PERIODO_DITO = {madrugada:'de madrugada', 'manhã':'de manhã', tarde:'à tarde', noite:'de noite'};
+
 const Recados = {
   atual:null,      // a ligação à toa que está tocando agora
   _n:0,
@@ -273,9 +331,51 @@ const Recados = {
     if (!nav.recados) nav.recados = {contatos:{}, presentes:{}};
     if (!nav.recados.contatos) nav.recados.contatos = {};
     if (!nav.recados.presentes) nav.recados.presentes = {};
+    if (!nav.recados.perdidas) nav.recados.perdidas = {};    // chamada perdida, por contato: dá pra retornar até a meia-noite
+    if (!nav.recados.naoLidas) nav.recados.naoLidas = {};    // mensagem que chegou no silencioso
     return nav.recados;
   },
   doContato(id){ const r = this.reg(); return r.contatos[id] || (r.contatos[id] = {}); },
+
+  /* ---------- o que a pessoa sabe ----------
+     Cada contato guarda o retrato de quando falou com você por último
+     (sabe): quantos Pokémon seus morreram, quantas insígnias você tinha,
+     quantas vezes a Patrulha te segurou. O que mudou desde então é a
+     notícia, e quem liga fala dela antes de tudo. O retrato nasce quando
+     o número entra na agenda (conhecer), e atender põe ele em dia. */
+  retrato(){
+    const d = Estado.dados;
+    return {mortos:(d.cemiterio || []).length, insignias:this.insigniasDe(d).length, custodias:(d.liga && d.liga.custodias) || 0};
+  },
+  insigniasDe(d){ return (d.insignias || []).filter(i => i !== 'Título de Campeão'); },
+  conhecer(id){ const r = this.doContato(id); if (!r.sabe) r.sabe = this.retrato(); },
+  sabeDe(c){ const r = this.doContato(c.id); if (!r.sabe) r.sabe = this.retrato(); return r.sabe; },
+  emDia(c){ if (c) this.doContato(c.id).sabe = this.retrato(); },
+  /* a notícia que essa pessoa tem pra dar: a morte (a casa, e quem tem
+     afinidade AFINIDADE_DA_NOTICIA), a custódia (a casa e quem não é
+     treinador) e a insígnia nova (todo mundo, menos o líder que deu) */
+  eventoPara(c){
+    if (!c || typeof Estado === 'undefined' || !Estado.dados) return null;
+    const d = Estado.dados, s = this.sabeDe(c), agora = this.retrato(), casa = c.id === 'casa';
+    if (agora.mortos > s.mortos && (casa || this.afinidade(c) >= AFINIDADE_DA_NOTICIA)){
+      const p = d.cemiterio[d.cemiterio.length - 1];
+      if (p) return {tipo:'morte', p};
+    }
+    if (agora.custodias > s.custodias && (casa || c.tipo !== 'treinador')) return {tipo:'custodia'};
+    if (agora.insignias > s.insignias){
+      const lista = this.insigniasDe(d), nome = lista[lista.length - 1];
+      const g = c.ginasio && typeof GINASIOS !== 'undefined' ? GINASIOS.find(z => z.id === c.ginasio) : null;
+      if (nome && !(g && g.insignia === nome)) return {tipo:'insignia', nome};
+    }
+    return null;
+  },
+  /* notícia que não espera a semana: a casa, depois de uma morte ou da
+     custódia — liga no mesmo dia, até de madrugada */
+  urgente(c){
+    if (!c || c.id !== 'casa') return false;
+    const e = this.eventoPara(c);
+    return !!e && (e.tipo === 'morte' || e.tipo === 'custodia');
+  },
 
   /* ---------- afinidade ----------
      Quem a história conhece (d.npcs) tem a opinião de lá, e a conversa
@@ -318,19 +418,28 @@ const Recados = {
   /* ---------- quem procura você ---------- */
   /* está na agenda, a história ainda põe a pessoa no mundo (requer) e
      não falou com você faz pouco */
-  candidatos(){
+  candidatos(madrugada){
     if (!Estado.temPokenav()) return [];
     const d = Estado.dados;
+    /* save de antes da notícia: quem não tem retrato ganha o de agora */
+    Estado.contatosNaAgenda().forEach(c => this.sabeDe(c));
     return Estado.contatosNaAgenda().filter(c => {
       try { if (c.requer && !c.requer(d)) return false; } catch(e){ return false; }
       const u = this.doContato(c.id).ultimoDia;
+      /* a notícia que não espera liga no mesmo dia, uma vez por dia; de
+         madrugada, só ela */
+      if (this.urgente(c)) return u == null || u !== d.relogio.dia;
+      if (madrugada) return false;
       return u == null || d.relogio.dia - u >= RECADO_POR_CONTATO_DIAS;
     });
   },
-  /* quem gosta mais liga mais */
-  quemLiga(){
-    const cs = this.candidatos();
+  /* quem tem notícia que não espera liga primeiro; no resto, quem gosta
+     mais liga mais */
+  quemLiga(madrugada){
+    const cs = this.candidatos(madrugada);
     if (!cs.length) return null;
+    const urgentes = cs.filter(c => this.urgente(c));
+    if (urgentes.length) return Dados.escolher(urgentes);
     const sacola = [];
     cs.forEach(c => { const n = Math.max(1, Math.min(6, this.afinidade(c) + 2)); for (let i = 0; i < n; i++) sacola.push(c); });
     return Dados.escolher(sacola);
@@ -349,13 +458,16 @@ const Recados = {
      só na hora de abrir o aparelho (mostrar), porque o toque que cai no
      meio da luta espera ela acabar, e até lá o time pode ter mudado.
      Devolve o toque ({recados, de}) pro Jogo abrir ou guardar. */
-  escolherToque(){
+  escolherToque(madrugada){
     if (typeof Estado === 'undefined' || !Estado.dados || !Estado.temPokenav()) return null;
-    const c = this.quemLiga();
+    const c = this.quemLiga(madrugada);
     if (!c) return null;
     this.doContato(c.id).ultimoDia = Estado.dados.relogio.dia;
     let tipo = 'ligacao';
-    if (this.podeMandarPresente(c) && Dados.chance(this.chanceDoPresente(c)) && this.separarPresente(c)) tipo = 'recado';
+    /* quem tem notícia fala dela antes de qualquer coisa, e de madrugada
+       ninguém manda recado nem pede favor */
+    if (madrugada || this.eventoPara(c)){ /* a ligação, com a notícia */ }
+    else if (this.podeMandarPresente(c) && Dados.chance(this.chanceDoPresente(c)) && this.separarPresente(c)) tipo = 'recado';
     else if (typeof Pedidos !== 'undefined' && Pedidos.podePedir(c) && Dados.chance(CHANCE_DO_PEDIDO)) tipo = 'pedido';
     Estado.salvar('auto');
     return {recados:tipo, de:c.id};
@@ -390,7 +502,8 @@ const Recados = {
       pr:p ? pron(p) : {ele:'ele', Ele:'Ele', dele:'dele', nele:'nele', o:'o', um:'um', do:'do', ao:'ao', pro:'pro', f:false},
       emLugar:emLocal(lugarId), naCidade:L.tipo === 'cidade',
       insig:(d.insignias || []).filter(i => i !== 'Título de Campeão').length,
-      periodo:d.relogio.periodo,
+      periodo:d.relogio.periodo, madrugada:d.relogio.periodo === 'madrugada',
+      evento:this.eventoPara(c),
       lider:!!c.ginasio, treinador:c.tipo === 'treinador', figura:c.tipo !== 'treinador' && !casa,
       ondeId, emOnde:emLocal(ondeId), emCidadeDele:emLocal(ondeId),
       diz:(t, tom, nota) => casa ? falaCasa(t, tom, nota) : fala(rot, t, tom, nota),
@@ -430,6 +543,8 @@ const Recados = {
     const pool = this.topicosDe(c);
     if (!pool.length) return null;
     let t = topicoId ? pool.find(z => z.id === topicoId) : null;
+    /* a notícia tem a vez na frente do assunto à toa */
+    if (!t) t = pool.find(z => z.noticia) || null;
     if (!t){
       const ult = this.doContato(c.id).ultimoTopico;
       const sem = pool.filter(z => z.id !== ult);
@@ -454,6 +569,8 @@ const Recados = {
     this.atual = null;
     const c = contatoPorId(ch.de);
     this.mudarAfinidade(c, esc.afeto || 0);
+    /* atendeu: a pessoa ficou sabendo de tudo até aqui, e a notícia não volta */
+    this.emDia(c);
     /* a ligação que pedia um favor: aceitar abre o pedido (pedidos.js) */
     if (ch.pedido && typeof Pedidos !== 'undefined') Pedidos.responder(c, ch.pedido, esc);
     else if (c) Estado.registrar(`Conversou com ${this.nomeNaNarracao(c)} pelo PokéNav.`);
@@ -465,10 +582,182 @@ const Recados = {
     if (!ch) return null;
     this.atual = null;
     const c = contatoPorId(ch.de);
-    this.mudarAfinidade(c, -1);
-    if (c) Estado.registrar(`Não atendeu ${this.nomeNaNarracao(c)}.`);
+    const custou = -this.mudarAfinidade(c, -1);
+    if (c){
+      this.perder(c, {tipo:ch.pedido ? 'pedido' : 'ligacao', topico:ch.topico || null, pedido:ch.pedido || null, custou});
+      Estado.registrar(`Não atendeu ${this.nomeNaNarracao(c)}.`);
+    }
     Estado.salvar('auto');
     return {chamada:ch, recusou:true};
+  },
+
+  /* ---------- a chamada perdida ----------
+     Quem você não atendeu, e quem ligou com o aparelho no silencioso,
+     fica na agenda até a meia-noite. Retornar no mesmo dia devolve o
+     que o não atender custou, e a pessoa continua o assunto de onde
+     parou; virou o dia, a chamada some e o custo fica. A mensagem que
+     chegou no silencioso espera até ser lida. */
+  perder(c, o){
+    if (!c || !Estado.nav().contatos[c.id]) return;
+    const d = Estado.dados, r = this.reg(), antes = r.perdidas[c.id];
+    const doDia = antes && antes.dia === d.relogio.dia ? antes : null;
+    /* o que as duas custaram volta junto no retorno */
+    const custou = (o.custou || 0) + (doDia ? doDia.custou || 0 : 0);
+    /* a chamada escrita do mesmo dia não dá lugar à ligação à toa */
+    const fica = doDia && doDia.tipo === 'escrita' && o.tipo !== 'escrita' ? doDia
+      : Object.assign({dia:d.relogio.dia, periodo:d.relogio.periodo}, o);
+    fica.custou = custou;
+    r.perdidas[c.id] = fica;
+  },
+  /* o que passou da meia-noite sai; a mensagem do presente que você já
+     buscou também, e a de quem a história tirou do mundo */
+  conferirPerdidas(){
+    if (typeof Estado === 'undefined' || !Estado.dados || !Estado.temPokenav()) return;
+    const r = this.reg(), d = Estado.dados, hoje = d.relogio.dia;
+    const some = id => {
+      const c = contatoPorId(id);
+      if (!c) return true;
+      try { return !!c.requer && !c.requer(d); } catch(e){ return true; }
+    };
+    for (const id of Object.keys(r.perdidas)) if (r.perdidas[id].dia !== hoje || some(id)) delete r.perdidas[id];
+    for (const id of Object.keys(r.naoLidas)){
+      const m = r.naoLidas[id];
+      if (some(id) || (m.tipo === 'recado' && !r.presentes[id])) delete r.naoLidas[id];
+    }
+  },
+  temPerdida(id){
+    if (typeof Estado === 'undefined' || !Estado.dados || !Estado.temPokenav()) return false;
+    const p = this.reg().perdidas[id];
+    return !!p && p.dia === Estado.dados.relogio.dia;
+  },
+  temMensagem(id){
+    if (typeof Estado === 'undefined' || !Estado.dados || !Estado.temPokenav()) return false;
+    return !!this.reg().naoLidas[id];
+  },
+  /* "de Misty", "do zelador da Torre" */
+  deQuem(nome){ return /^o /.test(nome) ? 'do ' + nome.slice(2) : /^a /.test(nome) ? 'da ' + nome.slice(2) : 'de ' + nome; },
+
+  /* ---------- o silencioso ----------
+     O aparelho no silencioso não toca: o dado do toque rola igual, a
+     pessoa liga, e a ligação vira chamada perdida sem custo nenhum; o
+     recado e a mensagem do prazo viram mensagem por ler. A tela do mapa
+     diz numa linha o que chegou. */
+  silencioso(){
+    return typeof Estado !== 'undefined' && !!Estado.dados && Estado.temPokenav() && !!Estado.nav().silencioso;
+  },
+  alternarSilencio(){
+    if (!Estado.temPokenav()) return false;
+    const nav = Estado.nav();
+    nav.silencioso = !nav.silencioso;
+    Estado.salvar('auto');
+    return nav.silencioso;
+  },
+  guardarNoSilencio(toque){
+    if (!toque) return false;
+    const c = contatoPorId(toque.de);
+    if (!c) return false;
+    const d = Estado.dados, r = this.reg();
+    if (toque.recados === 'recado' || toque.recados === 'prazo')
+      r.naoLidas[c.id] = {tipo:toque.recados, pedido:toque.pedido || null, dia:d.relogio.dia};
+    else if (toque.recados)
+      this.perder(c, {tipo:toque.recados === 'pedido' ? 'pedido' : 'ligacao', topico:null, pedido:null, custou:0, silencio:true});
+    else
+      /* a chamada escrita não se gasta no silencioso: a pessoa tenta de novo outro dia */
+      this.perder(c, {tipo:'escrita', chamada:toque.id, custou:0, silencio:true});
+    Estado.salvar('auto');
+    this.pintarNotificacao();
+    return true;
+  },
+
+  /* o aviso de uma linha da tela do mapa: quem ligou hoje e você não
+     falou, e a mensagem por ler. Tocar abre a agenda em quem chegou primeiro. */
+  notificacao(){
+    if (typeof Estado === 'undefined' || !Estado.dados || !Estado.temPokenav()) return null;
+    this.conferirPerdidas();
+    const r = this.reg();
+    const perdidas = Object.keys(r.perdidas).filter(id => this.temPerdida(id));
+    const msgs = Object.keys(r.naoLidas).filter(id => contatoPorId(id));
+    if (!perdidas.length && !msgs.length) return null;
+    const nome = id => this.nomeNaNarracao(contatoPorId(id));
+    const partes = [];
+    if (perdidas.length === 1) partes.push(`Chamada perdida ${this.deQuem(nome(perdidas[0]))}`);
+    else if (perdidas.length) partes.push(`${perdidas.length} chamadas perdidas`);
+    if (msgs.length === 1) partes.push(`Mensagem nova ${this.deQuem(nome(msgs[0]))}`);
+    else if (msgs.length) partes.push(`${msgs.length} mensagens novas`);
+    return {texto:partes.join(' · '), abre:perdidas[0] || msgs[0]};
+  },
+  htmlDaNotificacao(){
+    const n = this.notificacao();
+    if (!n) return '<div id="nav-aviso" hidden></div>';
+    const mudo = this.silencioso();
+    return `<button id="nav-aviso" class="nav-aviso-mapa" onclick="UI.modalNav('${n.abre}')">${
+      svgIcone(mudo ? 'sino_mudo' : 'telefone', '', mudo ? '' : '--ac:#e57373')}<span>${UI.esc(n.texto)}</span></button>`;
+  },
+  /* o toque no silencioso chega depois da tela desenhar: a linha muda no lugar */
+  pintarNotificacao(){
+    if (typeof document === 'undefined') return;
+    const el = document.getElementById('nav-aviso');
+    if (el) el.outerHTML = this.htmlDaNotificacao();
+  },
+
+  /* as linhas da ficha do PokéNav: ler a mensagem, retornar a ligação */
+  linhasDaFicha(c){
+    if (!c || typeof Estado === 'undefined' || !Estado.dados || !Estado.temPokenav()) return [];
+    const r = this.reg(), luta = emLuta(), out = [];
+    if (r.naoLidas[c.id]) out.push({acao:'ler', rot:'Ler a mensagem', nota:'Mensagem nova', ok:!luta,
+      motivo:luta ? 'No meio da luta não dá pra ler.' : ''});
+    if (this.temPerdida(c.id)) out.push({acao:'retornar', rot:'Retornar a ligação',
+      nota:'Chamada perdida · ' + (PERIODO_DITO[r.perdidas[c.id].periodo] || 'hoje'), ok:!luta,
+      motivo:luta ? 'No meio da luta não dá pra ligar.' : ''});
+    return out;
+  },
+
+  /* ligar de volta no mesmo dia: o custo de não atender volta, e a
+     pessoa retoma o assunto — a chamada escrita, o pedido, a notícia ou
+     o assunto à toa de antes. Não tem "Não atender": quem ligou foi você. */
+  retornar(id){
+    const c = contatoPorId(id), r = this.reg(), pe = r.perdidas[id], d = Estado.dados;
+    if (!c || !pe || !Estado.temPokenav() || emLuta()) return false;
+    delete r.perdidas[id];
+    if (pe.dia !== d.relogio.dia){ Estado.salvar('auto'); return false; }
+    if (pe.custou) this.mudarAfinidade(c, pe.custou, Infinity);
+    this.doContato(c.id).ultimoDia = d.relogio.dia;
+    const x = this.contexto(c);
+    let ch = null;
+    if (pe.tipo === 'escrita' && typeof CHAMADAS !== 'undefined'){
+      const esc = CHAMADAS.find(z => z.id === pe.chamada);
+      let vale = !!esc;
+      try { if (esc && esc.cond && !esc.cond(d)) vale = false; } catch(e){ vale = false; }
+      if (vale){
+        /* a recusa se desfaz: a conversa acontece agora */
+        const at = Chamadas.atendidas()[esc.id];
+        if (at && at.recusada) delete Chamadas.atendidas()[esc.id];
+        if (!Chamadas.jaAtendeu(esc.id))
+          ch = Object.assign({}, esc, {falas:typeof esc.falas === 'function' ? esc.falas(d) : (esc.falas || [])});
+      }
+    }
+    if (!ch && pe.tipo === 'pedido' && typeof Pedidos !== 'undefined' && Pedidos.podePedir(c))
+      ch = Pedidos.montar(c, null, pe.pedido);
+    if (!ch) ch = this.montarLigacao(c, pe.topico);
+    Estado.registrar(`Retornou a ligação ${this.deQuem(this.nomeNaNarracao(c))}.`);
+    Estado.marcarLigacao(c.id, 'retorno');
+    Estado.salvar('auto');
+    if (!ch) return false;
+    ch.falas = [this.aberturaDoRetorno(x, /^noticia_(morte|custodia)$/.test(ch.topico || ''))].concat(ch.falas || []);
+    UI.telaChamada(ch, {retorno:true});
+    return true;
+  },
+  aberturaDoRetorno(x, grave){ return grave ? ABRE_O_RETORNO_GRAVE(x) : x.sorteio(ABRE_O_RETORNO[this.tipoDe(x)])(x); },
+  /* a mensagem que esperou no silencioso */
+  ler(id){
+    const c = contatoPorId(id), r = this.reg(), m = r.naoLidas[id];
+    if (!c || !m || !Estado.temPokenav() || emLuta()) return false;
+    delete r.naoLidas[id];
+    Estado.salvar('auto');
+    if (m.tipo === 'prazo') return typeof Pedidos !== 'undefined' && Pedidos.mostrarPrazo(c, {pedido:m.pedido});
+    if (!r.presentes[id]) return false;
+    UI.telaRecado(c);
+    return true;
   },
 
   /* ---------- o presente ---------- */
@@ -624,12 +913,29 @@ const Recados = {
       const x = this.contexto(c);
       const dono = c.id === 'casa' ? null : (falaComoDe(c) || textoContato(c, 'nome'));
       for (const t of TOPICOS_DE_LIGACAO){
+        if (t.noticia) continue;
         let ok = false; try { ok = t.para(x); } catch(e){ ok = false; }
         if (!ok) continue;
         out.push({onde:`recado/${c.id}/${t.id}`, dono, linhas:t.falas(x)});
         t.escolhas(x).forEach((e, i) => out.push({onde:`recado/${c.id}/${t.id}>${i}`, dono, linhas:e.resultado || []}));
       }
+      /* as notícias: cada uma, de dia e de madrugada */
+      const d = Estado.dados, morto = (d.cemiterio || []).slice(-1)[0] || (d.time || [])[0];
+      const eventos = [morto ? {tipo:'morte', p:morto} : null, {tipo:'custodia'}, {tipo:'insignia', nome:'Insígnia Cascata'}].filter(Boolean);
+      for (const ev of eventos) for (const madrugada of [false, true]){
+        const y = Object.assign({}, x, {evento:ev, madrugada});
+        for (const t of TOPICOS_DE_LIGACAO){
+          if (!t.noticia) continue;
+          let ok = false; try { ok = t.para(y); } catch(e){ ok = false; }
+          if (!ok) continue;
+          out.push({onde:`recado/${c.id}/${t.id}${madrugada ? '/madrugada' : ''}`, dono, linhas:t.falas(y)});
+          t.escolhas(y).forEach((e, i) => out.push({onde:`recado/${c.id}/${t.id}>${i}`, dono, linhas:e.resultado || []}));
+        }
+      }
       const tipo = this.tipoDe(x);
+      /* quem atende o retorno da chamada perdida */
+      ABRE_O_RETORNO[tipo].forEach((f, i) => out.push({onde:`recado/${c.id}/retorno${i}`, dono, linhas:[f(x)]}));
+      out.push({onde:`recado/${c.id}/retorno grave`, dono, linhas:[ABRE_O_RETORNO_GRAVE(x)]});
       RECADO_DE_PRESENTE[tipo].forEach((f, i) => out.push({onde:`recado/${c.id}/msg${i}`, dono, linhas:f(x)}));
       ENTREGA[tipo].forEach((f, i) => out.push({onde:`recado/${c.id}/entrega${i}`, dono, linhas:f(x)}));
       if (typeof Pedidos !== 'undefined') out.push(...Pedidos.amostras(c));

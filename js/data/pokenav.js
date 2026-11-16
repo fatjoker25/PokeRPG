@@ -1285,6 +1285,8 @@ const Chamadas = {
     if (!c) return null;
     this.atendidas()[id] = {cap:Estado.dados.capitulo, escolha:null, recusada:true};
     const contato = contatoPorId(c.de);
+    /* fica como chamada perdida até a meia-noite, e dá pra retornar (recados.js) */
+    if (contato && typeof Recados !== 'undefined') Recados.perder(contato, {tipo:'escrita', chamada:id, custou:0});
     Estado.registrar(`Não atendeu ${contato ? textoContato(contato,'nome') : 'uma chamada'}.`);
     Estado.salvar('auto');
     return {chamada:c, recusou:true};

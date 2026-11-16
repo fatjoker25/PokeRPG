@@ -296,10 +296,13 @@ const Pedidos = {
      a tela é a da chamada (telaChamada), com id rec_ como a ligação à
      toa: o Chamadas manda o atender e o recusar pro Recados, que manda
      a resposta pra cá (responder). tipo força o jeito (conferência) */
-  montar(c, tipo){
-    const tipos = tipo ? [tipo] : TIPOS_DE_PEDIDO.slice().sort(() => Math.random() - .5);
-    let p = null;
-    for (const t of tipos){ p = this.planejar(t, c); if (p) break; }
+  montar(c, tipo, plano){
+    /* o retorno da chamada perdida (recados.js): o mesmo pedido, se ainda
+       der pra cumprir; senão outro do mesmo jeito, senão qualquer um */
+    let p = plano && this.aindaServe(plano) ? Object.assign({}, plano) : null;
+    const tipos = tipo ? [tipo] : plano ? [plano.tipo].concat(TIPOS_DE_PEDIDO.filter(t => t !== plano.tipo))
+      : TIPOS_DE_PEDIDO.slice().sort(() => Math.random() - .5);
+    for (const t of tipos){ if (p) break; p = this.planejar(t, c); }
     if (!p) return null;
     const x = Recados.contexto(c), k = Recados.tipoDe(x), T = PEDIDOS[p.tipo];
     const ch = {id:'rec_' + c.id + '_' + (++Recados._n), de:c.id, pedido:p, falas:T.pede[k](x, p),
@@ -307,6 +310,13 @@ const Pedidos = {
                 {texto:T.nao, afeto:0, resultado:NEGOU_O_PEDIDO(x)}]};
     Recados.atual = ch;
     return ch;
+  },
+  aindaServe(p){
+    if (!p || !PEDIDOS[p.tipo]) return false;
+    if (p.tipo === 'perdido') return this.alcancavel(p.onde) && this.alcancavel(p.centro);
+    if (p.tipo === 'entrega') return this.alcancavel(p.pega) && this.alcancavel(p.leva);
+    if (p.tipo === 'avistar') return this.alcancavel(p.onde) && !(Estado.pdex().vistos || {})[p.dex];
+    return false;
   },
   responder(c, p, esc){
     if (!c || !p) return;

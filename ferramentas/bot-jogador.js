@@ -1311,6 +1311,29 @@ const SUSPEITO = [
             X.recadoIr[pend[0]] = d.capitulo;
           }
         }
+        /* o PokéNav (recados.js): a mensagem por ler ele lê, a chamada
+           perdida ele retorna duas vezes em três, e num capítulo em oito
+           anda com o aparelho no silencioso */
+        if (typeof Recados !== 'undefined' && Estado.temPokenav()){
+          X.silCap = X.silCap || {};
+          if (X.silCap[d.capitulo] === undefined){
+            X.silCap[d.capitulo] = Math.random() < 1 / 8;
+            if (X.silCap[d.capitulo] !== Recados.silencioso()){
+              Recados.alternarSilencio();
+              window.__passo && __passo('pokenav', {silencioso:Recados.silencioso()});
+            }
+          }
+          const rg = Recados.reg();
+          const msg = Object.keys(rg.naoLidas).find(cid => contatoPorId(cid));
+          if (msg) return {f:'ler_recado', id:msg};
+          X.retorno = X.retorno || {};
+          const pe = Object.keys(rg.perdidas).find(cid => Recados.temPerdida(cid) && X.retorno[cid + ':' + rg.perdidas[cid].dia] === undefined);
+          if (pe){
+            const k = pe + ':' + rg.perdidas[pe].dia;
+            X.retorno[k] = Math.random() < 2 / 3;
+            if (X.retorno[k]) return {f:'retornar', id:pe};
+          }
+        }
         /* o pedido aceito (pedidos.js): o passo que é aqui, ele faz; o
            lugar do passo, ele vai uma vez por capítulo; pronto, ele liga
            pra contar */
@@ -1614,6 +1637,11 @@ const SUSPEITO = [
           UI.fecharModal(true); Exploracao.tela();
           window.__passo && __passo('pedra', {nome:x.nome, de, para:p ? p.nome : null});
         }, dec).catch(e => erros.push('pedra: ' + e.message));
+      } else if (dec.f === 'retornar' || dec.f === 'ler_recado'){
+        await page.evaluate(x => { UI.fecharModal && UI.fecharModal(true);
+          const ok = x.f === 'ler_recado' ? Recados.ler(x.id) : Recados.retornar(x.id);
+          window.__passo && __passo('pokenav', {acao:x.f === 'ler_recado' ? 'leu' : 'retornou', quem:x.id, ok:!!ok}); }, dec)
+          .catch(e => erros.push(dec.f + ': ' + e.message));
       } else if (dec.f === 'contar_pedido'){
         await page.evaluate(i => { UI.fecharModal && UI.fecharModal(true); Pedidos.ligar(i, 'contar');
           window.__passo && __passo('pedido', {fim:'contou', quem:i}); }, dec.id).catch(e => erros.push('pedido: ' + e.message));

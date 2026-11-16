@@ -1024,11 +1024,14 @@ const Jogo = {
     if (typeof Chamadas === 'undefined' || !Estado.temPokenav()) return false;
     /* um toque esperando a luta acabar já é o telefone tocando */
     if (this.chamadaAdiada) return false;
+    /* de madrugada ninguém liga à toa: só a chamada escrita, e a casa com
+       notícia que não espera (recados.js) */
+    const madrugada = Estado.dados.relogio.periodo === 'madrugada';
     const escrita = Chamadas.disponiveis().length > 0;
-    const aToa = typeof Recados !== 'undefined' && Recados.candidatos().length > 0;
+    const aToa = typeof Recados !== 'undefined' && Recados.candidatos(madrugada).length > 0;
     if (!escrita && !aToa) return false;
     if (!Dados.chanceDados(DADOS_DO_TOQUE, 'PokéNav')) return false;
-    const toque = (escrita && Chamadas.sortear()) || (aToa ? Recados.escolherToque() : null);
+    const toque = (escrita && Chamadas.sortear()) || (aToa ? Recados.escolherToque(madrugada) : null);
     if (!toque) return false;
     setTimeout(() => this.tocarOuGuardar(toque), 80);
     return true;
@@ -1040,6 +1043,16 @@ const Jogo = {
      recado; o resto é chamada escrita, que confere se ainda vale. */
   tocarOuGuardar(toque){
     if (!toque || !Estado.temPokenav()) return false;
+    /* no silencioso nada toca: a ligação vira chamada perdida, e o recado
+       mensagem por ler (recados.js) */
+    if (typeof Recados !== 'undefined' && Recados.silencioso()){
+      if (!toque.recados){
+        if (Chamadas.jaAtendeu(toque.id)) return false;
+        try { if (toque.cond && !toque.cond(Estado.dados)) return false; } catch(e){ return false; }
+      }
+      Recados.guardarNoSilencio(toque);
+      return false;
+    }
     if (emLuta() || document.getElementById('modal')){ this.chamadaAdiada = toque; return false; }
     if (toque.recados) return typeof Recados !== 'undefined' && Recados.mostrar(toque.de, toque.recados, toque);
     if (Chamadas.jaAtendeu(toque.id)) return false;

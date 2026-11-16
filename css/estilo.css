@@ -2380,7 +2380,17 @@ h3.cat-item{
 }
 .nav-marca{flex:1}
 .nav-sinal{color:#9fc4e6;letter-spacing:.03em;font-weight:500;text-transform:none;font-variant-numeric:tabular-nums}
-.modal.nav.em-linha .nav-sinal{display:none}
+.modal.nav.em-linha .nav-sinal,.modal.nav.em-linha .nav-silencio{display:none}
+/* o silencioso: o sino na barra, aceso quando o aparelho não toca */
+.nav-silencio{
+  display:inline-flex;align-items:center;gap:5px;padding:3px 9px 3px 6px;border-radius:999px;cursor:pointer;
+  font:600 11px/1 var(--letra-hud, var(--fonte));letter-spacing:.04em;text-transform:none;
+  color:#cfe2f5;background:rgba(255,255,255,.08);border:1px solid rgba(159,196,230,.35);
+}
+.nav-silencio svg.icone{width:15px;height:15px;stroke-width:2}
+.nav-silencio:hover{background:rgba(255,255,255,.16)}
+.nav-silencio:focus-visible{outline:2px solid #7fd8ff;outline-offset:2px}
+.nav-silencio.on{color:#2a2410;background:#ffca28;border-color:#ffca28}
 .nav-antena{
   width:7px;height:7px;border-radius:50%;background:#7fd8ff;flex:0 0 auto;
   box-shadow:0 0 6px #7fd8ff;animation:navSinal 2.4s ease-in-out infinite;
@@ -2463,6 +2473,12 @@ details.nav-novos[open] .nav-novos-ver{transform:rotate(225deg) translate(-2px,-
 .nav-papel{font:400 12px/1.35 var(--fonte);color:var(--nav-txt-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .nav-ponto{width:10px;height:10px;flex:0 0 auto;border-radius:50%;background:#e0a33a;
   box-shadow:0 0 0 3px rgba(224,163,58,.22)}
+/* chamada perdida e mensagem por ler, na linha da agenda */
+.nav-marca-linha{flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;
+  width:22px;height:22px;border-radius:50%;color:#fff}
+.nav-marca-linha svg.icone{width:13px;height:13px;stroke-width:2.2}
+.nav-marca-linha.perdida{background:#d9534f}
+.nav-marca-linha.msg{background:#2f8fd8}
 .nav-vazio{color:var(--nav-txt-2);font:400 13px/1.5 var(--fonte);text-align:center;padding:24px 8px}
 
 /* o rosto na bolinha */
@@ -2530,6 +2546,9 @@ details.nav-novos[open] .nav-novos-ver{transform:rotate(225deg) translate(-2px,-
 .nav-acao:disabled > svg.icone{background:#a9bdd2;box-shadow:none}
 .na-rot{flex:1 1 auto;min-width:0}
 .na-trava{display:block;margin-top:2px;font:400 12px/1.4 var(--fonte);color:var(--nav-txt-2)}
+.na-nota{display:block;margin-top:2px;font:500 12px/1.4 var(--fonte);color:var(--nav-txt-2)}
+.nav-acao.retornar .na-nota{color:#b23b34}
+.nav-acao.retornar{border-color:#e7a5a0}
 .nav-acao.diz .na-rot{font:italic 500 14.5px/1.4 var(--fonte)}
 .nav-acao.recusar{color:#8e2a20}
 .nav-acao.recusar > svg.icone{transform:rotate(135deg)}
@@ -4255,6 +4274,22 @@ h3.sec-ir{--sec:#5aa7ff}
   box-shadow:0 3px 0 var(--destaque-esc), 0 8px 16px -10px var(--destaque-sombra);
 }
 .linha-acao .btn.destaque:active{transform:translateY(2px);box-shadow:0 1px 0 var(--destaque-esc)}
+
+/* o PokéNav no mapa: quem ligou e você não falou, e a mensagem por
+   ler, numa linha só (recados.js); tocar abre a agenda em quem é */
+.nav-aviso-mapa{
+  display:flex;align-items:center;gap:10px;width:100%;margin-top:14px;padding:6px 14px 6px 6px;
+  border-radius:20px;cursor:pointer;text-align:left;color:var(--texto);
+  font:600 13.5px/1.3 var(--letra-hud, var(--fonte));
+  background:linear-gradient(90deg, color-mix(in srgb, #4fc3f7 15%, var(--bg-2)), transparent 92%);
+  border:1px solid color-mix(in srgb, #4fc3f7 38%, var(--borda));
+  animation:aparece .4s var(--suave) backwards;
+}
+.nav-aviso-mapa > svg.icone{width:28px;height:28px;padding:6px;flex:0 0 auto;border-radius:50%;color:#fff;
+  stroke-width:2.1;background:var(--ac, #43b581)}
+.nav-aviso-mapa > span{min-width:0;overflow-wrap:anywhere}
+.nav-aviso-mapa:hover{border-color:#4fc3f7}
+.nav-aviso-mapa:focus-visible{outline:2px solid #4fc3f7;outline-offset:2px}
 
 /* ---------- avisos: o que a escolha mudou ---------- */
 .avisos:not(:empty){margin-top:16px}

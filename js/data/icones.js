@@ -166,6 +166,9 @@ const ICONE = {
   pokedex:'<rect x="5" y="3" width="14" height="18" rx="2"/><circle cx="9" cy="7" r="1.6"/><rect x="8" y="11" width="8" height="6" rx="1"/>',
   pokenav:'<rect x="7" y="3" width="10" height="18" rx="2"/><path d="M10 6h4M11 18h2"/><rect x="9" y="8" width="6" height="7" rx="1"/>',
   lua:'<path d="M14.6 3.8a8.4 8.4 0 1 0 5.6 13.9 7.2 7.2 0 0 1-5.6-13.9z"/><path d="M18.6 4.2l.6 1.5 1.5.6-1.5.6-.6 1.5-.6-1.5-1.5-.6 1.5-.6z"/>',
+  /* o silencioso do PokéNav: o sino, e o sino riscado */
+  sino:'<path d="M6 16.5V11a6 6 0 0 1 12 0v5.5l1.6 1.7H4.4z"/><path d="M10 20.6a2.1 2.1 0 0 0 4 0"/>',
+  sino_mudo:'<path d="M6 16.5V11a6 6 0 0 1 9.4-4.9M18 11v5.5l1.6 1.7H8.2"/><path d="M10 20.6a2.1 2.1 0 0 0 4 0"/><path d="M4 3.5l16 17"/>',
   telefone:'<path d="M7.2 3.5H5.4c-1 0-1.9.9-1.8 1.9.6 7.6 6.6 13.6 14.2 14.2 1 .1 1.9-.8 1.9-1.8v-1.8c0-.7-.5-1.3-1.2-1.5l-2.6-.6c-.6-.1-1.2.1-1.5.6l-.8 1.1c-2.4-1.1-4.3-3-5.4-5.4l1.1-.8c.5-.4.7-1 .6-1.5l-.6-2.6c-.2-.7-.8-1.2-1.5-1.2z"/>',
   cartao:'<rect x="3" y="6" width="18" height="13" rx="2"/><circle cx="8.5" cy="12" r="2"/><path d="M14 10h5M14 13h4M14 16h3"/>',
   /* os comandos da luta: o time é a Pokébola, fugir é correr, o
@@ -222,7 +225,7 @@ const COR_DO_ICONE = {
   mural:'#ffb74d', pc:'#4dd0e1', mapa:'#66bb6a', dormir:'#7986cb', diario:'#e8b923',
   bola:'#4cc38a', pokedex:'#ef5350', itens:'#d9a35b', telefone:'#43b581', lua:'#b39ddb',
   seta:'#5aa7ff', voar:'#9fa8ff', alfinete:'#ffd54f', olho:'#90caf9', pergunta:'#8c9eff', dado:'#4dd0e1', chama:'#a77bff', tigela:'#d9a35b',
-  salvar:'#64b5f6', carregar:'#81c784', patrulha:'#9fb3c8',
+  salvar:'#64b5f6', carregar:'#81c784', patrulha:'#9fb3c8', sino:'#ffca28', sino_mudo:'#90a4ae',
   /* o pedido de quem tem o seu número, na cor da missão do PokéNav */
   bandeira:'#4fc3f7'
 };
