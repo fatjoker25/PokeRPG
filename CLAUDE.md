@@ -2600,7 +2600,23 @@ Fogo do Rory, que parecia de graça. O Nolan do 22 era parede mesmo com
 o time da jornada (4%): o Cloyster dele (Vitalidade 8, 12 de HP, Clamp)
 saiu dos três arcos, e o time acompanha a média do seu sem o +1. Hoje
 o 22 fica em 20% (39% com a conta), onde a Diana fica no 24. O Rory e
-o Otto ficam fáceis do 15 em diante (de 83% a 99%). Rival novo passa por ali, pelo
+o Otto ficavam fáceis do 15 em diante (de 78% a 100% na maior parte
+dos arcos): o Rory era só Fogo, com os golpes de nível (Ember, Fire
+Spin) e cinco no time no máximo, e o Otto só Veneno, contra o
+Terrestre e o Psíquico que a jornada junta. Hoje cada um tem quem
+cubra o tipo (o Exeggutor e o Kangaskhan da Zona Safári, o Vileplume
+e o Nidoking) e, da quinta insígnia sua em diante, troca o golpe mais
+fraco de cada Pokémon por um de TM (`golpes` no rival ou no arco,
+`INSIGNIAS_PRO_TM_DO_RIVAL`, pelo `ensinarDoVeterano` do veterano e do
+torneio). Sem flag, o `sim-rivais` mede só o arco que as flags vazias
+dão (o Ressentido do Rory, o Cansado do Otto); `ARCOS=1` mede todos.
+Assim o Rory fica de 48% a 75% no 12 e de 42% a 58% no 23, e o Otto
+de 54% a 81% no 15 (o Cansado é o mais mole) e de 32% a 48% no 19; o
+Caçador continua duro desde o 7 (de 36% a 43% no 7 e no 10, como
+era). Lista de TM nova confere o que sai: o `ensinarDoVeterano` mede
+pela força dos jogos, e o Night Shade (dados pelo posto, sem defesa)
+conta zero — o Gengar do Otto trocava ele pelo Body Slam do torneio.
+Rival novo passa por ali, pelo
 `chk-lutas` (cada arco, nas duas fichas) e pelo `chk-telas` (a estreia,
 a volta depois de passar reto, o placar e o resultado).
 

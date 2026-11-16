@@ -11,6 +11,11 @@
    Uso:  node ferramentas/sim-rivais.js [lutas por caso] [ids]
          node ferramentas/sim-rivais.js 200 diana
          MODO=conta node ferramentas/sim-rivais.js 200
+         ARCOS=1 node ferramentas/sim-rivais.js 300 fuchsia,vasco
+
+   Sem ARCOS, cada rival luta no arco que as flags vazias dão (o
+   Ressentido do Rory, o Cansado do Otto, o Orgulhoso do Nolan); com
+   ARCOS=1, uma linha por arco, com o arco forçado.
 
    O jogador simulado é ingênuo, como nos outros simuladores: sem item
    nem troca, o golpe de dano que mais machuca pelo poder. MODO=conta
@@ -89,9 +94,14 @@ function lutar(meuTime, R){
 }
 
 console.log('rival   cap área ins time | +0 (vitória, caídos) · +4 | o time no +0');
+const casos = [];
 for (const id of quais){
   const R = defRival(id);
   if (!R){ console.log('não existe:', id); continue; }
+  if (process.env.ARCOS && R.arcos) for (const arco of Object.keys(R.arcos)) casos.push({id, R:Object.assign({}, R, {arco}), rotulo:`${R.nome}/${arco}`});
+  else casos.push({id, R, rotulo:R.nome});
+}
+for (const {id, R, rotulo} of casos){
   /* um encontro já feito, sem placar: o arco é o do começo */
   d.rivais = {[id]: {id, nome:R.nome, vitorias:0, derrotas:0, encontros:1, ultimoCap:0}};
   for (const cap of R.caps){
@@ -108,7 +118,7 @@ for (const id of quais){
       }
       return {vit: Math.round(100 * v / N), cai: (cai / N).toFixed(1), time};
     });
-    console.log(`${R.nome.padEnd(6)} ${String(cap).padStart(4)} ${String(area).padStart(4)} ${ins}   ${tam}   | ` +
+    console.log(`${rotulo.padEnd(process.env.ARCOS ? 17 : 6)} ${String(cap).padStart(4)} ${String(area).padStart(4)} ${ins}   ${tam}   | ` +
       `${String(res[0].vit).padStart(3)}% ${res[0].cai} · ${String(res[1].vit).padStart(3)}% ${res[1].cai} | ${res[0].time.join(', ')}`);
   }
 }

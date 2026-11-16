@@ -561,14 +561,23 @@ const RIVAIS_EXTRA = [
           : 'ressentido',
   arcos:{
     devedor:{nome:'Devedor', resumo:'O Rapidash operou com o seu dinheiro, e ele luta pra pagar do único jeito que sabe.',
-      pool:[59, 38, 126, 136], ace:78, nivelExtra:2, moral:90},
+      pool:[103, 59, 38, 126, 136], golpes:['Fire Blast', 'Psychic'], ace:78, nivelExtra:1, moral:90},
     quase:{nome:'Quase', resumo:'A cirurgia saiu com atraso, e cada luta é uma conta que diminui.',
-      pool:[38, 126, 110, 59], ace:78, nivelExtra:2, moral:65},
+      pool:[38, 59, 103, 126, 110], golpes:['Fire Blast', 'Psychic', 'Sludge Bomb'], ace:78, nivelExtra:2, moral:65},
     companhia:{nome:'Companhia', resumo:'O Rapidash anda em três patas, e ele lembra de quem sentou do lado.',
-      pool:[59, 38, 136, 89], ace:78, nivelExtra:1, moral:75},
+      pool:[59, 115, 38, 136, 89], golpes:['Earthquake', 'Fire Blast', 'Sludge Bomb'], ace:78, nivelExtra:1, moral:75},
     ressentido:{nome:'Ressentido', resumo:'Ele não esqueceu o corredor, e o time dele ficou venenoso.',
-      pool:[89, 110, 24, 126], ace:78, nivelExtra:3, moral:45}
+      pool:[89, 45, 34, 110, 126], golpes:['Sludge Bomb', 'Earthquake', 'Fire Blast'], ace:78, nivelExtra:3, moral:45}
   },
+  /* Era tudo Fogo, com os golpes de nível (Ember, Fire Spin, Bite) e
+     cinco no time no máximo: contra a Água, a Pedra e a Terra que o
+     time da jornada junta, o jogador ganhava de 82% a 100% no 18 e no
+     23. Hoje cada arco tem cinco na lista e quem cobre o Fogo — o
+     Exeggutor e o Kangaskhan da Zona Safári de Fuchsia, o Vileplume e
+     o Nidoking no time venenoso —, e da quinta insígnia sua em diante
+     ensina um golpe de TM a cada um (o Fire Blast nos de Fogo). Medido
+     assim (ARCOS=1 no sim-rivais, com e sem MODO=conta): de 48% a 75%
+     no 12, de 49% a 71% no 18 e de 42% a 58% no 23. */
 
   fala:(d, r, arco) => {
     if (arco === 'devedor') return [
@@ -649,7 +658,8 @@ const RIVAIS_EXTRA = [
   origem:'O caçador da Floresta de Viridian. Você o obrigou a abrir as gaiolas e ele anotou o seu rosto.',
   gatilho:d => { const n = d.npcs['Caçador Roque']; return !!n && n.opiniao <= -3; },
   nascimento:'O Caçador Roque perguntou o seu nome em três Centros Pokémon diferentes esta semana.',
-  pool:[42, 49, 89, 94, 71, 110],            // Golbat, Venomoth, Muk, Gengar, Victreebel, Weezing
+  pool:[42, 49, 89, 34, 71, 94],             // Golbat, Venomoth, Muk, Nidoking, Victreebel, Gengar
+  golpes:['Sludge Bomb', 'Earthquake', 'Rock Slide'],   // os do time dele no Torneio Aberto, menos o Body Slam
   ace:24, nivelExtra:3, moral:35,           // o Arbok é o que ele usa para prender
   cor:'var(--ruim)',
 
@@ -663,10 +673,21 @@ const RIVAIS_EXTRA = [
   arcos:{
     cacador:{nome:'Caçador', resumo:'Tem paciência e anota o seu rosto.'},
     colega:{nome:'Colega', resumo:'Acha que vocês trabalham pros mesmos, e trata você como igual.',
-      pool:[94, 89, 42, 110, 49], ace:24, nivelExtra:4, moral:40},
+      pool:[94, 89, 42, 34, 110, 49], ace:24, nivelExtra:4, moral:40},
     cansado:{nome:'Cansado', resumo:'Largou a rede, e ainda não sabe o que fazer com as mãos.',
-      pool:[49, 71, 42], ace:24, nivelExtra:1, moral:55}
+      pool:[49, 71, 42, 34, 110], ace:24, nivelExtra:1, moral:55}
   },
+  /* Só Veneno, contra o Terrestre e o Psíquico que o time da jornada
+     tem do 15 em diante: o jogador ganhava de 78% a 86% no 15, e o
+     Cansado, com três na lista, era de graça no 15 e no 19 (de 96% a
+     99%). Hoje o Nidoking entra no quarto lugar (do 15 em diante: o 7
+     e o 10 ficam como eram) e, da quinta insígnia sua em diante, cada
+     um aprende um golpe de TM. Medido assim (ARCOS=1 no sim-rivais,
+     com e sem MODO=conta): de 54% a 81% no 15 (o Cansado é o mais
+     mole) e de 32% a 48% no 19; o Caçador continua duro desde o 7 (de
+     36% a 43% no 7 e no 10, como era). A lista não tem o Body Slam do
+     torneio: o Gengar trocaria o Night Shade (dados pelo posto, sem
+     defesa) por ele. */
 
   fala:(d, r, arco) => {
     if (arco === 'colega') return [
@@ -929,17 +950,24 @@ function arcoRivalExtra(R){
   try { return typeof R.arco === 'function' ? R.arco(Estado.dados, reg) : (R.arco || 'padrao'); }
   catch(e){ return 'padrao'; }
 }
-/* o que o arco muda no time: lista, ace, nível e moral */
+/* o que o arco muda no time: lista, ace, nível, moral e os golpes de
+   TM que o dono ensina (um por Pokémon, o mais fraco sai: o mesmo
+   ensinarDoVeterano do veterano e do torneio) */
 function defArcoExtra(R, arco){
   const A = (R.arcos && R.arcos[arco || arcoRivalExtra(R)]) || {};
   return {nome:A.nome || 'Rival', resumo:A.resumo || '', pool:A.pool || R.pool, ace:A.ace || R.ace,
-          nivelExtra:A.nivelExtra != null ? A.nivelExtra : (R.nivelExtra || 0), moral:A.moral || R.moral || 70};
+          nivelExtra:A.nivelExtra != null ? A.nivelExtra : (R.nivelExtra || 0), moral:A.moral || R.moral || 70,
+          golpes:A.golpes || R.golpes || null};
 }
 /* ajudantes dos gatilhos */
 function opiniaoRival(R, d){ const n = (d || Estado.dados).npcs[R.npc]; return n ? (n.opiniao || 0) : 0; }
 function repRuim(n){ const r = Estado.rep; return r.eixo === 'ruim' && r.ruim >= n; }
 function repBoa(n){ const r = Estado.rep; return r.eixo === 'bom' && r.bom >= n; }
 function ladoEscuro(d){ return ['rocket', 'mercenario', 'foragido'].includes(typeof linhaAtual === 'function' ? linhaAtual(d) : null); }
+
+/* da quinta insígnia sua em diante, o rival que tem `golpes` (o Rory e
+   o Otto) ensina um golpe de TM a cada Pokémon do time */
+const INSIGNIAS_PRO_TM_DO_RIVAL = 5;
 
 function nivelRivalExtra(R){
   const t = Estado.dados.time.filter(p => !p.morto);
@@ -950,6 +978,8 @@ function nivelRivalExtra(R){
 function timeRivalExtra(R){
   const A = defArcoExtra(R);
   R = Object.assign({}, R, {pool:A.pool, ace:A.ace, moral:A.moral});
+  const comTM = A.golpes && numInsignias() >= INSIGNIAS_PRO_TM_DO_RIVAL && typeof ensinarDoVeterano === 'function';
+  const ensina = p => { if (comTM) ensinarDoVeterano(p, A.golpes); return p; };
   const nivel = nivelRivalExtra(R);
   const qtd = Math.max(2, Math.min(6, 2 + Math.round(numInsignias() * 0.5)));
   const time = [];
@@ -966,9 +996,9 @@ function timeRivalExtra(R){
     const dex = forma(R.pool[i], nv);
     if (usados.has(dex)) continue;
     usados.add(dex);
-    time.push(criarPokemon(dex, nv, {moral:R.moral || 70}));
+    time.push(ensina(criarPokemon(dex, nv, {moral:R.moral || 70})));
   }
-  time.push(criarPokemon(R.aceFixo ? R.ace : forma(R.ace, nvAce), nvAce, {moral:R.moral || 70}));
+  time.push(ensina(criarPokemon(R.aceFixo ? R.ace : forma(R.ace, nvAce), nvAce, {moral:R.moral || 70})));
   return time;
 }
 
