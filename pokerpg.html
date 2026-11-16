@@ -50386,6 +50386,12 @@ const NOME_ESTAGIO = {atk:'a Força', def:'a Vitalidade', spa:'o Especial', spd:
 /* estágio dos jogos (chave do golpe) → atributo do livro */
 const ATRIB_DO_ESTAGIO = {atk:'for', def:'vit', spa:'esp', spd:'ins', spe:'des'};
 const ESTAGIO_DO_ATRIB = {for:'atk', vit:'def', esp:'spa', ins:'spd', des:'spe'};
+/* Até onde um estágio sobe ou desce: ±3, não os ±6 dos jogos. No livro
+   o maior empurrão de um golpe é +3 (Cotton Guard, Tail Glow, e o Belly
+   Drum, que nos jogos põe o Ataque no máximo), e cada estágio aqui é um
+   ponto inteiro de atributo: com seis, um Corsola que só usava Harden
+   tirava 6 dados da parada de dano de quem batia nele. */
+const ESTAGIO_MAXIMO = 3;
 /* Seismic Toss, Night Shade e Psywave: dados pelo posto */
 const DADOS_POR_POSTO = [1, 2, 4, 6, 8, 10, 10, 10];
 /* Wrap, Bind, Clamp e Fire Spin, pelo livro (3.0): prende 4 rodadas e
@@ -51225,7 +51231,7 @@ const Batalha = {
       return false;
     }
     const antes = est[chave] || 0;
-    const depois = Math.max(-6, Math.min(6, antes + delta));
+    const depois = Math.max(-ESTAGIO_MAXIMO, Math.min(ESTAGIO_MAXIMO, antes + delta));
     const nomeStat = NOME_ESTAGIO[chave] || chave;
     if (depois === antes){
       this.ev('erro', `${nomeStat[0].toUpperCase() + nomeStat.slice(1)} de ${nomeVisivel(p)} não ${delta > 0 ? 'sobe' : 'desce'} mais.`);
@@ -51743,15 +51749,15 @@ const Batalha = {
         }
         /* golpe de estágio que não muda mais nada não se escolhe, e o que
            está perto do limite vale menos. Sem isso a IA repetia
-           Smokescreen com a precisão do outro já em −6, ninguém acertava
-           ninguém e a luta passava de cem turnos */
+           Smokescreen com a precisão do outro já no limite, ninguém
+           acertava ninguém e a luta passava de cem turnos */
         if (E.baixa || E.sobe){
           const ladoAlvo = this.lados && this.lados[p === this.aliado ? 'inimigo' : 'aliado'];
           if (E.baixa && ladoAlvo && ladoAlvo.nevoa > 0) return 0;
-          const resta = E.baixa ? 6 + (estAlvo[E.baixa] || 0) : 6 - (estP[E.sobe] || 0);
+          const resta = E.baixa ? ESTAGIO_MAXIMO + (estAlvo[E.baixa] || 0) : ESTAGIO_MAXIMO - (estP[E.sobe] || 0);
           if (resta <= 0) return 0;
           const base = alvo.status ? 5 : (p.hp / p.hpMax > 0.6) ? 45 : 20;
-          return base * Math.max(0.3, resta / 6);
+          return base * Math.max(0.3, resta / ESTAGIO_MAXIMO);
         }
         if (alvo.status || (G.ef && G.ef.tipo && alvo.status)) return 5;
         return (p.hp / p.hpMax > 0.6) ? 45 : 20;
@@ -56623,8 +56629,13 @@ const GINASIOS = [
     {min:0, especies:[63, 122], variacoes:[96,63,122]},                      // Abra, Mr. Mime
     {min:2, especies:[63, 96, 122], variacoes:[96,63,79,122]},                  // + Drowzee
     {min:4, especies:[64, 97, 122, 79], variacoes:[80,97,64,102]},              // Kadabra, Hypno, Mr. Mime, Slowpoke
-    {min:6, especies:[64, 97, 122, 80, 121, 65], variacoes:[80,97,121,65]}      // + Slowbro, Starmie, Alakazam
+    {min:6, especies:[64, 97, 122, 80, 49, 65], variacoes:[80,97,49,65]}        // + Slowbro, Venomoth, Alakazam
   ],
+  /* A Venomoth é a do time dela em Red/Blue. A Starmie saiu quando o
+     Minimize virou esquiva de graça até sair da luta e a IA parou de
+     gastar a vez: com ela a Sabrina caiu de 68/48/29 pra 54/41/23
+     (Fácil/Normal/Difícil, sim-ginasios), e com a Venomoth fica em
+     66/48/23. */
   efeito:'Você aprende a falar com quem já decidiu não te ouvir. (+1 Carisma)',
   premio:{dinheiro:6000, itens:{'Full Heal':3,'Ultra Ball':2,'TM46 Psywave':1}, rep:1, status:'carisma'},
 
@@ -154051,10 +154062,11 @@ const UI = {
       <div class="linha"><span class="k">FRZ · congelado</span><span class="v">20% por turno de descongelar</span></div>
       <p class="sussurro">Tipo Elétrico não paralisa, Fogo não queima, Venenoso e Metálico não envenenam e Gelo não congela. O congelado é regra da casa: no livro ele só sai quebrando o gelo por fora, e numa luta de um contra um isso não acaba nunca.</p>
       <h3>Estágios de atributo</h3>
-      <div class="linha"><span class="k">Faixa</span><span class="v">de −6 a +6 · aparece na ficha de HP durante a luta</span></div>
+      <div class="linha"><span class="k">Faixa</span><span class="v">de −${ESTAGIO_MAXIMO} a +${ESTAGIO_MAXIMO} · aparece na ficha de HP durante a luta</span></div>
       <div class="linha"><span class="k">FOR, VIT, ESP, INS, DES</span><span class="v">cada estágio é 1 ponto no atributo · nenhum fica abaixo de 1</span></div>
       <div class="linha"><span class="k">Precisão e evasão</span><span class="v">cada estágio é 1 sucesso a mais ou a menos · a precisão de quem ataca contra a evasão de quem apanha · evasão só desce (Sweet Scent): nenhum golpe faz ela subir</span></div>
-      <div class="linha"><span class="k">No limite</span><span class="v">golpe que sobe ou baixa estágio já em ±6 não faz nada · o adversário não escolhe esse golpe, e quanto mais perto do limite, menos ele escolhe</span></div>
+      <div class="linha"><span class="k">No limite</span><span class="v">golpe que sobe ou baixa estágio já em ±${ESTAGIO_MAXIMO} não faz nada · o adversário não escolhe esse golpe, e quanto mais perto do limite, menos ele escolhe</span></div>
+      <p class="sussurro">Nos jogos o estágio vai até seis. Aqui cada estágio é um ponto inteiro de atributo, e no livro nenhum golpe dá mais que três de uma vez: o Belly Drum, que nos jogos põe o Ataque no máximo, dá +3 de Força.</p>
       <div class="linha"><span class="k">Cura de golpe</span><span class="v">Recover, Softboiled e Synthesis devolvem metade do HP · Rest enche e faz dormir · acertou, a cura só ativa gastando 1 de Vontade, e sem Vontade não cura · o adversário não se cura com 80% do HP ou mais, e quanto mais ferido, mais ele escolhe a cura</span></div>
       <div class="linha"><span class="k">Efeito de golpe de dano</span><span class="v">nos dados de chance do livro · golpe sem essa ficha segue a chance dos jogos</span></div>
 

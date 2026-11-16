@@ -712,11 +712,12 @@ própria tabela (`Dificuldade.regras()`).
 
 Medido no `sim-ginasios.js` (400 lutas por caso, jogador no nível da
 área): Brock 68% / 38% / 18% (Fácil / Normal / Difícil), Misty 57 /
-46 / 26, Sabrina 54 / 38 / 23, Blue 68 / 39 / 21; Surge, Erika, Koga
-e Blaine ficam perto do teto nas três. A Sabrina era 68 / 48 / 29
-antes de a IA errar só entre golpes úteis (ver "O combate é
-Pokérole"): o time dela gastava a vez com Hypnosis em quem já tinha
-condição.
+46 / 26, Sabrina 66 / 48 / 23, Blue 68 / 39 / 21; Surge, Erika, Koga
+e Blaine ficam perto do teto nas três. A Sabrina era 68 / 48 / 29 e
+caiu pra 54 / 41 / 23 quando a IA passou a errar só entre golpes
+úteis e o Minimize virou esquiva de graça (ver "O combate é
+Pokérole"): a Starmie dela não gastava mais a vez. A Starmie saiu do
+time de seis pela Venomoth, a do time dela em Red/Blue.
 
 ## O corpo do Pokémon na luta
 O que o **lutador** faz com o próprio corpo mora em
@@ -1034,6 +1035,23 @@ vez de Night Shade. `node ferramentas/sim-impasse.js` repete essas
 lutas (com `ROOT=<pasta>` na frente, contra uma cópia de antes da
 mudança): hoje todas acabam, e só a Blissey passa de trinta turnos, por
 ser a Blissey (esquiva e cura que gasta Vontade).
+
+**O estágio vai de −3 a +3** (`ESTAGIO_MAXIMO`, em `batalha.js`), não os
+±6 dos jogos. Cada estágio aqui é um ponto inteiro de atributo, e no
+livro nenhum golpe empurra mais que três (Cotton Guard, Tail Glow, e o
+Belly Drum, que nos jogos põe o Ataque no máximo e no 3.0 dá +3 de
+Força). Medido com e sem o teto (ginásios, estrada, rivais, veteranos,
+rede e torneio), nada mudou além do ruído: o teto só corta o caso de
+quem repete Harden até tirar seis dados da parada de quem bate nele. A
+folha de regras lê o número da constante.
+
+**O nível pesa o que o livro pesa**, e isso fica. `pontosDoNivel` dá os
++2 de atributo por posto do 3.0 (4 no Regular, 8 no Especialista, 14 no
+Campeão) e `periciaDoNivel` o teto de perícia do posto. Por isso um
+Venusaur 60 só com Razor Leaf de dano (a 1ª geração ensina o Solar Beam
+no 65) briga de igual pra igual com um Corsola 28 de Harden e Recover:
+os oito pontos dele foram pra Especial e Instinto, e o golpe que ele tem
+é de Força. Quem resolve isso é a TM, não o nível.
 
 ## O que o olho lê e o que o time come
 Tipo e natureza de quem está do outro lado **não têm dado**: o tipo

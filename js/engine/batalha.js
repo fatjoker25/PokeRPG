@@ -33,6 +33,12 @@ const NOME_ESTAGIO = {atk:'a Força', def:'a Vitalidade', spa:'o Especial', spd:
 /* estágio dos jogos (chave do golpe) → atributo do livro */
 const ATRIB_DO_ESTAGIO = {atk:'for', def:'vit', spa:'esp', spd:'ins', spe:'des'};
 const ESTAGIO_DO_ATRIB = {for:'atk', vit:'def', esp:'spa', ins:'spd', des:'spe'};
+/* Até onde um estágio sobe ou desce: ±3, não os ±6 dos jogos. No livro
+   o maior empurrão de um golpe é +3 (Cotton Guard, Tail Glow, e o Belly
+   Drum, que nos jogos põe o Ataque no máximo), e cada estágio aqui é um
+   ponto inteiro de atributo: com seis, um Corsola que só usava Harden
+   tirava 6 dados da parada de dano de quem batia nele. */
+const ESTAGIO_MAXIMO = 3;
 /* Seismic Toss, Night Shade e Psywave: dados pelo posto */
 const DADOS_POR_POSTO = [1, 2, 4, 6, 8, 10, 10, 10];
 /* Wrap, Bind, Clamp e Fire Spin, pelo livro (3.0): prende 4 rodadas e
@@ -872,7 +878,7 @@ const Batalha = {
       return false;
     }
     const antes = est[chave] || 0;
-    const depois = Math.max(-6, Math.min(6, antes + delta));
+    const depois = Math.max(-ESTAGIO_MAXIMO, Math.min(ESTAGIO_MAXIMO, antes + delta));
     const nomeStat = NOME_ESTAGIO[chave] || chave;
     if (depois === antes){
       this.ev('erro', `${nomeStat[0].toUpperCase() + nomeStat.slice(1)} de ${nomeVisivel(p)} não ${delta > 0 ? 'sobe' : 'desce'} mais.`);
@@ -1390,15 +1396,15 @@ const Batalha = {
         }
         /* golpe de estágio que não muda mais nada não se escolhe, e o que
            está perto do limite vale menos. Sem isso a IA repetia
-           Smokescreen com a precisão do outro já em −6, ninguém acertava
-           ninguém e a luta passava de cem turnos */
+           Smokescreen com a precisão do outro já no limite, ninguém
+           acertava ninguém e a luta passava de cem turnos */
         if (E.baixa || E.sobe){
           const ladoAlvo = this.lados && this.lados[p === this.aliado ? 'inimigo' : 'aliado'];
           if (E.baixa && ladoAlvo && ladoAlvo.nevoa > 0) return 0;
-          const resta = E.baixa ? 6 + (estAlvo[E.baixa] || 0) : 6 - (estP[E.sobe] || 0);
+          const resta = E.baixa ? ESTAGIO_MAXIMO + (estAlvo[E.baixa] || 0) : ESTAGIO_MAXIMO - (estP[E.sobe] || 0);
           if (resta <= 0) return 0;
           const base = alvo.status ? 5 : (p.hp / p.hpMax > 0.6) ? 45 : 20;
-          return base * Math.max(0.3, resta / 6);
+          return base * Math.max(0.3, resta / ESTAGIO_MAXIMO);
         }
         if (alvo.status || (G.ef && G.ef.tipo && alvo.status)) return 5;
         return (p.hp / p.hpMax > 0.6) ? 45 : 20;

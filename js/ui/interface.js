@@ -6359,10 +6359,11 @@ const UI = {
       <div class="linha"><span class="k">FRZ · congelado</span><span class="v">20% por turno de descongelar</span></div>
       <p class="sussurro">Tipo Elétrico não paralisa, Fogo não queima, Venenoso e Metálico não envenenam e Gelo não congela. O congelado é regra da casa: no livro ele só sai quebrando o gelo por fora, e numa luta de um contra um isso não acaba nunca.</p>
       <h3>Estágios de atributo</h3>
-      <div class="linha"><span class="k">Faixa</span><span class="v">de −6 a +6 · aparece na ficha de HP durante a luta</span></div>
+      <div class="linha"><span class="k">Faixa</span><span class="v">de −${ESTAGIO_MAXIMO} a +${ESTAGIO_MAXIMO} · aparece na ficha de HP durante a luta</span></div>
       <div class="linha"><span class="k">FOR, VIT, ESP, INS, DES</span><span class="v">cada estágio é 1 ponto no atributo · nenhum fica abaixo de 1</span></div>
       <div class="linha"><span class="k">Precisão e evasão</span><span class="v">cada estágio é 1 sucesso a mais ou a menos · a precisão de quem ataca contra a evasão de quem apanha · evasão só desce (Sweet Scent): nenhum golpe faz ela subir</span></div>
-      <div class="linha"><span class="k">No limite</span><span class="v">golpe que sobe ou baixa estágio já em ±6 não faz nada · o adversário não escolhe esse golpe, e quanto mais perto do limite, menos ele escolhe</span></div>
+      <div class="linha"><span class="k">No limite</span><span class="v">golpe que sobe ou baixa estágio já em ±${ESTAGIO_MAXIMO} não faz nada · o adversário não escolhe esse golpe, e quanto mais perto do limite, menos ele escolhe</span></div>
+      <p class="sussurro">Nos jogos o estágio vai até seis. Aqui cada estágio é um ponto inteiro de atributo, e no livro nenhum golpe dá mais que três de uma vez: o Belly Drum, que nos jogos põe o Ataque no máximo, dá +3 de Força.</p>
       <div class="linha"><span class="k">Cura de golpe</span><span class="v">Recover, Softboiled e Synthesis devolvem metade do HP · Rest enche e faz dormir · acertou, a cura só ativa gastando 1 de Vontade, e sem Vontade não cura · o adversário não se cura com 80% do HP ou mais, e quanto mais ferido, mais ele escolhe a cura</span></div>
       <div class="linha"><span class="k">Efeito de golpe de dano</span><span class="v">nos dados de chance do livro · golpe sem essa ficha segue a chance dos jogos</span></div>
 

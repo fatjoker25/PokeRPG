@@ -272,8 +272,13 @@ const GINASIOS = [
     {min:0, especies:[63, 122], variacoes:[96,63,122]},                      // Abra, Mr. Mime
     {min:2, especies:[63, 96, 122], variacoes:[96,63,79,122]},                  // + Drowzee
     {min:4, especies:[64, 97, 122, 79], variacoes:[80,97,64,102]},              // Kadabra, Hypno, Mr. Mime, Slowpoke
-    {min:6, especies:[64, 97, 122, 80, 121, 65], variacoes:[80,97,121,65]}      // + Slowbro, Starmie, Alakazam
+    {min:6, especies:[64, 97, 122, 80, 49, 65], variacoes:[80,97,49,65]}        // + Slowbro, Venomoth, Alakazam
   ],
+  /* A Venomoth é a do time dela em Red/Blue. A Starmie saiu quando o
+     Minimize virou esquiva de graça até sair da luta e a IA parou de
+     gastar a vez: com ela a Sabrina caiu de 68/48/29 pra 54/41/23
+     (Fácil/Normal/Difícil, sim-ginasios), e com a Venomoth fica em
+     66/48/23. */
   efeito:'Você aprende a falar com quem já decidiu não te ouvir. (+1 Carisma)',
   premio:{dinheiro:6000, itens:{'Full Heal':3,'Ultra Ball':2,'TM46 Psywave':1}, rep:1, status:'carisma'},
 
