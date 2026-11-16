@@ -205,9 +205,12 @@ const GOLPES = {
   'Focus Energy':  {t:'Normal',c:'status',p:0,a:999,pp:30,nv:1,ef:{acao:'foco'}},
   'Defense Curl':  {t:'Normal',c:'status',p:0,a:999,pp:40,nv:1,ef:{sobe:'def'}},
   'Withdraw':      {t:'Água',c:'status',p:0,a:999,pp:40,nv:1,ef:{sobe:'def'}},
-  'Minimize':      {t:'Normal',c:'status',p:0,a:999,pp:20,nv:1,ef:{sobe:'evasao'}},
+  /* Minimize e Double Team (Pokérole 3.0): "pode fazer até 5 Esquivas
+     por rodada", a cena inteira. Aqui é a esquiva de graça (batalha.js,
+     acao 'esquivas'), não o estágio de evasão dos jogos */
+  'Minimize':      {t:'Normal',c:'status',p:0,a:999,pp:20,nv:1,ef:{acao:'esquivas'}},
   'Substitute':    {t:'Normal',c:'status',p:0,a:999,pp:10,nv:1,ef:{acao:'substituto'}},
-  'Double Team':   {t:'Normal',c:'status',p:0,a:999,pp:15,nv:1,ef:{sobe:'evasao'}},
+  'Double Team':   {t:'Normal',c:'status',p:0,a:999,pp:15,nv:1,ef:{acao:'esquivas'}},
   'Conversion':    {t:'Normal',c:'status',p:0,a:999,pp:30,nv:1,ef:{acao:'conversao'}},
   'Light Screen':  {t:'Psíquico',c:'status',p:0,a:999,pp:30,nv:1,ef:{acao:'tela'}},
   'Reflect':       {t:'Psíquico',c:'status',p:0,a:999,pp:20,nv:1,ef:{acao:'reflexo'}},

@@ -710,10 +710,13 @@ própria tabela (`Dificuldade.regras()`).
   revanche e o Pico do arco quebrado com o nível de um e a força de
   outro.
 
-Medido no `sim-ginasios.js` (50 lutas por caso, jogador no nível da
-área): Brock 64% / 42% / 24% (Fácil / Normal / Difícil), Misty 64 /
-44 / 40, Sabrina 68 / 48 / 40, Blue 66 / 44 / 24; Surge, Erika, Koga
-e Blaine ficam perto do teto nas três.
+Medido no `sim-ginasios.js` (400 lutas por caso, jogador no nível da
+área): Brock 68% / 38% / 18% (Fácil / Normal / Difícil), Misty 57 /
+46 / 26, Sabrina 54 / 38 / 23, Blue 68 / 39 / 21; Surge, Erika, Koga
+e Blaine ficam perto do teto nas três. A Sabrina era 68 / 48 / 29
+antes de a IA errar só entre golpes úteis (ver "O combate é
+Pokérole"): o time dela gastava a vez com Hypnosis em quem já tinha
+condição.
 
 ## O corpo do Pokémon na luta
 O que o **lutador** faz com o próprio corpo mora em
@@ -1001,6 +1004,36 @@ sucesso a mais, garantido; zerar custa metade do HP (adaptação: no livro desma
 trocar por d10 com sucesso em 6+ já apareceu e foi recusado, porque isso
 é Storyteller, não Pokérole. Toda parada vai pro log com as faces
 (`facesDe(r)`).
+
+**Minimize e Double Team não são estágio de evasão.** No 3.0 eles dão
+"até 5 Esquivas por rodada" (o SRD em
+`/home/user/willowlark/pokeroleobsidiansrd`, clonado do
+`willowlark/pokeroleobsidiansrd`); aqui, onde a esquiva custa Vontade,
+eles deixam a esquiva de graça em todo golpe que dá pra esquivar, até
+sair da luta (`est.esquivaLivre`, ação `esquivas`), e ela tira de um
+terço a dois terços dos golpes que acertam (34% no nível 10, 60% a 68%
+do 25 em diante). A esquiva paga ainda vale como segunda chance, usar
+de novo não soma, o Foresight anula toda esquiva (a paga também), o
+Haze desfaz e o Stomp passa por quem se encolheu. A evasão só desce
+(Sweet Scent): antes cada uso subia um estágio, cada estágio tirava um
+sucesso da precisão do outro até seis, e ninguém acertava ninguém — o
+Muk do Koga, a Blissey da Veronica e um Staryu do mato prenderam o robô
+em lutas de 60 a 150 turnos.
+
+**A IA erra entre o que funciona.** O erro de 22% (`erroIA`) pega o
+segundo melhor golpe só entre os de nota acima de zero: o que não afeta,
+a condição que não pega (`statusPega`, a mesma conta do
+`aplicarStatus`: já tem uma, ou o tipo segura) e o estágio no limite
+ficam fora. Errar pro golpe inútil era turno jogado fora: o Rhydon do
+Blue dava Stomp no Gengar, e o Muk, Poison Gas. Sem nenhum golpe útil
+ela usa o primeiro, e a luta acaba pelo lado de cá. A conta de dano da
+IA mora em `Batalha.danoEsperado` (a defesa do outro, o dano fixo e do
+posto, o que só funciona dormindo), e o `bot-jogador` escolhe por ela:
+pelo poder do golpe, o Gengar dele dava Lick (1 de dano) no Rhydon em
+vez de Night Shade. `node ferramentas/sim-impasse.js` repete essas
+lutas (com `ROOT=<pasta>` na frente, contra uma cópia de antes da
+mudança): hoje todas acabam, e só a Blissey passa de trinta turnos, por
+ser a Blissey (esquiva e cura que gasta Vontade).
 
 ## O que o olho lê e o que o time come
 Tipo e natureza de quem está do outro lado **não têm dado**: o tipo

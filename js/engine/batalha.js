@@ -207,6 +207,7 @@ const Batalha = {
     if (est.focado)          m.push({t:'Focad' + o, c:'bom'});
     if (est.identificado)    m.push({t:'Identificad' + o, c:'estado'});
     if (est.transformado)    m.push({t:'Transformad' + o, c:'bom'});
+    if (est.esquivaLivre)    m.push({t:est.esquivaLivre === 'Minimize' ? 'Encolhid' + o : 'Cópias', c:'bom'});
     if (L){
       if (L.reflexo > 0) m.push({t:`Reflect ${L.reflexo}`, c:'campo'});
       if (L.tela > 0)    m.push({t:`Light Screen ${L.tela}`, c:'campo'});
@@ -255,6 +256,8 @@ const Batalha = {
     if (!this.ativo || this.fase !== 'normal' || !a || !estaVivo(a)) return false;
     if (!USOS_DE_VONTADE[uso] || vontadeDe(a) <= 0) return false;
     if (uso === 'dor') return this.dor(a) > 0;
+    /* identificado (Foresight) não esquiva de nada */
+    if (uso === 'esquiva' && this.estAliado && this.estAliado.identificado) return false;
     return !this.vontadeArmadaAgora();
   },
   gastarVontade(uso){
@@ -288,7 +291,7 @@ const Batalha = {
     const nome = (p.golpes[iGolpe] || {}).nome;
     const g = GOLPES[nome] || {}, pr = PR_GOLPE[nome] || {};
     let uso = null;
-    if (p.hp * 2 <= p.hpMax && quer(45)) uso = 'esquiva';
+    if (p.hp * 2 <= p.hpMax && !(this.estInimigo && this.estInimigo.identificado) && quer(45)) uso = 'esquiva';
     else if (g.c !== 'status' && ((pr.r || 0) >= 1 || this.dor(p) >= 1) && quer(50)) uso = 'destino';
     else if (g.c !== 'status' && (pr.p || 0) >= 3 && vontadeDe(p) >= 3 && quer(25)) uso = 'chances';
     if (!uso) return;
@@ -437,7 +440,10 @@ const Batalha = {
     }
     if (usoV === 'chances' || usoV === 'destino'){ if (atk === this.aliado) this.vontadeArmada = null; else this.vontadeInimigo = null; }
     const destino = usoV === 'destino' ? 1 : 0;
-    const eva = estDef ? (estDef.identificado ? Math.min(0, estDef.evasao || 0) : (estDef.evasao || 0)) : 0;
+    /* evasão só desce (Sweet Scent): a que subia era o Minimize e o
+       Double Team dos jogos, e no livro eles dão esquiva, não estágio.
+       Com seis estágios ninguém acertava ninguém, e a luta não acabava */
+    const eva = estDef ? Math.min(0, estDef.evasao || 0) : 0;
     const passo = (estAtk.precisao || 0) - eva;
     const menos = (pr.r || 0) + this.dor(atk) + (estAtk.penalConf || 0);
     const liquido = r.suc + passo - menos + destino;
@@ -592,13 +598,21 @@ const Batalha = {
     return res;
   },
 
+  /* a condição pega nesse Pokémon? Não pega em quem já tem uma, nem no
+     tipo que o livro diz imune (GM Screen do 3.0). A IA pergunta antes
+     de escolher o golpe */
+  statusPega(alvo, tipoStatus){
+    if (!alvo || alvo.status) return false;
+    const t = alvo.tipos || [];
+    if (tipoStatus === 'veneno' && (t.includes('Venenoso') || t.includes('Metálico'))) return false;
+    if (tipoStatus === 'queimadura' && t.includes('Fogo')) return false;
+    if (tipoStatus === 'congelamento' && t.includes('Gelo')) return false;
+    if (tipoStatus === 'paralisia' && t.includes('Elétrico')) return false;
+    return true;
+  },
   aplicarStatus(alvo, tipoStatus, grave){
     if (tipoStatus === 'recuo') return false;
-    if (alvo.status) return false;
-    if (tipoStatus === 'veneno' && (alvo.tipos.includes('Venenoso') || alvo.tipos.includes('Metálico'))) return false;
-    if (tipoStatus === 'queimadura' && alvo.tipos.includes('Fogo')) return false;
-    if (tipoStatus === 'congelamento' && alvo.tipos.includes('Gelo')) return false;
-    if (tipoStatus === 'paralisia' && alvo.tipos.includes('Elétrico')) return false;
+    if (!this.statusPega(alvo, tipoStatus)) return false;
     alvo.status = tipoStatus;
     alvo.statusGrave = !!grave;
     /* sono: 5 sucessos de Instinto pra acordar, somados vez a vez */
@@ -704,15 +718,21 @@ const Batalha = {
       return;
     }
 
+    /* Minimize e Double Team: esquiva de graça em todo golpe que dá pra
+       esquivar, até sair da luta. O Stomp acha quem se encolheu
+       (vulnerável, no livro), e quem foi identificado (Foresight) não
+       esquiva de nada — nem da esquiva que gasta Vontade, logo abaixo */
+    const esquivavel = prec.rolou && prec.k !== 'soc' && !prec.garantido && this.miraNoOutro(g) && !estDef.identificado;
+    if (esquivavel && estDef.esquivaLivre && !(nome === 'Stomp' && estDef.esquivaLivre === 'Minimize')){
+      if (this.esquivou(defensor, estDef, prec.sucessos, evGolpe)){ estAtk.cortes = 0; return; }
+    }
     /* Esquivar (Vontade): o seu sai da frente do golpe do outro. Golpe
        social e golpe que não erra não se esquivam (no livro, também). */
-    if (!souAliado && defensor === this.aliado && this.vontadeDoTurno() === 'esquiva'
-        && prec.rolou && prec.k !== 'soc' && !prec.garantido && this.miraNoOutro(g)){
+    if (!souAliado && defensor === this.aliado && this.vontadeDoTurno() === 'esquiva' && esquivavel){
       this.vontadeArmada = null;
       if (this.esquivou(defensor, estDef, prec.sucessos, evGolpe)){ estAtk.cortes = 0; return; }
     }
-    if (souAliado && defensor === this.inimigo && this.vontadeInimigo === 'esquiva'
-        && prec.rolou && prec.k !== 'soc' && !prec.garantido && this.miraNoOutro(g)){
+    if (souAliado && defensor === this.inimigo && this.vontadeInimigo === 'esquiva' && esquivavel){
       this.vontadeInimigo = null;
       if (this.esquivou(defensor, estDef, prec.sucessos, evGolpe)){ estAtk.cortes = 0; return; }
     }
@@ -963,8 +983,10 @@ const Batalha = {
       }
 
       case 'haze':
-        for (const est of [this.estAliado, this.estInimigo])
+        for (const est of [this.estAliado, this.estInimigo]){
           for (const k of ['atk','def','spa','spd','spe','precisao','evasao']) est[k] = 0;
+          est.esquivaLivre = null;
+        }
         return this.ev('status', 'Uma névoa escura desfaz todas as mudanças de atributo dos dois lados.');
 
       case 'soprar': {
@@ -1007,6 +1029,15 @@ const Batalha = {
         if (def.tipos.includes('Grama') || estDef.semente) return this.ev('erro', `Não teve efeito em ${ele}.`);
         estDef.semente = true;
         return this.ev('status', `${ele} foi semead${pron(def).o}! Vai perder HP todo turno pra quem plantou.`);
+
+      /* Minimize e Double Team: liga a esquiva de graça (é ligada ou
+         desligada; usar de novo não soma nada) */
+      case 'esquivas':
+        if (estAtk.esquivaLivre) return falhou();
+        estAtk.esquivaLivre = nome;
+        return this.ev('status', nome === 'Minimize'
+          ? `${eu} se encolhe até virar um alvo pequeno.`
+          : `${eu} se espalha em cópias. Fica difícil saber qual é ${pron(atk).o} de verdade.`);
 
       case 'identificar':
         estDef.identificado = true;
@@ -1281,6 +1312,36 @@ const Batalha = {
   },
 
   /* ---------- IA ---------- */
+  /* quanto de dano o golpe deve tirar desse alvo agora: metade da
+     parada, mais a fraqueza (parada vazia é 1, e só, como na luta);
+     dano fixo e o do posto, pela conta deles; a precisão baixa e os
+     golpes que batem mais de uma vez pesam. A IA escolhe por aqui, e o
+     robô que joga também (bot-jogador.js) */
+  danoEsperado(p, alvo, estP, estAlvo, nome){
+    const G = GOLPES[nome] || {};
+    if (G.c === 'status') return 0;
+    /* o que só funciona dormindo não tira nada de quem está acordado */
+    const E = G.ef || {};
+    if (E.soDormindo && alvo.status !== 'sono') return 0;
+    if (E.soSeDormindo && p.status !== 'sono') return 0;
+    const ef = eficacia(G.t, (alvo.tipos && alvo.tipos.length) ? alvo.tipos : ['Normal']);
+    if (ef === 0) return 0;
+    const fis = G.c === 'fis';
+    const PR = PR_GOLPE[nome] || {};
+    let s;
+    if (PR.fixo) s = PR.fixo;
+    else if (PR.posto || PR.metade) s = DADOS_POR_POSTO[postoDoNivel(p.nivel)] / 2;
+    else {
+      const pw = PR.p || Math.max(1, Math.round((G.p || 40) / 25));
+      const a = this.valorAtrib(p, estP, this.melhorAtrib(p, estP, PR.d, fis ? 'for' : 'esp'));
+      const d = PR.ign ? 0 : this.attr(alvo, estAlvo, fis ? 'vit' : 'ins');
+      const parada = a + pw + ((p.tipos || []).includes(G.t) ? 1 : 0) - d;
+      s = parada <= 0 ? 1 : Math.max(1, parada / 2 + Math.round(Math.log2(ef)));
+    }
+    s *= Math.max(0.2, 1 - (PR.r || 0) * 0.2);
+    if (PR.dupla) s *= 2; if (PR.tripla) s *= 3; if (PR.suc) s *= 1.6;
+    return s;
+  },
   iaEscolher(p, alvo, estP, estAlvo){
     const disponiveis = p.golpes.map((g,i) => ({i, g}))
       .filter(x => !(estP.desabilitado && estP.desabilitado.nome === x.g.nome));
@@ -1305,6 +1366,15 @@ const Batalha = {
       }
       if ((E.acao === 'proteger' || E.acao === 'aguentar') && estP.seguidas > 0) return 3;
       if (E.acao === 'transformar' && estP.transformado) return 0;
+      if (E.acao === 'esquivas' && estP.esquivaLivre) return 0;
+      /* condição que não pega nesse alvo (já tem uma, ou o tipo segura)
+         é turno jogado fora: o Muk do Koga dava Poison Gas no Gengar a
+         luta inteira. O Safeguard do outro lado segura também */
+      if (G.c === 'status' && E.tipo && E.tipo !== 'recuo'){
+        const ladoAlvo = this.lados && this.lados[p === this.aliado ? 'inimigo' : 'aliado'];
+        if (ladoAlvo && ladoAlvo.salva > 0) return 0;
+        if (E.tipo !== 'confusao' && !this.statusPega(alvo, E.tipo)) return 0;
+      }
       if (E.tipo === 'confusao' && G.c === 'status' && estAlvo.confuso > 0) return 0;
       if (G.c === 'status'){
         /* clima que já está valendo não se chama de novo */
@@ -1333,27 +1403,18 @@ const Batalha = {
         if (alvo.status || (G.ef && G.ef.tipo && alvo.status)) return 5;
         return (p.hp / p.hpMax > 0.6) ? 45 : 20;
       }
-      const ef = eficacia(G.t, alvo.tipos);
-      if (ef === 0) return 0;
-      /* quanto de dano ele espera: metade da parada, mais a fraqueza */
-      const fis = G.c === 'fis';
-      const PR = PR_GOLPE[x.g.nome] || {};
-      const pw = PR.fixo ? 0 : (PR.p || Math.max(1, Math.round((G.p || 40) / 25)));
-      const a = this.valorAtrib(p, estP, this.melhorAtrib(p, estP, PR.d, fis ? 'for' : 'esp'));
-      const d = PR.ign ? 0 : this.attr(alvo, estAlvo, fis ? 'vit' : 'ins');
-      let s = PR.fixo ? PR.fixo
-            : (PR.posto || PR.metade) ? DADOS_POR_POSTO[postoDoNivel(p.nivel)] / 2
-            : Math.max(1, (a + pw + (p.tipos.includes(G.t) ? 1 : 0) - d) / 2 + Math.round(Math.log2(ef)));
-      s *= Math.max(0.2, 1 - (PR.r || 0) * 0.2);
-      if (PR.dupla) s *= 2; if (PR.tripla) s *= 3; if (PR.suc) s *= 1.6;
-      s *= 20;
+      /* quanto de dano ele espera (danoEsperado); o que não afeta é zero */
+      let s = this.danoEsperado(p, alvo, estP, estAlvo, x.g.nome) * 20;
       if (nat.agressiva) s *= 1.1;
       return s;
     };
-    disponiveis.sort((a,b) => pontuar(b) - pontuar(a));
-    // não é uma máquina perfeita: às vezes erra a escolha
-    if (disponiveis.length > 1 && Dados.chance(this.erroIA != null ? this.erroIA : 22)) return disponiveis[1].i;
-    return disponiveis[0].i;
+    const notas = disponiveis.map(x => ({x, n:pontuar(x)})).sort((a, b) => b.n - a.n);
+    /* não é uma máquina perfeita: às vezes erra a escolha — mas erra
+       entre os golpes que fazem alguma coisa. Errar pro que não afeta o
+       outro (o Stomp do Rhydon no Gengar) era turno jogado fora */
+    const uteis = notas.filter(o => o.n > 0);
+    if (uteis.length > 1 && Dados.chance(this.erroIA != null ? this.erroIA : 22)) return uteis[1].x.i;
+    return (uteis[0] || notas[0]).x.i;
   },
 
   /* ---------- AÇÃO DO JOGADOR: resolve o turno inteiro ---------- */

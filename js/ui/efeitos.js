@@ -436,7 +436,7 @@ const Efeitos = {
     if (ef.sobe) passos.push(this.subir(lado, 'stat_boost', 6, 22, false, '#6fe0ff'));
     if (ef.baixa) passos.push(this.subir(outro, 'stat_drop', 6, 18, true, '#ff7a3a'));
     if (ef.cura) passos.push(this.cura(lado));
-    if (!passos.length) passos.push(this.anel(ef.sobe || ef.cura ? lado : outro, COR_TIPO[g.t] || '#d8d8ff'));
+    if (!passos.length) passos.push(this.anel(ef.sobe || ef.cura || ef.acao === 'esquivas' ? lado : outro, COR_TIPO[g.t] || '#d8d8ff'));
     await Promise.all(passos);
   },
   /* partículas subindo (atributo que sobe) ou descendo (que cai) */

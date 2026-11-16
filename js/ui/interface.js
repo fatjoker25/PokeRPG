@@ -4303,7 +4303,7 @@ const UI = {
                   identificar:'Desfaz a esquiva do outro', salvaguarda:'Protege o seu lado de condição', aguentar:'Aguenta um golpe com 1 de HP',
                   maldicao:'Troca HP por força, ou amaldiçoa', atracao:'Deixa o outro apaixonado', pesadelo:'Pesadelo em quem dorme',
                   copiar:'Copia um golpe do outro', sonambulo:'Usa um golpe dormindo', foco:'Prepara um crítico', conversao:'Muda o próprio tipo',
-                  fanfarra:'Encara o outro e nada mais'};
+                  fanfarra:'Encara o outro e nada mais', esquivas:'Esquiva sem gastar Vontade até sair da luta'};
     const est = k => NOME_ESTAGIO[k] || k;
     const L = [];
     if (ef.prioridade) L.push('Sai primeiro');
@@ -6292,14 +6292,14 @@ const UI = {
       <div class="linha"><span class="k">Ordem</span><span class="v">prioridade primeiro · depois iniciativa: 1d6 na entrada + Destreza + Alerta</span></div>
       <div class="linha"><span class="k">Fuga</span><span class="v">Destreza + Atletismo do seu contra os do selvagem · empate é seu</span></div>
       <div class="linha"><span class="k">Sem PP</span><span class="v">o Pokérole não tem PP: golpe não acaba · Éter (+1) e Elixir (+2) repõem Vontade, e o PP Up dá +1 de Vontade máxima</span></div>
-      <p class="sussurro">Duas adaptações pro jogo de um golpe por turno. No livro, o Pokémon de posto alto gasta a sobra da precisão em mais ações na mesma rodada; aqui ele age uma vez, então a sobra que vira crítico sobe com o posto. E não existe choque, e a esquiva não sai de graça: no livro ela é uma reação que gasta uma das ações da rodada; aqui, onde cada um age uma vez, ela custa 1 de Vontade.</p>
+      <p class="sussurro">Duas adaptações pro jogo de um golpe por turno. No livro, o Pokémon de posto alto gasta a sobra da precisão em mais ações na mesma rodada; aqui ele age uma vez, então a sobra que vira crítico sobe com o posto. E não existe choque, e a esquiva não sai de graça: no livro ela é uma reação que gasta uma das ações da rodada; aqui, onde cada um age uma vez, ela custa 1 de Vontade. Minimize e Double Team, que no livro dão até cinco esquivas por rodada, aqui deixam ela de graça.</p>
 
       <h3>Vontade</h3>
       <p class="sussurro">Os pontos de Vontade (Will) do Pokérole 3.0. Ficam no Pokémon de uma luta pra outra e aparecem como bolinhas na ficha dele; o botão Vontade, no menu da luta, gasta. Os três primeiros valem pro turno que vem e só um deles por turno.</p>
       <div class="linha"><span class="k">Quanto</span><span class="v">Instinto + 2 pontos</span></div>
       <div class="linha"><span class="k">Forçar o destino</span><span class="v">+1 sucesso na precisão do golpe (no livro, Pushing Fate · não vale em dano nem em chance)</span></div>
       <div class="linha"><span class="k">Arriscar</span><span class="v">um dado da precisão que falhou rola de novo (Take Your Chances)</span></div>
-      <div class="linha"><span class="k">Esquivar</span><span class="v">quando o golpe do outro acerta: Destreza + Evasão (a perícia do posto) contra os sucessos da precisão dele · empate é seu · golpe social e golpe que não erra não se esquivam</span></div>
+      <div class="linha"><span class="k">Esquivar</span><span class="v">quando o golpe do outro acerta: Destreza + Evasão (a perícia do posto) contra os sucessos da precisão dele · empate é seu · golpe social e golpe que não erra não se esquivam · quem foi identificado (Foresight) não esquiva</span></div>
       <div class="linha"><span class="k">Aguentar a dor</span><span class="v">ignora uma penalidade de dor até o fim da luta · não ocupa o turno (Power Through the Pain)</span></div>
       <div class="linha"><span class="k">Zerou</span><span class="v">quem gasta toda a Vontade numa luta desmaia quando ela acaba</span></div>
       <div class="linha"><span class="k">Recupera</span><span class="v">toda no Centro e em casa · +2 num dia de treino · +1 por vitória, pra quem está de pé</span></div>
@@ -6361,7 +6361,7 @@ const UI = {
       <h3>Estágios de atributo</h3>
       <div class="linha"><span class="k">Faixa</span><span class="v">de −6 a +6 · aparece na ficha de HP durante a luta</span></div>
       <div class="linha"><span class="k">FOR, VIT, ESP, INS, DES</span><span class="v">cada estágio é 1 ponto no atributo · nenhum fica abaixo de 1</span></div>
-      <div class="linha"><span class="k">Precisão e evasão</span><span class="v">cada estágio é 1 sucesso a mais ou a menos · a precisão de quem ataca contra a evasão de quem apanha</span></div>
+      <div class="linha"><span class="k">Precisão e evasão</span><span class="v">cada estágio é 1 sucesso a mais ou a menos · a precisão de quem ataca contra a evasão de quem apanha · evasão só desce (Sweet Scent): nenhum golpe faz ela subir</span></div>
       <div class="linha"><span class="k">No limite</span><span class="v">golpe que sobe ou baixa estágio já em ±6 não faz nada · o adversário não escolhe esse golpe, e quanto mais perto do limite, menos ele escolhe</span></div>
       <div class="linha"><span class="k">Cura de golpe</span><span class="v">Recover, Softboiled e Synthesis devolvem metade do HP · Rest enche e faz dormir · acertou, a cura só ativa gastando 1 de Vontade, e sem Vontade não cura · o adversário não se cura com 80% do HP ou mais, e quanto mais ferido, mais ele escolhe a cura</span></div>
       <div class="linha"><span class="k">Efeito de golpe de dano</span><span class="v">nos dados de chance do livro · golpe sem essa ficha segue a chance dos jogos</span></div>
@@ -6378,9 +6378,10 @@ const UI = {
       <div class="linha"><span class="k">Protect, Detect, Endure</span><span class="v">agem antes de tudo · Endure fica com 1 de HP · usar seguido: metade da chance a cada vez</span></div>
       <div class="linha"><span class="k">Reflect / Light Screen</span><span class="v">5 turnos pro lado inteiro · +2 de Vitalidade / Instinto contra dano · crítico atravessa</span></div>
       <div class="linha"><span class="k">Mist / Safeguard</span><span class="v">5 turnos · ninguém baixa atributo / nenhuma condição pega, vindo do outro lado</span></div>
-      <div class="linha"><span class="k">Haze</span><span class="v">zera os estágios dos dois lados</span></div>
+      <div class="linha"><span class="k">Haze</span><span class="v">zera os estágios dos dois lados e desfaz o Minimize e o Double Team</span></div>
+      <div class="linha"><span class="k">Minimize · Double Team</span><span class="v">até sair da luta, a esquiva sai de graça em todo golpe que dá pra esquivar (a mesma rolagem do Esquivar, sem gastar Vontade) · a esquiva que gasta Vontade ainda vale, como segunda chance · usar de novo não soma · o Stomp passa por quem se encolheu</span></div>
       <div class="linha"><span class="k">Focus Energy</span><span class="v">o crítico pede 1 sucesso a menos</span></div>
-      <div class="linha"><span class="k">Foresight</span><span class="v">tira a evasão que subiu · Normal e Lutador passam a acertar Fantasma</span></div>
+      <div class="linha"><span class="k">Foresight</span><span class="v">o outro não esquiva mais de nada (nem com Vontade, nem com Minimize ou Double Team) · Normal e Lutador passam a acertar Fantasma</span></div>
       <div class="linha"><span class="k">Roar, Whirlwind</span><span class="v">agem por último · em selvagem acabam a luta · em treinador trocam o Pokémon dele</span></div>
       <div class="linha"><span class="k">Teleport</span><span class="v">sai de luta contra selvagem</span></div>
       <div class="linha"><span class="k">Transform</span><span class="v">vira cópia do outro: tipos, atributos (menos HP), golpes e estágios · desfaz no fim</span></div>
@@ -6504,7 +6505,7 @@ const UI = {
       <div class="linha"><span class="k">Nível</span><span class="v">o do lugar + 9 · se a média dos seus três mais fortes passou disso, essa média · o time vai de 3 abaixo desse número até ele, o último no topo</span></div>
       <div class="linha"><span class="k">Tamanho do time</span><span class="v">fixo, pelas insígnias que o lugar pede: 3 com 1, 4 com 2–3, 5 com 4–5, 6 com 6 ou mais · voltar mais forte vale a pena</span></div>
       <div class="linha"><span class="k">Golpes</span><span class="v">os de nível da espécie, e o mais fraco trocado por um golpe de TM do dono, quando a espécie aprende</span></div>
-      <div class="linha"><span class="k">Escolha do golpe</span><span class="v">todo adversário pega o segundo melhor golpe 22% das vezes · veterano, 8%</span></div>
+      <div class="linha"><span class="k">Escolha do golpe</span><span class="v">todo adversário pega o segundo melhor golpe 22% das vezes · veterano, 8% · o erro é sempre entre golpes que fazem alguma coisa: o que não afeta você, a condição que não pega (você já tem uma, ou o seu tipo segura) e o estágio no limite não entram</span></div>
       <div class="linha"><span class="k">Prêmio</span><span class="v">valor da classe × nível do último Pokémon × 3 · na primeira vitória, uma TM e um item que o veterano carrega</span></div>
       <div class="linha"><span class="k">Perder</span><span class="v">não custa dinheiro · ele continua lá</span></div>
       <div class="linha"><span class="k">Lutar de novo no lugar</span><span class="v">depois da primeira vitória, só pelo gosto: não paga dinheiro · a revanche que paga é a do PokéNav</span></div>
