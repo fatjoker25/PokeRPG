@@ -507,8 +507,10 @@ const Pedidos = {
     if (c && c.requer){ try { if (!c.requer(d)) some = true; } catch(e){ some = true; } }
     if (some){ this.fechar(p); return; }
     if (this.pronto(p) || this.travado(p) || d.relogio.dia <= p.ate) return;
-    /* um toque esperando a tela: a mensagem vem na próxima */
+    /* um toque esperando a tela: a mensagem vem na próxima; e de
+       madrugada ninguém manda mensagem, ela vem quando amanhecer */
     if (typeof Jogo !== 'undefined' && Jogo.chamadaAdiada) return;
+    if (d.relogio.periodo === 'madrugada') return;
     Recados.mudarAfinidade(c, -1);
     this.fechar(p);
     Estado.registrar(`O pedido ${this.deQuem(Recados.nomeNaNarracao(c))} passou do prazo.`);

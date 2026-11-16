@@ -3261,7 +3261,13 @@ const UI = {
         ${l.acao === 'retornar' ? svgIcone('telefone', '', '--ac:#e57373') : svgIcone('convite', '', '--ac:#4fc3f7')}
         <span class="na-rot">${this.esc(l.rot)}<small class="na-nota">${this.esc(l.ok || !l.motivo ? l.nota : l.motivo)}</small></span>
       </button>`).join('');
-    const SERVICO = {revanche:'revanche', favor:'favor', missao:'missão', prova:'notícia', pedido:'pedido', retorno:'retorno'};
+    /* a ligação que você faz à toa (recados.js), embaixo de tudo */
+    const lc = typeof Recados !== 'undefined' ? Recados.linhaDeConversa(c) : null;
+    const conversa = lc ? `<button class="nav-acao conversar" ${lc.ok ? `onclick="UI.navConversar('${c.id}')"` : 'disabled'}>
+        ${svgIcone('conversar', '', '--ac:#81c784')}
+        <span class="na-rot">${this.esc(lc.rot)}${lc.ok ? '' : `<small class="na-trava">${this.esc(lc.motivo)}</small>`}</span>
+      </button>` : '';
+    const SERVICO = {revanche:'revanche', favor:'favor', missao:'missão', prova:'notícia', pedido:'pedido', retorno:'retorno', conversa:'conversa'};
     const hist = (Estado.nav().ligacoes||[]).filter(l => l.id === c.id).slice(-3).reverse();
     const papel = textoContato(c,'papel');
     const meta = [textoContato(c,'cidade'), reg.desdeCap >= 1 ? `na agenda desde o ${this.navCapitulo(reg.desdeCap)}` : ''].filter(Boolean);
@@ -3277,7 +3283,7 @@ const UI = {
         </span>
       </div>
       <div class="nav-titulo">Ligar</div>
-      <div class="nav-acoes">${recados + acoes || '<span class="nav-nota">Nada a pedir agora.</span>'}</div>
+      <div class="nav-acoes">${recados + acoes + conversa || '<span class="nav-nota">Nada a pedir agora.</span>'}</div>
       ${hist.length ? `<div class="nav-titulo">Últimas ligações</div>
       <div class="nav-hist">${hist.map(l =>
         `<span>${this.esc(this.navCapitulo(l.cap))} · ${this.esc(SERVICO[l.servico] || l.servico)}</span>`).join('')}</div>` : ''}`;
@@ -3318,6 +3324,11 @@ const UI = {
   navLigarPedido(id, acao){
     this.fecharModal(true);
     Pedidos.ligar(id, acao);
+  },
+  /* ligar só pra conversar (recados.js) */
+  navConversar(id){
+    this.fecharModal(true);
+    Recados.conversar(id);
   },
   /* ler a mensagem que chegou no silencioso, retornar a chamada perdida */
   navRecado(id, acao){
@@ -6688,9 +6699,10 @@ const UI = {
       <div class="linha"><span class="k">Notícia</span><span class="v">não rende nada material · muda o que a pessoa pensa de você</span></div>
       <div class="linha"><span class="k">Gente da estrada</span><span class="v">19 dos treinadores de rota passam o número na primeira vez que perdem pra você · a revanche vem com o time de quem tem duas insígnias a mais, e +2 de nível</span></div>
       <div class="linha"><span class="k">Gente da história</span><span class="v">quem gostou de você o bastante passa o número depois do capítulo em que vocês se conheceram</span></div>
-      <div class="linha"><span class="k">Quando toca</span><span class="v">cada ação no mapa rola ${DADOS_DO_TOQUE === 1 ? '1 dado' : DADOS_DO_TOQUE + ' dados'} de chance, e o 6 faz o PokéNav tocar: entrar num lugar, andar pela cidade, conversar com os moradores, procurar Pokémon, ir atrás de quem treina, vasculhar, treinar, pescar, esperar a hora passar, acampar e começar um capítulo · toca primeiro a ligação da história que estiver esperando; sem ela, alguém da agenda liga à toa, manda recado ou pede um favor · sem ninguém que possa ligar, não rola · no meio da luta ou com uma janela aberta, toca depois · toda chamada tem "Não atender"</span></div>
+      <div class="linha"><span class="k">Quando toca</span><span class="v">cada ação no mapa rola ${DADOS_DO_TOQUE === 1 ? '1 dado' : DADOS_DO_TOQUE + ' dados'} de chance, e o 6 faz o PokéNav tocar: entrar num lugar, andar pela cidade, conversar com os moradores, procurar Pokémon, ir atrás de quem treina, vasculhar, treinar, pescar, esperar a hora passar, acampar e começar um capítulo · toca primeiro a ligação da história que estiver esperando; sem ela, alguém da agenda liga à toa, manda recado ou pede um favor, ${TOQUES_A_TOA_POR_DIA === 1 ? 'uma vez' : TOQUES_A_TOA_POR_DIA + ' vezes'} por dia no máximo (quem ficou em casa, com notícia que não espera, liga mesmo assim) · sem ninguém que possa ligar, não rola · no meio da luta ou com uma janela aberta, toca depois · toda chamada tem "Não atender"</span></div>
       <div class="linha"><span class="k">Ligação à toa</span><span class="v">alguém da agenda liga só pra conversar · a mesma pessoa não procura de novo antes de ${RECADO_POR_CONTATO_DIAS} dias · quem gosta mais de você liga mais · resposta boa aproxima (+1 de afinidade, até ${AFINIDADE_TETO_LIGACAO}) · resposta ruim ou não atender afasta (−1, até ${String(AFINIDADE_PISO_LIGACAO).replace('-', '−')})</span></div>
-      <div class="linha"><span class="k">De madrugada</span><span class="v">da meia-noite às seis só toca a ligação da história · ninguém liga à toa, manda recado nem pede favor · a exceção é quem ficou em casa, com notícia que não espera</span></div>
+      <div class="linha"><span class="k">Só conversar</span><span class="v">você também liga à toa, pela ficha de quem está na agenda · uma vez por dia por pessoa, nunca de madrugada (quem ficou em casa, com notícia que não espera, atende a qualquer hora) · é a mesma conversa da ligação à toa, com a mesma afinidade e o mesmo teto · quem já falou com você hoje, por qualquer lado, não liga de novo no mesmo dia · com chamada perdida da pessoa, a linha é a de retornar</span></div>
+      <div class="linha"><span class="k">De madrugada</span><span class="v">da meia-noite às seis só toca a ligação da história · ninguém liga à toa, manda recado nem pede favor, e a mensagem do prazo do pedido espera amanhecer · a exceção é quem ficou em casa, com notícia que não espera</span></div>
       <div class="linha"><span class="k">O que mudou</span><span class="v">quem liga sabe o que aconteceu desde a última conversa com você e fala disso antes de qualquer outro assunto: a insígnia nova (todo mundo, menos o líder que deu), os dias com a Patrulha (quem ficou em casa e quem não é treinador) e o Pokémon que morreu (quem ficou em casa e quem tem afinidade ${AFINIDADE_DA_NOTICIA} ou mais) · atender deixa a pessoa em dia, e a mesma notícia não volta · depois de uma morte ou da custódia, quem ficou em casa liga no mesmo dia, sem esperar os ${RECADO_POR_CONTATO_DIAS}, uma vez por dia até você atender, e de madrugada também</span></div>
       <div class="linha"><span class="k">Chamada perdida</span><span class="v">quem você não atendeu fica na agenda até a meia-noite · retornar no mesmo dia, pela ficha da pessoa, devolve o −1, e ela continua o assunto de onde parou (a notícia, o pedido, a ligação da história) · virou o dia, a chamada some e o −1 fica</span></div>
       <div class="linha"><span class="k">Silencioso</span><span class="v">o sino na barra da agenda · o dado do toque rola igual, mas nada toca · a ligação vira chamada perdida, sem o −1 · o recado e a mensagem do prazo viram mensagem por ler na ficha de quem mandou, e ficam até você ler · a ligação da história não se gasta: a pessoa tenta de novo outro dia · a tela do mapa mostra numa linha quem ligou e o que chegou</span></div>

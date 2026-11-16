@@ -398,6 +398,29 @@ const SUSPEITO = [
     Exploracao.viajar = function(id){ const de = Mundo.id(); const r = vj(id); if (Mundo.id() !== de) passo('viagem', {de, para:Mundo.id()}); return r; };
     const tr = UI.telaRival && UI.telaRival.bind(UI);
     if (tr) UI.telaRival = function(){ passo('rival', {quem:nomeDe(Jogo.encontroRival)}); return tr.apply(UI, arguments); };
+    /* o telefone: cada rolagem do PokéNav soma na conta (rolou), e cada
+       toque vira um passo, com o tipo (ligacao, recado, pedido, prazo ou
+       a chamada escrita) e se o aparelho estava no silencioso. O toque
+       que esperou a luta passa duas vezes pelo tocarOuGuardar e conta
+       uma. Quem mede a frequência lê daqui (tel e os passos 'toque') */
+    __reg.tel = __reg.tel || {rolou:0, tocou:0};
+    const tv = Jogo.talvezToque.bind(Jogo);
+    Jogo.talvezToque = function(){
+      const pode = Estado.temPokenav() && !Jogo.chamadaAdiada && (Chamadas.disponiveis().length > 0
+        || (typeof Recados !== 'undefined' && Recados.candidatos(Estado.dados.relogio.periodo === 'madrugada').length > 0));
+      if (pode) __reg.tel.rolou++;
+      return tv();
+    };
+    const vistos = new WeakSet();
+    const tg = Jogo.tocarOuGuardar.bind(Jogo);
+    Jogo.tocarOuGuardar = function(toque){
+      if (toque && typeof toque === 'object' && !vistos.has(toque)){
+        vistos.add(toque); __reg.tel.tocou++;
+        passo('toque', {tipo:toque.recados || 'escrita', quem:toque.de || toque.contato || toque.id || null,
+          silencio:typeof Recados !== 'undefined' && Recados.silencioso(), periodo:Estado.dados.relogio.periodo});
+      }
+      return tg(toque);
+    };
     __reg.contexto = contexto;
     window.__contextoDaLuta = contexto;
     /* todo dinheiro que sai, somado pela função que tirou: quantas vezes,
@@ -1323,6 +1346,17 @@ const SUSPEITO = [
             X.retorno[k] = Math.random() < 2 / 3;
             if (X.retorno[k]) return {f:'retornar', id:pe};
           }
+          /* e uma vez em três capítulos ele liga só pra conversar, pra
+             quem está mais longe do teto da afinidade */
+          X.conversaCap = X.conversaCap || {};
+          if (X.conversaCap[d.capitulo] === undefined){
+            X.conversaCap[d.capitulo] = Math.random() < 1 / 3;
+            if (X.conversaCap[d.capitulo]){
+              const alvo = Estado.contatosNaAgenda().filter(c => Recados.podeConversar(c).ok && Recados.afinidade(c) < AFINIDADE_TETO_LIGACAO)
+                .sort((a, b) => Recados.afinidade(a) - Recados.afinidade(b))[0];
+              if (alvo) return {f:'conversar', id:alvo.id};
+            }
+          }
         }
         /* o pedido aceito (pedidos.js): o passo que é aqui, ele faz; o
            lugar do passo, ele vai uma vez por capítulo; pronto, ele liga
@@ -1627,6 +1661,11 @@ const SUSPEITO = [
           UI.fecharModal(true); Exploracao.tela();
           window.__passo && __passo('pedra', {nome:x.nome, de, para:p ? p.nome : null});
         }, dec).catch(e => erros.push('pedra: ' + e.message));
+      } else if (dec.f === 'conversar'){
+        await page.evaluate(i => { UI.fecharModal && UI.fecharModal(true);
+          const ok = Recados.conversar(i);
+          window.__passo && __passo('pokenav', {acao:'conversou', quem:i, ok:!!ok}); }, dec.id)
+          .catch(e => erros.push('conversar: ' + e.message));
       } else if (dec.f === 'retornar' || dec.f === 'ler_recado'){
         await page.evaluate(x => { UI.fecharModal && UI.fecharModal(true);
           const ok = x.f === 'ler_recado' ? Recados.ler(x.id) : Recados.retornar(x.id);

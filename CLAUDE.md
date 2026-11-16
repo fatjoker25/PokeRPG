@@ -1929,7 +1929,16 @@ Carisma. Mora tudo em `js/story/recados.js` (`Recados`).
   `Jogo.chamadaAdiada` até a próxima tela de mapa ou de cena
   (`tocarAdiada`) — abrir por cima fechava a janela de baixo. Toda
   chamada tem "Não atender". Ação nova de mapa que passa o tempo chama
-  `this.toque()`; a que abre janela (Centro, loja, PC) não.
+  `this.toque()`; a que abre janela (Centro, loja, PC) não. Ligação à
+  toa, recado e pedido vêm no máximo `TOQUES_A_TOA_POR_DIA` vez por dia
+  (`toquesDeHoje`, contado no `escolherToque`; a casa urgente passa, e
+  a chamada escrita não conta): três robôs, do capítulo 1 ao 17 (199
+  dias de jogo), mediram um toque a cada 2,8 dias, com seis ações de
+  mapa no meio (4,1 dias no começo, 2,2 no fim, com a agenda cheia), mas
+  um em cada sete vinha colado no anterior, e no 14 três pessoas ligaram
+  em três voltas seguidas por Vermilion. O limite tira 12% dos toques à
+  toa, os do mesmo dia. Depois do limite, nem rola. Mexeu na conta do
+  toque, roda os robôs e conta os passos `toque` do diário deles.
 - **A ligação à toa** não é CHAMADA: é montada na hora de abrir o
   aparelho (`Recados.mostrar` → `montarLigacao`: um tópico de
   `TOPICOS_DE_LIGACAO` que serve pro tipo do contato — casa, líder,
@@ -2015,7 +2024,9 @@ Carisma. Mora tudo em `js/story/recados.js` (`Recados`).
   Notícia nova entra no `retrato`, no `eventoPara` e com tópico.
 - **De madrugada ninguém liga à toa**: o `Jogo.talvezToque` passa a
   madrugada pro `candidatos` e pro `escolherToque`. A chamada escrita
-  toca, e de resto só a casa urgente, sem recado nem pedido.
+  toca, e de resto só a casa urgente, sem recado nem pedido. A mensagem
+  do prazo do pedido também espera amanhecer (`Pedidos.conferir` não
+  fecha o prazo de madrugada): um robô recebeu a do Brock à meia-noite.
 - **A chamada perdida** (`reg().perdidas`, uma por contato, só de quem
   está na agenda): não atender (`Recados.recusar`, e o
   `Chamadas.recusar` da escrita) guarda o que custou (`custou`) e o
@@ -2036,6 +2047,19 @@ Carisma. Mora tudo em `js/story/recados.js` (`Recados`).
   tem a linha do PokéNav (`#nav-aviso`, `Recados.htmlDaNotificacao`),
   que o toque chegado depois da tela repinta no lugar
   (`pintarNotificacao`), e a agenda marca quem ligou e quem mandou.
+- **A ligação que você faz** (`Recados.conversar`, a linha "Só
+  conversar" da ficha, `linhaDeConversa`) — foi pedido assim: cuidar da
+  afinidade sem esperar o telefone tocar. Uma vez por dia por pessoa
+  (`falouDia`, que o `atender` também marca: quem falou com você hoje,
+  por qualquer lado, não liga de novo no mesmo dia), nunca de madrugada
+  (a casa urgente atende), nunca na luta, e com chamada perdida do dia a
+  linha some (a de retornar está ali). É a ligação à toa montada na hora
+  (`montarLigacao(c, null, {voceLigou:true})`), já em linha e sem "Não
+  atender", com quem atende falando primeiro (`ABRE_A_CONVERSA`): a
+  resposta mexe na afinidade pelo `atender`, até o mesmo teto. Fala de
+  tópico que diz "liguei" lê `x.voceLigou` e troca; tópico novo que
+  supõe quem ligou faz o mesmo, e o `chk-telas` reprova o "liguei" numa
+  ligação que você fez.
 - Nome no meio da frase passa por `nomeNaNarracao` (quem é chamado
   pelo cargo vai com artigo: "o zelador da Torre"), e nada na cena diz
   por que alguém deu o que deu: a regra está na folha (PokéNav e
@@ -2055,14 +2079,20 @@ conversa), passa da meia-noite (a chamada some e o −1 fica), retorna a
 escrita recusada e o pedido (o mesmo pedido), confere a madrugada (ninguém
 liga, e a casa liga com a morte uma vez só), liga o silencioso (a
 ligação, o recado, a escrita que não se gasta, a rolagem de verdade e a
-linha do mapa) e dá cada notícia pra cada tipo de contato (e o líder não
-liga pela insígnia dele). O `chk-baloes` confere as falas pelo
-`Recados.amostras` (o pedido entra por `Pedidos.amostras`, e as
-notícias com a madrugada e a fala do retorno também). O robô grava os
+linha do mapa), dá cada notícia pra cada tipo de contato (e o líder não
+liga pela insígnia dele) e liga só pra conversar com cada tipo de
+contato e cada resposta (a afinidade, a segunda vez no dia, o dia
+seguinte, a madrugada com e sem a casa urgente, a chamada perdida e a
+luta). O `chk-baloes` confere as falas pelo `Recados.amostras` (o
+pedido entra por `Pedidos.amostras`, e as notícias com a madrugada, a
+fala do retorno e a ligação que você faz também). O robô grava os
 números que oferecem, vai buscar o presente, cumpre o pedido que
 aceitou, uma vez em seis não atende a ligação à toa, retorna a chamada
-perdida duas vezes em três, lê a mensagem e anda um capítulo em oito no
-silencioso.
+perdida duas vezes em três, lê a mensagem, anda um capítulo em oito no
+silencioso e, um capítulo em três, liga pra conversar com quem está
+mais longe do teto. Cada toque vira um passo `toque` no diário dele,
+com o tipo, e `reg.tel` conta as rolagens e os toques: é dali que se
+mede quantas vezes o telefone toca.
 
 ## A luta não acaba no recarregar
 `Estado.salvar` chama `LutaSalva.anotar` (`js/engine/luta-salva.js`): com
