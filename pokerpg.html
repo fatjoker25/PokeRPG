@@ -167228,6 +167228,9 @@ const Efeitos = {
        Pokémon: medir antes dava uma máscara gigante no nascimento. */
     await this.spritePronto(s);
     const t = this.alvo(lado);
+    /* a luta saiu da tela enquanto a GIF carregava (fugiu, desistiu,
+       recarregou): não tem mais onde a bola cair */
+    if (!t || !arena.isConnected){ s.style.visibility = ''; return; }
     const TAM = 30;
     const bola = spriteDaBola(nomeBola);
     const voo = document.createElement('div');

@@ -555,6 +555,9 @@ Capturou, a ficha de lá ganha `.capturado` (corpo e sombra somem e não
 voltam no redesenho) e a bola pisca três vezes e some. Quem mede a arte
 pra máscara branca espera ela carregar (`Efeitos.spritePronto`): GIF
 sem carregar tem o tamanho do quadro inteiro, e a máscara saía gigante.
+Quem espera confere, na volta, se a arena ainda está na tela: a
+entrada pela bola quebrava medindo uma arena que a luta encerrada já
+tinha tirado.
 A sombra (`.arte::after`) some com HP zero (`.sem-sombra`, `.caido`).
 
 ## O turno é encenado
