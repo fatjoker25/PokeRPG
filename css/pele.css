@@ -945,3 +945,22 @@ body.com-cenario .topo{
   .tt-ceu::before{animation:none}
   .tt-ceu::after{animation:none;opacity:0}
 }
+
+/* ============================================================
+   O BOTÃO QUE SOBE NÃO TREME
+   O comando da luta sobe 1 px no hover (translateY, no estilo.css). Com
+   o mouse parado na última linha de pixels dele, ele subia, saía de
+   baixo do mouse, descia e subia de novo, tremendo pra sempre — e o
+   clique podia cair no meio da descida. Os robôs da quarta rodada
+   pararam no Continuar assim ("element is not stable"). Com o mouse
+   em cima, uma faixa invisível embaixo dele cobre o lugar de onde ele
+   saiu: quem estava em cima continua em cima. O ::before é o brilho.
+   ============================================================ */
+/* o botão corta o que passa da borda (o brilho, nos cantos redondos), e
+   faixa cortada não conta pro mouse: o clip com margem deixa os 4 px de
+   fora valendo, sem mostrar nada (o brilho é do tamanho do botão) */
+.mb-btn{overflow:clip;overflow-clip-margin:4px}
+.mb-btn::before{border-radius:inherit}
+.mb-btn:hover:not(:disabled)::after{
+  content:'';position:absolute;left:0;right:0;top:100%;height:4px;
+}

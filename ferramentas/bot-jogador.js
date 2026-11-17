@@ -791,6 +791,11 @@ const SUSPEITO = [
        seguida ele anota o motivo do Playwright, o que está por cima do
        botão e a foto da tela, e aperta pelo jogo (UI.continuarBatalha) */
     if (!(await page.locator('#modal').count()) && await page.locator('.continuar-batalha').count()){
+      /* o mouse parado na última linha de pixels de um botão que sobe 1 px
+         no hover faz o botão tremer pra sempre (sobe, sai de baixo do
+         mouse, desce, volta), e o Playwright não clica em botão que treme
+         ("element is not stable"). O mouse sai pro canto antes */
+      await page.mouse.move(1, 1).catch(() => {});
       const r = await page.locator('.continuar-batalha').first().click({timeout:3000}).then(() => true)
         .catch(e => String(e.message || e).split('\n').filter(l => /intercepts|visible|viewport|stable|enabled|Timeout/.test(l)).slice(0, 3).join(' | '));
       if (r === true) falhasContinuar = 0;
@@ -1979,6 +1984,7 @@ const SUSPEITO = [
          virada): com a ligação por cima, o clique esperava 30 s e
          derrubava a jogada. Agora desiste rápido, e a volta seguinte
          atende a janela */
+      await page.mouse.move(1, 1).catch(() => {});
       const rc = await esc.nth(k).click({timeout:3000}).then(() => true)
         .catch(e => String(e.message || e).split('\n').filter(l => /intercepts|visible|viewport|stable|enabled|Timeout|detached/.test(l)).slice(0, 3).join(' | '));
       /* a opção que não pega: o policial da quarta rodada escolheu "Ir

@@ -3153,6 +3153,20 @@ não apagava, o aviso flutuante (`.recado`) não esmaecia ao sair e os
 comandos desligados da luta ficavam inteiros. Foi medido com
 `getComputedStyle`: o `transform` do hover saía matriz identidade.
 
+Botão que **sobe no hover** (`translateY(-1px)`) treme com o mouse
+parado na última linha de pixels dele: sobe, sai de baixo do mouse,
+desce e sobe de novo, pra sempre, e o clique pode cair na descida. Os
+robôs da quarta rodada pararam no Continuar assim ("element is not
+stable", no Playwright). O comando da luta (`.mb-btn`, no `pele.css`)
+leva, com o mouse em cima, uma faixa invisível embaixo (`::after`) que
+cobre o lugar de onde ele saiu; como ele corta o que passa da borda, o
+corte é `overflow:clip` com `overflow-clip-margin` (faixa cortada não
+conta pro mouse) e o brilho ganha `border-radius:inherit`. A opção de
+cena (`.escolha`) também sobe, mas os dois pseudo-elementos dela já
+têm dono (a tecla e a seta): ali quem se cuida é o robô, que tira o
+mouse pro canto antes de clicar. Botão novo que sobe no hover leva a
+faixa.
+
 A **evolução** (`UI.telaEvolucao`) toma a tela inteira: o palco na cor
 dos tipos de quem evolui (`--t1`/`--t2` de `COR_TIPO`; o fundo da forma
 nova acende por cima no fim), a aura azul e as bolhas do anime, e
