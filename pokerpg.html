@@ -7674,6 +7674,46 @@ body.com-cenario .topo{
 }
 
 /* ============================================================
+   A INSCRIÇÃO
+   A fonte de pixel fica só no título da ficha ("Inscrição de
+   treinador"): nada de fonte de pixel fora do título, diz o
+   CLAUDE.md, e os títulos dos passos, o número de cada etapa, o
+   valor do status e os botões do pé estavam nela, miúdos e duros de
+   ler. Agora são letra do HUD; o botão continua com o corpo de botão
+   da abertura (borda grossa, a espessura embaixo).
+   ============================================================ */
+.cr-h{font-family:var(--letra-hud);font-weight:700;font-size:19px;letter-spacing:.005em;line-height:1.3}
+.cr-num{font-family:var(--letra-hud);font-weight:700;font-size:12.5px}
+.cr-valor{font-family:var(--letra-hud);font-weight:700;font-size:13.5px}
+.criacao .tt-btn{font-family:var(--letra-hud);font-weight:700;font-size:15px;letter-spacing:.02em;line-height:1.2;padding:11px 18px 10px}
+.criacao .tt-btn.tt-principal{font-size:16px;padding:12px 22px 11px}
+@media (max-width:480px){
+  .cr-h{font-size:17px}
+  .criacao .tt-btn{font-size:14px;padding:10px 12px 9px}
+  .criacao .tt-btn.tt-principal{font-size:15px}
+}
+
+/* ============================================================
+   A TELA DE MORTE
+   O título fica em pixel, como o da abertura; o resumo é de ler: o
+   valor de cada quadro sai grande na letra do HUD, e o rótulo
+   embaixo dele sai do tamanho de ler, num tom mais claro.
+   ============================================================ */
+.tf-quadros{gap:10px}
+.tf-quadro{gap:5px;padding:14px 10px 13px;border-radius:14px;background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.12)}
+.tf-v{font-family:var(--letra-hud);font-weight:700;font-size:19px;line-height:1.25;letter-spacing:.01em}
+.tf-k{font-family:var(--letra-hud);font-weight:600;font-size:12px;letter-spacing:.12em;color:#b9afcd}
+.tf-sub{font-family:var(--letra-hud);font-size:12.5px;color:#b9afcd}
+.tf-pk{border-radius:14px}
+.tf-pk-nome{font-family:var(--letra-hud);font-size:14px}
+.tf-pk-nota{font-size:12px;color:#b9afcd}
+.tf-nota{font-size:14px;color:#b9afcd}
+@media (max-width:520px){
+  .tf-v{font-size:17px}
+  .tf-k{font-size:11.5px}
+}
+
+/* ============================================================
    A ABERTURA
    A mesma noite em Pallet, com mais céu: a lua com o halo, uma
    estrela cadente de tempos em tempos, o chão que escurece embaixo

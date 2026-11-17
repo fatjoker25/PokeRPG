@@ -2182,7 +2182,10 @@ A criação é a **ficha de inscrição da Liga** (`UI.telaCriacao`, dados em
 `js/data/inscricao.js`, desenho em `css/criacao.css`): seis passos no
 idioma da abertura — você, seu jeito, o que você quer, aparência, casa e
 começo, conferência —, com o cartão de inscrição se preenchendo ao lado
-(no celular, só na conferência). O estado mora em `UI._cr` até "Sair de
+(no celular, só na conferência). A fonte de pixel fica só no título da
+ficha: o título de cada passo, o número das etapas, o valor do status e
+os botões do pé são letra do HUD (no `pele.css`), com o corpo de botão
+da abertura. Estavam todos em pixel, miúdos e duros de ler. O estado mora em `UI._cr` até "Sair de
 casa", e `UI.lerCriacao()` entrega pro `Jogo.criar`.
 
 **O que pesa no jogo é escolha, nunca palavra solta.** A ficha antiga era
@@ -2782,7 +2785,9 @@ das duas finais da história, adiantada até o fim.
 `UI.telaGameOver(motivo)` fala o idioma da abertura (`css/titulo.css`,
 `.tela-fim`): no meio da tela (`body.na-abertura`), Pokébola do fundo
 apagada e rachada, título em fonte de pixel, o motivo numa caixa de
-diálogo, o resumo em quadros (capítulo, dias, insígnias, reputação), os
+diálogo, o resumo em quadros (capítulo, dias, insígnias, reputação; o
+valor grande e o rótulo do tamanho de ler, na letra do HUD — eram 11 px
+de pixel e 10 px de rótulo), os
 ícones de quem ficou no time e de quem morreu antes (com a causa), e o
 botão da abertura. O save automático é apagado ali.
 
