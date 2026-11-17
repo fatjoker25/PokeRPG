@@ -181,11 +181,29 @@ function deOnde(l){
           pedidos:Cargos.pedidos(c).map(p => ({t:concordaJogador(p.t), ok:p.ok}))}; });
       const rep = Estado.nivelRep ? Estado.nivelRep() : null;
       const st = j.status || {};
+      /* pedra e linha: quem do cinto e do PC ainda evolui por pedra ou
+         pelo cabo e não evoluiu, as pedras que sobraram na mochila e as
+         linhas repetidas no time do fim (os dois Nidoran separados, como
+         no robô: o Nidoking não é o Nidoqueen) */
+      const linhaDe = dex => { let x = (typeof BEBE_DE !== 'undefined' && BEBE_DE[dex]) || dex, g = 0;
+        while (DEX[x] && DEX[x].preEvo && g++ < 5) x = DEX[x].preEvo; return x; };
+      const vivosT = (d.time || []).filter(p => !p.morto);
+      const porLinha = {};
+      vivosT.forEach(p => (porLinha[linhaDe(p.dex)] = porLinha[linhaDe(p.dex)] || []).push(p.nome + ' ' + p.nivel));
+      const repetidos = Object.values(porLinha).filter(v => v.length > 1);
+      const esperaPedra = [];
+      [].concat(d.time || [], d.pc || []).filter(p => !p.morto).forEach(p => {
+        const pedra = (typeof nomesDePedra === 'function' ? nomesDePedra() : []).find(n => (pedrasDe(n) || {})[p.dex]);
+        const cabo = typeof evolucaoPeloCabo === 'function' ? evolucaoPeloCabo(p) : null;
+        if (pedra || cabo) esperaPedra.push({nome:p.nome, nivel:p.nivel, pedra:pedra || 'Link Cable', noPC:(d.pc || []).includes(p)});
+      });
+      const pedrasNaMochila = Object.entries(d.itens || {}).filter(([n, q]) => q > 0 && ['pedra', 'cabo'].includes((ITENS_INFO[n] || {}).tipo)).map(([n, q]) => q > 1 ? q + '× ' + n : n);
       return {foto, quadro, rep:rep ? concordaJogador(rep.nome) : null, cargo:j.cargo ? concordaJogador(j.cargo) : null,
         personalidade:j.personalidade || null, objetivo:j.objetivo || null, casa:j.casa || null, status:st, forte:j.forte,
         gostos:j.gostos && j.gostos.texto || null, desgostos:j.desgostos && j.desgostos.texto || null,
         nomes:Object.fromEntries([].concat(d.time || [], d.pc || []).map(p => [p.uid, nomeExib(p)])),
-        moral:(d.time || []).map(p => p.moral || 0), diario:(d.log || []).map(l => typeof l === 'string' ? l : (l.texto || JSON.stringify(l)))};
+        moral:(d.time || []).map(p => p.moral || 0), diario:(d.log || []).map(l => typeof l === 'string' ? l : (l.texto || JSON.stringify(l))),
+        repetidos, esperaPedra, pedrasNaMochila};
     }, x.ponto.save).catch(e => ({erro:e.message}));
     /* a foto: endereço de arquivo vira imagem embutida */
     if (x.jogo && typeof x.jogo.foto === 'string' && !/^data:/.test(x.jogo.foto)){
@@ -316,12 +334,27 @@ function deOnde(l){
   /* ---------- a Nacional ---------- */
   const comNac = robos.filter(x => x.out.ficha.pokedex && x.out.ficha.pokedex.nacional);
   const blocoNacional = `<section class="bloco nacional"><h3>A Pokédex Nacional</h3>
-    <p class="nota">Desde esta rodada a Nacional vem por dois caminhos: o título de Campeão, como antes, e o Professor, em Pallet, pra quem traz sessenta espécies de Kanto catalogadas depois das oito insígnias (ou do capítulo 22). Todo robô aponta a Pokédex pra espécie que ainda não catalogou, e vai a Pallet quando a conta fecha.</p>
+    <p class="nota">A Nacional vem por dois caminhos: o título de Campeão e o Professor, em Pallet, pra quem traz sessenta espécies de Kanto catalogadas depois das oito insígnias (ou do capítulo 22). Todo robô aponta a Pokédex pra espécie que ainda não catalogou, e vai a Pallet quando a conta fecha.</p>
     <div class="tabela"><table class="comparar"><thead><tr><th scope="col">Robô</th><th scope="col">Kanto catalogadas</th><th scope="col">Catalogadas</th><th scope="col">Vistas</th><th scope="col">Nacional</th></tr></thead><tbody>
     ${robos.slice().sort((a, b) => (b.out.ficha.pokedex || {}).deKanto - (a.out.ficha.pokedex || {}).deKanto).map(x => { const p = x.out.ficha.pokedex || {}, n = x.m.nacional[0];
       return `<tr><th scope="row"><a href="#${x.id}">${esc(x.out.ficha.nome)}</a> <small>${esc(x.rotulo)}</small></th><td>${p.deKanto || 0}</td><td>${p.catalogados || 0}</td><td>${p.vistos || 0}</td>
       <td class="${p.nacional ? 'final' : ''}">${p.nacional ? `✓ ${esc(n && n.como ? n.como : '')}${n ? ` · cap. ${esc(String(n.cap))}, dia ${num(n.dia)}` : ''}` : '—'}</td></tr>`; }).join('')}
     </tbody></table></div>${comNac.length ? '' : '<p class="nota">Ninguém chegou à Nacional nesta rodada.</p>'}</section>`;
+
+  /* ---------- pedra de evolução e time sem repetido ---------- */
+  const compraBazar = x => x.m.ps.filter(p => p.t === 'compra' && p.onde === 'bazar' && (p.itens || []).length);
+  const comRepetido = robos.filter(x => ((x.jogo || {}).repetidos || []).length).length;
+  const usaramPedra = robos.filter(x => x.m.pedras.length).length;
+  const blocoPedras = `<section class="bloco pedras"><h3>Pedra de evolução e time sem repetido</h3>
+    <p class="nota">O robô usa a pedra quando alguém do cinto ou do PC evolui com ela: compra a que a loja da cidade vende, viaja até a cidade que vende a que falta e pega a que a cena dá. A Moon Stone não está em loja de cidade; sai do bazar de domingo no terraço da Grande Loja de Celadon (das 8h às 17h), da cratera do Monte da Lua, do vasculhar de caverna e de presente, e o robô vai até Celadon no fim de semana pra comprar. O Link Cable vale como pedra pra quem só evolui trocando. E o robô não anda com dois da mesma linha de evolução no cinto: não captura a mesma linha (só a espécie nova, pra Pokédex), não tira repetido do PC, manda o mais fraco do par pra caixa e não aceita troca que repete. ${uma(usaramPedra, 'robô usou', 'robôs usaram')} pedra ou cabo; ${comRepetido ? uma(comRepetido, 'terminou', 'terminaram') + ' com repetido no time' : 'nenhum terminou com repetido no time'}. “Ainda esperando pedra” é quem terminou, no cinto ou no PC, podendo evoluir por pedra ou pelo cabo.</p>
+    <div class="tabela"><table class="comparar"><thead><tr><th scope="col">Robô</th><th scope="col">Pedras usadas</th><th scope="col">Bazar de domingo</th><th scope="col">Ainda esperando pedra</th><th scope="col">Repetidos no time do fim</th></tr></thead><tbody>
+    ${robos.map(x => { const j = x.jogo || {}, bz = compraBazar(x), espera = j.esperaPedra || [], rep = j.repetidos || [];
+      return `<tr><th scope="row"><a href="#${x.id}">${esc(x.out.ficha.nome)}</a> <small>${esc(x.rotulo)}</small></th>
+      <td>${x.m.pedras.length ? x.m.pedras.map(p => `${esc(p.nome)}: ${esc(p.de)} → <b>${esc(p.para)}</b>`).join('<br>') : '—'}</td>
+      <td>${bz.length ? bz.map(p => `${esc(p.itens.join(', '))} <small>(dia ${num(p.dia)})</small>`).join('<br>') : '—'}</td>
+      <td>${espera.length ? espera.map(e => `${esc(e.nome)} ${e.nivel} <small>(${esc(e.pedra)}${e.noPC ? ', no PC' : ''})</small>`).join('<br>') : '—'}</td>
+      <td class="${rep.length ? 'ruim' : 'final'}">${rep.length ? rep.map(v => esc(v.join(' e '))).join('<br>') : '✓ nenhum'}</td></tr>`; }).join('')}
+    </tbody></table></div></section>`;
 
   /* ---------- as lutas longas ---------- */
   const longas = [];
@@ -581,6 +614,7 @@ ${css}${extra}</style>
   ${quadroJeitos}
   ${NOTAS.geral ? `<section class="bloco geral"><h3>${esc(NOTAS.geralTitulo || 'O que os quinze mostraram')}</h3><ul>${NOTAS.geral.map(g => `<li>${g}</li>`).join('')}</ul></section>` : ''}
   ${blocoNacional}
+  ${blocoPedras}
   ${blocoLongas}
   ${NOTAS.defeitos ? `<section class="bloco geral"><h3>Defeitos achados e consertados</h3><ul>${NOTAS.defeitos.map(g => `<li>${g}</li>`).join('')}</ul></section>` : ''}
   ${robos.map(secao).join('\n')}
