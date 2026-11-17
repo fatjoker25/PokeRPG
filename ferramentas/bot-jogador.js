@@ -116,7 +116,9 @@ const RAIZ = 'file://' + path.resolve(__dirname, '..', 'index.html');
             'nova' (toda espécie que a Pokédex ainda não tem);
    lendario — tenta Pokébola em lendário ferido;
    troca  — põe no cinto o melhor que tem no PC;
-   pedra  — compra e usa pedra de evolução;
+   pedra  — compra e usa pedra de evolução (o fiel ao time também: ele não
+            troca ninguém, mas evolui quem tem; na terceira rodada o
+            criador terminou com um Growlithe 39 e um Kadabra 67);
    ginasio— vai atrás de ginásio mesmo sem o capítulo pedir;
    liga   — tenta a Elite quando passa pelo Planalto com as oito;
    desvio — chance de vasculhar ou andar pra um vizinho antes de seguir;
@@ -133,7 +135,7 @@ const JEITOS = {
     ginasio:true, liga:false, desvio:0, bolas:5, rep:'bom', extras:.15, gosta:/(ajud|proteg|vigi|patrulh|avis|denunc|chamar|segur)/i},
   justiceiro: {nome:'Justiceiro', cura:.6, abaixo:1, moer:60, foge:9, captura:'forte', lendario:false, troca:true, pedra:true,
     ginasio:true, liga:false, desvio:0, bolas:5, rep:'bom', via:['heroi'], extras:0, gosta:/(proteg|defend|prend|denunc|enfrent|parar|impedir|salv)/i},
-  cuidadoso: {nome:'Cuidadoso', cura:.75, abaixo:1, moer:70, foge:6, captura:'time', lendario:false, troca:false, pedra:false,
+  cuidadoso: {nome:'Cuidadoso', cura:.75, abaixo:1, moer:70, foge:6, captura:'time', lendario:false, troca:false, pedra:true,
     ginasio:false, liga:false, desvio:.05, bolas:5, racaoMoral:72, racao:10, extras:.1, gosta:/(cuid|comida|água|carinho|acalm|time|junt|descans)/i},
   andarilho: {nome:'Andarilho', cura:.55, abaixo:4, moer:30, foge:8, captura:'nova', lendario:false, troca:true, pedra:true,
     ginasio:false, liga:false, desvio:.25, andar:.4, bolas:8, extras:.2, gosta:/(olhar|andar|sub|desc|entrar|segu|explor|atravess|caminh)/i},
@@ -162,7 +164,7 @@ const JEITOS = {
     ginasio:false, liga:false, desvio:.05, bolas:6, gosta:/(ajud|proteg|defend|salv|levar|socorr|cuid|devolv|tirar eles)/i},
   poder: {nome:'Ambicioso', cura:.5, abaixo:3, moer:40, foge:9, captura:'forte', lendario:true, troca:true, pedra:true,
     ginasio:true, liga:true, desvio:0, bolas:6, gosta:/(aceit|dinheiro|cobr|contrato|negóci|oferta|assin|preço)/i},
-  vinculo: {nome:'Fiel ao time', cura:.75, abaixo:1, moer:80, foge:7, captura:'time', lendario:false, troca:false, pedra:false,
+  vinculo: {nome:'Fiel ao time', cura:.75, abaixo:1, moer:80, foge:7, captura:'time', lendario:false, troca:false, pedra:true,
     ginasio:false, liga:false, desvio:.05, bolas:5, gosta:/(time|cuid|comida|água|junt|ficar|carinho|acalm)/i},
   explorar: {nome:'Andarilho', cura:.55, abaixo:4, moer:30, foge:8, captura:'nova', lendario:false, troca:true, pedra:true,
     ginasio:false, liga:false, desvio:.2, bolas:8, gosta:/(olhar|andar|sub|desc|entrar|segu|explor|atravess|caminh)/i},
@@ -353,6 +355,20 @@ const SUSPEITO = [
     window.__treinos = (antes && antes.treinos) || {};
     window.__extra = (antes && antes.extra) || {};
     window.__jeito = jeito;
+    /* a linha de evolução de um Pokémon (a forma de baixo dela): dois da
+       mesma linha no cinto são dois iguais, ou vão ser — o Oddish e o
+       Gloom viram dois Vileplume. Os dois Nidoran são linhas diferentes
+       aqui (o Nidoking não é o Nidoqueen), ao contrário do raizDaLinha do
+       jogo, que junta os dois pra formar par. Na terceira rodada um robô
+       terminou com dois Victreebel e dois Gengar, e outros três com um
+       Raticate, um Beedrill ou um Vileplume repetido */
+    window.__linha = dex => {
+      let x = (typeof BEBE_DE !== 'undefined' && BEBE_DE[dex]) || dex, g = 0;
+      while (DEX[x] && DEX[x].preEvo && g++ < 5) x = DEX[x].preEvo;
+      return x;
+    };
+    /* quem do cinto (vivo, menos `fora`) já é da linha desse dex */
+    window.__daLinha = (dex, fora) => Estado.dados.time.find(x => !x.morto && x.uid !== fora && __linha(x.dex) === __linha(dex)) || null;
     /* o diário de bordo: um passo por coisa que aconteceu, com capítulo,
        dia, hora e lugar. Passo igual ao anterior (o mesmo afazer no mesmo
        lugar) só soma na conta dele */
@@ -866,8 +882,16 @@ const SUSPEITO = [
           /* lendário é um só: tenta enquanto não for seu, e não só no
              primeiro encontro (na terceira rodada, 137 lutas com lendário
              e nenhuma Pokébola) */
+          /* a mesma linha já no cinto: só vale pegar se for espécie que a
+             Pokédex não tem (o colecionador quer o registro, e o repetido
+             desce pro PC no próximo Centro) ou se for muito melhor que o
+             da linha que está lá, que aí sai. Antes pegava tudo enquanto o
+             time não tinha seis, e quatro dos quinze robôs terminaram a
+             terceira rodada com dois iguais no cinto */
+          const igual = window.__daLinha ? __daLinha(alvo.dex) : null;
           if (B.tipo === 'lendario') quer = !!J.lendario && !((d.lendarios || {})[alvo.dex] || {}).capturado;
           else if (g < 0) quer = false;
+          else if (igual) quer = (J.captura === 'nova' && novo) || (!!J.troca && valor(alvo) > valor(igual) + 6);
           else if (vivos.length < 6) quer = true;
           else if (J.captura === 'nova') quer = novo;
           else if (J.captura === 'forte') quer = valor(alvo) > pior + 3 || (g > 0 && novo);
@@ -1007,6 +1031,9 @@ const SUSPEITO = [
         const PEDRAS_ROBO = () => (typeof nomesDePedra === 'function' ? nomesDePedra() : [])
           .concat(typeof evolucaoPeloCabo === 'function' ? ['Link Cable'] : []);
         const serve = (nome, x) => !!x && !x.morto && (nome === 'Link Cable' ? !!evolucaoPeloCabo(x) : !!(pedrasDe(nome) || {})[x.dex]);
+        /* pedra que nenhuma loja de cidade vende (o bazar de domingo não é
+           loja de cidade): a Moon Stone, e a Pedra do Sol antes da Nacional */
+        const pedraRara = n => !Object.keys(LOJAS).some(c => c !== 'bazar_celadon' && catalogoDaCidade(c).some(([x]) => x === n));
         /* o mais forte de pé vai na frente: o Vito entrava no ginásio do
            Blaine com o Graveler 25 (o inicial) na frente do Golbat 65 e
            perdeu dez semanas seguidas */
@@ -1056,8 +1083,11 @@ const SUSPEITO = [
           X.pcDia = dia + id;
           const valor = x => x.nivel + (((DEX[x.dex] || {}).total) || 300) / 40 + ((typeof gostoSabido === 'function' && gostoSabido(x) > 0) ? 3 : 0);
           const guardados = (d.pc || []).filter(x => !x.morto).sort((a, b) => valor(b) - valor(a));
+          /* o melhor guardado de uma linha que o cinto ainda não tem (sem
+             contar quem `sai`): do PC não sobe repetido */
+          const melhorNovo = sai => guardados.find(x => !__daLinha(x.dex, sai)) || null;
           const morto = d.time.find(x => x.morto);
-          if (morto) return {f:'pc', guardar:morto.uid, tirar:guardados[0] ? guardados[0].uid : null};
+          if (morto){ const t = melhorNovo(morto.uid); return {f:'pc', guardar:morto.uid, tirar:t ? t.uid : null}; }
           /* quem vai evoluir sai do PC: pedra na mochila que só serve pra
              alguém guardado (o Gloom, o Weepinbell e o Pikachu da Vera
              ficaram no PC a jornada inteira), e o Haunter ou o Kadabra
@@ -1075,14 +1105,29 @@ const SUSPEITO = [
               if (!Estado.contaItem(nome)) continue;
               if (d.time.some(x => serve(nome, x))) continue;
               const quem = guardados.find(x => serve(nome, x));
-              if (quem && (d.time.length < 6 || vaga())) return {f:'pc', guardar:vaga(), tirar:quem.uid};
+              const sai = vaga();
+              if (quem && (d.time.length < 6 || sai) && !__daLinha(quem.dex, sai)) return {f:'pc', guardar:sai, tirar:quem.uid};
             }
           if (capuzEspera && (d.pc || []).includes(dj0) && d.capitulo >= (fj.capuz_cap_entrega || 0) + 2 && (d.time.length < 6 || vaga()))
             return {f:'pc', guardar:vaga(), tirar:dj0.uid};
-          if (d.time.length < 6 && guardados.length) return {f:'pc', guardar:null, tirar:guardados[0].uid};
+          /* dois da mesma linha no cinto: o mais fraco desce pro PC (o
+             inicial e o que a figura de capuz vai completar ficam), e sobe
+             o melhor guardado de outra linha, se não for muito pior. Sem
+             ninguém pra subir, desce assim mesmo com quatro ou mais de pé:
+             a vaga fica pra próxima espécie que aparecer no mato */
+          const repetido = d.time.filter(x => !x.morto && !fica(x) && __daLinha(x.dex, x.uid))
+            .sort((a, b) => valor(a) - valor(b))[0];
+          if (repetido){
+            const sobe = melhorNovo(repetido.uid);
+            if (sobe && valor(sobe) >= valor(repetido) - 8) return {f:'pc', guardar:repetido.uid, tirar:sobe.uid};
+            if (d.time.filter(x => !x.morto).length >= 4) return {f:'pc', guardar:repetido.uid, tirar:null};
+          }
+          const falta = melhorNovo(null);
+          if (d.time.length < 6 && falta) return {f:'pc', guardar:null, tirar:falta.uid};
           if (J.troca && guardados.length && d.time.length >= 6){
             const pior = d.time.filter(x => !fica(x)).sort((a, b) => valor(a) - valor(b))[0];
-            if (pior && valor(guardados[0]) > valor(pior) + 3) return {f:'pc', guardar:pior.uid, tirar:guardados[0].uid};
+            const sobe = pior && melhorNovo(pior.uid);
+            if (sobe && valor(sobe) > valor(pior) + 3) return {f:'pc', guardar:pior.uid, tirar:sobe.uid};
           }
         }
         /* moral no chão e Ração sobrando: dá na mão (+10 de moral), um por
@@ -1127,6 +1172,8 @@ const SUSPEITO = [
             /* quem só evolui por troca e recebe um que já chegou no fim
                aceita até dez níveis abaixo: o que fica aqui não cresce mais */
             const parado = !!evoluiPorTroca(vai.dex) && totalDe(vem) > totalDe(vai.dex) && nv >= vai.nivel - 10;
+            /* o que vem não pode ser da linha de outro que fica no cinto */
+            if (__daLinha(vem, vai.uid)) continue;
             if (parado || valorT(vem, nv) > valorT(vai.dex, vai.nivel) + 2) return {f:'trocar', uid:vai.uid, tid:t.id};
           }
         }
@@ -1139,6 +1186,30 @@ const SUSPEITO = [
           const dst = Historia.proximoDestino && Historia.proximoDestino();
           const preso = !!(dst && travaDoCapitulo(dst.num));
           if (pend && id !== 'lavender' && !preso && hp >= .5){ const c = ir('lavender'); if (c) return c; }
+        }
+        /* a Moon Stone não está em loja nenhuma: sai do bazar de domingo,
+           no terraço da Grande Loja de Celadon (AGENDA, das 8h às 17h).
+           Quem tem alguém que evolui com ela e o dinheiro (com mil
+           sobrando) vai até Celadon no sábado ou no domingo cedo e espera
+           o bazar abrir; duas semanas por capítulo, no máximo, e só se
+           Celadon fica a seis trechos ou menos. Na terceira rodada seis
+           robôs terminaram com um Nidorina, um Nidorino ou um Jigglypuff
+           acima do nível 50, e nenhum viu uma Moon Stone */
+        if (J.pedra && LOJAS.bazar_celadon && hp >= .5){
+          const doBazar = catalogoDaCidade('bazar_celadon').filter(([n, preco]) => (ITENS_INFO[n] || {}).tipo === 'pedra'
+            && !Estado.contaItem(n) && [...d.time, ...(d.pc || [])].some(x => serve(n, x)) && d.jogador.dinheiro >= preco + 1000);
+          if (doBazar.length){
+            if (afz.includes('ag_bazar')) return {f:'bazar', itens:Object.fromEntries(doBazar.map(([n]) => [n, 1]))};
+            const hoje = Calendario.hoje(), semana = dia - hoje.semanaIdx;
+            const fimDeSemana = hoje.semanaIdx === 5 || (hoje.semanaIdx === 6 && d.relogio.hora < 17);
+            const B0 = X.bazar && X.bazar.cap === d.capitulo ? X.bazar : (X.bazar = {cap:d.capitulo, semanas:[]});
+            const caminho = Mundo.visitado('celadon') ? trajeto(id, 'celadon') : null;
+            if (fimDeSemana && caminho && caminho.length <= 7 && (B0.semanas.includes(semana) || B0.semanas.length < 2)){
+              if (!B0.semanas.includes(semana)) B0.semanas.push(semana);
+              if (id === 'celadon') return {f:'esperar'};
+              if (caminho[1] && !travaDaPassagem(id, caminho[1])) return {f:'viajar', id:caminho[1]};
+            }
+          }
         }
         /* pedra que a loja daqui não vende: com o dinheiro dela e mil
            sobrando, vai até a cidade já visitada que vende (a Grande Loja
@@ -1187,7 +1258,10 @@ const SUSPEITO = [
             const pedeNaTroca = typeof evolucaoPeloCabo === 'function' && [...d.time, ...(d.pc || [])].some(x => { const c = evolucaoPeloCabo(x); return c && c.item === n; });
             if (i.tipo === 'equipar' && !pedeNaTroca) vende.push([n, q]);
             else if (i.tipo === 'tm' && !d.time.some(p => !p.morto && aprendeTM(p, n))) vende.push([n, q]);
-            else if ((i.tipo === 'pedra' || i.tipo === 'cabo') && !(J.pedra && [...d.time, ...(d.pc || [])].some(p => serve(n, p)))) vende.push([n, q]);
+            /* a pedra que loja nenhuma vende (a Moon Stone só sai do bazar
+               de domingo, do Monte da Lua e de presente) não se vende: o
+               Nidoran de amanhã precisa dela */
+            else if ((i.tipo === 'pedra' || i.tipo === 'cabo') && !pedraRara(n) && !(J.pedra && [...d.time, ...(d.pc || [])].some(p => serve(n, p)))) vende.push([n, q]);
           }
           /* e a sobra do que o mato dá, guardando um tanto de cada: o Vito
              andava com 9 lanternas, 11 cordas e 11 Águas Frescas, 0 ₽ e o
@@ -1558,7 +1632,7 @@ const SUSPEITO = [
         return {f:'viajar', id:Dados.escolher(viz)};
       }).catch(e => ({f:'erro', e:e.message}));
       /* o que ele decidiu no mapa vai pro diário (andar entra pela viagem) */
-      if (!['viajar', 'erro', 'pc', 'pedra', 'loja', 'segurar', 'vender', 'tm', 'trocar', 'ordem', 'racao'].includes(dec.f))
+      if (!['viajar', 'erro', 'pc', 'pedra', 'loja', 'bazar', 'segurar', 'vender', 'tm', 'trocar', 'ordem', 'racao'].includes(dec.f))
         await page.evaluate(x => window.__passo && __passo('mapa', {f:x.f, itens:x.itens || null}), dec).catch(() => {});
       if (dec.f === 'erro') anota('erro na decisão do mapa', dec.e || '');
       const assin = JSON.stringify(dec) + await page.evaluate(() => Estado.dados.local + Relogio.texto());
@@ -1586,6 +1660,27 @@ const SUSPEITO = [
           UI.fecharModal(true); Exploracao.tela();
           window.__passo && __passo('compra', {itens:comprou, dinheiro:Estado.j.dinheiro});
         }, dec.itens || {});
+      } else if (dec.f === 'bazar'){
+        /* o bazar de domingo é outro balcão (Cidade.loja(0, 'bazar_celadon')),
+           aberto pelo afazer da agenda, com o preço dele */
+        await page.evaluate(() => Exploracao.fazer('ag_bazar')); await page.waitForTimeout(150);
+        await page.evaluate(itens => {
+          const comprou = [], Q = 'bazar_celadon';
+          for (const [n, q] of Object.entries(itens)){
+            if (!catalogoDaCidade(Q).some(([x]) => x === n)) continue;
+            try {
+              const p = precoNaCidade(n, Q);
+              const cabe = Math.floor((Estado.j.dinheiro - 1000) / Math.max(1, p));
+              if (cabe < 1) continue;
+              Cidade.comprar(n, p);
+              if (Cidade._compra) Cidade._compra.qtd = Math.min(q, cabe, Cidade._compra.max || 0);
+              if (Cidade._compra && Cidade._compra.qtd){ const k = Cidade._compra.qtd; Cidade.confirmarCompra(n, p); comprou.push(k + '× ' + n); }
+            } catch(e){}
+          }
+          Cidade._qual = null;
+          UI.fecharModal(true); Exploracao.tela();
+          window.__passo && __passo('compra', {itens:comprou, dinheiro:Estado.j.dinheiro, onde:'bazar'});
+        }, dec.itens || {}).catch(e => erros.push('bazar: ' + e.message));
       } else if (dec.f === 'pc'){
         /* pelos botões do PC: Guardar na caixa e Levar no cinto */
         await page.evaluate(x => {
@@ -1785,6 +1880,27 @@ const SUSPEITO = [
           return w;
         });
       }, {rep:J.rep || null, via:J.via || null}).catch(() => []) : [];
+      /* quem usa pedra pega a que a cena dá (a da cratera do Monte da Lua)
+         e não devolve à toa: a escolha que dá pedra de evolução pesa três
+         vezes, a que tira pesa um terço. A reputação pesa por cima, e o
+         protetor devolve do mesmo jeito */
+      const pedraNaCena = J.pedra ? await esc.evaluateAll(els => {
+        const cena = Historia.cenaAtual || {}, cs = (Historia.capAtual && Historia.capAtual.cenas) || {};
+        const ehPedra = n => ['pedra', 'cabo'].includes((ITENS_INFO[n] || {}).tipo);
+        return els.map(el => {
+          const m = /Jogo\.escolher\((\d+)\)/.exec(el.getAttribute('onclick') || '');
+          const e = m && (cena.escolhas || [])[+m[1]];
+          if (!e) return 1;
+          const efs = [e.ef || {}];
+          if (typeof e.vai === 'string' && cs[e.vai] && cs[e.vai].ef) efs.push(cs[e.vai].ef);
+          let w = 1;
+          for (const ef of efs){
+            if (Object.keys(ef.itens || {}).some(ehPedra)) w *= 3;
+            if (Object.keys(ef.perdeItens || {}).some(ehPedra)) w /= 3;
+          }
+          return w;
+        });
+      }).catch(() => []) : [];
       /* perdeu duas vezes no mesmo ginásio: não tenta de novo na hora,
          vai treinar antes. O Vito, com um Geodude só, perdeu do Onix do
          Brock mais de dez vezes seguidas pelo "tentar de novo" */
@@ -1796,7 +1912,7 @@ const SUSPEITO = [
       const precisaCurar = await page.evaluate(() => { const v = Estado.dados.time.filter(p => !p.morto);
         return v.reduce((s, p) => s + Math.max(0, p.hp), 0) / Math.max(1, v.reduce((s, p) => s + p.hpMax, 0)) < .7; }).catch(() => false);
       const pesos = textos.map((t, i) => (J.gosta && J.gosta.test(t) ? 3 : 1) * (/^Parar e olhar mais um pouco/.test(t) ? .5 : 1)
-        * (soFinal[i] && temOutra ? .03 : 1) * (lado[i] || 1)
+        * (soFinal[i] && temOutra ? .03 : 1) * (lado[i] || 1) * (pedraNaCena[i] || 1)
         * (perdeuAqui >= 2 && /tentar de novo/i.test(t) ? 0 : 1)
         * (/^Ir ao balcão do Centro/.test(t) ? (precisaCurar ? 3 : 0) : 1)
         /* a figura de capuz pede a Pokébola pra completar o que ela deu:
