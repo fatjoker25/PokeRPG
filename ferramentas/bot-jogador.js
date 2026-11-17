@@ -1077,7 +1077,13 @@ const SUSPEITO = [
         const ir = ate => { const c = trajeto(id, ate); return c && c[1] ? {f:'viajar', id:c[1]} : null; };
         const vivos = d.time.filter(p => !p.morto);
         const hp = vivos.reduce((s, p) => s + Math.max(0, p.hp), 0) / Math.max(1, vivos.reduce((s, p) => s + p.hpMax, 0));
-        const afz = afazeresDoLocal().map(a => a.id);
+        /* porta fechada fica na tela, apagada, com o motivo (fechada no
+           afazer): não é coisa pra fazer. Depois do fim que guarda o
+           cartão na caixa de sapato a Liga fecha (Depois.ligaFechada), e o
+           policial da quarta rodada tentou o ginásio de Viridian de 42 a
+           112 vezes por dia, nove dias seguidos */
+        const afz = afazeresDoLocal().filter(a => !a.fechada).map(a => a.id);
+        const semLiga = typeof Depois !== 'undefined' && Depois.ligaFechada && !!Depois.ligaFechada();
         const ref = nivelDeReferencia();
         /* pedra e cabo: o Link Cable é a pedra de quem evolui trocando
            (evolucaoPeloCabo). Serve = a espécie evolui com ele; se a troca
@@ -1553,7 +1559,7 @@ const SUSPEITO = [
         if (J.andar && L.tipo === 'cidade' && afz.includes('andar') && Math.random() < J.andar) return {f:'andar'};
 
         const ELITE_VEZES = J.eliteVezes || 6;
-        const querElite = (J.liga || d.capitulo >= 26) && typeof statusElite4 === 'function'
+        const querElite = !semLiga && (J.liga || d.capitulo >= 26) && typeof statusElite4 === 'function'
           && statusElite4().estado === 'disponivel' && (X.eliteVezes || 0) < ELITE_VEZES && X.eliteDia !== dia;
         if (querElite){
           const m = (typeof Titulares !== 'undefined' && Titulares.membro(0)) || (typeof ELITE4 !== 'undefined' && ELITE4[0]) || {};
@@ -1602,15 +1608,19 @@ const SUSPEITO = [
            de oito níveis que não mudavam a luta. O teto segura o Vito, que
            tinha 1.452 derrotas pro Brock (do laço antigo) */
         const prontoPra = g => ref >= nivelGinasio(g) - (J.ginasio ? 1 : 0) + Math.min(3, perdeu(g.id));
-        const daqui = GINASIOS.find(x => x.id === id && statusGinasio(x).estado === 'disponivel');
+        const daqui = !semLiga && afz.includes('ginasio') ? GINASIOS.find(x => x.id === id && statusGinasio(x).estado === 'disponivel') : null;
         if (daqui && prontoPra(daqui)){
           /* porta com hora marcada (Cinnabar): curar agora gasta a janela,
              então entra como está */
           if (hp < .9 && !daqui.horario){ const c = curar(); if (c) return c; }
           return naFrente(3) || {f:'ginasio'};
         }
-        if (travado || J.ginasio){
-          const abertos = GINASIOS.filter(g => ['disponivel', 'fechado'].includes(statusGinasio(g).estado))
+        if (!semLiga && (travado || J.ginasio)){
+          /* porta de ginásio que se achou fechada hoje (o ginásio que é
+             seu depois do fim, por exemplo) sai da lista até amanhã */
+          X.ginFechado = X.ginFechado || {};
+          if (GINASIOS.some(g => g.id === id) && !afz.includes('ginasio')) X.ginFechado[id] = dia;
+          const abertos = GINASIOS.filter(g => ['disponivel', 'fechado'].includes(statusGinasio(g).estado) && X.ginFechado[g.id] !== dia)
             .map(g => ({g, cam:trajeto(id, g.id)})).filter(x => x.cam)
             .sort((a, b) => nivelGinasio(a.g) - nivelGinasio(b.g) || a.cam.length - b.cam.length);
           const alvo = abertos[0];
