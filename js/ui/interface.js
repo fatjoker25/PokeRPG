@@ -6544,6 +6544,7 @@ const UI = {
 
       <h3>Elite dos Quatro</h3>
       <div class="linha"><span class="k">Quem entra</span><span class="v">quem tem as 8 insígnias · quatro salas seguidas, sem Centro Pokémon entre elas · perdeu uma, a ala recomeça da primeira porta</span></div>
+      <div class="linha"><span class="k">Vencer a Elite</span><span class="v">passar as quatro portas numa ala só, ganhando ou perdendo do Campeão depois · é o que o posto da Elite dos Quatro pede, além de uma porta sem o dono de volta</span></div>
       <div class="linha"><span class="k">Nível</span><span class="v">o de cada porta, um a mais por Pokémon do time, e o último 2 acima disso · a quarta porta é sempre a mais alta</span></div>
       <div class="linha"><span class="k">Fora da ala</span><span class="v">quando a história leva a Elite pra outro lugar, são as mesmas quatro cadeiras, com os mesmos times e a mesma regra: uma depois da outra, sem cura no meio, e perder de uma volta pra primeira · vencer as quatro ali dá a cadeira do Campeão, com o mesmo prêmio da ala</span></div>
       <div class="linha"><span class="k">Os titulares</span><span class="v">Lorelei, Bruno e Agatha estão em casa desde antes do capítulo 17, cada um na sua cidade · quem senta na cadeira de cada um conta onde, ganhando ou perdendo, e a cidade também conta, pra quem anda e conversa</span></div>

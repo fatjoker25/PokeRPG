@@ -1446,7 +1446,17 @@ const Jogo = {
     /* a porta ganha o carimbo na tela da Liga, mesmo que a ala recomece */
     Estado.marcar('elite_passou_' + alvo.id);
     const acabou = e.indice >= ELITE4.length;
-    if (acabou) e.campeao = true;
+    if (acabou){
+      e.campeao = true;
+      /* as quatro portas numa ala só é ter vencido a Elite dos Quatro,
+         que é o que o posto da Elite pede (cargos.js), ganhando ou
+         perdendo do Campeão depois. Só o poço do 26 marcava, e quem
+         passava as quatro e caía no Red ficava sem a cadeira */
+      if (!Estado.dados.flags.venceu_a_elite){
+        Estado.marcar('venceu_a_elite');
+        Estado.registrar('Venceu as quatro portas da Elite dos Quatro.');
+      }
+    }
     Estado.salvar('auto');
     UI.telaResultadoLiga({
       titulo: `${alvo.nome} derrotad${alvo.f ? 'a' : 'o'}`,

@@ -114,14 +114,22 @@ function lancar(r){
     partes.forEach(l => { if (ALERTA.test(l)) alerta(r.cargo, l); });
   };
   p.stdout.on('data', ler); p.stderr.on('data', ler);
+  /* robô que passa do tempo com folga é robô preso (a página num laço
+     sem fim, que o vigia do robô não pegou, ou o próprio node): morre, e
+     a etapa conta como travada. Sem isso a rodada esperava pra sempre */
+  let morto = false;
+  const matar = setTimeout(() => { morto = true; diz('passou do tempo, mato', r.cargo); try { p.kill('SIGKILL'); } catch (e) {} }, (min + 20) * 60000);
   rodando.set(r.cargo, {p, k, t0:Date.now()});
   diz('etapa', k, r.cargo, `(${r.jeito}, ${r.inicial}${env.RETOMAR ? ', retomada' : ''}, ${min} min)`);
   p.on('close', code => {
+    clearTimeout(matar);
     fs.closeSync(log);
     rodando.delete(r.cargo);
     r.etapas = k;
     let estado = 'sem saída', resumo = '';
-    try {
+    /* morto por tempo: a saída que está no disco é a da etapa de antes */
+    if (morto){ estado = 'travou'; resumo = 'morto por tempo, sem saída'; }
+    else try {
       const s = JSON.parse(fs.readFileSync(out, 'utf8'));
       estado = s.estado;
       const f = s.ficha || {};

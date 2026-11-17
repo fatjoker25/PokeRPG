@@ -217,6 +217,16 @@ const SUSPEITO = [
     erros.push(m); console.log('ERRO JS', m.slice(0, 300)); });
   page.on('dialog', d => /Soltar|permanente|Vender|Largar/.test(d.message()) ? d.dismiss() : d.accept());
   await page.goto(RAIZ);
+  /* o depurador fica ligado desde o começo: com a página presa num laço
+     sem fim, o Debugger.enable não é atendido (espera a vez da página),
+     e o Debugger.pause, com ele ligado, interrompe o laço. Custa uns
+     0,15 ms por evaluate (medido: 20 mil em 10 s sem, 13 s com) e o
+     teto do cache de scripts segura a memória */
+  const cdpVigia = await page.context().newCDPSession(page).catch(() => null);
+  if (cdpVigia) await cdpVigia.send('Debugger.enable', {maxScriptsCacheSize:1e6}).catch(() => {});
+  /* TESTE_TRAVA=s prende a página num laço sem fim depois de s segundos:
+     é como se confere o vigia */
+  if (+process.env.TESTE_TRAVA) await page.evaluate(s => { setTimeout(function lacoDeTeste(){ for (;;){} }, s * 1000); }, +process.env.TESTE_TRAVA).catch(() => {});
   /* no LEVE a arte é a parada, como no artefato: a GIF animada da luta
      repinta a arena o tempo todo, e com seis robôs a máquina parava. O
      jogo cai sozinho na arte parada quando não tem GIF (imgSprite) */
@@ -597,7 +607,45 @@ const SUSPEITO = [
   if (await page.evaluate(() => !!(Estado.dados && Estado.dados.depoisDoFim)).catch(() => false)){ depoisFeito = true; estado = 'depois'; }
   let ultimoMinuto = Date.now(), ultimoMinutoK = '', mesmoMinuto = 0, ultimaAcao = '';
   const prazo = MIN * 60000;
+  /* o vigia da página: volta do laço que não termina em 150 s é a página
+     presa num laço sem fim (o comissao da quarta rodada ficou uma hora
+     assim, sem um retrato, e a rodada esperando). Pausa o depurador,
+     guarda a pilha e o que o jogo tinha na mão, mata o laço
+     (terminateExecution) e a etapa acaba sem gravar o ponto: a próxima
+     segue do último bom */
+  let ultimoPasso = Date.now(), travouPagina = 0, vigiando = false;
+  const vigia = setInterval(async () => {
+    if (vigiando || travouPagina || Date.now() - ultimoPasso < 150000) return;
+    vigiando = true;
+    const tempo = (pr, ms) => Promise.race([pr.catch(() => null), new Promise(r => setTimeout(() => r(null), ms))]);
+    let pilha = 'sem pilha', jogo = null;
+    try {
+      const cdp = cdpVigia;
+      if (!cdp) throw new Error('sem sessão do depurador');
+      const pausou = new Promise(r => cdp.once('Debugger.paused', r));
+      await tempo(cdp.send('Debugger.pause'), 15000);
+      const ev = await tempo(pausou, 20000);
+      if (ev && ev.callFrames && ev.callFrames.length){
+        pilha = ev.callFrames.slice(0, 16).map(f => `${f.functionName || '(anônima)'} ${(f.url || '').split('/').pop()}:${f.location.lineNumber + 1}:${f.location.columnNumber + 1}`).join(' ← ');
+        const r = await tempo(cdp.send('Debugger.evaluateOnCallFrame', {callFrameId:ev.callFrames[0].callFrameId, returnByValue:true,
+          expression:'JSON.stringify({c:Estado.dados.capitulo, l:Estado.dados.local, cena:Estado.dados.cena, modo:Estado.dados.modo, luta:!!Batalha.ativo, turno:Batalha.turno, tipo:Batalha.tipo, '
+            + 'aliado:Batalha.aliado && (Batalha.aliado.nome + " " + Batalha.aliado.hp + "/" + Batalha.aliado.hpMax), inimigo:Batalha.inimigo && (Batalha.inimigo.nome + " " + Batalha.inimigo.hp + "/" + Batalha.inimigo.hpMax), '
+            + 'ultimos:(Batalha.log || []).slice(-10).map(e => typeof e === "string" ? e : (e.tipo + ": " + (e.texto || e.msg || "")))})'}), 15000);
+        jogo = r && r.result ? r.result.value : null;
+        await tempo(cdp.send('Runtime.terminateExecution'), 10000);
+        await tempo(cdp.send('Debugger.resume'), 10000);
+      } else await tempo(cdp.send('Runtime.terminateExecution'), 10000);
+    } catch (e) { pilha += ' (vigia: ' + e.message + ')'; }
+    travouPagina++;
+    const m = 'página travou num laço sem fim: ' + pilha + (jogo ? ' :: ' + jogo : '');
+    erros.push(m); console.log('ERRO JS', m.slice(0, 1500));
+    anota('página travou', pilha.slice(0, 300));
+    ultimoPasso = Date.now(); vigiando = false;
+  }, 20000);
   while (passos++ < 2000000){
+    ultimoPasso = Date.now();
+    if (travouPagina){ estado = 'travou'; break; }
+    try {
     const passou = Date.now() - t0;
     if (passou >= prazo){
       /* o tempo acabou: a luta que está andando termina antes (até 3 minutos) */
@@ -2034,11 +2082,19 @@ const SUSPEITO = [
     }
     anota('tela sem ação', await page.evaluate(() => document.querySelector('#app').innerText.slice(0, 120)));
     await page.evaluate(() => Exploracao.tela()).catch(() => {});
+    } catch (e) {
+      /* o laço morto pelo vigia derruba o evaluate que estava esperando */
+      if (travouPagina){ estado = 'travou'; break; }
+      throw e;
+    }
   }
+  clearInterval(vigia);
   if (passos >= 2000000) estado = 'travou';
 
-  /* fim da etapa: o ponto de parada, pra seguir dali (se a jornada não acabou) */
-  if (estado === 'pausa' || estado === 'erros' || estado === 'travou'){
+  /* fim da etapa: o ponto de parada, pra seguir dali (se a jornada não
+     acabou). Página que travou não grava: o estado pode ter ficado pela
+     metade, e a próxima etapa segue do último ponto bom */
+  if (!travouPagina && (estado === 'pausa' || estado === 'erros' || estado === 'travou')){
     for (let i = 0; i < 40 && await page.evaluate(() => !!(Jogo.encenando || Jogo.animandoBola)).catch(() => false); i++) await page.waitForTimeout(250);
     await gravarPonto();
   }

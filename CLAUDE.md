@@ -1829,6 +1829,19 @@ com os três; `chk-telas` abre a pista de cada cidade, cada jeito de
 cada visita com cada escolha (o teste pros dois lados) e a Liga com
 titulares de volta.
 
+**Vencer a Elite é passar as quatro portas numa ala só**
+(`venceu_a_elite`, marcado no `resultadoElite` quando a quarta porta
+cai e no poço do 26), ganhando ou perdendo do Red depois: é o que o
+posto da Elite pede. Só o poço marcava, e quem passava as quatro e caía
+no Red ficava sem a cadeira. `node ferramentas/sim-elite.js` mede a ala
+inteira (até que porta o time chega, pelo nível e pela mochila) e
+`SOZINHA=1`, cada porta por si: no nível da primeira porta, cada uma
+sozinha vai de 62% a 90% e o Red fica em 35%, e as quatro seguidas,
+sem cura no meio, de 0% a 1% (6% com o time 5 acima e a mochila
+cheia). `ENTRE=` mede o que a ala daria entre as portas (`folego`,
+`metade`, `tudo`): só a cura inteira muda a conta (34% a 38%), porque
+o time acaba por quem cai, não pelo HP.
+
 **O poço do capítulo 26 é a mesma Elite.** Quem recusa as três ofertas
 desce ao poço da arena, e ali lutam as quatro cadeiras da ala, uma
 depois da outra (`c21_luta_elite`, `c21_poco_segunda`, `_terceira`,
@@ -2126,6 +2139,18 @@ resultado esperando, retoma a cadeia (`UI.continuarBatalha`) e escreve
 `Continuar retomado: …` no console, que o robô anota como achado.
 Janela nova nessa cadeia não pode ser fechada por fora, e quem abre
 `UI.modal` no meio dela precisa esperar (como o `tocarOuGuardar`).
+
+Página presa num laço sem fim não escreve nada, e o robô esperava pra
+sempre o `evaluate` que ela não ia devolver: o comissao da quarta
+rodada ficou uma hora assim, e a rodada esperando. Hoje o robô liga o
+depurador na abertura (com a página presa, o `Debugger.enable` espera a
+vez dela, e o `Debugger.pause` só interrompe com ele já ligado), e um
+vigia, com 150 s sem uma volta do laço, pausa a página, grava a pilha e
+o que o jogo tinha na mão (`ERRO JS página travou…`), mata o laço
+(`Runtime.terminateExecution`) e fecha a etapa como `travou`, sem
+gravar o ponto por cima do último bom. O orquestrador ainda mata quem
+passa vinte minutos do tempo da etapa. `TESTE_TRAVA=s` prende a página
+de propósito, pra conferir o vigia.
 
 ## O save em arquivo
 O jogo se salva sozinho no navegador (`Estado.salvar`, a cada passo,
