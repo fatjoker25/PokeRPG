@@ -4200,7 +4200,9 @@ const UI = {
     const est = p.morto ? ' morto' : p.hp <= 0 ? ' caido' : '';
     const fome = !p.morto && typeof Fome !== 'undefined' ? Fome.estado(p) : null;
     const acao = troca ? `UI.trocarNoTime('${troca}','${p.uid}')` : `UI.timeAcoes('${p.uid}')`;
-    return `<button class="tm-carta${est}${i === 0 ? ' frente' : ''}${troca === p.uid ? ' marcado' : ''}" data-uid="${p.uid}" onclick="${acao}">
+    /* o cartão na cor do tipo, como a vaga do time dos jogos de hoje */
+    const t1 = COR_TIPO[p.tipos[0]] || '#8a8f99', t2 = COR_TIPO[p.tipos[1] || p.tipos[0]] || t1;
+    return `<button class="tm-carta${est}${i === 0 ? ' frente' : ''}${troca === p.uid ? ' marcado' : ''}" data-uid="${p.uid}" style="--t1:${t1};--t2:${t2}" onclick="${acao}">
       ${i === 0 ? '<span class="tm-selo">Na frente</span>' : ''}
       <span class="tm-icone">${imgSprite(p, 'icone')}</span>
       <span class="tm-corpo">
@@ -4292,7 +4294,7 @@ const UI = {
           ? opcao('itens', `onclick="UI.tirarItem('${uid}')"`, `Retirar ${this.esc(p.segurando)}`)
           : opcao('itens', temEquipavel ? `onclick="UI.menuEquipar('${uid}')"` : 'disabled', 'Dar item pra segurar'))}
         <button class="escolha utilitaria" onclick="UI.modalTime()">Voltar</button>
-      </div>`, true, 'time');
+      </div>`, true, 'time', {'--t1': COR_TIPO[p.tipos[0]] || '#8a8f99', '--t2': COR_TIPO[p.tipos[1] || p.tipos[0]] || COR_TIPO[p.tipos[0]] || '#8a8f99'});
   },
 
   /* ========================================================
@@ -4519,8 +4521,9 @@ const UI = {
     };
 
     const volta = noPC || this._sumarioDe === 'pc' ? `UI.modalPC('${uid}')` : 'UI.modalTime()';
+    /* a janela inteira na cor dos tipos: abas, blocos, golpes e pontos */
     this.modal('', cabeca + `<div class="sm-folha" role="tabpanel">${abas[atual]()}</div>
-      <div class="sm-pe"><button class="btn" onclick="${volta}">Voltar</button></div>`, true, 'sumario');
+      <div class="sm-pe"><button class="btn" onclick="${volta}">Voltar</button></div>`, true, 'sumario', {'--t1': t1, '--t2': t2});
   },
 
   /* Pokédex, PokéNav, Cartão e Mapa moram no bolso de Itens-chave:

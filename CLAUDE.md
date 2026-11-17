@@ -293,16 +293,23 @@ do `#app`); a tela de morte fica no meio (`body.na-abertura`).
 Fora da batalha, o **fundo da página** também é o lugar: `CENARIO_POR_LOCAL`
 (em `arenas.js`) dá um cenário a cada ponto do mapa — os nove da batalha
 nas rotas e cavernas, mais `prado.png` (Rota 1) e `gelo.png` (Seafoam) —,
-e **cada cidade tem o panorama dela**, em pixel no jeito dos fundos do
-Showdown, com o marco e a cor do nome (Pallet branca com o moinho do
-laboratório, Lavender lilás com a Torre, Vermilion no poente com o S.S.
-Anne, Saffron amarela com a Silph…), gerado por `python3
-ferramentas/desenhar-cidades.py` em `sprites_nds/arenas/<cidade>.png`.
-Antes Viridian, Cerulean, Saffron e Celadon dividiam a mesma rua de
-tijolo, e o Showdown não tem mais fundo de cidade. A placa do lugar
-recorta a faixa de cima da imagem; no panorama o marco fica no meio, e
-`FOCO_DO_CENARIO` desce a placa até ele (`--cenario-foco`). Cidade nova
-entra no gerador, no mapa e no foco. Em cena
+e **cada cidade tem o mapa dela nos jogos**: o de HeartGold/SoulSilver,
+que o PokéWiki monta inteiro, sem ninguém andando por cima, recortado
+em volta do marco por `python3 -I ferramentas/recortar-cidades.py
+<pasta>` em `sprites_nds/arenas/<cidade>.png` (os endereços estão no
+script). Foi pedido assim: os panoramas desenhados aqui saíram, e entre
+os mapas de GBA e os de DS ficaram os de DS, "que são mais bonitos".
+Cinnabar é a exceção, com o de FireRed/LeafGreen: a de HeartGold/
+SoulSilver é a ilha depois da erupção, sem o laboratório e o ginásio
+que a história ainda tem, e capítulo não sabe do futuro. A Lavender de
+lá tem a torre do rádio onde ficava a Torre, e serve de torre. Os
+arquivos vão com 256 cores (o artefato publicado tem teto de 16 MB), e
+a placa e o fundo escalam liso (`image-rendering:auto`, no `pele.css`):
+no celular a placa mostra o mapa com menos da metade do tamanho, e o
+vizinho mais perto serrilhava telhado e sumia com cerca. A placa do
+lugar recorta uma faixa da imagem; no mapa da cidade ela desce até o
+marco por `FOCO_DO_CENARIO` (`--cenario-foco`). Cidade nova entra no
+recorte, no mapa e no foco. Em cena
 de capítulo cujo ambiente não é o do lugar, vale o do capítulo. É só
 estética, fica escurecido e puxado pro tom do capítulo, e entra por
 `UI.pintarCenario()`, chamado no `topo()` de toda tela. Lugar novo em
@@ -344,7 +351,7 @@ Showdown (`gen5ani-back`, a mesma coleção), e `python3
 ferramentas/chk-arte.py` confere cada GIF contra a arte parada da mesma
 vista, pela cor: GIF nova ou trocada passa por ali. Sem a GIF a `<img>` cai sozinha na arte parada
 (`spriteParado`). O `pokerpg.html` **embute as GIFs**
-(`SPRITES_SO_NO_UNICO` no `build.py`; ~43 MB, ~4 s pra carregar); o
+(`SPRITES_SO_NO_UNICO` no `build.py`; ~42 MB, ~4 s pra carregar); o
 `artefato.html` não, porque a publicação tem teto de 16 MB — lá a arte é
 a parada.
 
@@ -2897,6 +2904,12 @@ Campeão não recebe de novo: a coroação só diz da passagem do norte.
 - A ordem dos scripts está em `index.html`. Script novo entra lá.
 - `python3 build.py` gera `pokerpg.html` e `artefato.html` (arquivo único
   com sprites, cenários, ícones, rostos, insígnias e gritos embutidos). Rodar depois de qualquer mudança em js/ ou css/.
+- O build cola os estilos **uma vez**, no lugar do primeiro `<link>`.
+  O `re.sub` de antes punha todas as folhas no lugar de cada `<link>`:
+  com sete folhas o CSS ia sete vezes, 3 MB a mais em cada arquivo, e
+  foi assim que o artefato passou do teto de 16 MB quando os fundos de
+  cidade cresceram. A troca é função, pra barra invertida do CSS não
+  virar referência de grupo.
 - O `artefato.html` é **só o miolo**: o `<meta name="viewport">` e o
   reset (`img{max-width:100%}`, `[hidden]`, body de 14 px) vêm da
   publicação. Aberto solto, o celular desenha a página com 980 px e
@@ -2923,6 +2936,17 @@ Campeão não recebe de novo: a coroação só diz da passagem do norte.
 O pedido foi "deixar no formato de hoje o gráfico", e o modelo é o dos
 jogos de Switch (Sword/Shield, Scarlet/Violet) levado pra arte de pixel
 que o projeto tem:
+
+- **A pele** (`css/pele.css`, a última folha do `index.html`) é o
+  acabamento de tudo: vidro (`backdrop-filter`) por cima do cenário do
+  lugar, raio grande, sombra macia, e o desenho de cada linha numa
+  ficha da cor dele (`--ac`, traço branco), como os ícones de menu de
+  Scarlet/Violet. O `estilo.css` monta (grade, tamanho, estado,
+  animação) e a pele veste: quem muda só a cara de uma coisa muda lá.
+  O cenário da página morava atrás do fundo opaco do body e nunca
+  aparecia; o `body.com-cenario` é contexto de empilhamento
+  (`isolation:isolate`), senão a camada negativa some calada. Desenho
+  novo que abre linha entra no `COR_DO_ICONE` com a cor da ficha dele.
 
 - **Letra**: a interface (fichas da luta, comandos, topo, placas) é
   Jost, embutida em `css/fonte-jogo.css` (OFL, em `fontes/`), pela
@@ -3034,6 +3058,21 @@ dos capítulos, cada nó na cor do tom do capítulo, e o Diário é a ficha
 de agora com a linha do tempo. O fim da jornada (`telaFinal`) usa a
 mesma folha e põe os números em quadros. Janela nova de ler entra nas
 duas listas.
+
+O **Time** é a vaga dos jogos de hoje: cada cartão na cor do tipo do
+Pokémon (`--t1`/`--t2`, postos no cartão pelo `cartaoDoTime`), o ícone
+num disco de luz da mesma cor, o nível numa pílula, o HP numa barra
+grossa com o rótulo, a borda dourada e o selo em quem está na frente,
+e a marca da Pokébola na vaga vazia (`--marca-bola`, um SVG no `:root`
+da pele). O **Sumário** leva as cores dos tipos na janela inteira (o
+`UI.modal` recebe `--t1` e `--t2`): o nome numa pílula entre as setas,
+o palco com a Pokébola em marca d'água, HP e XP com o rótulo na cor, as
+abas num controle de segmentos e os golpes em duas colunas. A aba
+escolhida é a pílula branca com o fio do tipo, não a pílula da cor do
+tipo: letra branca no amarelo do Elétrico não se lê. No celular a
+pílula do nome aperta o resto, senão o nome virava "Chari…". O
+**Centro** tem a faixa vermelha do letreiro com a Pokébola em cima do
+título.
 
 Time, Sumário, Cartão e Ficha têm estrutura própria (o cartão e a ficha
 com a cara de aparelho, na cor do cartão), mas a letra é a do HUD:

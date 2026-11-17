@@ -84,11 +84,12 @@ const TERRENO = {
 /* O fundo da página, atrás do texto: um cenário por lugar do mapa.
    É só ambiente — não muda regra nenhuma. Rota e caverna usam os
    fundos da batalha, mais o campo cercado (Rota 1) e a caverna de gelo
-   das Seafoam; cada cidade tem o panorama dela, com o marco e a cor do
-   nome (ferramentas/desenhar-cidades.py) — antes Viridian, Cerulean,
-   Saffron e Celadon dividiam a mesma rua de tijolo. Cena de capítulo
-   num canto que não é o do mapa (a caverna embaixo de uma cidade) usa
-   o ambiente do capítulo. */
+   das Seafoam; cada cidade tem o mapa dela nos jogos, recortado em
+   volta do marco (ferramentas/recortar-cidades.py): o de HeartGold/
+   SoulSilver, e o de FireRed/LeafGreen em Cinnabar, que em HeartGold/
+   SoulSilver já é a ilha depois da erupção. Cena de capítulo num canto
+   que não é o do mapa (a caverna embaixo de uma cidade) usa o ambiente
+   do capítulo. */
 const CENARIO_POR_LOCAL = {
   pallet:'pallet.png', rota1:'prado.png', viridian:'viridian.png', rota22:'montanha.png',
   rota2:'floresta.png', floresta:'floresta.png', pewter:'pewter.png', rota3:'montanha.png',
@@ -102,12 +103,15 @@ const CENARIO_POR_LOCAL = {
   ilha_sem_nome:'montanha.png'
 };
 /* Onde a placa do lugar recorta a imagem (a altura, de cima pra baixo).
-   Os fundos da batalha mostram a faixa de cima; o panorama da cidade
-   tem o marco no meio, e a placa desce até ele. */
+   Os fundos da batalha mostram a faixa de cima; no mapa da cidade a
+   placa desce até o marco: as casas e o laboratório de Pallet, o
+   ginásio de Viridian, o museu e o ginásio de Pewter, o ginásio e o
+   Centro de Cerulean, o porto de Vermilion, a torre de Lavender, a loja
+   de Celadon, a Silph, o ginásio de Fuchsia e o laboratório de Cinnabar. */
 const FOCO_DO_CENARIO = {
-  'pallet.png':'44%', 'viridian.png':'42%', 'pewter.png':'40%', 'cerulean.png':'44%',
-  'vermilion.png':'48%', 'lavender.png':'36%', 'celadon.png':'32%', 'fuchsia.png':'40%',
-  'saffron.png':'30%', 'cinnabar.png':'38%'
+  'pallet.png':'20%', 'viridian.png':'30%', 'pewter.png':'40%', 'cerulean.png':'65%',
+  'vermilion.png':'50%', 'lavender.png':'70%', 'celadon.png':'30%', 'fuchsia.png':'90%',
+  'saffron.png':'60%', 'cinnabar.png':'57%'
 };
 
 const Arenas = {

@@ -123,7 +123,17 @@ if paletas:
     print(f'shiny animado pela paleta: {len(paletas)} GIFs montados no jogo, {len(animadas)} GIFs inteiros')
 
 def montar(dados, paletas=None):
-    s = re.sub(r'<link rel="stylesheet" href="[^"]+">', '\n'.join(estilos), html)
+    # Os estilos entram uma vez, no lugar do primeiro <link>, e os outros
+    # <link> saem. O re.sub com o texto de troca punha TODOS os estilos no
+    # lugar de CADA <link>: com sete folhas, o CSS ia sete vezes (3 MB a
+    # mais em cada arquivo), e o artefato passou do teto de 16 MB. A troca
+    # é função pra barra invertida do CSS não virar referência de grupo.
+    juntos = '\n'.join(estilos)
+    vez = [0]
+    def troca(m):
+        vez[0] += 1
+        return juntos if vez[0] == 1 else ''
+    s = re.sub(r'<link rel="stylesheet" href="[^"]+">', troca, html)
     s = re.sub(r'<script src="[^"]+"></script>\s*', '', s)
     blocos = list(scripts)
     if paletas:

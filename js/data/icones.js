@@ -227,7 +227,10 @@ const COR_DO_ICONE = {
   seta:'#5aa7ff', voar:'#9fa8ff', alfinete:'#ffd54f', olho:'#90caf9', pergunta:'#8c9eff', dado:'#4dd0e1', chama:'#a77bff', tigela:'#d9a35b',
   salvar:'#64b5f6', carregar:'#81c784', patrulha:'#9fb3c8', sino:'#ffca28', sino_mudo:'#90a4ae',
   /* o pedido de quem tem o seu número, na cor da missão do PokéNav */
-  bandeira:'#4fc3f7'
+  bandeira:'#4fc3f7',
+  /* o alto da tela e as janelas: a Ficha, os Ajustes, a hora, o dinheiro */
+  cartao:'#7e8ce0', engrenagem:'#8d97bd', relogio:'#3aa7c2', moeda:'#d49b12', comprar:'#3d8bfd', vender:'#e8a13a',
+  cura:'#4cc38a', info:'#5aa7ff', alerta:'#f0a53a', mundo:'#4fc3f7', brilho:'#f5c518', exclama:'#f5c518', pokenav:'#43b581'
 };
 
 /* estilo: mais alguma coisa inline (a seta da placa gira por ele) */
