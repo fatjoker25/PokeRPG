@@ -671,7 +671,7 @@ const RIVAIS_EXTRA = [
     return 'cacador';
   },
   arcos:{
-    cacador:{nome:'Caçador', resumo:'Tem paciência e anota o seu rosto.'},
+    cacador:{nome:'Caçador', resumo:'Tem paciência e anota o seu rosto.', nivelExtra:2},
     colega:{nome:'Colega', resumo:'Acha que vocês trabalham pros mesmos, e trata você como igual.',
       pool:[94, 89, 42, 34, 110, 49], ace:24, nivelExtra:4, moral:40},
     cansado:{nome:'Cansado', resumo:'Largou a rede, e ainda não sabe o que fazer com as mãos.',
@@ -682,12 +682,13 @@ const RIVAIS_EXTRA = [
      Cansado, com três na lista, era de graça no 15 e no 19 (de 96% a
      99%). Hoje o Nidoking entra no quarto lugar (do 15 em diante: o 7
      e o 10 ficam como eram) e, da quinta insígnia sua em diante, cada
-     um aprende um golpe de TM. Medido assim (ARCOS=1 no sim-rivais,
-     com e sem MODO=conta): de 54% a 81% no 15 (o Cansado é o mais
-     mole) e de 32% a 48% no 19; o Caçador continua duro desde o 7 (de
-     36% a 43% no 7 e no 10, como era). A lista não tem o Body Slam do
-     torneio: o Gengar trocaria o Night Shade (dados pelo posto, sem
-     defesa) por ele. */
+     um aprende um golpe de TM. Com seis insígnias ele já vem com seis
+     (timeRivalExtra), e o Caçador, que era o arco mais duro do 7 ao 19
+     (de 32% a 43% com +3), vem com +2. Medido assim (ARCOS=1 no
+     sim-rivais, 300 lutas, com e sem MODO=conta): o Caçador de 40% a
+     58% do 7 ao 15 e de 33% a 40% no 19, o Colega de 37% a 54%, e o
+     Cansado, que era de graça no 15 com cinco (de 77% a 81%), de 62% a
+     72%. */
 
   fala:(d, r, arco) => {
     if (arco === 'colega') return [
@@ -981,7 +982,11 @@ function timeRivalExtra(R){
   const comTM = A.golpes && numInsignias() >= INSIGNIAS_PRO_TM_DO_RIVAL && typeof ensinarDoVeterano === 'function';
   const ensina = p => { if (comTM) ensinarDoVeterano(p, A.golpes); return p; };
   const nivel = nivelRivalExtra(R);
-  const qtd = Math.max(2, Math.min(6, 2 + Math.round(numInsignias() * 0.5)));
+  /* o time cresce com as suas insígnias (dois, e mais um a cada duas),
+     e com seis já são seis: com cinco contra os seis que o jogador tem
+     nessa altura, todo rival ficava mole justo na sexta insígnia */
+  const ins = numInsignias();
+  const qtd = Math.max(2, Math.min(6, ins >= 6 ? 6 : 2 + Math.round(ins * 0.5)));
   const time = [];
   /* a linha evolutiva acompanha o nível: nada de Kingler Nv28
      num rival cujo time inteiro está no Nv9. E ninguém leva dois

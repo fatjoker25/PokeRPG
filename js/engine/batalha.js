@@ -1338,7 +1338,13 @@ const Batalha = {
     if (PR.fixo) s = PR.fixo;
     else if (PR.posto || PR.metade) s = DADOS_POR_POSTO[postoDoNivel(p.nivel)] / 2;
     else {
-      const pw = PR.p || Math.max(1, Math.round((G.p || 40) / 25));
+      let pw = PR.p || Math.max(1, Math.round((G.p || 40) / 25));
+      /* Return e Frustration: o poder sai da moral, como na luta (de 0 a
+         5). Com o 1 da tabela, quem tinha Return não usava */
+      if (E.amizade){
+        const am = Math.max(0, Math.min(100, p.moral == null ? 70 : p.moral));
+        pw = Math.round((E.amizade === 'retorno' ? am : 100 - am) / 20);
+      }
       const a = this.valorAtrib(p, estP, this.melhorAtrib(p, estP, PR.d, fis ? 'for' : 'esp'));
       const d = PR.ign ? 0 : this.attr(alvo, estAlvo, fis ? 'vit' : 'ins');
       const parada = a + pw + ((p.tipos || []).includes(G.t) ? 1 : 0) - d;

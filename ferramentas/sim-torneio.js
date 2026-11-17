@@ -13,6 +13,8 @@
          --cada mostra cada inscrito na final, pra achar quem destoa.
          NIVEL=-4,-3,-2,0 EXTRA=0,0,0,0 ERRO=14,12,10,8 SEM_ITEM=1 trocam os
          números da rodada só na medição, pra calibrar antes de mudar.
+         FASE=8 mede só a fase dessas insígnias (a arena fica atrás da
+         guarita das oito: é a que acontece), e SO=cada pula a tabela.
    ============================================================ */
 const fs = require('fs'), vm = require('vm'), path = require('path');
 const raiz = path.resolve(__dirname, '..');
@@ -79,12 +81,13 @@ function lutar(meu, inimigos, rodada){
 }
 
 /* fases da jornada: insígnias, nível do seu time, tamanho, de onde ele vem */
-const FASES = [[1, 16, 3, 'rota3'], [3, 28, 4, 'rota9'], [5, 38, 5, 'rota16'], [6, 44, 6, 'rota23'], [8, 55, 6, 'caminho_vitoria']];
+const FASES = [[1, 16, 3, 'rota3'], [3, 28, 4, 'rota9'], [5, 38, 5, 'rota16'], [6, 44, 6, 'rota23'], [8, 55, 6, 'caminho_vitoria']]
+  .filter(f => !process.env.FASE || process.env.FASE.split(',').map(Number).includes(f[0]));
 const inscritos = RIVAIS_TORNEIO.filter(r => r.linhas);   // o Ezra luta com o time de rival, medido no sim-rivais
 console.log(`${inscritos.length} inscritos com time montado, ${N} lutas por inscrito e rodada`);
 const RODADAS = PREMIO_TORNEIO.map((_, i) => i);
 console.log(`fase (ins/nv/tam) | ${PREMIO_TORNEIO.map(r => r.rodada.toLowerCase()).join(' · ')}   (vitória, caídos) | título   tamanho e nível do inscrito`);
-for (const [ins, nv, tam, loc] of FASES){
+if (process.env.SO !== 'cada') for (const [ins, nv, tam, loc] of FASES){
   d.insignias = INS.slice(0, ins);
   const linha = RODADAS.map(rodada => {
     let v = 0, c = 0, n = 0, amostra = '';

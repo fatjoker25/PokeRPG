@@ -757,19 +757,47 @@ function nivelDeReferencia(){
   return Math.round(tres.reduce((s, n) => s + n, 0) / tres.length);
 }
 
-/* Golpe que só um veterano ensinou: troca o golpe mais fraco do bicho
-   por um da lista do dono, se a espécie aprende por TM. */
+/* A força de um golpe, pra saber qual é o mais fraco: a dos jogos, com
+   o golpe de status valendo 30, menos onde a tabela não diz nada.
+   Night Shade, Seismic Toss e Psywave (dados pelo posto de quem usa,
+   sem defesa) e o Super Fang (a metade do HP do outro) têm força zero
+   na tabela e são dos melhores que o Pokémon tem: eram eles que saíam,
+   e um Gengar trocava o Night Shade por um Body Slam. Return e
+   Frustration valem pela moral. Dano fixo (Dragon Rage, Sonic Boom)
+   e o golpe de um acerto só (Horn Drill, Guillotine) continuam
+   saindo primeiro: no nível dessa gente, tiram pouco ou não acertam. */
+function forcaPraTroca(p, nome){
+  const G = GOLPES[nome] || {}, PR = PR_GOLPE[nome] || {}, E = G.ef || {};
+  if (G.c === 'status') return 30;
+  if (PR.ohko) return 10;
+  if (PR.posto || PR.metade) return 40 + 8 * DADOS_POR_POSTO[postoDoNivel(p.nivel)];
+  if (PR.fixo) return 10 * PR.fixo;
+  if (E.amizade){
+    const am = Math.max(0, Math.min(100, p.moral == null ? 70 : p.moral));
+    return 20 * Math.round((E.amizade === 'retorno' ? am : 100 - am) / 20);
+  }
+  return G.p || 0;
+}
+
+/* Golpe que o dono ensinou: o primeiro da lista dele que a espécie
+   aprende por TM e que é mais forte que o golpe mais fraco que o
+   Pokémon tem, no lugar desse golpe. Um por Pokémon. Golpe de status
+   da lista só entra em quem ainda tem lugar (menos de quatro golpes),
+   e o que não entra não trava a lista: passa pro seguinte (antes o
+   Swords Dance na frente deixava sem golpe de TM quem já sabia
+   quatro). */
 function ensinarDoVeterano(p, lista){
   for (const nome of (lista || [])){
     if (!GOLPES[nome] || p.golpes.some(g => g.nome === nome)) continue;
     const tm = TM_LISTA.find(t => t[2] === nome);
     if (!tm || !(TM_COMPAT[p.dex] || '').split(',').includes(tm[0] + '.' + tm[1])) continue;
-    const forca = g => { const G = GOLPES[g.nome] || {}; return G.c === 'status' ? 30 : (G.p || 0); };
-    if (p.golpes.length < 4){ p.golpes.push({nome, pp:GOLPES[nome].pp, ppMax:GOLPES[nome].pp}); return; }
+    const novo = {nome, pp:GOLPES[nome].pp, ppMax:GOLPES[nome].pp};
+    if (p.golpes.length < 4){ p.golpes.push(novo); return; }
+    if (GOLPES[nome].c === 'status') continue;
     let pior = 0;
-    p.golpes.forEach((g, i) => { if (forca(g) < forca(p.golpes[pior])) pior = i; });
-    if (forca(p.golpes[pior]) >= (GOLPES[nome].p || 0)) return;
-    p.golpes[pior] = {nome, pp:GOLPES[nome].pp, ppMax:GOLPES[nome].pp};
+    p.golpes.forEach((g, i) => { if (forcaPraTroca(p, g.nome) < forcaPraTroca(p, p.golpes[pior].nome)) pior = i; });
+    if (forcaPraTroca(p, p.golpes[pior].nome) >= forcaPraTroca(p, nome)) continue;
+    p.golpes[pior] = novo;
     return;
   }
 }
@@ -1135,8 +1163,8 @@ const SUBIDA_CONFERENCIA = [-1, 0, 1, 2];
    comum quase não vence (os lutadores do Conrad, o gelo do Bryce) vem
    mais baixo, quem cai fácil vem mais alto, e todos pesam parecido */
 const AJUSTE_NA_CONFERENCIA = {
-  conrad:-10, talia:-4, greer:-1, wendell:-3, quinn:10, maxine:10, harlan:2,
-  cv_bryce:-7, cv_sterling:-7, cv_brenna:-8, cv_orson:-4, cv_astrid:-2
+  conrad:-16, talia:-4, greer:-1, wendell:-3, quinn:10, maxine:10, harlan:-6,
+  cv_bryce:-7, cv_sterling:-7, cv_brenna:-8, cv_orson:-10, cv_astrid:-2, cv_cedric:-5
 };
 
 /* Quem só aparece na Conferência: gente de estrada longa que não se

@@ -2610,12 +2610,34 @@ fraco de cada Pokémon por um de TM (`golpes` no rival ou no arco,
 `INSIGNIAS_PRO_TM_DO_RIVAL`, pelo `ensinarDoVeterano` do veterano e do
 torneio). Sem flag, o `sim-rivais` mede só o arco que as flags vazias
 dão (o Ressentido do Rory, o Cansado do Otto); `ARCOS=1` mede todos.
-Assim o Rory fica de 48% a 75% no 12 e de 42% a 58% no 23, e o Otto
-de 54% a 81% no 15 (o Cansado é o mais mole) e de 32% a 48% no 19; o
-Caçador continua duro desde o 7 (de 36% a 43% no 7 e no 10, como
-era). Lista de TM nova confere o que sai: o `ensinarDoVeterano` mede
-pela força dos jogos, e o Night Shade (dados pelo posto, sem defesa)
-conta zero — o Gengar do Otto trocava ele pelo Body Slam do torneio.
+Assim o Rory fica de 48% a 75% no 12 e de 42% a 58% no 23.
+
+**O time do rival extra cresce com as suas insígnias**: dois sem
+nenhuma, mais um a cada duas, e **seis com seis** (`timeRivalExtra`).
+Antes a sexta insígnia ainda dava cinco, contra os seis do jogador, e
+todo rival ficava mole justo ali: o Cansado do Otto era de graça no 15
+(de 77% a 81%). Com seis, e o Caçador com +2 em vez de +3 (era o arco
+mais duro do 7 ao 19, de 32% a 43%), o Otto fica de 40% a 58% do 7 ao
+15 e de 33% a 40% no 19 no Caçador, de 37% a 54% no Colega e de 62% a
+72% no 15 no Cansado; o Nolan do 16 vai de 22% a 29% (de 33% a 46%
+com a conta), mais fácil que o do 22. O Lior e a Diana não passam por
+seis insígnias e ficam como estavam.
+
+**O ensino de TM** (`ensinarDoVeterano`, em `veteranos.js`, o mesmo do
+veterano, do torneio, da Conferência, da prova da rede e dos rivais)
+troca o golpe mais fraco pela conta de `forcaPraTroca`: o poder do
+golpe nos jogos, menos o de dano fixo, que conta pelo que causa (o
+Night Shade, o Seismic Toss e o Super Fang pelos dados do posto,
+`DADOS_POR_POSTO`; o Dragon Rage e o Sonic Boom pelo número; o Return
+e o Frustration pela moral), e o golpe de status de TM só entra em
+vaga vazia. Antes o Night Shade
+contava zero e saía primeiro — o Gengar do Otto trocava ele pelo Body
+Slam do torneio. Uma versão que media cada golpe pela conta de dano
+da IA (`danoEsperado` contra um alvo neutro) mexia em 141 dos 303
+times de nível 60 e jogava fora golpe bom; a de hoje mexe em 29. Mudou
+a conta, mede de novo o torneio, a Conferência e os veteranos
+(`sim-torneio.js`, `sim-veteranos.js --conf`, `SO=cada`) e acerta o
+`ajuste` de quem saiu do lugar.
 Rival novo passa por ali, pelo
 `chk-lutas` (cada arco, nas duas fichas) e pelo `chk-telas` (a estreia,
 a volta depois de passar reto, o placar e o resultado).

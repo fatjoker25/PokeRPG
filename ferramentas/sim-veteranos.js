@@ -9,6 +9,10 @@
    Uso:  node ferramentas/sim-veteranos.js [lutas por caso] [--conf]
          --conf mostra cada um da Conferência (veteranos e convidados)
          nas quatro rodadas, pra achar quem destoa.
+         SO=vet,convite,conf,rede mede só essas partes.
+         ERRO=12 VET=-2 CONF=-3 REDE=-1 trocam o erro da IA e o nível
+         (dos veteranos, da Conferência, das provas da rede) só na
+         medição, pra calibrar antes de mudar o jogo.
    ============================================================ */
 const fs = require('fs'), vm = require('vm'), path = require('path');
 const raiz = path.resolve(__dirname, '..');
@@ -36,6 +40,12 @@ function escolhaJogador(){
 }
 
 const N = +process.argv[2] || 40;
+const SO = (process.env.SO || '').split(',').filter(Boolean);
+const quer = parte => !SO.length || SO.includes(parte);
+const ERRO = process.env.ERRO != null ? +process.env.ERRO : ERRO_IA_VETERANO;
+const REDE = +process.env.REDE || 0;
+if (process.env.VET){ const nv0 = Veteranos.nivel; Veteranos.nivel = function(v, extra){ return nv0.call(this, v, (extra || 0) + (+process.env.VET)); }; }
+if (process.env.CONF) [PISO_CONFERENCIA, SUBIDA_CONFERENCIA].forEach(l => l.forEach((x, i) => { l[i] = x + (+process.env.CONF); }));
 Estado.novo({nome:'Sim', genero:'Mulher', cidade:'Pallet', idade:15, casaNome:'Delia', casaQuem:'mãe'});
 /* DIFICULDADE=facil|dificil mede outra dificuldade da jornada (dificuldade.js); sem ela, Normal */
 if (process.env.DIFICULDADE) Estado.dados.config.dificuldade = process.env.DIFICULDADE;
@@ -68,7 +78,7 @@ function timeJogador(nivel, localId, tam){
 function lutar(meuTime, fazInimigos, tipo){
   d.time = meuTime;
   const inimigos = fazInimigos();
-  Batalha.iniciar(meuTime[0], inimigos[0], {tipo, fuga:false, treinador:'Sim', timeInimigo:inimigos.slice(1), erroIA:ERRO_IA_VETERANO, vontadeIA:true});
+  Batalha.iniciar(meuTime[0], inimigos[0], {tipo, fuga:false, treinador:'Sim', timeInimigo:inimigos.slice(1), erroIA:ERRO, vontadeIA:true});
   let turnos = 0, r;
   while (Batalha.ativo && turnos < 120){
     turnos++;
@@ -95,8 +105,8 @@ function medir(nivel, localId, tam, fazInimigos, tipo){
   return {vit: Math.round(100 * v / N), cai: (cai / N).toFixed(1), amostra};
 }
 
-console.log('veterano  lugar(nv) ins  | +2 de passagem · +6 treinado · +10 preparado   (vitória, caídos)  níveis do veterano no +2');
-for (const v of VETERANOS){
+if (quer('vet')) console.log('veterano  lugar(nv) ins  | +2 de passagem · +6 treinado · +10 preparado   (vitória, caídos)  níveis do veterano no +2');
+if (quer('vet')) for (const v of VETERANOS){
   const L = LOCAIS[v.local];
   const n = Math.max(v.insignias, 0);
   d.insignias = INS.slice(0, n);
@@ -107,8 +117,8 @@ for (const v of VETERANOS){
     res.map(r => `${String(r.vit).padStart(3)}% ${r.cai}`).join(' · ') + `   ${res[0].amostra.join('/')}`);
 }
 
-console.log('\n--- convites (luta), com o jogador no nível do lugar do convite +6 ---');
-for (const v of VETERANOS){
+if (quer('convite')) console.log('\n--- convites (luta), com o jogador no nível do lugar do convite +6 ---');
+if (quer('convite')) for (const v of VETERANOS){
   const c = v.convite;
   if (!c || !c.luta) continue;
   const L = LOCAIS[c.local];
@@ -128,10 +138,10 @@ for (const v of VETERANOS){
 /* a Conferência é a chave de dezesseis: qualquer um dos veteranos dela
    ou dos convidados pode cair em qualquer rodada. --conf mostra cada
    um, rodada a rodada, com o jogador no nível 66, pra achar quem destoa */
-console.log('\n--- Conferência do Planalto Indigo, time de 6, chave de dezesseis ---');
+if (quer('conf')) console.log('\n--- Conferência do Planalto Indigo, time de 6, chave de dezesseis ---');
 d.insignias = INS.slice(0, 8); d.flags.campeao_de_kanto = true;
 const naConferencia = VETERANOS.filter(v => v.conferencia).concat(CONVIDADOS_DA_CONFERENCIA);
-for (const nv of [60, 66, 72]){
+if (quer('conf')) for (const nv of [60, 66, 72]){
   const linha = PREMIO_CONFERENCIA.map((pr, rod) => {
     const r = medir(nv, 'planalto', 6, () =>
       adversarioDaConferencia({id:naConferencia[Dados.entre(0, naConferencia.length - 1)].id}, rod).time);
@@ -150,25 +160,25 @@ if (process.argv.includes('--conf')){
 /* ── a rede (js/story/rede.js): as quatro provas e as brigas de serviço,
    com o jogador no nível da área do capítulo do degrau (+0, +4, +8) e o
    time do tamanho das insígnias que ele teria ali ── */
-console.log('\n--- a rede: provas (área do capítulo do degrau +0 · +4 · +8) ---');
+if (quer('rede')) console.log('\n--- a rede: provas (área do capítulo do degrau +0 · +4 · +8) ---');
 d.flags.campeao_de_kanto = false;
 const areaDoCap = cap => { const c = Historia.capitulo(cap); return (c && c.nivelArea) || 20 + cap * 2; };
-for (const [id, pv] of Object.entries(PROVAS_DA_REDE)){
+if (quer('rede')) for (const [id, pv] of Object.entries(PROVAS_DA_REDE)){
   const e = ESCALOES[pv.escalao - 1];
   const n = Math.min(8, Math.floor(e.cap / 3));
   d.insignias = INS.slice(0, n);
   const tam = Math.min(6, 3 + Math.floor(n / 2));
   const area = areaDoCap(e.cap);
   const faz = () => {
-    const nv = Math.min(85, Math.max(((LOCAIS[pv.local] || {}).nivel || 20) + 2, nivelDeReferencia()) + (pv.acima || 0));
+    const nv = Math.min(85, Math.max(((LOCAIS[pv.local] || {}).nivel || 20) + 2, nivelDeReferencia()) + (pv.acima || 0) + REDE);
     return timeDeLinhas(pv.times, nv, Math.min(pv.tam, pv.times.length), pv.golpes, 90);
   };
   const res = [0, 4, 8].map(dn => medir(area + dn, pv.local, tam, faz));
   console.log(`${pv.nome.padEnd(7)} → ${e.nome.replace(/\{([^|}]*)\|[^}]*\}/, '$1').padEnd(15)} cap ${String(e.cap).padStart(2)} área ${area}  | ` +
     res.map(r => `${String(r.vit).padStart(3)}% ${r.cai}`).join(' · ') + `   ${res[0].amostra.join('/')}`);
 }
-console.log('\n--- a rede: brigas de serviço (área do capítulo do degrau +2) ---');
-for (const s of SERVICOS_DA_REDE) s.escolhas.forEach((esc, i) => [null, 'bom', 'ruim'].forEach(ramo => {
+if (quer('rede')) console.log('\n--- a rede: brigas de serviço (área do capítulo do degrau +2) ---');
+if (quer('rede')) for (const s of SERVICOS_DA_REDE) s.escolhas.forEach((esc, i) => [null, 'bom', 'ruim'].forEach(ramo => {
   const L = ramo ? esc[ramo] && esc[ramo].luta : esc.luta;
   if (!L) return;
   const e = ESCALOES[s.escalao - 1];
