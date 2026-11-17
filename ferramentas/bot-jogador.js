@@ -1667,7 +1667,19 @@ const SUSPEITO = [
           /* porta de ginásio que se achou fechada hoje (o ginásio que é
              seu depois do fim, por exemplo) sai da lista até amanhã */
           X.ginFechado = X.ginFechado || {};
-          if (GINASIOS.some(g => g.id === id) && !afz.includes('ginasio')) X.ginFechado[id] = dia;
+          /* porta que ainda não se achou não é porta fechada: a do ginásio
+             só entra na lista pra quem anda pela cidade (DESCOBERTAS), e a
+             de Viridian (a das sete insígnias) muita gente nunca viu. O
+             conselheiro da quarta rodada achou que ela estava fechada e
+             passou três etapas entre Viridian e a Rota 1, lutando com
+             Pidgey de nível 2 */
+          const gDaqui = GINASIOS.find(g => g.id === id);
+          if (gDaqui && !Mundo.descobriu('ginasio_' + id) && ['disponivel', 'fechado'].includes(statusGinasio(gDaqui).estado) && afz.includes('andar')){
+            X.andouAtras = X.andouAtras || {};
+            const k = id + ':' + dia;
+            if ((X.andouAtras[k] = (X.andouAtras[k] || 0) + 1) <= 12) return {f:'andar'};
+          }
+          if (gDaqui && !afz.includes('ginasio')) X.ginFechado[id] = dia;
           const abertos = GINASIOS.filter(g => ['disponivel', 'fechado'].includes(statusGinasio(g).estado) && X.ginFechado[g.id] !== dia)
             .map(g => ({g, cam:trajeto(id, g.id)})).filter(x => x.cam)
             .sort((a, b) => nivelGinasio(a.g) - nivelGinasio(b.g) || a.cam.length - b.cam.length);

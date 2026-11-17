@@ -203,7 +203,12 @@ function deOnde(l){
         gostos:j.gostos && j.gostos.texto || null, desgostos:j.desgostos && j.desgostos.texto || null,
         nomes:Object.fromEntries([].concat(d.time || [], d.pc || []).map(p => [p.uid, nomeExib(p)])),
         moral:(d.time || []).map(p => p.moral || 0), diario:(d.log || []).map(l => typeof l === 'string' ? l : (l.texto || JSON.stringify(l))),
-        repetidos, esperaPedra, pedrasNaMochila};
+        repetidos, esperaPedra, pedrasNaMochila,
+        /* a agenda: o nome de quem toca e de quem ele grava, pelo id */
+        contatos:Object.fromEntries((typeof todosContatos === 'function' ? todosContatos() : []).map(c => {
+          let n = null; try { n = concordaJogador(typeof c.nome === 'function' ? c.nome(d) : c.nome); } catch (e) {}
+          return [c.id, n];
+        }).filter(([, n]) => n))};
     }, x.ponto.save).catch(e => ({erro:e.message}));
     /* a foto: endereço de arquivo vira imagem embutida */
     if (x.jogo && typeof x.jogo.foto === 'string' && !/^data:/.test(x.jogo.foto)){
@@ -386,8 +391,17 @@ function deOnde(l){
     ${(NOTAS.longasNota || []).map(n => `<p class="nota">${n}</p>`).join('')}</section>`;
 
   /* ---------- a seção de cada robô ---------- */
+  /* o passo a passo é a maior parte da página (noventa mil linhas na
+     quarta rodada, e a publicação tem teto de 16 MB): a linha é <li>
+     com o quando em <i> e o que aconteceu num <span> sem classe, e o
+     dia só aparece quando muda */
+  const TOQUE = {ligacao:'ligação', recado:'recado', pedido:'pedido de favor', prazo:'prazo do pedido', escrita:'chamada', urgente:'ligação urgente'};
+  const hora = p => `${String(p.hora == null ? '?' : p.hora).padStart(2, '0')}h`;
+  let diaAntes = null, agenda = {};
+  const quemNav = id => agenda[id] || String(id).replace(/^rt_/, '');
   const evento = p => {
-    const q = `dia ${num(p.dia)} · ${String(p.hora == null ? '?' : p.hora).padStart(2, '0')}h`;
+    const q = p.dia === diaAntes ? hora(p) : `dia ${num(p.dia)} · ${hora(p)}`;
+    diaAntes = p.dia;
     let cls = 'p-' + p.t, txt = '';
     switch (p.t){
       case 'escolha': txt = `<span class="cena">${esc(p.cena)}</span> ${esc(p.texto)}`; break;
@@ -408,6 +422,11 @@ function deOnde(l){
       case 'rival': txt = `o rival na saída: <b>${esc(p.quem)}</b>`; break;
       case 'linha': txt = `cena da linha: ${esc(p.titulo)}`; break;
       case 'chamada': txt = `atendeu o PokéNav: ${esc(p.resposta)}`; break;
+      /* o toque vem junto com a resposta, quando ela é o passo seguinte */
+      case 'toque': cls = 'p-chamada'; txt = `PokéNav: ${esc(TOQUE[p.tipo] || p.tipo || 'toque')}${p.quem ? ' de ' + esc(quemNav(p.quem)) : ''}${p.silencio ? ' (no silencioso)' : ''}${p.resposta ? ` → ${esc(p.resposta)}` : ''}`; break;
+      case 'pokenav': txt = `PokéNav: ${esc(p.acao || '')} ${esc(p.quem ? quemNav(p.quem) : '')}${p.ok === false ? ' (não deu)' : ''}`; break;
+      case 'numeros': cls = 'p-pokenav'; txt = `gravou ${uma(p.n || 0, 'número', 'números')}: ${esc(String(p.quem || '').split(',').filter(Boolean).map(quemNav).join(', '))}`; break;
+      case 'pedido': cls = 'p-pokenav'; txt = `pedido de favor de ${esc(p.quem ? quemNav(p.quem) : '?')}: ${esc(p.fim || '')}`; break;
       case 'janela': txt = `${esc(p.janela)}: ${esc(p.texto)}`; break;
       case 'evoluiu': txt = `<b>${esc(p.de)}</b> evoluiu para <b>${esc(p.para)}</b> no nível ${p.nivel}`; break;
       case 'tm': txt = `ensinou ${esc(p.nome)} a ${esc(p.quem)}`; break;
@@ -424,11 +443,12 @@ function deOnde(l){
       case 'depois': txt = `continuou pela estrada depois do fim${p.situacao ? ' · ' + esc(p.situacao) : ''}`; break;
       default: txt = esc(JSON.stringify(p).slice(0, 200));
     }
-    return `<li class="${cls}"><span class="quando">${q}</span><span class="o-que">${txt}</span></li>`;
+    return `<li class="${cls}"><i>${q}</i><span>${txt}</span></li>`;
   };
   /* um capítulo por bloco: luta comum seguida no mato vira uma linha, e
      viagem seguida vira um trajeto */
   const passoAPasso = x => {
+    agenda = (x.jogo && x.jogo.contatos) || {};
     /* as linhas "no mapa" (procurar, treinar, curar) contam pouco e pesam
        um oitavo da página: ficam só as que dizem alguma coisa */
     const ps = x.m.ps.filter(p => p.t !== 'luta30' && !(p.t === 'mapa' && !['liga', 'dexnac', 'rede', 'assumir', 'cadastro'].includes(p.f)));
@@ -441,6 +461,7 @@ function deOnde(l){
     blocos.push(atual);
     return blocos.filter(b => b.itens.length || b.cab.num).map(b => {
       const li = [];
+      diaAntes = null;
       for (let i = 0; i < b.itens.length; i++){
         const p = b.itens[i];
         if (p.t === 'luta' && p.tipo === 'selvagem' && !(p.ctx && p.ctx.de === 'história')){
@@ -448,19 +469,23 @@ function deOnde(l){
           while (j < b.itens.length && b.itens[j].t === 'luta' && b.itens[j].tipo === 'selvagem' && !(b.itens[j].ctx && b.itens[j].ctx.de === 'história')){ grupo.push(b.itens[j]); j++; }
           if (grupo.length > 1){
             const c = grupo.filter(g => g.capturou), f = grupo.filter(g => g.res === 'fuga'), d = grupo.filter(g => g.res === 'derrota');
-            li.push(`<li class="p-mato"><span class="quando">dia ${num(p.dia)}–${num(grupo[grupo.length - 1].dia)}</span><span class="o-que">${grupo.length} lutas no mato em ${esc(lugar(p.local))}: ${grupo.length - c.length - f.length - d.length} vitórias${c.length ? `, capturou ${esc(c.map(g => g.capturou).join(', '))}` : ''}${f.length ? `, ${f.length} fugas` : ''}${d.length ? `, ${d.length} derrotas` : ''}</span></li>`);
+            const ate = grupo[grupo.length - 1].dia;
+            li.push(`<li class="p-mato"><i>${ate === p.dia ? (p.dia === diaAntes ? hora(p) : `dia ${num(p.dia)}`) : `dia ${num(p.dia)}–${num(ate)}`}</i><span>${grupo.length} lutas no mato em ${esc(lugar(p.local))}: ${grupo.length - c.length - f.length - d.length} vitórias${c.length ? `, capturou ${esc(c.map(g => g.capturou).join(', '))}` : ''}${f.length ? `, ${f.length} fugas` : ''}${d.length ? `, ${d.length} derrotas` : ''}</span></li>`);
+            diaAntes = ate;
             i = j - 1; continue;
           }
         }
         if (p.t === 'viagem'){
           let j = i; const rota = [p.de];
           while (j < b.itens.length && b.itens[j].t === 'viagem'){ rota.push(b.itens[j].para); j++; }
-          if (rota.length > 2){ li.push(`<li class="p-viagem"><span class="quando">dia ${num(p.dia)}</span><span class="o-que">${rota.map(r => esc(lugar(r))).join(' → ')}</span></li>`); i = j - 1; continue; }
+          if (rota.length > 2){ li.push(`<li class="p-viagem"><i>${p.dia === diaAntes ? hora(p) : `dia ${num(p.dia)}`}</i><span>${rota.map(r => esc(lugar(r))).join(' → ')}</span></li>`); diaAntes = b.itens[j - 1].dia; i = j - 1; continue; }
         }
         if (p.t === 'mapa'){
           let j = i; while (j + 1 < b.itens.length && b.itens[j + 1].t === 'mapa' && b.itens[j + 1].f === p.f) j++;
-          if (j > i){ li.push(`<li class="p-mapa"><span class="quando">dia ${num(p.dia)}</span><span class="o-que">no mapa: ${esc(p.f)}<span class="vezes">×${j - i + 1}</span></span></li>`); i = j; continue; }
+          if (j > i){ li.push(`<li class="p-mapa"><i>${p.dia === diaAntes ? hora(p) : `dia ${num(p.dia)}`}</i><span>no mapa: ${esc(p.f)}<span class="vezes">×${j - i + 1}</span></span></li>`); diaAntes = b.itens[j].dia; i = j; continue; }
         }
+        /* o toque e a resposta do PokéNav numa linha só */
+        if (p.t === 'toque' && b.itens[i + 1] && b.itens[i + 1].t === 'chamada'){ li.push(evento(Object.assign({}, p, {resposta:b.itens[i + 1].resposta}))); i++; continue; }
         li.push(evento(p));
       }
       const c = b.cab, lutas = b.itens.filter(p => p.t === 'luta').length;
