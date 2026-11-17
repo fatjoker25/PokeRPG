@@ -592,7 +592,7 @@ const SUSPEITO = [
   const APELIDOS = ['Faísca', 'Pipoca', 'Brasa', 'Nuvem', 'Pingo', 'Trovão', 'Fubá', 'Cacau', 'Tufão', 'Chuvisco', 'Pedrinha',
     'Ventania', 'Biscoito', 'Cometa', 'Garoa', 'Sereno', 'Tição', 'Graveto', 'Paçoca', 'Tampinha', 'Neblina', 'Farol'];
   const apelidosDados = new Set(await page.evaluate(() => [...Estado.dados.time, ...(Estado.dados.pc || [])].map(p => p.apelido).filter(Boolean)).catch(() => []));
-  let passos = 0, parado = 0, ultima = '', empacou = 0, ultimoRetrato = '', estado = 'pausa', depoisFeito = false;
+  let passos = 0, parado = 0, ultima = '', empacou = 0, ultimoRetrato = '', estado = 'pausa', depoisFeito = false, falhasContinuar = 0;
   /* quem já está depois do fim (etapa retomada) segue nele */
   if (await page.evaluate(() => !!(Estado.dados && Estado.dados.depoisDoFim)).catch(() => false)){ depoisFeito = true; estado = 'depois'; }
   let ultimoMinuto = Date.now(), ultimoMinutoK = '', mesmoMinuto = 0, ultimaAcao = '';
@@ -785,7 +785,33 @@ const SUSPEITO = [
        golpe novo abrem por cima dele: com janela aberta, quem responde é
        ela. Antes o robô clicava no Continuar coberto, esperava 3 s e
        tentava de novo pra sempre (20 minutos na evolução do Caterpie) */
-    if (!(await page.locator('#modal').count()) && await page.locator('.continuar-batalha').count()){ await page.locator('.continuar-batalha').first().click({timeout:3000}).catch(() => {}); await page.waitForTimeout(80); continue; }
+    /* o clique que não pega: três robôs da quarta rodada ficaram meia
+       hora com o Continuar na tela e o clique esbarrando em alguma coisa
+       (o callback ainda armado, nenhuma janela aberta). Na segunda falha
+       seguida ele anota o motivo do Playwright, o que está por cima do
+       botão e a foto da tela, e aperta pelo jogo (UI.continuarBatalha) */
+    if (!(await page.locator('#modal').count()) && await page.locator('.continuar-batalha').count()){
+      const r = await page.locator('.continuar-batalha').first().click({timeout:3000}).then(() => true)
+        .catch(e => String(e.message || e).split('\n').filter(l => /intercepts|visible|viewport|stable|enabled|Timeout/.test(l)).slice(0, 3).join(' | '));
+      if (r === true) falhasContinuar = 0;
+      else if (++falhasContinuar >= 2){
+        falhasContinuar = 0;
+        const diag = await page.evaluate(() => {
+          const b = document.querySelector('.continuar-batalha'), a = document.getElementById('acoes');
+          if (!b) return {sumiu:true};
+          const q = b.getBoundingClientRect(), cs = getComputedStyle(b), em = document.elementFromPoint(q.x + q.width / 2, q.y + q.height / 2);
+          const quem = el => el ? (el.tagName + (el.id ? '#' + el.id : '') + '.' + String(el.className || '').trim().replace(/\s+/g, '.')).slice(0, 80) : null;
+          return {acoes:a ? a.className : null, pe:cs.pointerEvents, vis:cs.visibility, op:cs.opacity, rect:[q.x, q.y, q.width, q.height].map(Math.round),
+            tela:[innerWidth, innerHeight, Math.round(scrollY)], emCima:quem(em), paiDeCima:quem(em && em.parentElement), ao:!!UI._aoContinuar,
+            fim:!!Jogo.fimPendente, enc:!!Jogo.encenando, bola:!!Jogo.animandoBola};
+        }).catch(e => ({erro:e.message}));
+        anota('continuar sem clique', JSON.stringify(Object.assign({motivo:r}, diag)));
+        console.log('CONTINUAR SEM CLIQUE', r, JSON.stringify(diag));
+        await page.screenshot({path:OUT.replace(/\.json$/, '') + '.continuar.png'}).catch(() => {});
+        await page.evaluate(() => UI.continuarBatalha()).catch(() => {});
+      }
+      await page.waitForTimeout(80); continue;
+    }
     if (await page.locator('#modal .evo').count()){
       if (await page.locator('#evo-seguir:visible').count()) await page.locator('#evo-seguir').click({timeout:3000}).catch(() => {}); else await page.waitForTimeout(300);
       continue;
