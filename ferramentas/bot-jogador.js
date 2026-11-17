@@ -210,7 +210,7 @@ const SUSPEITO = [
     if (!achados[k]) console.log('ACHADO', k);
     achados[k] = (achados[k] || 0) + 1; };
   /* cena sem saída o jogo não deixa quebrar: avisa no console */
-  page.on('console', m => { if (m.type() === 'error' && /Cena sem saída/.test(m.text())) console.log('ACHADO', m.text());
+  page.on('console', m => { if (m.type() === 'error' && /Cena sem saída|Continuar retomado/.test(m.text())) console.log('ACHADO', m.text());
     /* luta de ginásio e da Elite saem na hora, pra quem vigia a jogada */
     else if (m.type() === 'info' && /^LUTA /.test(m.text())) console.log(m.text()); });
   page.on('pageerror', e => { const m = e.message + ' @ ' + (e.stack || '').split('\n').slice(1, 3).join(' | ');
@@ -369,6 +369,26 @@ const SUSPEITO = [
     };
     /* quem do cinto (vivo, menos `fora`) já é da linha desse dex */
     window.__daLinha = (dex, fora) => Estado.dados.time.find(x => !x.morto && x.uid !== fora && __linha(x.dex) === __linha(dex)) || null;
+    /* a caixa-preta da janela: quem abriu e quem fechou as últimas, com
+       de onde veio o fechar, e o erro que a cadeia do fim da luta jogou
+       (o robô chama muita coisa por dentro de um evaluate que engole o
+       erro). Dois robôs pararam com o Continuar morto na tela e a
+       janela da evolução fechada sem ninguém ver por quê */
+    if (!UI.__caixaPreta){
+      UI.__caixaPreta = true;
+      const nota = t => { window.__modais = (window.__modais || []).slice(-7); window.__modais.push(t); };
+      const abre = UI.modal, fecha = UI.fecharModal;
+      UI.modal = function(t, h, s, c){ nota('abre ' + (c || '-') + ' ' + String(t || '').slice(0, 24)); return abre.apply(this, arguments); };
+      UI.fecharModal = function(){ const m = document.getElementById('modal');
+        if (m) nota('fecha ' + ((m.querySelector('.modal') || {}).className || '?') + ' ← ' + String(new Error().stack || '').split('\n').slice(2, 5).map(s => s.trim().replace(/^at /, '').replace(/\(file:.*\/js\//, '(')).join(' < '));
+        return fecha.apply(this, arguments); };
+      for (const [o, n] of [[Jogo, 'seguirDoFim'], [Jogo, 'resolverEvolucoes'], [Jogo, 'resolverApelidos'], [Jogo, 'resolverGolpes'], [Jogo, 'finalizarBatalha'], [Jogo, 'darApelido'], [UI, 'responderGolpe']]){
+        const f = o[n]; if (typeof f !== 'function') continue;
+        o[n] = function(){ try { return f.apply(this, arguments); } catch(e){
+          (window.__errosJogo = (window.__errosJogo || []).slice(-4)).push(n + ': ' + e.message + ' @ ' + String(e.stack || '').split('\n').slice(1, 3).map(s => s.trim()).join(' | '));
+          throw e; } };
+      }
+    }
     /* o diário de bordo: um passo por coisa que aconteceu, com capítulo,
        dia, hora e lugar. Passo igual ao anterior (o mesmo afazer no mesmo
        lugar) só soma na conta dele */
@@ -607,6 +627,9 @@ const SUSPEITO = [
         arena:!!document.querySelector('#arena'), acoes:!!document.querySelector('.acoes-combate, #acoes'),
         fase:Batalha.fase, tipo:Batalha.tipo, aliado:Batalha.aliado && (Batalha.aliado.nome + ' ' + Batalha.aliado.hp),
         inimigo:Batalha.inimigo && (Batalha.inimigo.nome + ' ' + Batalha.inimigo.hp), ativo:Batalha.ativo, fimPendente:!!Jogo.fimPendente,
+        aoContinuar:!!UI._aoContinuar, adiada:!!Jogo.chamadaAdiada, apelidar:(Estado.dados.apelidar || []).length,
+        evoPendente:(Estado.dados.time || []).filter(p => p.evoPendente).map(p => p.nome + '→' + p.evoPendente),
+        modais:window.__modais || [], errosJogo:window.__errosJogo || [],
         botoes:[...document.querySelectorAll('#app button, #modal button')].map(b => (b.className.split(' ')[0] || '') + ':' + b.innerText.replace(/\s+/g, ' ').trim().slice(0, 30) + (b.disabled ? '(off)' : '')).slice(0, 30)
       })).catch(e => ({erro:e.message}))), 'ÚLTIMA AÇÃO', ultimaAcao);
     }

@@ -2115,6 +2115,18 @@ Contra treinador a saída é **Desistir** (`Batalha.desistir`, o botão
 com a bandeira branca; texto do jogo é português, nada de "Forfeit"): derrota,
 multa e moral (`MULTA_FORFEIT_POR_NIVEL`, `MORAL_FORFEIT`).
 
+O **Continuar do fim da luta** abre a cadeia `Jogo.seguirDoFim`
+(evoluções, apelidos e o resultado), e o resultado só sai do save
+quando ela chega ao fim (`finalizarBatalha` limpa o `fimPendente`).
+Janela da cadeia que fecha sem responder (outra `UI.modal` por cima, ou
+erro no meio) deixava o botão morto na tela: o `_aoContinuar` já tinha
+sido gasto, e só o recarregar voltava. Dois robôs da quarta rodada
+pararam assim. Hoje o segundo toque, sem janela aberta e com o
+resultado esperando, retoma a cadeia (`UI.continuarBatalha`) e escreve
+`Continuar retomado: …` no console, que o robô anota como achado.
+Janela nova nessa cadeia não pode ser fechada por fora, e quem abre
+`UI.modal` no meio dela precisa esperar (como o `tocarOuGuardar`).
+
 ## O save em arquivo
 O jogo se salva sozinho no navegador (`Estado.salvar`, a cada passo,
 por cima do anterior). O **Salvar** do alto da tela (o disquete, entre

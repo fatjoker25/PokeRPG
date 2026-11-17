@@ -2447,7 +2447,19 @@ const UI = {
   continuarBatalha(){
     const fn = this._aoContinuar;
     this._aoContinuar = null;
-    if (fn) fn();
+    if (fn) return fn();
+    /* o Continuar já foi apertado, e o que vinha depois dele (a evolução,
+       o golpe novo, o apelido) fechou sem chegar ao fim: o resultado
+       ainda espera (Jogo.fimPendente) e o botão ficava morto na tela,
+       com a luta só voltando num recarregar. Dois robôs da quarta rodada
+       pararam assim. Agora ele retoma de onde parou; com janela aberta é
+       o segundo toque do mesmo Continuar, e não faz nada */
+    const fim = typeof Jogo !== 'undefined' && Jogo.fimPendente;
+    if (!fim || document.getElementById('modal') || (typeof Batalha !== 'undefined' && Batalha.ativo)) return;
+    console.error('Continuar retomado: ' + [fim.resultado, Estado.dados.capitulo + ':' + Estado.dados.cena,
+      (Estado.dados.time || []).filter(p => p.evoPendente).map(p => p.nome + '→' + p.evoPendente).join(',') || 'sem evolução',
+      (Estado.dados.apelidar || []).length + ' apelido(s)'].join(' · '));
+    Jogo.seguirDoFim(fim);
   },
 
   /* Recado curto que some sozinho: o que aconteceu fora da batalha

@@ -494,10 +494,14 @@ const Jogo = {
     this.fimPendente = fim;
     Estado.salvar('auto');
     UI.atualizarTopo();
-    UI.mostrarContinuar(() => {
-      if (fim.resultado === 'gameover') return this.finalizarBatalha(fim);
-      this.resolverEvolucoes(() => this.resolverApelidos(() => this.finalizarBatalha(fim)));
-    });
+    UI.mostrarContinuar(() => this.seguirDoFim(fim));
+  },
+  /* o que vem depois do Continuar: as evoluções, os apelidos e o
+     resultado. Dá pra chamar de novo: quem já evoluiu e quem já ganhou
+     nome saíram da fila, e o resultado limpa o fimPendente */
+  seguirDoFim(fim){
+    if (fim.resultado === 'gameover') return this.finalizarBatalha(fim);
+    this.resolverEvolucoes(() => this.resolverApelidos(() => this.finalizarBatalha(fim)));
   },
 
   resumoFimDeBatalha(fim){
