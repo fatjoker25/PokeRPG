@@ -1979,7 +1979,26 @@ const SUSPEITO = [
          virada): com a ligação por cima, o clique esperava 30 s e
          derrubava a jogada. Agora desiste rápido, e a volta seguinte
          atende a janela */
-      await esc.nth(k).click({timeout:3000}).catch(() => {}); await page.waitForTimeout(70); continue;
+      const rc = await esc.nth(k).click({timeout:3000}).then(() => true)
+        .catch(e => String(e.message || e).split('\n').filter(l => /intercepts|visible|viewport|stable|enabled|Timeout|detached/.test(l)).slice(0, 3).join(' | '));
+      /* a opção que não pega: o policial da quarta rodada escolheu "Ir
+         até a mesa da parede" treze vezes seguidas no subsolo de
+         Cinnabar e a cena não andou. Com janela por cima (o PokéNav que
+         toca na virada) a volta seguinte atende a janela; sem ela, anota
+         o motivo e o que está por cima, e aperta pela página */
+      if (rc !== true){
+        const diag = await esc.nth(k).evaluate(el => {
+          const q = el.getBoundingClientRect(), em = document.elementFromPoint(q.x + q.width / 2, q.y + q.height / 2);
+          const quem = x => x ? (x.tagName + (x.id ? '#' + x.id : '') + '.' + String(x.className || '').trim().replace(/\s+/g, '.')).slice(0, 80) : null;
+          return {rect:[q.x, q.y, q.width, q.height].map(Math.round), tela:[innerWidth, innerHeight, Math.round(scrollY)], emCima:quem(em),
+            modal:!!document.querySelector('#modal'), pe:getComputedStyle(el).pointerEvents};
+        }).catch(e => ({erro:e.message}));
+        if (!diag.modal && !diag.erro){
+          anota('opção sem clique', JSON.stringify(Object.assign({motivo:rc, texto:t.slice(0, 40)}, diag)));
+          await esc.nth(k).evaluate(el => el.click()).catch(() => {});
+        }
+      }
+      await page.waitForTimeout(70); continue;
     }
     const outros = page.locator('.painel button.btn:not([disabled]), .painel .escolha:not([disabled])');
     if (await outros.count()){ await outros.first().click({timeout:3000}).catch(() => {}); continue; }
