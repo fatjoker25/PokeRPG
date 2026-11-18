@@ -2347,6 +2347,17 @@ gravar o ponto por cima do último bom. O orquestrador ainda mata quem
 passa vinte minutos do tempo da etapa. `TESTE_TRAVA=s` prende a página
 de propósito, pra conferir o vigia.
 
+Com a página parada e o robô preso, o vigia não tem pilha pra mostrar
+("sem pilha": a pausa do depurador espera um JavaScript que não roda),
+e foi o que voltou na quinta rodada, com o comissao numa luta no
+Planalto. Quem prende assim é uma espera sem prazo do lado do robô (o
+`page.evaluate` não tem tempo limite, e uma função do jogo que devolve
+promessa que nunca se cumpre o segura pra sempre). Hoje toda espera do
+robô na página tem prazo de 60 s: passou dele, o robô pergunta se a
+página responde e, respondendo, desiste da espera e anota qual função
+era (`espera longa`, no alerta); sem resposta, é laço de verdade, e o
+vigia age.
+
 ## O save em arquivo
 O jogo se salva sozinho no navegador (`Estado.salvar`, a cada passo,
 por cima do anterior). O **Salvar** do alto da tela (o disquete, entre
@@ -2707,7 +2718,11 @@ o desconto e o peso da linha sobem junto; quem promove atualiza
   pesquisador, só no capítulo 9), e o da Elite a que concede a cadeira
   (`Cargos.conceder`, na oferta da Conselheira no 26, só quando a
   oferta é a Elite): o da quinta rodada ouviu a oferta e aceitou o
-  contrato de campo.
+  contrato de campo. E o robô não larga o posto que busca numa escolha
+  (`fica`: a opção que chama `Cargos.largar` dele pesa um vigésimo, em
+  capítulo e em cena de linha, que o robô agora também pesa pelo lado
+  da reputação): o da rede, Chefe de turno, disse à mula que tinha
+  entregado tudo à polícia, numa cena de linha do 27, e saiu dela.
 - **Subir** pede confiança, o capítulo do degrau e vencer a **prova**
   (`PROVAS_DA_REDE`: Brant, Juno, Mercer, Corbin, cada um no ponto
   dele), e a prova só aparece com as duas primeiras cumpridas

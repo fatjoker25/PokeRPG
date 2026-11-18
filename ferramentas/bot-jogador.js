@@ -225,6 +225,28 @@ const SUSPEITO = [
   page.on('pageerror', e => { const m = e.message + ' @ ' + (e.stack || '').split('\n').slice(1, 3).join(' | ');
     erros.push(m); console.log('ERRO JS', m.slice(0, 300)); });
   page.on('dialog', d => /Soltar|permanente|Vender|Largar/.test(d.message()) ? d.dismiss() : d.accept());
+  /* espera sem prazo é robô preso: o page.evaluate não tem tempo limite,
+     e uma função do jogo que devolve promessa que nunca se cumpre (uma
+     janela esperando o clique que o robô, esperando, nunca dá) prende a
+     jogada com a página parada. O comissao da quinta rodada travou assim
+     no Planalto, numa luta, e o vigia pausou uma página que não rodava
+     nada ("sem pilha"). Passou de 60 s, o robô pergunta se a página
+     responde: respondendo, a espera desiste, anota qual função era e o
+     laço segue; sem resposta, é laço de verdade, e quem cuida é o vigia */
+  {
+    const ev = page.evaluate.bind(page);
+    page.evaluate = (fn, arg) => {
+      let t;
+      const limite = new Promise((_, rej) => { t = setTimeout(async () => {
+        const viva = await Promise.race([ev(() => 1).then(() => true, () => false), new Promise(r => setTimeout(() => r(false), 5000))]);
+        if (!viva) return;
+        const qual = String(fn).replace(/\s+/g, ' ').slice(0, 160);
+        anota('espera longa', qual);
+        rej(new Error('evaluate passou de 60 s: ' + qual));
+      }, 60000); });
+      return Promise.race([ev(fn, arg), limite]).finally(() => clearTimeout(t));
+    };
+  }
   await page.goto(RAIZ);
   /* o depurador fica ligado desde o começo: com a página presa num laço
      sem fim, o Debugger.enable não é atendido (espera a vez da página),
@@ -2153,11 +2175,15 @@ const SUSPEITO = [
       const lado = (J.rep || J.via) ? await esc.evaluateAll((els, q) => {
         const cena = Historia.cenaAtual || {}, cs = (Historia.capAtual && Historia.capAtual.cenas) || {};
         return els.map(el => {
-          const m = /Jogo\.escolher\((\d+)\)/.exec(el.getAttribute('onclick') || '');
-          const e = m && (cena.escolhas || [])[+m[1]];
+          /* a escolha de capítulo (Jogo.escolher) ou a de cena de linha
+             (Linhas.escolher, que mora em Linhas.atual e não leva a cena) */
+          const on = el.getAttribute('onclick') || '';
+          const m = /Jogo\.escolher\((\d+)\)/.exec(on), ml = /Linhas\.escolher\((\d+)\)/.exec(on);
+          const e = m ? (cena.escolhas || [])[+m[1]]
+            : ml && typeof Linhas !== 'undefined' && Linhas.atual ? (Linhas.atual.escolhas || [])[+ml[1]] : null;
           if (!e) return 1;
           const efs = [e.ef || {}];
-          if (typeof e.vai === 'string' && cs[e.vai] && cs[e.vai].ef) efs.push(cs[e.vai].ef);
+          if (m && typeof e.vai === 'string' && cs[e.vai] && cs[e.vai].ef) efs.push(cs[e.vai].ef);
           let w = 1;
           for (const ef of efs){
             const r = ef.rep;
@@ -2227,6 +2253,26 @@ const SUSPEITO = [
         if (!ds.some(x => x < Infinity)) return [];
         return ds.map(x => x < Infinity ? 1 + 40 * Math.pow(.5, x) : .2);
       }, PORTA_DO_POSTO[CARGO] || {}).catch(() => []) : [];
+      /* o posto que ele quer não se larga numa escolha: a opção que tira o
+         posto dele (Cargos.largar, na escolha ou na cena pra onde ela
+         leva, em capítulo ou em cena de linha) pesa um vigésimo. O robô
+         da rede da quinta rodada, Chefe de turno, disse à mula da rede que
+         tinha entregado tudo à polícia, numa cena de linha do 27, e
+         terminou fora dela */
+      const fica = CARGO ? await esc.evaluateAll((els, cargo) => {
+        const cena = Historia.cenaAtual || {}, cs = (Historia.capAtual && Historia.capAtual.cenas) || {};
+        const larga = ef => !!ef && new RegExp("Cargos\\.largar\\(\\s*['\"]" + cargo + "['\"]").test(String(ef.executar || ''));
+        return els.map(el => {
+          const on = el.getAttribute('onclick') || '';
+          const m = /Jogo\.escolher\((\d+)\)/.exec(on), ml = /Linhas\.escolher\((\d+)\)/.exec(on);
+          const e = m ? (cena.escolhas || [])[+m[1]]
+            : ml && typeof Linhas !== 'undefined' && Linhas.atual ? (Linhas.atual.escolhas || [])[+ml[1]] : null;
+          if (!e) return 1;
+          const efs = [e.ef];
+          if (m && typeof e.vai === 'string' && cs[e.vai]) efs.push(cs[e.vai].ef);
+          return efs.some(larga) ? .05 : 1;
+        });
+      }, CARGO).catch(() => []) : [];
       /* quem usa pedra pega a que a cena dá (a da cratera do Monte da Lua)
          e não devolve à toa: a escolha que dá pedra de evolução pesa três
          vezes, a que tira pesa um terço. A reputação pesa por cima, e o
@@ -2259,7 +2305,7 @@ const SUSPEITO = [
       const precisaCurar = await page.evaluate(() => { const v = Estado.dados.time.filter(p => !p.morto);
         return v.reduce((s, p) => s + Math.max(0, p.hp), 0) / Math.max(1, v.reduce((s, p) => s + p.hpMax, 0)) < .7; }).catch(() => false);
       const pesos = textos.map((t, i) => (J.gosta && J.gosta.test(t) ? 3 : 1) * (/^Parar e olhar mais um pouco/.test(t) ? .5 : 1)
-        * (soFinal[i] && temOutra ? .03 : 1) * (lado[i] || 1) * (pedraNaCena[i] || 1) * (porta[i] || 1)
+        * (soFinal[i] && temOutra ? .03 : 1) * (lado[i] || 1) * (pedraNaCena[i] || 1) * (porta[i] || 1) * (fica[i] || 1)
         * (perdeuAqui >= 2 && /tentar de novo/i.test(t) ? 0 : 1)
         * (/^Ir ao balcão do Centro/.test(t) ? (precisaCurar ? 3 : 0) : 1)
         /* a figura de capuz pede a Pokébola pra completar o que ela deu:
