@@ -104,6 +104,11 @@ const CAPITULO = +(process.env.CAPITULO || 0);
 const SAVE = process.env.SAVE || '';
 const RETOMAR = process.env.RETOMAR || '';
 const CARGO = process.env.CARGO || '';
+/* a marca que abre a porta do posto, quando a porta é uma cena: o
+   envelope da rede só fica no armário pra quem a rede conhece
+   (aRedeConhece, em cargos.js), e o jeito de ela conhecer cedo é
+   carregar carga no Monte da Lua (c5_aceitou) */
+const PORTA_DO_POSTO = {rocket:'trabalhou_rocket'};
 const JEITO = process.env.JEITO || '';
 const RAIZ = 'file://' + path.resolve(__dirname, '..', 'index.html');
 
@@ -2139,6 +2144,44 @@ const SUSPEITO = [
           return w;
         });
       }, {rep:J.rep || null, via:J.via || null}).catch(() => []) : [];
+      /* a porta do posto (PORTA_DO_POSTO): enquanto falta a marca, a
+         escolha que leva mais perto da cena que dá a marca, em passos de
+         cena pelo grafo do capítulo, pesa mais, e a que não leva a ela
+         pesa um quinto. O robô da rede da quinta rodada subiu pela
+         cratera, voltou "sem encostar em nada" e saiu do 5 sem ver a
+         operação: chegou ao 25 com a reputação boa e sem o envelope */
+      const porta = PORTA_DO_POSTO[CARGO] ? await esc.evaluateAll((els, flag) => {
+        if (Estado.dados.flags[flag]) return [];
+        const cena = Historia.cenaAtual || {}, cs = (Historia.capAtual && Historia.capAtual.cenas) || {};
+        const da = ef => { const f = ef && ef.flag; return !!f && (Array.isArray(f) ? f.includes(flag) : f === flag); };
+        const dist = ini => {
+          const vis = new Set([ini]);
+          let fila = [ini];
+          for (let k = 0; fila.length && k <= 12; k++){
+            const prox = [];
+            for (const id of fila){
+              const c = cs[id];
+              if (!c) continue;
+              if (da(c.ef)) return k;
+              for (const e of (c.escolhas || [])){
+                if (da(e.ef)) return k + 1;
+                if (typeof e.vai === 'string' && !vis.has(e.vai)){ vis.add(e.vai); prox.push(e.vai); }
+              }
+            }
+            fila = prox;
+          }
+          return Infinity;
+        };
+        const ds = els.map(el => {
+          const m = /Jogo\.escolher\((\d+)\)/.exec(el.getAttribute('onclick') || '');
+          const e = m && (cena.escolhas || [])[+m[1]];
+          if (!e) return Infinity;
+          if (da(e.ef)) return 0;
+          return typeof e.vai === 'string' ? dist(e.vai) : Infinity;
+        });
+        if (!ds.some(x => x < Infinity)) return [];
+        return ds.map(x => x < Infinity ? 1 + 40 * Math.pow(.5, x) : .2);
+      }, PORTA_DO_POSTO[CARGO]).catch(() => []) : [];
       /* quem usa pedra pega a que a cena dá (a da cratera do Monte da Lua)
          e não devolve à toa: a escolha que dá pedra de evolução pesa três
          vezes, a que tira pesa um terço. A reputação pesa por cima, e o
@@ -2171,7 +2214,7 @@ const SUSPEITO = [
       const precisaCurar = await page.evaluate(() => { const v = Estado.dados.time.filter(p => !p.morto);
         return v.reduce((s, p) => s + Math.max(0, p.hp), 0) / Math.max(1, v.reduce((s, p) => s + p.hpMax, 0)) < .7; }).catch(() => false);
       const pesos = textos.map((t, i) => (J.gosta && J.gosta.test(t) ? 3 : 1) * (/^Parar e olhar mais um pouco/.test(t) ? .5 : 1)
-        * (soFinal[i] && temOutra ? .03 : 1) * (lado[i] || 1) * (pedraNaCena[i] || 1)
+        * (soFinal[i] && temOutra ? .03 : 1) * (lado[i] || 1) * (pedraNaCena[i] || 1) * (porta[i] || 1)
         * (perdeuAqui >= 2 && /tentar de novo/i.test(t) ? 0 : 1)
         * (/^Ir ao balcão do Centro/.test(t) ? (precisaCurar ? 3 : 0) : 1)
         /* a figura de capuz pede a Pokébola pra completar o que ela deu:

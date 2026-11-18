@@ -2684,7 +2684,11 @@ o desconto e o peso da linha sobem junto; quem promove atualiza
   sempre, cada ginásio vale 15 de notícia do lado bom, e o ruim só sobe
   depois de pagar o bom. Na terceira rodada o robô que buscava o
   envelope escolheu o mal sempre que pôde e chegou ao 19 com a
-  reputação boa. O veto com os postos da lei continua.
+  reputação boa. O veto com os postos da lei continua. O robô da rede
+  puxa a cena que dá a marca (`PORTA_DO_POSTO`, no `bot-jogador.js`:
+  a escolha mais perto dela, pelo grafo do capítulo, pesa mais): o da
+  quinta rodada subiu pela cratera do Monte da Lua, saiu do 5 sem ver a
+  operação e chegou ao 25 sem o envelope.
 - **Subir** pede confiança, o capítulo do degrau e vencer a **prova**
   (`PROVAS_DA_REDE`: Brant, Juno, Mercer, Corbin, cada um no ponto
   dele), e a prova só aparece com as duas primeiras cumpridas
