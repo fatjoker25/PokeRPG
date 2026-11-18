@@ -2205,7 +2205,11 @@ const SUSPEITO = [
             modal:!!document.querySelector('#modal'), pe:getComputedStyle(el).pointerEvents};
         }).catch(e => ({erro:e.message}));
         if (!diag.modal && !diag.erro){
-          anota('opção sem clique', JSON.stringify(Object.assign({motivo:rc, texto:t.slice(0, 40)}, diag)));
+          /* o texto e o que está por cima vêm antes do motivo: a anotação
+             corta em 140 caracteres, e o motivo do Playwright, com os
+             códigos de cor do terminal, comia tudo */
+          anota('opção sem clique', JSON.stringify(Object.assign({texto:t.slice(0, 40), emCima:diag.emCima, rect:diag.rect, tela:diag.tela},
+            {motivo:String(rc).replace(/\u001b\[[0-9;]*m/g, '').replace(/\s+/g, ' ').slice(0, 160)})));
           await esc.nth(k).evaluate(el => el.click()).catch(() => {});
         }
       }
