@@ -114,7 +114,9 @@ const RAIZ = 'file://' + path.resolve(__dirname, '..', 'index.html');
    foge   — selvagem quantos níveis acima do Pokémon dele faz ele fugir;
    captura— 'time' (só até ter seis), 'forte' (o que melhora o time),
             'nova' (toda espécie que a Pokédex ainda não tem);
-   lendario — tenta Pokébola em lendário ferido;
+   lendario — quer o lendário: a Master Ball na hora; sem ela, paralisa
+            ou adormece, desce o HP até 1 com o golpe que não derruba e
+            joga Ultra Ball (e leva dez na mochila);
    troca  — põe no cinto o melhor que tem no PC;
    pedra  — compra e usa pedra de evolução (o fiel ao time também: ele não
             troca ninguém, mas evolui quem tem; na terceira rodada o
@@ -907,7 +909,7 @@ const SUSPEITO = [
         /* se a espécie era nova vale pela entrada dela, antes da Pokédex
            apontada catalogar: lida depois, ela nunca era nova, e o robô
            não jogava Pokébola em espécie nova nem em lendário */
-        if (X.lutaUid !== alvo.uid){ X.lutaUid = alvo.uid; X.bolasNaLuta = 0; X.trocasNaLuta = 0; X.turnoDesde = B.turno;
+        if (X.lutaUid !== alvo.uid){ X.lutaUid = alvo.uid; X.bolasNaLuta = 0; X.trocasNaLuta = 0; X.turnoDesde = B.turno; X.condLenda = 0; X.bolasFracas = 0;
           X.novoNaLuta = !((Estado.pdex().catalogados || {})[alvo.dex]); }
         if (B.fase === 'ameaca') return {tipo:'fugirAmeaca'};
         /* a Pokédex na espécie que ainda não catalogou: não gasta o turno,
@@ -924,7 +926,10 @@ const SUSPEITO = [
            mesmos dois em campo, quem joga desiste da luta de treinador e
            foge da selvagem; a troca pra quem acerta, se tiver, vem antes,
            pela regra do banco lá embaixo */
-        const marca = [p.uid, p.hp, alvo.uid, alvo.hp].join('/');
+        /* a Pokébola jogada e a condição tentada contam como andamento:
+           com o lendário a 1 de HP, o HP fica parado enquanto as Ultra
+           Balls voam, e doze turnos assim faziam o robô fugir */
+        const marca = [p.uid, p.hp, alvo.uid, alvo.hp, X.bolasNaLuta || 0, X.condLenda || 0].join('/');
         if (X.marcaLuta !== marca){ X.marcaLuta = marca; X.marcaTurno = B.turno; }
         else if (B.turno - (X.marcaTurno || B.turno) >= 12){
           X.marcaTurno = B.turno;
@@ -998,20 +1003,121 @@ const SUSPEITO = [
           else if (vivos.length < 6) quer = true;
           else if (J.captura === 'nova') quer = novo;
           else if (J.captura === 'forte') quer = valor(alvo) > pior + 3 || (g > 0 && novo);
-          const limite = B.tipo === 'lendario' ? 4 : 6;
-          if (quer && (X.bolasNaLuta || 0) < limite){
-            const lista = B.tipo === 'lendario' ? ['Master Ball', 'Ultra Ball'] : ['Poké Ball', 'Great Ball', 'Ultra Ball'];
-            const tem = lista.filter(n => Estado.contaItem(n) > 0);
-            const ferido = B.tipo === 'lendario' ? alvo.hp <= alvo.hpMax * .25 : alvo.hp <= alvo.hpMax * .5;
+          /* lendário (captura.js): só Ultra e Master, e ele conta no
+             mínimo como Ás, que pede 10 sucessos. A Master fecha sem
+             rolar, então vai na hora. A Ultra tem 8 dados: com metade do
+             HP e mais nada ela não pega nunca; com 1 de HP e uma
+             condição, pega 1 vez em 28, e com a confusão junto, 1 em 7.
+             Então: condição que não tira HP (paralisia, sono), o HP
+             descendo com o golpe que não derruba nem no pior caso, e a
+             Ultra quando a conta passa de 3%. Antes ele esperava os 25%
+             até com a Master na mão, batia forte e passava direto pro
+             nocaute: na quarta rodada, 85 das 152 lutas com lendário
+             acabaram assim, e sete robôs terminaram com a Master guardada */
+          if (B.tipo === 'lendario' && quer){
+            if (Estado.contaItem('Master Ball') > 0){ X.bolasNaLuta = (X.bolasNaLuta || 0) + 1; return {tipo:'bola', nome:'Master Ball'}; }
+            if (Estado.contaItem('Ultra Ball') > 0 && (X.bolasNaLuta || 0) < 15){
+              const estI = B.estInimigo || {};
+              const salva = ((B.lados || {}).inimigo || {}).salva > 0;
+              const usavel = (quem, i) => { const g = quem.golpes[i];
+                return g && !(g.pp <= 0) && !(quem === p && B.estAliado && B.estAliado.desabilitado && B.estAliado.desabilitado.nome === g.nome); };
+              /* o máximo que o golpe tira agora, no pior caso: a conta do
+                 calcularDano com o crítico, o clima e a fraqueza a favor */
+              const maximo = (quem, nome) => {
+                const G = GOLPES[nome] || {}, PR = PR_GOLPE[nome] || {}, E = G.ef || {};
+                if (G.c === 'status') return 0;
+                if (E.soDormindo && alvo.status !== 'sono') return 0;
+                if (E.soSeDormindo && quem.status !== 'sono') return 0;
+                const ef = eficacia(G.t, (alvo.tipos && alvo.tipos.length) ? alvo.tipos : ['Normal']);
+                if (ef === 0) return 0;
+                if (PR.ohko || E.fixo >= 200) return Infinity;
+                if (PR.fixo || E.fixo) return PR.fixo || 1;
+                if (PR.metade) return Math.min(10, Math.max(1, Math.floor(alvo.hp / 2)));
+                if (PR.posto || E.nivel) return DADOS_POR_POSTO[postoDoNivel(quem.nivel)];
+                const fis = G.c === 'fis', eq = quem === p ? B.estAliado : null;
+                const a = B.valorAtrib(quem, eq, B.melhorAtrib(quem, eq, PR.d, fis ? 'for' : 'esp'));
+                let pw = PR.p || Math.max(1, Math.round((G.p || 40) / 25));
+                if (E.amizade) pw = 5;
+                if (E.corte) pw += 4;
+                const seg = typeof efeitoSegurado === 'function' ? efeitoSegurado(quem) : null;
+                const item = seg ? ((fis && seg.fis) || (!fis && seg.esp) || 0) + (seg.golpeTipo === G.t ? (seg.dadosTipo || 0) : 0) : 0;
+                const dv = PR.ign ? 0 : B.attr(alvo, estI, fis ? 'vit' : 'ins');
+                const n = Math.max(0, a + pw + 1 + ((quem.tipos || []).includes(G.t) ? 1 : 0) + 2 + item - dv);
+                const um = Math.max(1, n + Math.max(0, Math.round(Math.log2(ef))));
+                return um * (PR.dupla ? 2 : PR.tripla ? 3 : PR.suc ? 5 : (!PR_GOLPE[nome] && E.golpes) ? E.golpes : 1);
+              };
+              /* o golpe que fere sem poder derrubar, o que mais tira entre
+                 eles. O que prende (Wrap, Clamp, Fire Spin) fica fora: o
+                 dano do fim da rodada vem depois e derruba */
+              const seguro = quem => { let i0 = -1, s0 = -1;
+                quem.golpes.forEach((g, i) => { if (!usavel(quem, i) || ((GOLPES[g.nome] || {}).ef || {}).preso) return;
+                  const m = maximo(quem, g.nome); if (!(m > 0) || m > alvo.hp - 1) return;
+                  const s = B.danoEsperado(quem, alvo, quem === p ? B.estAliado : null, estI, g.nome);
+                  if (s > s0){ s0 = s; i0 = i; } });
+                return i0; };
+              const condicao = (quem, tipos) => quem.golpes.findIndex((g, i) => { const G = GOLPES[g.nome] || {}, E = G.ef || {};
+                return usavel(quem, i) && G.c === 'status' && tipos.includes(E.tipo)
+                  && (E.tipo === 'confusao' ? !(estI.confuso > 0) : B.statusPega(alvo, E.tipo)); });
+              const banco = d.time.filter(x => x.uid !== p.uid && estaVivo(x) && x.hp > x.hpMax * .3);
+              const podeTrocar = (X.trocasNaLuta || 0) < 4 && !(B.estAliado && B.estAliado.presoTurnos);
+              const trocaPor = x => { X.trocasNaLuta = (X.trocasNaLuta || 0) + 1; X.turnoDesde = B.turno; return {tipo:'trocar', uid:x.uid}; };
+              /* 1) a condição que não tira HP; sem ela no campo, quem tem */
+              if (!alvo.status && !salva && X.condLenda < 6){
+                const c = condicao(p, ['paralisia', 'sono']);
+                if (c >= 0){ X.condLenda++; return {tipo:'golpe', indice:c}; }
+                const quem = banco.find(x => condicao(x, ['paralisia', 'sono']) >= 0);
+                if (quem && podeTrocar) return trocaPor(quem);
+              }
+              /* 2) desce até 1 de HP sem derrubar, ou põe quem desce */
+              if (alvo.hp > 1){
+                const i = seguro(p);
+                if (i >= 0) return {tipo:'golpe', indice:i};
+                const quem = banco.find(x => seguro(x) >= 0);
+                if (quem && podeTrocar) return trocaPor(quem);
+              }
+              /* 3) dormindo, a confusão não faz ele tropeçar no próprio golpe */
+              if (alvo.status === 'sono' && !salva && X.condLenda < 8){
+                const c = condicao(p, ['confusao']);
+                if (c >= 0){ X.condLenda++; return {tipo:'golpe', indice:c}; }
+              }
+              /* 4) a conta: 8 dados (o gosto soma ou tira um) mais o bônus
+                 da condição, contra o que o posto pede */
+              const gostoL = typeof gostoNaCaptura === 'function' ? gostoNaCaptura(alvo) : 0;
+              const nd = Math.max(1, SELO_DA_BOLA['Ultra Ball'] + gostoL);
+              const falta = SUCESSOS_DO_POSTO[Math.max(POSTO_MINIMO_LENDARIO, postoDoNivel(alvo.nivel))] - Captura.bonusDaCondicao(alvo, B).n;
+              let chance = 0;
+              for (let k = Math.max(0, falta); k <= nd; k++){ let c = 1; for (let j = 0; j < k; j++) c = c * (nd - j) / (j + 1); chance += c / Math.pow(2, nd); }
+              if (chance >= .03){ X.bolasNaLuta = (X.bolasNaLuta || 0) + 1; return {tipo:'bola', nome:'Ultra Ball'}; }
+              /* 5) nada desce sem risco: o golpe que menos tira, pra ele
+                 sobrar com pouco HP em vez de cair (cair não tira ele do
+                 mapa, mas gasta o encontro) */
+              if (alvo.hp > 1){
+                let i0 = -1, s0 = Infinity;
+                p.golpes.forEach((g, i) => { if (!usavel(p, i) || !(maximo(p, g.nome) > 0) || ((GOLPES[g.nome] || {}).ef || {}).preso) return;
+                  const s = B.danoEsperado(p, alvo, B.estAliado, estI, g.nome); if (s > 0 && s < s0){ s0 = s; i0 = i; } });
+                if (i0 >= 0) return {tipo:'golpe', indice:i0};
+              }
+              /* 6) a chance pequena (1 de HP sem condição é 1 em 256) vale
+                 duas Pokébolas, não a mochila inteira */
+              if (chance > 0 && (X.bolasFracas || 0) < 2){
+                X.bolasFracas = (X.bolasFracas || 0) + 1; X.bolasNaLuta = (X.bolasNaLuta || 0) + 1;
+                return {tipo:'bola', nome:'Ultra Ball'};
+              }
+            }
+            /* sem Pokébola que sirva, ou sem jeito de chegar lá: luta como sempre */
+          }
+          if (quer && B.tipo !== 'lendario' && (X.bolasNaLuta || 0) < 6){
+            const tem = ['Poké Ball', 'Great Ball', 'Ultra Ball'].filter(n => Estado.contaItem(n) > 0);
+            const ferido = alvo.hp <= alvo.hpMax * .5;
             /* time pequeno, ou o selvagem cai no primeiro golpe: joga logo,
                com ele inteiro (uma Poké Ball pega o de nível baixo uma vez
                em três). O Vito, com um Geodude 21, derrubava tudo antes da
                metade do HP e não jogou uma Pokébola sequer */
-            const jaDe = B.tipo !== 'lendario' && (X.bolasNaLuta || 0) < 3 && (vivos.length < 3 || p.nivel >= alvo.nivel + 8);
+            const jaDe = (X.bolasNaLuta || 0) < 3 && (vivos.length < 3 || p.nivel >= alvo.nivel + 8);
             if (tem.length && (ferido || jaDe)){
               /* a mais barata que dá conta do posto dele, senão a melhor que tem */
               const pede = (SUCESSOS_DO_POSTO[postoDoNivel(alvo.nivel)] || 4) - (alvo.hp <= 1 ? 2 : 1) - (alvo.status ? 1 : 0);
-              const nome = B.tipo === 'lendario' ? tem[0] : (tem.find(n => (SELO_DA_BOLA[n] || 0) / 2 >= pede) || tem[tem.length - 1]);
+              const nome = tem.find(n => (SELO_DA_BOLA[n] || 0) / 2 >= pede) || tem[tem.length - 1];
               X.bolasNaLuta = (X.bolasNaLuta || 0) + 1;
               return {tipo:'bola', nome};
             }
@@ -1449,6 +1555,9 @@ const SUSPEITO = [
           if (pot) quero[pot] = J.cura >= .7 ? 6 : 4;
           const bola = melhor(['Ultra Ball', 'Great Ball', 'Poké Ball']);
           if (bola && (J.captura !== 'time' || d.time.length < 6)) quero[bola] = J.bolas || 5;
+          /* quem quer lendário leva Ultra Ball de sobra: com 1 de HP e uma
+             condição, cada uma pega 1 vez em 28 */
+          if (J.lendario && vende('Ultra Ball')) quero['Ultra Ball'] = Math.max(quero['Ultra Ball'] || 0, 10);
           /* Revive custa caro: só com dinheiro sobrando */
           if (vende('Revive') && J.cura >= .6 && d.jogador.dinheiro > 8000) quero['Revive'] = 2;
           /* e só entra se der pra comprar alguma coisa guardando mil pra estrada */
