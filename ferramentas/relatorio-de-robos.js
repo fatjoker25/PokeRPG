@@ -15,8 +15,8 @@
 
    notas.json é o que quem vigiou a rodada escreveu à mão, tudo
    opcional: {titulo, eyebrow, h1, intro:[html], geralTitulo, geral:[html],
-   defeitos:[html], longasNota:[html], robos:{<posto>:{dificuldades:[html],
-   nota:html}}, rodape}.
+   defeitos:[html], longasNota:[html], defesaNota:[html],
+   robos:{<posto>:{dificuldades:[html], nota:html}}, rodape}.
    ============================================================ */
 const fs = require('fs');
 const path = require('path');
@@ -133,6 +133,7 @@ function metricas(x){
     racao:ps.filter(p => p.t === 'racao').length, trocas:ps.filter(p => p.t === 'troca'), pedras:ps.filter(p => p.t === 'pedra'),
     mortes:ps.filter(p => p.t === 'morte'), postos:ps.filter(p => p.t === 'posto'), largou:ps.filter(p => p.t === 'largou'),
     nacional:ps.filter(p => p.t === 'nacional'), fim:ps.filter(p => p.t === 'fim'), depois:ps.filter(p => p.t === 'depois'),
+    defesas:ps.filter(p => p.t === 'luta' && p.ctx && p.ctx.de === 'defesa'),
     rivais:ps.filter(p => p.t === 'rival'), linhas:ps.filter(p => p.t === 'linha')};
 }
 
@@ -204,6 +205,13 @@ function deOnde(l){
         nomes:Object.fromEntries([].concat(d.time || [], d.pc || []).map(p => [p.uid, nomeExib(p)])),
         moral:(d.time || []).map(p => p.moral || 0), diario:(d.log || []).map(l => typeof l === 'string' ? l : (l.texto || JSON.stringify(l))),
         repetidos, esperaPedra, pedrasNaMochila,
+        /* o posto que se defende (defesa.js): o placar do ginásio e da
+           porta, com a cidade do ginásio, e o que a Liga já tirou */
+        defesa:(() => { if (typeof Defesa === 'undefined') return null; const r = Defesa.reg(d);
+          const um = (x, tipo) => x ? {tipo, ginasio:x.ginasio ? cidadeDoGinasio(x.ginasio) : null, porta:x.porta != null ? x.porta + 1 : null,
+            ganhas:x.ganhas || 0, perdidas:x.perdidas || 0, faltas:x.faltas || 0, adv:x.adv || 0, seguidas:x.seguidas || 0, recorde:x.recorde || 0} : null;
+          return {lider:um(r.lider, 'lider'), elite:um(r.elite, 'elite'), perdidos:(r.perdidos || []).map(cidadeDoGinasio), portasPerdidas:(r.portasPerdidas || []).length,
+            teto:typeof FAMA_DA_QUADRA !== 'undefined' ? FAMA_DA_QUADRA.length - 1 : null}; })(),
         /* a agenda: o nome de quem toca e de quem ele grava, pelo id */
         contatos:Object.fromEntries((typeof todosContatos === 'function' ? todosContatos() : []).map(c => {
           let n = null; try { n = concordaJogador(typeof c.nome === 'function' ? c.nome(d) : c.nome); } catch (e) {}
@@ -360,6 +368,33 @@ function deOnde(l){
       <td>${espera.length ? espera.map(e => `${esc(e.nome)} ${e.nivel} <small>(${esc(e.pedra)}${e.noPC ? ', no PC' : ''})</small>`).join('<br>') : '—'}</td>
       <td class="${rep.length ? 'ruim' : 'final'}">${rep.length ? rep.map(v => esc(v.join(' e '))).join('<br>') : '✓ nenhum'}</td></tr>`; }).join('')}
     </tbody></table></div></section>`;
+
+  /* ---------- a defesa do posto ---------- */
+  const comDefesa = robos.filter(x => x.jogo && x.jogo.defesa && (x.jogo.defesa.lider || x.jogo.defesa.elite));
+  const placar = y => y ? `${num(y.ganhas)}–${num(y.perdidas)}${y.faltas ? ` <small>· ${uma(y.faltas, 'falta')}</small>` : ''}` : '—';
+  /* a vitória em cada degrau da fama, das lutas que guardaram o degrau */
+  const porDegrau = {lider:{}, elite:{}};
+  robos.forEach(x => x.m.defesas.forEach(l => { const c = l.ctx || {};
+    if (c.fama == null || !porDegrau[c.tipo]) return;
+    const g = porDegrau[c.tipo][c.fama] = porDegrau[c.tipo][c.fama] || {v:0, n:0};
+    g.n++; if (l.res === 'vitoria') g.v++; }));
+  const tetoFama = (comDefesa.find(x => x.jogo.defesa.teto != null) || {jogo:{defesa:{teto:3}}}).jogo.defesa.teto;
+  const linhaDegrau = tipo => Array.from({length:tetoFama + 1}, (_, k) => { const g = porDegrau[tipo][k];
+    return `<td>${g ? `${pct(g.v, g.n)} <small>(${num(g.v)} de ${num(g.n)})</small>` : '—'}</td>`; }).join('');
+  const comDegrau = Object.values(porDegrau.lider).concat(Object.values(porDegrau.elite)).reduce((s, g) => s + g.n, 0);
+  const blocoDefesa = !comDefesa.length ? '' : `<section class="bloco defesa"><h3>A defesa do posto</h3>
+    <p class="nota">Quem é Líder fica com um ginásio, e quem senta na Elite com uma porta; alguém marca desafio a cada três a seis dias, um de cada vez, com três de prazo, e cada defesa ganha seguida sobe a fama da quadra um degrau (até o ${tetoFama}º): quem marca depois vem mais preparado. Perder, desistir e faltar dão advertência; três tiram o posto. ${uma(comDefesa.length, 'robô defendeu', 'robôs defenderam')} posto nesta rodada.</p>
+    <div class="tabela"><table class="comparar"><thead><tr><th scope="col">Robô</th><th scope="col">Ginásio</th><th scope="col">Placar</th><th scope="col">Recorde</th><th scope="col">Porta</th><th scope="col">Placar</th><th scope="col">Recorde</th><th scope="col">Perdeu</th></tr></thead><tbody>
+    ${comDefesa.map(x => { const df = x.jogo.defesa, L = df.lider, E = df.elite;
+      return `<tr><th scope="row"><a href="#${x.id}">${esc(x.out.ficha.nome)}</a> <small>${esc(x.rotulo)}</small></th>
+      <td>${L ? esc(L.ginasio || '?') : '—'}</td><td>${placar(L)}</td><td>${L ? uma(L.recorde, 'seguida', 'seguidas') : '—'}</td>
+      <td>${E ? esc(E.porta + 'ª') : '—'}</td><td>${placar(E)}</td><td>${E ? uma(E.recorde, 'seguida', 'seguidas') : '—'}</td>
+      <td class="quebra">${[].concat(df.perdidos.map(c => 'o ginásio de ' + esc(c)), df.portasPerdidas ? [uma(df.portasPerdidas, 'porta')] : []).join(', ') || '—'}</td></tr>`; }).join('')}
+    </tbody></table></div>
+    ${comDegrau ? `<h4 class="sub-pc">A vitória em cada degrau da fama <small>${uma(comDegrau, 'luta')} que guardaram o degrau</small></h4>
+    <div class="tabela"><table class="comparar"><thead><tr><th scope="col">Posto</th>${Array.from({length:tetoFama + 1}, (_, k) => `<th scope="col">Degrau ${k}</th>`).join('')}</tr></thead><tbody>
+    <tr><th scope="row">O ginásio</th>${linhaDegrau('lider')}</tr><tr><th scope="row">A porta</th>${linhaDegrau('elite')}</tr></tbody></table></div>` : ''}
+    ${(NOTAS.defesaNota || []).map(n => `<p class="nota">${n}</p>`).join('')}</section>`;
 
   /* ---------- as lutas longas ---------- */
   const longas = [];
@@ -641,6 +676,7 @@ ${css}${extra}</style>
   ${NOTAS.geral ? `<section class="bloco geral"><h3>${esc(NOTAS.geralTitulo || 'O que os quinze mostraram')}</h3><ul>${NOTAS.geral.map(g => `<li>${g}</li>`).join('')}</ul></section>` : ''}
   ${blocoNacional}
   ${blocoPedras}
+  ${blocoDefesa}
   ${blocoLongas}
   ${NOTAS.defeitos ? `<section class="bloco geral"><h3>Defeitos achados e consertados</h3><ul>${NOTAS.defeitos.map(g => `<li>${g}</li>`).join('')}</ul></section>` : ''}
   ${robos.map(secao).join('\n')}
