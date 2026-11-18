@@ -422,8 +422,11 @@ const SUSPEITO = [
       const J = Jogo, d = Estado.dados;
       if (J.ginasioAtual) return {de:'ginásio', nome:'Ginásio de ' + J.ginasioAtual.cidade, lider:J.ginasioAtual.lider, insignia:J.ginasioAtual.insignia, id:J.ginasioAtual.id};
       if (J.eliteAtual != null) return {de:'Liga', nome:J.eliteAtual.campeao ? 'Campeão' : 'Elite, porta ' + ((J.eliteAtual.indice || 0) + 1)};
-      /* o posto que se defende (defesa.js): quem desafiou, e onde */
-      if (J.defesaAtual) return {de:'defesa', nome:J.defesaAtual.tipo === 'elite' ? 'a sua porta da ala' : 'o seu ginásio, ' + J.defesaAtual.ginasio, quem:J.defesaAtual.quem};
+      /* o posto que se defende (defesa.js): quem desafiou, onde e o degrau
+         da fama da quadra em que ele marcou (pro relatório medir a escada) */
+      if (J.defesaAtual){ const x = ((typeof Defesa !== 'undefined' && Defesa.estado(J.defesaAtual.tipo)) || {}).desafio || {};
+        return {de:'defesa', nome:J.defesaAtual.tipo === 'elite' ? 'a sua porta da ala' : 'o seu ginásio, ' + J.defesaAtual.ginasio, quem:J.defesaAtual.quem,
+          tipo:J.defesaAtual.tipo, fama:x.fama != null ? x.fama : null}; }
       if (J.revancheAtual) return {de:'revanche', nome:nomeDe(J.revancheAtual)};
       if (J.conferenciaAtual) return {de:'Conferência', nome:'rodada ' + ((J.conferenciaAtual.rodada || 0) + 1)};
       if (J.torneioAtual) return {de:'Torneio Aberto', nome:'rodada ' + ((J.torneioAtual.rodada || 0) + 1)};
