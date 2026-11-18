@@ -1368,12 +1368,29 @@ const SUSPEITO = [
            o tempo todo, e o investigador da primeira rodada da defesa
            passou noventa e nove dias atravessando Kanto atrás de presente,
            com Viridian a uma rota, até a Liga tirar o ginásio dele */
+        /* a jornada não espera pra sempre: com o capítulo seguinte aberto e
+           DIAS_ATE_SEGUIR dias passados desde o último que fechou, o que é
+           de lado (presente noutra cidade, o passo do favor noutra cidade,
+           procurar espécie nova, a Pokédex Nacional em Pallet) fica pra
+           depois, e a defesa do posto só leva ele de volta quando mais uma
+           falta tira o posto (no lugar dele, defende sempre). A auxiliar
+           da quinta rodada, Líder e Elite ao mesmo tempo, fechou o 27 e
+           passou 120 dias sem chegar ao 28: a cada desafio dava meia-volta
+           pra Viridian ou pro Planalto, e entre um e outro buscava
+           presente e favor do outro lado de Kanto, que não paravam de
+           chegar. "Uma vez por capítulo" não zerava: o capítulo parado no
+           27 era o mesmo */
+        const DIAS_ATE_SEGUIR = 6;
+        const prox = !d.depoisDoFim && Historia.proximoDestino ? Historia.proximoDestino() : null;
+        const fecho = (window.__reg && __reg.caps && __reg.caps.length) ? __reg.caps[__reg.caps.length - 1].dia : null;
+        const jornadaEspera = !!(prox && prox.local && prox.local !== '*' && !travaDoCapitulo(prox.num)
+          && fecho != null && dia - fecho >= DIAS_ATE_SEGUIR && (prox.local === id || trajeto(id, prox.local)));
         if (typeof Defesa !== 'undefined'){
           const df = Defesa.pendente();
           if (df && hp >= .5){
             if (id === df.lugar) return {f:'defender', tipo:df.tipo};
-            const v = ir(df.lugar);
-            if (v) return v;
+            const risco = ((Defesa.estado(df.tipo) || {}).adv || 0) >= ADVERTENCIAS_PRA_PERDER - 1;
+            if (!jornadaEspera || risco){ const v = ir(df.lugar); if (v) return v; }
           }
         }
         /* moral no chão e Ração sobrando: dá na mão (+10 de moral), um por
@@ -1641,7 +1658,7 @@ const SUSPEITO = [
           if (rec) return {f:rec};
           X.recadoIr = X.recadoIr || {};
           const pend = Object.entries(Recados.reg().presentes).find(([cid, pr]) => pr.onde !== id && X.recadoIr[cid] !== d.capitulo);
-          if (pend && hp >= .5){
+          if (pend && hp >= .5 && !jornadaEspera){
             const v = ir(pend[1].onde);
             if (v) return v;
             X.recadoIr[pend[0]] = d.capitulo;
@@ -1691,7 +1708,7 @@ const SUSPEITO = [
           if (pd && Pedidos.pronto(pd)) return {f:'contar_pedido', id:pd.quem};
           X.pedidoIr = X.pedidoIr || {};
           const lugar = Pedidos.proximoLugar(), chave = pd && (pd.quem + ':' + pd.dia);
-          if (lugar && lugar !== id && X.pedidoIr[chave] !== d.capitulo && hp >= .5){
+          if (lugar && lugar !== id && X.pedidoIr[chave] !== d.capitulo && hp >= .5 && !jornadaEspera){
             const v = ir(lugar);
             if (v) return v;
             X.pedidoIr[chave] = d.capitulo;
@@ -1701,7 +1718,7 @@ const SUSPEITO = [
           if (afz.includes('dexnac')) return {f:'dexnac'};
           X.nacCap = X.nacCap || {};
           if (X.nacCap[d.capitulo] === undefined) X.nacCap[d.capitulo] = J.captura === 'nova' || Math.random() < .35;
-          if (X.nacCap[d.capitulo] && hp >= .4){ const v = ir('pallet'); if (v) return v; }
+          if (X.nacCap[d.capitulo] && hp >= .4 && !jornadaEspera){ const v = ir('pallet'); if (v) return v; }
         }
         const ALVO = window.__cargo;
         if (ALVO && typeof Cargos !== 'undefined'){
@@ -1865,7 +1882,7 @@ const SUSPEITO = [
           const pd = Estado.pdex();
           const falta = ENCONTROS[id].some(([dex]) => !(pd.catalogados || {})[dex]);
           const k = 'p' + id + d.capitulo;
-          if (falta && (X[k] || 0) < 6 && Estado.contaItem('Poké Ball') + Estado.contaItem('Great Ball') + Estado.contaItem('Ultra Ball') > 0){
+          if (falta && !jornadaEspera && (X[k] || 0) < 6 && Estado.contaItem('Poké Ball') + Estado.contaItem('Great Ball') + Estado.contaItem('Ultra Ball') > 0){
             X[k] = (X[k] || 0) + 1; return {f:'procurar'};
           }
         }

@@ -2035,7 +2035,13 @@ O robô vai defender quando tem desafio marcado e o time de pé
 (`Defesa.pendente`, o que vence antes primeiro, `{f:'defender'}`), e o
 passo `defesa` vai pro relatório. A defesa vem logo depois de curar e
 do PC na ordem dele: embaixo dos recados ela nunca chegava, porque
-depois do fim recado novo chega o tempo todo. `chk-lutas` roda cada inscrito no seu ginásio e na sua
+depois do fim recado novo chega o tempo todo. Mas a jornada não espera
+pra sempre (`jornadaEspera`, `DIAS_ATE_SEGUIR`): com o capítulo seguinte
+aberto e seis dias desde o último que fechou, presente, favor, espécie
+nova e a Pokédex Nacional ficam pra depois, e a defesa só leva o robô
+de volta quando mais uma falta tira o posto. A auxiliar da quinta
+rodada, Líder e Elite ao mesmo tempo, passou 120 dias entre o 27 e o
+28 dando meia-volta a cada desafio. `chk-lutas` roda cada inscrito no seu ginásio e na sua
 porta, nas duas fichas, ganhando e perdendo; `chk-telas` passa pelo
 sorteio, a mensagem, a quadra, a luta, ganhar, perder até sair do
 posto, a falta, o silencioso, o ex-líder, a porta, a ala que pula, a
