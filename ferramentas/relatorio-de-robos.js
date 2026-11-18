@@ -370,8 +370,13 @@ function deOnde(l){
     </tbody></table></div></section>`;
 
   /* ---------- a defesa do posto ---------- */
-  const comDefesa = robos.filter(x => x.jogo && x.jogo.defesa && (x.jogo.defesa.lider || x.jogo.defesa.elite));
-  const placar = y => y ? `${num(y.ganhas)}–${num(y.perdidas)}${y.faltas ? ` <small>· ${uma(y.faltas, 'falta')}</small>` : ''}` : '—';
+  /* o placar sai do passo a passo inteiro (o registro do posto se perde
+     quando a Liga tira o posto), e entra todo robô que lutou na quadra */
+  const tipoDaDefesa = c => c.tipo || (/porta/.test(c.nome || '') ? 'elite' : 'lider');
+  const placarDe = (x, tipo) => { const l = x.m.defesas.filter(p => tipoDaDefesa(p.ctx || {}) === tipo);
+    return l.length ? {v:l.filter(p => p.res === 'vitoria').length, d:l.filter(p => p.res !== 'vitoria').length} : null; };
+  const comDefesa = robos.filter(x => x.m.defesas.length || (x.jogo && x.jogo.defesa && (x.jogo.defesa.lider || x.jogo.defesa.elite)));
+  const placar = y => y ? `${num(y.v)}–${num(y.d)}` : '—';
   /* a vitória em cada degrau da fama, das lutas que guardaram o degrau */
   const porDegrau = {lider:{}, elite:{}};
   robos.forEach(x => x.m.defesas.forEach(l => { const c = l.ctx || {};
@@ -384,12 +389,14 @@ function deOnde(l){
   const comDegrau = Object.values(porDegrau.lider).concat(Object.values(porDegrau.elite)).reduce((s, g) => s + g.n, 0);
   const blocoDefesa = !comDefesa.length ? '' : `<section class="bloco defesa"><h3>A defesa do posto</h3>
     <p class="nota">Quem é Líder fica com um ginásio, e quem senta na Elite com uma porta; alguém marca desafio a cada três a seis dias, um de cada vez, com três de prazo, e cada defesa ganha seguida sobe a fama da quadra um degrau (até o ${tetoFama}º): quem marca depois vem mais preparado. Perder, desistir e faltar dão advertência; três tiram o posto. ${uma(comDefesa.length, 'robô defendeu', 'robôs defenderam')} posto nesta rodada.</p>
-    <div class="tabela"><table class="comparar"><thead><tr><th scope="col">Robô</th><th scope="col">Ginásio</th><th scope="col">Placar</th><th scope="col">Recorde</th><th scope="col">Porta</th><th scope="col">Placar</th><th scope="col">Recorde</th><th scope="col">Perdeu</th></tr></thead><tbody>
-    ${comDefesa.map(x => { const df = x.jogo.defesa, L = df.lider, E = df.elite;
+    <div class="tabela"><table class="comparar"><thead><tr><th scope="col">Robô</th><th scope="col">Ginásio no fim</th><th scope="col">No ginásio</th><th scope="col">Recorde</th><th scope="col">Porta no fim</th><th scope="col">Na porta</th><th scope="col">Recorde</th><th scope="col">A Liga tirou</th></tr></thead><tbody>
+    ${comDefesa.map(x => { const df = (x.jogo && x.jogo.defesa) || {perdidos:[], portasPerdidas:0}, L = df.lider, E = df.elite;
+      /* o ginásio de mesma cidade perdido mais de uma vez conta junto */
+      const perd = {}; (df.perdidos || []).forEach(c => { perd[c] = (perd[c] || 0) + 1; });
       return `<tr><th scope="row"><a href="#${x.id}">${esc(x.out.ficha.nome)}</a> <small>${esc(x.rotulo)}</small></th>
-      <td>${L ? esc(L.ginasio || '?') : '—'}</td><td>${placar(L)}</td><td>${L ? uma(L.recorde, 'seguida', 'seguidas') : '—'}</td>
-      <td>${E ? esc(E.porta + 'ª') : '—'}</td><td>${placar(E)}</td><td>${E ? uma(E.recorde, 'seguida', 'seguidas') : '—'}</td>
-      <td class="quebra">${[].concat(df.perdidos.map(c => 'o ginásio de ' + esc(c)), df.portasPerdidas ? [uma(df.portasPerdidas, 'porta')] : []).join(', ') || '—'}</td></tr>`; }).join('')}
+      <td>${L ? esc(L.ginasio || '?') : '—'}</td><td>${placar(placarDe(x, 'lider'))}</td><td>${L ? uma(L.recorde, 'seguida', 'seguidas') : '—'}</td>
+      <td>${E ? esc(E.porta + 'ª') : '—'}</td><td>${placar(placarDe(x, 'elite'))}</td><td>${E ? uma(E.recorde, 'seguida', 'seguidas') : '—'}</td>
+      <td class="quebra">${[].concat(Object.entries(perd).map(([c, n]) => 'o ginásio de ' + esc(c) + (n > 1 ? ` (${n}×)` : '')), df.portasPerdidas ? [uma(df.portasPerdidas, 'porta')] : []).join(', ') || '—'}</td></tr>`; }).join('')}
     </tbody></table></div>
     ${comDegrau ? `<h4 class="sub-pc">A vitória em cada degrau da fama <small>${uma(comDegrau, 'luta')} que guardaram o degrau</small></h4>
     <div class="tabela"><table class="comparar"><thead><tr><th scope="col">Posto</th>${Array.from({length:tetoFama + 1}, (_, k) => `<th scope="col">Degrau ${k}</th>`).join('')}</tr></thead><tbody>
