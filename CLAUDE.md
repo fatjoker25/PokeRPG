@@ -2688,7 +2688,9 @@ o desconto e o peso da linha sobem junto; quem promove atualiza
   puxa a cena que dá a marca (`PORTA_DO_POSTO`, no `bot-jogador.js`:
   a escolha mais perto dela, pelo grafo do capítulo, pesa mais): o da
   quinta rodada subiu pela cratera do Monte da Lua, saiu do 5 sem ver a
-  operação e chegou ao 25 sem o envelope.
+  operação e chegou ao 25 sem o envelope. O da comissão puxa, do mesmo
+  jeito, a cena que define a via que o posto pede (herói ou
+  pesquisador, só no capítulo 9).
 - **Subir** pede confiança, o capítulo do degrau e vencer a **prova**
   (`PROVAS_DA_REDE`: Brant, Juno, Mercer, Corbin, cada um no ponto
   dele), e a prova só aparece com as duas primeiras cumpridas

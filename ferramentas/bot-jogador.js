@@ -104,11 +104,12 @@ const CAPITULO = +(process.env.CAPITULO || 0);
 const SAVE = process.env.SAVE || '';
 const RETOMAR = process.env.RETOMAR || '';
 const CARGO = process.env.CARGO || '';
-/* a marca que abre a porta do posto, quando a porta é uma cena: o
-   envelope da rede só fica no armário pra quem a rede conhece
-   (aRedeConhece, em cargos.js), e o jeito de ela conhecer cedo é
-   carregar carga no Monte da Lua (c5_aceitou) */
-const PORTA_DO_POSTO = {rocket:'trabalhou_rocket'};
+/* o que abre a porta do posto, quando a porta é uma cena: o envelope da
+   rede só fica no armário pra quem a rede conhece (aRedeConhece, em
+   cargos.js), e o jeito de ela conhecer cedo é carregar carga no Monte
+   da Lua (c5_aceitou, a flag); a Comissão pede ser conhecido como herói
+   ou pesquisador, e a via só se define no capítulo 9 */
+const PORTA_DO_POSTO = {rocket:{flag:'trabalhou_rocket'}, comissao:{via:['heroi', 'pesquisador']}};
 const JEITO = process.env.JEITO || '';
 const RAIZ = 'file://' + path.resolve(__dirname, '..', 'index.html');
 
@@ -2144,16 +2145,26 @@ const SUSPEITO = [
           return w;
         });
       }, {rep:J.rep || null, via:J.via || null}).catch(() => []) : [];
-      /* a porta do posto (PORTA_DO_POSTO): enquanto falta a marca, a
-         escolha que leva mais perto da cena que dá a marca, em passos de
-         cena pelo grafo do capítulo, pesa mais, e a que não leva a ela
-         pesa um quinto. O robô da rede da quinta rodada subiu pela
-         cratera, voltou "sem encostar em nada" e saiu do 5 sem ver a
-         operação: chegou ao 25 com a reputação boa e sem o envelope */
-      const porta = PORTA_DO_POSTO[CARGO] ? await esc.evaluateAll((els, flag) => {
-        if (Estado.dados.flags[flag]) return [];
+      /* a porta do posto (PORTA_DO_POSTO): enquanto falta a marca (ou a
+         via), a escolha que leva mais perto da cena que dá a marca, em
+         passos de cena pelo grafo do capítulo, pesa mais, e a que não
+         leva a ela pesa um quinto. O robô da rede da quinta rodada subiu
+         pela cratera, voltou "sem encostar em nada" e saiu do 5 sem ver
+         a operação: chegou ao 25 com a reputação boa e sem o envelope. O
+         da comissão atravessou o 9 por quatro cenas, sem nenhuma que
+         define a via, e chegou ao 23 neutro, com o posto fechado */
+      const porta = PORTA_DO_POSTO[CARGO] ? await esc.evaluateAll((els, P) => {
+        const d = Estado.dados;
+        if (P.flag && d.flags[P.flag]) return [];
+        if (P.via && P.via.includes(d.via || 'neutro')) return [];
         const cena = Historia.cenaAtual || {}, cs = (Historia.capAtual && Historia.capAtual.cenas) || {};
-        const da = ef => { const f = ef && ef.flag; return !!f && (Array.isArray(f) ? f.includes(flag) : f === flag); };
+        const da = ef => {
+          if (!ef) return false;
+          const f = ef.flag;
+          if (P.flag && f && (Array.isArray(f) ? f.includes(P.flag) : f === P.flag)) return true;
+          const vm = P.via && /definirVia\(\s*['"](\w+)['"]/.exec(String(ef.executar || ''));
+          return !!(vm && P.via.includes(vm[1]));
+        };
         const dist = ini => {
           const vis = new Set([ini]);
           let fila = [ini];
@@ -2181,7 +2192,7 @@ const SUSPEITO = [
         });
         if (!ds.some(x => x < Infinity)) return [];
         return ds.map(x => x < Infinity ? 1 + 40 * Math.pow(.5, x) : .2);
-      }, PORTA_DO_POSTO[CARGO]).catch(() => []) : [];
+      }, PORTA_DO_POSTO[CARGO] || {}).catch(() => []) : [];
       /* quem usa pedra pega a que a cena dá (a da cratera do Monte da Lua)
          e não devolve à toa: a escolha que dá pedra de evolução pesa três
          vezes, a que tira pesa um terço. A reputação pesa por cima, e o
