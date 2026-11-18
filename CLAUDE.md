@@ -2704,7 +2704,10 @@ o desconto e o peso da linha sobem junto; quem promove atualiza
   quinta rodada subiu pela cratera do Monte da Lua, saiu do 5 sem ver a
   operação e chegou ao 25 sem o envelope. O da comissão puxa, do mesmo
   jeito, a cena que define a via que o posto pede (herói ou
-  pesquisador, só no capítulo 9).
+  pesquisador, só no capítulo 9), e o da Elite a que concede a cadeira
+  (`Cargos.conceder`, na oferta da Conselheira no 26, só quando a
+  oferta é a Elite): o da quinta rodada ouviu a oferta e aceitou o
+  contrato de campo.
 - **Subir** pede confiança, o capítulo do degrau e vencer a **prova**
   (`PROVAS_DA_REDE`: Brant, Juno, Mercer, Corbin, cada um no ponto
   dele), e a prova só aparece com as duas primeiras cumpridas

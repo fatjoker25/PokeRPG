@@ -108,8 +108,9 @@ const CARGO = process.env.CARGO || '';
    rede só fica no armário pra quem a rede conhece (aRedeConhece, em
    cargos.js), e o jeito de ela conhecer cedo é carregar carga no Monte
    da Lua (c5_aceitou, a flag); a Comissão pede ser conhecido como herói
-   ou pesquisador, e a via só se define no capítulo 9 */
-const PORTA_DO_POSTO = {rocket:{flag:'trabalhou_rocket'}, comissao:{via:['heroi', 'pesquisador']}};
+   ou pesquisador, e a via só se define no capítulo 9; a cadeira da Elite
+   sai da oferta da Conselheira no 26 (c21_cargo, Cargos.conceder) */
+const PORTA_DO_POSTO = {rocket:{flag:'trabalhou_rocket'}, comissao:{via:['heroi', 'pesquisador']}, elite:{conceder:'elite'}};
 const JEITO = process.env.JEITO || '';
 const RAIZ = 'file://' + path.resolve(__dirname, '..', 'index.html');
 
@@ -2177,18 +2178,26 @@ const SUSPEITO = [
          pela cratera, voltou "sem encostar em nada" e saiu do 5 sem ver
          a operação: chegou ao 25 com a reputação boa e sem o envelope. O
          da comissão atravessou o 9 por quatro cenas, sem nenhuma que
-         define a via, e chegou ao 23 neutro, com o posto fechado */
+         define a via, e chegou ao 23 neutro, com o posto fechado. O da
+         Elite ouviu a oferta da cadeira no 26 e aceitou o contrato de
+         campo */
       const porta = PORTA_DO_POSTO[CARGO] ? await esc.evaluateAll((els, P) => {
         const d = Estado.dados;
         if (P.flag && d.flags[P.flag]) return [];
         if (P.via && P.via.includes(d.via || 'neutro')) return [];
+        if (P.conceder && Cargos.tem(P.conceder)) return [];
         const cena = Historia.cenaAtual || {}, cs = (Historia.capAtual && Historia.capAtual.cenas) || {};
         const da = ef => {
           if (!ef) return false;
           const f = ef.flag;
           if (P.flag && f && (Array.isArray(f) ? f.includes(P.flag) : f === P.flag)) return true;
-          const vm = P.via && /definirVia\(\s*['"](\w+)['"]/.exec(String(ef.executar || ''));
-          return !!(vm && P.via.includes(vm[1]));
+          const src = String(ef.executar || '');
+          const vm = P.via && /definirVia\(\s*['"](\w+)['"]/.exec(src);
+          if (vm && P.via.includes(vm[1])) return true;
+          /* a cena que dá o posto; se ela depende da oferta do 26, só
+             quando a oferta é a dele */
+          return !!(P.conceder && new RegExp("Cargos\\.conceder\\(\\s*['\"]" + P.conceder + "['\"]").test(src)
+            && (!/c26_oferta/.test(src) || typeof c26_oferta !== 'function' || c26_oferta(d) === P.conceder));
         };
         const dist = ini => {
           const vis = new Set([ini]);
