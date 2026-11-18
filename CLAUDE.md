@@ -1952,7 +1952,9 @@ regras ("O seu ginásio e a sua porta") lê os mesmos números.
   chamado pelo `Cargos.assumir` e pelo `Cargos.conceder`): o ginásio é
   o do final de Viridian se você já tem, Viridian se o Blue foi embora
   no 23 (`recusou_o_ginasio`, `blue_ofereceu_o_ginasio`), ou um dos
-  oito; a porta é uma das três do meio cujo titular não voltou. Vaga
+  oito, menos a cidade que um final fechou pra você (`fecha`, em
+  depois.js): ginásio aonde você não chega é posto perdido na terceira
+  falta. A porta é uma das três do meio cujo titular não voltou. Vaga
   que você perdeu ou largou não volta no sorteio (`perdidos`,
   `portasPerdidas`). A cadeira que a Conselheira oferece no 26 é o
   posto `elite` de verdade (`Cargos.conceder`, no `c21_cargo`), com

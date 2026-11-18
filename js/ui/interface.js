@@ -6888,7 +6888,7 @@ const UI = {
         /* os números moram em defesa.js e liga.js */
         const nv = n => n === 0 ? 'na média dos seus três mais fortes' : n < 0 ? `${-n} abaixo da média dos seus três mais fortes` : `${n} acima da média dos seus três mais fortes`;
         const L = (k, v) => `<div class="linha"><span class="k">${k}</span><span class="v">${v}</span></div>`;
-        return L('O ginásio', 'o posto de Líder dá o ginásio que está vago: no dado entre os oito, ou o que a história já deixou vago · o seu ginásio não se desafia: é a sua quadra, e a porta dele na cidade abre ela')
+        return L('O ginásio', 'o posto de Líder dá o ginásio que está vago: no dado entre os oito, ou o que a história já deixou vago · cidade que ficou fechada pra você não entra no dado · o seu ginásio não se desafia: é a sua quadra, e a porta dele na cidade abre ela')
           + L('A porta', 'a cadeira na Elite dá, no dado, uma das três portas cujo dono não voltou · quem sentava nela sai, e o dono dela não volta mais · na ala, a sua porta se atravessa sem luta')
           + L('Desafio', `alguém marca a cada ${ESPERA_ENTRE_DESAFIOS[0]} a ${ESPERA_ENTRE_DESAFIOS[1]} dias · a secretaria do Planalto avisa pelo PokéNav · quem marcou espera ${PRAZO_DA_DEFESA} dias · capítulo que anda no meio do prazo remarca o prazo`)
           + L('Quem desafia', `gente do Torneio Aberto, e quem você conhece da estrada, com o time e o item dele · no ginásio, ${DEFESAS.lider.tam} Pokémon, o ás ${nv(DEFESAS.lider.nivel)}, errando ${DEFESAS.lider.erroIA}% · na porta, ${DEFESAS.elite.tam} Pokémon, o ás ${nv(DEFESAS.elite.nivel)}, errando ${DEFESAS.elite.erroIA}% · os dois gastam Vontade`)

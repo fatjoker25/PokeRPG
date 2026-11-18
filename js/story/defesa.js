@@ -134,12 +134,16 @@ const Defesa = {
   sortearGinasio(d){
     const r = this.reg(d), x = d.depoisDoFim;
     if (x && x.ginasio && !r.perdeuDoFim) return x.ginasio;
+    /* a cidade que um final fechou pra você (depois.js) não entra:
+       ginásio aonde você não chega é posto perdido na terceira falta */
+    const aberta = g => !(x && x.fecha && x.fecha[g]);
     const fora = r.perdidos || [];
     /* o Blue foi embora no 23 (aceitando ou não ficar com o ginásio
        dele): a vaga que todo mundo sabe que existe é Viridian */
-    if ((d.flags.recusou_o_ginasio || d.flags.blue_ofereceu_o_ginasio) && !fora.includes('viridian')) return 'viridian';
-    const ids = GINASIOS.map(g => g.id).filter(g => !fora.includes(g));
-    return Dados.escolher(ids.length ? ids : GINASIOS.map(g => g.id));
+    if ((d.flags.recusou_o_ginasio || d.flags.blue_ofereceu_o_ginasio) && !fora.includes('viridian') && aberta('viridian')) return 'viridian';
+    const todos = GINASIOS.map(g => g.id).filter(aberta);
+    const ids = todos.filter(g => !fora.includes(g));
+    return Dados.escolher(ids.length ? ids : todos.length ? todos : GINASIOS.map(g => g.id));
   },
   /* as três do meio cujo dono não voltou (a do Lance nunca ficou vaga) */
   portasVagas(d){
