@@ -260,7 +260,14 @@ const Defesa = {
         if (dia > r.desafio.ate) this.falta(tipo);
         continue;
       }
-      if (dia >= r.proximo) this.marcar(tipo);
+      if (dia >= r.proximo){
+        /* com o ginásio e a porta, um desafio de cada vez: o segundo
+           espera o primeiro acabar, senão os dois prazos caíam juntos, um
+           em Vermilion e outro no Planalto, e um deles virava falta */
+        const outro = this.reg(d)[tipo === 'lider' ? 'elite' : 'lider'];
+        if (outro && outro.desafio){ r.proximo = outro.desafio.ate + 1; continue; }
+        this.marcar(tipo);
+      }
     }
   },
 
@@ -392,13 +399,12 @@ const Defesa = {
     if (id === 'elite'){ const p = this.minhaPorta(); return p != null ? `${cap1(ORDINAL_DA_PORTA[p])} porta da ala` : null; }
     return null;
   },
-  /* quem tem desafio marcado, e onde (o robô vai atrás) */
+  /* quem tem desafio marcado, e onde (o robô vai atrás): o que vence
+     antes primeiro */
   pendente(){
-    for (const tipo of ['lider', 'elite']){
-      const r = this.estado(tipo);
-      if (r && r.desafio) return {tipo, lugar:tipo === 'lider' ? r.ginasio : 'planalto'};
-    }
-    return null;
+    const l = ['lider', 'elite'].map(tipo => ({tipo, r:this.estado(tipo)})).filter(x => x.r && x.r.desafio)
+      .sort((a, b) => a.r.desafio.ate - b.r.desafio.ate);
+    return l.length ? {tipo:l[0].tipo, lugar:l[0].tipo === 'lider' ? l[0].r.ginasio : 'planalto', ate:l[0].r.desafio.ate} : null;
   },
 
   tela(tipo, avisos){

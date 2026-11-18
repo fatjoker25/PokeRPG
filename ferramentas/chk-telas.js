@@ -735,6 +735,14 @@ const SUSPEITO = [
       if (Som.tipoDeLuta() !== 'elite') falhas.push('a defesa da porta não toca a faixa da Elite');
       fim('derrota');
       if (Defesa.reg().elite.adv !== 1) falhas.push('perder na porta não deu advertência');
+      /* um desafio de cada vez: com o ginásio desafiado, a porta espera
+         o prazo dele, e o robô vai ao que vence antes */
+      if (!Defesa.reg().lider.desafio){ Defesa.marcar('lider'); await dorme(150); UI.fecharModal(true); Jogo.chamadaAdiada = null; }
+      Defesa.reg().elite.desafio = null; Defesa.reg().elite.proximo = d.relogio.dia;
+      d.relogio.periodo = 'manha'; Exploracao.tela(); await dorme(250); UI.fecharModal(true); Jogo.chamadaAdiada = null;
+      if (Defesa.reg().elite.desafio) falhas.push('a porta foi desafiada com o ginásio já desafiado');
+      else if (Defesa.reg().elite.proximo <= Defesa.reg().lider.desafio.ate) falhas.push('a porta não ficou pra depois do prazo do ginásio');
+      if ((Defesa.pendente() || {}).tipo !== 'lider') falhas.push('o pendente não é o desafio marcado');
       /* a oferta do 26 dá a porta de verdade */
       Cargos.largar('elite'); d.defesa.portasPerdidas = []; d.flags.c26_oferta = 'elite';
       Historia.capitulo(26).cenas.c21_cargo.ef.executar(d);

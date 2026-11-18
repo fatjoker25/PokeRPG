@@ -1350,6 +1350,21 @@ const SUSPEITO = [
             if (sobe && valor(sobe) > valor(pior) + 3) return {f:'pc', guardar:pior.uid, tirar:sobe.uid};
           }
         }
+        /* o posto que se defende (defesa.js): desafio marcado no ginásio
+           ou na porta da ala tem prazo, então vem logo depois de curar e
+           do PC, antes de compra, troca, presente e recado. Lá embaixo
+           dos recados ele nunca chegava: depois do fim recado novo chega
+           o tempo todo, e o investigador da primeira rodada da defesa
+           passou noventa e nove dias atravessando Kanto atrás de presente,
+           com Viridian a uma rota, até a Liga tirar o ginásio dele */
+        if (typeof Defesa !== 'undefined'){
+          const df = Defesa.pendente();
+          if (df && hp >= .5){
+            if (id === df.lugar) return {f:'defender', tipo:df.tipo};
+            const v = ir(df.lugar);
+            if (v) return v;
+          }
+        }
         /* moral no chão e Ração sobrando: dá na mão (+10 de moral), um por
            dia cada, guardando duas pro time comer sozinho. O Vito andou o
            capítulo 16 inteiro com o time em moral 0, faminto, ignorando
@@ -1653,16 +1668,6 @@ const SUSPEITO = [
                 .sort((a, b) => Recados.afinidade(a) - Recados.afinidade(b))[0];
               if (alvo) return {f:'conversar', id:alvo.id};
             }
-          }
-        }
-        /* o posto que se defende (defesa.js): desafio marcado no ginásio
-           ou na porta da ala, ele vai até lá e luta, com o time em pé */
-        if (typeof Defesa !== 'undefined'){
-          const df = Defesa.pendente();
-          if (df && hp >= .5){
-            if (id === df.lugar) return {f:'defender', tipo:df.tipo};
-            const v = ir(df.lugar);
-            if (v) return v;
           }
         }
         /* o pedido aceito (pedidos.js): o passo que é aqui, ele faz; o

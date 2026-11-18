@@ -1990,7 +1990,11 @@ regras ("O seu ginásio e a sua porta") lê os mesmos números.
   `recados:'defesa'`, pelo `tocarOuGuardar`: espera a luta e a
   madrugada, e no silencioso vira mensagem por ler. Capítulo que anda
   no meio do prazo remarca o prazo (`desafio.cap`, por
-  `capNaJornada`): a história te levou, e isso não é falta.
+  `capNaJornada`): a história te levou, e isso não é falta. Com o
+  ginásio e a porta, um desafio de cada vez: o segundo espera o
+  primeiro acabar (`proximo` depois do `ate` do outro). Os dois prazos
+  caíam juntos, um em Vermilion e outro no Planalto, e o conselheiro
+  da primeira rodada da defesa perdeu a porta assim.
 - **Quem desafia** sai dos inscritos do Torneio Aberto
   (`sortearDesafiante`, sem repetir os três últimos), com as linhas, os
   golpes e o item dele, mas no tamanho e no nível da defesa
@@ -2011,8 +2015,10 @@ regras ("O seu ginásio e a sua porta") lê os mesmos números.
   quadra cura o time depois, ganhando ou perdendo.
 
 O robô vai defender quando tem desafio marcado e o time de pé
-(`Defesa.pendente`, `{f:'defender'}`), e o passo `defesa` vai pro
-relatório. `chk-lutas` roda cada inscrito no seu ginásio e na sua
+(`Defesa.pendente`, o que vence antes primeiro, `{f:'defender'}`), e o
+passo `defesa` vai pro relatório. A defesa vem logo depois de curar e
+do PC na ordem dele: embaixo dos recados ela nunca chegava, porque
+depois do fim recado novo chega o tempo todo. `chk-lutas` roda cada inscrito no seu ginásio e na sua
 porta, nas duas fichas, ganhando e perdendo; `chk-telas` passa pelo
 sorteio, a mensagem, a quadra, a luta, ganhar, perder até sair do
 posto, a falta, o silencioso, o ex-líder, a porta, a ala que pula, a

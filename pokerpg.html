@@ -113955,7 +113955,14 @@ const Defesa = {
         if (dia > r.desafio.ate) this.falta(tipo);
         continue;
       }
-      if (dia >= r.proximo) this.marcar(tipo);
+      if (dia >= r.proximo){
+        /* com o ginásio e a porta, um desafio de cada vez: o segundo
+           espera o primeiro acabar, senão os dois prazos caíam juntos, um
+           em Vermilion e outro no Planalto, e um deles virava falta */
+        const outro = this.reg(d)[tipo === 'lider' ? 'elite' : 'lider'];
+        if (outro && outro.desafio){ r.proximo = outro.desafio.ate + 1; continue; }
+        this.marcar(tipo);
+      }
     }
   },
 
@@ -114087,13 +114094,12 @@ const Defesa = {
     if (id === 'elite'){ const p = this.minhaPorta(); return p != null ? `${cap1(ORDINAL_DA_PORTA[p])} porta da ala` : null; }
     return null;
   },
-  /* quem tem desafio marcado, e onde (o robô vai atrás) */
+  /* quem tem desafio marcado, e onde (o robô vai atrás): o que vence
+     antes primeiro */
   pendente(){
-    for (const tipo of ['lider', 'elite']){
-      const r = this.estado(tipo);
-      if (r && r.desafio) return {tipo, lugar:tipo === 'lider' ? r.ginasio : 'planalto'};
-    }
-    return null;
+    const l = ['lider', 'elite'].map(tipo => ({tipo, r:this.estado(tipo)})).filter(x => x.r && x.r.desafio)
+      .sort((a, b) => a.r.desafio.ate - b.r.desafio.ate);
+    return l.length ? {tipo:l[0].tipo, lugar:l[0].tipo === 'lider' ? l[0].r.ginasio : 'planalto', ate:l[0].r.desafio.ate} : null;
   },
 
   tela(tipo, avisos){
@@ -122309,7 +122315,7 @@ const UI = {
         const L = (k, v) => `<div class="linha"><span class="k">${k}</span><span class="v">${v}</span></div>`;
         return L('O ginásio', 'o posto de Líder dá o ginásio que está vago: no dado entre os oito, ou o que a história já deixou vago · cidade que ficou fechada pra você não entra no dado · o seu ginásio não se desafia: é a sua quadra, e a porta dele na cidade abre ela')
           + L('A porta', 'a cadeira na Elite dá, no dado, uma das três portas cujo dono não voltou · quem sentava nela sai, e o dono dela não volta mais · na ala, a sua porta se atravessa sem luta')
-          + L('Desafio', `alguém marca a cada ${ESPERA_ENTRE_DESAFIOS[0]} a ${ESPERA_ENTRE_DESAFIOS[1]} dias · a secretaria do Planalto avisa pelo PokéNav · quem marcou espera ${PRAZO_DA_DEFESA} dias · capítulo que anda no meio do prazo remarca o prazo`)
+          + L('Desafio', `alguém marca a cada ${ESPERA_ENTRE_DESAFIOS[0]} a ${ESPERA_ENTRE_DESAFIOS[1]} dias · a secretaria do Planalto avisa pelo PokéNav · quem marcou espera ${PRAZO_DA_DEFESA} dias · capítulo que anda no meio do prazo remarca o prazo · com o ginásio e a porta, um desafio de cada vez: o segundo espera o primeiro acabar`)
           + L('Quem desafia', `gente do Torneio Aberto, e quem você conhece da estrada, com o time e o item dele · no ginásio, ${DEFESAS.lider.tam} Pokémon, o ás ${nv(DEFESAS.lider.nivel)}, errando ${DEFESAS.lider.erroIA}% · na porta, ${DEFESAS.elite.tam} Pokémon, o ás ${nv(DEFESAS.elite.nivel)}, errando ${DEFESAS.elite.erroIA}% · os dois gastam Vontade`)
           + L('Ganhou', `${fmtDin(DEFESAS.lider.bonus)} ₽ no ginásio, ${fmtDin(DEFESAS.elite.bonus)} ₽ na porta · uma advertência a menos`)
           + L('Perdeu, desistiu ou faltou', 'uma advertência · faltar é a insígnia, ou a passagem, sem luta')
