@@ -39,8 +39,8 @@ const PRESENTE_DA_CIDADE_ESPERA_DIAS = 14;     // o mesmo morador dá de novo s�
 /* O que a pessoa separa pra você, pela afinidade: vale o primeiro degrau
    que cabe, de cima pra baixo. Cada item é [nome, quantidade, peso]. */
 const PRESENTES_POR_AFINIDADE = [
-  {min:8, nome:'de confiança', itens:[['Pedra do Sol', 1, 2], ['Moon Stone', 1, 2], ['PP Up', 1, 2], ['Elixir', 2, 2], ['Revive', 2, 2], ['Ultra Ball', 3, 2]]},
-  {min:5, nome:'próximo', itens:[['Hyper Potion', 2, 3], ['Ultra Ball', 2, 3], ['Revive', 1, 2], ['Moon Stone', 1, 1],
+  {min:8, nome:'de confiança', itens:[['Pedra do Sol', 1, 2], ['Moon Stone', 1, 2], ['PP Up', 1, 2], ['Elixir', 2, 2], ['Revive', 2, 2], ['Max Revive', 1, 1], ['Ultra Ball', 3, 2]]},
+  {min:5, nome:'próximo', itens:[['Hyper Potion', 2, 3], ['Max Potion', 1, 1], ['Ultra Ball', 2, 3], ['Revive', 1, 2], ['Moon Stone', 1, 1],
     ['Pedra do Fogo', 1, 1], ['Pedra da Água', 1, 1], ['Pedra do Trovão', 1, 1], ['Pedra da Folha', 1, 1]]},
   {min:3, nome:'amigo', itens:[['Super Potion', 2, 3], ['Great Ball', 3, 3], ['Repelente', 2, 2], ['Full Heal', 2, 2], ['Éter', 1, 1], ['Ração', 4, 2]]},
   {min:1, nome:'conhecido', itens:[['Potion', 2, 3], ['Poké Ball', 3, 3], ['Ração', 2, 3], ['Antidote', 2, 2], ['Água Fresca', 2, 1]]}

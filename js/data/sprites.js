@@ -188,7 +188,8 @@ const ITEM_SPRITE = {
   'Ultra Ball':'ultraball', 'Master Ball':'masterball',
   /* cura */
   'Potion':'potion', 'Super Potion':'super_potion', 'Hyper Potion':'hyper_potion',
-  'Revive':'revive', 'Água Fresca':'fresh_water',
+  'Max Potion':'max_potion', 'Full Restore':'full_restore',
+  'Revive':'revive', 'Max Revive':'max_revive', 'Água Fresca':'fresh_water',
   'Éter':'ether', 'Elixir':'elixir',
   /* status */
   'Antidote':'antidote', 'Full Heal':'full_heal',

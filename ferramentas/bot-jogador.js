@@ -777,13 +777,14 @@ const SUSPEITO = [
       const usa = (n, p) => { UI.aplicarItemFora(n, p.uid); UI.fecharModal(true); usados.push(n); };
       for (const p of Estado.dados.time){
         if (p.morto) continue;
-        if (p.hp <= 0 && tem('Revive')) usa('Revive', p);
+        /* o Max Revive levanta inteiro: é aqui, entre as portas, que ele vale */
+        if (p.hp <= 0){ const r = ['Max Revive', 'Revive'].find(tem); if (r) usa(r, p); }
         if (p.hp > 0 && p.status){
-          const s = tem('Full Heal') ? 'Full Heal' : (p.status === 'veneno' && tem('Antidote')) ? 'Antidote' : null;
+          const s = tem('Full Heal') ? 'Full Heal' : (p.status === 'veneno' && tem('Antidote')) ? 'Antidote' : tem('Full Restore') ? 'Full Restore' : null;
           if (s) usa(s, p);
         }
         for (let v = 0; v < 6 && p.hp > 0 && p.hp < p.hpMax * 0.6; v++){
-          const pot = ['Hyper Potion', 'Super Potion', 'Potion'].find(tem);
+          const pot = ['Hyper Potion', 'Max Potion', 'Full Restore', 'Super Potion', 'Potion'].find(tem);
           if (!pot) break;
           usa(pot, p);
         }
@@ -1017,7 +1018,9 @@ const SUSPEITO = [
           }
         }
         /* cura quem está quase caindo */
-        const pot = ['Hyper Potion', 'Super Potion', 'Potion'].find(n => Estado.contaItem(n) > 0);
+        /* com condição, o Full Restore resolve as duas coisas de uma vez */
+        const pot = (p.status && Estado.contaItem('Full Restore') > 0) ? 'Full Restore'
+          : ['Hyper Potion', 'Max Potion', 'Full Restore', 'Super Potion', 'Potion'].find(n => Estado.contaItem(n) > 0);
         if (pot && p.hp <= p.hpMax * 0.25 && p.hp > 0) return {tipo:'item', nome:pot, alvoUid:p.uid};
         /* Vontade: com pouco HP, esquiva o próximo golpe */
         if (p.hp <= p.hpMax * 0.5 && vontadeDe(p) >= 2 && B.podeGastarVontade('esquiva')) B.gastarVontade('esquiva');
@@ -1442,7 +1445,7 @@ const SUSPEITO = [
           }
           if (vende('Ração')) quero['Ração'] = J.racao || 3;
           const melhor = lista => lista.find(vende);
-          const pot = melhor(['Hyper Potion', 'Super Potion', 'Potion']);
+          const pot = melhor(['Hyper Potion', 'Max Potion', 'Super Potion', 'Potion']);
           if (pot) quero[pot] = J.cura >= .7 ? 6 : 4;
           const bola = melhor(['Ultra Ball', 'Great Ball', 'Poké Ball']);
           if (bola && (J.captura !== 'time' || d.time.length < 6)) quero[bola] = J.bolas || 5;

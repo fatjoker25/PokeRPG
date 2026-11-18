@@ -1153,7 +1153,7 @@ const PREMIO_CONFERENCIA = [
   {rodada:'Oitavas',   dinheiro:6000,  rep:0, itens:{'Hyper Potion':2}},
   {rodada:'Quartas',   dinheiro:12000, rep:1, itens:{'Hyper Potion':3}},
   {rodada:'Semifinal', dinheiro:25000, rep:1, itens:{'Full Heal':3, 'Revive':2}},
-  {rodada:'Final',     dinheiro:60000, rep:3, itens:{'PP Up':3, 'Elixir':2}}
+  {rodada:'Final',     dinheiro:60000, rep:3, itens:{'PP Up':3, 'Elixir':2, 'Max Revive':2}}
 ];
 /* nível de cada rodada: os seus três mais fortes + ACIMA_CONFERENCIA +
    a subida da rodada, nunca abaixo do piso; mais o acerto de cada um */

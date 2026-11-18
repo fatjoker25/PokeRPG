@@ -1455,7 +1455,16 @@ const Batalha = {
       }
       return this.tentarCaptura(acao.nome);
     }
-    if (acao.tipo === 'item')   { this.usarItemEmCombate(acao.nome, acao.alvoUid); return this.turnoInimigoSozinho(); }
+    if (acao.tipo === 'item'){
+      /* item recusado (o Revive em quem está de pé, o remédio em quem
+         está cheio, o boneco no treinador) não sai da mochila e não gasta
+         a vez, como a troca de quem está preso: antes o remédio em quem
+         estava cheio sumia e o outro batia de graça */
+      const antes = Estado.contaItem(acao.nome);
+      this.usarItemEmCombate(acao.nome, acao.alvoUid);
+      if (this.ativo && Estado.contaItem(acao.nome) >= antes){ this.turno--; return {eventos:this.eventos, fim:null}; }
+      return this.turnoInimigoSozinho();
+    }
     if (acao.tipo === 'trocar'){
       if (this.estAliado.presoTurnos > 0 && estaVivo(this.aliado)){
         this.eventos = []; this.turno--;
@@ -1568,21 +1577,24 @@ const Batalha = {
     if (!info || !Estado.contaItem(nome)){ this.ev('erro', 'Você não tem esse item.'); return; }
     const alvo = Estado.dados.time.find(p => p.uid === alvoUid) || this.aliado;
     if (info.tipo === 'cura'){
-      if (alvo.hp <= 0 && !alvo.morto){ this.ev('erro', `${nomeVisivel(alvo)} está desmaiad${pron(alvo).o} — Potion não resolve.`); return; }
+      if (alvo.hp <= 0 && !alvo.morto){ this.ev('erro', `${nomeVisivel(alvo)} está desmaiad${pron(alvo).o} — ${nome} não resolve.`); return; }
+      const tira = info.tiraCondicao && alvo.status;
+      if (alvo.hp >= alvo.hpMax && !tira){ this.ev('erro', `${nomeVisivel(alvo)} já está com o HP cheio.`); return; }
       Estado.usarItem(nome);
       const antes = alvo.hp;
-      alvo.hp = Math.min(alvo.hpMax, alvo.hp + info.valor);
-      this.ev('cura', `Você usou ${nome}. ${nomeVisivel(alvo)} recuperou ${alvo.hp - antes} de HP.`);
+      alvo.hp = info.inteiro ? alvo.hpMax : Math.min(alvo.hpMax, alvo.hp + info.valor);
+      if (tira){ alvo.status = null; alvo.statusTurnos = 0; }
+      this.ev('cura', `Você usou ${nome}. ${nomeVisivel(alvo)} ${alvo.hp > antes ? `recuperou ${alvo.hp - antes} de HP${tira ? ' e teve as condições curadas' : ''}` : 'teve as condições curadas'}.`);
     } else if (info.tipo === 'revive'){
       if (alvo.morto){
-        this.ev('erro', `Você aplica o Revive em ${nomeVisivel(alvo)} e não acontece nada. Nem uma reação.`);
+        this.ev('erro', `Você aplica o ${nome} em ${nomeVisivel(alvo)} e não acontece nada. Nem uma reação.`);
         this.ev('info', 'Tem uma diferença entre desmaiar e morrer, e você acabou de aprender qual é.');
         Estado.marcar('revive_nao_ressuscita');
         return;
       }
       if (alvo.hp > 0){ this.ev('erro', `${nomeVisivel(alvo)} não está desmaiad${pron(alvo).o}.`); return; }
       Estado.usarItem(nome);
-      alvo.hp = Math.floor(alvo.hpMax / 2);
+      alvo.hp = info.inteiro ? alvo.hpMax : Math.floor(alvo.hpMax / 2);
       this.ev('cura', `${nomeVisivel(alvo)} voltou a si com ${alvo.hp} de HP.`);
     } else if (info.tipo === 'status'){
       Estado.usarItem(nome);

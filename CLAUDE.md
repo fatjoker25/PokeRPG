@@ -1395,6 +1395,26 @@ Os números estão na folha de regras ("Creche e ovos"). `chk-telas`
 deixa um par, um com Ditto e um par com a Pokédex Nacional, entrega o
 ovo, abre a ficha dele, busca sem dinheiro e choca.
 
+## Os remédios do fim
+Foi pedido assim: os remédios do fim dos jogos, **Max Potion**,
+**Full Restore** e **Max Revive** (`ITENS_INFO`, com os ícones dos
+jogos). O Max Potion e o Full Restore são `cura` com `inteiro` (enche o
+HP; o `valor` 999 é só reserva), e o Full Restore leva `tiraCondicao`;
+o Max Revive é `revive` com `inteiro` (levanta com o HP cheio). Os dois
+primeiros só se compram na **loja do saguão do Planalto**
+(`LOJAS.planalto`, como a do Indigo Plateau): o Planalto não é cidade,
+então a porta sai sem precisar achar, do lado do Centro
+(`afazeresDoLocal`). O Max Revive loja nenhuma vende, como nos jogos:
+vasculhar raro no Caminho da Vitória e nas Seafoam, presente de quem é
+de confiança no PokéNav e a final do Torneio Aberto (1) e da
+Conferência (2). Remédio em quem não precisa (HP cheio, de pé) não sai
+da mochila, e na luta o item recusado não gasta a vez (`Batalha.acao`
+confere a conta do item antes e depois). Medido no `sim-elite.js`: o
+Max Potion quase não muda a ala (no nível 60 o HP vai de 10 a 14, e a
+Hyper Potion cura 14); quem muda é o Max Revive, que é um Pokémon
+inteiro de volta (no nível da primeira porta, `MOCHILA=saguao` passa as
+quatro em 1%, e `saguao_mr`, com três Max Revives, em 9%).
+
 ## Ferramenta gasta, e o balcão compra
 `js/engine/desgaste.js`: Machado, Picareta e Lanterna têm `DURABILIDADE` em
 usos; o estado (nova, meio desgastada, desgastada, quebrando, quebrada) sai

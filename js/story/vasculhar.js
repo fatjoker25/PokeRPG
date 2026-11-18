@@ -183,11 +183,13 @@ const ACHADOS_DO_LUGAR = {
   seafoam:[
     {t:'Gelo fino sobre a água escura, e embaixo dele alguma coisa grande passando devagar.', rastro:[86, 87, 131]},
     {t:'Penas brancas presas no gelo, quase transparentes, frias demais pra ser de qualquer Pokémon que você conheça.', raro:true},
-    {t:'Um Seel dormindo numa placa de gelo que gira devagar com a corrente.', rastro:[86]}
+    {t:'Um Seel dormindo numa placa de gelo que gira devagar com a corrente.', rastro:[86]},
+    {t:'Preso numa bolha do gelo, como num peso de papel, um Max Revive inteiro. O gelo cede na terceira pancada.', item:['Max Revive', 1], raro:true}
   ],
   caminho_vitoria:[
     {t:'Na parede, nomes riscados com ponta de pedra. Centenas. Alguns com uma data. Alguns com um "ainda".'},
     {t:'Uma Revive esquecida numa saliência, com a etiqueta de um Centro de Johto.', item:['Revive', 1], raro:true},
+    {t:'Num nicho da parede, embrulhado num lenço, um Max Revive. Do lado, riscado na pedra: "pra quem chegar até aqui".', item:['Max Revive', 1], raro:true},
     {t:'Pegadas de muita gente indo em frente. Muito menos voltando.'}
   ],
   rota22:[

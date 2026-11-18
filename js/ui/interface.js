@@ -5268,12 +5268,17 @@ const UI = {
     const hpAntes = Math.max(0, p.hp);
     let msg = '';
     if (info.tipo === 'cura'){
-      if (p.hp <= 0) msg = `${nomeExib(p)} está desmaiad${pron(p).o}. Potion não resolve isso.`;
-      else { Estado.usarItem(nome); const a = p.hp; p.hp = Math.min(p.hpMax, p.hp + info.valor);
-             msg = `${nomeExib(p)} recuperou ${p.hp - a} de HP.`; }
+      /* o Full Restore tira a condição junto; cheio e sem condição, nada
+         se gasta (o Revive já não se gastava em quem está de pé) */
+      const tira = info.tiraCondicao && p.status;
+      if (p.hp <= 0) msg = `${nomeExib(p)} está desmaiad${pron(p).o}. ${nome} não resolve isso.`;
+      else if (p.hp >= p.hpMax && !tira) msg = `${nomeExib(p)} já está com o HP cheio.`;
+      else { Estado.usarItem(nome); const a = p.hp; p.hp = info.inteiro ? p.hpMax : Math.min(p.hpMax, p.hp + info.valor);
+             if (tira){ p.status = null; p.statusTurnos = 0; }
+             msg = p.hp > a ? `${nomeExib(p)} recuperou ${p.hp - a} de HP${tira ? ' e teve as condições curadas' : ''}.` : `${nomeExib(p)} teve as condições curadas.`; }
     } else if (info.tipo === 'revive'){
       if (p.hp > 0) msg = `${nomeExib(p)} não está desmaiad${pron(p).o}.`;
-      else { Estado.usarItem(nome); p.hp = Math.floor(p.hpMax/2); msg = `${nomeExib(p)} voltou a si com ${p.hp} de HP.`; }
+      else { Estado.usarItem(nome); p.hp = info.inteiro ? p.hpMax : Math.floor(p.hpMax/2); msg = `${nomeExib(p)} voltou a si com ${p.hp} de HP.`; }
     } else if (info.tipo === 'status'){
       Estado.usarItem(nome); p.status = null; p.statusTurnos = 0;
       msg = `${nomeExib(p)} teve as condições curadas.`;
@@ -6440,7 +6445,7 @@ const UI = {
       <div class="linha"><span class="k">Quanto demora</span><span class="v">de noite você dorme lá e acorda às seis · de dia espera o time voltar, e o dia anda um período · em casa, o mesmo, de graça</span></div>
       <div class="linha"><span class="k">No meio de um capítulo</span><span class="v">se ele acontece numa cidade com Centro, dá pra passar lá e voltar pro mesmo ponto da história · ali quem anda com a hora é a história, e o balcão não mexe no relógio</span></div>
       <div class="linha"><span class="k">Atalho pro balcão</span><span class="v">a derrota no ginásio e na Liga, e o rival que te para na saída do capítulo, têm o botão pro Centro da cidade · onde não tem Centro, não tem botão · o rival espera você voltar</span></div>
-      <div class="linha"><span class="k">Achado andando</span><span class="v">loja, ginásio, quem quer trocar e o Relembrador de Golpes: nada disso tem placa, você acha andando pela cidade</span></div>
+      <div class="linha"><span class="k">Achado andando</span><span class="v">loja, ginásio, quem quer trocar e o Relembrador de Golpes: nada disso tem placa, você acha andando pela cidade · a loja do saguão do Planalto não precisa achar: fica do lado do Centro</span></div>
       <h3>Quem aparece onde</h3>
       <div class="linha"><span class="k">Espécie</span><span class="v">cada lugar do mapa tem a sua lista, com o comum e o raro · a de FireRed/LeafGreen, em quase tudo</span></div>
       <div class="linha"><span class="k">Cidade</span><span class="v">o que vem das rotas em volta e da água do porto</span></div>
@@ -6748,10 +6753,12 @@ const UI = {
       <p class="sussurro">Bulbasaur, Charmander e Squirtle saem de Pallet numa caixa térmica, uma fileira de cada. Quem assina a inscrição é quem é responsável por você; a espécie ninguém escolhe no papel. Se a manhã acabar sem você na frente da caixa, a Pokébola que o laboratório separou te espera no balcão do Centro (em Pallet, na porta de casa). Quem não aparece vira duas letras no caderno. A volta é mensal e a perua não deixa de passar por chuva.</p>
 
       <h3>Loja</h3>
-      <div class="linha"><span class="k">Onde</span><span class="v">nove cidades (Pallet não tem loja) · cada uma vende o que a cidade é</span></div>
+      <div class="linha"><span class="k">Onde</span><span class="v">nove cidades (Pallet não tem loja) e o saguão do Planalto, do lado do Centro · cada uma vende o que a cidade é</span></div>
       <div class="linha"><span class="k">Venda</span><span class="v">todo balcão compra pela metade do preço de tabela · ferramenta gasta vale ¾, ½ ou ¼ disso · quebrada, coisa da história sem preço e a mochila que você está usando não se vendem</span></div>
       <div class="linha"><span class="k">Compra</span><span class="v">a loja pergunta quantos antes de cobrar, até o que o dinheiro paga (99 no máximo) · ferramenta que não gasta, mapa e mochila se compram uma vez só</span></div>
-      <div class="linha"><span class="k">Como nos jogos</span><span class="v">Poké Ball e Potion desde Viridian · Repelente a partir de Cerulean · Super Potion a partir de Vermilion · Great Ball e Revive a partir de Lavender e Celadon · Ultra Ball em Fuchsia e Cinnabar · Full Heal em Fuchsia, Saffron e Cinnabar · Hyper Potion em Saffron e Cinnabar</span></div>
+      <div class="linha"><span class="k">Como nos jogos</span><span class="v">Poké Ball e Potion desde Viridian · Repelente a partir de Cerulean · Super Potion a partir de Vermilion · Great Ball e Revive a partir de Lavender e Celadon · Ultra Ball em Fuchsia e Cinnabar · Full Heal em Fuchsia, Saffron e Cinnabar · Hyper Potion em Saffron e Cinnabar · Full Restore e Max Potion só no saguão do Planalto, como no Indigo Plateau</span></div>
+      <div class="linha"><span class="k">Remédios</span><span class="v">Potion +2 de HP · Super Potion +4 · Hyper Potion +14 · Max Potion, todo o HP · Full Restore, todo o HP e qualquer condição · Revive levanta quem desmaiou com metade do HP · Max Revive levanta com o HP cheio · Full Heal tira qualquer condição, o Antidote só veneno · em quem não precisa (HP cheio, de pé) o remédio não sai da mochila e, na luta, não gasta a vez</span></div>
+      <div class="linha"><span class="k">Max Revive</span><span class="v">loja nenhuma vende, como nos jogos · sai do vasculhar no Caminho da Vitória e nas Seafoam, raro · de presente de quem é de confiança no PokéNav · na final do Torneio Aberto (1) e da Conferência (2) · o balcão compra por ${fmtDin(Math.round(PRECO_BASE['Max Revive'] / 2))} ₽</span></div>
       <div class="linha"><span class="k">Preço</span><span class="v">base × o multiplicador da cidade</span></div>
       <div class="linha"><span class="k">Mais barato</span><span class="v">Celadon (0,85×) e o cais de Vermilion (0,9×)</span></div>
       <div class="linha"><span class="k">Mais caro</span><span class="v">Saffron (1,3×) e Cinnabar (1,25×)</span></div>

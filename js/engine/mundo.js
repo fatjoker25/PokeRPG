@@ -477,7 +477,7 @@ planalto:{
     'Um complexo de pedra e vidro no alto de uma montanha, construído para intimidar.',
     'Funciona.'
   ],
-  lugares:['centro']
+  lugares:['centro', 'loja']
 },
 norte:{
   nome:'Norte da Rota 10', tipo:'especial', ambiente:'montanha', nivel:55, perigosa:true,
@@ -716,6 +716,11 @@ function afazeresDoLocal(){
   if (L.tipo !== 'cidade' && (L.lugares||[]).includes('centro'))
     lista.push({lugar:true, id:'centro', titulo:'Centro Pokémon',
       sub:'Enfermeira, PC, balcão de credenciais e mapa na parede.'});
+  /* e a loja do saguão do Planalto, que fica do lado do Centro: não se
+     acha andando, como a de cidade */
+  if (L.tipo !== 'cidade' && (L.lugares||[]).includes('loja') && LOJAS[id])
+    lista.push({lugar:true, id:'loja', titulo:'Loja',
+      sub:'A última prateleira antes das quatro portas.'});
 
   if (id === 'planalto'){
     lista.push({lugar:true, id:'relembrar', titulo:'Relembrador de Golpes', sub:RELEMBRADOR.planalto.sub});

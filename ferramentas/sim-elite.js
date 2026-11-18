@@ -78,7 +78,12 @@ const MOCHILAS = {
   /* o conselheiro da quarta rodada, o único que passou as quatro portas,
      chegou à ala com mais de cem Revives (presente, achado e missão
      juntados em três etapas parado no capítulo 21) */
-  farta:{Revive:30, 'Hyper Potion':12, 'Full Heal':6}
+  farta:{Revive:30, 'Hyper Potion':12, 'Full Heal':6},
+  /* o que uns 30.000 ₽ compram no saguão do Planalto (6 Revives, 6 Max
+     Potions, 2 Full Restores), e isso com os Max Revives das finais do
+     Torneio e da Conferência */
+  saguao:{Revive:6, 'Max Potion':6, 'Full Restore':2, 'Full Heal':2},
+  saguao_mr:{Revive:6, 'Max Revive':3, 'Max Potion':6, 'Full Restore':2, 'Full Heal':2}
 };
 /* ENTRE= o que a ala dá entre uma porta e outra, pra medir a regra:
    nada (só a mochila, a ala de hoje), folego (a Vontade volta),
@@ -98,9 +103,19 @@ function descanso(time){
 function entrePortas(time, m){
   descanso(time);
   for (const p of time){
-    if (p.hp <= 0 && m.Revive > 0){ m.Revive--; p.hp = Math.floor(p.hpMax / 2); }
-    if (p.hp > 0 && p.status && m['Full Heal'] > 0){ m['Full Heal']--; p.status = null; }
-    if (p.hp > 0 && p.hp < p.hpMax * .6 && m['Hyper Potion'] > 0){ m['Hyper Potion']--; p.hp = Math.min(p.hpMax, p.hp + 14); }
+    /* o Max Revive levanta inteiro; o Revive, com metade */
+    if (p.hp <= 0){
+      if (m['Max Revive'] > 0){ m['Max Revive']--; p.hp = p.hpMax; }
+      else if (m.Revive > 0){ m.Revive--; p.hp = Math.floor(p.hpMax / 2); }
+    }
+    if (p.hp > 0 && p.status){
+      if (m['Full Heal'] > 0){ m['Full Heal']--; p.status = null; }
+      else if (m['Full Restore'] > 0){ m['Full Restore']--; p.status = null; p.hp = p.hpMax; }
+    }
+    if (p.hp > 0 && p.hp < p.hpMax * .6){
+      const pot = ['Hyper Potion', 'Max Potion', 'Full Restore'].find(n => m[n] > 0);
+      if (pot){ m[pot]--; p.hp = pot === 'Hyper Potion' ? Math.min(p.hpMax, p.hp + 14) : p.hpMax; if (pot === 'Full Restore') p.status = null; }
+    }
   }
 }
 function lutar(meuTime, alvo){

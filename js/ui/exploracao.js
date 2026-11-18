@@ -315,7 +315,7 @@ const Exploracao = {
        não têm — só aparecem aqui depois que você acha andando. */
     const tem = [];
     if ((L.lugares || []).includes('centro')) tem.push('Centro Pokémon');
-    if ((L.lugares || []).includes('loja') && Mundo.descobriu('loja_' + id)) tem.push('loja');
+    if ((L.lugares || []).includes('loja') && (L.tipo !== 'cidade' || Mundo.descobriu('loja_' + id))) tem.push('loja');
     if (Mundo.descobriu('ginasio_' + id)) tem.push('ginásio');
     const desc = pisou && L.desc && L.desc.length ? txt(L.desc[0]) : null;
     /* O que dá pra fazer daqui, no idioma do lugar: o vizinho é a placa de

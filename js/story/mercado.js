@@ -6,7 +6,10 @@
 const PRECO_BASE = {
   'Poké Ball':200, 'Great Ball':600, 'Ultra Ball':1200,
   'Potion':300, 'Super Potion':700, 'Hyper Potion':1500,
-  'Revive':1500, 'Antidote':250, 'Full Heal':600,
+  'Max Potion':2500, 'Full Restore':3000,
+  /* o Max Revive não se vende em loja nenhuma, como nos jogos: o preço é
+     o do balcão que compra (metade) */
+  'Revive':1500, 'Max Revive':4000, 'Antidote':250, 'Full Heal':600,
   'Bandagem':400, 'Ração':200, 'Água Fresca':250, 'Cantil':500,
   'Éter':900, 'Elixir':2000, 'Boneco':700, 'Repelente':400,
   'Corda':450, 'Lanterna':600, 'Pilha':180, 'Isca':150, 'Machado':900, 'Picareta':1100,
@@ -113,6 +116,16 @@ const LOJAS = {
     ar:'Fica no térreo de um prédio comercial e tem fila de gente de crachá na hora do almoço. Tudo é caro e tudo tem nota fiscal.',
     mult:1.3,
     itens:['Ração','Great Ball','Super Potion','Hyper Potion','Full Heal','Revive','Repelente','Corda','Elixir','Éter','Caderno de campo','Câmera descartável','Relógio','Wise Glasses','Amulet Coin','Link Cable','Mochila sem marca','Bolsa discreta']
+  },
+  /* a loja do saguão, entre o Centro e o corredor da ala, como a do
+     Indigo Plateau nos jogos: é a única que vende Max Potion e Full
+     Restore. Não é cidade, então a porta aparece sem precisar achar
+     (afazeresDoLocal) */
+  planalto: {
+    nome:'Loja do saguão',
+    ar:'Fica no saguão, entre o Centro e o corredor da ala. A prateleira é curta e é a última antes das quatro portas.',
+    mult:1.0,
+    itens:['Ultra Ball','Great Ball','Full Restore','Max Potion','Revive','Full Heal','Repelente','Ração']
   },
   cinnabar: {
     nome:'Vitrine da Sra. Juna',

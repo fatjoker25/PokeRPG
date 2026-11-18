@@ -557,7 +557,7 @@ const PREMIO_TORNEIO = [
   {rodada:'Oitavas',   dinheiro:1500,  rep:0, itens:{'Super Potion':2}},
   {rodada:'Quartas',   dinheiro:3000,  rep:0, itens:{'Hyper Potion':2}},
   {rodada:'Semifinal', dinheiro:8000,  rep:1, itens:{'Full Heal':2,'Ultra Ball':1}},
-  {rodada:'Final',     dinheiro:25000, rep:2, itens:{'Ultra Ball':3,'Hyper Potion':3}}
+  {rodada:'Final',     dinheiro:25000, rep:2, itens:{'Ultra Ball':3,'Hyper Potion':3,'Max Revive':1}}
 ];
 
 const INSCRICAO_TORNEIO = 2000;
