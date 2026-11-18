@@ -1958,7 +1958,13 @@ regras ("O seu ginásio e a sua porta") lê os mesmos números.
   que você perdeu ou largou não volta no sorteio (`perdidos`,
   `portasPerdidas`). A cadeira que a Conselheira oferece no 26 é o
   posto `elite` de verdade (`Cargos.conceder`, no `c21_cargo`), com
-  porta: antes ela só escrevia o nome do cargo, sem posto.
+  porta: antes ela só escrevia o nome do cargo, sem posto. Save de
+  antes da defesa com o posto no bolso ganha a vaga na primeira olhada
+  (`Defesa.estado` → `vagaDeAntes`, sem aviso, com a linha no diário),
+  como o ginásio do final: sem isso o posto pagava e ninguém nunca
+  desafiava. O `aoAssumir` lê o registro direto, nunca o `estado()`: o
+  `Cargos.assumir` põe o posto na lista antes de chamar, e o `estado()`
+  sortearia a vaga calado, sem o aviso de qual ginásio é.
 - **O seu ginásio é a sua quadra**: a porta dele na cidade vira "Seu
   ginásio" (`afazerDoGinasio`, no `afazeresDoLocal`) e abre a tela da
   quadra (`Defesa.tela`, pelo `Cidade.ginasio`). O ginásio do final de

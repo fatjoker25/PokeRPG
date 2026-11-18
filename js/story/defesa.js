@@ -114,15 +114,40 @@ const Defesa = {
   /* o ginásio de quem saiu: o telefone dele não fala mais de desafiante */
   deixouDeSer(ginasio, d){ return !!ginasio && this.meuGinasio(d) === ginasio; },
 
-  /* o estado de um posto, com o ginásio do final aberto na primeira olhada */
+  /* o estado de um posto, com o ginásio do final aberto na primeira
+     olhada. Save de antes da defesa com o posto no bolso também ganha a
+     vaga aqui, na primeira olhada: sem isso o posto pagava e ninguém
+     nunca desafiava */
   estado(tipo, d){
     d = d || Estado.dados;
     const r = this.reg(d);
     if (tipo === 'lider' && !r.lider){
       const x = d.depoisDoFim;
       if (x && x.ginasio && !r.perdeuDoFim) this.regGravar(d).lider = this.novo(d, {ginasio:x.ginasio, doFim:true});
+      else if (d === Estado.dados && Cargos.tem('lider')) this.vagaDeAntes('lider', d);
     }
+    if (tipo === 'elite' && !r.elite && d === Estado.dados && Cargos.tem('elite')) this.vagaDeAntes('elite', d);
     return this.reg(d)[tipo] || null;
+  },
+  /* a vaga de quem assumiu o posto antes da defesa existir: o mesmo
+     sorteio do aoAssumir, sem aviso (o posto não é novo), com a linha no
+     diário. O ginásio aparece na Ficha e no cartão do posto, e a
+     secretaria diz qual é no primeiro desafio */
+  vagaDeAntes(tipo, d){
+    const r = this.regGravar(d);
+    if (tipo === 'lider'){
+      const g = this.sortearGinasio(d);
+      if (!g) return;
+      r.lider = this.novo(d, {ginasio:g});
+      if (typeof Mundo !== 'undefined' && Mundo.descobrir) Mundo.descobrir('ginasio_' + g);
+      Estado.registrar(`A Liga acertou a vaga do seu posto: o ginásio de ${cidadeDoGinasio(g)}.`);
+    } else {
+      const p = this.sortearPorta(d);
+      if (p == null) return;
+      r.elite = this.novo(d, {porta:p});
+      const t = this.titularDaPorta(p);
+      Estado.registrar(`A Liga acertou a vaga do seu posto: a ${ORDINAL_DA_PORTA[p]} porta da ala, a ${t.f ? 'da' : 'do'} ${t.nome}.`);
+    }
   },
   novo(d, o){
     return Object.assign({desde:d.relogio.dia, proximo:d.relogio.dia + this.espera(), desafio:null,
@@ -163,7 +188,12 @@ const Defesa = {
     const d = Estado.dados, av = [];
     if (id !== 'lider' && id !== 'elite') return av;
     const r = this.regGravar(d);
-    if (id === 'lider' && !this.estado('lider', d)){
+    /* o registro direto, nunca o estado(): o posto já está na lista
+       quando o Cargos.assumir chama aqui, e o estado() sortearia a vaga
+       calado, como a de um save de antes */
+    const x = d.depoisDoFim;
+    if (id === 'lider' && !r.lider && x && x.ginasio && !r.perdeuDoFim) r.lider = this.novo(d, {ginasio:x.ginasio, doFim:true});
+    if (id === 'lider' && !r.lider){
       const g = this.sortearGinasio(d);
       if (!g) return av;
       r.lider = this.novo(d, {ginasio:g});

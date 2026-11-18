@@ -416,6 +416,8 @@ const SUSPEITO = [
       const J = Jogo, d = Estado.dados;
       if (J.ginasioAtual) return {de:'ginásio', nome:'Ginásio de ' + J.ginasioAtual.cidade, lider:J.ginasioAtual.lider, insignia:J.ginasioAtual.insignia, id:J.ginasioAtual.id};
       if (J.eliteAtual != null) return {de:'Liga', nome:J.eliteAtual.campeao ? 'Campeão' : 'Elite, porta ' + ((J.eliteAtual.indice || 0) + 1)};
+      /* o posto que se defende (defesa.js): quem desafiou, e onde */
+      if (J.defesaAtual) return {de:'defesa', nome:J.defesaAtual.tipo === 'elite' ? 'a sua porta da ala' : 'o seu ginásio, ' + J.defesaAtual.ginasio, quem:J.defesaAtual.quem};
       if (J.revancheAtual) return {de:'revanche', nome:nomeDe(J.revancheAtual)};
       if (J.conferenciaAtual) return {de:'Conferência', nome:'rodada ' + ((J.conferenciaAtual.rodada || 0) + 1)};
       if (J.torneioAtual) return {de:'Torneio Aberto', nome:'rodada ' + ((J.torneioAtual.rodada || 0) + 1)};
@@ -539,6 +541,7 @@ const SUSPEITO = [
     window.__contextoDaLuta = () => {
       const J = Jogo, d = Estado.dados;
       if (J.ginasioAtual) return 'ginásio ' + J.ginasioAtual.id;
+      if (J.defesaAtual) return 'defesa ' + (J.defesaAtual.tipo === 'elite' ? 'da porta' : 'do ginásio ' + J.defesaAtual.ginasio) + ' · ' + J.defesaAtual.quem;
       if (J.patrulhaAtual) return 'patrulha';
       if (J.redeAtual) return 'rede ' + J.redeAtual.tipo + ' ' + J.redeAtual.id;
       if (J.veteranoAtual) return 'veterano ' + (J.veteranoAtual.tipo || '') + ' ' + (J.veteranoAtual.id || '');
