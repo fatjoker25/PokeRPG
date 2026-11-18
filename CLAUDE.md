@@ -2013,6 +2013,23 @@ regras ("O seu ginásio e a sua porta") lê os mesmos números.
   advertência. Com `ADVERTENCIAS_PRA_PERDER`, a Liga tira o posto
   (`perderPosto`; o do final vira "Ex-titular" na Ficha). A máquina da
   quadra cura o time depois, ganhando ou perdendo.
+- **A fama da quadra** (`FAMA_DA_QUADRA`): cada defesa ganha seguida
+  (`r.seguidas`) sobe um degrau, até o último da tabela (`famaTeto`), e
+  quem marca o desafio seguinte vem mais preparado — `itens` Pokémon
+  dele segurando Leftovers (os mais fortes, fora o ás, que já segura o
+  dele; o Ezra também) e, no alto, `tam` a mais no time. Perder,
+  desistir e faltar zeram. O degrau fica no desafio quando ele é marcado
+  (`x.fama`): ele ouviu falar daquela conta, e a fala dele pode dizer
+  isso (`FALAS_DA_FAMA`, de duas seguidas em diante). A lousa da quadra
+  conta as seguidas de verdade e o recorde (`r.recorde`), sem teto; o
+  teto é só do degrau. Foi medido com `node ferramentas/sim-defesa.js`
+  (cada inscrito em cada degrau, contra o ingênuo e o forte; `FAMA=`,
+  `ITEM=`, `TIPO=` e `JOGADOR=` na frente calibram sem mexer no jogo),
+  cada alavanca sozinha: cada Leftovers tira uns 9 pontos da vitória, o
+  Pokémon a mais uns 16, e o erro da IA, o nível, o Muscle Band, o Wise
+  Glasses e o Quick Claw quase nada — por isso a tabela só tem os dois.
+  O forte vai de 83% a 53% no ginásio e de 69% a 44% na porta; o
+  ingênuo, de 70% a 33% e de 53% a 25%. Mexeu na tabela, roda ali.
 
 O robô vai defender quando tem desafio marcado e o time de pé
 (`Defesa.pendente`, o que vence antes primeiro, `{f:'defender'}`), e o

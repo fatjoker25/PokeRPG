@@ -6893,7 +6893,10 @@ const UI = {
           + L('Desafio', `alguém marca a cada ${ESPERA_ENTRE_DESAFIOS[0]} a ${ESPERA_ENTRE_DESAFIOS[1]} dias · a secretaria do Planalto avisa pelo PokéNav · quem marcou espera ${PRAZO_DA_DEFESA} dias · capítulo que anda no meio do prazo remarca o prazo · com o ginásio e a porta, um desafio de cada vez: o segundo espera o primeiro acabar`)
           + L('Quem desafia', `gente do Torneio Aberto, e quem você conhece da estrada, com o time e o item dele · no ginásio, ${DEFESAS.lider.tam} Pokémon, o ás ${nv(DEFESAS.lider.nivel)}, errando ${DEFESAS.lider.erroIA}% · na porta, ${DEFESAS.elite.tam} Pokémon, o ás ${nv(DEFESAS.elite.nivel)}, errando ${DEFESAS.elite.erroIA}% · os dois gastam Vontade`)
           + L('Ganhou', `${fmtDin(DEFESAS.lider.bonus)} ₽ no ginásio, ${fmtDin(DEFESAS.elite.bonus)} ₽ na porta · uma advertência a menos`)
-          + L('Perdeu, desistiu ou faltou', 'uma advertência · faltar é a insígnia, ou a passagem, sem luta')
+          + L('Perdeu, desistiu ou faltou', 'uma advertência · faltar é a insígnia, ou a passagem, sem luta · a fama da quadra volta pro zero')
+          + L('Fama da quadra', `cada defesa ganha seguida sobe um degrau, até o ${FAMA_DA_QUADRA.length - 1}º, e quem marca o desafio seguinte vem mais preparado · `
+            + FAMA_DA_QUADRA.slice(1).map((F, i) => `${i + 1}º degrau: ${F.itens === 1 ? 'um Pokémon dele segura' : F.itens + ' Pokémon dele seguram'} ${ITEM_DA_FAMA}${F.tam ? (F.tam === 1 ? ' e ele traz um Pokémon a mais' : ` e ele traz ${F.tam} Pokémon a mais`) : ''}`).join(' · ')
+            + ` · quem segura são os mais fortes, fora o ás, que já segura o dele · time que já é de seis não cresce · a lousa da quadra conta as seguidas`)
           + L('Advertências', `com ${ADVERTENCIAS_PRA_PERDER}, a Liga tira o posto: o ginásio vai pra outra pessoa, a porta volta pra quem sentava nela · assumir de novo sorteia outra vaga`)
           + L('Depois da luta', 'a máquina da quadra cura o time, ganhando ou perdendo');
       })()}

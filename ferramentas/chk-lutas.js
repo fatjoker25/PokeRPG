@@ -20,6 +20,7 @@
    DIFICULDADE=facil|dificil roda tudo na outra dificuldade da jornada
    (dificuldade.js): o nível da apresentação tem que bater com o do
    Pokémon, e o item que o ás do Difícil segura tem que existir.
+   SO=texto roda só as lutas com esse texto no nome (SO=defesa).
    Precisa do playwright: NODE_PATH=<onde ele está> node ferramentas/chk-lutas.js */
 const {chromium} = require('playwright');
 const fs = require('fs'), path = require('path');
@@ -33,7 +34,7 @@ const raiz = path.resolve(__dirname, '..');
   p.on('console', m => { if (/Cena inexistente/.test(m.text())) cenaInexistente.push(m.text()); });
   await p.goto('file://' + path.join(raiz, 'index.html'));
   await p.waitForTimeout(800);
-  await p.evaluate(x => { window.__DIF = x; }, process.env.DIFICULDADE || '');
+  await p.evaluate(x => { window.__DIF = x.dif; window.__SO = x.so; }, {dif:process.env.DIFICULDADE || '', so:process.env.SO || ''});
 
   const r = await p.evaluate(() => {
     const out = {casos:0, problemas:[], rostos:{}, falas:0};
@@ -222,19 +223,29 @@ const raiz = path.resolve(__dirname, '..');
     [[2, 6], [8, 22]].forEach(([ins, cap]) => add(`Patrulha (${ins} insígnias)`, ins, cap, d => { naDetencao(d); Patrulha.lutar(); }));
     add('Patrulha (procurado do fim)', 8, 28, d => { naDetencao(d, true); Patrulha.lutar(); });
     /* a defesa do posto (defesa.js): cada inscrito do torneio desafiando
-       o seu ginásio e a sua porta da ala */
-    const naDefesa = (d, tipo, ins) => {
+       o seu ginásio e a sua porta da ala, cada um num degrau da fama da
+       quadra (o ginásio e a porta em degraus diferentes, pra todo degrau
+       passar pelos dois), e o Ezra com a fama no alto */
+    const naDefesa = (d, tipo, ins, fama) => {
       if (tipo === 'elite') d.flags.venceu_a_elite = true;
       Cargos.conceder(tipo);
       const r = Defesa.estado(tipo);
-      r.desafio = {quem:ins.id, nome:ins.nome, curto:ins.curto || ins.nome, f:!!ins.f, de:ins.de || '', fala:'Vim.',
+      r.seguidas = fama;
+      r.desafio = {quem:ins.id, nome:ins.nome, curto:ins.curto || ins.nome, f:!!ins.f, de:ins.de || '', fala:'Vim.', fama,
         dia:d.relogio.dia, ate:d.relogio.dia + 3, cap:capNaJornada(d)};
       Mundo.viajar(tipo === 'lider' ? r.ginasio : 'planalto');
       Defesa.lutar(tipo);
     };
     const umaVez = l => { const ja = new Set(); return l.filter(x => !ja.has(x.id) && ja.add(x.id)); };
-    umaVez(RIVAIS_TORNEIO.filter(r => !r.cond && (r.linhas || r.veterano))).forEach(ins => ['lider', 'elite'].forEach(tipo =>
-      add(`defesa ${tipo === 'lider' ? 'do ginásio' : 'da porta'} ${ins.curto || ins.nome}`, 8, 27, d => naDefesa(d, tipo, ins))));
+    const graus = FAMA_DA_QUADRA.length;
+    umaVez(RIVAIS_TORNEIO.filter(r => !r.cond && (r.linhas || r.veterano))).forEach((ins, i) => ['lider', 'elite'].forEach((tipo, j) => {
+      const fama = (i + 2 * j) % graus;
+      add(`defesa ${tipo === 'lider' ? 'do ginásio' : 'da porta'} ${ins.curto || ins.nome} (fama ${fama})`, 8, 27, d => naDefesa(d, tipo, ins, fama));
+    }));
+    /* o Ezra só desafia quem já conhece ele (sortearDesafiante): o rival e a opinião */
+    ['lider', 'elite'].forEach(tipo => add(`defesa ${tipo === 'lider' ? 'do ginásio' : 'da porta'} Ezra (fama ${graus - 1})`, 8, 27,
+      d => { rival(); if (!d.npcs['Ezra']) d.npcs['Ezra'] = {nome:'Ezra', opiniao:1, memorias:[]};
+        naDefesa(d, tipo, inscritoDoTorneio('ezra'), graus - 1); }));
     /* revanches */
     CONTATOS.filter(c => c.ginasio || c.rivalExtra || c.revanche).forEach(c => add(`revanche ${c.id}`, 6, 16, d => {
       d.revanches = {[c.id]: {local: Mundo.id()}}; Jogo.lutarRevanche(c.id); }));
@@ -248,8 +259,10 @@ const raiz = path.resolve(__dirname, '..');
       });
     }
 
-    out.total = casos.length;
-    for (const c of casos) for (const gen of ['Homem', 'Mulher']) for (const res of ['vitoria', 'derrota'])
+    /* SO=texto roda só as lutas com esse texto no nome */
+    const lista = window.__SO ? casos.filter(c => c.nome.includes(window.__SO)) : casos;
+    out.total = lista.length;
+    for (const c of lista) for (const gen of ['Homem', 'Mulher']) for (const res of ['vitoria', 'derrota'])
       umaLuta(`${c.nome} [${gen[0]}/${res}]`, gen, c.ins, c.cap, c.iniciar, res);
     return out;
   });

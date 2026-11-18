@@ -652,7 +652,9 @@ const SUSPEITO = [
      advertência que sai), perder até a Liga tirar o posto, faltar, o
      silencioso, o ex-líder que não fala mais de desafiante, a ala que
      pula a sua porta, o titular dela que não volta, a oferta do 26, o
-     ginásio do final de Viridian e a folha de regras */
+     ginásio do final de Viridian, a fama da quadra (a lousa, o degrau
+     guardado no desafio, o time e o item de cada degrau, a fala de quem
+     ouviu falar, perder e faltar zerando, o recorde) e a folha de regras */
   {
     const snapDef = await page.evaluate(() => JSON.stringify(Estado.dados));
     onde = 'defesa';
@@ -691,6 +693,49 @@ const SUSPEITO = [
       fim('vitoria');
       if (Estado.j.dinheiro - din !== DEFESAS.lider.bonus) falhas.push('ganhar não pagou o bônus');
       if (Defesa.reg().lider.adv !== 0) falhas.push('ganhar não tirou a advertência');
+      /* a fama da quadra: a lousa conta, quem marca depois vem mais
+         preparado (o degrau fica no desafio), perder apaga e o recorde fica */
+      const txt = () => document.querySelector('#app').innerText;
+      if (Defesa.reg().lider.seguidas !== 1) falhas.push('ganhar não subiu a fama da quadra');
+      if (!/o primeiro traço na lousa/.test(txt())) falhas.push('o resultado não risca a lousa');
+      Defesa.tela('lider');
+      if (!/um traço: as suas defesas seguidas/.test(txt())) falhas.push('a quadra não mostra a lousa');
+      Defesa.marcar('lider'); await dorme(150); UI.fecharModal(true); Jogo.chamadaAdiada = null;
+      Defesa.lutar('lider'); fim('vitoria');
+      if (!/mais um traço na lousa/.test(txt())) falhas.push('a segunda defesa não risca mais um traço');
+      Defesa.marcar('lider'); await dorme(150); UI.fecharModal(true); Jogo.chamadaAdiada = null;
+      if (Defesa.reg().lider.desafio.fama !== 2) falhas.push('o desafio marcado não guardou o degrau da fama');
+      Defesa.lutar('lider');
+      { const adv = [Batalha.inimigo].concat(Batalha.timeInimigo), F = FAMA_DA_QUADRA[2];
+        const com = adv.slice(0, -1).filter(p => p.segurando === ITEM_DA_FAMA).length;
+        if (Jogo.defesaAtual.quem !== 'ezra' && adv.length !== DEFESAS.lider.tam + F.tam) falhas.push('o desafiante do degrau 2 veio com time de outro tamanho');
+        if (com < F.itens) falhas.push(`o desafiante do degrau 2 veio com ${com} ${ITEM_DA_FAMA} em vez de ${F.itens}`); }
+      fim('derrota');
+      if (Defesa.reg().lider.seguidas !== 0 || Defesa.reg().lider.recorde !== 2) falhas.push('perder não zerou a fama ou perdeu o recorde');
+      if (!/passa a manga na lousa/.test(txt())) falhas.push('perder não apaga a lousa');
+      Defesa.tela('lider');
+      if (!/o recorde: duas/.test(txt())) falhas.push('a quadra não mostra o recorde');
+      /* cada degrau, montado direto: o tamanho e os itens */
+      { const ins = RIVAIS_TORNEIO.find(x => x.linhas && !x.cond);
+        for (let k = 0; k <= Defesa.famaTeto(); k++) for (const tipo of ['lider', 'elite']){
+          const F = FAMA_DA_QUADRA[k], t = Defesa.desafiante(ins, tipo, k).time;
+          const com = t.slice(0, -1).filter(p => p.segurando === ITEM_DA_FAMA).length;
+          if (t.length !== Math.min(6, DEFESAS[tipo].tam + F.tam)) falhas.push(`${tipo} no degrau ${k}: ${t.length} Pokémon`);
+          if (com !== Math.min(F.itens, t.length - 1)) falhas.push(`${tipo} no degrau ${k}: ${com} com ${ITEM_DA_FAMA}`);
+        }
+        if (d.rival && inscritoDoTorneio('ezra')){
+          const t = Defesa.desafiante(inscritoDoTorneio('ezra'), 'lider', Defesa.famaTeto()).time;
+          if (t.slice(0, -1).filter(p => p.segurando === ITEM_DA_FAMA).length < FAMA_DA_QUADRA[Defesa.famaTeto()].itens) falhas.push('o Ezra não vem mais preparado com a fama');
+        }
+        /* quem ouviu falar diz, de duas seguidas em diante */
+        Defesa.reg().lider.seguidas = 1;
+        if (Array.from({length:30}, () => Defesa.falaDoDesafiante('lider', ins)).some(f => /seguidas/.test(f))) falhas.push('o desafiante fala da sequência com uma só');
+        Defesa.reg().lider.seguidas = 3;
+        const ditas = Array.from({length:40}, () => Defesa.falaDoDesafiante('lider', ins));
+        if (!ditas.some(f => /três seguidas|Três defesas seguidas/i.test(f))) falhas.push('o desafiante não fala da sequência de três');
+        if (ditas.some(f => /undefined|NaN/.test(f))) falhas.push('a fala da fama saiu quebrada');
+        Defesa.reg().lider.seguidas = 0; }
+      Defesa.reg().lider.adv = 0;
       for (let i = 0; i < ADVERTENCIAS_PRA_PERDER; i++){ Defesa.marcar('lider'); Defesa.lutar('lider'); fim('derrota'); }
       if (Cargos.tem('lider') || Defesa.meuGinasio()) falhas.push('perder até as advertências não tirou o posto');
       await dorme(150); UI.fecharModal(true); Jogo.chamadaAdiada = null;
@@ -699,9 +744,11 @@ const SUSPEITO = [
       const g2 = Defesa.meuGinasio();
       if (g2 === g) falhas.push('assumir de novo sorteou o ginásio perdido');
       Defesa.marcar('lider'); await dorme(150); UI.fecharModal(true); Jogo.chamadaAdiada = null;
+      Defesa.reg().lider.seguidas = 2;
       Defesa.reg().lider.desafio.ate = d.relogio.dia - 1; Exploracao.tela(); await dorme(250);
       if (!/prazo inteiro/.test((document.querySelector('#modal') || {}).innerText || '') || Defesa.reg().lider.faltas !== 1)
         falhas.push('a falta não virou mensagem e advertência');
+      if (Defesa.reg().lider.seguidas) falhas.push('faltar não zerou a fama da quadra');
       UI.fecharModal(true); Jogo.chamadaAdiada = null;
       /* o silencioso guarda o aviso, e ele se lê depois */
       Estado.nav().silencioso = true; Defesa.marcar('lider'); await dorme(150); Estado.nav().silencioso = false;
@@ -757,6 +804,7 @@ const SUSPEITO = [
       if (!/porta da ala/.test(cred)) falhas.push('o cartão do posto da Elite não diz a porta');
       UI.modalRegras(); const regras = (document.querySelector('#modal') || {}).innerText || ''; UI.fecharModal(true);
       if (!/O seu ginásio e a sua porta/.test(regras)) falhas.push('a folha de regras não tem a defesa do posto');
+      if (!/Fama da quadra/.test(regras) || !new RegExp(ITEM_DA_FAMA).test(regras)) falhas.push('a folha de regras não tem a fama da quadra');
       return falhas;
     });
     r.forEach(f => anota('defesa', f));
