@@ -5,7 +5,8 @@
    Customização, pelo capítulo 1, e num save do meio do jogo abre o
    lugar, o mapa, a mochila, o time, o PokéNav, a Ficha, a Pokédex, o
    PC, o Salvar, as regras, os ajustes, a Liga, a loja, o Centro, uma
-   luta (golpes, mochila e um turno) e a evolução. Acusa a página que
+   luta (o tutorial dela passo a passo, golpes, mochila e um turno) e a
+   evolução. Acusa a página que
    rola de lado, o que fica pra fora da tela sem estar numa caixa que
    rola, erro de JavaScript e texto quebrado.
 
@@ -179,6 +180,34 @@ const SUSPEITO = [
     });
     await page.waitForTimeout(2500);
     await medir('luta-assentada');
+    /* o tutorial da luta, passo a passo: o balão dentro da tela, sem
+       tapar o botão da vez, e fechado no fim */
+    const nTut = await page.evaluate(() => TutorialLuta.comecar() ? TutorialLuta._passos.length : 0);
+    if (!nTut) problemas.push(`${nomeAp} · tutorial: não começou`);
+    for (let k = 0; k < nTut; k++){
+      /* a rolagem do passo é suave: mede depois que ela para */
+      await page.waitForTimeout(700);
+      const r = await page.evaluate(() => {
+        const raiz = document.getElementById('tutorial-luta');
+        if (!raiz) return null;
+        const p = TutorialLuta._passos[TutorialLuta.i];
+        const g = raiz.querySelector('.tl-guia').getBoundingClientRect();
+        const b = raiz.querySelector('.tl-balao').getBoundingClientRect();
+        const c = p.alvo ? TutorialLuta.caixa() : null;
+        const falhas = [];
+        if (g.top < -1 || g.bottom > innerHeight + 1) falhas.push('o balão sai da tela em cima ou embaixo');
+        if (p.alvo && !c) falhas.push('o alvo não está na tela');
+        if (c && (c.top < TutorialLuta.medidas().topo - 1 || c.bottom > innerHeight + 1)) falhas.push('o alvo ficou fora da tela ou embaixo do topo grudado');
+        if (c && !(b.bottom <= c.top + 1 || b.top >= c.bottom - 1)) falhas.push('o balão tapa o alvo');
+        return {id:p.id, falhas};
+      });
+      if (!r){ problemas.push(`${nomeAp} · tutorial: fechou no passo ${k + 1}`); break; }
+      await medir(`luta-tutorial-${String(k + 1).padStart(2, '0')}-${r.id}`);
+      r.falhas.forEach(f => problemas.push(`${nomeAp} · tutorial, passo ${r.id}: ${f}`));
+      await page.evaluate(() => TutorialLuta.proximo());
+    }
+    if (await page.evaluate(() => TutorialLuta.ativo || !!document.getElementById('tutorial-luta')))
+      problemas.push(`${nomeAp} · tutorial: não fechou no fim`);
     const lutar = page.locator('#acoes button:has-text("Lutar")');
     if (await lutar.count()){ await lutar.first().click(); await medir('luta-golpes'); }
     const voltar = page.locator('#acoes button:has-text("Voltar")');

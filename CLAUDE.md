@@ -10,6 +10,8 @@ Isso não briga com o pedido de tirar as dicas: a folha de regras é o lugar ond
 regras moram, aberta de propósito por quem quer ler. O que não pode é o jogo
 explicar a regra durante a partida — nada de "pra essa missão pokémons calmos
 ajudam", nada de descrição de quem é quem no PokéNav. O jogador repara jogando.
+A exceção pedida é o tutorial da luta (ver "O tutorial da luta"), e ela
+diz o que cada botão faz, não como ganhar.
 
 ## Capítulo não sabe do futuro
 Um capítulo pode **citar o nome** de um lugar aonde o jogador ainda não foi —
@@ -680,6 +682,59 @@ loop. A evolução e o treino ficam de fora: não são a luta.
 Medido numa luta de líder: a abertura vai de ~6,1 s a ~3,3 s e ~2,3 s,
 e um turno de dois golpes de ~2,9 s a ~1,7 s e ~1,1 s — a 3× sobra a
 latência de quadro entre um passo e outro.
+
+## O tutorial da luta
+Foi pedido assim: um tutorial breve, com balões apontando pro botão
+que brilha e dizendo o que ele faz dentro da batalha, e um Smeargle
+shiny do lado do balão (`js/ui/tutorial-luta.js`,
+`css/tutorial-luta.css`). É a exceção pedida à regra de não explicar
+durante a partida, e por isso **diz o que cada coisa faz, nunca como
+ganhar**: os números ficam na folha de regras.
+
+- Aparece **uma vez por navegador**, na primeira luta
+  ('jc-tutorial-luta', valendo pras três jornadas), quando a abertura
+  da luta termina (`telaBatalha` encadeia `TutorialLuta.talvez()` no
+  `Efeitos.abertura`), só com o menu de sempre na tela (`menuPronto`:
+  nada de fase de ameaça, de turno encenado ou de janela aberta).
+- "Pular" em todo balão, Enter/→ segue, ← volta, Esc pula. Nenhuma
+  tecla chega no jogo com ele aberto (a de opção, a do menu), mas
+  atalho do navegador passa. Volta pelos Ajustes e pela aba Combate do
+  Tutorial (`rever`): no meio da luta abre na hora, fora dela fica pra
+  próxima.
+- **Robô e verificador não veem** (`navigator.webdriver`): o balão por
+  cima do menu travaria todos eles. Quem testa chama `comecar()`.
+- Os passos moram em `PASSOS_DO_TUTORIAL`: as duas fichas, Lutar, os
+  golpes (a lista abre de verdade, `modo:'golpes'`), Mochila, Time,
+  Fugir ou Desistir (`quando`, pelo tipo da luta), Vontade, Pokédex, o
+  registro, a bandeja, a velocidade e o fim. Passo cujo alvo não está
+  na tela (sem Pokédex ainda) é pulado sozinho; `antes`/`depois` mexem
+  na tela e desfazem (a ficha do seu abre no passo dela e fecha depois).
+  **Comando novo na luta entra ali**, senão o tutorial fica velho.
+- Cada passo se enquadra uma vez (`enquadrar`): o menor rolar da página
+  que deixa o alvo e o balão juntos na tela, e o lado do balão fica
+  guardado, senão ele trocaria de lado no meio da rolagem. Alvo grande
+  demais pra caber com o balão usa `alvoCurto` (a lista de golpes no
+  celular baixo vira o primeiro golpe). O `.topo` gruda no alto quando
+  a página rola, e o que está embaixo dele não se vê: o alvo fica
+  abaixo do topo (`medidas().topo`), e o balão pode ficar por cima. O
+  botão de velocidade já ficou embaixo do topo, com o foco brilhando
+  em cima do topo vazio, no iPhone SE.
+- O foco é um buraco no escuro do tamanho do alvo (`.tl-foco`, a sombra
+  de 200vmax) com o brilho dourado pulsando por cima; o overlay fica na
+  camada 95, por cima da luta e do topo e por baixo das janelas (100).
+- O Smeargle é o `imgSprite` de sempre (`GUIA_DO_TUTORIAL`): a GIF
+  brilhante no arquivo único e a arte parada no artefato, a 2× no
+  computador (pixel inteiro) e 1,25× no celular, encostado no balão e
+  olhando pro botão (a arte de frente olha pra esquerda; `olha-direita`
+  vira). A caixa abraça a arte, então o balão se reposiciona quando ela
+  carrega.
+
+`chk-telas` passa o tutorial inteiro contra selvagem e contra
+treinador (o alvo de cada passo na tela e fora do topo, o foco em cima
+dele, o balão sem tapar o alvo, o texto, o Smeargle, os golpes só no
+passo deles, e no fim o menu e a ficha como estavam), confere que ele
+não abre sozinho no navegador automatizado e o rever dos Ajustes nas
+duas pontas. `chk-celular` tira a foto de cada passo nos três celulares.
 
 ## A dificuldade
 Foi pedido assim: os sistemas ficam (fome, moral, Vontade, caminhos), e

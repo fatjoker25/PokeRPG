@@ -1837,8 +1837,12 @@ const UI = {
     this.escreverLog(Batalha.eventos);
     this.acoesCombate();
     this.rolarTopo();
-    /* o outro lado aparece, depois a sua bola; o menu espera os dois */
-    if (typeof Efeitos !== 'undefined') Efeitos.abertura();
+    /* o outro lado aparece, depois a sua bola; o menu espera os dois,
+       e na primeira luta o tutorial espera o menu */
+    if (typeof Efeitos !== 'undefined'){
+      const ab = Efeitos.abertura();
+      if (typeof TutorialLuta !== 'undefined' && ab && ab.then) ab.then(() => TutorialLuta.talvez(), () => {});
+    }
   },
 
   /* Cor da moldura: tocar na bolinha mostra na hora; só fica com o
@@ -4574,7 +4578,8 @@ const UI = {
       <button class="escolha com-icone" onclick="UI.modalSalvar()">${svgIcone('salvar')}<span class="esc-rot">Baixar o save<small class="esc-det">a jornada inteira num arquivo .json · na abertura, Carregar jogo lê de volta</small></span></button>` : ''}
       <h3>Ajuda</h3>
       <button class="escolha com-icone" onclick="UI.modalRegras()">${svgIcone('dado')}<span class="esc-rot">Regras<small class="esc-det">todas as contas do jogo, com os números</small></span></button>
-      <button class="escolha com-icone" onclick="UI.modalTutorial()">${svgIcone('pergunta')}<span class="esc-rot">Tutorial<small class="esc-det">a primeira hora, passo a passo</small></span></button>`, false, 'ajustes');
+      <button class="escolha com-icone" onclick="UI.modalTutorial()">${svgIcone('pergunta')}<span class="esc-rot">Tutorial<small class="esc-det">a primeira hora, passo a passo</small></span></button>
+      ${typeof TutorialLuta !== 'undefined' ? `<button class="escolha com-icone" id="tl-rever" onclick="TutorialLuta.rever(this)">${svgIcone('lutar')}<span class="esc-rot">Tutorial da luta<small class="esc-det">${TutorialLuta.textoDoRever()}</small></span></button>` : ''}`, false, 'ajustes');
   },
 
   /* ========================================================
@@ -6095,6 +6100,7 @@ const UI = {
       <p class="sussurro">Os dois eixos se pagam: enquanto você deve de um lado, o que faz do outro serve primeiro pra quitar.</p>`;
 
     if (k === 'combate') return `
+      ${typeof TutorialLuta !== 'undefined' ? `<button class="escolha com-icone" id="tl-rever-tut" onclick="TutorialLuta.rever(this)">${svgIcone('lutar')}<span class="esc-rot">Ver os botões da luta<small class="esc-det">${TutorialLuta.textoDoRever()}</small></span></button>` : ''}
       <h3>A conta — Pokérole</h3>
       ${L('Os dados', 'parada de d6 · cada 4, 5 ou 6 é um sucesso')}
       ${L('Precisão', 'atributo + perícia · 1 sucesso acerta · dor e precisão baixa tiram')}

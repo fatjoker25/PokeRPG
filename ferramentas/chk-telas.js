@@ -14,7 +14,8 @@
        ficha (as cinco abas), diário, rota, códice de finais, credenciais,
        PC (com cada Pokémon selecionado e a ficha aberta de lá), ajustes
        (com as três velocidades da luta),
-       as abas do tutorial, a folha de regras, o mapa e a ficha de cada
+       as abas do tutorial, o tutorial da luta (cada passo, contra
+       selvagem e contra treinador), a folha de regras, o mapa e a ficha de cada
        lugar nele, e o mapa da parede do Centro;
      - salvar e carregar: o recibo do Salvar (do alto e dos Ajustes), a
        abertura com o Carregar jogo, o arquivo bom (com a etiqueta e o
@@ -531,6 +532,120 @@ const SUSPEITO = [
   }
   /* a velocidade da luta nos Ajustes: as três, e volta pra 1× */
   for (const v of [2, 3, 1]) await tentar('ajustes/velocidade ' + v, x => { UI.modalAjustes(); Velocidade.definir(x); }, v);
+  /* o tutorial da luta (tutorial-luta.js), contra selvagem e contra
+     treinador: robô não vê sozinho; cada passo com o alvo na tela, o
+     foco em cima dele, o balão dentro da tela sem tapar o alvo, o texto
+     inteiro e o Smeargle; os golpes abertos só no passo deles; no fim,
+     o menu, a ficha e o resto como estavam. E o rever dos Ajustes: na
+     luta abre na hora, fora dela fica pra próxima. */
+  {
+    const snapTut = await page.evaluate(() => JSON.stringify(Estado.dados));
+    await page.emulateMedia({reducedMotion:'reduce'});
+    const lutaDoTutorial = tipo => page.evaluate(([s, tipo]) => {
+      Batalha.ativo = false; UI.fecharModal(true); Estado.dados = JSON.parse(s);
+      try { localStorage.removeItem('jc-tutorial-luta'); } catch (e) {}
+      if (tipo === 'selvagem') Exploracao.encontro(sortearSelvagem('campo', 20), ['Um Pokémon sai do mato.'], {fixo:true});
+      else {
+        const t = [criarPokemon(36, 20), criarPokemon(124, 21)];
+        Jogo.batalhaLivre = true;
+        Batalha.iniciar(Estado.dados.time[0], t[0], {tipo:'treinador', fuga:false, treinador:'Treinadora Ás Giselle', timeInimigo:t.slice(1)});
+        UI.telaBatalha(['A Giselle quer lutar!']);
+      }
+    }, [snapTut, tipo]);
+    const menuPronto = async () => {
+      for (let i = 0; i < 60; i++){
+        if (await page.evaluate(() => TutorialLuta.menuPronto())) return true;
+        await page.waitForTimeout(150);
+      }
+      return false;
+    };
+    for (const tipo of ['selvagem', 'treinador']){
+      onde = 'tutorial da luta/' + tipo;
+      await lutaDoTutorial(tipo);
+      if (!(await menuPronto())){ anota('tutorial', 'o menu da luta não ficou pronto contra ' + tipo); continue; }
+      const antes = await page.evaluate(() => {
+        TutorialLuta.talvez();
+        return {sozinho:TutorialLuta.ativo, ficha:!!(UI._fichaAberta || {}).aliado};
+      });
+      if (antes.sozinho) anota('tutorial', 'o tutorial abriu sozinho com o navegador automatizado (o robô ficaria preso)');
+      const n = await page.evaluate(() => TutorialLuta.comecar() ? TutorialLuta._passos.length : 0);
+      if (!n){ anota('tutorial', 'o tutorial não começou contra ' + tipo); continue; }
+      const vistos = [];
+      for (let k = 0; k < n; k++){
+        await page.waitForTimeout(80);
+        const r = await page.evaluate(() => {
+          const raiz = document.getElementById('tutorial-luta');
+          if (!raiz) return null;
+          const p = TutorialLuta._passos[TutorialLuta.i], falhas = [];
+          const vw = document.documentElement.clientWidth, vh = innerHeight;
+          const g = raiz.querySelector('.tl-guia').getBoundingClientRect();
+          if (g.left < -1 || g.top < -1 || g.right > vw + 1 || g.bottom > vh + 1) falhas.push('o balão sai da tela');
+          if (p.alvo){
+            const c = TutorialLuta.caixa();
+            if (!c) falhas.push('o alvo não está na tela');
+            else {
+              const b = raiz.querySelector('.tl-balao').getBoundingClientRect();
+              const f = raiz.querySelector('.tl-foco').getBoundingClientRect();
+              if (!(b.bottom <= c.top + 1 || b.top >= c.bottom - 1)) falhas.push('o balão tapa o alvo');
+              if (c.top < -1 || c.bottom > vh + 1) falhas.push('o alvo ficou fora da tela');
+              else if (c.top < TutorialLuta.medidas().topo - 1) falhas.push('o alvo ficou embaixo do topo grudado');
+              if (Math.abs(f.left - c.left) > 12 || Math.abs(f.top - c.top) > 12) falhas.push('o foco não está em cima do alvo');
+            }
+          }
+          if ((p.modo || 'menu') !== UI.modoBatalha) falhas.push(`o menu está em "${UI.modoBatalha}" e o passo pede "${p.modo || 'menu'}"`);
+          const img = raiz.querySelector('.tl-arte img');
+          if (!img || !img.getAttribute('src')) falhas.push('o Smeargle sumiu');
+          return {id:p.id, falhas, texto:raiz.querySelector('.tl-titulo').textContent + ' · ' + raiz.querySelector('.tl-texto').textContent,
+            conta:raiz.querySelector('.tl-conta').textContent};
+        });
+        if (!r){ anota('tutorial', `o tutorial fechou no passo ${k + 1} de ${n} contra ${tipo}`); break; }
+        vistos.push(r.id);
+        r.falhas.forEach(f => anota('tutorial', `${tipo}, passo ${r.id}: ${f}`));
+        for (const [re, nome] of SUSPEITO) if (re.test(r.texto)) anota(nome, `tutorial da luta, passo ${r.id}: ${r.texto}`);
+        if (r.conta !== `${k + 1} de ${n}`) anota('tutorial', `${tipo}, passo ${r.id}: a conta diz "${r.conta}"`);
+        await page.evaluate(() => TutorialLuta.proximo());
+      }
+      const quer = tipo === 'treinador' ? 'desistir' : 'fugir', nao = tipo === 'treinador' ? 'fugir' : 'desistir';
+      if (!vistos.includes(quer) || vistos.includes(nao)) anota('tutorial', `contra ${tipo} o tutorial mostrou ${vistos.join(', ')}`);
+      const depois = await page.evaluate(() => ({raiz:!!document.getElementById('tutorial-luta'), ativo:TutorialLuta.ativo,
+        modo:UI.modoBatalha, ficha:!!(UI._fichaAberta || {}).aliado, visto:TutorialLuta.visto(),
+        lutar:!!document.querySelector('#acoes .mb-btn.lutar')}));
+      if (depois.raiz || depois.ativo) anota('tutorial', 'o tutorial não fechou no fim contra ' + tipo);
+      if (depois.modo !== 'menu' || !depois.lutar) anota('tutorial', 'o menu da luta não voltou pro começo depois do tutorial');
+      if (depois.ficha !== antes.ficha) anota('tutorial', 'a ficha do seu Pokémon não voltou como estava');
+      if (!depois.visto) anota('tutorial', 'terminar o tutorial não marcou como visto');
+    }
+    /* o rever dos Ajustes, no meio da luta: abre na hora, e o Pular fecha */
+    onde = 'tutorial da luta/rever';
+    await page.evaluate(() => { UI.modalAjustes(); document.getElementById('tl-rever').click(); });
+    await page.waitForTimeout(250);
+    const rev = await page.evaluate(() => {
+      const r = {ativo:TutorialLuta.ativo, janela:!!document.querySelector('.modal-fundo')};
+      const pular = document.querySelector('#tutorial-luta .tl-pular');
+      if (pular) pular.click();
+      return Object.assign(r, {fechou:!TutorialLuta.ativo && !document.getElementById('tutorial-luta'), visto:TutorialLuta.visto()});
+    });
+    if (!rev.ativo || rev.janela) anota('tutorial', 'o rever dos Ajustes, no meio da luta, não abriu o tutorial');
+    if (!rev.fechou || !rev.visto) anota('tutorial', 'o Pular não fechou o tutorial (ou não marcou como visto)');
+    /* fora da luta: fica pra próxima, e a aba Combate do Tutorial tem o mesmo botão */
+    const fora = await page.evaluate(s => {
+      Batalha.ativo = false; UI.fecharModal(true); Estado.dados = JSON.parse(s); Exploracao.tela();
+      UI.modalAjustes();
+      const b = document.getElementById('tl-rever');
+      b.click();
+      const r = {visto:TutorialLuta.visto(), ativo:TutorialLuta.ativo, desligou:b.disabled, nota:(b.querySelector('.esc-det') || {}).textContent};
+      UI.fecharModal(true);
+      UI.modalTutorial('combate');
+      r.naAba = !!document.getElementById('tl-rever-tut');
+      UI.fecharModal(true);
+      TutorialLuta.marcar(true);
+      return r;
+    }, snapTut);
+    if (fora.visto || fora.ativo || !fora.desligou) anota('tutorial', 'o rever fora da luta não ficou pra próxima: ' + JSON.stringify(fora));
+    if (!fora.naAba) anota('tutorial', 'a aba Combate do Tutorial não tem o botão do tutorial da luta');
+    await page.emulateMedia({reducedMotion:null});
+    await page.evaluate(s => { Batalha.ativo = false; UI.fecharModal(true); Estado.dados = JSON.parse(s); Exploracao.tela(); }, snapTut);
+  }
   /* o fio dos capítulos grandes no Diário: cada cena da lista existe e
      escreveu no diário, e o Diário abre com nenhuma ponta e com todas */
   {
