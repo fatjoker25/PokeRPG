@@ -76,6 +76,13 @@ const r=await p.evaluate(()=>{
     for(const re of [/^rt_/,/^vt_/,/^tr_/,/^rival_/]){ const c=todosContatos().find(x=>re.test(x.id)); if(c) ids.push(c.id); }
     for(const a of Recados.amostras(ids.map(contatoPorId).filter(Boolean))) varre(lista(a.linhas), a.onde, a.dono, null, null);
   }
+  /* a defesa do posto (defesa.js): a secretaria, quem entrega a porta e quem desafia */
+  if(typeof Defesa!=='undefined'){
+    varre(Defesa.amostras(), 'defesa', 'a secretária do Planalto', null, null);
+    const ja=new Set();
+    for(const ins of RIVAIS_TORNEIO){ if(ja.has(ins.nome)) continue; ja.add(ins.nome);
+      varre(['Vim.'].map(t=>fala(ins.nome, t)), 'defesa/'+ins.nome, ins.nome, null, null); }
+  }
   return out;
 });
 const sem=Object.entries(r.nomes).filter(([n,o])=>o.rosto===0).sort((a,b)=>b[1].n-a[1].n);

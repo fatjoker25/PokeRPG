@@ -1383,6 +1383,8 @@ const Cidade = {
     const id = Mundo.id();
     const g = GINASIOS.find(x => x.id === id);
     if (!g) return Exploracao.tela([{tipo:'info', texto:'Não tem ginásio aqui.'}]);
+    /* o seu ginásio (defesa.js): ninguém desafia a própria quadra */
+    if (typeof Defesa !== 'undefined' && Defesa.meuGinasio() === id) return Defesa.tela('lider');
     const st = statusGinasio(g);
     if (st.estado === 'conquistado'){
       Mundo.passar(1);

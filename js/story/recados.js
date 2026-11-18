@@ -446,6 +446,8 @@ const Recados = {
     /* save de antes da notícia: quem não tem retrato ganha o de agora */
     Estado.contatosNaAgenda().forEach(c => this.sabeDe(c));
     return Estado.contatosNaAgenda().filter(c => {
+      /* quem só avisa (a secretaria do Planalto) não liga à toa */
+      if (c.soAvisa) return false;
       try { if (c.requer && !c.requer(d)) return false; } catch(e){ return false; }
       const u = this.doContato(c.id).ultimoDia;
       /* a notícia que não espera liga no mesmo dia, uma vez por dia; de
@@ -513,6 +515,7 @@ const Recados = {
     if (!c || !Estado.temPokenav()) return false;
     if (tipo === 'recado'){ UI.telaRecado(c); return true; }
     if (tipo === 'prazo') return typeof Pedidos !== 'undefined' && Pedidos.mostrarPrazo(c, toque);
+    if (tipo === 'defesa') return typeof Defesa !== 'undefined' && Defesa.mostrarAviso(c, toque);
     const ch = (tipo === 'pedido' && typeof Pedidos !== 'undefined' && Pedidos.podePedir(c) && Pedidos.montar(c)) || this.montarLigacao(c);
     if (!ch) return false;
     UI.telaChamada(ch);
@@ -539,7 +542,9 @@ const Recados = {
       evento:this.eventoPara(c),
       /* quem ligou foi você ("Só conversar"): a pessoa não diz "liguei" */
       voceLigou:!!(o && o.voceLigou),
-      lider:!!c.ginasio, treinador:c.tipo === 'treinador', figura:c.tipo !== 'treinador' && !casa,
+      /* o líder cujo ginásio agora é seu (defesa.js) não fala mais de desafiante */
+      lider:!!c.ginasio && !(typeof Defesa !== 'undefined' && Defesa.deixouDeSer(c.ginasio, d)),
+      treinador:c.tipo === 'treinador', figura:c.tipo !== 'treinador' && !casa,
       ondeId, emOnde:emLocal(ondeId), emCidadeDele:emLocal(ondeId),
       diz:(t, tom, nota) => casa ? falaCasa(t, tom, nota) : fala(rot, t, tom, nota),
       /* o mesmo sorteio dentro da mesma ligação, se a fala for lida duas vezes */
@@ -693,8 +698,8 @@ const Recados = {
     const c = contatoPorId(toque.de);
     if (!c) return false;
     const d = Estado.dados, r = this.reg();
-    if (toque.recados === 'recado' || toque.recados === 'prazo')
-      r.naoLidas[c.id] = {tipo:toque.recados, pedido:toque.pedido || null, dia:d.relogio.dia};
+    if (toque.recados === 'recado' || toque.recados === 'prazo' || toque.recados === 'defesa')
+      r.naoLidas[c.id] = {tipo:toque.recados, pedido:toque.pedido || null, aviso:toque.aviso || null, dia:d.relogio.dia};
     else if (toque.recados)
       this.perder(c, {tipo:toque.recados === 'pedido' ? 'pedido' : 'ligacao', topico:null, pedido:null, custou:0, silencio:true});
     else
@@ -794,6 +799,7 @@ const Recados = {
      A chamada perdida do dia tem a linha dela (retornar), e esta some. */
   podeConversar(c){
     if (!c || typeof Estado === 'undefined' || !Estado.dados || !Estado.temPokenav()) return {ok:false, mostra:false};
+    if (c.soAvisa) return {ok:false, mostra:false};
     if (!Estado.nav().contatos[c.id] || this.temPerdida(c.id)) return {ok:false, mostra:false};
     if (!this.topicosDe(c, {voceLigou:true}).length) return {ok:false, mostra:false};
     const d = Estado.dados;
@@ -829,6 +835,7 @@ const Recados = {
     delete r.naoLidas[id];
     Estado.salvar('auto');
     if (m.tipo === 'prazo') return typeof Pedidos !== 'undefined' && Pedidos.mostrarPrazo(c, {pedido:m.pedido});
+    if (m.tipo === 'defesa') return typeof Defesa !== 'undefined' && Defesa.mostrarAviso(c, {aviso:m.aviso});
     if (!r.presentes[id]) return false;
     UI.telaRecado(c);
     return true;

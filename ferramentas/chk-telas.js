@@ -646,6 +646,115 @@ const SUSPEITO = [
     await page.emulateMedia({reducedMotion:null});
     await page.evaluate(s => { Batalha.ativo = false; UI.fecharModal(true); Estado.dados = JSON.parse(s); Exploracao.tela(); }, snapTut);
   }
+  /* o posto que se defende (defesa.js): o ginásio vago sorteado e a
+     porta sem dono, a mensagem da secretaria, a quadra e a porta, a
+     luta na quadra com a faixa do ginásio, ganhar (o bônus e a
+     advertência que sai), perder até a Liga tirar o posto, faltar, o
+     silencioso, o ex-líder que não fala mais de desafiante, a ala que
+     pula a sua porta, o titular dela que não volta, a oferta do 26, o
+     ginásio do final de Viridian e a folha de regras */
+  {
+    const snapDef = await page.evaluate(() => JSON.stringify(Estado.dados));
+    onde = 'defesa';
+    const r = await page.evaluate(async () => {
+      const falhas = [], dorme = ms => new Promise(x => setTimeout(x, ms));
+      const fim = res => { Jogo.finalizarBatalha({resultado:res}); Batalha.ativo = false; Jogo.chamadaAdiada = null; };
+      const d = Estado.dados;
+      Object.assign(d.flags, {tem_pokedex:true, tem_licenca:true, venceu_a_elite:true});
+      Estado.ganharPokenav();
+      d.capitulo = 27; d.capitulosFechados = Array.from({length:26}, (_, i) => i + 1);
+      d.insignias = GINASIOS.map(g => g.insignia); d.reputacao.eixo = 'bom'; d.reputacao.bom = 6;
+      d.relogio.periodo = 'manha'; d.relogio.hora = 10; d.local = 'planalto';
+      GINASIOS.forEach(g => Mundo.descobrir('ginasio_' + g.id));
+      GINASIOS.forEach(g => { const c = todosContatos().find(x => x.ginasio === g.id); if (c) Estado.registrarNumero(c.id); });
+      Jogo.chamadaAdiada = null; Batalha.ativo = false;
+      Jogo.assumirCargo('lider');
+      const g = Defesa.meuGinasio();
+      if (!g) return ['o posto de líder não sorteou ginásio'];
+      if (!/A vaga é em/.test(document.querySelector('#app').innerText)) falhas.push('a secretária não diz qual é a vaga');
+      Defesa.reg().lider.proximo = d.relogio.dia; Exploracao.tela(); await dorme(250);
+      const msg = (document.querySelector('#modal') || {}).innerText || '';
+      if (!/marcou desafio/.test(msg)) falhas.push('o desafio marcado não chegou pelo PokéNav');
+      UI.fecharModal(true); Jogo.chamadaAdiada = null;
+      d.local = g; Exploracao.tela();
+      const afz = afazeresDoLocal().find(x => x.id === 'ginasio');
+      if (!afz || afz.titulo !== 'Seu ginásio' || afz.fechada) falhas.push('a porta do seu ginásio não é a sua quadra');
+      Exploracao.fazer('ginasio');
+      if (!/Defender o ginásio/.test(document.querySelector('#app').innerText)) falhas.push('a quadra não tem o botão de defender');
+      const din = Estado.j.dinheiro;
+      Defesa.reg().lider.adv = 1;
+      Defesa.lutar('lider');
+      if (!Batalha.ativo) falhas.push('a defesa do ginásio não começou a luta');
+      if (Som.tipoDeLuta() !== 'lider:' + g) falhas.push('a defesa não toca a faixa do ginásio');
+      if (Arenas.atual().arena !== 'ginasio') falhas.push('a defesa não é na quadra');
+      if (1 + Batalha.timeInimigo.length !== DEFESAS.lider.tam && Jogo.defesaAtual.quem !== 'ezra') falhas.push('o desafiante do ginásio veio com time de outro tamanho');
+      fim('vitoria');
+      if (Estado.j.dinheiro - din !== DEFESAS.lider.bonus) falhas.push('ganhar não pagou o bônus');
+      if (Defesa.reg().lider.adv !== 0) falhas.push('ganhar não tirou a advertência');
+      for (let i = 0; i < ADVERTENCIAS_PRA_PERDER; i++){ Defesa.marcar('lider'); Defesa.lutar('lider'); fim('derrota'); }
+      if (Cargos.tem('lider') || Defesa.meuGinasio()) falhas.push('perder até as advertências não tirou o posto');
+      await dorme(150); UI.fecharModal(true); Jogo.chamadaAdiada = null;
+      /* de novo: outra vaga, e a falta */
+      Jogo.assumirCargo('lider');
+      const g2 = Defesa.meuGinasio();
+      if (g2 === g) falhas.push('assumir de novo sorteou o ginásio perdido');
+      Defesa.marcar('lider'); await dorme(150); UI.fecharModal(true); Jogo.chamadaAdiada = null;
+      Defesa.reg().lider.desafio.ate = d.relogio.dia - 1; Exploracao.tela(); await dorme(250);
+      if (!/prazo inteiro/.test((document.querySelector('#modal') || {}).innerText || '') || Defesa.reg().lider.faltas !== 1)
+        falhas.push('a falta não virou mensagem e advertência');
+      UI.fecharModal(true); Jogo.chamadaAdiada = null;
+      /* o silencioso guarda o aviso, e ele se lê depois */
+      Estado.nav().silencioso = true; Defesa.marcar('lider'); await dorme(150); Estado.nav().silencioso = false;
+      if (!Recados.ler('secretaria')) falhas.push('o aviso guardado no silencioso não se lê');
+      await dorme(150); UI.fecharModal(true); Jogo.chamadaAdiada = null;
+      /* o ex-líder do seu ginásio */
+      const ex = todosContatos().find(x => x.ginasio === g2);
+      if (ex && Recados.contexto(ex).lider) falhas.push('o ex-líder ainda fala como líder');
+      if (ex && Estado.podeLigar(ex.id, 'revanche').ok) falhas.push('a revanche no ginásio que é seu não fechou');
+      const sec = contatoPorId('secretaria');
+      if (Recados.candidatos(false).includes(sec) || Recados.linhaDeConversa(sec) || Pedidos.podePedir(sec)) falhas.push('a secretaria liga à toa, conversa ou pede favor');
+      /* a porta */
+      Jogo.assumirCargo('elite');
+      const p = Defesa.minhaPorta();
+      if (p == null) return falhas.concat('o posto da Elite não sorteou porta');
+      const t = Titulares.todos().find(x => x.porta === p);
+      Estado.marcar(t.pista);
+      if (Titulares.visitavel(t.id)) falhas.push('o titular da sua porta ainda pode voltar');
+      d.local = 'planalto'; Jogo.abrirLiga();
+      if (!document.querySelector('.liga-porta.sua')) falhas.push('o corredor não mostra a sua porta');
+      Jogo.iniciarElite4();
+      for (let k = 0; k < 4 && Jogo.eliteAtual && !Jogo.eliteAtual.campeao; k++){
+        if (Jogo.eliteAtual.indice === p) falhas.push('a ala parou na sua porta');
+        fim('vitoria'); Jogo.continuarElite();
+      }
+      Batalha.ativo = false; Jogo.eliteAtual = null; document.querySelectorAll('.vitoria, .vt').forEach(e => e.remove());
+      Defesa.marcar('elite'); await dorme(150); UI.fecharModal(true); Jogo.chamadaAdiada = null;
+      if (!afazeresDoLocal().some(x => x.id === 'defesa_elite')) falhas.push('o Planalto não tem a sua porta na lista');
+      Exploracao.fazer('defesa_elite');
+      Defesa.lutar('elite');
+      if (Som.tipoDeLuta() !== 'elite') falhas.push('a defesa da porta não toca a faixa da Elite');
+      fim('derrota');
+      if (Defesa.reg().elite.adv !== 1) falhas.push('perder na porta não deu advertência');
+      /* a oferta do 26 dá a porta de verdade */
+      Cargos.largar('elite'); d.defesa.portasPerdidas = []; d.flags.c26_oferta = 'elite';
+      Historia.capitulo(26).cenas.c21_cargo.ef.executar(d);
+      if (!Cargos.tem('elite') || Defesa.minhaPorta() == null) falhas.push('a cadeira do 26 não deu a porta');
+      /* o ginásio do final de Viridian */
+      Cargos.largar('lider'); d.defesa.lider = null; d.defesa.perdidos = [];
+      d.depoisDoFim = {final:'assumiu_viridian', titulo:'TITULAR', s:'livre', cargo:'Titular do ginásio de Viridian', ginasio:'viridian', fecha:{}, desde:d.relogio.dia};
+      d.local = 'viridian';
+      const av = afazeresDoLocal().find(x => x.id === 'ginasio');
+      if (Defesa.meuGinasio() !== 'viridian' || !av || av.fechada || av.titulo !== 'Seu ginásio') falhas.push('o ginásio do final não virou a sua quadra');
+      UI.modalCredenciais(); const cred = (document.querySelector('#modal') || {}).innerText || ''; UI.fecharModal(true);
+      if (!/porta da ala/.test(cred)) falhas.push('o cartão do posto da Elite não diz a porta');
+      UI.modalRegras(); const regras = (document.querySelector('#modal') || {}).innerText || ''; UI.fecharModal(true);
+      if (!/O seu ginásio e a sua porta/.test(regras)) falhas.push('a folha de regras não tem a defesa do posto');
+      return falhas;
+    });
+    r.forEach(f => anota('defesa', f));
+    await olhar('defesa');
+    await page.evaluate(s => { Batalha.ativo = false; UI.fecharModal(true); Jogo.chamadaAdiada = null; Estado.dados = JSON.parse(s); Exploracao.tela(); }, snapDef);
+  }
   /* o fio dos capítulos grandes no Diário: cada cena da lista existe e
      escreveu no diário, e o Diário abre com nenhuma ponta e com todas */
   {

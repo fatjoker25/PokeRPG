@@ -1543,6 +1543,16 @@ const SUSPEITO = [
             }
           }
         }
+        /* o posto que se defende (defesa.js): desafio marcado no ginásio
+           ou na porta da ala, ele vai até lá e luta, com o time em pé */
+        if (typeof Defesa !== 'undefined'){
+          const df = Defesa.pendente();
+          if (df && hp >= .5){
+            if (id === df.lugar) return {f:'defender', tipo:df.tipo};
+            const v = ir(df.lugar);
+            if (v) return v;
+          }
+        }
         /* o pedido aceito (pedidos.js): o passo que é aqui, ele faz; o
            lugar do passo, ele vai uma vez por capítulo; pronto, ele liga
            pra contar */
@@ -1893,6 +1903,11 @@ const SUSPEITO = [
           const ok = x.f === 'ler_recado' ? Recados.ler(x.id) : Recados.retornar(x.id);
           window.__passo && __passo('pokenav', {acao:x.f === 'ler_recado' ? 'leu' : 'retornou', quem:x.id, ok:!!ok}); }, dec)
           .catch(e => erros.push(dec.f + ': ' + e.message));
+      } else if (dec.f === 'defender'){
+        await page.evaluate(t => { UI.fecharModal && UI.fecharModal(true);
+          const x = (Defesa.estado(t) || {}).desafio;
+          window.__passo && __passo('defesa', {tipo:t, quem:x ? x.nome : null});
+          Defesa.lutar(t); }, dec.tipo).catch(e => erros.push('defender: ' + e.message));
       } else if (dec.f === 'contar_pedido'){
         await page.evaluate(i => { UI.fecharModal && UI.fecharModal(true); Pedidos.ligar(i, 'contar');
           window.__passo && __passo('pedido', {fim:'contou', quem:i}); }, dec.id).catch(e => erros.push('pedido: ' + e.message));

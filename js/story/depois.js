@@ -128,7 +128,7 @@ const Depois = {
     if (r.dias) L.push(['A licença', `Volta em ${r.dias} dias. Até lá o Centro cobra como de quem não tem licença, o balcão não emite outra e a Liga não te inscreve.`]);
     for (const [id, motivo] of Object.entries(r.fecha)) L.push([(LOCAIS[id] || {}).nome || id, motivo]);
     if (r.semTroca) L.push(['Trocas', r.semTroca]);
-    if (r.ginasio) L.push([`Ginásio de ${(LOCAIS[r.ginasio] || {}).nome || r.ginasio}`, 'É seu: ninguém desafia o próprio ginásio.']);
+    if (r.ginasio) L.push([`Ginásio de ${(LOCAIS[r.ginasio] || {}).nome || r.ginasio}`, 'É seu: quem desafia é quem marca desafio com você.']);
     if (r.cargo) L.push(['O que você virou', r.cargo]);
     return L;
   },
@@ -211,7 +211,8 @@ const Depois = {
   portaDoGinasio(id){
     const x = this.dados();
     if (!x) return null;
-    if (x.ginasio === id) return 'É o seu ginásio: aqui quem recebe desafio é você.';
+    /* o ginásio que é seu abre a sua quadra (defesa.js), com quem marcou desafio */
+    if (x.ginasio === id) return typeof Defesa !== 'undefined' ? null : 'É o seu ginásio: aqui quem recebe desafio é você.';
     return this.ligaFechada();
   },
   trava(de, para){ const x = this.dados(); return x && x.fecha && x.fecha[para] || null; },

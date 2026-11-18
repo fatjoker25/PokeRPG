@@ -199,7 +199,9 @@ const CARGOS = [
   beneficios:{renda:3000, centro:true, loja:0.9, semEspera:true},
   fala:['O convite está em cima da mesa, num papel timbrado que pesa mais que papel devia pesar.',
         d => fala('a secretária do Planalto', 'Ginásio não é prêmio por ser forte. É um posto de trabalho com horário fixo e uma criança chorando na sua sala toda quinta.'),
-        d => fala('a secretária do Planalto', 'Pensa bem. E depois assina, porque a gente precisa.')]
+        /* a vaga é sorteada no Cargos.assumir (defesa.js) */
+        d => fala('a secretária do Planalto', Defesa.falaDaVaga(d)),
+        d => fala('a secretária do Planalto', 'Quem quiser a insígnia marca desafio aqui na secretaria, e eu aviso você pelo PokéNav.')]
 },
 {
   id:'elite', falante:'quem estava na porta antes de você', nome:'Elite dos Quatro', orgao:'Planalto Indigo', peso:5, cap:27,
@@ -213,8 +215,12 @@ const CARGOS = [
   veta:['rocket'],
   resumo:'Uma das quatro portas. Você passa a ser a parede de alguém.',
   beneficios:{renda:5000, centro:true, semEspera:true},
+  /* a porta é sorteada no Cargos.assumir (defesa.js), e quem sentava
+     nela entrega a chave */
   fala:['Os quatro nomes estão nas portas desde sempre e um deles agora é o seu, impresso na mesma fonte dos outros três.',
-        d => fala('quem estava na porta antes de você', 'A parte difícil não é ganhar. É ganhar de gente que treinou um ano pra te enfrentar e ver a cara delas depois.')]
+        d => Defesa.falasDaPorta(d)[0] || '',
+        d => Defesa.falasDaPorta(d)[1] || '',
+        d => fala(Defesa.quemSaiuDaPorta(d), 'A parte difícil não é ganhar. É ganhar de gente que treinou um ano pra te enfrentar e ver a cara delas depois.')]
 },
 {
   id:'professor', falante:'Professor Oak', nome:'{Professor|Professora} de Kanto', orgao:'rede de laboratórios', peso:5, cap:27,
@@ -319,13 +325,27 @@ const Cargos = {
     Estado.j.cargo = (this.principal() || c).nome;
     Estado.marcar('cargo_' + id);
     Estado.registrar(`Assumiu o posto: ${c.nome} (${c.orgao}).`);
+    /* o ginásio vago e a porta sem dono saem no dado (defesa.js) */
+    if (typeof Defesa !== 'undefined') Defesa.aoAssumir(id).forEach(a => avisos.push(a));
     return {ok:true, cargo:c, avisos};
+  },
+  /* o posto que alguém te dá sem passar pelo balcão (a cadeira da
+     Elite que a Conselheira oferece no 26): entra no bolso sem pedido */
+  conceder(id){
+    const c = this.porId(id);
+    if (!c || this.tem(id)) return [];
+    this.lista().push(id);
+    Estado.marcar('cargo_' + id);
+    Estado.registrar(`Assumiu o posto: ${c.nome} (${c.orgao}).`);
+    return typeof Defesa !== 'undefined' ? Defesa.aoAssumir(id) : [];
   },
 
   largar(id){
     const i = this.lista().indexOf(id);
     if (i < 0) return false;
     this.lista().splice(i, 1);
+    /* o ginásio e a porta vão pra outra pessoa (defesa.js) */
+    if (typeof Defesa !== 'undefined') Defesa.aoLargar(id);
     /* a rede não recebe de volta quem saiu ("ninguém sai, a gente só para de ligar") */
     if (id === 'rocket'){
       Estado.marcar('largou_rocket');

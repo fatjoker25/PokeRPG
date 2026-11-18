@@ -697,8 +697,11 @@ function afazeresDoLocal(){
     if (tem('andou_'+id) && typeof Cidade !== 'undefined' && Cidade.causas && Cidade.causas().length)
       lista.push({lugar:true, id:'doar', titulo:'Tem uma coisa aqui que falta dinheiro',
         sub:'E você tem dinheiro.'});
-    if (tem('ginasio_'+id)) lista.push({lugar:true, id:'ginasio', titulo:'Ginásio',
-      sub:'Você sabe onde fica. Não sabe o que tem dentro.', fechada:(typeof Depois !== 'undefined' ? Depois.portaDoGinasio(id) : null)});
+    /* o ginásio que é seu (defesa.js) é a sua quadra: abre com quem marcou desafio */
+    if (tem('ginasio_'+id)) lista.push(typeof Defesa !== 'undefined' && Defesa.meuGinasio() === id
+      ? Defesa.afazerDoGinasio(id)
+      : {lugar:true, id:'ginasio', titulo:'Ginásio',
+        sub:'Você sabe onde fica. Não sabe o que tem dentro.', fechada:(typeof Depois !== 'undefined' ? Depois.portaDoGinasio(id) : null)});
     /* (a troca de cidade é montada aqui; a de rota, no bloco de rota) */
     if (tem('troca_'+id) && typeof Trocas !== 'undefined' && Trocas.lista(id).length){
       const abertas = Trocas.disponiveis(id);
@@ -756,6 +759,8 @@ function afazeresDoLocal(){
   if (typeof Intuicao !== 'undefined') Intuicao.afazeres(id).forEach(x => lista.push(x));
   /* a porta de casa de um titular da Elite, pra quem sabe onde ele está */
   if (typeof Titulares !== 'undefined') Titulares.afazeres(id).forEach(x => lista.push(x));
+  /* a sua porta da ala, no Planalto (defesa.js) */
+  if (typeof Defesa !== 'undefined') Defesa.afazeres(id).forEach(x => lista.push(x));
   /* o Professor, em Pallet, que atualiza a Pokédex pra Nacional (dex-nacional.js) */
   if (typeof DexNacional !== 'undefined') DexNacional.afazeres(id).forEach(x => lista.push(x));
   /* quem mandou recado de que separou alguma coisa e está nesta cidade (recados.js) */

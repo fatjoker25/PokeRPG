@@ -215,7 +215,7 @@ const Patrulha = {
     time.forEach(x => { x.nomeAnunciado = true; });
     Jogo.cenaBatalha = null; Jogo.ginasioAtual = null; Jogo.eliteAtual = null; Jogo.torneioAtual = null;
     Jogo.rivalAtual = null; Jogo.revancheAtual = null; Jogo.estradaAtual = null; Jogo.conferenciaAtual = null;
-    Jogo.veteranoAtual = null; Jogo.redeAtual = null;
+    Jogo.veteranoAtual = null; Jogo.redeAtual = null; Jogo.defesaAtual = null;
     Jogo.patrulhaAtual = {local:Mundo.id()};
     Jogo.batalhaLivre = true;
     UI.limparDados();
@@ -229,7 +229,7 @@ const Patrulha = {
   },
 
   resultado(fim){
-    Jogo.patrulhaAtual = null;
+    Jogo.patrulhaAtual = null; Jogo.defesaAtual = null;
     Jogo.batalhaLivre = false;
     if (fim.resultado === 'gameover') return UI.telaGameOver('Você caiu na estrada, brigando com a Patrulha.');
     /* desistir no meio é levantar a mão: a custódia de quem se entrega */

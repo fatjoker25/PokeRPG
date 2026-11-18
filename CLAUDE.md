@@ -1942,6 +1942,75 @@ sempre — um robô ganhou assim. Hoje quem coroa é `coroarCampeao`
 título, prêmio, reputação e o registro nacional. Quem já é Campeão não
 vê a opção de descer.
 
+## O seu ginásio e a sua porta
+Foi pedido assim: o jogo sorteia o ginásio que está vago, e o
+ginásio e a Elite são desafiados — "tivesse como defender". Mora em
+`js/story/defesa.js` (`Defesa`), com os números no topo, e a folha de
+regras ("O seu ginásio e a sua porta") lê os mesmos números.
+
+- **A vaga sai no dado, na hora de assumir** (`Defesa.aoAssumir`,
+  chamado pelo `Cargos.assumir` e pelo `Cargos.conceder`): o ginásio é
+  o do final de Viridian se você já tem, Viridian se o Blue foi embora
+  no 23 (`recusou_o_ginasio`, `blue_ofereceu_o_ginasio`), ou um dos
+  oito; a porta é uma das três do meio cujo titular não voltou. Vaga
+  que você perdeu ou largou não volta no sorteio (`perdidos`,
+  `portasPerdidas`). A cadeira que a Conselheira oferece no 26 é o
+  posto `elite` de verdade (`Cargos.conceder`, no `c21_cargo`), com
+  porta: antes ela só escrevia o nome do cargo, sem posto.
+- **O seu ginásio é a sua quadra**: a porta dele na cidade vira "Seu
+  ginásio" (`afazerDoGinasio`, no `afazeresDoLocal`) e abre a tela da
+  quadra (`Defesa.tela`, pelo `Cidade.ginasio`). O ginásio do final de
+  Viridian também (`Depois.portaDoGinasio` deixa a porta aberta). Quem
+  saiu do ginásio continua na agenda, mas não fala mais de desafiante
+  (`lider` no `Recados.contexto`) e a revanche com ele fecha
+  (`Estado.podeLigar`).
+- **A sua porta**: o substituto entrega a chave (`QUEM_DEIXA_A_PORTA`,
+  uma narração e uma fala, lidas pela fala do posto), o corredor da
+  Liga desenha a placa com o seu nome (`.liga-porta.sua`), o titular
+  dela não volta mais (`Titulares.visitavel`) e a ala atravessa a sua
+  porta sem luta (`Jogo.pularMinhaPorta`), pra o Campeão continuar ao
+  alcance. No Planalto, "Sua porta na ala" (`Defesa.afazeres`).
+- **O desafio** (`Defesa.conferir`, na tela do mapa): marcado a cada
+  `ESPERA_ENTRE_DESAFIOS` dias, com `PRAZO_DA_DEFESA` dias de prazo, e
+  avisado pela **secretaria do Planalto**, um contato que só avisa
+  (`soAvisa`: fora do sorteio de quem liga, dos pedidos e do "Só
+  conversar"), que entra na agenda com o posto. O registro
+  (`d.defesa`) só nasce quando um posto entra no bolso
+  (`Defesa.regGravar`); ler (`Defesa.reg`) não cria nada, senão todo
+  save ganhava um e a secretaria aparecia na agenda de quem nunca teve
+  posto. O contato é `automatico`: ninguém oferece o número. O aviso é um toque
+  `recados:'defesa'`, pelo `tocarOuGuardar`: espera a luta e a
+  madrugada, e no silencioso vira mensagem por ler. Capítulo que anda
+  no meio do prazo remarca o prazo (`desafio.cap`, por
+  `capNaJornada`): a história te levou, e isso não é falta.
+- **Quem desafia** sai dos inscritos do Torneio Aberto
+  (`sortearDesafiante`, sem repetir os três últimos), com as linhas, os
+  golpes e o item dele, mas no tamanho e no nível da defesa
+  (`DEFESAS[tipo]`, montado em `Defesa.desafiante`); o Ezra vem com o
+  time de rival. Medido no `sim-torneio.js` com `FASE=8` e o `NIVEL` e
+  o `EXTRA` da defesa: o jogador ingênuo no nível da área vence 70% no
+  ginásio (4 Pokémon, ás 3 abaixo dos seus três mais fortes) e 57% na
+  porta (5, ás 5 abaixo). Com o time de seis no nível do torneio, era
+  35% e 28%, e baixar seis níveis só levava o ginásio a 50%: aqui o
+  nível pesa pouco, e o que pesa é o time montado.
+- **A luta** é `Jogo.defesaAtual`, olhado antes de tudo no
+  `finalizarBatalha`, salvo pela `LutaSalva` e zerado em toda luta que
+  começa (junto com o `patrulhaAtual`); na quadra (`arena:'ginasio'`),
+  com a faixa do seu ginásio ou a da Elite (`Som.tipoDeLuta`). Ganhou:
+  o bônus e uma advertência a menos. Perdeu, desistiu ou faltou: uma
+  advertência. Com `ADVERTENCIAS_PRA_PERDER`, a Liga tira o posto
+  (`perderPosto`; o do final vira "Ex-titular" na Ficha). A máquina da
+  quadra cura o time depois, ganhando ou perdendo.
+
+O robô vai defender quando tem desafio marcado e o time de pé
+(`Defesa.pendente`, `{f:'defender'}`), e o passo `defesa` vai pro
+relatório. `chk-lutas` roda cada inscrito no seu ginásio e na sua
+porta, nas duas fichas, ganhando e perdendo; `chk-telas` passa pelo
+sorteio, a mensagem, a quadra, a luta, ganhar, perder até sair do
+posto, a falta, o silencioso, o ex-líder, a porta, a ala que pula, a
+oferta do 26 e o ginásio do final; `chk-baloes` lê as falas pelo
+`Defesa.amostras`.
+
 ## Sexo do Pokémon
 Todo Pokémon ganha `genero` (`'m'`, `'f'` ou `null`) no `criarPokemon`,
 na proporção dos jogos (`chanceDeMacho`, em `js/engine/pokemon.js`). Save
@@ -2940,7 +3009,8 @@ final; quem não está lá é `livre`), e a tela do fim mostra o bloco
   guarita, Celadon pra quem fugiu pela porta dos fundos — pela
   `travaDaPassagem`, e o mapa continua conexo sem eles;
 - **cargo**, na Ficha, e o ginásio que é seu (`ginasio`) não se
-  desafia; **sem troca** pra quem parou de trocar. Posto que espera um
+  desafia: é a sua quadra, defendida (ver "O seu ginásio e a sua
+  porta"); **sem troca** pra quem parou de trocar. Posto que espera um
   capítulo (`cap` em `CARGOS`) abre depois do fim (`capDoPosto`): quem
   terminou num final do 25 ficava com o capítulo parado ali, e
   Conselheiro, Elite e Professor nunca abriam.

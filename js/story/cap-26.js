@@ -1397,8 +1397,12 @@ c21_cargo:{
     fala('Conselheira Edda Thistle', 'Porque o que {o senhor|a senhora} resolvia sozinh{o|a} lá fora não escalava, e o que a gente faz aqui dentro escala mal, e ninguém achou nada melhor que isso ainda.')
   ],
   ef:{flag:'aceitou_cargo_liga',
-      executar:d=>{ d.jogador.cargo = C26_CARGO[c26_oferta(d)];
-        return [{tipo:'insignia', texto:`Cargo assumido: ${d.jogador.cargo}.`}]; },
+      executar:d=>{ const o = c26_oferta(d);
+        /* a cadeira da Elite é uma porta de verdade (defesa.js): entra no
+           bolso como o posto do balcão, e a porta sai no dado */
+        const extra = o === 'elite' && typeof Cargos !== 'undefined' ? Cargos.conceder('elite') : [];
+        d.jogador.cargo = C26_CARGO[o];
+        return [{tipo:'insignia', texto:`Cargo assumido: ${d.jogador.cargo}.`}].concat(extra); },
       rep:{eixo:'bom',delta:2,motivo:'Assumiu um cargo formal na Liga Pokémon'},
       dinheiro:30000,
       registrar:'Aceitou um cargo formal na Liga Pokémon.'},

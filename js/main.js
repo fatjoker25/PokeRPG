@@ -62,6 +62,8 @@ const Jogo = {
   ginasioAtual: null,
   voltarDeGinasio: 'exploracao',
   eliteAtual: null,
+  /* a defesa do seu ginásio ou da sua porta da Elite (defesa.js) */
+  defesaAtual: null,
   revancheAtual: null,
   /* o chaveamento do Torneio Aberto mora no save (d.torneioAberto):
      recarregar entre uma rodada e outra volta pra chave, e luta
@@ -378,7 +380,7 @@ const Jogo = {
     const cena = Historia.cenaAtual;
     const b = cena.batalha;
     this.cenaBatalha = b;
-    this.redeAtual = null; this.patrulhaAtual = null;
+    this.redeAtual = null; this.patrulhaAtual = null; this.defesaAtual = null;
 
     const meu = Estado.primeiroApto();
     if (!meu){
@@ -685,6 +687,7 @@ const Jogo = {
 
   finalizarBatalha(fim){
     this.fimPendente = null;
+    if (this.defesaAtual)   return Defesa.resultado(fim);
     if (this.patrulhaAtual) return Patrulha.resultado(fim);
     if (this.redeAtual)     return Rede.resultado(fim);
     if (this.veteranoAtual) return this.veteranoAtual.tipo === 'conferencia' ? Conferencia.resultado(fim) : Veteranos.resultado(fim);
@@ -936,7 +939,7 @@ const Jogo = {
     /* o líder grita o nome ao soltar a bola — a entrada já sai com o nome certo */
     time.forEach(x => { x.nomeAnunciado = true; });
     this.ginasioAtual = g;
-    this.cenaBatalha = null; this.redeAtual = null; this.patrulhaAtual = null;
+    this.cenaBatalha = null; this.redeAtual = null; this.patrulhaAtual = null; this.defesaAtual = null;
     /* entrou uma vez, viu o time: a ficha do ginásio abre daqui pra frente */
     Estado.marcar('enfrentou_' + g.id);
     Estado.registrar(`Desafiou ${g.lider} no Ginásio de ${g.cidade}.`);
@@ -1199,7 +1202,7 @@ const Jogo = {
 
     this.revancheAtual = {id:c.id, nome};
     this.ginasioAtual = null; this.eliteAtual = null; this.torneioAtual = null;
-    this.rivalAtual = null; this.cenaBatalha = null; this.veteranoAtual = null; this.estradaAtual = null; this.redeAtual = null; this.patrulhaAtual = null;
+    this.rivalAtual = null; this.cenaBatalha = null; this.veteranoAtual = null; this.estradaAtual = null; this.redeAtual = null; this.patrulhaAtual = null; this.defesaAtual = null;
     Mundo.passar(1);
     UI.limparDados();
     Batalha.iniciar(meu, time[0], {
@@ -1251,7 +1254,7 @@ const Jogo = {
     const time = R ? timeRivalExtra(R) : timeRival();
     this.rivalAtual = R ? {extra:R.id} : {arco: arcoRival()};
     this.cenaBatalha = null; this.ginasioAtual = null; this.eliteAtual = null; this.torneioAtual = null;
-    this.redeAtual = null; this.patrulhaAtual = null;
+    this.redeAtual = null; this.patrulhaAtual = null; this.defesaAtual = null;
     UI.limparDados();
     Batalha.iniciar(meu, time[0], {
       tipo:'treinador', fuga:false, treinador:nome, vontadeIA:true,
@@ -1371,21 +1374,34 @@ const Jogo = {
     const meu = Estado.primeiroApto();
     if (!meu) return UI.modal('Elite 4', '<p class="nada">Nenhum Pokémon em pé. A ala não tem Centro Pokémon — cure antes de entrar.</p>');
     this.eliteAtual = {indice:0, campeao:false};
+    this.pularMinhaPorta();
     Estado.marcar('entrou_na_ala');
     Estado.registrar('Entrou na ala da Elite 4.');
     this.batalhaElite();
+  },
+
+  /* a sua porta da ala (defesa.js) se atravessa sem luta: ninguém
+     desafia a própria sala */
+  pularMinhaPorta(){
+    const e = this.eliteAtual, p = typeof Defesa !== 'undefined' ? Defesa.minhaPorta() : null;
+    if (!e || e.campeao || p == null || e.indice !== p) return false;
+    e.indice++;
+    e.pulou = true;
+    if (e.indice >= ELITE4.length) e.campeao = true;
+    return true;
   },
 
   batalhaElite(){
     const e = this.eliteAtual;
     const meu = Estado.primeiroApto();
     if (!meu) return this.resultadoElite({resultado:'derrota'});
+    this.pularMinhaPorta();
 
     /* quem senta atrás da porta hoje: o titular que voltou, ou o substituto */
     const alvo = e.campeao ? CAMPEAO : Titulares.membro(e.indice);
     const time = timeDaElite(alvo);
 
-    this.cenaBatalha = null; this.ginasioAtual = null; this.torneioAtual = null; this.redeAtual = null; this.patrulhaAtual = null;
+    this.cenaBatalha = null; this.ginasioAtual = null; this.torneioAtual = null; this.redeAtual = null; this.patrulhaAtual = null; this.defesaAtual = null;
     UI.limparDados();
     Batalha.iniciar(meu, time[0], {
       tipo:'treinador', fuga:false, vontadeIA:true,
@@ -1394,7 +1410,12 @@ const Jogo = {
       revelarNatureza: true,   // líder e nome grande falam do próprio time
       introducao: `${alvo.nome} enviou ${nomeVisivel(time[0])} (Nv ${time[0].nivel})!`
     });
-    UI.telaBatalha(alvo.intro(Estado.dados).filter(Boolean));
+    const intro = alvo.intro(Estado.dados).filter(Boolean);
+    if (e.pulou){
+      intro.unshift('A sua porta fica aberta. Você atravessa a sua própria sala com a chave no bolso.');
+      e.pulou = false;
+    }
+    UI.telaBatalha(intro);
   },
 
   resultadoElite(fim){
@@ -1498,7 +1519,7 @@ const Jogo = {
     if (!meu) return this.resultadoTorneio({resultado:'derrota'});
     const adv = t.adv || (t.adv = adversarioDaVez(t));
     adv.time.forEach(x => { x.nomeAnunciado = true; });
-    this.cenaBatalha = null; this.ginasioAtual = null; this.eliteAtual = null; this.redeAtual = null; this.patrulhaAtual = null;
+    this.cenaBatalha = null; this.ginasioAtual = null; this.eliteAtual = null; this.redeAtual = null; this.patrulhaAtual = null; this.defesaAtual = null;
     UI.limparDados();
     Batalha.iniciar(meu, adv.time[0], {
       tipo:'treinador', fuga:false, treinador: adv.nome, vontadeIA:true, erroIA: ERRO_IA_TORNEIO[t.rodada],

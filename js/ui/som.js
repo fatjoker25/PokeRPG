@@ -326,6 +326,8 @@ const Som = {
       if (/\bNolan\b/.test(t)) return 'faixa:' + FAIXA_DO_RIVAL.tunico;
       if (/\bDiana\b/.test(t)) return 'faixa:' + FAIXA_DO_RIVAL.diana;
     }
+    /* a defesa do seu posto (defesa.js): a faixa do seu ginásio, ou a da Elite */
+    if (J.defesaAtual) return J.defesaAtual.tipo === 'elite' ? 'elite' : 'lider:' + J.defesaAtual.ginasio;
     if (J.eliteAtual || J.torneioAtual || J.conferenciaAtual) return 'elite';
     /* a Elite fora da ala (o poço do capítulo 26) toca a mesma */
     if (J.cenaBatalha && J.cenaBatalha.elite !== undefined) return 'elite';

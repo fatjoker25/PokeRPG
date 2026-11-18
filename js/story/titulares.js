@@ -217,7 +217,9 @@ const Titulares = {
   visitavel(id, d){
     d = d || Estado.dados;
     const t = TITULARES[id];
-    return !!t && this.liberado(d) && !!d.flags[t.pista] && !this.estado(id, d) && !d.flags.campeao_de_kanto;
+    return !!t && this.liberado(d) && !!d.flags[t.pista] && !this.estado(id, d) && !d.flags.campeao_de_kanto
+      /* a porta dele agora é sua (defesa.js): não tem pra onde voltar */
+      && !(typeof Defesa !== 'undefined' && Defesa.minhaPorta(d) === t.porta);
   },
 
   afazeres(local){

@@ -61,7 +61,7 @@ const raiz = path.resolve(__dirname, '..');
       d.relogio.hora = 12;
       Mundo.viajar('viridian');
       Jogo.cenaBatalha = Jogo.ginasioAtual = Jogo.eliteAtual = Jogo.torneioAtual = Jogo.rivalAtual = null;
-      Jogo.revancheAtual = Jogo.veteranoAtual = Jogo.estradaAtual = Jogo.redeAtual = Jogo.patrulhaAtual = null; Jogo.batalhaLivre = false;
+      Jogo.revancheAtual = Jogo.veteranoAtual = Jogo.estradaAtual = Jogo.redeAtual = Jogo.patrulhaAtual = Jogo.defesaAtual = null; Jogo.batalhaLivre = false;
       return d;
     };
 
@@ -221,6 +221,20 @@ const raiz = path.resolve(__dirname, '..');
     };
     [[2, 6], [8, 22]].forEach(([ins, cap]) => add(`Patrulha (${ins} insígnias)`, ins, cap, d => { naDetencao(d); Patrulha.lutar(); }));
     add('Patrulha (procurado do fim)', 8, 28, d => { naDetencao(d, true); Patrulha.lutar(); });
+    /* a defesa do posto (defesa.js): cada inscrito do torneio desafiando
+       o seu ginásio e a sua porta da ala */
+    const naDefesa = (d, tipo, ins) => {
+      if (tipo === 'elite') d.flags.venceu_a_elite = true;
+      Cargos.conceder(tipo);
+      const r = Defesa.estado(tipo);
+      r.desafio = {quem:ins.id, nome:ins.nome, curto:ins.curto || ins.nome, f:!!ins.f, de:ins.de || '', fala:'Vim.',
+        dia:d.relogio.dia, ate:d.relogio.dia + 3, cap:capNaJornada(d)};
+      Mundo.viajar(tipo === 'lider' ? r.ginasio : 'planalto');
+      Defesa.lutar(tipo);
+    };
+    const umaVez = l => { const ja = new Set(); return l.filter(x => !ja.has(x.id) && ja.add(x.id)); };
+    umaVez(RIVAIS_TORNEIO.filter(r => !r.cond && (r.linhas || r.veterano))).forEach(ins => ['lider', 'elite'].forEach(tipo =>
+      add(`defesa ${tipo === 'lider' ? 'do ginásio' : 'da porta'} ${ins.curto || ins.nome}`, 8, 27, d => naDefesa(d, tipo, ins))));
     /* revanches */
     CONTATOS.filter(c => c.ginasio || c.rivalExtra || c.revanche).forEach(c => add(`revanche ${c.id}`, 6, 16, d => {
       d.revanches = {[c.id]: {local: Mundo.id()}}; Jogo.lutarRevanche(c.id); }));

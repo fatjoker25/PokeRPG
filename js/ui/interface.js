@@ -3311,7 +3311,9 @@ const UI = {
     const nome = textoContato(c, 'nome') || '?';
     /* a casa pelo parentesco, como no balão: nunca o rosto de quem tem o mesmo nome */
     const r = c.id === 'casa' && typeof retratoDaCasa === 'function' ? retratoDaCasa()
-      : (typeof retratoDe === 'function') ? (retratoDe(nome) || retratoDe(c.nome && typeof c.nome === 'string' ? c.nome : '')) : null;
+      : (typeof retratoDe === 'function') ? (retratoDe(nome) || retratoDe(c.nome && typeof c.nome === 'string' ? c.nome : '')
+        /* e pelo rótulo com que a pessoa fala, como o balão (a secretaria do Planalto) */
+        || (c.falaComo ? retratoDe(c.falaComo) : null)) : null;
     const cls = `nav-inicial${grande ? ' grande' : ''} ${c.tipo === 'treinador' ? 'treinador' : 'figura'}`;
     /* a inicial é a do nome, não a do artigo: "O menino do balde" é M */
     const ini = this.esc((this.navChave(nome).charAt(0) || '?').toUpperCase());
@@ -3777,7 +3779,19 @@ const UI = {
        quem já sabe; a porta que você já atravessou ganha o carimbo.
        Titular que a visita trouxe de volta senta na própria porta
        (Titulares.membro) e ganha a etiqueta de quem voltou. */
-    const portas = ELITE4.map((_, i) => Titulares.membro(i)).map(m => {
+    /* a sua porta (defesa.js): a placa com o seu nome, e quem senta é você */
+    const minha = typeof Defesa !== 'undefined' ? Defesa.minhaPorta(d) : null;
+    const portas = ELITE4.map((_, i) => Titulares.membro(i)).map((m, i) => {
+      if (i === minha){
+        const euNaPorta = retratoDoJogador(d);
+        return `<div class="liga-porta sua">
+          <span class="lp-ordem">${i + 1}ª porta</span>
+          <span class="lp-placa">${this.esc(String(d.jogador.nome || 'Você').toUpperCase())}</span>
+          <span class="lp-rosto">${euNaPorta ? `<img src="${euNaPorta}" alt="" onerror="this.remove()">` : '<b aria-hidden="true">★</b>'}</span>
+          <span class="lp-quem">Você</span>
+          <span class="lp-cadeira">a sua porta</span>
+        </div>`;
+      }
       const passou = campeao || !!d.flags['elite_passou_' + m.id];
       const rosto = sabeQuemSao && typeof retratoDe === 'function' ? retratoDe(m.nome) : null;
       const outro = m.titular && m.titular !== m.nome;
@@ -3823,7 +3837,11 @@ const UI = {
     /* o que dá pra fazer aqui, no menu de sempre: a porta fechada
        aparece e diz o que falta, como no resto do mapa */
     const fechada = (ic, rot, motivo) => `<button class="escolha menu com-icone" disabled>${svgIcone(ic)}<span class="esc-rot">${rot}<span class="esc-trava">${this.esc(motivo)}</span></span></button>`;
+    /* o desafio marcado na sua porta (defesa.js) */
+    const naPorta = minha != null ? Defesa.estado('elite', d) : null;
     const acoes = [
+      naPorta && naPorta.desafio
+        ? `<button class="escolha chamado com-icone" onclick="Defesa.lutar('elite')">${svgIcone('lutar')}<span class="esc-rot"><small>A sua porta</small>Defender a porta — ${this.esc(naPorta.desafio.curto)}</span></button>` : '',
       e4.estado === 'disponivel'
         ? `<button class="escolha chamado com-icone" onclick="Jogo.iniciarElite4()">${svgIcone('liga')}<span class="esc-rot"><small>Elite dos Quatro</small>Entrar na ala</span></button>`
         : e4.estado === 'trancado' ? fechada('trancado', 'Entrar na ala da Elite', e4.texto) : '',
@@ -3996,7 +4014,10 @@ const UI = {
       <div class="narrativa">${o.quem && o.monologo ? this.narrarMonologo(o.falas || [], o.quem) : this.narrar(o.falas || [], o.quem || null)}</div>
       <div id="avisos" class="avisos"></div>
       <div id="escolhas" class="escolhas" style="margin-top:18px">
-        ${(o.botoes || []).map(b => `<button class="escolha" onclick="${b.acao}">${this.esc(txt(b.texto))}</button>`).join('')}
+        ${(o.botoes || []).map(b => b.icone
+          /* botão com desenho e classe (a luta, em vermelho): o mesmo das ações de cena */
+          ? `<button class="escolha com-icone${b.classe ? ' ' + b.classe : ''}" onclick="${b.acao}">${svgIcone(b.icone)}<span class="esc-rot">${this.esc(txt(b.texto))}</span></button>`
+          : `<button class="escolha${b.classe ? ' ' + b.classe : ''}" onclick="${b.acao}">${this.esc(txt(b.texto))}</button>`).join('')}
       </div>
     </div>`);
     if (o.avisos && o.avisos.length) this.avisos(o.avisos);
@@ -5946,6 +5967,7 @@ const UI = {
         <span class="cargo-peso">${'●'.repeat(x.cargo.peso)}${'○'.repeat(5 - x.cargo.peso)}</span>
       </div>
       <div class="cargo-resumo">${this.esc(x.cargo.resumo)}</div>
+      ${x.tem && typeof Defesa !== 'undefined' && Defesa.notaDoCartao(x.cargo.id) ? `<div class="cargo-resumo"><b>${this.esc(Defesa.notaDoCartao(x.cargo.id))}</b></div>` : ''}
       <div class="cargo-ben">${(l => l.length ? l.map(b => `<span>${this.esc(b)}</span>`).join('') : '<span>—</span>')(ben(x.cargo.beneficios || {}))}</div>
       ${x.cargo.aviso ? `<div class="cargo-aviso">${this.esc(x.cargo.aviso)}</div>` : ''}
       ${acao}
@@ -6840,7 +6862,7 @@ const UI = {
       <div class="linha"><span class="k">Parou de competir</span><span class="v">ginásio, ala da Elite, arena e Conferência fecham, e você recomeça em casa</span></div>
       <div class="linha"><span class="k">Licença suspensa</span><span class="v">até ela voltar, o Centro cobra como de quem não tem licença, o balcão não emite outra e a Liga não te inscreve · ela volta sozinha no dia</span></div>
       <div class="linha"><span class="k">Lugar fechado</span><span class="v">quem disse que não volta a um lugar não volta: a passagem pra ele fica trancada</span></div>
-      <div class="linha"><span class="k">Cargo</span><span class="v">o que você virou aparece na Ficha · o ginásio que é seu não se desafia · posto que esperava um capítulo da história abre depois do fim (ela já passou dele), e o resto do que ele pede continua valendo</span></div>
+      <div class="linha"><span class="k">Cargo</span><span class="v">o que você virou aparece na Ficha · o ginásio que é seu não se desafia: é a sua quadra, e é você quem defende ele (O seu ginásio e a sua porta) · posto que esperava um capítulo da história abre depois do fim (ela já passou dele), e o resto do que ele pede continua valendo</span></div>
 
       <h3>O que o crachá muda na história</h3>
       <div class="linha"><span class="k">Opção que só existe com posto</span><span class="v">cais de Vermilion · recepção da Silph · cerca de Fuchsia</span></div>
@@ -6860,6 +6882,21 @@ const UI = {
       <div class="linha"><span class="k">O que cada um pede</span><span class="v">a lista aparece no lugar, com ✓ no que você já tem e ✗ no que falta</span></div>
       <div class="linha"><span class="k">Policial de Kanto</span><span class="v">${this.esc('3 insígnias · reputação boa {Reconhecido|Reconhecida} ou mais · ter sido Guarda de rota · 800 ₽ por capítulo, Centro sem custo, passagem e Força +1')}</span></div>
       <p class="sussurro">Quinze postos, de licença de treinador a conselheiro regional. Cada um pede uma coisa diferente — espécies catalogadas, insígnias, reputação, o time que você leva, o que você já fez — e alguns só existem depois de muita estrada. O envelope sem timbre chega a quem a rede conhece: quem carregou carga pra ela, ou quem já tem a reputação ruim. Quem carrega o envelope sem timbre não recebe crachá da Liga, e vice-versa; e esse envelope piora a sua reputação sozinho, todo capítulo.</p>
+
+      <h3>O seu ginásio e a sua porta</h3>
+      ${(() => {
+        /* os números moram em defesa.js e liga.js */
+        const nv = n => n === 0 ? 'na média dos seus três mais fortes' : n < 0 ? `${-n} abaixo da média dos seus três mais fortes` : `${n} acima da média dos seus três mais fortes`;
+        const L = (k, v) => `<div class="linha"><span class="k">${k}</span><span class="v">${v}</span></div>`;
+        return L('O ginásio', 'o posto de Líder dá o ginásio que está vago: no dado entre os oito, ou o que a história já deixou vago · o seu ginásio não se desafia: é a sua quadra, e a porta dele na cidade abre ela')
+          + L('A porta', 'a cadeira na Elite dá, no dado, uma das três portas cujo dono não voltou · quem sentava nela sai, e o dono dela não volta mais · na ala, a sua porta se atravessa sem luta')
+          + L('Desafio', `alguém marca a cada ${ESPERA_ENTRE_DESAFIOS[0]} a ${ESPERA_ENTRE_DESAFIOS[1]} dias · a secretaria do Planalto avisa pelo PokéNav · quem marcou espera ${PRAZO_DA_DEFESA} dias · capítulo que anda no meio do prazo remarca o prazo`)
+          + L('Quem desafia', `gente do Torneio Aberto, e quem você conhece da estrada, com o time e o item dele · no ginásio, ${DEFESAS.lider.tam} Pokémon, o ás ${nv(DEFESAS.lider.nivel)}, errando ${DEFESAS.lider.erroIA}% · na porta, ${DEFESAS.elite.tam} Pokémon, o ás ${nv(DEFESAS.elite.nivel)}, errando ${DEFESAS.elite.erroIA}% · os dois gastam Vontade`)
+          + L('Ganhou', `${fmtDin(DEFESAS.lider.bonus)} ₽ no ginásio, ${fmtDin(DEFESAS.elite.bonus)} ₽ na porta · uma advertência a menos`)
+          + L('Perdeu, desistiu ou faltou', 'uma advertência · faltar é a insígnia, ou a passagem, sem luta')
+          + L('Advertências', `com ${ADVERTENCIAS_PRA_PERDER}, a Liga tira o posto: o ginásio vai pra outra pessoa, a porta volta pra quem sentava nela · assumir de novo sorteia outra vaga`)
+          + L('Depois da luta', 'a máquina da quadra cura o time, ganhando ou perdendo');
+      })()}
 
       <h3>A rede</h3>
       <div class="linha"><span class="k">O que é</span><span class="v">o que sobrou da Rocket; quem entra é quem carrega o envelope sem timbre</span></div>

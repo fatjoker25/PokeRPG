@@ -427,6 +427,7 @@ function deOnde(l){
       case 'pokenav': txt = `PokéNav: ${esc(p.acao || '')} ${esc(p.quem ? quemNav(p.quem) : '')}${p.ok === false ? ' (não deu)' : ''}`; break;
       case 'numeros': cls = 'p-pokenav'; txt = `gravou ${uma(p.n || 0, 'número', 'números')}: ${esc(String(p.quem || '').split(',').filter(Boolean).map(quemNav).join(', '))}`; break;
       case 'pedido': cls = 'p-pokenav'; txt = `pedido de favor de ${esc(p.quem ? quemNav(p.quem) : '?')}: ${esc(p.fim || '')}`; break;
+      case 'defesa': txt = `desafio marcado ${p.tipo === 'elite' ? 'na sua porta da ala' : 'no seu ginásio'}${p.quem ? ': ' + esc(p.quem) : ''}`; break;
       case 'janela': txt = `${esc(p.janela)}: ${esc(p.texto)}`; break;
       case 'evoluiu': txt = `<b>${esc(p.de)}</b> evoluiu para <b>${esc(p.para)}</b> no nível ${p.nivel}`; break;
       case 'tm': txt = `ensinou ${esc(p.nome)} a ${esc(p.quem)}`; break;

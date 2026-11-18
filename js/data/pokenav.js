@@ -863,6 +863,18 @@ const CONTATOS = [
   }
 },
 
+/* ── a secretaria do Planalto: o número vem com o seu ginásio ou a
+   sua porta da Elite (defesa.js), e ela só avisa do desafio marcado.
+   Não liga à toa, não pede favor e não conversa (`soAvisa`). ───── */
+{
+  id:'secretaria', tipo:'figura', nome:'Secretaria do Planalto', falaComo:'a secretária do Planalto', papel:'',
+  cidade:'Planalto Indigo', soAvisa:true,
+  /* o número entra sozinho com o posto (automatico): ninguém oferece */
+  automatico:true,
+  requer:d=>!!d.defesa,
+  oferece:[]
+},
+
 /* ── rivais ──────────────────────────────────────────────── */
 {
   id:'teo', tipo:'treinador', nome:'Ezra', papel:'o seu rival', cidade:'estrada',

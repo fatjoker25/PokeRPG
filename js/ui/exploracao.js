@@ -22,6 +22,8 @@ const Exploracao = {
     if (nasceu) avisos = (avisos || []).concat(nasceu);
     /* o pedido que passou do prazo fecha, e a pessoa manda mensagem (pedidos.js) */
     if (typeof Pedidos !== 'undefined') Pedidos.conferir();
+    /* o desafio marcado no seu ginásio ou na sua porta, e o prazo que passou (defesa.js) */
+    if (typeof Defesa !== 'undefined') Defesa.conferir();
     /* a intuição avisa quando chega a hora, sem dizer qual é a hora */
     const intu = typeof Intuicao !== 'undefined' ? Intuicao.talvez() : null;
     if (intu) avisos = (avisos || []).concat([intu]);
@@ -476,6 +478,7 @@ const Exploracao = {
     if (acao.startsWith('recado_')) return Recados.encontrar(acao.slice(7));
     if (acao.startsWith('pedido_')) return Pedidos.fazer(acao.slice(7));
     if (acao === 'rede')          return Rede.tela();
+    if (acao === 'defesa_elite')  return Defesa.tela('elite');
     if (acao === 'esperar')       return this.esperar();
     if (acao.startsWith('posto_')){
       const x = Cargos.lugaresEm(Mundo.id())[+acao.slice(6)];
@@ -771,7 +774,7 @@ const Exploracao = {
     const errante = !(opts && opts.fixo) && typeof Errantes !== 'undefined' ? Errantes.talvez(Mundo.id()) : null;
     if (errante){ selvagem = errante.p; intro = errante.intro; tipo = 'lendario'; }
     Jogo.cenaBatalha = null; Jogo.ginasioAtual = null; Jogo.eliteAtual = null;
-    Jogo.torneioAtual = null; Jogo.rivalAtual = null; Jogo.redeAtual = null; Jogo.patrulhaAtual = null;
+    Jogo.torneioAtual = null; Jogo.rivalAtual = null; Jogo.redeAtual = null; Jogo.patrulhaAtual = null; Jogo.defesaAtual = null;
     Jogo.batalhaLivre = true;
     UI.limparDados();
     /* Um brilhante muda a entrada da cena antes de mudar a batalha. */
