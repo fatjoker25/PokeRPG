@@ -74,7 +74,11 @@ function timeJogador(nivel){
 const MOCHILAS = {
   nada:{Revive:0, 'Hyper Potion':0, 'Full Heal':0},
   robo:{Revive:2, 'Hyper Potion':4, 'Full Heal':2},       // o que o robô leva hoje
-  preparado:{Revive:6, 'Hyper Potion':12, 'Full Heal':4}   // quem se preparou pra ala
+  preparado:{Revive:6, 'Hyper Potion':12, 'Full Heal':4},  // quem se preparou pra ala
+  /* o conselheiro da quarta rodada, o único que passou as quatro portas,
+     chegou à ala com mais de cem Revives (presente, achado e missão
+     juntados em três etapas parado no capítulo 21) */
+  farta:{Revive:30, 'Hyper Potion':12, 'Full Heal':6}
 };
 /* ENTRE= o que a ala dá entre uma porta e outra, pra medir a regra:
    nada (só a mochila, a ala de hoje), folego (a Vontade volta),

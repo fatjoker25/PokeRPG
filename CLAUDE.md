@@ -1840,7 +1840,13 @@ sozinha vai de 62% a 90% e o Red fica em 35%, e as quatro seguidas,
 sem cura no meio, de 0% a 1% (6% com o time 5 acima e a mochila
 cheia). `ENTRE=` mede o que a ala daria entre as portas (`folego`,
 `metade`, `tudo`): só a cura inteira muda a conta (34% a 38%), porque
-o time acaba por quem cai, não pelo HP.
+o time acaba por quem cai, não pelo HP. Pelo mesmo motivo o que pesa
+na mochila é o Revive: com trinta (`MOCHILA=farta`), as quatro saem em
+19% no nível e 44% com o time 5 acima. O conselheiro da quarta rodada,
+o único robô que passou as quatro, chegou com mais de cem, juntados de
+presente, achado e missão; os outros chegavam com uns dez e nenhuma
+poção (o robô só compra Revive com mais de 8.000 ₽, vive com uns
+1.000, e a Potion comum que ele compra cura 2 e se gasta no caminho).
 
 **O poço do capítulo 26 é a mesma Elite.** Quem recusa as três ofertas
 desce ao poço da arena, e ali lutam as quatro cadeiras da ala, uma
