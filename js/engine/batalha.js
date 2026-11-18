@@ -39,6 +39,12 @@ const ESTAGIO_DO_ATRIB = {for:'atk', vit:'def', esp:'spa', ins:'spd', des:'spe'}
    ponto inteiro de atributo: com seis, um Corsola que só usava Harden
    tirava 6 dados da parada de dano de quem batia nele. */
 const ESTAGIO_MAXIMO = 3;
+/* A sobra acaba: item que regenera (Leftovers) cura no máximo essa fração
+   do HP máximo por luta. Com o dano mínimo de 1 por golpe, cura de 1 por
+   turno sem teto empatava com quem só tira o mínimo, e a luta não
+   acabava: na quinta rodada de robôs um Primeape tirou 1 por turno de um
+   Lapras da fama da quadra, e o Lapras beliscou 1 de volta, cem turnos */
+const REGEN_TETO = 0.5;
 /* Seismic Toss, Night Shade e Psywave: dados pelo posto */
 const DADOS_POR_POSTO = [1, 2, 4, 6, 8, 10, 10, 10];
 /* Wrap, Bind, Clamp e Fire Spin, pelo livro (3.0): prende 4 rodadas e
@@ -83,7 +89,7 @@ const Batalha = {
     /* Vontade: o gasto armado vale pro próximo turno; a dor ignorada e
        quem gastou valem a luta inteira */
     this.vontadeArmada = null; this.vontadeTurno = -1;
-    this.semDor = {}; this.gastaram = {};
+    this.semDor = {}; this.gastaram = {}; this.regenUsado = {};
     /* todo adversário tem Vontade e gasta: selvagem e treinador comum
        com menos critério, o de peso (líder, Elite, veterano, rival,
        torneio) com mais; o gasto vale só o turno em que é feito */
@@ -1263,13 +1269,17 @@ const Batalha = {
         est.desabilitado = null;
       }
     }
-    /* item segurado: regeneração lenta */
+    /* item segurado: regeneração lenta, até REGEN_TETO do HP na luta */
     const seg = efeitoSegurado(p);
     if (seg && seg.regen && p.hp > 0 && p.hp < p.hpMax){
-      const c = seg.regen;
-      const antes = p.hp;
-      p.hp = Math.min(p.hpMax, p.hp + c);
-      this.ev('cura', `${nomeVisivel(p)} belisca o ${p.segurando} e recupera ${p.hp - antes}. (${p.hp}/${p.hpMax})`);
+      const usado = this.regenUsado || (this.regenUsado = {});
+      const teto = Math.max(1, Math.floor(p.hpMax * REGEN_TETO)), ja = usado[p.uid] || 0;
+      const c = Math.min(seg.regen, teto - ja, p.hpMax - p.hp);
+      if (c > 0){
+        p.hp += c; usado[p.uid] = ja + c;
+        this.ev('cura', `${nomeVisivel(p)} belisca o ${p.segurando} e recupera ${c}. (${p.hp}/${p.hpMax})`);
+        if (usado[p.uid] >= teto) this.ev('status', `O ${p.segurando} de ${nomeVisivel(p)} acabou.`);
+      }
     }
   },
 

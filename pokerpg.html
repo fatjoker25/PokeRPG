@@ -15264,8 +15264,8 @@ const ITENS_INFO = {
      dos jogos pra parada de dados. Item de segurar inventado não entra
      (ferramentas/chk-icones.js reprova). */
   'Leftovers':    {tipo:'equipar', cat:'Segurado', efeito:{regen:1},
-                   ficha:'SEGURADO · recupera 1 de HP no fim de cada turno',
-                   desc:'Um miolo de fruta que nunca acaba de ser comido. Quem segura belisca entre um golpe e outro.'},
+                   ficha:'SEGURADO · recupera 1 de HP no fim de cada turno, até metade do HP máximo na luta',
+                   desc:'Um miolo de fruta que rende mais do que parece. Quem segura belisca entre um golpe e outro, até não sobrar nada.'},
   'Focus Band':   {tipo:'equipar', cat:'Segurado', efeito:{aguenta:true},
                    ficha:'SEGURADO · uma vez por combate, sobrevive a um golpe fatal com 1 HP',
                    desc:'Uma faixa vermelha de amarrar na cabeça ou na pata, com o nó atrás. Não protege de nada. Aperta.'},
@@ -17341,6 +17341,12 @@ const ESTAGIO_DO_ATRIB = {for:'atk', vit:'def', esp:'spa', ins:'spd', des:'spe'}
    ponto inteiro de atributo: com seis, um Corsola que só usava Harden
    tirava 6 dados da parada de dano de quem batia nele. */
 const ESTAGIO_MAXIMO = 3;
+/* A sobra acaba: item que regenera (Leftovers) cura no máximo essa fração
+   do HP máximo por luta. Com o dano mínimo de 1 por golpe, cura de 1 por
+   turno sem teto empatava com quem só tira o mínimo, e a luta não
+   acabava: na quinta rodada de robôs um Primeape tirou 1 por turno de um
+   Lapras da fama da quadra, e o Lapras beliscou 1 de volta, cem turnos */
+const REGEN_TETO = 0.5;
 /* Seismic Toss, Night Shade e Psywave: dados pelo posto */
 const DADOS_POR_POSTO = [1, 2, 4, 6, 8, 10, 10, 10];
 /* Wrap, Bind, Clamp e Fire Spin, pelo livro (3.0): prende 4 rodadas e
@@ -17385,7 +17391,7 @@ const Batalha = {
     /* Vontade: o gasto armado vale pro próximo turno; a dor ignorada e
        quem gastou valem a luta inteira */
     this.vontadeArmada = null; this.vontadeTurno = -1;
-    this.semDor = {}; this.gastaram = {};
+    this.semDor = {}; this.gastaram = {}; this.regenUsado = {};
     /* todo adversário tem Vontade e gasta: selvagem e treinador comum
        com menos critério, o de peso (líder, Elite, veterano, rival,
        torneio) com mais; o gasto vale só o turno em que é feito */
@@ -18565,13 +18571,17 @@ const Batalha = {
         est.desabilitado = null;
       }
     }
-    /* item segurado: regeneração lenta */
+    /* item segurado: regeneração lenta, até REGEN_TETO do HP na luta */
     const seg = efeitoSegurado(p);
     if (seg && seg.regen && p.hp > 0 && p.hp < p.hpMax){
-      const c = seg.regen;
-      const antes = p.hp;
-      p.hp = Math.min(p.hpMax, p.hp + c);
-      this.ev('cura', `${nomeVisivel(p)} belisca o ${p.segurando} e recupera ${p.hp - antes}. (${p.hp}/${p.hpMax})`);
+      const usado = this.regenUsado || (this.regenUsado = {});
+      const teto = Math.max(1, Math.floor(p.hpMax * REGEN_TETO)), ja = usado[p.uid] || 0;
+      const c = Math.min(seg.regen, teto - ja, p.hpMax - p.hp);
+      if (c > 0){
+        p.hp += c; usado[p.uid] = ja + c;
+        this.ev('cura', `${nomeVisivel(p)} belisca o ${p.segurando} e recupera ${c}. (${p.hp}/${p.hpMax})`);
+        if (usado[p.uid] >= teto) this.ev('status', `O ${p.segurando} de ${nomeVisivel(p)} acabou.`);
+      }
     }
   },
 
@@ -113737,16 +113747,17 @@ const DEFESAS = {
    `itens` Pokémon dele segurando Leftovers (os mais fortes, fora o ás,
    que já segura o dele) e, no alto, `tam` Pokémon a mais no time.
    Perder, desistir ou faltar zera. Medido no sim-defesa.js, cada
-   alavanca sozinha: cada Leftovers tira uns 9 pontos da vitória, o
-   Pokémon a mais uns 16, e o resto quase nada — o erro da IA, o nível
-   (um ponto de atributo a cada 7), o Muscle Band, o Wise Glasses e o
-   Quick Claw. Com a escada: o forte vai de 83% a 53% no ginásio e de
-   69% a 44% na porta; o ingênuo, de 70% a 33% e de 53% a 25% */
+   alavanca sozinha: o Pokémon a mais tira uns 16 pontos da vitória, cada
+   Leftovers uns 5 (eram 9 antes de a sobra acabar, REGEN_TETO em
+   batalha.js), e o resto quase nada — o erro da IA, o nível (um ponto de
+   atributo a cada 7), o Muscle Band, o Wise Glasses e o Quick Claw. Com
+   a escada: o forte vai de 84% a 55% no ginásio e de 71% a 45% na porta;
+   o ingênuo, de 70% a 37% e de 52% a 26% */
 const FAMA_DA_QUADRA = [
   {tam:0, itens:0},
-  {tam:0, itens:1},
   {tam:0, itens:2},
-  {tam:1, itens:2}
+  {tam:0, itens:3},
+  {tam:1, itens:3}
 ];
 const ITEM_DA_FAMA = 'Leftovers';
 /* quem ouviu falar da lousa diz (s: as seguidas, de duas em diante) */
@@ -122438,7 +122449,7 @@ const UI = {
       <div class="linha"><span class="k">Quantos</span><span class="v">1 por Pokémon</span></div>
       <div class="linha"><span class="k">Onde</span><span class="v">Time → o Pokémon → equipar · ou Mochila, bolso de Itens → equipar</span></div>
       <div class="linha"><span class="k">Quais</span><span class="v">os dos jogos, com o nome e o ícone deles · o Quick Claw e o Eviolite fazem o que o livro manda; os outros o livro não tem, e o efeito é o dos jogos traduzido pra parada de dados</span></div>
-      <div class="linha"><span class="k">Leftovers</span><span class="v">+1 de HP no fim de cada turno</span></div>
+      <div class="linha"><span class="k">Leftovers</span><span class="v">+1 de HP no fim de cada turno, até ${Math.round(REGEN_TETO * 100) === 50 ? 'metade' : Math.round(REGEN_TETO * 100) + '%'} do HP máximo na luta: a sobra acaba</span></div>
       <div class="linha"><span class="k">Focus Band</span><span class="v">uma vez por combate, fica com 1 de HP em vez de cair de um golpe só</span></div>
       <div class="linha"><span class="k">Muscle Band</span><span class="v">+1 dado de dano em golpe físico</span></div>
       <div class="linha"><span class="k">Wise Glasses</span><span class="v">+1 dado de dano em golpe especial</span></div>

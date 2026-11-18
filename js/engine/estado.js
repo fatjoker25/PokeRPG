@@ -251,8 +251,8 @@ const ITENS_INFO = {
      dos jogos pra parada de dados. Item de segurar inventado não entra
      (ferramentas/chk-icones.js reprova). */
   'Leftovers':    {tipo:'equipar', cat:'Segurado', efeito:{regen:1},
-                   ficha:'SEGURADO · recupera 1 de HP no fim de cada turno',
-                   desc:'Um miolo de fruta que nunca acaba de ser comido. Quem segura belisca entre um golpe e outro.'},
+                   ficha:'SEGURADO · recupera 1 de HP no fim de cada turno, até metade do HP máximo na luta',
+                   desc:'Um miolo de fruta que rende mais do que parece. Quem segura belisca entre um golpe e outro, até não sobrar nada.'},
   'Focus Band':   {tipo:'equipar', cat:'Segurado', efeito:{aguenta:true},
                    ficha:'SEGURADO · uma vez por combate, sobrevive a um golpe fatal com 1 HP',
                    desc:'Uma faixa vermelha de amarrar na cabeça ou na pata, com o nó atrás. Não protege de nada. Aperta.'},

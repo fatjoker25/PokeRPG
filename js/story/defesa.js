@@ -42,16 +42,17 @@ const DEFESAS = {
    `itens` Pokémon dele segurando Leftovers (os mais fortes, fora o ás,
    que já segura o dele) e, no alto, `tam` Pokémon a mais no time.
    Perder, desistir ou faltar zera. Medido no sim-defesa.js, cada
-   alavanca sozinha: cada Leftovers tira uns 9 pontos da vitória, o
-   Pokémon a mais uns 16, e o resto quase nada — o erro da IA, o nível
-   (um ponto de atributo a cada 7), o Muscle Band, o Wise Glasses e o
-   Quick Claw. Com a escada: o forte vai de 83% a 53% no ginásio e de
-   69% a 44% na porta; o ingênuo, de 70% a 33% e de 53% a 25% */
+   alavanca sozinha: o Pokémon a mais tira uns 16 pontos da vitória, cada
+   Leftovers uns 5 (eram 9 antes de a sobra acabar, REGEN_TETO em
+   batalha.js), e o resto quase nada — o erro da IA, o nível (um ponto de
+   atributo a cada 7), o Muscle Band, o Wise Glasses e o Quick Claw. Com
+   a escada: o forte vai de 84% a 55% no ginásio e de 71% a 45% na porta;
+   o ingênuo, de 70% a 37% e de 52% a 26% */
 const FAMA_DA_QUADRA = [
   {tam:0, itens:0},
-  {tam:0, itens:1},
   {tam:0, itens:2},
-  {tam:1, itens:2}
+  {tam:0, itens:3},
+  {tam:1, itens:3}
 ];
 const ITEM_DA_FAMA = 'Leftovers';
 /* quem ouviu falar da lousa diz (s: as seguidas, de duas em diante) */

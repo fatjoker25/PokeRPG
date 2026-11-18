@@ -2,8 +2,9 @@
    sim-impasse — as lutas que não acabavam, repetidas
    O robô achou lutas de 60 a 150 turnos: evasão empilhada (Minimize,
    Double Team) que zerava a precisão, IA usando golpe que não afeta
-   (Stomp no Gengar, Poison Gas em Veneno) e quem joga escolhendo o
-   golpe pelo poder, sem olhar a defesa do outro. Cada caso aqui é uma
+   (Stomp no Gengar, Poison Gas em Veneno), quem joga escolhendo o
+   golpe pelo poder, sem olhar a defesa do outro, e o Leftovers sem
+   teto, que empatava com quem só tira o mínimo. Cada caso aqui é uma
    dessas lutas, um contra um, com os golpes que estavam em campo.
    Mede a média de turnos, quantas passam de 30 e de 60, quantas batem
    no teto de 150 e a vitória de quem joga.
@@ -58,7 +59,11 @@ const CASOS = [
   ['Victreebel 47 x Blissey 44', () => com(71, 47, ['Acid','Wrap','Poison Powder','Sleep Powder']), () => com(242, 44, ['Minimize','Softboiled','Light Screen','Double-Edge']), true],
   ['Gengar 39 x Staryu 39 (mato)', () => com(94, 39, ['Lick','Psywave','Night Shade','Dream Eater']), () => com(120, 39, ['Harden','Recover','Swift','Minimize']), false],
   ['Gengar 47 x Rhydon 49 (Blue)', () => com(94, 47, ['Lick','Psywave','Night Shade','Dream Eater']), () => com(112, 49, ['Stomp','Tail Whip','Fury Attack','Horn Drill']), true],
-  ['Venusaur 60 x Corsola 28 (mato)', () => com(3, 60, ['Tackle','Razor Leaf','Leech Seed','Vine Whip']), () => com(222, 28, ['Harden','Bubble','Recover','Bubble Beam']), false]
+  ['Venusaur 60 x Corsola 28 (mato)', () => com(3, 60, ['Tackle','Razor Leaf','Leech Seed','Vine Whip']), () => com(222, 28, ['Harden','Bubble','Recover','Bubble Beam']), false],
+  /* o Leftovers que a fama da quadra dá (defesa.js): o Primeape tirava 1
+     por turno e o Lapras beliscava 1 de volta, cem turnos */
+  ['Primeape 48 x Lapras 47 (Leftovers)', () => com(57, 48, ['Thrash','Seismic Toss','Karate Chop','Thunderbolt']),
+    () => { const p = com(131, 47, ['Body Slam','Blizzard','Ice Beam','Hydro Pump']); p.segurando = 'Leftovers'; return p; }, true]
 ];
 console.log(`jogador: ${MODO} · ${N} lutas por caso${process.env.ROOT ? ' · ' + raiz : ''}`);
 console.log('caso                                 turnos  >30   >60  teto  vitória');

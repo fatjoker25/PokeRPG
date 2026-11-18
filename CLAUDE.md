@@ -1019,7 +1019,11 @@ vem mais vezes).
   aparece no log como evento `rolagem` — **número que decide o turno tem
   que estar escrito ali**, senão o jogador não tem como conferir.
 - Dano de condição e de item é número fixo do livro (veneno 2, queimadura
-  1, Potion 2), não fração do HP: o HP vai de 4 a uns 20. O que continua
+  1, Potion 2), não fração do HP: o HP vai de 4 a uns 20. O Leftovers
+  cura 1 no fim de cada turno, mas a sobra acaba: no máximo metade do HP
+  máximo por luta (`REGEN_TETO`, contado em `Batalha.regenUsado`). Com o
+  dano mínimo de 1 por golpe, a cura sem teto empatava com quem só tira
+  o mínimo, e a luta não acabava. O que continua
   fração (Substitute, Curse, Recover) tem `Math.max(1, …)`. O veneno é o
   do GM Screen do 3.0 (2 por rodada, o grave sobe 2); o "1 por rodada"
   do Cheat Sheet do SRD é do 2.0.
@@ -2025,11 +2029,15 @@ regras ("O seu ginásio e a sua porta") lê os mesmos números.
   teto é só do degrau. Foi medido com `node ferramentas/sim-defesa.js`
   (cada inscrito em cada degrau, contra o ingênuo e o forte; `FAMA=`,
   `ITEM=`, `TIPO=` e `JOGADOR=` na frente calibram sem mexer no jogo),
-  cada alavanca sozinha: cada Leftovers tira uns 9 pontos da vitória, o
-  Pokémon a mais uns 16, e o erro da IA, o nível, o Muscle Band, o Wise
+  cada alavanca sozinha: o Pokémon a mais tira uns 16 pontos da vitória,
+  cada Leftovers uns 5, e o erro da IA, o nível, o Muscle Band, o Wise
   Glasses e o Quick Claw quase nada — por isso a tabela só tem os dois.
-  O forte vai de 83% a 53% no ginásio e de 69% a 44% na porta; o
-  ingênuo, de 70% a 33% e de 53% a 25%. Mexeu na tabela, roda ali.
+  O forte vai de 84% a 55% no ginásio e de 71% a 45% na porta; o
+  ingênuo, de 70% a 37% e de 52% a 26%. Mexeu na tabela, roda ali.
+  Cada Leftovers tirava 9 antes de a sobra acabar (`REGEN_TETO`, ver "O
+  combate é Pokérole"), e foi a fama que mostrou o empate: com dois por
+  time, um Primeape que só tirava 1 de um Lapras que beliscava 1 de
+  volta passou de cem turnos na quinta rodada de robôs.
 
 O robô vai defender quando tem desafio marcado e o time de pé
 (`Defesa.pendente`, o que vence antes primeiro, `{f:'defender'}`), e o

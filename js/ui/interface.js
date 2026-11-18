@@ -6943,7 +6943,7 @@ const UI = {
       <div class="linha"><span class="k">Quantos</span><span class="v">1 por Pokémon</span></div>
       <div class="linha"><span class="k">Onde</span><span class="v">Time → o Pokémon → equipar · ou Mochila, bolso de Itens → equipar</span></div>
       <div class="linha"><span class="k">Quais</span><span class="v">os dos jogos, com o nome e o ícone deles · o Quick Claw e o Eviolite fazem o que o livro manda; os outros o livro não tem, e o efeito é o dos jogos traduzido pra parada de dados</span></div>
-      <div class="linha"><span class="k">Leftovers</span><span class="v">+1 de HP no fim de cada turno</span></div>
+      <div class="linha"><span class="k">Leftovers</span><span class="v">+1 de HP no fim de cada turno, até ${Math.round(REGEN_TETO * 100) === 50 ? 'metade' : Math.round(REGEN_TETO * 100) + '%'} do HP máximo na luta: a sobra acaba</span></div>
       <div class="linha"><span class="k">Focus Band</span><span class="v">uma vez por combate, fica com 1 de HP em vez de cair de um golpe só</span></div>
       <div class="linha"><span class="k">Muscle Band</span><span class="v">+1 dado de dano em golpe físico</span></div>
       <div class="linha"><span class="k">Wise Glasses</span><span class="v">+1 dado de dano em golpe especial</span></div>
