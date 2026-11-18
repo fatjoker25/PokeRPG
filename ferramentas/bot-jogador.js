@@ -701,8 +701,13 @@ const SUSPEITO = [
         tela:(document.querySelector('#app') || {innerText:''}).innerText.replace(/\s+/g, ' ').slice(0, 90)}));
       console.log(`[${Math.round((Date.now() - t0) / 1000)}s] ${JSON.stringify(s)}`);
       log.push(s);
-      /* empacou: o mesmo retrato três vezes seguidas é tela que não anda */
-      const retrato = JSON.stringify([s.c, s.l, s.t, s.$, s.luta, s.tela.replace(/\d+h · \S+ do dia \d+/, '')]);
+      /* empacou: o mesmo retrato três vezes seguidas é tela que não anda.
+         A cena entra no retrato: na cena de capítulo o relógio para, e o
+         alto da tela (que é o começo do texto) fica igual enquanto as
+         cenas andam; o conselheiro da quinta rodada "empacou" assim no 15,
+         andando pelo mirante, pelo capinzal e pelo encontro com o trio */
+      const cenaAgora = await page.evaluate(() => Estado.dados.modo === 'cena' ? Estado.dados.cena : null).catch(() => null);
+      const retrato = JSON.stringify([s.c, s.l, s.t, s.$, s.luta, cenaAgora, s.tela.replace(/\d+h · \S+ do dia \d+/, '')]);
       empacou = retrato === ultimoRetrato ? empacou + 1 : 0; ultimoRetrato = retrato;
       if (empacou === 2){
         const dump = await page.evaluate(() => ({
