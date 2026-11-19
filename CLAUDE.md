@@ -2111,11 +2111,16 @@ que já tem e que mais anda no mato, em lugar de nível baixo
 cena: a ficha tem botões de cena, e o sorteio da cena fez a Líder
 assinar Fantasma, que tem dois Pokémon no mato, e perder o posto cinco
 vezes por falta. Desce com o time que a quadra sugere (`preSelecao`),
-e, com escalão faltando gente, vai procurar onde o tipo anda num nível
-que serve, o escalão de teto mais baixo primeiro (`__ondeCacar`, seis
-procuras por dia), compra Pokébola mesmo com o cinto cheio e joga no
-que serve; sem ninguém que sirva contra quem marcou, ele não vai à
-quadra, e o prazo vira falta. A defesa vem logo depois de curar e
+e, com escalão faltando gente boa (a até oito níveis do teto,
+`__faltaBoa`: o Rattata 9 serve contra seis insígnias, mas desce pra
+perder), vai procurar onde o tipo anda com o mato perto do teto, o
+escalão de teto mais baixo primeiro (`__ondeCacar`, seis procuras por
+dia), compra Pokébola mesmo com o cinto cheio e joga no que serve; sem
+ninguém que sirva contra quem marcou, ele não vai à quadra, e o prazo
+vira falta. Ele ainda não treina o que pega: a Líder da quinta rodada,
+retomada com o ginásio de Normal, defendeu 51 vezes em 200 dias sem
+falta nenhuma e ganhou 13, quase todas contra quem tinha até três
+insígnias, com os escalões de cima no nível em que o Pokémon foi pego. A defesa vem logo depois de curar e
 do PC na ordem dele: embaixo dos recados ela nunca chegava, porque
 depois do fim recado novo chega o tempo todo. Mas a jornada não espera
 pra sempre (`jornadaEspera`, `DIAS_ATE_SEGUIR`): com o capítulo seguinte
