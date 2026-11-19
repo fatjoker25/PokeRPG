@@ -222,10 +222,11 @@ const raiz = path.resolve(__dirname, '..');
     };
     [[2, 6], [8, 22]].forEach(([ins, cap]) => add(`Patrulha (${ins} insígnias)`, ins, cap, d => { naDetencao(d); Patrulha.lutar(); }));
     add('Patrulha (procurado do fim)', 8, 28, d => { naDetencao(d, true); Patrulha.lutar(); });
-    /* a defesa do posto (defesa.js): cada inscrito do torneio desafiando
-       o seu ginásio e a sua porta da ala, cada um num degrau da fama da
-       quadra (o ginásio e a porta em degraus diferentes, pra todo degrau
-       passar pelos dois), e o Ezra com a fama no alto */
+    /* a defesa do posto (defesa.js). Na porta, cada inscrito do torneio,
+       cada um num degrau da fama da quadra, e o Ezra com a fama no alto.
+       No ginásio, cada tipo da casa contra gente da estrada, com zero,
+       três e sete insígnias (e a fama andando), descendo com o time do
+       tipo que a quadra sugere, do cinto e do PC */
     const naDefesa = (d, tipo, ins, fama) => {
       if (tipo === 'elite') d.flags.venceu_a_elite = true;
       Cargos.conceder(tipo);
@@ -236,16 +237,38 @@ const raiz = path.resolve(__dirname, '..');
       Mundo.viajar(tipo === 'lider' ? r.ginasio : 'planalto');
       Defesa.lutar(tipo);
     };
+    const naQuadra = (d, T, n, fama) => {
+      Cargos.conceder('lider');
+      const r = Defesa.estado('lider');
+      r.tipo = T; r.abre = d.relogio.dia; r.seguidas = fama;
+      /* o time da casa: o tipo em todo nível, no PC */
+      const bases = Object.keys(DEX).map(Number).filter(x => x <= 251 && !DEX[x].preEvo);
+      for (let nv = 6; nv <= 56; nv += 5){
+        const ok = bases.map(x => formaAteONivel(finalDaLinha(x), nv)).filter(x => (DEX[x].tipos || []).includes(T));
+        if (ok.length) d.pc.push(criarPokemon(ok[nv % ok.length], nv));
+      }
+      const t = Defesa.sortearDaEstrada(r, n);
+      r.desafio = {quem:t.id, estrada:true, nome:nomeDeLuta(t), curto:t.nome, f:t.artigo === 'uma', de:'', ins:n, fala:'Vim.', fama,
+        dia:d.relogio.dia, ate:d.relogio.dia + 3, cap:capNaJornada(d)};
+      Mundo.viajar(r.ginasio);
+      Defesa.lutar('lider', Defesa.preSelecao(n));
+    };
     const umaVez = l => { const ja = new Set(); return l.filter(x => !ja.has(x.id) && ja.add(x.id)); };
     const graus = FAMA_DA_QUADRA.length;
-    umaVez(RIVAIS_TORNEIO.filter(r => !r.cond && (r.linhas || r.veterano))).forEach((ins, i) => ['lider', 'elite'].forEach((tipo, j) => {
-      const fama = (i + 2 * j) % graus;
-      add(`defesa ${tipo === 'lider' ? 'do ginásio' : 'da porta'} ${ins.curto || ins.nome} (fama ${fama})`, 8, 27, d => naDefesa(d, tipo, ins, fama));
+    umaVez(RIVAIS_TORNEIO.filter(r => !r.cond && (r.linhas || r.veterano))).forEach((ins, i) => {
+      const fama = (i + 2) % graus;
+      add(`defesa da porta ${ins.curto || ins.nome} (fama ${fama})`, 8, 27, d => naDefesa(d, 'elite', ins, fama));
+    });
+    TIPOS.forEach((T, i) => [0, 3, 7].forEach((n, j) => {
+      const fama = (i + j) % graus;
+      add(`defesa do ginásio de tipo ${T} contra ${n} insígnias (fama ${fama})`, 8, 27, d => {
+        if (TIPOS_JOHTO.includes(T)) DexNacional.liberar();
+        naQuadra(d, T, n, fama); });
     }));
     /* o Ezra só desafia quem já conhece ele (sortearDesafiante): o rival e a opinião */
-    ['lider', 'elite'].forEach(tipo => add(`defesa ${tipo === 'lider' ? 'do ginásio' : 'da porta'} Ezra (fama ${graus - 1})`, 8, 27,
+    add(`defesa da porta Ezra (fama ${graus - 1})`, 8, 27,
       d => { rival(); if (!d.npcs['Ezra']) d.npcs['Ezra'] = {nome:'Ezra', opiniao:1, memorias:[]};
-        naDefesa(d, tipo, inscritoDoTorneio('ezra'), graus - 1); }));
+        naDefesa(d, 'elite', inscritoDoTorneio('ezra'), graus - 1); });
     /* revanches */
     CONTATOS.filter(c => c.ginasio || c.rivalExtra || c.revanche).forEach(c => add(`revanche ${c.id}`, 6, 16, d => {
       d.revanches = {[c.id]: {local: Mundo.id()}}; Jogo.lutarRevanche(c.id); }));

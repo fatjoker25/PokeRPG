@@ -82,6 +82,8 @@ const Batalha = {
     this.revelaNatureza = !!opts.revelarNatureza;   // líder/NPC que fala do próprio time
     /* quanto a IA erra a escolha do golpe, em %: veterano erra menos */
     this.erroIA = (opts.erroIA != null) ? opts.erroIA : 22;
+    /* luta que não dá experiência (a defesa do seu ginásio) */
+    this.semExp = !!opts.semExp;
     if (this.revelaNatureza && inimigo) inimigo.nomeAnunciado = true;
     if (this.revelaNatureza && opts.timeInimigo) opts.timeInimigo.forEach(p => { p.nomeAnunciado = true; });
     if (Estado.dados) (Estado.dados.time || []).forEach(p => { p.faixaUsada = false; });
@@ -1703,8 +1705,12 @@ const Batalha = {
       const total = Math.floor(expGanha(this.inimigo, this.aliado) * (this.tipo === 'treinador' ? 1.5 : 1));
       const metade = donos.length ? Math.floor(total / 2) : total;
       const ganhos = new Map();
-      if (quem.length) quem.forEach(p => ganhos.set(p, Math.max(1, Math.floor(metade / quem.length))));
-      if (donos.length) donos.forEach(p => ganhos.set(p, (ganhos.get(p) || 0) + Math.max(1, Math.floor((total - metade) / donos.length))));
+      /* na sua quadra ninguém ganha experiência (defesa.js): senão o time
+         do escalão de baixo passava do teto, e você perdia o que montou */
+      if (!this.semExp){
+        if (quem.length) quem.forEach(p => ganhos.set(p, Math.max(1, Math.floor(metade / quem.length))));
+        if (donos.length) donos.forEach(p => ganhos.set(p, (ganhos.get(p) || 0) + Math.max(1, Math.floor((total - metade) / donos.length))));
+      }
       for (const [p, porIgual] of ganhos){
         /* quem ficou pra trás da área do capítulo ganha mais (fatorDeAtraso) */
         const cada = Math.max(1, Math.floor(porIgual * fatorDeAtraso(p) * (typeof Dificuldade !== 'undefined' ? Dificuldade.xp() : 1)));

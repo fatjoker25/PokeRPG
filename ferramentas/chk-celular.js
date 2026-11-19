@@ -160,6 +160,25 @@ const SUSPEITO = [
     await tentar('liga', () => { UI.fecharModal(true); Jogo.abrirLiga(); });
     await tentar('loja', () => { UI.fecharModal(true); Exploracao.tela(); Cidade.loja(); });
     await tentar('centro', () => { UI.fecharModal(true); Cidade.atenderAqui(); });
+    /* o seu ginásio (defesa.js): a ficha do tipo da casa, a quadra com o
+       regulamento e a escolha do time */
+    await tentar('ginasio-ficha', () => {
+      UI.fecharModal(true);
+      const d = Estado.dados;
+      for (let nv = 8; nv <= 56; nv += 4) d.pc.push(criarPokemon(nv < 20 ? 19 : 20, nv));
+      Cargos.conceder('lider');
+      Exploracao.tela();
+    });
+    await tentar('ginasio-quadra', () => {
+      const d = Estado.dados, r = Defesa.reg().lider;
+      Defesa.escolherTipo('Normal'); r.abre = d.relogio.dia;
+      const t = Defesa.sortearDaEstrada(r, 5);
+      r.desafio = {quem:t.id, estrada:true, nome:nomeDeLuta(t), curto:t.nome, f:t.artigo === 'uma', de:'', ins:5,
+        fala:'Vim pela insígnia.', fama:0, dia:d.relogio.dia, ate:d.relogio.dia + 3, cap:capNaJornada(d)};
+      d.local = r.ginasio; Defesa.tela('lider');
+    });
+    await tentar('ginasio-time', () => Defesa.montar());
+    await tentar('ginasio-volta', () => { const d = Estado.dados; Defesa.reg().lider.desafio = null; d.local = 'celadon'; Exploracao.tela(); });
     /* a Patrulha na estrada (patrulha.js): a parada com a ordem de
        detenção, com o Zapdos visto na Pokébola, e a custódia */
     await tentar('patrulha', () => {

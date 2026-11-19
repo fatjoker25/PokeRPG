@@ -768,8 +768,10 @@ própria tabela (`Dificuldade.regras()`).
   antes da luta passa por ali.
 - O resto é peso: experiência (`Dificuldade.xp()`, na luta e no
   treino), fome (`fomeTiraMoral`, `fomeDistrai`), moral de cena
-  (`moralCenaTeto`, no `moralDaCena`) e a chance de ignorar ordem
-  (`desobediencia`). Peso novo entra na tabela, na folha e aqui.
+  (`moralCenaTeto`, no `moralDaCena`), a chance de ignorar ordem
+  (`desobediencia`) e a derrota no seu ginásio (`derrotaNaQuadra`: só
+  no Difícil ela vale advertência, ver "O seu ginásio e a sua porta").
+  Peso novo entra na tabela, na folha e aqui.
 - `renivelar` é também quem põe o ás dois acima depois de criado:
   `p.nivel += 2` sem refazer os atributos deixava o Red, o rival na
   revanche e o Pico do arco quebrado com o nível de um e a força de
@@ -1976,6 +1978,44 @@ regras ("O seu ginásio e a sua porta") lê os mesmos números.
   saiu do ginásio continua na agenda, mas não fala mais de desafiante
   (`lider` no `Recados.contexto`) e a revanche com ele fecha
   (`Estado.podeLigar`).
+- **O tipo da casa** — foi pedido assim: quem fica com o ginásio
+  escolhe a especialidade, um tipo que nenhum dos outros sete usa
+  (`Defesa.tiposLivres`: o de quem saiu fica livre, o variado do Blue
+  não prende nada, e Sombrio e Metálico só com a Pokédex Nacional). A
+  ficha (`Defesa.telaTipo`) abre na tela do mapa logo depois que o
+  ginásio é seu (`precisaTipo`, no `Exploracao.tela`) e só sai
+  escolhendo, com a confirmação de assinar; vale pro ginásio do balcão,
+  pro do final de Viridian e pro save de antes, que ganham a ficha na
+  primeira olhada. Assinada (`escolherTipo`), a casa reabre
+  `REABRE_EM_DIAS` (14) depois, o desafio marcado antes cai e a lousa
+  começa limpa. Ginásio novo é ficha nova. Até lá, a casa não recebe
+  desafio (`conferir` pula), e a porta diz "A ficha da casa está em
+  branco" ou "Fechado pra reforma".
+- **A regra da quadra** é a dos líderes de Kanto, ao contrário (foi
+  pedido assim: "a mesma mecânica dos líderes de se adaptar o seu time
+  às insígnias dos desafiantes", e correr atrás dos Pokémon): quem
+  desafia o ginásio tem de zero a sete insígnias, e você desce só com
+  Pokémon do tipo da casa, do cinto ou do PC, no tamanho e até o nível
+  do ás que o líder de antes usaria contra aquelas insígnias
+  (`Defesa.regra(g, n)`: a base de `ESCALOES_NIVEL`, a dificuldade do
+  ginásio, 3 por insígnia dentro do escalão, e o tamanho dos escalões
+  dele, `Defesa.escaloes`; Viridian, que só tinha o time de sete,
+  usa 2/3/4/6). Em Pewter: 2 até o 13, 3 até o 22, 4 até o 33, 5 até o
+  46. O piso e o teto da sua jornada (`pisoDoGinasio`,
+  `tetoDoGinasio`) não entram: são de quem anda com a história, não de
+  quem desafia. A tela da quadra mostra o regulamento, insígnia por
+  insígnia, com quantos seus servem e quantos faltam (`Defesa.quadro`:
+  a porta fechada que diz o que falta). "Montar o time"
+  (`Defesa.montar`) sugere os mais fortes que servem, o mais forte por
+  último (`preSelecao`), e o toque tira e põe, na ordem de descer
+  (`alternar`, que redesenha só a lista). Quem desce sai do cinto e do
+  PC pra luta (`emprestar`: o resto do cinto espera no PC) e volta pro
+  lugar no fim (`devolver`, no `resultado`, e no `conferir` se a luta
+  não chegou ao fim na tela); a máquina da quadra cura quem desce,
+  antes e depois. Na quadra ninguém ganha experiência (`semExp` no
+  `Batalha.iniciar`): senão o time do escalão de baixo passava do teto
+  e você perdia o que montou. Sem ninguém que sirva, "Entregar a
+  insígnia sem descer" (`desistirSemTime`) é desistir.
 - **A sua porta**: o substituto entrega a chave (`QUEM_DEIXA_A_PORTA`,
   uma narração e uma fala, lidas pela fala do posto), o corredor da
   Liga desenha a placa com o seu nome (`.liga-porta.sua`), o titular
@@ -1999,24 +2039,45 @@ regras ("O seu ginásio e a sua porta") lê os mesmos números.
   primeiro acabar (`proximo` depois do `ate` do outro). Os dois prazos
   caíam juntos, um em Vermilion e outro no Planalto, e o conselheiro
   da primeira rodada da defesa perdeu a porta assim.
-- **Quem desafia** sai dos inscritos do Torneio Aberto
+- **Quem desafia o ginásio** é gente da estrada
+  (`sortearDaEstrada`, quem não fecha barreira e tem linha pro
+  escalão, sem repetir os três últimos), com zero a sete insígnias no
+  sorteio (`marcarNaQuadra`), que a secretaria diz na mensagem. O time
+  dele (`desafianteDaQuadra`) sai das linhas do escalão dele, da
+  reserva e, se faltar, dos outros escalões (`linhasDe`), no tamanho da
+  regra mais o da fama (`tamDaQuadra`) e no nível do líder de antes: do
+  base pra cima, um por Pokémon, e o ás no nível máximo. Luta como a
+  estrada: erra 22% e gasta Vontade sem o critério cheio
+  (`DEFESAS.lider`). Medido no `sim-defesa.js` com `QUADRA=1` (um time
+  comum de cada tipo, as espécies do tipo que mais andam no mato, no
+  nível máximo, contra cada número de insígnias, em Pewter): o forte
+  vence 72% no degrau zero, de 57% (Pedra, Elétrico, Dragão) a 83%
+  (Normal, Inseto), e o ingênuo 66%; o começo do segundo escalão é o
+  mais fácil (89%) e o último o mais duro (60%). Com o critério cheio
+  e 12% de erro, como o desafiante de antes, o forte ficava em 65%.
+- **Quem desafia a porta** sai dos inscritos do Torneio Aberto
   (`sortearDesafiante`, sem repetir os três últimos), com as linhas, os
   golpes e o item dele, mas no tamanho e no nível da defesa
-  (`DEFESAS[tipo]`, montado em `Defesa.desafiante`); o Ezra vem com o
+  (`DEFESAS.elite`, montado em `Defesa.desafiante`); o Ezra vem com o
   time de rival. Medido no `sim-torneio.js` com `FASE=8` e o `NIVEL` e
-  o `EXTRA` da defesa: o jogador ingênuo no nível da área vence 70% no
-  ginásio (4 Pokémon, ás 3 abaixo dos seus três mais fortes) e 57% na
-  porta (5, ás 5 abaixo). Com o time de seis no nível do torneio, era
-  35% e 28%, e baixar seis níveis só levava o ginásio a 50%: aqui o
-  nível pesa pouco, e o que pesa é o time montado.
+  o `EXTRA` da defesa: o jogador ingênuo no nível da área vence 57% na
+  porta (5 Pokémon, ás 5 abaixo dos seus três mais fortes). Com o time
+  de seis no nível do torneio, era 28%: aqui o nível pesa pouco, e o
+  que pesa é o time montado.
 - **A luta** é `Jogo.defesaAtual`, olhado antes de tudo no
   `finalizarBatalha`, salvo pela `LutaSalva` e zerado em toda luta que
   começa (junto com o `patrulhaAtual`); na quadra (`arena:'ginasio'`),
   com a faixa do seu ginásio ou a da Elite (`Som.tipoDeLuta`). Ganhou:
-  o bônus e uma advertência a menos. Perdeu, desistiu ou faltou: uma
-  advertência. Com `ADVERTENCIAS_PRA_PERDER`, a Liga tira o posto
-  (`perderPosto`; o do final vira "Ex-titular" na Ficha). A máquina da
-  quadra cura o time depois, ganhando ou perdendo.
+  o bônus e uma advertência a menos. Desistiu ou faltou: uma
+  advertência. Perdeu: na porta, advertência; no ginásio, a insígnia
+  vai e a fama zera, sem advertência — quem ainda está montando os
+  times não perde a casa por isso (foi proposto assim, depois que a
+  quinta rodada perdeu 27 postos, 26 deles logo depois de uma derrota).
+  No Difícil a derrota no ginásio vale advertência
+  (`derrotaNaQuadra` em `DIFICULDADES`). Com
+  `ADVERTENCIAS_PRA_PERDER`, a Liga tira o posto (`perderPosto`; o do
+  final vira "Ex-titular" na Ficha). A máquina da quadra cura o time
+  depois, ganhando ou perdendo.
 - **A fama da quadra** (`FAMA_DA_QUADRA`): cada defesa ganha seguida
   (`r.seguidas`) sobe um degrau, até o último da tabela (`famaTeto`), e
   quem marca o desafio seguinte vem mais preparado — `itens` Pokémon
@@ -2032,8 +2093,10 @@ regras ("O seu ginásio e a sua porta") lê os mesmos números.
   cada alavanca sozinha: o Pokémon a mais tira uns 16 pontos da vitória,
   cada Leftovers uns 5, e o erro da IA, o nível, o Muscle Band, o Wise
   Glasses e o Quick Claw quase nada — por isso a tabela só tem os dois.
-  O forte vai de 84% a 55% no ginásio e de 71% a 45% na porta; o
-  ingênuo, de 70% a 37% e de 52% a 26%. Mexeu na tabela, roda ali.
+  Na porta, o forte vai de 71% a 45% e o ingênuo de 52% a 26%; no
+  ginásio, pelo `QUADRA=1` com `FAMA_GRAU=`, o forte com o time comum
+  vai de 72% a 60%, 57% e 37% (o Pokémon a mais pesa mais em time de
+  dois ou três). Mexeu na tabela, roda ali.
   Cada Leftovers tirava 9 antes de a sobra acabar (`REGEN_TETO`, ver "O
   combate é Pokérole"), e foi a fama que mostrou o empate: com dois por
   time, um Primeape que só tirava 1 de um Lapras que beliscava 1 de
@@ -2041,7 +2104,18 @@ regras ("O seu ginásio e a sua porta") lê os mesmos números.
 
 O robô vai defender quando tem desafio marcado e o time de pé
 (`Defesa.pendente`, o que vence antes primeiro, `{f:'defender'}`), e o
-passo `defesa` vai pro relatório. A defesa vem logo depois de curar e
+passo `defesa` vai pro relatório, com as insígnias de quem desafiou. No
+ginásio ele assina a ficha com o tipo que mais enche os escalões com o
+que já tem e que mais anda no mato, em lugar de nível baixo
+(`__tipoDaCasa`, passo `especialidade`), antes de olhar a tela como
+cena: a ficha tem botões de cena, e o sorteio da cena fez a Líder
+assinar Fantasma, que tem dois Pokémon no mato, e perder o posto cinco
+vezes por falta. Desce com o time que a quadra sugere (`preSelecao`),
+e, com escalão faltando gente, vai procurar onde o tipo anda num nível
+que serve, o escalão de teto mais baixo primeiro (`__ondeCacar`, seis
+procuras por dia), compra Pokébola mesmo com o cinto cheio e joga no
+que serve; sem ninguém que sirva contra quem marcou, ele não vai à
+quadra, e o prazo vira falta. A defesa vem logo depois de curar e
 do PC na ordem dele: embaixo dos recados ela nunca chegava, porque
 depois do fim recado novo chega o tempo todo. Mas a jornada não espera
 pra sempre (`jornadaEspera`, `DIAS_ATE_SEGUIR`): com o capítulo seguinte

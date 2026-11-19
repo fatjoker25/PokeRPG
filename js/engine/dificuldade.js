@@ -29,21 +29,22 @@ const DIFICULDADES = {
     xp:1.3,                                // experiência de luta e de treino
     fomeMoral:false, fomeDistrai:0,        // a fome não tira moral nem distrai na luta
     moralCenaTeto:5,                       // o que uma cena tira, no máximo
-    desobedece:0.5                         // a chance de recusar uma ordem
+    desobedece:0.5,                        // a chance de recusar uma ordem
+    derrotaNaQuadra:false                  // perder no seu ginásio vale advertência (defesa.js)
   },
   normal: {
     nome:'Normal',
     curta:'A experiência original, do jeito que o jogo foi medido.',
     nota:'A experiência original: o jogo como ele foi medido e calibrado.',
     nivelTreinador:0, nivelSelvagem:0, erroMais:0, erroVezes:1, vontadePeso:null, asSegura:false,
-    xp:1, fomeMoral:true, fomeDistrai:1, moralCenaTeto:null, desobedece:1
+    xp:1, fomeMoral:true, fomeDistrai:1, moralCenaTeto:null, desobedece:1, derrotaNaQuadra:false
   },
   dificil: {
     nome:'Difícil',
     curta:'Pra quem quer desafio: o lado de lá vem mais forte, erra menos e o ás segura item.',
     nota:'Pra quem quer desafio. O lado de lá vem mais forte, erra menos, todo treinador gasta Vontade com critério e o ás chega segurando item.',
     nivelTreinador:3, nivelSelvagem:2, erroMais:0, erroVezes:0.5, vontadePeso:true, asSegura:true,
-    xp:1, fomeMoral:true, fomeDistrai:1, moralCenaTeto:null, desobedece:1
+    xp:1, fomeMoral:true, fomeDistrai:1, moralCenaTeto:null, desobedece:1, derrotaNaQuadra:true
   }
 };
 const ORDEM_DAS_DIFICULDADES = ['facil', 'normal', 'dificil'];
@@ -122,6 +123,8 @@ const Dificuldade = {
   fomeDistrai(){ return this.atual().fomeDistrai; },
   moralCenaTeto(padrao){ return this.atual().moralCenaTeto || padrao; },
   desobediencia(x){ return x * this.atual().desobedece; },
+  /* perder no seu ginásio vale advertência? (defesa.js) */
+  derrotaNaQuadra(){ return !!this.atual().derrotaNaQuadra; },
 
   /* a seção da folha de regras, com os números da própria tabela */
   regras(){
@@ -135,7 +138,7 @@ const Dificuldade = {
       <p class="sussurro">Escolhida na inscrição e trocada a qualquer hora nos Ajustes, da próxima luta em diante. Os sistemas são os mesmos nas três: o que muda é quanto eles pesam e quem está do outro lado. O Normal é o jogo como ele foi medido, e todos os números desta folha são os dele.${aberta ? ` A desta jornada: <b>${this.nome()}</b>.` : ''}</p>
       ${linha('Fácil', `${lado(F)} · a IA erra ${F.erroMais} pontos a mais na escolha do golpe · nenhum treinador gasta Vontade com critério cheio · experiência de luta e de treino ×${vezes(F.xp)} · a fome não tira moral nem distrai na luta · uma cena tira no máximo ${F.moralCenaTeto} de moral · ${F.desobedece === 0.5 ? 'metade' : vezes(F.desobedece) + '×'} da chance de ignorar uma ordem`)}
       ${linha('Normal', 'nada muda: os números desta folha')}
-      ${linha('Difícil', `${lado(X)} · a IA erra ${X.erroVezes === 0.5 ? 'metade' : vezes(X.erroVezes) + '×'} do que erraria · todo treinador gasta Vontade com critério cheio · o ás chega segurando item, se não tiver: Eviolite se ainda evolui, senão Wise Glasses ou Muscle Band, pelo que ele bate mais forte · o resto como no Normal`)}
+      ${linha('Difícil', `${lado(X)} · a IA erra ${X.erroVezes === 0.5 ? 'metade' : vezes(X.erroVezes) + '×'} do que erraria · todo treinador gasta Vontade com critério cheio · o ás chega segurando item, se não tiver: Eviolite se ainda evolui, senão Wise Glasses ou Muscle Band, pelo que ele bate mais forte · perder no seu ginásio vale advertência, como faltar · o resto como no Normal`)}
       ${linha('O que a tela mostra', 'o nível de quem está do lado de lá já vem com a dificuldade: na apresentação da luta, nas portas da Liga e no chaveamento')}`;
   },
 

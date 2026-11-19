@@ -5830,3 +5830,31 @@ h3.sec-conf{--sec:#7fb2ff}
 .creche-pk small{opacity:.7;margin-left:4px}
 .modal.creche .escolha .esc-custo{margin-left:auto;flex:none}
 .creche-sec{margin:14px 0 6px;font:600 .78rem var(--letra-hud, system-ui);letter-spacing:.08em;text-transform:uppercase;opacity:.75}
+
+/* ── O seu ginásio (defesa.js): a ficha do tipo da casa, o regulamento
+      da quadra e o time que desce ─────────────────────────────── */
+.escolha.com-tipo{display:flex;align-items:center;gap:12px}
+.escolha.com-tipo .tipo-tag{flex:0 0 auto;min-width:84px;text-align:center;margin:0}
+.escolha.com-tipo .esc-det{display:block;font-size:.8em;opacity:.75;font-weight:400}
+.quadro-quadra{margin:14px 0 4px;padding:12px 14px;border-radius:14px;background:rgba(0,0,0,.22);
+  border:1px solid rgba(255,255,255,.12);border-color:color-mix(in srgb, var(--ac) 45%, transparent);overflow-x:auto}
+.quadro-quadra .qq-tit{display:flex;align-items:center;gap:10px;margin-bottom:8px;
+  font:600 .78rem var(--letra-hud, system-ui);letter-spacing:.08em;text-transform:uppercase}
+.quadro-quadra .qq-tit .tipo-tag{margin:0}
+.quadro-quadra table{width:100%;border-collapse:collapse;font:500 .86rem var(--letra-hud, system-ui);font-variant-numeric:tabular-nums}
+.quadro-quadra th{font-weight:600;font-size:.7rem;letter-spacing:.04em;text-transform:uppercase;opacity:.7;text-align:left;padding:4px 6px;vertical-align:bottom}
+.quadro-quadra td{padding:5px 6px;border-top:1px solid rgba(255,255,255,.08)}
+.quadro-quadra td:last-child, .quadro-quadra th:last-child{text-align:right;white-space:nowrap}
+.quadro-quadra tr.vazio td:last-child{color:#ff8a80}
+.quadro-quadra tr.parcial td:last-child{color:#ffd54f}
+.quadro-quadra tr.cheio td:last-child{color:#a5d6a7}
+.quadro-quadra td small{opacity:.85;margin-left:4px}
+.quadra-lista{margin-top:14px}
+.quadra-lista .quadra-pk{display:flex;align-items:center;gap:10px}
+.quadra-lista .quadra-pk .creche-pk{flex:1 1 auto;min-width:0}
+.quadra-lista .quadra-pk .creche-pk small{display:block;margin:2px 0 0}
+.quadra-lista .quadra-pk .quadra-ordem{flex:0 0 auto;margin-left:auto;min-width:2.4em;text-align:center;
+  font:700 .82rem var(--letra-hud, system-ui);font-variant-numeric:tabular-nums;color:var(--ac, #e8b923)}
+.quadra-lista .quadra-pk:not(.escolhido){opacity:.72}
+.quadra-lista .quadra-pk.escolhido{outline:2px solid var(--ac, #e8b923);outline-offset:-2px}
+.quadra-lista #quadra-descer{margin-top:6px}

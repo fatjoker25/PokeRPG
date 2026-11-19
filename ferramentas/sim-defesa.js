@@ -85,9 +85,9 @@ function timeJogador(nivel){
   }
   return t;
 }
-function lutar(meu, adv, erroIA, golpe){
+function lutar(meu, adv, erroIA, golpe, vontadeIA = true){
   d.time = meu;
-  Batalha.iniciar(meu[0], adv[0], {tipo:'treinador', fuga:false, treinador:'Sim', arena:'ginasio', timeInimigo:adv.slice(1), erroIA, vontadeIA:true});
+  Batalha.iniciar(meu[0], adv[0], {tipo:'treinador', fuga:false, treinador:'Sim', arena:'ginasio', timeInimigo:adv.slice(1), erroIA, vontadeIA});
   let turnos = 0, r;
   while (Batalha.ativo && turnos < 150){
     turnos++;
@@ -97,6 +97,70 @@ function lutar(meu, adv, erroIA, golpe){
     if (Batalha.fase === 'ameaca') break;
   }
   return {venceu:!!(Batalha.fim && Batalha.fim.resultado === 'vitoria'), turnos, caidos:meu.filter(p => p.hp <= 0).length};
+}
+
+/* ---------- a quadra do seu ginásio (QUADRA=1) ----------
+   O tipo da casa e o escalão: pra cada tipo, um time comum dele (as
+   espécies do tipo que mais aparecem no mato, na forma que o nível dá,
+   todas no nível máximo do escalão, repetindo quando o tipo tem poucas)
+   contra gente da estrada com zero a sete insígnias, montada pelo
+   próprio Defesa.desafianteDaQuadra, no degrau zero da fama (FAMA=k mede
+   outro degrau). GINASIO=pewter,cinnabar escolhe a casa (a dificuldade
+   dela mexe no nível); TIPOS=Gelo,Normal mede só esses; ABAIXO=n põe o
+   time n níveis abaixo do máximo. */
+if (process.env.QUADRA){
+  const onde = {};
+  for (const k in ENCONTROS) for (const [id, peso] of ENCONTROS[k]) onde[id] = (onde[id] || 0) + peso;
+  /* o time comum de um tipo num nível: as formas do tipo, pelo peso no mato */
+  const comum = (T, nv, tam) => {
+    const peso = {};
+    for (const id in onde){
+      const f = formaAteONivel(finalDaLinha(+id), nv);
+      const base = formaAteONivel(+id, nv) === +id ? +id : f;
+      const forma = (DEX[f] && DEX[f].tipos.includes(T)) ? f : (DEX[base] && DEX[base].tipos.includes(T) ? base : null);
+      if (forma) peso[forma] = (peso[forma] || 0) + onde[id];
+    }
+    /* quem não tem golpe que bate naquele nível (o Magikarp só com
+       Splash, o Abra só com Teleport) ninguém escala */
+    const bate = f => criarPokemon(f, nv).golpes.some(g => (GOLPES[g.nome] || {}).c !== 'status');
+    const l = Object.keys(peso).sort((a, b) => peso[b] - peso[a]).map(Number).filter(bate);
+    if (!l.length) return [];
+    return Array.from({length:tam}, (_, i) => criarPokemon(l[i % l.length], nv, {moral:70}));
+  };
+  const golpe = process.env.JOGADOR === 'ingenuo' ? golpeIngenuo : golpeForte;
+  const fama = +(process.env.FAMA_GRAU || 0);
+  if (process.env.ERRO) DEFESAS.lider.erroIA = +process.env.ERRO;
+  if (process.env.VONTADE) DEFESAS.lider.vontadeIA = process.env.VONTADE === '1';
+  const tipos = process.env.TIPOS ? process.env.TIPOS.split(',') : TIPOS_KANTO;
+  const abaixo = +(process.env.ABAIXO || 0);
+  for (const g of (process.env.GINASIO || 'pewter').split(',')){
+    console.log(`\nginásio de ${cidadeDoGinasio(g)} · degrau ${fama} da fama · ${golpe === golpeForte ? 'forte' : 'ingênuo'} · ${N} lutas por caso`);
+    console.log('tipo        ' + [0,1,2,3,4,5,6,7].map(n => `${n}`.padStart(5)).join('') + '   média');
+    const soma = [0,0,0,0,0,0,0,0];
+    for (const T of tipos){
+      const cols = [];
+      for (let n = 0; n <= 7; n++){
+        const R = Defesa.regra(g, n);
+        d.defesa = {lider:{ginasio:g, tipo:T, recentes:[], seguidas:0, adv:0}};
+        let v = 0, k = 0;
+        for (let i = 0; i < N; i++){
+          const meu = comum(T, Math.max(3, R.nivel - abaixo), R.tam);
+          if (!meu.length) break;
+          const t = Defesa.sortearDaEstrada(d.defesa.lider, n);
+          const adv = Defesa.desafianteDaQuadra({quem:t.id, nome:nomeDeLuta(t), curto:t.nome, ins:n}, fama);
+          d.time = meu;
+          const x = lutar(meu, adv.time, DEFESAS.lider.erroIA, golpe, DEFESAS.lider.vontadeIA);
+          v += x.venceu ? 1 : 0; k++;
+        }
+        const pct = k ? Math.round(100 * v / k) : null;
+        cols.push(pct); if (pct != null) soma[n] += pct;
+      }
+      const ok = cols.filter(c => c != null);
+      console.log(T.padEnd(12) + cols.map(c => (c == null ? '—' : c + '%').padStart(5)).join('') + `   ${ok.length ? Math.round(ok.reduce((a, b) => a + b, 0) / ok.length) : '—'}%`);
+    }
+    console.log('média'.padEnd(12) + soma.map(x => (Math.round(x / tipos.length) + '%').padStart(5)).join(''));
+  }
+  process.exit(0);
 }
 
 const inscritos = RIVAIS_TORNEIO.filter(r => r.linhas && !r.cond);
