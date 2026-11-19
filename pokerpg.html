@@ -113827,8 +113827,8 @@ const FALAS_DA_FAMA = {
     s => `${cap1(porExtensoF(s))} defesas seguidas, é o que dizem na estrada. Trouxe o que eu tinha de melhor.`
   ],
   elite:[
-    s => `Disseram lá embaixo que a sua porta segurou ${porExtensoF(s)} seguidas. Eu vim mudar a conta.`,
-    s => `${cap1(porExtensoF(s))} seguidas nessa porta. Eu treinei pensando nisso.`
+    s => `Disseram lá embaixo que ninguém passa da sua porta: ${porExtenso(s)} desafios seguidos. Eu vim mudar a conta.`,
+    s => `${cap1(porExtensoF(s))} defesas seguidas nessa porta. Eu treinei pensando nisso.`
   ]
 };
 const SECRETARIA_DO_PLANALTO = 'a secretária do Planalto';
@@ -113849,18 +113849,19 @@ const QUEM_DEIXA_A_PORTA = {
    ginásio: c, a cidade; n, as insígnias dele; t, o tipo do ginásio */
 const FALAS_DO_DESAFIANTE = {
   lider:[
-    (c, n) => n === 0 ? `A de ${c} vai ser a minha primeira.` : `Vim pela insígnia de ${c}. Tenho ${insigniasDitas(n)}.`,
+    (c, n) => n === 0 ? `A insígnia de ${c} vai ser a minha primeira.` : `Vim pela insígnia de ${c}. Tenho ${insigniasDitas(n)}.`,
     () => 'Me disseram que o ginásio trocou de dono. Vim ver se trocou pra melhor.',
     (c, n, t) => t ? `Ouvi dizer que o ginásio agora é do tipo ${t}. Montei o time pensando nisso.`
       : 'Três semanas treinando pra este ginásio. Não me faz perder a viagem.',
-    (c, n) => n >= 6 ? 'Depois dessa, falta pouco pro Planalto. Não vou parar aqui.'
-      : n === 0 ? 'Nunca batalhei num ginásio. Pode vir do jeito que for.'
+    (c, n) => n === 7 ? 'Esta é a última insígnia que me falta pro Planalto. Não vou parar aqui.'
+      : n === 6 ? 'Depois desta, só falta uma pro Planalto.'
+      : n === 0 ? 'Nunca batalhei num ginásio. Pode vir com tudo.'
       : 'Três semanas treinando pra este ginásio. Não me faz perder a viagem.'
   ],
   elite:[
     () => 'Me disseram que tem gente nova numa dessas portas. Vim conferir.',
-    () => 'Oito insígnias e um ano de estrada até esta sala.',
-    () => 'Eu não subi até o Planalto pra voltar no primeiro corredor.'
+    () => 'Oito insígnias e um ano de estrada pra chegar nesta porta.',
+    () => 'Eu não subi até o Planalto pra parar na sua porta.'
   ]
 };
 const FALAS_DO_EZRA = {
@@ -113873,7 +113874,7 @@ const SAIDA_DO_DESAFIANTE = {
   perdeu:['Volto com outro plano.', 'Tá. Ainda não é a minha vez.', 'Anotado. Até a próxima.'],
   ganhou:['Valeu a viagem.', 'Eu sabia que dava.', 'Foi apertado. Foi justo.'],
   /* a insígnia entregue sem ninguém batalhar */
-  semLuta:['Assim? Tá. Eu levo.', 'Não era assim que eu queria ganhar essa.', 'Eu treinei pra isso. Ia gostar de ter usado.']
+  semLuta:['Assim? Tá. Eu levo.', 'Não era assim que eu queria ganhar essa.', 'Eu treinei pra isso. Queria ter batalhado.']
 };
 const SAIDA_DO_EZRA = {
   perdeu:'De novo?! Tá. TÁ. Eu volto.',
@@ -114026,7 +114027,7 @@ const Defesa = {
     if (!g) return 'Ginásio não é prêmio por ser forte. É um posto de trabalho com horário fixo e uma criança chorando na sua sala toda quinta.';
     if (g === 'viridian' && (d.flags.recusou_o_ginasio || d.flags.blue_ofereceu_o_ginasio))
       return 'A vaga é em Viridian. O titular de lá foi embora e deixou a chave na portaria, com o formulário pela metade.';
-    return `A vaga é em ${cidadeDoGinasio(g)}. Quem estava lá pediu afastamento, e ginásio fechado manda desafiante pra cidade do lado.`;
+    return `A vaga é em ${cidadeDoGinasio(g)}. Quem estava lá pediu afastamento, e com o ginásio fechado os desafiantes iam todos pra cidade do lado.`;
   },
   /* quem sai da porta (cargos.js): o substituto, com a fala dele */
   falasDaPorta(d){
@@ -114086,10 +114087,10 @@ const Defesa = {
     const cor = t => ` style="--ac:${COR_TIPO[t] || '#888'}"`;
     const falas = escolha
       ? [`**TIPO DO GINÁSIO: ${escolha.toUpperCase()}**`,
-         `Falta a sua assinatura embaixo. Depois dela, a Liga só muda o tipo com outro ginásio.`]
-      : [`Junto com a chave do Ginásio de ${cidade}, a Liga mandou a ficha do ginásio, com um campo só em branco.`,
+         'Falta a sua assinatura embaixo. Assinada, a ficha vale enquanto o ginásio for seu.']
+      : [`Junto com a chave do Ginásio de ${cidade} veio uma ficha da Liga, com um campo só, em branco.`,
          '**TIPO DO GINÁSIO: ________**',
-         'Os outros sete ginásios já têm tipo, e o tipo de quem saiu ficou livre. Embaixo, em letra pequena: o ginásio reabre duas semanas depois da ficha assinada.'];
+         'Do lado, a lista dos outros sete ginásios, cada um com o tipo dele. Embaixo, em letra pequena: o ginásio reabre duas semanas depois da ficha assinada.'];
     const botoes = escolha
       ? `<button class="escolha com-tipo"${cor(escolha)} onclick="Defesa.escolherTipo('${escolha}')">${UI.tipoTag(escolha)}<span class="esc-rot">Assinar a ficha</span></button>
          <button class="escolha discreta" onclick="Defesa.telaTipo()">Escolher outro tipo</button>`
@@ -114331,12 +114332,12 @@ const Defesa = {
       }
       reg.lider = null;
       if (Cargos.tem('lider')) Cargos.largar('lider');
-      Estado.registrar(`A Liga tirou o ginásio de ${onde}.`);
+      Estado.registrar(`A Liga tirou de você o ginásio de ${onde}.`);
     } else {
       (reg.portasPerdidas = reg.portasPerdidas || []).push(r.porta);
       reg.elite = null;
       if (Cargos.tem('elite')) Cargos.largar('elite');
-      Estado.registrar(`A Liga tirou a ${onde} da ala da Elite.`);
+      Estado.registrar(`A Liga tirou de você a ${onde} da ala.`);
     }
     return onde;
   },
@@ -114346,7 +114347,7 @@ const Defesa = {
     if (!Estado.temPokenav() || typeof Jogo === 'undefined' || !Jogo.tocarOuGuardar) return;
     Estado.registrarNumero('secretaria');
     const r = this.reg()[tipo] || {}, x = r.desafio || {};
-    const aviso = Object.assign({tipo, qual, nome:x.nome || null, ate:x.ate || null, ins:x.ins,
+    const aviso = Object.assign({tipo, qual, nome:x.nome || null, f:!!x.f, ate:x.ate || null, ins:x.ins,
       ginasio:this.meuGinasio(), porta:this.minhaPorta()}, extra || {});
     setTimeout(() => Jogo.tocarOuGuardar({recados:'defesa', de:'secretaria', aviso}), 80);
   },
@@ -114366,14 +114367,14 @@ const Defesa = {
     const S = SECRETARIA_DO_PLANALTO;
     const onde = a.tipo === 'lider' ? cidadeDoGinasio(a.ginasio) : `${ORDINAL_DA_PORTA[a.porta] || 'sua'} porta`;
     if (a.qual === 'marcado') return a.tipo === 'lider'
-      ? [fala(S, `${a.nome} marcou desafio no ginásio de ${onde}${a.ins != null ? ', ' + this.comInsignias(a.ins) : ''}.`), fala(S, `Espera até ${this.diaDito(a.ate)}.`)]
-      : [fala(S, `${a.nome} marcou a ala e pediu a sua porta.`), fala(S, `Espera no corredor até ${this.diaDito(a.ate)}.`)];
+      ? [fala(S, `${a.nome} marcou desafio no ginásio de ${onde}${a.ins != null ? ', ' + this.comInsignias(a.ins) : ''}.`), fala(S, `${a.f ? 'Ela' : 'Ele'} espera até ${this.diaDito(a.ate)}.`)]
+      : [fala(S, `${a.nome} marcou desafio na Elite e pediu a sua porta.`), fala(S, `${a.f ? 'Ela' : 'Ele'} espera no corredor até ${this.diaDito(a.ate)}.`)];
     if (a.qual === 'falta'){
       const l = a.tipo === 'lider'
         ? [fala(S, `${a.nome} esperou o prazo inteiro no ginásio e foi embora com a insígnia.`), fala(S, 'A Liga anotou a falta.')]
         : [fala(S, `${a.nome} passou pela sua porta sem ninguém do outro lado.`), fala(S, 'A Liga anotou a falta.')];
       if (a.perdeu) l.push(a.tipo === 'lider'
-        ? fala(S, `E a Liga decidiu hoje cedo: o ginásio de ${a.perdeu} vai pra outra pessoa. A chave fica na portaria.`)
+        ? fala(S, `E a Liga decidiu hoje cedo: o ginásio de ${a.perdeu} vai pra outra pessoa. Pode deixar a chave na portaria.`)
         : fala(S, `E a Liga decidiu hoje cedo: a ${a.perdeu} volta pra quem sentava nela antes. O seu nome sai da placa amanhã.`));
       return l;
     }
@@ -114388,14 +114389,14 @@ const Defesa = {
     return {lugar:true, id:'ginasio', titulo:'Seu ginásio',
       sub:r && !r.tipo ? 'Falta escolher o tipo do ginásio.'
         : ab ? `Fechado pra reforma. Reabre ${this.daquiA(ab)}.`
-        : x ? `${x.curto} marcou desafio. Espera até ${this.diaDito(x.ate)}.` : 'Ninguém marcou desafio.'};
+        : x ? `${x.curto} marcou desafio. Prazo até ${this.diaDito(x.ate)}.` : 'Ninguém marcou desafio.'};
   },
   /* a sua porta, no Planalto */
   afazeres(local){
     if (local !== 'planalto' || this.minhaPorta() == null) return [];
     const r = this.estado('elite'), x = r && r.desafio;
     return [{lugar:true, id:'defesa_elite', titulo:'Sua porta na ala',
-      sub:x ? `${x.curto} marcou a ala. Espera até ${this.diaDito(x.ate)}.` : 'Ninguém marcou a ala.'}];
+      sub:x ? `${x.curto} pediu a sua porta. Prazo até ${this.diaDito(x.ate)}.` : 'Ninguém pediu a sua porta.'}];
   },
   /* a linha do cartão do posto no balcão de credenciais */
   notaDoCartao(id){
@@ -114415,7 +114416,9 @@ const Defesa = {
     const d = Estado.dados, r = this.estado(tipo, d);
     if (!r) return Exploracao.tela();
     const x = r.desafio, falas = [];
-    const adv = r.adv ? `No quadro da secretaria, do lado do seu nome: ${porExtensoF(r.adv)} advertência${r.adv > 1 ? 's' : ''}.` : null;
+    const advs = `${porExtensoF(r.adv)} advertência${r.adv > 1 ? 's' : ''}`;
+    const adv = !r.adv ? null : tipo === 'lider' ? `Em cima da mesa, a carta da Liga: ${advs} no seu nome.`
+      : `No quadro da secretaria, do lado do seu nome: ${advs}.`;
     /* a sequência é coisa que a quadra mostra, não regra: o que ela faz
        com quem marca desafio está na folha */
     const rec = (r.recorde || 0) > (r.seguidas || 0) ? ` Embaixo, num canto, o recorde: ${porExtensoF(r.recorde)}.` : '';
@@ -114446,14 +114449,14 @@ const Defesa = {
     const p = r.porta;
     falas.push('A placa de bronze da porta tem o seu nome, na mesma fonte das outras três.');
     if (x){
-      falas.push(`${x.nome}${x.de ? ', ' + x.de + ',' : ''} marcou a ala e espera no corredor.`);
+      falas.push(`${x.nome}${x.de ? ', ' + x.de + ',' : ''} pediu a sua porta e espera no corredor.`);
       falas.push(fala(x.nome, x.fala));
-    } else falas.push('O corredor está vazio. Ninguém marcou a ala.');
+    } else falas.push('O corredor está vazio. Ninguém pediu a sua porta.');
     if (seq) falas.push(seq);
     if (adv) falas.push(adv);
     return UI.telaConversa({num:'Elite dos Quatro', titulo:'A sua porta', loc:`${cap1(ORDINAL_DA_PORTA[p])} porta`, falas, avisos,
       botoes:(x ? [{texto:`Defender a porta — ${x.curto}`, acao:"Defesa.lutar('elite')", classe:'luta', icone:'lutar'}] : [])
-        .concat([{texto:'Ir pro corredor da Liga', acao:'Jogo.abrirLiga()'}, {texto:'Sair', acao:'Exploracao.tela()'}])});
+        .concat([{texto:'Ir pro corredor da Elite', acao:'Jogo.abrirLiga()'}, {texto:'Sair', acao:'Exploracao.tela()'}])});
   },
 
   /* ---------- a luta ---------- */
@@ -114616,7 +114619,7 @@ const Defesa = {
       timeInimigo:adv.time.slice(1),
       introducao:`${adv.nome} enviou ${nomeVisivel(adv.time[0])} (Nv ${adv.time[0].nivel})!`
     });
-    UI.telaBatalha([`${adv.nome} desce pra quadra do seu ginásio.`, `${adv.nome} quer a insígnia!`]);
+    UI.telaBatalha([`${adv.nome} desce da arquibancada pra quadra.`, `${adv.nome} quer a insígnia!`]);
   },
 
   lutar(tipo, uids){
@@ -114646,7 +114649,7 @@ const Defesa = {
       introducao:`${adv.nome} enviou ${nomeVisivel(adv.time[0])} (Nv ${adv.time[0].nivel})!`
     });
     UI.telaBatalha(tipo === 'lider'
-      ? [`${adv.nome} desce pra quadra do seu ginásio.`, `${adv.nome} quer a insígnia!`]
+      ? [`${adv.nome} desce da arquibancada pra quadra.`, `${adv.nome} quer a insígnia!`]
       : [`${adv.nome} abre a sua porta.`, `${adv.nome} quer passar!`]);
   },
 
@@ -114656,7 +114659,7 @@ const Defesa = {
     Jogo.batalhaLivre = false;
     /* o time da quadra volta pro lugar antes de tudo */
     if (ctx && ctx.tipo === 'lider') this.devolver();
-    if (fim.resultado === 'gameover') return UI.telaGameOver('Você caiu na quadra do seu próprio posto.');
+    if (fim.resultado === 'gameover') return UI.telaGameOver(ctx && ctx.tipo === 'elite' ? 'Você caiu na sua própria porta da Elite.' : 'Você caiu no seu próprio ginásio.');
     const d = Estado.dados, tipo = ctx && ctx.tipo, r = tipo ? this.estado(tipo, d) : null;
     const x = r && r.desafio;
     if (!x) return Jogo.resolverPendencias(() => Exploracao.tela());
@@ -114683,9 +114686,9 @@ const Defesa = {
       av.push({tipo:'item', texto:`+${fmtDin(b)} ₽ — o que a Liga paga por desafio defendido.`});
       if (r.adv > 0){ r.adv--; av.push({tipo:'liga', texto:'A Liga tirou uma advertência do seu nome.'}); }
       falas.push(tipo === 'lider' ? `${x.curto} recolhe a última Pokébola e fica um tempo olhando pra quadra.`
-        : `${x.curto} recolhe a última Pokébola e desce o corredor de volta, sem olhar pras outras portas.`);
+        : `${x.curto} recolhe a última Pokébola e volta pelo corredor sem olhar pras outras portas.`);
       falas.push(fala(x.nome, ezra ? SAIDA_DO_EZRA.perdeu : Dados.escolher(SAIDA_DO_DESAFIANTE.perdeu)));
-      falas.push(tipo === 'lider' ? `Na entrada, alguém da quadra risca ${giz} na lousa, a giz.`
+      falas.push(tipo === 'lider' ? `Na entrada, alguém do ginásio risca ${giz} na lousa, a giz.`
         : `Do lado da sua placa, alguém risca ${giz} a giz.`);
       titulo = tipo === 'lider' ? 'Ginásio defendido' : 'Porta defendida';
       Estado.registrar(`Defendeu ${tipo === 'lider' ? 'o seu ginásio' : 'a sua porta da ala'} contra ${x.nome}.`);
@@ -114702,7 +114705,7 @@ const Defesa = {
         : `${x.curto} passa pela sua porta e segue pro fundo do corredor.`);
       falas.push(fala(x.nome, ezra ? SAIDA_DO_EZRA.ganhou[tipo]
         : Dados.escolher(semLuta ? SAIDA_DO_DESAFIANTE.semLuta : SAIDA_DO_DESAFIANTE.ganhou)));
-      if (tinha) falas.push(tipo === 'lider' ? 'Na entrada, alguém da quadra passa a manga na lousa.'
+      if (tinha) falas.push(tipo === 'lider' ? 'Na entrada, alguém do ginásio passa a manga na lousa.'
         : 'Do lado da sua placa, os traços de giz somem debaixo de um pano.');
       titulo = tipo === 'lider' ? `${x.curto} levou a insígnia` : `${x.curto} passou`;
       Estado.registrar(semLuta ? `Entregou a insígnia do seu ginásio a ${x.nome} sem batalhar.`
@@ -114710,14 +114713,14 @@ const Defesa = {
       if (conta){
         if (r.adv >= ADVERTENCIAS_PRA_PERDER){
           const onde = this.perderPosto(tipo);
-          av.push({tipo:'dano', texto:tipo === 'lider' ? `A Liga tirou o ginásio de ${onde} de você.` : `A Liga tirou a ${onde} da ala de você.`});
+          av.push({tipo:'dano', texto:tipo === 'lider' ? `A Liga tirou de você o ginásio de ${onde}.` : `A Liga tirou de você a ${onde} da ala.`});
           falas.push(fala(SECRETARIA_DO_PLANALTO, tipo === 'lider'
             ? 'A Liga decidiu: o ginásio vai pra outra pessoa. Pode deixar a chave na portaria.'
             : 'A Liga decidiu: a porta volta pra quem sentava nela antes.'));
         } else av.push({tipo:'liga', texto:`A Liga anotou uma advertência: ${r.adv} de ${ADVERTENCIAS_PRA_PERDER}.`});
       }
     }
-    if (!semLuta) av.push({tipo:'cura', texto:'A máquina da quadra cura o time.'});
+    if (!semLuta) av.push({tipo:'cura', texto:tipo === 'lider' ? 'A máquina do ginásio cura o time.' : 'A máquina da ala cura o time.'});
     Estado.salvar('auto');
     const num = tipo === 'lider' ? `Ginásio de ${cidadeDoGinasio((ctx && ctx.ginasio) || r.ginasio)}` : 'Elite dos Quatro';
     Jogo.resolverPendencias(() => UI.telaConversa({num, titulo, loc:tipo === 'lider' ? 'a quadra' : 'a sua porta',
@@ -114731,7 +114734,7 @@ const Defesa = {
     const est = (typeof TREINADORES_ESTRADA !== 'undefined' ? TREINADORES_ESTRADA : []).filter(t => !t.barreira);
     const quemDa = tipo => tipo === 'lider' && est.length ? nomeDeLuta(est[0]) : 'Domador de Dragões Ronan';
     ['lider', 'elite'].forEach(tipo => {
-      ['marcado', 'falta'].forEach(qual => [0, 3].forEach(ins => out.push(...this.falasDoAviso({tipo, qual, nome:quemDa(tipo), ins,
+      ['marcado', 'falta'].forEach(qual => [0, 3].forEach(ins => out.push(...this.falasDoAviso({tipo, qual, nome:quemDa(tipo), ins, f:ins > 0,
         ate:Estado.dados.relogio.dia + PRAZO_DA_DEFESA, ginasio:'pewter', porta:1, perdeu:qual === 'falta' ? 'Pewter' : null}))));
     });
     est.slice(0, 3).forEach(t => FALAS_DO_DESAFIANTE.lider.forEach(f => [0, 1, 4, 7].forEach(n => [null, 'Gelo'].forEach(tp =>
@@ -122833,7 +122836,7 @@ const UI = {
             + FAMA_DA_QUADRA.slice(1).map((F, i) => `${i + 1}º degrau: ${F.itens === 1 ? 'um Pokémon dele segura' : F.itens + ' Pokémon dele seguram'} ${ITEM_DA_FAMA}${F.tam ? (F.tam === 1 ? ' e ele traz um Pokémon a mais' : ` e ele traz ${F.tam} Pokémon a mais`) : ''}`).join(' · ')
             + ` · quem segura são os mais fortes, fora o ás, que já segura o dele · no ginásio, o Pokémon a mais vem por cima do tamanho do escalão · time que já é de seis não cresce · a lousa da quadra conta as seguidas`)
           + L('Advertências', `com ${ADVERTENCIAS_PRA_PERDER}, a Liga tira o posto: o ginásio vai pra outra pessoa, a porta volta pra quem sentava nela · assumir de novo sorteia outra vaga`)
-          + L('Depois da luta', 'a máquina da quadra cura o time, ganhando ou perdendo · no ginásio, quem batalhou volta pro cinto ou pro PC de onde saiu');
+          + L('Depois da luta', 'o time sai curado, ganhando ou perdendo · no ginásio, quem batalhou volta pro cinto ou pro PC de onde saiu');
       })()}
 
       <h3>A rede</h3>

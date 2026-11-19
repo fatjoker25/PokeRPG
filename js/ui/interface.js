@@ -6903,7 +6903,7 @@ const UI = {
             + FAMA_DA_QUADRA.slice(1).map((F, i) => `${i + 1}º degrau: ${F.itens === 1 ? 'um Pokémon dele segura' : F.itens + ' Pokémon dele seguram'} ${ITEM_DA_FAMA}${F.tam ? (F.tam === 1 ? ' e ele traz um Pokémon a mais' : ` e ele traz ${F.tam} Pokémon a mais`) : ''}`).join(' · ')
             + ` · quem segura são os mais fortes, fora o ás, que já segura o dele · no ginásio, o Pokémon a mais vem por cima do tamanho do escalão · time que já é de seis não cresce · a lousa da quadra conta as seguidas`)
           + L('Advertências', `com ${ADVERTENCIAS_PRA_PERDER}, a Liga tira o posto: o ginásio vai pra outra pessoa, a porta volta pra quem sentava nela · assumir de novo sorteia outra vaga`)
-          + L('Depois da luta', 'a máquina da quadra cura o time, ganhando ou perdendo · no ginásio, quem batalhou volta pro cinto ou pro PC de onde saiu');
+          + L('Depois da luta', 'o time sai curado, ganhando ou perdendo · no ginásio, quem batalhou volta pro cinto ou pro PC de onde saiu');
       })()}
 
       <h3>A rede</h3>
