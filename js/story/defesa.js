@@ -539,7 +539,7 @@ const Defesa = {
     if (tipo === 'lider') return this.marcarNaQuadra(r);
     const ins = this.sortearDesafiante(r);
     if (!ins){ r.proximo = d.relogio.dia + this.espera(); return; }
-    r.desafio = {quem:ins.id, nome:ins.nome, curto:ins.curto || ins.nome, f:!!ins.f, de:ins.de || '',
+    r.desafio = {quem:ins.id, nome:ins.nome, curto:ins.curto || ins.nome, classe:ins.classe || null, f:!!ins.f, de:ins.de || '',
       fala:this.falaDoDesafiante(tipo, ins), fama:this.fama(tipo, d),
       dia:d.relogio.dia, ate:d.relogio.dia + PRAZO_DA_DEFESA, cap:capNaJornada(d)};
     r.recentes = [ins.id].concat(r.recentes || []).slice(0, 3);
@@ -562,17 +562,18 @@ const Defesa = {
     this.avisar('lider', 'marcado');
   },
   comInsignias(n){ return n ? `com ${insigniasDitas(n)}` : 'sem insígnia nenhuma'; },
-  /* quem desafia, na frase: o nome com o artigo ("a Sally"), nunca o nome
-     de luta ("Garota Sally"), que é o anúncio da luta, como na estrada.
-     Na primeira notícia, o que a pessoa é ("uma garota chamada Sally");
-     quem vem do torneio, de onde vem ("o Ronan, do Planalto,") */
+  /* quem desafia, na frase: o nome com o artigo ("a Sally"). Na
+     primeira notícia, o que a pessoa é e de onde vem ("uma garota
+     chamada Sally", "um domador de dragões do Planalto chamado Ronan");
+     quem não tem classe, de onde vem ("a Fenna, de Saffron,") */
   oNome(x){ return `${x.f ? 'a' : 'o'} ${x.curto || x.nome}`; },
   apresentar(x){
-    if (x.classe && x.curto) return `${x.f ? 'uma' : 'um'} ${x.classe.toLowerCase()} chamad${x.f ? 'a' : 'o'} ${x.curto}`;
+    const nome = x.curto || x.nome;
+    if (x.classe) return `${x.f ? 'uma' : 'um'} ${x.classe.toLowerCase()}${x.de ? ' ' + x.de : ''} chamad${x.f ? 'a' : 'o'} ${nome}`;
     return this.oNome(x) + (x.de ? `, ${x.de},` : '');
   },
-  /* o nome no balão: o curto, como na estrada ("Sally"), quando o rosto
-     dele é o do nome de luta; senão o nome inteiro, que tem rosto */
+  /* o nome no balão: o curto, quando o rosto dele é o do nome inteiro
+     (desafio salvo antes, com a classe no nome); senão o nome */
   rotulo(x){
     const R = typeof RETRATO_POR_NOME !== 'undefined' ? RETRATO_POR_NOME : {};
     const c = x.curto;

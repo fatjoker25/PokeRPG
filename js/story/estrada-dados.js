@@ -174,7 +174,7 @@ const TREINADORES_ESTRADA = [
  volta:'"Dessa vez você não tá cansad{o|a}. Eu também não."',
  perde:'"Pelo jeito cansad{o|a} você luta melhor."',
  vence:'"Descansa em Cerulean, que o rio faz bem."'},
-{id:'cale', local:'rota4', classe:'Campista', arq:'camper', artigo:'um', nome:'Liam',
+{id:'cale', local:'rota4', classe:'Campista', arq:'camper', artigo:'um', nome:'Liam', nomeAntes:'Cale',
  times:[[27,23], [27,23,50], [28,24,51,105], [28,24,51,105,232]], reserva:[104,231],
  abre:'"Tô acampado aqui há três dias esperando alguém pra lutar. Três dias! Por favor, não recusa."',
  volta:'"Quatro dias dessa vez. Obrigado por voltar."',
@@ -273,7 +273,7 @@ const TREINADORES_ESTRADA = [
  vence:'"Olha a cabeça na terceira curva, sempre."'},
 
 /* ── Rota 5 ─────────────────────────────────────────────── */
-{id:'reli', local:'rota5', classe:'Garota', arq:'lass', artigo:'uma', nome:'Sally',
+{id:'reli', local:'rota5', classe:'Garota', arq:'lass', artigo:'uma', nome:'Sally', nomeAntes:'Reli',
  times:[[52,39], [52,39,209], [53,40,210,176], [53,40,210,176,241]], reserva:[35,190],
  abre:'"Asfalto do começo ao fim, que tédio. Me distrai com uma luta?"',
  volta:'"Ainda tédio. Me distrai de novo."',
@@ -620,11 +620,14 @@ const TREINADORES_ESTRADA = [
  vence:'"O Caminho escolhe."'}
 ];
 
-/* rosto de quem luta na estrada: o nome de luta e o nome sozinho.
-   E o nome sai do sorteio: ninguém mais em Kanto se chama Joey. */
+/* rosto de quem luta na estrada: pelo nome, e pelo nome com a classe,
+   que é como o save de antes guardou a luta ("Garota Reli", com o nome
+   de antes também). E o nome sai do sorteio: ninguém mais em Kanto se
+   chama Joey. */
 TREINADORES_ESTRADA.forEach(t => {
   if (typeof NOMES_DA_HISTORIA !== 'undefined') NOMES_DA_HISTORIA.add(t.nome);
   if (typeof RETRATO_POR_NOME === 'undefined') return;
-  RETRATO_POR_NOME[nomeDeLuta(t)] = 'trainers/' + t.arq;
+  RETRATO_POR_NOME[nomeComClasse(t)] = 'trainers/' + t.arq;
+  if (t.nomeAntes) RETRATO_POR_NOME[`${t.classe} ${t.nomeAntes}`] = 'trainers/' + t.arq;
   if (!RETRATO_POR_NOME[t.nome]) RETRATO_POR_NOME[t.nome] = 'trainers/' + t.arq;
 });

@@ -152,12 +152,14 @@ for (const [quem, arq] of exclusivos){
    rosto de toda escrevente, o Sargento Holt com o de todo guarda. Gente com
    nome é quem tem um nome da história (NOMES_DA_HISTORIA) ou nome fixo; o
    treinador de classe (estrada, veterano, quem luta na rede) fica de fora,
-   porque ele é a classe dos jogos — o Pescador Andrew é pescador. */
+   porque ele é a classe dos jogos — o Andrew, que pesca na estrada, é
+   o pescador dos jogos. */
 const deClasse = new Set();
 const classe = (c, n) => { if (!n) return; deClasse.add(n); if (c) deClasse.add(`${c} ${n}`); };
 for (const t of (typeof TREINADORES_ESTRADA !== 'undefined' ? TREINADORES_ESTRADA : [])) classe(t.classe, t.nome);
 for (const v of (typeof VETERANOS !== 'undefined' ? VETERANOS : [])){
-  classe(null, v.nome); if (typeof nomeDeLuta === 'function') classe(null, nomeDeLuta(v));
+  /* o nome e o nome com a classe, que fica registrado pro save de antes */
+  classe(v.classe, v.nome);
   if (v.convite && v.convite.luta) classe(v.convite.luta.classe, v.convite.luta.nome);
 }
 if (typeof PROVAS_DA_REDE !== 'undefined'){

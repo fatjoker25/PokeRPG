@@ -3987,7 +3987,7 @@ const UI = {
     this.telaDaChave(t, {num:'Torneio Aberto',
       sub: adv => {
         const nv = adv.time.map(p => Dificuldade.nivelDe(p)), a = Math.min(...nv), b = Math.max(...nv);
-        return [adv.de, a === b ? `Nv ${a}` : `Nv ${a}–${b}`].filter(Boolean).join(' · ');
+        return [adv.classe, adv.de, a === b ? `Nv ${a}` : `Nv ${a}–${b}`].filter(Boolean).join(' · ');
       },
       lutar:'Jogo.lutarRodadaTorneio()', curar:'Jogo.curarNoTorneio()', desistir:'Jogo.desistirTorneio()', rotDesistir:'Desistir do torneio'});
   },
@@ -3996,7 +3996,7 @@ const UI = {
     const c = Jogo.conferenciaAtual;
     if (!c) return this.telaLiga();
     this.telaDaChave(c, {num:'Conferência do Planalto Indigo',
-      sub: adv => Veteranos.registro(adv.id).conheceu ? (adv.de || '') : 'nunca se viram',
+      sub: adv => [adv.classe, Veteranos.registro(adv.id).conheceu ? adv.de : 'nunca se viram'].filter(Boolean).join(' · '),
       lutar:'Conferencia.lutar()', curar:'Conferencia.curar()', desistir:'Conferencia.desistir()', rotDesistir:'Desistir da Conferência'});
   },
 

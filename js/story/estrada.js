@@ -41,9 +41,16 @@ function escalaoEstradaDe(n){
 }
 
 function treinadorEstrada(id){ return (typeof TREINADORES_ESTRADA !== 'undefined' ? TREINADORES_ESTRADA : []).find(t => t.id === id) || null; }
-function nomeDeLuta(t){ return `${t.classe} ${t.nome}`; }
-/* na frase, o nome de luta leva artigo, como título: "venceu a Garota
-   Sally", como "a Enfermeira Joy" */
+/* o nome de quem luta é o nome: a classe ("Garota", "Pescador") não
+   entra nele, nem no anúncio da luta ("Sally quer lutar!"). Ela aparece
+   onde a pessoa é apresentada: a narração da estrada ("Uma garota se
+   levanta…"), a secretária ("uma garota chamada Sally"), o quadro do
+   torneio. O rosto e o prêmio saem do nome */
+function nomeDeLuta(t){ return t.nome; }
+/* o nome com a classe, como o save de antes guardou a luta ("Garota
+   Reli"): só pro rosto continuar achando quem é */
+function nomeComClasse(t){ return t.classe ? `${t.classe} ${t.nome}` : t.nome; }
+/* na frase, com artigo: "Você venceu a Sally" */
 function oNomeDeLuta(t){ return `${t.artigo === 'uma' || t.f ? 'a' : 'o'} ${nomeDeLuta(t)}`; }
 
 /* Gente de dia e gente de noite: pela classe (o rosto). O resto anda

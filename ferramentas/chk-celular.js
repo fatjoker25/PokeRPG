@@ -179,6 +179,15 @@ const SUSPEITO = [
     });
     await tentar('ginasio-time', () => Defesa.montar());
     await tentar('ginasio-volta', () => { const d = Estado.dados; Defesa.reg().lider.desafio = null; d.local = 'celadon'; Exploracao.tela(); });
+    /* o quadro da sua luta no torneio: o nome, e embaixo a classe, de
+       onde vem e a faixa de nível (o nome não leva a classe) */
+    await tentar('torneio-vez', () => {
+      const d = Estado.dados;
+      d.local = 'planalto';
+      Jogo.torneioAtual = chaveAteARodada(novaChave('torneio'), 1);
+      UI.telaTorneio();
+    });
+    await tentar('torneio-volta', () => { Jogo.torneioAtual = null; Estado.dados.local = 'celadon'; Exploracao.tela(); });
     /* a Patrulha na estrada (patrulha.js): a parada com a ordem de
        detenção, com o Zapdos visto na Pokébola, e a custódia */
     await tentar('patrulha', () => {

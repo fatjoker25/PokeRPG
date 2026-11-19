@@ -39,7 +39,7 @@ const RETRATO_POR_NOME = {
   'Garoto de Fuchsia':'trainers/rory', 'Menino do cais':'trainers/nolan',
   'Nadia':'trainers/nadia', 'Nadia Arden':'trainers/nadia',
   /* torneio */
-  'Fenna, da Silph':'trainers/fenna', 'Guia Orin':'trainers/pokemon_ranger',
+  'Fenna, da Silph':'trainers/fenna', 'Guia Orin':'trainers/pokemon_ranger', 'Orin':'trainers/pokemon_ranger',
   /* a final do torneio do S.S. Anne, no 8 */
   'Celeste':'trainers/beauty_gen8',
   /* cenas */

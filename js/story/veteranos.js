@@ -992,7 +992,7 @@ const Veteranos = {
         nome = nomeDeLuta(w);
         time = this.time(w, L.acima, 6);
       } else {
-        nome = `${L.classe} ${L.nome}`;
+        nome = L.nome;
         const nv = Math.min(85, Math.max(((LOCAIS[c.local] || {}).nivel || 20) + 2, nivelDeReferencia() + (L.acima || 0)));
         time = timeDeLinhas(L.times, nv, Math.min(L.times.length, this.tamanho(v) + 1), v.golpes, 70);
       }
@@ -1095,7 +1095,7 @@ const Veteranos = {
 VETERANOS.forEach(v => {
   if (typeof NOMES_DA_HISTORIA !== 'undefined') NOMES_DA_HISTORIA.add(v.nome);
   if (typeof RETRATO_POR_NOME === 'undefined') return;
-  RETRATO_POR_NOME[nomeDeLuta(v)] = 'trainers/' + v.arq;
+  RETRATO_POR_NOME[nomeComClasse(v)] = 'trainers/' + v.arq;   // o save de antes
   RETRATO_POR_NOME[v.nome] = 'trainers/' + v.arq;
   const c = v.convite;
   if (c && c.luta && c.luta.nome){
@@ -1134,7 +1134,7 @@ if (typeof CHAMADAS !== 'undefined') VETERANOS.forEach(v => {
 
 /* ── no Torneio Aberto, quem você venceu pode cair no seu chaveamento ── */
 if (typeof RIVAIS_TORNEIO !== 'undefined') VETERANOS.forEach(v => {
-  RIVAIS_TORNEIO.push({id:'vt_' + v.id, nome:nomeDeLuta(v), curto:v.nome, f:!!v.f, veterano:v.id, fala:v.torneio, cond:d=>Veteranos.venceu(v.id)});
+  RIVAIS_TORNEIO.push({id:'vt_' + v.id, nome:v.nome, classe:v.classe, f:!!v.f, veterano:v.id, fala:v.torneio, cond:d=>Veteranos.venceu(v.id)});
 });
 
 /* ============================================================
@@ -1216,7 +1216,7 @@ const CONVIDADOS_DA_CONFERENCIA = [
 CONVIDADOS_DA_CONFERENCIA.forEach(c => {
   if (typeof NOMES_DA_HISTORIA !== 'undefined') NOMES_DA_HISTORIA.add(c.nome);
   if (typeof RETRATO_POR_NOME !== 'undefined'){
-    RETRATO_POR_NOME[nomeDeLuta(c)] = 'trainers/' + c.arq;
+    RETRATO_POR_NOME[nomeComClasse(c)] = 'trainers/' + c.arq;   // o save de antes
     RETRATO_POR_NOME[c.nome] = 'trainers/' + c.arq;
   }
 });
@@ -1230,7 +1230,7 @@ function inscritosDaConferencia(){
   const sempre = conf.filter(v => v.final || Veteranos.venceu(v.id));
   const resto = _embaralhar(conf.filter(v => !sempre.includes(v)).concat(CONVIDADOS_DA_CONFERENCIA));
   return sempre.concat(resto).slice(0, VAGAS_TORNEIO - 1).map(v => ({
-    id:v.id, nome:nomeDeLuta(v), curto:v.nome, f:!!v.f, de:(LOCAIS[v.local] || {}).nome || '', fala:v.torneio}));
+    id:v.id, nome:v.nome, curto:v.nome, classe:v.classe, f:!!v.f, de:(LOCAIS[v.local] || {}).nome || '', fala:v.torneio}));
 }
 function nivelDaConferencia(rodada, id){
   return Math.max(PISO_CONFERENCIA[rodada], nivelDeReferencia() + ACIMA_CONFERENCIA + SUBIDA_CONFERENCIA[rodada])
@@ -1240,7 +1240,7 @@ function nivelDaConferencia(rodada, id){
 function adversarioDaConferencia(ins, rodada){
   const v = daConferencia(ins.id);
   if (!v) return null;
-  return {id:v.id, nome:nomeDeLuta(v), curto:v.nome, f:!!v.f, fala:v.torneio, de:(LOCAIS[v.local] || {}).nome || '',
+  return {id:v.id, nome:v.nome, curto:v.nome, classe:v.classe, f:!!v.f, fala:v.torneio, de:(LOCAIS[v.local] || {}).nome || '',
     time:timeDeLinhas(v.times, nivelDaConferencia(rodada, v.id), 6, v.golpes, 95)};
 }
 if (typeof CHAVES !== 'undefined') CHAVES.conferencia = {
@@ -1262,7 +1262,7 @@ function conferenciaDeAntes(c){
   const vaga = vagaDoAdversario(novo);
   const ja = novo.inscritos.findIndex(x => x.id === id);
   if (ja >= 0 && ja !== vaga) novo.inscritos[ja] = novo.inscritos[vaga];
-  novo.inscritos[vaga] = {id, nome:nomeDeLuta(v), curto:v.nome, f:!!v.f, de:(LOCAIS[v.local] || {}).nome || '', fala:v.torneio};
+  novo.inscritos[vaga] = {id, nome:v.nome, curto:v.nome, classe:v.classe, f:!!v.f, de:(LOCAIS[v.local] || {}).nome || '', fala:v.torneio};
   novo.adv = adversarioDaVez(novo);
   return novo;
 }

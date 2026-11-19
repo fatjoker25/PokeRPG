@@ -285,86 +285,86 @@ const RIVAIS_TORNEIO = [
    cond:d=>!!d.npcs['Ezra'] && d.npcs['Ezra'].opiniao >= 0},
   {id:'ezra', nome:'Ezra', tipos:['Normal','Voador'], fala:'"Não sorri pra mim." Ezra não aperta a sua mão. "Eu treinei pra isso todo dia desde que saí de casa."',
    cond:d=>!!d.npcs['Ezra'] && d.npcs['Ezra'].opiniao < 0},
-  {id:'roque', nome:'Caçador Roque', curto:'Roque', de:'da Floresta de Viridian', fala:'"Torneio é o único lugar onde eu posso te bater na frente de gente e sair aplaudido."',
+  {id:'roque', nome:'Roque', classe:'Caçador', de:'da Floresta de Viridian', fala:'"Torneio é o único lugar onde eu posso te bater na frente de gente e sair aplaudido."',
    linhas:[49, 42, 89, 110, 34, 24], golpes:['Earthquake', 'Sludge Bomb', 'Rock Slide', 'Body Slam'], segura:'Focus Band',
    cond:d=>!!d.npcs['Caçador Roque']},
-  {id:'fenna', nome:'Fenna, da Silph', curto:'Fenna', f:true, de:'de Saffron', fala:'"Eu pedi demissão." Ela dá de ombros. "Sobrou tempo pra treinar."',
+  {id:'fenna', nome:'Fenna', f:true, de:'de Saffron', fala:'"Eu pedi demissão." Ela dá de ombros. "Sobrou tempo pra treinar."',
    linhas:[137, 101, 82, 64, 125, 135], golpes:['Thunderbolt', 'Psychic', 'Thunder Wave', 'Ice Beam'], segura:'Wise Glasses',
    cond:d=>!!d.npcs['Fenna (crachá azul)']},
-  {id:'orin', nome:'Guia Orin', curto:'Orin', de:'de Fuchsia', fala:'"Eu saí da Zona." Orin está diferente. "Pedi as contas depois de tudo aquilo. Tô aqui."',
+  {id:'orin', nome:'Orin', classe:'Guia', de:'de Fuchsia', fala:'"Eu saí da Zona." Orin está diferente. "Pedi as contas depois de tudo aquilo. Tô aqui."',
    linhas:[47, 49, 103, 114, 127, 123], golpes:['Swords Dance', 'Body Slam', 'Solar Beam', 'Double-Edge'], segura:'Muscle Band', ajuste:2,
    cond:d=>!!d.npcs['Guia Orin']},
   /* quem não vem da sua história: os inscritos de sempre */
-  {nome:'Domador de Dragões Ronan', curto:'Ronan', arq:'dragon_tamer', de:'do Planalto',
+  {nome:'Ronan', classe:'Domador de Dragões', arq:'dragon_tamer', de:'do Planalto',
    fala:'"Eu treino aqui. Literalmente aqui. Boa sorte."',
    linhas:[18, 142, 117, 130, 6, 149], golpes:['Earthquake', 'Fire Blast', 'Thunderbolt', 'Ice Beam'], segura:'Focus Band', ajuste:3},
-  {nome:'Paranormal Sabine', curto:'Sabine', f:true, arq:'psychic_f', de:'de Saffron',
+  {nome:'Sabine', classe:'Paranormal', f:true, arq:'psychic_f', de:'de Saffron',
    fala:'"Décimo quarto torneio. Eu não vim ganhar, eu vim continuar vindo."',
    linhas:[122, 178, 200, 203, 97, 94], golpes:['Psychic', 'Shadow Ball', 'Thunderbolt', 'Ice Punch'], segura:'Wise Glasses', ajuste:-10},
-  {nome:'Pescador Ewan', curto:'Ewan', arq:'ewan', de:'de Fuchsia',
+  {nome:'Ewan', classe:'Pescador', arq:'ewan', de:'de Fuchsia',
    fala:'"Eu não uso Poké Ball cara e ainda assim eu ganho de gente rica. É o meu hobby."',
    linhas:[119, 99, 73, 87, 91, 130], golpes:['Ice Beam', 'Blizzard', 'Thunderbolt', 'Earthquake'], segura:'Leftovers', ajuste:-4},
-  {nome:'Criador Abel', curto:'Abel', arq:'pokemonbreeder_gen6xy', de:'de Pallet',
+  {nome:'Abel', classe:'Criador', arq:'pokemonbreeder_gen6xy', de:'de Pallet',
    fala:'"Eu crio. Eu não batalho. Mas os meus batalham."',
    linhas:[20, 53, 108, 57, 115, 128], golpes:['Body Slam', 'Earthquake', 'Rock Slide', 'Submission'], segura:'Muscle Band', ajuste:-8},
-  {nome:'Estudante Felix', curto:'Felix', arq:'schoolkid_gen4dp', de:'de Cinnabar',
+  {nome:'Felix', classe:'Estudante', arq:'schoolkid_gen4dp', de:'de Cinnabar',
    fala:'"O Blaine é meu professor. Ele diz pra nunca subestimar quem chega com a mochila suja."',
    linhas:[78, 139, 141, 38, 126, 59], golpes:['Fire Blast', 'Rock Slide', 'Body Slam', 'Hyper Beam'], segura:'Focus Band', ajuste:4},
-  {nome:'Mochileira Kaia', curto:'Kaia', f:true, arq:'backpacker_gen6', de:'da Rota 3',
+  {nome:'Kaia', classe:'Mochileira', f:true, arq:'backpacker_gen6', de:'da Rota 3',
    fala:'"Eu durmo no mato há dois anos. Isso conta como treino?"',
    linhas:[95, 28, 51, 75, 105, 112], golpes:['Earthquake', 'Rock Slide', 'Body Slam', 'Swords Dance'], segura:'Muscle Band', ajuste:-2},
-  {nome:'Enfermeira Mabel', curto:'Mabel', f:true, arq:'pokemoncenterlady', de:'de folga',
+  {nome:'Mabel', classe:'Enfermeira', f:true, arq:'pokemoncenterlady', de:'de folga',
    fala:'"Eu curo time a semana inteira. Hoje eu machuco."',
    linhas:[40, 36, 103, 80, 121, 113], golpes:['Psychic', 'Thunderbolt', 'Ice Beam', 'Thunder Wave'], segura:'Leftovers', ajuste:-2},
-  {nome:'Faixa-preta Rocco', curto:'Rocco', arq:'blackbelt_gen6', de:'de Saffron',
+  {nome:'Rocco', classe:'Faixa-preta', arq:'blackbelt_gen6', de:'de Saffron',
    fala:'"O dojo inteiro apostou contra mim. Eu vim cobrar."',
    linhas:[57, 237, 107, 106, 62, 68], golpes:['Dynamic Punch', 'Rock Slide', 'Earthquake', 'Thunder Punch'], segura:'Muscle Band', ajuste:-5},
-  {nome:'Nadadora Marina', curto:'Marina', f:true, arq:'swimmerf_gen8', de:'de Cerulean',
+  {nome:'Marina', classe:'Nadadora', f:true, arq:'swimmerf_gen8', de:'de Cerulean',
    fala:'"Eu nado do cabo até a ponte toda manhã. A arena é seca demais pra mim, mas eu me viro."',
    linhas:[184, 171, 186, 121, 131, 134], golpes:['Ice Beam', 'Thunderbolt', 'Psychic', 'Body Slam'], segura:'Leftovers', ajuste:-5},
-  {nome:'Ornitóloga Avery', curto:'Avery', f:true, arq:'birdkeeper_gen4dp', de:'da Rota 15',
+  {nome:'Avery', classe:'Ornitóloga', f:true, arq:'birdkeeper_gen4dp', de:'da Rota 15',
    fala:'"Eu conto Pokémon voador na rota todo fim de tarde. Hoje eu vim ver os seus."',
    linhas:[164, 178, 22, 85, 227, 18], golpes:['Double-Edge', 'Steel Wing', 'Return', 'Body Slam'], segura:'Quick Claw', ajuste:-3},
-  {nome:'Guitarrista Jett', curto:'Jett', arq:'guitarist_gen4', de:'de Viridian',
+  {nome:'Jett', classe:'Guitarrista', arq:'guitarist_gen4', de:'de Viridian',
    fala:'"Eu toco no bar do Centro às sextas. Hoje o barulho é outro."',
    linhas:[101, 26, 82, 181, 125, 135], golpes:['Thunderbolt', 'Thunder Wave', 'Shadow Ball', 'Iron Tail'], segura:'Wise Glasses', ajuste:1},
-  {nome:'Médium Morwen', curto:'Morwen', f:true, arq:'channeler_lgpe', de:'de Lavender',
+  {nome:'Morwen', classe:'Médium', f:true, arq:'channeler_lgpe', de:'de Lavender',
    fala:'"A Torre ficou quieta essa semana. Eu desci pra ver gente viva."',
    linhas:[198, 202, 200, 229, 197, 94], golpes:['Shadow Ball', 'Psychic', 'Thunderbolt', 'Sludge Bomb'], segura:'Focus Band', ajuste:-4},
-  {nome:'Esquiadora Freya', curto:'Freya', f:true, arq:'skierf', de:'das Ilhas Seafoam',
+  {nome:'Freya', classe:'Esquiadora', f:true, arq:'skierf', de:'das Ilhas Seafoam',
    fala:'"Lá em casa a água congela no meio da conversa. Aqui dentro eu sinto calor."',
    linhas:[225, 215, 221, 124, 87, 131], golpes:['Ice Beam', 'Blizzard', 'Earthquake', 'Body Slam'], segura:'Leftovers', ajuste:-4},
-  {nome:'Dama Odette', curto:'Odette', f:true, arq:'lady_gen4', de:'de Celadon',
+  {nome:'Odette', classe:'Dama', f:true, arq:'lady_gen4', de:'de Celadon',
    fala:'"Meu jardim tem mais inscritos que este torneio. Vamos ver qual dos dois é mais bem cuidado."',
    linhas:[189, 114, 45, 71, 103, 154], golpes:['Giga Drain', 'Sludge Bomb', 'Psychic', 'Body Slam'], segura:'Wise Glasses', ajuste:5},
-  {nome:'Aprendiz Ninja Kian', curto:'Kian', arq:'ninjaboy_gen6', de:'de Fuchsia',
+  {nome:'Kian', classe:'Aprendiz Ninja', arq:'ninjaboy_gen6', de:'de Fuchsia',
    fala:'"Você nem me viu entrar na arena. Isso já é meio caminho."',
    linhas:[168, 211, 89, 31, 169, 110], golpes:['Sludge Bomb', 'Shadow Ball', 'Earthquake', 'Return'], segura:'Quick Claw', ajuste:5},
-  {nome:'Cavalheiro Ambrose', curto:'Ambrose', arq:'gentleman_gen8', de:'de Vermilion',
+  {nome:'Ambrose', classe:'Cavalheiro', arq:'gentleman_gen8', de:'de Vermilion',
    fala:'"Eu me inscrevo todo ano desde antes de você nascer. Perdi quase todos. Quase."',
    linhas:[210, 234, 53, 217, 241, 59], golpes:['Body Slam', 'Earthquake', 'Return', 'Fire Blast'], segura:'Focus Band', ajuste:-8},
-  {nome:'Guarda-parque Willa', curto:'Willa', f:true, arq:'pokemonrangerf_gen6xy', de:'da Rota 25',
+  {nome:'Willa', classe:'Guarda-parque', f:true, arq:'pokemonrangerf_gen6xy', de:'da Rota 25',
    fala:'"Eu passo o dia tirando gente presa de dentro da mata. Hoje eu vim de folga, e de mau humor."',
    linhas:[12, 166, 205, 127, 214, 212], golpes:['Swords Dance', 'Earthquake', 'Fury Cutter', 'Return'], segura:'Muscle Band', ajuste:-1},
-  {nome:'Pokémaníaco Quincy', curto:'Quincy', arq:'pokemaniac_gen6', de:'de Pewter',
+  {nome:'Quincy', classe:'Pokémaníaco', arq:'pokemaniac_gen6', de:'de Pewter',
    fala:'"Eu vim pela vitrine. Se eu ganhar, ótimo. Se eu perder, eu vi o seu time de perto."',
    linhas:[206, 132, 83, 199, 196, 248], golpes:['Psychic', 'Earthquake', 'Rock Slide', 'Shadow Ball'], segura:'Leftovers', ajuste:-2},
-  {nome:'Carvoeiro Dax', curto:'Dax', arq:'kindler_gen6', de:'da Rota 9',
+  {nome:'Dax', classe:'Carvoeiro', arq:'kindler_gen6', de:'da Rota 9',
    fala:'"Eu passo a semana do lado do forno de carvão. Arena é o lugar mais fresco que eu conheço."',
    linhas:[219, 76, 136, 126, 112, 229], golpes:['Fire Blast', 'Earthquake', 'Rock Slide', 'Body Slam'], segura:'Leftovers', ajuste:2},
-  {nome:'Cozinheiro Remy', curto:'Remy', arq:'cook_gen9', de:'de Celadon',
+  {nome:'Remy', classe:'Cozinheiro', arq:'cook_gen9', de:'de Celadon',
    fala:'"Eu fechei a cozinha às duas pra vir. Se eu cair cedo, ainda dá tempo de abrir pro jantar."',
    linhas:[83, 108, 162, 80, 241, 143], golpes:['Body Slam', 'Earthquake', 'Ice Beam', 'Return'], segura:'Leftovers', ajuste:-9},
-  {nome:'Triatleta Rafe', curto:'Rafe', arq:'triathletebiker_gen6', de:'da Ciclovia',
+  {nome:'Rafe', classe:'Triatleta', arq:'triathletebiker_gen6', de:'da Ciclovia',
    fala:'"Vim pedalando de Fuchsia. Ainda estou aquecido, então é melhor começar logo."',
    linhas:[101, 22, 85, 78, 135, 169], golpes:['Double-Edge', 'Thunderbolt', 'Return', 'Steel Wing'], segura:'Quick Claw', ajuste:5},
-  {nome:'Dançarina Zara', curto:'Zara', f:true, arq:'dancer_gen7', de:'de Vermilion',
+  {nome:'Zara', classe:'Dançarina', f:true, arq:'dancer_gen7', de:'de Vermilion',
    fala:'"No cais eu danço pra quem chega de barco. Hoje eu vim ver quem sai daqui de pé."',
    linhas:[124, 182, 237, 40, 122, 196], golpes:['Psychic', 'Ice Beam', 'Body Slam', 'Dynamic Punch'], segura:'Wise Glasses'},
-  {nome:'Turista Elin', curto:'Elin', f:true, arq:'lady_gen6', de:'de Johto',
+  {nome:'Elin', classe:'Turista', f:true, arq:'lady_gen6', de:'de Johto',
    fala:'"Eu vim de Johto ver o Planalto, e o guarda disse que dava pra entrar no torneio. Ninguém me avisou que era sério."',
    linhas:[162, 224, 207, 232, 181, 157], golpes:['Earthquake', 'Thunderbolt', 'Fire Blast', 'Return'], segura:'Muscle Band'},
-  {nome:'Beldade Noemi', curto:'Noemi', f:true, arq:'beauty_gen7', de:'de Saffron',
+  {nome:'Noemi', classe:'Beldade', f:true, arq:'beauty_gen7', de:'de Saffron',
    fala:'"Não olha pra mim. Olha pros meus. É deles que você tem que ter medo."',
    linhas:[53, 38, 36, 134, 197, 131], golpes:['Body Slam', 'Ice Beam', 'Psychic', 'Shadow Ball'], segura:'Focus Band'}
 ];
@@ -375,12 +375,12 @@ const _semAcentoTorneio = s => String(s).normalize('NFD').replace(/[̀-ͯ]/g, ''
 RIVAIS_TORNEIO.forEach(r => {
   if (!r.id) r.id = _semAcentoTorneio(r.curto || r.nome);
   if (!r.arq) return;
-  if (typeof NOMES_DA_HISTORIA !== 'undefined') NOMES_DA_HISTORIA.add(r.curto);
+  if (typeof NOMES_DA_HISTORIA !== 'undefined') NOMES_DA_HISTORIA.add(r.curto || r.nome);
   if (typeof RETRATO_POR_NOME === 'undefined') return;
-  RETRATO_POR_NOME[r.nome] = 'trainers/' + r.arq;
-  /* e pelo nome curto, que é o do balão fora do anúncio da luta (a
-     porta da Elite, defesa.js), se ninguém mais se chama assim */
-  if (r.curto && !RETRATO_POR_NOME[r.curto]) RETRATO_POR_NOME[r.curto] = 'trainers/' + r.arq;
+  if (!RETRATO_POR_NOME[r.nome]) RETRATO_POR_NOME[r.nome] = 'trainers/' + r.arq;
+  /* a chave salva antes guardou o nome com a classe ("Domador de
+     Dragões Ronan") */
+  if (r.classe) RETRATO_POR_NOME[`${r.classe} ${r.nome}`] = 'trainers/' + r.arq;
 });
 
 /* o ás de cada rodada e o tamanho do time, pelo seu time e pelas suas insígnias */
@@ -403,7 +403,7 @@ function adversarioTorneio(rival, rodada){
   const nivel = Math.max(5, nivelDoTorneio(rodada) + (rival.ajuste || 0));
   const time = timeDeLinhas(linhas, nivel, tamanhoDoTorneio(rodada), golpes, MORAL_TORNEIO);
   if (rival.segura && time.length) time[time.length - 1].segurando = rival.segura;
-  return {id: rival.id, nome: rival.nome, curto: rival.curto || rival.nome, f:!!rival.f, fala: rival.fala, de: rival.de || '', time};
+  return {id: rival.id, nome: rival.nome, curto: rival.curto || rival.nome, classe: rival.classe || '', f:!!rival.f, fala: rival.fala, de: rival.de || '', time};
 }
 
 /* o inscrito pela chave dele (o Ezra tem duas entradas, uma por humor) */
@@ -457,7 +457,7 @@ function inscritosDoTorneio(){
   const daHistoria = unicos(_embaralhar(RIVAIS_TORNEIO.filter(r => r.cond && pode(r)))).slice(0, DA_HISTORIA_NO_TORNEIO);
   const deSempre = _embaralhar(RIVAIS_TORNEIO.filter(r => !r.cond && pode(r))).slice(0, VAGAS_TORNEIO - 1 - daHistoria.length);
   return daHistoria.concat(deSempre)
-    .map(r => ({id:r.id, nome:r.nome, curto:r.curto || r.nome, f:!!r.f, de:r.de || '', fala:r.fala}));
+    .map(r => ({id:r.id, nome:r.nome, curto:r.curto || r.nome, classe:r.classe || '', f:!!r.f, de:r.de || '', fala:r.fala}));
 }
 
 /* quem está do outro lado da sua luta, na rodada de agora */
@@ -544,12 +544,14 @@ function torneioDeAntes(t){
   const adv = t.adversarios[t.rodada] || t.adversarios[0];
   if (!adv) return novo;
   const vaga = vagaDoAdversario(novo);
-  const r = RIVAIS_TORNEIO.find(x => x.nome === adv.nome) || {};
+  /* a luta de antes guardou o nome com a classe ("Domador de Dragões Ronan") */
+  const r = RIVAIS_TORNEIO.find(x => x.nome === adv.nome || nomeComClasse(x) === adv.nome) || {};
   const id = r.id || _semAcentoTorneio(adv.nome);
+  const nome = r.nome || adv.nome, curto = r.curto || nome;
   const ja = novo.inscritos.findIndex(x => x.id === id);
   if (ja >= 0 && ja !== vaga) novo.inscritos[ja] = novo.inscritos[vaga];
-  novo.inscritos[vaga] = {id, nome:adv.nome, curto:r.curto || adv.nome, f:!!adv.f, de:adv.de || '', fala:adv.fala};
-  novo.adv = Object.assign({}, adv, {id, curto:r.curto || adv.nome, vaga});
+  novo.inscritos[vaga] = {id, nome, curto, classe:r.classe || '', f:!!adv.f, de:adv.de || '', fala:adv.fala};
+  novo.adv = Object.assign({}, adv, {id, nome, curto, classe:r.classe || '', vaga});
   return novo;
 }
 

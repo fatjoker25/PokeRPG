@@ -864,8 +864,8 @@ O mesmo vale pra **toda pessoa com nome**: o `chk-rostos` reprova quem
 tem nome da história (`NOMES_DA_HISTORIA`) ou nome fixo e fala pelo
 rosto de uma regra genérica (palavra, cargo, ou o rótulo solto que é de
 qualquer um, "os pescadores", "quem te atendeu"). O treinador de classe
-(estrada, veterano, quem luta na rede) fica de fora: o Pescador Andrew
-é o pescador dos jogos. A Sra. Cybil tinha o rosto de toda escrevente,
+(estrada, veterano, quem luta na rede) fica de fora: o Andrew, que
+pesca na estrada, tem a cara do pescador dos jogos. A Sra. Cybil tinha o rosto de toda escrevente,
 o Sargento Holt o de todo guarda, a Lena, a Sra. Ada e a Coordenadora
 Maple o mesmo uniforme da Liga com a mesma cara. Nome novo na história
 entra em `NOMES_DA_HISTORIA` — é por ela que o sorteio não dá "Sra.
@@ -883,7 +883,7 @@ em comum ("Nadia" e "Nadia Arden") ou `MESMA_PESSOA` (em
 cais" é o Nolan), o de luta e o do save velho. Treinador de estrada que
 é gente da história luta com o rosto dela — o Roque da barreira da Rota
 9 é o Otto Roque, `arq:'otto'` —, porque o registro da estrada escreve
-`nomeDeLuta` por cima do `RETRATO_POR_NOME` na carga, e o rosto escrito
+o nome com a classe (`nomeComClasse`) por cima do `RETRATO_POR_NOME` na carga, e o rosto escrito
 à mão sumia de todos os capítulos sem ninguém ver; o verificador
 compara o mapa escrito à mão com o que sobra depois de carregar.
 
@@ -1583,18 +1583,25 @@ seguinte. Quem tem `numero` vira contato do PokéNav na primeira derrota
 Nome de treinador de estrada sai do sorteio de nomes (`NOMES_DA_HISTORIA`) e
 ganha rosto pela classe (`arq`).
 
-O **nome de luta** (`nomeDeLuta`: a classe e o nome, "Garota Sally") é o
-anúncio dos jogos, "Garota Sally quer lutar!", e na frase a classe é
-título, com artigo, como "a Enfermeira Joy": "Você venceu a Garota Sally"
-(`oNomeDeLuta`). Fora disso a pessoa é o nome: o balão diz "Sally", a
-narração apresenta pela classe em minúscula ("uma garota chamada Sally",
-"Uma garota se levanta de onde estava"), e o "Procurar" da revanche
-procura a Sally (`quemDaRevanche`). O ginásio já tratou o nome de luta
-como se fosse o nome dela ("Garota Reli tem cinco insígnias"), e
-`Defesa.oNome`, `apresentar` e `rotulo` existem por isso. E o nome não
-pode ser palavra do português: a Reli virou Sally ("reli" é de reler) e
-o Cale virou Liam ("cale" é de calar), os dois nomes de treinador dos
-jogos; o `id` ficou, pro save.
+**O nome é o nome: a classe não entra nele.** Foi pedido assim, depois
+de "Garota Reli tem cinco insígnias": "o nome 'Garota' não precisa
+aparecer no nome". Nem no anúncio da luta ("Sally quer lutar!"), nem no
+resultado ("Você venceu a Sally", `oNomeDeLuta`), nem no balão, no
+torneio, na Conferência ou no veterano (`nomeDeLuta` devolve o nome). A
+classe aparece onde a pessoa é apresentada, minúscula, com artigo: a
+narração da estrada ("Uma garota se levanta de onde estava"), a
+secretária do seu ginásio ("uma garota chamada Sally", "um domador de
+dragões do Planalto chamado Ronan", por `Defesa.apresentar`) e o quadro
+da sua luta no torneio e na Conferência ("Domador de Dragões · do
+Planalto · Nv 30–34", pelo campo `classe` do inscrito). O rosto e o
+prêmio saem do nome (`retratoDe`, `pagaPorNivel`), e o nome sozinho de
+cada um aponta pro rosto dele; o nome com a classe (`nomeComClasse`)
+continua registrado só pra luta e a chave salvas antes. "Líder Brock" e
+"Professor Oak" são título, não classe, e ficam. E o nome não pode ser
+palavra do português: a Reli virou Sally ("reli" é de reler) e o Cale
+virou Liam ("cale" é de calar), os dois nomes de treinador dos jogos; o
+`id` ficou, pro save, e o nome de antes (`nomeAntes`) segue com o
+rosto.
 
 A força foi **medida**, não chutada: `node ferramentas/sim-estrada.js`
 luta cada treinador contra times do tamanho e nível de cada fase, e compara
@@ -1812,9 +1819,9 @@ Luta salva de antes da chave (três rodadas, `adversarios`) vira chave
 nova na carga (`torneioDeAntes`, `conferenciaDeAntes`).
 
 Todo inscrito (`RIVAIS_TORNEIO`) tem uma chave (`id`, a vaga dele no
-save), nome, nome curto (`curto`, o que cabe na chave), cidade (`de`,
-que o quadro da sua luta mostra com a faixa de nível), rosto só dele
-(`arq`, registrado no `RETRATO_POR_NOME` na carga, com o nome curto no
+save), nome (só o nome: a classe é o campo `classe`), cidade (`de`,
+que o quadro da sua luta mostra com a classe e a faixa de nível), rosto só dele
+(`arq`, registrado no `RETRATO_POR_NOME` na carga, com o nome no
 `NOMES_DA_HISTORIA`) e time montado: `linhas` do mais fraco ao ás,
 `golpes` de TM do dono, `segura` (o item do ás) e `ajuste` (o acerto de
 nível dele). Os de sempre são vinte e quatro, bem mais que as quinze
@@ -1854,7 +1861,7 @@ primeiro trocando espécie da lista (o Snorlax e o Machoke saíram do
 Criador) e só depois pelo `ajuste`; `NIVEL=… EXTRA=… ERRO=… SEM_ITEM=1`
 na frente do comando calibram sem mexer no jogo, e a última coluna é a
 chance de título (as quatro rodadas seguidas). Inscrito novo entra com
-as seis coisas (o `id` sai do `curto` se não vier), passa por ali e
+as seis coisas (o `id` sai do nome se não vier), passa por ali e
 pelo `chk-lutas`, que roda cada inscrito nas quatro rodadas; o
 `chk-telas` confere a chave de cada rodada, a de quem caiu e o sorteio
 (dezesseis vagas, ninguém repetido, a final variando).
