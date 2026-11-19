@@ -5840,7 +5840,7 @@ h3.sec-conf{--sec:#7fb2ff}
 .modal.creche .escolha .esc-custo{margin-left:auto;flex:none}
 .creche-sec{margin:14px 0 6px;font:600 .78rem var(--letra-hud, system-ui);letter-spacing:.08em;text-transform:uppercase;opacity:.75}
 
-/* ── O seu ginásio (defesa.js): a ficha do tipo da casa, o regulamento
+/* ── O seu ginásio (defesa.js): a ficha do tipo do ginásio, o regulamento
       da quadra e o time que desce ─────────────────────────────── */
 .escolha.com-tipo{display:flex;align-items:center;gap:12px}
 .escolha.com-tipo .tipo-tag{flex:0 0 auto;min-width:84px;text-align:center;margin:0}
@@ -5866,7 +5866,7 @@ h3.sec-conf{--sec:#7fb2ff}
   font:700 .82rem var(--letra-hud, system-ui);font-variant-numeric:tabular-nums;color:var(--ac, #e8b923)}
 .quadra-lista .quadra-pk:not(.escolhido){opacity:.72}
 .quadra-lista .quadra-pk.escolhido{outline:2px solid var(--ac, #e8b923);outline-offset:-2px}
-.quadra-lista #quadra-descer{margin-top:6px}
+.quadra-lista #quadra-batalhar{margin-top:6px}
 
 </style>
 <style>
@@ -113761,19 +113761,19 @@ const Pedidos = {
      `PRAZO_DA_DEFESA` dias de prazo, e a secretária do Planalto avisa
      pelo PokéNav (o contato `secretaria`, que só avisa). Capítulo que
      anda no meio do prazo remarca o prazo: a história te levou.
-   - A especialidade (foi pedido assim): quem fica com o ginásio escolhe
-     o tipo da casa (`telaTipo`, que a tela do mapa abre e só deixa sair
+   - O tipo do ginásio (foi pedido assim): quem fica com o ginásio escolhe
+     o tipo do ginásio (`telaTipo`, que a tela do mapa abre e só deixa sair
      escolhendo), entre os que os outros sete não usam: o de quem saiu
-     fica livre, e Sombrio e Metálico entram com a Pokédex Nacional. A
-     casa reabre `REABRE_EM_DIAS` depois da ficha assinada, e ginásio
+     fica livre, e Sombrio e Metálico entram com a Pokédex Nacional. O
+     ginásio reabre `REABRE_EM_DIAS` depois da ficha assinada, e ginásio
      novo é ficha nova.
    - No ginásio, quem desafia é gente da estrada (estrada-dados.js), com
      zero a sete insígnias no dado, e você defende como os líderes de
-     Kanto: só com o tipo da casa, do cinto ou do PC, no tamanho e até o
+     Kanto: só com o tipo do ginásio, do cinto ou do PC, no tamanho e até o
      nível do ás que o líder de antes usaria contra aquelas insígnias
      (`regra`, pela tabela de ginasios.js). O desafiante traz o time do
      escalão dele, no nível desse líder (`desafianteDaQuadra`). Sem
-     ninguém que sirva, descer é desistir. Na quadra ninguém ganha
+     ninguém que sirva, entregar a insígnia é desistir. Na quadra ninguém ganha
      experiência (`semExp` na luta): senão o time de baixo passava do
      teto, e você perdia o que montou.
    - Na porta, o desafiante sai dos inscritos do Torneio Aberto
@@ -113786,14 +113786,14 @@ const Pedidos = {
      Faltou ou desistiu: uma advertência. Perdeu: na porta, advertência;
      no ginásio, a insígnia vai e a fama zera, e só no Difícil vale
      advertência (`Dificuldade.derrotaNaQuadra`): quem ainda está
-     montando os times não perde a casa por isso. Com
+     montando os times não perde o ginásio por isso. Com
      `ADVERTENCIAS_PRA_PERDER`, a Liga tira o posto. A máquina do
-     ginásio cura quem desce antes e depois da luta; a da ala, depois.
+     ginásio cura quem batalha antes e depois da luta; a da ala, depois.
    ============================================================ */
 const ESPERA_ENTRE_DESAFIOS = [3, 6];   // dias entre um desafio e o próximo, no dado
 const PRAZO_DA_DEFESA = 3;              // dias que o desafiante espera
 const ADVERTENCIAS_PRA_PERDER = 3;      // com elas, a Liga tira o posto
-const REABRE_EM_DIAS = 14;              // a casa reabre duas semanas depois da ficha assinada
+const REABRE_EM_DIAS = 14;              // o ginásio reabre duas semanas depois da ficha assinada
 /* no ginásio quem desafia é gente da estrada e luta como ela (erra o
    que a estrada erra, e gasta Vontade sem o critério cheio); o `nivel`
    e o `tam` dele são do desafio de antes da especialidade, que o save
@@ -113846,15 +113846,15 @@ const QUEM_DEIXA_A_PORTA = {
 };
 
 /* o que o desafiante diz na quadra (o do Ezra, pelo humor dele). No
-   ginásio: c, a cidade; n, as insígnias dele; t, o tipo da casa */
+   ginásio: c, a cidade; n, as insígnias dele; t, o tipo do ginásio */
 const FALAS_DO_DESAFIANTE = {
   lider:[
     (c, n) => n === 0 ? `A de ${c} vai ser a minha primeira.` : `Vim pela insígnia de ${c}. Tenho ${insigniasDitas(n)}.`,
     () => 'Me disseram que o ginásio trocou de dono. Vim ver se trocou pra melhor.',
-    (c, n, t) => t ? `Ouvi dizer que o ginásio agora é de tipo ${t}. Montei o time pensando nisso.`
+    (c, n, t) => t ? `Ouvi dizer que o ginásio agora é do tipo ${t}. Montei o time pensando nisso.`
       : 'Três semanas treinando pra este ginásio. Não me faz perder a viagem.',
     (c, n) => n >= 6 ? 'Depois dessa, falta pouco pro Planalto. Não vou parar aqui.'
-      : n === 0 ? 'Eu nunca entrei numa quadra. Pode descer do jeito que for.'
+      : n === 0 ? 'Nunca batalhei num ginásio. Pode vir do jeito que for.'
       : 'Três semanas treinando pra este ginásio. Não me faz perder a viagem.'
   ],
   elite:[
@@ -113872,7 +113872,7 @@ const FALAS_DO_EZRA = {
 const SAIDA_DO_DESAFIANTE = {
   perdeu:['Volto com outro plano.', 'Tá. Ainda não é a minha vez.', 'Anotado. Até a próxima.'],
   ganhou:['Valeu a viagem.', 'Eu sabia que dava.', 'Foi apertado. Foi justo.'],
-  /* a insígnia entregue sem ninguém descer pra quadra */
+  /* a insígnia entregue sem ninguém batalhar */
   semLuta:['Assim? Tá. Eu levo.', 'Não era assim que eu queria ganhar essa.', 'Eu treinei pra isso. Ia gostar de ter usado.']
 };
 const SAIDA_DO_EZRA = {
@@ -114038,7 +114038,7 @@ const Defesa = {
     return s ? s.nome : 'quem estava na porta antes de você';
   },
 
-  /* ---------- a especialidade da casa ---------- */
+  /* ---------- o tipo do ginásio ---------- */
   /* o tipo de cada um dos outros sete: o de quem saiu do seu fica livre,
      e o variado do Blue não prende tipo nenhum */
   tiposDosOutros(g){
@@ -114051,14 +114051,14 @@ const Defesa = {
     const presos = this.tiposDosOutros(this.meuGinasio(d));
     return TIPOS_KANTO.concat(nacional ? TIPOS_JOHTO : []).filter(t => !presos.includes(t));
   },
-  tipoDaCasa(d){ const r = this.reg(d).lider; return (r && r.tipo) || null; },
+  tipoDoGinasio(d){ const r = this.reg(d).lider; return (r && r.tipo) || null; },
   /* o ginásio é seu e a ficha ainda está em branco: a tela do mapa abre ela */
   precisaTipo(d){
     d = d || (typeof Estado !== 'undefined' && Estado.dados);
     const r = d && this.reg(d).lider;
     return !!(r && r.ginasio && !r.tipo);
   },
-  /* a casa fechada pra reforma: o dia em que ela reabre, ou nada */
+  /* o ginásio fechado pra reforma: o dia em que ele reabre, ou nada */
   fechadaAte(d){
     d = d || Estado.dados;
     const r = this.reg(d).lider;
@@ -114068,13 +114068,13 @@ const Defesa = {
     const n = dia - Estado.dados.relogio.dia;
     return n <= 1 ? this.diaDito(dia) : `daqui a ${porExtenso(n)} dias`;
   },
-  /* todo Pokémon seu que pode descer: o do cinto e o do PC, vivo */
+  /* todo Pokémon seu que pode batalhar: o do cinto e o do PC, vivo */
   meusPokemon(d){
     d = d || Estado.dados;
     return (d.time || []).concat(d.pc || []).filter(p => p && !p.morto);
   },
-  /* a ficha da especialidade: a tela do mapa abre, e só sai escolhendo.
-     Com `escolha`, a confirmação: tipo de casa não se troca no meio */
+  /* a ficha do ginásio: a tela do mapa abre, e só sai escolhendo.
+     Com `escolha`, a confirmação: o tipo do ginásio não se troca no meio */
   telaTipo(escolha, avisos){
     const d = Estado.dados, r = this.estado('lider', d);
     if (!r || r.tipo) return Exploracao.tela(avisos);
@@ -114085,17 +114085,17 @@ const Defesa = {
     const conta = t => meus.filter(p => (p.tipos || []).includes(t)).length;
     const cor = t => ` style="--ac:${COR_TIPO[t] || '#888'}"`;
     const falas = escolha
-      ? [`**ESPECIALIDADE DA CASA: ${escolha.toUpperCase()}**`,
+      ? [`**TIPO DO GINÁSIO: ${escolha.toUpperCase()}**`,
          `Falta a sua assinatura embaixo. Depois dela, a Liga só muda o tipo com outro ginásio.`]
-      : [`Junto com a chave do ginásio de ${cidade}, a Liga mandou a ficha da casa, com um campo só em branco.`,
-         '**ESPECIALIDADE DA CASA: ________**',
-         'Os outros sete ginásios já têm tipo, e o de quem saiu ficou livre. Embaixo, em letra pequena: a casa reabre duas semanas depois da ficha assinada.'];
+      : [`Junto com a chave do Ginásio de ${cidade}, a Liga mandou a ficha do ginásio, com um campo só em branco.`,
+         '**TIPO DO GINÁSIO: ________**',
+         'Os outros sete ginásios já têm tipo, e o tipo de quem saiu ficou livre. Embaixo, em letra pequena: o ginásio reabre duas semanas depois da ficha assinada.'];
     const botoes = escolha
       ? `<button class="escolha com-tipo"${cor(escolha)} onclick="Defesa.escolherTipo('${escolha}')">${UI.tipoTag(escolha)}<span class="esc-rot">Assinar a ficha</span></button>
          <button class="escolha discreta" onclick="Defesa.telaTipo()">Escolher outro tipo</button>`
       : livres.map(t => {
           const n = conta(t);
-          const det = [n ? `Você tem ${n}` : 'Você não tem nenhum', t === G.tipo ? 'o tipo da casa até agora' : ''].filter(Boolean).join(' · ');
+          const det = [n ? `Você tem ${n}` : 'Você não tem nenhum', t === G.tipo ? 'o tipo do ginásio até agora' : ''].filter(Boolean).join(' · ');
           return `<button class="escolha com-tipo"${cor(t)} aria-label="${UI.esc(t)}" onclick="Defesa.telaTipo('${t}')">${UI.tipoTag(t)}<span class="esc-rot">${UI.esc(det)}</span></button>`;
         }).join('');
     UI.limpar();
@@ -114104,7 +114104,7 @@ const Defesa = {
       <div class="cap-cabecalho">
         <div class="num">Seu ginásio</div>
         <div class="tit">Ginásio de ${UI.esc(cidade)}</div>
-        <div class="loc">a especialidade</div>
+        <div class="loc">a ficha do ginásio</div>
       </div>
       <div class="narrativa">${UI.narrar(falas, null)}</div>
       <div id="avisos" class="avisos"></div>
@@ -114119,12 +114119,12 @@ const Defesa = {
     r.tipo = t;
     r.abre = d.relogio.dia + REABRE_EM_DIAS;
     r.proximo = Math.max(r.proximo || 0, r.abre);
-    /* casa nova: o desafio marcado antes cai, e a lousa começa limpa */
+    /* ginásio novo: o desafio marcado antes cai, e a lousa começa limpa */
     r.desafio = null; r.seguidas = 0;
     const cidade = cidadeDoGinasio(r.ginasio);
-    Estado.registrar(`Assinou a ficha do ginásio de ${cidade}: a casa é de tipo ${t}.`);
+    Estado.registrar(`Assinou a ficha do Ginásio de ${cidade}: agora ele é do tipo ${t}.`);
     Estado.salvar('auto');
-    return Exploracao.tela([{tipo:'insignia', texto:`O ginásio de ${cidade} é de tipo ${t}. A casa reabre daqui a duas semanas.`}]);
+    return Exploracao.tela([{tipo:'insignia', texto:`O Ginásio de ${cidade} agora é do tipo ${t} e reabre daqui a duas semanas.`}]);
   },
 
   /* ---------- a regra da quadra ----------
@@ -114149,7 +114149,7 @@ const Defesa = {
     const base = f.base + (G.dificuldade || 0) + (n - f.min) * 3;
     return {n, tam:e.tam, base, nivel:base + e.tam + 1};
   },
-  /* quem pode descer contra n insígnias: o tipo da casa, até o nível do
+  /* quem pode batalhar contra n insígnias: o tipo do ginásio, até o nível do
      ás, do mais forte pro mais fraco */
   aptos(n, d){
     d = d || Estado.dados;
@@ -114181,8 +114181,8 @@ const Defesa = {
         <td>${tem}${falta ? ` <small>falta${falta > 1 ? 'm' : ''} ${falta}</small>` : ''}</td></tr>`);
     }
     return `<div class="quadro-quadra" style="--ac:${COR_TIPO[r.tipo] || '#888'}">
-      <div class="qq-tit">${UI.tipoTag(r.tipo)}<span>Regulamento da quadra</span></div>
-      <table><thead><tr><th>Insígnias</th><th>Seu time</th><th>Servem</th></tr></thead>
+      <div class="qq-tit">${UI.tipoTag(r.tipo)}<span>Regulamento do ginásio</span></div>
+      <table><thead><tr><th>Insígnias</th><th>Pokémon permitidos</th><th>Você tem</th></tr></thead>
       <tbody>${linhas.join('')}</tbody></table>
     </div>`;
   },
@@ -114201,7 +114201,7 @@ const Defesa = {
       if (tipo === 'lider'){
         /* o time da quadra de uma luta que não chegou ao fim volta pro lugar */
         if (r.emprestimo && !(typeof Jogo !== 'undefined' && Jogo.defesaAtual) && !(typeof Batalha !== 'undefined' && Batalha.ativo)) this.devolver(d);
-        /* a casa sem tipo não recebe desafio: a ficha abre na tela do mapa */
+        /* o ginásio sem tipo não recebe desafio: a ficha abre na tela do mapa */
         if (!r.tipo) continue;
       }
       /* a mensagem espera o toque da vez, e ninguém manda de madrugada */
@@ -114271,7 +114271,7 @@ const Defesa = {
     }
     const s = ((this.reg(d)[tipo]) || {}).seguidas || 0;
     if (s >= 2 && Dados.chance(60)) return Dados.escolher(FALAS_DA_FAMA[tipo])(s);
-    return Dados.escolher(FALAS_DO_DESAFIANTE[tipo])(cidadeDoGinasio(this.meuGinasio(d)), n || 0, this.tipoDaCasa(d));
+    return Dados.escolher(FALAS_DO_DESAFIANTE[tipo])(cidadeDoGinasio(this.meuGinasio(d)), n || 0, this.tipoDoGinasio(d));
   },
 
   marcar(tipo){
@@ -114386,7 +114386,7 @@ const Defesa = {
     const r = this.estado('lider');
     const x = r && r.desafio, ab = r && r.tipo ? this.fechadaAte() : null;
     return {lugar:true, id:'ginasio', titulo:'Seu ginásio',
-      sub:r && !r.tipo ? 'A ficha da casa está em branco.'
+      sub:r && !r.tipo ? 'Falta escolher o tipo do ginásio.'
         : ab ? `Fechado pra reforma. Reabre ${this.daquiA(ab)}.`
         : x ? `${x.curto} marcou desafio. Espera até ${this.diaDito(x.ate)}.` : 'Ninguém marcou desafio.'};
   },
@@ -114399,7 +114399,7 @@ const Defesa = {
   },
   /* a linha do cartão do posto no balcão de credenciais */
   notaDoCartao(id){
-    if (id === 'lider'){ const g = this.meuGinasio(), t = this.tipoDaCasa(); return g ? `Ginásio de ${cidadeDoGinasio(g)}${t ? ' · tipo ' + t : ''}` : null; }
+    if (id === 'lider'){ const g = this.meuGinasio(), t = this.tipoDoGinasio(); return g ? `Ginásio de ${cidadeDoGinasio(g)}${t ? ' · tipo ' + t : ''}` : null; }
     if (id === 'elite'){ const p = this.minhaPorta(); return p != null ? `${cap1(ORDINAL_DA_PORTA[p])} porta da ala` : null; }
     return null;
   },
@@ -114430,15 +114430,15 @@ const Defesa = {
       const cidade = cidadeDoGinasio(r.ginasio), ab = this.fechadaAte(d);
       falas.push(r.doFim ? 'A chave pequena do segundo andar continua no seu chaveiro.'
         : 'O quadro da entrada tem o seu nome escrito por cima do nome de quem saiu.');
-      falas.push('Na parede da quadra, o regulamento da Liga, com o tipo da casa no alto.');
-      if (ab) falas.push(`Na porta da quadra, o aviso da Liga: fechado pra reforma, reabre ${this.daquiA(ab)}.`);
+      falas.push('Na parede, o regulamento da Liga, com o tipo do ginásio no alto.');
+      if (ab) falas.push(`Na porta, o aviso da Liga: fechado pra reforma, reabre ${this.daquiA(ab)}.`);
       else if (x){
         falas.push(`${x.nome}${x.de ? ', ' + x.de + ',' : ''} espera na arquibancada, ${x.ins != null ? this.comInsignias(x.ins) + ' no estojo' : 'com o cinto cheio'}.`);
         falas.push(fala(x.nome, x.fala));
       } else falas.push('A quadra está limpa e as luzes estão acesas. Ninguém marcou desafio.');
       if (seq) falas.push(seq);
       if (adv) falas.push(adv);
-      return UI.telaConversa({num:'Seu ginásio', titulo:`Ginásio de ${cidade}`, loc:`a quadra · tipo ${r.tipo}`, falas, avisos,
+      return UI.telaConversa({num:'Seu ginásio', titulo:`Ginásio de ${cidade}`, loc:`ginásio do tipo ${r.tipo}`, falas, avisos,
         extra:this.quadro(d),
         botoes:(x && !ab ? [{texto:`Montar o time — ${x.curto}`, acao:x.estrada ? 'Defesa.montar()' : "Defesa.lutar('lider')", classe:'luta', icone:'lutar'}] : [])
           .concat([{texto:'Sair do ginásio', acao:'Exploracao.tela()'}])});
@@ -114514,7 +114514,7 @@ const Defesa = {
 
   /* a escolha do time: quem serve contra as insígnias de quem desafia,
      do cinto e do PC, até o tamanho da regra. A ordem dos toques é a
-     ordem de descer */
+     ordem de entrar */
   montar(avisos){
     const d = Estado.dados, r = this.estado('lider', d), x = r && r.desafio;
     if (!x || !x.estrada || !r.tipo) return this.tela('lider', avisos);
@@ -114523,12 +114523,12 @@ const Defesa = {
     if (!Array.isArray(this._sel) || this._selDe !== chave){ this._sel = this.preSelecao(n, d); this._selDe = chave; }
     this._sel = this._sel.filter(u => aptos.some(p => p.uid === u)).slice(0, R.tam);
     const falas = [n ? `${x.nome} tem ${insigniasDitas(n)}.` : `${x.nome} ainda não tem insígnia nenhuma.`,
-      `Pelo regulamento, você desce com até ${porExtenso(R.tam)} de tipo ${r.tipo}, nenhum acima do nível ${R.nivel}.`];
-    if (!aptos.length) falas.push(`Você não tem nenhum Pokémon de tipo ${r.tipo} até o nível ${R.nivel}, nem no cinto, nem no PC.`);
+      `Pelo regulamento, você pode usar até ${porExtenso(R.tam)} Pokémon do tipo ${r.tipo}, nenhum acima do nível ${R.nivel}.`];
+    if (!aptos.length) falas.push(`Você não tem nenhum Pokémon do tipo ${r.tipo} até o nível ${R.nivel}, nem no cinto, nem no PC.`);
     UI.telaConversa({num:'Seu ginásio', titulo:'Montar o time', loc:`contra ${x.curto}`, falas, avisos,
       extra:aptos.length ? `<div id="quadra-lista" class="escolhas quadra-lista">${this.listaHTML(aptos, R)}</div>` : '',
       botoes:aptos.length ? [{texto:'Voltar', acao:"Defesa.tela('lider')"}]
-        : [{texto:'Entregar a insígnia sem descer', acao:'Defesa.desistirSemTime()'}, {texto:'Sair do ginásio', acao:'Exploracao.tela()'}]});
+        : [{texto:'Entregar a insígnia sem batalhar', acao:'Defesa.desistirSemTime()'}, {texto:'Sair do ginásio', acao:'Exploracao.tela()'}]});
   },
   listaHTML(aptos, R){
     const d = Estado.dados, sel = this._sel || [];
@@ -114537,8 +114537,8 @@ const Defesa = {
       return `<button class="escolha com-item quadra-pk${i >= 0 ? ' escolhido' : ''}" data-uid="${UI.esc(p.uid)}" onclick="Defesa.alternar(this.dataset.uid)">
         <span class="creche-pk">${imgSprite(p, 'icone')}<span>${UI.esc(nomeExib(p))} <small>Nv ${p.nivel} · ${onde}</small></span></span>
         <span class="quadra-ordem">${i >= 0 ? `${i + 1}º` : ''}</span></button>`;
-    }).join('') + `<button id="quadra-descer" class="escolha com-icone luta" onclick="Defesa.descer()"${sel.length ? '' : ' disabled'}>${svgIcone('lutar')}<span class="esc-rot">${
-      sel.length ? `Descer pra quadra com ${sel.length === 1 ? 'um' : porExtenso(sel.length)}` : 'Escolha quem desce'}</span></button>`;
+    }).join('') + `<button id="quadra-batalhar" class="escolha com-icone luta" onclick="Defesa.batalhar()"${sel.length ? '' : ' disabled'}>${svgIcone('lutar')}<span class="esc-rot">${
+      sel.length ? `Batalhar com ${sel.length === 1 ? 'um Pokémon' : porExtenso(sel.length) + ' Pokémon'}` : 'Escolha quem vai batalhar'}</span></button>`;
   },
   alternar(uid){
     const d = Estado.dados, r = this.reg(d).lider, x = r && r.desafio;
@@ -114551,7 +114551,7 @@ const Defesa = {
     const el = document.getElementById('quadra-lista');
     if (el) el.innerHTML = this.listaHTML(aptos, R);
   },
-  descer(){ return this.lutar('lider', (this._sel || []).slice()); },
+  batalhar(){ return this.lutar('lider', (this._sel || []).slice()); },
   /* sem ninguém que sirva: a insígnia vai sem luta, e é desistir */
   desistirSemTime(){
     const d = Estado.dados, r = this.estado('lider', d), x = r && r.desafio;
@@ -114560,7 +114560,7 @@ const Defesa = {
     return this.fechar('lider', r, x, 'desistiu', {tipo:'lider', ginasio:r.ginasio}, true);
   },
 
-  /* o time da quadra desce do cinto e do PC: quem não desce espera no PC
+  /* quem batalha sai do cinto e do PC: o resto do cinto espera no PC
      durante a luta, e tudo volta pro lugar no fim (devolver) */
   emprestar(uids){
     const d = Estado.dados, r = this.reg(d).lider;
@@ -114570,14 +114570,14 @@ const Defesa = {
     r.emprestimo = {cinto:d.time.map(p => p.uid), pc:(d.pc || []).map(p => p.uid)};
     d.pc = (d.pc || []).filter(p => !uids.includes(p.uid)).concat(d.time.filter(p => !uids.includes(p.uid)));
     d.time = sel;
-    /* a máquina da quadra: quem desce, desce inteiro */
+    /* a máquina da quadra: quem batalha entra inteiro */
     sel.forEach(p => curarTotal(p));
   },
   devolver(d){
     d = d || Estado.dados;
     const r = this.reg(d).lider, e = r && r.emprestimo;
     if (!e) return;
-    /* a máquina cura quem desceu, ganhando ou perdendo */
+    /* a máquina cura quem batalhou, ganhando ou perdendo */
     (d.time || []).forEach(p => { if (!p.morto) curarTotal(p); });
     const todos = (d.time || []).concat(d.pc || []);
     const acha = u => todos.find(p => p.uid === u);
@@ -114624,7 +114624,7 @@ const Defesa = {
     if (!x) return Exploracao.tela();
     if (tipo === 'lider' && x.estrada) return this.lutarNaQuadra(r, x, uids);
     const meu = Estado.primeiroApto();
-    if (!meu) return this.tela(tipo, [{tipo:'info', texto:'Nenhum Pokémon em pé. Cure o time antes de descer pra quadra.'}]);
+    if (!meu) return this.tela(tipo, [{tipo:'info', texto:'Nenhum Pokémon em pé. Cure o time antes de batalhar.'}]);
     const ins = inscritoDoTorneio(x.quem);
     /* o degrau é o de quando ele marcou (desafio de antes da fama: o de agora) */
     const fama = x.fama != null ? x.fama : this.fama(tipo, d);
@@ -114663,7 +114663,7 @@ const Defesa = {
     return this.fechar(tipo, r, x, fim.resultado === 'vitoria' ? 'vitoria' : fim.desistiu ? 'desistiu' : 'derrota', ctx);
   },
   /* o fim do desafio: vitória, derrota ou desistência (na luta, ou sem
-     descer, `semLuta`, quando ninguém do time servia) */
+     batalhar, `semLuta`, quando ninguém do time servia) */
   fechar(tipo, r, x, desfecho, ctx, semLuta){
     const d = Estado.dados;
     r.desafio = null;
@@ -114697,7 +114697,7 @@ const Defesa = {
         || (typeof Dificuldade !== 'undefined' && Dificuldade.derrotaNaQuadra());
       r.perdidas++; r.seguidas = 0;
       if (conta) r.adv++;
-      falas.push(semLuta ? `Você não desce pra quadra. Tira uma insígnia da caixa e põe na mão ${de} ${x.curto}.`
+      falas.push(semLuta ? `Sem ninguém pra batalhar, você tira uma insígnia da caixa e põe na mão ${de} ${x.curto}.`
         : tipo === 'lider' ? `Você tira uma insígnia da caixa e põe na mão ${de} ${x.curto}.`
         : `${x.curto} passa pela sua porta e segue pro fundo do corredor.`);
       falas.push(fala(x.nome, ezra ? SAIDA_DO_EZRA.ganhou[tipo]
@@ -114705,7 +114705,7 @@ const Defesa = {
       if (tinha) falas.push(tipo === 'lider' ? 'Na entrada, alguém da quadra passa a manga na lousa.'
         : 'Do lado da sua placa, os traços de giz somem debaixo de um pano.');
       titulo = tipo === 'lider' ? `${x.curto} levou a insígnia` : `${x.curto} passou`;
-      Estado.registrar(semLuta ? `Entregou a insígnia do seu ginásio a ${x.nome} sem descer pra quadra.`
+      Estado.registrar(semLuta ? `Entregou a insígnia do seu ginásio a ${x.nome} sem batalhar.`
         : `${x.nome} venceu ${tipo === 'lider' ? 'no seu ginásio' : 'na sua porta da ala'}.`);
       if (conta){
         if (r.adv >= ADVERTENCIAS_PRA_PERDER){
@@ -122819,10 +122819,10 @@ const UI = {
         /* os números moram em defesa.js e liga.js */
         const nv = n => n === 0 ? 'na média dos seus três mais fortes' : n < 0 ? `${-n} abaixo da média dos seus três mais fortes` : `${n} acima da média dos seus três mais fortes`;
         const L = (k, v) => `<div class="linha"><span class="k">${k}</span><span class="v">${v}</span></div>`;
-        const ex = [0, 2, 4, 6].map(n => { const R = Defesa.regra('pewter', n); return `contra ${n ? n : 'nenhuma insígnia'}, ${R.tam} até o nível ${R.nivel}`; }).join(' · ');
+        const ex = [0, 2, 4, 6].map(n => { const R = Defesa.regra('pewter', n); return `${n ? `com ${n} insígnias` : 'sem insígnia'}: ${R.tam} Pokémon até o nível ${R.nivel}`; }).join(' · ');
         return L('O ginásio', 'o posto de Líder dá o ginásio que está vago: no dado entre os oito, ou o que a história já deixou vago · cidade que ficou fechada pra você não entra no dado · o seu ginásio não se desafia: é a sua quadra, e a porta dele na cidade abre ela')
-          + L('O tipo da casa', `você escolhe ao ficar com o ginásio, entre os que os outros sete não usam: o de quem saiu fica livre, e Sombrio e Metálico só com a Pokédex Nacional · o tipo fica até você trocar de ginásio · a casa reabre ${REABRE_EM_DIAS} dias depois da ficha assinada`)
-          + L('A quadra', `no seu ginásio você desce só com Pokémon do tipo da casa, do cinto ou do PC, no tamanho e até o nível do ás que o líder de antes usaria contra as insígnias de quem desafia: o nível base do escalão (${ESCALOES_NIVEL.map(f => f.base).join(', ')}, a partir de ${ESCALOES_NIVEL.map(f => f.min).join(', ')} insígnias), mais a dificuldade do ginásio, mais 3 por insígnia além do começo do escalão, mais o tamanho do time, mais 1 · em Pewter: ${ex} · quem desce, desce curado · sem ninguém que sirva, descer é desistir · na quadra ninguém ganha experiência`)
+          + L('O tipo do ginásio', `você escolhe ao ficar com o ginásio, entre os que os outros sete não usam: o tipo de quem saiu fica livre, e Sombrio e Metálico só com a Pokédex Nacional · o tipo fica até você trocar de ginásio · o ginásio reabre ${REABRE_EM_DIAS} dias depois da ficha assinada`)
+          + L('A batalha no ginásio', `no seu ginásio você só usa Pokémon do tipo do ginásio, do cinto ou do PC, até o número e o nível do ás que o líder de antes usaria contra as insígnias de quem desafia: o nível base do escalão de insígnias (${ESCALOES_NIVEL.map(f => f.base).join(', ')}, a partir de ${ESCALOES_NIVEL.map(f => f.min).join(', ')} insígnias), mais a dificuldade do ginásio, mais 3 por insígnia além do começo do escalão, mais o tamanho do time, mais 1 · em Pewter: ${ex} · quem batalha entra curado · sem ninguém que sirva, é desistir · nessas batalhas ninguém ganha experiência`)
           + L('A porta', 'a cadeira na Elite dá, no dado, uma das três portas cujo dono não voltou · quem sentava nela sai, e o dono dela não volta mais · na ala, a sua porta se atravessa sem luta')
           + L('Desafio', `alguém marca a cada ${ESPERA_ENTRE_DESAFIOS[0]} a ${ESPERA_ENTRE_DESAFIOS[1]} dias · a secretaria do Planalto avisa pelo PokéNav · quem marcou espera ${PRAZO_DA_DEFESA} dias · capítulo que anda no meio do prazo remarca o prazo · com o ginásio e a porta, um desafio de cada vez: o segundo espera o primeiro acabar`)
           + L('Quem desafia', `no ginásio, gente da estrada, com zero a sete insígnias, no sorteio, e o time do escalão dela, no tamanho e no nível que o líder de antes usaria: do nível base pra cima, um por Pokémon, e o ás no nível máximo, errando ${DEFESAS.lider.erroIA}% · na porta, gente do Torneio Aberto e quem você conhece da estrada, com o time e o item dele, ${DEFESAS.elite.tam} Pokémon, o ás ${nv(DEFESAS.elite.nivel)}, errando ${DEFESAS.elite.erroIA}% · os dois gastam Vontade`)
@@ -122833,7 +122833,7 @@ const UI = {
             + FAMA_DA_QUADRA.slice(1).map((F, i) => `${i + 1}º degrau: ${F.itens === 1 ? 'um Pokémon dele segura' : F.itens + ' Pokémon dele seguram'} ${ITEM_DA_FAMA}${F.tam ? (F.tam === 1 ? ' e ele traz um Pokémon a mais' : ` e ele traz ${F.tam} Pokémon a mais`) : ''}`).join(' · ')
             + ` · quem segura são os mais fortes, fora o ás, que já segura o dele · no ginásio, o Pokémon a mais vem por cima do tamanho do escalão · time que já é de seis não cresce · a lousa da quadra conta as seguidas`)
           + L('Advertências', `com ${ADVERTENCIAS_PRA_PERDER}, a Liga tira o posto: o ginásio vai pra outra pessoa, a porta volta pra quem sentava nela · assumir de novo sorteia outra vaga`)
-          + L('Depois da luta', 'a máquina da quadra cura o time, ganhando ou perdendo · no ginásio, quem desceu volta pro cinto ou pro PC de onde saiu');
+          + L('Depois da luta', 'a máquina da quadra cura o time, ganhando ou perdendo · no ginásio, quem batalhou volta pro cinto ou pro PC de onde saiu');
       })()}
 
       <h3>A rede</h3>
@@ -136426,7 +136426,7 @@ const Exploracao = {
     if (typeof Pedidos !== 'undefined') Pedidos.conferir();
     /* o desafio marcado no seu ginásio ou na sua porta, e o prazo que passou (defesa.js) */
     if (typeof Defesa !== 'undefined') Defesa.conferir();
-    /* o ginásio é seu e a ficha da casa está em branco: só sai escolhendo o tipo */
+    /* o ginásio é seu e a ficha do ginásio está em branco: só sai escolhendo o tipo */
     if (typeof Defesa !== 'undefined' && Defesa.precisaTipo()) return Defesa.telaTipo(null, avisos);
     /* a intuição avisa quando chega a hora, sem dizer qual é a hora */
     const intu = typeof Intuicao !== 'undefined' ? Intuicao.talvez() : null;

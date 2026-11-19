@@ -224,7 +224,7 @@ const raiz = path.resolve(__dirname, '..');
     add('Patrulha (procurado do fim)', 8, 28, d => { naDetencao(d, true); Patrulha.lutar(); });
     /* a defesa do posto (defesa.js). Na porta, cada inscrito do torneio,
        cada um num degrau da fama da quadra, e o Ezra com a fama no alto.
-       No ginásio, cada tipo da casa contra gente da estrada, com zero,
+       No ginásio, cada tipo de ginásio contra gente da estrada, com zero,
        três e sete insígnias (e a fama andando), descendo com o time do
        tipo que a quadra sugere, do cinto e do PC */
     const naDefesa = (d, tipo, ins, fama) => {
@@ -241,7 +241,7 @@ const raiz = path.resolve(__dirname, '..');
       Cargos.conceder('lider');
       const r = Defesa.estado('lider');
       r.tipo = T; r.abre = d.relogio.dia; r.seguidas = fama;
-      /* o time da casa: o tipo em todo nível, no PC */
+      /* o time do ginásio: o tipo em todo nível, no PC */
       const bases = Object.keys(DEX).map(Number).filter(x => x <= 251 && !DEX[x].preEvo);
       for (let nv = 6; nv <= 56; nv += 5){
         const ok = bases.map(x => formaAteONivel(finalDaLinha(x), nv)).filter(x => (DEX[x].tipos || []).includes(T));
@@ -261,7 +261,7 @@ const raiz = path.resolve(__dirname, '..');
     });
     TIPOS.forEach((T, i) => [0, 3, 7].forEach((n, j) => {
       const fama = (i + j) % graus;
-      add(`defesa do ginásio de tipo ${T} contra ${n} insígnias (fama ${fama})`, 8, 27, d => {
+      add(`defesa do ginásio do tipo ${T} contra ${n} insígnias (fama ${fama})`, 8, 27, d => {
         if (TIPOS_JOHTO.includes(T)) DexNacional.liberar();
         naQuadra(d, T, n, fama); });
     }));

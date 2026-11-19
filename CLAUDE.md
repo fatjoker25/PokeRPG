@@ -1978,24 +1978,24 @@ regras ("O seu ginásio e a sua porta") lê os mesmos números.
   saiu do ginásio continua na agenda, mas não fala mais de desafiante
   (`lider` no `Recados.contexto`) e a revanche com ele fecha
   (`Estado.podeLigar`).
-- **O tipo da casa** — foi pedido assim: quem fica com o ginásio
-  escolhe a especialidade, um tipo que nenhum dos outros sete usa
+- **O tipo do ginásio** — foi pedido assim: quem fica com o ginásio
+  escolhe o tipo dele, um que nenhum dos outros sete usa
   (`Defesa.tiposLivres`: o de quem saiu fica livre, o variado do Blue
   não prende nada, e Sombrio e Metálico só com a Pokédex Nacional). A
   ficha (`Defesa.telaTipo`) abre na tela do mapa logo depois que o
   ginásio é seu (`precisaTipo`, no `Exploracao.tela`) e só sai
   escolhendo, com a confirmação de assinar; vale pro ginásio do balcão,
   pro do final de Viridian e pro save de antes, que ganham a ficha na
-  primeira olhada. Assinada (`escolherTipo`), a casa reabre
+  primeira olhada. Assinada (`escolherTipo`), o ginásio reabre
   `REABRE_EM_DIAS` (14) depois, o desafio marcado antes cai e a lousa
-  começa limpa. Ginásio novo é ficha nova. Até lá, a casa não recebe
-  desafio (`conferir` pula), e a porta diz "A ficha da casa está em
-  branco" ou "Fechado pra reforma".
+  começa limpa. Ginásio novo é ficha nova. Até lá, o ginásio não recebe
+  desafio (`conferir` pula), e a porta diz "Falta escolher o tipo do
+  ginásio" ou "Fechado pra reforma".
 - **A regra da quadra** é a dos líderes de Kanto, ao contrário (foi
   pedido assim: "a mesma mecânica dos líderes de se adaptar o seu time
   às insígnias dos desafiantes", e correr atrás dos Pokémon): quem
-  desafia o ginásio tem de zero a sete insígnias, e você desce só com
-  Pokémon do tipo da casa, do cinto ou do PC, no tamanho e até o nível
+  desafia o ginásio tem de zero a sete insígnias, e você usa só
+  Pokémon do tipo do ginásio, do cinto ou do PC, no tamanho e até o nível
   do ás que o líder de antes usaria contra aquelas insígnias
   (`Defesa.regra(g, n)`: a base de `ESCALOES_NIVEL`, a dificuldade do
   ginásio, 3 por insígnia dentro do escalão, e o tamanho dos escalões
@@ -2003,19 +2003,18 @@ regras ("O seu ginásio e a sua porta") lê os mesmos números.
   usa 2/3/4/6). Em Pewter: 2 até o 13, 3 até o 22, 4 até o 33, 5 até o
   46. O piso e o teto da sua jornada (`pisoDoGinasio`,
   `tetoDoGinasio`) não entram: são de quem anda com a história, não de
-  quem desafia. A tela da quadra mostra o regulamento, insígnia por
-  insígnia, com quantos seus servem e quantos faltam (`Defesa.quadro`:
+  quem desafia. A tela do ginásio mostra o regulamento, insígnia por insígnia, com quantos seus servem e quantos faltam (`Defesa.quadro`:
   a porta fechada que diz o que falta). "Montar o time"
   (`Defesa.montar`) sugere os mais fortes que servem, o mais forte por
-  último (`preSelecao`), e o toque tira e põe, na ordem de descer
-  (`alternar`, que redesenha só a lista). Quem desce sai do cinto e do
+  último (`preSelecao`), e o toque tira e põe, na ordem de entrar
+  (`alternar`, que redesenha só a lista). Quem batalha sai do cinto e do
   PC pra luta (`emprestar`: o resto do cinto espera no PC) e volta pro
   lugar no fim (`devolver`, no `resultado`, e no `conferir` se a luta
-  não chegou ao fim na tela); a máquina da quadra cura quem desce,
+  não chegou ao fim na tela); a máquina da quadra cura quem batalha,
   antes e depois. Na quadra ninguém ganha experiência (`semExp` no
   `Batalha.iniciar`): senão o time do escalão de baixo passava do teto
   e você perdia o que montou. Sem ninguém que sirva, "Entregar a
-  insígnia sem descer" (`desistirSemTime`) é desistir.
+  insígnia sem batalhar" (`desistirSemTime`) é desistir.
 - **A sua porta**: o substituto entrega a chave (`QUEM_DEIXA_A_PORTA`,
   uma narração e uma fala, lidas pela fala do posto), o corredor da
   Liga desenha a placa com o seu nome (`.liga-porta.sua`), o titular
@@ -2107,7 +2106,7 @@ O robô vai defender quando tem desafio marcado e o time de pé
 passo `defesa` vai pro relatório, com as insígnias de quem desafiou. No
 ginásio ele assina a ficha com o tipo que mais enche os escalões com o
 que já tem e que mais anda no mato, em lugar de nível baixo
-(`__tipoDaCasa`, passo `especialidade`), antes de olhar a tela como
+(`__tipoDoGinasio`, passo `especialidade`), antes de olhar a tela como
 cena: a ficha tem botões de cena, e o sorteio da cena fez a Líder
 assinar Fantasma, que tem dois Pokémon no mato, e perder o posto cinco
 vezes por falta. Desce com o time que a quadra sugere (`preSelecao`),
@@ -3513,6 +3512,14 @@ não esconde e os dois ficam na tela; e quem a animação escala pelo
   propósito (o Ezra e a "coisa mais importante que já aconteceu")
   entra em `permitidos`. O "como quem" e o "de um jeito que" estão de
   olho, sem teto.
+- **O ginásio não é "a casa"**: casa, no jogo, é a casa de quem joga ("Sua
+  casa", quem ficou em casa). O tipo é **do tipo** Gelo ("Pokémon do
+  tipo Gelo", "o ginásio agora é do tipo Gelo"), nunca "de tipo", e
+  botão diz o que acontece ("Batalhar com dois Pokémon", "Entregar a
+  insígnia sem batalhar"), sem jargão nosso: o "tipo da casa", a
+  "ficha da casa" e o "Descer pra quadra" saíram da tela do ginásio
+  assim. "Quadra" e "escalão" ficam onde já estavam (a narração da
+  defesa, a folha da estrada).
 - Fala de NPC: `fala(quem, diz, tom, nota)`. Tons válidos: `grita`, `baixo`, `riso`,
   `frio`. Frase inteira entre aspas numa linha de narração também vira balão sozinha.
 - Aspas de ironia ("análise jurídica") continuam narração porque não terminam em

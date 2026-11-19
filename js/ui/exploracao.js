@@ -24,7 +24,7 @@ const Exploracao = {
     if (typeof Pedidos !== 'undefined') Pedidos.conferir();
     /* o desafio marcado no seu ginásio ou na sua porta, e o prazo que passou (defesa.js) */
     if (typeof Defesa !== 'undefined') Defesa.conferir();
-    /* o ginásio é seu e a ficha da casa está em branco: só sai escolhendo o tipo */
+    /* o ginásio é seu e a ficha do ginásio está em branco: só sai escolhendo o tipo */
     if (typeof Defesa !== 'undefined' && Defesa.precisaTipo()) return Defesa.telaTipo(null, avisos);
     /* a intuição avisa quando chega a hora, sem dizer qual é a hora */
     const intu = typeof Intuicao !== 'undefined' ? Intuicao.talvez() : null;

@@ -160,7 +160,7 @@ const SUSPEITO = [
     await tentar('liga', () => { UI.fecharModal(true); Jogo.abrirLiga(); });
     await tentar('loja', () => { UI.fecharModal(true); Exploracao.tela(); Cidade.loja(); });
     await tentar('centro', () => { UI.fecharModal(true); Cidade.atenderAqui(); });
-    /* o seu ginásio (defesa.js): a ficha do tipo da casa, a quadra com o
+    /* o seu ginásio (defesa.js): a ficha do tipo do ginásio, a quadra com o
        regulamento e a escolha do time */
     await tentar('ginasio-ficha', () => {
       UI.fecharModal(true);

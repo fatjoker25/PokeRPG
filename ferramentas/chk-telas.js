@@ -671,15 +671,15 @@ const SUSPEITO = [
       GINASIOS.forEach(g => { const c = todosContatos().find(x => x.ginasio === g.id); if (c) Estado.registrarNumero(c.id); });
       Jogo.chamadaAdiada = null; Batalha.ativo = false;
       const txt = () => document.querySelector('#app').innerText;
-      /* o time da casa: Normal em todo nível, no PC */
+      /* o time do ginásio: Normal em todo nível, no PC */
       for (let nv = 8; nv <= 56; nv += 3) d.pc.push(criarPokemon(nv < 20 ? 19 : 20, nv));
       Jogo.assumirCargo('lider');
       const g = Defesa.meuGinasio();
       if (!g) return ['o posto de líder não sorteou ginásio'];
       if (!/A vaga é em/.test(txt())) falhas.push('a secretária não diz qual é a vaga');
-      /* a ficha da casa: a tela do mapa abre, com os tipos livres */
+      /* a ficha do ginásio: a tela do mapa abre, com os tipos livres */
       UI.fecharModal(true); Exploracao.tela(); await dorme(150);
-      if (!/ESPECIALIDADE DA CASA/.test(txt())) falhas.push('a ficha da casa não abriu na tela do mapa');
+      if (!/TIPO DO GINÁSIO/.test(txt())) falhas.push('a ficha do ginásio não abriu na tela do mapa');
       const livres = Defesa.tiposLivres(), presos = Defesa.tiposDosOutros(g), antigo = (ginasioPorId(g) || {}).tipo;
       if (livres.some(t => presos.includes(t))) falhas.push('a ficha oferece o tipo de outro ginásio');
       if (TIPOS.includes(antigo) && !livres.includes(antigo)) falhas.push('o tipo de quem saiu não ficou livre');
@@ -690,10 +690,10 @@ const SUSPEITO = [
       Defesa.escolherTipo('Normal'); await dorme(100);
       const R0 = Defesa.reg().lider;
       if (R0.tipo !== 'Normal' || R0.abre !== d.relogio.dia + REABRE_EM_DIAS) falhas.push('a ficha assinada não guardou o tipo e a reabertura');
-      if (/ESPECIALIDADE DA CASA/.test(txt())) falhas.push('a ficha continua aberta depois de assinada');
+      if (/TIPO DO GINÁSIO/.test(txt())) falhas.push('a ficha continua aberta depois de assinada');
       Defesa.conferir();
       if (R0.desafio) falhas.push('a casa fechada pra reforma recebeu desafio');
-      if (!/Reabre daqui a/.test((Defesa.afazerDoGinasio(g) || {}).sub || '')) falhas.push('a porta do ginásio não diz quando a casa reabre');
+      if (!/Reabre daqui a/.test((Defesa.afazerDoGinasio(g) || {}).sub || '')) falhas.push('a porta do ginásio não diz quando o ginásio reabre');
       /* reabriu: alguém da estrada marca, com as insígnias dele */
       R0.abre = d.relogio.dia; R0.proximo = d.relogio.dia; Exploracao.tela(); await dorme(250);
       const msg = (document.querySelector('#modal') || {}).innerText || '';
@@ -710,18 +710,18 @@ const SUSPEITO = [
       Defesa.montar();
       const n0 = R0.desafio.ins, Rg = Defesa.regra(g, n0);
       if (Defesa._sel.length !== Math.min(Rg.tam, Defesa.aptos(n0).length)) falhas.push('a quadra não sugeriu o time do escalão');
-      if (Defesa.aptos(n0).some(p => p.nivel > Rg.nivel || !p.tipos.includes('Normal'))) falhas.push('a quadra deixa descer quem não serve');
+      if (Defesa.aptos(n0).some(p => p.nivel > Rg.nivel || !p.tipos.includes('Normal'))) falhas.push('o ginásio deixa batalhar quem não serve');
       { const u = Defesa._sel[0]; Defesa.alternar(u); if (Defesa._sel.includes(u)) falhas.push('o toque não tira do time'); Defesa.alternar(u); }
       { const fora = Defesa.aptos(n0).find(p => !Defesa._sel.includes(p.uid));
         if (fora){ Defesa.alternar(fora.uid); if (Defesa._sel.length > Rg.tam) falhas.push('o time passou do tamanho do escalão'); } }
-      if (!document.querySelector('#quadra-descer')) falhas.push('a escolha do time não tem o botão de descer');
+      if (!document.querySelector('#quadra-batalhar')) falhas.push('a escolha do time não tem o botão de batalhar');
       const antesT = d.time.map(p => p.uid).join(), antesP = d.pc.map(p => p.uid).join();
       const din = Estado.j.dinheiro, escolhidos = Defesa._sel.join();
       R0.adv = 1;
-      Defesa.descer();
+      Defesa.batalhar();
       if (!Batalha.ativo) falhas.push('a defesa do ginásio não começou a luta');
       if (!Batalha.semExp) falhas.push('a luta da quadra dá experiência');
-      if (d.time.map(p => p.uid).join() !== escolhidos) falhas.push('quem desce não é o time escolhido');
+      if (d.time.map(p => p.uid).join() !== escolhidos) falhas.push('quem batalha não é o time escolhido');
       if (Som.tipoDeLuta() !== 'lider:' + g) falhas.push('a defesa não toca a faixa do ginásio');
       if (Arenas.atual().arena !== 'ginasio') falhas.push('a defesa não é na quadra');
       if (1 + Batalha.timeInimigo.length !== Rg.tam) falhas.push('o desafiante do ginásio veio com time de outro tamanho');
@@ -792,9 +792,9 @@ const SUSPEITO = [
       R0.desafio.ins = 0;
       { const sobe = Defesa.aptos(0); sobe.forEach(p => { p._nv = p.nivel; p.nivel = 99; });
         Defesa.montar();
-        if (!/não tem nenhum Pokémon de tipo Normal/.test(txt())) falhas.push('a quadra sem ninguém que sirva não diz o que falta');
+        if (!/não tem nenhum Pokémon do tipo Normal/.test(txt())) falhas.push('a quadra sem ninguém que sirva não diz o que falta');
         Defesa.desistirSemTime();
-        if (R0.adv !== 1 || !/não desce pra quadra/.test(txt())) falhas.push('entregar a insígnia sem descer não foi advertência');
+        if (R0.adv !== 1 || !/Sem ninguém pra batalhar/.test(txt())) falhas.push('entregar a insígnia sem batalhar não foi advertência');
         sobe.forEach(p => { p.nivel = p._nv; delete p._nv; }); }
       /* a luta que não chegou ao fim: o time da quadra volta no mapa */
       { const tt = d.time.map(p => p.uid).join();
@@ -811,7 +811,7 @@ const SUSPEITO = [
       Jogo.assumirCargo('lider');
       const g2 = Defesa.meuGinasio();
       if (g2 === g) falhas.push('assumir de novo sorteou o ginásio perdido');
-      if (!Defesa.precisaTipo()) falhas.push('o ginásio novo não pediu a ficha da casa');
+      if (!Defesa.precisaTipo()) falhas.push('o ginásio novo não pediu a ficha do ginásio');
       Defesa.escolherTipo('Normal'); Defesa.reg().lider.abre = d.relogio.dia;
       Defesa.marcar('lider'); await dorme(150); UI.fecharModal(true); Jogo.chamadaAdiada = null;
       Defesa.reg().lider.seguidas = 2;
@@ -870,13 +870,13 @@ const SUSPEITO = [
       d.local = 'viridian';
       const av = afazeresDoLocal().find(x => x.id === 'ginasio');
       if (Defesa.meuGinasio() !== 'viridian' || !av || av.fechada || av.titulo !== 'Seu ginásio') falhas.push('o ginásio do final não virou a sua quadra');
-      if (!Defesa.precisaTipo()) falhas.push('o ginásio do final não pede a ficha da casa');
+      if (!Defesa.precisaTipo()) falhas.push('o ginásio do final não pede a ficha do ginásio');
       UI.modalCredenciais(); const cred = (document.querySelector('#modal') || {}).innerText || ''; UI.fecharModal(true);
       if (!/porta da ala/.test(cred)) falhas.push('o cartão do posto da Elite não diz a porta');
       UI.modalRegras(); const regras = (document.querySelector('#modal') || {}).innerText || ''; UI.fecharModal(true);
       if (!/O seu ginásio e a sua porta/.test(regras)) falhas.push('a folha de regras não tem a defesa do posto');
       if (!/Fama da quadra/.test(regras) || !new RegExp(ITEM_DA_FAMA).test(regras)) falhas.push('a folha de regras não tem a fama da quadra');
-      if (!/O tipo da casa/.test(regras) || !/A quadra/.test(regras) || !/ninguém ganha experiência/.test(regras)) falhas.push('a folha de regras não tem o tipo da casa e a quadra');
+      if (!/O tipo do ginásio/.test(regras) || !/A batalha no ginásio/.test(regras) || !/ninguém ganha experiência/.test(regras)) falhas.push('a folha de regras não tem o tipo do ginásio e a batalha no ginásio');
       return falhas;
     });
     r.forEach(f => anota('defesa', f));
@@ -931,10 +931,10 @@ const SUSPEITO = [
           Jogo.continuarPelaEstrada();
           if (!d.depoisDoFim || d.modo !== 'mundo') falhas.push(`o final ${ce.final.id} não continua pela estrada`);
           if (Historia.proximoCapitulo(false) !== null) falhas.push(`depois do final ${ce.final.id} ainda tem capítulo`);
-          /* o final que dá o ginásio: a ficha da casa vem antes do mapa (defesa.js) */
+          /* o final que dá o ginásio: a ficha do ginásio vem antes do mapa (defesa.js) */
           if (d.depoisDoFim && d.depoisDoFim.ginasio){
-            if (!Defesa.precisaTipo() || !/ESPECIALIDADE DA CASA/.test(document.getElementById('app').innerText))
-              falhas.push(`depois do final ${ce.final.id}, o ginásio não pediu a ficha da casa`);
+            if (!Defesa.precisaTipo() || !/TIPO DO GINÁSIO/.test(document.getElementById('app').innerText))
+              falhas.push(`depois do final ${ce.final.id}, o ginásio não pediu a ficha do ginásio`);
             Defesa.escolherTipo(Defesa.tiposLivres()[0]);
           }
           Mundo.viajar(Mundo.idDaCidade(d.jogador.cidade)); Exploracao.tela();

@@ -5831,7 +5831,7 @@ h3.sec-conf{--sec:#7fb2ff}
 .modal.creche .escolha .esc-custo{margin-left:auto;flex:none}
 .creche-sec{margin:14px 0 6px;font:600 .78rem var(--letra-hud, system-ui);letter-spacing:.08em;text-transform:uppercase;opacity:.75}
 
-/* ── O seu ginásio (defesa.js): a ficha do tipo da casa, o regulamento
+/* ── O seu ginásio (defesa.js): a ficha do tipo do ginásio, o regulamento
       da quadra e o time que desce ─────────────────────────────── */
 .escolha.com-tipo{display:flex;align-items:center;gap:12px}
 .escolha.com-tipo .tipo-tag{flex:0 0 auto;min-width:84px;text-align:center;margin:0}
@@ -5857,4 +5857,4 @@ h3.sec-conf{--sec:#7fb2ff}
   font:700 .82rem var(--letra-hud, system-ui);font-variant-numeric:tabular-nums;color:var(--ac, #e8b923)}
 .quadra-lista .quadra-pk:not(.escolhido){opacity:.72}
 .quadra-lista .quadra-pk.escolhido{outline:2px solid var(--ac, #e8b923);outline-offset:-2px}
-.quadra-lista #quadra-descer{margin-top:6px}
+.quadra-lista #quadra-batalhar{margin-top:6px}

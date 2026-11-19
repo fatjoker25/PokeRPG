@@ -410,10 +410,10 @@ const SUSPEITO = [
     };
     /* quem do cinto (vivo, menos `fora`) já é da linha desse dex */
     window.__daLinha = (dex, fora) => Estado.dados.time.find(x => !x.morto && x.uid !== fora && __linha(x.dex) === __linha(dex)) || null;
-    /* o ginásio do posto (defesa.js): o tipo da casa que o robô escolhe
+    /* o ginásio do posto (defesa.js): o tipo do ginásio que o robô escolhe
        (o que mais enche os escalões com o que ele já tem, e o que mais
        anda no mato) e, depois, o escalão que ainda falta gente */
-    window.__tipoDaCasa = () => {
+    window.__tipoDoGinasio = () => {
       const livres = Defesa.tiposLivres(), g = Defesa.meuGinasio(), meus = Defesa.meusPokemon();
       /* quantas espécies do tipo andam no mato, e quantas num lugar de
          nível baixo: é dali que sai o time dos escalões de baixo */
@@ -438,7 +438,7 @@ const SUSPEITO = [
        com o ginásio de Normal, ganhou 6 de 39 assim) */
     window.__faltaBoa = () => {
       const g = Defesa.meuGinasio();
-      if (!Defesa.tipoDaCasa() || !g) return [];
+      if (!Defesa.tipoDoGinasio() || !g) return [];
       const out = [];
       for (let k = 0; k <= 7; k++){
         const R = Defesa.regra(g, k), bons = Defesa.aptos(k).filter(p => p.nivel >= R.nivel - 8).length;
@@ -450,7 +450,7 @@ const SUSPEITO = [
        primeiro (Pokémon só sobe de nível), num lugar com o tipo e com o
        mato perto do teto; vale o primeiro escalão que tem lugar assim */
     window.__ondeCacar = () => {
-      const T = Defesa.tipoDaCasa();
+      const T = Defesa.tipoDoGinasio();
       if (!T) return [];
       for (const f of __faltaBoa()){
         const l = Object.keys(ENCONTROS).filter(x => {
@@ -501,7 +501,7 @@ const SUSPEITO = [
       if (J.defesaAtual){ const x = ((typeof Defesa !== 'undefined' && Defesa.estado(J.defesaAtual.tipo)) || {}).desafio || {};
         return {de:'defesa', nome:J.defesaAtual.tipo === 'elite' ? 'a sua porta da ala' : 'o seu ginásio, ' + J.defesaAtual.ginasio, quem:J.defesaAtual.quem,
           tipo:J.defesaAtual.tipo, fama:x.fama != null ? x.fama : null, ins:x.ins != null ? x.ins : null,
-          casa:J.defesaAtual.tipo === 'lider' ? Defesa.tipoDaCasa() : null, desceram:J.defesaAtual.tipo === 'lider' ? Estado.dados.time.length : null}; }
+          tipoGinasio:J.defesaAtual.tipo === 'lider' ? Defesa.tipoDoGinasio() : null, batalharam:J.defesaAtual.tipo === 'lider' ? Estado.dados.time.length : null}; }
       if (J.revancheAtual) return {de:'revanche', nome:nomeDe(J.revancheAtual)};
       if (J.conferenciaAtual) return {de:'Conferência', nome:'rodada ' + ((J.conferenciaAtual.rodada || 0) + 1)};
       if (J.torneioAtual) return {de:'Torneio Aberto', nome:'rodada ' + ((J.torneioAtual.rodada || 0) + 1)};
@@ -1095,10 +1095,10 @@ const SUSPEITO = [
           else if (vivos.length < 6) quer = true;
           else if (J.captura === 'nova') quer = novo;
           else if (J.captura === 'forte') quer = valor(alvo) > pior + 3 || (g > 0 && novo);
-          /* o tipo da casa (defesa.js): o que serve num escalão do seu
+          /* o tipo do ginásio (defesa.js): o que serve num escalão do seu
              ginásio que ainda falta gente vai pro PC */
-          if (!quer && B.tipo === 'selvagem' && g >= 0 && typeof Defesa !== 'undefined' && Defesa.tipoDaCasa()
-              && (alvo.tipos || []).includes(Defesa.tipoDaCasa())){
+          if (!quer && B.tipo === 'selvagem' && g >= 0 && typeof Defesa !== 'undefined' && Defesa.tipoDoGinasio()
+              && (alvo.tipos || []).includes(Defesa.tipoDoGinasio())){
             quer = __faltaBoa().some(f => alvo.nivel <= f.cap && alvo.nivel >= f.cap - 8);
           }
           /* lendário (captura.js): só Ultra e Master, e ele conta no
@@ -1300,14 +1300,14 @@ const SUSPEITO = [
       await page.locator('#btn-seguir').click({timeout:3000}).catch(() => {}); await page.waitForTimeout(200); continue;
     }
 
-    /* a ficha da casa (defesa.js): o ginásio é seu e o tipo está em
+    /* a ficha do ginásio (defesa.js): o ginásio é seu e o tipo está em
        branco. A tela tem botões de cena, e o sorteio da cena escolhia o
        tipo ao acaso: a Líder assinou Fantasma, que tem dois Pokémon no
        mato, e perdeu o posto cinco vezes por falta */
-    const fichaDaCasa = await page.evaluate(() => typeof Defesa !== 'undefined' && !Batalha.ativo && Defesa.precisaTipo()
+    const fichaDoGinasio = await page.evaluate(() => typeof Defesa !== 'undefined' && !Batalha.ativo && Defesa.precisaTipo()
       && !!document.querySelector('.ficha-tipo')).catch(() => false);
-    if (fichaDaCasa){
-      await page.evaluate(() => { const t = __tipoDaCasa();
+    if (fichaDoGinasio){
+      await page.evaluate(() => { const t = __tipoDoGinasio();
         window.__passo && __passo('especialidade', {tipo:t, ginasio:Defesa.meuGinasio()});
         Defesa.escolherTipo(t); }).catch(e => erros.push('especialidade: ' + e.message));
       await page.waitForTimeout(150); continue;
@@ -1351,9 +1351,9 @@ const SUSPEITO = [
            policial da quarta rodada tentou o ginásio de Viridian de 42 a
            112 vezes por dia, nove dias seguidos */
         const afz = afazeresDoLocal().filter(a => !a.fechada).map(a => a.id);
-        /* o ginásio é seu e a ficha da casa está em branco (defesa.js): a
+        /* o ginásio é seu e a ficha do ginásio está em branco (defesa.js): a
            tela do mapa só sai escolhendo o tipo */
-        if (typeof Defesa !== 'undefined' && Defesa.precisaTipo()) return {f:'especialidade', tipo:__tipoDaCasa()};
+        if (typeof Defesa !== 'undefined' && Defesa.precisaTipo()) return {f:'especialidade', tipo:__tipoDoGinasio()};
         const semLiga = typeof Depois !== 'undefined' && Depois.ligaFechada && !!Depois.ligaFechada();
         const ref = nivelDeReferencia();
         /* pedra e cabo: o Link Cable é a pedra de quem evolui trocando
@@ -1496,10 +1496,10 @@ const SUSPEITO = [
             const risco = ((Defesa.estado(df.tipo) || {}).adv || 0) >= ADVERTENCIAS_PRA_PERDER - 1;
             if (!jornadaEspera || risco){ const v = ir(df.lugar); if (v) return v; }
           }
-          /* o tipo da casa: escalão do seu ginásio sem gente, vai procurar
+          /* o tipo do ginásio: escalão do seu ginásio sem gente, vai procurar
              onde o tipo anda no mato, num nível que serve (seis procuras
              por dia, no máximo; a jornada que espera vem antes) */
-          if (Defesa.tipoDaCasa() && !jornadaEspera && hp >= .5){
+          if (Defesa.tipoDoGinasio() && !jornadaEspera && hp >= .5){
             if (X.cacaDia !== dia){ X.cacaDia = dia; X.cacaN = 0; }
             const lugares = X.cacaN < 6 ? __ondeCacar() : [];
             if (lugares.length){
@@ -1717,7 +1717,7 @@ const SUSPEITO = [
           const pot = melhor(['Hyper Potion', 'Max Potion', 'Super Potion', 'Potion']);
           if (pot) quero[pot] = J.cura >= .7 ? 6 : 4;
           const bola = melhor(['Ultra Ball', 'Great Ball', 'Poké Ball']);
-          const caca = typeof Defesa !== 'undefined' && Defesa.tipoDaCasa() && __ondeCacar().length;
+          const caca = typeof Defesa !== 'undefined' && Defesa.tipoDoGinasio() && __ondeCacar().length;
           if (bola && (J.captura !== 'time' || d.time.length < 6 || caca)) quero[bola] = J.bolas || 5;
           /* quem quer lendário leva Ultra Ball de sobra: com 1 de HP e uma
              condição, cada uma pega 1 vez em 28 */
