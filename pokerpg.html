@@ -14014,7 +14014,7 @@ function afazeresDoLocal(){
   for (const [cid, r] of Object.entries(Estado.dados.revanches || {})){
     if (r.local !== id || typeof contatoPorId !== 'function') continue;
     const c = contatoPorId(cid);
-    if (c) lista.push({id:'rev_' + cid, titulo:`Procurar ${nomeDaRevanche(c)}`, sub:'Revanche marcada.'});
+    if (c) lista.push({id:'rev_' + cid, titulo:`Procurar ${quemDaRevanche(c)}`, sub:'Revanche marcada.'});
   }
 
   /* a rede: o ponto dela nesta cidade, pra quem carrega o envelope */
@@ -21221,6 +21221,9 @@ function escalaoEstradaDe(n){
 
 function treinadorEstrada(id){ return (typeof TREINADORES_ESTRADA !== 'undefined' ? TREINADORES_ESTRADA : []).find(t => t.id === id) || null; }
 function nomeDeLuta(t){ return `${t.classe} ${t.nome}`; }
+/* na frase, o nome de luta leva artigo, como título: "venceu a Garota
+   Sally", como "a Enfermeira Joy" */
+function oNomeDeLuta(t){ return `${t.artigo === 'uma' || t.f ? 'a' : 'o'} ${nomeDeLuta(t)}`; }
 
 /* Gente de dia e gente de noite: pela classe (o rosto). O resto anda
    a qualquer hora. */
@@ -21403,10 +21406,10 @@ const Estrada = {
       if (venceu){
         const v = this.premio(t.id);
         Estado.j.dinheiro += v;
-        avisos.push({tipo:'item', texto:`Você venceu ${nomeDeLuta(t)}. +${v.toLocaleString('pt-BR')} ₽`});
+        avisos.push({tipo:'item', texto:`Você venceu ${oNomeDeLuta(t)}. +${v.toLocaleString('pt-BR')} ₽`});
         if (!r.vencidos.includes(atual.escalao)) r.vencidos.push(atual.escalao);
         r.vitorias++;
-        Estado.registrar(`Venceu ${nomeDeLuta(t)} ${emLocal(t.local)}.`);
+        Estado.registrar(`Venceu ${oNomeDeLuta(t)} ${emLocal(t.local)}.`);
         /* quem tem número passa na primeira vez que perde pra você */
         if (t.numero && !r.numero && Estado.temPokenav()){
           r.numero = true;
@@ -21416,8 +21419,8 @@ const Estrada = {
         const p = this.perda(t.id);
         Estado.j.dinheiro -= p;
         r.derrotas++;
-        avisos.push({tipo:'dano', texto: p ? `${nomeDeLuta(t)} venceu. −${p.toLocaleString('pt-BR')} ₽` : `${nomeDeLuta(t)} venceu.`});
-        Estado.registrar(`Perdeu para ${nomeDeLuta(t)}.`);
+        avisos.push({tipo:'dano', texto: p ? `${cap1(oNomeDeLuta(t))} venceu. −${p.toLocaleString('pt-BR')} ₽` : `${cap1(oNomeDeLuta(t))} venceu.`});
+        Estado.registrar(`Perdeu para ${oNomeDeLuta(t)}.`);
       }
     }
     Estado.salvar('auto');
@@ -21433,6 +21436,13 @@ const Estrada = {
 function nomeDaRevanche(c){
   if (c.ginasio){ const g = ginasioPorId(c.ginasio); if (g) return 'Líder ' + g.lider; }
   if (c.estrada){ const t = treinadorEstrada(c.estrada); if (t) return nomeDeLuta(t); }
+  return textoContato(c, 'nome');
+}
+/* quem você procura é a pessoa ("Procurar Joey"); o nome de luta de
+   cima ("Garoto Joey") é o da luta */
+function quemDaRevanche(c){
+  if (c.ginasio){ const g = ginasioPorId(c.ginasio); if (g) return g.lider; }
+  if (c.estrada){ const t = treinadorEstrada(c.estrada); if (t) return t.nome; }
   return textoContato(c, 'nome');
 }
 
@@ -21656,7 +21666,7 @@ const TREINADORES_ESTRADA = [
  volta:'"Dessa vez você não tá cansad{o|a}. Eu também não."',
  perde:'"Pelo jeito cansad{o|a} você luta melhor."',
  vence:'"Descansa em Cerulean, que o rio faz bem."'},
-{id:'cale', local:'rota4', classe:'Campista', arq:'camper', artigo:'um', nome:'Cale',
+{id:'cale', local:'rota4', classe:'Campista', arq:'camper', artigo:'um', nome:'Liam',
  times:[[27,23], [27,23,50], [28,24,51,105], [28,24,51,105,232]], reserva:[104,231],
  abre:'"Tô acampado aqui há três dias esperando alguém pra lutar. Três dias! Por favor, não recusa."',
  volta:'"Quatro dias dessa vez. Obrigado por voltar."',
@@ -21755,7 +21765,7 @@ const TREINADORES_ESTRADA = [
  vence:'"Olha a cabeça na terceira curva, sempre."'},
 
 /* ── Rota 5 ─────────────────────────────────────────────── */
-{id:'reli', local:'rota5', classe:'Garota', arq:'lass', artigo:'uma', nome:'Reli',
+{id:'reli', local:'rota5', classe:'Garota', arq:'lass', artigo:'uma', nome:'Sally',
  times:[[52,39], [52,39,209], [53,40,210,176], [53,40,210,176,241]], reserva:[35,190],
  abre:'"Asfalto do começo ao fim, que tédio. Me distrai com uma luta?"',
  volta:'"Ainda tédio. Me distrai de novo."',
@@ -24462,7 +24472,11 @@ RIVAIS_TORNEIO.forEach(r => {
   if (!r.id) r.id = _semAcentoTorneio(r.curto || r.nome);
   if (!r.arq) return;
   if (typeof NOMES_DA_HISTORIA !== 'undefined') NOMES_DA_HISTORIA.add(r.curto);
-  if (typeof RETRATO_POR_NOME !== 'undefined') RETRATO_POR_NOME[r.nome] = 'trainers/' + r.arq;
+  if (typeof RETRATO_POR_NOME === 'undefined') return;
+  RETRATO_POR_NOME[r.nome] = 'trainers/' + r.arq;
+  /* e pelo nome curto, que é o do balão fora do anúncio da luta (a
+     porta da Elite, defesa.js), se ninguém mais se chama assim */
+  if (r.curto && !RETRATO_POR_NOME[r.curto]) RETRATO_POR_NOME[r.curto] = 'trainers/' + r.arq;
 });
 
 /* o ás de cada rodada e o tamanho do time, pelo seu time e pelas suas insígnias */
@@ -26770,23 +26784,23 @@ const Veteranos = {
     if (venceu){
       const valor = this.premioAgora(v);
       Estado.j.dinheiro += valor;
-      avisos.push({tipo:'item', texto: valor ? `Você venceu ${nomeDeLuta(v)}. +${valor.toLocaleString('pt-BR')} ₽` : `Você venceu ${nomeDeLuta(v)}.`});
+      avisos.push({tipo:'item', texto: valor ? `Você venceu ${oNomeDeLuta(v)}. +${valor.toLocaleString('pt-BR')} ₽` : `Você venceu ${oNomeDeLuta(v)}.`});
       if (!r.vitorias){
         for (const [n, q] of Object.entries(v.premio || {})){
           Estado.darItem(n, q);
           avisos.push({tipo:'item', texto:`${v.nome} te entrega ${q > 1 ? q + '× ' : ''}${n}.`});
         }
-        const m = Estado.mudarRep('bom', 1, `Venceu ${nomeDeLuta(v)}, que ninguém vencia`, {rep:{notorio:true, peso:3}});
+        const m = Estado.mudarRep('bom', 1, `Venceu ${oNomeDeLuta(v)}, que ninguém vencia`, {rep:{notorio:true, peso:3}});
         if (m && m.mudou) avisos.push({tipo:'rep', texto:`Reputação: ${m.de} → ${m.para}`});
         r.diaVitoria = Estado.dados.relogio.dia;
         if (Estado.temPokenav()) avisos.push({tipo:'eco', texto:`${v.nome} anota o número no verso da sua mão, com caneta, porque é o que tinha. "Eu ligo."`});
       }
       r.vitorias++;
-      Estado.registrar(`Venceu ${nomeDeLuta(v)} ${v.onde}.`);
+      Estado.registrar(`Venceu ${oNomeDeLuta(v)} ${v.onde}.`);
     } else {
       r.derrotas++;
-      avisos.push({tipo:'dano', texto:`${nomeDeLuta(v)} venceu.`});
-      Estado.registrar(`Perdeu para ${nomeDeLuta(v)}.`);
+      avisos.push({tipo:'dano', texto:`${cap1(oNomeDeLuta(v))} venceu.`});
+      Estado.registrar(`Perdeu para ${oNomeDeLuta(v)}.`);
     }
     Estado.salvar('auto');
     Jogo.resolverPendencias(() => Exploracao.tela(avisos));
@@ -114285,7 +114299,7 @@ const Defesa = {
       fala:this.falaDoDesafiante(tipo, ins), fama:this.fama(tipo, d),
       dia:d.relogio.dia, ate:d.relogio.dia + PRAZO_DA_DEFESA, cap:capNaJornada(d)};
     r.recentes = [ins.id].concat(r.recentes || []).slice(0, 3);
-    Estado.registrar(`${ins.nome} marcou desafio ${tipo === 'lider' ? 'no seu ginásio' : 'na sua porta da ala'}.`);
+    Estado.registrar(`${cap1(this.apresentar(r.desafio))} ${tipo === 'lider' ? 'marcou desafio no seu ginásio' : 'pediu a sua porta da ala'}.`);
     Estado.salvar('auto');
     this.avisar(tipo, 'marcado');
   },
@@ -114295,15 +114309,31 @@ const Defesa = {
     const d = Estado.dados, n = Dados.entre(0, 7);
     const t = this.sortearDaEstrada(r, n);
     if (!t){ r.proximo = d.relogio.dia + this.espera(); return; }
-    r.desafio = {quem:t.id, estrada:true, nome:nomeDeLuta(t), curto:t.nome, f:t.artigo === 'uma', de:'', ins:n,
+    r.desafio = {quem:t.id, estrada:true, nome:nomeDeLuta(t), curto:t.nome, classe:t.classe, f:t.artigo === 'uma', de:'', ins:n,
       fala:this.falaDoDesafiante('lider', t, n), fama:this.fama('lider', d),
       dia:d.relogio.dia, ate:d.relogio.dia + PRAZO_DA_DEFESA, cap:capNaJornada(d)};
     r.recentes = [t.id].concat(r.recentes || []).slice(0, 3);
-    Estado.registrar(`${nomeDeLuta(t)} marcou desafio no seu ginásio, ${this.comInsignias(n)}.`);
+    Estado.registrar(`${cap1(this.apresentar(r.desafio))} marcou desafio no seu ginásio, ${this.comInsignias(n)}.`);
     Estado.salvar('auto');
     this.avisar('lider', 'marcado');
   },
   comInsignias(n){ return n ? `com ${insigniasDitas(n)}` : 'sem insígnia nenhuma'; },
+  /* quem desafia, na frase: o nome com o artigo ("a Sally"), nunca o nome
+     de luta ("Garota Sally"), que é o anúncio da luta, como na estrada.
+     Na primeira notícia, o que a pessoa é ("uma garota chamada Sally");
+     quem vem do torneio, de onde vem ("o Ronan, do Planalto,") */
+  oNome(x){ return `${x.f ? 'a' : 'o'} ${x.curto || x.nome}`; },
+  apresentar(x){
+    if (x.classe && x.curto) return `${x.f ? 'uma' : 'um'} ${x.classe.toLowerCase()} chamad${x.f ? 'a' : 'o'} ${x.curto}`;
+    return this.oNome(x) + (x.de ? `, ${x.de},` : '');
+  },
+  /* o nome no balão: o curto, como na estrada ("Sally"), quando o rosto
+     dele é o do nome de luta; senão o nome inteiro, que tem rosto */
+  rotulo(x){
+    const R = typeof RETRATO_POR_NOME !== 'undefined' ? RETRATO_POR_NOME : {};
+    const c = x.curto;
+    return c && c !== x.nome && R[c] && R[c] === R[x.nome] ? c : x.nome;
+  },
 
   /* não apareceu até o prazo: a insígnia vai (a porta passa) sem luta */
   falta(tipo){
@@ -114311,8 +114341,8 @@ const Defesa = {
     if (!x) return;
     r.desafio = null; r.faltas++; r.adv++; r.seguidas = 0;
     r.proximo = d.relogio.dia + this.espera();
-    Estado.registrar(`${x.nome} esperou ${tipo === 'lider' ? 'no seu ginásio' : 'na sua porta da ala'}, e você não apareceu.`);
-    const extra = {nome:x.nome};
+    Estado.registrar(`${cap1(this.oNome(x))} esperou ${tipo === 'lider' ? 'no seu ginásio' : 'na sua porta da ala'}, e você não apareceu.`);
+    const extra = {nome:x.nome, curto:x.curto || null, classe:x.classe || null, de:x.de || '', f:!!x.f};
     if (r.adv >= ADVERTENCIAS_PRA_PERDER) extra.perdeu = this.perderPosto(tipo);
     Estado.salvar('auto');
     this.avisar(tipo, 'falta', extra);
@@ -114347,7 +114377,7 @@ const Defesa = {
     if (!Estado.temPokenav() || typeof Jogo === 'undefined' || !Jogo.tocarOuGuardar) return;
     Estado.registrarNumero('secretaria');
     const r = this.reg()[tipo] || {}, x = r.desafio || {};
-    const aviso = Object.assign({tipo, qual, nome:x.nome || null, f:!!x.f, ate:x.ate || null, ins:x.ins,
+    const aviso = Object.assign({tipo, qual, nome:x.nome || null, curto:x.curto || null, classe:x.classe || null, de:x.de || '', f:!!x.f, ate:x.ate || null, ins:x.ins,
       ginasio:this.meuGinasio(), porta:this.minhaPorta()}, extra || {});
     setTimeout(() => Jogo.tocarOuGuardar({recados:'defesa', de:'secretaria', aviso}), 80);
   },
@@ -114367,12 +114397,12 @@ const Defesa = {
     const S = SECRETARIA_DO_PLANALTO;
     const onde = a.tipo === 'lider' ? cidadeDoGinasio(a.ginasio) : `${ORDINAL_DA_PORTA[a.porta] || 'sua'} porta`;
     if (a.qual === 'marcado') return a.tipo === 'lider'
-      ? [fala(S, `${a.nome} marcou desafio no ginásio de ${onde}${a.ins != null ? ', ' + this.comInsignias(a.ins) : ''}.`), fala(S, `${a.f ? 'Ela' : 'Ele'} espera até ${this.diaDito(a.ate)}.`)]
-      : [fala(S, `${a.nome} marcou desafio na Elite e pediu a sua porta.`), fala(S, `${a.f ? 'Ela' : 'Ele'} espera no corredor até ${this.diaDito(a.ate)}.`)];
+      ? [fala(S, `${cap1(this.apresentar(a))} marcou desafio no ginásio de ${onde}${a.ins != null ? ', ' + this.comInsignias(a.ins) : ''}.`), fala(S, `${a.f ? 'Ela' : 'Ele'} espera até ${this.diaDito(a.ate)}.`)]
+      : [fala(S, `${cap1(this.apresentar(a))} marcou desafio na Elite e pediu a sua porta.`), fala(S, `${a.f ? 'Ela' : 'Ele'} espera no corredor até ${this.diaDito(a.ate)}.`)];
     if (a.qual === 'falta'){
       const l = a.tipo === 'lider'
-        ? [fala(S, `${a.nome} esperou o prazo inteiro no ginásio e foi embora com a insígnia.`), fala(S, 'A Liga anotou a falta.')]
-        : [fala(S, `${a.nome} passou pela sua porta sem ninguém do outro lado.`), fala(S, 'A Liga anotou a falta.')];
+        ? [fala(S, `${cap1(this.oNome(a))} esperou o prazo inteiro no ginásio e foi embora com a insígnia.`), fala(S, 'A Liga anotou a falta.')]
+        : [fala(S, `${cap1(this.oNome(a))} passou pela sua porta sem ninguém do outro lado.`), fala(S, 'A Liga anotou a falta.')];
       if (a.perdeu) l.push(a.tipo === 'lider'
         ? fala(S, `E a Liga decidiu hoje cedo: o ginásio de ${a.perdeu} vai pra outra pessoa. Pode deixar a chave na portaria.`)
         : fala(S, `E a Liga decidiu hoje cedo: a ${a.perdeu} volta pra quem sentava nela antes. O seu nome sai da placa amanhã.`));
@@ -114436,8 +114466,8 @@ const Defesa = {
       falas.push('Na parede, o regulamento da Liga, com o tipo do ginásio no alto.');
       if (ab) falas.push(`Na porta, o aviso da Liga: fechado pra reforma, reabre ${this.daquiA(ab)}.`);
       else if (x){
-        falas.push(`${x.nome}${x.de ? ', ' + x.de + ',' : ''} espera na arquibancada, ${x.ins != null ? this.comInsignias(x.ins) + ' no estojo' : 'com o cinto cheio'}.`);
-        falas.push(fala(x.nome, x.fala));
+        falas.push(`${cap1(this.oNome(x))}${x.de ? ', ' + x.de + ',' : ''} espera na arquibancada, ${x.ins != null ? this.comInsignias(x.ins) + ' no estojo' : 'com o cinto cheio'}.`);
+        falas.push(fala(this.rotulo(x), x.fala));
       } else falas.push('A quadra está limpa e as luzes estão acesas. Ninguém marcou desafio.');
       if (seq) falas.push(seq);
       if (adv) falas.push(adv);
@@ -114449,8 +114479,8 @@ const Defesa = {
     const p = r.porta;
     falas.push('A placa de bronze da porta tem o seu nome, na mesma fonte das outras três.');
     if (x){
-      falas.push(`${x.nome}${x.de ? ', ' + x.de + ',' : ''} pediu a sua porta e espera no corredor.`);
-      falas.push(fala(x.nome, x.fala));
+      falas.push(`${cap1(this.oNome(x))}${x.de ? ', ' + x.de + ',' : ''} pediu a sua porta e espera no corredor.`);
+      falas.push(fala(this.rotulo(x), x.fala));
     } else falas.push('O corredor está vazio. Ninguém pediu a sua porta.');
     if (seq) falas.push(seq);
     if (adv) falas.push(adv);
@@ -114525,7 +114555,7 @@ const Defesa = {
     const chave = `${x.dia}:${x.quem}`;
     if (!Array.isArray(this._sel) || this._selDe !== chave){ this._sel = this.preSelecao(n, d); this._selDe = chave; }
     this._sel = this._sel.filter(u => aptos.some(p => p.uid === u)).slice(0, R.tam);
-    const falas = [n ? `${x.nome} tem ${insigniasDitas(n)}.` : `${x.nome} ainda não tem insígnia nenhuma.`,
+    const falas = [n ? `${cap1(this.oNome(x))} tem ${insigniasDitas(n)}.` : `${cap1(this.oNome(x))} ainda não tem insígnia nenhuma.`,
       `Pelo regulamento, você pode usar até ${porExtenso(R.tam)} Pokémon do tipo ${r.tipo}, nenhum acima do nível ${R.nivel}.`];
     if (!aptos.length) falas.push(`Você não tem nenhum Pokémon do tipo ${r.tipo} até o nível ${R.nivel}, nem no cinto, nem no PC.`);
     UI.telaConversa({num:'Seu ginásio', titulo:'Montar o time', loc:`contra ${x.curto}`, falas, avisos,
@@ -114619,7 +114649,7 @@ const Defesa = {
       timeInimigo:adv.time.slice(1),
       introducao:`${adv.nome} enviou ${nomeVisivel(adv.time[0])} (Nv ${adv.time[0].nivel})!`
     });
-    UI.telaBatalha([`${adv.nome} desce da arquibancada pra quadra.`, `${adv.nome} quer a insígnia!`]);
+    UI.telaBatalha([`${cap1(this.oNome(x))} desce da arquibancada pra quadra.`, `${adv.nome} quer a insígnia!`]);
   },
 
   lutar(tipo, uids){
@@ -114649,8 +114679,8 @@ const Defesa = {
       introducao:`${adv.nome} enviou ${nomeVisivel(adv.time[0])} (Nv ${adv.time[0].nivel})!`
     });
     UI.telaBatalha(tipo === 'lider'
-      ? [`${adv.nome} desce da arquibancada pra quadra.`, `${adv.nome} quer a insígnia!`]
-      : [`${adv.nome} abre a sua porta.`, `${adv.nome} quer passar!`]);
+      ? [`${cap1(this.oNome(x))} desce da arquibancada pra quadra.`, `${adv.nome} quer a insígnia!`]
+      : [`${cap1(this.oNome(x))} abre a sua porta.`, `${adv.nome} quer passar!`]);
   },
 
   resultado(fim){
@@ -114674,7 +114704,7 @@ const Defesa = {
     /* a máquina do ginásio (e a da ala) cura o time depois da luta */
     if (!semLuta) d.time.forEach(p => { if (!p.morto) curarTotal(p); });
     const av = [], falas = [], ezra = x.quem === 'ezra';
-    const de = x.f ? 'da' : 'do';
+    const de = x.f ? 'da' : 'do', O = cap1(this.oNome(x));
     let titulo;
     if (desfecho === 'vitoria'){
       r.ganhas++;
@@ -114685,13 +114715,13 @@ const Defesa = {
       Estado.j.dinheiro += b;
       av.push({tipo:'item', texto:`+${fmtDin(b)} ₽ — o que a Liga paga por desafio defendido.`});
       if (r.adv > 0){ r.adv--; av.push({tipo:'liga', texto:'A Liga tirou uma advertência do seu nome.'}); }
-      falas.push(tipo === 'lider' ? `${x.curto} recolhe a última Pokébola e fica um tempo olhando pra quadra.`
-        : `${x.curto} recolhe a última Pokébola e volta pelo corredor sem olhar pras outras portas.`);
-      falas.push(fala(x.nome, ezra ? SAIDA_DO_EZRA.perdeu : Dados.escolher(SAIDA_DO_DESAFIANTE.perdeu)));
+      falas.push(tipo === 'lider' ? `${O} recolhe a última Pokébola e fica um tempo olhando pra quadra.`
+        : `${O} recolhe a última Pokébola e volta pelo corredor sem olhar pras outras portas.`);
+      falas.push(fala(this.rotulo(x), ezra ? SAIDA_DO_EZRA.perdeu : Dados.escolher(SAIDA_DO_DESAFIANTE.perdeu)));
       falas.push(tipo === 'lider' ? `Na entrada, alguém do ginásio risca ${giz} na lousa, a giz.`
         : `Do lado da sua placa, alguém risca ${giz} a giz.`);
       titulo = tipo === 'lider' ? 'Ginásio defendido' : 'Porta defendida';
-      Estado.registrar(`Defendeu ${tipo === 'lider' ? 'o seu ginásio' : 'a sua porta da ala'} contra ${x.nome}.`);
+      Estado.registrar(`Defendeu ${tipo === 'lider' ? 'o seu ginásio' : 'a sua porta da ala'} contra ${this.oNome(x)}.`);
     } else {
       const tinha = r.seguidas || 0;
       /* no ginásio, perder é a insígnia que vai: a advertência é de quem
@@ -114702,14 +114732,14 @@ const Defesa = {
       if (conta) r.adv++;
       falas.push(semLuta ? `Sem ninguém pra batalhar, você tira uma insígnia da caixa e põe na mão ${de} ${x.curto}.`
         : tipo === 'lider' ? `Você tira uma insígnia da caixa e põe na mão ${de} ${x.curto}.`
-        : `${x.curto} passa pela sua porta e segue pro fundo do corredor.`);
-      falas.push(fala(x.nome, ezra ? SAIDA_DO_EZRA.ganhou[tipo]
+        : `${O} passa pela sua porta e segue pro fundo do corredor.`);
+      falas.push(fala(this.rotulo(x), ezra ? SAIDA_DO_EZRA.ganhou[tipo]
         : Dados.escolher(semLuta ? SAIDA_DO_DESAFIANTE.semLuta : SAIDA_DO_DESAFIANTE.ganhou)));
       if (tinha) falas.push(tipo === 'lider' ? 'Na entrada, alguém do ginásio passa a manga na lousa.'
         : 'Do lado da sua placa, os traços de giz somem debaixo de um pano.');
       titulo = tipo === 'lider' ? `${x.curto} levou a insígnia` : `${x.curto} passou`;
-      Estado.registrar(semLuta ? `Entregou a insígnia do seu ginásio a ${x.nome} sem batalhar.`
-        : `${x.nome} venceu ${tipo === 'lider' ? 'no seu ginásio' : 'na sua porta da ala'}.`);
+      Estado.registrar(semLuta ? `Entregou a insígnia do seu ginásio ${x.f ? 'à' : 'ao'} ${x.curto || x.nome} sem batalhar.`
+        : `${O} venceu ${tipo === 'lider' ? 'no seu ginásio' : 'na sua porta da ala'}.`);
       if (conta){
         if (r.adv >= ADVERTENCIAS_PRA_PERDER){
           const onde = this.perderPosto(tipo);
@@ -114732,14 +114762,16 @@ const Defesa = {
     const S = SECRETARIA_DO_PLANALTO, out = [];
     /* no ginásio quem desafia vem da estrada; na porta, do torneio */
     const est = (typeof TREINADORES_ESTRADA !== 'undefined' ? TREINADORES_ESTRADA : []).filter(t => !t.barreira);
-    const quemDa = tipo => tipo === 'lider' && est.length ? nomeDeLuta(est[0]) : 'Domador de Dragões Ronan';
+    const quemDa = tipo => tipo === 'lider' && est.length
+      ? {nome:nomeDeLuta(est[0]), curto:est[0].nome, classe:est[0].classe, f:est[0].artigo === 'uma'}
+      : {nome:'Domador de Dragões Ronan', curto:'Ronan', de:'do Planalto', f:false};
     ['lider', 'elite'].forEach(tipo => {
-      ['marcado', 'falta'].forEach(qual => [0, 3].forEach(ins => out.push(...this.falasDoAviso({tipo, qual, nome:quemDa(tipo), ins, f:ins > 0,
-        ate:Estado.dados.relogio.dia + PRAZO_DA_DEFESA, ginasio:'pewter', porta:1, perdeu:qual === 'falta' ? 'Pewter' : null}))));
+      ['marcado', 'falta'].forEach(qual => [0, 3].forEach(ins => out.push(...this.falasDoAviso(Object.assign({tipo, qual, ins,
+        ate:Estado.dados.relogio.dia + PRAZO_DA_DEFESA, ginasio:'pewter', porta:1, perdeu:qual === 'falta' ? 'Pewter' : null}, quemDa(tipo))))));
     });
     est.slice(0, 3).forEach(t => FALAS_DO_DESAFIANTE.lider.forEach(f => [0, 1, 4, 7].forEach(n => [null, 'Gelo'].forEach(tp =>
-      out.push(fala(nomeDeLuta(t), f('Pewter', n, tp)))))));
-    SAIDA_DO_DESAFIANTE.semLuta.forEach(t => out.push(fala(quemDa('lider'), t)));
+      out.push(fala(this.rotulo({nome:nomeDeLuta(t), curto:t.nome}), f('Pewter', n, tp)))))));
+    SAIDA_DO_DESAFIANTE.semLuta.forEach(t => out.push(fala(this.rotulo(quemDa('lider')), t)));
     out.push(fala(S, this.falaDaVaga(Estado.dados)));
     ['lider', 'elite'].forEach(tipo => FALAS_DA_FAMA[tipo].forEach(f => out.push(fala('Domador de Dragões Ronan', f(3)))));
     Object.values(QUEM_DEIXA_A_PORTA).forEach(l => out.push(...l));

@@ -42,6 +42,9 @@ function escalaoEstradaDe(n){
 
 function treinadorEstrada(id){ return (typeof TREINADORES_ESTRADA !== 'undefined' ? TREINADORES_ESTRADA : []).find(t => t.id === id) || null; }
 function nomeDeLuta(t){ return `${t.classe} ${t.nome}`; }
+/* na frase, o nome de luta leva artigo, como título: "venceu a Garota
+   Sally", como "a Enfermeira Joy" */
+function oNomeDeLuta(t){ return `${t.artigo === 'uma' || t.f ? 'a' : 'o'} ${nomeDeLuta(t)}`; }
 
 /* Gente de dia e gente de noite: pela classe (o rosto). O resto anda
    a qualquer hora. */
@@ -224,10 +227,10 @@ const Estrada = {
       if (venceu){
         const v = this.premio(t.id);
         Estado.j.dinheiro += v;
-        avisos.push({tipo:'item', texto:`Você venceu ${nomeDeLuta(t)}. +${v.toLocaleString('pt-BR')} ₽`});
+        avisos.push({tipo:'item', texto:`Você venceu ${oNomeDeLuta(t)}. +${v.toLocaleString('pt-BR')} ₽`});
         if (!r.vencidos.includes(atual.escalao)) r.vencidos.push(atual.escalao);
         r.vitorias++;
-        Estado.registrar(`Venceu ${nomeDeLuta(t)} ${emLocal(t.local)}.`);
+        Estado.registrar(`Venceu ${oNomeDeLuta(t)} ${emLocal(t.local)}.`);
         /* quem tem número passa na primeira vez que perde pra você */
         if (t.numero && !r.numero && Estado.temPokenav()){
           r.numero = true;
@@ -237,8 +240,8 @@ const Estrada = {
         const p = this.perda(t.id);
         Estado.j.dinheiro -= p;
         r.derrotas++;
-        avisos.push({tipo:'dano', texto: p ? `${nomeDeLuta(t)} venceu. −${p.toLocaleString('pt-BR')} ₽` : `${nomeDeLuta(t)} venceu.`});
-        Estado.registrar(`Perdeu para ${nomeDeLuta(t)}.`);
+        avisos.push({tipo:'dano', texto: p ? `${cap1(oNomeDeLuta(t))} venceu. −${p.toLocaleString('pt-BR')} ₽` : `${cap1(oNomeDeLuta(t))} venceu.`});
+        Estado.registrar(`Perdeu para ${oNomeDeLuta(t)}.`);
       }
     }
     Estado.salvar('auto');
@@ -254,6 +257,13 @@ const Estrada = {
 function nomeDaRevanche(c){
   if (c.ginasio){ const g = ginasioPorId(c.ginasio); if (g) return 'Líder ' + g.lider; }
   if (c.estrada){ const t = treinadorEstrada(c.estrada); if (t) return nomeDeLuta(t); }
+  return textoContato(c, 'nome');
+}
+/* quem você procura é a pessoa ("Procurar Joey"); o nome de luta de
+   cima ("Garoto Joey") é o da luta */
+function quemDaRevanche(c){
+  if (c.ginasio){ const g = ginasioPorId(c.ginasio); if (g) return g.lider; }
+  if (c.estrada){ const t = treinadorEstrada(c.estrada); if (t) return t.nome; }
   return textoContato(c, 'nome');
 }
 

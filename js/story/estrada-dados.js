@@ -174,7 +174,7 @@ const TREINADORES_ESTRADA = [
  volta:'"Dessa vez você não tá cansad{o|a}. Eu também não."',
  perde:'"Pelo jeito cansad{o|a} você luta melhor."',
  vence:'"Descansa em Cerulean, que o rio faz bem."'},
-{id:'cale', local:'rota4', classe:'Campista', arq:'camper', artigo:'um', nome:'Cale',
+{id:'cale', local:'rota4', classe:'Campista', arq:'camper', artigo:'um', nome:'Liam',
  times:[[27,23], [27,23,50], [28,24,51,105], [28,24,51,105,232]], reserva:[104,231],
  abre:'"Tô acampado aqui há três dias esperando alguém pra lutar. Três dias! Por favor, não recusa."',
  volta:'"Quatro dias dessa vez. Obrigado por voltar."',
@@ -273,7 +273,7 @@ const TREINADORES_ESTRADA = [
  vence:'"Olha a cabeça na terceira curva, sempre."'},
 
 /* ── Rota 5 ─────────────────────────────────────────────── */
-{id:'reli', local:'rota5', classe:'Garota', arq:'lass', artigo:'uma', nome:'Reli',
+{id:'reli', local:'rota5', classe:'Garota', arq:'lass', artigo:'uma', nome:'Sally',
  times:[[52,39], [52,39,209], [53,40,210,176], [53,40,210,176,241]], reserva:[35,190],
  abre:'"Asfalto do começo ao fim, que tédio. Me distrai com uma luta?"',
  volta:'"Ainda tédio. Me distrai de novo."',

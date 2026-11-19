@@ -376,7 +376,11 @@ RIVAIS_TORNEIO.forEach(r => {
   if (!r.id) r.id = _semAcentoTorneio(r.curto || r.nome);
   if (!r.arq) return;
   if (typeof NOMES_DA_HISTORIA !== 'undefined') NOMES_DA_HISTORIA.add(r.curto);
-  if (typeof RETRATO_POR_NOME !== 'undefined') RETRATO_POR_NOME[r.nome] = 'trainers/' + r.arq;
+  if (typeof RETRATO_POR_NOME === 'undefined') return;
+  RETRATO_POR_NOME[r.nome] = 'trainers/' + r.arq;
+  /* e pelo nome curto, que é o do balão fora do anúncio da luta (a
+     porta da Elite, defesa.js), se ninguém mais se chama assim */
+  if (r.curto && !RETRATO_POR_NOME[r.curto]) RETRATO_POR_NOME[r.curto] = 'trainers/' + r.arq;
 });
 
 /* o ás de cada rodada e o tamanho do time, pelo seu time e pelas suas insígnias */

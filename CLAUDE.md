@@ -1583,6 +1583,19 @@ seguinte. Quem tem `numero` vira contato do PokéNav na primeira derrota
 Nome de treinador de estrada sai do sorteio de nomes (`NOMES_DA_HISTORIA`) e
 ganha rosto pela classe (`arq`).
 
+O **nome de luta** (`nomeDeLuta`: a classe e o nome, "Garota Sally") é o
+anúncio dos jogos, "Garota Sally quer lutar!", e na frase a classe é
+título, com artigo, como "a Enfermeira Joy": "Você venceu a Garota Sally"
+(`oNomeDeLuta`). Fora disso a pessoa é o nome: o balão diz "Sally", a
+narração apresenta pela classe em minúscula ("uma garota chamada Sally",
+"Uma garota se levanta de onde estava"), e o "Procurar" da revanche
+procura a Sally (`quemDaRevanche`). O ginásio já tratou o nome de luta
+como se fosse o nome dela ("Garota Reli tem cinco insígnias"), e
+`Defesa.oNome`, `apresentar` e `rotulo` existem por isso. E o nome não
+pode ser palavra do português: a Reli virou Sally ("reli" é de reler) e
+o Cale virou Liam ("cale" é de calar), os dois nomes de treinador dos
+jogos; o `id` ficou, pro save.
+
 A força foi **medida**, não chutada: `node ferramentas/sim-estrada.js`
 luta cada treinador contra times do tamanho e nível de cada fase, e compara
 com selvagens e líderes. O alvo é o jogador no nível da rota + 2 vencer

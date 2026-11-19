@@ -739,7 +739,7 @@ function afazeresDoLocal(){
   for (const [cid, r] of Object.entries(Estado.dados.revanches || {})){
     if (r.local !== id || typeof contatoPorId !== 'function') continue;
     const c = contatoPorId(cid);
-    if (c) lista.push({id:'rev_' + cid, titulo:`Procurar ${nomeDaRevanche(c)}`, sub:'Revanche marcada.'});
+    if (c) lista.push({id:'rev_' + cid, titulo:`Procurar ${quemDaRevanche(c)}`, sub:'Revanche marcada.'});
   }
 
   /* a rede: o ponto dela nesta cidade, pra quem carrega o envelope */

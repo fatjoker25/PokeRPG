@@ -1061,23 +1061,23 @@ const Veteranos = {
     if (venceu){
       const valor = this.premioAgora(v);
       Estado.j.dinheiro += valor;
-      avisos.push({tipo:'item', texto: valor ? `Você venceu ${nomeDeLuta(v)}. +${valor.toLocaleString('pt-BR')} ₽` : `Você venceu ${nomeDeLuta(v)}.`});
+      avisos.push({tipo:'item', texto: valor ? `Você venceu ${oNomeDeLuta(v)}. +${valor.toLocaleString('pt-BR')} ₽` : `Você venceu ${oNomeDeLuta(v)}.`});
       if (!r.vitorias){
         for (const [n, q] of Object.entries(v.premio || {})){
           Estado.darItem(n, q);
           avisos.push({tipo:'item', texto:`${v.nome} te entrega ${q > 1 ? q + '× ' : ''}${n}.`});
         }
-        const m = Estado.mudarRep('bom', 1, `Venceu ${nomeDeLuta(v)}, que ninguém vencia`, {rep:{notorio:true, peso:3}});
+        const m = Estado.mudarRep('bom', 1, `Venceu ${oNomeDeLuta(v)}, que ninguém vencia`, {rep:{notorio:true, peso:3}});
         if (m && m.mudou) avisos.push({tipo:'rep', texto:`Reputação: ${m.de} → ${m.para}`});
         r.diaVitoria = Estado.dados.relogio.dia;
         if (Estado.temPokenav()) avisos.push({tipo:'eco', texto:`${v.nome} anota o número no verso da sua mão, com caneta, porque é o que tinha. "Eu ligo."`});
       }
       r.vitorias++;
-      Estado.registrar(`Venceu ${nomeDeLuta(v)} ${v.onde}.`);
+      Estado.registrar(`Venceu ${oNomeDeLuta(v)} ${v.onde}.`);
     } else {
       r.derrotas++;
-      avisos.push({tipo:'dano', texto:`${nomeDeLuta(v)} venceu.`});
-      Estado.registrar(`Perdeu para ${nomeDeLuta(v)}.`);
+      avisos.push({tipo:'dano', texto:`${cap1(oNomeDeLuta(v))} venceu.`});
+      Estado.registrar(`Perdeu para ${oNomeDeLuta(v)}.`);
     }
     Estado.salvar('auto');
     Jogo.resolverPendencias(() => Exploracao.tela(avisos));
