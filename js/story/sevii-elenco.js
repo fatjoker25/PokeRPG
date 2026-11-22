@@ -33,7 +33,7 @@ const ELENCO_SEVII = [
   tracos:['teimoso', 'solitário', 'leal'], meta:'vinculo', forte:'resistencia',
   gosta:{lugar:'montanha', tipo:'Dragão', especie:'Salamence'},
   desgosta:{lugar:'cidade', tipo:'Gelo', especie:'Glalie'},
-  aparencia:'Alto e magro, cabelo azul-escuro preso atrás, capa comprida de domador de dragões, gasta na barra de tanto arrastar em pedra.',
+  aparencia:'Alto e magro, cabelo curto azul-escuro penteado pra trás, roupa justa vinho de domador e a capa comprida com o forro dourado, gasta na barra de tanto arrastar em pedra.',
   voz:'Frase curta. Fala de dragão como quem fala de gente da família, e nunca levanta a voz.',
   jornada:[
     'Nasceu no Covil dos Dragões de Blackthorn, filho de um guardião do santuário.',
@@ -61,7 +61,7 @@ const ELENCO_SEVII = [
   tracos:['paciente', 'brincalhão', 'teimoso'], meta:'campeao', forte:'sorte',
   gosta:{lugar:'agua', tipo:'Água', especie:'Lapras'},
   desgosta:{lugar:'cidade', tipo:'Elétrico', especie:'Qwilfish'},
-  aparencia:'Velho, barba branca curta, chapéu de pescador desbotado e a vara de bambu que ele não larga nem pra apertar a mão.',
+  aparencia:'Velho barrigudo de barba branca, chapéu de pano branco, colete azul de bolso cheio e a mochila de pesca nas costas, com a vara de bambu atravessada.',
   voz:'Conta tudo como causo, no ritmo de quem espera a linha puxar. Chama todo mundo de moço e de moça.',
   jornada:[
     'Pesca no cais de Olivine há cinquenta e tantos anos.',
@@ -88,7 +88,7 @@ const ELENCO_SEVII = [
   tracos:['orgulhosa', 'curiosa', 'determinada'], meta:'casa', forte:'intelecto',
   gosta:{lugar:'floresta', tipo:'Inseto', especie:'Heracross'},
   desgosta:{lugar:'vulcao', tipo:'Fogo', especie:'Slowpoke'},
-  aparencia:'Cabelo ruivo enrolado, mochila maior que ela, cheia de Pokébolas de Apricorn penduradas por fora, cada uma de uma cor.',
+  aparencia:'Cabelo loiro preso, roupa colorida manchada de tinta, sempre ajoelhada com a tinta verde da Apricorn na mão e a mochila cheia de Pokébolas penduradas por fora.',
   voz:'Rápida e técnica. Explica a costura de uma Pokébola sem ninguém pedir e corrige quem diz "Pokébola comum".',
   jornada:[
     'A família dela faz Pokébola de Apricorn em Azalea há quatro gerações, na rua de baixo da do mestre famoso. Todo mundo conhece a rua de cima. Ninguém conhece a de baixo.',
@@ -115,7 +115,7 @@ const ELENCO_SEVII = [
   tracos:['alegre', 'competitivo', 'sonhador'], meta:'poder', forte:'carisma',
   gosta:{lugar:'cidade', tipo:'Normal', especie:'Miltank'},
   desgosta:{lugar:'caverna', tipo:'Fantasma', especie:'Misdreavus'},
-  aparencia:'Topete azul que não se mexe com vento nenhum, jaqueta de couro sintético, o fio do microfone enrolado no braço.',
+  aparencia:'Topete azul espetado que não se mexe com vento nenhum, jaqueta marrom aberta e o fio do microfone girando na mão.',
   voz:'Fala como quem está no ar: em vinheta, chamando todo mundo de ouvinte. Quando o microfone desliga, fica quieto de repente.',
   jornada:[
     'Apresenta "Ziggy na Madrugada" na rádio de Goldenrod há seis anos, o programa que todo caminhoneiro de Johto escuta da meia-noite às quatro.',
@@ -141,7 +141,7 @@ const ELENCO_SEVII = [
   tracos:['corajosa', 'alegre', 'impulsiva'], meta:'campeao', forte:'forca',
   gosta:{lugar:'agua', tipo:'Lutador', especie:'Hariyama'},
   desgosta:{lugar:'cidade', tipo:'Psíquico', especie:'Alakazam'},
-  aparencia:'Cabelo castanho num rabo alto, quimono azul de treino com a faixa amarrada duas vezes, os braços cheios de arranhão de rocha.',
+  aparencia:'Cabelo castanho preso, quimono azul de treino com a faixa amarrada duas vezes, descalça, os braços cheios de arranhão de rocha.',
   voz:'Ri alto, fala com o corpo inteiro e cumprimenta apertando o braço, não a mão.',
   jornada:[
     'Cresceu no dojô de Cianwood. Nada até as Ilhas do Redemoinho toda manhã, ida e volta antes do café.',
@@ -167,7 +167,7 @@ const ELENCO_SEVII = [
   tracos:['organizado', 'observador', 'cauteloso'], meta:'vinculo', forte:'intelecto',
   gosta:{lugar:'campo', tipo:'Normal', especie:'Eevee'},
   desgosta:{lugar:'vulcao', tipo:'Fantasma', especie:'Ditto'},
-  aparencia:'Macacão verde de jardineiro, luva de couro sintético no bolso de trás e um caderno de capa mole sempre aberto.',
+  aparencia:'Boné claro, roupa de trabalho verde de jardineiro e um ovo nas duas mãos, segurado como quem segura vidro.',
   voz:'Fala em porcentagem e depois pede desculpa por falar em porcentagem.',
   jornada:[
     'Neto do casal que cuida da creche da Rota 34. Cresceu entre ovo e cesto de palha.',
@@ -194,7 +194,7 @@ const ELENCO_SEVII = [
   tracos:['desconfiado', 'solitário', 'protetor'], meta:'heroi', forte:'percepcao',
   gosta:{lugar:'agua', tipo:'Sombrio', especie:'Houndoom'},
   desgosta:{lugar:'cidade', tipo:'Psíquico', especie:'Raticate'},
-  aparencia:'Cabelo preto comprido, barba de semanas, casaco escuro grande demais e um anzol de metal pendurado no pescoço.',
+  aparencia:'Cabelo preto comprido preso, barba de semanas, jaqueta marrom de viagem e uma Pokébola sempre na mão, nunca no cinto.',
   voz:'Fala pouco, olha nos olhos. Nunca diz "nós" quando fala da Equipe Rocket: diz "eles", mesmo quando era "nós".',
   jornada:[
     'Há três anos era recruta da Equipe Rocket no esconderijo de Mahogany, o que ficava debaixo da loja de lembrancinhas.',
@@ -223,7 +223,7 @@ const ELENCO_SEVII = [
   tracos:['sonhadora', 'distraída', 'alegre'], meta:'explorar', forte:'sorte',
   gosta:{lugar:'floresta', tipo:'Voador', especie:'Altaria'},
   desgosta:{lugar:'agua', tipo:'Elétrico', especie:'Sharpedo'},
-  aparencia:'Boné verde virado pra trás, bermuda de escalada com o joelho ralado e uma pena de Swablu presa atrás da orelha.',
+  aparencia:'Boné azul-céu, cabelo curto, roupa de trilha azul com o joelho ralado e uma pena de Swablu presa atrás da orelha.',
   voz:'Fala olhando pro céu e conta o vento. Se distrai no meio da frase quando passa alguma coisa voando.',
   jornada:[
     'Cresceu nas casas de árvore de Fortree, onde a rua é ponte de corda.',
@@ -250,7 +250,7 @@ const ELENCO_SEVII = [
   tracos:['orgulhosa', 'impulsiva', 'prática'], meta:'casa', forte:'carisma',
   gosta:{lugar:'vulcao', tipo:'Fogo', especie:'Torkoal'},
   desgosta:{lugar:'agua', tipo:'Água', especie:'Wailord'},
-  aparencia:'Cabelo preto num coque firme, quimono de festa vermelho e preto, o leque fechado na mão como quem segura uma régua.',
+  aparencia:'Cabelo preto em duas mechas, quimono preto com a faixa cor de brasa e o leque fechado na mão como quem segura uma régua.',
   voz:'Afiada e educada ao mesmo tempo. Negocia tudo, até o preço do chá, e sorri do jeito que corta.',
   jornada:[
     'Herdou da avó a pousada de termas mais velha de Lavaridge.',
@@ -277,7 +277,7 @@ const ELENCO_SEVII = [
   tracos:['calma', 'observadora', 'curiosa'], meta:'pokedex', forte:'intelecto',
   gosta:{lugar:'montanha', tipo:'Psíquico', especie:'Lunatone'},
   desgosta:{lugar:'cidade', tipo:'Sombrio', especie:'Murkrow'},
-  aparencia:'Jaleco branco por cima de roupa de campo, cabelo preto curto, a pele escura cheia de sardas de sol de observatório.',
+  aparencia:'Cabelo preto preso, roupa folgada cor de vinho de quem passa a noite no telhado, as mãos erguidas com duas Pokébolas brilhando.',
   voz:'Precisa e seca. Ri sem som, mede distância em coisa que ninguém mede e responde pergunta com outra.',
   jornada:[
     'Calcula órbita de satélite no centro espacial de Mossdeep.',
@@ -303,7 +303,7 @@ const ELENCO_SEVII = [
   tracos:['protetor', 'impulsivo', 'leal'], meta:'heroi', forte:'forca',
   gosta:{lugar:'agua', tipo:'Água', especie:'Wailord'},
   desgosta:{lugar:'cidade', tipo:'Elétrico', especie:'Pelipper'},
-  aparencia:'Ombro largo, braço tatuado com âncora, camiseta laranja do sindicato do cais de Slateport e o boné azul de estiva.',
+  aparencia:'Ombro largo, capacete laranja de estiva, colete refletivo amarelo, luva grossa e a âncora tatuada no braço.',
   voz:'Grita ordem como quem fala normal, chama todo mundo de chefia e chora fácil, sem vergonha nenhuma.',
   jornada:[
     'Estivador do cais de Slateport há vinte anos e delegado do sindicato.',
@@ -329,7 +329,7 @@ const ELENCO_SEVII = [
   tracos:['competitiva', 'orgulhosa', 'gentil'], meta:'campeao', forte:'carisma',
   gosta:{lugar:'cidade', tipo:'Água', especie:'Milotic'},
   desgosta:{lugar:'caverna', tipo:'Pedra', especie:'Geodude'},
-  aparencia:'Vestido de palco lilás com babado, o cabelo preso com um laço do mesmo tom e o sorriso de quem já foi fotografada demais.',
+  aparencia:'Cabelo castanho preso com um laço, vestido lilás de palco com babado, a fita do concurso presa no peito e o sorriso de quem já foi fotografada demais.',
   voz:'Gentil na frente, fria por baixo. Termina frase com sorriso de palco, mesmo quando a frase é ruim.',
   jornada:[
     'Três vezes campeã do Concurso Mestre de Lilycove, na categoria Beleza.',
@@ -355,7 +355,7 @@ const ELENCO_SEVII = [
   tracos:['calma', 'solitária', 'observadora'], meta:'vinculo', forte:'percepcao',
   gosta:{lugar:'cemiterio', tipo:'Fantasma', especie:'Dusclops'},
   desgosta:{lugar:'cidade', tipo:'Normal', especie:'Exploud'},
-  aparencia:'Cabelo branco desgrenhado até a cintura, vestido roxo comprido, os olhos de quem dormiu pouco e não se importa.',
+  aparencia:'Cabelo branco comprido e desgrenhado, vestido roxo até o chão, sempre agachada como quem varre degrau, os olhos de quem dormiu pouco.',
   voz:'Baixa e pausada. Olha por cima do seu ombro, como se tivesse mais alguém ali.',
   jornada:[
     'Neta dos zeladores do Monte Pyre, o morro de Hoenn onde se enterram os Pokémon.',
@@ -384,7 +384,7 @@ const ELENCO_SEVII = [
   tracos:['competitivo', 'orgulhoso', 'calmo'], meta:'campeao', forte:'resistencia',
   gosta:{lugar:'montanha', tipo:'Metálico', especie:'Aggron'},
   desgosta:{lugar:'floresta', tipo:'Lutador', especie:'Hariyama'},
-  aparencia:'Terno escuro bem cortado sem gravata, cabelo preto penteado pra trás e luva de couro sintético numa mão só.',
+  aparencia:'Cabelo preto penteado pra trás, terno escuro bem cortado com o forro verde-água e luva de vinil preto numa mão só.',
   voz:'Educado e frio. Diz "por favor" antes de ameaçar e agradece depois de ganhar.',
   jornada:[
     'Chegou duas vezes à Elite de Hoenn e caiu nas duas no mesmo lugar: a terceira porta.',
@@ -413,13 +413,13 @@ const ELENCO_SEVII = [
   tracos:['desconfiada', 'ousada', 'leal'], meta:'casa', forte:'sorte',
   gosta:{lugar:'agua', tipo:'Sombrio', especie:'Sharpedo'},
   desgosta:{lugar:'cidade', tipo:'Psíquico', especie:'Persian'},
-  aparencia:'Cabelo verde-mar curto e arrepiado de sal, jaqueta preta grande demais, tênis sem cadarço e um Murkrow no ombro que encara todo mundo.',
+  aparencia:'Pele morena de sol, cabelo verde-mar preso no alto e arrepiado de sal, jaqueta preta de agasalho com a faixa amarela, grande demais, e um Murkrow no ombro que encara todo mundo.',
   voz:'Fala rápido e de lado, nunca de frente. Quando mente, olha nos olhos; quando fala a verdade, olha pro chão.',
   jornada:[
     'Filha de pescador da Ilha Um.',
     'Quando a fábrica de conserva fechou, o pai pegou óleo fiado com os Faróis, e o barco foi junto com a dívida.',
     'Desde então ela trabalha pra Maré, a turma do cais, que trabalha pros Faróis.',
-    'O Sharpedo dela, o Dente, o pai pescou ainda Carvanha, na rede, no último dia em que o barco saiu.'
+    'O Sharpedo dela, o Dente, o pai tirou ainda Carvanha da rede, no último dia em que o barco saiu: tinha vindo grudado no casco de um cargueiro de Hoenn.'
   ],
   porque:'O prêmio do torneio paga a dívida e devolve o barco. Ela não pode se inscrever enquanto trabalha pra gangue.',
   gancho:'Nunca saiu das ilhas. Quer ver Vermilion de perto, "só pra ver se é feia como dizem".',
@@ -442,7 +442,7 @@ const ELENCO_SEVII = [
   tracos:['calmo', 'orgulhoso', 'paciente'], meta:'casa', forte:'resistencia',
   gosta:{lugar:'montanha', tipo:'Normal', especie:'Kangaskhan'},
   desgosta:{lugar:'cidade', tipo:'Fantasma', especie:'Banette'},
-  aparencia:'Velho de terno cinza e chapéu, bengala de madeira escura com castão de latão, o bigode branco aparado à régua.',
+  aparencia:'Velho de terno marrom e chapéu, bigode branco aparado à régua e a bengala de madeira escura com castão de latão.',
   voz:'Pausada, de quem já contou a mesma história muitas vezes e ainda gosta de contar.',
   jornada:[
     'Ganhou o Torneio das Ilhas duas vezes, há mais de cinquenta anos. Numa das finais, ganhou de um pescador de Olivine chamado Gideon.',
@@ -468,11 +468,19 @@ const ELENCO_SEVII = [
 /* As gangues e quem mais luta nas ilhas fora do torneio: time de
    linhas de Kanto e Johto (nada de Hoenn com quem mora aqui). */
 const LUTAS_DE_SEVII = {
-  jory:   {nome:'Jory', f:false, arq:'sevii_jory', times:[42, 57, 210, 99], ajuste:-3},
-  kaspar: {nome:'Kaspar', f:false, arq:'sevii_kaspar', times:[24, 89, 126, 217], ajuste:-1},
-  dekker: {nome:'Dekker', f:false, arq:'sevii_dekker', times:[107, 76, 68], ajuste:0},
-  farol:  {nome:'um dos Faróis', f:false, arq:'sevii_farol', times:[110, 78, 89], ajuste:-5},
-  mare:   {nome:'um garoto da Maré', f:false, arq:'sevii_mare', times:[20, 22, 99], ajuste:-7}
+  /* a Maré: a turma do cais da Ilha Um, molecada sem a fábrica */
+  mare:   {nome:'uma garota da Maré', f:true, arq:'sevii_mare', times:[20, 22, 99], ajuste:-7,
+           golpes:['Body Slam', 'Surf']},
+  jory:   {nome:'Jory', f:false, arq:'sevii_jory', times:[20, 42, 57, 210, 99], ajuste:-3,
+           golpes:['Crunch', 'Body Slam', 'Rock Slide', 'Surf']},
+  /* os Faróis: a gangue das motos da Ilha Três */
+  farol:  {nome:'um dos Faróis', f:false, arq:'sevii_farol', times:[110, 78, 89], ajuste:-5,
+           golpes:['Sludge Bomb', 'Fire Blast']},
+  kaspar: {nome:'Kaspar', f:false, arq:'sevii_kaspar', times:[24, 110, 89, 126, 229, 217], ajuste:-2,
+           golpes:['Sludge Bomb', 'Earthquake', 'Fire Blast', 'Crunch']},
+  /* o homem do armazém: quem segura a porta pro Penrose */
+  dekker: {nome:'Dekker', f:false, arq:'sevii_dekker', times:[57, 237, 107, 76, 68], ajuste:-1,
+           golpes:['Rock Slide', 'Earthquake', 'Thunder Punch', 'Ice Punch']}
 };
 
 /* rosto e nome: cada ficha tem o arquivo dela, e o nome entra na lista

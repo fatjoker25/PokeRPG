@@ -331,8 +331,10 @@ const Historia = {
        proximo: d => numero   (desvio explícito, decidido pelas escolhas)
        requer:  d => bool     (capítulo só existe em certas rotas) */
   proximoCapitulo(registrando){
-    /* depois do fim a história está fechada: não tem próximo (depois.js) */
-    if (Estado.dados && Estado.dados.depoisDoFim) return null;
+    /* depois do fim a história de Kanto está fechada (depois.js): o
+       próximo, se houver, é o do pós-jogo das Ilhas Sevii (sevii.js) */
+    if (Estado.dados && Estado.dados.depoisDoFim)
+      return typeof Sevii !== 'undefined' ? Sevii.proximo(Estado.dados) : null;
     const atual = this.capitulo(Estado.dados.capitulo);
     if (atual && typeof atual.proximo === 'function'){
       let alvo = null;
@@ -342,8 +344,9 @@ const Historia = {
     let n = Estado.dados.capitulo + 1;
     while (this.capitulo(n)){
       const c = this.capitulo(n);
-      /* capítulo de caminho só entra pelo desvio (caminhos.js), nunca em sequência */
-      if (c.caminho){ n++; continue; }
+      /* capítulo de caminho só entra pelo desvio (caminhos.js), nunca em
+         sequência; o do pós-jogo, só depois do fim (sevii.js) */
+      if (c.caminho || c.posJogo){ n++; continue; }
       if (!c.requer || this.testaRequisito(c)) return n;
       /* a bússola consulta isto a cada tela: só o avanço de verdade escreve no diário */
       if (registrando) Estado.registrar(`(Capítulo ${n} — "${c.titulo}" — não aconteceu nesta jornada.)`);
@@ -360,7 +363,7 @@ const Historia = {
      jornada: quem não passou por um desvio nunca fica sabendo que ele
      existia (condicionais.js). */
   capitulosPulados(){
-    return CAPITULOS.filter(c => c.requer && !c.caminho && !this.testaRequisito(c)).map(c => c.titulo);
+    return CAPITULOS.filter(c => c.requer && !c.caminho && !c.posJogo && !this.testaRequisito(c)).map(c => c.titulo);
   },
 
   /* A "via" é o jeito que o mundo passou a te enxergar. Ela abre e fecha caminhos. */

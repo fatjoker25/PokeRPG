@@ -477,6 +477,7 @@ const Exploracao = {
     if (acao.startsWith('intu_')) return Intuicao.fazer(acao.slice(5));
     if (acao.startsWith('tit_'))  return Titulares.fazer(acao.slice(4));
     if (acao === 'dexnac')        return DexNacional.fazer();
+    if (acao.startsWith('sevii_')) return Sevii.fazer(acao.slice(6));
     if (acao.startsWith('recado_')) return Recados.encontrar(acao.slice(7));
     if (acao.startsWith('pedido_')) return Pedidos.fazer(acao.slice(7));
     if (acao === 'rede')          return Rede.tela();

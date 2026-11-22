@@ -595,6 +595,9 @@ function travaDaPassagem(de, para){
   if (fim) return {texto:fim};
   const b = (typeof Barreiras !== 'undefined') ? Barreiras.entre(de, para) : null;
   if (b) return {barreira:b, texto:b.texto};
+  /* a balsa das ilhas: a passagem do Blue, e cada ilha na vez dela (sevii.js) */
+  const ilhas = (typeof Sevii !== 'undefined') ? Sevii.trava(de, para) : null;
+  if (ilhas) return {texto:ilhas};
   return faltaInsignias(INSIGNIAS_DA_PASSAGEM[de + '>' + para]);
 }
 function textoTrava(t){

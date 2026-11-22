@@ -55,7 +55,9 @@ const Patrulha = {
   /* no meio de um trecho de rota: devolve true se a tela virou a parada */
   talvez(localId){
     const d = Estado.dados;
-    if (!d || d.modo === 'cena' || SEM_PATRULHA.includes(localId)) return false;
+    /* nas Ilhas Sevii quem cuida é a Guarda das Ilhas, um homem só, e a
+       Patrulha de Kanto não atravessa o mar (sevii.js) */
+    if (!d || d.modo === 'cena' || SEM_PATRULHA.includes(localId) || (typeof ehSevii === 'function' && ehSevii(localId))) return false;
     const t = this.tipo();
     if (!t || d.liga.paradaDia === d.relogio.dia || !Dados.chance(CHANCE_PATRULHA[t])) return false;
     d.liga.paradaDia = d.relogio.dia;

@@ -67,7 +67,7 @@ const LUTAS_DO_VILAO = {'5:c5_luta_trio':'bw2-homika-dogars', '5:c5_ataque':'bw2
    por um Pokémon que não é só dele. Otto, o caçador: o de Sinnoh, rápido e na espreita.
    Diana, que te para pra ver do que você é feito: o de líder de Kanto de
    Black 2/White 2, o do desafio, que nenhum ginásio daqui ficou. */
-const FAIXA_DO_RIVAL = {ezra:'bw-rival', ezra_parceiro:'xy-rival', nilo:'oras-rival', tunico:'sm-rival', fuchsia:'bw2-rival', vasco:'dpp-rival', diana:'bw2-kanto-gym-leader'};
+const FAIXA_DO_RIVAL = {ezra:'bw-rival', ezra_parceiro:'xy-rival', nilo:'oras-rival', tunico:'sm-rival', fuchsia:'bw2-rival', vasco:'dpp-rival', diana:'bw2-kanto-gym-leader', noa:'oras-trainer'};
 
 /* ---------- as faixas do Showdown e o que cada uma é ----------
    laco: os pontos de volta que o próprio Showdown usa (ms), pra emendar
@@ -312,6 +312,15 @@ const Som = {
     const chave = `${d.capitulo}:${d.cena}`;
     if (J.cenaBatalha && LUTAS_DO_VILAO[chave]) return 'faixa:' + LUTAS_DO_VILAO[chave];
     if (J.cenaBatalha && this.noEsconderijo()) return 'faixa:' + FAIXA_DO_VILAO[d.capitulo];
+    /* as Ilhas Sevii (sevii.js): a gangue toca radical, quem manda nela a
+       do chefe, e o Torneio das Ilhas a das ilhas, com a final mais alta */
+    if (J.cenaBatalha && J.cenaBatalha.sevii && typeof FAIXA_DE_SEVII !== 'undefined'){
+      const q = txt(J.cenaBatalha.sevii);
+      if (FAIXA_DE_SEVII[q]) return 'faixa:' + FAIXA_DE_SEVII[q];
+      if (q === 'noa') return 'faixa:' + FAIXA_DO_RIVAL.noa;
+    }
+    if (J.veteranoAtual && J.veteranoAtual.tipo === 'copa')
+      return 'faixa:' + (J.copaAtual && J.copaAtual.rodada >= 3 ? 'spl-elite4' : 'sm-trainer');
     /* a rede: prova e briga com gente dela tocam a faixa radical */
     if (J.redeAtual && J.redeAtual.vilao) return 'faixa:' + (J.redeAtual.tipo === 'prova' ? FAIXA_DO_VILAO[9] : FAIXA_DO_VILAO[5]);
     /* rival: o extra pelo id, o de casa pelo arco */
@@ -558,6 +567,64 @@ const Som = {
                [74,.5],[77,1],[81,.5],[86,2], [82,1],[79,1],[74,2], [76,.5],[79,.5],[84,1],[82,.5],[79,1.5], [79,2],[null,2],
                [77,.5],[82,1],[77,.5],[74,2], [81,1.5],[79,.5],[77,2], [79,.5],[82,1],[86,.5],[84,2], [85,2],[81,2],
                [86,1],[81,1],[77,1],[74,1], [74,.5],[77,1],[82,.5],[77,2], [79,1.5],[77,.5],[76,1],[72,1], [77,3],[null,1]]},
+    /* ---------- as vilas das Ilhas Sevii (sevii-mundo.js) ---------- */
+    /* Ilha Um: o porto e as termas — sanfona em arpejo, Ré maior */
+    ilha_um:{bpm:104, compasso:3, timbre:'sanfona', ritmo:'arpejo',
+      acordes:[[50,54,57],[50,54,57],[43,47,50],[50,54,57],[47,50,54],[52,55,59],[45,49,52],[45,49,52],
+               [43,47,50],[50,54,57],[47,50,54],[52,55,59],[43,47,50],[45,49,52],[50,54,57],[50,54,57]],
+      melodia:[[74,1],[73,.5],[71,.5],[69,1], [66,2],[69,1], [71,1],[74,1],[79,1], [78,2],[76,1],
+               [74,1.5],[73,.5],[71,1], [67,1],[71,1],[76,1], [73,2],[71,1], [69,3],
+               [71,1],[74,1],[71,1], [69,1.5],[66,.5],[69,1], [74,2],[71,1], [67,3],
+               [71,1],[74,1],[79,1], [78,1.5],[76,.5],[73,1], [74,3], [null,3]]},
+    /* Ilha Dois: a feira — marimba em bossa, Sol com sétima */
+    ilha_dois:{bpm:104, compasso:4, timbre:'marimba', ritmo:'bossa',
+      acordes:[[55,59,62,66],[52,55,59,62],[45,48,52,55],[50,54,57,60],[55,59,62,66],[52,55,59,62],[48,52,55,59],[50,54,57,60],
+               [47,50,54,57],[52,55,59,62],[45,48,52,55],[50,54,57,60],[48,52,55,59],[50,54,57,60],[55,59,62,66],[55,59,62,66]],
+      melodia:[[74,1.5],[71,.5],[67,1],[66,1], [67,1],[71,1],[74,2], [76,1.5],[74,.5],[72,1],[69,1], [72,3],[null,1],
+               [74,1.5],[71,.5],[67,1],[79,1], [78,2],[74,2], [76,1],[79,1],[83,2], [81,2],[78,1],[76,1],
+               [74,1.5],[71,.5],[66,2], [67,1],[71,1],[76,1],[74,1], [72,1.5],[69,.5],[64,2], [66,1],[69,1],[72,1],[74,1],
+               [76,1.5],[74,.5],[72,1],[71,1], [69,1],[72,1],[78,2], [79,3],[null,1], [null,4]]},
+    /* Ilha Três: as janelas fechando quando o ronco passa — clarinete
+       sobre um pulso, Lá menor */
+    ilha_tres:{bpm:96, compasso:4, timbre:'clarinete', ritmo:'pulso', menor:true,
+      acordes:[[45,48,52],[45,48,52],[41,45,48],[43,47,50],[45,48,52],[41,45,48],[44,47,52],[44,47,52],
+               [50,53,57],[45,48,52],[41,45,48],[44,47,52],[45,48,52],[41,45,48],[44,47,52],[45,48,52]],
+      melodia:[[69,1],[72,1],[76,2], [74,1],[72,1],[69,2], [72,1.5],[69,.5],[65,2], [67,1],[71,1],[74,2],
+               [76,1.5],[74,.5],[72,1],[69,1], [69,1],[72,1],[77,2], [76,2],[74,1],[71,1], [68,3],[null,1],
+               [74,1],[77,1],[81,2], [79,1],[76,1],[72,2], [77,1.5],[76,.5],[72,1],[69,1], [71,1],[68,1],[64,2],
+               [69,1],[72,1],[76,1],[81,1], [77,2],[72,2], [71,1.5],[74,.5],[68,2], [69,3],[null,1]]},
+    /* Ilha Quatro: o gelo de verão — sino em valsa lenta, Mi maior */
+    ilha_quatro:{bpm:72, compasso:3, timbre:'sino', ritmo:'valsa',
+      acordes:[[52,56,59],[52,56,59],[45,49,52],[52,56,59],[49,52,56],[45,49,52],[47,51,54],[47,51,54],
+               [45,49,52],[52,56,59],[49,52,56],[44,47,51],[45,49,52],[47,51,54],[52,56,59],[52,56,59]],
+      melodia:[[80,2],[76,1], [71,1],[76,1],[80,1], [81,2],[80,.5],[78,.5], [76,3],
+               [73,1],[76,1],[80,1], [81,1.5],[80,.5],[76,1], [78,2],[75,1], [71,3],
+               [73,1],[76,1],[81,1], [80,2],[76,1], [76,1],[73,1],[68,1], [71,3],
+               [69,1],[73,1],[76,1], [78,1.5],[75,.5],[71,1], [76,3], [null,3]]},
+    /* Ilha Cinco: a campina e o relógio que adianta — flauta em arpejo, Fá maior */
+    ilha_cinco:{bpm:88, compasso:4, timbre:'flauta', ritmo:'arpejo',
+      acordes:[[53,57,60],[48,52,55],[50,53,57],[46,50,53],[53,57,60],[48,52,55],[46,50,53],[48,52,55],
+               [50,53,57],[45,48,52],[46,50,53],[53,57,60],[43,46,50],[48,52,55],[53,57,60],[53,57,60]],
+      melodia:[[72,1],[69,1],[65,1],[69,1], [67,2],[72,2], [74,1.5],[72,.5],[69,2], [70,1],[74,1],[77,2],
+               [77,1.5],[76,.5],[72,2], [76,1],[72,1],[67,2], [70,1],[74,1],[72,1],[70,1], [72,3],[null,1],
+               [69,1],[74,1],[77,2], [76,1.5],[72,.5],[69,2], [70,1],[74,1],[77,1],[74,1], [72,4],
+               [70,1],[67,1],[74,2], [72,1],[76,1],[79,2], [77,3],[null,1], [null,4]]},
+    /* Ilha Seis: as ruínas — trompa em arpejo, Ré dórico */
+    ilha_seis:{bpm:80, compasso:4, timbre:'trompa', ritmo:'arpejo',
+      acordes:[[50,53,57],[43,47,50],[50,53,57],[43,47,50],[48,52,55],[45,48,52],[50,53,57],[50,53,57],
+               [41,45,48],[48,52,55],[43,47,50],[50,53,57],[45,48,52],[43,47,50],[50,53,57],[50,53,57]],
+      melodia:[[62,1],[65,1],[69,2], [71,2],[67,2], [69,1],[72,1],[74,2], [71,1.5],[69,.5],[67,2],
+               [67,1],[72,1],[76,2], [74,1],[72,1],[69,2], [65,1.5],[67,.5],[69,2], [62,3],[null,1],
+               [65,1],[69,1],[72,2], [76,1.5],[74,.5],[72,2], [71,1],[74,1],[79,2], [77,2],[74,2],
+               [72,1],[69,1],[76,2], [74,1],[71,1],[67,2], [69,1.5],[65,.5],[62,2], [null,4]]},
+    /* Ilha Sete: a arena de pedra da família que ganhava torneio — metais em marcha, Dó maior */
+    ilha_sete:{bpm:96, compasso:4, timbre:'metais', ritmo:'marcha',
+      acordes:[[48,52,55],[48,52,55],[53,57,60],[48,52,55],[45,48,52],[52,55,59],[53,57,60],[43,47,50],
+               [48,52,55],[53,57,60],[50,54,57,60],[43,47,50],[53,57,60],[43,47,50],[48,52,55],[48,52,55]],
+      melodia:[[67,1],[72,1],[76,1.5],[72,.5], [79,2],[76,2], [77,1],[76,1],[74,1],[72,1], [76,3],[null,1],
+               [72,1],[76,1],[81,2], [79,1.5],[76,.5],[71,2], [72,1],[77,1],[81,1],[77,1], [79,3],[null,1],
+               [79,1],[84,1],[79,1],[76,1], [77,1.5],[76,.5],[74,2], [78,1],[74,1],[72,1],[69,1], [71,2],[74,2],
+               [77,1],[81,1],[84,2], [83,1.5],[81,.5],[79,2], [84,3],[null,1], [null,4]]},
   },
   tocarCalma(ctx, vol){
     const c = this.ctx(); if (!c) return;

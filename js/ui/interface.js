@@ -4034,7 +4034,7 @@ const UI = {
       <div class="c16-cab${t.rodada === R - 1 && !acabou ? ' agora' : ''}">${svgIcone('torneio')}${this.esc(RODADAS[R - 1].rodada)}</div>
       <div class="c16-jogos">${jogo(R - 1, 0, titulo(true), titulo(false))}</div>
     </div>`;
-    return `<div class="chave16${t.qual === 'conferencia' ? ' conf' : ''}" role="group" aria-label="${this.esc('Chaveamento: ' + chaveDe(t).nome)}">${metade(0)}${final}${metade(1)}</div>`;
+    return `<div class="chave16${t.qual === 'conferencia' ? ' conf' : t.qual === 'sevii' ? ' ilhas' : ''}" role="group" aria-label="${this.esc('Chaveamento: ' + chaveDe(t).nome)}">${metade(0)}${final}${metade(1)}</div>`;
   },
 
   /* A tela de quem está na chave: a sua luta (rosto, de onde vem, as
@@ -4058,9 +4058,9 @@ const UI = {
       <div class="cap-cabecalho">
         <div class="num">${this.esc(o.num)}</div>
         <div class="tit">${this.esc(pr.rodada)}</div>
-        <div class="loc">Arena do Planalto Indigo</div>
+        <div class="loc">${this.esc(o.loc || 'Arena do Planalto Indigo')}</div>
       </div>
-      <div class="torneio-vez${t.qual === 'conferencia' ? ' conf' : ''}">
+      <div class="torneio-vez${t.qual === 'conferencia' ? ' conf' : t.qual === 'sevii' ? ' ilhas' : ''}">
         <div class="chave-rosto">${rosto ? `<img src="${rosto}" alt="" onerror="this.remove()">` : ''}</div>
         <div class="tv-corpo">
           <div class="chave-cab"><span class="chave-nome-rodada">Sua luta · ${this.esc(pr.rodada)}</span><span class="chave-selo">Agora</span></div>
@@ -4071,7 +4071,7 @@ const UI = {
         <div class="chave-premio"><span class="chave-din">${svgIcone('moeda')}${fmtDin(pr.dinheiro)} ₽</span>${itens}</div>
       </div>
       ${this.chaveDoTorneio(t)}
-      <div class="tv-escada${t.qual === 'conferencia' ? ' conf' : ''}" aria-label="Prêmio de cada rodada">${escada}</div>
+      <div class="tv-escada${t.qual === 'conferencia' ? ' conf' : t.qual === 'sevii' ? ' ilhas' : ''}" aria-label="Prêmio de cada rodada">${escada}</div>
       ${this.acoesDoChaveamento(adv.nome, o.lutar, o.curar, o.desistir, o.rotDesistir)}
     </div>`);
     this.rolarTopo();
@@ -4128,12 +4128,12 @@ const UI = {
        Conferência) só tem a porta da frente: a ala não deixa sair até
        vencer os quatro ou perder pra um, e o chaveamento tem a
        desistência dele */
-    const meio = !!(o.continuar || o.torneio || o.conferencia);
+    const meio = !!(o.continuar || o.torneio || o.conferencia || o.copa);
     this.add(`<div class="painel">
       <div class="cap-cabecalho">
         <div class="num">${this.esc(o.sub||'Liga Pokémon')}</div>
         <div class="tit">${this.esc(o.titulo)}</div>
-        <div class="loc">Planalto Indigo</div>
+        <div class="loc">${this.esc(o.loc || 'Planalto Indigo')}</div>
       </div>
       <div class="narrativa">${o.quem ? this.narrarMonologo((o.falas||[]).filter(Boolean), o.quem) : (o.falas||[]).filter(Boolean).map(t=>`<p>${this.esc(txt(t))}</p>`).join('')}</div>
       ${o.chave || ''}
@@ -4142,7 +4142,9 @@ const UI = {
         ${o.continuar ? `<button class="escolha" onclick="Jogo.continuarElite()">Abrir a próxima porta</button>` : ''}
         ${o.torneio ? `<button class="escolha" onclick="UI.telaTorneio()">Voltar ao chaveamento</button>` : ''}
         ${o.conferencia ? `<button class="escolha" onclick="UI.telaConferencia()">Voltar ao chaveamento</button>` : ''}
-        ${meio ? '' : `
+        ${o.copa ? `<button class="escolha" onclick="CopaSevii.tela()">Voltar ao chaveamento</button>` : ''}
+        ${!meio && o.botoes ? o.botoes.map(b => `<button class="escolha${b.classe ? ' ' + b.classe : ''}" onclick="${b.acao}">${this.esc(txt(b.texto))}</button>`).join('') : ''}
+        ${meio || o.botoes ? '' : `
         ${!o.venceu && Exploracao.temCentro(Mundo.atual()) ? `<button class="escolha" onclick="Jogo.hubCentro()">Passar no Centro</button>` : ''}
         <button class="escolha" onclick="UI.telaLiga()">Voltar à Liga</button>
         <button class="escolha" onclick="Jogo.voltarDosGinasios()">Continuar a jornada</button>`}

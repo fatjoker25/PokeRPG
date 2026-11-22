@@ -291,8 +291,8 @@ Object.assign(CONVERSAS, {
     [fala('a menina da barraca de pedra', 'A Pedra do Trovão é de Ilha Seis. Ninguém sabe disso. A minha avó sabe.')]
   ],
   ilha_tres:[
-    {cond:d=>Sevii.fase(d) < 3, texto:[fala('a moça da loja', 'Fala baixo. Se o ronco passar, a gente entra.', 'baixo')]},
-    {cond:d=>Sevii.fase(d) >= 3, texto:[fala('a moça da loja', 'Faz uma semana que ninguém fecha janela quando passa moto. É estranho. É bom.')]},
+    {cond:d=>Sevii.fase(d) < 4, texto:[fala('a moça da loja', 'Fala baixo. Se o ronco passar, a gente entra.', 'baixo')]},
+    {cond:d=>Sevii.fase(d) >= 4, texto:[fala('a moça da loja', 'Faz uma semana que ninguém fecha janela quando passa moto. É estranho. É bom.')]},
     ['Um Snubbull dorme na porta da padaria com cara de quem está de guarda. Ele está de guarda.'],
     [fala('o velho do banco', 'Essa ilha tinha festa de pipa todo inverno. Hoppip amarrado em linha, o céu cheio. Faz tempo que não tem.')]
   ],
@@ -304,7 +304,7 @@ Object.assign(CONVERSAS, {
   ilha_cinco:[
     [fala('o relojoeiro', 'O relógio da torre adianta quatro minutos. Eu podia acertar. A ilha inteira já se acostumou a chegar quatro minutos antes.')],
     ['Um Hoothoot dorme no ponteiro das horas do relógio da torre e roda junto com ele, sem acordar.'],
-    {cond:d=>Sevii.fase(d) < 3, texto:[fala('a mulher do varal', 'De noite tem barco sem luz encostando lá no armazém. A Guarda sabe. A Guarda é um homem só.', 'baixo')]}
+    {cond:d=>Sevii.fase(d) < 5, texto:[fala('a mulher do varal', 'De noite tem barco sem luz encostando lá no armazém. A Guarda sabe. A Guarda é um homem só.', 'baixo')]}
   ],
   ilha_seis:[
     [fala('o historiador', 'As ruínas do vale têm mais de mil anos. As casas da vila têm cento e poucos. Adivinha qual das duas eu estudo.')],

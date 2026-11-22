@@ -556,6 +556,8 @@ const Mundo = {
   conhecido(id){
     const v = LOCAIS[id];
     if (!v) return false;
+    /* as Ilhas Sevii não existem pra quem não tem a passagem (sevii.js) */
+    if (v.regiao === 'sevii') return this.visitado(id) || (typeof Sevii !== 'undefined' && Sevii.conhecido(id));
     if (!v.oculto || this.descobriu('local_' + id) || this.visitado(id)) return true;
     const prox = typeof Historia !== 'undefined' && Historia.proximoDestino ? Historia.proximoDestino() : null;
     return !!(prox && prox.local === id);
@@ -761,6 +763,8 @@ function afazeresDoLocal(){
   if (typeof Titulares !== 'undefined') Titulares.afazeres(id).forEach(x => lista.push(x));
   /* a sua porta da ala, no Planalto (defesa.js) */
   if (typeof Defesa !== 'undefined') Defesa.afazeres(id).forEach(x => lista.push(x));
+  /* as Ilhas Sevii: a arena da Ilha Sete, a Noa no cais, quem veio pro torneio (sevii.js) */
+  if (typeof Sevii !== 'undefined') Sevii.afazeres(id).forEach(x => lista.push(x));
   /* o Professor, em Pallet, que atualiza a Pokédex pra Nacional (dex-nacional.js) */
   if (typeof DexNacional !== 'undefined') DexNacional.afazeres(id).forEach(x => lista.push(x));
   /* quem mandou recado de que separou alguma coisa e está nesta cidade (recados.js) */
@@ -788,7 +792,9 @@ const LOCAL_DO_CAPITULO = {
   14:'cinnabar', 15:'rota16',   16:'fuchsia',  17:'viridian',
   18:'saffron',  19:'rota21',   20:'saffron',
   21:null,       22:'planalto', 23:'viridian', 24:'rota23', 25:'saffron',
-  26:'planalto', 27:'norte',    28:'norte'
+  26:'planalto', 27:'norte',    28:'norte',
+  /* o pós-jogo das Ilhas Sevii (sevii.js) */
+  33:'pallet',   34:'vermilion', 35:'ilha_um',  36:'ilha_tres', 37:'ilha_cinco', 38:'ilha_sete'
 };
 
 function localDoCapitulo(n){

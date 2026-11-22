@@ -74,6 +74,9 @@ function caminhoNaJanela(de, ate, h){
 /* "Capítulo 12" ou, no desvio, o nome do caminho e a parte dele */
 function numeroDoCapitulo(cap){
   if (!cap) return '';
+  /* o pós-jogo conta à parte: "Ilhas Sevii · III" */
+  if (cap.posJogo && typeof SEVII_CAPS !== 'undefined')
+    return `Ilhas Sevii · ${['I', 'II', 'III', 'IV', 'V', 'VI'][SEVII_CAPS.indexOf(cap.num)] || ''}`.trim();
   if (!cap.caminho) return `Capítulo ${cap.num}`;
   const cm = defCaminho(cap.caminho);
   const parte = cm ? cm.caps.indexOf(cap.num) : -1;

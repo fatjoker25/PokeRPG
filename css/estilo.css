@@ -5652,6 +5652,8 @@ h3.sec-conf{--sec:#7fb2ff}
 .painel:has(> .cap-cabecalho) > .chave16{max-width:66rem}
 /* a Conferência acende na cor dela, a da festa */
 .chave16.conf,.torneio-vez.conf{--chave:#7fb2ff}
+/* o Torneio das Ilhas acende no verde-mar das ilhas */
+.chave16.ilhas,.torneio-vez.ilhas{--chave:#3ccfb4}
 .c16-lado{display:grid;grid-template-columns:repeat(3, minmax(0, 1fr));column-gap:var(--c16-gap)}
 .c16-lado.b{direction:rtl}
 .c16-col,.c16-final{display:flex;flex-direction:column;min-width:0}
@@ -5764,6 +5766,7 @@ h3.sec-conf{--sec:#7fb2ff}
 /* a escada dos prêmios, rodada por rodada */
 .tv-escada{--chave:#ff8a3d;display:grid;grid-template-columns:repeat(4, minmax(0, 1fr));gap:8px;margin:0 0 18px}
 .tv-escada.conf{--chave:#7fb2ff}
+.tv-escada.ilhas{--chave:#3ccfb4}
 .tv-degrau{
   display:flex;flex-direction:column;align-items:center;gap:2px;padding:7px 6px;border-radius:12px;text-align:center;
   background:rgba(255,255,255,.05);border:1px solid color-mix(in srgb, var(--borda-forte) 50%, transparent);

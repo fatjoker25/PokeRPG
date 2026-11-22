@@ -89,6 +89,13 @@ const Jogo = {
     if (!d) return;
     if (c) d.conferenciaAberta = conferenciaDeAntes(c); else delete d.conferenciaAberta;
   },
+  /* a chave da Copa das Ilhas (sevii-torneio.js), também no save (d.copaAberta) */
+  get copaAtual(){ const d = Estado.dados; return (d && d.copaAberta) || null; },
+  set copaAtual(c){
+    const d = Estado.dados;
+    if (!d) return;
+    if (c) d.copaAberta = c; else delete d.copaAberta;
+  },
   depoisDaEstrada: null,
 
   /* ---------- início ---------- */
@@ -124,6 +131,12 @@ const Jogo = {
     if (this.conferenciaAtual){
       if (Mundo.id() === 'planalto') return UI.telaConferencia();
       this.conferenciaAtual = null;
+    }
+    /* a Copa da história acabou e o recarregar caiu entre o resultado e a cena */
+    if (Estado.dados.copaVolta && typeof CopaSevii !== 'undefined') return CopaSevii.voltarPraHistoria();
+    if (this.copaAtual && typeof CopaSevii !== 'undefined'){
+      if (Mundo.id() === 'ilha_sete') return CopaSevii.tela();
+      this.copaAtual = null;
     }
     if (Estado.dados.modo === 'mundo' || !Estado.dados.cena){
       return Exploracao.tela([{tipo:'info', texto:'Você retoma o caminho de onde parou.'}]);
@@ -226,6 +239,12 @@ const Jogo = {
 
     if (e.trocaNPC) return this.trocaComNPC(e);
     if (e.vendaTime) return this.venderDoTime(e);
+    /* a Copa das Ilhas tem tela própria: a cena entrega a vez pra chave,
+       e a chave devolve pra cena quando a tarde acaba (sevii-torneio.js) */
+    if (e.copa && typeof CopaSevii !== 'undefined'){
+      Historia.marcarEscolha(Estado.dados.cena, i);
+      return CopaSevii.daHistoria(e.copa);
+    }
 
     /* a opção conta como feita, e o efeito dela também só vale uma vez */
     const idCena = Estado.dados.cena;
@@ -398,6 +417,15 @@ const Jogo = {
       const time = timeDaElite(daElite);
       inimigo = time[0];
       timeInimigo = time.slice(1);
+    } else if (b.sevii && typeof Sevii !== 'undefined'){
+      /* gente das ilhas (sevii.js): a ficha do elenco ou a gangue, no
+         nível do seu time; `mais` sobe ou desce o nível */
+      const quem = txt(b.sevii);
+      const time = Sevii.timeDaLuta(quem, Sevii.nivel(Estado.dados, txt(b.mais) || 0));
+      time.forEach(x => { x.nomeAnunciado = true; });
+      inimigo = time[0];
+      timeInimigo = time.slice(1);
+      if (!b.treinador) b.treinador = Sevii.nomeDaLuta(quem);
     } else if (b.comissao){
       // time de unidades fabricadas da Comissão
       const nvC = txt(b.nivel) || Historia.capAtual.nivelArea;
@@ -580,7 +608,8 @@ const Jogo = {
       if (c && fim.resultado !== 'gameover') L('citacao', c);
       if (venceu) dinheiro(Rede.premio());
     } else if (this.veteranoAtual){
-      const a = this.veteranoAtual, v = a.tipo === 'conferencia' ? daConferencia(a.id) : veterano(a.id);
+      const a = this.veteranoAtual;
+      const v = a.tipo === 'conferencia' ? daConferencia(a.id) : a.tipo === 'copa' ? CopaSevii.inscrito(a.id) : veterano(a.id);
       if (a.tipo === 'desafio'){
         const c = Veteranos.citacao(venceu);
         if (c && fim.resultado !== 'gameover') L('citacao', c);
@@ -588,6 +617,9 @@ const Jogo = {
       } else if (a.tipo === 'conferencia' && fim.resultado !== 'gameover'){
         L('citacao', `${v.nome}: ${txt(venceu ? v.perde : v.vence)}`);
         dinheiro(Conferencia.premio(venceu));
+      } else if (a.tipo === 'copa' && v && fim.resultado !== 'gameover'){
+        L('citacao', `${v.nome}: ${txt(venceu ? v.perde : v.vence)}`);
+        dinheiro(CopaSevii.premio(venceu));
       }
     } else if (this.estradaAtual){
       const c = Estrada.citacao(venceu);
@@ -690,7 +722,10 @@ const Jogo = {
     if (this.defesaAtual)   return Defesa.resultado(fim);
     if (this.patrulhaAtual) return Patrulha.resultado(fim);
     if (this.redeAtual)     return Rede.resultado(fim);
-    if (this.veteranoAtual) return this.veteranoAtual.tipo === 'conferencia' ? Conferencia.resultado(fim) : Veteranos.resultado(fim);
+    if (this.veteranoAtual){
+      if (this.veteranoAtual.tipo === 'copa') return CopaSevii.resultado(fim);
+      return this.veteranoAtual.tipo === 'conferencia' ? Conferencia.resultado(fim) : Veteranos.resultado(fim);
+    }
     if (this.estradaAtual)  return Estrada.resultado(fim);
     if (this.revancheAtual) return this.resultadoRevanche(fim);
     if (this.ginasioAtual)  return this.resultadoGinasio(fim);
@@ -867,7 +902,10 @@ const Jogo = {
     if (caixa) abertura.push(caixa);
     /* quem é do seu lado te acha na virada (js/story/linhas.js) */
     /* o capítulo de caminho já é a cena da sua linha: não chama outra por cima */
-    if (typeof Linhas !== 'undefined' && !(Historia.capAtual && Historia.capAtual.caminho) && Linhas.talvez(cena, abertura)) return;
+    /* e o das ilhas também não: a história de Kanto já fechou cada linha
+       no epílogo (sevii.js) */
+    if (typeof Linhas !== 'undefined' && !(Historia.capAtual && (Historia.capAtual.caminho || Historia.capAtual.posJogo))
+        && Linhas.talvez(cena, abertura)) return;
     /* começar o capítulo também rola o PokéNav, e telefone toca na hora
        errada, que é quando telefone toca */
     this.talvezToque();
