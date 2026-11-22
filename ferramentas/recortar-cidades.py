@@ -15,6 +15,7 @@ Uso (os arquivos ficam numa pasta à parte, com o nome da cidade):
     curl -o pallet.png https://www.pokewiki.de/images/d/d7/HGSS_Alabastia.png
     ... (um por cidade, endereços em ORIGEM)
     python3 -I ferramentas/recortar-cidades.py pasta
+    python3 -I ferramentas/recortar-cidades.py pasta ilha_um ilha_dois   (só essas)
 
 Sai em sprites_nds/arenas/<cidade>.png, 768x512, com 256 cores (a conta
 de cor do recorte não muda nada à vista e o arquivo cai pela metade: o
@@ -39,6 +40,14 @@ ORIGEM = {
     'saffron':  'https://www.pokewiki.de/images/5/57/HGSS_Saffronia_City.png',
     'fuchsia':  'https://www.pokewiki.de/images/2/2b/HGSS_Fuchsania_City.png',
     'cinnabar': 'https://www.serebii.net/pokearth/maps/kanto-frlg/38.png',
+    # as Ilhas Sevii só existem em FireRed/LeafGreen: o mapa é o do Pokéarth
+    'ilha_um':     'https://www.serebii.net/pokearth/maps/kanto-frlg/57.png',
+    'ilha_dois':   'https://www.serebii.net/pokearth/maps/kanto-frlg/61.png',
+    'ilha_tres':   'https://www.serebii.net/pokearth/maps/kanto-frlg/63.png',
+    'ilha_quatro': 'https://www.serebii.net/pokearth/maps/kanto-frlg/68.png',
+    'ilha_cinco':  'https://www.serebii.net/pokearth/maps/kanto-frlg/70.png',
+    'ilha_seis':   'https://www.serebii.net/pokearth/maps/kanto-frlg/77.png',
+    'ilha_sete':   'https://www.serebii.net/pokearth/maps/kanto-frlg/85.png',
 }
 
 # x, y, largura, altura (no mapa) e quantas vezes dobra. O marco de cada
@@ -57,16 +66,26 @@ RECORTE = {
     'saffron':  (166, 80, 768, 512, 1),
     'fuchsia':  (60, 110, 768, 512, 1),
     'cinnabar': (0, 0, 384, 256, 2),
+    # as ilhas: o Centro, as casas e o cais de cada uma
+    'ilha_um':     (0, 64, 384, 256, 2),
+    'ilha_dois':   (140, 30, 384, 256, 2),
+    'ilha_tres':   (0, 24, 384, 256, 2),
+    'ilha_quatro': (160, 120, 384, 256, 2),
+    'ilha_cinco':  (0, 40, 384, 256, 2),
+    'ilha_seis':   (0, 96, 384, 256, 2),
+    'ilha_sete':   (0, 40, 384, 256, 2),
 }
 
 SAIDA = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'sprites_nds', 'arenas')
 
 
-def recortar(pasta):
-    faltam = [c for c in RECORTE if not os.path.isfile(os.path.join(pasta, c + '.png'))]
+def recortar(pasta, so=None):
+    quais = [c for c in RECORTE if not so or c in so]
+    faltam = [c for c in quais if not os.path.isfile(os.path.join(pasta, c + '.png'))]
     if faltam:
         sys.exit('faltam na pasta: ' + ', '.join(f + '.png' for f in faltam))
-    for cidade, (x, y, w, h, k) in RECORTE.items():
+    for cidade in quais:
+        x, y, w, h, k = RECORTE[cidade]
         im = Image.open(os.path.join(pasta, cidade + '.png')).convert('RGB')
         if x + w > im.size[0] or y + h > im.size[1]:
             sys.exit(f'{cidade}: o recorte passa da borda do mapa ({im.size[0]}x{im.size[1]})')
@@ -80,6 +99,7 @@ def recortar(pasta):
 
 
 if __name__ == '__main__':
-    if len(sys.argv) != 2:
+    if len(sys.argv) < 2:
         sys.exit(__doc__)
-    recortar(sys.argv[1])
+    # python3 -I ferramentas/recortar-cidades.py pasta [cidade …]: só as que forem ditas
+    recortar(sys.argv[1], set(sys.argv[2:]))

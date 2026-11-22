@@ -261,6 +261,9 @@ const APRENDE_RAW = {
 251:'1 Leech Seed,1 Confusion,1 Recover,10 Safeguard,20 Ancient Power,30 Psychic,50 Solar Beam'
 };
 
+/* Hoenn (hoenn.js): o que cada uma aprende por nível na 3ª geração */
+if (typeof APRENDE_RAW_HOENN !== 'undefined') Object.assign(APRENDE_RAW, APRENDE_RAW_HOENN);
+
 /* ---- parse: 'nível Golpe' -> [[nível, 'Golpe'], …] ---- */
 const APRENDE = {};
 for (const [dex, str] of Object.entries(APRENDE_RAW)){

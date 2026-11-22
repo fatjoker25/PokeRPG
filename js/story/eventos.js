@@ -2744,12 +2744,16 @@ const Eventos = {
      Cidade puxa o banco da cidade; rota puxa o banco do ambiente. */
   banco(id){
     const L = LOCAIS[id] || {};
-    if (L.tipo === 'cidade') return (EVENTOS_CIDADE[id] || []).concat(EVENTOS_GERAIS);
+    /* as Ilhas Sevii (sevii-mundo.js) têm os eventos delas: o banco geral
+       e o da estrada falam de Kanto, e o encanto das ilhas (`sevii:true`)
+       não acontece em Kanto */
+    const sevii = typeof ehSevii === 'function' && ehSevii(id);
+    if (L.tipo === 'cidade') return (EVENTOS_CIDADE[id] || []).concat(sevii ? [] : EVENTOS_GERAIS);
     /* evento de campo só vai pra onde ele faz sentido: cercado de
        Miltank não existe dentro da Floresta de Viridian */
     const amb = L.ambiente || 'campo';
     const deCampo = amb === 'campo' ? [] : (EVENTOS_ROTA.campo || []).filter(ev => (ev.ambientes || ['campo']).includes(amb));
-    return (EVENTOS_ROTA[amb] || []).concat(deCampo);
+    return (EVENTOS_ROTA[amb] || []).concat(deCampo).filter(ev => !!ev.sevii === sevii);
   },
 
   disponiveis(id){

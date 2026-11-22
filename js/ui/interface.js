@@ -5857,6 +5857,7 @@ const UI = {
       ? `<div class="dex-faixas">
            <span><b>Kanto</b> ${DEX_KANTO_IDS.concat(pd.catalogados[151] || pd.vistos[151] ? [151] : []).filter(d => pd.catalogados[d]).length}/${DEX_KANTO_IDS.length + (pd.catalogados[151] || pd.vistos[151] ? 1 : 0)}</span>
            <span><b>Johto</b> ${DEX_NACIONAL_IDS.filter(d => d > 151 && pd.catalogados[d]).length}/${DEX_NACIONAL_IDS.filter(d => d > 151).length}</span>
+           ${idsDeHoenn().length ? `<span><b>Hoenn</b> ${idsDeHoenn().filter(d => pd.catalogados[d]).length}/${idsDeHoenn().length} vistos</span>` : ''}
          </div>`
       : '';
 

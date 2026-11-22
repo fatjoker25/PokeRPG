@@ -23,6 +23,10 @@ Cada variação diz o que muda em cada grupo:
 'cores' troca a escolha automática por uma lista (cabelo ruivo é da cor
 da sombra da pele, e o automático não separa).
 
+A base pode vir de fora do jogo: 'base/<arquivo>' é um desenho do acervo
+do Showdown guardado em ferramentas/rostos-base/ (fora do build), quando
+o desenho não é de ninguém no jogo — o elenco das Ilhas Sevii.
+
 Uso: python3 ferramentas/variar-rostos.py           (gera todos)
      python3 ferramentas/variar-rostos.py --folha f.png   (e a folha de conferir)
 Os arquivos saem em sprites_nds/npcs/trainers/<nome>.png; o mesmo pedido
@@ -151,6 +155,52 @@ VARIACOES = {
     'ewan':   dict(base='trainers/fisherman',                                                  # pescador de Fuchsia, colete amarelo
                    extra=[(['#686030', '#988858', '#d0b888'], dict(h=88, s=.26, l=(.20, .56))),
                           (['#385850', '#589088', '#78c0a8'], dict(h=46, s=.72, l=(.36, .70)))]),
+    # --- o elenco das Ilhas Sevii (js/story/sevii-elenco.js): desenho do acervo
+    #     que ninguém no jogo usa, com a cor que a ficha de cada um pede
+    'sevii_soren':   dict(base='base/dragontamer-gen3',      # cabelo azul-escuro, roupa vinho, o dourado do colarinho
+                          cabelo=dict(cores=['#87888f'], h=222, s=.45, l=(.26, .26)),
+                          extra=[(['#7830a8', '#a038f0'], dict(h=350, s=.60, l=(.28, .48))),
+                                 (['#c44647', '#f46057'], dict(h=42, s=.75, l=(.46, .62)))]),
+    'sevii_gideon':  dict(base='base/hiker-gen6',            # barba e cabelo brancos, colete azul de marinheiro
+                          extra=[(['#503818', '#986820', '#e0a850'], dict(h=40, s=.05, l=(.52, .92))),
+                                 (['#c03028', '#f85040'], dict(h=212, s=.48, l=(.26, .46)))]),
+    'sevii_etta':    dict(base='base/artist-gen9'),          # como o desenho: a tinta verde da Apricorn na mão
+    'sevii_ziggy':   dict(base='base/rocker-gen3',           # topete azul elétrico, jaqueta vermelha
+                          cabelo=dict(cores=['#b8d0f8', '#d8e8f0', '#e8f0f0'], h=212, s=.85, l=(.48, .82)),
+                          extra=[(['#884030', '#786050'], dict(h=356, s=.62, l=(.30, .42)))]),
+    'sevii_saskia':  dict(base='base/battlegirl-gen6xy',     # cabelo castanho
+                          cabelo=dict(cores=['#5b624e', '#969f86', '#dbd6aa'], h=24, s=.45, l=(.18, .52))),
+    'sevii_florian': dict(base='base/pokemonbreeder-gen8',   # a roupa de trabalho verde
+                          extra=[(['#525d56', '#808e85', '#becec3'], dict(h=112, s=.30, l=(.26, .72)))]),
+    'sevii_zev':     dict(base='base/backpacker-gen8'),
+    'sevii_skye':    dict(base='base/picnicker-gen6',        # boné e roupa de trilha azul-céu
+                          extra=[(['#597b7b', '#5a7c7c', '#7ac1bc'], dict(h=200, s=.55, l=(.36, .72)))]),
+    'sevii_calla':   dict(base='base/furisodegirl-black',    # o vermelho do quimono vira laranja de brasa
+                          extra=[(['#612c34', '#6d2b25', '#793741', '#9f4855', '#c05048'], dict(h=20, s=.78, l=(.22, .58)))]),
+    'sevii_imogen':  dict(base='base/psychicf-gen4',         # cabelo preto
+                          cabelo=dict(cores=['#62836a'], h=230, s=.14, l=(.16, .16))),
+    'sevii_brody':   dict(base='base/janitor-gen9'),
+    'sevii_esme':    dict(base='base/idol',                  # o vestido de palco lilás
+                          extra=[(['#cd5a83', '#ee83ac'], dict(h=282, s=.45, l=(.46, .78)))]),
+    'sevii_oona':    dict(base='base/hexmaniac-gen6',        # o cabelo comprido, branco
+                          cabelo=dict(cores=['#482060', '#585986', '#7838b0', '#919bc7', '#a050d8'], h=230, s=.06, l=(.48, .94))),
+    'sevii_rhys':    dict(base='base/acetrainer-gen6xy',     # cabelo preto, o terno com o forro verde-água
+                          cabelo=dict(cores=['#62528b', '#967ec2', '#d1abde'], h=222, s=.12, l=(.12, .44)),
+                          extra=[(['#5e3962', '#9b639f', '#be9bc1'], dict(h=184, s=.34, l=(.20, .56)))]),
+    'sevii_noa':     dict(base='base/delinquentf2-gen9',     # o cabelo verde-mar
+                          cabelo=dict(cores=['#775b6e', '#c687b5', '#eacbc5'], h=166, s=.45, l=(.28, .78))),
+    'sevii_magnus':  dict(base='base/gentleman-gen3rs'),
+    'sevii_jory':    dict(base='base/punkguy-gen7',          # a faixa do cabelo laranja
+                          cabelo=dict(cores=['#186898', '#02adfe'], h=24, s=.85, l=(.36, .56))),
+    'sevii_kaspar':  dict(base='base/biker-gen4'),
+    'sevii_dekker':  dict(base='base/roughneck-gen4'),
+    'sevii_farol':   dict(base='base/biker-gen3'),
+    'sevii_mare':    dict(base='base/delinquent'),
+    'sevii_lund':    dict(base='base/policeman',             # a farda verde-escura da Guarda das Ilhas
+                          extra=[(['#202030', '#303040', '#384068', '#507080', '#7890a8'], dict(h=182, s=.34, l=(.12, .56))),
+                                 (['#1070b8'], dict(h=182, s=.55, l=(.34, .34)))]),
+    'sevii_penrose': dict(base='base/richboy-gen4',          # o cabelo grisalho
+                          cabelo=dict(cores=['#5a5283', '#8b73a4'], h=230, s=.05, l=(.40, .72))),
 }
 
 
@@ -244,8 +294,14 @@ def para_rgb(c):
     return tuple(int(c[i:i + 2], 16) for i in (1, 3, 5))
 
 
+def caminho_da_base(base):
+    if base.startswith('base/'):
+        return os.path.join(RAIZ, 'ferramentas', 'rostos-base', base[5:] + '.png')
+    return os.path.join(NPC, base + '.png')
+
+
 def variar(nome, v):
-    im = Image.open(os.path.join(NPC, v['base'] + '.png')).convert('RGBA')
+    im = Image.open(caminho_da_base(v['base'])).convert('RGBA')
     fica, cabelo, roupa = grupos(im)
     corte = corte_da_cabeca(im)
     # cada troca é uma camada; 'onde' prende a troca na cabeça ou no corpo,
@@ -286,7 +342,7 @@ def folha(saida):
     d = ImageDraw.Draw(out)
     for i, (base, n) in enumerate(pares):
         for j, cam in enumerate([base, 'trainers/' + n]):
-            im = Image.open(os.path.join(NPC, cam + '.png')).convert('RGBA')
+            im = Image.open(caminho_da_base(cam) if cam.startswith('base/') else os.path.join(NPC, cam + '.png')).convert('RGBA')
             im = im.resize((im.width * esc, im.height * esc), Image.NEAREST)
             out.paste(im, (i * (T * esc + 8), j * (T * esc + 8)), im)
         d.text((i * (T * esc + 8) + 4, 2 * (T * esc + 8) - 14), n, fill=(255, 230, 150))

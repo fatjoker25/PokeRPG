@@ -7,8 +7,9 @@ pequenos, as imagens é que pesam).
 
 Uso: python3 ferramentas/gerar-pokerole.py /caminho/Pokerole-Data/v3.0
 
-Só entra o que o jogo usa: as espécies 1 a 251 (forma normal, sem mega,
-alola ou galar) e os golpes que existem em js/data/golpes.js.
+Só entra o que o jogo usa: as espécies 1 a 386 (forma normal, sem mega,
+alola ou galar) e os golpes que existem em js/data/golpes.js. As de
+Hoenn (252 a 386) vêm no time de quem veio de lá (hoenn.js).
 """
 import json, os, re, sys
 
@@ -53,12 +54,12 @@ def especies():
     for arq in os.listdir(pasta):
         d = json.load(open(os.path.join(pasta, arq), encoding='utf-8'))
         n = d.get('Number', 0)
-        if not (1 <= n <= 251) or d.get('DexID') != '%04d' % n:
+        if not (1 <= n <= 386) or d.get('DexID') != '%04d' % n:
             continue
         saida[n] = [d['BaseHP'],
                     d['Strength'], d['Dexterity'], d['Vitality'], d['Special'], d['Insight'],
                     d['MaxStrength'], d['MaxDexterity'], d['MaxVitality'], d['MaxSpecial'], d['MaxInsight']]
-    faltam = [n for n in range(1, 252) if n not in saida]
+    faltam = [n for n in range(1, 387) if n not in saida]
     if faltam:
         sys.exit('espécies sem ficha: %s' % faltam)
     return saida

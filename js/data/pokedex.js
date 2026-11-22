@@ -272,9 +272,13 @@ const DEX_RAW_JOHTO = [
 [251,'Celebi',['Psíquico','Grama'],100,100,100,100,100,100,0,0]
 ];
 DEX_RAW_JOHTO.forEach(r => DEX_RAW.push(r));
+/* Hoenn (hoenn.js, gerado): só no time de quem veio de lá. O mato de
+   Kanto e o das Ilhas Sevii não sorteiam ninguém daqui (POOL_*), e a
+   Pokédex mostra quem você viu (idsDeHoenn). */
+if (typeof DEX_RAW_HOENN !== 'undefined') DEX_RAW_HOENN.forEach(r => DEX_RAW.push(r));
 
 /* Lendários (lista fechada do universo) */
-const LENDARIOS = [144,145,146,150,151,243,244,245,249,250,251];
+const LENDARIOS = [144,145,146,150,151,243,244,245,249,250,251,377,378,379,380,381,382,383,384,385,386];
 /* Quebram Poké Balls: Mewtwo e Ho-Oh */
 const QUEBRA_BOLA = [150,249,250,251];
 /* Grupos para consequências em cascata */
@@ -324,6 +328,8 @@ const PRE_EVO_EXTRA = {
 Object.values(DEX).forEach(p => { p.preEvo = 0; p.nivelMin = 1; });
 Object.values(DEX).forEach(p => { if (p.evo) DEX[p.evo].preEvo = p.dex; });
 Object.entries(PRE_EVO_EXTRA).forEach(([dex, anterior]) => { DEX[dex].preEvo = anterior; });
+if (typeof PRE_EVO_HOENN !== 'undefined')
+  Object.entries(PRE_EVO_HOENN).forEach(([dex, anterior]) => { if (DEX[dex]) DEX[dex].preEvo = anterior; });
 
 (function calcularPisos(){
   const piso = dex => {
@@ -363,7 +369,7 @@ const POOL_KANTO = Object.values(DEX)
   .map(p => p.dex);
 
 const POOL_JOHTO_SELVAGEM = Object.values(DEX)
-  .filter(p => !p.lendario && p.dex >= 152 && !BEBES_JOHTO.includes(p.dex) && p.dex !== 201)
+  .filter(p => !p.lendario && p.dex >= 152 && p.dex <= 251 && !BEBES_JOHTO.includes(p.dex) && p.dex !== 201)
   .map(p => p.dex);
 
 /* Compatibilidade: quem lê POOL_SELVAGEM direto continua vendo Kanto. */
@@ -396,7 +402,17 @@ function dexNacional(){
    disso, nem a casa vazia existe, que casa vazia já é notícia. */
 const DEX_KANTO_IDS = Object.values(DEX).filter(p => p.dex <= 150).map(p => p.dex).sort((a,b) => a-b);
 const DEX_KANTO_SO_REGISTRADO = [151, 243, 244, 245, 250];
-const DEX_NACIONAL_IDS = Object.values(DEX).map(p => p.dex).sort((a,b) => a-b);
+const DEX_NACIONAL_IDS = Object.values(DEX).filter(p => p.dex <= 251).map(p => p.dex).sort((a,b) => a-b);
+/* Hoenn entra na Pokédex Nacional pela casa de quem você viu: ninguém
+   de lá anda solto aqui, e a lista não mostra casa vazia de região
+   que você nunca pisou */
+const DEX_HOENN_IDS = Object.values(DEX).filter(p => p.dex >= 252 && p.dex <= 386).map(p => p.dex).sort((a,b) => a-b);
+function idsDeHoenn(){
+  let pd = null;
+  try { pd = Estado.pdex(); } catch(e){}
+  if (!pd) return [];
+  return DEX_HOENN_IDS.filter(d => (pd.catalogados || {})[d] || (pd.vistos || {})[d]);
+}
 
 function idsKanto(){
   let pd = null;
@@ -404,7 +420,7 @@ function idsKanto(){
   const tem = d => !!(pd && ((pd.catalogados || {})[d] || (pd.vistos || {})[d]));
   return DEX_KANTO_IDS.concat(DEX_KANTO_SO_REGISTRADO.filter(tem)).sort((a,b) => a-b);
 }
-function registroAtivo(){ return dexNacional() ? DEX_NACIONAL_IDS : idsKanto(); }
+function registroAtivo(){ return dexNacional() ? DEX_NACIONAL_IDS.concat(idsDeHoenn()) : idsKanto(); }
 
 /* Viés de ambiente — aumenta a chance, mas QUALQUER um pode aparecer */
 const VIES_AMBIENTE = {
