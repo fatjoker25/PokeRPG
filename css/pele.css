@@ -14,8 +14,8 @@
    colorido de antes.
 
    O que continua valendo do CLAUDE.md: a letra do HUD (Nunito) na
-   interface, a de título (Lilita One) só em título, e a fonte do
-   sistema no que é de ler; nada de `filter` direto em sprite;
+   interface, as de pixel (Pixelify Sans e Press Start 2P) só em
+   título, e a fonte do sistema no que é de ler; nada de `filter` direto em sprite;
    animação de entrada com fill backwards; o zoom da letra de ler não
    aninha; e tempo de luta passa por --vel-luta.
    ============================================================ */
@@ -819,17 +819,17 @@ body.com-cenario .topo{
 
 /* ============================================================
    A INSCRIÇÃO
-   A letra de título (Lilita One) fica só no título da ficha
-   ("Inscrição de treinador") e no botão principal: os títulos dos
-   passos, o número de cada etapa, o valor do status e os outros
-   botões do pé são letra do HUD; o botão continua com o corpo de
-   botão da abertura (a pílula com a espessura embaixo).
+   A letra de pixel fica só no título da ficha ("Inscrição de
+   treinador", a dos 8 bits) e no botão principal (a de título): os
+   títulos dos passos, o número de cada etapa, o valor do status e os
+   outros botões do pé são letra do HUD; o botão continua com o corpo
+   de botão da abertura (a borda de 3 px e a espessura embaixo).
    ============================================================ */
 .cr-h{font-family:var(--letra-hud);font-weight:700;font-size:19px;letter-spacing:.005em;line-height:1.3}
 .cr-num{font-family:var(--letra-hud);font-weight:700;font-size:12.5px}
 .cr-valor{font-family:var(--letra-hud);font-weight:700;font-size:13.5px}
 .criacao .tt-btn{font-family:var(--letra-hud);font-weight:800;font-size:15px;letter-spacing:.02em;line-height:1.2;padding:11px 18px 10px}
-.criacao .tt-btn.tt-principal{font-family:var(--letra-titulo);font-weight:400;font-size:18px;letter-spacing:.03em;padding:12px 22px 11px}
+.criacao .tt-btn.tt-principal{font-family:var(--letra-titulo);font-weight:700;font-size:18px;letter-spacing:.03em;padding:12px 22px 11px}
 @media (max-width:480px){
   .cr-h{font-size:17px}
   .criacao .tt-btn{font-size:14px;padding:10px 12px 9px}

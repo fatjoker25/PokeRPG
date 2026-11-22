@@ -40,13 +40,12 @@ if os.path.isdir(SPRITES_DIR):
                     animadas[caminho] = 'data:image/gif;base64,' + base64.b64encode(open(caminho, 'rb').read()).decode('ascii')
             continue
         for a in sorted(arqs):
-            # png de sprite e efeito; jpg só nos fundos de golpe do Showdown;
-            # webp só nos renders da vitrine da abertura (sprites_nds/abertura/)
-            if not a.endswith(('.png', '.jpg', '.webp')):
+            # png de sprite e efeito; jpg só nos fundos de golpe do Showdown
+            if not a.endswith(('.png', '.jpg')):
                 continue
             caminho = os.path.join(raiz, a).replace(os.sep, '/')
             dados = base64.b64encode(open(caminho, 'rb').read()).decode('ascii')
-            tipo = 'image/jpeg' if a.endswith('.jpg') else 'image/webp' if a.endswith('.webp') else 'image/png'
+            tipo = 'image/jpeg' if a.endswith('.jpg') else 'image/png'
             sprites[caminho] = 'data:' + tipo + ';base64,' + dados
     # os gritos vão no mesmo dicionário: o jogo procura qualquer
     # arquivo pelo caminho relativo, seja imagem ou som
@@ -123,6 +122,30 @@ for caminho in paletas:
 if paletas:
     print(f'shiny animado pela paleta: {len(paletas)} GIFs montados no jogo, {len(animadas)} GIFs inteiros')
 
+# ---- a abertura do artefato anima ----
+# O artefato não leva as GIFs do jogo, mas a abertura é feita delas: a
+# vitrine e o desfile de quem ainda não tem jornada (as duas listas de
+# js/data/abertura.js). Essas vão à parte, no caminho da abertura
+# (sprites_nds/abertura/ani/<dex>.gif), e só no artefato: no arquivo
+# único a GIF de sempre já está embutida, e o jogo procura uma e depois
+# a outra (UI.arteDaAbertura). No caminho da abertura elas não acendem
+# a GIF do Pikachu na luta do artefato, onde todo o resto é parado.
+def lista_da_abertura():
+    txt = open('js/data/abertura.js', encoding='utf-8').read()
+    nums = set()
+    for nome in ('VITRINE_DA_ABERTURA', 'DESFILE_DA_ABERTURA'):
+        m = re.search(nome + r'\s*=\s*\[([^\]]*)\]', txt)
+        if m:
+            nums.update(int(x) for x in re.findall(r'\d+', m.group(1)))
+    return sorted(nums)
+da_abertura = {}
+for dex in lista_da_abertura():
+    k = f'{SPRITES_DIR}/battle/front_ani/{dex}.gif'
+    if k in animadas:
+        da_abertura[f'{SPRITES_DIR}/abertura/ani/{dex}.gif'] = animadas[k]
+if da_abertura:
+    print(f'abertura do artefato: {len(da_abertura)} GIFs, {sum(len(v) for v in da_abertura.values())/1024:.0f} KB')
+
 def montar(dados, paletas=None):
     # Os estilos entram uma vez, no lugar do primeiro <link>, e os outros
     # <link> saem. O re.sub com o texto de troca punha TODOS os estilos no
@@ -154,8 +177,8 @@ if os.path.getsize('pokerpg.html') > 50 * 1024 * 1024:
     print('  ATENÇÃO: passou de 50 MB, o GitHub avisa a cada push (ver CLAUDE.md, "A arte é de corpo inteiro")')
 
 # variante para publicação como Artifact: sem doctype/html/body (o host envolve)
-# e sem as GIFs, que não cabem no teto de 16 MB
-saida = montar(sprites)
+# e sem as GIFs, que não cabem no teto de 16 MB — menos as da abertura
+saida = montar(dict(sprites, **da_abertura))
 titulo = '<title>Pok\u00e9RPG</title>'
 estilo = '\n'.join(re.findall(r'<style>.*?</style>', saida, re.S))
 corpo  = re.search(r'<body[^>]*>(.*?)</body>', saida, re.S).group(1)

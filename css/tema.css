@@ -4,11 +4,12 @@
    último (index.html), por cima da pele: a pele dá o vidro e a luz,
    o tema dá a cara.
 
-   - a cor: o verde-mar (data-moldura="kanto", o padrão dos Ajustes),
-     o ouro do logo e o coral do "RPG";
-   - a letra: Lilita One (--letra-titulo) só em título — o nome do
-     lugar, o título das janelas, o nome de quem joga, os comandos
-     grandes da luta, o "Vitória!" —, Nunito (--letra-hud) na
+   - a cor: o verde-mar (data-moldura="kanto", o padrão dos Ajustes)
+     e o ouro do "Poké" do logo;
+   - a letra: pixel em título — Pixelify Sans (--letra-titulo) no
+     nome do lugar, no título das janelas, no nome de quem joga, nos
+     comandos grandes da luta e no botão principal, e a dos 8 bits
+     (--letra-pixel) no "Vitória!" —, Nunito (--letra-hud) na
      interface e a fonte do sistema no que é de ler;
    - o desenho: todo ícone que abre linha é uma moeda redonda, com o
      brilho no alto à esquerda e a borda de baixo mais escura (a
@@ -46,13 +47,15 @@
 .topo-bt:hover:not(:disabled) svg.topo-ic{transform:rotate(-8deg) scale(1.06)}
 
 /* ---------- os títulos na letra de título ---------- */
-.modal > h2{font-family:var(--letra-titulo);font-weight:400;letter-spacing:.012em}
-.topo h1{font-family:var(--letra-titulo);font-weight:400;font-size:20px;letter-spacing:.01em}
+.modal > h2{font-family:var(--letra-titulo);font-weight:700;letter-spacing:.02em}
+.topo h1{font-family:var(--letra-titulo);font-weight:700;font-size:20px;letter-spacing:.02em}
 .cap-cabecalho .tit{text-shadow:0 3px 0 rgba(4,24,28,.82), 0 6px 18px rgba(0,0,0,.6)}
-.mb-btn .rot{font-family:var(--letra-titulo);font-weight:400;font-size:21px;letter-spacing:.02em}
+.mb-btn .rot{font-family:var(--letra-titulo);font-weight:700;font-size:21px;letter-spacing:.03em}
 .mb-extra .mb-btn .rot{font-size:16.5px}
 .mb-btn.continuar-batalha .rot{font-size:20px}
-.vt-titulo{font-family:var(--letra-titulo);font-weight:400;font-style:normal;letter-spacing:.02em}
+/* o "Vitória!" na letra de pixel dos 8 bits, que é larga: menor que a de antes */
+.vt-titulo{font-family:var(--letra-pixel);font-weight:400;font-style:normal;letter-spacing:.04em;
+  font-size:clamp(26px, 7vw, 64px);line-height:1.15}
 @media (max-width:760px){ .topo h1{font-size:17px} }
 @media (max-width:620px){ .mb-btn .rot{font-size:18.5px} }
 
@@ -63,7 +66,7 @@
              linear-gradient(180deg, #ef4a36 0 45%, #10292d 45% 55%, #f4f4f0 55% 100%) border-box;
   box-shadow:0 0 0 2px var(--bg), 0 8px 16px -8px rgba(0,0,0,.9);
 }
-.topo-rosto b{color:rgba(255,255,255,.7);font-family:var(--letra-titulo);font-weight:400}
+.topo-rosto b{color:rgba(255,255,255,.7);font-family:var(--letra-pixel);font-weight:400;font-size:14px}
 @media (max-width:760px){
   .topo-rosto{border-width:2.5px;box-shadow:0 0 0 1.5px var(--bg)}
 }
@@ -81,7 +84,7 @@
 .btn{border-radius:999px;font-family:var(--letra-hud);font-weight:700}
 .btn.mini{border-radius:999px}
 .btn.destaque{
-  font-family:var(--letra-titulo);font-weight:400;letter-spacing:.03em;font-size:16px;
+  font-family:var(--letra-titulo);font-weight:700;letter-spacing:.03em;font-size:16px;
   color:#0c3a40;border:0;
   background:linear-gradient(180deg, #ffe58a 0%, #ffc93c 48%, #f6ae19 100%);
   box-shadow:inset 0 2px 0 rgba(255,255,255,.6), 0 3px 0 #b97c08, 0 10px 18px -10px rgba(255,201,60,.7);
@@ -138,6 +141,10 @@
 .log-combate{background:linear-gradient(180deg, rgba(7,36,41,.94), rgba(3,20,24,.96))}
 
 /* ---------- a mochila: o nome da bolsa na letra de título ---------- */
-.moch-nome{font-family:var(--letra-titulo);font-weight:400;letter-spacing:.015em}
+.moch-nome{font-family:var(--letra-titulo);font-weight:700;letter-spacing:.02em}
 /* o título do Seu time não é h2 da janela: mora no cabeçalho dele */
-.tm-titulo{font-family:var(--letra-titulo);font-weight:400;letter-spacing:.012em}
+.tm-titulo{font-family:var(--letra-titulo);font-weight:700;letter-spacing:.02em}
+
+/* a etiqueta da reputação mora dentro do h1 do topo e herdava a letra
+   de pixel, miúda demais pra ler: ela é da letra do HUD */
+.topo-rep{font-family:var(--letra-hud);font-weight:800}

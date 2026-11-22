@@ -1,26 +1,30 @@
 /* ============================================================
    TELA DE TÍTULO — PokéRPG
-   A abertura é uma paisagem de Kanto na hora de quem joga (o relógio
-   do computador: madrugada, manhã, dia, tarde ou noite), desenhada
-   aqui em camadas: céu, astro, nuvens, a serra longe, a serra perto,
-   a mata, o morro com a estrada e o capim, que balança. No meio, a
-   vitrine: um Pokémon de Kanto de cada vez, primeiro em silhueta
-   ("Quem é esse Pokémon?") e depois revelado, com o número e o nome
-   (renders do Pokémon HOME, em sprites_nds/abertura/vitrine/). Do
-   lado, o cartão da jornada e o menu; embaixo, no capim, o seu time.
-   O logo é Lilita One em ouro com contorno verde-mar. Quem pede menos
-   movimento vê tudo parado e já no lugar.
+   Em pixel art. A abertura é uma paisagem de Kanto na hora de quem
+   joga (o relógio do computador: madrugada, manhã, dia, tarde ou
+   noite), desenhada em pixel num canvas (js/ui/paisagem.js) com as
+   cores das variáveis de cada período, aqui embaixo. No meio, a
+   vitrine: um Pokémon de Kanto de cada vez, no sprite animado de
+   Black/White, primeiro em silhueta ("Quem é esse Pokémon?") e depois
+   revelado, com o número e o nome. Do lado, o cartão da jornada e o
+   menu; embaixo, no capim, o seu time. O logo é a letra de pixel dos
+   8 bits, em amarelo e branco com o contorno de degrau. Pixel só se
+   amplia por inteiro (UI.zoomPixel), com image-rendering:pixelated.
+   Quem pede menos movimento vê tudo parado e já no lugar.
    ============================================================ */
 :root{
-  /* os nomes ficam (a inscrição usa): o ouro do logo, o verde-mar do
-     contorno e a tinta funda */
+  /* os nomes ficam (a inscrição usa): o ouro, o verde-mar do contorno
+     e a tinta funda; o logo tem as cores dele, as de antes */
   --tt-amarelo:#ffc93c;
   --tt-amarelo-esc:#d99a12;
   --tt-azul:#1f8a8f;
   --tt-azul-esc:#0c3a40;
   --tt-tinta:#062226;
   --tt-coral:#ff6a4d;
-  --tt-pixel:var(--letra-titulo, 'Lilita One', var(--fonte));
+  --tt-pixel:var(--letra-pixel, 'Press Start 2P', monospace);
+  --logo-amarelo:#ffcb05;
+  --logo-contorno:#1b3f7a;
+  --logo-sombra:#0b1230;
 }
 
 /* ---------- a abertura toma a tela inteira ---------- */
@@ -68,140 +72,132 @@ body.na-titulo #app{max-width:none;margin:0;padding:0;display:block;min-height:1
   --parede:#2c364c; --telhado:#1f2338; --janela:#e8b85a; --madeira:#3a2e27; --madeira-2:#221a16;
 }
 
-/* ---------- a paisagem ---------- */
+/* ---------- a paisagem ----------
+   Um canvas em baixa resolução (PaisagemPixel), do tamanho da abertura
+   em pontos de 2 a 5 px: o JS põe a largura e a altura, e o navegador
+   amplia sem borrar. O degradê do .tela-titulo é a reserva, se o
+   canvas não desenhar. */
 .tt-paisagem{position:absolute;inset:0;z-index:-2;pointer-events:none;overflow:hidden}
-.tt-ceu{position:absolute;inset:0 0 34% 0}
-/* estrela só de noite e de madrugada; a cadente passa de tempos em tempos */
-.tt-estrela{
-  display:none;position:absolute;left:var(--x);top:var(--y);width:var(--s);height:var(--s);border-radius:50%;
-  background:#fff;opacity:.2;box-shadow:0 0 6px rgba(255,255,255,.6);
-  animation:ttPisca var(--t) ease-in-out var(--a) infinite;
-}
-:is([data-periodo="noite"], [data-periodo="madrugada"]) .tt-estrela{display:block}
-@keyframes ttPisca{0%,100%{opacity:.18}50%{opacity:.95}}
-:is([data-periodo="noite"], [data-periodo="madrugada"]) .tt-ceu::after{
-  content:'';position:absolute;left:8%;top:14%;width:150px;height:2px;border-radius:2px;
-  background:linear-gradient(90deg, transparent, rgba(255,255,255,.95));
-  transform:rotate(24deg) translateX(-40vw);opacity:0;
-  animation:ttCadente 11s linear 4s infinite;
-}
-@keyframes ttCadente{
-  0%{opacity:0;transform:rotate(24deg) translateX(-10vw)}
-  2%{opacity:1}
-  9%{opacity:0;transform:rotate(24deg) translateX(46vw)}
-  100%{opacity:0;transform:rotate(24deg) translateX(46vw)}
-}
-/* o sol do dia, o sol baixo de manhã e de tarde, e a lua */
-.tt-astro{
-  position:absolute;right:clamp(6%, 11vw, 15%);top:clamp(64px, 12vh, 140px);
-  width:clamp(66px, 8.5vw, 120px);aspect-ratio:1;border-radius:50%;
-  background:radial-gradient(circle at 42% 38%, #fffdf0 0 34%, #fff2b8 58%, #ffd66b 100%);
-  box-shadow:0 0 0 10px rgba(255,240,180,.16), 0 0 0 26px rgba(255,236,170,.08), 0 0 120px 40px rgba(255,226,140,.45);
-  animation:ttAstro 1.8s var(--suave) .2s backwards;
-}
-/* de manhã e de tarde o sol é baixo, grande e quente */
-:is([data-periodo="manha"], [data-periodo="tarde"]) .tt-astro{
-  top:clamp(110px, 19vh, 200px);width:clamp(80px, 10vw, 140px);
-  background:radial-gradient(circle at 50% 50%, var(--sol) 0 34%, color-mix(in srgb, var(--sol-2) 70%, var(--sol)) 64%, var(--sol-2) 100%);
-  box-shadow:0 0 0 12px color-mix(in srgb, var(--halo) 40%, transparent), 0 0 0 30px color-mix(in srgb, var(--halo) 20%, transparent), 0 0 150px 60px var(--halo);
-}
-:is([data-periodo="noite"], [data-periodo="madrugada"]) .tt-astro{
-  background:
-    radial-gradient(circle at 66% 30%, rgba(190,182,140,.5) 0 9%, transparent 10%),
-    radial-gradient(circle at 40% 62%, rgba(190,182,140,.42) 0 13%, transparent 14%),
-    radial-gradient(circle at 70% 70%, rgba(190,182,140,.34) 0 7%, transparent 8%),
-    radial-gradient(circle at 36% 32%, #fffef2 0 36%, #f6efcb 62%, #ddd3a2 100%);
-  box-shadow:0 0 0 8px rgba(255,250,214,.06), 0 0 0 20px rgba(255,250,214,.035), 0 0 80px 20px rgba(255,244,190,.24), 0 0 200px 80px rgba(110,160,255,.16);
-}
-@keyframes ttAstro{from{opacity:0;transform:translateY(30px) scale(.9)}to{opacity:1;transform:none}}
-/* nuvens de algodão que andam devagar; de noite quase somem */
-.tt-nuvens{position:absolute;inset:0 0 42% 0}
-.tt-nuvens i{
-  --nuvem:#fff;
-  position:absolute;left:-30%;top:var(--y);width:var(--w);height:calc(var(--w) * .26);border-radius:999px;
-  background:var(--nuvem);opacity:var(--o, .86);
-  box-shadow:inset 0 calc(var(--w) * -.03) 0 rgba(120,150,190,.18);
-  animation:ttNuvem var(--d) linear var(--a) infinite;
-}
-.tt-nuvens i::before, .tt-nuvens i::after{content:'';position:absolute;border-radius:50%;background:var(--nuvem)}
-.tt-nuvens i::before{width:44%;aspect-ratio:1;left:14%;bottom:24%}
-.tt-nuvens i::after{width:32%;aspect-ratio:1;left:50%;bottom:20%}
-.tt-nuvens i:nth-child(1){--y:20%;--w:200px;--d:120s;--a:-40s}
-.tt-nuvens i:nth-child(2){--y:36%;--w:130px;--d:95s;--a:-70s;--o:.72}
-.tt-nuvens i:nth-child(3){--y:9%;--w:250px;--d:150s;--a:-10s;--o:.64}
-.tt-nuvens i:nth-child(4){--y:48%;--w:110px;--d:80s;--a:-25s;--o:.68}
-[data-periodo="manha"] .tt-nuvens i{--nuvem:#ffe2d6}
-[data-periodo="tarde"] .tt-nuvens i{--nuvem:#ffc0a4;--o:.74}
-:is([data-periodo="noite"], [data-periodo="madrugada"]) .tt-nuvens{opacity:.09}
-@keyframes ttNuvem{from{transform:translateX(0)}to{transform:translateX(170vw)}}
-/* o chão: as serras, a vila, a mata, o morro com a estrada e o capim */
-.tt-terra{position:absolute;left:0;right:0;bottom:0;width:100%;height:max(60vh, 340px)}
-.tt-terra .s1{fill:var(--serra-1)}
-.tt-terra .s2{fill:var(--serra-2)}
-.tt-terra .mt{fill:var(--mata)}
-.tt-terra .mr{fill:var(--morro)}
-.tt-terra .tr{fill:var(--trilha)}
-.tt-terra .cp{fill:var(--capim)}
-.tt-terra .cp2{fill:var(--capim-2)}
-.tt-terra .tc{fill:var(--tronco)}
-.tt-terra .arv.perto .mt{fill:var(--arvore)}
-.tt-terra .br{fill:var(--copa-luz);opacity:.7}
-.tt-terra .pd{fill:var(--parede)}
-.tt-terra .tl{fill:var(--telhado)}
-.tt-terra .jn{fill:var(--janela)}
-:is([data-periodo="noite"], [data-periodo="madrugada"]) .tt-terra .jn{filter:drop-shadow(0 0 3px var(--janela))}
-.tt-terra .pl{fill:var(--madeira)}
-.tt-terra .pl2{fill:var(--madeira-2)}
-.tt-terra .nv0{stop-color:var(--nevoa);stop-opacity:0}
-.tt-terra .nv1{stop-color:var(--nevoa);stop-opacity:1}
-.tt-terra .tufos{transform-box:fill-box;transform-origin:50% 100%;animation:ttCapim 5.5s ease-in-out infinite}
-.tt-terra .tufos.b{animation-duration:6.8s;animation-delay:-2s}
-@keyframes ttCapim{0%,100%{transform:skewX(0deg)}50%{transform:skewX(-5deg)}}
+.tt-pixel{position:absolute;left:0;top:0;image-rendering:crisp-edges;image-rendering:pixelated}
 
 /* ---------- o alto: o logo e a frase ---------- */
 .tt-topo{display:flex;flex-direction:column;align-items:center;padding-bottom:clamp(12px, 2.6vh, 28px)}
+/* a letra de pixel dos 8 bits: "Poké" em amarelo, "RPG" em branco, o
+   contorno em degrau de 3 px nas oito direções e a sombra funda */
 .tt-logo{
-  position:relative;isolation:isolate;margin:0;line-height:1;
-  font-family:var(--letra-titulo, 'Lilita One', var(--fonte));font-weight:400;
-  font-size:clamp(50px, min(10vw, 11vh), 116px);letter-spacing:.015em;
-  display:inline-flex;align-items:baseline;gap:.05em;padding:0 .12em .12em;
-  filter:drop-shadow(0 12px 18px rgba(4,24,28,.42));
+  position:relative;margin:0;line-height:1;
+  font-family:var(--tt-pixel);font-weight:400;
+  font-size:clamp(30px, min(9vw, 9.5vh), 92px);letter-spacing:.02em;
+  display:inline-flex;align-items:baseline;gap:.08em;
+  filter:drop-shadow(0 0 26px rgba(255,203,5,.22)) drop-shadow(0 10px 20px rgba(0,0,0,.45));
   animation:ttCai .9s cubic-bezier(.3,1.5,.5,1) .2s both;
 }
-/* três camadas por palavra, com a ordem decidida no logo inteiro: o
-   contorno (::before) de todas atrás, o ouro (::after) de todas na
-   frente. Com o contorno dentro de cada palavra, o da segunda comia a
-   ponta da primeira. O brilho que atravessa corre por cima do ouro */
-.tt-logo span{position:relative;display:inline-block;color:transparent}
-.tt-logo span::before, .tt-logo span::after{content:attr(data-t);position:absolute;left:0;top:0;pointer-events:none}
-.tt-logo span::before{
-  z-index:0;color:var(--tt-azul-esc);-webkit-text-stroke:.17em var(--tt-azul-esc);
-  text-shadow:0 .07em 0 var(--tt-tinta), 0 .11em 0 var(--tt-tinta);
+.tt-logo span{position:relative;display:inline-block;--c:var(--logo-contorno);
+  text-shadow:
+    3px 0 var(--c), -3px 0 var(--c), 0 3px var(--c), 0 -3px var(--c),
+    3px 3px var(--c), -3px 3px var(--c), 3px -3px var(--c), -3px -3px var(--c),
+    0 7px 0 var(--logo-sombra), 3px 7px 0 var(--logo-sombra), -3px 7px 0 var(--logo-sombra);
 }
+.tt-poke{color:var(--logo-amarelo)}
+.tt-rpg{color:#fff}
+/* o brilho que atravessa as letras de tempos em tempos: uma cópia do
+   texto por cima, recortada pelas próprias letras */
 .tt-logo span::after{
-  z-index:1;color:transparent;
-  background-image:linear-gradient(105deg, transparent 40%, rgba(255,255,255,.92) 50%, transparent 60%),
-                   linear-gradient(180deg, #fff3a6 0%, #ffd649 38%, #ffb81f 70%, #f39c12 100%);
-  background-size:320% 100%, 100% 100%;background-repeat:no-repeat;background-position:160% 0, 0 0;
+  content:attr(data-t);position:absolute;left:0;top:0;pointer-events:none;
+  color:transparent;text-shadow:none;
+  background:linear-gradient(105deg, transparent 42%, rgba(255,255,255,.9) 50%, transparent 58%) no-repeat;
+  background-size:300% 100%;background-position:150% 0;
   -webkit-background-clip:text;background-clip:text;
-  animation:ttBrilho 6.5s ease-in-out 1.6s infinite;
+  animation:ttBrilho 5.5s ease-in-out 1.2s infinite;
 }
-.tt-logo .tt-rpg::after{
-  background-image:linear-gradient(105deg, transparent 40%, rgba(255,255,255,.85) 50%, transparent 60%),
-                   linear-gradient(180deg, #ffc1a8 0%, #ff7a5a 42%, #ee4b33 78%, #d8372a 100%);
-  animation-delay:1.85s;
-}
-@keyframes ttBrilho{0%{background-position:160% 0, 0 0}20%,100%{background-position:-60% 0, 0 0}}
+.tt-rpg::after{animation-delay:1.45s}
+@keyframes ttBrilho{0%{background-position:150% 0}24%,100%{background-position:-50% 0}}
+/* depois de cair, respira de leve, em degrau de pixel */
+.tt-poke{animation:ttFlutuaLogo 3.6s steps(2, jump-none) 1.2s infinite}
+.tt-rpg{animation:ttFlutuaLogo 3.6s steps(2, jump-none) 1.45s infinite}
+@keyframes ttFlutuaLogo{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
 @keyframes ttCai{
-  0%{opacity:0;transform:translateY(-60px) scale(1.12)}
+  0%{opacity:0;transform:translateY(-70px) scale(1.15)}
   60%{opacity:1}
   100%{opacity:1;transform:none}
 }
 .tt-sub{
-  margin-top:clamp(8px, 1.4vh, 14px);padding:6px 16px 6px;border-radius:999px;
-  font:900 clamp(11px, 1.3vw, 13.5px)/1.2 var(--letra-hud, var(--fonte));letter-spacing:.24em;text-transform:uppercase;
-  color:#fff;background:rgba(6,34,38,.46);box-shadow:inset 0 0 0 1px rgba(255,255,255,.22);
-  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+  margin-top:clamp(12px, 2vh, 20px);padding:7px 14px 6px;border-radius:4px;
+  font:400 clamp(9px, 1vw, 11px)/1.4 var(--tt-pixel);letter-spacing:.06em;
+  color:#fff;background:rgba(6,34,38,.55);box-shadow:inset 0 0 0 2px rgba(255,255,255,.2), 0 3px 0 rgba(4,20,24,.6);
+  text-shadow:0 2px 0 rgba(0,0,0,.45);
+  animation:ttSobe .6s var(--suave) .9s both;
+}
+@keyframes ttSobe{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+/* ---------- o meio: a vitrine, a jornada e o menu ---------- */
+/* no computador, três colunas; no meio-termo, a vitrine e o cartão
+   em cima e o menu embaixo; no celular, uma coluna */
+.tt-corpo{
+  width:min(1180px, 100%);margin-block:auto;
+  display:grid;grid-template-columns:minmax(0, .95fr) minmax(0, 1.12fr) minmax(0, .9fr);
+  grid-template-areas:"vitrine jornada menu";
+  gap:clamp(14px, 2vw, 26px);align-items:center;text-align:left;
+}
+.tt-vitrine{grid-area:vitrine}
+.tt-jornada{grid-area:jornada}
+.tt-menu{grid-area:menu}
+.tt-e{animation:ttSobe .6s var(--suave) calc(.9s + var(--i, 0) * .14s) backwards}
+
+/* a vitrine: a lente, os raios do "Quem é esse Pokémon?" atrás, e a placa */
+.tt-vitrine{display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;min-width:0}
+.tt-vitrine.sem-arte{visibility:hidden}
+.tt-palco{position:relative;display:grid;place-items:center}
+.tt-raios{
+  position:absolute;inset:-30%;border-radius:50%;pointer-events:none;
+  background:repeating-conic-gradient(from 0deg, rgba(255,255,255,.36) 0 6deg, rgba(255,255,255,0) 6deg 18deg);
+  -webkit-mask:radial-gradient(circle, #000 28%, transparent 70%);
+          mask:radial-gradient(circle, #000 28%, transparent 70%);
+  opacity:.75;animation:ttGira 48s linear infinite;
+  transition:opacity .6s var(--suave);
+}
+.tt-vitrine.revela .tt-raios{opacity:1}
+.tt-lente{
+  --l:clamp(220px, 25vw, 330px);
+  position:relative;width:var(--l);aspect-ratio:1;border-radius:50%;display:grid;place-items:center;
+  background:
+    radial-gradient(circle at 50% 46%, rgba(255,255,255,.96) 0 20%, rgba(255,247,214,.6) 42%, rgba(255,255,255,0) 68%),
+    radial-gradient(circle at 50% 50%, rgba(255,255,255,.14) 0 60%, rgba(255,255,255,.05) 61% 100%);
+  box-shadow:inset 0 0 0 2px rgba(255,255,255,.6), inset 0 0 0 9px rgba(255,255,255,.12),
+             0 0 0 6px rgba(6,34,38,.26), 0 26px 60px -24px rgba(4,24,28,.7);
+}
+/* o anel que gira, em traços, como a mira da Pokédex */
+.tt-lente::before{
+  content:'';position:absolute;inset:-14px;border-radius:50%;
+  background:repeating-conic-gradient(from 0deg, rgba(255,255,255,.85) 0 2.2deg, transparent 2.2deg 9deg);
+  -webkit-mask:radial-gradient(circle, transparent 66%, #000 67% 69%, transparent 70%);
+          mask:radial-gradient(circle, transparent 66%, #000 67% 69%, transparent 70%);
+  animation:ttGira 26s linear infinite reverse;
+}
+.tt-lente::after{
+  content:'';position:absolute;left:20%;right:20%;bottom:12%;height:9%;border-radius:50%;
+  background:radial-gradient(closest-side, rgba(4,24,28,.42), transparent);
+}
+@keyframes ttGira{to{transform:rotate(360deg)}}
+.tt-lente img{
+  position:relative;z-index:1;width:auto;height:auto;max-width:none;
+  image-rendering:crisp-edges;image-rendering:pixelated;
+  animation:ttFlutua 3.4s steps(2, jump-none) infinite;
+  /* o filtro só anima na revelação: na volta pra silhueta ele vira na
+     hora, senão o próximo aparecia colorido enquanto escurecia */
+  transition:opacity .45s var(--suave), transform .45s var(--suave);
+}
+@keyframes ttFlutuaLogo{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+@keyframes ttCai{
+  0%{opacity:0;transform:translateY(-70px) scale(1.15)}
+  60%{opacity:1}
+  100%{opacity:1;transform:none}
+}
+.tt-sub{
+  margin-top:clamp(12px, 2vh, 20px);padding:7px 14px 6px;border-radius:4px;
+  font:400 clamp(9px, 1vw, 11px)/1.4 var(--tt-pixel);letter-spacing:.06em;
+  color:#fff;background:rgba(6,34,38,.55);box-shadow:inset 0 0 0 2px rgba(255,255,255,.2), 0 3px 0 rgba(4,20,24,.6);
+  text-shadow:0 2px 0 rgba(0,0,0,.45);
   animation:ttSobe .6s var(--suave) .9s both;
 }
 @keyframes ttSobe{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
@@ -263,7 +259,7 @@ body.na-titulo #app{max-width:none;margin:0;padding:0;display:block;min-height:1
   transition:opacity .45s var(--suave), transform .45s var(--suave);
 }
 .tt-vitrine.revela .tt-lente img{transition:filter .55s var(--suave), opacity .45s var(--suave), transform .45s var(--suave)}
-@keyframes ttFlutua{0%,100%{translate:0 0}50%{translate:0 -8px}}
+@keyframes ttFlutua{0%,100%{translate:0 0}50%{translate:0 -6px}}
 /* quem é esse Pokémon? — a silhueta, depois a revelação */
 .tt-vitrine.silhueta .tt-lente img{filter:brightness(0) drop-shadow(0 0 3px rgba(255,255,255,.8))}
 .tt-vitrine:is(.sai, .entra) .tt-lente img{opacity:0;transform:scale(.86)}
@@ -280,7 +276,7 @@ body.na-titulo #app{max-width:none;margin:0;padding:0;display:block;min-height:1
   flex:0 0 auto;padding:4px 10px 3px;border-radius:999px;font:900 12.5px/1.1 var(--letra-hud, var(--fonte));letter-spacing:.06em;
   color:var(--tt-tinta);background:linear-gradient(180deg, #ffe58a, var(--tt-amarelo));font-variant-numeric:tabular-nums;
 }
-.tt-placa-nome{font:400 clamp(18px, 1.9vw, 23px)/1.15 var(--letra-titulo, var(--fonte));letter-spacing:.01em;color:#fff;
+.tt-placa-nome{font:700 clamp(18px, 1.9vw, 23px)/1.15 var(--letra-titulo, var(--fonte));letter-spacing:.02em;color:#fff;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
 .tt-vitrine.silhueta .tt-placa-nome{color:#ffe58a}
 .tt-vitrine.revela .tt-placa{animation:ttPop .5s cubic-bezier(.3,1.6,.5,1)}
@@ -326,10 +322,10 @@ body.na-titulo #app{max-width:none;margin:0;padding:0;display:block;min-height:1
   box-shadow:0 0 0 2px var(--tt-tinta), 0 10px 18px -8px rgba(0,0,0,.9);
 }
 .tt-j-rosto img{position:absolute;inset:0;width:100%;height:100%;border-radius:50%;object-fit:contain;object-position:50% 100%;image-rendering:pixelated}
-.tt-j-rosto b{font:400 26px/1 var(--letra-titulo, var(--fonte));color:rgba(255,255,255,.6);position:relative}
+.tt-j-rosto b{font:400 20px/1 var(--tt-pixel);color:rgba(255,255,255,.6);position:relative}
 .tt-j-rosto:not(.vazio) b{display:none}
 .tt-j-quem{display:flex;flex-direction:column;gap:3px;min-width:0}
-.tt-j-quem b{font:400 26px/1.1 var(--letra-titulo, var(--fonte));letter-spacing:.01em;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tt-j-quem b{font:700 26px/1.1 var(--letra-titulo, var(--fonte));letter-spacing:.02em;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tt-j-quem span{font:700 13.5px/1.35 var(--letra-hud, var(--fonte));color:#c4e6e1}
 .tt-j-fatos{display:flex;flex-wrap:wrap;gap:6px}
 .tt-j-fatos span{
@@ -367,7 +363,7 @@ body.na-titulo #app{max-width:none;margin:0;padding:0;display:block;min-height:1
 }
 .tt-jornada .tt-btn{margin-top:auto;width:100%}
 .tt-j-novo{display:flex;flex-direction:column;gap:7px;padding:4px 2px}
-.tt-j-novo b{font:400 27px/1.1 var(--letra-titulo, var(--fonte));letter-spacing:.01em;color:#fff}
+.tt-j-novo b{font:700 27px/1.1 var(--letra-titulo, var(--fonte));letter-spacing:.02em;color:#fff}
 .tt-j-novo span{font-size:14.5px;line-height:1.55;color:#cfe9e5;text-wrap:pretty}
 .tt-jornada.nova{justify-content:space-between}
 
@@ -411,10 +407,11 @@ body.na-titulo #app{max-width:none;margin:0;padding:0;display:block;min-height:1
 .tt-pk .sprite{width:var(--q);height:auto}
 /* a arte parada (sem a GIF) tem 24% de folga embaixo do pé */
 .tt-pk .sprite:not(.ani){height:var(--q);margin-bottom:calc(var(--q) * -.24)}
-/* sem jornada: os de sempre, no render do HOME, saltitando */
-.tt-pk .tt-pk-render{width:calc(var(--q) * .8);height:calc(var(--q) * .8);object-fit:contain;object-position:50% 100%;
-  animation:ttSaltita 2.8s ease-in-out calc(var(--i, 0) * -.5s) infinite}
-@keyframes ttSaltita{0%,38%,62%,100%{translate:0 0}50%{translate:0 -10px}}
+/* sem jornada: os de sempre, no sprite animado, ampliados por inteiro
+   (UI.zoomNoDesfile) e dando um pulinho de vez em quando */
+.tt-pk .tt-pk-px{width:auto;height:auto;max-width:none;image-rendering:crisp-edges;image-rendering:pixelated;
+  animation:ttSaltita 2.8s steps(1, jump-none) calc(var(--i, 0) * -.5s) infinite}
+@keyframes ttSaltita{0%,44%,56%,100%{translate:0 0}47%,53%{translate:0 -6px}}
 @keyframes ttPula{0%{opacity:0;transform:translateY(40px) scale(.7)}100%{opacity:1;transform:none}}
 
 .tt-pe{
@@ -446,8 +443,6 @@ body.na-titulo #app{max-width:none;margin:0;padding:0;display:block;min-height:1
   .tt-placa-nome{white-space:normal;text-wrap:balance}
   .tt-pk{--q:86px}
   .tt-desfile{gap:clamp(2px, 1.4vw, 14px);min-height:92px}
-  .tt-astro, :is([data-periodo="manha"], [data-periodo="tarde"]) .tt-astro{top:12px;right:3%;width:52px;
-    box-shadow:0 0 0 7px rgba(255,240,180,.14), 0 0 60px 18px rgba(255,226,140,.38)}
 }
 @media (max-width:480px){
   .tela-titulo{padding-top:18px}
@@ -461,51 +456,55 @@ body.na-titulo #app{max-width:none;margin:0;padding:0;display:block;min-height:1
   .tt-j-rosto{width:62px;height:62px;border-width:4px}
   .tt-pk{--q:72px}
   .tt-slot small{letter-spacing:.05em}
-  .tt-astro, :is([data-periodo="manha"], [data-periodo="tarde"]) .tt-astro{top:6px;right:2%;width:40px}
+  .tt-logo span{
+    text-shadow:
+      2px 0 var(--c), -2px 0 var(--c), 0 2px var(--c), 0 -2px var(--c),
+      2px 2px var(--c), -2px 2px var(--c), 2px -2px var(--c), -2px -2px var(--c),
+      0 5px 0 var(--logo-sombra), 2px 5px 0 var(--logo-sombra), -2px 5px 0 var(--logo-sombra);
+  }
 }
 
-/* ---------- o botão da abertura (e da inscrição e da tela de morte) ---------- */
+/* ---------- o botão da abertura (e da inscrição e da tela de morte) ----------
+   O botão dos jogos de 8 bits: canto quase reto, borda de 3 px, a
+   espessura embaixo, que afunda quando aperta; o da abertura na letra
+   de pixel. A inscrição troca a letra (pele.css), mas fica com o corpo. */
 .tt-btn{
-  font:800 15px/1.2 var(--letra-hud, var(--fonte));letter-spacing:.02em;
-  color:#e6f6f3;background:linear-gradient(180deg, #1d555b, #133f44);
-  border:0;border-radius:999px;
-  padding:12px 20px 11px;cursor:pointer;position:relative;
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.18), 0 4px 0 #082a2e, 0 14px 22px -14px rgba(0,0,0,.9);
+  font:400 11px/1.3 var(--tt-pixel);letter-spacing:.06em;
+  color:#e6f6f3;background:#12434a;
+  border:3px solid #2a7a82;border-radius:4px;
+  padding:13px 16px 12px;cursor:pointer;position:relative;
+  box-shadow:0 4px 0 #04191c, inset 0 -3px 0 rgba(0,0,0,.25);
   /* backwards, nunca both: o both segurava o último quadro e o hover não subia */
   animation:ttBotao .5s cubic-bezier(.3,1.4,.5,1) calc(1.2s + var(--i, 0) * .11s) backwards;
-  transition:transform .12s, box-shadow .12s, background .15s, color .15s;
+  transition:transform .12s, box-shadow .12s, background .15s, border-color .15s, color .15s;
 }
-.tt-btn:hover{background:linear-gradient(180deg, #236970, #174a50);color:#fff;transform:translateY(-2px);
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.3), 0 6px 0 #082a2e, 0 18px 26px -14px rgba(0,0,0,.9)}
-.tt-btn:active{transform:translateY(3px);box-shadow:inset 0 0 0 1px rgba(255,255,255,.18), 0 1px 0 #082a2e}
+.tt-btn:hover{background:#185862;border-color:var(--tt-amarelo);color:var(--tt-amarelo);transform:translateY(-2px);box-shadow:0 6px 0 #04191c, inset 0 -3px 0 rgba(0,0,0,.25)}
+.tt-btn:active{transform:translateY(3px);box-shadow:0 1px 0 #04191c, inset 0 -2px 0 rgba(0,0,0,.25)}
 .tt-btn:focus-visible{outline:3px solid var(--tt-amarelo);outline-offset:3px}
 .tt-principal{
-  font:400 21px/1.1 var(--letra-titulo, var(--fonte));letter-spacing:.03em;
-  background:linear-gradient(180deg, #ffe58a 0%, #ffc93c 48%, #f6ae19 100%);color:var(--tt-azul-esc);
-  padding:14px 26px 13px;
-  box-shadow:inset 0 2px 0 rgba(255,255,255,.65), inset 0 -3px 0 rgba(160,96,0,.25), 0 5px 0 #b97c08, 0 0 30px -6px rgba(255,201,60,.75), 0 18px 26px -14px rgba(0,0,0,.8);
+  background:var(--logo-amarelo);color:var(--logo-contorno);border-color:#fff3b0;
+  box-shadow:0 4px 0 #c7a008, 0 0 22px -4px rgba(255,203,5,.55), inset 0 -3px 0 rgba(0,0,0,.12);
+  font-size:13px;padding:15px 22px 14px;
 }
-.tt-principal:hover{background:linear-gradient(180deg, #fff0b0 0%, #ffd55c 48%, #ffb92a 100%);color:var(--tt-tinta);
-  box-shadow:inset 0 2px 0 rgba(255,255,255,.75), inset 0 -3px 0 rgba(160,96,0,.25), 0 7px 0 #b97c08, 0 0 38px -4px rgba(255,201,60,.85), 0 20px 28px -14px rgba(0,0,0,.8)}
-.tt-principal:active{box-shadow:inset 0 2px 0 rgba(255,255,255,.6), 0 1px 0 #b97c08}
+.tt-principal:hover{background:#ffd93b;color:var(--logo-contorno);border-color:#fff;box-shadow:0 6px 0 #c7a008, 0 0 30px -2px rgba(255,203,5,.7), inset 0 -3px 0 rgba(0,0,0,.12)}
+.tt-principal:active{box-shadow:0 1px 0 #c7a008, inset 0 -2px 0 rgba(0,0,0,.12)}
 @keyframes ttBotao{
   from{opacity:0;transform:translateY(18px) scale(.9)}
   to{opacity:1;transform:none}
 }
 @media (max-width:480px){
-  .tt-btn{font-size:14px;padding:11px 14px 10px}
-  .tt-principal{font-size:19px;width:100%}
+  .tt-btn{font-size:10px;padding:12px 12px 11px}
+  .tt-principal{font-size:12px;width:100%}
 }
 
 @media (prefers-reduced-motion: reduce){
   .tela-titulo *, .tela-titulo *::before, .tela-titulo *::after{animation:none !important}
   .tt-lente img{transition:none}
-  :is([data-periodo="noite"], [data-periodo="madrugada"]) .tt-ceu::after{display:none}
 }
 
 /* ============================================================
    FIM DA JORNADA — a tela de morte, no idioma da abertura
-   Mesmo botão e a mesma letra de título, mas sem céu e sem ouro: a
+   Mesmo botão e a mesma letra de pixel, mas sem céu e sem ouro: a
    Pokébola do fundo está apagada e rachada, e o vermelho é o de
    Pokébola, não o de alarme.
    ============================================================ */
@@ -530,9 +529,9 @@ body.na-titulo #app{max-width:none;margin:0;padding:0;display:block;min-height:1
 @keyframes tfBola{from{opacity:0;transform:translateX(-50%) rotate(-12deg) scale(.85)}to{opacity:1}}
 @keyframes tfRacha{to{stroke-dashoffset:0}}
 .tf-titulo{
-  margin:0;font-family:var(--letra-titulo, var(--fonte));font-weight:400;line-height:1.15;
-  font-size:clamp(30px, 7.4vw, 54px);letter-spacing:.02em;color:#f2f2f2;
-  text-shadow:0 3px 0 #5c1712, 0 6px 18px rgba(0,0,0,.6);
+  margin:0;font-family:var(--tt-pixel);font-weight:400;line-height:1.3;
+  font-size:clamp(22px, 6.4vw, 40px);letter-spacing:.06em;color:#f2f2f2;
+  text-shadow:3px 0 #5c1712, -3px 0 #5c1712, 0 3px #5c1712, 0 -3px #5c1712, 0 6px 0 #000;
   text-wrap:balance;
   animation:ttSobe .8s var(--suave) .4s both;
 }

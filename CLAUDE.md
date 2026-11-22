@@ -357,7 +357,7 @@ vista, pela cor: GIF nova ou trocada passa por ali. Sem a GIF a `<img>` cai sozi
 (`spriteParado`). O `pokerpg.html` **embute as GIFs**
 (`SPRITES_SO_NO_UNICO` no `build.py`; ~42 MB, ~4 s pra carregar); o
 `artefato.html` não, porque a publicação tem teto de 16 MB — lá a arte é
-a parada.
+a parada, menos a da abertura (ver "A abertura").
 
 O `pokerpg.html` fica no repositório e tem que ficar **abaixo de 50 MB**,
 o aviso do GitHub (já passou: 57 MB). O que segura é a paleta: 363 dos
@@ -2533,12 +2533,13 @@ A criação é a **ficha de inscrição da Liga** (`UI.telaCriacao`, dados em
 `js/data/inscricao.js`, desenho em `css/criacao.css`): seis passos no
 idioma da abertura — você, seu jeito, o que você quer, aparência, casa e
 começo, conferência —, com o cartão de inscrição se preenchendo ao lado
-(no celular, só na conferência). A letra de título (Lilita One) fica só
-no título da ficha e no botão principal: o título de cada passo, o
-número das etapas, o valor do status e os outros botões do pé são letra
-do HUD (no `pele.css`), com o corpo de botão da abertura. Estavam todos
-numa fonte de pixel, miúdos e duros de ler. O estado mora em `UI._cr`
-até "Sair de casa", e `UI.lerCriacao()` entrega pro `Jogo.criar`.
+(no celular, só na conferência). A letra de pixel dos 8 bits fica só no
+título da ficha, e a de título no botão principal: o título de cada
+passo, o número das etapas, o valor do status e os outros botões do pé
+são letra do HUD (no `pele.css`), com o corpo de botão da abertura (a
+borda de 3 px e a espessura embaixo). Estavam todos na Press Start 2P,
+miúdos e duros de ler. O estado mora em `UI._cr` até "Sair de casa", e
+`UI.lerCriacao()` entrega pro `Jogo.criar`.
 
 **O que pesa no jogo é escolha, nunca palavra solta.** A ficha antiga era
 texto livre lido por radical, e escrever "ambiciosa" em vez de "teimosa"
@@ -3076,39 +3077,70 @@ são só da casa, e `NOMES_DE_CASA` não tem nome da história — o
 
 ## A abertura
 Foi pedido assim: uma interface única, dentro do tema, com coisa pega
-da internet, e sem "aquele Pidgeot feio estático". A tela de título
-(`UI.telaInicial`, `css/titulo.css`) é **Kanto na hora de quem joga**:
-o relógio do computador (`periodoDaAbertura`: madrugada, manhã, dia,
-tarde, noite) põe `data-periodo` na tela, e cada período tem o céu e a
-terra dele (as variáveis no topo do `titulo.css`). A paisagem é
-desenhada ali, em camadas: o céu com o sol (baixo e quente de manhã e
-de tarde) ou a lua, as estrelas e a cadente de noite, as nuvens, e o
-chão em SVG (`paisagemDaAbertura`: as duas serras com a névoa, a vila
-no alto da serra de perto, com a janela que acende de noite, a mata, o
-morro com a estrada de terra e a placa, as árvores e o capim, que
-balança). Cada camada pinta com a cor do período, então o desenho é um
-só. No alto o logo, em Lilita One: "Poké" no ouro e "RPG" no coral, com
-o contorno verde-mar numa cópia do texto atrás (`::before`, `data-t`) e
-o brilho que atravessa — o contorno de todas as palavras fica atrás do
-ouro de todas pela camada (`z-index` no logo, que é o contexto), senão
-o da segunda comia a ponta da primeira. No meio, a **vitrine**, o
-**cartão da jornada** e o **menu** (três colunas no computador; a
-vitrine e o cartão em cima e o menu embaixo no meio-termo; uma coluna no
-celular, com a vitrine pequena do lado da placa); embaixo, no capim, o
-seu time vivo — ou, sem jornada, Bulbasaur, Charmander, Pikachu,
-Squirtle e Eevee no render do HOME, saltitando.
+da internet, e sem "aquele Pidgeot feio estático"; e depois, "eu
+gostava do tema em pixel art, como o nome". A tela de título
+(`UI.telaInicial`, `css/titulo.css`) é **Kanto na hora de quem joga,
+em pixel art**: o relógio do computador (`periodoDaAbertura`:
+madrugada, manhã, dia, tarde, noite) põe `data-periodo` na tela, e cada
+período tem o céu e a terra dele (as variáveis no topo do
+`titulo.css`). A paisagem é um **canvas em baixa resolução**
+(`PaisagemPixel`, `js/ui/paisagem.js`), mostrado em escala inteira —
+cada ponto do desenho é um quadrado de 2 a 5 px na tela, pela altura da
+janela, com `image-rendering:pixelated` —, então todo canto é degrau e
+nenhuma borda sai borrada:
+
+- o céu vem em **faixas**, com uma linha pontilhada entre uma e outra;
+  sol, sol baixo com as faixas de nuvem, lua com as crateras, nuvens e
+  estrelas são desenhados ponto a ponto;
+- o chão é um desenho de 1440×600 em caminhos (as duas serras, a vila
+  no alto da serra de perto, a mata, o morro com a estrada e a placa,
+  as árvores, o capim): cada camada é preenchida num rascunho e
+  **cortada a 50% de cobertura** (`pintar`), sem meio-tom, e a névoa da
+  serra é pontilhado ordenado (Bayer). Chão encostado embaixo,
+  cobrindo a largura, como o `slice` do SVG;
+- as cores saem das variáveis do período, lidas do `.tela-titulo`: o
+  desenho é um só, e o `MutationObserver` do `data-periodo` redesenha;
+- anda a 8 quadros por segundo (nuvens, os tufos do capim em duas
+  posições, as estrelas, a cadente e os vagalumes de noite), só
+  enquanto o canvas está na página (`parar` quando ele sai), e sem
+  nada disso pra quem pede menos movimento. O estático (o céu com o
+  astro, o chão, as duas posições do capim) só se desenha de novo
+  quando muda o tamanho (`ResizeObserver`) ou o período;
+- no celular o astro vai pro canto, pequeno e de halo curto, senão
+  encosta no logo.
+
+No alto o logo, na **letra de pixel dos 8 bits** (Press Start 2P), como
+sempre foi: "Poké" em amarelo e "RPG" em branco, o contorno em degrau
+de 3 px nas oito direções (2 no celular), a sombra funda, o brilho que
+atravessa e a respiração em degrau. No meio, a **vitrine**, o **cartão
+da jornada** e o **menu** (três colunas no computador; a vitrine e o
+cartão em cima e o menu embaixo no meio-termo; uma coluna no celular,
+com a vitrine pequena do lado da placa); embaixo, no capim, o seu time
+vivo — ou, sem jornada, os de sempre (`DESFILE_DA_ABERTURA`).
 
 - **A vitrine** é o "Quem é esse Pokémon?": um Pokémon de Kanto por vez
-  (`VITRINE_DA_ABERTURA`, os que qualquer um reconhece, sem lendário nem
-  Mew), primeiro em silhueta, depois o clarão, o número e o nome, com os
-  raios do anime girando atrás da lente. As artes são os renders do
-  Pokémon HOME da PokeAPI (`sprites_nds/abertura/vitrine/<dex>.webp`,
-  recortados e em WebP; o build embute `.webp`). Um relógio só
+  (`VITRINE_DA_ABERTURA`, em `js/data/abertura.js`: os que qualquer um
+  reconhece, sem lendário nem Mew), primeiro em silhueta, depois o
+  clarão, o número e o nome, com os raios do anime girando atrás da
+  lente. A arte é o **sprite animado de Black/White**
+  (`UI.arteDaAbertura`): no arquivo único e na pasta, a GIF da luta; no
+  artefato, que não leva as GIFs do jogo, as das duas listas vão
+  embutidas à parte, em `abertura/ani/<dex>.gif`, pelo `build.py`, que
+  lê as listas do arquivo (uns 1,3 MB; quem entra na lista pesa no
+  artefato). No caminho da abertura elas não acendem a GIF do Pikachu na
+  luta do artefato, onde todo o resto é parado. Um relógio só
   (`UI._vitrine`, `girarVitrine`) que para quando a abertura sai da
   tela. A troca é sempre no escuro: a silhueta entra antes da arte nova
   e o filtro só anima na revelação (`.revela`), senão o próximo
   aparecia colorido enquanto escurecia e a resposta vazava. Com menos
   movimento pedido, nada de silhueta: um por vez, parado.
+- **Pixel só se amplia por inteiro** (`UI.zoomPixel`): cada ponto do
+  sprite vira um quadrado de 2, 3, 4… pontos da tela, na conta da
+  densidade da tela (num celular de 3x, ⅔ e 4/3 são inteiros, 1,5 não
+  é). A vitrine cabe na lente (`zoomNaLente`), e o desfile de quem não
+  tem jornada vai todo no mesmo zoom, o maior que cabe na largura, até
+  3x (`zoomNoDesfile`); os dois refazem a conta quando a abertura muda
+  de tamanho (o `aoMudar` da `PaisagemPixel`).
 - No alto do cartão, **uma aba por jornada** (`.tt-slot`): nome e
   capítulo, ou "Vazia · começar aqui". Tocar escolhe a jornada em uso
   (`UI.escolherJornada`) e troca só o cartão, o menu e o chão
@@ -3117,6 +3149,9 @@ Squirtle e Eevee no render do HOME, saltitando.
   O rosto do cartão fica num anel de Pokébola: o anel é a borda
   (`border-box`) e o fundo verde-mar o miolo (`padding-box`); num
   `::before` por baixo, o anel cobria o fundo.
+- O botão da abertura é o dos jogos de 8 bits: canto quase reto, borda
+  de 3 px, a espessura embaixo, na letra de pixel; o Começar e o
+  Continuar no amarelo do logo.
 - O cartão lê o save do navegador **cru e só pra mostrar**: nome, foto,
   capítulo, lugar, dias, o estojo das oito, catalogados, time e
   dinheiro, tudo pelo `esc` (o save pode ter vindo de arquivo de outra
@@ -3180,7 +3215,7 @@ das duas finais da história, adiantada até o fim.
 ## A tela de morte
 `UI.telaGameOver(motivo)` fala o idioma da abertura (`css/titulo.css`,
 `.tela-fim`): no meio da tela (`body.na-abertura`), Pokébola do fundo
-apagada e rachada, título na letra de título, o motivo numa caixa de
+apagada e rachada, título na letra de pixel dos 8 bits, o motivo numa caixa de
 diálogo, o resumo em quadros (capítulo, dias, insígnias, reputação; o
 valor grande e o rótulo do tamanho de ler, na letra do HUD — eram 11 px
 de fonte de pixel e 10 px de rótulo), os
@@ -3305,8 +3340,9 @@ Campeão não recebe de novo: a coroação só diz da passagem do norte.
   offline. Nada de `import`/`export`.
 - A ordem dos scripts está em `index.html`. Script novo entra lá.
 - `python3 build.py` gera `pokerpg.html` e `artefato.html` (arquivo único
-  com sprites, cenários, ícones, rostos, insígnias, gritos e os renders
-  da abertura embutidos). Rodar depois de qualquer mudança em js/ ou css/.
+  com sprites, cenários, ícones, rostos, insígnias e gritos embutidos; o
+  artefato leva também as GIFs da abertura). Rodar depois de qualquer
+  mudança em js/ ou css/.
 - O build cola os estilos **uma vez**, no lugar do primeiro `<link>`.
   O `re.sub` de antes punha todas as folhas no lugar de cada `<link>`:
   com sete folhas o CSS ia sete vezes, 3 MB a mais em cada arquivo, e
@@ -3348,34 +3384,41 @@ que o projeto tem:
   quem muda só a cara de uma coisa muda lá.
 - **O tema Kanto** (`css/tema.css`, a última folha do `index.html`) é a
   identidade da abertura levada pro jogo inteiro, por cima da pele: o
-  verde-mar como cor padrão, o ouro e o coral do logo; todo desenho que
-  abre linha é uma **moeda redonda** (brilho no alto à esquerda, borda de
-  baixo mais escura, gira um pouco quando a linha está na mira); botão é
+  verde-mar como cor padrão, o ouro do logo; todo desenho que abre linha
+  é uma **moeda redonda** (brilho no alto à esquerda, borda de baixo
+  mais escura, gira um pouco quando a linha está na mira); botão é
   **pílula** com espessura, e o principal (`.btn.destaque`) é o ouro da
-  abertura em Lilita One; a tecla da opção é uma tampa redonda; o rosto
-  de quem joga fica num **anel de Pokébola** no topo, como no cartão da
-  abertura; as fichas de HP e a caixa de mensagem da luta são da tinta
-  verde-mar. Desenho novo que abre linha entra na lista da moeda.
+  abertura na letra de título; a tecla da opção é uma tampa redonda; o
+  rosto de quem joga fica num **anel de Pokébola** no topo, como no
+  cartão da abertura; as fichas de HP e a caixa de mensagem da luta são
+  da tinta verde-mar. Desenho novo que abre linha entra na lista da
+  moeda.
   O cenário da página morava atrás do fundo opaco do body e nunca
   aparecia; o `body.com-cenario` é contexto de empilhamento
   (`isolation:isolate`), senão a camada negativa some calada. Desenho
   novo que abre linha entra no `COR_DO_ICONE` com a cor da ficha dele.
 
-- **Letra**: a interface (fichas da luta, topo, placas, menus) é
-  **Nunito**, e o título é **Lilita One**, as duas embutidas em
-  `css/fonte-jogo.css` (OFL, em `fontes/`), pelas variáveis
-  `--letra-hud` e `--letra-titulo`, que moram no `:root`. A de título
-  vai só em título: o logo, o nome do lugar e do capítulo, o título das
-  janelas, o nome de quem joga, o nome da bolsa, os comandos grandes da
-  luta, o botão principal e o "Vitória!" — nunca em texto de ler nem em
-  rótulo miúdo. A letra do HUD já morou só no topo e na luta, e tudo
+- **Letra**: o jogo é de pixel art, e foi pedido assim: "eu gostava do
+  tema em pixel art, como o nome". A interface (fichas da luta, topo,
+  menus, rótulos) é **Nunito** (`--letra-hud`); o título é em pixel —
+  **Pixelify Sans** (`--letra-titulo`), de largura normal, que se lê
+  numa linha comprida, no nome do lugar e do capítulo, no título das
+  janelas, no nome de quem joga, no nome da bolsa, nos comandos grandes
+  da luta e no botão principal; e a **Press Start 2P**
+  (`--letra-pixel`), a dos 8 bits, larga e quadrada, só no que é grande
+  e curto: o logo, o "Vitória!", o "Fim da jornada", o título da ficha
+  de inscrição e o botão da abertura. As três embutidas em
+  `css/fonte-jogo.css` (OFL, em `fontes/`), pelas variáveis do `:root`.
+  Letra de pixel nunca vai em texto de ler nem em rótulo miúdo: a
+  etiqueta da reputação mora dentro do h1 do topo e herdava a Pixelify
+  em 9 px (`.topo-rep` volta pra do HUD). A letra do HUD já morou só no topo e na luta, e tudo
   fora deles que pedia `var(--letra-hud, …)` caía calado na fonte do
   sistema — medido com `getComputedStyle`, não no olho. O menu do lugar
   (portas, o que fazer, para onde ir) e a ação de cena que não é frase
   (encarar, rolar, encerrar) também. O texto da história continua na
   fonte do sistema, que é a de ler, e a opção de cena que é frase vai
-  junto com ele. Nada de fonte de pixel: a Press Start 2P e a Jost
-  saíram com a abertura nova.
+  junto com ele. A Lilita One e a Jost já foram a letra daqui e
+  saíram.
 - **Topo** (`UI.topo`): HUD em duas linhas — rosto, nome e título de
   quem joga com os seis botões de menu (cada um com o desenho de
   `icones.js`; no celular só o desenho, com `aria-label`), e embaixo os

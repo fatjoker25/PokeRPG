@@ -402,10 +402,12 @@ const UI = {
   /* ========================================================
      TELA INICIAL — a abertura
      Kanto na hora de quem joga (o relógio do computador: madrugada,
-     manhã, dia, tarde ou noite), desenhada em camadas: o céu com o sol
-     ou a lua, as nuvens, a serra, a vila, a mata, o morro com a
-     estrada, a placa e o capim. No alto o logo; no meio a vitrine
-     ("Quem é esse Pokémon?": a silhueta, depois quem é), o cartão da
+     manhã, dia, tarde ou noite), em pixel art: a paisagem é um canvas
+     em baixa resolução (PaisagemPixel, js/ui/paisagem.js) com o céu em
+     faixas, o sol ou a lua, as nuvens, a serra, a vila, a mata, o morro
+     com a estrada, a placa e o capim. No alto o logo, na letra de pixel
+     de 8 bits; no meio a vitrine ("Quem é esse Pokémon?": a silhueta,
+     depois quem é, no sprite animado de Black/White), o cartão da
      jornada salva e o menu; embaixo, no capim, o seu time — ou, sem
      jornada, os de sempre. O .json do Salvar pode ser solto em
      qualquer lugar dela.
@@ -414,16 +416,9 @@ const UI = {
     this.tom('leve'); this.limpar();
     document.body.classList.add('na-abertura', 'na-titulo');
     const {jornada, menu, desfile} = this.partesDaAbertura(true);
-    const estrelas = Array.from({length:42}, () =>
-      `<i class="tt-estrela" style="--x:${(Math.random()*100).toFixed(1)}%;--y:${(Math.random()*64).toFixed(1)}%;--t:${(1.6+Math.random()*2.8).toFixed(2)}s;--a:${(Math.random()*3).toFixed(2)}s;--s:${Math.random() < .25 ? 3 : 2}px"></i>`).join('');
 
     this.add(`<div class="tela-titulo" data-periodo="${this.periodoDaAbertura()}" ondragover="event.preventDefault()" ondrop="UI.soltarSave(event)">
-      <div class="tt-paisagem" aria-hidden="true">
-        <div class="tt-ceu">${estrelas}</div>
-        <div class="tt-astro"></div>
-        <div class="tt-nuvens"><i></i><i></i><i></i><i></i></div>
-        ${this.paisagemDaAbertura()}
-      </div>
+      <div class="tt-paisagem" aria-hidden="true"><canvas class="tt-pixel"></canvas></div>
       <header class="tt-topo">
         <h1 class="tt-logo" aria-label="PokéRPG">
           <span class="tt-poke" data-t="Poké">Poké</span><span class="tt-rpg" data-t="RPG">RPG</span>
@@ -436,8 +431,14 @@ const UI = {
         <nav class="tt-menu tt-e" style="--i:2" aria-label="Opções">${menu}</nav>
       </main>
       <div class="tt-desfile" aria-hidden="true">${desfile}</div>
-      <footer class="tt-pe">Jogo de fã · regras do Pokérole 3.0 · arte da PokeAPI, do Pokémon Showdown e do Pokémon HOME</footer>
+      <footer class="tt-pe">Jogo de fã · regras do Pokérole 3.0 · arte da PokeAPI e do Pokémon Showdown</footer>
     </div>`);
+    const tela = document.querySelector('.tela-titulo');
+    if (typeof PaisagemPixel !== 'undefined') PaisagemPixel.montar(tela, () => {
+      this.zoomNoDesfile();
+      const a = tela.querySelector('.tt-vit-arte');
+      if (a && a.naturalWidth) this.zoomNaLente(a);
+    });
     this.girarVitrine();
   },
 
@@ -446,74 +447,41 @@ const UI = {
     return h < 5 ? 'madrugada' : h < 8 ? 'manha' : h < 17 ? 'dia' : h < 19 ? 'tarde' : 'noite';
   },
 
-  /* o chão da abertura, em SVG: cada camada pinta com a cor da hora
-     (as variáveis do .tela-titulo[data-periodo]), e o desenho é sempre
-     o mesmo — as serras, a vila no alto da serra de perto, a mata, o
-     morro com a estrada de terra e a placa, as árvores e o capim */
-  paisagemDaAbertura(){
-    /* uma linha de serra pelos pontos, com o topo e o fundo redondos */
-    const serra = pts => 'M0 600 L' + pts[0].join(' ') + pts.slice(1).map((q, i) => {
-      const [x0, y0] = pts[i], [x1, y1] = q, d = (x1 - x0) * .48;
-      return ` C${x0 + d} ${y0} ${x1 - d} ${y1} ${x1} ${y1}`;
-    }).join('') + ' L1440 600 Z';
-    const longe = serra([[0,300],[90,252],[210,292],[330,214],[470,286],[560,262],[650,294],[790,206],[930,284],[1040,304],[1150,246],[1270,292],[1370,230],[1440,262]]);
-    const perto = serra([[0,362],[140,320],[300,374],[460,332],[600,380],[760,346],[880,374],[1010,324],[1180,372],[1320,336],[1440,356]]);
-    /* a mata: copas em fila, uma atrás da outra */
-    let mata = 'M0 600 L0 442', x = 0, k = 0;
-    const raios = [18, 24, 15, 21, 27, 17, 22, 19, 25, 16];
-    while (x < 1440){ const r = raios[k % raios.length], y = 440 + (k * 7 % 9); mata += ` L${x} ${y} A${r} ${r} 0 0 1 ${x + 2 * r} ${y}`; x += 2 * r - 4; k++; }
-    mata += ' L1440 600 Z';
-    /* o capim da frente: lâminas em zigue-zague */
-    let capim = 'M0 600 L0 556';
-    for (let i = 0, cx = 0; cx < 1440; i++, cx += 12) capim += ` L${cx + 6} ${538 + (i * 5 % 11)} L${cx + 12} ${556 - (i * 3 % 5)}`;
-    capim += ' L1440 600 Z';
-    const tufo = ([tx, ty]) => `M${tx} ${ty} l4 -13 l3 11 l4 -17 l3 17 l4 -11 l3 13 Z`;
-    const tufos = [[180,480],[430,470],[930,468],[1210,462],[1330,476]].map(tufo).join(' ');
-    const tufos2 = [[300,488],[640,474],[1060,472]].map(tufo).join(' ');
-    /* árvore redonda: tronco, copa em três e o brilho de cima */
-    const arvore = (ax, ay, r, perto) => `<g class="arv${perto ? ' perto' : ''}"><rect class="tc" x="${ax - r * .17}" y="${ay - r * 1.25}" width="${r * .34}" height="${r * 1.3}" rx="${r * .08}"/>`
-      + `<circle class="mt" cx="${ax}" cy="${ay - r * 1.85}" r="${r}"/><circle class="mt" cx="${ax - r * .72}" cy="${ay - r * 1.38}" r="${r * .7}"/><circle class="mt" cx="${ax + r * .74}" cy="${ay - r * 1.42}" r="${r * .72}"/>`
-      + `<circle class="br" cx="${ax - r * .3}" cy="${ay - r * 2.15}" r="${r * .38}"/></g>`;
-    /* casa da vila: parede, telhado e a janela, que acende de noite */
-    const casa = (cx, cy, w, h) => `<g class="casa"><rect class="pd" x="${cx}" y="${cy - h}" width="${w}" height="${h}"/>`
-      + `<path class="tl" d="M${cx - 4} ${cy - h + 1} L${cx + w / 2} ${cy - h - w * .48} L${cx + w + 4} ${cy - h + 1} Z"/>`
-      + `<rect class="jn" x="${cx + w * .22}" y="${cy - h * .66}" width="${w * .2}" height="${w * .2}"/><rect class="jn" x="${cx + w * .58}" y="${cy - h * .66}" width="${w * .2}" height="${w * .2}"/></g>`;
-    return `<svg class="tt-terra" viewBox="0 0 1440 600" preserveAspectRatio="xMidYMax slice">
-      <defs>
-        <linearGradient id="tt-nevoa" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="nv0"/><stop offset=".55" class="nv1"/><stop offset="1" class="nv0"/></linearGradient>
-      </defs>
-      <path class="s1" d="${longe}"/>
-      <rect x="0" y="250" width="1440" height="120" fill="url(#tt-nevoa)"/>
-      <path class="s2" d="${perto}"/>
-      ${casa(1298, 343, 18, 12)}${casa(1328, 342, 26, 17)}${casa(1364, 347, 20, 13)}
-      <path class="mt" d="${mata}"/>
-      ${arvore(318, 456, 16)}${arvore(1150, 448, 14)}
-      <path class="mr" d="M0 600 L0 472 C240 440 420 452 620 462 C800 471 980 444 1160 450 C1300 455 1380 468 1440 478 L1440 600 Z"/>
-      <path class="tr" d="M560 600 C600 572 700 556 690 530 C682 508 652 492 690 476 C700 472 707 468 709 463 L718 463 C718 470 713 476 706 480 C682 496 712 510 724 530 C740 556 702 580 822 600 Z"/>
-      <g class="placa"><rect class="tc" x="852" y="520" width="7" height="34" rx="1.5"/><rect class="pl" x="826" y="508" width="58" height="22" rx="3"/><rect class="pl2" x="832" y="514" width="46" height="3" rx="1.5"/><rect class="pl2" x="832" y="521" width="30" height="3" rx="1.5"/></g>
-      <path class="cp2 tufos" d="${tufos}"/>
-      <path class="cp2 tufos b" d="${tufos2}"/>
-      ${arvore(176, 566, 40, true)}${arvore(1282, 566, 46, true)}
-      <path class="cp" d="${capim}"/>
-    </svg>`;
+  /* a arte de quem aparece na abertura: o sprite animado de Black/White.
+     O artefato publicado não leva as GIFs do jogo, e as da abertura vão
+     nele à parte (abertura/ani/, pelo build.py, das listas de
+     js/data/abertura.js); no arquivo único e na pasta é a GIF de
+     sempre; sem nenhuma das duas, a arte parada */
+  arteDaAbertura(dex){
+    const ani = SPRITES_EMBUTIDOS[`${SPRITES_BASE}abertura/ani/${dex}.gif`] || caminhoSpriteAni(dex, 'frente');
+    return ani || caminhoSprite(dex, 'frente');
+  },
+  /* pixel art só se amplia por inteiro: cada ponto do sprite vira um
+     quadrado de 2, 3, 4… pontos da tela (na conta da densidade da tela,
+     senão um celular de 3x faria quadrados tortos). Cabe na caixa, até
+     o teto */
+  zoomPixel(img, caixa, teto){
+    const w = img.naturalWidth, h = img.naturalHeight;
+    if (!w || !h) return 0;
+    const dpr = window.devicePixelRatio || 1;
+    const z = Math.max(1 / dpr, Math.min(teto || 4, Math.floor(caixa / Math.max(w, h) * dpr) / dpr));
+    img.style.width = w * z + 'px'; img.style.height = h * z + 'px';
+    return z;
   },
 
-  /* a vitrine: um Pokémon de Kanto por vez, em render do Pokémon HOME
-     (sprites_nds/abertura/vitrine/), primeiro em silhueta e depois quem
-     é. Os da lista são os que qualquer um reconhece; o resto se acha na
-     estrada */
-  VITRINE_DA_ABERTURA: [1, 3, 4, 6, 7, 9, 25, 35, 37, 39, 52, 54, 58, 59, 94, 123, 129, 130, 131, 133, 143, 147, 149],
-  renderDaVitrine(dex){
-    const rel = `${SPRITES_BASE}abertura/vitrine/${dex}.webp`;
-    return SPRITES_EMBUTIDOS[rel] || rel;
-  },
+  /* a vitrine: um Pokémon de Kanto por vez (VITRINE_DA_ABERTURA),
+     primeiro em silhueta e depois quem é */
   vitrineDaAbertura(){
     return `<div class="tt-vitrine silhueta tt-e" style="--i:0" aria-hidden="true">
       <div class="tt-palco"><span class="tt-raios"></span>
-        <div class="tt-lente"><img alt="" src="${this.renderDaVitrine(25)}" onerror="this.closest('.tt-vitrine').classList.add('sem-arte')"><span class="tt-flash"></span></div>
+        <div class="tt-lente"><img class="tt-vit-arte" alt="" onload="UI.zoomNaLente(this)" onerror="this.closest('.tt-vitrine').classList.add('sem-arte')"><span class="tt-flash"></span></div>
       </div>
       <div class="tt-placa"><b class="tt-placa-num">Nº ???</b><span class="tt-placa-nome">Quem é esse Pokémon?</span></div>
     </div>`;
+  },
+  zoomNaLente(img){
+    const l = img.closest('.tt-lente');
+    this.zoomPixel(img, (l ? l.clientWidth : 200) * .66, 5);
   },
   /* a volta da vitrine: silhueta, revela, some, o próximo. Um relógio
      só (UI._vitrine), que para sozinho quando a abertura sai da tela */
@@ -522,13 +490,13 @@ const UI = {
     const v = document.querySelector('.tt-vitrine');
     if (!v) return;
     const img = v.querySelector('img'), num = v.querySelector('.tt-placa-num'), nome = v.querySelector('.tt-placa-nome');
-    const fila = _embaralhar(this.VITRINE_DA_ABERTURA.filter(d => DEX[d]));
+    const fila = _embaralhar(VITRINE_DA_ABERTURA.filter(d => DEX[d]));
     const quieto = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
     let i = 0;
     const depois = (ms, f) => { this._vitrine = setTimeout(() => { if (v.isConnected) f(); }, ms); };
     const mostrar = () => {
-      const dex = fila[i++ % fila.length], src = this.renderDaVitrine(dex);
-      const prox = new Image(); prox.src = this.renderDaVitrine(fila[i % fila.length]);
+      const dex = fila[i++ % fila.length], src = this.arteDaAbertura(dex);
+      const prox = new Image(); prox.src = this.arteDaAbertura(fila[i % fila.length]);
       if (quieto){
         img.src = src; v.classList.remove('silhueta');
         num.textContent = 'Nº ' + String(dex).padStart(3, '0'); nome.textContent = DEX[dex].nome;
@@ -546,6 +514,19 @@ const UI = {
       });
     };
     mostrar();
+  },
+
+  /* o desfile de quem ainda não tem jornada: todos no mesmo zoom
+     inteiro, o maior que cabe na largura (e no máximo 3x) */
+  zoomNoDesfile(){
+    const d = document.querySelector('.tt-desfile');
+    if (!d) return;
+    const imgs = [...d.querySelectorAll('img.tt-pk-px')];
+    if (!imgs.length || imgs.some(i => !i.complete || !i.naturalWidth)) return;
+    const soma = imgs.reduce((a, i) => a + i.naturalWidth, 0);
+    const vao = parseFloat(getComputedStyle(d).columnGap) || 0;
+    const largura = d.clientWidth - vao * (imgs.length - 1);
+    for (const i of imgs) this.zoomPixel(i, Math.max(i.naturalWidth, i.naturalHeight) * largura / soma, 3);
   },
 
   /* tocar noutra jornada troca só o cartão, o menu e o chão: o céu, a
@@ -587,7 +568,7 @@ const UI = {
       : [];
     const desfile = time.length
       ? time.map((p, i) => `<span class="tt-pk" style="--i:${i}">${imgSprite(p, 'frente', {classe:'tt-pk-arte'})}</span>`).join('')
-      : [1, 4, 25, 7, 133].map((dex, i) => `<span class="tt-pk" style="--i:${i}"><img class="tt-pk-render" alt="" src="${this.renderDaVitrine(dex)}" onerror="this.remove()"></span>`).join('');
+      : DESFILE_DA_ABERTURA.map((dex, i) => `<span class="tt-pk" style="--i:${i}"><img class="tt-pk-px" alt="" src="${this.arteDaAbertura(dex)}" onload="UI.zoomNoDesfile()" onerror="this.remove()"></span>`).join('');
 
     /* o cartão da jornada */
     let jornada;
