@@ -31,8 +31,9 @@ HTML, CSS e JavaScript puro, sem dependências nem servidor.
 - Quatro rostos de gente da história (`sprites_nds/npcs/trainers/pr_*.png`): o primeiro quadro das folhas de treinador do [PokeRogue](https://github.com/pagefaultgames/pokerogue-assets) (`images/trainer/`), arte de fã no estilo de Black/White.
 - Fotos da ficha do jogador (`sprites_nds/npcs/jogador/`): rostos de treinador do Pokémon Showdown e do Smogon Sprite Project, e dois do PokeRogue (`mistico.png` e `animada.png`), renomeados pelo jeito de cada um.
 - Regras de jogo: Pokérole (Pokérole Project), com dados do Pokerole-Data, mantido pela comunidade.
-- Fonte do título: Press Start 2P, de CodeMan38 (SIL Open Font License 1.1, em `fontes/`).
-- Fonte da interface (fichas da luta, comandos, topo e cabeçalhos): Jost, de The Jost Project Authors / indestructible type* (SIL Open Font License 1.1, em `fontes/`).
+- Renders da vitrine e do chão da abertura (`sprites_nds/abertura/vitrine/`): as artes do Pokémon HOME no repositório de sprites da [PokeAPI](https://github.com/PokeAPI/sprites) (`other/home/`), recortadas e convertidas em WebP.
+- Fonte dos títulos (o logo, a placa do lugar, o título das janelas e o botão principal): Lilita One, de Juan Montoreano (SIL Open Font License 1.1, em `fontes/`).
+- Fonte da interface (fichas da luta, comandos, topo e cabeçalhos): Nunito, de The Nunito Project Authors (SIL Open Font License 1.1, em `fontes/`).
 - Ícones em SVG, efeitos sonoros e trilha calma: feitos no próprio projeto.
 
 Pokémon é marca da Nintendo, Game Freak e Creatures Inc. Este é um projeto de fã, sem fim comercial.

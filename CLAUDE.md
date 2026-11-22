@@ -284,11 +284,13 @@ golpe (6) e as fichas de HP (8), que nada cobre.
 
 O **fundo do site** sai da **cor do jogo** que quem joga escolhe nos Ajustes
 (`CORES_MOLDURA` em `interface.js`, `data-moldura` em `estilo.css`): cada
-cor é um conjunto inteiro no jeito do azul da abertura — degradê de fundo
-(`--fundo-topo`, `--fundo-site`, `--fundo-pe`, brilho em `--fundo-brilho`),
-painel, borda e texto secundário. O padrão é o azul-noite; "Do capítulo"
-deixa o tom de cada capítulo mandar no painel. A abertura e a película do
-cenário leem as mesmas variáveis. Cor nova entra com as quatro do fundo.
+cor é um conjunto inteiro — degradê de fundo (`--fundo-topo`,
+`--fundo-site`, `--fundo-pe`, brilho em `--fundo-brilho`), painel, borda
+e texto secundário. O padrão é o verde-mar da abertura (`kanto`), e quem
+tinha escolhido o azul-noite de antes continua nele; "Do capítulo" deixa
+o tom de cada capítulo mandar no painel. A inscrição e a película do
+cenário leem as mesmas variáveis; a abertura tem o céu dela (ver "A
+abertura"). Cor nova entra com as quatro do fundo.
 A abertura toma a tela inteira (`body.na-titulo`, que tira a coluna
 do `#app`); a tela de morte fica no meio (`body.na-abertura`).
 
@@ -2531,11 +2533,12 @@ A criação é a **ficha de inscrição da Liga** (`UI.telaCriacao`, dados em
 `js/data/inscricao.js`, desenho em `css/criacao.css`): seis passos no
 idioma da abertura — você, seu jeito, o que você quer, aparência, casa e
 começo, conferência —, com o cartão de inscrição se preenchendo ao lado
-(no celular, só na conferência). A fonte de pixel fica só no título da
-ficha: o título de cada passo, o número das etapas, o valor do status e
-os botões do pé são letra do HUD (no `pele.css`), com o corpo de botão
-da abertura. Estavam todos em pixel, miúdos e duros de ler. O estado mora em `UI._cr` até "Sair de
-casa", e `UI.lerCriacao()` entrega pro `Jogo.criar`.
+(no celular, só na conferência). A letra de título (Lilita One) fica só
+no título da ficha e no botão principal: o título de cada passo, o
+número das etapas, o valor do status e os outros botões do pé são letra
+do HUD (no `pele.css`), com o corpo de botão da abertura. Estavam todos
+numa fonte de pixel, miúdos e duros de ler. O estado mora em `UI._cr`
+até "Sair de casa", e `UI.lerCriacao()` entrega pro `Jogo.criar`.
 
 **O que pesa no jogo é escolha, nunca palavra solta.** A ficha antiga era
 texto livre lido por radical, e escrever "ambiciosa" em vez de "teimosa"
@@ -3072,19 +3075,48 @@ são só da casa, e `NOMES_DE_CASA` não tem nome da história — o
 `chk-rostos` confere os dois.
 
 ## A abertura
-A tela de título (`UI.telaInicial`, `css/titulo.css`) é a noite em
-Pallet, de ponta a ponta: o `prado.png` desfocado de leve e puxado pra
-cor do jogo (as `--fundo-*` da moldura), estrelas no céu e um Pidgeot
-que cruza de tempos em tempos. No alto o logo; no meio, lado a lado
-(empilhados no celular), o **cartão da jornada** e o **menu**; embaixo,
-no chão, o seu time vivo — ou, sem jornada, Bulbasaur, Charmander,
-Pikachu e Squirtle —, com as GIFs na escala do jogo (`--q` é o quadro).
+Foi pedido assim: uma interface única, dentro do tema, com coisa pega
+da internet, e sem "aquele Pidgeot feio estático". A tela de título
+(`UI.telaInicial`, `css/titulo.css`) é **Kanto na hora de quem joga**:
+o relógio do computador (`periodoDaAbertura`: madrugada, manhã, dia,
+tarde, noite) põe `data-periodo` na tela, e cada período tem o céu e a
+terra dele (as variáveis no topo do `titulo.css`). A paisagem é
+desenhada ali, em camadas: o céu com o sol (baixo e quente de manhã e
+de tarde) ou a lua, as estrelas e a cadente de noite, as nuvens, e o
+chão em SVG (`paisagemDaAbertura`: as duas serras com a névoa, a vila
+no alto da serra de perto, com a janela que acende de noite, a mata, o
+morro com a estrada de terra e a placa, as árvores e o capim, que
+balança). Cada camada pinta com a cor do período, então o desenho é um
+só. No alto o logo, em Lilita One: "Poké" no ouro e "RPG" no coral, com
+o contorno verde-mar numa cópia do texto atrás (`::before`, `data-t`) e
+o brilho que atravessa — o contorno de todas as palavras fica atrás do
+ouro de todas pela camada (`z-index` no logo, que é o contexto), senão
+o da segunda comia a ponta da primeira. No meio, a **vitrine**, o
+**cartão da jornada** e o **menu** (três colunas no computador; a
+vitrine e o cartão em cima e o menu embaixo no meio-termo; uma coluna no
+celular, com a vitrine pequena do lado da placa); embaixo, no capim, o
+seu time vivo — ou, sem jornada, Bulbasaur, Charmander, Pikachu,
+Squirtle e Eevee no render do HOME, saltitando.
 
+- **A vitrine** é o "Quem é esse Pokémon?": um Pokémon de Kanto por vez
+  (`VITRINE_DA_ABERTURA`, os que qualquer um reconhece, sem lendário nem
+  Mew), primeiro em silhueta, depois o clarão, o número e o nome, com os
+  raios do anime girando atrás da lente. As artes são os renders do
+  Pokémon HOME da PokeAPI (`sprites_nds/abertura/vitrine/<dex>.webp`,
+  recortados e em WebP; o build embute `.webp`). Um relógio só
+  (`UI._vitrine`, `girarVitrine`) que para quando a abertura sai da
+  tela. A troca é sempre no escuro: a silhueta entra antes da arte nova
+  e o filtro só anima na revelação (`.revela`), senão o próximo
+  aparecia colorido enquanto escurecia e a resposta vazava. Com menos
+  movimento pedido, nada de silhueta: um por vez, parado.
 - No alto do cartão, **uma aba por jornada** (`.tt-slot`): nome e
   capítulo, ou "Vazia · começar aqui". Tocar escolhe a jornada em uso
   (`UI.escolherJornada`) e troca só o cartão, o menu e o chão
-  (`partesDaAbertura`): o céu, as estrelas e o Pidgeot continuam, e o
+  (`partesDaAbertura`): o céu, a vitrine e a paisagem continuam, e o
   cartão novo entra sem a espera da abertura (`.tela-titulo.trocou`).
+  O rosto do cartão fica num anel de Pokébola: o anel é a borda
+  (`border-box`) e o fundo verde-mar o miolo (`padding-box`); num
+  `::before` por baixo, o anel cobria o fundo.
 - O cartão lê o save do navegador **cru e só pra mostrar**: nome, foto,
   capítulo, lugar, dias, o estojo das oito, catalogados, time e
   dinheiro, tudo pelo `esc` (o save pode ter vindo de arquivo de outra
@@ -3093,11 +3125,13 @@ Pikachu e Squirtle —, com as GIFs na escala do jogo (`--q` é o quadro).
   jogo, nunca escritos à mão) e tem o Começar.
 - O menu é uma linha por coisa (`.tt-op`): Nova jornada (só com
   jornada), Carregar jogo, Tutorial, Regras, Códice de finais (com a
-  conta) e Ajustes, cada uma com o desenho na pastilha da cor dele. No
-  celular vira grade de dois, só desenho e nome, e o ímpar ocupa a linha.
+  conta) e Ajustes, cada uma com o desenho numa moeda da cor dele, que
+  gira no hover (a linha não sobe: linha que sobe treme embaixo do mouse
+  parado). No meio-termo vira grade de três; no celular, de dois, só
+  desenho e nome, e o ímpar ocupa a linha.
 - O meio fica no meio do que sobra (`margin-block:auto`), e em tela
-  grande cresce (`zoom`), senão sobra noite em volta. O `.json` do
-  Salvar pode ser solto em qualquer lugar dela (`UI.soltarSave`).
+  grande cresce (`zoom`). O `.json` do Salvar pode ser solto em
+  qualquer lugar dela (`UI.soltarSave`).
 
 Na abertura **ainda não tem jogo** (`Estado.dados` é nulo até o
 Continuar): janela que o menu dela abre (Regras, Tutorial, Códice,
@@ -3146,10 +3180,10 @@ das duas finais da história, adiantada até o fim.
 ## A tela de morte
 `UI.telaGameOver(motivo)` fala o idioma da abertura (`css/titulo.css`,
 `.tela-fim`): no meio da tela (`body.na-abertura`), Pokébola do fundo
-apagada e rachada, título em fonte de pixel, o motivo numa caixa de
+apagada e rachada, título na letra de título, o motivo numa caixa de
 diálogo, o resumo em quadros (capítulo, dias, insígnias, reputação; o
 valor grande e o rótulo do tamanho de ler, na letra do HUD — eram 11 px
-de pixel e 10 px de rótulo), os
+de fonte de pixel e 10 px de rótulo), os
 ícones de quem ficou no time e de quem morreu antes (com a causa), e o
 botão da abertura. O save automático é apagado ali.
 
@@ -3271,7 +3305,8 @@ Campeão não recebe de novo: a coroação só diz da passagem do norte.
   offline. Nada de `import`/`export`.
 - A ordem dos scripts está em `index.html`. Script novo entra lá.
 - `python3 build.py` gera `pokerpg.html` e `artefato.html` (arquivo único
-  com sprites, cenários, ícones, rostos, insígnias e gritos embutidos). Rodar depois de qualquer mudança em js/ ou css/.
+  com sprites, cenários, ícones, rostos, insígnias, gritos e os renders
+  da abertura embutidos). Rodar depois de qualquer mudança em js/ ou css/.
 - O build cola os estilos **uma vez**, no lugar do primeiro `<link>`.
   O `re.sub` de antes punha todas as folhas no lugar de cada `<link>`:
   com sete folhas o CSS ia sete vezes, 3 MB a mais em cada arquivo, e
@@ -3305,27 +3340,42 @@ O pedido foi "deixar no formato de hoje o gráfico", e o modelo é o dos
 jogos de Switch (Sword/Shield, Scarlet/Violet) levado pra arte de pixel
 que o projeto tem:
 
-- **A pele** (`css/pele.css`, a última folha do `index.html`) é o
-  acabamento de tudo: vidro (`backdrop-filter`) por cima do cenário do
-  lugar, raio grande, sombra macia, e o desenho de cada linha numa
-  ficha da cor dele (`--ac`, traço branco), como os ícones de menu de
-  Scarlet/Violet. O `estilo.css` monta (grade, tamanho, estado,
-  animação) e a pele veste: quem muda só a cara de uma coisa muda lá.
+- **A pele** (`css/pele.css`) é o acabamento de tudo: vidro
+  (`backdrop-filter`) por cima do cenário do lugar, raio grande, sombra
+  macia, e o desenho de cada linha numa ficha da cor dele (`--ac`,
+  traço branco), como os ícones de menu de Scarlet/Violet. O
+  `estilo.css` monta (grade, tamanho, estado, animação) e a pele veste:
+  quem muda só a cara de uma coisa muda lá.
+- **O tema Kanto** (`css/tema.css`, a última folha do `index.html`) é a
+  identidade da abertura levada pro jogo inteiro, por cima da pele: o
+  verde-mar como cor padrão, o ouro e o coral do logo; todo desenho que
+  abre linha é uma **moeda redonda** (brilho no alto à esquerda, borda de
+  baixo mais escura, gira um pouco quando a linha está na mira); botão é
+  **pílula** com espessura, e o principal (`.btn.destaque`) é o ouro da
+  abertura em Lilita One; a tecla da opção é uma tampa redonda; o rosto
+  de quem joga fica num **anel de Pokébola** no topo, como no cartão da
+  abertura; as fichas de HP e a caixa de mensagem da luta são da tinta
+  verde-mar. Desenho novo que abre linha entra na lista da moeda.
   O cenário da página morava atrás do fundo opaco do body e nunca
   aparecia; o `body.com-cenario` é contexto de empilhamento
   (`isolation:isolate`), senão a camada negativa some calada. Desenho
   novo que abre linha entra no `COR_DO_ICONE` com a cor da ficha dele.
 
-- **Letra**: a interface (fichas da luta, comandos, topo, placas) é
-  Jost, embutida em `css/fonte-jogo.css` (OFL, em `fontes/`), pela
-  variável `--letra-hud`, que mora no `:root`. Ela já morou só no topo
-  e na luta, e tudo fora deles que pedia `var(--letra-hud, …)` caía
-  calado na fonte do sistema — medido com `getComputedStyle`, não no
-  olho. O menu do lugar (portas, o que fazer, para
-  onde ir) e a ação de cena que não é frase (encarar, rolar, encerrar)
-  também. O texto da história continua na fonte do sistema, que é a de
-  ler, e a opção de cena que é frase vai junto com ele. Nada de fonte
-  de pixel fora do título.
+- **Letra**: a interface (fichas da luta, topo, placas, menus) é
+  **Nunito**, e o título é **Lilita One**, as duas embutidas em
+  `css/fonte-jogo.css` (OFL, em `fontes/`), pelas variáveis
+  `--letra-hud` e `--letra-titulo`, que moram no `:root`. A de título
+  vai só em título: o logo, o nome do lugar e do capítulo, o título das
+  janelas, o nome de quem joga, o nome da bolsa, os comandos grandes da
+  luta, o botão principal e o "Vitória!" — nunca em texto de ler nem em
+  rótulo miúdo. A letra do HUD já morou só no topo e na luta, e tudo
+  fora deles que pedia `var(--letra-hud, …)` caía calado na fonte do
+  sistema — medido com `getComputedStyle`, não no olho. O menu do lugar
+  (portas, o que fazer, para onde ir) e a ação de cena que não é frase
+  (encarar, rolar, encerrar) também. O texto da história continua na
+  fonte do sistema, que é a de ler, e a opção de cena que é frase vai
+  junto com ele. Nada de fonte de pixel: a Press Start 2P e a Jost
+  saíram com a abertura nova.
 - **Topo** (`UI.topo`): HUD em duas linhas — rosto, nome e título de
   quem joga com os seis botões de menu (cada um com o desenho de
   `icones.js`; no celular só o desenho, com `aria-label`), e embaixo os
@@ -3445,8 +3495,8 @@ título.
 Time, Sumário, Cartão e Ficha têm estrutura própria (o cartão e a ficha
 com a cara de aparelho, na cor do cartão), mas a letra é a do HUD:
 número (nível, HP, XP, atributo, a conta do golpe, dinheiro, registro)
-em Jost com algarismo de largura fixa, como na ficha de HP da luta —
-dentro dessas quatro janelas `.mono` vira Jost —, nome, aba e rótulo
+na letra do HUD com algarismo de largura fixa, como na ficha de HP da
+luta — dentro dessas quatro janelas `.mono` vira a letra do HUD —, nome, aba e rótulo
 também, e o cabeçalho de seção com o losango (no sumário na cor do tipo
 do Pokémon, `--t1`; na ficha na cor do cartão). O que fazer com um
 Pokémon do time é menu com desenho, como o do lugar.
@@ -3454,7 +3504,7 @@ Pokémon do time é menu com desenho, como o do lugar.
 O **PC** é a carcaça bege com a tela de fósforo, e mora no Centro: o
 topo é a barra do Centro (`UI.barraDoCentro`, "‹ Centro" de volta pro
 balcão, como o "‹ Mochila" dos aparelhos). Na tela, nome, seção (o
-losango na luz verde) e botão são Jost; número (nível, HP, a faixa do
+losango na luz verde) e botão são letra do HUD; número (nível, HP, a faixa do
 sistema) fica na letra de terminal. Golpe tem a faixa da cor do tipo,
 como na luta, e os botões são tecla com espessura que afunda: Guardar
 na caixa / Levar no cinto (desligado com o motivo embaixo) e Ver ficha,

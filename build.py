@@ -40,12 +40,13 @@ if os.path.isdir(SPRITES_DIR):
                     animadas[caminho] = 'data:image/gif;base64,' + base64.b64encode(open(caminho, 'rb').read()).decode('ascii')
             continue
         for a in sorted(arqs):
-            # png de sprite e efeito; jpg só nos fundos de golpe do Showdown
-            if not a.endswith(('.png', '.jpg')):
+            # png de sprite e efeito; jpg só nos fundos de golpe do Showdown;
+            # webp só nos renders da vitrine da abertura (sprites_nds/abertura/)
+            if not a.endswith(('.png', '.jpg', '.webp')):
                 continue
             caminho = os.path.join(raiz, a).replace(os.sep, '/')
             dados = base64.b64encode(open(caminho, 'rb').read()).decode('ascii')
-            tipo = 'image/jpeg' if a.endswith('.jpg') else 'image/png'
+            tipo = 'image/jpeg' if a.endswith('.jpg') else 'image/webp' if a.endswith('.webp') else 'image/png'
             sprites[caminho] = 'data:' + tipo + ';base64,' + dados
     # os gritos vão no mesmo dicionário: o jogo procura qualquer
     # arquivo pelo caminho relativo, seja imagem ou som

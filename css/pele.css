@@ -13,8 +13,9 @@
    o ícone de menu de Scarlet/Violet e do HOME, não o traço fino
    colorido de antes.
 
-   O que continua valendo do CLAUDE.md: Jost na interface e a fonte
-   do sistema no que é de ler; nada de `filter` direto em sprite;
+   O que continua valendo do CLAUDE.md: a letra do HUD (Nunito) na
+   interface, a de título (Lilita One) só em título, e a fonte do
+   sistema no que é de ler; nada de `filter` direto em sprite;
    animação de entrada com fill backwards; o zoom da letra de ler não
    aninha; e tempo de luta passa por --vel-luta.
    ============================================================ */
@@ -818,27 +819,26 @@ body.com-cenario .topo{
 
 /* ============================================================
    A INSCRIÇÃO
-   A fonte de pixel fica só no título da ficha ("Inscrição de
-   treinador"): nada de fonte de pixel fora do título, diz o
-   CLAUDE.md, e os títulos dos passos, o número de cada etapa, o
-   valor do status e os botões do pé estavam nela, miúdos e duros de
-   ler. Agora são letra do HUD; o botão continua com o corpo de botão
-   da abertura (borda grossa, a espessura embaixo).
+   A letra de título (Lilita One) fica só no título da ficha
+   ("Inscrição de treinador") e no botão principal: os títulos dos
+   passos, o número de cada etapa, o valor do status e os outros
+   botões do pé são letra do HUD; o botão continua com o corpo de
+   botão da abertura (a pílula com a espessura embaixo).
    ============================================================ */
 .cr-h{font-family:var(--letra-hud);font-weight:700;font-size:19px;letter-spacing:.005em;line-height:1.3}
 .cr-num{font-family:var(--letra-hud);font-weight:700;font-size:12.5px}
 .cr-valor{font-family:var(--letra-hud);font-weight:700;font-size:13.5px}
-.criacao .tt-btn{font-family:var(--letra-hud);font-weight:700;font-size:15px;letter-spacing:.02em;line-height:1.2;padding:11px 18px 10px}
-.criacao .tt-btn.tt-principal{font-size:16px;padding:12px 22px 11px}
+.criacao .tt-btn{font-family:var(--letra-hud);font-weight:800;font-size:15px;letter-spacing:.02em;line-height:1.2;padding:11px 18px 10px}
+.criacao .tt-btn.tt-principal{font-family:var(--letra-titulo);font-weight:400;font-size:18px;letter-spacing:.03em;padding:12px 22px 11px}
 @media (max-width:480px){
   .cr-h{font-size:17px}
   .criacao .tt-btn{font-size:14px;padding:10px 12px 9px}
-  .criacao .tt-btn.tt-principal{font-size:15px}
+  .criacao .tt-btn.tt-principal{font-size:17px}
 }
 
 /* ============================================================
    A TELA DE MORTE
-   O título fica em pixel, como o da abertura; o resumo é de ler: o
+   O título fica na letra de título, como o da abertura; o resumo é de ler: o
    valor de cada quadro sai grande na letra do HUD, e o rótulo
    embaixo dele sai do tamanho de ler, num tom mais claro.
    ============================================================ */
@@ -854,96 +854,6 @@ body.com-cenario .topo{
 @media (max-width:520px){
   .tf-v{font-size:17px}
   .tf-k{font-size:11.5px}
-}
-
-/* ============================================================
-   A ABERTURA
-   A mesma noite em Pallet, com mais céu: a lua com o halo, uma
-   estrela cadente de tempos em tempos, o chão que escurece embaixo
-   do time e um foco de luz onde ele pisa. O cartão e o menu são de
-   vidro, como o resto.
-   ============================================================ */
-.tt-cena{filter:blur(2px) brightness(.66) saturate(.95)}
-.tt-ceu::before{
-  content:'';position:absolute;right:clamp(7%, 13vw, 17%);top:clamp(22px, 8vh, 84px);
-  width:clamp(58px, 8.5vw, 112px);aspect-ratio:1;border-radius:50%;
-  background:
-    radial-gradient(circle at 66% 30%, rgba(190,182,140,.5) 0 9%, transparent 10%),
-    radial-gradient(circle at 40% 62%, rgba(190,182,140,.42) 0 13%, transparent 14%),
-    radial-gradient(circle at 70% 70%, rgba(190,182,140,.34) 0 7%, transparent 8%),
-    radial-gradient(circle at 36% 32%, #fffef2 0 36%, #f6efcb 62%, #ddd3a2 100%);
-  box-shadow:0 0 0 7px rgba(255,250,214,.07), 0 0 0 16px rgba(255,250,214,.04),
-             0 0 70px 18px rgba(255,244,190,.3), 0 0 190px 70px rgba(120,160,255,.2);
-  animation:ttLua 1.6s var(--suave) .3s backwards;
-}
-@keyframes ttLua{from{opacity:0;transform:translateY(24px) scale(.9)}to{opacity:1;transform:none}}
-.tt-ceu::after{
-  content:'';position:absolute;left:8%;top:14%;width:150px;height:2px;border-radius:2px;
-  background:linear-gradient(90deg, transparent, rgba(255,255,255,.95));
-  transform:rotate(24deg) translateX(-40vw);opacity:0;
-  animation:ttCadente 11s linear 4s infinite;
-}
-@keyframes ttCadente{
-  0%{opacity:0;transform:rotate(24deg) translateX(-10vw)}
-  2%{opacity:1}
-  9%{opacity:0;transform:rotate(24deg) translateX(46vw)}
-  100%{opacity:0;transform:rotate(24deg) translateX(46vw)}
-}
-.tela-titulo::after{
-  content:'';position:absolute;z-index:-1;left:0;right:0;bottom:0;height:34vh;pointer-events:none;
-  background:
-    radial-gradient(60% 46% at 50% 78%, rgba(255,236,170,.2), transparent 70%),
-    linear-gradient(180deg, transparent, color-mix(in srgb, var(--fundo-pe, #090d26) 58%, transparent) 62%, color-mix(in srgb, var(--fundo-pe, #090d26) 88%, transparent));
-}
-.tela-titulo .tt-logo{filter:drop-shadow(0 0 26px rgba(255,203,5,.22)) drop-shadow(0 10px 20px rgba(0,0,0,.45))}
-.tt-jornada, .tt-menu{
-  border-radius:24px;padding:18px;
-  background:linear-gradient(180deg, color-mix(in srgb, var(--fundo-topo, #121a44) 66%, transparent), color-mix(in srgb, var(--fundo-pe, #090d26) 78%, transparent));
-  border:1px solid rgba(255,255,255,.16);
-  box-shadow:0 30px 60px -30px rgba(0,0,0,1), inset 0 1px 0 rgba(255,255,255,.12);
-  -webkit-backdrop-filter:blur(18px) saturate(1.3);backdrop-filter:blur(18px) saturate(1.3);
-}
-.tt-menu{padding:12px}
-.tt-slot{border-radius:14px;padding:8px 11px 9px;background:rgba(0,0,0,.3)}
-.tt-slot.sel{
-  background:linear-gradient(180deg, rgba(255,203,5,.2), rgba(255,203,5,.08));
-  box-shadow:inset 0 0 0 2px var(--tt-amarelo), 0 10px 18px -12px rgba(255,203,5,.8);
-}
-.tt-j-rosto{
-  width:72px;height:72px;border-radius:22px;
-  background:radial-gradient(120% 90% at 50% 100%, rgba(255,203,5,.34), transparent 70%), rgba(0,0,0,.38);
-  box-shadow:0 0 0 2px rgba(9,13,38,.9), 0 0 0 4.5px var(--tt-amarelo), 0 0 22px -4px rgba(255,203,5,.5), 0 10px 18px -8px rgba(0,0,0,.9);
-}
-.tt-j-quem b{font-size:25px}
-.tt-j-fatos span{padding:4px 11px 4px 5px;background:rgba(0,0,0,.32);box-shadow:inset 0 0 0 1px rgba(255,255,255,.13)}
-.tt-j-fatos svg{
-  width:19px;height:19px;padding:3px;border-radius:50%;color:#fff;stroke-width:2.3;
-  background:linear-gradient(180deg, color-mix(in srgb, var(--ac, var(--tt-amarelo)) 88%, #fff), color-mix(in srgb, var(--ac, var(--tt-amarelo)) 80%, #000));
-}
-.tt-num{border-radius:15px;padding:10px 4px 9px;background:rgba(0,0,0,.3);box-shadow:inset 0 0 0 1px rgba(255,255,255,.11)}
-.tt-j-caixa{border-radius:16px;padding:9px}
-.tt-j-sobre svg, .tt-op svg.tt-op-ic{
-  background:
-    linear-gradient(160deg, rgba(255,255,255,.36) 0%, rgba(255,255,255,0) 46%),
-    linear-gradient(180deg, color-mix(in srgb, var(--ac, #5aa7ff) 92%, #fff), color-mix(in srgb, var(--ac, #5aa7ff) 78%, #000));
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.26), inset 0 -3px 0 rgba(0,0,0,.16), 0 6px 12px -6px color-mix(in srgb, var(--ac, #5aa7ff) 70%, #000);
-}
-.tt-j-sobre svg{width:32px;height:32px;padding:7px;border-radius:10px}
-.tt-op{padding:9px 12px 9px 9px;border-radius:16px}
-.tt-op svg.tt-op-ic{width:40px;height:40px;padding:9px;border-radius:13px}
-.tt-op:hover{background:rgba(255,255,255,.1);box-shadow:inset 0 0 0 1px rgba(255,255,255,.14)}
-.tt-desfile{position:relative}
-.tt-pk::after{bottom:-6px;height:14px;background:radial-gradient(closest-side, rgba(0,0,0,.62), transparent)}
-@media (max-width:760px){
-  .tt-jornada, .tt-menu{border-radius:20px;padding:14px}
-  .tt-menu{padding:10px}
-  .tt-j-rosto{width:60px;height:60px;border-radius:18px}
-  .tt-j-quem b{font-size:21px}
-  .tt-op svg.tt-op-ic{width:34px;height:34px;padding:7.5px;border-radius:11px}
-}
-@media (prefers-reduced-motion: reduce){
-  .tt-ceu::before{animation:none}
-  .tt-ceu::after{animation:none;opacity:0}
 }
 
 /* ============================================================

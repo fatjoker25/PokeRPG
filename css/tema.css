@@ -1,0 +1,143 @@
+/* ============================================================
+   O TEMA KANTO
+   A identidade da abertura levada pro jogo inteiro. Carrega por
+   último (index.html), por cima da pele: a pele dá o vidro e a luz,
+   o tema dá a cara.
+
+   - a cor: o verde-mar (data-moldura="kanto", o padrão dos Ajustes),
+     o ouro do logo e o coral do "RPG";
+   - a letra: Lilita One (--letra-titulo) só em título — o nome do
+     lugar, o título das janelas, o nome de quem joga, os comandos
+     grandes da luta, o "Vitória!" —, Nunito (--letra-hud) na
+     interface e a fonte do sistema no que é de ler;
+   - o desenho: todo ícone que abre linha é uma moeda redonda, com o
+     brilho no alto à esquerda e a borda de baixo mais escura (a
+     espessura), como os do menu da abertura;
+   - o botão: pílula com a espessura embaixo, que afunda quando
+     aperta; o principal é o ouro da abertura;
+   - o rosto de quem joga num anel de Pokébola, no alto da tela como
+     no cartão da abertura.
+   ============================================================ */
+
+/* ---------- a moeda do desenho ---------- */
+.escolha > svg.icone,
+.porta > svg.icone,
+.modal > h2 svg.janela-icone,
+.topo-bt svg.topo-ic,
+.nav-aviso-mapa > svg.icone,
+.nav-acao > svg.icone,
+.tm-titulo svg.janela-icone{
+  border-radius:50% !important;
+  background:
+    radial-gradient(circle at 32% 24%, rgba(255,255,255,.5) 0 16%, rgba(255,255,255,0) 44%),
+    linear-gradient(180deg, color-mix(in srgb, var(--ac, var(--borda-forte)) 94%, #fff), color-mix(in srgb, var(--ac, var(--borda-forte)) 70%, #000));
+  box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.3), inset 0 -3px 0 rgba(0,0,0,.16),
+             0 3px 0 color-mix(in srgb, var(--ac, #0a2a2e) 42%, #000), 0 8px 14px -8px rgba(0,0,0,.85);
+}
+.escolha:is(:hover:not(:disabled), :focus-visible) > svg.icone{
+  background:
+    radial-gradient(circle at 32% 24%, rgba(255,255,255,.62) 0 16%, rgba(255,255,255,0) 44%),
+    linear-gradient(180deg, color-mix(in srgb, var(--ac) 88%, #fff), color-mix(in srgb, var(--ac) 80%, #000));
+}
+/* a moeda gira um pouco quando a linha está na mira */
+.escolha > svg.icone, .porta > svg.icone, .topo-bt svg.topo-ic{transition:transform .2s var(--mola), background .15s var(--suave)}
+.escolha:is(:hover:not(:disabled), :focus-visible) > svg.icone,
+.porta:is(:hover, :focus-visible) > svg.icone,
+.topo-bt:hover:not(:disabled) svg.topo-ic{transform:rotate(-8deg) scale(1.06)}
+
+/* ---------- os títulos na letra de título ---------- */
+.modal > h2{font-family:var(--letra-titulo);font-weight:400;letter-spacing:.012em}
+.topo h1{font-family:var(--letra-titulo);font-weight:400;font-size:20px;letter-spacing:.01em}
+.cap-cabecalho .tit{text-shadow:0 3px 0 rgba(4,24,28,.82), 0 6px 18px rgba(0,0,0,.6)}
+.mb-btn .rot{font-family:var(--letra-titulo);font-weight:400;font-size:21px;letter-spacing:.02em}
+.mb-extra .mb-btn .rot{font-size:16.5px}
+.mb-btn.continuar-batalha .rot{font-size:20px}
+.vt-titulo{font-family:var(--letra-titulo);font-weight:400;font-style:normal;letter-spacing:.02em}
+@media (max-width:760px){ .topo h1{font-size:17px} }
+@media (max-width:620px){ .mb-btn .rot{font-size:18.5px} }
+
+/* ---------- o rosto num anel de Pokébola ---------- */
+.topo-rosto{
+  border:3px solid transparent;
+  background:radial-gradient(circle at 50% 30%, #3d8f8a, #0f3d41 78%) padding-box,
+             linear-gradient(180deg, #ef4a36 0 45%, #10292d 45% 55%, #f4f4f0 55% 100%) border-box;
+  box-shadow:0 0 0 2px var(--bg), 0 8px 16px -8px rgba(0,0,0,.9);
+}
+.topo-rosto b{color:rgba(255,255,255,.7);font-family:var(--letra-titulo);font-weight:400}
+@media (max-width:760px){
+  .topo-rosto{border-width:2.5px;box-shadow:0 0 0 1.5px var(--bg)}
+}
+.topo-rep{color:#1b1500;background:linear-gradient(180deg, color-mix(in srgb, var(--destaque) 78%, #fff), var(--destaque));
+  box-shadow:0 1.5px 0 var(--destaque-esc)}
+
+/* ---------- os botões do topo: pílulas ---------- */
+.btn.mini.topo-bt{border-radius:999px;padding:4px 13px 4px 4px}
+.btn.mini.topo-bt:hover:not(:disabled){transform:none}
+@media (min-width:761px) and (max-width:860px){ .btn.mini.topo-bt{padding:4px} }
+@media (max-width:760px){ .btn.mini.topo-bt{padding:3px;border-radius:999px} }
+.topo-chip{border-radius:999px}
+
+/* ---------- o botão: pílula com espessura ---------- */
+.btn{border-radius:999px;font-family:var(--letra-hud);font-weight:700}
+.btn.mini{border-radius:999px}
+.btn.destaque{
+  font-family:var(--letra-titulo);font-weight:400;letter-spacing:.03em;font-size:16px;
+  color:#0c3a40;border:0;
+  background:linear-gradient(180deg, #ffe58a 0%, #ffc93c 48%, #f6ae19 100%);
+  box-shadow:inset 0 2px 0 rgba(255,255,255,.6), 0 3px 0 #b97c08, 0 10px 18px -10px rgba(255,201,60,.7);
+}
+.btn.destaque:hover:not(:disabled){color:#062226;filter:brightness(1.05);
+  box-shadow:inset 0 2px 0 rgba(255,255,255,.7), 0 4px 0 #b97c08, 0 14px 22px -10px rgba(255,201,60,.8)}
+.btn.destaque:active:not(:disabled){box-shadow:inset 0 2px 0 rgba(255,255,255,.5), 0 1px 0 #b97c08;transform:translateY(2px)}
+.modal-pe .btn{border-radius:999px}
+.modal-x{border-radius:50%}
+/* a linha de enviar do campo livre */
+.linha-acao input{border-radius:999px;padding-inline:16px}
+.linha-acao .btn.destaque{border-radius:999px}
+
+/* ---------- as portas ---------- */
+.porta{border-radius:22px}
+@media (max-width:620px){ .porta{border-radius:18px} }
+.porta-nome{font-weight:800}
+
+/* ---------- as opções ----------
+   A tecla que escolhe vira uma tampa redonda, do jeito do botão de
+   controle; o resto da linha continua o da pele. */
+.escolha{border-radius:20px}
+#app .escolhas > .escolha::before{width:27px;height:27px;margin-top:-14px;border-radius:50%;font-weight:900}
+.escolha.menu{font-weight:700}
+.escolha.chamado{border-radius:22px}
+@media (max-width:520px){ .escolha{border-radius:18px} }
+
+/* ---------- as seções do lugar ---------- */
+.painel:has(> .cap-cabecalho) > h3{font-weight:900}
+.painel:has(> .cap-cabecalho) > h3::before{border-radius:50%}
+
+/* ---------- a caixa de diálogo ---------- */
+.narrativa .fala-quem{font-weight:900}
+
+/* ---------- as janelas ---------- */
+.modal{border-radius:26px}
+@media (max-width:620px){ .modal{border-radius:22px} }
+
+/* ---------- a luta ----------
+   Os comandos grandes ganham a letra de título e o desenho numa
+   moeda clara; as fichas de HP continuam como estão. */
+.mb-btn{border-radius:18px}
+.mb-extra .mb-btn{border-radius:14px}
+.mb-btn svg.mb-icone{
+  background:radial-gradient(circle at 32% 24%, rgba(255,255,255,.4) 0 16%, rgba(255,255,255,0) 46%), rgba(0,0,0,.22);
+  box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.3), 0 2px 0 rgba(0,0,0,.25);
+}
+.golpe-btn{border-radius:16px}
+
+/* as fichas de HP e a caixa de mensagem: a tinta verde-mar da abertura,
+   em vez do azul-marinho. A faixa de cada lado (azul o seu, vermelho o
+   de lá) continua */
+.lutador .ficha::before{background:linear-gradient(180deg, rgba(10,46,52,.92), rgba(4,24,28,.95))}
+.log-combate{background:linear-gradient(180deg, rgba(7,36,41,.94), rgba(3,20,24,.96))}
+
+/* ---------- a mochila: o nome da bolsa na letra de título ---------- */
+.moch-nome{font-family:var(--letra-titulo);font-weight:400;letter-spacing:.015em}
+/* o título do Seu time não é h2 da janela: mora no cabeçalho dele */
+.tm-titulo{font-family:var(--letra-titulo);font-weight:400;letter-spacing:.012em}

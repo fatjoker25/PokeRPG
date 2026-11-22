@@ -1,336 +1,513 @@
 /* ============================================================
    TELA DE TÍTULO — PokéRPG
-   "Poké" no amarelo do logo dos jogos, "RPG" branco, os dois na
-   Press Start 2P com contorno azul em pixel (sombra em degrau, não
-   desfoque). A abertura toma a tela inteira: o prado de Pallet à
-   noite, na cor do jogo, com estrelas e um Pidgeot que passa; o logo
-   cai com quique e o brilho atravessa as letras; o cartão da jornada
-   e o menu sobem; o time pula pro chão, um por um. Quem pede menos
+   A abertura é uma paisagem de Kanto na hora de quem joga (o relógio
+   do computador: madrugada, manhã, dia, tarde ou noite), desenhada
+   aqui em camadas: céu, astro, nuvens, a serra longe, a serra perto,
+   a mata, o morro com a estrada e o capim, que balança. No meio, a
+   vitrine: um Pokémon de Kanto de cada vez, primeiro em silhueta
+   ("Quem é esse Pokémon?") e depois revelado, com o número e o nome
+   (renders do Pokémon HOME, em sprites_nds/abertura/vitrine/). Do
+   lado, o cartão da jornada e o menu; embaixo, no capim, o seu time.
+   O logo é Lilita One em ouro com contorno verde-mar. Quem pede menos
    movimento vê tudo parado e já no lugar.
    ============================================================ */
 :root{
-  --tt-amarelo:#ffcb05;
-  --tt-amarelo-esc:#c7a008;
-  --tt-azul:#2a75bb;
-  --tt-azul-esc:#1b3f7a;
-  --tt-tinta:#0b1230;
-  --tt-pixel:'Press Start 2P', ui-monospace, 'Courier New', monospace;
+  /* os nomes ficam (a inscrição usa): o ouro do logo, o verde-mar do
+     contorno e a tinta funda */
+  --tt-amarelo:#ffc93c;
+  --tt-amarelo-esc:#d99a12;
+  --tt-azul:#1f8a8f;
+  --tt-azul-esc:#0c3a40;
+  --tt-tinta:#062226;
+  --tt-coral:#ff6a4d;
+  --tt-pixel:var(--letra-titulo, 'Lilita One', var(--fonte));
 }
 
-/* ---------- a abertura: a tela inteira é a noite em Pallet ---------- */
+/* ---------- a abertura toma a tela inteira ---------- */
 /* body.na-titulo tira a coluna do #app: a abertura vai de ponta a ponta */
 body.na-titulo #app{max-width:none;margin:0;padding:0;display:block;min-height:100vh;min-height:100dvh}
 .tela-titulo{
+  /* o céu e a terra de cada hora (data-periodo, posto pelo relógio do
+     computador); sem período, o dia */
+  --ceu-1:#2f8fd8; --ceu-2:#63b8ea; --ceu-3:#c9eef8;
+  --serra-1:#9cc7dc; --serra-2:#6aa8a5; --mata:#3c8a5d; --morro:#55b16b; --capim:#2f8f4a; --capim-2:#73c873;
+  --trilha:#ecd39a; --nevoa:rgba(255,255,255,.34); --tronco:#7a5232; --arvore:#2e7a4c; --copa-luz:#5cae6a;
+  --parede:#f6efdc; --telhado:#d65143; --janela:#a9d4e6; --madeira:#c8894a; --madeira-2:#8e5a2b;
+  --vidro-tt:rgba(6,36,41,.8); --vidro-tt-2:rgba(12,58,64,.74);
   position:relative;isolation:isolate;overflow:hidden;width:100%;
   min-height:100vh;min-height:100dvh;
   display:flex;flex-direction:column;align-items:center;
-  padding:clamp(26px, 6vh, 64px) 16px 0;text-align:center;
-  background:var(--fundo-site, #0b1030);
+  padding:clamp(20px, 4.4vh, 50px) 16px 0;text-align:center;
+  background:linear-gradient(180deg, var(--ceu-1) 0%, var(--ceu-2) 40%, var(--ceu-3) 70%, var(--ceu-3) 100%);
+  color:#fff;
 }
-/* o prado do começo de tudo, puxado pra noite e pra cor do jogo */
-.tt-cena{
-  position:absolute;inset:-3%;z-index:-3;pointer-events:none;
-  background:var(--tt-cena) 50% 82% / cover no-repeat;
-  image-rendering:pixelated;
-  /* desfocado de leve: é o fundo, e o time na frente fica nítido */
-  filter:blur(2px) brightness(.58) saturate(.85);
-  animation:ttPan 46s ease-in-out infinite alternate;
+.tela-titulo[data-periodo="manha"]{
+  --ceu-1:#3d5aa8; --ceu-2:#d28fb2; --ceu-3:#ffd6a0;
+  --serra-1:#b9a2c4; --serra-2:#8a86ad; --mata:#4e7a66; --morro:#5f9d6a; --capim:#3a7f4f; --capim-2:#6aa86c;
+  --trilha:#efc896; --nevoa:rgba(255,214,190,.36); --tronco:#6e4a33; --arvore:#3f6f55; --copa-luz:#6c9a72;
+  --parede:#f3e1cf; --telhado:#c4504a; --janela:#ffe2a8; --madeira:#c8894a; --madeira-2:#8a5530;
+  --sol:#fff4d6; --sol-2:#ffb26a; --halo:rgba(255,190,140,.6);
 }
-.tt-cena::after{
-  content:'';position:absolute;inset:0;
-  background:
-    radial-gradient(70% 45% at 50% 0%, rgba(var(--fundo-brilho, 42,117,187),.42), transparent 70%),
-    linear-gradient(180deg,
-      var(--fundo-topo, #121a44) 0%,
-      color-mix(in srgb, var(--fundo-topo, #121a44) 88%, transparent) 22%,
-      color-mix(in srgb, var(--fundo-site, #0b1030) 62%, transparent) 50%,
-      color-mix(in srgb, var(--fundo-site, #0b1030) 34%, transparent) 72%,
-      color-mix(in srgb, var(--fundo-pe, #090d26) 62%, transparent) 100%);
+.tela-titulo[data-periodo="tarde"]{
+  --ceu-1:#2e2370; --ceu-2:#c2557b; --ceu-3:#ffb45e;
+  --serra-1:#a3628f; --serra-2:#6a4479; --mata:#3c4660; --morro:#4a6650; --capim:#2c563d; --capim-2:#4f7d56;
+  --trilha:#d9a272; --nevoa:rgba(255,170,120,.26); --tronco:#4a2f2a; --arvore:#2f4a45; --copa-luz:#4c6a58;
+  --parede:#e8c7b1; --telhado:#a3434a; --janela:#ffd07a; --madeira:#b27445; --madeira-2:#6e3e24;
+  --sol:#fff0c8; --sol-2:#ff8f4f; --halo:rgba(255,140,90,.58);
 }
-@keyframes ttPan{from{transform:scale(1.06) translateX(-1.2%)}to{transform:scale(1) translateX(1.2%)}}
+.tela-titulo[data-periodo="noite"]{
+  --ceu-1:#050d24; --ceu-2:#0f2447; --ceu-3:#21496b;
+  --serra-1:#1d3858; --serra-2:#152c48; --mata:#0f2933; --morro:#123430; --capim:#0b2724; --capim-2:#184a3f;
+  --trilha:#3d4c55; --nevoa:rgba(120,170,220,.12); --tronco:#1a1f22; --arvore:#0c2b27; --copa-luz:#16403a;
+  --parede:#3d4a63; --telhado:#2b2f4a; --janela:#ffd66b; --madeira:#4a3a30; --madeira-2:#2a201b;
+}
+.tela-titulo[data-periodo="madrugada"]{
+  --ceu-1:#020615; --ceu-2:#08142e; --ceu-3:#142e4c;
+  --serra-1:#152a45; --serra-2:#0f2038; --mata:#0b1f28; --morro:#0d2725; --capim:#081d1b; --capim-2:#123a33;
+  --trilha:#2e3a42; --nevoa:rgba(110,150,210,.1); --tronco:#121619; --arvore:#081f1c; --copa-luz:#10302b;
+  --parede:#2c364c; --telhado:#1f2338; --janela:#e8b85a; --madeira:#3a2e27; --madeira-2:#221a16;
+}
 
-/* estrelas que piscam em pixel, só no céu */
-.tt-ceu{position:absolute;inset:0 0 50% 0;z-index:-2;pointer-events:none}
+/* ---------- a paisagem ---------- */
+.tt-paisagem{position:absolute;inset:0;z-index:-2;pointer-events:none;overflow:hidden}
+.tt-ceu{position:absolute;inset:0 0 34% 0}
+/* estrela só de noite e de madrugada; a cadente passa de tempos em tempos */
 .tt-estrela{
-  position:absolute;left:var(--x);top:var(--y);width:var(--s);height:var(--s);
-  background:#fff;opacity:.15;image-rendering:pixelated;
-  animation:ttPisca var(--t) steps(3) var(--a) infinite;
+  display:none;position:absolute;left:var(--x);top:var(--y);width:var(--s);height:var(--s);border-radius:50%;
+  background:#fff;opacity:.2;box-shadow:0 0 6px rgba(255,255,255,.6);
+  animation:ttPisca var(--t) ease-in-out var(--a) infinite;
 }
-@keyframes ttPisca{0%,100%{opacity:.12}50%{opacity:.85}}
-
-/* um Pidgeot que cruza o céu de tempos em tempos */
-.tt-voo{position:absolute;z-index:-1;top:11%;left:0;width:100%;pointer-events:none;
-  animation:ttVoo 30s linear 4s infinite;transform:translateX(110vw)}
-.tt-voo .sprite{width:64px;height:auto;filter:var(--fx-sprite, opacity(1)) brightness(.55) saturate(.7);
-  animation:ttPlana 2.4s ease-in-out infinite}
-@keyframes ttVoo{
-  0%{transform:translateX(105vw)}
-  38%, 100%{transform:translateX(-30vw)}
+:is([data-periodo="noite"], [data-periodo="madrugada"]) .tt-estrela{display:block}
+@keyframes ttPisca{0%,100%{opacity:.18}50%{opacity:.95}}
+:is([data-periodo="noite"], [data-periodo="madrugada"]) .tt-ceu::after{
+  content:'';position:absolute;left:8%;top:14%;width:150px;height:2px;border-radius:2px;
+  background:linear-gradient(90deg, transparent, rgba(255,255,255,.95));
+  transform:rotate(24deg) translateX(-40vw);opacity:0;
+  animation:ttCadente 11s linear 4s infinite;
 }
-@keyframes ttPlana{0%, 100%{translate:0 0}50%{translate:0 -9px}}
+@keyframes ttCadente{
+  0%{opacity:0;transform:rotate(24deg) translateX(-10vw)}
+  2%{opacity:1}
+  9%{opacity:0;transform:rotate(24deg) translateX(46vw)}
+  100%{opacity:0;transform:rotate(24deg) translateX(46vw)}
+}
+/* o sol do dia, o sol baixo de manhã e de tarde, e a lua */
+.tt-astro{
+  position:absolute;right:clamp(6%, 11vw, 15%);top:clamp(64px, 12vh, 140px);
+  width:clamp(66px, 8.5vw, 120px);aspect-ratio:1;border-radius:50%;
+  background:radial-gradient(circle at 42% 38%, #fffdf0 0 34%, #fff2b8 58%, #ffd66b 100%);
+  box-shadow:0 0 0 10px rgba(255,240,180,.16), 0 0 0 26px rgba(255,236,170,.08), 0 0 120px 40px rgba(255,226,140,.45);
+  animation:ttAstro 1.8s var(--suave) .2s backwards;
+}
+/* de manhã e de tarde o sol é baixo, grande e quente */
+:is([data-periodo="manha"], [data-periodo="tarde"]) .tt-astro{
+  top:clamp(110px, 19vh, 200px);width:clamp(80px, 10vw, 140px);
+  background:radial-gradient(circle at 50% 50%, var(--sol) 0 34%, color-mix(in srgb, var(--sol-2) 70%, var(--sol)) 64%, var(--sol-2) 100%);
+  box-shadow:0 0 0 12px color-mix(in srgb, var(--halo) 40%, transparent), 0 0 0 30px color-mix(in srgb, var(--halo) 20%, transparent), 0 0 150px 60px var(--halo);
+}
+:is([data-periodo="noite"], [data-periodo="madrugada"]) .tt-astro{
+  background:
+    radial-gradient(circle at 66% 30%, rgba(190,182,140,.5) 0 9%, transparent 10%),
+    radial-gradient(circle at 40% 62%, rgba(190,182,140,.42) 0 13%, transparent 14%),
+    radial-gradient(circle at 70% 70%, rgba(190,182,140,.34) 0 7%, transparent 8%),
+    radial-gradient(circle at 36% 32%, #fffef2 0 36%, #f6efcb 62%, #ddd3a2 100%);
+  box-shadow:0 0 0 8px rgba(255,250,214,.06), 0 0 0 20px rgba(255,250,214,.035), 0 0 80px 20px rgba(255,244,190,.24), 0 0 200px 80px rgba(110,160,255,.16);
+}
+@keyframes ttAstro{from{opacity:0;transform:translateY(30px) scale(.9)}to{opacity:1;transform:none}}
+/* nuvens de algodão que andam devagar; de noite quase somem */
+.tt-nuvens{position:absolute;inset:0 0 42% 0}
+.tt-nuvens i{
+  --nuvem:#fff;
+  position:absolute;left:-30%;top:var(--y);width:var(--w);height:calc(var(--w) * .26);border-radius:999px;
+  background:var(--nuvem);opacity:var(--o, .86);
+  box-shadow:inset 0 calc(var(--w) * -.03) 0 rgba(120,150,190,.18);
+  animation:ttNuvem var(--d) linear var(--a) infinite;
+}
+.tt-nuvens i::before, .tt-nuvens i::after{content:'';position:absolute;border-radius:50%;background:var(--nuvem)}
+.tt-nuvens i::before{width:44%;aspect-ratio:1;left:14%;bottom:24%}
+.tt-nuvens i::after{width:32%;aspect-ratio:1;left:50%;bottom:20%}
+.tt-nuvens i:nth-child(1){--y:20%;--w:200px;--d:120s;--a:-40s}
+.tt-nuvens i:nth-child(2){--y:36%;--w:130px;--d:95s;--a:-70s;--o:.72}
+.tt-nuvens i:nth-child(3){--y:9%;--w:250px;--d:150s;--a:-10s;--o:.64}
+.tt-nuvens i:nth-child(4){--y:48%;--w:110px;--d:80s;--a:-25s;--o:.68}
+[data-periodo="manha"] .tt-nuvens i{--nuvem:#ffe2d6}
+[data-periodo="tarde"] .tt-nuvens i{--nuvem:#ffc0a4;--o:.74}
+:is([data-periodo="noite"], [data-periodo="madrugada"]) .tt-nuvens{opacity:.09}
+@keyframes ttNuvem{from{transform:translateX(0)}to{transform:translateX(170vw)}}
+/* o chão: as serras, a vila, a mata, o morro com a estrada e o capim */
+.tt-terra{position:absolute;left:0;right:0;bottom:0;width:100%;height:max(60vh, 340px)}
+.tt-terra .s1{fill:var(--serra-1)}
+.tt-terra .s2{fill:var(--serra-2)}
+.tt-terra .mt{fill:var(--mata)}
+.tt-terra .mr{fill:var(--morro)}
+.tt-terra .tr{fill:var(--trilha)}
+.tt-terra .cp{fill:var(--capim)}
+.tt-terra .cp2{fill:var(--capim-2)}
+.tt-terra .tc{fill:var(--tronco)}
+.tt-terra .arv.perto .mt{fill:var(--arvore)}
+.tt-terra .br{fill:var(--copa-luz);opacity:.7}
+.tt-terra .pd{fill:var(--parede)}
+.tt-terra .tl{fill:var(--telhado)}
+.tt-terra .jn{fill:var(--janela)}
+:is([data-periodo="noite"], [data-periodo="madrugada"]) .tt-terra .jn{filter:drop-shadow(0 0 3px var(--janela))}
+.tt-terra .pl{fill:var(--madeira)}
+.tt-terra .pl2{fill:var(--madeira-2)}
+.tt-terra .nv0{stop-color:var(--nevoa);stop-opacity:0}
+.tt-terra .nv1{stop-color:var(--nevoa);stop-opacity:1}
+.tt-terra .tufos{transform-box:fill-box;transform-origin:50% 100%;animation:ttCapim 5.5s ease-in-out infinite}
+.tt-terra .tufos.b{animation-duration:6.8s;animation-delay:-2s}
+@keyframes ttCapim{0%,100%{transform:skewX(0deg)}50%{transform:skewX(-5deg)}}
 
 /* ---------- o alto: o logo e a frase ---------- */
-.tt-topo{display:flex;flex-direction:column;align-items:center;padding-bottom:clamp(18px, 4vh, 40px)}
-.tela-titulo .tt-logo{font-size:clamp(30px, min(9vw, 9.5vh), 92px)}
-
-/* ---------- o meio: a jornada e o menu ---------- */
-.tt-corpo{
-  /* o meio fica no meio do que sobra entre o logo e o chão */
-  width:min(820px, 100%);margin-block:auto;
-  display:grid;grid-template-columns:minmax(0, 1fr) minmax(0, 1fr);gap:16px;align-items:stretch;
-  text-align:left;
+.tt-topo{display:flex;flex-direction:column;align-items:center;padding-bottom:clamp(12px, 2.6vh, 28px)}
+.tt-logo{
+  position:relative;isolation:isolate;margin:0;line-height:1;
+  font-family:var(--letra-titulo, 'Lilita One', var(--fonte));font-weight:400;
+  font-size:clamp(50px, min(10vw, 11vh), 116px);letter-spacing:.015em;
+  display:inline-flex;align-items:baseline;gap:.05em;padding:0 .12em .12em;
+  filter:drop-shadow(0 12px 18px rgba(4,24,28,.42));
+  animation:ttCai .9s cubic-bezier(.3,1.5,.5,1) .2s both;
 }
-.tt-e{animation:ttSobe .6s var(--suave) calc(1.1s + var(--i, 0) * .14s) backwards}
-.tt-jornada, .tt-menu{
-  border-radius:20px;padding:16px;
-  background:linear-gradient(180deg, color-mix(in srgb, var(--fundo-topo, #121a44) 78%, transparent), color-mix(in srgb, var(--fundo-pe, #090d26) 86%, transparent));
-  border:1px solid rgba(255,255,255,.13);
-  box-shadow:0 22px 40px -24px rgba(0,0,0,.95), inset 0 1px 0 rgba(255,255,255,.08);
+/* três camadas por palavra, com a ordem decidida no logo inteiro: o
+   contorno (::before) de todas atrás, o ouro (::after) de todas na
+   frente. Com o contorno dentro de cada palavra, o da segunda comia a
+   ponta da primeira. O brilho que atravessa corre por cima do ouro */
+.tt-logo span{position:relative;display:inline-block;color:transparent}
+.tt-logo span::before, .tt-logo span::after{content:attr(data-t);position:absolute;left:0;top:0;pointer-events:none}
+.tt-logo span::before{
+  z-index:0;color:var(--tt-azul-esc);-webkit-text-stroke:.17em var(--tt-azul-esc);
+  text-shadow:0 .07em 0 var(--tt-tinta), 0 .11em 0 var(--tt-tinta);
+}
+.tt-logo span::after{
+  z-index:1;color:transparent;
+  background-image:linear-gradient(105deg, transparent 40%, rgba(255,255,255,.92) 50%, transparent 60%),
+                   linear-gradient(180deg, #fff3a6 0%, #ffd649 38%, #ffb81f 70%, #f39c12 100%);
+  background-size:320% 100%, 100% 100%;background-repeat:no-repeat;background-position:160% 0, 0 0;
+  -webkit-background-clip:text;background-clip:text;
+  animation:ttBrilho 6.5s ease-in-out 1.6s infinite;
+}
+.tt-logo .tt-rpg::after{
+  background-image:linear-gradient(105deg, transparent 40%, rgba(255,255,255,.85) 50%, transparent 60%),
+                   linear-gradient(180deg, #ffc1a8 0%, #ff7a5a 42%, #ee4b33 78%, #d8372a 100%);
+  animation-delay:1.85s;
+}
+@keyframes ttBrilho{0%{background-position:160% 0, 0 0}20%,100%{background-position:-60% 0, 0 0}}
+@keyframes ttCai{
+  0%{opacity:0;transform:translateY(-60px) scale(1.12)}
+  60%{opacity:1}
+  100%{opacity:1;transform:none}
+}
+.tt-sub{
+  margin-top:clamp(8px, 1.4vh, 14px);padding:6px 16px 6px;border-radius:999px;
+  font:900 clamp(11px, 1.3vw, 13.5px)/1.2 var(--letra-hud, var(--fonte));letter-spacing:.24em;text-transform:uppercase;
+  color:#fff;background:rgba(6,34,38,.46);box-shadow:inset 0 0 0 1px rgba(255,255,255,.22);
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+  animation:ttSobe .6s var(--suave) .9s both;
+}
+@keyframes ttSobe{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+/* ---------- o meio: a vitrine, a jornada e o menu ---------- */
+/* no computador, três colunas; no meio-termo, a vitrine e o cartão
+   em cima e o menu embaixo; no celular, uma coluna */
+.tt-corpo{
+  width:min(1180px, 100%);margin-block:auto;
+  display:grid;grid-template-columns:minmax(0, .95fr) minmax(0, 1.12fr) minmax(0, .9fr);
+  grid-template-areas:"vitrine jornada menu";
+  gap:clamp(14px, 2vw, 26px);align-items:center;text-align:left;
+}
+.tt-vitrine{grid-area:vitrine}
+.tt-jornada{grid-area:jornada}
+.tt-menu{grid-area:menu}
+.tt-e{animation:ttSobe .6s var(--suave) calc(.9s + var(--i, 0) * .14s) backwards}
+
+/* a vitrine: a lente, os raios do "Quem é esse Pokémon?" atrás, e a placa */
+.tt-vitrine{display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;min-width:0}
+.tt-vitrine.sem-arte{visibility:hidden}
+.tt-palco{position:relative;display:grid;place-items:center}
+.tt-raios{
+  position:absolute;inset:-30%;border-radius:50%;pointer-events:none;
+  background:repeating-conic-gradient(from 0deg, rgba(255,255,255,.36) 0 6deg, rgba(255,255,255,0) 6deg 18deg);
+  -webkit-mask:radial-gradient(circle, #000 28%, transparent 70%);
+          mask:radial-gradient(circle, #000 28%, transparent 70%);
+  opacity:.75;animation:ttGira 48s linear infinite;
+  transition:opacity .6s var(--suave);
+}
+.tt-vitrine.revela .tt-raios{opacity:1}
+.tt-lente{
+  --l:clamp(220px, 25vw, 330px);
+  position:relative;width:var(--l);aspect-ratio:1;border-radius:50%;display:grid;place-items:center;
+  background:
+    radial-gradient(circle at 50% 46%, rgba(255,255,255,.96) 0 20%, rgba(255,247,214,.6) 42%, rgba(255,255,255,0) 68%),
+    radial-gradient(circle at 50% 50%, rgba(255,255,255,.14) 0 60%, rgba(255,255,255,.05) 61% 100%);
+  box-shadow:inset 0 0 0 2px rgba(255,255,255,.6), inset 0 0 0 9px rgba(255,255,255,.12),
+             0 0 0 6px rgba(6,34,38,.26), 0 26px 60px -24px rgba(4,24,28,.7);
+}
+/* o anel que gira, em traços, como a mira da Pokédex */
+.tt-lente::before{
+  content:'';position:absolute;inset:-14px;border-radius:50%;
+  background:repeating-conic-gradient(from 0deg, rgba(255,255,255,.85) 0 2.2deg, transparent 2.2deg 9deg);
+  -webkit-mask:radial-gradient(circle, transparent 66%, #000 67% 69%, transparent 70%);
+          mask:radial-gradient(circle, transparent 66%, #000 67% 69%, transparent 70%);
+  animation:ttGira 26s linear infinite reverse;
+}
+.tt-lente::after{
+  content:'';position:absolute;left:20%;right:20%;bottom:12%;height:9%;border-radius:50%;
+  background:radial-gradient(closest-side, rgba(4,24,28,.42), transparent);
+}
+@keyframes ttGira{to{transform:rotate(360deg)}}
+.tt-lente img{
+  position:relative;z-index:1;width:76%;height:76%;object-fit:contain;object-position:50% 74%;
+  animation:ttFlutua 3.4s ease-in-out infinite;
+  /* o filtro só anima na revelação: na volta pra silhueta ele vira na
+     hora, senão o próximo aparecia colorido enquanto escurecia */
+  transition:opacity .45s var(--suave), transform .45s var(--suave);
+}
+.tt-vitrine.revela .tt-lente img{transition:filter .55s var(--suave), opacity .45s var(--suave), transform .45s var(--suave)}
+@keyframes ttFlutua{0%,100%{translate:0 0}50%{translate:0 -8px}}
+/* quem é esse Pokémon? — a silhueta, depois a revelação */
+.tt-vitrine.silhueta .tt-lente img{filter:brightness(0) drop-shadow(0 0 3px rgba(255,255,255,.8))}
+.tt-vitrine:is(.sai, .entra) .tt-lente img{opacity:0;transform:scale(.86)}
+.tt-flash{position:absolute;inset:6%;border-radius:50%;z-index:2;pointer-events:none;opacity:0;
+  background:radial-gradient(circle, rgba(255,255,255,.96), rgba(255,255,255,0) 70%)}
+.tt-vitrine.revela .tt-flash{animation:ttFlash .7s var(--suave)}
+@keyframes ttFlash{0%{opacity:0}25%{opacity:1}100%{opacity:0}}
+.tt-placa{
+  display:inline-flex;align-items:center;gap:10px;min-height:42px;max-width:100%;padding:6px 18px 6px 7px;border-radius:999px;
+  background:var(--vidro-tt);box-shadow:inset 0 0 0 1px rgba(255,255,255,.18), 0 12px 24px -14px rgba(0,0,0,.8);
   -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
 }
-.tt-jornada{display:flex;flex-direction:column;gap:14px}
+.tt-placa-num{
+  flex:0 0 auto;padding:4px 10px 3px;border-radius:999px;font:900 12.5px/1.1 var(--letra-hud, var(--fonte));letter-spacing:.06em;
+  color:var(--tt-tinta);background:linear-gradient(180deg, #ffe58a, var(--tt-amarelo));font-variant-numeric:tabular-nums;
+}
+.tt-placa-nome{font:400 clamp(18px, 1.9vw, 23px)/1.15 var(--letra-titulo, var(--fonte));letter-spacing:.01em;color:#fff;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.tt-vitrine.silhueta .tt-placa-nome{color:#ffe58a}
+.tt-vitrine.revela .tt-placa{animation:ttPop .5s cubic-bezier(.3,1.6,.5,1)}
+@keyframes ttPop{0%{transform:scale(.86)}100%{transform:none}}
+
+/* o cartão e o menu: vidro verde-mar */
+.tt-jornada, .tt-menu{
+  border-radius:24px;padding:16px;
+  background:linear-gradient(180deg, var(--vidro-tt-2), var(--vidro-tt));
+  border:1px solid rgba(255,255,255,.16);
+  box-shadow:0 30px 60px -30px rgba(2,16,19,.95), inset 0 1px 0 rgba(255,255,255,.14);
+  -webkit-backdrop-filter:blur(16px) saturate(1.25);backdrop-filter:blur(16px) saturate(1.25);
+}
+.tt-jornada{display:flex;flex-direction:column;gap:13px;align-self:stretch}
 /* as três jornadas deste navegador: uma aba cada, a escolhida acesa */
 .tt-slots{display:grid;grid-template-columns:repeat(3, minmax(0, 1fr));gap:6px;margin:-4px -4px 0}
 .tt-slot{
-  display:flex;flex-direction:column;gap:1px;min-width:0;padding:7px 9px 8px;border-radius:12px;cursor:pointer;text-align:left;
-  border:0;background:rgba(0,0,0,.26);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1);color:#e4ecff;
+  display:flex;flex-direction:column;gap:1px;min-width:0;padding:7px 10px 8px;border-radius:14px;cursor:pointer;text-align:left;
+  border:0;background:rgba(0,0,0,.24);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1);color:#e6f6f3;font:inherit;
   transition:background .15s var(--suave), box-shadow .15s var(--suave);
 }
-.tt-slot:hover{background:rgba(255,255,255,.08)}
+.tt-slot:hover{background:rgba(255,255,255,.09)}
 .tt-slot:focus-visible{outline:2px solid var(--tt-amarelo);outline-offset:2px}
-.tt-slot small{font:700 10px/1.2 var(--letra-hud, var(--fonte));letter-spacing:.1em;text-transform:uppercase;color:#a9b8de}
-.tt-slot b{font:700 14.5px/1.25 var(--letra-hud, var(--fonte));color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.tt-slot span{font:500 11.5px/1.25 var(--letra-hud, var(--fonte));color:#c9d6f5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.tt-slot.vazia b{font-weight:600;color:#a9b8de}
-.tt-slot.sel{background:rgba(255,203,5,.13);box-shadow:inset 0 0 0 2px var(--tt-amarelo), 0 4px 12px -6px rgba(255,203,5,.6)}
+.tt-slot small{font:900 10px/1.2 var(--letra-hud, var(--fonte));letter-spacing:.12em;text-transform:uppercase;color:#9fd3cc;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tt-slot b{font:800 14.5px/1.25 var(--letra-hud, var(--fonte));color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tt-slot span{font:600 11.5px/1.25 var(--letra-hud, var(--fonte));color:#c4e6e1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tt-slot.vazia b{font-weight:700;color:#9fd3cc}
+.tt-slot.sel{background:linear-gradient(180deg, rgba(255,201,60,.22), rgba(255,201,60,.08));box-shadow:inset 0 0 0 2px var(--tt-amarelo), 0 8px 16px -10px rgba(255,201,60,.8)}
 .tt-slot.sel small{color:var(--tt-amarelo)}
-/* trocou de jornada: o cartão novo e o time do chão entram já, sem a
-   espera da abertura (que é pra quem acabou de chegar) */
+/* trocou de jornada: o cartão novo e o time do chão entram já */
 .tela-titulo.trocou .tt-btn{animation-delay:0s}
 .tela-titulo.trocou .tt-pk{animation-delay:calc(var(--i, 0) * .08s)}
-.tt-j-topo{display:flex;align-items:center;gap:13px;min-width:0}
+.tt-j-topo{display:flex;align-items:center;gap:15px;min-width:0;padding-left:5px}
+/* o rosto num anel de Pokébola: metade vermelha, metade branca. O anel
+   é a borda (border-box) e o fundo verde-mar fica dentro (padding-box):
+   num ::before por baixo, o anel cobria o fundo e a foto ficava sem chão */
 .tt-j-rosto{
-  position:relative;flex:0 0 auto;width:64px;height:64px;border-radius:50%;overflow:hidden;display:grid;place-items:center;
-  background:radial-gradient(circle at 50% 30%, rgba(255,255,255,.2), rgba(0,0,0,.35) 75%);
-  box-shadow:0 0 0 3px var(--tt-amarelo), 0 6px 14px -6px rgba(0,0,0,.8);
+  position:relative;flex:0 0 auto;width:74px;height:74px;border-radius:50%;display:grid;place-items:center;overflow:hidden;
+  border:5px solid transparent;
+  background:radial-gradient(circle at 50% 35%, #3d8f8a, #0f3d41 75%) padding-box,
+             linear-gradient(180deg, #ef4a36 0 46%, var(--tt-tinta) 46% 54%, #f4f4f0 54% 100%) border-box;
+  box-shadow:0 0 0 2px var(--tt-tinta), 0 10px 18px -8px rgba(0,0,0,.9);
 }
-.tt-j-rosto img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:50% 100%;image-rendering:pixelated}
-.tt-j-rosto b{font:400 22px/1 var(--tt-pixel);color:rgba(255,255,255,.4)}
+.tt-j-rosto img{position:absolute;inset:0;width:100%;height:100%;border-radius:50%;object-fit:contain;object-position:50% 100%;image-rendering:pixelated}
+.tt-j-rosto b{font:400 26px/1 var(--letra-titulo, var(--fonte));color:rgba(255,255,255,.6);position:relative}
 .tt-j-rosto:not(.vazio) b{display:none}
 .tt-j-quem{display:flex;flex-direction:column;gap:3px;min-width:0}
-.tt-j-quem b{font:700 22px/1.15 var(--letra-hud, var(--fonte));color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.tt-j-quem span{font:500 13.5px/1.35 var(--letra-hud, var(--fonte));color:#c9d6f5}
+.tt-j-quem b{font:400 26px/1.1 var(--letra-titulo, var(--fonte));letter-spacing:.01em;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tt-j-quem span{font:700 13.5px/1.35 var(--letra-hud, var(--fonte));color:#c4e6e1}
 .tt-j-fatos{display:flex;flex-wrap:wrap;gap:6px}
 .tt-j-fatos span{
-  display:inline-flex;align-items:center;gap:5px;padding:4px 10px 4px 8px;border-radius:999px;
-  font:600 12.5px/1.2 var(--letra-hud, var(--fonte));color:#e4ecff;
-  background:rgba(0,0,0,.28);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1);
+  display:inline-flex;align-items:center;gap:6px;padding:4px 11px 4px 5px;border-radius:999px;
+  font:700 12.5px/1.2 var(--letra-hud, var(--fonte));color:#e6f6f3;
+  background:rgba(0,0,0,.26);box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);
 }
-.tt-j-fatos svg{width:14px;height:14px;color:var(--ac, var(--tt-amarelo))}
-/* o estojo das oito, pequeno */
+.tt-j-fatos svg{width:20px;height:20px;padding:3.5px;border-radius:50%;color:#fff;stroke-width:2.3;
+  background:linear-gradient(180deg, color-mix(in srgb, var(--ac, var(--tt-amarelo)) 88%, #fff), color-mix(in srgb, var(--ac, var(--tt-amarelo)) 78%, #000))}
+/* o estojo das oito: veludo vinho com o friso dourado */
 .tt-j-caixa{
-  display:grid;grid-template-columns:repeat(8, minmax(0, 1fr));gap:5px;padding:8px;border-radius:13px;
-  background:linear-gradient(180deg, #3b1d2a, #26111b);
-  box-shadow:0 0 0 2px #a8853a, inset 0 3px 6px rgba(0,0,0,.6);
+  display:grid;grid-template-columns:repeat(8, minmax(0, 1fr));gap:5px;padding:9px;border-radius:16px;
+  background:linear-gradient(180deg, #4a1f2e, #2a0f1a);
+  box-shadow:0 0 0 2px #c79a3d, inset 0 3px 6px rgba(0,0,0,.6);
 }
 .tt-casa{aspect-ratio:1;border-radius:50%;display:grid;place-items:center;background:rgba(0,0,0,.35);box-shadow:inset 0 2px 3px rgba(0,0,0,.7)}
 .tt-casa img{width:84%;height:84%;object-fit:contain;filter:drop-shadow(0 1px 1px rgba(0,0,0,.6))}
 .tt-j-num{display:grid;grid-template-columns:repeat(3, minmax(0, 1fr));gap:6px}
 .tt-num{
-  display:flex;flex-direction:column;align-items:center;gap:2px;padding:9px 4px 8px;border-radius:12px;text-align:center;
-  background:rgba(0,0,0,.26);box-shadow:inset 0 0 0 1px rgba(255,255,255,.09);min-width:0;
+  display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 4px 8px;border-radius:15px;text-align:center;
+  background:rgba(0,0,0,.24);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1);min-width:0;
 }
-.tt-num svg{width:18px;height:18px;color:var(--ac, var(--tt-amarelo))}
-.tt-num b{font:700 17px/1.15 var(--letra-hud, var(--fonte));color:#fff;font-variant-numeric:tabular-nums;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.tt-num small{font:500 11.5px/1.2 var(--letra-hud, var(--fonte));color:#a9b8de}
+.tt-num svg{width:24px;height:24px;padding:4px;border-radius:50%;color:#fff;stroke-width:2.2;
+  background:linear-gradient(180deg, color-mix(in srgb, var(--ac, var(--tt-amarelo)) 88%, #fff), color-mix(in srgb, var(--ac, var(--tt-amarelo)) 78%, #000))}
+.tt-num b{font:900 17px/1.15 var(--letra-hud, var(--fonte));color:#fff;font-variant-numeric:tabular-nums;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tt-num small{font:700 11.5px/1.2 var(--letra-hud, var(--fonte));color:#9fd3cc}
 .tt-j-sobre{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px}
-.tt-j-sobre li{display:flex;align-items:center;gap:11px;font:500 14px/1.35 var(--letra-hud, var(--fonte));color:#dfe8ff}
+.tt-j-sobre li{display:flex;align-items:center;gap:11px;font:700 14px/1.35 var(--letra-hud, var(--fonte));color:#e6f6f3}
 .tt-j-sobre svg{
-  flex:0 0 auto;width:30px;height:30px;padding:6px;border-radius:9px;stroke-width:2;color:#fff;
-  background:color-mix(in srgb, var(--ac, #5aa7ff) 70%, #000);box-shadow:inset 0 0 0 1px rgba(255,255,255,.18);
+  flex:0 0 auto;width:34px;height:34px;padding:7.5px;border-radius:50%;stroke-width:2.1;color:#fff;
+  background:
+    linear-gradient(160deg, rgba(255,255,255,.36) 0%, rgba(255,255,255,0) 46%),
+    linear-gradient(180deg, color-mix(in srgb, var(--ac, #3fc6b4) 92%, #fff), color-mix(in srgb, var(--ac, #3fc6b4) 76%, #000));
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.28), 0 6px 12px -6px color-mix(in srgb, var(--ac, #3fc6b4) 70%, #000);
 }
 .tt-jornada .tt-btn{margin-top:auto;width:100%}
-.tt-j-novo{display:flex;flex-direction:column;gap:8px;padding:6px 2px}
-.tt-j-novo b{font:700 21px/1.2 var(--letra-hud, var(--fonte));color:#fff}
-.tt-j-novo span{font-size:14.5px;line-height:1.55;color:#c9d6f5;text-wrap:pretty}
+.tt-j-novo{display:flex;flex-direction:column;gap:7px;padding:4px 2px}
+.tt-j-novo b{font:400 27px/1.1 var(--letra-titulo, var(--fonte));letter-spacing:.01em;color:#fff}
+.tt-j-novo span{font-size:14.5px;line-height:1.55;color:#cfe9e5;text-wrap:pretty}
 .tt-jornada.nova{justify-content:space-between}
 
-/* o menu: uma linha por coisa, o desenho numa pastilha da cor dele */
-.tt-menu{display:flex;flex-direction:column;gap:4px;padding:10px}
+/* o menu: o desenho numa moeda da cor dele, o nome e a linha do que é */
+.tt-menu{display:grid;grid-template-columns:minmax(0, 1fr);gap:6px;padding:10px;align-content:start}
 .tt-op{
-  display:flex;align-items:center;gap:12px;width:100%;padding:8px 12px 8px 8px;border-radius:13px;
-  border:0;background:transparent;color:#eef3ff;cursor:pointer;text-align:left;font:inherit;
-  transition:background .15s var(--suave), transform .15s var(--mola);
+  position:relative;display:flex;align-items:center;gap:11px;width:100%;min-width:0;padding:9px 10px 9px 9px;border-radius:16px;
+  border:0;background:rgba(255,255,255,.05);box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);color:#f2fbf9;cursor:pointer;text-align:left;font:inherit;
+  transition:background .15s var(--suave), box-shadow .15s var(--suave);
 }
-.tt-op::after{content:'›';margin-left:auto;font:700 22px/1 var(--letra-hud, var(--fonte));color:rgba(255,255,255,.35);transition:color .15s, transform .15s var(--mola)}
 .tt-op svg.tt-op-ic{
-  flex:0 0 auto;width:36px;height:36px;padding:8px;border-radius:11px;stroke-width:2;color:#fff;
-  background:radial-gradient(circle at 50% 30%, color-mix(in srgb, var(--ac, #5aa7ff) 62%, #fff), var(--ac, #5aa7ff) 60%, color-mix(in srgb, var(--ac, #5aa7ff) 70%, #000));
-  box-shadow:0 3px 0 color-mix(in srgb, var(--ac, #5aa7ff) 45%, #000);
+  flex:0 0 auto;width:38px;height:38px;padding:8.5px;border-radius:50%;stroke-width:2.1;color:#fff;
+  background:
+    linear-gradient(160deg, rgba(255,255,255,.4) 0%, rgba(255,255,255,0) 48%),
+    linear-gradient(180deg, color-mix(in srgb, var(--ac, #3fc6b4) 92%, #fff), color-mix(in srgb, var(--ac, #3fc6b4) 74%, #000));
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.3), 0 3px 0 color-mix(in srgb, var(--ac, #3fc6b4) 40%, #000);
+  transition:transform .18s var(--mola);
 }
 .tt-op-txt{display:flex;flex-direction:column;gap:1px;min-width:0}
-.tt-op-txt b{font:600 16px/1.2 var(--letra-hud, var(--fonte))}
-.tt-op-txt small{font:400 12.5px/1.3 var(--letra-hud, var(--fonte));color:#a9b8de;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.tt-op:hover{background:rgba(255,255,255,.08);transform:translateX(2px)}
-.tt-op:hover::after{color:var(--tt-amarelo);transform:translateX(2px)}
-.tt-op:active{transform:translateY(1px)}
+.tt-op-txt b{font:800 15.5px/1.2 var(--letra-hud, var(--fonte))}
+.tt-op-txt small{font:600 12px/1.3 var(--letra-hud, var(--fonte));color:#9fd3cc;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* no hover quem se mexe é a moeda, não a linha: linha que sobe treme
+   embaixo do mouse parado */
+.tt-op:hover{background:rgba(255,255,255,.12);box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--ac, #fff) 60%, transparent)}
+.tt-op:hover svg.tt-op-ic{transform:scale(1.08) rotate(-6deg)}
+.tt-op:active{background:rgba(255,255,255,.18)}
 .tt-op:focus-visible{outline:3px solid var(--tt-amarelo);outline-offset:1px}
 
-/* ---------- embaixo: o time no chão do prado ---------- */
+/* ---------- embaixo: o time no capim ---------- */
 .tt-desfile{
-  padding-top:clamp(14px, 3vh, 30px);width:min(1100px, 100%);
-  display:flex;align-items:flex-end;justify-content:center;gap:clamp(4px, 2.4vw, 34px);
-  min-height:clamp(110px, 20vh, 240px);
+  position:relative;padding-top:clamp(10px, 2vh, 22px);width:min(1100px, 100%);
+  display:flex;align-items:flex-end;justify-content:center;gap:clamp(6px, 2.6vw, 34px);
+  min-height:clamp(96px, 16vh, 190px);
 }
-.tt-pk{position:relative;display:flex;align-items:flex-end;justify-content:center;
-  animation:ttPula .7s cubic-bezier(.3,1.6,.5,1) calc(1.5s + var(--i, 0) * .12s) backwards}
+.tt-pk{position:relative;display:flex;align-items:flex-end;justify-content:center;--q:clamp(96px, 15vh, 170px);
+  animation:ttPula .7s cubic-bezier(.3,1.6,.5,1) calc(1.4s + var(--i, 0) * .12s) backwards}
 .tt-pk::after{
-  content:'';position:absolute;z-index:-1;left:50%;bottom:-5px;width:78%;height:12px;transform:translateX(-50%);
-  border-radius:50%;background:radial-gradient(closest-side, rgba(0,0,0,.55), transparent);
+  content:'';position:absolute;z-index:-1;left:50%;bottom:-6px;width:78%;height:14px;transform:translateX(-50%);
+  border-radius:50%;background:radial-gradient(closest-side, rgba(0,0,0,.5), transparent);
 }
-.tt-pk{--q:clamp(120px, 19vh, 230px)}
 .tt-pk .sprite{width:var(--q);height:auto}
 /* a arte parada (sem a GIF) tem 24% de folga embaixo do pé */
 .tt-pk .sprite:not(.ani){height:var(--q);margin-bottom:calc(var(--q) * -.24)}
+/* sem jornada: os de sempre, no render do HOME, saltitando */
+.tt-pk .tt-pk-render{width:calc(var(--q) * .8);height:calc(var(--q) * .8);object-fit:contain;object-position:50% 100%;
+  animation:ttSaltita 2.8s ease-in-out calc(var(--i, 0) * -.5s) infinite}
+@keyframes ttSaltita{0%,38%,62%,100%{translate:0 0}50%{translate:0 -10px}}
 @keyframes ttPula{0%{opacity:0;transform:translateY(40px) scale(.7)}100%{opacity:1;transform:none}}
 
 .tt-pe{
   width:100%;padding:12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
-  font:500 11.5px/1.4 var(--letra-hud, var(--fonte));letter-spacing:.02em;color:rgba(214,226,255,.55);
-  background:linear-gradient(180deg, transparent, rgba(0,0,0,.35));
+  font:700 11.5px/1.4 var(--letra-hud, var(--fonte));letter-spacing:.02em;color:rgba(235,252,248,.8);
+  text-shadow:0 1px 2px rgba(0,0,0,.7);
+  background:linear-gradient(180deg, transparent, rgba(0,0,0,.32));
 }
 
-/* tela grande: o meio cresce junto, senão sobra noite em volta */
-@media (min-width:1500px) and (min-height:940px){
-  .tela-titulo .tt-corpo{zoom:1.2}
-  .tt-sub{zoom:1.15}
+/* tela grande: o meio cresce junto */
+@media (min-width:1600px) and (min-height:960px){
+  .tela-titulo .tt-corpo{zoom:1.12}
 }
-@media (max-width:760px){
-  .tt-corpo{grid-template-columns:minmax(0, 1fr);gap:12px;max-width:460px}
-  .tt-pk{--q:96px}
-  .tt-desfile{gap:clamp(2px, 1.4vw, 14px);min-height:96px}
+/* meio-termo: a vitrine e o cartão em cima, o menu numa faixa embaixo */
+@media (max-width:1179px){
+  .tt-corpo{grid-template-columns:minmax(0, 1fr) minmax(0, 1.15fr);grid-template-areas:"vitrine jornada" "menu menu";max-width:900px}
+  .tt-menu{grid-template-columns:repeat(3, minmax(0, 1fr))}
+  .tt-lente{--l:clamp(220px, 30vw, 320px)}
+}
+/* celular: uma coluna, com a vitrine pequena do lado da placa */
+@media (max-width:860px){
+  .tt-corpo{grid-template-columns:minmax(0, 1fr);grid-template-areas:"vitrine" "jornada" "menu";gap:14px;max-width:470px}
+  .tt-menu{grid-template-columns:repeat(2, minmax(0, 1fr))}
+  .tt-op:last-child:nth-child(odd){grid-column:1 / -1}
+  .tt-vitrine{flex-direction:row;justify-content:center;gap:16px}
+  .tt-lente{--l:clamp(112px, 31vw, 150px)}
+  .tt-lente::before{inset:-9px}
+  .tt-placa{flex-direction:column;align-items:flex-start;gap:5px;border-radius:18px;padding:10px 14px 11px;text-align:left}
+  .tt-placa-nome{white-space:normal;text-wrap:balance}
+  .tt-pk{--q:86px}
+  .tt-desfile{gap:clamp(2px, 1.4vw, 14px);min-height:92px}
+  .tt-astro, :is([data-periodo="manha"], [data-periodo="tarde"]) .tt-astro{top:12px;right:3%;width:52px;
+    box-shadow:0 0 0 7px rgba(255,240,180,.14), 0 0 60px 18px rgba(255,226,140,.38)}
 }
 @media (max-width:480px){
-  .tela-titulo{padding-top:24px}
-  .tt-jornada, .tt-menu{border-radius:18px}
-  .tt-op{padding:6px 10px 6px 6px}
+  .tela-titulo{padding-top:18px}
+  .tt-jornada, .tt-menu{border-radius:20px;padding:13px}
+  .tt-menu{padding:8px}
+  .tt-op{gap:9px;padding:8px}
   .tt-op svg.tt-op-ic{width:32px;height:32px;padding:7px}
-  .tt-op-txt b{font-size:15px}
-  .tt-j-quem b{font-size:20px}
-  .tt-pk{--q:80px}
-  /* o menu vira grade de dois, só o desenho e o nome */
-  .tt-menu{display:grid;grid-template-columns:minmax(0, 1fr) minmax(0, 1fr);gap:6px;padding:8px}
-  .tt-op{gap:9px;padding:7px 8px;background:rgba(255,255,255,.04)}
-  .tt-op svg.tt-op-ic{width:30px;height:30px;padding:6px;border-radius:9px}
-  .tt-op::after{display:none}
-  /* número ímpar de coisas: a última ocupa a linha inteira */
-  .tt-op:last-child:nth-child(odd){grid-column:1 / -1}
   .tt-op-txt small{display:none}
   .tt-op-txt b{font-size:14.5px}
+  .tt-j-quem b{font-size:22px}
+  .tt-j-rosto{width:62px;height:62px;border-width:4px}
+  .tt-pk{--q:72px}
+  .tt-slot small{letter-spacing:.05em}
+  .tt-astro, :is([data-periodo="manha"], [data-periodo="tarde"]) .tt-astro{top:6px;right:2%;width:40px}
 }
 
-/* ---------- o logo ---------- */
-.tt-logo{
-  position:relative;margin:0;line-height:1;
-  font-family:var(--tt-pixel);font-weight:400;
-  font-size:clamp(30px, 9vw, 64px);letter-spacing:.02em;
-  display:inline-flex;align-items:baseline;gap:.08em;
-  animation:ttCai .9s cubic-bezier(.3,1.5,.5,1) .25s both;
-}
-.tt-logo span{display:inline-block;--c:var(--tt-azul-esc);
-  /* contorno de pixel: oito direções em degrau de 3px, depois a sombra funda */
-  text-shadow:
-    3px 0 var(--c), -3px 0 var(--c), 0 3px var(--c), 0 -3px var(--c),
-    3px 3px var(--c), -3px 3px var(--c), 3px -3px var(--c), -3px -3px var(--c),
-    0 7px 0 var(--tt-tinta), 3px 7px 0 var(--tt-tinta), -3px 7px 0 var(--tt-tinta);
-}
-.tt-poke{color:var(--tt-amarelo)}
-.tt-rpg{color:#fff;--c:var(--tt-azul-esc)}
-@keyframes ttCai{
-  0%{opacity:0;transform:translateY(-70px) scale(1.15)}
-  60%{opacity:1}
-  100%{opacity:1;transform:none}
-}
-/* o brilho que atravessa as letras, uma vez na entrada e depois de tempos
-   em tempos: uma cópia do texto por cima, recortada pelas próprias letras
-   (background-clip:text), então ele nunca passa pelo fundo */
-.tt-logo span{position:relative}
-.tt-logo span::after{
-  content:attr(data-t);position:absolute;left:0;top:0;pointer-events:none;
-  color:transparent;text-shadow:none;
-  background:linear-gradient(105deg, transparent 42%, rgba(255,255,255,.9) 50%, transparent 58%) no-repeat;
-  background-size:300% 100%;background-position:150% 0;
-  -webkit-background-clip:text;background-clip:text;
-  animation:ttBrilho 5.5s ease-in-out 1.2s infinite;
-}
-.tt-rpg::after{animation-delay:1.45s}
-@keyframes ttBrilho{0%{background-position:150% 0}24%,100%{background-position:-50% 0}}
-
-/* respira de leve depois de cair */
-.tt-poke{animation:ttFlutua 3.6s ease-in-out 1.2s infinite}
-.tt-rpg{animation:ttFlutua 3.6s ease-in-out 1.45s infinite}
-@keyframes ttFlutua{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
-
-.tt-sub{
-  margin-top:28px;font-family:var(--tt-pixel);font-size:12px;letter-spacing:.06em;line-height:1.7;
-  color:#dbe6ff;text-shadow:0 2px 0 var(--tt-tinta);
-  text-wrap:balance;max-width:30ch;
-  animation:ttSobe .6s var(--suave) 1s both;
-}
-.tt-aviso{
-  max-width:440px;margin:18px auto 0;color:var(--texto-fraco);font-size:13px;line-height:1.6;
-  animation:ttSobe .6s var(--suave) 1.15s both;
-}
-@keyframes ttSobe{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-
-/* ---------- o botão da abertura (e da tela de morte) ---------- */
+/* ---------- o botão da abertura (e da inscrição e da tela de morte) ---------- */
 .tt-btn{
-  font-family:var(--tt-pixel);font-size:10.5px;letter-spacing:.06em;line-height:1.3;
-  color:#e7ecff;background:#1b2552;
-  border:3px solid #3a4c93;border-radius:4px;
-  padding:13px 16px 12px;cursor:pointer;position:relative;
-  box-shadow:0 4px 0 #0a1030, inset 0 -3px 0 rgba(0,0,0,.25);
+  font:800 15px/1.2 var(--letra-hud, var(--fonte));letter-spacing:.02em;
+  color:#e6f6f3;background:linear-gradient(180deg, #1d555b, #133f44);
+  border:0;border-radius:999px;
+  padding:12px 20px 11px;cursor:pointer;position:relative;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.18), 0 4px 0 #082a2e, 0 14px 22px -14px rgba(0,0,0,.9);
   /* backwards, nunca both: o both segurava o último quadro e o hover não subia */
-  animation:ttBotao .5s cubic-bezier(.3,1.4,.5,1) calc(1.35s + var(--i, 0) * .11s) backwards;
-  transition:transform .12s, box-shadow .12s, background .15s, border-color .15s, color .15s;
+  animation:ttBotao .5s cubic-bezier(.3,1.4,.5,1) calc(1.2s + var(--i, 0) * .11s) backwards;
+  transition:transform .12s, box-shadow .12s, background .15s, color .15s;
 }
-.tt-btn:hover{background:#25336d;border-color:var(--tt-amarelo);color:var(--tt-amarelo);transform:translateY(-2px);box-shadow:0 6px 0 #0a1030, inset 0 -3px 0 rgba(0,0,0,.25)}
-.tt-btn:active{transform:translateY(3px);box-shadow:0 1px 0 #0a1030, inset 0 -2px 0 rgba(0,0,0,.25)}
+.tt-btn:hover{background:linear-gradient(180deg, #236970, #174a50);color:#fff;transform:translateY(-2px);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.3), 0 6px 0 #082a2e, 0 18px 26px -14px rgba(0,0,0,.9)}
+.tt-btn:active{transform:translateY(3px);box-shadow:inset 0 0 0 1px rgba(255,255,255,.18), 0 1px 0 #082a2e}
 .tt-btn:focus-visible{outline:3px solid var(--tt-amarelo);outline-offset:3px}
 .tt-principal{
-  background:var(--tt-amarelo);color:var(--tt-azul-esc);border-color:#fff3b0;
-  box-shadow:0 4px 0 var(--tt-amarelo-esc), 0 0 22px -4px rgba(255,203,5,.55), inset 0 -3px 0 rgba(0,0,0,.12);
-  font-size:12px;padding:15px 22px 14px;
+  font:400 21px/1.1 var(--letra-titulo, var(--fonte));letter-spacing:.03em;
+  background:linear-gradient(180deg, #ffe58a 0%, #ffc93c 48%, #f6ae19 100%);color:var(--tt-azul-esc);
+  padding:14px 26px 13px;
+  box-shadow:inset 0 2px 0 rgba(255,255,255,.65), inset 0 -3px 0 rgba(160,96,0,.25), 0 5px 0 #b97c08, 0 0 30px -6px rgba(255,201,60,.75), 0 18px 26px -14px rgba(0,0,0,.8);
 }
-.tt-principal:hover{background:#ffd93b;color:var(--tt-azul-esc);border-color:#fff;box-shadow:0 6px 0 var(--tt-amarelo-esc), 0 0 30px -2px rgba(255,203,5,.7), inset 0 -3px 0 rgba(0,0,0,.12)}
-.tt-principal:active{box-shadow:0 1px 0 var(--tt-amarelo-esc), inset 0 -2px 0 rgba(0,0,0,.12)}
+.tt-principal:hover{background:linear-gradient(180deg, #fff0b0 0%, #ffd55c 48%, #ffb92a 100%);color:var(--tt-tinta);
+  box-shadow:inset 0 2px 0 rgba(255,255,255,.75), inset 0 -3px 0 rgba(160,96,0,.25), 0 7px 0 #b97c08, 0 0 38px -4px rgba(255,201,60,.85), 0 20px 28px -14px rgba(0,0,0,.8)}
+.tt-principal:active{box-shadow:inset 0 2px 0 rgba(255,255,255,.6), 0 1px 0 #b97c08}
 @keyframes ttBotao{
   from{opacity:0;transform:translateY(18px) scale(.9)}
   to{opacity:1;transform:none}
 }
-
 @media (max-width:480px){
-  .tt-btn{font-size:9.5px;padding:12px 12px 11px}
-  .tt-sub{font-size:10.5px;max-width:24ch}
-  .tt-principal{font-size:11px;width:100%}
-  .tt-logo span{--d:2px;
-    text-shadow:
-      2px 0 var(--c), -2px 0 var(--c), 0 2px var(--c), 0 -2px var(--c),
-      2px 2px var(--c), -2px 2px var(--c), 2px -2px var(--c), -2px -2px var(--c),
-      0 5px 0 var(--tt-tinta), 2px 5px 0 var(--tt-tinta), -2px 5px 0 var(--tt-tinta);
-  }
+  .tt-btn{font-size:14px;padding:11px 14px 10px}
+  .tt-principal{font-size:19px;width:100%}
 }
 
 @media (prefers-reduced-motion: reduce){
-  .tela-titulo *, .tela-titulo *::after{animation:none !important}
-  .tt-voo{display:none}
+  .tela-titulo *, .tela-titulo *::before, .tela-titulo *::after{animation:none !important}
+  .tt-lente img{transition:none}
+  :is([data-periodo="noite"], [data-periodo="madrugada"]) .tt-ceu::after{display:none}
 }
 
 /* ============================================================
    FIM DA JORNADA — a tela de morte, no idioma da abertura
-   Mesmo fundo, mesma fonte de pixel e mesmo botão, mas sem estrela
-   e sem amarelo: a Pokébola do fundo está apagada e rachada, e o
-   vermelho é o de Pokébola, não o de alarme.
+   Mesmo botão e a mesma letra de título, mas sem céu e sem ouro: a
+   Pokébola do fundo está apagada e rachada, e o vermelho é o de
+   Pokébola, não o de alarme.
    ============================================================ */
 .tela-fim{
   position:relative;overflow:hidden;isolation:isolate;width:100%;
@@ -339,7 +516,7 @@ body.na-titulo #app{max-width:none;margin:0;padding:0;display:block;min-height:1
   border-radius:var(--raio);border:1px solid color-mix(in srgb, #e0473a 30%, var(--borda));
   background:
     radial-gradient(110% 70% at 50% 0%, rgba(224,71,58,.16), transparent 60%),
-    linear-gradient(180deg, #120d1c, #0a0812 70%, #07060c);
+    linear-gradient(180deg, #13101c, #0a0812 70%, #07060c);
   box-shadow:var(--sombra-alta);
   animation:tfEntra 1.4s var(--suave) both;
 }
@@ -353,9 +530,9 @@ body.na-titulo #app{max-width:none;margin:0;padding:0;display:block;min-height:1
 @keyframes tfBola{from{opacity:0;transform:translateX(-50%) rotate(-12deg) scale(.85)}to{opacity:1}}
 @keyframes tfRacha{to{stroke-dashoffset:0}}
 .tf-titulo{
-  margin:0;font-family:var(--tt-pixel);font-weight:400;line-height:1.3;
-  font-size:clamp(22px, 6.4vw, 40px);letter-spacing:.06em;color:#f2f2f2;
-  text-shadow:3px 0 #5c1712, -3px 0 #5c1712, 0 3px #5c1712, 0 -3px #5c1712, 0 6px 0 #000;
+  margin:0;font-family:var(--letra-titulo, var(--fonte));font-weight:400;line-height:1.15;
+  font-size:clamp(30px, 7.4vw, 54px);letter-spacing:.02em;color:#f2f2f2;
+  text-shadow:0 3px 0 #5c1712, 0 6px 18px rgba(0,0,0,.6);
   text-wrap:balance;
   animation:ttSobe .8s var(--suave) .4s both;
 }
@@ -375,21 +552,21 @@ body.na-titulo #app{max-width:none;margin:0;padding:0;display:block;min-height:1
 }
 .tf-quadro{
   display:flex;flex-direction:column;gap:6px;align-items:center;justify-content:center;
-  padding:12px 8px;border-radius:10px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);
+  padding:12px 8px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);
 }
-.tf-v{font-family:var(--tt-pixel);font-size:11px;overflow-wrap:anywhere;line-height:1.4;color:#f2ecff;font-variant-numeric:tabular-nums;text-wrap:balance}
-.tf-k{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#9d93b0}
-.tf-sub{margin:26px 0 10px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#9d93b0;font-weight:700;
+.tf-v{font:900 19px/1.25 var(--letra-hud, var(--fonte));overflow-wrap:anywhere;color:#f2ecff;font-variant-numeric:tabular-nums;text-wrap:balance}
+.tf-k{font:800 11.5px/1.2 var(--letra-hud, var(--fonte));letter-spacing:.12em;text-transform:uppercase;color:#9d93b0}
+.tf-sub{margin:26px 0 10px;font:900 12px/1.2 var(--letra-hud, var(--fonte));letter-spacing:.14em;text-transform:uppercase;color:#9d93b0;
   animation:ttSobe .6s var(--suave) 1.4s both}
 .tf-time{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;max-width:40rem;animation:ttSobe .6s var(--suave) 1.45s both}
 .tf-pk{
   display:flex;flex-direction:column;align-items:center;gap:2px;width:108px;padding:8px 6px 10px;
-  border-radius:10px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.08);
+  border-radius:14px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.08);
 }
 .tf-pk-icone{display:block;height:60px}
 .tf-pk-icone img{width:80px;height:60px;image-rendering:pixelated;filter:grayscale(.75) brightness(.85)}
 .tf-pk.morto .tf-pk-icone img{filter:grayscale(1) brightness(.6)}
-.tf-pk-nome{font-size:13px;font-weight:700;color:#ece6f6;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tf-pk-nome{font:800 14px/1.2 var(--letra-hud, var(--fonte));color:#ece6f6;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .tf-pk-nota{font-size:11px;color:#9d93b0;line-height:1.35}
 .tf-botoes{margin-top:30px}
 .tf-botoes .tt-btn{animation:ttBotao .5s cubic-bezier(.3,1.4,.5,1) 1.7s backwards}
