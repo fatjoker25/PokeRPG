@@ -485,10 +485,10 @@ c3_surpresa:{
   texto:[
     'Você sai de trás do tronco com a Pokébola já na mão.',
     'Eles levam três segundos inteiros pra entender o que está acontecendo, e três segundos é muita coisa.',
-    fala('Caçador Roque', 'Ô —', null, 'O mais velho começa, e não termina.')
+    fala('Roque', 'Ô —', null, 'O mais velho começa, e não termina.')
   ],
   ef:{flag:['atacou_de_surpresa','cruzou_os_cacadores']},
-  batalha:{dex:23, nivel:16, tipo:'treinador', treinador:'Caçador Roque', fuga:false,
+  batalha:{dex:23, nivel:16, tipo:'treinador', treinador:'Roque', fuga:false,
            vitoria:'c3_venceu_cacador', derrota:'c3_perdeu_cacador', gameover:'gameover'}
 },
 
@@ -706,14 +706,14 @@ c3_caçadores:{
     'Eles param quando te veem. O da frente olha pras suas mãos, depois pro seu cinto, depois pros seus olhos. Nessa ordem exata, que é a ordem de quem já fez isso muitas vezes.',
     'O mais novo, atrás, diz um nome baixinho, Roque, do jeito de quem avisa. O da frente nem vira a cabeça.',
     d=>{
-      if (d.flags.pegou_mochila_cacador) return fala('Caçador Roque', 'Essa mochila é minha.', null, 'Sem levantar a voz nenhum tom.');
-      if (d.flags.pikachu_aliado) return fala('Caçador Roque', 'Esse amarelo aí atrás de você é meu.', 'frio', 'Ele olha o Pikachu, não você.');
-      if (d.flags.esperou_os_cacadores) return fala('Caçador Roque', 'Tava aí faz tempo?', null, 'Ele sorri. O sorriso não sobe até os olhos.');
-      return fala('Caçador Roque', 'Viu alguma coisa aí atrás?', null, 'Ele sorri. O sorriso não sobe até os olhos.');
+      if (d.flags.pegou_mochila_cacador) return fala('Roque', 'Essa mochila é minha.', null, 'Sem levantar a voz nenhum tom.');
+      if (d.flags.pikachu_aliado) return fala('Roque', 'Esse amarelo aí atrás de você é meu.', 'frio', 'Ele olha o Pikachu, não você.');
+      if (d.flags.esperou_os_cacadores) return fala('Roque', 'Tava aí faz tempo?', null, 'Ele sorri. O sorriso não sobe até os olhos.');
+      return fala('Roque', 'Viu alguma coisa aí atrás?', null, 'Ele sorri. O sorriso não sobe até os olhos.');
     }
   ],
   ef:{flag:'cruzou_os_cacadores',
-      npc:{nome:'Caçador Roque', opiniao:0, memoria:'Te encontrou na trilha da Floresta de Viridian.'}},
+      npc:{nome:'Roque', opiniao:0, memoria:'Te encontrou na trilha da Floresta de Viridian.'}},
   escolhas:[
     {texto:'Enfrentar. Alguém tem que enfrentar.', vai:'c3_luta_cacador'},
     {texto:'Mentir. Dizer que não viu nada.', vai:'c3_mentir'},
@@ -725,7 +725,7 @@ c3_caçadores:{
 },
 
 c3_blefe_caderno:{
-  falante:'Caçador Roque',
+  falante:'Roque',
   vozes:['P','o caçador mais novo','N','N'],
   texto:[
     '"Eu sei o seu nome."',
@@ -745,7 +745,7 @@ c3_blefe_caderno:{
 },
 
 c3_negociou_alto:{
-  falante:'Caçador Roque',
+  falante:'Roque',
   vozes:['P','N','N','N','N'],
   texto:[
     '"Devolvo se vocês soltarem tudo que tiver na caminhonete."',
@@ -760,13 +760,13 @@ c3_negociou_alto:{
   ],
   ef:{flag:['inimigo_cacadores','soltou_dois_da_caminhonete'],
       rep:{eixo:'bom',delta:2,motivo:'Negociou a soltura de dois Pokémon com quem os capturou'},
-      npc:{nome:'Caçador Roque', opiniao:-4, memoria:'Você o forçou a soltar dois. Ele anotou seu rosto na floresta.'},
+      npc:{nome:'Roque', opiniao:-4, memoria:'Você o forçou a soltar dois. Ele anotou seu rosto na floresta.'},
       registrar:'Negociou a soltura de dois Pokémon. Os caçadores anotaram seu rosto.'},
   escolhas:[{texto:'Sair da floresta.', vai:'c3_fim'}]
 },
 
 c3_devolveu_mochila:{
-  falante:'Caçador Roque',
+  falante:'Roque',
   vozes:['N','N'],
   texto:[
     'Você devolve a mochila. Ele confere o conteúdo na sua frente, sem pressa, item por item.',
@@ -777,7 +777,7 @@ c3_devolveu_mochila:{
     '"Vai embora, {garoto|garota}."'
   ],
   ef:{perdeItens:{'Great Ball':3}, dinheiro:-600,
-      npc:{nome:'Caçador Roque', opiniao:-1, memoria:'Você devolveu a mochila dele na trilha.'}},
+      npc:{nome:'Roque', opiniao:-1, memoria:'Você devolveu a mochila dele na trilha.'}},
   escolhas:[{texto:'Ir embora.', vai:'c3_fim'}]
 },
 
@@ -790,25 +790,25 @@ c3_correu_com_mochila:{
   ],
   ef:{hp:-4, causa:'Corrida com a mochila roubada',
       flag:['inimigo_cacadores','provas_da_floresta'],
-      npc:{nome:'Caçador Roque', opiniao:-5, memoria:'Você roubou a mochila dele e correu. Ele te procurou por dois dias.'},
+      npc:{nome:'Roque', opiniao:-5, memoria:'Você roubou a mochila dele e correu. Ele te procurou por dois dias.'},
       rep:{eixo:'bom',delta:1,motivo:'Roubou de quem rouba'}},
   escolhas:[{texto:'Sair da floresta.', vai:'c3_fim'}]
 },
 
 c3_luta_cacador:{
-  falante:'Caçador Roque',
+  falante:'Roque',
   vozes:['N','N'],
   texto:[
     'O homem suspira como quem já fez isso antes e não gosta de fazer.',
     'Ele solta a Pokébola no chão em vez de jogar. Nem olha o próprio Pokémon sair.',
     '"Rápido," ele diz pro parceiro. "A gente tem que descer ainda hoje."'
   ],
-  batalha:{dex:23, nivel:16, tipo:'treinador', treinador:'Caçador Roque', fuga:false,
+  batalha:{dex:23, nivel:16, tipo:'treinador', treinador:'Roque', fuga:false,
            vitoria:'c3_venceu_cacador', derrota:'c3_perdeu_cacador', gameover:'gameover'}
 },
 
 c3_venceu_cacador:{
-  falante:'Caçador Roque',
+  falante:'Roque',
   vozes:['N'],
   texto:[
     'O Ekans volta pra Pokébola e o homem não reclama, não xinga, não ameaça.',
@@ -817,7 +817,7 @@ c3_venceu_cacador:{
     'Eles saem pela trilha. Sem pressa nenhuma. O mais velho para uma vez e olha pra trás, não pra você — pra clareira.'
   ],
   ef:{rep:{eixo:'bom',delta:2,motivo:'Enfrentou caçadores na Floresta de Viridian'},
-      npc:{nome:'Caçador Roque', opiniao:-5, memoria:'Você o derrotou na floresta. Ele anotou seu rosto.'},
+      npc:{nome:'Roque', opiniao:-5, memoria:'Você o derrotou na floresta. Ele anotou seu rosto.'},
       flag:'inimigo_cacadores', registrar:'Fez inimigos: os caçadores da floresta anotaram seu rosto.'},
   escolhas:[
     {texto:'Seguir eles.', vai:'c3_seguir_depois'},
@@ -840,7 +840,7 @@ c3_seguir_depois:{
 },
 
 c3_perdeu_cacador:{
-  falante:'Caçador Roque',
+  falante:'Roque',
   vozes:['N','N'],
   texto:[
     'Quando acaba, ele se agacha na sua frente pra ficar na sua altura, o que é pior que qualquer coisa que ele podia fazer de pé.',
@@ -851,7 +851,7 @@ c3_perdeu_cacador:{
     'É aritmética. Tudo nele é aritmética.'
   ],
   ef:{dinheiro:-500, hp:-5, causa:'Espancamento na Floresta de Viridian',
-      npc:{nome:'Caçador Roque', opiniao:-3, memoria:'Te derrubou na floresta e te deixou ir. Como aviso.'},
+      npc:{nome:'Roque', opiniao:-3, memoria:'Te derrubou na floresta e te deixou ir. Como aviso.'},
       flag:['humilhado_cacadores','cacadores_seguiram'], registrar:'Perdeu para os caçadores e foi deixado como aviso.'},
   escolhas:[
     {texto:d=>d.flags.esperou_os_cacadores ? 'Levantar e ir até a estaca.' : 'Levantar e voltar pra clareira.', vai:'c3_de_volta'},
@@ -879,7 +879,7 @@ c3_mentiu_bem:{
 },
 
 c3_mentiu_mal:{
-  falante:'Caçador Roque',
+  falante:'Roque',
   vozes:['N','N'],
   texto:[
     'Você mente, mas o rosto entrega. Ele olha pra você mais um segundo do que seria confortável.',
@@ -888,7 +888,7 @@ c3_mentiu_mal:{
     'Ele diz isso como se anotasse um compromisso, e segue trilha adentro com o outro.'
   ],
   ef:{flag:'cacadores_seguiram',
-      npc:{nome:'Caçador Roque', opiniao:-2, memoria:'Você mentiu mal para ele na floresta.'}},
+      npc:{nome:'Roque', opiniao:-2, memoria:'Você mentiu mal para ele na floresta.'}},
   escolhas:[
     {texto:'Voltar pra clareira.', vai:'c3_de_volta'},
     {texto:'Sair da floresta.', vai:'c3_fim'}
@@ -903,7 +903,7 @@ c3_negociar:{
 },
 
 c3_negociou:{
-  falante:'Caçador Roque',
+  falante:'Roque',
   vozes:['N','N'],
   texto:[
     'O homem ri pela primeira vez de verdade.',
@@ -913,14 +913,14 @@ c3_negociou:{
     'O dinheiro pesa no bolso de um jeito estranho, mais do que papel devia pesar.'
   ],
   ef:{dinheiro:1500, rep:{eixo:'ruim',delta:2,motivo:'Vendeu a localização de um Pokémon preso a caçadores'},
-      npc:{nome:'Caçador Roque', opiniao:2, memoria:'Você vendeu informação pra ele. Ele te acha promissor.'},
+      npc:{nome:'Roque', opiniao:2, memoria:'Você vendeu informação pra ele. Ele te acha promissor.'},
       flag:['vendeu_para_cacadores','endereco_celadon_cedo'],
       registrar:'Vendeu informação para os caçadores. Eles gostaram de você.'},
   escolhas:[{texto:'Sair da floresta.', vai:'c3_fim'}]
 },
 
 c3_negociou_mal:{
-  falante:'Caçador Roque',
+  falante:'Roque',
   vozes:['N','N','N'],
   texto:[
     '"Informação." Ele repete a palavra como se fosse engraçada. "{Garoto|Garota}, eu amarrei o Pokémon. Eu sei onde ele tá."',

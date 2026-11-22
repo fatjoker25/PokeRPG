@@ -1203,7 +1203,7 @@ c12_passeio:{
 },
 
 c12_ficou_pra_tras:{
-  falante:'Guia Orin',
+  falante:'Orin',
   vozes:['N','N'],
   texto:[
     'Você fica pra trás na curva e deixa o grupo seguir, e ninguém conta cabeça num passeio de onze pessoas até o fim.',
@@ -1216,7 +1216,7 @@ c12_ficou_pra_tras:{
     '"Fica quiet{o|a}", ele sussurra. "Tem plantão."'
   ],
   ef:{flag:['quase_viu_o_setor7','nico_te_salvou'],
-      npc:{nome:'Guia Orin', opiniao:3, memoria:'Correu setecentos metros para te puxar de trás de uma moita antes do plantão te ver.'},
+      npc:{nome:'Orin', opiniao:3, memoria:'Correu setecentos metros para te puxar de trás de uma moita antes do plantão te ver.'},
       registrar:'O guia Orin te impediu de ser vist{o|a} pelo plantão do setor 7.',
       presagio:'Ele correu. Ele não gritou, não chamou ninguém, não te entregou. Ele correu.'},
   escolhas:[
@@ -1228,7 +1228,7 @@ c12_ficou_pra_tras:{
 },
 
 c12_guia_perguntado:{
-  falante:'Guia Orin',
+  falante:'Orin',
   vozes:['P','N','N','N','N'],
   texto:[
     '"Pra onde vai esse trilho?"',
@@ -1242,7 +1242,7 @@ c12_guia_perguntado:{
     '"Não volta."',
     'Ele solta o seu braço e vai embora quase correndo, e acena pro casal de idosos, e o casal acena de volta.'
   ],
-  ef:{npc:{nome:'Guia Orin', opiniao:1, memoria:'Te avisou, apavorado e sorrindo, para não voltar à Zona à noite.'},
+  ef:{npc:{nome:'Orin', opiniao:1, memoria:'Te avisou, apavorado e sorrindo, para não voltar à Zona à noite.'},
       flag:'aviso_do_guia',
       presagio:'Ele sorriu o tempo inteiro. Todo mundo aqui sorri o tempo inteiro.'},
   escolhas:[
@@ -1254,11 +1254,11 @@ c12_guia_perguntado:{
 },
 
 c12_nico:{
-  falante:'Guia Orin',
+  falante:'Orin',
   vozes:['N','N','N','P','N','N','N'],
   texto:[
     d=>d.flags.quase_viu_o_setor7 ? 'Atrás da moita, ele não responde nada. Ele te devolve pro grupo por uma trilha de fora, e na catraca, sem olhar pra você, diz uma coisa só.' : '',
-    d=>d.flags.quase_viu_o_setor7 ? fala('Guia Orin', 'Saída dos funcionários. Seis e quarenta.', 'baixo') : '',
+    d=>d.flags.quase_viu_o_setor7 ? fala('Orin', 'Saída dos funcionários. Seis e quarenta.', 'baixo') : '',
     d=>d.flags.quase_viu_o_setor7 ? 'Às seis e quarenta ele sai pela porta dos funcionários e vem direto até você, sem olhar pros lados.' : 'Você espera o Orin na saída dos funcionários, às dezoito e quarenta.',
     d=>d.flags.quase_viu_o_setor7 ? '' : 'Ele te vê e quase volta pra dentro, e não volta porque a porta já fechou atrás dele e reabrir daria mais na vista.',
     'Vocês conversam encostados num muro, no escuro, do lado de um contêiner de lixo, e ele fala muito rápido e muito baixo.',
@@ -1272,7 +1272,7 @@ c12_nico:{
     '"Eu tenho esse emprego e mais nada. Eu tenho isso e mais nada, e meu pai tá com problema de coluna, e a gente mora nos fundos da casa da minha tia."'
   ],
   ef:{flag:['sabe_do_setor7','nico_falou'],
-      npc:{nome:'Guia Orin', opiniao:4, memoria:'Te contou tudo sobre o setor 7 encostado num muro, no escuro, ao lado de um contêiner de lixo.'},
+      npc:{nome:'Orin', opiniao:4, memoria:'Te contou tudo sobre o setor 7 encostado num muro, no escuro, ao lado de um contêiner de lixo.'},
       moral:-5,
       registrar:'Orin denunciou o setor 7 ao diretor há quatro meses e nada aconteceu.',
       executar:d=>{ if (c12_hora(d) < 19) Relogio.ate(19); return []; }},
@@ -1285,7 +1285,7 @@ c12_nico:{
 },
 
 c12_protegeu_nico:{
-  falante:'Guia Orin',
+  falante:'Orin',
   vozes:['P','N','P','N','N','N','N','N'],
   texto:[
     '"Eu não vou falar seu nome pra ninguém."',
@@ -1302,7 +1302,7 @@ c12_protegeu_nico:{
   ],
   ef:{flag:['protegeu_nico','tem_a_chave_do_nico'],
       itens:{'Chave do portão de pedestre':1},
-      npc:{nome:'Guia Orin', opiniao:7, memoria:'Te deu a chave do portão de pedestre depois que você prometeu não usar o nome dele.'},
+      npc:{nome:'Orin', opiniao:7, memoria:'Te deu a chave do portão de pedestre depois que você prometeu não usar o nome dele.'},
       rep:{eixo:'bom',delta:3,motivo:'Protegeu a fonte antes de usar a fonte'},
       registrar:'Orin te deu a chave do portão de pedestre da trilha três.',
       presagio:'"Essa chave você achou no chão." Ele pensou nisso antes de oferecer.'},
@@ -1315,7 +1315,7 @@ c12_protegeu_nico:{
 },
 
 c12_mapa_do_nico:{
-  falante:'Guia Orin',
+  falante:'Orin',
   vozes:['P','N','P','N','P','N','N','P'],
   texto:[
     '"Me desenha o mapa e fica em casa."',
@@ -1334,7 +1334,7 @@ c12_mapa_do_nico:{
   ],
   ef:{flag:['tem_o_mapa_do_nico','protegeu_nico'],
       itens:{'Mapa do Orin':1},
-      npc:{nome:'Guia Orin', opiniao:6, memoria:'Desenhou o mapa do setor 7 no verso de um folheto e ficou em casa, com a sua permissão.'},
+      npc:{nome:'Orin', opiniao:6, memoria:'Desenhou o mapa do setor 7 no verso de um folheto e ficou em casa, com a sua permissão.'},
       rep:{eixo:'bom',delta:3,motivo:'Deixou alguém ajudar sem se destruir'},
       moral:8,
       registrar:'Orin desenhou o mapa do setor 7 com os três pontos de plantão e os horários de ronda.'},
@@ -1347,7 +1347,7 @@ c12_mapa_do_nico:{
 },
 
 c12_nico_vai:{
-  falante:'Guia Orin',
+  falante:'Orin',
   vozes:['P'],
   texto:[
     '"Você vai comigo hoje à noite."',
@@ -1359,14 +1359,14 @@ c12_nico_vai:{
   ],
   ef:{flag:['nico_junto'],
       itens:{'Garrafa de água':1},
-      npc:{nome:'Guia Orin', opiniao:6, memoria:'Foi com você ao setor 7, de noite, depois de dizer não quatro vezes.'},
+      npc:{nome:'Orin', opiniao:6, memoria:'Foi com você ao setor 7, de noite, depois de dizer não quatro vezes.'},
       rep:{eixo:'bom',delta:1,motivo:'Convenceu alguém a fazer o que ele queria fazer'},
       presagio:'Ele levou água pra dois. Guia sempre leva água.'},
   escolhas:[{texto:'Ir à noite.', vai:'c12_noite_zona'}]
 },
 
 c12_nico_acusado:{
-  falante:'Guia Orin',
+  falante:'Orin',
   vozes:['P','N','N'],
   texto:[
     '"Então você é cúmplice."',
@@ -1377,7 +1377,7 @@ c12_nico_acusado:{
     'Ele vai embora sem dizer mais nada, sem correr, sem olhar pra trás.',
     'Fica você, o muro, o contêiner e a frase, que agora é sua.'
   ],
-  ef:{npc:{nome:'Guia Orin', opiniao:-2, memoria:'Você o chamou de cúmplice. Ele concordou e foi embora.'},
+  ef:{npc:{nome:'Orin', opiniao:-2, memoria:'Você o chamou de cúmplice. Ele concordou e foi embora.'},
       flag:'afastou_nico', moral:-8,
       registrar:'Chamou o Orin de cúmplice. Ele concordou.'},
   escolhas:[
@@ -1389,7 +1389,7 @@ c12_nico_acusado:{
 },
 
 c12_pediu_desculpa_nico:{
-  falante:'Guia Orin',
+  falante:'Orin',
   vozes:['P','N','P','N'],
   texto:[
     'Você anda Fuchsia inteira à noite procurando e acha ele nos fundos da casa da tia, sentado num degrau, sem lanterna, no escuro.',
@@ -1405,7 +1405,7 @@ c12_pediu_desculpa_nico:{
   ],
   ef:{flag:['tem_o_mapa_do_nico'], limpaFlag:'afastou_nico',
       itens:{'Mapa do Orin':1},
-      npc:{nome:'Guia Orin', opiniao:5, memoria:'Você voltou para pedir desculpa. Ele te deu o mapa em silêncio, sentado num degrau.'},
+      npc:{nome:'Orin', opiniao:5, memoria:'Você voltou para pedir desculpa. Ele te deu o mapa em silêncio, sentado num degrau.'},
       rep:{eixo:'bom',delta:3,motivo:'Voltou para pedir desculpa'},
       moral:10,
       registrar:'Pediu desculpa ao Orin e recebeu o mapa.',
@@ -2017,7 +2017,7 @@ c12_conta_pro_nico:{
     'Da janela do corredor você vê os dois na sala por dezenove minutos, e o diretor mostrando a pasta, e o Orin sentado com as duas mãos no rosto.'
   ],
   ef:{flag:['diretor_contou_pro_nico'],
-      npc:{nome:'Guia Orin', opiniao:5, memoria:'Descobriu que o diretor tentou catorze vezes. Chorou na sala dele.'},
+      npc:{nome:'Orin', opiniao:5, memoria:'Descobriu que o diretor tentou catorze vezes. Chorou na sala dele.'},
       rep:{eixo:'bom',delta:4,motivo:'Fez duas pessoas que estavam do mesmo lado descobrirem isso'},
       moral:15,
       registrar:'O diretor contou ao Orin sobre os catorze ofícios indeferidos.',
@@ -2443,7 +2443,7 @@ c12_ja_abriram:{
   ef:{flag:['sabe_do_beto','sabe_que_voltam'],
       rep:{eixo:'bom',delta:3,motivo:'Perguntou se alguém já tinha tentado'},
       moral:-10,
-      npc:{nome:'Guarda Kell', opiniao:2, memoria:'Te contou do Garth, que abriu o curral em 1999 e não tinha para onde levar.'},
+      npc:{nome:'Kell', opiniao:2, memoria:'Te contou do Garth, que abriu o curral em 1999 e não tinha para onde levar.'},
       registrar:'Em 1999 um guarda abriu o curral. Metade voltou sozinha em três dias, por fome.',
       presagio:'Ele abriu a porta e não tinha pra onde levar. A porta era a parte fácil.'},
   escolhas:[
@@ -2471,7 +2471,7 @@ c12_precisa_de_caminhao:{
   ],
   ef:{flag:['sabe_dos_caminhoes','plano_de_soltura'],
       rep:{eixo:'bom',delta:4,motivo:'Transformou uma invasão num plano de logística'},
-      npc:{nome:'Guarda Kell', opiniao:5, memoria:'Sabe onde está a chave do galpão de máquinas com os dois caminhões de soltura.'},
+      npc:{nome:'Kell', opiniao:5, memoria:'Sabe onde está a chave do galpão de máquinas com os dois caminhões de soltura.'},
       moral:10,
       registrar:'A reserva tem dois caminhões de soltura parados desde 1995, no galpão de máquinas.',
       presagio:'"Meu cunhado tem oficina." É assim que as coisas acontecem de verdade.'},
@@ -2502,7 +2502,7 @@ c12_guarda_leva:{
   ef:{flag:'guarda_junto',
       /* o mais novo chama ele pelo nome na porta */
       executar:d=>{ Nomes.apresentar('o guarda-parque mais velho'); return []; },
-      npc:{nome:'Guarda Kell', opiniao:5, memoria:'Te levou ao setor 7 depois de quatro anos calado, e empurrou o copo pra longe antes.'},
+      npc:{nome:'Kell', opiniao:5, memoria:'Te levou ao setor 7 depois de quatro anos calado, e empurrou o copo pra longe antes.'},
       rep:{eixo:'bom',delta:2,motivo:'Alguém decidiu parar de esperar'},
       presagio:'Ele empurrou o copo pra longe. Não terminou. Isso é uma decisão inteira num gesto.'},
   escolhas:[{texto:'Ir.', vai:'c12_setor7'}]

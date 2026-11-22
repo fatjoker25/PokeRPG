@@ -385,7 +385,7 @@ const Historia = {
    pra Comissão, ou fica no meio, não entra na conta sozinho — a cena
    é que diz. Uma vez por pessoa, por lado, por capítulo.
    ============================================================ */
-const NPC_DO_CRIME = new Set(['Caçador Roque', 'Otto', 'A Terceira', 'Rook', 'o da aliança',
+const NPC_DO_CRIME = new Set(['Roque', 'Otto', 'A Terceira', 'Rook', 'o da aliança',
   'Encarregado do Armazém 7', 'Comprador de jaleco', 'Caçadores da Rota 23']);
 const NPC_NO_MEIO = new Set(['Curador Fabre', 'Auditora Brill', 'Hester Colman', 'Dr. Hollis', 'Dra. Sorrel',
   'Kira', 'Dr. Bramble', 'Diretor Quince', 'Fenna (crachá azul)', 'Mulher de crachá azul', 'a mulher de crachá azul',

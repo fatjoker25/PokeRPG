@@ -1601,13 +1601,13 @@ c5_observou_camara:{
     'Aprende quatro coisas:',
     'Primeira: são cinco pessoas, não três. Duas estão sentadas fora do círculo de luz, fazendo pausa.',
     'Segunda: eles têm rotina. Alguém confere etiqueta, alguém empilha, alguém escreve numa prancheta.',
-    d=>(d.flags.cruzou_os_cacadores || d.npcs['Caçador Roque'])
+    d=>(d.flags.cruzou_os_cacadores || d.npcs['Roque'])
       ? 'Terceira: um deles é o Roque. O caçador da floresta.'
       : 'Terceira: um deles é mais velho que os outros, e tem um rolo de fio de aço pendurado num prego da parede.',
     'Quarta: não tem arma nenhuma à vista. Eles não acham que precisam, e é isso que assusta.'
   ],
   ef:{flag:'observou_a_camara',
-      npc:{nome:'Caçador Roque', memoria:'Você o viu de novo, no Monte da Lua, trabalhando numa operação com cinco pessoas.'}},
+      npc:{nome:'Roque', memoria:'Você o viu de novo, no Monte da Lua, trabalhando numa operação com cinco pessoas.'}},
   escolhas:[
     {texto:'Chegar mais perto.', vai:'c5_camara'},
     {texto:'Recuar e ligar pra Dra. Cordell.', vai:'c5_ligou_antes', cond:d=>!!d.flags.cartao_ivone},
@@ -1624,15 +1624,15 @@ c5_camara:{
     'Clefairy em quase todas — cinco, seis por gaiola, em gaiolas de dois palmos. Um Paras numa sozinha, que não se mexe. Dois Zubat.',
     'Nas mesas de cavalete, fósseis. Meio expostos ainda na rocha, com etiqueta numerada e preço a lápis no canto. Kabuto. Omanyte. Coisas de trezentos milhões de anos com adesivo de leilão.',
     'Cinco pessoas trabalhando. Nenhuma de uniforme, nenhuma escondendo o rosto. O uniforme acabou junto com a organização; o trabalho não.',
-    d=>(d.flags.cruzou_os_cacadores || d.npcs['Caçador Roque'])
+    d=>(d.flags.cruzou_os_cacadores || d.npcs['Roque'])
       ? 'Um deles é o Roque. O caçador da floresta. Ele levanta a cabeça e te reconhece, e o rosto dele faz uma coisa complicada que não é raiva nem medo.'
       : 'Um deles é mais velho que os outros, com um rolo de fio de aço pendurado num prego atrás dele. Ele levanta a cabeça quando você aparece, e o rosto dele faz uma coisa complicada que não é raiva nem medo.',
     '"Ah, não."',
-    d=>(d.flags.cruzou_os_cacadores || d.npcs['Caçador Roque'])
+    d=>(d.flags.cruzou_os_cacadores || d.npcs['Roque'])
       ? 'Alguém na mesa do fundo chama por ele, Otto, e ele responde levantando a mão sem tirar os olhos de você. O Roque tem primeiro nome.'
       : 'Alguém na mesa do fundo chama por ele, Otto, e ele responde levantando a mão sem tirar os olhos de você.'
   ],
-  ef:{npc:{nome:'Caçador Roque', memoria:'Você o encontrou de novo no Monte da Lua, trabalhando com fósseis e gaiolas.'},
+  ef:{npc:{nome:'Roque', memoria:'Você o encontrou de novo no Monte da Lua, trabalhando com fósseis e gaiolas.'},
       registrar:'Encontrou a operação do Monte da Lua. Otto Roque, o caçador da floresta, está lá.'},
   escolhas:[
     {texto:'Atacar. Agora, antes que se organizem.', vai:'c5_ataque'},
@@ -1723,7 +1723,7 @@ c5_onde_ficam:{
     '"A Rota 25 não é ponto de coleta nosso. É de um cara que envenena Pokémon de rua e vende o que sobra." Ele faz cara de nojo genuíno. "Isso eu acho errado. Eu tenho limite, {moleque|moleca}. Você não acredita, mas eu tenho."'
   ],
   ef:{flag:'sabe_do_envenenador', registrar:'Alguém envenena Pokémon de rua na Rota 25 e vende o que sobra.',
-      npc:{nome:'Caçador Roque', opiniao:1, memoria:'Te contou do ponto da Rota 25 porque ele mesmo acha aquilo errado.'}},
+      npc:{nome:'Roque', opiniao:1, memoria:'Te contou do ponto da Rota 25 porque ele mesmo acha aquilo errado.'}},
   escolhas:[
     {texto:'Atacar. Limite ou não.', vai:'c5_ataque'},
     {texto:'Recuar e ligar pra Dra. Cordell.', vai:'c5_ligar', cond:d=>!!d.flags.cartao_ivone},
@@ -1758,7 +1758,7 @@ c5_venceu:{
   ],
   ef:{rep:{eixo:'bom',delta:3,motivo:'Desmontou uma operação de tráfico no Monte da Lua'},
       itens:{'Ultra Ball':1,'Hyper Potion':1}, dinheiro:900,
-      npc:{nome:'Caçador Roque', opiniao:-8, memoria:'Você destruiu a operação dele no Monte da Lua. Ele não esquece.'},
+      npc:{nome:'Roque', opiniao:-8, memoria:'Você destruiu a operação dele no Monte da Lua. Ele não esquece.'},
       flag:'destruiu_operacao', registrar:'Libertou os Pokémon do Monte da Lua e fez um inimigo permanente.'},
   escolhas:[
     {texto:'Carregar o Paras até o Centro Pokémon. São três horas.', vai:'c5_paras'},
@@ -1836,7 +1836,7 @@ c5_perdeu:{
   ],
   ef:{hp:-9, causa:'Espancado no Monte da Lua', dinheiro:-1000,
       flag:['operacao_escapou','viu_o_retangulo'], instabilidade:1,
-      npc:{nome:'Caçador Roque', opiniao:-4, memoria:'Te derrubou no Monte da Lua e levou tudo embora numa noite.'},
+      npc:{nome:'Roque', opiniao:-4, memoria:'Te derrubou no Monte da Lua e levou tudo embora numa noite.'},
       registrar:'Perdeu no Monte da Lua. A operação se mudou em uma noite e levou os Pokémon.',
       presagio:'Eles desmontaram em uma noite. Ninguém desmonta em uma noite na primeira vez.'},
   escolhas:[
@@ -1874,10 +1874,10 @@ c5_proposta:{
   vozes:['N','N'],
   texto:[
     'Você desce fazendo barulho de propósito, com as mãos à mostra.',
-    d=>(d.flags.cruzou_os_cacadores || d.npcs['Caçador Roque'])
+    d=>(d.flags.cruzou_os_cacadores || d.npcs['Roque'])
       ? 'Otto te reconhece e leva três segundos pra decidir o que você é. Depois ri.'
       : 'Otto leva três segundos pra decidir o que você é. Depois ri.',
-    d=>`${(d.flags.cruzou_os_cacadores || d.npcs['Caçador Roque']) ? '"Olha só quem cresceu."' : '"Olha só."'} Ele limpa a mão no jeans e estende. "Eu preciso de gente que anda em rota e não chama atenção. Paga bem. Você nem precisa pegar em gaiola — só carrega e cala a boca."`,
+    d=>`${(d.flags.cruzou_os_cacadores || d.npcs['Roque']) ? '"Olha só quem cresceu."' : '"Olha só."'} Ele limpa a mão no jeans e estende. "Eu preciso de gente que anda em rota e não chama atenção. Paga bem. Você nem precisa pegar em gaiola — só carrega e cala a boca."`,
     'Os outros quatro voltaram a trabalhar. Isso é o mais perturbador: sua presença aqui já é normal.'
   ],
   escolhas:[
@@ -1897,7 +1897,7 @@ c5_aceitou:{
   ],
   ef:{dinheiro:4000, itens:{'Ultra Ball':2},
       rep:{eixo:'ruim',delta:3,motivo:'Trabalhou para traficantes de Pokémon'},
-      npc:{nome:'Caçador Roque', opiniao:5, memoria:'Você trabalhou pra ele. Agora você é útil.'},
+      npc:{nome:'Roque', opiniao:5, memoria:'Você trabalhou pra ele. Agora você é útil.'},
       flag:'trabalhou_rocket', moral:-15,
       registrar:'Passou a trabalhar para os remanescentes da Rocket.'},
   escolhas:[
@@ -1940,7 +1940,7 @@ c5_traicao:{
   ],
   ef:{rep:{eixo:'bom',delta:3,motivo:'Voltou de madrugada e abriu as gaiolas que tinha ajudado a carregar'},
       flag:['destruiu_operacao','traiu_vasco'],
-      npc:{nome:'Caçador Roque', opiniao:-10, memoria:'Você trabalhou pra ele e voltou de madrugada pra abrir as gaiolas. Ele considera isso pior que inimizade.'},
+      npc:{nome:'Roque', opiniao:-10, memoria:'Você trabalhou pra ele e voltou de madrugada pra abrir as gaiolas. Ele considera isso pior que inimizade.'},
       registrar:'Voltou de madrugada e libertou os Pokémon depois de ter trabalhado para eles.'},
   escolhas:[
     {texto:'Seguir para Cerulean.', vai:'c5_fim'},
@@ -2000,7 +2000,7 @@ c5_recusou_perto:{
     '"Você entrou aqui e viu tudo. Agora sobe essa passarela devagar e esquece o caminho."',
     'Você sobe. Devagar. Ele te olha o percurso inteiro, sem piscar, e continua olhando quando você some na curva — dá pra sentir.'
   ],
-  ef:{flag:'recusou_rocket', npc:{nome:'Caçador Roque', opiniao:-3, memoria:'Você recusou a proposta dele na cara dele.'},
+  ef:{flag:'recusou_rocket', npc:{nome:'Roque', opiniao:-3, memoria:'Você recusou a proposta dele na cara dele.'},
       registrar:'Recusou trabalhar para os traficantes.'},
   escolhas:[
     {texto:'Voltar depois com um plano — e atacar.', vai:'c5_ataque'},

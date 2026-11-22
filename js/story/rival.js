@@ -654,10 +654,10 @@ const RIVAIS_EXTRA = [
   }
 },
 {
-  id:'vasco', nome:'Otto', npc:'Caçador Roque', desde:'Floresta de Viridian', caps:[7, 10, 15, 19],
+  id:'vasco', nome:'Otto', npc:'Roque', desde:'Floresta de Viridian', caps:[7, 10, 15, 19],
   origem:'O caçador da Floresta de Viridian. Você o obrigou a abrir as gaiolas e ele anotou o seu rosto.',
-  gatilho:d => { const n = d.npcs['Caçador Roque']; return !!n && n.opiniao <= -3; },
-  nascimento:'O Caçador Roque perguntou o seu nome em três Centros Pokémon diferentes esta semana.',
+  gatilho:d => { const n = d.npcs['Roque']; return !!n && n.opiniao <= -3; },
+  nascimento:'O Roque perguntou o seu nome em três Centros Pokémon diferentes esta semana.',
   pool:[42, 49, 89, 34, 71, 94],             // Golbat, Venomoth, Muk, Nidoking, Victreebel, Gengar
   golpes:['Sludge Bomb', 'Earthquake', 'Rock Slide'],   // os do time dele no Torneio Aberto, menos o Body Slam
   ace:24, nivelExtra:3, moral:35,           // o Arbok é o que ele usa para prender

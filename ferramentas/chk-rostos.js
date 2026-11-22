@@ -169,7 +169,7 @@ if (typeof PROVAS_DA_REDE !== 'undefined'){
     ['bom', 'ruim'].forEach(k => { if (e[k] && e[k].luta) lutas.push(e[k].luta); });
   }));
   lutas.forEach(L => classe(L.classe, L.nome));
-  ['Guarda Teague', 'Guarda-parque Ines', 'Oficial Rourke', 'Cientista Odran'].forEach(n => deClasse.add(n));
+  ['Teague', 'Ines', 'Rourke', 'Odran'].forEach(n => deClasse.add(n));
 }
 const fixos = new Set([...Object.keys(NOMES_FIXOS), ...Object.values(NOMES_FIXOS)]);
 const temNomeDaHistoria = k => fixos.has(k) || String(k).split(/[\s,()]+/).some(p => NOMES_DA_HISTORIA.has(p));
@@ -193,7 +193,7 @@ for (const [k, a] of Object.entries(RETRATO_POR_NOME).concat(Object.entries(ROST
    a mesma pessoa: o nome fixo (NOMES_FIXOS), o apelido (MESMA_PESSOA)
    ou um nome da história em comum ("Nadia" e "Nadia Arden"). Lido
    depois de tudo carregar: o registro da estrada escreve por cima do
-   RETRATO_POR_NOME, e foi assim que o Caçador Roque da história falava
+   RETRATO_POR_NOME, e foi assim que o Roque da história falava
    com o rosto do Arruaceiro. */
 const apelidos = typeof MESMA_PESSOA !== 'undefined' ? MESMA_PESSOA : {};
 const quemE = k => NOMES_FIXOS[k] || apelidos[k] || k;
@@ -212,7 +212,7 @@ for (const [a, ks] of porArquivo){
 const apelidoSobrando = Object.keys(apelidos).filter(k => !RETRATO_POR_NOME[k] && !ROSTO_POR_NOME_SOLTO[k]);
 /* quem a história desenhou não pode perder o rosto pro registro de luta:
    o Roque da barreira tinha arq:'roughneck', e o registro da estrada
-   trocava o rosto do Caçador Roque de todos os capítulos */
+   trocava o rosto do Roque de todos os capítulos */
 const trocadoNaCarga = Object.entries(escritoAMao).filter(([k, a]) => RETRATO_POR_NOME[k] !== a);
 const bytes = arq => { try { return fs.readFileSync(path.join(raiz, caminhoNPC(arq))); } catch (e) { return null; } };
 const fotos = [].concat(...Object.values(RETRATOS_DA_FICHA)).map(f => [f, bytes(PASTA_DOS_RETRATOS + f)]).filter(([, b]) => b);

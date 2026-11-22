@@ -227,12 +227,12 @@ const SERVICOS_DA_REDE = [
   texto:[
     'Uniforme preto, um banquinho e a porta de um armazém no fim do cais. A ordem cabe numa frase: ninguém entra.',
     'Lá pelas tantas, um guarda portuário vem pela beira do cais com uma lanterna, devagar, conferindo cadeado por cadeado.',
-    fala('Guarda Teague', 'Esse armazém está vazio no registro do porto. Abre pra mim.')
+    fala('Teague', 'Esse armazém está vazio no registro do porto. Abre pra mim.')
   ],
   escolhas:[
     {texto:'Ficar na frente da porta.',
      luta:{classe:'Guarda', nome:'Teague', rosto:'overworld/policial', times:[21, 66, 58], tam:3, acima:-1,
-       antes:[fala('Guarda Teague', 'Então vai ser assim. Tá bom.'), 'Ele apoia a lanterna num poste, virada pra vocês dois.'],
+       antes:[fala('Teague', 'Então vai ser assim. Tá bom.'), 'Ele apoia a lanterna num poste, virada pra vocês dois.'],
        vence:'"Abre a porta agora."', perde:'"Eu volto com mais gente."',
        perdeu:['Teague abre a porta com o seu molho de chaves e anota o que vê num caderninho. Caixas lacradas, furo de ar em cada uma.', 'Na semana seguinte o armazém está vazio e com outro cadeado.']},
      conf:2, ef:{dinheiro:900, rep:{eixo:'ruim', delta:1, motivo:'Brigou com o guarda do porto na porta de um armazém da rede'}, executar:()=>{ Relogio.ate(7); }},
@@ -240,17 +240,17 @@ const SERVICOS_DA_REDE = [
     {texto:'Dizer que o armazém é de uma transportadora e que a papelada está no escritório.',
      teste:{status:'carisma', dificuldade:7, nomeStatus:'Carisma', eixo:'simpatia'},
      bom:{conf:2, ef:{dinheiro:900, executar:()=>{ Relogio.ate(7); }},
-       resultado:[fala('Guarda Teague', 'Transportadora. Tá. Amanhã eu passo no escritório.'), 'Ele não passa. De manhã, alguém troca o cadeado e te paga na porta.']},
+       resultado:[fala('Teague', 'Transportadora. Tá. Amanhã eu passo no escritório.'), 'Ele não passa. De manhã, alguém troca o cadeado e te paga na porta.']},
      ruim:{conf:0,
        luta:{classe:'Guarda', nome:'Teague', rosto:'overworld/policial', times:[21, 66, 58], tam:3, acima:-1,
-         antes:[fala('Guarda Teague', 'Transportadora de madrugada, com {moço|moça} de preto na porta. Não.'), 'Ele apoia a lanterna num poste.'],
+         antes:[fala('Teague', 'Transportadora de madrugada, com {moço|moça} de preto na porta. Não.'), 'Ele apoia a lanterna num poste.'],
          vence:'"Abre a porta agora."', perde:'"Eu volto com mais gente."',
          perdeu:['Teague abre a porta e anota o que vê. Caixas lacradas, furo de ar em cada uma.', 'Na semana seguinte o armazém está vazio e com outro cadeado.']},
        ef:{dinheiro:900, executar:()=>{ Relogio.ate(7); }}, conf:2,
        resultado:['Teague vai embora sem a resposta que veio buscar.', 'De manhã alguém troca o cadeado e te paga na porta.']}},
     {texto:'Sair da frente e deixar ele olhar.', conf:-2, ef:{rep:{eixo:'bom', delta:2, motivo:'Deixou o guarda do porto abrir o armazém da rede'}, executar:()=>{ Relogio.ate(7); }},
      resultado:['Teague abre a porta e fica um tempo parado com a lanterna apontada pra dentro. Caixas lacradas, furo de ar em cada uma, e um barulho baixinho que não é do mar.',
-       fala('Guarda Teague', 'Você não estava aqui. Some.', 'baixo'), 'De manhã tem viatura no cais. O armário 14 fica vazio três dias.']}
+       fala('Teague', 'Você não estava aqui. Some.', 'baixo'), 'De manhã tem viatura no cais. O armário 14 fica vazio três dias.']}
   ]
 },
 {
@@ -351,12 +351,12 @@ const SERVICOS_DA_REDE = [
     'O galpão da saída sul tem uma balança de carga e um caderno. Tudo que sai de Fuchsia pela rede passa por ela e vira número: quilo, não cabeça.',
     'Hoje a balança marca quarenta quilos a mais do que a nota.',
     'Na porta do galpão aparece uma guarda-parque de chapéu de aba larga, com o crachá da reserva preso no bolso.',
-    fala('Guarda-parque Ines', 'Esse caderno é o que eu acho que é?')
+    fala('Ines', 'Esse caderno é o que eu acho que é?')
   ],
   escolhas:[
     {texto:'Fechar o caderno e ficar entre ela e a balança.',
      luta:{classe:'Guarda-parque', nome:'Ines', rosto:'trainers/pokemon_ranger_f', times:[30, 48, 102, 111, 115], tam:3, acima:0,
-       antes:[fala('Guarda-parque Ines', 'Eu esperava que fosse.'), 'Ela tira o chapéu, põe na balança e solta a primeira Pokébola.'],
+       antes:[fala('Ines', 'Eu esperava que fosse.'), 'Ela tira o chapéu, põe na balança e solta a primeira Pokébola.'],
        vence:'"Esse caderno vem comigo."', perde:'"Eu volto com o caderno de outro jeito."',
        perdeu:['Ines leva o caderno debaixo do braço, com o chapéu na outra mão.', 'O galpão fica fechado uma semana inteira.']},
      conf:2, ef:{dinheiro:1100, rep:{eixo:'ruim', delta:1, motivo:'Brigou com a guarda da reserva pelo caderno da balança'},
@@ -365,13 +365,13 @@ const SERVICOS_DA_REDE = [
     {texto:'Entregar o caderno pra ela.', conf:-3,
      ef:{flag:'rede_caderno_da_balanca', rep:{eixo:'bom', delta:3, motivo:'Entregou à reserva o caderno da balança da rede'},
        npc:{nome:'Ines', opiniao:4, memoria:'Você entregou a ela o caderno da balança da saída sul.'}},
-     resultado:['Ines folheia o caderno ali mesmo, de pé, sem pressa. Para numa página e passa o dedo numa linha.', fala('Guarda-parque Ines', 'Quarenta quilos de quê?', 'baixo'), 'Você não sabe. Ela vai descobrir.']},
+     resultado:['Ines folheia o caderno ali mesmo, de pé, sem pressa. Para numa página e passa o dedo numa linha.', fala('Ines', 'Quarenta quilos de quê?', 'baixo'), 'Você não sabe. Ela vai descobrir.']},
     {texto:'Arrancar a página de hoje e entregar o resto como se fosse tudo.',
      teste:{status:'intelecto', dificuldade:7, nomeStatus:'Intelecto', eixo:'discricao'},
      bom:{conf:1, ef:{rep:{eixo:'bom', delta:1, motivo:'Entregou à reserva um caderno velho da balança'}},
        resultado:['O caderno que ela leva é de meses atrás e não diz nada que ela não saiba. A página de hoje vai pro seu bolso, dobrada em quatro.']},
      ruim:{conf:-2, ef:{rep:{eixo:'bom', delta:1, motivo:'Entregou à reserva o caderno da balança, com uma página arrancada'}},
-       resultado:['Ines passa o dedo na borda rasgada da costura e olha pra você.', fala('Guarda-parque Ines', 'Faltou uma.', 'baixo'), 'Quem cuida do galpão também conta páginas.']}}
+       resultado:['Ines passa o dedo na borda rasgada da costura e olha pra você.', fala('Ines', 'Faltou uma.', 'baixo'), 'Quem cuida do galpão também conta páginas.']}}
   ]
 },
 /* ---------- Chefe de turno ---------- */
@@ -420,7 +420,7 @@ const SERVICOS_DA_REDE = [
   escolhas:[
     {texto:'Avisar a rede e segurar o oficial até o caminhão passar.',
      luta:{classe:'Oficial', nome:'Rourke', rosto:'overworld/policial', times:[17, 66, 125, 58], tam:4, acima:1,
-       antes:['Você atravessa o cais e para do lado dele.', fala('Oficial Rourke', 'Eu sei o que você é. Senta, que eu também sei o que você vai fazer.'), 'Ele termina o café, joga o copo no lixo e não erra.'],
+       antes:['Você atravessa o cais e para do lado dele.', fala('Rourke', 'Eu sei o que você é. Senta, que eu também sei o que você vai fazer.'), 'Ele termina o café, joga o copo no lixo e não erra.'],
        vence:'"Cinco da manhã. Você vai estar lá dentro."', perde:'"Vai. Leva as onze. A gente se vê."',
        perdeu:['De madrugada, a viatura chega antes do caminhão. Você vê de longe, do outro lado da água, as gaiolas saindo uma por uma.'],
        perdeuEf:{executar:()=>{ Relogio.ate(5); }}},
@@ -466,16 +466,16 @@ const SERVICOS_DA_REDE = [
   id:'laboratorio', escalao:5, local:'celadon', titulo:'O pedido do laboratório',
   texto:[
     'Um homem de jaleco espera na sala sem janela, com uma prancheta e a paciência de quem não precisa de ninguém pra continuar.',
-    fala('Cientista Odran', 'Odran. Eu peço seis por mês, sempre seis, e o seu antecessor nunca perguntou pra quê.'),
-    fala('Cientista Odran', 'Preciso da sua assinatura aqui. Só aqui.'),
+    fala('Odran', 'Odran. Eu peço seis por mês, sempre seis, e o seu antecessor nunca perguntou pra quê.'),
+    fala('Odran', 'Preciso da sua assinatura aqui. Só aqui.'),
     'Na prancheta, uma lista de espécies e uma coluna escrita "resistência".'
   ],
   escolhas:[
     {texto:'Assinar.', conf:3, ef:{dinheiro:3000, rep:{eixo:'ruim', delta:3, motivo:'Assinou o pedido do laboratório da rede'}},
-     resultado:['Odran destaca a folha com cuidado, sem rasgar a margem.', fala('Cientista Odran', 'Até o mês que vem.'), 'Seis gaiolas descem a escada naquela mesma noite.']},
+     resultado:['Odran destaca a folha com cuidado, sem rasgar a margem.', fala('Odran', 'Até o mês que vem.'), 'Seis gaiolas descem a escada naquela mesma noite.']},
     {texto:'Perguntar pra quê.',
      luta:{classe:'Cientista', nome:'Odran', rosto:'trainers/scientist', times:[109, 137, 100, 81], tam:4, acima:2,
-       antes:[fala('Cientista Odran', 'O seu antecessor nunca perguntou. Ele sabia que a pergunta tem preço.'), 'Ele pousa a prancheta e solta as Pokébolas na ordem da lista.'],
+       antes:[fala('Odran', 'O seu antecessor nunca perguntou. Ele sabia que a pergunta tem preço.'), 'Ele pousa a prancheta e solta as Pokébolas na ordem da lista.'],
        vence:'"Assina."', perde:'"Pra saber quanto aguentam. Satisfeit{o|a}?"',
        perdeu:['Você assina com a mão tremendo. Odran destaca a folha sem rasgar a margem.']},
      conf:0, ef:{rep:{eixo:'bom', delta:2, motivo:'Fez o laboratório da rede responder o que faz'},
@@ -486,7 +486,7 @@ const SERVICOS_DA_REDE = [
      bom:{conf:2, ef:{dinheiro:3000, flag:'rede_assinou_falso'},
        resultado:['Odran não confere a assinatura. Ninguém confere assinatura de executivo.', 'Seis gaiolas descem a escada naquela noite, e o pedido tem o nome de uma pessoa que não existe.']},
      ruim:{conf:-2,
-       resultado:['Odran olha a assinatura, olha você.', fala('Cientista Odran', 'Eu sei como você se chama. Assina de novo.'), 'Você assina de novo, com o seu nome.']}}
+       resultado:['Odran olha a assinatura, olha você.', fala('Odran', 'Eu sei como você se chama. Assina de novo.'), 'Você assina de novo, com o seu nome.']}}
   ]
 },
 {
@@ -855,7 +855,8 @@ const Rede = {
     if (!esc) return null;
     return (a.ramo ? esc[a.ramo] : esc).luta;
   },
-  nomeDaLuta(L){ return `${L.classe} ${L.nome}`; },
+  /* a classe não entra no nome (estrada.js, nomeDeLuta) */
+  nomeDaLuta(L){ return L.nome; },
   lutar(a){
     const L = this.definicaoDaLuta(a);
     const meu = Estado.primeiroApto();
@@ -968,10 +969,10 @@ function pinoDaRede(n){
   /* quem fala nos serviços sem lutar */
   if (typeof RETRATO_POR_NOME !== 'undefined'){
     RETRATO_POR_NOME['Tilly'] = 'trainers/tilly';
-    RETRATO_POR_NOME['Guarda Teague'] = 'overworld/policial';
-    RETRATO_POR_NOME['Guarda-parque Ines'] = 'trainers/pokemon_ranger_f';
-    RETRATO_POR_NOME['Oficial Rourke'] = 'overworld/policial';
-    RETRATO_POR_NOME['Cientista Odran'] = 'trainers/scientist';
+    RETRATO_POR_NOME['Teague'] = 'overworld/policial';
+    RETRATO_POR_NOME['Ines'] = 'trainers/pokemon_ranger_f';
+    RETRATO_POR_NOME['Rourke'] = 'overworld/policial';
+    RETRATO_POR_NOME['Odran'] = 'trainers/scientist';
     RETRATO_POR_NOME['Sr. Quinlan'] = 'trainers/gentleman_gen4';
   }
   if (typeof NOMES_DA_HISTORIA !== 'undefined') NOMES_DA_HISTORIA.add('Tilly');

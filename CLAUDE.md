@@ -1596,8 +1596,16 @@ da sua luta no torneio e na Conferência ("Domador de Dragões · do
 Planalto · Nv 30–34", pelo campo `classe` do inscrito). O rosto e o
 prêmio saem do nome (`retratoDe`, `pagaPorNivel`), e o nome sozinho de
 cada um aponta pro rosto dele; o nome com a classe (`nomeComClasse`)
-continua registrado só pra luta e a chave salvas antes. "Líder Brock" e
-"Professor Oak" são título, não classe, e ficam. E o nome não pode ser
+continua registrado só pra luta e a chave salvas antes. Na história
+também: o Caçador Roque do capítulo 3 é o Roque, o Guia Orin da Zona
+Safári é o Orin e o Guarda Kell é o Kell, e nas lutas da rede
+(`Rede.nomeDaLuta`) e dos convites dos veteranos lutam o Teague, a
+Ines, o Rourke, o Odran, o Garrick e o Sloan; o save de antes junta o
+rótulo velho no novo (`MESMA_PESSOA`, no `Estado.abrir`). Quem só tinha
+a classe pra se apresentar ganhou a linha que diz quem é (o Garrick: "o
+pescador dono dele", e a Rhoda diz o nome). Título de quem é chamado
+assim ("Líder Brock", "Professor Oak", "Sargento Holt", "Dra. Cordell",
+"Curador Fabre", "Sr. Dane") não é classe, e fica. E o nome não pode ser
 palavra do português: a Reli virou Sally ("reli" é de reler) e o Cale
 virou Liam ("cale" é de calar), os dois nomes de treinador dos jogos; o
 `id` ficou, pro save, e o nome de antes (`nomeAntes`) segue com o

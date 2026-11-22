@@ -1528,7 +1528,9 @@ const Estado = {
                             'Dono do curral':'Sr. Hale',
                             /* a funcionária da guarita de Lavender é a Sra. Myrtle do 7;
                                o 30 chamava ela de Sra. Wren */
-                            'Sra. Wren':'a funcionária da guarita'};
+                            'Sra. Wren':'a funcionária da guarita',
+                            /* a classe saiu do nome (o Roque, o Orin, o Kell) */
+                            'Caçador Roque':'Roque', 'Guia Orin':'Orin', 'Guarda Kell':'Kell'};
       /* a mulher do elevador do 20 também carrega pasta de vinil, e a
          grafia dela era a da advogada do 25, que o 25 diz que você não
          conhece: o elevador fica com ela, a planta com a advogada */

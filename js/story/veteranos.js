@@ -197,10 +197,11 @@ const VETERANOS = [
     sub:'O barco azul sem nome no casco.', hora:{h:6}, dura:5,
     cena:[
       'O barco azul está atracado no píer com o gerador ligado. Tem Magikarp boiando de barriga pra cima em volta do casco inteiro.',
+      'Na proa, o pescador dono dele enrola a linha sem pressa.',
       'Rhoda chega mancando, de capa, e para do seu lado sem dizer nada.',
-      fala('Pescador Garrick', 'O rio é público. Eu pesco do jeito que eu quiser.'),
-      fala('Rhoda', 'O rio é público. O que tá boiando também era.', 'frio'),
-      fala('Pescador Garrick', 'Então vem tirar, vó.')
+      fala('Garrick', 'O rio é público. Eu pesco do jeito que eu quiser.'),
+      fala('Rhoda', 'O rio é público, Garrick. O que tá boiando também era.', 'frio'),
+      fala('Garrick', 'Então vem tirar, vó.')
     ],
     botao:'Tirar ele do píer',
     luta:{classe:'Pescador', arq:'fisherman', nome:'Garrick', times:[118, 98, 81, 72, 129], acima:2},
@@ -503,7 +504,7 @@ const VETERANOS = [
     cena:[
       'Talia já desarmou nove laços quando você chega. Os outros dois ela deixou armados, de propósito, de isca.',
       'O caçador chega com um saco de lona nas costas e para quando vê o chapéu.',
-      fala('Caçador Sloan', 'Aqui é fora da reserva, moça. Aqui você não manda.'),
+      fala('Sloan', 'Aqui é fora da reserva, moça. Aqui você não manda.'),
       fala('Talia', 'Não mando.'),
       fala('Talia', 'Mas {esse aí|essa aí} do meu lado também não é da reserva.')
     ],

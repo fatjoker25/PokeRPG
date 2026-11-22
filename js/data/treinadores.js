@@ -33,7 +33,7 @@ const RETRATO_POR_NOME = {
      sua idade e a roupa nova demais de quem comprou tudo pra viagem.
      Rosto de rival nunca é protagonista dos jogos nem foto que o
      jogador pode escolher pra si (RETRATOS_DA_FICHA) */
-  'Ezra':'trainers/ezra', 'Otto':'trainers/otto', 'Caçador Roque':'trainers/otto', 'o caçador mais novo':'trainers/roughneck',
+  'Ezra':'trainers/ezra', 'Otto':'trainers/otto', 'Caçador Roque':'trainers/otto', 'Roque':'trainers/otto', 'o caçador mais novo':'trainers/roughneck',
   'Lior':'trainers/worker_gen7', 'Nolan':'trainers/nolan', 'Rory':'trainers/rory', 'o garoto de Fuchsia':'trainers/rory',
   'Diana':'trainers/diana',
   'Garoto de Fuchsia':'trainers/rory', 'Menino do cais':'trainers/nolan',
