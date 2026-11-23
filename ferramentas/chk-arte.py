@@ -43,7 +43,8 @@ def parecido(a, b):
 
 def main():
     falhas, conferidas = [], 0
-    for n in range(1, 252):
+    # os 251 e os de Hoenn que lutam no Torneio das Ilhas (só de frente: ninguém tem um)
+    for n in range(1, 387):
         for vista in ('front', 'back'):
             for brilho in ('', '_shiny'):
                 ani = os.path.join(BASE, f'{vista}_ani{brilho}', f'{n}.gif')

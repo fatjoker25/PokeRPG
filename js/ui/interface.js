@@ -4112,8 +4112,10 @@ const UI = {
       <div id="avisos" class="avisos"></div>
       <div id="escolhas" class="escolhas" style="margin-top:18px">
         ${(o.botoes || []).map(b => b.icone
-          /* botão com desenho e classe (a luta, em vermelho): o mesmo das ações de cena */
-          ? `<button class="escolha com-icone${b.classe ? ' ' + b.classe : ''}" onclick="${b.acao}">${svgIcone(b.icone)}<span class="esc-rot">${this.esc(txt(b.texto))}</span></button>`
+          /* botão com desenho e classe (a luta, em vermelho): o mesmo das ações de cena;
+             com `trava`, a porta fechada fica na tela, com o cadeado e o motivo */
+          ? `<button class="escolha com-icone${b.classe ? ' ' + b.classe : ''}" ${b.trava ? 'disabled' : `onclick="${b.acao}"`}>${svgIcone(b.trava ? 'trancado' : b.icone)}<span class="esc-rot">${this.esc(txt(b.texto))}${
+              b.trava ? `<span class="esc-trava">${this.esc(txt(b.trava))}</span>` : ''}</span></button>`
           : `<button class="escolha${b.classe ? ' ' + b.classe : ''}" onclick="${b.acao}">${this.esc(txt(b.texto))}</button>`).join('')}
       </div>
     </div>`);
@@ -6966,8 +6968,8 @@ const UI = {
 
       <h3>Ilhas Sevii</h3>
       <div class="linha"><span class="k">Quem vai</span><span class="v">depois do fim, com o título de Campeão: o Blue, em Pallet, entrega a passagem · são seis capítulos à parte, que não mudam o final que você já viu</span></div>
-      <div class="linha"><span class="k">A travessia</span><span class="v">a primeira é a do S.S. Anne, no capítulo · depois, a balsa vai e volta entre Vermilion e a Ilha Um · entre as ilhas, a Um e a Dois abrem na chegada, a Três depois do capítulo da Maré, a Quatro e a Cinco depois do dos Faróis, a Seis e a Sete depois do armazém · a balsa fechada diz por quê</span></div>
-      <div class="linha"><span class="k">O mapa</span><span class="v">as ilhas são a outra página do mapa desenhado, com a aba Kanto / Ilhas Sevii · voar leva a qualquer vila já pisada da mesma região: entre Kanto e as ilhas, só de balsa</span></div>
+      <div class="linha"><span class="k">A travessia</span><span class="v">a primeira é a do S.S. Anne, no capítulo · depois, a balsa vai de ilha em ilha pelo caminho, e o cais de Vermilion e da vila de cada ilha tem a balsa direta, pra qualquer cais aberto, num período e sem pagar · a Um e a Dois abrem na chegada, a Três depois do capítulo da Maré, a Quatro e a Cinco depois do dos Faróis, a Seis e a Sete depois do armazém · a balsa fechada diz por quê · depois do torneio, as sete ilhas ficam abertas pra sempre</span></div>
+      <div class="linha"><span class="k">O mapa</span><span class="v">as ilhas são a outra página do mapa desenhado, com a aba Kanto / Ilhas Sevii · voar leva a qualquer cidade já pisada, das ilhas ou de Kanto, por cima do mar também, no mesmo período de um voo comum</span></div>
       <div class="linha"><span class="k">O mato</span><span class="v">Kanto e Johto misturados · os Pokémon de Johto que andam soltos vivem só aqui · nível de 60 a 68, pelo lugar</span></div>
       <div class="linha"><span class="k">A lei</span><span class="v">a Patrulha de Kanto não atravessa o mar: nas ilhas ninguém te para por ordem de Kanto · quem cuida das ilhas é a Guarda, um sargento só</span></div>
       <div class="linha"><span class="k">As lutas da história</span><span class="v">o nível acompanha a média dos seus três mais fortes, nunca abaixo de 58 · quem é de gangue vem um pouco abaixo dela · o que a gangue levou e não voltou fica fora do time do dono no torneio</span></div>

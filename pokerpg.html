@@ -4795,6 +4795,8 @@ h3.sec-ir{--sec:#5aa7ff}
 .mapa-kanto .mp-mar-via.andada{opacity:1}
 .mapa-kanto .mp-no text{font:700 6.4px system-ui,sans-serif;fill:#122233;paint-order:stroke;stroke:#f6f8ee;stroke-width:2px;stroke-linejoin:round}
 .mapa-kanto .mp-no text.mp-rota{font:700 5px system-ui,sans-serif}
+/* a saída de balsa pra outra página do mapa: fora dos pontos, na letra de rota */
+.mapa-kanto text.mp-saida{font:700 5.4px var(--letra-hud, system-ui),sans-serif;fill:#122233;paint-order:stroke;stroke:#f6f8ee;stroke-width:2px;stroke-linejoin:round}
 .mapa-kanto .mp-no.cidade rect{fill:#e2463a;stroke:#fff;stroke-width:1.4}
 .mapa-kanto .mp-no.rota circle{fill:#f6f1df;stroke:#7a6236;stroke-width:1.1}
 .mapa-kanto .mp-no.especial rect{fill:#f2c94c;stroke:#6b5420;stroke-width:1}
@@ -11189,6 +11191,8 @@ const ICONE = {
   torneio:'<path d="M7 4h10v4a5 5 0 0 1-10 0z"/><path d="M7 6H4a3 3 0 0 0 3 4M17 6h3a3 3 0 0 1-3 4M12 13v4M8 21h8M9 17h6"/>',
   liga:'<path d="M12 3l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.8 6.8 19.1l1-5.8-4.3-4.1 5.9-.9z"/>',
   onibus:'<rect x="4" y="4" width="16" height="13" rx="2"/><path d="M4 11h16M8 17v3M16 17v3"/><circle cx="8" cy="14" r=".8"/><circle cx="16" cy="14" r=".8"/>',
+  /* a balsa das ilhas: casco, cabine, chaminé e a onda embaixo */
+  balsa:'<path d="M3.5 13.5h17l-2.6 4.5H6.1z"/><path d="M7 13.5V10h6.5l2.5 3.5"/><path d="M9.5 10V6.8h2.4V10"/><path d="M2.5 21c1.2 0 1.8-.8 3-.8s1.8.8 3 .8 1.8-.8 3-.8 1.8.8 3 .8 1.8-.8 3-.8 1.8.8 3 .8"/>',
   doar:'<path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/>',
   relembrar:'<path d="M4 5h11a3 3 0 0 1 3 3v12H7a3 3 0 0 1-3-3z"/><path d="M18 8h2v12h-2M8 9h6M8 12h6"/>',
   vasculhar:'<circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l5 5"/>',
@@ -11265,7 +11269,7 @@ const ICONE = {
    o CSS, pela variável --ac; desenho sem cor fica na cor da linha. */
 const COR_DO_ICONE = {
   centro:'#ef5350', loja:'#3d8bfd', ginasio:'#e8b923', casa:'#43b581', laboratorio:'#26c6da', ovo:'#f0b45a',
-  onibus:'#2bb3a3', doar:'#f06292', relembrar:'#9575cd', liga:'#b18cf0', torneio:'#ff8a3d',
+  onibus:'#2bb3a3', balsa:'#2f9fd8', doar:'#f06292', relembrar:'#9575cd', liga:'#b18cf0', torneio:'#ff8a3d',
   credenciais:'#7e8ce0', rede:'#c2414f', porta:'#8d97bd', ferragem:'#d4893b',
   procurar:'#4caf50', vasculhar:'#f0b429', andar:'#4fc3f7', conversar:'#f48fb1', treinar:'#ff7043',
   pescar:'#42a5f5', acampar:'#c49a6c', esperar:'#90a4ae', lutar:'#ef5350', troca:'#26a69a',
@@ -11297,7 +11301,7 @@ function iconeDoAfazer(a){
   const direto = {centro:'centro', loja:'loja', ginasio:'ginasio', casa:'casa', liga:'liga', torneio:'torneio',
     onibus:'onibus', doar:'doar', relembrar:'relembrar', vasculhar:'vasculhar', procurar:'procurar', andar:'andar',
     conversar:'conversar', treinar:'treinar', pescar:'pescar', acampar:'acampar', esperar:'esperar', desafiar:'lutar', troca:'troca',
-    rede:'rede', creche:'ovo', dexnac:'pokedex'};
+    rede:'rede', creche:'ovo', dexnac:'pokedex', sevii_balsa:'balsa'};
   if (direto[id]) return direto[id];
   if (/^posto_/.test(id)) return 'credenciais';
   if (/^vet_/.test(id)) return 'lutar';
@@ -28980,7 +28984,7 @@ const ELENCO_SEVII = [
   perde:'"Quarenta e três. Número bonito. Ano que vem eu volto."'
 },
 {
-  id:'etta', nome:'Etta', sobrenome:'Hemlock', f:true, idade:14, nasceu:[14, 6],
+  id:'etta', ajuste:-8, nome:'Etta', sobrenome:'Hemlock', f:true, idade:14, nasceu:[14, 6],
   regiao:'Johto', de:'Azalea', classe:'Artesã de Pokébolas', tipo:'Inseto',
   tracos:['orgulhosa', 'curiosa', 'determinada'], meta:'casa', forte:'intelecto',
   gosta:{lugar:'floresta', tipo:'Inseto', especie:'Heracross'},
@@ -28995,9 +28999,9 @@ const ELENCO_SEVII = [
   porque:'Vender as bolas na feira do torneio (quem vem de Hoenn nunca viu uma Apricorn) e provar que inseto ganha torneio.',
   gancho:'Quer abrir uma banca da família em Lilycove, do outro lado do mar.',
   time:[
+    [291, ['Slash', 'Fury Cutter', 'Swords Dance', 'Double-Edge'], 'Jolly'],
     [127, ['Swords Dance', 'Body Slam', 'Earthquake', 'Rock Slide'], 'Jolly'],
     [205, ['Earthquake', 'Explosion', 'Rapid Spin', 'Protect'], 'Relaxed'],
-    [291, ['Slash', 'Fury Cutter', 'Swords Dance', 'Double-Edge'], 'Jolly'],
     [214, ['Megahorn', 'Earthquake', 'Body Slam', 'Swords Dance'], 'Adamant'],
     [348, ['Rock Slide', 'Earthquake', 'Fury Cutter', 'Swords Dance'], 'Adamant'],
     [212, ['Metal Claw', 'Fury Cutter', 'Swords Dance', 'Quick Attack'], 'Adamant', 'Metal Coat']
@@ -29007,7 +29011,7 @@ const ELENCO_SEVII = [
   perde:'"Tá. Mas olha a costura da bola que você usou. Agora olha a minha."'
 },
 {
-  id:'ziggy', nome:'Ziggy', sobrenome:'Bay', f:false, idade:28, nasceu:[1, 4],
+  id:'ziggy', ajuste:8, nome:'Ziggy', sobrenome:'Bay', f:false, idade:28, nasceu:[1, 4],
   regiao:'Johto', de:'Goldenrod', classe:'Radialista', tipo:null,
   tracos:['alegre', 'competitivo', 'sonhador'], meta:'poder', forte:'carisma',
   gosta:{lugar:'cidade', tipo:'Normal', especie:'Miltank'},
@@ -29021,11 +29025,11 @@ const ELENCO_SEVII = [
   porque:'Narrar o torneio ao vivo, lutando nele, num transmissor de mão. Se o Ziggy da madrugada ganhar o Torneio das Ilhas, a rádio não tem coragem de tirar do ar.',
   gancho:'Promete uma entrevista com você "no programa", se o programa existir.',
   time:[
-    [181, ['Thunderbolt', 'Fire Punch', 'Thunder Wave', 'Light Screen'], 'Modest'],
-    [241, ['Body Slam', 'Earthquake', 'Rollout', 'Attract'], 'Careful'],
     [352, ['Shadow Ball', 'Thunderbolt', 'Body Slam', 'Ice Beam'], 'Brave'],
     [277, ['Double-Edge', 'Fly', 'Quick Attack', 'Steel Wing'], 'Jolly'],
     [335, ['Swords Dance', 'Slash', 'Shadow Ball', 'Rock Slide'], 'Adamant'],
+    [241, ['Body Slam', 'Earthquake', 'Rollout', 'Attract'], 'Careful'],
+    [181, ['Thunderbolt', 'Fire Punch', 'Thunder Wave', 'Light Screen'], 'Modest'],
     [295, ['Body Slam', 'Earthquake', 'Flamethrower', 'Ice Beam'], 'Lonely', 'Muscle Band']
   ],
   torneio:'"Boa tarde, ouvinte! Agora é comigo e com {o|a} visitante de Kanto, ao vivo das ilhas!"',
@@ -29059,7 +29063,7 @@ const ELENCO_SEVII = [
   perde:'"Ai. Essa entrou. Entrou bonito. Me mostra de novo como foi?"'
 },
 {
-  id:'florian', nome:'Florian', sobrenome:'Ashgrove', f:false, idade:34, nasceu:[22, 9],
+  id:'florian', ajuste:5, nome:'Florian', sobrenome:'Ashgrove', f:false, idade:34, nasceu:[22, 9],
   regiao:'Johto', de:'Rota 34', classe:'Criador Pokémon', tipo:null,
   tracos:['organizado', 'observador', 'cauteloso'], meta:'vinculo', forte:'intelecto',
   gosta:{lugar:'campo', tipo:'Normal', especie:'Eevee'},
@@ -29086,7 +29090,7 @@ const ELENCO_SEVII = [
   perde:'"Anotado. Não é derrota, é dado."'
 },
 {
-  id:'zev', nome:'Zev', sobrenome:'Fernley', f:false, idade:31, nasceu:[13, 12],
+  id:'zev', ajuste:-2, nome:'Zev', sobrenome:'Fernley', f:false, idade:31, nasceu:[13, 12],
   regiao:'Johto', de:'Mahogany', classe:'Pescador do Lago', tipo:'Sombrio',
   tracos:['desconfiado', 'solitário', 'protetor'], meta:'heroi', forte:'percepcao',
   gosta:{lugar:'agua', tipo:'Sombrio', especie:'Houndoom'},
@@ -29115,7 +29119,7 @@ const ELENCO_SEVII = [
 
 /* ─────────────────────────── HOENN ─────────────────────────── */
 {
-  id:'skye', nome:'Skye', sobrenome:'Fernwood', f:true, idade:15, nasceu:[20, 5],
+  id:'skye', ajuste:5, nome:'Skye', sobrenome:'Fernwood', f:true, idade:15, nasceu:[20, 5],
   regiao:'Hoenn', de:'Fortree', classe:'Escaladora', tipo:'Voador',
   tracos:['sonhadora', 'distraída', 'alegre'], meta:'explorar', forte:'sorte',
   gosta:{lugar:'floresta', tipo:'Voador', especie:'Altaria'},
@@ -29131,10 +29135,10 @@ const ELENCO_SEVII = [
   gancho:'Jura que um dia vai seguir a migração inteira, de Fortree até onde ela acaba.',
   time:[
     [85, ['Drill Peck', 'Tri Attack', 'Agility', 'Body Slam'], 'Jolly'],
-    [227, ['Steel Wing', 'Drill Peck', 'Agility', 'Swift'], 'Impish'],
-    [178, ['Psychic', 'Night Shade', 'Confuse Ray', 'Steel Wing'], 'Timid'],
     [279, ['Surf', 'Ice Beam', 'Wing Attack', 'Steel Wing'], 'Modest'],
     [357, ['Razor Leaf', 'Fly', 'Body Slam', 'Synthesis'], 'Careful'],
+    [178, ['Psychic', 'Night Shade', 'Confuse Ray', 'Steel Wing'], 'Timid'],
+    [227, ['Steel Wing', 'Drill Peck', 'Agility', 'Swift'], 'Impish'],
     [334, ['Dragon Claw', 'Fly', 'Flamethrower', 'Ice Beam'], 'Jolly', 'Leftovers']
   ],
   torneio:'"Vento de sudoeste hoje. Bom pra voar. Ruim pra você."',
@@ -29142,7 +29146,7 @@ const ELENCO_SEVII = [
   perde:'"Tudo bem. Daqui eu vejo o céu inteiro do mesmo jeito."'
 },
 {
-  id:'calla', nome:'Calla', sobrenome:'Sumac', f:true, idade:24, nasceu:[5, 1],
+  id:'calla', ajuste:6, nome:'Calla', sobrenome:'Sumac', f:true, idade:24, nasceu:[5, 1],
   regiao:'Hoenn', de:'Lavaridge', classe:'Dona de Termas', tipo:'Fogo',
   tracos:['orgulhosa', 'impulsiva', 'prática'], meta:'casa', forte:'carisma',
   gosta:{lugar:'vulcao', tipo:'Fogo', especie:'Torkoal'},
@@ -29195,7 +29199,7 @@ const ELENCO_SEVII = [
   perde:'"Interessante. Eu errei a conta em algum lugar. Vou achar onde."'
 },
 {
-  id:'brody', nome:'Brody', sobrenome:'Teak', f:false, idade:38, nasceu:[27, 7],
+  id:'brody', ajuste:-10, nome:'Brody', sobrenome:'Teak', f:false, idade:38, nasceu:[27, 7],
   regiao:'Hoenn', de:'Slateport', classe:'Estivador', tipo:'Água',
   tracos:['protetor', 'impulsivo', 'leal'], meta:'heroi', forte:'forca',
   gosta:{lugar:'agua', tipo:'Água', especie:'Wailord'},
@@ -29221,7 +29225,7 @@ const ELENCO_SEVII = [
   perde:'"Tudo bem, tudo bem. Foi justo. Aperta aqui."'
 },
 {
-  id:'esme', nome:'Esme', sobrenome:'Wisteria', f:true, idade:20, nasceu:[3, 3],
+  id:'esme', ajuste:-6, nome:'Esme', sobrenome:'Wisteria', f:true, idade:20, nasceu:[3, 3],
   regiao:'Hoenn', de:'Lilycove', classe:'Coordenadora', tipo:null,
   tracos:['competitiva', 'orgulhosa', 'gentil'], meta:'campeao', forte:'carisma',
   gosta:{lugar:'cidade', tipo:'Água', especie:'Milotic'},
@@ -29237,8 +29241,8 @@ const ELENCO_SEVII = [
   time:[
     [284, ['Ice Beam', 'Giga Drain', 'Shadow Ball', 'Stun Spore'], 'Modest'],
     [315, ['Giga Drain', 'Sludge Bomb', 'Stun Spore', 'Synthesis'], 'Modest'],
-    [359, ['Slash', 'Swords Dance', 'Faint Attack', 'Iron Tail'], 'Adamant'],
     [272, ['Surf', 'Giga Drain', 'Ice Beam', 'Thunder Punch'], 'Modest'],
+    [359, ['Slash', 'Swords Dance', 'Faint Attack', 'Iron Tail'], 'Adamant'],
     [282, ['Psychic', 'Thunderbolt', 'Shadow Ball', 'Hypnosis'], 'Modest'],
     [350, ['Surf', 'Ice Beam', 'Recover', 'Attract'], 'Bold', 'Leftovers']
   ],
@@ -29247,7 +29251,7 @@ const ELENCO_SEVII = [
   perde:'"Bom. Foi uma batalha de verdade. Era o que eu queria."'
 },
 {
-  id:'oona', nome:'Oona', sobrenome:'Yew', f:true, idade:16, nasceu:[31, 10],
+  id:'oona', ajuste:2, nome:'Oona', sobrenome:'Yew', f:true, idade:16, nasceu:[31, 10],
   regiao:'Hoenn', de:'Monte Pyre', classe:'Zeladora do Monte Pyre', tipo:'Fantasma',
   tracos:['calma', 'solitária', 'observadora'], meta:'vinculo', forte:'percepcao',
   gosta:{lugar:'cemiterio', tipo:'Fantasma', especie:'Dusclops'},
@@ -29276,7 +29280,7 @@ const ELENCO_SEVII = [
   perde:'"Eu vou contar pra eles que foi bonito."'
 },
 {
-  id:'rhys', nome:'Rhys', sobrenome:'Ironwood', f:false, idade:26, nasceu:[19, 2],
+  id:'rhys', ajuste:-6, nome:'Rhys', sobrenome:'Ironwood', f:false, idade:26, nasceu:[19, 2],
   regiao:'Hoenn', de:'Sootopolis', classe:'Ás de Hoenn', tipo:null,
   tracos:['competitivo', 'orgulhoso', 'calmo'], meta:'campeao', forte:'resistencia',
   gosta:{lugar:'montanha', tipo:'Metálico', especie:'Aggron'},
@@ -29292,9 +29296,9 @@ const ELENCO_SEVII = [
   gancho:'Vai tentar a Elite de Hoenn uma terceira vez. Diz que quer você na arquibancada.',
   time:[
     [275, ['Giga Drain', 'Faint Attack', 'Swords Dance', 'Body Slam'], 'Adamant'],
+    [365, ['Blizzard', 'Surf', 'Earthquake', 'Rock Slide'], 'Modest'],
     [346, ['Giga Drain', 'Rock Slide', 'Earthquake', 'Sludge Bomb'], 'Calm'],
     [310, ['Thunderbolt', 'Thunder Wave', 'Iron Tail', 'Body Slam'], 'Timid'],
-    [365, ['Blizzard', 'Surf', 'Earthquake', 'Rock Slide'], 'Modest'],
     [254, ['Giga Drain', 'Dragon Claw', 'Earthquake', 'Thunder Punch'], 'Naive'],
     [306, ['Iron Tail', 'Earthquake', 'Rock Slide', 'Thunder Punch'], 'Adamant', 'Leftovers']
   ],
@@ -29305,7 +29309,7 @@ const ELENCO_SEVII = [
 
 /* ─────────────────────────── AS ILHAS ─────────────────────────── */
 {
-  id:'noa', nome:'Noa', sobrenome:'Kelp', f:true, idade:16, nasceu:[9, 9],
+  id:'noa', ajuste:4, nome:'Noa', sobrenome:'Kelp', f:true, idade:16, nasceu:[9, 9],
   regiao:'Ilhas Sevii', de:'Ilha Um', classe:'Moça do Cais', tipo:null, rival:true,
   tracos:['desconfiada', 'ousada', 'leal'], meta:'casa', forte:'sorte',
   gosta:{lugar:'agua', tipo:'Sombrio', especie:'Sharpedo'},
@@ -29334,7 +29338,7 @@ const ELENCO_SEVII = [
   perde:'"De novo. Tudo bem. Eu volto. Eu sempre volto."'
 },
 {
-  id:'magnus', nome:'Magnus', sobrenome:'Holm', f:false, idade:74, nasceu:[17, 4],
+  id:'magnus', ajuste:-8, nome:'Magnus', sobrenome:'Holm', f:false, idade:74, nasceu:[17, 4],
   regiao:'Ilhas Sevii', de:'Ilha Sete', classe:'Bicampeão das Ilhas', tipo:null, completa:true,
   tracos:['calmo', 'orgulhoso', 'paciente'], meta:'casa', forte:'resistencia',
   gosta:{lugar:'montanha', tipo:'Normal', especie:'Kangaskhan'},
@@ -33954,8 +33958,8 @@ Object.assign(CONVERSAS, {
     [fala('a menina da barraca de pedra', 'A Pedra do Trovão é de Ilha Seis. Ninguém sabe disso. A minha avó sabe.')]
   ],
   ilha_tres:[
-    {cond:d=>Sevii.fase(d) < 4, texto:[fala('a moça da loja', 'Fala baixo. Se o ronco passar, a gente entra.', 'baixo')]},
-    {cond:d=>Sevii.fase(d) >= 4, texto:[fala('a moça da loja', 'Faz uma semana que ninguém fecha janela quando passa moto. É estranho. É bom.')]},
+    {cond:d=>Sevii.fase(d) < 4, texto:[fala('a balconista da Ilha Três', 'Fala baixo. Se o ronco passar, a gente entra.', 'baixo')]},
+    {cond:d=>Sevii.fase(d) >= 4, texto:[fala('a balconista da Ilha Três', 'Faz uma semana que ninguém fecha janela quando passa moto. É estranho. É bom.')]},
     ['Um Snubbull dorme na porta da padaria com cara de quem está de guarda. Ele está de guarda.'],
     [fala('o velho do banco', 'Essa ilha tinha festa de pipa todo inverno. Hoppip amarrado em linha, o céu cheio. Faz tempo que não tem.')]
   ],
@@ -33967,7 +33971,7 @@ Object.assign(CONVERSAS, {
   ilha_cinco:[
     [fala('o relojoeiro', 'O relógio da torre adianta quatro minutos. Eu podia acertar. A ilha inteira já se acostumou a chegar quatro minutos antes.')],
     ['Um Hoothoot dorme no ponteiro das horas do relógio da torre e roda junto com ele, sem acordar.'],
-    {cond:d=>Sevii.fase(d) < 5, texto:[fala('a mulher do varal', 'De noite tem barco sem luz encostando lá no armazém. A Guarda sabe. A Guarda é um homem só.', 'baixo')]}
+    {cond:d=>Sevii.fase(d) < 5, texto:[fala('a mulher do varal da praça', 'De noite tem barco sem luz encostando lá no armazém. A Guarda sabe. A Guarda é um homem só.', 'baixo')]}
   ],
   ilha_seis:[
     [fala('o historiador', 'As ruínas do vale têm mais de mil anos. As casas da vila têm cento e poucos. Adivinha qual das duas eu estudo.')],
@@ -34015,7 +34019,7 @@ ilha_dois:[
   titulo:'A placa da barraca',
   texto:[
     'Uma barraca de frutinha está sem placa. A dona deixou um Smeargle pintar uma nova, e o Smeargle pintou uma Pokébola enorme em vez de escrever "frutinha".',
-    fala('a dona da barraca', 'É a terceira placa que ele pinta. As três são Pokébola. Eu vendo frutinha.')
+    fala('a vendedora de frutinha', 'É a terceira placa que ele pinta. As três são Pokébola. Eu vendo frutinha.')
   ],
   escolhas:[
     {texto:'Sugerir que ela venda a placa e deixe a Pokébola.',
@@ -34028,7 +34032,7 @@ ilha_dois:[
      ef:{moral:3, registrar:'Segurou a placa pro Smeargle de Ilha Dois tentar escrever "frutinha".'},
      resultado:[
        'O Smeargle olha a palavra que você aponta, pensa muito, e pinta uma frutinha. Uma frutinha redonda, vermelha e branca, com um botão no meio.',
-       fala('a dona da barraca', 'Tá. Essa eu aceito.', 'riso')
+       fala('a vendedora de frutinha', 'Tá. Essa eu aceito.', 'riso')
      ]},
     {texto:'Seguir pela feira.', ef:{}, resultado:['Você segue. Atrás de você, o Smeargle mergulha o rabo na tinta e recomeça.']}
   ]
@@ -106858,9 +106862,9 @@ c36_por_tras:{
 c36_a_loja:{
   texto:[
     'A loja tem a prateleira da frente cheia e a de trás vazia. O dono fecha a cortina quando você olha muito, e quando você não para de olhar, abre de novo.',
-    fala('o dono da loja', 'A de trás é a parte do farol. Toda semana eles levam a parte do farol. Taxa de proteção, eles chamam.', 'baixo'),
-    fala('o dono da loja', 'O Kaspar tinha oficina de moto aqui na rua. Consertava a moto de todo mundo. Aí começou a emprestar óleo pros pescadores, quando a fábrica fechou e ninguém mais comprava nada. Óleo fiado. E de fiado em fiado, a ilha ficou dele.'),
-    fala('o dono da loja', 'Ele tem um caderno. Quem deve, está no caderno. O número nunca desce.'),
+    fala('o dono da loja da Ilha Três', 'A de trás é a parte do farol. Toda semana eles levam a parte do farol. Taxa de proteção, eles chamam.', 'baixo'),
+    fala('o dono da loja da Ilha Três', 'O Kaspar tinha oficina de moto aqui na rua. Consertava a moto de todo mundo. Aí começou a emprestar óleo pros pescadores, quando a fábrica fechou e ninguém mais comprava nada. Óleo fiado. E de fiado em fiado, a ilha ficou dele.'),
+    fala('o dono da loja da Ilha Três', 'Ele tem um caderno. Quem deve, está no caderno. O número nunca desce.'),
     d => d.flags.sv_noa_ajudou
       ? 'Do fundo da loja sai uma menina de jaqueta preta grande demais, com um Murkrow no ombro e um saco de pão debaixo do braço.'
       : ''
@@ -107264,9 +107268,9 @@ c37_o_cartaz:{
 c37_o_varal:{
   texto:[
     'Ela estende lençol branco com prendedor de madeira, um atrás do outro, sem pressa e sem olhar pra você.',
-    fala('a mulher do varal', 'De noite tem barco sem luz encostando lá no armazém. Eu já disse pra Guarda. A Guarda é um homem só.', 'baixo'),
-    fala('a mulher do varal', 'Tem um homem que dorme lá dentro. Careca, grande, jaqueta com um dragão bordado nas costas. Trabalhava na segurança da fábrica, quando tinha fábrica. Era boxeador antes disso, diz o meu marido.'),
-    fala('a mulher do varal', 'E toda quinta, de madrugada, desce do barco um senhor de terno branco. Terno branco, de madrugada, na campina. Quem usa terno branco de madrugada não é pescador.')
+    fala('a mulher do varal da praça', 'De noite tem barco sem luz encostando lá no armazém. Eu já disse pra Guarda. A Guarda é um homem só.', 'baixo'),
+    fala('a mulher do varal da praça', 'Tem um homem que dorme lá dentro. Careca, grande, jaqueta com um dragão bordado nas costas. Trabalhava na segurança da fábrica, quando tinha fábrica. Era boxeador antes disso, diz o meu marido.'),
+    fala('a mulher do varal da praça', 'E toda quinta, de madrugada, desce do barco um senhor de terno branco. Terno branco, de madrugada, na campina. Quem usa terno branco de madrugada não é pescador.')
   ],
   ef:{flag:'sv_sabe_do_dekker', registrar:'A mulher do varal da Ilha Cinco: um homem careca de jaqueta de dragão dorme no armazém, e toda quinta desce do barco sem luz um senhor de terno branco.'},
   escolhas:[
@@ -118976,8 +118980,12 @@ const ILHA_ABRE_NA_FASE = {
 const BALSA_FECHADA = {
   3:'O barqueiro da Ilha Dois não leva ninguém pra Ilha Três. "Lá tem moto no cais, e eu tenho filho."',
   4:'O barco que desce pro sul não sai: o mestre diz que só desamarra quando o cais da Ilha Três voltar a ser cais.',
-  5:'A balsa da Ilha Sete só sai na semana do torneio, com a lista dos inscritos, e a lista ainda não fechou.'
+  5:'A balsa do norte, a da Ilha Seis e da Ilha Sete, só sai na semana do torneio, com a lista dos inscritos, e a lista ainda não fechou.'
 };
+/* os cais da balsa direta: Vermilion e a vila de cada ilha. Depois da
+   chegada ela sai de qualquer um pra qualquer cais aberto, sem parar
+   nas ilhas do meio; o cais fechado é o da balsa de ilha em ilha */
+const PORTOS_DA_BALSA = ['vermilion', 'ilha_um', 'ilha_dois', 'ilha_tres', 'ilha_quatro', 'ilha_cinco', 'ilha_seis', 'ilha_sete'];
 /* quem fala nos capítulos e não é do elenco nem luta: rosto e nome */
 const PESSOAS_DE_SEVII = {
   'Sargento Lund':'sevii_lund', 'Sr. Penrose':'sevii_penrose'
@@ -119120,7 +119128,11 @@ const Sevii = {
      quem veio de longe ficou, e a Noa no cais. */
   afazeres(id){
     const d = Estado.dados, lista = [];
-    if (!d || !ehSevii(id)) return lista;
+    if (!d) return lista;
+    /* o cais da balsa: em Vermilion e na vila de cada ilha, depois da chegada */
+    if (PORTOS_DA_BALSA.includes(id) && this.balsaAberta(d))
+      lista.push({lugar:true, id:'sevii_balsa', titulo:'Cais da balsa'});
+    if (!ehSevii(id)) return lista;
     const f = this.fase(d);
     if (id === 'ilha_quatro' && f === 4 && !d.flags.sv_pista_quatro)
       lista.push({id:'sevii_pista_quatro', titulo:'O cais dos pescadores do gelo',
@@ -119143,6 +119155,8 @@ const Sevii = {
     return lista;
   },
   fazer(x){
+    if (x === 'balsa') return this.balsa();
+    if (x.startsWith('balsa_')) return this.embarcar(x.slice(6));
     if (x === 'arena') return CopaSevii.tela();
     if (x === 'pousada') return this.pousada();
     if (x.startsWith('sentar_')) return this.sentar(x.slice(7));
@@ -119156,6 +119170,54 @@ const Sevii = {
       return UI.telaRival();
     }
     return Exploracao.tela();
+  },
+
+  /* ── a balsa direta: do cais de Vermilion e de cada vila, pra
+     qualquer cais aberto, sem descer nas ilhas do meio. A primeira
+     travessia é a do S.S. Anne (capítulo 34); depois dela a balsa é de
+     quem está na lista do torneio, e depois do torneio as sete ilhas
+     ficam abertas pra sempre. Leva um período, como uma viagem ── */
+  balsaAberta(d){ d = d || Estado.dados; return !!(d && this.aberto(d) && d.flags.sv_chegou); },
+  /* o cais aonde a balsa ainda não vai: o que a ilha diz, na língua dela */
+  portoFechado(id, d){
+    d = d || Estado.dados;
+    if (!PORTOS_DA_BALSA.includes(id)) return 'A balsa não para lá.';
+    const fim = (typeof Depois !== 'undefined') ? Depois.trava(Mundo.id(), id) : null;
+    if (fim) return fim;
+    if (id === 'vermilion') return null;
+    const precisa = ILHA_ABRE_NA_FASE[id] || 0;
+    return this.fase(d) >= precisa ? null : (BALSA_FECHADA[precisa] || 'A balsa não sai pra lá hoje.');
+  },
+  balsa(av){
+    const d = Estado.dados, aqui = Mundo.id();
+    if (!this.balsaAberta(d) || !PORTOS_DA_BALSA.includes(aqui)) return Exploracao.tela();
+    const botoes = PORTOS_DA_BALSA.filter(id => id !== aqui).map(id => ({
+      texto:LOCAIS[id].nome, icone:'balsa', trava:this.portoFechado(id, d), acao:`Sevii.fazer('balsa_${id}')`}));
+    botoes.push({texto:`Ficar ${emLocal(aqui)}.`, classe:'fim', acao:'Exploracao.tela()'});
+    const falas = aqui === 'vermilion'
+      ? ['A balsa das ilhas sai do fim do porto, depois do cais três, onde o S.S. Anne encosta. É um barco baixo e rápido, de casco branco e cabine azul, que faz a linha inteira: as sete ilhas, de uma ponta à outra.',
+         'O barqueiro tem a lista do Torneio das Ilhas pregada na parede da cabine, com o seu nome no meio, e não cobra de quem está nela.']
+      : ['O cais da balsa fica na ponta do píer, com a placa das sete ilhas pintada à mão e Vermilion embaixo, do outro lado do mar.',
+         'A balsa encosta uma vez por período e faz a linha inteira. Quem não quer descer em cada ilha fica sentado até a sua.'];
+    UI.telaConversa({num: aqui === 'vermilion' ? 'Vermilion' : 'Ilhas Sevii', titulo:'O cais da balsa', loc:LOCAIS[aqui].nome,
+      falas, botoes, avisos:av});
+  },
+  embarcar(id){
+    const d = Estado.dados, aqui = Mundo.id();
+    if (!this.balsaAberta(d) || !PORTOS_DA_BALSA.includes(aqui) || id === aqui || !LOCAIS[id]) return this.balsa();
+    const trava = this.portoFechado(id, d);
+    if (trava) return this.balsa([{tipo:'info', texto:trava}]);
+    const primeira = !Mundo.visitado(id);
+    d.local = id;
+    Mundo.marcarVisitado(id);
+    Mundo.passar(1);
+    Estado.registrar(`Pegou a balsa até ${LOCAIS[id].nome}.`);
+    Estado.salvar('auto');
+    /* a viagem é uma ação: rola o PokéNav, que espera a tela nova */
+    Exploracao.toque();
+    Exploracao.tela([{tipo:'info', texto: id === 'vermilion'
+      ? 'A balsa encosta no fim do porto de Vermilion, do lado dos guindastes, e o cheiro de óleo volta antes do cais.'
+      : `A balsa encosta no cais da ${LOCAIS[id].nome}${primeira ? ', e você desce numa ilha onde nunca pisou' : ''}.`}]);
   },
 
   /* ── Ilha Quatro, entre os Faróis e o armazém: quem viu o barco ── */
@@ -119268,8 +119330,9 @@ const Sevii = {
       : n === 2 ? 'Contou pra você por que veio pro Torneio das Ilhas.' : 'Contou pra você o que pretende fazer depois das ilhas.'}});
     if (n === 1) Estado.registrar(`${f.nome} ${f.sobrenome}, de ${f.de}, contou da jornada na varanda da pousada da Ilha Sete.`);
     Estado.salvar('auto');
+    /* a fala que vem entre aspas no meio da conta é de quem conta */
     UI.telaConversa({num:'A pousada da arena', titulo:`${f.nome} ${f.sobrenome}`, loc:`${f.classe} · ${f.de}`,
-      falas, avisos:av,
+      falas, quem:f.nome, avisos:av,
       botoes:[{texto:'Voltar pra varanda.', acao:'Sevii.pousada()'}]});
   }
 };
@@ -125010,8 +125073,10 @@ const UI = {
       <div id="avisos" class="avisos"></div>
       <div id="escolhas" class="escolhas" style="margin-top:18px">
         ${(o.botoes || []).map(b => b.icone
-          /* botão com desenho e classe (a luta, em vermelho): o mesmo das ações de cena */
-          ? `<button class="escolha com-icone${b.classe ? ' ' + b.classe : ''}" onclick="${b.acao}">${svgIcone(b.icone)}<span class="esc-rot">${this.esc(txt(b.texto))}</span></button>`
+          /* botão com desenho e classe (a luta, em vermelho): o mesmo das ações de cena;
+             com `trava`, a porta fechada fica na tela, com o cadeado e o motivo */
+          ? `<button class="escolha com-icone${b.classe ? ' ' + b.classe : ''}" ${b.trava ? 'disabled' : `onclick="${b.acao}"`}>${svgIcone(b.trava ? 'trancado' : b.icone)}<span class="esc-rot">${this.esc(txt(b.texto))}${
+              b.trava ? `<span class="esc-trava">${this.esc(txt(b.trava))}</span>` : ''}</span></button>`
           : `<button class="escolha${b.classe ? ' ' + b.classe : ''}" onclick="${b.acao}">${this.esc(txt(b.texto))}</button>`).join('')}
       </div>
     </div>`);
@@ -127864,8 +127929,8 @@ const UI = {
 
       <h3>Ilhas Sevii</h3>
       <div class="linha"><span class="k">Quem vai</span><span class="v">depois do fim, com o título de Campeão: o Blue, em Pallet, entrega a passagem · são seis capítulos à parte, que não mudam o final que você já viu</span></div>
-      <div class="linha"><span class="k">A travessia</span><span class="v">a primeira é a do S.S. Anne, no capítulo · depois, a balsa vai e volta entre Vermilion e a Ilha Um · entre as ilhas, a Um e a Dois abrem na chegada, a Três depois do capítulo da Maré, a Quatro e a Cinco depois do dos Faróis, a Seis e a Sete depois do armazém · a balsa fechada diz por quê</span></div>
-      <div class="linha"><span class="k">O mapa</span><span class="v">as ilhas são a outra página do mapa desenhado, com a aba Kanto / Ilhas Sevii · voar leva a qualquer vila já pisada da mesma região: entre Kanto e as ilhas, só de balsa</span></div>
+      <div class="linha"><span class="k">A travessia</span><span class="v">a primeira é a do S.S. Anne, no capítulo · depois, a balsa vai de ilha em ilha pelo caminho, e o cais de Vermilion e da vila de cada ilha tem a balsa direta, pra qualquer cais aberto, num período e sem pagar · a Um e a Dois abrem na chegada, a Três depois do capítulo da Maré, a Quatro e a Cinco depois do dos Faróis, a Seis e a Sete depois do armazém · a balsa fechada diz por quê · depois do torneio, as sete ilhas ficam abertas pra sempre</span></div>
+      <div class="linha"><span class="k">O mapa</span><span class="v">as ilhas são a outra página do mapa desenhado, com a aba Kanto / Ilhas Sevii · voar leva a qualquer cidade já pisada, das ilhas ou de Kanto, por cima do mar também, no mesmo período de um voo comum</span></div>
       <div class="linha"><span class="k">O mato</span><span class="v">Kanto e Johto misturados · os Pokémon de Johto que andam soltos vivem só aqui · nível de 60 a 68, pelo lugar</span></div>
       <div class="linha"><span class="k">A lei</span><span class="v">a Patrulha de Kanto não atravessa o mar: nas ilhas ninguém te para por ordem de Kanto · quem cuida das ilhas é a Guarda, um sargento só</span></div>
       <div class="linha"><span class="k">As lutas da história</span><span class="v">o nível acompanha a média dos seus três mais fortes, nunca abaixo de 58 · quem é de gangue vem um pouco abaixo dela · o que a gangue levou e não voltou fica fora do time do dono no torneio</span></div>
@@ -142095,14 +142160,14 @@ const Exploracao = {
     if (!Mundo.conhecido('vermilion')) return '';
     const [x, y] = this._q(this.MAPA_SEVII.ilha_um);
     return `<path d="M${x} ${y} L${x + 40} ${y - 30} L${x + 40} 4" class="mp-mar-via"/>
-      <text class="mp-rota" x="${x + 44}" y="12" text-anchor="start">Vermilion ↑</text>`;
+      <text class="mp-saida" x="${x + 44}" y="12" text-anchor="start">Vermilion ↑</text>`;
   },
   /* e em Kanto, a mesma balsa sai de Vermilion pro sul */
   saidaPrasIlhas(){
     if (!Mundo.conhecido('ilha_um')) return '';
     const [x, y] = this.POS_MAPA.vermilion;
     return `<path d="M${x} ${y} L${x + 6} ${y + 14} L${x + 6} 222" class="mp-mar-via"/>
-      <text class="mp-rota" x="${x + 9}" y="214" text-anchor="start">Ilhas Sevii ↓</text>`;
+      <text class="mp-saida" x="${x + 9}" y="214" text-anchor="start">Ilhas Sevii ↓</text>`;
   },
   /* Todo Centro Pokémon tem um mapa da região na parede do saguão: quem
      não comprou o dele olha o de lá. */
@@ -142169,7 +142234,8 @@ const Exploracao = {
       const L = LOCAIS[id], [x, y] = pos[id];
       const pisou = Mundo.visitado(id) || id === aqui;
       const ir = viz.has(id);
-      const voa = !ir && voo.pode && pisou && L.tipo === 'cidade' && id !== aqui && this.regiaoNoMapa(aqui) === reg;
+      /* o voo desce em qualquer cidade já pisada, das duas páginas: por cima do mar também */
+      const voa = !ir && voo.pode && pisou && L.tipo === 'cidade' && id !== aqui && !this.vooFechado(id);
       const cls = `mp-no ${L.tipo}${pisou ? '' : ' nao-pisado'}${id === aqui ? ' aqui' : ''}${ir ? ' vizinho' : ''}${voa ? ' voo' : ''}`;
       const forma = L.tipo === 'cidade' ? `<rect x="${x - 5.5}" y="${y - 4.5}" width="11" height="9" rx="1.5"/>`
                   : L.tipo === 'especial' ? `<rect x="${x - 4}" y="${y - 4}" width="8" height="8" transform="rotate(45 ${x} ${y})"/>`
@@ -142224,7 +142290,8 @@ const Exploracao = {
     const voo = this._voo || {pode:false};
     const ir = Mundo.vizinhos().includes(id);
     const outraRegiao = this.regiaoNoMapa(aqui) !== this.regiaoNoMapa(id);
-    const voa = !ir && voo.pode && pisou && L.tipo === 'cidade' && id !== aqui && !outraRegiao;
+    const fechado = L.tipo === 'cidade' && pisou && id !== aqui && !ir ? this.vooFechado(id) : null;
+    const voa = !ir && voo.pode && pisou && L.tipo === 'cidade' && id !== aqui && !fechado;
     const tipo = L.tipo === 'cidade' ? (L.porte || 'cidade') : L.tipo === 'rota' ? 'rota' : 'lugar à parte';
     const liga = (L.conexoes || []).filter(v => Mundo.conhecido(v) && (this.POS_MAPA[v] || this.POS_SEVII[v])).map(v => LOCAIS[v].nome);
     /* o que o mapa de parede diria: o Centro tem placa. Loja e ginásio
@@ -142246,8 +142313,10 @@ const Exploracao = {
             trava ? `<span class="esc-trava">${UI.esc(textoTrava(trava))}</span>` : ''}</span></button>`
       : voa ? `<button class="escolha menu caminho voo com-icone" onclick="UI.fecharModal(true);Exploracao.voarPara('${id}')">
           ${svgIcone('voar')}<span class="esc-rot"><small>Voar${voo.quem ? ' com ' + UI.esc(nomeExib(voo.quem)) : ''}</small><b>${UI.esc(L.nome)}</b></span></button>`
-      : `<div class="mi-longe">${svgIcone('info')}<span>${outraRegiao
-          ? 'Do outro lado do mar. Lá se chega de balsa, pelo cais de Vermilion e da Ilha Um: voando é mar demais.'
+      : `<div class="mi-longe">${svgIcone(fechado ? 'trancado' : 'info')}<span>${fechado
+          ? UI.esc(fechado)
+          : outraRegiao
+          ? this.doOutroLado(L, pisou, voo)
           : L.tipo === 'cidade' && pisou
           ? `Longe daqui. Voar até lá pede ${UI.esc(voo.falta || 'um Pokémon voador de grande porte')}.`
           : 'Longe daqui: dá pra chegar andando pelas rotas do caminho.'}</span></div>`;
@@ -142272,16 +142341,32 @@ const Exploracao = {
     }
   },
 
+  /* onde o voo não desce: o lugar que o final fechou (depois.js) */
+  vooFechado(id){ return (typeof Depois !== 'undefined' && Depois.trava(Mundo.id(), id)) || null; },
+  /* a ficha do lugar do outro lado do mar: a balsa (ou, antes da
+     chegada, o S.S. Anne) e, na cidade já pisada, o que o voo pede */
+  doOutroLado(L, pisou, voo){
+    const barco = (typeof Sevii !== 'undefined' && Sevii.balsaAberta())
+      ? 'Do outro lado do mar. A balsa sai do cais de Vermilion e da vila de cada ilha.'
+      : 'Do outro lado do mar. A primeira travessia é a do S.S. Anne, no cais três de Vermilion.';
+    return L.tipo === 'cidade' && pisou ? `${barco} Voar até lá pede ${UI.esc(voo.falta || 'um Pokémon voador de grande porte')}.` : barco;
+  },
+
   /* Voo: sai daqui e desce na cidade escolhida, sem atravessar as rotas
-     do meio. Leva um período do dia, como qualquer viagem curta. */
+     do meio, e por cima do mar também: de Kanto pras ilhas, de ilha em
+     ilha e de volta, pra cidade onde você já pisou. Leva um período do
+     dia, como qualquer viagem curta. */
   voarPara(id){
     const v = (typeof Campo !== 'undefined') ? Campo.voar() : {pode:false};
     const L = LOCAIS[id];
-    if (!v.pode || !L || !Mundo.visitado(id) || this.regiaoNoMapa(id) !== this.regiaoNoMapa(Mundo.id())) return this.tela();
+    if (!v.pode || !L || L.tipo !== 'cidade' || !Mundo.visitado(id) || id === Mundo.id()) return this.tela();
+    const fechado = this.vooFechado(id);
+    if (fechado) return this.tela([{tipo:'info', texto:fechado}]);
+    const mar = this.regiaoNoMapa(id) !== this.regiaoNoMapa(Mundo.id());
     Mundo.viajar(id);
     Estado.registrar(`Voou até ${L.nome} ${v.como || ''}.`.replace(/\s+\./, '.'));
     Estado.salvar('auto');
-    this.tela([{tipo:'info', texto:`${nomeExib(v.quem)} pousa em ${L.nome}. As rotas do caminho passaram lá embaixo.`}]);
+    this.tela([{tipo:'info', texto:`${nomeExib(v.quem)} pousa ${emLocal(id)}. ${mar ? 'Foi mar o caminho inteiro.' : 'As rotas do caminho passaram lá embaixo.'}`}]);
   },
 
   /* ---------- entrar no arco que espera neste lugar ---------- */

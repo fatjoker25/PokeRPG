@@ -98,9 +98,9 @@ const ELENCO_SEVII = [
   porque:'Vender as bolas na feira do torneio (quem vem de Hoenn nunca viu uma Apricorn) e provar que inseto ganha torneio.',
   gancho:'Quer abrir uma banca da família em Lilycove, do outro lado do mar.',
   time:[
+    [291, ['Slash', 'Fury Cutter', 'Swords Dance', 'Double-Edge'], 'Jolly'],
     [127, ['Swords Dance', 'Body Slam', 'Earthquake', 'Rock Slide'], 'Jolly'],
     [205, ['Earthquake', 'Explosion', 'Rapid Spin', 'Protect'], 'Relaxed'],
-    [291, ['Slash', 'Fury Cutter', 'Swords Dance', 'Double-Edge'], 'Jolly'],
     [214, ['Megahorn', 'Earthquake', 'Body Slam', 'Swords Dance'], 'Adamant'],
     [348, ['Rock Slide', 'Earthquake', 'Fury Cutter', 'Swords Dance'], 'Adamant'],
     [212, ['Metal Claw', 'Fury Cutter', 'Swords Dance', 'Quick Attack'], 'Adamant', 'Metal Coat']
@@ -124,11 +124,11 @@ const ELENCO_SEVII = [
   porque:'Narrar o torneio ao vivo, lutando nele, num transmissor de mão. Se o Ziggy da madrugada ganhar o Torneio das Ilhas, a rádio não tem coragem de tirar do ar.',
   gancho:'Promete uma entrevista com você "no programa", se o programa existir.',
   time:[
-    [181, ['Thunderbolt', 'Fire Punch', 'Thunder Wave', 'Light Screen'], 'Modest'],
-    [241, ['Body Slam', 'Earthquake', 'Rollout', 'Attract'], 'Careful'],
     [352, ['Shadow Ball', 'Thunderbolt', 'Body Slam', 'Ice Beam'], 'Brave'],
     [277, ['Double-Edge', 'Fly', 'Quick Attack', 'Steel Wing'], 'Jolly'],
     [335, ['Swords Dance', 'Slash', 'Shadow Ball', 'Rock Slide'], 'Adamant'],
+    [241, ['Body Slam', 'Earthquake', 'Rollout', 'Attract'], 'Careful'],
+    [181, ['Thunderbolt', 'Fire Punch', 'Thunder Wave', 'Light Screen'], 'Modest'],
     [295, ['Body Slam', 'Earthquake', 'Flamethrower', 'Ice Beam'], 'Lonely', 'Muscle Band']
   ],
   torneio:'"Boa tarde, ouvinte! Agora é comigo e com {o|a} visitante de Kanto, ao vivo das ilhas!"',
@@ -234,10 +234,10 @@ const ELENCO_SEVII = [
   gancho:'Jura que um dia vai seguir a migração inteira, de Fortree até onde ela acaba.',
   time:[
     [85, ['Drill Peck', 'Tri Attack', 'Agility', 'Body Slam'], 'Jolly'],
-    [227, ['Steel Wing', 'Drill Peck', 'Agility', 'Swift'], 'Impish'],
-    [178, ['Psychic', 'Night Shade', 'Confuse Ray', 'Steel Wing'], 'Timid'],
     [279, ['Surf', 'Ice Beam', 'Wing Attack', 'Steel Wing'], 'Modest'],
     [357, ['Razor Leaf', 'Fly', 'Body Slam', 'Synthesis'], 'Careful'],
+    [178, ['Psychic', 'Night Shade', 'Confuse Ray', 'Steel Wing'], 'Timid'],
+    [227, ['Steel Wing', 'Drill Peck', 'Agility', 'Swift'], 'Impish'],
     [334, ['Dragon Claw', 'Fly', 'Flamethrower', 'Ice Beam'], 'Jolly', 'Leftovers']
   ],
   torneio:'"Vento de sudoeste hoje. Bom pra voar. Ruim pra você."',
@@ -340,8 +340,8 @@ const ELENCO_SEVII = [
   time:[
     [284, ['Ice Beam', 'Giga Drain', 'Shadow Ball', 'Stun Spore'], 'Modest'],
     [315, ['Giga Drain', 'Sludge Bomb', 'Stun Spore', 'Synthesis'], 'Modest'],
-    [359, ['Slash', 'Swords Dance', 'Faint Attack', 'Iron Tail'], 'Adamant'],
     [272, ['Surf', 'Giga Drain', 'Ice Beam', 'Thunder Punch'], 'Modest'],
+    [359, ['Slash', 'Swords Dance', 'Faint Attack', 'Iron Tail'], 'Adamant'],
     [282, ['Psychic', 'Thunderbolt', 'Shadow Ball', 'Hypnosis'], 'Modest'],
     [350, ['Surf', 'Ice Beam', 'Recover', 'Attract'], 'Bold', 'Leftovers']
   ],
@@ -395,9 +395,9 @@ const ELENCO_SEVII = [
   gancho:'Vai tentar a Elite de Hoenn uma terceira vez. Diz que quer você na arquibancada.',
   time:[
     [275, ['Giga Drain', 'Faint Attack', 'Swords Dance', 'Body Slam'], 'Adamant'],
+    [365, ['Blizzard', 'Surf', 'Earthquake', 'Rock Slide'], 'Modest'],
     [346, ['Giga Drain', 'Rock Slide', 'Earthquake', 'Sludge Bomb'], 'Calm'],
     [310, ['Thunderbolt', 'Thunder Wave', 'Iron Tail', 'Body Slam'], 'Timid'],
-    [365, ['Blizzard', 'Surf', 'Earthquake', 'Rock Slide'], 'Modest'],
     [254, ['Giga Drain', 'Dragon Claw', 'Earthquake', 'Thunder Punch'], 'Naive'],
     [306, ['Iron Tail', 'Earthquake', 'Rock Slide', 'Thunder Punch'], 'Adamant', 'Leftovers']
   ],

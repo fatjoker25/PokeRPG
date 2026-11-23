@@ -28,7 +28,9 @@ const ehBolsa = n => /^(Mochila|Bolsa)\s/.test(n);
 const COMPRA_DE_ENREDO = new Set([
   'Recibo de consignação',
   'Saco de pipoca',
-  'Medalha de natação da filha do Sr. Wells'
+  'Medalha de natação da filha do Sr. Wells',
+  /* a caixa de Pokébolas roubadas que você compra do Jory pela rede, no 35 */
+  'Caixa da Maré'
 ]);
 
 const arqs = [];

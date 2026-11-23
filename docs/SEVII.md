@@ -118,9 +118,9 @@ golpes, natureza e o item que o ás segura. O que fica pra depois (o gancho) é 
 
 | Pokémon | Tipo | Região | Golpes | Natureza | Item |
 |---|---|---|---|---|---|
+| Ninjask | Inseto/Voador | Hoenn | Slash, Fury Cutter, Swords Dance, Double-Edge | Jolly | — |
 | Pinsir | Inseto | Kanto | Swords Dance, Body Slam, Earthquake, Rock Slide | Jolly | — |
 | Forretress | Inseto/Metálico | Johto | Earthquake, Explosion, Rapid Spin, Protect | Relaxed | — |
-| Ninjask | Inseto/Voador | Hoenn | Slash, Fury Cutter, Swords Dance, Double-Edge | Jolly | — |
 | Heracross | Inseto/Lutador | Johto | Megahorn, Earthquake, Body Slam, Swords Dance | Adamant | — |
 | Armaldo | Pedra/Inseto | Hoenn | Rock Slide, Earthquake, Fury Cutter, Swords Dance | Adamant | — |
 | Scizor | Inseto/Metálico | Johto | Metal Claw, Fury Cutter, Swords Dance, Quick Attack | Adamant | Metal Coat |
@@ -152,11 +152,11 @@ golpes, natureza e o item que o ás segura. O que fica pra depois (o gancho) é 
 
 | Pokémon | Tipo | Região | Golpes | Natureza | Item |
 |---|---|---|---|---|---|
-| Ampharos | Elétrico | Johto | Thunderbolt, Fire Punch, Thunder Wave, Light Screen | Modest | — |
-| Miltank | Normal | Johto | Body Slam, Earthquake, Rollout, Attract | Careful | — |
 | Kecleon | Normal | Hoenn | Shadow Ball, Thunderbolt, Body Slam, Ice Beam | Brave | — |
 | Swellow | Normal/Voador | Hoenn | Double-Edge, Fly, Quick Attack, Steel Wing | Jolly | — |
 | Zangoose | Normal | Hoenn | Swords Dance, Slash, Shadow Ball, Rock Slide | Adamant | — |
+| Miltank | Normal | Johto | Body Slam, Earthquake, Rollout, Attract | Careful | — |
+| Ampharos | Elétrico | Johto | Thunderbolt, Fire Punch, Thunder Wave, Light Screen | Modest | — |
 | Exploud | Normal | Hoenn | Body Slam, Earthquake, Flamethrower, Ice Beam | Lonely | Muscle Band |
 
 **No torneio:** "Boa tarde, ouvinte! Agora é comigo e com o/a visitante de Kanto, ao vivo das ilhas!" · **quando ganha:** "E É DO ZIGGY! Repete pro pessoal de Ecruteak que não acreditou!" · **quando perde:** "…e o Ziggy cai, ouvinte. Mas cai bonito. Fica com a gente que depois do intervalo tem mais."
@@ -289,10 +289,10 @@ golpes, natureza e o item que o ás segura. O que fica pra depois (o gancho) é 
 | Pokémon | Tipo | Região | Golpes | Natureza | Item |
 |---|---|---|---|---|---|
 | Dodrio | Normal/Voador | Kanto | Drill Peck, Tri Attack, Agility, Body Slam | Jolly | — |
-| Skarmory | Metálico/Voador | Johto | Steel Wing, Drill Peck, Agility, Swift | Impish | — |
-| Xatu | Psíquico/Voador | Johto | Psychic, Night Shade, Confuse Ray, Steel Wing | Timid | — |
 | Pelipper | Água/Voador | Hoenn | Surf, Ice Beam, Wing Attack, Steel Wing | Modest | — |
 | Tropius | Grama/Voador | Hoenn | Razor Leaf, Fly, Body Slam, Synthesis | Careful | — |
+| Xatu | Psíquico/Voador | Johto | Psychic, Night Shade, Confuse Ray, Steel Wing | Timid | — |
+| Skarmory | Metálico/Voador | Johto | Steel Wing, Drill Peck, Agility, Swift | Impish | — |
 | Altaria | Dragão/Voador | Hoenn | Dragon Claw, Fly, Flamethrower, Ice Beam | Jolly | Leftovers |
 
 **No torneio:** "Vento de sudoeste hoje. Bom pra voar. Ruim pra você." · **quando ganha:** "Eles chegam na quinta. Você vem ver?" · **quando perde:** "Tudo bem. Daqui eu vejo o céu inteiro do mesmo jeito."
@@ -426,8 +426,8 @@ golpes, natureza e o item que o ás segura. O que fica pra depois (o gancho) é 
 |---|---|---|---|---|---|
 | Masquerain | Inseto/Voador | Hoenn | Ice Beam, Giga Drain, Shadow Ball, Stun Spore | Modest | — |
 | Roselia | Grama/Venenoso | Hoenn | Giga Drain, Sludge Bomb, Stun Spore, Synthesis | Modest | — |
-| Absol | Sombrio | Hoenn | Slash, Swords Dance, Faint Attack, Iron Tail | Adamant | — |
 | Ludicolo | Água/Grama | Hoenn | Surf, Giga Drain, Ice Beam, Thunder Punch | Modest | — |
+| Absol | Sombrio | Hoenn | Slash, Swords Dance, Faint Attack, Iron Tail | Adamant | — |
 | Gardevoir | Psíquico | Hoenn | Psychic, Thunderbolt, Shadow Ball, Hypnosis | Modest | — |
 | Milotic | Água | Hoenn | Surf, Ice Beam, Recover, Attract | Bold | Leftovers |
 
@@ -493,9 +493,9 @@ golpes, natureza e o item que o ás segura. O que fica pra depois (o gancho) é 
 | Pokémon | Tipo | Região | Golpes | Natureza | Item |
 |---|---|---|---|---|---|
 | Shiftry | Grama/Sombrio | Hoenn | Giga Drain, Faint Attack, Swords Dance, Body Slam | Adamant | — |
+| Walrein | Gelo/Água | Hoenn | Blizzard, Surf, Earthquake, Rock Slide | Modest | — |
 | Cradily | Pedra/Grama | Hoenn | Giga Drain, Rock Slide, Earthquake, Sludge Bomb | Calm | — |
 | Manectric | Elétrico | Hoenn | Thunderbolt, Thunder Wave, Iron Tail, Body Slam | Timid | — |
-| Walrein | Gelo/Água | Hoenn | Blizzard, Surf, Earthquake, Rock Slide | Modest | — |
 | Sceptile | Grama | Hoenn | Giga Drain, Dragon Claw, Earthquake, Thunder Punch | Naive | — |
 | Aggron | Metálico/Pedra | Hoenn | Iron Tail, Earthquake, Rock Slide, Thunder Punch | Adamant | Leftovers |
 

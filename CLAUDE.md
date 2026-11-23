@@ -3341,10 +3341,21 @@ a 38; o desenho de cada um do elenco está em `docs/SEVII.md`.
   `ILHA_ABRE_NA_FASE` diz quando cada lugar abre; a primeira travessia
   é a do Anne (`sv_chegou`). Sem a passagem, as ilhas não existem no
   mapa (`Sevii.conhecido`, no `Mundo.conhecido`).
+- **A balsa direta** (`Sevii.balsa`, `embarcar`, `PORTOS_DA_BALSA`):
+  foi pedido assim — depois do pós-jogo as ilhas são um mapa por onde
+  se anda sempre. O cais da balsa é porta em Vermilion e na vila de
+  cada ilha, depois da chegada, e leva direto a qualquer cais aberto,
+  num período, sem descer nas ilhas do meio; o cais fechado fica na
+  tela com o motivo (`portoFechado`: o `BALSA_FECHADA` da fase, ou o
+  lugar que o final fechou). Depois do torneio, nada fecha.
 - **O mapa tem duas páginas** (`Exploracao.mapa(origem, regiao)`): a
   aba Kanto / Ilhas Sevii, `MAPA_SEVII` e `terrenoSevii`, e a saída de
-  balsa nas duas. Voar não atravessa o mar (`regiaoNoMapa`). Lugar
-  novo das ilhas entra em `MAPA_SEVII` e, se precisar, no rótulo.
+  balsa nas duas. **O voo atravessa o mar** (foi pedido assim: voar
+  entre as ilhas): leva a qualquer cidade já pisada, das duas páginas,
+  menos a que o final fechou (`vooFechado`, que o voo de Kanto também
+  passou a respeitar), e a ficha do lugar do outro lado diz da balsa
+  e do que o voo pede (`doOutroLado`). Lugar novo das ilhas entra em
+  `MAPA_SEVII` e, se precisar, no rótulo.
 - **A Patrulha de Kanto não atravessa o mar** (`Patrulha.talvez`):
   quem cuida das ilhas é a Guarda, o Sargento Lund, um homem só.
 - **O elenco** (`ELENCO_SEVII`, em `sevii-elenco.js`): dezesseis fichas
@@ -3378,7 +3389,17 @@ a 38; o desenho de cada um do elenco está em `docs/SEVII.md`.
   (`d.copaVolta`, que o `continuar` também lê). Depois do arco, todo
   domingo (`DIA_DA_COPA`), com inscrição. O nível é o da Conferência
   com `PISO_COPA` e `SUBIDA_COPA`; luta pela `Veteranos.iniciarLuta`
-  (`tipo:'copa'`), na quadra.
+  (`tipo:'copa'`), na quadra. O time de cada rodada são os últimos da
+  ficha (`timeDaFicha`: três nas oitavas, quatro nas quartas e na semi,
+  cinco na final), então **a ordem do `time` é balanceamento**, e foi
+  medida: `node ferramentas/sim-sevii.js` (o jogador ingênuo, o inicial
+  e o mato das ilhas, nos níveis 60, 66 e 72) dá 75% nas oitavas, de
+  46% a 57% nas quartas e na semi, de 17% a 25% na final, e 3% a 5% de
+  título; com `--cada` (e `QUEM=`, `SO=cada`), cada um. O nível pesa
+  pouco (o `ajuste` de cada ficha mexe uns pontos), e quem destoava
+  acertou pela ordem: o Ninjask da Etta na rodada de três derrubava as
+  oitavas pra 38%, e a Pelipper e o Tropius da Skye deixavam ela em
+  95%. Ficha que muda de time roda ali e o `fichas-sevii.js`.
 - **Entre os capítulos, a ilha do meio conta alguma coisa**
   (`Sevii.afazeres`): o barco sem luz na Ilha Quatro, a Pokébola M. H.
   da Oona na Ilha Seis. Depois do arco, a pousada da arena, onde cada
@@ -3390,7 +3411,10 @@ a 38; o desenho de cada um do elenco está em `docs/SEVII.md`.
 
 `chk-lutas` roda cada um do elenco nas quatro rodadas e a chave da
 história, além das lutas de cena dos capítulos; `chk-telas` anda as
-fases (o chamado e a balsa), as duas páginas do mapa, as pistas, a
+fases (o chamado e a balsa), a balsa direta de cada cais em cada fase
+(o cais fechado com o motivo, e nenhum depois do torneio), o voo por
+cima do mar (de Kanto pra vila já pisada, de ilha em ilha, de volta, e
+nunca pro lugar que o final fechou), as duas páginas do mapa, as pistas, a
 pousada (cada um nas três conversas), a arena fora e dentro do
 domingo, cada rodada ganhando e perdendo, a chave da história nos dois
 fins e a Noa no cais.

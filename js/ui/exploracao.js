@@ -272,14 +272,14 @@ const Exploracao = {
     if (!Mundo.conhecido('vermilion')) return '';
     const [x, y] = this._q(this.MAPA_SEVII.ilha_um);
     return `<path d="M${x} ${y} L${x + 40} ${y - 30} L${x + 40} 4" class="mp-mar-via"/>
-      <text class="mp-rota" x="${x + 44}" y="12" text-anchor="start">Vermilion ↑</text>`;
+      <text class="mp-saida" x="${x + 44}" y="12" text-anchor="start">Vermilion ↑</text>`;
   },
   /* e em Kanto, a mesma balsa sai de Vermilion pro sul */
   saidaPrasIlhas(){
     if (!Mundo.conhecido('ilha_um')) return '';
     const [x, y] = this.POS_MAPA.vermilion;
     return `<path d="M${x} ${y} L${x + 6} ${y + 14} L${x + 6} 222" class="mp-mar-via"/>
-      <text class="mp-rota" x="${x + 9}" y="214" text-anchor="start">Ilhas Sevii ↓</text>`;
+      <text class="mp-saida" x="${x + 9}" y="214" text-anchor="start">Ilhas Sevii ↓</text>`;
   },
   /* Todo Centro Pokémon tem um mapa da região na parede do saguão: quem
      não comprou o dele olha o de lá. */
@@ -346,7 +346,8 @@ const Exploracao = {
       const L = LOCAIS[id], [x, y] = pos[id];
       const pisou = Mundo.visitado(id) || id === aqui;
       const ir = viz.has(id);
-      const voa = !ir && voo.pode && pisou && L.tipo === 'cidade' && id !== aqui && this.regiaoNoMapa(aqui) === reg;
+      /* o voo desce em qualquer cidade já pisada, das duas páginas: por cima do mar também */
+      const voa = !ir && voo.pode && pisou && L.tipo === 'cidade' && id !== aqui && !this.vooFechado(id);
       const cls = `mp-no ${L.tipo}${pisou ? '' : ' nao-pisado'}${id === aqui ? ' aqui' : ''}${ir ? ' vizinho' : ''}${voa ? ' voo' : ''}`;
       const forma = L.tipo === 'cidade' ? `<rect x="${x - 5.5}" y="${y - 4.5}" width="11" height="9" rx="1.5"/>`
                   : L.tipo === 'especial' ? `<rect x="${x - 4}" y="${y - 4}" width="8" height="8" transform="rotate(45 ${x} ${y})"/>`
@@ -401,7 +402,8 @@ const Exploracao = {
     const voo = this._voo || {pode:false};
     const ir = Mundo.vizinhos().includes(id);
     const outraRegiao = this.regiaoNoMapa(aqui) !== this.regiaoNoMapa(id);
-    const voa = !ir && voo.pode && pisou && L.tipo === 'cidade' && id !== aqui && !outraRegiao;
+    const fechado = L.tipo === 'cidade' && pisou && id !== aqui && !ir ? this.vooFechado(id) : null;
+    const voa = !ir && voo.pode && pisou && L.tipo === 'cidade' && id !== aqui && !fechado;
     const tipo = L.tipo === 'cidade' ? (L.porte || 'cidade') : L.tipo === 'rota' ? 'rota' : 'lugar à parte';
     const liga = (L.conexoes || []).filter(v => Mundo.conhecido(v) && (this.POS_MAPA[v] || this.POS_SEVII[v])).map(v => LOCAIS[v].nome);
     /* o que o mapa de parede diria: o Centro tem placa. Loja e ginásio
@@ -423,8 +425,10 @@ const Exploracao = {
             trava ? `<span class="esc-trava">${UI.esc(textoTrava(trava))}</span>` : ''}</span></button>`
       : voa ? `<button class="escolha menu caminho voo com-icone" onclick="UI.fecharModal(true);Exploracao.voarPara('${id}')">
           ${svgIcone('voar')}<span class="esc-rot"><small>Voar${voo.quem ? ' com ' + UI.esc(nomeExib(voo.quem)) : ''}</small><b>${UI.esc(L.nome)}</b></span></button>`
-      : `<div class="mi-longe">${svgIcone('info')}<span>${outraRegiao
-          ? 'Do outro lado do mar. Lá se chega de balsa, pelo cais de Vermilion e da Ilha Um: voando é mar demais.'
+      : `<div class="mi-longe">${svgIcone(fechado ? 'trancado' : 'info')}<span>${fechado
+          ? UI.esc(fechado)
+          : outraRegiao
+          ? this.doOutroLado(L, pisou, voo)
           : L.tipo === 'cidade' && pisou
           ? `Longe daqui. Voar até lá pede ${UI.esc(voo.falta || 'um Pokémon voador de grande porte')}.`
           : 'Longe daqui: dá pra chegar andando pelas rotas do caminho.'}</span></div>`;
@@ -449,16 +453,32 @@ const Exploracao = {
     }
   },
 
+  /* onde o voo não desce: o lugar que o final fechou (depois.js) */
+  vooFechado(id){ return (typeof Depois !== 'undefined' && Depois.trava(Mundo.id(), id)) || null; },
+  /* a ficha do lugar do outro lado do mar: a balsa (ou, antes da
+     chegada, o S.S. Anne) e, na cidade já pisada, o que o voo pede */
+  doOutroLado(L, pisou, voo){
+    const barco = (typeof Sevii !== 'undefined' && Sevii.balsaAberta())
+      ? 'Do outro lado do mar. A balsa sai do cais de Vermilion e da vila de cada ilha.'
+      : 'Do outro lado do mar. A primeira travessia é a do S.S. Anne, no cais três de Vermilion.';
+    return L.tipo === 'cidade' && pisou ? `${barco} Voar até lá pede ${UI.esc(voo.falta || 'um Pokémon voador de grande porte')}.` : barco;
+  },
+
   /* Voo: sai daqui e desce na cidade escolhida, sem atravessar as rotas
-     do meio. Leva um período do dia, como qualquer viagem curta. */
+     do meio, e por cima do mar também: de Kanto pras ilhas, de ilha em
+     ilha e de volta, pra cidade onde você já pisou. Leva um período do
+     dia, como qualquer viagem curta. */
   voarPara(id){
     const v = (typeof Campo !== 'undefined') ? Campo.voar() : {pode:false};
     const L = LOCAIS[id];
-    if (!v.pode || !L || !Mundo.visitado(id) || this.regiaoNoMapa(id) !== this.regiaoNoMapa(Mundo.id())) return this.tela();
+    if (!v.pode || !L || L.tipo !== 'cidade' || !Mundo.visitado(id) || id === Mundo.id()) return this.tela();
+    const fechado = this.vooFechado(id);
+    if (fechado) return this.tela([{tipo:'info', texto:fechado}]);
+    const mar = this.regiaoNoMapa(id) !== this.regiaoNoMapa(Mundo.id());
     Mundo.viajar(id);
     Estado.registrar(`Voou até ${L.nome} ${v.como || ''}.`.replace(/\s+\./, '.'));
     Estado.salvar('auto');
-    this.tela([{tipo:'info', texto:`${nomeExib(v.quem)} pousa em ${L.nome}. As rotas do caminho passaram lá embaixo.`}]);
+    this.tela([{tipo:'info', texto:`${nomeExib(v.quem)} pousa ${emLocal(id)}. ${mar ? 'Foi mar o caminho inteiro.' : 'As rotas do caminho passaram lá embaixo.'}`}]);
   },
 
   /* ---------- entrar no arco que espera neste lugar ---------- */

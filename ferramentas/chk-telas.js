@@ -2338,14 +2338,88 @@ const SUSPEITO = [
       Exploracao.mapaInfo(r === 'sevii' ? 'ilha_sete' : 'cerulean');
     }, [local, reg]);
   }
+  /* o voo atravessa o mar: de Kanto pra vila já pisada das ilhas, de ilha
+     em ilha e de volta; pra onde nunca pisou, não */
   await restaurar();
-  await tentar('ilhas/voo não atravessa o mar', () => {
+  await tentar('ilhas/voo por cima do mar', () => {
     nasIlhas(6, 'vermilion');
-    Mundo.marcarVisitado('ilha_sete');
-    const antes = Mundo.id();
+    const t = Estado.dados.time;
+    if (!Campo.voar().pode) t[t.length - 1] = criarPokemon(18, 50, {moral:80});
+    if (!Campo.voar().pode) throw new Error('o time de teste não voa');
+    Estado.dados.visitados = Object.fromEntries(Object.entries(Estado.dados.visitados || {}).filter(([k]) => !ehSevii(k.replace(/^__v_/, ''))));
+    Exploracao.voarPara('ilha_cinco');
+    if (Mundo.id() !== 'vermilion') throw new Error('voou pra uma ilha onde nunca pisou');
+    Mundo.marcarVisitado('ilha_sete'); Mundo.marcarVisitado('ilha_dois');
+    Exploracao.mapa('mochila', 'sevii');
+    if (!document.querySelector('.modal .mp-no.voo[data-id="ilha_sete"]')) throw new Error('a página das ilhas não marca o voo pra Ilha Sete');
+    if (document.querySelector('.modal .mp-no.voo[data-id="ilha_cinco"]')) throw new Error('a página das ilhas marca o voo pra ilha onde nunca pisou');
+    Exploracao.mapaInfo('ilha_sete');
+    if (!document.querySelector('#mapa-info .voo')) throw new Error('a ficha da Ilha Sete não tem o botão de voar');
+    Exploracao.mapaInfo('ilha_cinco');
+    if (!/balsa/.test(document.querySelector('#mapa-info').innerText)) throw new Error('a ficha da ilha onde nunca pisou não fala da balsa');
+    UI.fecharModal(true);
     Exploracao.voarPara('ilha_sete');
-    if (Mundo.id() !== antes) throw new Error('voou de Kanto pra Ilha Sete');
+    if (Mundo.id() !== 'ilha_sete') throw new Error('não voou de Kanto pra Ilha Sete');
+    Exploracao.voarPara('ilha_dois');
+    if (Mundo.id() !== 'ilha_dois') throw new Error('não voou de ilha em ilha');
+    Exploracao.mapa('mochila', 'kanto');
+    Exploracao.mapaInfo('celadon');
+    if (!document.querySelector('#mapa-info .voo')) throw new Error('das ilhas, a ficha de Celadon não tem o botão de voar');
+    UI.fecharModal(true);
+    Exploracao.voarPara('celadon');
+    if (Mundo.id() !== 'celadon') throw new Error('não voou das ilhas pra Kanto');
   });
+  /* o voo não desce onde o final fechou, de Kanto ou das ilhas */
+  await restaurar();
+  await tentar('ilhas/voo pro lugar fechado', () => {
+    nasIlhas(6, 'ilha_sete');
+    const t = Estado.dados.time;
+    if (!Campo.voar().pode) t[t.length - 1] = criarPokemon(18, 50, {moral:80});
+    const id = Object.keys(DEPOIS_DO_FIM).find(k => DEPOIS_DO_FIM[k].fecha && DEPOIS_DO_FIM[k].fecha.celadon);
+    if (!id) throw new Error('nenhum final fecha Celadon');
+    Estado.dados.depoisDoFim = Object.assign({}, Estado.dados.depoisDoFim, {final:id, fecha:Object.assign({}, DEPOIS_DO_FIM[id].fecha)});
+    if (!Exploracao.vooFechado('celadon')) throw new Error('o final fecha Celadon e o voo não sabe');
+    Exploracao.voarPara('celadon');
+    if (Mundo.id() === 'celadon') throw new Error('voou pra Celadon, que o final fechou');
+    Exploracao.mapa('mochila', 'kanto'); Exploracao.mapaInfo('celadon');
+    if (document.querySelector('#mapa-info .voo')) throw new Error('a ficha de Celadon oferece o voo pro lugar fechado');
+  });
+  /* a balsa direta: o cais de Vermilion e de cada vila leva a qualquer cais
+     aberto; o fechado fica na tela com o motivo, e depois do torneio nada fecha */
+  await restaurar();
+  await tentar('ilhas/balsa antes da chegada', () => {
+    nasIlhas(1, 'vermilion');
+    if (afazeresDoLocal().some(a => a.id === 'sevii_balsa')) throw new Error('o cais da balsa aparece antes da travessia do S.S. Anne');
+    Exploracao.tela();
+  });
+  for (const [fase, local] of [[2, 'vermilion'], [2, 'ilha_dois'], [3, 'ilha_um'], [4, 'ilha_tres'], [5, 'ilha_seis'], [6, 'ilha_sete'], [6, 'vermilion']]){
+    await restaurar();
+    await tentar(`ilhas/balsa do cais/fase ${fase} ${local}`, ([f, l]) => {
+      nasIlhas(f, l);
+      Exploracao.tela();
+      if (!afazeresDoLocal().some(a => a.id === 'sevii_balsa')) throw new Error(`o cais da balsa não aparece em ${l}`);
+      if (!document.querySelector('#app .porta[onclick*="sevii_balsa"]')) throw new Error('a porta do cais não está na tela');
+      Exploracao.fazer('sevii_balsa');
+      const bts = [...document.querySelectorAll('#escolhas .escolha')];
+      const abertos = PORTOS_DA_BALSA.filter(id => id !== l && !Sevii.portoFechado(id));
+      const fechados = bts.filter(b => b.disabled);
+      if (bts.length !== PORTOS_DA_BALSA.length) throw new Error(`o cais mostra ${bts.length} botões, e devia mostrar ${PORTOS_DA_BALSA.length - 1} cais e o de ficar`);
+      if (bts.length - fechados.length !== abertos.length + 1) throw new Error(`o cais abre ${bts.length - fechados.length - 1} destinos, e devia abrir ${abertos.length}`);
+      if (f >= 6 && fechados.length) throw new Error('depois do torneio ainda tem cais fechado');
+      if (f < 5 && !fechados.length) throw new Error(`na fase ${f} a balsa leva pra todo lado`);
+      if (fechados.some(b => !b.querySelector('.esc-trava'))) throw new Error('o cais fechado não diz por quê');
+      const fechada = PORTOS_DA_BALSA.find(id => id !== l && Sevii.portoFechado(id));
+      if (fechada){ Sevii.fazer('balsa_' + fechada); if (Mundo.id() === fechada) throw new Error(`a balsa levou pra ${fechada}, que está fechada`); }
+      const destino = abertos[abertos.length - 1];
+      const antes = Estado.dados.relogio.dia * 24 + Estado.dados.relogio.hora;
+      Sevii.fazer('balsa_' + destino);
+      if (Mundo.id() !== destino) throw new Error(`a balsa não levou pra ${destino}`);
+      if (Estado.dados.relogio.dia * 24 + Estado.dados.relogio.hora <= antes) throw new Error('a balsa não passou o tempo');
+      if (!document.querySelector('#avisos .aviso')) throw new Error('a chegada da balsa não diz nada');
+      Sevii.fazer('balsa'); Sevii.fazer('balsa_' + l);
+      if (Mundo.id() !== l) throw new Error(`a balsa não voltou pra ${l}`);
+    }, [fase, local]);
+  }
   /* as pistas do caminho */
   for (const [rot, fase, local, fn] of [['pista da Ilha Quatro', 4, 'ilha_quatro', 'pista_quatro'], ['pista da Ilha Seis', 5, 'ilha_seis', 'pista_seis']])
     for (const variante of [0, 1]){

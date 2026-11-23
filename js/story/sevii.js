@@ -57,8 +57,12 @@ const ILHA_ABRE_NA_FASE = {
 const BALSA_FECHADA = {
   3:'O barqueiro da Ilha Dois não leva ninguém pra Ilha Três. "Lá tem moto no cais, e eu tenho filho."',
   4:'O barco que desce pro sul não sai: o mestre diz que só desamarra quando o cais da Ilha Três voltar a ser cais.',
-  5:'A balsa da Ilha Sete só sai na semana do torneio, com a lista dos inscritos, e a lista ainda não fechou.'
+  5:'A balsa do norte, a da Ilha Seis e da Ilha Sete, só sai na semana do torneio, com a lista dos inscritos, e a lista ainda não fechou.'
 };
+/* os cais da balsa direta: Vermilion e a vila de cada ilha. Depois da
+   chegada ela sai de qualquer um pra qualquer cais aberto, sem parar
+   nas ilhas do meio; o cais fechado é o da balsa de ilha em ilha */
+const PORTOS_DA_BALSA = ['vermilion', 'ilha_um', 'ilha_dois', 'ilha_tres', 'ilha_quatro', 'ilha_cinco', 'ilha_seis', 'ilha_sete'];
 /* quem fala nos capítulos e não é do elenco nem luta: rosto e nome */
 const PESSOAS_DE_SEVII = {
   'Sargento Lund':'sevii_lund', 'Sr. Penrose':'sevii_penrose'
@@ -201,7 +205,11 @@ const Sevii = {
      quem veio de longe ficou, e a Noa no cais. */
   afazeres(id){
     const d = Estado.dados, lista = [];
-    if (!d || !ehSevii(id)) return lista;
+    if (!d) return lista;
+    /* o cais da balsa: em Vermilion e na vila de cada ilha, depois da chegada */
+    if (PORTOS_DA_BALSA.includes(id) && this.balsaAberta(d))
+      lista.push({lugar:true, id:'sevii_balsa', titulo:'Cais da balsa'});
+    if (!ehSevii(id)) return lista;
     const f = this.fase(d);
     if (id === 'ilha_quatro' && f === 4 && !d.flags.sv_pista_quatro)
       lista.push({id:'sevii_pista_quatro', titulo:'O cais dos pescadores do gelo',
@@ -224,6 +232,8 @@ const Sevii = {
     return lista;
   },
   fazer(x){
+    if (x === 'balsa') return this.balsa();
+    if (x.startsWith('balsa_')) return this.embarcar(x.slice(6));
     if (x === 'arena') return CopaSevii.tela();
     if (x === 'pousada') return this.pousada();
     if (x.startsWith('sentar_')) return this.sentar(x.slice(7));
@@ -237,6 +247,54 @@ const Sevii = {
       return UI.telaRival();
     }
     return Exploracao.tela();
+  },
+
+  /* ── a balsa direta: do cais de Vermilion e de cada vila, pra
+     qualquer cais aberto, sem descer nas ilhas do meio. A primeira
+     travessia é a do S.S. Anne (capítulo 34); depois dela a balsa é de
+     quem está na lista do torneio, e depois do torneio as sete ilhas
+     ficam abertas pra sempre. Leva um período, como uma viagem ── */
+  balsaAberta(d){ d = d || Estado.dados; return !!(d && this.aberto(d) && d.flags.sv_chegou); },
+  /* o cais aonde a balsa ainda não vai: o que a ilha diz, na língua dela */
+  portoFechado(id, d){
+    d = d || Estado.dados;
+    if (!PORTOS_DA_BALSA.includes(id)) return 'A balsa não para lá.';
+    const fim = (typeof Depois !== 'undefined') ? Depois.trava(Mundo.id(), id) : null;
+    if (fim) return fim;
+    if (id === 'vermilion') return null;
+    const precisa = ILHA_ABRE_NA_FASE[id] || 0;
+    return this.fase(d) >= precisa ? null : (BALSA_FECHADA[precisa] || 'A balsa não sai pra lá hoje.');
+  },
+  balsa(av){
+    const d = Estado.dados, aqui = Mundo.id();
+    if (!this.balsaAberta(d) || !PORTOS_DA_BALSA.includes(aqui)) return Exploracao.tela();
+    const botoes = PORTOS_DA_BALSA.filter(id => id !== aqui).map(id => ({
+      texto:LOCAIS[id].nome, icone:'balsa', trava:this.portoFechado(id, d), acao:`Sevii.fazer('balsa_${id}')`}));
+    botoes.push({texto:`Ficar ${emLocal(aqui)}.`, classe:'fim', acao:'Exploracao.tela()'});
+    const falas = aqui === 'vermilion'
+      ? ['A balsa das ilhas sai do fim do porto, depois do cais três, onde o S.S. Anne encosta. É um barco baixo e rápido, de casco branco e cabine azul, que faz a linha inteira: as sete ilhas, de uma ponta à outra.',
+         'O barqueiro tem a lista do Torneio das Ilhas pregada na parede da cabine, com o seu nome no meio, e não cobra de quem está nela.']
+      : ['O cais da balsa fica na ponta do píer, com a placa das sete ilhas pintada à mão e Vermilion embaixo, do outro lado do mar.',
+         'A balsa encosta uma vez por período e faz a linha inteira. Quem não quer descer em cada ilha fica sentado até a sua.'];
+    UI.telaConversa({num: aqui === 'vermilion' ? 'Vermilion' : 'Ilhas Sevii', titulo:'O cais da balsa', loc:LOCAIS[aqui].nome,
+      falas, botoes, avisos:av});
+  },
+  embarcar(id){
+    const d = Estado.dados, aqui = Mundo.id();
+    if (!this.balsaAberta(d) || !PORTOS_DA_BALSA.includes(aqui) || id === aqui || !LOCAIS[id]) return this.balsa();
+    const trava = this.portoFechado(id, d);
+    if (trava) return this.balsa([{tipo:'info', texto:trava}]);
+    const primeira = !Mundo.visitado(id);
+    d.local = id;
+    Mundo.marcarVisitado(id);
+    Mundo.passar(1);
+    Estado.registrar(`Pegou a balsa até ${LOCAIS[id].nome}.`);
+    Estado.salvar('auto');
+    /* a viagem é uma ação: rola o PokéNav, que espera a tela nova */
+    Exploracao.toque();
+    Exploracao.tela([{tipo:'info', texto: id === 'vermilion'
+      ? 'A balsa encosta no fim do porto de Vermilion, do lado dos guindastes, e o cheiro de óleo volta antes do cais.'
+      : `A balsa encosta no cais da ${LOCAIS[id].nome}${primeira ? ', e você desce numa ilha onde nunca pisou' : ''}.`}]);
   },
 
   /* ── Ilha Quatro, entre os Faróis e o armazém: quem viu o barco ── */

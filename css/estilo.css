@@ -4786,6 +4786,8 @@ h3.sec-ir{--sec:#5aa7ff}
 .mapa-kanto .mp-mar-via.andada{opacity:1}
 .mapa-kanto .mp-no text{font:700 6.4px system-ui,sans-serif;fill:#122233;paint-order:stroke;stroke:#f6f8ee;stroke-width:2px;stroke-linejoin:round}
 .mapa-kanto .mp-no text.mp-rota{font:700 5px system-ui,sans-serif}
+/* a saída de balsa pra outra página do mapa: fora dos pontos, na letra de rota */
+.mapa-kanto text.mp-saida{font:700 5.4px var(--letra-hud, system-ui),sans-serif;fill:#122233;paint-order:stroke;stroke:#f6f8ee;stroke-width:2px;stroke-linejoin:round}
 .mapa-kanto .mp-no.cidade rect{fill:#e2463a;stroke:#fff;stroke-width:1.4}
 .mapa-kanto .mp-no.rota circle{fill:#f6f1df;stroke:#7a6236;stroke-width:1.1}
 .mapa-kanto .mp-no.especial rect{fill:#f2c94c;stroke:#6b5420;stroke-width:1}

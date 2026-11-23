@@ -143,6 +143,8 @@ const ICONE = {
   torneio:'<path d="M7 4h10v4a5 5 0 0 1-10 0z"/><path d="M7 6H4a3 3 0 0 0 3 4M17 6h3a3 3 0 0 1-3 4M12 13v4M8 21h8M9 17h6"/>',
   liga:'<path d="M12 3l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.8 6.8 19.1l1-5.8-4.3-4.1 5.9-.9z"/>',
   onibus:'<rect x="4" y="4" width="16" height="13" rx="2"/><path d="M4 11h16M8 17v3M16 17v3"/><circle cx="8" cy="14" r=".8"/><circle cx="16" cy="14" r=".8"/>',
+  /* a balsa das ilhas: casco, cabine, chaminé e a onda embaixo */
+  balsa:'<path d="M3.5 13.5h17l-2.6 4.5H6.1z"/><path d="M7 13.5V10h6.5l2.5 3.5"/><path d="M9.5 10V6.8h2.4V10"/><path d="M2.5 21c1.2 0 1.8-.8 3-.8s1.8.8 3 .8 1.8-.8 3-.8 1.8.8 3 .8 1.8-.8 3-.8 1.8.8 3 .8"/>',
   doar:'<path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/>',
   relembrar:'<path d="M4 5h11a3 3 0 0 1 3 3v12H7a3 3 0 0 1-3-3z"/><path d="M18 8h2v12h-2M8 9h6M8 12h6"/>',
   vasculhar:'<circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l5 5"/>',
@@ -219,7 +221,7 @@ const ICONE = {
    o CSS, pela variável --ac; desenho sem cor fica na cor da linha. */
 const COR_DO_ICONE = {
   centro:'#ef5350', loja:'#3d8bfd', ginasio:'#e8b923', casa:'#43b581', laboratorio:'#26c6da', ovo:'#f0b45a',
-  onibus:'#2bb3a3', doar:'#f06292', relembrar:'#9575cd', liga:'#b18cf0', torneio:'#ff8a3d',
+  onibus:'#2bb3a3', balsa:'#2f9fd8', doar:'#f06292', relembrar:'#9575cd', liga:'#b18cf0', torneio:'#ff8a3d',
   credenciais:'#7e8ce0', rede:'#c2414f', porta:'#8d97bd', ferragem:'#d4893b',
   procurar:'#4caf50', vasculhar:'#f0b429', andar:'#4fc3f7', conversar:'#f48fb1', treinar:'#ff7043',
   pescar:'#42a5f5', acampar:'#c49a6c', esperar:'#90a4ae', lutar:'#ef5350', troca:'#26a69a',
@@ -251,7 +253,7 @@ function iconeDoAfazer(a){
   const direto = {centro:'centro', loja:'loja', ginasio:'ginasio', casa:'casa', liga:'liga', torneio:'torneio',
     onibus:'onibus', doar:'doar', relembrar:'relembrar', vasculhar:'vasculhar', procurar:'procurar', andar:'andar',
     conversar:'conversar', treinar:'treinar', pescar:'pescar', acampar:'acampar', esperar:'esperar', desafiar:'lutar', troca:'troca',
-    rede:'rede', creche:'ovo', dexnac:'pokedex'};
+    rede:'rede', creche:'ovo', dexnac:'pokedex', sevii_balsa:'balsa'};
   if (direto[id]) return direto[id];
   if (/^posto_/.test(id)) return 'credenciais';
   if (/^vet_/.test(id)) return 'lutar';

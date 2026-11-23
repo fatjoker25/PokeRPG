@@ -14,7 +14,8 @@
          destoa (o acerto é o `ajuste` da ficha).
          NIVEIS=60,66,72 troca os níveis do jogador medidos;
          PISO=62,64,66,68 e SUBIDA=-2,-1,0,1 trocam os da chave só na
-         medição, pra calibrar antes de mudar.
+         medição, pra calibrar antes de mudar. QUEM=etta,rhys mede só
+         essas fichas no --cada, e SO=cada pula a curva de todo mundo.
    ============================================================ */
 const fs = require('fs'), vm = require('vm'), path = require('path');
 const raiz = path.resolve(__dirname, '..');
@@ -108,7 +109,9 @@ if (longas) console.log(`(${longas} lutas passaram de 150 turnos)`);
 
 if (CADA){
   console.log(`\n--- cada um, somando os níveis: ${PREMIO_COPA.map(r => r.rodada.toLowerCase()).join(' · ')} ---`);
+  const QUEM = process.env.QUEM ? process.env.QUEM.split(',') : null;
   for (const f of elenco){
+    if (QUEM && !QUEM.includes(f.id)) continue;
     const res = RODADAS.map(rodada => {
       let v = 0, n = 0;
       for (const nv of NIVEIS) for (let k = 0; k < Math.max(4, Math.round(N / 2)); k++){
