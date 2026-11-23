@@ -66,6 +66,7 @@ M = {
     'vidro':    [(255, 255, 255), (214, 238, 255), (160, 204, 236), (104, 150, 196)],
     'amarelo_luz': [(255, 255, 230), (255, 250, 180), (255, 236, 120), (230, 200, 70)],
     'pele':     [(255, 230, 206), (248, 206, 168), (222, 166, 126), (170, 116, 82)],
+    'pedralua': [(226, 232, 255), (164, 176, 222), (110, 120, 170), (66, 72, 112)],
 }
 
 
@@ -1116,6 +1117,116 @@ def bolsa_acetinada(mat='roxo'):
     return t
 
 
+# ---------- as tarefas da cidade (tarefas.js): o que se colhe, se leva e se ganha ----------
+def frutinha():
+    """a frutinha-tinta da Floresta de Viridian: o cacho roxo no galhinho,
+    e a gota verde que ela solta por dentro"""
+    t = Tela()
+    t.bastao(5, 5, 14, 12, 1.6, 'marrom')                                         # o galhinho
+    t.elipse(20, 7, 4.8, 2.4, 'verde')                                            # a folha
+    t.linha(16, 8, 24, 6, M['verde'][3])
+    t.elipse(10, 17, 4.4, 4.4, 'roxo')
+    t.elipse(18, 16, 4.2, 4.2, 'roxo')
+    t.elipse(14, 23, 4.4, 4.0, 'roxo')
+    t.pontos([(8, 15), (16, 14), (12, 21)], B)                                    # o brilho de cada uma
+    t.elipse(23.5, 25, 2.6, 1.8, 'verde', modo='plano', fixo=1)                   # a gota verde de dentro
+    return t
+
+
+def caco():
+    """o caco de pedra-da-lua: a lasca azulada, de faces, com o brilho fraco de dentro"""
+    t = Tela()
+    t.poli([(10, 4), (19, 6), (25, 14), (21, 25), (11, 27), (5, 17)], 'pedralua', grad=0.5)
+    t.poli([(10, 4), (19, 6), (15, 13), (8, 12)], 'pedralua', fixo=0)             # a face de cima, acesa
+    t.poli([(15, 13), (25, 14), (21, 25)], 'pedralua', fixo=3)                    # a face da sombra
+    t.linha(15, 13, 11, 26, M['pedralua'][3])                                     # a quina
+    t.pontos([(11, 17), (17, 19), (13, 22)], (196, 222, 255, 255))                # o brilho de lua
+    t.ponto(9, 8, B)
+    return t
+
+
+def flor():
+    """a flor-de-sino da Rota 8: o sino branco pendurado na curva do talo"""
+    t = Tela()
+    t.bastao(12, 28, 13, 18, 1.6, 'verde', fixo=2)                                # o talo
+    t.bastao(13, 18, 16, 7, 1.6, 'verde', fixo=2)
+    t.bastao(16, 7, 21, 5, 1.4, 'verde', fixo=2)                                  # a curva de onde o sino pende
+    t.elipse(7.5, 21, 4.4, 1.8, 'verde')                                          # a folha
+    t.poli([(16, 7), (25, 7), (27, 14), (28, 19), (13, 19), (14, 14)], 'branco', grad=0.4)   # o sino
+    t.elipse(20.5, 19, 7.2, 1.6, 'cinza', fixo=3)                                 # a boca
+    t.bastao(20, 19, 20, 23, 1.2, 'amarelo', fixo=1)                              # o miolo pendurado
+    t.linha(17, 9, 15, 15, B)
+    return t
+
+
+def folha():
+    """a folha de Oddish: comprida e pontuda, verde-escura, com a nervura do meio"""
+    t = Tela()
+    t.poli([(4, 26), (8, 17), (14, 10), (22, 4), (26, 3), (25, 8), (20, 16), (13, 23)], 'verde', grad=0.3)
+    t.linha(5, 25, 24, 5, M['verde'][3])                                          # a nervura
+    t.bastao(3, 28, 6, 24, 1.6, 'oliva')                                          # o cabinho
+    t.pontos([(9, 18), (13, 14), (17, 10)], M['verde'][0])                        # o brilho da beira
+    return t
+
+
+def fruta():
+    """a fruta-do-mato da Ilha Três: o cacho vermelho, com as folhas em cima"""
+    t = Tela()
+    t.elipse(10, 6, 4.4, 2.2, 'verde')                                            # as folhas
+    t.elipse(20, 6, 4.4, 2.2, 'verde')
+    t.bastao(15, 3, 15, 9, 1.4, 'marrom')
+    for cx, cy in ((11, 12), (19, 12), (15, 15), (9, 19), (15, 21), (21, 19), (15, 26)):
+        t.elipse(cx, cy, 3.4, 3.2, 'vermelho')
+    t.pontos([(10, 11), (18, 11), (8, 18), (14, 20), (20, 18), (14, 25)], B)
+    return t
+
+
+def frasco():
+    """o frasco de perfume: vidro facetado, rosa por dentro, a tampa dourada"""
+    t = Tela()
+    t.elipse(15, 4.5, 3.4, 2.4, 'dourado')                                        # a tampa redonda
+    t.ret(13, 7, 17, 9, 'dourado', fixo=2)                                        # o gargalo
+    t.poli([(8, 10), (22, 10), (25, 16), (22, 27), (8, 27), (5, 16)], 'vidro', grad=0.3)
+    t.poli([(6.5, 16), (23.5, 16), (21.5, 26.5), (8.5, 26.5)], 'rosa', fixo=1)   # o perfume
+    t.linha(15, 11, 15, 26, M['vidro'][2])                                        # a quina do vidro
+    t.linha(9, 12, 7, 15, B)                                                      # o brilho da faceta
+    return t
+
+
+def pote_compota():
+    """o pote de compota: vermelho por dentro, o pano xadrez amarrado na tampa"""
+    t = Tela()
+    t.ret(7, 10, 22, 27, 'vidro', grad=0.3)
+    t.ret(8, 14, 21, 26, 'vermelho', fixo=1)                                      # a compota
+    t.poli([(5, 4), (25, 4), (23, 11), (7, 11)], 'branco', fixo=1)                # o pano
+    for y in range(5, 11):
+        for x in range(6, 24):
+            if (x // 2 + y // 2) % 2 == 0 and t.tem(x, y):
+                t.ponto(x, y, M['vermelho'][1])                                   # o xadrez
+    t.linha(7, 11, 22, 11, M['marrom'][3])                                        # o barbante
+    t.pontos([(11, 18), (16, 21), (18, 16)], M['vermelho'][0])                    # a fruta inteira lá dentro
+    t.linha(9, 13, 9, 17, B)
+    return t
+
+
+def caixinha():
+    """a caixinha de música: madeira, a tampa um pouco mais larga que o
+    corpo, o friso dourado entre as duas e a manivela de latão do lado"""
+    t = Tela()
+    t.poli([(3, 16), (11, 20), (11, 27), (3, 23)], 'madeira', fixo=2)            # a frente
+    t.poli([(11, 20), (26, 15), (26, 22), (11, 27)], 'madeira', fixo=3)          # o lado
+    t.poli([(2, 11), (18, 6), (27, 10), (11, 15)], 'madeira', fixo=0)            # o tampo
+    t.poli([(2, 11), (11, 15), (11, 18), (2, 14)], 'madeira', fixo=1)            # a borda da tampa, de frente
+    t.poli([(11, 15), (27, 10), (27, 13), (11, 18)], 'madeira', fixo=2)          # e de lado
+    t.linha(3, 16, 11, 20, M['dourado'][1])                                       # o friso entre a tampa e o corpo
+    t.linha(11, 20, 26, 15, M['dourado'][2])
+    t.elipse(14, 10.5, 2.6, 1.2, 'dourado', fixo=1)                               # o enfeite do tampo
+    t.bastao(26, 18, 29, 18, 1.4, 'dourado')                                      # a manivela
+    t.bastao(28.5, 18, 28.5, 23, 1.4, 'dourado')
+    t.ret(5, 21, 6, 23, 'dourado', fixo=1)                                        # o fecho
+    return t
+
+
 # a bolsa da loja → o desenho dela; a cor de cada uma é a da ficha
 BOLSAS_DA_LOJA = {
     'mochila_escolar': mochila_escolar, 'mochila_sinalizacao': mochila_sinalizacao,
@@ -1143,6 +1254,9 @@ DESENHOS = {
     'placa_bronze': lambda: placa('dourado'), 'fita': fita, 'rolo': rolo, 'garrafa': garrafa, 'pote': pote,
     'lata': lata, 'luva': luva, 'medidor': medidor, 'muda': muda, 'rede': rede, 'pena': pena,
     'bracadeira': bracadeira, 'lanche': lanche, 'pipoca': pipoca, 'radio': radio, 'sacola': sacola, 'taca': taca, 'etiqueta': etiqueta,
+    # as tarefas da cidade
+    'frutinha': frutinha, 'caco': caco, 'flor': flor, 'folha': folha, 'fruta': fruta, 'frasco': frasco,
+    'pote_compota': pote_compota, 'caixinha': caixinha, 'pena_pidgey': lambda: pena('marrom'),
 }
 CORES_DE_MOCHILA = {'bege': 'lona', 'preta': 'preto', 'vermelha': 'vermelho', 'azul': 'azul', 'verde': 'verde',
                     'amarela': 'amarelo', 'marrom': 'marrom', 'laranja': 'laranja', 'roxa': 'roxo',

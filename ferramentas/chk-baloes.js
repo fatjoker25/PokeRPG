@@ -76,6 +76,8 @@ const r=await p.evaluate(()=>{
     for(const re of [/^rt_/,/^vt_/,/^tr_/,/^rival_/,/^ilhas_/]){ const c=todosContatos().find(x=>re.test(x.id)); if(c) ids.push(c.id); }
     for(const a of Recados.amostras(ids.map(contatoPorId).filter(Boolean))) varre(lista(a.linhas), a.onde, a.dono, null, null);
   }
+  /* as tarefas da cidade (tarefas.js): o pedido, o passo, a luta, a volta e o telefone */
+  if(typeof Tarefas!=='undefined' && Tarefas.amostras) for(const a of Tarefas.amostras()) varre(lista(a.linhas), a.onde, a.dono, null, null);
   /* as Ilhas Sevii (sevii.js): a despedida no cais, e quem atravessa de Kanto pro domingo */
   if(typeof Sevii!=='undefined' && Sevii.amostras) for(const a of Sevii.amostras()) varre(lista(a.linhas), a.onde, a.dono, null, null);
   /* a defesa do posto (defesa.js): a secretaria, quem entrega a porta e quem desafia */

@@ -1832,6 +1832,21 @@ const SUSPEITO = [
             X.pedidoIr[chave] = d.capitulo;
           }
         }
+        /* as tarefas da cidade (tarefas.js): a pronta ele entrega; o passo
+           que é aqui ele faz, seis vezes no máximo por tarefa (a coleta de
+           noite e a luta perdida voltam); a oferta ele aceita uma vez em duas */
+        if (typeof Tarefas !== 'undefined'){
+          const ac = afazeresDoLocal().filter(a => a.tarefa && !a.fechada);
+          const doId = a => a.id.slice(3).split('__')[0];
+          const volta = ac.find(a => a.tarefa === 'pronta');
+          if (volta) return {f:'tarefa', id:doId(volta), como:'volta'};
+          X.tfPassos = X.tfPassos || {};
+          const passo = ac.find(a => a.tarefa === 'passo' && (X.tfPassos[a.id] || 0) < 6);
+          if (passo && hp >= .5 && !jornadaEspera){ X.tfPassos[passo.id] = (X.tfPassos[passo.id] || 0) + 1; return {f:'tarefa', id:doId(passo), como:'passo'}; }
+          X.tfVisto = X.tfVisto || {};
+          const nova = ac.find(a => a.tarefa === 'nova' && !X.tfVisto[a.id]);
+          if (nova && !jornadaEspera){ X.tfVisto[nova.id] = true; if (Math.random() < .5) return {f:'tarefa', id:doId(nova), como:'aceitar'}; }
+        }
         if (typeof DexNacional !== 'undefined' && !DexNacional.tem() && DexNacional.pode()){
           if (afz.includes('dexnac')) return {f:'dexnac'};
           X.nacCap = X.nacCap || {};
@@ -2177,6 +2192,22 @@ const SUSPEITO = [
           /* no ginásio, o time que a quadra sugere: os mais fortes que servem */
           if (t === 'lider' && x && x.estrada) Defesa.lutar(t, Defesa.preSelecao(x.ins || 0));
           else Defesa.lutar(t); }, dec.tipo).catch(e => erros.push('defender: ' + e.message));
+      } else if (dec.f === 'tarefa'){
+        /* a tarefa da cidade: aceitar, o passo (a escolha sorteada; achou
+           e tem alguém em volta, a luta, que o laço de luta joga) e a volta */
+        await page.evaluate(([i, como]) => {
+          UI.fecharModal && UI.fecharModal(true);
+          const t = Tarefas.porId(i);
+          if (como === 'aceitar'){ Exploracao.fazer('tf_' + i); Tarefas.aceitar(i); }
+          else if (como === 'volta') Exploracao.fazer('tf_' + i + '__volta');
+          else {
+            Exploracao.fazer('tf_' + i + '__passo');
+            const r = Tarefas.de(i) || {};
+            if (t.tipo === 'resgate' && r.achou && t.passo.luta) Tarefas.lutar(i);
+            else { const ops = Tarefas.escolhasDe(t); const op = ops[Math.floor(Math.random() * ops.length)]; if (op) Tarefas.escolher(i, op.i); }
+          }
+          window.__passo && __passo('tarefa', {id:i, como, estado:(Tarefas.de(i) || {}).estado || null});
+        }, [dec.id, dec.como]).catch(e => erros.push('tarefa: ' + e.message));
       } else if (dec.f === 'contar_pedido'){
         await page.evaluate(i => { UI.fecharModal && UI.fecharModal(true); Pedidos.ligar(i, 'contar');
           window.__passo && __passo('pedido', {fim:'contou', quem:i}); }, dec.id).catch(e => erros.push('pedido: ' + e.message));

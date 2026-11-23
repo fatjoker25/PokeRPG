@@ -1,0 +1,119 @@
+/* ============================================================
+   TAREFAS DA CIDADE (tarefas.js)
+   Quem pede aparece na seção Tarefas da tela do lugar com o rosto numa
+   moeda, como os desenhos das outras linhas, e uma marca no canto da
+   moeda: ! (tem um pedido, no ouro do logo), ✓ (pronta pra entregar, no
+   verde) e … (ainda espera, apagada). O passo de fora da cidade usa o
+   mesmo rosto: é a mesma pessoa pedindo. A cor da seção é o lilás,
+   que nenhuma outra seção usa.
+   ============================================================ */
+h3.sec-tarefas{--sec:#c39bff}
+.escolha.tarefa{--ac:#a77df0}
+
+/* a moeda: o rosto recortado da cabeça aos ombros, como na agenda */
+.tf-moeda{
+  position:relative;flex:0 0 auto;width:38px;height:38px;border-radius:50%;overflow:visible;
+  background:
+    radial-gradient(circle at 32% 24%, rgba(255,255,255,.55) 0 18%, rgba(255,255,255,0) 46%),
+    linear-gradient(180deg, color-mix(in srgb, var(--ac, #a77df0) 55%, #fff), color-mix(in srgb, var(--ac, #a77df0) 72%, #000));
+  box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.35), inset 0 -3px 0 rgba(0,0,0,.16),
+             0 3px 0 color-mix(in srgb, var(--ac, #a77df0) 40%, #000), 0 8px 14px -8px rgba(0,0,0,.85);
+  transition:transform .2s var(--mola, ease);
+}
+.tf-janela{
+  /* a janela redonda por onde o rosto aparece: o recorte é aqui, e a marca fica de fora */
+  position:absolute;inset:3px;border-radius:50%;overflow:hidden;
+  background:color-mix(in srgb, var(--ac, #a77df0) 18%, #f2ecff);
+}
+/* o quadro da cabeça (--q-x, --q-y, --q-l, em pontos do desenho de 80) enche a janela;
+   sem quadro, o recorte da agenda do PokéNav */
+.tf-janela > img{
+  position:absolute;max-width:none;height:auto;image-rendering:pixelated;
+  width:calc(8000% / var(--q-l, 38));
+  left:calc(var(--q-x, 21) * -100% / var(--q-l, 38));
+  top:calc(var(--q-y, 4) * -100% / var(--q-l, 38));
+}
+.escolha:is(:hover:not(:disabled), :focus-visible) > .tf-moeda{transform:rotate(-8deg) scale(1.06)}
+
+/* a marca no canto da moeda */
+.tf-marca{
+  position:absolute;right:-5px;bottom:-4px;z-index:1;
+  display:grid;place-items:center;width:18px;height:18px;border-radius:50%;
+  font:900 12px/1 var(--letra-hud, var(--fonte));color:#2a1d00;
+  background:linear-gradient(180deg, #ffe58a, #f4b81f);
+  box-shadow:0 0 0 2px var(--painel, #10262a), 0 2px 0 #8a6100;
+}
+.tf-marca[data-marca="nova"]{animation:tf-pulso 1.8s ease-in-out infinite}
+.tf-marca[data-marca="pronta"]{color:#05301a;background:linear-gradient(180deg, #9ff0c2, #34c27a);box-shadow:0 0 0 2px var(--painel, #10262a), 0 2px 0 #157a46}
+.tf-marca[data-marca="espera"]{color:#e8e4f2;background:linear-gradient(180deg, #8f86a6, #5f577a);box-shadow:0 0 0 2px var(--painel, #10262a), 0 2px 0 #3a3450}
+@keyframes tf-pulso{0%, 100%{transform:scale(1)} 50%{transform:scale(1.16)}}
+@media (prefers-reduced-motion: reduce){ .tf-marca[data-marca="nova"]{animation:none} }
+
+/* quem espera: a linha apagada, mas o rosto continua de cor */
+.escolha.tarefa.espera{opacity:1}
+.escolha.tarefa.espera .esc-rot{opacity:.72}
+.escolha.tarefa.pronta{--ac:#3cc785}
+
+/* ---------- o passo: quanto falta, com o desenho do que se colhe ---------- */
+.tf-progresso{
+  display:grid;grid-template-columns:auto auto 1fr auto;align-items:center;gap:10px;
+  max-width:48rem;margin:12px auto 0;padding:10px 14px;border-radius:14px;
+  background:color-mix(in srgb, var(--painel, #10262a) 82%, #a77df0);
+  border:1px solid color-mix(in srgb, #a77df0 40%, var(--borda, #2a4a50));
+  font:700 13px/1.2 var(--letra-hud, var(--fonte));color:var(--texto, #eaf4f2);
+}
+.tf-progresso img{width:30px;height:30px;image-rendering:pixelated}
+.tf-prog-barra{position:relative;height:10px;border-radius:99px;background:rgba(0,0,0,.28);overflow:hidden;box-shadow:inset 0 1px 2px rgba(0,0,0,.4)}
+.tf-prog-barra > i{position:absolute;inset:0 auto 0 0;width:var(--tf-feito, 0%);border-radius:inherit;
+  background:linear-gradient(180deg, #d7c2ff, #9b6cf0);transition:width .4s ease}
+.tf-prog-n{font-variant-numeric:tabular-nums;color:var(--texto-fraco, #a9c0bd)}
+
+/* ---------- o selo de tarefa cumprida ---------- */
+.tf-selo{
+  display:flex;align-items:center;gap:14px;max-width:48rem;margin:14px auto 0;padding:12px 16px;
+  border-radius:16px;border:1.5px dashed color-mix(in srgb, #3cc785 70%, transparent);
+  background:color-mix(in srgb, var(--painel, #10262a) 80%, #3cc785);
+  animation:tf-selo-entra .5s var(--mola, cubic-bezier(.2,1.4,.4,1)) .15s backwards;
+}
+.tf-selo .tf-moeda{--ac:#3cc785;width:46px;height:46px}
+.tf-selo-t{display:grid;gap:2px;flex:1 1 auto;min-width:0}
+.tf-selo-t small{font:800 11px/1.2 var(--letra-hud, var(--fonte));letter-spacing:.14em;text-transform:uppercase;color:#7fe3ad}
+.tf-selo-t b{font:700 18px/1.2 var(--letra-titulo, var(--fonte));color:var(--texto, #eaf4f2);overflow-wrap:anywhere}
+.tf-selo-ok{
+  flex:0 0 auto;display:grid;place-items:center;width:40px;height:40px;border-radius:50%;
+  font:900 22px/1 var(--letra-hud, var(--fonte));color:#05301a;
+  background:radial-gradient(circle at 35% 30%, #c6ffe0, #34c27a 70%);
+  box-shadow:0 0 0 3px color-mix(in srgb, #3cc785 35%, transparent), 0 4px 0 #157a46;
+  transform:rotate(-12deg);
+  animation:tf-carimbo .45s cubic-bezier(.2,1.6,.4,1) .45s backwards;
+}
+@keyframes tf-selo-entra{from{opacity:0;transform:translateY(10px)}}
+@keyframes tf-carimbo{from{opacity:0;transform:rotate(-30deg) scale(2.2)}}
+@media (prefers-reduced-motion: reduce){ .tf-selo, .tf-selo-ok{animation:none} }
+
+/* ---------- o Diário: o que cada um pediu ---------- */
+.tf-lista{list-style:none;margin:0 0 8px;padding:0;display:grid;gap:8px}
+.tf-diario{
+  display:grid;grid-template-columns:auto 1fr;align-items:start;gap:12px;padding:10px 12px;border-radius:12px;
+  background:color-mix(in srgb, var(--painel, #10262a) 88%, #a77df0);border:1px solid color-mix(in srgb, #a77df0 30%, var(--borda, #2a4a50));
+}
+.tf-diario.pronta{border-color:color-mix(in srgb, #3cc785 60%, transparent)}
+.tf-diario .tf-moeda{width:34px;height:34px}
+.tf-d-txt{display:grid;gap:3px;min-width:0;font-size:13.5px;line-height:1.45}
+.tf-d-txt b{font:700 14px/1.3 var(--letra-hud, var(--fonte))}
+.tf-d-txt b em{font-style:normal;font-size:11px;font-weight:800;letter-spacing:.06em;margin-left:6px;padding:2px 7px;border-radius:99px;color:#05301a;background:#7fe3ad;vertical-align:1px}
+.tf-d-txt small{font:700 12px/1.2 var(--letra-hud, var(--fonte));color:#cdb6ff;font-variant-numeric:tabular-nums}
+.tf-moeda.pequena{width:30px;height:30px}
+.tf-feitas{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin:6px 0 4px;font:700 13px/1.2 var(--letra-hud, var(--fonte))}
+.tf-feitas > span:first-child{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--texto-fraco, #a9c0bd)}
+.tf-feita{display:inline-flex;align-items:center;gap:6px}
+.tf-feita .tf-moeda{--ac:#3cc785}
+
+@media (max-width:600px){
+  .tf-moeda{width:34px;height:34px}
+  .tf-progresso{grid-template-columns:auto 1fr auto;grid-template-areas:'ic nome n' 'barra barra barra'}
+  .tf-progresso img{grid-area:ic}
+  .tf-prog-nome{grid-area:nome}
+  .tf-prog-n{grid-area:n}
+  .tf-prog-barra{grid-area:barra}
+}

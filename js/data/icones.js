@@ -33,6 +33,10 @@ const ITEM_PIXEL = {
   'Crachá da Limptotal':'cracha_verde', 'Caderno do Rook':'caderno_azul',
   /* o ovo da creche */
   'Ovo':'ovo',
+  /* as tarefas da cidade (tarefas.js): o que se colhe, se leva e se ganha */
+  'Frutinha-tinta':'frutinha', 'Caco de pedra-da-lua':'caco', 'Flor-de-sino':'flor', 'Folha de Oddish':'folha',
+  'Fruta-do-mato':'fruta', 'Frasco de perfume':'frasco', 'Pote de compota':'pote_compota',
+  'Caixinha de música':'caixinha', 'Pena de Pidgey':'pena_pidgey',
   /* as bolsas da loja: cada uma com o desenho do que ela é, na cor dela */
   'Mochila escolar':'mochila_escolar', 'Mochila de sinalização':'mochila_sinalizacao',
   'Mochila de resgate':'mochila_resgate', 'Mochila de acampamento':'mochila_acampamento',

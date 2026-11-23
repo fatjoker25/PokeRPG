@@ -2431,6 +2431,77 @@ mais longe do teto. Cada toque vira um passo `toque` no diário dele,
 com o tipo, e `reg.tel` conta as rolagens e os toques: é dali que se
 mede quantas vezes o telefone toca.
 
+## As tarefas da cidade
+Foi pedido assim: tarefa com gente das cidades — resgatar um Pokémon
+que se perdeu, colher alguma coisa, levar uma encomenda —, feita no
+jeito de jogo de hoje. Mora em `js/story/tarefas.js` (`TAREFAS`,
+`Tarefas`) e `css/tarefas.css`: doze, uma em cada cidade de Kanto e
+duas nas ilhas (a Lia de Pallet, o Emil de Viridian… a Hattie da Ilha
+Dois e o Sven da Ilha Quatro), em quatro jeitos:
+- **resgate**: o Pokémon de quem pede fugiu pra um lugar perto; achar
+  é teste, e quem está em volta dele é luta;
+- **coleta**: três de alguma coisa num lugar, um item de enredo que
+  mora na mochila;
+- **entrega**: levar uma encomenda até a casa de alguém de outra
+  cidade;
+- **mostrar**: ir até a pessoa com um Pokémon do tipo que ela quer
+  ver no time, ou com um que voltou de fóssil.
+
+- **Aparece pra quem chegou**: `desde` é a posição na jornada
+  (`capNaJornada`, nunca o número cru), `fase` a das ilhas
+  (`Sevii.fase`), e a cidade tem que estar pisada. Recusar vale só pra
+  hoje: a oferta volta no dia seguinte.
+- **Na tela do lugar** a seção é própria, "Tarefas", antes de "O que
+  fazer" (`Tarefas.afazeres`, chamado no `afazeresDoLocal`; o
+  `Exploracao.tela` separa as linhas que têm `tarefa`). Quem pede vem
+  com o rosto numa moeda (`Tarefas.moeda`) e a marca no canto: `!` tem
+  um pedido, `✓` está pronto pra entregar, `…` ainda espera (apagada,
+  com o que falta no `fechada`). O passo de fora aparece no lugar onde
+  ele se faz, com o rosto de quem pediu. O rosto é recortado da cabeça
+  aos ombros pelo `quadro` da tarefa (`[x, y, lado]` no desenho de
+  80 px, que o CSS lê em `--q-x`, `--q-y` e `--q-l`): com o recorte da
+  agenda, desenho pequeno no quadro saía moeda vazia. Rosto novo entra
+  com o quadro medido.
+- **O passo** é cena de escolhas (`Tarefas.passo`, `escolher`): teste
+  pelo status do treinador (`Dados.teste`, ou `testeComTime` com
+  `eixo`), Ração gasta, `Campo` na condição (`surfar`, `iluminar`, com
+  o `desgaste` da lanterna pelo `Historia.aplicar`) e `espera`, que
+  leva o relógio até a hora (as flores que só abrem de noite). A luta é
+  selvagem no nível do lugar + 1, pela porta de sempre
+  (`Exploracao.encontro` com `{fixo:true}`), e volta pelo
+  `Jogo.depoisDaEstrada` pro `Tarefas.depoisDaLuta`, que confere pelo
+  `uid` guardado se a luta que acabou é a dela: recarregar no meio
+  perde a volta, e só isso. Perdeu no resgate, o Pokémon some de novo
+  (`achou` volta a falso). Na coleta, o crítico dá um a mais.
+- **A coleta conta a mochila** (`Estado.contaItem`): o item de enredo
+  tem desenho nosso (`ITEM_PIXEL`, pelo `desenhar-itens.py`), e a tela
+  do passo mostra a barra de quanto falta (`htmlProgresso`).
+- **A volta** (`Tarefas.entregar`) dá o prêmio (itens e dinheiro; no
+  mostrar, `MORAL_DO_MOSTRAR` pro Pokémon que foi visto), sobe a
+  opinião de quem pediu em `OPINIAO_DA_TAREFA` (o `lembrarNPC` grava o
+  valor, então a conta soma a de antes), dá reputação boa com motivo,
+  marca `tarefa_feita_<id>` e mostra o selo de tarefa cumprida. Quem
+  tem `contato` deixa o número (`contatosDasTarefas`, no
+  `todosContatos`), e a ficha dele no PokéNav tem a linha de perguntar
+  como estão as coisas.
+- **O Diário guarda como memória** (`htmlDiario`): o que a pessoa
+  disse (`lembrete`) e quanto falta na coleta, nunca onde nem como. A
+  oferta (`oferta.sub`) repara na pessoa e para ali, como o presságio.
+- Quem pede tem nome e rosto só dele (`NOMES_DA_HISTORIA`,
+  `RETRATO_POR_NOME`, `trainers/<arq>`), tirados do acervo do Showdown
+  e conferidos pelos pixels contra todo rosto em uso e as fotos de
+  quem joga. O Pokémon de quem pede (o Pipoca da Lia, o Psyduck do Pim)
+  é da pessoa: nunca entra no seu time.
+
+Tarefa nova entra com as falas, o `lembrete`, o `quadro` e a regra na
+folha ("Tarefas da cidade", que lê `TAREFAS.length` e as duas
+constantes), e passa pelo `chk-telas` (a oferta, recusar e voltar no
+outro dia, cada escolha do passo em cada grau, a luta ganhando e
+perdendo, a volta com o selo, a opinião, o número e o Diário) e pelo
+`chk-baloes` (`Tarefas.amostras`). O robô entrega a que está pronta,
+faz o passo do lugar onde está (seis vezes por tarefa, no máximo) e
+aceita metade das ofertas, menos quando a jornada espera.
+
 ## A luta não acaba no recarregar
 `Estado.salvar` chama `LutaSalva.anotar` (`js/engine/luta-salva.js`): com
 luta ativa, ou com resultado esperando o Continuar (`Jogo.fimPendente`),

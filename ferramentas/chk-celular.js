@@ -5,7 +5,8 @@
    Customização, pelo capítulo 1, e num save do meio do jogo abre o
    lugar, o mapa, a mochila, o time, o PokéNav, a Ficha, a Pokédex, o
    PC, o Salvar, as regras, os ajustes, a Liga, a loja, o Centro, uma
-   luta (o tutorial dela passo a passo, golpes, mochila e um turno) e a
+   tarefa da cidade (o pedido, o passo, a volta e o selo), uma luta (o
+   tutorial dela passo a passo, golpes, mochila e um turno) e a
    evolução. Acusa a página que
    rola de lado, o que fica pra fora da tela sem estar numa caixa que
    rola, erro de JavaScript e texto quebrado.
@@ -160,6 +161,18 @@ const SUSPEITO = [
     await tentar('liga', () => { UI.fecharModal(true); Jogo.abrirLiga(); });
     await tentar('loja', () => { UI.fecharModal(true); Exploracao.tela(); Cidade.loja(); });
     await tentar('centro', () => { UI.fecharModal(true); Cidade.atenderAqui(); });
+    /* as tarefas da cidade (tarefas.js): a Lotte de Celadon pede, o passo
+       na Rota 7 com a barra do que falta, a volta pronta na cidade e o selo */
+    await tentar('tarefa-pedido', () => { UI.fecharModal(true); Exploracao.tela(); Tarefas.fazer('perfume_da_lotte'); });
+    await tentar('tarefa-passo', () => {
+      const d = Estado.dados;
+      Tarefas.aceitar('perfume_da_lotte');
+      Estado.darItem('Folha de Oddish', 1);
+      d.local = 'rota7';
+      Tarefas.passo('perfume_da_lotte');
+    });
+    await tentar('tarefa-volta', () => { Estado.darItem('Folha de Oddish', 2); Estado.dados.local = 'celadon'; Exploracao.tela(); });
+    await tentar('tarefa-selo', () => Tarefas.entregar('perfume_da_lotte'));
     /* o seu ginásio (defesa.js): a ficha do tipo do ginásio, a quadra com o
        regulamento e a escolha do time */
     await tentar('ginasio-ficha', () => {

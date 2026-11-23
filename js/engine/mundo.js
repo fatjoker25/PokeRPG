@@ -765,6 +765,8 @@ function afazeresDoLocal(){
   if (typeof Defesa !== 'undefined') Defesa.afazeres(id).forEach(x => lista.push(x));
   /* as Ilhas Sevii: a arena da Ilha Sete, a Noa no cais, quem veio pro torneio (sevii.js) */
   if (typeof Sevii !== 'undefined') Sevii.afazeres(id).forEach(x => lista.push(x));
+  /* as tarefas da cidade (tarefas.js): quem pede, o passo de fora e a volta */
+  if (typeof Tarefas !== 'undefined') Tarefas.afazeres(id).forEach(x => lista.push(x));
   /* o Professor, em Pallet, que atualiza a Pokédex pra Nacional (dex-nacional.js) */
   if (typeof DexNacional !== 'undefined') DexNacional.afazeres(id).forEach(x => lista.push(x));
   /* quem mandou recado de que separou alguma coisa e está nesta cidade (recados.js) */

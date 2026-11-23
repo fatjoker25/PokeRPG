@@ -1804,7 +1804,7 @@ const UI = {
     if (/confia mais em você|te olha diferente/.test(t)) return svgIcone('doar');
     const POR_TIPO = {intuicao:'lua', item:'itens', rep:'liga', cura:'cura', dano:'alerta', perigo:'alerta', gameover:'alerta',
       morte:'luto', pokemon:'bola', insignia:'ginasio', mundo:'mundo', liga:'liga', lei:'patrulha', natureza:'olho',
-      pokedex:'pokedex', evolucao:'brilho', rival:'lutar', nav:'telefone'};
+      pokedex:'pokedex', evolucao:'brilho', rival:'lutar', nav:'telefone', tarefa:'exclama'};
     return svgIcone(POR_TIPO[a.tipo] || 'info');
   },
 
@@ -5986,8 +5986,11 @@ const UI = {
         ${F.pontas.length ? F.pontas.map(p => `<p class="da-linha"><span class="da-k">${this.esc(p.nome)}</span><span class="da-v">${this.esc(p.texto)}</span></p>`).join('')
                           : '<p class="da-solta nada">Nenhuma ponta puxada ainda.</p>'}
       </div>` : '';
+    /* as tarefas da cidade: o que cada um pediu, como você lembra (tarefas.js) */
+    const tarefas = typeof Tarefas !== 'undefined' ? Tarefas.htmlDiario() : '';
     this.modal('Diário de campanha', `
       ${fio}
+      ${tarefas}
       <h3>Onde você está</h3><div class="diario-agora">${resumo}</div>
       <h3>O que aconteceu</h3>
       ${log.length ? `<ol class="diario-lista">${log.map(l=>`<li><span class="dl-quando">Cap ${l.cap} · dia ${l.dia}</span><span class="dl-texto">${this.esc(l.texto)}</span></li>`).join('')}</ol>`
@@ -6872,6 +6875,14 @@ const UI = {
       <div class="linha"><span class="k">Quando</span><span class="v">depois de conversar com alguém na cidade · teste de Carisma, ${Dados.sucessosPedidos(PRESENTE_DA_CIDADE_DIFICULDADE)} sucessos · uma vez por dia em cada cidade · a mesma pessoa, só depois de ${PRESENTE_DA_CIDADE_ESPERA_DIAS} dias</span></div>
       <div class="linha"><span class="k">O que vem</span><span class="v">sobe com o seu Carisma · o crítico sobe um degrau</span></div>
       ${PRESENTES_DA_CIDADE.map((t, i, l) => `<div class="linha"><span class="k">Carisma ${i ? t.min + (l[i - 1].min - 1 > t.min ? '–' + (l[i - 1].min - 1) : '') : t.min + ' ou mais'}</span><span class="v">${t.itens.map(([n]) => this.esc(n)).join(' · ')}</span></div>`).join('')}
+
+      ${typeof TAREFAS !== 'undefined' ? `<h3>Tarefas da cidade</h3>
+      <div class="linha"><span class="k">Quem pede</span><span class="v">gente que mora na cidade, na seção Tarefas da tela do lugar, com o rosto e a marca: ! tem um pedido, ✓ está pronto pra entregar, … ainda espera · ${TAREFAS.length} pessoas, cada uma uma vez · aparece quando a jornada chega perto (as das Ilhas Sevii, com o arco andando) e você já pisou na cidade · dizer que não pode deixa pra outro dia</span></div>
+      <div class="linha"><span class="k">Resgate</span><span class="v">o Pokémon de alguém se perdeu num lugar · lá, procurar (teste de Percepção, Carisma, Força ou Resistência; quem tem Ração na mochila pode gastar uma e esperar, sem teste; quem tem Pokémon que atravessa água ou dá luz, às vezes, passa sem teste) · achou, e quase sempre tem um selvagem em volta dele, no nível do lugar mais um: vencer (ou capturar) resgata, perder ou fugir faz ele sumir de novo</span></div>
+      <div class="linha"><span class="k">Coleta</span><span class="v">juntar o que a pessoa pediu num lugar, uma procura de cada vez · o sucesso dá um, e o crítico, um a mais · uma das procuras costuma ser uma briga com quem guarda o melhor pedaço, que dá mais · tem coisa que só se acha de noite, e dá pra esperar a noite lá · o que você junta vai pra mochila e sai dela na entrega</span></div>
+      <div class="linha"><span class="k">Entrega e mostrar</span><span class="v">levar o que a pessoa te deu até quem ela disse, e voltar pra contar · ou mostrar um Pokémon que ela quer ver, de pé no seu cinto (ele sai contente: +${MORAL_DO_MOSTRAR} de moral)</span></div>
+      <div class="linha"><span class="k">Cada procura</span><span class="v">leva um período (esperar com Ração, dois), e rola o PokéNav como as outras ações do mapa</span></div>
+      <div class="linha"><span class="k">A volta</span><span class="v">dinheiro e itens, que sobem com a jornada · quem pediu passa a gostar mais de você (+${OPINIAO_DA_TAREFA}) · +1 de reputação boa · quem tem telefone deixa o número no PokéNav · o Diário guarda o que cada um pediu, do jeito que a pessoa disse, e quantos você já juntou</span></div>` : ''}
 
       <h3>De onde vem o seu primeiro</h3>
       <div class="linha"><span class="k">Qual dos três</span><span class="v">você escolhe na hora, com os três fora da Pokébola, na sua frente · nenhuma vem escolhida</span></div>

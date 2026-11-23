@@ -61,7 +61,16 @@ const Exploracao = {
     }).join('');
     /* as portas enchem a linha: três numa, quatro em duas de duas */
     const colunas = portas.length <= 3 ? Math.max(1, portas.length) : portas.length === 4 ? 2 : 3;
-    const afazeres = todos.filter(a => !a.lugar).map(a => {
+    /* as tarefas da cidade (tarefas.js): quem pede, o passo de fora e a
+       volta, cada uma com o rosto de quem pediu numa moeda e a marca */
+    const tarefas = todos.filter(a => a.tarefa).map(a => {
+      const moeda = Tarefas.moeda(a.rosto, a.tarefa, null, a.quadro);
+      if (a.fechada) return `<button class="escolha menu com-icone tarefa espera" disabled>
+        ${moeda}<span class="esc-rot">${UI.esc(a.titulo)}<span class="esc-trava">${UI.esc(a.fechada)}</span></span></button>`;
+      return `<button class="escolha menu com-icone tarefa ${UI.esc(a.tarefa)}" onclick="Exploracao.fazer('${a.id}')">
+        ${moeda}<span class="esc-rot">${UI.esc(a.titulo)}${a.sub ? `<small class="esc-det">${UI.esc(a.sub)}</small>` : ''}</span></button>`;
+    }).join('');
+    const afazeres = todos.filter(a => !a.lugar && !a.tarefa).map(a => {
       const ic = iconeDoAfazer(a);
       const [rot, custo] = String(a.titulo).split(' — ');
       if (a.fechada) return `<button class="escolha menu com-icone"${cor(ic)} disabled>
@@ -105,6 +114,9 @@ const Exploracao = {
 
       ${lugares ? `<h3 class="sec sec-portas">Onde entrar</h3>
         <div class="portas" style="--cols:${colunas}">${lugares}</div>` : ''}
+
+      ${tarefas ? `<h3 class="sec sec-tarefas">Tarefas</h3>
+        <div class="escolhas">${tarefas}</div>` : ''}
 
       <h3 class="sec sec-fazer">O que fazer</h3>
       <div class="escolhas">${afazeres}</div>
@@ -589,6 +601,7 @@ const Exploracao = {
     if (acao.startsWith('tit_'))  return Titulares.fazer(acao.slice(4));
     if (acao === 'dexnac')        return DexNacional.fazer();
     if (acao.startsWith('sevii_')) return Sevii.fazer(acao.slice(6));
+    if (acao.startsWith('tf_')) return Tarefas.fazer(acao.slice(3));
     if (acao.startsWith('recado_')) return Recados.encontrar(acao.slice(7));
     if (acao.startsWith('pedido_')) return Pedidos.fazer(acao.slice(7));
     if (acao === 'rede')          return Rede.tela();

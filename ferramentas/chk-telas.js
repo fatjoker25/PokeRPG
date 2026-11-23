@@ -2694,6 +2694,203 @@ const SUSPEITO = [
     Exploracao.fazer('sevii_noa');
   });
 
+  /* ---------- as tarefas da cidade (tarefas.js) ----------
+     Cada tarefa do pedido à volta: a oferta na cidade (com o rosto e a
+     marca), recusar (some hoje, volta amanhã), aceitar, o passo no
+     lugar dele com cada escolha nos dois ramos (o dado forçado), a
+     espera da noite, a luta ganhando e perdendo, a volta com o prêmio,
+     o número no PokéNav e o caderno do Diário. O mostrar antes e
+     depois de ter o Pokémon que a pessoa quer ver. */
+  await page.evaluate(() => {
+    /* o dado forçado: o mesmo teste, rolado com muito ou nenhum dado, e o grau que se quer */
+    window.dadoForcado = grau => {
+      const t = Dados.teste.__orig || Dados.teste, c = Dados.testeComTime.__orig || Dados.testeComTime;
+      const f = (v, dif, nome) => Object.assign(t(grau === 'fracasso' ? 0 : 30, dif, nome), {grau, texto:grau});
+      f.__orig = t;
+      const g = (v, dif, nome) => Object.assign(c(grau === 'fracasso' ? 0 : 30, dif, nome), {grau, texto:grau});
+      g.__orig = c;
+      Dados.teste = f; Dados.testeComTime = g;
+    };
+    window.dadoDeVolta = () => {
+      if (Dados.teste.__orig) Dados.teste = Dados.teste.__orig;
+      if (Dados.testeComTime.__orig) Dados.testeComTime = Dados.testeComTime.__orig;
+    };
+    /* a tarefa no ponto de partida: a cidade pisada, a jornada no fim (as das ilhas, no arco) */
+    window.prepTarefa = id => {
+      dadoDeVolta();
+      const t = Tarefas.porId(id), d = Estado.dados;
+      if (t.fase != null) nasIlhas(6, t.cidade);
+      else { d.capitulo = Math.max(d.capitulo || 0, 20); d.modo = 'mundo'; }
+      d.tarefas = {};
+      d.local = t.cidade;
+      Mundo.marcarVisitado(t.cidade);
+      if (t.passo) Mundo.marcarVisitado(t.passo.onde);
+      Relogio.ate(10);
+      Jogo.depoisDaEstrada = null; Batalha.ativo = false;
+      return t;
+    };
+    /* termina a luta da tarefa como quiser */
+    window.fimDaLuta = res => {
+      if (!Batalha.ativo) throw new Error('a luta da tarefa não começou');
+      if (!Jogo.depoisDaEstrada) throw new Error('a luta da tarefa não sabe pra onde voltar');
+      Batalha.encerrar(res);
+      Jogo.finalizarBatalha(Batalha.fim);
+    };
+    /* faz o passo inteiro, com o dado no sucesso e a luta ganha */
+    window.passoInteiro = id => {
+      const t = Tarefas.porId(id), d = Estado.dados;
+      if (!t.passo) return;
+      d.local = t.passo.onde;
+      dadoForcado('sucesso');
+      try {
+        for (let k = 0; k < 12 && !Tarefas.passoFeito(t, d); k++){
+          const r = Tarefas.de(id, d);
+          if (t.tipo === 'resgate' && r.achou && t.passo.luta){ Tarefas.lutar(id); fimDaLuta('vitoria'); continue; }
+          const ops = Tarefas.escolhasDe(t).filter(({e}) => !e.espera && !e.luta);
+          if (!ops.length){ Relogio.ate(20); continue; }
+          Tarefas.escolher(id, ops[0].i);
+        }
+      } finally { dadoDeVolta(); }
+      if (!Tarefas.passoFeito(t, d)) throw new Error('o passo não terminou com o dado no sucesso');
+    };
+  });
+  for (const id of await page.evaluate(() => TAREFAS.map(t => t.id))){
+    await restaurar();
+    await tentar(`tarefa/${id}/oferta`, x => {
+      const t = prepTarefa(x);
+      Exploracao.tela();
+      const a = afazeresDoLocal().find(z => z.id === 'tf_' + x);
+      if (!a || a.tarefa !== 'nova') throw new Error('a oferta não aparece na cidade');
+      if (!document.querySelector('.sec-tarefas')) throw new Error('a tela do lugar não tem a seção Tarefas');
+      const b = [...document.querySelectorAll('.escolha.tarefa')].find(z => (z.getAttribute('onclick') || '').includes("'tf_" + x + "'"));
+      if (!b || !b.querySelector('.tf-moeda img') || !b.querySelector('.tf-marca[data-marca="nova"]')) throw new Error('a oferta sem o rosto ou sem a marca');
+      Exploracao.fazer('tf_' + x);
+      if (!document.getElementById('app').innerText.includes(t.quem)) throw new Error('o pedido não mostra quem pede');
+    }, id);
+    await tentar(`tarefa/${id}/recusar`, x => {
+      const d = Estado.dados;
+      Tarefas.recusar(x);
+      if (Tarefas.afazeres(d.local).some(z => z.id === 'tf_' + x)) throw new Error('recusou e a oferta continua hoje');
+      d.relogio.dia++;
+      if (!Tarefas.afazeres(d.local).some(z => z.id === 'tf_' + x)) throw new Error('a oferta não voltou no dia seguinte');
+      Tarefas.aceitar(x);
+      if (!Tarefas.aberta(x)) throw new Error('aceitou e a tarefa não abriu');
+      const t = Tarefas.porId(x);
+      if (t.entrega && !Estado.contaItem(t.entrega)) throw new Error('a entrega não pôs o item na mochila');
+      const esp = Tarefas.afazeres(d.local).find(z => z.id === 'tf_' + x + '__volta');
+      if (!Tarefas.pronta(t) && !(esp && esp.tarefa === 'espera' && esp.fechada)) throw new Error('quem espera não fica na tela com o que falta');
+    }, id);
+    /* cada escolha do passo, nos dois ramos */
+    const nEsc = await page.evaluate(x => { const t = Tarefas.porId(x); return t.passo ? t.passo.escolhas.length : 0; }, id);
+    for (let i = 0; i < nEsc; i++) for (const grau of ['sucesso', 'fracasso', 'critico']){
+      await restaurar();
+      await tentar(`tarefa/${id}/passo ${i} ${grau}`, ([x, k, g]) => {
+        const t = prepTarefa(x), d = Estado.dados, e = t.passo.escolhas[k];
+        Tarefas.aceitar(x);
+        d.local = t.passo.onde;
+        /* o que a escolha pede: Ração, quem atravessa água, luz, a hora certa */
+        Estado.darItem('Ração', 3);
+        if (!d.time.some(p => (DEX[p.dex].tipos || []).includes('Água') && porteDe(p.dex) !== 'pequeno')) d.time.push(criarPokemon(131, 40));
+        Estado.darItem('Lanterna', 1); Estado.darItem('Pilha', 3);
+        const quer = c => { try { return !c || c(d); } catch(err){ return false; } };
+        if (!quer(e.cond)) Relogio.ate(ehNoite() ? 10 : 20);
+        if (!quer(e.cond)) throw new Error('a escolha não fica disponível nem de dia nem de noite');
+        Exploracao.tela();
+        if (!afazeresDoLocal().some(z => z.id === 'tf_' + x + '__passo')) throw new Error('o passo não aparece no lugar dele');
+        Exploracao.fazer('tf_' + x + '__passo');
+        dadoForcado(g);
+        try {
+          const antes = t.passo.item ? Estado.contaItem(t.passo.item) : 0;
+          Tarefas.escolher(x, k);
+          if (e.espera != null){ if (!ehNoite()) throw new Error('esperar a noite não levou o relógio até ela'); return; }
+          if (e.luta){
+            fimDaLuta(g === 'fracasso' ? 'derrota' : 'vitoria');
+            const ganhou = Estado.contaItem(t.passo.item) - antes;
+            if (g !== 'fracasso' && ganhou !== e.luta.ganha) throw new Error(`a luta ganha deu ${ganhou}, e devia dar ${e.luta.ganha}`);
+            if (g === 'fracasso' && ganhou) throw new Error('a luta perdida deu item');
+            return;
+          }
+          const ramo = e.teste ? (g === 'fracasso' ? e.ruim : e.bom) || {} : e;
+          if (t.passo.item){
+            const quer = (ramo.ganha || 0) + (ramo.ganha && g === 'critico' && e.teste ? 1 : 0);
+            if (Estado.contaItem(t.passo.item) - antes !== quer) throw new Error(`juntou ${Estado.contaItem(t.passo.item) - antes}, e devia ser ${quer}`);
+          }
+          if (ramo.achou && !Tarefas.de(x).achou) throw new Error('achou e não marcou');
+        } finally { dadoDeVolta(); }
+      }, [id, i, grau]);
+    }
+    /* a luta do resgate: perder faz ele sumir de novo, ganhar resgata */
+    if (await page.evaluate(x => !!(Tarefas.porId(x).passo || {}).luta, id)){
+      for (const res of ['derrota', 'fuga', 'vitoria', 'captura']){
+        await restaurar();
+        await tentar(`tarefa/${id}/luta ${res}`, ([x, r]) => {
+          const t = prepTarefa(x), d = Estado.dados;
+          Tarefas.aceitar(x);
+          d.local = t.passo.onde;
+          Tarefas.de(x).achou = true;
+          Tarefas.passo(x);
+          if (!/Encarar/.test(document.getElementById('app').innerText)) throw new Error('achou e a luta não aparece');
+          Tarefas.lutar(x);
+          fimDaLuta(r);
+          const ok = r === 'vitoria' || r === 'captura';
+          if (ok !== !!Tarefas.de(x).resgatou) throw new Error(`a luta ${r} deixou o resgate ${Tarefas.de(x).resgatou ? 'feito' : 'por fazer'}`);
+          if (!ok && Tarefas.de(x).achou) throw new Error('perdeu e ele continua achado');
+        }, [id, res]);
+      }
+    }
+    /* do começo ao fim, e a volta */
+    await restaurar();
+    await tentar(`tarefa/${id}/volta`, x => {
+      const t = prepTarefa(x), d = Estado.dados;
+      Tarefas.aceitar(x);
+      Estado.darItem('Ração', 3);
+      passoInteiro(x);
+      if (t.tipo === 'entrega' && Estado.contaItem(t.entrega)) throw new Error('entregou e o item ficou na mochila');
+      if (t.tipo === 'mostrar'){
+        d.local = t.cidade;
+        if (Tarefas.pronta(t)) throw new Error('o mostrar ficou pronto sem o Pokémon que ela quer ver');
+        Exploracao.tela();
+        const b = [...document.querySelectorAll('.escolha.tarefa')].find(z => z.disabled);
+        if (!b || !b.querySelector('.esc-trava')) throw new Error('quem espera o Pokémon não fica apagado com o que falta');
+        d.time.push(criarPokemon(x === 'janela_da_bea' ? 131 : 138, 40));
+      }
+      d.local = t.cidade;
+      Exploracao.tela();
+      const a = afazeresDoLocal().find(z => z.id === 'tf_' + x + '__volta');
+      if (!a || a.tarefa !== 'pronta') throw new Error('a volta não aparece pronta na cidade');
+      const din = Estado.j.dinheiro, rep = JSON.stringify(d.reputacao);
+      Exploracao.fazer('tf_' + x + '__volta');
+      if (!Tarefas.feita(x)) throw new Error('entregou e a tarefa não fechou');
+      if (!document.querySelector('.tf-selo')) throw new Error('sem o selo de tarefa cumprida');
+      const pr = t.volta.premio || {};
+      if (pr.dinheiro && Estado.j.dinheiro !== din + pr.dinheiro) throw new Error('o dinheiro do prêmio não chegou');
+      for (const [n, q] of Object.entries(pr.itens || {})) if (Estado.contaItem(n) < q) throw new Error(`o prêmio não deu ${n}`);
+      if (t.tipo === 'coleta' && Estado.contaItem(t.passo.item)) throw new Error('a coleta ficou na mochila depois de entregue');
+      if (((d.npcs[t.quem] || {}).opiniao || 0) < OPINIAO_DA_TAREFA) throw new Error('quem pediu não passou a gostar de você');
+      if (t.contato && !Estado.temNumero('tarefa_' + x)) throw new Error('quem tem telefone não deixou o número');
+      if (afazeresDoLocal().some(z => z.id && z.id.startsWith('tf_' + x))) throw new Error('a tarefa cumprida continua na tela');
+      UI.modalDiario();
+      if (!/Tarefas da cidade/.test(document.querySelector('#modal').innerText)) throw new Error('o Diário não tem o caderno de tarefas');
+      UI.fecharModal(true);
+      if (t.contato){
+        UI.modalNav('tarefa_' + x);
+        const b = [...document.querySelectorAll('#modal .nav-acao')].find(z => z.innerText.includes(t.contato.rotulo));
+        if (!b || b.disabled) throw new Error('a ficha do PokéNav não tem a pergunta do que foi resolvido');
+        UI.fecharModal(true);
+      }
+    }, id);
+  }
+  /* o Diário com tarefa em aberto: o lembrete e quanto falta */
+  await restaurar();
+  await tentar('tarefa/diário em aberto', () => {
+    prepTarefa('tintas_do_emil');
+    Tarefas.aceitar('tintas_do_emil');
+    Estado.darItem('Frutinha-tinta', 1);
+    UI.modalDiario();
+    const t = document.querySelector('#modal').innerText;
+    if (!/O verde do Emil/.test(t) || !/1 de 3/.test(t)) throw new Error('o caderno não mostra a tarefa aberta com quanto falta');
+  });
+
   /* ---------- lugares e afazeres ---------- */
   for (const id of await page.evaluate(() => Object.keys(LOCAIS))){
     await restaurar();

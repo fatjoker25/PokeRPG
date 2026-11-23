@@ -973,7 +973,8 @@ function todosContatos(){
   return CONTATOS.concat(contatosDeRivaisExtras(), contatosDaEstrada(),
     typeof contatosVeteranos === 'function' ? contatosVeteranos() : [],
     typeof contatosDasTrocas === 'function' ? contatosDasTrocas() : [],
-    typeof contatosDoElenco === 'function' ? contatosDoElenco() : []);
+    typeof contatosDoElenco === 'function' ? contatosDoElenco() : [],
+    typeof contatosDasTarefas === 'function' ? contatosDasTarefas() : []);
 }
 function contatoPorId(id){ return todosContatos().find(c => c.id === id) || null; }
 
