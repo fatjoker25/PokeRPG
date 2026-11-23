@@ -3257,6 +3257,17 @@ h3.com-mapa{display:flex;align-items:center;justify-content:space-between;gap:8p
   background:linear-gradient(180deg,#3d78b8,#2e5f99);box-shadow:inset 0 0 0 2px rgba(0,0,0,.25)}
 .mapa-kanto .mp-terra{fill:#7fb069;stroke:#4f7d43;stroke-width:1.2}
 .mapa-kanto .mp-ilha{fill:#9cc07e;stroke:#4f7d43;stroke-width:1}
+/* as Ilhas Sevii: a outra página do mapa (exploracao.js, terrenoSevii) */
+.mapa-kanto .mp-ilha.gelo{fill:#dbeef5;stroke:#7fa7b8}
+.mapa-kanto .mp-arena{fill:none;stroke:#e8d8a8;stroke-width:2.4;stroke-dasharray:2.5 2}
+.mapa-kanto .mp-ruina{fill:#b9ad93;stroke:#6e6450;stroke-width:.8}
+.mapa-abas{display:flex;gap:6px;margin:-2px 0 10px}
+.mapa-aba{flex:1 1 0;min-height:34px;border-radius:999px;border:1px solid var(--borda);
+  background:color-mix(in srgb, var(--painel) 70%, transparent);color:var(--texto-fraco);
+  font:700 13px/1 var(--letra-hud, var(--fonte));letter-spacing:.04em;cursor:pointer}
+.mapa-aba:hover:not(:disabled){color:var(--texto);border-color:var(--borda-forte)}
+.mapa-aba.ativa,.mapa-aba:disabled{cursor:default;color:#0c3a40;border-color:transparent;
+  background:linear-gradient(180deg,#9fe6d4,#5cc6ad);box-shadow:0 2px 0 #2e8c78}
 .mapa-kanto .mp-via{stroke:#e8d8a8;stroke-width:3;stroke-linecap:round}
 .mapa-kanto .mp-via{opacity:.55}
 .mapa-kanto .mp-via.andada{opacity:1}
@@ -3322,6 +3333,7 @@ h3.com-mapa{display:flex;align-items:center;justify-content:space-between;gap:8p
   .mapa-kanto{display:grid;grid-template-columns:minmax(0, 1fr) 330px;grid-template-rows:auto 1fr auto;
     grid-template-areas:'topo topo' 'mapa info' 'mapa leg';column-gap:18px}
   .mapa-kanto .mapa-topo{grid-area:topo}
+  .mapa-kanto .mapa-abas{grid-area:topo;align-self:end;justify-self:end;margin:0;max-width:280px;width:100%}
   .mapa-kanto > svg{grid-area:mapa;align-self:start}
   .mapa-kanto .mapa-info{grid-area:info;align-self:start;margin-top:0}
   .mapa-kanto .mapa-legenda{grid-area:leg;display:grid;grid-template-columns:max-content max-content;gap:7px 22px;margin:12px 4px 0}

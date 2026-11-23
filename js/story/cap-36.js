@@ -101,9 +101,9 @@ c36_por_tras:{
 c36_a_loja:{
   texto:[
     'A loja tem a prateleira da frente cheia e a de trás vazia. O dono fecha a cortina quando você olha muito, e quando você não para de olhar, abre de novo.',
-    fala('o dono da loja', 'A de trás é a parte do farol. Toda semana eles levam a parte do farol. Taxa de proteção, eles chamam.', 'baixo'),
-    fala('o dono da loja', 'O Kaspar tinha oficina de moto aqui na rua. Consertava a moto de todo mundo. Aí começou a emprestar óleo pros pescadores, quando a fábrica fechou e ninguém mais comprava nada. Óleo fiado. E de fiado em fiado, a ilha ficou dele.'),
-    fala('o dono da loja', 'Ele tem um caderno. Quem deve, está no caderno. O número nunca desce.'),
+    fala('o dono da loja da Ilha Três', 'A de trás é a parte do farol. Toda semana eles levam a parte do farol. Taxa de proteção, eles chamam.', 'baixo'),
+    fala('o dono da loja da Ilha Três', 'O Kaspar tinha oficina de moto aqui na rua. Consertava a moto de todo mundo. Aí começou a emprestar óleo pros pescadores, quando a fábrica fechou e ninguém mais comprava nada. Óleo fiado. E de fiado em fiado, a ilha ficou dele.'),
+    fala('o dono da loja da Ilha Três', 'Ele tem um caderno. Quem deve, está no caderno. O número nunca desce.'),
     d => d.flags.sv_noa_ajudou
       ? 'Do fundo da loja sai uma menina de jaqueta preta grande demais, com um Murkrow no ombro e um saco de pão debaixo do braço.'
       : ''
@@ -256,7 +256,7 @@ c36_ponte_perdeu:{
 
 c36_o_kaspar:{
   texto:[
-    'O Kaspar sorri do jeito de quem fez esse sorriso pra muita gente que devia pra ele.',
+    'O Kaspar sorri. É um sorriso gasto, que muita gente que devia pra ele já viu.',
     fala('Kaspar', 'Eu consertei moto nessa ilha vinte anos. Eu emprestei óleo quando ninguém emprestava. Agora eles me devem, e eu cobro. Isso tem nome em Kanto? Aqui chama negócio.'),
     d => _c36AliadoDosOvos(d) === 'Noa' ? 'Pela porta dos fundos você vê a Noa saindo correndo atrás do rapaz da caixa térmica, pela ponte, sem ninguém mandar.'
       : _c36AliadoDosOvos(d) === 'Zev' ? 'Pela janela você vê alguém de cabelo comprido na ponta da ponte, parado, esperando o rapaz da caixa térmica chegar: o Zev.'
@@ -382,7 +382,7 @@ c36_queimou:{
 },
 c36_entregou_o_caderno:{
   texto:[
-    d => d.flags.sv_kaspar_preso ? 'O Lund recebe o caderno de capa de lona com as duas mãos, do jeito que se recebe uma coisa que pesa mais do que parece.' : 'De manhã você leva o caderno pro Sargento Lund, na Ilha Um, pela primeira balsa.',
+    d => d.flags.sv_kaspar_preso ? 'O Lund recebe o caderno de capa de lona com as duas mãos. Pesa mais do que parece.' : 'De manhã você leva o caderno pro Sargento Lund, na Ilha Um, pela primeira balsa.',
     fala('Sargento Lund', 'Isso é prova de vinte anos.', 'baixo'),
     fala('Sargento Lund', 'Com isso, nenhuma dívida dessas vale um tostão. Eu escrevo pra cada família. Uma por uma. Vai levar o mês.'),
     'Ele já está abrindo o caderno na primeira página e tirando a caneta do bolso da camisa.'

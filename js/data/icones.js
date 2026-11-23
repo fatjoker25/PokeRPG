@@ -21,6 +21,8 @@
    sprites_nds/items/nossos/). Item novo sem arte entra lá e aqui. */
 const ITEM_PIXEL = {
   'Bandagem':'bandagem', 'Cantil':'cantil', 'Ração':'racao',
+  /* as Ilhas Sevii (capítulo 35): a braçadeira de auxiliar da Guarda */
+  'Braçadeira da Guarda':'bracadeira',
   'Bota de borracha':'bota_borracha', 'Machado':'machado', 'Picareta':'picareta', 'Lanterna':'lanterna',
   'Pilha':'pilha', 'Máscara de pó':'mascara', 'Cobertor térmico':'cobertor', 'Câmera descartável':'camera',
   'Caderno de campo':'caderno', 'Isca':'isca', 'Relógio':'relogio',

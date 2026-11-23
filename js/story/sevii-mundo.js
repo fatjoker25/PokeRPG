@@ -8,8 +8,9 @@
 
    O mato daqui é Kanto e Johto misturados: foi pedido assim — os
    Pokémon da Pokédex Nacional ficam nas ilhas, não nas cidades de
-   Kanto (habitats.js, sorteioJohto). Cada espécie de Johto que anda
-   solta tem pelo menos uma tabela aqui (chk-obtencao confere).
+   Kanto (o mato de Kanto é só de Kanto, habitats.js). Cada espécie de
+   Johto que anda solta tem uma tabela aqui ou chega por evolução ou
+   pela creche (chk-obtencao confere).
 
    Cenário: as vilas têm o mapa delas no FireRed/LeafGreen (a ilha só
    existe lá), recortado por ferramentas/recortar-cidades.py; as áreas
@@ -291,8 +292,8 @@ Object.assign(CONVERSAS, {
     [fala('a menina da barraca de pedra', 'A Pedra do Trovão é de Ilha Seis. Ninguém sabe disso. A minha avó sabe.')]
   ],
   ilha_tres:[
-    {cond:d=>Sevii.fase(d) < 4, texto:[fala('a moça da loja', 'Fala baixo. Se o ronco passar, a gente entra.', 'baixo')]},
-    {cond:d=>Sevii.fase(d) >= 4, texto:[fala('a moça da loja', 'Faz uma semana que ninguém fecha janela quando passa moto. É estranho. É bom.')]},
+    {cond:d=>Sevii.fase(d) < 4, texto:[fala('a balconista da Ilha Três', 'Fala baixo. Se o ronco passar, a gente entra.', 'baixo')]},
+    {cond:d=>Sevii.fase(d) >= 4, texto:[fala('a balconista da Ilha Três', 'Faz uma semana que ninguém fecha janela quando passa moto. É estranho. É bom.')]},
     ['Um Snubbull dorme na porta da padaria com cara de quem está de guarda. Ele está de guarda.'],
     [fala('o velho do banco', 'Essa ilha tinha festa de pipa todo inverno. Hoppip amarrado em linha, o céu cheio. Faz tempo que não tem.')]
   ],
@@ -304,7 +305,7 @@ Object.assign(CONVERSAS, {
   ilha_cinco:[
     [fala('o relojoeiro', 'O relógio da torre adianta quatro minutos. Eu podia acertar. A ilha inteira já se acostumou a chegar quatro minutos antes.')],
     ['Um Hoothoot dorme no ponteiro das horas do relógio da torre e roda junto com ele, sem acordar.'],
-    {cond:d=>Sevii.fase(d) < 5, texto:[fala('a mulher do varal', 'De noite tem barco sem luz encostando lá no armazém. A Guarda sabe. A Guarda é um homem só.', 'baixo')]}
+    {cond:d=>Sevii.fase(d) < 5, texto:[fala('a mulher do varal da praça', 'De noite tem barco sem luz encostando lá no armazém. A Guarda sabe. A Guarda é um homem só.', 'baixo')]}
   ],
   ilha_seis:[
     [fala('o historiador', 'As ruínas do vale têm mais de mil anos. As casas da vila têm cento e poucos. Adivinha qual das duas eu estudo.')],
@@ -352,7 +353,7 @@ ilha_dois:[
   titulo:'A placa da barraca',
   texto:[
     'Uma barraca de frutinha está sem placa. A dona deixou um Smeargle pintar uma nova, e o Smeargle pintou uma Pokébola enorme em vez de escrever "frutinha".',
-    fala('a dona da barraca', 'É a terceira placa que ele pinta. As três são Pokébola. Eu vendo frutinha.')
+    fala('a vendedora de frutinha', 'É a terceira placa que ele pinta. As três são Pokébola. Eu vendo frutinha.')
   ],
   escolhas:[
     {texto:'Sugerir que ela venda a placa e deixe a Pokébola.',
@@ -365,7 +366,7 @@ ilha_dois:[
      ef:{moral:3, registrar:'Segurou a placa pro Smeargle de Ilha Dois tentar escrever "frutinha".'},
      resultado:[
        'O Smeargle olha a palavra que você aponta, pensa muito, e pinta uma frutinha. Uma frutinha redonda, vermelha e branca, com um botão no meio.',
-       fala('a dona da barraca', 'Tá. Essa eu aceito.', 'riso')
+       fala('a vendedora de frutinha', 'Tá. Essa eu aceito.', 'riso')
      ]},
     {texto:'Seguir pela feira.', ef:{}, resultado:['Você segue. Atrás de você, o Smeargle mergulha o rabo na tinta e recomeça.']}
   ]

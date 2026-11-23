@@ -74,9 +74,9 @@ c37_o_cartaz:{
 c37_o_varal:{
   texto:[
     'Ela estende lençol branco com prendedor de madeira, um atrás do outro, sem pressa e sem olhar pra você.',
-    fala('a mulher do varal', 'De noite tem barco sem luz encostando lá no armazém. Eu já disse pra Guarda. A Guarda é um homem só.', 'baixo'),
-    fala('a mulher do varal', 'Tem um homem que dorme lá dentro. Careca, grande, jaqueta com um dragão bordado nas costas. Trabalhava na segurança da fábrica, quando tinha fábrica. Era boxeador antes disso, diz o meu marido.'),
-    fala('a mulher do varal', 'E toda quinta, de madrugada, desce do barco um senhor de terno branco. Terno branco, de madrugada, na campina. Quem usa terno branco de madrugada não é pescador.')
+    fala('a mulher do varal da praça', 'De noite tem barco sem luz encostando lá no armazém. Eu já disse pra Guarda. A Guarda é um homem só.', 'baixo'),
+    fala('a mulher do varal da praça', 'Tem um homem que dorme lá dentro. Careca, grande, jaqueta com um dragão bordado nas costas. Trabalhava na segurança da fábrica, quando tinha fábrica. Era boxeador antes disso, diz o meu marido.'),
+    fala('a mulher do varal da praça', 'E toda quinta, de madrugada, desce do barco um senhor de terno branco. Terno branco, de madrugada, na campina. Quem usa terno branco de madrugada não é pescador.')
   ],
   ef:{flag:'sv_sabe_do_dekker', registrar:'A mulher do varal da Ilha Cinco: um homem careca de jaqueta de dragão dorme no armazém, e toda quinta desce do barco sem luz um senhor de terno branco.'},
   escolhas:[

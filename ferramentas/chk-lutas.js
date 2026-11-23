@@ -188,6 +188,21 @@ const raiz = path.resolve(__dirname, '..');
           Jogo.conferenciaAtual = chaveAte(rd, {id:v.id, nome:nomeDeLuta(v), curto:v.nome, f:!!v.f, fala:v.torneio}, 'conferencia');
           Conferencia.lutar(); })));
     }
+    /* o Torneio das Ilhas (sevii-torneio.js): cada um do elenco nas quatro
+       rodadas, na Ilha Sete, com o que a gangue levou fora do time dele */
+    if (typeof CopaSevii !== 'undefined'){
+      ELENCO_SEVII.forEach(f => PREMIO_COPA.forEach((pr, rd) => add(`Ilhas ${f.nome} (${pr.rodada})`, 8, 38, d => {
+        d.flags.campeao_de_kanto = true; d.depoisDoFim = d.depoisDoFim || {final:'teste'};
+        Mundo.viajar('ilha_sete');
+        Jogo.copaAtual = chaveAte(rd, inscritoDaCopa(f), 'sevii');
+        CopaSevii.lutar(); })));
+      /* a chave da história: a Esme sem a Milotic, com a mochila da Etta de volta */
+      add('Ilhas (história)', 8, 38, d => {
+        d.flags.campeao_de_kanto = true; d.depoisDoFim = d.depoisDoFim || {final:'teste'}; d.flags.sv_rec_etta = true;
+        Mundo.viajar('ilha_sete');
+        CopaSevii.daHistoria({vitoria:'c38_campeao', derrota:'c38_caiu'});
+        CopaSevii.lutar(); });
+    }
     /* barreiras */
     (typeof BARREIRAS_DE_ESCOLHA !== 'undefined' ? BARREIRAS_DE_ESCOLHA : []).filter(x => x.luta)
       .forEach(x => add(`barreira ${x.id}`, 4, 14, () => Barreiras.fazer(x.id)));

@@ -83,7 +83,7 @@ const ELENCO_SEVII = [
   perde:'"Quarenta e três. Número bonito. Ano que vem eu volto."'
 },
 {
-  id:'etta', nome:'Etta', sobrenome:'Hemlock', f:true, idade:14, nasceu:[14, 6],
+  id:'etta', ajuste:-8, nome:'Etta', sobrenome:'Hemlock', f:true, idade:14, nasceu:[14, 6],
   regiao:'Johto', de:'Azalea', classe:'Artesã de Pokébolas', tipo:'Inseto',
   tracos:['orgulhosa', 'curiosa', 'determinada'], meta:'casa', forte:'intelecto',
   gosta:{lugar:'floresta', tipo:'Inseto', especie:'Heracross'},
@@ -110,7 +110,7 @@ const ELENCO_SEVII = [
   perde:'"Tá. Mas olha a costura da bola que você usou. Agora olha a minha."'
 },
 {
-  id:'ziggy', nome:'Ziggy', sobrenome:'Bay', f:false, idade:28, nasceu:[1, 4],
+  id:'ziggy', ajuste:8, nome:'Ziggy', sobrenome:'Bay', f:false, idade:28, nasceu:[1, 4],
   regiao:'Johto', de:'Goldenrod', classe:'Radialista', tipo:null,
   tracos:['alegre', 'competitivo', 'sonhador'], meta:'poder', forte:'carisma',
   gosta:{lugar:'cidade', tipo:'Normal', especie:'Miltank'},
@@ -162,7 +162,7 @@ const ELENCO_SEVII = [
   perde:'"Ai. Essa entrou. Entrou bonito. Me mostra de novo como foi?"'
 },
 {
-  id:'florian', nome:'Florian', sobrenome:'Ashgrove', f:false, idade:34, nasceu:[22, 9],
+  id:'florian', ajuste:5, nome:'Florian', sobrenome:'Ashgrove', f:false, idade:34, nasceu:[22, 9],
   regiao:'Johto', de:'Rota 34', classe:'Criador Pokémon', tipo:null,
   tracos:['organizado', 'observador', 'cauteloso'], meta:'vinculo', forte:'intelecto',
   gosta:{lugar:'campo', tipo:'Normal', especie:'Eevee'},
@@ -189,7 +189,7 @@ const ELENCO_SEVII = [
   perde:'"Anotado. Não é derrota, é dado."'
 },
 {
-  id:'zev', nome:'Zev', sobrenome:'Fernley', f:false, idade:31, nasceu:[13, 12],
+  id:'zev', ajuste:-2, nome:'Zev', sobrenome:'Fernley', f:false, idade:31, nasceu:[13, 12],
   regiao:'Johto', de:'Mahogany', classe:'Pescador do Lago', tipo:'Sombrio',
   tracos:['desconfiado', 'solitário', 'protetor'], meta:'heroi', forte:'percepcao',
   gosta:{lugar:'agua', tipo:'Sombrio', especie:'Houndoom'},
@@ -218,7 +218,7 @@ const ELENCO_SEVII = [
 
 /* ─────────────────────────── HOENN ─────────────────────────── */
 {
-  id:'skye', nome:'Skye', sobrenome:'Fernwood', f:true, idade:15, nasceu:[20, 5],
+  id:'skye', ajuste:5, nome:'Skye', sobrenome:'Fernwood', f:true, idade:15, nasceu:[20, 5],
   regiao:'Hoenn', de:'Fortree', classe:'Escaladora', tipo:'Voador',
   tracos:['sonhadora', 'distraída', 'alegre'], meta:'explorar', forte:'sorte',
   gosta:{lugar:'floresta', tipo:'Voador', especie:'Altaria'},
@@ -245,7 +245,7 @@ const ELENCO_SEVII = [
   perde:'"Tudo bem. Daqui eu vejo o céu inteiro do mesmo jeito."'
 },
 {
-  id:'calla', nome:'Calla', sobrenome:'Sumac', f:true, idade:24, nasceu:[5, 1],
+  id:'calla', ajuste:6, nome:'Calla', sobrenome:'Sumac', f:true, idade:24, nasceu:[5, 1],
   regiao:'Hoenn', de:'Lavaridge', classe:'Dona de Termas', tipo:'Fogo',
   tracos:['orgulhosa', 'impulsiva', 'prática'], meta:'casa', forte:'carisma',
   gosta:{lugar:'vulcao', tipo:'Fogo', especie:'Torkoal'},
@@ -298,7 +298,7 @@ const ELENCO_SEVII = [
   perde:'"Interessante. Eu errei a conta em algum lugar. Vou achar onde."'
 },
 {
-  id:'brody', nome:'Brody', sobrenome:'Teak', f:false, idade:38, nasceu:[27, 7],
+  id:'brody', ajuste:-10, nome:'Brody', sobrenome:'Teak', f:false, idade:38, nasceu:[27, 7],
   regiao:'Hoenn', de:'Slateport', classe:'Estivador', tipo:'Água',
   tracos:['protetor', 'impulsivo', 'leal'], meta:'heroi', forte:'forca',
   gosta:{lugar:'agua', tipo:'Água', especie:'Wailord'},
@@ -324,7 +324,7 @@ const ELENCO_SEVII = [
   perde:'"Tudo bem, tudo bem. Foi justo. Aperta aqui."'
 },
 {
-  id:'esme', nome:'Esme', sobrenome:'Wisteria', f:true, idade:20, nasceu:[3, 3],
+  id:'esme', ajuste:-6, nome:'Esme', sobrenome:'Wisteria', f:true, idade:20, nasceu:[3, 3],
   regiao:'Hoenn', de:'Lilycove', classe:'Coordenadora', tipo:null,
   tracos:['competitiva', 'orgulhosa', 'gentil'], meta:'campeao', forte:'carisma',
   gosta:{lugar:'cidade', tipo:'Água', especie:'Milotic'},
@@ -350,7 +350,7 @@ const ELENCO_SEVII = [
   perde:'"Bom. Foi uma batalha de verdade. Era o que eu queria."'
 },
 {
-  id:'oona', nome:'Oona', sobrenome:'Yew', f:true, idade:16, nasceu:[31, 10],
+  id:'oona', ajuste:2, nome:'Oona', sobrenome:'Yew', f:true, idade:16, nasceu:[31, 10],
   regiao:'Hoenn', de:'Monte Pyre', classe:'Zeladora do Monte Pyre', tipo:'Fantasma',
   tracos:['calma', 'solitária', 'observadora'], meta:'vinculo', forte:'percepcao',
   gosta:{lugar:'cemiterio', tipo:'Fantasma', especie:'Dusclops'},
@@ -379,7 +379,7 @@ const ELENCO_SEVII = [
   perde:'"Eu vou contar pra eles que foi bonito."'
 },
 {
-  id:'rhys', nome:'Rhys', sobrenome:'Ironwood', f:false, idade:26, nasceu:[19, 2],
+  id:'rhys', ajuste:-6, nome:'Rhys', sobrenome:'Ironwood', f:false, idade:26, nasceu:[19, 2],
   regiao:'Hoenn', de:'Sootopolis', classe:'Ás de Hoenn', tipo:null,
   tracos:['competitivo', 'orgulhoso', 'calmo'], meta:'campeao', forte:'resistencia',
   gosta:{lugar:'montanha', tipo:'Metálico', especie:'Aggron'},
@@ -408,7 +408,7 @@ const ELENCO_SEVII = [
 
 /* ─────────────────────────── AS ILHAS ─────────────────────────── */
 {
-  id:'noa', nome:'Noa', sobrenome:'Kelp', f:true, idade:16, nasceu:[9, 9],
+  id:'noa', ajuste:4, nome:'Noa', sobrenome:'Kelp', f:true, idade:16, nasceu:[9, 9],
   regiao:'Ilhas Sevii', de:'Ilha Um', classe:'Moça do Cais', tipo:null, rival:true,
   tracos:['desconfiada', 'ousada', 'leal'], meta:'casa', forte:'sorte',
   gosta:{lugar:'agua', tipo:'Sombrio', especie:'Sharpedo'},
@@ -437,7 +437,7 @@ const ELENCO_SEVII = [
   perde:'"De novo. Tudo bem. Eu volto. Eu sempre volto."'
 },
 {
-  id:'magnus', nome:'Magnus', sobrenome:'Holm', f:false, idade:74, nasceu:[17, 4],
+  id:'magnus', ajuste:-8, nome:'Magnus', sobrenome:'Holm', f:false, idade:74, nasceu:[17, 4],
   regiao:'Ilhas Sevii', de:'Ilha Sete', classe:'Bicampeão das Ilhas', tipo:null, completa:true,
   tracos:['calmo', 'orgulhoso', 'paciente'], meta:'casa', forte:'resistencia',
   gosta:{lugar:'montanha', tipo:'Normal', especie:'Kangaskhan'},

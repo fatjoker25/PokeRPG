@@ -1,6 +1,6 @@
 /* ============================================================
    A POKÉDEX NACIONAL — o Professor atualiza quem anda
-   O registro nacional (os 251, Johto no mato, as evoluções da 2ª
+   O registro nacional (os 251, Johto no mato das Ilhas Sevii, as evoluções da 2ª
    geração, os bebês da creche e o que a loja guarda pra quem tem a
    Nacional) só vinha com o título de Campeão (coroarCampeao, em
    liga.js). Quem não passava da Elite ficava sem Johto pra sempre, e a
@@ -63,11 +63,11 @@ const DexNacional = {
       fala(Q, `${cap1(porExtensoF(n))}.`, null, 'Ele confere a lista com o dedo, linha por linha.'),
       fala(Q, 'Essa lista parava no cento e cinquenta porque Kanto parava ali. Kanto não para mais ali.'),
       'A Pokédex trava por quatro segundos e reinicia sozinha. Quando volta, a lista não termina mais em Kanto.',
-      fala(Q, 'Tem gente vendo Pokémon de Johto descendo pelas serras do norte faz um tempo. Agora você tem onde anotar.'),
+      fala(Q, 'Os barcos de Johto deixam Pokémon de lá nas ilhas do sul faz um tempo. Agora você tem onde anotar.'),
       fala(Q, 'Cem registros novos, todos vazios. Vazio é a parte boa.', 'riso')
     ], avisos:[
       {tipo:'pokedex', texto:'Pokédex Nacional: a lista vai até o 251.'},
-      {tipo:'mundo', texto:'Pokémon de Johto passam a aparecer no mato de Kanto.'}
+      {tipo:'mundo', texto:'Os Pokémon de Johto que andam soltos ficam nas Ilhas Sevii, ao sul de Kanto, no meio dos daqui.'}
     ], botoes:[{texto:'Seguir', acao:'Exploracao.tela()'}]});
   }
 };

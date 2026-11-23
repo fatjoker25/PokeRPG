@@ -82,7 +82,8 @@ function habitatPorAmbiente(){
   const out = {};
   if (typeof LOCAIS === 'undefined') return out;
   for (const id in ENCONTROS){
-    const L = LOCAIS[id]; if (!L) continue;
+    /* as Ilhas Sevii não entram: luta de cena em Kanto não acha Johto */
+    const L = LOCAIS[id]; if (!L || L.regiao === 'sevii') continue;
     const t = out[L.ambiente] = out[L.ambiente] || {};
     for (const [dex, peso] of ENCONTROS[id]) t[dex] = (t[dex] || 0) + peso;
   }
@@ -90,22 +91,16 @@ function habitatPorAmbiente(){
   return (_habitatPorAmbiente = out);
 }
 
-/* Johto, depois que a região abre: entra pelos tipos do ambiente, num
-   quarto dos encontros, e só a espécie de mato (sem bebê, sem Unown) */
-function sorteioJohto(ambiente, cabe){
-  if (typeof johtoLiberado !== 'function' || !johtoLiberado() || !Dados.chance(25)) return null;
-  const tipos = VIES_AMBIENTE[ambiente] || [];
-  const lista = POOL_JOHTO_SELVAGEM.filter(d => cabe(d) && DEX[d].tipos.some(t => tipos.includes(t)));
-  return lista.length ? Dados.escolher(lista) : null;
-}
+/* Johto não anda no mato de Kanto: foi pedido assim. Os de Johto que
+   andam soltos moram nas tabelas das Ilhas Sevii (sevii-mundo.js),
+   misturados com os de Kanto, e chk-obtencao confere que cada um tem
+   caminho (mato das ilhas, evolução, creche). */
 
 /* Quem aparece aqui, neste nível. Só entra quem pode existir no nível
    (um Doduo, não um Dodrio, numa rota de nível 6) — e, se a tabela
    inteira for de forma evoluída acima do nível, vale a forma de antes. */
 function sortearEspecie(localId, ambiente, nivel){
   const cabe = d => nivelMinimoDe(d) <= nivel;
-  const j = sorteioJohto(ambiente, cabe);
-  if (j) return j;
   const tabela = ENCONTROS[localId] || habitatPorAmbiente()[ambiente] || ENCONTROS.rota1;
   let opcoes = tabela.filter(([d]) => DEX[d] && !FOSSEIS.includes(d) && cabe(d));
   if (!opcoes.length) opcoes = tabela.map(([d, p]) => [formaAteONivel(d, nivel), p]);

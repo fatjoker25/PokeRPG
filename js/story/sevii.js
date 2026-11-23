@@ -171,10 +171,11 @@ const Sevii = {
     const ref = tres.length ? Math.round(tres.reduce((s, n) => s + n, 0) / tres.length) : 60;
     return Math.max(58, ref + (extra || 0));
   },
-  timeDaLuta(chave, nivel){
+  /* `tam` é o tamanho do time de quem é do elenco (os do fim da ficha) */
+  timeDaLuta(chave, nivel, tam){
     if (chave === 'blue') return this.timeDoBlue(nivel);
     const f = typeof fichaSevii === 'function' ? fichaSevii(chave) : null;
-    if (f) return timeDaFicha(f, nivel, 6, this.semDoDono(f.id));
+    if (f) return timeDaFicha(f, nivel, tam || 6, this.semDoDono(f.id));
     const l = LUTAS_DE_SEVII[chave];
     if (!l) return [criarPokemon(19, nivel)];
     return timeDeLinhas(l.times, nivel + (l.ajuste || 0), l.times.length, l.golpes || [], 80);
@@ -348,8 +349,9 @@ const Sevii = {
       : n === 2 ? 'Contou pra você por que veio pro Torneio das Ilhas.' : 'Contou pra você o que pretende fazer depois das ilhas.'}});
     if (n === 1) Estado.registrar(`${f.nome} ${f.sobrenome}, de ${f.de}, contou da jornada na varanda da pousada da Ilha Sete.`);
     Estado.salvar('auto');
+    /* a fala que vem entre aspas no meio da conta é de quem conta */
     UI.telaConversa({num:'A pousada da arena', titulo:`${f.nome} ${f.sobrenome}`, loc:`${f.classe} · ${f.de}`,
-      falas, avisos:av,
+      falas, quem:f.nome, avisos:av,
       botoes:[{texto:'Voltar pra varanda.', acao:'Sevii.pousada()'}]});
   }
 };

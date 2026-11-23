@@ -139,6 +139,31 @@ const Exploracao = {
     rota11:[16.8,10.6], rota12:[19.6,10.6], rota13:[17.4,13.3], fuchsia:[12,13.3],
     rota16:[7,10.6], rota19:[12,16.1], seafoam:[8.4,16.1], ilha_sem_nome:[1.3,15]
   },
+  /* As Ilhas Sevii são a outra página do mapa (sevii-mundo.js), na
+     mesma grade: as três do norte (Um, Dois e Três) juntas, a Quatro e a
+     Cinco no meio do mar, a Seis e a Sete no sul, como no mapa das ilhas
+     de FireRed/LeafGreen. Cada vila com as áreas dela do lado. */
+  MAPA_SEVII: {
+    monte_brasa:[2.2,1.4], estrada_brasa:[2.2,3.7], ilha_um:[2.2,6.2],
+    ilha_dois:[7.2,5.4], cabo:[9.6,3.6],
+    ilha_tres:[12.4,7.2], ponte:[15,7.2], floresta_frutas:[17.8,7.2],
+    gruta_gelada:[3.6,10.8], ilha_quatro:[6.4,10.8],
+    ilha_cinco:[10.6,12.4], campina:[13.2,12.4],
+    ilha_seis:[15.6,14.8], vale_ruinas:[18.2,14.8],
+    ilha_sete:[17.8,17.2], canion:[20.6,17.2]
+  },
+  /* o rótulo curto das áreas das ilhas (o nome inteiro está na ficha) */
+  ROTULO_SEVII: {monte_brasa:'Mt. Brasa', estrada_brasa:'Estrada', cabo:'Cabo', ponte:'Ponte', floresta_frutas:'Floresta',
+    gruta_gelada:'Gruta', campina:'Campina', vale_ruinas:'Ruínas', canion:'Cânion'},
+  ROTULO_MAPA_SEVII: {
+    monte_brasa:[6, 2, 'start'], estrada_brasa:[6, 2, 'start'], ilha_um:[0, 13, 'middle'], ilha_dois:[0, -7.5, 'middle'],
+    cabo:[6, 2, 'start'], ilha_tres:[0, 13, 'middle'], ponte:[0, -6, 'middle'], floresta_frutas:[0, 13, 'middle'],
+    gruta_gelada:[0, 13, 'middle'], ilha_quatro:[0, -7.5, 'middle'], ilha_cinco:[0, -7.5, 'middle'], campina:[0, 12, 'middle'],
+    ilha_seis:[-8, 2.4, 'end'], vale_ruinas:[0, -6.5, 'middle'], ilha_sete:[-8, 2.4, 'end'], canion:[-1, -6.5, 'middle']
+  },
+  /* a região de um lugar no mapa: as ilhas ou Kanto */
+  regiaoNoMapa(id){ return (LOCAIS[id] && LOCAIS[id].regiao === 'sevii') ? 'sevii' : 'kanto'; },
+  gradeDe(id){ return this.regiaoNoMapa(id) === 'sevii' ? this.MAPA_SEVII[id] : this.MAPA_GRADE[id]; },
   /* uma quadra = 12 unidades do desenho */
   _q(g){ return [g[0] * 12 + 10, g[1] * 12 + 10]; },
   /* Pra que lado fica o vizinho, no mesmo mapa que a parede do Centro
@@ -146,7 +171,10 @@ const Exploracao = {
      em 45 graus; 0 é leste e o y do mapa cresce pro sul. */
   RUMOS: ['leste', 'sudeste', 'sul', 'sudoeste', 'oeste', 'noroeste', 'norte', 'nordeste'],
   rumo(de, para){
-    const a = this.MAPA_GRADE[de], b = this.MAPA_GRADE[para];
+    /* de Kanto pras ilhas é o sul, das ilhas pra Kanto é o norte */
+    const ra = this.regiaoNoMapa(de), rb = this.regiaoNoMapa(para);
+    if (ra !== rb) return rb === 'sevii' ? {graus:90, nome:'sul'} : {graus:270, nome:'norte'};
+    const a = this.gradeDe(de), b = this.gradeDe(para);
     if (!a || !b || (a[0] === b[0] && a[1] === b[1])) return null;
     const i = ((Math.round(Math.atan2(b[1] - a[1], b[0] - a[0]) / (Math.PI / 4)) % 8) + 8) % 8;
     return {graus:i * 45, nome:this.RUMOS[i]};
@@ -155,6 +183,11 @@ const Exploracao = {
     if (!this._pos){ this._pos = {}; for (const [id, g] of Object.entries(this.MAPA_GRADE)) this._pos[id] = this._q(g); }
     return this._pos;
   },
+  get POS_SEVII(){
+    if (!this._posS){ this._posS = {}; for (const [id, g] of Object.entries(this.MAPA_SEVII)) this._posS[id] = this._q(g); }
+    return this._posS;
+  },
+  posDe(reg){ return reg === 'sevii' ? this.POS_SEVII : this.POS_MAPA; },
   /* a estrada dobra: por padrão anda na horizontal e depois na
      vertical, saindo do primeiro da dupla; estas descem primeiro */
   DESCE_PRIMEIRO: new Set(['rota12|rota13', 'norte|rota9']),
@@ -207,6 +240,47 @@ const Exploracao = {
       ${ilhaSem}
       <g class="mp-rosa" transform="translate(262 204)"><circle r="9"/><path d="M0 -8 L2.6 0 L0 8 L-2.6 0 Z"/><text y="-11">N</text></g>`;
   },
+  /* o chão das ilhas: mar aberto, sete ilhas, o vulcão da Um, o gelo da
+     Quatro, a mata da Três, as pedras velhas da Seis e a arena da Sete */
+  terrenoSevii(){
+    const q = (x, y) => this._q([x, y]);
+    const ilha = (x, y, rx, ry, cls) => { const [px, py] = q(x, y); return `<ellipse class="mp-ilha${cls ? ' ' + cls : ''}" cx="${px}" cy="${py}" rx="${rx}" ry="${ry}"/>`; };
+    const [vx, vy] = q(2.2, 1.4), [ax, ay] = q(17.8, 17.2);
+    const arvores = [[16.6, 6.5], [17.8, 6.3], [19, 6.7], [17.2, 8], [18.6, 8]].map(([x, y]) => { const [px, py] = q(x, y); return `<circle class="mp-arvore" cx="${px}" cy="${py}" r="2.6"/>`; }).join('');
+    const pedras = [[17.6, 14.3], [18.8, 14.5], [18.2, 15.4]].map(([x, y]) => { const [px, py] = q(x, y); return `<rect class="mp-ruina" x="${px - 2}" y="${py - 2}" width="4" height="4"/>`; }).join('');
+    return `<defs>
+        <pattern id="mp-ondas-s" width="16" height="10" patternUnits="userSpaceOnUse">
+          <path d="M1 6 q3 -3 6 0 t6 0" fill="none" stroke="rgba(255,255,255,.13)" stroke-width=".8"/>
+        </pattern>
+        <linearGradient id="mp-mar-s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3f8fc6"/><stop offset="1" stop-color="#235c98"/></linearGradient>
+      </defs>
+      <rect width="284" height="226" fill="url(#mp-mar-s)"/><rect width="284" height="226" fill="url(#mp-ondas-s)"/>
+      ${ilha(2.2, 3.8, 15, 38)}
+      <path class="mp-pico vulcao" d="M${vx - 7} ${vy + 4} L${vx - 2} ${vy - 7} L${vx + 2} ${vy - 7} L${vx + 7} ${vy + 4} Z"/>
+      ${ilha(8.2, 4.6, 26, 14)}
+      ${ilha(15, 7.2, 46, 11)}
+      ${arvores}
+      ${ilha(5, 10.8, 24, 10, 'gelo')}
+      ${ilha(11.9, 12.4, 26, 10)}
+      ${ilha(16.9, 14.8, 25, 10)}${pedras}
+      ${ilha(19.2, 17.2, 25, 9)}
+      <circle class="mp-arena" cx="${ax}" cy="${ay}" r="7"/>
+      <g class="mp-rosa" transform="translate(262 22)"><circle r="9"/><path d="M0 -8 L2.6 0 L0 8 L-2.6 0 Z"/><text y="-11">N</text></g>`;
+  },
+  /* a balsa pra Vermilion sai do cais da Ilha Um pro norte, pra fora do mapa */
+  saidaPraKanto(){
+    if (!Mundo.conhecido('vermilion')) return '';
+    const [x, y] = this._q(this.MAPA_SEVII.ilha_um);
+    return `<path d="M${x} ${y} L${x + 40} ${y - 30} L${x + 40} 4" class="mp-mar-via"/>
+      <text class="mp-rota" x="${x + 44}" y="12" text-anchor="start">Vermilion ↑</text>`;
+  },
+  /* e em Kanto, a mesma balsa sai de Vermilion pro sul */
+  saidaPrasIlhas(){
+    if (!Mundo.conhecido('ilha_um')) return '';
+    const [x, y] = this.POS_MAPA.vermilion;
+    return `<path d="M${x} ${y} L${x + 6} ${y + 14} L${x + 6} 222" class="mp-mar-via"/>
+      <text class="mp-rota" x="${x + 9}" y="214" text-anchor="start">Ilhas Sevii ↓</text>`;
+  },
   /* Todo Centro Pokémon tem um mapa da região na parede do saguão: quem
      não comprou o dele olha o de lá. */
   temCentro(L){ return !!(L && (L.lugares || []).includes('centro')); },
@@ -217,27 +291,33 @@ const Exploracao = {
      da Rota 21) só aparece depois que você descobre, ou quando a
      história te manda pra lá (Mundo.conhecido). Tocar num lugar
      abre a ficha dele embaixo; ir e voar são botões da ficha. */
-  mapaVisivel(id){
+  mapaVisivel(id, reg){
     const L = LOCAIS[id];
-    return !!(L && this.POS_MAPA[id] && Mundo.conhecido(id));
+    reg = reg || this._regiao || 'kanto';
+    return !!(L && this.regiaoNoMapa(id) === reg && this.posDe(reg)[id] && Mundo.conhecido(id));
   },
 
   /* o nome inteiro está na ficha; no desenho vai o que cabe */
-  rotuloMapa(L){
+  rotuloMapa(L, id){
+    if (id && this.ROTULO_SEVII[id]) return this.ROTULO_SEVII[id];
+    if (L.regiao === 'sevii') return L.nome;
     if (L.tipo !== 'rota') return L.nome.replace(/^Ilhas? /, '').replace(/^Planalto Indigo$/, 'Planalto')
       .replace(/^Usina Abandonada$/, 'Usina').replace(/^A ilha sem nome$/, 'Ilha').replace(/^Norte da Rota 10$/, 'Norte');
     const n = /^Rota (\d+)/.exec(L.nome);
     return n ? n[1] : L.nome.replace(/^Monte da /, 'Mt. ').replace(/^Túnel da Rocha$/, 'Túnel')
       .replace(/^Caminho da Vitória$/, 'C. Vitória').replace(/^Floresta de Viridian$/, 'Floresta');
   },
-  mapa(origem){
+  mapa(origem, regiao){
     const aqui = Estado.dados.local;
+    /* a página: a da região onde você está, ou a que a aba escolheu */
+    const reg = regiao || this.regiaoNoMapa(aqui);
+    this._regiao = reg; this._origem = origem;
     /* Voar, sem HM: um Voador de porte grande que voe de verdade te leva
        a qualquer cidade onde você já pisou. Sem ele, o mapa diz o que falta. */
     const voo = (typeof Campo !== 'undefined' && Campo.voar) ? Campo.voar() : {pode:false};
     this._voo = voo;
-    const pos = this.POS_MAPA;
-    const mostra = id => this.mapaVisivel(id);
+    const pos = this.posDe(reg);
+    const mostra = id => this.mapaVisivel(id, reg);
 
     const linhas = [], feitas = new Set();
     for (const id of Object.keys(LOCAIS)){
@@ -249,7 +329,9 @@ const Exploracao = {
         const [a, b] = k.split('|');
         const [x1, y1] = pos[a], [x2, y2] = pos[b];
         const andada = Mundo.visitado(id) && Mundo.visitado(v);
-        const mar = this.NO_MAR.has(a) || this.NO_MAR.has(b);
+        /* nas ilhas, de vila pra vila é balsa: mar */
+        const mar = reg === 'sevii' ? (LOCAIS[a].tipo === 'cidade' && LOCAIS[b].tipo === 'cidade')
+                                    : (this.NO_MAR.has(a) || this.NO_MAR.has(b));
         /* a ilha sem nome fica longe: a linha contorna pelo mar */
         const dd = (a === 'fuchsia' && b === 'ilha_sem_nome')
           ? `M${x1} ${y1} C${x1 + 2} ${y1 + 56} ${x2 + 14} ${y2 + 30} ${x2} ${y2}`
@@ -264,13 +346,13 @@ const Exploracao = {
       const L = LOCAIS[id], [x, y] = pos[id];
       const pisou = Mundo.visitado(id) || id === aqui;
       const ir = viz.has(id);
-      const voa = !ir && voo.pode && pisou && L.tipo === 'cidade' && id !== aqui;
+      const voa = !ir && voo.pode && pisou && L.tipo === 'cidade' && id !== aqui && this.regiaoNoMapa(aqui) === reg;
       const cls = `mp-no ${L.tipo}${pisou ? '' : ' nao-pisado'}${id === aqui ? ' aqui' : ''}${ir ? ' vizinho' : ''}${voa ? ' voo' : ''}`;
       const forma = L.tipo === 'cidade' ? `<rect x="${x - 5.5}" y="${y - 4.5}" width="11" height="9" rx="1.5"/>`
                   : L.tipo === 'especial' ? `<rect x="${x - 4}" y="${y - 4}" width="8" height="8" transform="rotate(45 ${x} ${y})"/>`
                   : `<circle cx="${x}" cy="${y}" r="3"/>`;
-      const rot = this.rotuloMapa(L);
-      const [dx, dy, ancora] = this.ROTULO_MAPA[id] || (L.tipo === 'rota' ? [5, 2, 'start'] : [0, -7.5, 'middle']);
+      const rot = this.rotuloMapa(L, id);
+      const [dx, dy, ancora] = (reg === 'sevii' ? this.ROTULO_MAPA_SEVII[id] : this.ROTULO_MAPA[id]) || (L.tipo === 'rota' ? [5, 2, 'start'] : [0, -7.5, 'middle']);
       const rotulo = `<text class="${L.tipo === 'rota' ? 'mp-rota' : 'mp-nome'}" x="${x + dx}" y="${y + dy}" text-anchor="${ancora}">${UI.esc(rot)}</text>`;
       const anel = id === aqui ? `<circle class="mp-anel" cx="${x}" cy="${y}" r="9"/>` : '';
       return `<g class="${cls}" data-id="${id}" onclick="Exploracao.mapaInfo('${id}', true)"
@@ -282,11 +364,17 @@ const Exploracao = {
        é do Centro, e volta pro balcão quando foi aberto lá */
     const barra = origem === 'mochila' ? UI.abasMochila('mapa')
       : UI.barraDoCentro('Mapa da parede', 'mapa', origem === 'centro' && this.temCentro(L));
-    UI.modal('', barra + `<div class="mapa-kanto">
-      <div class="mapa-topo"><b>Kanto</b><span>${origem === 'mochila'
+    /* a aba das duas páginas, pra quem já tem a passagem das ilhas */
+    const comIlhas = Mundo.conhecido('ilha_um');
+    const nomeReg = reg === 'sevii' ? 'Ilhas Sevii' : 'Kanto';
+    const abas = comIlhas ? `<div class="mapa-abas" role="tablist" aria-label="Região do mapa">${['kanto', 'sevii'].map(r =>
+      `<button class="mapa-aba${r === reg ? ' ativa' : ''}" role="tab" aria-selected="${r === reg}" ${r === reg ? 'disabled' : `onclick="Exploracao.mapa(Exploracao._origem, '${r}')"`}>${r === 'sevii' ? 'Ilhas Sevii' : 'Kanto'}</button>`).join('')}</div>` : '';
+    UI.modal('', barra + `<div class="mapa-kanto${reg === 'sevii' ? ' sevii' : ''}">
+      <div class="mapa-topo"><b>${nomeReg}</b><span>${origem === 'mochila'
         ? `você está ${UI.esc(emLocal(aqui))}` : `Centro Pokémon de ${UI.esc(L.nome)}`}</span></div>
-      <svg viewBox="0 0 284 226" role="img" aria-label="Mapa de Kanto">
-        ${this.terrenoKanto()}
+      ${abas}
+      <svg viewBox="0 0 284 226" role="img" aria-label="Mapa de ${nomeReg}">
+        ${reg === 'sevii' ? this.terrenoSevii() + this.saidaPraKanto() : this.terrenoKanto() + this.saidaPrasIlhas()}
         ${linhas.join('')}${pontos.join('')}
       </svg>
       <div class="mapa-legenda">
@@ -295,7 +383,7 @@ const Exploracao = {
       </div>
       <div id="mapa-info" class="mapa-info" aria-live="polite"></div>
     </div>`, false, 'mapa');
-    this.mapaInfo(aqui);
+    this.mapaInfo(this.regiaoNoMapa(aqui) === reg ? aqui : (reg === 'sevii' ? 'ilha_um' : 'vermilion'));
   },
 
   /* a ficha do lugar tocado no mapa: o que é, o que liga, se você já
@@ -312,9 +400,10 @@ const Exploracao = {
     const pisou = Mundo.visitado(id) || id === aqui;
     const voo = this._voo || {pode:false};
     const ir = Mundo.vizinhos().includes(id);
-    const voa = !ir && voo.pode && pisou && L.tipo === 'cidade' && id !== aqui;
+    const outraRegiao = this.regiaoNoMapa(aqui) !== this.regiaoNoMapa(id);
+    const voa = !ir && voo.pode && pisou && L.tipo === 'cidade' && id !== aqui && !outraRegiao;
     const tipo = L.tipo === 'cidade' ? (L.porte || 'cidade') : L.tipo === 'rota' ? 'rota' : 'lugar à parte';
-    const liga = (L.conexoes || []).filter(v => this.mapaVisivel(v)).map(v => LOCAIS[v].nome);
+    const liga = (L.conexoes || []).filter(v => Mundo.conhecido(v) && (this.POS_MAPA[v] || this.POS_SEVII[v])).map(v => LOCAIS[v].nome);
     /* o que o mapa de parede diria: o Centro tem placa. Loja e ginásio
        não têm — só aparecem aqui depois que você acha andando. */
     const tem = [];
@@ -334,7 +423,9 @@ const Exploracao = {
             trava ? `<span class="esc-trava">${UI.esc(textoTrava(trava))}</span>` : ''}</span></button>`
       : voa ? `<button class="escolha menu caminho voo com-icone" onclick="UI.fecharModal(true);Exploracao.voarPara('${id}')">
           ${svgIcone('voar')}<span class="esc-rot"><small>Voar${voo.quem ? ' com ' + UI.esc(nomeExib(voo.quem)) : ''}</small><b>${UI.esc(L.nome)}</b></span></button>`
-      : `<div class="mi-longe">${svgIcone('info')}<span>${L.tipo === 'cidade' && pisou
+      : `<div class="mi-longe">${svgIcone('info')}<span>${outraRegiao
+          ? 'Do outro lado do mar. Lá se chega de balsa, pelo cais de Vermilion e da Ilha Um: voando é mar demais.'
+          : L.tipo === 'cidade' && pisou
           ? `Longe daqui. Voar até lá pede ${UI.esc(voo.falta || 'um Pokémon voador de grande porte')}.`
           : 'Longe daqui: dá pra chegar andando pelas rotas do caminho.'}</span></div>`;
     const linha = (k, v) => `<div class="linha"><span class="k">${k}</span><span class="v">${v}</span></div>`;
@@ -363,7 +454,7 @@ const Exploracao = {
   voarPara(id){
     const v = (typeof Campo !== 'undefined') ? Campo.voar() : {pode:false};
     const L = LOCAIS[id];
-    if (!v.pode || !L || !Mundo.visitado(id)) return this.tela();
+    if (!v.pode || !L || !Mundo.visitado(id) || this.regiaoNoMapa(id) !== this.regiaoNoMapa(Mundo.id())) return this.tela();
     Mundo.viajar(id);
     Estado.registrar(`Voou até ${L.nome} ${v.como || ''}.`.replace(/\s+\./, '.'));
     Estado.salvar('auto');

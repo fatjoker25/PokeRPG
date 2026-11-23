@@ -733,6 +733,16 @@ def pena(mat='amarelo'):
     return t
 
 
+def bracadeira():
+    t = Tela()
+    t.elipse(15, 16, 12.5, 9, 'verde')                                            # a faixa de pano, vista de lado
+    t.furo(15, 13.5, 8.5, 4.6)                                                     # o lugar do braço
+    t.linha(6, 19, 24, 19, M['verde'][3])                                         # a costura
+    for x in range(8, 23, 2):
+        t.ponto(x, 21, M['amarelo'][1])                                           # o GUARDA bordado, em letra miúda
+    return t
+
+
 def lanche():
     t = Tela()
     t.elipse(11, 19, 9, 5.5, 'madeira')                                           # o pão
@@ -1132,7 +1142,7 @@ DESENHOS = {
     'anilha': anilha, 'apito': apito, 'binoculo': binoculo, 'placa': placa,
     'placa_bronze': lambda: placa('dourado'), 'fita': fita, 'rolo': rolo, 'garrafa': garrafa, 'pote': pote,
     'lata': lata, 'luva': luva, 'medidor': medidor, 'muda': muda, 'rede': rede, 'pena': pena,
-    'lanche': lanche, 'pipoca': pipoca, 'radio': radio, 'sacola': sacola, 'taca': taca, 'etiqueta': etiqueta,
+    'bracadeira': bracadeira, 'lanche': lanche, 'pipoca': pipoca, 'radio': radio, 'sacola': sacola, 'taca': taca, 'etiqueta': etiqueta,
 }
 CORES_DE_MOCHILA = {'bege': 'lona', 'preta': 'preto', 'vermelha': 'vermelho', 'azul': 'azul', 'verde': 'verde',
                     'amarela': 'amarelo', 'marrom': 'marrom', 'laranja': 'laranja', 'roxa': 'roxo',

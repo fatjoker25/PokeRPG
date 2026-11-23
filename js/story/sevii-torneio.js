@@ -18,8 +18,13 @@
      devolve pra cena quando a tarde acaba, ganhando ou perdendo. Depois
      do arco, a arena abre todo domingo (DIA_DA_COPA), com inscrição.
    ============================================================ */
-const PISO_COPA = [62, 64, 66, 68];          // o nível mínimo do ás, por rodada
-const SUBIDA_COPA = [-2, -1, 0, 1];          // em cima dos seus três mais fortes
+/* Medido no sim-sevii (o jogador ingênuo, com o inicial e o mato das
+   ilhas, nos níveis 60, 66 e 72): aqui o nível pesa pouco, e o que pesa
+   é o time montado, então quem mexe na curva é o tamanho do time */
+const PISO_COPA = [56, 58, 60, 62];          // o nível mínimo do ás, por rodada
+const SUBIDA_COPA = [-6, -5, -4, -3];        // em cima dos seus três mais fortes
+const TAM_COPA = [3, 4, 4, 5];               // o time de cada um, por rodada: os do fim da ficha
+const ERRO_IA_COPA = [14, 12, 10, 8];        // a escolha errada de golpe, por rodada
 const DIA_DA_COPA = 6;                       // domingo (0 = segunda, como o Calendario)
 const INSCRICAO_COPA = 3000;
 const PREMIO_COPA = [
@@ -47,7 +52,7 @@ function nivelDaCopa(rodada, f){
 function adversarioDaCopa(ins, rodada){
   const f = fichaSevii(ins.id);
   if (!f) return null;
-  const time = timeDaFicha(f, nivelDaCopa(rodada, f), 6, Sevii.semDoDono(f.id));
+  const time = timeDaFicha(f, nivelDaCopa(rodada, f), TAM_COPA[rodada], Sevii.semDoDono(f.id));
   return Object.assign(inscritoDaCopa(f), {time});
 }
 if (typeof CHAVES !== 'undefined') CHAVES.sevii = {
@@ -120,7 +125,7 @@ const CopaSevii = {
     if (!Estado.primeiroApto()) return this.resultado({resultado:'derrota'});
     const adv = c.adv || (c.adv = adversarioDaVez(c));
     const f = fichaSevii(adv.id);
-    Veteranos.iniciarLuta(adv.nome, adv.time, {id:adv.id, tipo:'copa', arena:'ginasio'});
+    Veteranos.iniciarLuta(adv.nome, adv.time, {id:adv.id, tipo:'copa', arena:'ginasio', erroIA:ERRO_IA_COPA[c.rodada]});
     const ja = (Estado.dados.npcs[f.nome] || {}).memorias;
     UI.telaBatalha([`${PREMIO_COPA[c.rodada].rodada} — ${adv.nome}`,
       `${f.nome}: ${txt(f.torneio)}`,

@@ -421,7 +421,7 @@ const Jogo = {
       /* gente das ilhas (sevii.js): a ficha do elenco ou a gangue, no
          nível do seu time; `mais` sobe ou desce o nível */
       const quem = txt(b.sevii);
-      const time = Sevii.timeDaLuta(quem, Sevii.nivel(Estado.dados, txt(b.mais) || 0));
+      const time = Sevii.timeDaLuta(quem, Sevii.nivel(Estado.dados, txt(b.mais) || 0), txt(b.tam) || null);
       time.forEach(x => { x.nomeAnunciado = true; });
       inimigo = time[0];
       timeInimigo = time.slice(1);

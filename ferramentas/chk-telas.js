@@ -2279,6 +2279,181 @@ const SUSPEITO = [
     });
   }
 
+  /* ---------- as Ilhas Sevii (sevii.js, sevii-torneio.js) ----------
+     O pós-jogo: depois do fim, com o título de Campeão. Cada fase (os
+     capítulos das ilhas fechados) abre uma balsa; entre um capítulo e
+     outro a ilha do meio tem uma pista; depois do arco, a arena aos
+     domingos, a pousada e a Noa no cais. O mapa tem a outra página. */
+  /* o estado das ilhas, montado dentro da página (os testes rodam lá) */
+  await page.evaluate(() => {
+    window.nasIlhas = (fase, local) => {
+      const d = Estado.dados;
+      d.depoisDoFim = d.depoisDoFim || {final:'teste'};
+      d.flags.campeao_de_kanto = true; d.flags.dex_nacional = true; d.flags.johto_liberado = true;
+      d.flags.sv_passagem = true; d.flags.sv_chegou = fase >= 2;
+      d.capitulosFechados = (d.capitulosFechados || []).filter(n => !SEVII_CAPS.includes(n)).concat(SEVII_CAPS.slice(0, fase));
+      d.capitulo = fase ? SEVII_CAPS[fase - 1] : 28; d.modo = 'mundo';
+      d.local = local; Mundo.marcarVisitado(local);
+    };
+  });
+  /* o chamado de cada capítulo no lugar dele, e a balsa de cada fase */
+  for (let fase = 0; fase <= 6; fase++){
+    await restaurar();
+    await tentar(`ilhas/fase ${fase}/chamado`, f => {
+      nasIlhas(f, f >= 2 ? 'ilha_um' : 'pallet');
+      const prox = Sevii.proximo(Estado.dados);
+      if (f < 6 && prox !== SEVII_CAPS[f]) throw new Error(`na fase ${f} o próximo capítulo é ${prox}, e devia ser ${SEVII_CAPS[f]}`);
+      if (f === 6 && prox !== null) throw new Error('depois do torneio ainda tem capítulo das ilhas');
+      const dest = Historia.proximoDestino();
+      if (f < 6 && (!dest || !LOCAIS[dest.local])) throw new Error('o capítulo das ilhas não tem lugar no mapa');
+      Estado.dados.local = f < 6 ? dest.local : 'ilha_sete'; Exploracao.tela();
+      if (f < 6 && !document.querySelector('#app .escolha.chamado')) throw new Error(`o chamado do capítulo ${SEVII_CAPS[f]} não aparece em ${dest.local}`);
+    }, fase);
+    await tentar(`ilhas/fase ${fase}/balsa`, f => {
+      nasIlhas(f, 'ilha_dois');
+      const t3 = travaDaPassagem('ilha_dois', 'ilha_tres');
+      if (f < 3 && !t3) throw new Error(`na fase ${f} a balsa já leva pra Ilha Três`);
+      if (f >= 3 && t3) throw new Error(`na fase ${f} a balsa da Ilha Três continua fechada: ${textoTrava(t3)}`);
+      const v = travaDaPassagem('ilha_um', 'vermilion');
+      if (f >= 2 && v) throw new Error('depois da chegada a balsa não volta pra Vermilion');
+      Exploracao.tela();
+    }, fase);
+  }
+  /* o mapa: a aba das duas páginas, as ilhas desenhadas, e o voo que não atravessa o mar */
+  for (const [rot, local, reg] of [['de Kanto', 'vermilion', 'kanto'], ['das ilhas', 'ilha_tres', 'sevii'], ['de Kanto, a página das ilhas', 'vermilion', 'sevii']]){
+    await restaurar();
+    await tentar(`ilhas/mapa ${rot}`, ([l, r]) => {
+      nasIlhas(6, l);
+      Object.keys(LOCAIS).filter(ehSevii).forEach(id => Mundo.marcarVisitado(id));
+      Exploracao.mapa('mochila', r);
+      const m = document.querySelector('.modal .mapa-kanto');
+      if (!m) throw new Error('o mapa não abriu');
+      if (document.querySelectorAll('.modal .mapa-aba').length !== 2) throw new Error('o mapa não tem as duas abas, Kanto e Ilhas Sevii');
+      const pontos = [...m.querySelectorAll('.mp-no')].map(g => g.dataset.id);
+      const sevii = pontos.filter(ehSevii).length;
+      if (r === 'sevii' && sevii !== Object.keys(Exploracao.MAPA_SEVII).length) throw new Error(`a página das ilhas mostra ${sevii} lugares das ilhas`);
+      if (r === 'kanto' && sevii) throw new Error('a página de Kanto mostra lugar das ilhas');
+      if (r === 'kanto' && !/Ilhas Sevii/.test(m.querySelector('svg').innerHTML)) throw new Error('a página de Kanto não mostra a saída pras ilhas');
+      for (const id of pontos) Exploracao.mapaInfo(id);
+      Exploracao.mapaInfo(r === 'sevii' ? 'ilha_sete' : 'cerulean');
+    }, [local, reg]);
+  }
+  await restaurar();
+  await tentar('ilhas/voo não atravessa o mar', () => {
+    nasIlhas(6, 'vermilion');
+    Mundo.marcarVisitado('ilha_sete');
+    const antes = Mundo.id();
+    Exploracao.voarPara('ilha_sete');
+    if (Mundo.id() !== antes) throw new Error('voou de Kanto pra Ilha Sete');
+  });
+  /* as pistas do caminho */
+  for (const [rot, fase, local, fn] of [['pista da Ilha Quatro', 4, 'ilha_quatro', 'pista_quatro'], ['pista da Ilha Seis', 5, 'ilha_seis', 'pista_seis']])
+    for (const variante of [0, 1]){
+      await restaurar();
+      await tentar(`ilhas/${rot}/${variante}`, ([f, l, x, v]) => {
+        nasIlhas(f, l);
+        if (v) { Estado.dados.flags.sv_conheceu_gideon = true; Estado.dados.itens['Ração'] = 2; }
+        Exploracao.tela();
+        if (!afazeresDoLocal().some(a => a.id === 'sevii_' + x)) throw new Error(`a pista não aparece em ${l}`);
+        Exploracao.fazer('sevii_' + x);
+        if (x === 'pista_quatro') Sevii.fimPistaQuatro(!!v); else Sevii.fimPistaSeis(!!v);
+        if (afazeresDoLocal().some(a => a.id === 'sevii_' + x)) throw new Error('a pista continua aparecendo depois de feita');
+      }, [fase, local, fn, variante]);
+    }
+  /* a pousada: cada um do elenco, nas três conversas */
+  await restaurar();
+  await tentar('ilhas/pousada', () => {
+    nasIlhas(6, 'ilha_sete');
+    Exploracao.fazer('sevii_pousada');
+    for (let dia = 0; dia < 3; dia++){
+      for (const f of Sevii.presentes(Estado.dados)){ Sevii.sentar(f.id); Sevii.pousada(); }
+      Estado.dados.relogio.dia++;
+    }
+    const r = Sevii.reg(Estado.dados);
+    if (Sevii.presentes(Estado.dados).some(f => r.conversas[f.id] !== 3)) throw new Error('alguém do elenco não chegou na terceira conversa');
+  });
+  for (const id of await page.evaluate(() => ELENCO_SEVII.filter(f => f.id !== 'magnus').map(f => f.id)))
+    for (const n of [1, 2, 3]){
+      await restaurar();
+      await tentar(`ilhas/pousada/${id}/${n}`, ([x, k]) => {
+        nasIlhas(6, 'ilha_sete');
+        Estado.dados.flags.sv_noa_rival = true; Estado.dados.flags.sv_noa_ajudou = true;
+        const r = Sevii.reg(Estado.dados); r.conversas[x] = k - 1;
+        Sevii.sentar(x);
+      }, [id, n]);
+    }
+  /* a arena: fechada fora do domingo, a inscrição no domingo, cada rodada e quem caiu */
+  await restaurar();
+  await tentar('ilhas/arena fora do domingo', () => {
+    nasIlhas(6, 'ilha_sete');
+    while (Calendario.hoje().semanaIdx === DIA_DA_COPA) Estado.dados.relogio.dia++;
+    Estado.dados.relogio.hora = 10;
+    const f = CopaSevii.fechada();
+    if (!f || !/domingo/.test(f)) throw new Error('a arena abre fora do domingo: ' + f);
+    Exploracao.tela(); Exploracao.fazer('sevii_arena');
+  });
+  await restaurar();
+  await tentar('ilhas/arena no domingo', () => {
+    nasIlhas(6, 'ilha_sete');
+    while (Calendario.hoje().semanaIdx !== DIA_DA_COPA) Estado.dados.relogio.dia++;
+    Estado.dados.relogio.hora = 9; Estado.j.dinheiro = 50000;
+    if (CopaSevii.fechada()) throw new Error('a arena não abre no domingo de manhã: ' + CopaSevii.fechada());
+    Exploracao.fazer('sevii_arena'); CopaSevii.iniciar();
+    if (!Jogo.copaAtual) throw new Error('a inscrição não abriu a chave');
+    if (Jogo.copaAtual.inscritos.length !== VAGAS_TORNEIO) throw new Error('a chave das ilhas não tem dezesseis vagas');
+    CopaSevii.desistir();
+    if (Jogo.copaAtual || Estado.dados.copaAberta) throw new Error('desistiu e a chave ficou no save');
+  });
+  for (const rodada of [0, 1, 2, 3]) for (const venceu of [true, false]){
+    await restaurar();
+    await tentar(`ilhas/copa/${rodada}/${venceu ? 'venceu' : 'caiu'}`, ([r, v]) => {
+      nasIlhas(6, 'ilha_sete');
+      Estado.dados.flags.sv_rec_ovos = true;
+      const t = chaveAteARodada(novaChave('sevii'), r);
+      Jogo.copaAtual = t; CopaSevii.tela();
+      if (document.querySelectorAll('#app .chave16.ilhas').length !== 1) throw new Error('a chave das ilhas não aparece');
+      Jogo.veteranoAtual = {id:t.adv.id, tipo:'copa'};
+      CopaSevii.resultado({resultado: v ? 'vitoria' : 'derrota'});
+      if (!v && Jogo.copaAtual) throw new Error('a chave continua aberta depois da derrota');
+      if (v && r === 3 && !Estado.dados.flags.sv_campeao_das_ilhas) throw new Error('venceu a final e não virou campeão das ilhas');
+      if (v && r === 3 && !Estado.contaItem('Troféu das Ilhas')) throw new Error('o primeiro título não deu o troféu');
+      if (v && r === 3 && !Estado.dados.ovos.some(o => o.dex === 133)) throw new Error('o Florian não deu o ovo da linhagem');
+    }, [rodada, venceu]);
+  }
+  /* a chave da história: a cena entrega a vez, e a chave devolve pra cena */
+  for (const venceu of [true, false]){
+    await restaurar();
+    await tentar(`ilhas/copa da história/${venceu ? 'venceu' : 'caiu'}`, v => {
+      nasIlhas(5, 'ilha_sete');
+      Estado.dados.modo = 'cena';
+      Historia.iniciarCapitulo(38); Historia.ir('c38_a_arena', true); UI.telaCena(Historia.cenaAtual);
+      const i = Historia.cenaAtual.escolhas.findIndex(e => e.copa);
+      Jogo.escolher(i);
+      if (!Jogo.copaAtual || !Jogo.copaAtual.historia) throw new Error('a opção da arena não abriu a chave da história');
+      const t = Jogo.copaAtual;
+      if (v){ for (let k = 0; k < 3; k++) fecharRodada(t, k, true); t.rodada = 3; t.adv = adversarioDaVez(t); }
+      Jogo.veteranoAtual = {id:t.adv.id, tipo:'copa'};
+      CopaSevii.resultado({resultado: v ? 'vitoria' : 'derrota'});
+      if (!Estado.dados.copaVolta) throw new Error('o fim da chave da história não sabe pra que cena voltar');
+      CopaSevii.voltarPraHistoria();
+      const esperado = v ? 'c38_campeao' : 'c38_caiu';
+      if (Estado.dados.cena !== esperado) throw new Error(`a chave voltou pra ${Estado.dados.cena}, e devia ser ${esperado}`);
+      Historia.ir('c38_a_arena', false); UI.telaCena(Historia.cenaAtual);
+      if (Historia.cenaAtual.escolhas.some((e, j) => e.copa && Historia.disponivel(e, 'c38_a_arena', j))) throw new Error('a arena oferece a chave da história de novo');
+    }, venceu);
+  }
+  /* a Noa no cais, depois do arco */
+  await restaurar();
+  await tentar('ilhas/a Noa no cais', () => {
+    nasIlhas(6, 'ilha_um');
+    Estado.dados.flags.sv_noa_rival = true;
+    conquistarRivais();
+    registroRival('noa').ultimoDia = Estado.dados.relogio.dia - 8;
+    Exploracao.tela();
+    if (!afazeresDoLocal().some(a => a.id === 'sevii_noa')) throw new Error('a Noa não aparece no cais');
+    Exploracao.fazer('sevii_noa');
+  });
+
   /* ---------- lugares e afazeres ---------- */
   for (const id of await page.evaluate(() => Object.keys(LOCAIS))){
     await restaurar();

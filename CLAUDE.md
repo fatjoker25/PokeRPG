@@ -1319,10 +1319,14 @@ mais ele anda.
 assim): não têm caminho em Kanto, nem de mato, nem de evento, nem de
 troca. A Pokédex Nacional mostra os 251 e fecha em 248, como a de
 FireRed, que lista quem só sai noutra região, e a folha de regras diz
-isso na linha da Pokédex. Os outros 97 de Johto saem do sorteio de
-Johto depois que a região abre (`sorteioJohto`, um quarto dos
-encontros, pelo tipo do ambiente), da creche e das evoluções da 2ª
-geração. Não é lacuna pra fechar com evento.
+isso na linha da Pokédex. Os outros de Johto **não andam no mato de
+Kanto** (foi pedido assim): os que andam soltos vivem nas tabelas das
+Ilhas Sevii, misturados com os de Kanto (`sevii-mundo.js`), e o resto
+sai da creche e das evoluções da 2ª geração. O `habitatPorAmbiente`
+não soma as ilhas, senão a luta de cena em Kanto achava Johto. O
+`chk-obtencao` confere os 244 que andam soltos (Kanto e Johto) e
+reprova espécie de Johto em tabela de Kanto. Não é lacuna pra fechar
+com evento.
 
 **Captura é a do Pokérole 3.0, pra todo Pokémon** (`captura.js`): o
 selo da bola (`SELO_DA_BOLA`: Poké Ball 4d6, Great 6d6, Ultra 8d6) + os
@@ -3314,8 +3318,85 @@ fim"). `chk-telas` para na estrada em cada degrau, devolve, recusa, se
 entrega, briga e perde, abre e fecha a casa, solta o caçador e o clima;
 `chk-lutas` roda a briga com a Patrulha nas duas fichas.
 
+## As Ilhas Sevii (o pós-jogo)
+Foi pedido assim: depois do fim, quem venceu a Liga fala com o Blue na
+casa dele, em Pallet; ele conta do Torneio das Ilhas e entrega a
+passagem; o S.S. Anne sai de Vermilion; nas ilhas, antes do torneio,
+um roubo de Pokémon por umas gangues, que você resolve passando pelas
+ilhas, investigando e lutando, com as escolhas e o jeito de quem joga
+pesando como na história; um rival novo em potencial; e o torneio com
+gente de Johto e de Hoenn, personagens com ficha e rosto, pra puxar
+noutra região depois. Mora em `js/story/sevii*.js` e nos capítulos 33
+a 38; o desenho de cada um do elenco está em `docs/SEVII.md`.
+
+- **Os capítulos são `posJogo`** (33 A Passagem, 34 O Navio, 35 A
+  Maré, 36 Os Faróis, 37 O Armazém, 38 O Torneio das Ilhas): fora da
+  sequência (`proximoCapitulo` os pula), e depois do fim o próximo é
+  `Sevii.proximo`, que pede o título de Campeão. Na tela, "Ilhas Sevii
+  · III" (`numeroDoCapitulo`). Não chamam cena de linha (a história de
+  Kanto fechou cada linha no epílogo). O número não é posição de
+  jornada: `capNaJornada` dá 33 a 38, que é depois de tudo.
+- **A balsa abre uma ilha de cada vez** (`Sevii.trava`, lido pela
+  `travaDaPassagem`): a fase é quantos capítulos das ilhas fecharam, e
+  `ILHA_ABRE_NA_FASE` diz quando cada lugar abre; a primeira travessia
+  é a do Anne (`sv_chegou`). Sem a passagem, as ilhas não existem no
+  mapa (`Sevii.conhecido`, no `Mundo.conhecido`).
+- **O mapa tem duas páginas** (`Exploracao.mapa(origem, regiao)`): a
+  aba Kanto / Ilhas Sevii, `MAPA_SEVII` e `terrenoSevii`, e a saída de
+  balsa nas duas. Voar não atravessa o mar (`regiaoNoMapa`). Lugar
+  novo das ilhas entra em `MAPA_SEVII` e, se precisar, no rótulo.
+- **A Patrulha de Kanto não atravessa o mar** (`Patrulha.talvez`):
+  quem cuida das ilhas é a Guarda, o Sargento Lund, um homem só.
+- **O elenco** (`ELENCO_SEVII`, em `sevii-elenco.js`): dezesseis fichas
+  no molde da inscrição (traços, objetivo, o status forte, gostos,
+  aparência, voz, jornada, por que veio, o gancho), time com golpe,
+  natureza e item, e rosto só de cada um (`sevii_<id>.png`, de
+  `variar-rostos.py`, com a aparência escrita pelo desenho). Ficha nova
+  ou mudada roda `node ferramentas/fichas-sevii.js`, que gera o
+  `docs/SEVII.md`. Hoenn só existe no time deles (`hoenn.js`): ninguém
+  pega Pokémon de Hoenn.
+- **O roubo** (`ROUBOS_DE_SEVII`): a Milotic da Esme, a mochila da
+  Etta, a caixa de ovos do Florian e os Pokémon da turma do Brody. Cada
+  um tem a flag de quando volta; o que não volta sai do time do dono no
+  torneio (`Sevii.semDoDono`). O que escapa num capítulo tem segunda
+  chance no armazém (`sv_*_subiu`, `_c37Volta`).
+- **Quem você ouviu antes volta**: o jantar do Anne (`sv_conheceu_*`,
+  três por noite) decide quem aparece pra ajudar no farol e no armazém
+  (o Zev, pela opinião), e a pista da Ilha Seis (o Gideon contou do
+  Magnus). O lado de quem joga (`Sevii.daLei`, `daRede`, `procurado`)
+  abre opção na prancha do navio, na fábrica, no farol e no armazém.
+- **A Noa é a rival em potencial** (`RIVAIS_EXTRA`, em `sevii.js`):
+  nasce no fim do cais do 35 (entregar, ajudar ou deixar ir dá o arco
+  dela), te para na saída do 35 e do 36, entra no torneio se estiver
+  livre da gangue (`Sevii.noaInscrita`) e fica no cais da Ilha Um uma
+  vez por semana depois do arco. Faixa: `oras-trainer`.
+- **O Torneio das Ilhas** (`sevii-torneio.js`, `CopaSevii`) é a
+  terceira competição no motor da chave de dezesseis (`CHAVES.sevii`),
+  com `Jogo.copaAtual` no save (`d.copaAberta`, na `LutaSalva`). Na
+  história, a opção de cena com `copa:{vitoria, derrota}` entrega a vez
+  pra chave (`Jogo.escolher`), e a chave devolve pra cena
+  (`d.copaVolta`, que o `continuar` também lê). Depois do arco, todo
+  domingo (`DIA_DA_COPA`), com inscrição. O nível é o da Conferência
+  com `PISO_COPA` e `SUBIDA_COPA`; luta pela `Veteranos.iniciarLuta`
+  (`tipo:'copa'`), na quadra.
+- **Entre os capítulos, a ilha do meio conta alguma coisa**
+  (`Sevii.afazeres`): o barco sem luz na Ilha Quatro, a Pokébola M. H.
+  da Oona na Ilha Seis. Depois do arco, a pousada da arena, onde cada
+  um do elenco senta com você uma vez por dia e conta a jornada em três
+  conversas (a ficha é o texto).
+- Música: cada vila tem o tema dela em `CALMAS`, as brigas da gangue
+  tocam radical (`FAIXA_DE_SEVII`) e o torneio, `sm-trainer` (a final,
+  `spl-elite4`).
+
+`chk-lutas` roda cada um do elenco nas quatro rodadas e a chave da
+história, além das lutas de cena dos capítulos; `chk-telas` anda as
+fases (o chamado e a balsa), as duas páginas do mapa, as pistas, a
+pousada (cada um nas três conversas), a arena fora e dentro do
+domingo, cada rodada ganhando e perdendo, a chave da história nos dois
+fins e a Noa no cais.
+
 ## A Pokédex Nacional
-O registro nacional (os 251, Johto no mato pelo `sorteioJohto`, as
+O registro nacional (os 251, Johto no mato das Ilhas Sevii, as
 evoluções da 2ª geração, os bebês da creche e o `ESTOQUE_NACIONAL` das
 lojas) são duas marcas, `dex_nacional` e `johto_liberado`, e quem
 liga as duas é `DexNacional.liberar` (`js/story/dex-nacional.js`),
@@ -3364,7 +3445,7 @@ Campeão não recebe de novo: a coroação só diz da passagem do norte.
 - `js/data/` — pokédex, golpes, learnsets, naturezas, afinidade, pokénav,
   nomes, porte, arenas, treinadores, tms, pokerole (gerado).
 - `js/engine/` — estado, batalha, dados, mundo, captura, pokémon.
-- `js/story/` — capítulos (`cap-01` a `cap-32`; os de caminho em `caminhos/`), lugares, mercado, eventos, motor,
+- `js/story/` — capítulos (`cap-01` a `cap-32`, e o pós-jogo das Ilhas Sevii, `cap-33` a `cap-38`; os de caminho em `caminhos/`), lugares, mercado, eventos, motor,
   estrada (treinadores de rota e o que surge nela), vasculhar (achado,
   falha e acampamento por ambiente e por lugar — texto novo de rota entra
   com o ambiente dele, senão aparece cerca no mar e tronco na caverna).

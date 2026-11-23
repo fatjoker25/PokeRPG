@@ -424,9 +424,9 @@ c35_noa_luta:{
   texto:[
     'Ela levanta no poste, em pé, equilibrada em cima da madeira como quem nasceu ali.',
     fala('Noa', 'Então pega.', 'frio'),
-    'O Murkrow sai do ombro dela. Embaixo do poste, na água, o Sharpedo sobe com a boca aberta.'
+    'O Murkrow sai do ombro dela e pousa no poste do lado, pra ver. Embaixo do poste, na água, o Sharpedo sobe com a boca aberta.'
   ],
-  batalha:{sevii:'noa', mais:-2, tipo:'treinador', fuga:false, treinador:'Noa',
+  batalha:{sevii:'noa', mais:-2, tam:4, tipo:'treinador', fuga:false, treinador:'Noa',
            intro:'A Noa salta do poste pro cais sem largar a mochila.',
            vitoria:'c35_noa_perdeu', derrota:'c35_noa_ganhou'}
 },
