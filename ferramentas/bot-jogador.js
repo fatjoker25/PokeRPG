@@ -1277,6 +1277,14 @@ const SUSPEITO = [
           X.trocasNaLuta = (X.trocasNaLuta || 0) + 1;
           return {tipo:'trocar', uid:melhorBanco.x.uid};
         }
+        /* selvagem empacado: quinze turnos contra o mesmo, ele ainda com 60%
+           do HP e ninguém melhor pra trocar, quem joga vai embora. O
+           Venusaur 34 do Bento só tinha golpe de Planta contra um Oddish
+           (0,25×, 1 de dano), o Oddish bebia de volta com Absorb o que
+           levava, e a luta passou de trinta turnos com o Venusaur
+           paralisado e cinco do time de pé no banco */
+        if (B.tipo === 'selvagem' && B.fuga !== false && B.turno - (X.turnoDesde || 0) >= 15
+            && alvo.hp >= alvo.hpMax * 0.6 && !(B.estAliado && B.estAliado.presoTurnos)) return {tipo:'fugir'};
         return {tipo:'golpe', indice:meu.idx};
       }).catch(() => null);
       if (a){
