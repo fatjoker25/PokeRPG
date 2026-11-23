@@ -39,6 +39,14 @@
      sv_viu_o_barco, sv_oona_ajudou          o que se achou no caminho
    ============================================================ */
 const SEVII_CAPS = [33, 34, 35, 36, 37, 38];
+/* Quem veio de Johto e de Hoenn fica ESTADIA_DO_ELENCO dias depois da
+   final (o c38_fim carimba o dia) e embarca no S.S. Anne, na Ilha Um,
+   de volta pra Vermilion e de lá pra casa. Foi pedido assim: o pós-jogo
+   não é obrigatório, e quem pulou as ilhas não conhece ninguém dali;
+   quem viveu, leva o número de quem gosta de você, e o PokéNav liga
+   pra eles do outro lado do mar — conversa, nunca revanche. O que fica
+   pra uma próxima região é Sevii.conhecidos(d). */
+const ESTADIA_DO_ELENCO = 7;
 /* o que a gangue levou, de quem, e a flag de quando volta */
 const ROUBOS_DE_SEVII = {
   milotic:{dono:'esme',    dex:[350],      flag:'sv_rec_milotic', o:'a Milotic da Esme'},
@@ -105,6 +113,68 @@ const Sevii = {
   aqui(d){ d = d || Estado.dados; return !!(d && ehSevii(d.local)); },
   /* o arco inteiro acabou: o torneio da história já foi */
   acabou(d){ return this.fase(d) >= SEVII_CAPS.length; },
+
+  /* ── quem veio de longe, e quando vai embora ── */
+  visitantes(){ return ELENCO_SEVII.filter(f => f.regiao !== 'Ilhas Sevii'); },
+  /* o dia em que o arco fechou (o c38_fim carimba; o save de antes, na carga) */
+  fimDoArco(d){ d = d || Estado.dados; const r = d && this.reg(d); return r && r.fimDoArco != null ? r.fimDoArco : null; },
+  diaDaPartida(d){ const f = this.fimDoArco(d); return f == null ? null : f + ESTADIA_DO_ELENCO; },
+  /* ainda nas ilhas: a semana do torneio, e a semana depois dele, até o
+     Anne sair (no dia da partida eles embarcam, com você no cais ou não) */
+  elencoNaIlha(d){
+    d = d || Estado.dados;
+    if (!d || !this.acabou(d)) return true;
+    const r = this.reg(d), p = this.diaDaPartida(d);
+    if (r.embarcou != null) return false;
+    return p == null || d.relogio.dia <= p;
+  },
+  partiu(d){ d = d || Estado.dados; return !!d && this.acabou(d) && !this.elencoNaIlha(d); },
+  /* quanto falta pro Anne, dito em voz alta */
+  quandoParte(d){
+    d = d || Estado.dados;
+    const p = this.diaDaPartida(d), falta = p == null ? null : p - d.relogio.dia;
+    if (falta == null || falta < 0) return null;
+    return falta === 0 ? 'hoje' : falta === 1 ? 'amanhã' : `daqui a ${porExtenso(falta)} dias`;
+  },
+  /* quem te conhece: quem a história pôs na sua frente (o jantar do Anne,
+     o roubo, a chave, a pousada) guarda memória de você */
+  conheceu(id, d){
+    d = d || Estado.dados;
+    const f = typeof fichaSevii === 'function' ? fichaSevii(id) : null;
+    if (!f || !d) return false;
+    const n = (d.npcs || {})[f.nome];
+    return !!((n && (n.memorias || []).length) || (d.flags || {})['sv_conheceu_' + id] || (this.reg(d).conversas || {})[id]);
+  },
+  /* e deixa o número quem te conhece e não tem nada contra você */
+  deixaNumero(id, d){
+    d = d || Estado.dados;
+    const f = fichaSevii(id);
+    return !!f && f.regiao !== 'Ilhas Sevii' && this.conheceu(id, d) && (((d.npcs || {})[f.nome] || {}).opiniao || 0) >= 0;
+  },
+  /* pra onde cada um voltou ("pra Blackthorn", "pro Monte Pyre") */
+  paraOnde(f){ return /^Monte\b/.test(f.de) ? 'pro ' + f.de : 'pra ' + f.de; },
+
+  /* Pra próxima região: quem das ilhas conhece você, e o que sabe. Quem
+     não está aqui não te conhece, e é isso mesmo: quem pulou as ilhas
+     chega lá sem ninguém. A opinião anda com o telefone (recados.js),
+     então ligar de longe também conta. */
+  conhecidos(d){
+    d = d || Estado.dados;
+    if (!d) return [];
+    const r = this.reg(d), contatos = (d.pokenav && d.pokenav.contatos) || {};
+    return this.visitantes().filter(f => this.conheceu(f.id, d)).map(f => {
+      const n = (d.npcs || {})[f.nome] || {}, mem = (n.memorias || []).map(m => typeof m === 'string' ? m : (m && m.texto) || '');
+      const roubo = Object.keys(ROUBOS_DE_SEVII).find(k => ROUBOS_DE_SEVII[k].dono === f.id);
+      const op = n.opiniao || 0;
+      return {id:f.id, nome:`${f.nome} ${f.sobrenome}`, regiao:f.regiao, de:f.de,
+        opiniao:op, laco: op >= 3 ? 'amigo' : op < 0 ? 'atrito' : 'conhecido',
+        conversas:(r.conversas || {})[f.id] || 0,
+        voceVenceu:mem.filter(t => /^Perdeu pra você/.test(t)).length,
+        venceuVoce:mem.filter(t => /^Ganhou de você/.test(t)).length,
+        devolveu: roubo ? this.recuperou(roubo, d) : null,
+        numero:!!contatos['ilhas_' + f.id], despedida:(r.despediu || []).includes(f.id)};
+    });
+  },
 
   /* Quem não tem a passagem não sabe que as ilhas existem no mapa: a
      Ilha Um aparece com a passagem na mão, o resto com a chegada */
@@ -222,12 +292,21 @@ const Sevii = {
       lista.push({id:'sevii_pista_seis', titulo:'A moça de cabelo branco no muro',
         sub:'Ela pergunta a todo mundo a mesma coisa, mostrando uma Pokébola velha, e todo mundo diz que não sabe.'});
     if (id === 'ilha_sete' && f >= 6){
+      const foi = this.partiu(d);
       lista.push({lugar:true, id:'sevii_arena', titulo:'A arena da Ilha Sete',
-        sub:'O Torneio das Ilhas volta todo domingo. Quem veio de longe ficou mais um pouco.',
+        sub: foi ? 'O Torneio das Ilhas volta todo domingo, com quem atravessa de Kanto na balsa.'
+                 : 'O Torneio das Ilhas volta todo domingo. Quem veio de longe ficou mais um pouco.',
         fechada:(typeof CopaSevii !== 'undefined' ? CopaSevii.fechada() : null)});
-      lista.push({lugar:true, id:'sevii_pousada', titulo:'A pousada da arena',
+      if (!foi) lista.push({lugar:true, id:'sevii_pousada', titulo:'A pousada da arena',
         sub:'Quem veio pro torneio ainda está por aqui, e de noite a varanda enche.'});
+      /* quem não foi ao cais acha os números no balcão */
+      else if (this.temBilhete(d)) lista.push({id:'sevii_bilhete', titulo:'O balcão da pousada',
+        sub:'A dona da pousada acena com um envelope quando você passa na porta.'});
     }
+    /* o dia em que o Anne leva quem veio de longe */
+    if (id === 'ilha_um' && f >= 6 && this.diaDaPartida(d) === d.relogio.dia && this.reg(d).embarcou == null)
+      lista.push({id:'sevii_despedida', titulo:'O S.S. Anne no cais',
+        sub:'Quem veio de Johto e de Hoenn pro torneio embarca hoje, de volta pra Vermilion e de lá pra casa.'});
     /* a Noa, depois do arco: uma vez por semana no fim do cais */
     const rn = typeof registroRival === 'function' ? registroRival('noa') : null;
     if (id === 'ilha_um' && f >= 6 && rn && (d.relogio.dia - (rn.ultimoDia || 0)) >= 7)
@@ -240,6 +319,8 @@ const Sevii = {
     if (x.startsWith('balsa_')) return this.embarcar(x.slice(6));
     if (x === 'arena') return CopaSevii.tela();
     if (x === 'pousada') return this.pousada();
+    if (x === 'despedida') return this.despedida();
+    if (x === 'bilhete') return this.bilhete();
     if (x.startsWith('sentar_')) return this.sentar(x.slice(7));
     if (x === 'pista_quatro') return this.pistaQuatro();
     if (x === 'pista_seis') return this.pistaSeis();
@@ -378,7 +459,8 @@ const Sevii = {
      onde veio, a segunda por que veio, a terceira o que vem depois. */
   presentes(d){
     d = d || Estado.dados;
-    return ELENCO_SEVII.filter(f => f.id !== 'magnus' && (f.id !== 'noa' || this.noaInscrita(d)));
+    const aqui = this.elencoNaIlha(d);
+    return ELENCO_SEVII.filter(f => f.id !== 'magnus' && (f.id !== 'noa' || this.noaInscrita(d)) && (aqui || f.regiao === 'Ilhas Sevii'));
   },
   reg(d){ d = d || Estado.dados; return (d.sevii = d.sevii || {conversas:{}, diaConversa:{}}); },
   pousada(av){
@@ -389,8 +471,10 @@ const Sevii = {
         acao: hoje ? 'Sevii.pousada()' : `Sevii.sentar('${f.id}')`};
     });
     botoes.push({texto:'Sair da pousada.', classe:'fim', acao:'Exploracao.tela()'});
+    const quando = this.acabou(d) ? this.quandoParte(d) : null;
     UI.telaConversa({num:'Ilhas Sevii', titulo:'A pousada da arena', loc:'Ilha Sete',
-      falas:['A varanda da pousada dá pro cânion, e de noite cada mesa é de uma região: Johto numa ponta, Hoenn na outra, e no meio quem ainda não decidiu de que lado senta.'],
+      falas:['A varanda da pousada dá pro cânion, e de noite cada mesa é de uma região: Johto numa ponta, Hoenn na outra, e no meio quem ainda não decidiu de que lado senta.',
+        quando ? `Na parede da recepção, a folha do S.S. Anne: ele passa na Ilha Um ${quando}, e quem veio de longe embarca nele.` : ''].filter(Boolean),
       botoes, avisos:av});
   },
   sentar(id){
@@ -415,8 +499,103 @@ const Sevii = {
     UI.telaConversa({num:'A pousada da arena', titulo:`${f.nome} ${f.sobrenome}`, loc:`${f.classe} · ${f.de}`,
       falas, quem:f.nome, avisos:av,
       botoes:[{texto:'Voltar pra varanda.', acao:'Sevii.pousada()'}]});
+  },
+
+  /* ── a despedida: o S.S. Anne no cais da Ilha Um ──
+     Quem te conhece e gosta de você diz a última coisa e deixa o número;
+     quem tem alguma coisa contra você sobe a prancha sem parar; quem
+     nunca falou com você embarca sem saber quem você é. */
+  despedida(){
+    const d = Estado.dados, r = this.reg(d);
+    if (r.embarcou != null || this.diaDaPartida(d) !== d.relogio.dia) return Exploracao.tela();
+    Mundo.passar(1);
+    const todos = this.visitantes();
+    const ficam = todos.filter(f => this.deixaNumero(f.id, d));
+    const frios = todos.filter(f => this.conheceu(f.id, d) && !this.deixaNumero(f.id, d));
+    const falas = ['O S.S. Anne está encostado no cais da Ilha Um, branco e alto demais do lado dos barcos de pesca. Quem veio de longe desce o morro com as malas, e o cais, que é de quatro barcos, fica pequeno.'];
+    ficam.forEach(f => falas.push(fala(f.nome, this.semAspas(txt(f.despedida)))));
+    if (ficam.length) falas.push(ficam.length === 1
+      ? `Antes de subir a prancha, ${ficam[0].nome} pede o seu PokéNav e grava o número ${ficam[0].f ? 'dela' : 'dele'} com o polegar, devagar.`
+      : 'Antes de subir a prancha, cada um pede o seu PokéNav e grava o próprio número, um depois do outro, com o aparelho passando de mão em mão.');
+    if (frios.length) falas.push(`${cap1(this.nomes(frios, true))} ${frios.length === 1 ? 'sobe' : 'sobem'} a prancha sem parar do seu lado.`);
+    if (todos.length > ficam.length + frios.length)
+      falas.push('Os outros embarcam sem olhar pra trás. Pra eles, você é mais um rosto da arquibancada.');
+    falas.push('O apito do Anne sai comprido, e o cais inteiro levanta a mão. A prancha sobe: Johto numa ponta da amurada, Hoenn na outra.',
+      'Você fica até o navio virar um ponto branco do lado de Kanto.');
+    r.embarcou = d.relogio.dia;
+    r.despediu = ficam.map(f => f.id);
+    const av = this.darNumeros(ficam);
+    Estado.registrar(ficam.length
+      ? `Foi ao cais da Ilha Um ver o S.S. Anne levar quem veio de longe. ${cap1(this.nomes(ficam, true))} ${ficam.length === 1 ? 'deixou o número' : 'deixaram o número'} no PokéNav.`
+      : 'Foi ao cais da Ilha Um ver o S.S. Anne levar quem veio de longe.');
+    Estado.salvar('auto');
+    UI.telaConversa({num:'Ilhas Sevii', titulo:'O S.S. Anne no cais', loc:'Ilha Um', falas, avisos:av,
+      botoes:[{texto:'Voltar pra vila.', classe:'fim', acao:'Exploracao.tela()'}]});
+  },
+  /* quem não foi ao cais: o envelope no balcão da pousada, com os mesmos números */
+  temBilhete(d){
+    d = d || Estado.dados;
+    const r = this.reg(d);
+    return this.partiu(d) && r.embarcou == null && !r.bilhete && this.visitantes().some(f => this.deixaNumero(f.id, d));
+  },
+  bilhete(){
+    const d = Estado.dados, r = this.reg(d);
+    if (!this.temBilhete(d)) return Exploracao.tela();
+    const ficam = this.visitantes().filter(f => this.deixaNumero(f.id, d));
+    r.bilhete = d.relogio.dia;
+    const falas = ['A dona da pousada tira um envelope da gaveta e põe no balcão sem dizer nada: quem deixou pediu pra entregar em mão.',
+      `Dentro, uma folha dobrada com ${ficam.length === 1 ? 'um número' : porExtenso(ficam.length) + ' números'}, cada um numa letra, e embaixo de cada número uma linha.`]
+      .concat(ficam.map(f => `**${f.nome}: ${this.semAspas(txt(f.despedida))}**`));
+    const av = this.darNumeros(ficam);
+    Estado.registrar(`Achou no balcão da pousada da Ilha Sete os números de quem embarcou no S.S. Anne: ${this.nomes(ficam)}.`);
+    Estado.salvar('auto');
+    UI.telaConversa({num:'Ilhas Sevii', titulo:'O balcão da pousada', loc:'Ilha Sete', falas, avisos:av,
+      botoes:[{texto:'Guardar a folha e sair.', classe:'fim', acao:'Exploracao.tela()'}]});
+  },
+  /* o que se fala aqui fora das cenas, pra conferência (chk-baloes): a
+     despedida de cada um no cais e as falas de quem atravessa de Kanto */
+  amostras(){
+    const diz = (q, t) => fala(q, this.semAspas(txt(t)));
+    const out = this.visitantes().map(f => ({onde:'sevii/despedida/' + f.id, dono:f.nome, linhas:[diz(f.nome, f.despedida)]}));
+    if (typeof VIAJANTES_DA_COPA !== 'undefined') for (const id of Object.keys(VIAJANTES_DA_COPA)){
+      const q = quemNaCopa(id);
+      if (q) out.push({onde:'sevii/copa/' + id, dono:q.nome, linhas:[q.torneio, q.vence, q.perde].map(t => diz(q.nome, t))});
+    }
+    return out;
+  },
+  /* "Etta", "Etta e Zev", "Etta, Zev e Oona"; com artigo, "a Etta e o Zev" */
+  nomes(fichas, artigo){
+    const l = fichas.map(f => (artigo ? (f.f ? 'a ' : 'o ') : '') + f.nome);
+    return l.length <= 1 ? l.join('') : l.slice(0, -1).join(', ') + ' e ' + l[l.length - 1];
+  },
+  semAspas(t){ return String(t || '').replace(/^["“]|["”]$/g, ''); },
+  /* o número no PokéNav: a marca fica (quem ainda não tem o aparelho
+     ganha o número junto com ele), e quem tem grava na hora */
+  darNumeros(fichas){
+    const gravou = [];
+    fichas.forEach(f => {
+      Estado.marcar('sv_numero_' + f.id);
+      if (Estado.temPokenav() && Estado.registrarNumero('ilhas_' + f.id)) gravou.push(f);
+    });
+    return gravou.length ? [{tipo:'nav', texto:`Gravou no PokéNav: ${this.nomes(gravou)}.`}] : [];
   }
 };
+
+/* ── PokéNav: quem foi embora das ilhas ──
+   Liga e atende de longe (recados.js, o tipo `longe`), conta de casa,
+   pergunta das ilhas. Revanche não tem: está do outro lado do mar, e a
+   ficha diz isso na linha apagada. Nem recado com presente, nem pedido. */
+function contatosDoElenco(){
+  if (typeof ELENCO_SEVII === 'undefined') return [];
+  return Sevii.visitantes().map(f => ({
+    id:'ilhas_' + f.id, tipo:'treinador', nome:f.nome, papel:'', elenco:f.id,
+    cidade:`${f.de}, ${f.regiao}`,
+    requer:d => !!(d.flags || {})['sv_numero_' + f.id],
+    longe:`Voltou ${Sevii.paraOnde(f)}, em ${f.regiao}. Do outro lado do mar não tem revanche.`,
+    oferece:['revanche']
+  }));
+}
+
 
 /* rosto de quem fala nos capítulos e não é do elenco */
 (function(){

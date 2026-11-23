@@ -196,6 +196,15 @@ const raiz = path.resolve(__dirname, '..');
         Mundo.viajar('ilha_sete');
         Jogo.copaAtual = chaveAte(rd, inscritoDaCopa(f), 'sevii');
         CopaSevii.lutar(); })));
+      /* depois que o elenco embarca no Anne: quem atravessa de Kanto, nas
+         quatro rodadas, com o time a mais de cada um */
+      Object.keys(VIAJANTES_DA_COPA).forEach(id => PREMIO_COPA.forEach((pr, rd) => add(`Ilhas ${quemNaCopa(id).nome} (${pr.rodada})`, 8, 38, d => {
+        d.flags.campeao_de_kanto = true; d.depoisDoFim = d.depoisDoFim || {final:'teste'};
+        d.capitulosFechados = (d.capitulosFechados || []).concat(SEVII_CAPS);
+        Sevii.reg(d).fimDoArco = d.relogio.dia - ESTADIA_DO_ELENCO - 1;
+        Mundo.viajar('ilha_sete');
+        Jogo.copaAtual = chaveAte(rd, inscritoDaCopa(quemNaCopa(id)), 'sevii');
+        CopaSevii.lutar(); })));
       /* a chave da história: a Esme sem a Milotic, com a mochila da Etta de volta */
       add('Ilhas (história)', 8, 38, d => {
         d.flags.campeao_de_kanto = true; d.depoisDoFim = d.depoisDoFim || {final:'teste'}; d.flags.sv_rec_etta = true;

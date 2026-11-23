@@ -48,7 +48,14 @@ if (process.env.PISO) lista(process.env.PISO).forEach((x, i) => { PISO_COPA[i] =
 if (process.env.SUBIDA) lista(process.env.SUBIDA).forEach((x, i) => { SUBIDA_COPA[i] = x; });
 if (process.env.TAM) lista(process.env.TAM).forEach((x, i) => { TAM_COPA[i] = x; });
 if (process.env.ERRO) lista(process.env.ERRO).forEach((x, i) => { ERRO_IA_COPA[i] = x; });
+if (process.env.TAM_VIAJANTE) lista(process.env.TAM_VIAJANTE).forEach((x, i) => { TAM_VIAJANTE[i] = x; });
 const NIVEIS = process.env.NIVEIS ? lista(process.env.NIVEIS) : [60, 66, 72];
+/* AJ=jett:4,morwen:-6 troca o acerto de nível de quem atravessa de
+   Kanto só na medição; AJ_TODOS=4 soma em todos eles */
+if (process.env.AJ) process.env.AJ.split(',').forEach(x => { const [id, v] = x.split(':'); if (VIAJANTES_DA_COPA[id]) VIAJANTES_DA_COPA[id].ajuste = +v; });
+/* MAIS=ewan:0.0.0.0,rafe:2.2.2.1 troca o time a mais de cada rodada */
+if (process.env.MAIS) process.env.MAIS.split(',').forEach(x => { const [id, v] = x.split(':'); if (VIAJANTES_DA_COPA[id]) VIAJANTES_DA_COPA[id].mais = v.split('.').map(Number); });
+if (process.env.AJ_TODOS) Object.values(VIAJANTES_DA_COPA).forEach(v => { v.ajuste = (v.ajuste || 0) + (+process.env.AJ_TODOS); });
 Estado.novo({nome:'Sim', genero:'Mulher', cidade:'Pallet', casaNome:'Delia', casaQuem:'mãe', nascimento:{dia:3, mes:9}});
 if (process.env.DIFICULDADE) Estado.dados.config.dificuldade = process.env.DIFICULDADE;
 const d = Estado.dados;
@@ -84,7 +91,11 @@ function lutar(meu, inimigos, rodada){
   return {venceu: !!(Batalha.fim && Batalha.fim.resultado === 'vitoria'), caidos: meu.filter(p => p.hp <= 0).length, turnos};
 }
 
-const elenco = ELENCO_SEVII;
+/* PARTIU=1 mede a chave de depois do Anne: o Magnus, a Noa e quem
+   atravessa de Kanto (VIAJANTES_DA_COPA), no lugar do elenco */
+const elenco = process.env.PARTIU
+  ? ['magnus', 'noa'].map(fichaSevii).concat(Object.keys(VIAJANTES_DA_COPA).map(quemNaCopa).filter(Boolean))
+  : ELENCO_SEVII;
 const RODADAS = PREMIO_COPA.map((_, i) => i);
 console.log(`${elenco.length} do elenco, ${N} lutas por pessoa e rodada · piso ${PISO_COPA.join('/')} · subida ${SUBIDA_COPA.join('/')} · time ${TAM_COPA.join('/')} · erro ${ERRO_IA_COPA.join('/')}`);
 console.log(`nível do jogador | ${PREMIO_COPA.map(r => r.rodada.toLowerCase()).join(' · ')}   (vitória, caídos) | título   nível do ás`);

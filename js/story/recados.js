@@ -151,7 +151,7 @@ const TOPICOS_DE_LIGACAO = [
   ]
 },
 {
-  id:'o_time', para:x => !!x.p,
+  id:'o_time', tambemLonge:true, para:x => !!x.p,
   falas:x => [x.diz(`Lembrei ${x.pr.do} ${x.chamado} hoje. Como ${x.pr.ele} tá?`)],
   escolhas:x => [
     {texto:`"Forte. ${x.pr.Ele} não para quiet${x.pr.o}."`, afeto:1,
@@ -163,7 +163,7 @@ const TOPICOS_DE_LIGACAO = [
   ]
 },
 {
-  id:'onde', para:x => true,
+  id:'onde', tambemLonge:true, para:x => true,
   falas:x => [x.periodo === 'madrugada' && !x.voceLigou ? x.diz('Te acordei? Desculpa. Onde você tá?') : x.diz('Onde você tá agora?')],
   escolhas:x => [
     {texto:`"${cap1(x.emLugar)}."`, afeto:1,
@@ -263,7 +263,7 @@ const TOPICOS_DE_LIGACAO = [
   ]
 },
 {
-  id:'rumo', para:x => true,
+  id:'rumo', tambemLonge:true, para:x => true,
   falas:x => [x.diz('Pra onde você vai depois daí?')],
   escolhas:x => [
     {texto:'Dizer pra onde vai.', afeto:1, resultado:[x.diz('Então vai com calma. Lá é outro ritmo.')]},
@@ -272,6 +272,34 @@ const TOPICOS_DE_LIGACAO = [
   ]
 }
 ];
+
+/* Quem foi embora pra outra região (o elenco das Ilhas Sevii, sevii.js)
+   liga de longe: conta de casa, pela ficha (deLonge, uma linha de cada
+   vez, na ordem), e pergunta das ilhas. Revanche não tem, e de longe
+   ninguém fica sabendo das notícias de Kanto: os assuntos são só estes e
+   os que têm `tambemLonge`. */
+TOPICOS_DE_LIGACAO.push({
+  id:'longe_casa', longe:true, para:x => x.longe && !!x.ficha && (x.ficha.deLonge || []).length > 0,
+  falas:x => {
+    const l = x.ficha.deLonge, r = Recados.doContato(x.c.id);
+    if (x.linhaDeLonge == null){ x.linhaDeLonge = ((r.deLonge == null ? -1 : r.deLonge) + 1) % l.length; r.deLonge = x.linhaDeLonge; }
+    return [x.diz(x.sorteio(x.voceLigou ? ['Que bom que você ligou. Deixa eu te contar daqui.', 'Chegou numa hora boa. Escuta só.']
+      : ['Liguei pra contar daqui.', 'Tenho uma coisa daqui pra te contar.', 'Você não sabe o que aconteceu aqui.'])), x.diz(l[x.linhaDeLonge])];
+  },
+  escolhas:x => [
+    {texto:'Contar das ilhas desde que o Anne saiu.', afeto:1, resultado:['Você conta.', x.diz('Então a arena ainda enche. Bom saber. Daqui, parece que foi há um ano.')]},
+    {texto:'"Quando você volta?"', afeto:1, resultado:[x.diz('Quando o mar deixar. Ano que vem tem torneio de novo, e barco também.')]},
+    {texto:'"Agora não dá. Te ligo depois."', afeto:-1, resultado:[x.diz('Tá. Ligação de longe é cara, mas eu espero.', 'baixo')]}
+  ]
+}, {
+  id:'longe_ilhas', longe:true, para:x => x.longe,
+  falas:x => [x.diz('E as ilhas? A arena da Ilha Sete ainda enche no domingo?')],
+  escolhas:x => [
+    {texto:'"Enche. Mas não é a mesma coisa sem vocês."', afeto:1, resultado:[x.diz('Não fala assim, que eu pego o próximo barco.', 'riso')]},
+    {texto:'Contar como estava a arquibancada da última vez.', afeto:1, resultado:['Você conta.', x.diz('A lousa da entrada ainda tem os nossos riscos? Não precisa responder. Eu gosto de achar que tem.')]},
+    {texto:'"Não voltei lá."', afeto:0, resultado:[x.diz('Volta um domingo. Alguém tem que me contar como está.')]}
+  ]
+});
 
 /* O recado de quem separou alguma coisa: chega no aparelho como
    mensagem, com o lugar onde a pessoa vai estar. */
@@ -329,7 +357,8 @@ const ABRE_O_RETORNO = {
   casa:[x => x.diz('Ah, é você. Eu tinha te ligado.'), x => x.diz('Achei que você ia esquecer de retornar.')],
   lider:[x => x.diz('Você retornou. Bom.'), x => x.diz('Liguei mais cedo. É coisa rápida.')],
   treinador:[x => x.diz('Ah, é você! Te liguei mais cedo.'), x => x.diz('Achei que você estava no meio de uma luta.')],
-  figura:[x => x.diz('Ah, é você. Eu tinha te ligado.'), x => x.diz('Que bom que você ligou de volta.')]
+  figura:[x => x.diz('Ah, é você. Eu tinha te ligado.'), x => x.diz('Que bom que você ligou de volta.')],
+  longe:[x => x.diz('Ah, é você! A ligação daqui pra Kanto chia, mas dá pra ouvir.'), x => x.diz('Retornou! Achei que o mar tinha comido a ligação.')]
 };
 /* a notícia que pesa (a morte, a custódia) não começa com pressa nem com festa */
 const ABRE_O_RETORNO_GRAVE = x => x.diz('Que bom que você ligou de volta.', 'baixo');
@@ -338,7 +367,8 @@ const ABRE_A_CONVERSA = {
   casa:[x => x.diz('Oi! Aconteceu alguma coisa?'), x => x.diz('Que bom ouvir você.')],
   lider:[x => x.diz('Pois não? Ah, é você.'), x => x.diz('Tenho um minuto entre um desafiante e outro. Fala.')],
   treinador:[x => x.diz('Opa! Nem acreditei quando vi o seu nome.'), x => x.diz('Ei! Achei que você tinha perdido o meu número.')],
-  figura:[x => x.diz('Alô? Ah, é você!'), x => x.diz('Que surpresa boa.')]
+  figura:[x => x.diz('Alô? Ah, é você!'), x => x.diz('Que surpresa boa.')],
+  longe:[x => x.diz('Alô? Kanto? É você mesmo?'), x => x.diz('Que surpresa. Daqui de longe a sua voz chega com eco.')]
 };
 const ABRE_A_CONVERSA_GRAVE = x => x.diz('Eu ia te ligar agora.', 'baixo');
 const PERIODO_DITO = {madrugada:'de madrugada', 'manhã':'de manhã', tarde:'à tarde', noite:'de noite'};
@@ -377,7 +407,7 @@ const Recados = {
      afinidade AFINIDADE_DA_NOTICIA), a custódia (a casa e quem não é
      treinador) e a insígnia nova (todo mundo, menos o líder que deu) */
   eventoPara(c){
-    if (!c || typeof Estado === 'undefined' || !Estado.dados) return null;
+    if (!c || c.longe || typeof Estado === 'undefined' || !Estado.dados) return null;
     const d = Estado.dados, s = this.sabeDe(c), agora = this.retrato(), casa = c.id === 'casa';
     if (agora.mortos > s.mortos && (casa || this.afinidade(c) >= AFINIDADE_DA_NOTICIA)){
       const p = d.cemiterio[d.cemiterio.length - 1];
@@ -473,7 +503,8 @@ const Recados = {
     return Dados.escolher(sacola);
   },
   podeMandarPresente(c){
-    if (!c || this.afinidade(c) < PRESENTE_MIN_AFINIDADE) return false;
+    /* quem está do outro lado do mar não tem onde te encontrar */
+    if (!c || c.longe || this.afinidade(c) < PRESENTE_MIN_AFINIDADE) return false;
     if (this.reg().presentes[c.id]) return false;
     const u = this.doContato(c.id).ultimoPresente;
     return u == null || Estado.dados.relogio.dia - u >= PRESENTE_ESPERA_DIAS;
@@ -544,6 +575,8 @@ const Recados = {
       voceLigou:!!(o && o.voceLigou),
       /* o líder cujo ginásio agora é seu (defesa.js) não fala mais de desafiante */
       lider:!!c.ginasio && !(typeof Defesa !== 'undefined' && Defesa.deixouDeSer(c.ginasio, d)),
+      /* quem foi embora pra outra região (sevii.js): a ficha diz de onde liga */
+      longe:!!c.longe, ficha:c.elenco && typeof fichaSevii === 'function' ? fichaSevii(c.elenco) : null,
       treinador:c.tipo === 'treinador', figura:c.tipo !== 'treinador' && !casa,
       ondeId, emOnde:emLocal(ondeId), emCidadeDele:emLocal(ondeId),
       diz:(t, tom, nota) => casa ? falaCasa(t, tom, nota) : fala(rot, t, tom, nota),
@@ -555,7 +588,13 @@ const Recados = {
       }
     };
   },
-  tipoDe(x){ return x.casa ? 'casa' : x.lider ? 'lider' : x.treinador ? 'treinador' : 'figura'; },
+  tipoDe(x){ return x.casa ? 'casa' : x.longe ? 'longe' : x.lider ? 'lider' : x.treinador ? 'treinador' : 'figura'; },
+  /* o tópico serve pra essa pessoa: quem está longe só fala do que dá
+     pra falar de longe, e quem está perto não fala do que é de longe */
+  serve(t, x){
+    if (x.longe ? !(t.longe || t.tambemLonge) : t.longe) return false;
+    try { return !!t.para(x); } catch(e){ return false; }
+  },
 
   /* o nome no meio da frase: o nome de verdade, quando você sabe; quem
      é chamado pelo cargo vai com artigo ("o zelador da Torre", "a
@@ -575,7 +614,7 @@ const Recados = {
      da última vez com ela */
   topicosDe(c, o){
     const x = this.contexto(c, o);
-    return TOPICOS_DE_LIGACAO.filter(t => { try { return t.para(x); } catch(e){ return false; } });
+    return TOPICOS_DE_LIGACAO.filter(t => this.serve(t, x));
   },
   montarLigacao(c, topicoId, o){
     if (!c) return null;
@@ -872,6 +911,7 @@ const Recados = {
     return primeira || 'viridian';
   },
   separarPresente(c){
+    if (!c || c.longe) return null;
     const t = this.degrau(this.afinidade(c));
     if (!t) return null;
     let [item, qtd] = sortearPeso(t.itens);
@@ -995,8 +1035,7 @@ const Recados = {
       const dono = c.id === 'casa' ? null : (falaComoDe(c) || textoContato(c, 'nome'));
       for (const t of TOPICOS_DE_LIGACAO){
         if (t.noticia) continue;
-        let ok = false; try { ok = t.para(x); } catch(e){ ok = false; }
-        if (!ok) continue;
+        if (!this.serve(t, x)) continue;
         out.push({onde:`recado/${c.id}/${t.id}`, dono, linhas:t.falas(x)});
         t.escolhas(x).forEach((e, i) => out.push({onde:`recado/${c.id}/${t.id}>${i}`, dono, linhas:e.resultado || []}));
       }
@@ -1007,8 +1046,7 @@ const Recados = {
         const y = Object.assign({}, x, {evento:ev, madrugada});
         for (const t of TOPICOS_DE_LIGACAO){
           if (!t.noticia) continue;
-          let ok = false; try { ok = t.para(y); } catch(e){ ok = false; }
-          if (!ok) continue;
+          if (!this.serve(t, y)) continue;
           out.push({onde:`recado/${c.id}/${t.id}${madrugada ? '/madrugada' : ''}`, dono, linhas:t.falas(y)});
           t.escolhas(y).forEach((e, i) => out.push({onde:`recado/${c.id}/${t.id}>${i}`, dono, linhas:e.resultado || []}));
         }
@@ -1022,21 +1060,19 @@ const Recados = {
       out.push({onde:`recado/${c.id}/conversa grave`, dono, linhas:[ABRE_A_CONVERSA_GRAVE(x)]});
       const vl = this.contexto(c, {voceLigou:true});
       for (const t of TOPICOS_DE_LIGACAO){
-        let ok = false; try { ok = !t.noticia && t.para(vl); } catch(e){ ok = false; }
-        if (!ok) continue;
+        if (t.noticia || !this.serve(t, vl)) continue;
         out.push({onde:`recado/${c.id}/${t.id}/voce ligou`, dono, linhas:t.falas(vl)});
         t.escolhas(vl).forEach((e, i) => out.push({onde:`recado/${c.id}/${t.id}/voce ligou>${i}`, dono, linhas:e.resultado || []}));
       }
       for (const ev of eventos){
         const y = Object.assign({}, vl, {evento:ev, madrugada:true});
         for (const t of TOPICOS_DE_LIGACAO){
-          let ok = false; try { ok = t.noticia && t.para(y); } catch(e){ ok = false; }
-          if (ok) out.push({onde:`recado/${c.id}/${t.id}/voce ligou/madrugada`, dono, linhas:t.falas(y)});
+          if (t.noticia && this.serve(t, y)) out.push({onde:`recado/${c.id}/${t.id}/voce ligou/madrugada`, dono, linhas:t.falas(y)});
         }
       }
-      RECADO_DE_PRESENTE[tipo].forEach((f, i) => out.push({onde:`recado/${c.id}/msg${i}`, dono, linhas:f(x)}));
-      ENTREGA[tipo].forEach((f, i) => out.push({onde:`recado/${c.id}/entrega${i}`, dono, linhas:f(x)}));
-      if (typeof Pedidos !== 'undefined') out.push(...Pedidos.amostras(c));
+      (RECADO_DE_PRESENTE[tipo] || []).forEach((f, i) => out.push({onde:`recado/${c.id}/msg${i}`, dono, linhas:f(x)}));
+      (ENTREGA[tipo] || []).forEach((f, i) => out.push({onde:`recado/${c.id}/entrega${i}`, dono, linhas:f(x)}));
+      if (typeof Pedidos !== 'undefined' && !c.longe) out.push(...Pedidos.amostras(c));
     }
     return out;
   }

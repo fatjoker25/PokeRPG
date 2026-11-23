@@ -3447,6 +3447,45 @@ a 38; o desenho de cada um do elenco está em `docs/SEVII.md`.
   Donphan da Saskia na rodada de três derrubavam pra 44%, e o Tropius,
   o Absol e o Altaria da Skye deixavam ela em 99%. Ficha que muda de
   time roda ali e o `fichas-sevii.js`.
+- **Quem veio de longe vai embora, e quem te conhece leva o seu
+  número** (foi pedido assim: o pós-jogo não é obrigatório, e quem
+  pulou as ilhas não conhece ninguém dali; os do torneio "não vão te
+  reconhecer nem você vai conhecê-los", e numa região nova as boas
+  tarefas são de quem já se conhece). Os catorze de Johto e de Hoenn
+  ficam `ESTADIA_DO_ELENCO` (7) dias depois da final (o `c38_fim`
+  carimba `Sevii.reg(d).fimDoArco`; o save de antes ganha o dia na
+  carga) e embarcam no S.S. Anne na Ilha Um (`sevii_despedida`, só no
+  dia da partida): quem te conhece (`Sevii.conheceu`: memória em
+  `d.npcs`, o jantar do Anne, a pousada) e não tem opinião negativa
+  diz a `despedida` da ficha e grava o número (`sv_numero_<id>`, contato
+  `ilhas_<id>`); quem tem, sobe sem parar; quem nunca falou com você
+  nem olha. Quem faltou acha os números num envelope no balcão da
+  pousada (`sevii_bilhete`). A pousada fecha com eles fora
+  (`Sevii.presentes`). **Pra próxima região, quem te conhece é
+  `Sevii.conhecidos(d)`**: nome, região, opinião e laço, as conversas
+  da pousada, quem venceu quem na chave, se o roubo dele voltou, se o
+  número está na agenda e se você foi ao cais. Lista vazia é jogador
+  que não viveu as ilhas: ninguém de lá sabe quem ele é. Não guarde
+  isso noutro lugar; o telefone mexe na opinião, e ela vai junto.
+- **O contato de longe** (`contatosDoElenco`, `longe` no contato) liga
+  e atende pelo tipo `longe` do `Recados` (`tipoDe`, `serve`): só os
+  tópicos `longe` (`longe_casa`, com as três `deLonge` da ficha em
+  ordem, e `longe_ilhas`) e os `tambemLonge` (`o_time`, `onde`,
+  `rumo`), sem notícia de Kanto (`eventoPara`), sem recado com presente
+  e sem pedido. A revanche aparece apagada, com o motivo (`longe` no
+  `Estado.podeLigar`): "Voltou pra Blackthorn, em Johto". Tópico novo
+  que serve de longe leva `tambemLonge`.
+- **O domingo depois do Anne** é de quem atravessa de Kanto
+  (`VIAJANTES_DA_COPA`, os inscritos de sempre do Torneio Aberto com
+  falas daqui, montados por `quemNaCopa`), do Magnus e da Noa livre.
+  Sem a ficha montada do elenco, eles levam um Pokémon a mais por
+  rodada (`TAM_VIAJANTE`, e `mais` de cada um), e foi medido no
+  `sim-sevii.js` com `PARTIU=1`: 74% a 77% nas oitavas, 47% a 53% nas
+  quartas, 42% a 52% na semi, 26% a 36% na final, 4% a 8% de título
+  (o elenco fica em 72-80, 39-56, 38-47, 19-25 e 2-5). Rafe, Jett e
+  Kian ficaram fora: o time deles cai fácil mesmo com seis. O ovo do
+  Florian, depois do Anne, só pra quem ele conheceu, com a dona da
+  pousada.
 - **Entre os capítulos, a ilha do meio conta alguma coisa**
   (`Sevii.afazeres`): o barco sem luz na Ilha Quatro, a Pokébola M. H.
   da Oona na Ilha Seis. Depois do arco, a pousada da arena, onde cada

@@ -181,7 +181,9 @@ c38_fim:{
     'E o Torneio das Ilhas, diz o rapaz da cal, volta todo domingo enquanto tiver gente.',
     d => d.flags.sv_pedido_no_bolso ? 'No seu bolso, a folha do armazém, dobrada em quatro. Você não precisa desdobrar pra lembrar da última linha: remessa norte, Ilhas do Redemoinho.' : ''
   ],
-  ef:{registrar:'Fim da semana do Torneio das Ilhas. A balsa das ilhas vai e volta, e a arena da Ilha Sete abre todo domingo.'},
+  ef:{registrar:'Fim da semana do Torneio das Ilhas. A balsa das ilhas vai e volta, e a arena da Ilha Sete abre todo domingo.',
+    /* o dia do fim: quem veio de longe embarca no Anne ESTADIA_DO_ELENCO depois (sevii.js) */
+    executar:d => { const r = Sevii.reg(d); if (r.fimDoArco == null) r.fimDoArco = d.relogio.dia; }},
   fim:true, sai:'ilha_sete',
   resumo:'O Torneio das Ilhas: dezesseis risquinhos de cal numa lousa, uma Pokébola vazia com as letras M. H., e a arena de pedra cheia.'
 }

@@ -1031,6 +1031,8 @@ const Estado = {
       if (fase === 'fazendo') return {ok:false, motivo: (c.missao && c.missao.dica) || 'Ainda não. Você sabe o que falta.'};
       return {ok:true, fase};
     }
+    /* quem foi embora pra outra região (o elenco das ilhas) não luta daqui */
+    if (servico === 'revanche' && c.longe) return {ok:false, motivo: typeof c.longe === 'function' ? c.longe(this.dados) : c.longe};
     if (servico === 'revanche' && (this.dados.revanches || {})[id])
       return {ok:false, motivo:`Já está marcada ${emLocal(this.dados.revanches[id].local)}.`};
     /* o ginásio dessa pessoa agora é seu (defesa.js): não tem onde marcar */
@@ -1644,6 +1646,13 @@ const Estado = {
       /* o parceiro do Ezra passou a ser sorteado: quem já conhecia o
          Pidgey dele continua com o Pidgey */
       if (d.rival && !d.rival.picoDex) d.rival.picoDex = (d.npcs && d.npcs['Ezra']) ? 16 : 0;
+      /* quem veio de longe pras ilhas embarca uma semana depois da final
+         (sevii.js): a jornada que fechou o arco antes do carimbo ganha a
+         semana a partir de hoje, e ninguém vai embora sem se despedir */
+      if (Array.isArray(d.capitulosFechados) && d.capitulosFechados.includes(38) && d.relogio){
+        d.sevii = d.sevii || {conversas:{}, diaConversa:{}};
+        if (d.sevii.fimDoArco == null) d.sevii.fimDoArco = d.relogio.dia;
+      }
       /* a dificuldade chegou depois: a jornada de antes dela é Normal,
          o jogo como ele foi medido */
       d.config = d.config || {};

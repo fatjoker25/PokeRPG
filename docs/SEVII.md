@@ -59,6 +59,10 @@ golpes, natureza e o item que o ás segura. O que fica pra depois (o gancho) é 
 
 **No torneio:** "Ele não nasceu no Covil. Nasceu numa caixa de papelão no porto de Olivine. Vem." · **quando ganha:** "Não foi contra você. Foi a favor dele." · **quando perde:** "Ele voou do mesmo jeito. Era isso que eu vim ver."
 
+**No cais do Anne:** "O Salamence quer ir voando até Blackthorn. Eu deixo. Se o clã perguntar, foi ele que quis."
+
+**De longe, no PokéNav:** "O Salamence pousou no telhado do santuário de Blackthorn ontem. Ninguém mandou ele descer." · "Meu pai veio ver o Dragonair. Não falou do clã. Falou do tempo. Foi bom." · "Tem neve na montanha daqui. O Salamence gosta de neve. Eu não."
+
 ## Gideon Spruce
 
 <img src="../sprites_nds/npcs/trainers/sevii_gideon.png" alt="Gideon" width="120">
@@ -92,6 +96,10 @@ golpes, natureza e o item que o ás segura. O que fica pra depois (o gancho) é 
 | Lapras | Água/Gelo | Kanto | Surf, Ice Beam, Body Slam, Psychic | Calm | Leftovers |
 
 **No torneio:** "Quarenta e duas vezes eu entrei nesta arena, moço. Em quarenta e uma eu saí com o barco cheio de história e sem troféu." · **quando ganha:** "Viu? O mar devolve. Demora, mas devolve." · **quando perde:** "Quarenta e três. Número bonito. Ano que vem eu volto."
+
+**No cais do Anne:** "Ano que vem tem outro torneio e outro barco, moço/moça. Eu vou nos dois."
+
+**De longe, no PokéNav:** "O mar de Olivine tá calmo, moço/moça. Calmo demais: nem Magikarp. Eu fico olhando a linha assim mesmo." · "O Lapras pegou mania de esperar o barco das ilhas no fim do cais. Toda tarde. Eu não tenho coragem de explicar que é só ano que vem." · "Contei no cais de Olivine das ilhas e de você. Ninguém acreditou em nada. É assim que se sabe que o causo é bom."
 
 ## Etta Hemlock
 
@@ -127,6 +135,10 @@ golpes, natureza e o item que o ás segura. O que fica pra depois (o gancho) é 
 
 **No torneio:** "Cada bola dessas eu fiz com a mão. Se eu perder, pelo menos você viu o acabamento." · **quando ganha:** "Inseto! Escreve aí: inseto!" · **quando perde:** "Tá. Mas olha a costura da bola que você usou. Agora olha a minha."
 
+**No cais do Anne:** "Guarda isso: Pokébola de Apricorn não é Pokébola comum. Se alguém disser que é, você corrige."
+
+**De longe, no PokéNav:** "Vendi trinta e duas bolas na feira das ilhas. Trinta e duas! A rua de cima de Azalea ficou sabendo." · "Tô costurando uma bola nova, verde-escura, com costura dupla. Ainda não tem nome. Quando tiver, você é a segunda a saber." · "Escrevi pra Lilycove perguntando quanto custa uma banca na praia. Responderam com um número que eu não vou repetir."
+
 ## Ziggy Bay
 
 <img src="../sprites_nds/npcs/trainers/sevii_ziggy.png" alt="Ziggy" width="120">
@@ -160,6 +172,10 @@ golpes, natureza e o item que o ás segura. O que fica pra depois (o gancho) é 
 | Exploud | Normal | Hoenn | Body Slam, Earthquake, Flamethrower, Ice Beam | Lonely | Muscle Band |
 
 **No torneio:** "Boa tarde, ouvinte! Agora é comigo e com o/a visitante de Kanto, ao vivo das ilhas!" · **quando ganha:** "E É DO ZIGGY! Repete pro pessoal de Ecruteak que não acreditou!" · **quando perde:** "…e o Ziggy cai, ouvinte. Mas cai bonito. Fica com a gente que depois do intervalo tem mais."
+
+**No cais do Anne:** "Ouvinte, aqui é o Ziggy, saindo das ilhas no último barco. Da meia-noite às quatro, fica com a gente."
+
+**De longe, no PokéNav:** "Ouvinte! O programa não saiu do ar. Ainda. Toquei a gravação do torneio três madrugadas seguidas e os caminhoneiros pediram bis." · "O diretor da rádio me chamou na sala. Achei que era o fim. Era pra perguntar se tinha mais gravação das ilhas." · "Um caminhoneiro de Ecruteak ligou no programa perguntando de você. Eu disse que você tava bem. Eu tô certo?"
 
 ## Saskia Rush
 
@@ -195,6 +211,10 @@ golpes, natureza e o item que o ás segura. O que fica pra depois (o gancho) é 
 
 **No torneio:** "Aperta aqui. Não, de verdade. Eu quero saber a força da mão de quem eu vou enfrentar." · **quando ganha:** "HA! Isso! Agora a gente vai nadar, os dois. É assim que se agradece." · **quando perde:** "Ai. Essa entrou. Entrou bonito. Me mostra de novo como foi?"
 
+**No cais do Anne:** "Aperta aqui. Mais forte. Isso. Agora vai, que o barco não espera e até Cianwood eu ainda não nado."
+
+**De longe, no PokéNav:** "Nadei ida e volta antes do café, como sempre. Contei as braçadas. Faltam umas seiscentas mil pra chegar nas ilhas." · "O dojô de Cianwood pediu pra eu contar do torneio. Eu contei lutando. Ninguém entendeu, mas todo mundo suou." · "Minha mãe disse que eu terminei um torneio. Eu disse que ainda não terminei nada. Ela riu."
+
 ## Florian Ashgrove
 
 <img src="../sprites_nds/npcs/trainers/sevii_florian.png" alt="Florian" width="120">
@@ -228,6 +248,10 @@ golpes, natureza e o item que o ás segura. O que fica pra depois (o gancho) é 
 | Espeon | Psíquico | Johto | Psychic, Shadow Ball, Swift, Reflect | Timid | Wise Glasses |
 
 **No torneio:** "Eles vieram da mesma avó. Cada um escolheu um caminho. Igual a gente." · **quando ganha:** "Noventa e um por cento, eu tinha calculado. Desculpa. Eu sempre calculo." · **quando perde:** "Anotado. Não é derrota, é dado."
+
+**No cais do Anne:** "Oitenta e sete por cento de chance de eu voltar ano que vem. Desculpa. Eu sempre calculo."
+
+**De longe, no PokéNav:** "A Eevee da creche botou um ovo na semana em que eu voltei. Anotei a hora: quatro e doze da manhã. Desculpa o detalhe." · "Meus avós querem saber quem é você. Eu disse: alguém que cuida. Eles disseram que isso basta." · "Um dos ovos da linhagem foi pra Hoenn, com uma família de Petalburg. Noventa e quatro por cento de chance de dar certo. Eu fiquei feliz em cem."
 
 ## Zev Fernley
 
@@ -263,6 +287,10 @@ golpes, natureza e o item que o ás segura. O que fica pra depois (o gancho) é 
 
 **No torneio:** "Pode olhar. Todo mundo olha. Eu prefiro que olhe de frente." · **quando ganha:** "Não foi sorte. Eu treinei mais que todo mundo aqui, porque eu comecei atrasado." · **quando perde:** "Foi limpo. Pra mim isso é muito."
 
+**No cais do Anne:** "Obrigado por ter olhado de frente. Do barco até aqui."
+
+**De longe, no PokéNav:** "O lago tá calmo. Peguei três Magikarp e soltei os três." · "Abriram uma loja nova do lado da de lembrancinhas. Eu passo na frente todo dia. É só uma loja. Eu confiro mesmo assim." · "O Houndoom dorme na porta de casa agora. Não deixa ninguém chegar perto do portão sem ele ver primeiro."
+
 ## Skye Fernwood
 
 <img src="../sprites_nds/npcs/trainers/sevii_skye.png" alt="Skye" width="120">
@@ -296,6 +324,10 @@ golpes, natureza e o item que o ás segura. O que fica pra depois (o gancho) é 
 | Altaria | Dragão/Voador | Hoenn | Dragon Claw, Fly, Flamethrower, Ice Beam | Jolly | Leftovers |
 
 **No torneio:** "Vento de sudoeste hoje. Bom pra voar. Ruim pra você." · **quando ganha:** "Eles chegam na quinta. Você vem ver?" · **quando perde:** "Tudo bem. Daqui eu vejo o céu inteiro do mesmo jeito."
+
+**No cais do Anne:** "Os Swablu saíram do mar ontem de noite. Você viu? Não? Ano que vem você vê."
+
+**De longe, no PokéNav:** "Os Swablu voltaram pra Fortree hoje. Contei quarenta e um. Um a menos que no ano passado. Fiquei olhando o céu até escurecer." · "Vento leste aqui. Ruim pra voar, bom pra pensar. Pensei nas ilhas." · "Tô juntando dinheiro pra seguir a migração inteira. Já tenho o do primeiro barco. Faltam os outros onze."
 
 ## Calla Sumac
 
@@ -331,6 +363,10 @@ golpes, natureza e o item que o ás segura. O que fica pra depois (o gancho) é 
 
 **No torneio:** "Eu cobro entrada de quem vem ver o meu Blaziken. Hoje é cortesia." · **quando ganha:** "Isso vai pra parede da pousada. Do lado da foto da minha avó." · **quando perde:** "Tudo bem. Passa lá em casa um dia. Banho de graça pra quem me ganhou."
 
+**No cais do Anne:** "Passa em Lavaridge um dia. Banho de graça pra quem me conhece. Pra quem me ganhou também: eu não guardo rancor de cliente."
+
+**De longe, no PokéNav:** "Consertei o telhado. Com o dinheiro das ilhas e um desconto que eu arranquei do carpinteiro na conversa. Ele ainda não sabe como." · "As termas da beira-mar abaixaram o preço. Eu não. Eu pus a foto da minha avó maior na recepção." · "Um hóspede de Kanto perguntou se eu conhecia você. Eu disse que sim, e cobrei a diária inteira dele mesmo assim."
+
 ## Imogen Vetch
 
 <img src="../sprites_nds/npcs/trainers/sevii_imogen.png" alt="Imogen" width="120">
@@ -364,6 +400,10 @@ golpes, natureza e o item que o ás segura. O que fica pra depois (o gancho) é 
 | Metagross | Metálico/Psíquico | Hoenn | Psychic, Earthquake, Metal Claw, Thunder Punch | Adamant | Metal Coat |
 
 **No torneio:** "Faltam quatro noites pra chuva. Eu não pretendo perder nenhuma delas." · **quando ganha:** "Previsível. Bonito do jeito que órbita é bonita." · **quando perde:** "Interessante. Eu errei a conta em algum lugar. Vou achar onde."
+
+**No cais do Anne:** "A chuva de meteoros foi boa. Você estava olhando pra arena, eu sei. Ninguém é perfeito."
+
+**De longe, no PokéNav:** "O satélite que eu calculo passou por cima das ilhas ontem. Seis minutos e doze segundos. Pensei em você em quatro deles." · "Meu chefe perguntou da desculpa da passagem. Mostrei as fotos da chuva de meteoros. Ele parou de perguntar." · "O Lunatone fica olhando pro sul de noite, desde que a gente voltou. Eu não sei o que ele procura. Nem ele, acho."
 
 ## Brody Teak
 
@@ -399,6 +439,10 @@ golpes, natureza e o item que o ás segura. O que fica pra depois (o gancho) é 
 
 **No torneio:** "A turma tá na arquibancada, chefia. Doze homens que pagaram a passagem em seis vezes. Eu não vou fazer eles passarem vergonha." · **quando ganha:** "VIU, TURMA? VIU?" · **quando perde:** "Tudo bem, tudo bem. Foi justo. Aperta aqui."
 
+**No cais do Anne:** "A turma volta inteira, chefia. Os Pokémon não. Isso não é culpa sua, e eu não quero ouvir o contrário."
+
+**De longe, no PokéNav:** "A turma escreveu a carta pro sindicato de Vermilion, chefia. Doze assinaturas. A minha tá torta porque eu tava chorando." · "O cais de Slateport tá cheio de navio esta semana. A gente trabalha cantando a música da arena da Ilha Sete. Ninguém aqui sabe de onde é." · "O Wailord ficou triste quando a gente desembarcou. Sério, chefia. Ficou uma tarde inteira boiando parado."
+
 ## Esme Wisteria
 
 <img src="../sprites_nds/npcs/trainers/sevii_esme.png" alt="Esme" width="120">
@@ -432,6 +476,10 @@ golpes, natureza e o item que o ás segura. O que fica pra depois (o gancho) é 
 | Milotic | Água | Hoenn | Surf, Ice Beam, Recover, Attract | Bold | Leftovers |
 
 **No torneio:** "Não é concurso, eu sei. Ninguém vai dar nota pra beleza. Hoje eu dou nota pra mim mesma." · **quando ganha:** "Recorta essa, revista." · **quando perde:** "Bom. Foi uma batalha de verdade. Era o que eu queria."
+
+**No cais do Anne:** "Não foi um concurso. Foi melhor. Não conta pra ninguém que eu disse isso."
+
+**De longe, no PokéNav:** "Mandei o recorte de volta pra redação da revista, com uma linha escrita embaixo. Não vou te dizer qual. Foi educada. Mais ou menos." · "Ganhei mais um concurso de Beleza em Lilycove. A Milotic ganhou, na verdade. Eu só estava lá sorrindo." · "A revista mandou um repórter perguntar das ilhas. Eu disse que batalha de verdade cansa mais que palco. Ele anotou "cansa"."
 
 ## Oona Yew
 
@@ -467,6 +515,10 @@ golpes, natureza e o item que o ás segura. O que fica pra depois (o gancho) é 
 
 **No torneio:** "Você veio sozinho/a. Isso é raro." · **quando ganha:** "Eles gostaram de você. Isso não muda o resultado." · **quando perde:** "Eu vou contar pra eles que foi bonito."
 
+**No cais do Anne:** "O monte vai estar quieto quando eu chegar. É bom voltar pra um lugar quieto."
+
+**De longe, no PokéNav:** "Entreguei as coisas que voltam pra casa este ano. Todas chegaram. Uma delas demorou dezenove anos e quatro dias." · "Venta muito no cume. O sino toca sozinho. Hoje ele tocou três vezes, e eu contei pra você." · "Alguém subiu o monte ontem perguntando de você. Não. Mentira. Ninguém subiu. Eu queria ver se você ia acreditar."
+
 ## Rhys Ironwood
 
 <img src="../sprites_nds/npcs/trainers/sevii_rhys.png" alt="Rhys" width="120">
@@ -500,6 +552,10 @@ golpes, natureza e o item que o ás segura. O que fica pra depois (o gancho) é 
 | Aggron | Metálico/Pedra | Hoenn | Iron Tail, Earthquake, Rock Slide, Thunder Punch | Adamant | Leftovers |
 
 **No torneio:** "Finalmente. Eu atravessei um mar inteiro por esta luta, e eu não costumo atravessar nem a rua." · **quando ganha:** "Era isso que eu queria saber. Obrigado." · **quando perde:** "Terceira porta de novo. Engraçado como a vida rima."
+
+**No cais do Anne:** "Foi uma travessia que valeu o mar. Obrigado. Te espero na arquibancada da terceira porta."
+
+**De longe, no PokéNav:** "Treinei o Aggron numa caverna de granito por três semanas seguidas. Não, não é por sua causa. É um pouco por sua causa." · "As casas de aposta de Slateport me puseram como favorito de novo. Eu agradeci e pedi que tirassem." · "Marquei a terceira tentativa na Elite de Hoenn. Fica sabendo. Não precisa responder."
 
 ## Noa Kelp
 

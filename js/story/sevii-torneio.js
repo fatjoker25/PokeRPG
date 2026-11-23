@@ -25,6 +25,13 @@ const PISO_COPA = [56, 58, 60, 62];          // o nível mínimo do ás, por rod
 const SUBIDA_COPA = [-6, -5, -4, -3];        // em cima dos seus três mais fortes
 const TAM_COPA = [3, 4, 4, 5];               // o time de cada um, por rodada: os do fim da ficha
 const ERRO_IA_COPA = [14, 12, 10, 8];        // a escolha errada de golpe, por rodada
+/* quem atravessa de Kanto traz o time das linhas (liga.js), sem a
+   ficha montada do elenco: o Pokémon a mais por rodada é o que segura
+   a curva no lugar dela (medido no sim-sevii com PARTIU=1). Quem tem
+   time que o jogador comum não aguenta (a água e o gelo do Ewan, os
+   fantasmas da Morwen) leva menos (`mais` na entrada dele); quem tem
+   espécie que cai fácil, mais. */
+const TAM_VIAJANTE = [1, 1, 1, 1];
 const DIA_DA_COPA = 6;                       // domingo (0 = segunda, como o Calendario)
 const INSCRICAO_COPA = 3000;
 const PREMIO_COPA = [
@@ -34,6 +41,60 @@ const PREMIO_COPA = [
   {rodada:'Final',     dinheiro:40000, rep:2, itens:{'Full Restore':2, 'Max Revive':1}}
 ];
 
+/* Depois que quem veio de Johto e de Hoenn embarca no Anne
+   (Sevii.partiu), o domingo da Ilha Sete é de quem atravessa de Kanto
+   na balsa: os inscritos de sempre do Torneio Aberto (liga.js), com o
+   time das linhas deles e as falas daqui, o Magnus e a Noa. `ajuste` é o
+   acerto de nível na chave das ilhas, medido no sim-sevii (PARTIU=1). */
+const VIAJANTES_DA_COPA = {
+  ronan:{torneio:'"Vim de balsa. Dragão não gosta de balsa, e eu não gosto de dragão enjoado. Vamos logo."',
+    vence:'"Vou contar isso no Planalto. Vão dizer que eu inventei."', perde:'"Perdi longe de casa. Pelo menos ninguém do Planalto viu."'},
+  sabine:{torneio:'"Sonhei com esta arena antes de saber que ela existia. A pedra era desta cor."',
+    vence:'"No sonho você ganhava. Sonho também erra."', perde:'"Eu sabia. Vim assim mesmo. É o que eu faço."'},
+  ewan:{torneio:'"Atravessei pela pesca: diz que no cabo da Ilha Dois o Mantine sobe na linha. O torneio é pra pagar a balsa."',
+    vence:'"Paguei a balsa de volta. E a de ida."', perde:'"Tudo bem. A pesca daqui compensa."', mais:[0, 0, 0, 0]},
+  felix:{torneio:'"De Cinnabar até aqui é uma balsa e meia. Faltei na aula de sexta pra chegar a tempo."',
+    vence:'"Vou escrever isso na redação de segunda."', perde:'"Anotei tudo. Na próxima eu chego com a lição feita."'},
+  kaia:{torneio:'"Dormi três noites na praia da Ilha Quatro pra economizar a pousada. A areia daqui é melhor que a de Kanto."',
+    vence:'"Pronto: a pousada desta noite está paga."', perde:'"Volto pra praia, então. Eu gosto da praia."'},
+  rocco:{torneio:'"O dojô me mandou ver se o torneio das ilhas é sério. Se eu voltar de mão vazia, varro o tatame um mês."',
+    vence:'"Isso eu levo pro dojô. A vassoura fica com outro."', perde:'"Um mês de vassoura. Valeu ver isso de perto."', mais:[0, 0, 0, 0]},
+  marina:{torneio:'"Hoje de manhã eu nadei até a pedra do farol e voltei. A água daqui é outra coisa. Agora eu estou quente."',
+    vence:'"Amanhã eu nado até a outra pedra. Comemoração."', perde:'"Vou nadar um pouco. Faz bem pra cabeça."', mais:[0, 0, 0, 0]},
+  avery:{torneio:'"Vim contar Pokémon voador nas ilhas. Já são onze espécies que Kanto não tem. A arena é o intervalo."',
+    vence:'"Dia de sorte: um Noctowl de manhã e uma vitória de tarde."', perde:'"Tudo bem. Na balsa de volta eu conto o que passar voando."', mais:[2, 2, 2, 1]},
+  morwen:{torneio:'"O cânion da Ilha Sete é quieto como a Torre de madrugada. Eu gostei daqui."',
+    vence:'"A arquibancada fez silêncio na hora certa. Agradeço a quem fez."', perde:'"Foi bonito. Eu vou lembrar do barulho da pedra."', mais:[0, 0, 0, -1]},
+  freya:{torneio:'"Lá em casa é gelo. Aqui é pedra quente e sol. Vim ver se o meu time derrete."',
+    vence:'"Não derreteu."', perde:'"Derreteu um pouco. Volto no inverno."', mais:[0, 0, 0, 0]},
+  odette:{torneio:'"Trouxe chapéu, sombrinha e os meus melhores. Os meus melhores enjoaram na balsa. Eu não."',
+    vence:'"Que tarde agradável."', perde:'"Que tarde agradável, mesmo assim. Quase."', mais:[2, 2, 2, 1]},
+  willa:{torneio:'"Folga de três dias, e eu passo dois aqui. O meu chefe acha que eu fui pra casa da minha mãe."',
+    vence:'"Valeu a folga."', perde:'"Ainda tem um dia de folga. Vou passar na praia."'},
+  dax:{torneio:'"O monte da Ilha Um esquenta a sola do sapato. Me senti em casa."',
+    vence:'"Isso aquece mais que forno."', perde:'"Volto pro forno. Lá pelo menos eu sei mexer no fogo."', mais:[2, 2, 2, 1]},
+  zara:{torneio:'"Eu danço no cais pra quem chega de barco. Dessa vez quem chegou de barco fui eu."',
+    vence:'"Agora eu danço pra mim."', perde:'"Dança de despedida, então. Você mereceu."'},
+  remy:{torneio:'"Fechei a cozinha no domingo pra vir. Se eu cair cedo, ainda pego a balsa e abro pro jantar."',
+    vence:'"Hoje o jantar é por minha conta. Na cozinha, não aqui."', perde:'"Tudo bem. Ainda dá tempo de abrir pro jantar."', mais:[0, 0, 0, 0]},
+  ambrose:{torneio:'"Eu atravesso pra cá todo verão desde antes de você nascer. O torneio é novo pra mim; a balsa, não."',
+    vence:'"Um velho também ganha uma de vez em quando."', perde:'"Perdi quase todas, a vida inteira. Esta foi das boas de perder."'},
+  abel:{torneio:'"Eu crio, não batalho. Mas os meus queriam ver o mar, e o mar é aqui."',
+    vence:'"Viu? Os meus batalham."', perde:'"Eles se divertiram. Eu também, um pouco."'},
+  quincy:{torneio:'"Vim pela vitrine: aqui tinha time de Johto e de Hoenn. Foram embora, e sobrou você."',
+    vence:'"Anotei o seu time inteiro. Pra coleção."', perde:'"Vi de perto. Valeu a balsa."'},
+};
+/* quem está na chave: a ficha do elenco, ou o viajante de Kanto, com os
+   campos que a arena lê (nome, classe, de, f, torneio, vence, perde) */
+function quemNaCopa(id){
+  const f = fichaSevii(id);
+  if (f) return f;
+  const v = VIAJANTES_DA_COPA[id], r = v && typeof inscritoDoTorneio === 'function' ? inscritoDoTorneio(id) : null;
+  if (!r || !r.linhas) return null;
+  const lugar = String(r.de || '').replace(/^(do|da|de|dos|das) /, '');
+  return {id, nome:r.nome, classe:r.classe || 'Treinador', f:!!r.f, de:lugar, deDito:r.de || '', regiao:'Kanto',
+    torneio:v.torneio, vence:v.vence, perde:v.perde, ajuste:v.ajuste || 0, mais:v.mais || null, viajante:r};
+}
 /* o inscrito, pela ficha: a vaga dele no save é o id */
 function inscritoDaCopa(f){
   return {id:f.id, nome:f.nome, curto:f.nome, classe:f.classe, f:!!f.f,
@@ -41,6 +102,12 @@ function inscritoDaCopa(f){
 }
 function inscritosDaCopa(){
   const d = Estado.dados;
+  if (Sevii.partiu(d)){
+    /* depois do Anne: o Magnus, a Noa se estiver livre, e quem atravessa de Kanto */
+    const locais = ELENCO_SEVII.filter(f => f.regiao === 'Ilhas Sevii' && (f.id !== 'noa' || Sevii.noaInscrita(d)));
+    const viajantes = _embaralhar(Object.keys(VIAJANTES_DA_COPA).map(quemNaCopa).filter(Boolean));
+    return locais.concat(viajantes).slice(0, VAGAS_TORNEIO - 1).map(inscritoDaCopa);
+  }
   const gente = ELENCO_SEVII.filter(f => f.id !== 'magnus' && (f.id !== 'noa' || Sevii.noaInscrita(d)));
   /* o Magnus fecha os dezesseis quando falta um */
   if (gente.length < VAGAS_TORNEIO - 1) gente.push(fichaSevii('magnus'));
@@ -50,8 +117,15 @@ function nivelDaCopa(rodada, f){
   return Math.max(PISO_COPA[rodada], nivelDeReferencia() + SUBIDA_COPA[rodada]) + ((f && f.ajuste) || 0);
 }
 function adversarioDaCopa(ins, rodada){
-  const f = fichaSevii(ins.id);
+  const f = quemNaCopa(ins.id);
   if (!f) return null;
+  if (f.viajante){
+    const r = f.viajante;
+    const mais = (f.mais || TAM_VIAJANTE)[rodada];
+    const time = timeDeLinhas(r.linhas, nivelDaCopa(rodada, f), Math.min(6, TAM_COPA[rodada] + mais), r.golpes || [], 90);
+    if (r.segura && time.length) time[time.length - 1].segurando = r.segura;
+    return Object.assign(inscritoDaCopa(f), {time});
+  }
   const time = timeDaFicha(f, nivelDaCopa(rodada, f), TAM_COPA[rodada], Sevii.semDoDono(f.id));
   return Object.assign(inscritoDaCopa(f), {time});
 }
@@ -63,7 +137,7 @@ if (typeof CHAVES !== 'undefined') CHAVES.sevii = {
 };
 
 const CopaSevii = {
-  inscrito(id){ return fichaSevii(id); },
+  inscrito(id){ return quemNaCopa(id); },
 
   /* a arena depois do arco: domingo à tarde, uma chave por domingo */
   fechada(){
@@ -87,7 +161,9 @@ const CopaSevii = {
     const d = Estado.dados;
     const conta = d.copasVencidas ? `O seu nome está no quadro da entrada ${d.copasVencidas === 1 ? 'uma vez' : porExtensoF(d.copasVencidas) + ' vezes'}.` : 'O quadro da entrada tem dois nomes repetidos, e nenhum é o seu.';
     UI.telaConversa({num:'Ilhas Sevii', titulo:'A arena da Ilha Sete', loc:'Ilha Sete',
-      falas:['A arquibancada de pedra enche devagar, de gente das ilhas e de quem ficou depois da semana do torneio.', conta,
+      falas:[Sevii.partiu(d)
+          ? 'A arquibancada de pedra enche devagar, de gente das ilhas e de quem desce da balsa de Kanto com a mochila nas costas.'
+          : 'A arquibancada de pedra enche devagar, de gente das ilhas e de quem ficou depois da semana do torneio.', conta,
         fala('Magnus', 'Domingo é domingo. Quem quiser, se inscreve. Quem não quiser, assiste e reclama.')],
       botoes:[
         {texto:`Inscrever-se — ${fmtDin(INSCRICAO_COPA)} ₽`, classe:'luta', acao:'CopaSevii.iniciar()'},
@@ -124,12 +200,12 @@ const CopaSevii = {
     if (!c) return this.tela();
     if (!Estado.primeiroApto()) return this.resultado({resultado:'derrota'});
     const adv = c.adv || (c.adv = adversarioDaVez(c));
-    const f = fichaSevii(adv.id);
+    const f = quemNaCopa(adv.id);
     Veteranos.iniciarLuta(adv.nome, adv.time, {id:adv.id, tipo:'copa', arena:'ginasio', erroIA:ERRO_IA_COPA[c.rodada]});
     const ja = (Estado.dados.npcs[f.nome] || {}).memorias;
     UI.telaBatalha([`${PREMIO_COPA[c.rodada].rodada} — ${adv.nome}`,
       `${f.nome}: ${txt(f.torneio)}`,
-      ja ? null : `${f.nome} entra pelo túnel do outro lado, ${f.classe.toLowerCase()} de ${f.de}.`].filter(Boolean));
+      ja ? null : `${f.nome} entra pelo túnel do outro lado, ${f.classe.toLowerCase()} ${f.deDito || 'de ' + f.de}.`].filter(Boolean));
   },
 
   premio(venceu){
@@ -163,7 +239,7 @@ const CopaSevii = {
     if (fim.resultado === 'gameover'){ Jogo.copaAtual = null; return UI.telaGameOver('Você caiu na arena da Ilha Sete, com a arquibancada de pedra inteira de pé.'); }
     const d = Estado.dados;
     const adv = c.adv || (c.adv = adversarioDaVez(c));
-    const f = fichaSevii(adv.id);
+    const f = quemNaCopa(adv.id);
     const R = PREMIO_COPA.length, pr = PREMIO_COPA[c.rodada];
     const diz = t => fala(f.nome, String(txt(t) || '').replace(/^["“]|["”]$/g, ''));
     const venceu = fim.resultado === 'vitoria';
@@ -194,6 +270,7 @@ const CopaSevii = {
         titulo:'Eliminad{o|a}', sub:`Torneio das Ilhas · ${pr.rodada}`, loc:'Ilha Sete',
         quem:f.nome, falas:[diz(f.vence), levou,
           historia ? 'A arquibancada de pedra aplaude quem sai, como aplaude quem fica. Aqui ninguém vaia: a ilha é pequena demais pra isso.'
+                   : Sevii.partiu(d) ? 'O Torneio das Ilhas é todo domingo, e a balsa de Kanto traz gente nova a cada um.'
                    : 'O Torneio das Ilhas é todo domingo. Quem veio de longe ainda está por aqui.'],
         chave, avisos, venceu:false, botoes:this.botoesDoFim({historia})
       }));
@@ -223,11 +300,15 @@ const CopaSevii = {
       if (d.copasVencidas === 1){
         /* a tradição do Florian: um ovo da linhagem pra quem chega na final,
            se a caixa térmica voltou pra ele */
-        if (d.flags.sv_rec_ovos){
+        /* depois do Anne, o ovo espera com a dona da pousada, pra quem o Florian conheceu */
+        const foi = Sevii.partiu(d);
+        if (d.flags.sv_rec_ovos && (!foi || Sevii.conheceu('florian', d))){
           d.ovos = d.ovos || [];
           d.ovos.push({dex:133, choca:Creche._agora() + HORAS_DO_OVO});
           Creche.sincronizarOvos();
-          avisos.push({tipo:'item', texto:`O Florian desce da arquibancada com um ovo nas duas mãos. Recebeu 1× ${NOME_DO_OVO}.`});
+          avisos.push({tipo:'item', texto: foi
+            ? `A dona da pousada desce até a arena com uma caixa térmica. Dentro, um ovo e um bilhete na letra do Florian: "Pra quando você ganhar." Recebeu 1× ${NOME_DO_OVO}.`
+            : `O Florian desce da arquibancada com um ovo nas duas mãos. Recebeu 1× ${NOME_DO_OVO}.`});
         }
         Estado.darItem('Troféu das Ilhas', 1);
         ganhos['Troféu das Ilhas'] = 1;

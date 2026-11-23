@@ -63,7 +63,13 @@ const ELENCO_SEVII = [
   ],
   torneio:'"Ele não nasceu no Covil. Nasceu numa caixa de papelão no porto de Olivine. Vem."',
   vence:'"Não foi contra você. Foi a favor dele."',
-  perde:'"Ele voou do mesmo jeito. Era isso que eu vim ver."'
+  perde:'"Ele voou do mesmo jeito. Era isso que eu vim ver."',
+  despedida:'"O Salamence quer ir voando até Blackthorn. Eu deixo. Se o clã perguntar, foi ele que quis."',
+  deLonge:[
+    'O Salamence pousou no telhado do santuário de Blackthorn ontem. Ninguém mandou ele descer.',
+    'Meu pai veio ver o Dragonair. Não falou do clã. Falou do tempo. Foi bom.',
+    'Tem neve na montanha daqui. O Salamence gosta de neve. Eu não.'
+  ]
 },
 {
   id:'gideon', nome:'Gideon', sobrenome:'Spruce', f:false, idade:71, nasceu:[30, 3],
@@ -91,7 +97,13 @@ const ELENCO_SEVII = [
   ],
   torneio:'"Quarenta e duas vezes eu entrei nesta arena, moço. Em quarenta e uma eu saí com o barco cheio de história e sem troféu."',
   vence:'"Viu? O mar devolve. Demora, mas devolve."',
-  perde:'"Quarenta e três. Número bonito. Ano que vem eu volto."'
+  perde:'"Quarenta e três. Número bonito. Ano que vem eu volto."',
+  despedida:'"Ano que vem tem outro torneio e outro barco, {moço|moça}. Eu vou nos dois."',
+  deLonge:[
+    'O mar de Olivine tá calmo, {moço|moça}. Calmo demais: nem Magikarp. Eu fico olhando a linha assim mesmo.',
+    'O Lapras pegou mania de esperar o barco das ilhas no fim do cais. Toda tarde. Eu não tenho coragem de explicar que é só ano que vem.',
+    'Contei no cais de Olivine das ilhas e de você. Ninguém acreditou em nada. É assim que se sabe que o causo é bom.'
+  ]
 },
 {
   id:'etta', ajuste:-8, nome:'Etta', sobrenome:'Hemlock', f:true, idade:14, nasceu:[14, 6],
@@ -118,7 +130,13 @@ const ELENCO_SEVII = [
   ],
   torneio:'"Cada bola dessas eu fiz com a mão. Se eu perder, pelo menos você viu o acabamento."',
   vence:'"Inseto! Escreve aí: inseto!"',
-  perde:'"Tá. Mas olha a costura da bola que você usou. Agora olha a minha."'
+  perde:'"Tá. Mas olha a costura da bola que você usou. Agora olha a minha."',
+  despedida:'"Guarda isso: Pokébola de Apricorn não é Pokébola comum. Se alguém disser que é, você corrige."',
+  deLonge:[
+    'Vendi trinta e duas bolas na feira das ilhas. Trinta e duas! A rua de cima de Azalea ficou sabendo.',
+    'Tô costurando uma bola nova, verde-escura, com costura dupla. Ainda não tem nome. Quando tiver, você é a segunda a saber.',
+    'Escrevi pra Lilycove perguntando quanto custa uma banca na praia. Responderam com um número que eu não vou repetir.'
+  ]
 },
 {
   id:'ziggy', ajuste:8, nome:'Ziggy', sobrenome:'Bay', f:false, idade:28, nasceu:[1, 4],
@@ -145,7 +163,13 @@ const ELENCO_SEVII = [
   ],
   torneio:'"Boa tarde, ouvinte! Agora é comigo e com {o|a} visitante de Kanto, ao vivo das ilhas!"',
   vence:'"E É DO ZIGGY! Repete pro pessoal de Ecruteak que não acreditou!"',
-  perde:'"…e o Ziggy cai, ouvinte. Mas cai bonito. Fica com a gente que depois do intervalo tem mais."'
+  perde:'"…e o Ziggy cai, ouvinte. Mas cai bonito. Fica com a gente que depois do intervalo tem mais."',
+  despedida:'"Ouvinte, aqui é o Ziggy, saindo das ilhas no último barco. Da meia-noite às quatro, fica com a gente."',
+  deLonge:[
+    'Ouvinte! O programa não saiu do ar. Ainda. Toquei a gravação do torneio três madrugadas seguidas e os caminhoneiros pediram bis.',
+    'O diretor da rádio me chamou na sala. Achei que era o fim. Era pra perguntar se tinha mais gravação das ilhas.',
+    'Um caminhoneiro de Ecruteak ligou no programa perguntando de você. Eu disse que você tava bem. Eu tô certo?'
+  ]
 },
 {
   id:'saskia', nome:'Saskia', sobrenome:'Rush', f:true, idade:22, nasceu:[8, 8],
@@ -172,7 +196,13 @@ const ELENCO_SEVII = [
   ],
   torneio:'"Aperta aqui. Não, de verdade. Eu quero saber a força da mão de quem eu vou enfrentar."',
   vence:'"HA! Isso! Agora a gente vai nadar, os dois. É assim que se agradece."',
-  perde:'"Ai. Essa entrou. Entrou bonito. Me mostra de novo como foi?"'
+  perde:'"Ai. Essa entrou. Entrou bonito. Me mostra de novo como foi?"',
+  despedida:'"Aperta aqui. Mais forte. Isso. Agora vai, que o barco não espera e até Cianwood eu ainda não nado."',
+  deLonge:[
+    'Nadei ida e volta antes do café, como sempre. Contei as braçadas. Faltam umas seiscentas mil pra chegar nas ilhas.',
+    'O dojô de Cianwood pediu pra eu contar do torneio. Eu contei lutando. Ninguém entendeu, mas todo mundo suou.',
+    'Minha mãe disse que eu terminei um torneio. Eu disse que ainda não terminei nada. Ela riu.'
+  ]
 },
 {
   id:'florian', ajuste:5, nome:'Florian', sobrenome:'Ashgrove', f:false, idade:34, nasceu:[22, 9],
@@ -199,7 +229,13 @@ const ELENCO_SEVII = [
   ],
   torneio:'"Eles vieram da mesma avó. Cada um escolheu um caminho. Igual a gente."',
   vence:'"Noventa e um por cento, eu tinha calculado. Desculpa. Eu sempre calculo."',
-  perde:'"Anotado. Não é derrota, é dado."'
+  perde:'"Anotado. Não é derrota, é dado."',
+  despedida:'"Oitenta e sete por cento de chance de eu voltar ano que vem. Desculpa. Eu sempre calculo."',
+  deLonge:[
+    'A Eevee da creche botou um ovo na semana em que eu voltei. Anotei a hora: quatro e doze da manhã. Desculpa o detalhe.',
+    'Meus avós querem saber quem é você. Eu disse: alguém que cuida. Eles disseram que isso basta.',
+    'Um dos ovos da linhagem foi pra Hoenn, com uma família de Petalburg. Noventa e quatro por cento de chance de dar certo. Eu fiquei feliz em cem.'
+  ]
 },
 {
   id:'zev', ajuste:-6, nome:'Zev', sobrenome:'Fernley', f:false, idade:31, nasceu:[13, 12],
@@ -226,7 +262,13 @@ const ELENCO_SEVII = [
   ],
   torneio:'"Pode olhar. Todo mundo olha. Eu prefiro que olhe de frente."',
   vence:'"Não foi sorte. Eu treinei mais que todo mundo aqui, porque eu comecei atrasado."',
-  perde:'"Foi limpo. Pra mim isso é muito."'
+  perde:'"Foi limpo. Pra mim isso é muito."',
+  despedida:'"Obrigado por ter olhado de frente. Do barco até aqui."',
+  deLonge:[
+    'O lago tá calmo. Peguei três Magikarp e soltei os três.',
+    'Abriram uma loja nova do lado da de lembrancinhas. Eu passo na frente todo dia. É só uma loja. Eu confiro mesmo assim.',
+    'O Houndoom dorme na porta de casa agora. Não deixa ninguém chegar perto do portão sem ele ver primeiro.'
+  ]
 },
 
 /* ─────────────────────────── HOENN ─────────────────────────── */
@@ -256,7 +298,13 @@ const ELENCO_SEVII = [
   ],
   torneio:'"Vento de sudoeste hoje. Bom pra voar. Ruim pra você."',
   vence:'"Eles chegam na quinta. Você vem ver?"',
-  perde:'"Tudo bem. Daqui eu vejo o céu inteiro do mesmo jeito."'
+  perde:'"Tudo bem. Daqui eu vejo o céu inteiro do mesmo jeito."',
+  despedida:'"Os Swablu saíram do mar ontem de noite. Você viu? Não? Ano que vem você vê."',
+  deLonge:[
+    'Os Swablu voltaram pra Fortree hoje. Contei quarenta e um. Um a menos que no ano passado. Fiquei olhando o céu até escurecer.',
+    'Vento leste aqui. Ruim pra voar, bom pra pensar. Pensei nas ilhas.',
+    'Tô juntando dinheiro pra seguir a migração inteira. Já tenho o do primeiro barco. Faltam os outros onze.'
+  ]
 },
 {
   id:'calla', ajuste:6, nome:'Calla', sobrenome:'Sumac', f:true, idade:24, nasceu:[5, 1],
@@ -284,7 +332,13 @@ const ELENCO_SEVII = [
   ],
   torneio:'"Eu cobro entrada de quem vem ver o meu Blaziken. Hoje é cortesia."',
   vence:'"Isso vai pra parede da pousada. Do lado da foto da minha avó."',
-  perde:'"Tudo bem. Passa lá em casa um dia. Banho de graça pra quem me ganhou."'
+  perde:'"Tudo bem. Passa lá em casa um dia. Banho de graça pra quem me ganhou."',
+  despedida:'"Passa em Lavaridge um dia. Banho de graça pra quem me conhece. Pra quem me ganhou também: eu não guardo rancor de cliente."',
+  deLonge:[
+    'Consertei o telhado. Com o dinheiro das ilhas e um desconto que eu arranquei do carpinteiro na conversa. Ele ainda não sabe como.',
+    'As termas da beira-mar abaixaram o preço. Eu não. Eu pus a foto da minha avó maior na recepção.',
+    'Um hóspede de Kanto perguntou se eu conhecia você. Eu disse que sim, e cobrei a diária inteira dele mesmo assim.'
+  ]
 },
 {
   id:'imogen', ajuste:3, nome:'Imogen', sobrenome:'Vetch', f:true, idade:31, nasceu:[11, 8],
@@ -311,7 +365,13 @@ const ELENCO_SEVII = [
   ],
   torneio:'"Faltam quatro noites pra chuva. Eu não pretendo perder nenhuma delas."',
   vence:'"Previsível. Bonito do jeito que órbita é bonita."',
-  perde:'"Interessante. Eu errei a conta em algum lugar. Vou achar onde."'
+  perde:'"Interessante. Eu errei a conta em algum lugar. Vou achar onde."',
+  despedida:'"A chuva de meteoros foi boa. Você estava olhando pra arena, eu sei. Ninguém é perfeito."',
+  deLonge:[
+    'O satélite que eu calculo passou por cima das ilhas ontem. Seis minutos e doze segundos. Pensei em você em quatro deles.',
+    'Meu chefe perguntou da desculpa da passagem. Mostrei as fotos da chuva de meteoros. Ele parou de perguntar.',
+    'O Lunatone fica olhando pro sul de noite, desde que a gente voltou. Eu não sei o que ele procura. Nem ele, acho.'
+  ]
 },
 {
   id:'brody', ajuste:-10, nome:'Brody', sobrenome:'Teak', f:false, idade:38, nasceu:[27, 7],
@@ -338,7 +398,13 @@ const ELENCO_SEVII = [
   ],
   torneio:'"A turma tá na arquibancada, chefia. Doze homens que pagaram a passagem em seis vezes. Eu não vou fazer eles passarem vergonha."',
   vence:'"VIU, TURMA? VIU?"',
-  perde:'"Tudo bem, tudo bem. Foi justo. Aperta aqui."'
+  perde:'"Tudo bem, tudo bem. Foi justo. Aperta aqui."',
+  despedida:d => d.flags.sv_rec_turma ? '"Chefia! A turma voltou inteira, e os Pokémon de todo mundo também. Isso é seu também. Não discute."' : '"A turma volta inteira, chefia. Os Pokémon não. Isso não é culpa sua, e eu não quero ouvir o contrário."',
+  deLonge:[
+    'A turma escreveu a carta pro sindicato de Vermilion, chefia. Doze assinaturas. A minha tá torta porque eu tava chorando.',
+    'O cais de Slateport tá cheio de navio esta semana. A gente trabalha cantando a música da arena da Ilha Sete. Ninguém aqui sabe de onde é.',
+    'O Wailord ficou triste quando a gente desembarcou. Sério, chefia. Ficou uma tarde inteira boiando parado.'
+  ]
 },
 {
   id:'esme', ajuste:-6, nome:'Esme', sobrenome:'Wisteria', f:true, idade:20, nasceu:[3, 3],
@@ -364,7 +430,13 @@ const ELENCO_SEVII = [
   ],
   torneio:'"Não é concurso, eu sei. Ninguém vai dar nota pra beleza. Hoje eu dou nota pra mim mesma."',
   vence:'"Recorta essa, revista."',
-  perde:'"Bom. Foi uma batalha de verdade. Era o que eu queria."'
+  perde:'"Bom. Foi uma batalha de verdade. Era o que eu queria."',
+  despedida:'"Não foi um concurso. Foi melhor. Não conta pra ninguém que eu disse isso."',
+  deLonge:[
+    'Mandei o recorte de volta pra redação da revista, com uma linha escrita embaixo. Não vou te dizer qual. Foi educada. Mais ou menos.',
+    'Ganhei mais um concurso de Beleza em Lilycove. A Milotic ganhou, na verdade. Eu só estava lá sorrindo.',
+    'A revista mandou um repórter perguntar das ilhas. Eu disse que batalha de verdade cansa mais que palco. Ele anotou "cansa".'
+  ]
 },
 {
   id:'oona', ajuste:2, nome:'Oona', sobrenome:'Yew', f:true, idade:16, nasceu:[31, 10],
@@ -393,7 +465,13 @@ const ELENCO_SEVII = [
     ? '"Você trouxe gente. Não aqui. Atrás. Os que ficaram no caminho."'
     : '"Você veio sozinh{o|a}. Isso é raro."',
   vence:'"Eles gostaram de você. Isso não muda o resultado."',
-  perde:'"Eu vou contar pra eles que foi bonito."'
+  perde:'"Eu vou contar pra eles que foi bonito."',
+  despedida:d => (d.cemiterio || []).length ? '"Eles vão no barco com você, os que ficaram no caminho. Eu pedi pra eles irem."' : '"O monte vai estar quieto quando eu chegar. É bom voltar pra um lugar quieto."',
+  deLonge:[
+    'Entreguei as coisas que voltam pra casa este ano. Todas chegaram. Uma delas demorou dezenove anos e quatro dias.',
+    'Venta muito no cume. O sino toca sozinho. Hoje ele tocou três vezes, e eu contei pra você.',
+    'Alguém subiu o monte ontem perguntando de você. Não. Mentira. Ninguém subiu. Eu queria ver se você ia acreditar.'
+  ]
 },
 {
   id:'rhys', ajuste:-6, nome:'Rhys', sobrenome:'Ironwood', f:false, idade:26, nasceu:[19, 2],
@@ -420,7 +498,13 @@ const ELENCO_SEVII = [
   ],
   torneio:'"Finalmente. Eu atravessei um mar inteiro por esta luta, e eu não costumo atravessar nem a rua."',
   vence:'"Era isso que eu queria saber. Obrigado."',
-  perde:'"Terceira porta de novo. Engraçado como a vida rima."'
+  perde:'"Terceira porta de novo. Engraçado como a vida rima."',
+  despedida:'"Foi uma travessia que valeu o mar. Obrigado. Te espero na arquibancada da terceira porta."',
+  deLonge:[
+    'Treinei o Aggron numa caverna de granito por três semanas seguidas. Não, não é por sua causa. É um pouco por sua causa.',
+    'As casas de aposta de Slateport me puseram como favorito de novo. Eu agradeci e pedi que tirassem.',
+    'Marquei a terceira tentativa na Elite de Hoenn. Fica sabendo. Não precisa responder.'
+  ]
 },
 
 /* ─────────────────────────── AS ILHAS ─────────────────────────── */

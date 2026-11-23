@@ -220,7 +220,8 @@ const Pedidos = {
   /* ---------- quem pode pedir ---------- */
   rotulo(c){ return Recados.rotuloNPC(c) || falaComoDe(c) || textoContato(c, 'nome'); },
   podePedir(c){
-    if (!c || c.soAvisa || this.atual()) return false;
+    /* quem está do outro lado do mar não pede favor daqui */
+    if (!c || c.soAvisa || c.longe || this.atual()) return false;
     if (typeof NPC_DO_CRIME !== 'undefined' && NPC_DO_CRIME.has(this.rotulo(c))) return false;
     if (Recados.afinidade(c) < PEDIDO_MIN_AFINIDADE) return false;
     const u = Recados.doContato(c.id).ultimoPedido;

@@ -16822,6 +16822,8 @@ const Estado = {
       if (fase === 'fazendo') return {ok:false, motivo: (c.missao && c.missao.dica) || 'Ainda não. Você sabe o que falta.'};
       return {ok:true, fase};
     }
+    /* quem foi embora pra outra região (o elenco das ilhas) não luta daqui */
+    if (servico === 'revanche' && c.longe) return {ok:false, motivo: typeof c.longe === 'function' ? c.longe(this.dados) : c.longe};
     if (servico === 'revanche' && (this.dados.revanches || {})[id])
       return {ok:false, motivo:`Já está marcada ${emLocal(this.dados.revanches[id].local)}.`};
     /* o ginásio dessa pessoa agora é seu (defesa.js): não tem onde marcar */
@@ -17435,6 +17437,13 @@ const Estado = {
       /* o parceiro do Ezra passou a ser sorteado: quem já conhecia o
          Pidgey dele continua com o Pidgey */
       if (d.rival && !d.rival.picoDex) d.rival.picoDex = (d.npcs && d.npcs['Ezra']) ? 16 : 0;
+      /* quem veio de longe pras ilhas embarca uma semana depois da final
+         (sevii.js): a jornada que fechou o arco antes do carimbo ganha a
+         semana a partir de hoje, e ninguém vai embora sem se despedir */
+      if (Array.isArray(d.capitulosFechados) && d.capitulosFechados.includes(38) && d.relogio){
+        d.sevii = d.sevii || {conversas:{}, diaConversa:{}};
+        if (d.sevii.fimDoArco == null) d.sevii.fimDoArco = d.relogio.dia;
+      }
       /* a dificuldade chegou depois: a jornada de antes dela é Normal,
          o jogo como ele foi medido */
       d.config = d.config || {};
@@ -23862,7 +23871,8 @@ function contatosDaEstrada(){
 function todosContatos(){
   return CONTATOS.concat(contatosDeRivaisExtras(), contatosDaEstrada(),
     typeof contatosVeteranos === 'function' ? contatosVeteranos() : [],
-    typeof contatosDasTrocas === 'function' ? contatosDasTrocas() : []);
+    typeof contatosDasTrocas === 'function' ? contatosDasTrocas() : [],
+    typeof contatosDoElenco === 'function' ? contatosDoElenco() : []);
 }
 function contatoPorId(id){ return todosContatos().find(c => c.id === id) || null; }
 
@@ -28966,7 +28976,13 @@ const ELENCO_SEVII = [
   ],
   torneio:'"Ele não nasceu no Covil. Nasceu numa caixa de papelão no porto de Olivine. Vem."',
   vence:'"Não foi contra você. Foi a favor dele."',
-  perde:'"Ele voou do mesmo jeito. Era isso que eu vim ver."'
+  perde:'"Ele voou do mesmo jeito. Era isso que eu vim ver."',
+  despedida:'"O Salamence quer ir voando até Blackthorn. Eu deixo. Se o clã perguntar, foi ele que quis."',
+  deLonge:[
+    'O Salamence pousou no telhado do santuário de Blackthorn ontem. Ninguém mandou ele descer.',
+    'Meu pai veio ver o Dragonair. Não falou do clã. Falou do tempo. Foi bom.',
+    'Tem neve na montanha daqui. O Salamence gosta de neve. Eu não.'
+  ]
 },
 {
   id:'gideon', nome:'Gideon', sobrenome:'Spruce', f:false, idade:71, nasceu:[30, 3],
@@ -28994,7 +29010,13 @@ const ELENCO_SEVII = [
   ],
   torneio:'"Quarenta e duas vezes eu entrei nesta arena, moço. Em quarenta e uma eu saí com o barco cheio de história e sem troféu."',
   vence:'"Viu? O mar devolve. Demora, mas devolve."',
-  perde:'"Quarenta e três. Número bonito. Ano que vem eu volto."'
+  perde:'"Quarenta e três. Número bonito. Ano que vem eu volto."',
+  despedida:'"Ano que vem tem outro torneio e outro barco, {moço|moça}. Eu vou nos dois."',
+  deLonge:[
+    'O mar de Olivine tá calmo, {moço|moça}. Calmo demais: nem Magikarp. Eu fico olhando a linha assim mesmo.',
+    'O Lapras pegou mania de esperar o barco das ilhas no fim do cais. Toda tarde. Eu não tenho coragem de explicar que é só ano que vem.',
+    'Contei no cais de Olivine das ilhas e de você. Ninguém acreditou em nada. É assim que se sabe que o causo é bom.'
+  ]
 },
 {
   id:'etta', ajuste:-8, nome:'Etta', sobrenome:'Hemlock', f:true, idade:14, nasceu:[14, 6],
@@ -29021,7 +29043,13 @@ const ELENCO_SEVII = [
   ],
   torneio:'"Cada bola dessas eu fiz com a mão. Se eu perder, pelo menos você viu o acabamento."',
   vence:'"Inseto! Escreve aí: inseto!"',
-  perde:'"Tá. Mas olha a costura da bola que você usou. Agora olha a minha."'
+  perde:'"Tá. Mas olha a costura da bola que você usou. Agora olha a minha."',
+  despedida:'"Guarda isso: Pokébola de Apricorn não é Pokébola comum. Se alguém disser que é, você corrige."',
+  deLonge:[
+    'Vendi trinta e duas bolas na feira das ilhas. Trinta e duas! A rua de cima de Azalea ficou sabendo.',
+    'Tô costurando uma bola nova, verde-escura, com costura dupla. Ainda não tem nome. Quando tiver, você é a segunda a saber.',
+    'Escrevi pra Lilycove perguntando quanto custa uma banca na praia. Responderam com um número que eu não vou repetir.'
+  ]
 },
 {
   id:'ziggy', ajuste:8, nome:'Ziggy', sobrenome:'Bay', f:false, idade:28, nasceu:[1, 4],
@@ -29048,7 +29076,13 @@ const ELENCO_SEVII = [
   ],
   torneio:'"Boa tarde, ouvinte! Agora é comigo e com {o|a} visitante de Kanto, ao vivo das ilhas!"',
   vence:'"E É DO ZIGGY! Repete pro pessoal de Ecruteak que não acreditou!"',
-  perde:'"…e o Ziggy cai, ouvinte. Mas cai bonito. Fica com a gente que depois do intervalo tem mais."'
+  perde:'"…e o Ziggy cai, ouvinte. Mas cai bonito. Fica com a gente que depois do intervalo tem mais."',
+  despedida:'"Ouvinte, aqui é o Ziggy, saindo das ilhas no último barco. Da meia-noite às quatro, fica com a gente."',
+  deLonge:[
+    'Ouvinte! O programa não saiu do ar. Ainda. Toquei a gravação do torneio três madrugadas seguidas e os caminhoneiros pediram bis.',
+    'O diretor da rádio me chamou na sala. Achei que era o fim. Era pra perguntar se tinha mais gravação das ilhas.',
+    'Um caminhoneiro de Ecruteak ligou no programa perguntando de você. Eu disse que você tava bem. Eu tô certo?'
+  ]
 },
 {
   id:'saskia', nome:'Saskia', sobrenome:'Rush', f:true, idade:22, nasceu:[8, 8],
@@ -29075,7 +29109,13 @@ const ELENCO_SEVII = [
   ],
   torneio:'"Aperta aqui. Não, de verdade. Eu quero saber a força da mão de quem eu vou enfrentar."',
   vence:'"HA! Isso! Agora a gente vai nadar, os dois. É assim que se agradece."',
-  perde:'"Ai. Essa entrou. Entrou bonito. Me mostra de novo como foi?"'
+  perde:'"Ai. Essa entrou. Entrou bonito. Me mostra de novo como foi?"',
+  despedida:'"Aperta aqui. Mais forte. Isso. Agora vai, que o barco não espera e até Cianwood eu ainda não nado."',
+  deLonge:[
+    'Nadei ida e volta antes do café, como sempre. Contei as braçadas. Faltam umas seiscentas mil pra chegar nas ilhas.',
+    'O dojô de Cianwood pediu pra eu contar do torneio. Eu contei lutando. Ninguém entendeu, mas todo mundo suou.',
+    'Minha mãe disse que eu terminei um torneio. Eu disse que ainda não terminei nada. Ela riu.'
+  ]
 },
 {
   id:'florian', ajuste:5, nome:'Florian', sobrenome:'Ashgrove', f:false, idade:34, nasceu:[22, 9],
@@ -29102,7 +29142,13 @@ const ELENCO_SEVII = [
   ],
   torneio:'"Eles vieram da mesma avó. Cada um escolheu um caminho. Igual a gente."',
   vence:'"Noventa e um por cento, eu tinha calculado. Desculpa. Eu sempre calculo."',
-  perde:'"Anotado. Não é derrota, é dado."'
+  perde:'"Anotado. Não é derrota, é dado."',
+  despedida:'"Oitenta e sete por cento de chance de eu voltar ano que vem. Desculpa. Eu sempre calculo."',
+  deLonge:[
+    'A Eevee da creche botou um ovo na semana em que eu voltei. Anotei a hora: quatro e doze da manhã. Desculpa o detalhe.',
+    'Meus avós querem saber quem é você. Eu disse: alguém que cuida. Eles disseram que isso basta.',
+    'Um dos ovos da linhagem foi pra Hoenn, com uma família de Petalburg. Noventa e quatro por cento de chance de dar certo. Eu fiquei feliz em cem.'
+  ]
 },
 {
   id:'zev', ajuste:-6, nome:'Zev', sobrenome:'Fernley', f:false, idade:31, nasceu:[13, 12],
@@ -29129,7 +29175,13 @@ const ELENCO_SEVII = [
   ],
   torneio:'"Pode olhar. Todo mundo olha. Eu prefiro que olhe de frente."',
   vence:'"Não foi sorte. Eu treinei mais que todo mundo aqui, porque eu comecei atrasado."',
-  perde:'"Foi limpo. Pra mim isso é muito."'
+  perde:'"Foi limpo. Pra mim isso é muito."',
+  despedida:'"Obrigado por ter olhado de frente. Do barco até aqui."',
+  deLonge:[
+    'O lago tá calmo. Peguei três Magikarp e soltei os três.',
+    'Abriram uma loja nova do lado da de lembrancinhas. Eu passo na frente todo dia. É só uma loja. Eu confiro mesmo assim.',
+    'O Houndoom dorme na porta de casa agora. Não deixa ninguém chegar perto do portão sem ele ver primeiro.'
+  ]
 },
 
 /* ─────────────────────────── HOENN ─────────────────────────── */
@@ -29159,7 +29211,13 @@ const ELENCO_SEVII = [
   ],
   torneio:'"Vento de sudoeste hoje. Bom pra voar. Ruim pra você."',
   vence:'"Eles chegam na quinta. Você vem ver?"',
-  perde:'"Tudo bem. Daqui eu vejo o céu inteiro do mesmo jeito."'
+  perde:'"Tudo bem. Daqui eu vejo o céu inteiro do mesmo jeito."',
+  despedida:'"Os Swablu saíram do mar ontem de noite. Você viu? Não? Ano que vem você vê."',
+  deLonge:[
+    'Os Swablu voltaram pra Fortree hoje. Contei quarenta e um. Um a menos que no ano passado. Fiquei olhando o céu até escurecer.',
+    'Vento leste aqui. Ruim pra voar, bom pra pensar. Pensei nas ilhas.',
+    'Tô juntando dinheiro pra seguir a migração inteira. Já tenho o do primeiro barco. Faltam os outros onze.'
+  ]
 },
 {
   id:'calla', ajuste:6, nome:'Calla', sobrenome:'Sumac', f:true, idade:24, nasceu:[5, 1],
@@ -29187,7 +29245,13 @@ const ELENCO_SEVII = [
   ],
   torneio:'"Eu cobro entrada de quem vem ver o meu Blaziken. Hoje é cortesia."',
   vence:'"Isso vai pra parede da pousada. Do lado da foto da minha avó."',
-  perde:'"Tudo bem. Passa lá em casa um dia. Banho de graça pra quem me ganhou."'
+  perde:'"Tudo bem. Passa lá em casa um dia. Banho de graça pra quem me ganhou."',
+  despedida:'"Passa em Lavaridge um dia. Banho de graça pra quem me conhece. Pra quem me ganhou também: eu não guardo rancor de cliente."',
+  deLonge:[
+    'Consertei o telhado. Com o dinheiro das ilhas e um desconto que eu arranquei do carpinteiro na conversa. Ele ainda não sabe como.',
+    'As termas da beira-mar abaixaram o preço. Eu não. Eu pus a foto da minha avó maior na recepção.',
+    'Um hóspede de Kanto perguntou se eu conhecia você. Eu disse que sim, e cobrei a diária inteira dele mesmo assim.'
+  ]
 },
 {
   id:'imogen', ajuste:3, nome:'Imogen', sobrenome:'Vetch', f:true, idade:31, nasceu:[11, 8],
@@ -29214,7 +29278,13 @@ const ELENCO_SEVII = [
   ],
   torneio:'"Faltam quatro noites pra chuva. Eu não pretendo perder nenhuma delas."',
   vence:'"Previsível. Bonito do jeito que órbita é bonita."',
-  perde:'"Interessante. Eu errei a conta em algum lugar. Vou achar onde."'
+  perde:'"Interessante. Eu errei a conta em algum lugar. Vou achar onde."',
+  despedida:'"A chuva de meteoros foi boa. Você estava olhando pra arena, eu sei. Ninguém é perfeito."',
+  deLonge:[
+    'O satélite que eu calculo passou por cima das ilhas ontem. Seis minutos e doze segundos. Pensei em você em quatro deles.',
+    'Meu chefe perguntou da desculpa da passagem. Mostrei as fotos da chuva de meteoros. Ele parou de perguntar.',
+    'O Lunatone fica olhando pro sul de noite, desde que a gente voltou. Eu não sei o que ele procura. Nem ele, acho.'
+  ]
 },
 {
   id:'brody', ajuste:-10, nome:'Brody', sobrenome:'Teak', f:false, idade:38, nasceu:[27, 7],
@@ -29241,7 +29311,13 @@ const ELENCO_SEVII = [
   ],
   torneio:'"A turma tá na arquibancada, chefia. Doze homens que pagaram a passagem em seis vezes. Eu não vou fazer eles passarem vergonha."',
   vence:'"VIU, TURMA? VIU?"',
-  perde:'"Tudo bem, tudo bem. Foi justo. Aperta aqui."'
+  perde:'"Tudo bem, tudo bem. Foi justo. Aperta aqui."',
+  despedida:d => d.flags.sv_rec_turma ? '"Chefia! A turma voltou inteira, e os Pokémon de todo mundo também. Isso é seu também. Não discute."' : '"A turma volta inteira, chefia. Os Pokémon não. Isso não é culpa sua, e eu não quero ouvir o contrário."',
+  deLonge:[
+    'A turma escreveu a carta pro sindicato de Vermilion, chefia. Doze assinaturas. A minha tá torta porque eu tava chorando.',
+    'O cais de Slateport tá cheio de navio esta semana. A gente trabalha cantando a música da arena da Ilha Sete. Ninguém aqui sabe de onde é.',
+    'O Wailord ficou triste quando a gente desembarcou. Sério, chefia. Ficou uma tarde inteira boiando parado.'
+  ]
 },
 {
   id:'esme', ajuste:-6, nome:'Esme', sobrenome:'Wisteria', f:true, idade:20, nasceu:[3, 3],
@@ -29267,7 +29343,13 @@ const ELENCO_SEVII = [
   ],
   torneio:'"Não é concurso, eu sei. Ninguém vai dar nota pra beleza. Hoje eu dou nota pra mim mesma."',
   vence:'"Recorta essa, revista."',
-  perde:'"Bom. Foi uma batalha de verdade. Era o que eu queria."'
+  perde:'"Bom. Foi uma batalha de verdade. Era o que eu queria."',
+  despedida:'"Não foi um concurso. Foi melhor. Não conta pra ninguém que eu disse isso."',
+  deLonge:[
+    'Mandei o recorte de volta pra redação da revista, com uma linha escrita embaixo. Não vou te dizer qual. Foi educada. Mais ou menos.',
+    'Ganhei mais um concurso de Beleza em Lilycove. A Milotic ganhou, na verdade. Eu só estava lá sorrindo.',
+    'A revista mandou um repórter perguntar das ilhas. Eu disse que batalha de verdade cansa mais que palco. Ele anotou "cansa".'
+  ]
 },
 {
   id:'oona', ajuste:2, nome:'Oona', sobrenome:'Yew', f:true, idade:16, nasceu:[31, 10],
@@ -29296,7 +29378,13 @@ const ELENCO_SEVII = [
     ? '"Você trouxe gente. Não aqui. Atrás. Os que ficaram no caminho."'
     : '"Você veio sozinh{o|a}. Isso é raro."',
   vence:'"Eles gostaram de você. Isso não muda o resultado."',
-  perde:'"Eu vou contar pra eles que foi bonito."'
+  perde:'"Eu vou contar pra eles que foi bonito."',
+  despedida:d => (d.cemiterio || []).length ? '"Eles vão no barco com você, os que ficaram no caminho. Eu pedi pra eles irem."' : '"O monte vai estar quieto quando eu chegar. É bom voltar pra um lugar quieto."',
+  deLonge:[
+    'Entreguei as coisas que voltam pra casa este ano. Todas chegaram. Uma delas demorou dezenove anos e quatro dias.',
+    'Venta muito no cume. O sino toca sozinho. Hoje ele tocou três vezes, e eu contei pra você.',
+    'Alguém subiu o monte ontem perguntando de você. Não. Mentira. Ninguém subiu. Eu queria ver se você ia acreditar.'
+  ]
 },
 {
   id:'rhys', ajuste:-6, nome:'Rhys', sobrenome:'Ironwood', f:false, idade:26, nasceu:[19, 2],
@@ -29323,7 +29411,13 @@ const ELENCO_SEVII = [
   ],
   torneio:'"Finalmente. Eu atravessei um mar inteiro por esta luta, e eu não costumo atravessar nem a rua."',
   vence:'"Era isso que eu queria saber. Obrigado."',
-  perde:'"Terceira porta de novo. Engraçado como a vida rima."'
+  perde:'"Terceira porta de novo. Engraçado como a vida rima."',
+  despedida:'"Foi uma travessia que valeu o mar. Obrigado. Te espero na arquibancada da terceira porta."',
+  deLonge:[
+    'Treinei o Aggron numa caverna de granito por três semanas seguidas. Não, não é por sua causa. É um pouco por sua causa.',
+    'As casas de aposta de Slateport me puseram como favorito de novo. Eu agradeci e pedi que tirassem.',
+    'Marquei a terceira tentativa na Elite de Hoenn. Fica sabendo. Não precisa responder.'
+  ]
 },
 
 /* ─────────────────────────── AS ILHAS ─────────────────────────── */
@@ -107777,7 +107871,9 @@ c38_fim:{
     'E o Torneio das Ilhas, diz o rapaz da cal, volta todo domingo enquanto tiver gente.',
     d => d.flags.sv_pedido_no_bolso ? 'No seu bolso, a folha do armazém, dobrada em quatro. Você não precisa desdobrar pra lembrar da última linha: remessa norte, Ilhas do Redemoinho.' : ''
   ],
-  ef:{registrar:'Fim da semana do Torneio das Ilhas. A balsa das ilhas vai e volta, e a arena da Ilha Sete abre todo domingo.'},
+  ef:{registrar:'Fim da semana do Torneio das Ilhas. A balsa das ilhas vai e volta, e a arena da Ilha Sete abre todo domingo.',
+    /* o dia do fim: quem veio de longe embarca no Anne ESTADIA_DO_ELENCO depois (sevii.js) */
+    executar:d => { const r = Sevii.reg(d); if (r.fimDoArco == null) r.fimDoArco = d.relogio.dia; }},
   fim:true, sai:'ilha_sete',
   resumo:'O Torneio das Ilhas: dezesseis risquinhos de cal numa lousa, uma Pokébola vazia com as letras M. H., e a arena de pedra cheia.'
 }
@@ -116521,7 +116617,7 @@ const TOPICOS_DE_LIGACAO = [
   ]
 },
 {
-  id:'o_time', para:x => !!x.p,
+  id:'o_time', tambemLonge:true, para:x => !!x.p,
   falas:x => [x.diz(`Lembrei ${x.pr.do} ${x.chamado} hoje. Como ${x.pr.ele} tá?`)],
   escolhas:x => [
     {texto:`"Forte. ${x.pr.Ele} não para quiet${x.pr.o}."`, afeto:1,
@@ -116533,7 +116629,7 @@ const TOPICOS_DE_LIGACAO = [
   ]
 },
 {
-  id:'onde', para:x => true,
+  id:'onde', tambemLonge:true, para:x => true,
   falas:x => [x.periodo === 'madrugada' && !x.voceLigou ? x.diz('Te acordei? Desculpa. Onde você tá?') : x.diz('Onde você tá agora?')],
   escolhas:x => [
     {texto:`"${cap1(x.emLugar)}."`, afeto:1,
@@ -116633,7 +116729,7 @@ const TOPICOS_DE_LIGACAO = [
   ]
 },
 {
-  id:'rumo', para:x => true,
+  id:'rumo', tambemLonge:true, para:x => true,
   falas:x => [x.diz('Pra onde você vai depois daí?')],
   escolhas:x => [
     {texto:'Dizer pra onde vai.', afeto:1, resultado:[x.diz('Então vai com calma. Lá é outro ritmo.')]},
@@ -116642,6 +116738,34 @@ const TOPICOS_DE_LIGACAO = [
   ]
 }
 ];
+
+/* Quem foi embora pra outra região (o elenco das Ilhas Sevii, sevii.js)
+   liga de longe: conta de casa, pela ficha (deLonge, uma linha de cada
+   vez, na ordem), e pergunta das ilhas. Revanche não tem, e de longe
+   ninguém fica sabendo das notícias de Kanto: os assuntos são só estes e
+   os que têm `tambemLonge`. */
+TOPICOS_DE_LIGACAO.push({
+  id:'longe_casa', longe:true, para:x => x.longe && !!x.ficha && (x.ficha.deLonge || []).length > 0,
+  falas:x => {
+    const l = x.ficha.deLonge, r = Recados.doContato(x.c.id);
+    if (x.linhaDeLonge == null){ x.linhaDeLonge = ((r.deLonge == null ? -1 : r.deLonge) + 1) % l.length; r.deLonge = x.linhaDeLonge; }
+    return [x.diz(x.sorteio(x.voceLigou ? ['Que bom que você ligou. Deixa eu te contar daqui.', 'Chegou numa hora boa. Escuta só.']
+      : ['Liguei pra contar daqui.', 'Tenho uma coisa daqui pra te contar.', 'Você não sabe o que aconteceu aqui.'])), x.diz(l[x.linhaDeLonge])];
+  },
+  escolhas:x => [
+    {texto:'Contar das ilhas desde que o Anne saiu.', afeto:1, resultado:['Você conta.', x.diz('Então a arena ainda enche. Bom saber. Daqui, parece que foi há um ano.')]},
+    {texto:'"Quando você volta?"', afeto:1, resultado:[x.diz('Quando o mar deixar. Ano que vem tem torneio de novo, e barco também.')]},
+    {texto:'"Agora não dá. Te ligo depois."', afeto:-1, resultado:[x.diz('Tá. Ligação de longe é cara, mas eu espero.', 'baixo')]}
+  ]
+}, {
+  id:'longe_ilhas', longe:true, para:x => x.longe,
+  falas:x => [x.diz('E as ilhas? A arena da Ilha Sete ainda enche no domingo?')],
+  escolhas:x => [
+    {texto:'"Enche. Mas não é a mesma coisa sem vocês."', afeto:1, resultado:[x.diz('Não fala assim, que eu pego o próximo barco.', 'riso')]},
+    {texto:'Contar como estava a arquibancada da última vez.', afeto:1, resultado:['Você conta.', x.diz('A lousa da entrada ainda tem os nossos riscos? Não precisa responder. Eu gosto de achar que tem.')]},
+    {texto:'"Não voltei lá."', afeto:0, resultado:[x.diz('Volta um domingo. Alguém tem que me contar como está.')]}
+  ]
+});
 
 /* O recado de quem separou alguma coisa: chega no aparelho como
    mensagem, com o lugar onde a pessoa vai estar. */
@@ -116699,7 +116823,8 @@ const ABRE_O_RETORNO = {
   casa:[x => x.diz('Ah, é você. Eu tinha te ligado.'), x => x.diz('Achei que você ia esquecer de retornar.')],
   lider:[x => x.diz('Você retornou. Bom.'), x => x.diz('Liguei mais cedo. É coisa rápida.')],
   treinador:[x => x.diz('Ah, é você! Te liguei mais cedo.'), x => x.diz('Achei que você estava no meio de uma luta.')],
-  figura:[x => x.diz('Ah, é você. Eu tinha te ligado.'), x => x.diz('Que bom que você ligou de volta.')]
+  figura:[x => x.diz('Ah, é você. Eu tinha te ligado.'), x => x.diz('Que bom que você ligou de volta.')],
+  longe:[x => x.diz('Ah, é você! A ligação daqui pra Kanto chia, mas dá pra ouvir.'), x => x.diz('Retornou! Achei que o mar tinha comido a ligação.')]
 };
 /* a notícia que pesa (a morte, a custódia) não começa com pressa nem com festa */
 const ABRE_O_RETORNO_GRAVE = x => x.diz('Que bom que você ligou de volta.', 'baixo');
@@ -116708,7 +116833,8 @@ const ABRE_A_CONVERSA = {
   casa:[x => x.diz('Oi! Aconteceu alguma coisa?'), x => x.diz('Que bom ouvir você.')],
   lider:[x => x.diz('Pois não? Ah, é você.'), x => x.diz('Tenho um minuto entre um desafiante e outro. Fala.')],
   treinador:[x => x.diz('Opa! Nem acreditei quando vi o seu nome.'), x => x.diz('Ei! Achei que você tinha perdido o meu número.')],
-  figura:[x => x.diz('Alô? Ah, é você!'), x => x.diz('Que surpresa boa.')]
+  figura:[x => x.diz('Alô? Ah, é você!'), x => x.diz('Que surpresa boa.')],
+  longe:[x => x.diz('Alô? Kanto? É você mesmo?'), x => x.diz('Que surpresa. Daqui de longe a sua voz chega com eco.')]
 };
 const ABRE_A_CONVERSA_GRAVE = x => x.diz('Eu ia te ligar agora.', 'baixo');
 const PERIODO_DITO = {madrugada:'de madrugada', 'manhã':'de manhã', tarde:'à tarde', noite:'de noite'};
@@ -116747,7 +116873,7 @@ const Recados = {
      afinidade AFINIDADE_DA_NOTICIA), a custódia (a casa e quem não é
      treinador) e a insígnia nova (todo mundo, menos o líder que deu) */
   eventoPara(c){
-    if (!c || typeof Estado === 'undefined' || !Estado.dados) return null;
+    if (!c || c.longe || typeof Estado === 'undefined' || !Estado.dados) return null;
     const d = Estado.dados, s = this.sabeDe(c), agora = this.retrato(), casa = c.id === 'casa';
     if (agora.mortos > s.mortos && (casa || this.afinidade(c) >= AFINIDADE_DA_NOTICIA)){
       const p = d.cemiterio[d.cemiterio.length - 1];
@@ -116843,7 +116969,8 @@ const Recados = {
     return Dados.escolher(sacola);
   },
   podeMandarPresente(c){
-    if (!c || this.afinidade(c) < PRESENTE_MIN_AFINIDADE) return false;
+    /* quem está do outro lado do mar não tem onde te encontrar */
+    if (!c || c.longe || this.afinidade(c) < PRESENTE_MIN_AFINIDADE) return false;
     if (this.reg().presentes[c.id]) return false;
     const u = this.doContato(c.id).ultimoPresente;
     return u == null || Estado.dados.relogio.dia - u >= PRESENTE_ESPERA_DIAS;
@@ -116914,6 +117041,8 @@ const Recados = {
       voceLigou:!!(o && o.voceLigou),
       /* o líder cujo ginásio agora é seu (defesa.js) não fala mais de desafiante */
       lider:!!c.ginasio && !(typeof Defesa !== 'undefined' && Defesa.deixouDeSer(c.ginasio, d)),
+      /* quem foi embora pra outra região (sevii.js): a ficha diz de onde liga */
+      longe:!!c.longe, ficha:c.elenco && typeof fichaSevii === 'function' ? fichaSevii(c.elenco) : null,
       treinador:c.tipo === 'treinador', figura:c.tipo !== 'treinador' && !casa,
       ondeId, emOnde:emLocal(ondeId), emCidadeDele:emLocal(ondeId),
       diz:(t, tom, nota) => casa ? falaCasa(t, tom, nota) : fala(rot, t, tom, nota),
@@ -116925,7 +117054,13 @@ const Recados = {
       }
     };
   },
-  tipoDe(x){ return x.casa ? 'casa' : x.lider ? 'lider' : x.treinador ? 'treinador' : 'figura'; },
+  tipoDe(x){ return x.casa ? 'casa' : x.longe ? 'longe' : x.lider ? 'lider' : x.treinador ? 'treinador' : 'figura'; },
+  /* o tópico serve pra essa pessoa: quem está longe só fala do que dá
+     pra falar de longe, e quem está perto não fala do que é de longe */
+  serve(t, x){
+    if (x.longe ? !(t.longe || t.tambemLonge) : t.longe) return false;
+    try { return !!t.para(x); } catch(e){ return false; }
+  },
 
   /* o nome no meio da frase: o nome de verdade, quando você sabe; quem
      é chamado pelo cargo vai com artigo ("o zelador da Torre", "a
@@ -116945,7 +117080,7 @@ const Recados = {
      da última vez com ela */
   topicosDe(c, o){
     const x = this.contexto(c, o);
-    return TOPICOS_DE_LIGACAO.filter(t => { try { return t.para(x); } catch(e){ return false; } });
+    return TOPICOS_DE_LIGACAO.filter(t => this.serve(t, x));
   },
   montarLigacao(c, topicoId, o){
     if (!c) return null;
@@ -117242,6 +117377,7 @@ const Recados = {
     return primeira || 'viridian';
   },
   separarPresente(c){
+    if (!c || c.longe) return null;
     const t = this.degrau(this.afinidade(c));
     if (!t) return null;
     let [item, qtd] = sortearPeso(t.itens);
@@ -117365,8 +117501,7 @@ const Recados = {
       const dono = c.id === 'casa' ? null : (falaComoDe(c) || textoContato(c, 'nome'));
       for (const t of TOPICOS_DE_LIGACAO){
         if (t.noticia) continue;
-        let ok = false; try { ok = t.para(x); } catch(e){ ok = false; }
-        if (!ok) continue;
+        if (!this.serve(t, x)) continue;
         out.push({onde:`recado/${c.id}/${t.id}`, dono, linhas:t.falas(x)});
         t.escolhas(x).forEach((e, i) => out.push({onde:`recado/${c.id}/${t.id}>${i}`, dono, linhas:e.resultado || []}));
       }
@@ -117377,8 +117512,7 @@ const Recados = {
         const y = Object.assign({}, x, {evento:ev, madrugada});
         for (const t of TOPICOS_DE_LIGACAO){
           if (!t.noticia) continue;
-          let ok = false; try { ok = t.para(y); } catch(e){ ok = false; }
-          if (!ok) continue;
+          if (!this.serve(t, y)) continue;
           out.push({onde:`recado/${c.id}/${t.id}${madrugada ? '/madrugada' : ''}`, dono, linhas:t.falas(y)});
           t.escolhas(y).forEach((e, i) => out.push({onde:`recado/${c.id}/${t.id}>${i}`, dono, linhas:e.resultado || []}));
         }
@@ -117392,21 +117526,19 @@ const Recados = {
       out.push({onde:`recado/${c.id}/conversa grave`, dono, linhas:[ABRE_A_CONVERSA_GRAVE(x)]});
       const vl = this.contexto(c, {voceLigou:true});
       for (const t of TOPICOS_DE_LIGACAO){
-        let ok = false; try { ok = !t.noticia && t.para(vl); } catch(e){ ok = false; }
-        if (!ok) continue;
+        if (t.noticia || !this.serve(t, vl)) continue;
         out.push({onde:`recado/${c.id}/${t.id}/voce ligou`, dono, linhas:t.falas(vl)});
         t.escolhas(vl).forEach((e, i) => out.push({onde:`recado/${c.id}/${t.id}/voce ligou>${i}`, dono, linhas:e.resultado || []}));
       }
       for (const ev of eventos){
         const y = Object.assign({}, vl, {evento:ev, madrugada:true});
         for (const t of TOPICOS_DE_LIGACAO){
-          let ok = false; try { ok = t.noticia && t.para(y); } catch(e){ ok = false; }
-          if (ok) out.push({onde:`recado/${c.id}/${t.id}/voce ligou/madrugada`, dono, linhas:t.falas(y)});
+          if (t.noticia && this.serve(t, y)) out.push({onde:`recado/${c.id}/${t.id}/voce ligou/madrugada`, dono, linhas:t.falas(y)});
         }
       }
-      RECADO_DE_PRESENTE[tipo].forEach((f, i) => out.push({onde:`recado/${c.id}/msg${i}`, dono, linhas:f(x)}));
-      ENTREGA[tipo].forEach((f, i) => out.push({onde:`recado/${c.id}/entrega${i}`, dono, linhas:f(x)}));
-      if (typeof Pedidos !== 'undefined') out.push(...Pedidos.amostras(c));
+      (RECADO_DE_PRESENTE[tipo] || []).forEach((f, i) => out.push({onde:`recado/${c.id}/msg${i}`, dono, linhas:f(x)}));
+      (ENTREGA[tipo] || []).forEach((f, i) => out.push({onde:`recado/${c.id}/entrega${i}`, dono, linhas:f(x)}));
+      if (typeof Pedidos !== 'undefined' && !c.longe) out.push(...Pedidos.amostras(c));
     }
     return out;
   }
@@ -117636,7 +117768,8 @@ const Pedidos = {
   /* ---------- quem pode pedir ---------- */
   rotulo(c){ return Recados.rotuloNPC(c) || falaComoDe(c) || textoContato(c, 'nome'); },
   podePedir(c){
-    if (!c || c.soAvisa || this.atual()) return false;
+    /* quem está do outro lado do mar não pede favor daqui */
+    if (!c || c.soAvisa || c.longe || this.atual()) return false;
     if (typeof NPC_DO_CRIME !== 'undefined' && NPC_DO_CRIME.has(this.rotulo(c))) return false;
     if (Recados.afinidade(c) < PEDIDO_MIN_AFINIDADE) return false;
     const u = Recados.doContato(c.id).ultimoPedido;
@@ -119039,6 +119172,14 @@ const Defesa = {
      sv_viu_o_barco, sv_oona_ajudou          o que se achou no caminho
    ============================================================ */
 const SEVII_CAPS = [33, 34, 35, 36, 37, 38];
+/* Quem veio de Johto e de Hoenn fica ESTADIA_DO_ELENCO dias depois da
+   final (o c38_fim carimba o dia) e embarca no S.S. Anne, na Ilha Um,
+   de volta pra Vermilion e de lá pra casa. Foi pedido assim: o pós-jogo
+   não é obrigatório, e quem pulou as ilhas não conhece ninguém dali;
+   quem viveu, leva o número de quem gosta de você, e o PokéNav liga
+   pra eles do outro lado do mar — conversa, nunca revanche. O que fica
+   pra uma próxima região é Sevii.conhecidos(d). */
+const ESTADIA_DO_ELENCO = 7;
 /* o que a gangue levou, de quem, e a flag de quando volta */
 const ROUBOS_DE_SEVII = {
   milotic:{dono:'esme',    dex:[350],      flag:'sv_rec_milotic', o:'a Milotic da Esme'},
@@ -119105,6 +119246,68 @@ const Sevii = {
   aqui(d){ d = d || Estado.dados; return !!(d && ehSevii(d.local)); },
   /* o arco inteiro acabou: o torneio da história já foi */
   acabou(d){ return this.fase(d) >= SEVII_CAPS.length; },
+
+  /* ── quem veio de longe, e quando vai embora ── */
+  visitantes(){ return ELENCO_SEVII.filter(f => f.regiao !== 'Ilhas Sevii'); },
+  /* o dia em que o arco fechou (o c38_fim carimba; o save de antes, na carga) */
+  fimDoArco(d){ d = d || Estado.dados; const r = d && this.reg(d); return r && r.fimDoArco != null ? r.fimDoArco : null; },
+  diaDaPartida(d){ const f = this.fimDoArco(d); return f == null ? null : f + ESTADIA_DO_ELENCO; },
+  /* ainda nas ilhas: a semana do torneio, e a semana depois dele, até o
+     Anne sair (no dia da partida eles embarcam, com você no cais ou não) */
+  elencoNaIlha(d){
+    d = d || Estado.dados;
+    if (!d || !this.acabou(d)) return true;
+    const r = this.reg(d), p = this.diaDaPartida(d);
+    if (r.embarcou != null) return false;
+    return p == null || d.relogio.dia <= p;
+  },
+  partiu(d){ d = d || Estado.dados; return !!d && this.acabou(d) && !this.elencoNaIlha(d); },
+  /* quanto falta pro Anne, dito em voz alta */
+  quandoParte(d){
+    d = d || Estado.dados;
+    const p = this.diaDaPartida(d), falta = p == null ? null : p - d.relogio.dia;
+    if (falta == null || falta < 0) return null;
+    return falta === 0 ? 'hoje' : falta === 1 ? 'amanhã' : `daqui a ${porExtenso(falta)} dias`;
+  },
+  /* quem te conhece: quem a história pôs na sua frente (o jantar do Anne,
+     o roubo, a chave, a pousada) guarda memória de você */
+  conheceu(id, d){
+    d = d || Estado.dados;
+    const f = typeof fichaSevii === 'function' ? fichaSevii(id) : null;
+    if (!f || !d) return false;
+    const n = (d.npcs || {})[f.nome];
+    return !!((n && (n.memorias || []).length) || (d.flags || {})['sv_conheceu_' + id] || (this.reg(d).conversas || {})[id]);
+  },
+  /* e deixa o número quem te conhece e não tem nada contra você */
+  deixaNumero(id, d){
+    d = d || Estado.dados;
+    const f = fichaSevii(id);
+    return !!f && f.regiao !== 'Ilhas Sevii' && this.conheceu(id, d) && (((d.npcs || {})[f.nome] || {}).opiniao || 0) >= 0;
+  },
+  /* pra onde cada um voltou ("pra Blackthorn", "pro Monte Pyre") */
+  paraOnde(f){ return /^Monte\b/.test(f.de) ? 'pro ' + f.de : 'pra ' + f.de; },
+
+  /* Pra próxima região: quem das ilhas conhece você, e o que sabe. Quem
+     não está aqui não te conhece, e é isso mesmo: quem pulou as ilhas
+     chega lá sem ninguém. A opinião anda com o telefone (recados.js),
+     então ligar de longe também conta. */
+  conhecidos(d){
+    d = d || Estado.dados;
+    if (!d) return [];
+    const r = this.reg(d), contatos = (d.pokenav && d.pokenav.contatos) || {};
+    return this.visitantes().filter(f => this.conheceu(f.id, d)).map(f => {
+      const n = (d.npcs || {})[f.nome] || {}, mem = (n.memorias || []).map(m => typeof m === 'string' ? m : (m && m.texto) || '');
+      const roubo = Object.keys(ROUBOS_DE_SEVII).find(k => ROUBOS_DE_SEVII[k].dono === f.id);
+      const op = n.opiniao || 0;
+      return {id:f.id, nome:`${f.nome} ${f.sobrenome}`, regiao:f.regiao, de:f.de,
+        opiniao:op, laco: op >= 3 ? 'amigo' : op < 0 ? 'atrito' : 'conhecido',
+        conversas:(r.conversas || {})[f.id] || 0,
+        voceVenceu:mem.filter(t => /^Perdeu pra você/.test(t)).length,
+        venceuVoce:mem.filter(t => /^Ganhou de você/.test(t)).length,
+        devolveu: roubo ? this.recuperou(roubo, d) : null,
+        numero:!!contatos['ilhas_' + f.id], despedida:(r.despediu || []).includes(f.id)};
+    });
+  },
 
   /* Quem não tem a passagem não sabe que as ilhas existem no mapa: a
      Ilha Um aparece com a passagem na mão, o resto com a chegada */
@@ -119222,12 +119425,21 @@ const Sevii = {
       lista.push({id:'sevii_pista_seis', titulo:'A moça de cabelo branco no muro',
         sub:'Ela pergunta a todo mundo a mesma coisa, mostrando uma Pokébola velha, e todo mundo diz que não sabe.'});
     if (id === 'ilha_sete' && f >= 6){
+      const foi = this.partiu(d);
       lista.push({lugar:true, id:'sevii_arena', titulo:'A arena da Ilha Sete',
-        sub:'O Torneio das Ilhas volta todo domingo. Quem veio de longe ficou mais um pouco.',
+        sub: foi ? 'O Torneio das Ilhas volta todo domingo, com quem atravessa de Kanto na balsa.'
+                 : 'O Torneio das Ilhas volta todo domingo. Quem veio de longe ficou mais um pouco.',
         fechada:(typeof CopaSevii !== 'undefined' ? CopaSevii.fechada() : null)});
-      lista.push({lugar:true, id:'sevii_pousada', titulo:'A pousada da arena',
+      if (!foi) lista.push({lugar:true, id:'sevii_pousada', titulo:'A pousada da arena',
         sub:'Quem veio pro torneio ainda está por aqui, e de noite a varanda enche.'});
+      /* quem não foi ao cais acha os números no balcão */
+      else if (this.temBilhete(d)) lista.push({id:'sevii_bilhete', titulo:'O balcão da pousada',
+        sub:'A dona da pousada acena com um envelope quando você passa na porta.'});
     }
+    /* o dia em que o Anne leva quem veio de longe */
+    if (id === 'ilha_um' && f >= 6 && this.diaDaPartida(d) === d.relogio.dia && this.reg(d).embarcou == null)
+      lista.push({id:'sevii_despedida', titulo:'O S.S. Anne no cais',
+        sub:'Quem veio de Johto e de Hoenn pro torneio embarca hoje, de volta pra Vermilion e de lá pra casa.'});
     /* a Noa, depois do arco: uma vez por semana no fim do cais */
     const rn = typeof registroRival === 'function' ? registroRival('noa') : null;
     if (id === 'ilha_um' && f >= 6 && rn && (d.relogio.dia - (rn.ultimoDia || 0)) >= 7)
@@ -119240,6 +119452,8 @@ const Sevii = {
     if (x.startsWith('balsa_')) return this.embarcar(x.slice(6));
     if (x === 'arena') return CopaSevii.tela();
     if (x === 'pousada') return this.pousada();
+    if (x === 'despedida') return this.despedida();
+    if (x === 'bilhete') return this.bilhete();
     if (x.startsWith('sentar_')) return this.sentar(x.slice(7));
     if (x === 'pista_quatro') return this.pistaQuatro();
     if (x === 'pista_seis') return this.pistaSeis();
@@ -119378,7 +119592,8 @@ const Sevii = {
      onde veio, a segunda por que veio, a terceira o que vem depois. */
   presentes(d){
     d = d || Estado.dados;
-    return ELENCO_SEVII.filter(f => f.id !== 'magnus' && (f.id !== 'noa' || this.noaInscrita(d)));
+    const aqui = this.elencoNaIlha(d);
+    return ELENCO_SEVII.filter(f => f.id !== 'magnus' && (f.id !== 'noa' || this.noaInscrita(d)) && (aqui || f.regiao === 'Ilhas Sevii'));
   },
   reg(d){ d = d || Estado.dados; return (d.sevii = d.sevii || {conversas:{}, diaConversa:{}}); },
   pousada(av){
@@ -119389,8 +119604,10 @@ const Sevii = {
         acao: hoje ? 'Sevii.pousada()' : `Sevii.sentar('${f.id}')`};
     });
     botoes.push({texto:'Sair da pousada.', classe:'fim', acao:'Exploracao.tela()'});
+    const quando = this.acabou(d) ? this.quandoParte(d) : null;
     UI.telaConversa({num:'Ilhas Sevii', titulo:'A pousada da arena', loc:'Ilha Sete',
-      falas:['A varanda da pousada dá pro cânion, e de noite cada mesa é de uma região: Johto numa ponta, Hoenn na outra, e no meio quem ainda não decidiu de que lado senta.'],
+      falas:['A varanda da pousada dá pro cânion, e de noite cada mesa é de uma região: Johto numa ponta, Hoenn na outra, e no meio quem ainda não decidiu de que lado senta.',
+        quando ? `Na parede da recepção, a folha do S.S. Anne: ele passa na Ilha Um ${quando}, e quem veio de longe embarca nele.` : ''].filter(Boolean),
       botoes, avisos:av});
   },
   sentar(id){
@@ -119415,8 +119632,103 @@ const Sevii = {
     UI.telaConversa({num:'A pousada da arena', titulo:`${f.nome} ${f.sobrenome}`, loc:`${f.classe} · ${f.de}`,
       falas, quem:f.nome, avisos:av,
       botoes:[{texto:'Voltar pra varanda.', acao:'Sevii.pousada()'}]});
+  },
+
+  /* ── a despedida: o S.S. Anne no cais da Ilha Um ──
+     Quem te conhece e gosta de você diz a última coisa e deixa o número;
+     quem tem alguma coisa contra você sobe a prancha sem parar; quem
+     nunca falou com você embarca sem saber quem você é. */
+  despedida(){
+    const d = Estado.dados, r = this.reg(d);
+    if (r.embarcou != null || this.diaDaPartida(d) !== d.relogio.dia) return Exploracao.tela();
+    Mundo.passar(1);
+    const todos = this.visitantes();
+    const ficam = todos.filter(f => this.deixaNumero(f.id, d));
+    const frios = todos.filter(f => this.conheceu(f.id, d) && !this.deixaNumero(f.id, d));
+    const falas = ['O S.S. Anne está encostado no cais da Ilha Um, branco e alto demais do lado dos barcos de pesca. Quem veio de longe desce o morro com as malas, e o cais, que é de quatro barcos, fica pequeno.'];
+    ficam.forEach(f => falas.push(fala(f.nome, this.semAspas(txt(f.despedida)))));
+    if (ficam.length) falas.push(ficam.length === 1
+      ? `Antes de subir a prancha, ${ficam[0].nome} pede o seu PokéNav e grava o número ${ficam[0].f ? 'dela' : 'dele'} com o polegar, devagar.`
+      : 'Antes de subir a prancha, cada um pede o seu PokéNav e grava o próprio número, um depois do outro, com o aparelho passando de mão em mão.');
+    if (frios.length) falas.push(`${cap1(this.nomes(frios, true))} ${frios.length === 1 ? 'sobe' : 'sobem'} a prancha sem parar do seu lado.`);
+    if (todos.length > ficam.length + frios.length)
+      falas.push('Os outros embarcam sem olhar pra trás. Pra eles, você é mais um rosto da arquibancada.');
+    falas.push('O apito do Anne sai comprido, e o cais inteiro levanta a mão. A prancha sobe: Johto numa ponta da amurada, Hoenn na outra.',
+      'Você fica até o navio virar um ponto branco do lado de Kanto.');
+    r.embarcou = d.relogio.dia;
+    r.despediu = ficam.map(f => f.id);
+    const av = this.darNumeros(ficam);
+    Estado.registrar(ficam.length
+      ? `Foi ao cais da Ilha Um ver o S.S. Anne levar quem veio de longe. ${cap1(this.nomes(ficam, true))} ${ficam.length === 1 ? 'deixou o número' : 'deixaram o número'} no PokéNav.`
+      : 'Foi ao cais da Ilha Um ver o S.S. Anne levar quem veio de longe.');
+    Estado.salvar('auto');
+    UI.telaConversa({num:'Ilhas Sevii', titulo:'O S.S. Anne no cais', loc:'Ilha Um', falas, avisos:av,
+      botoes:[{texto:'Voltar pra vila.', classe:'fim', acao:'Exploracao.tela()'}]});
+  },
+  /* quem não foi ao cais: o envelope no balcão da pousada, com os mesmos números */
+  temBilhete(d){
+    d = d || Estado.dados;
+    const r = this.reg(d);
+    return this.partiu(d) && r.embarcou == null && !r.bilhete && this.visitantes().some(f => this.deixaNumero(f.id, d));
+  },
+  bilhete(){
+    const d = Estado.dados, r = this.reg(d);
+    if (!this.temBilhete(d)) return Exploracao.tela();
+    const ficam = this.visitantes().filter(f => this.deixaNumero(f.id, d));
+    r.bilhete = d.relogio.dia;
+    const falas = ['A dona da pousada tira um envelope da gaveta e põe no balcão sem dizer nada: quem deixou pediu pra entregar em mão.',
+      `Dentro, uma folha dobrada com ${ficam.length === 1 ? 'um número' : porExtenso(ficam.length) + ' números'}, cada um numa letra, e embaixo de cada número uma linha.`]
+      .concat(ficam.map(f => `**${f.nome}: ${this.semAspas(txt(f.despedida))}**`));
+    const av = this.darNumeros(ficam);
+    Estado.registrar(`Achou no balcão da pousada da Ilha Sete os números de quem embarcou no S.S. Anne: ${this.nomes(ficam)}.`);
+    Estado.salvar('auto');
+    UI.telaConversa({num:'Ilhas Sevii', titulo:'O balcão da pousada', loc:'Ilha Sete', falas, avisos:av,
+      botoes:[{texto:'Guardar a folha e sair.', classe:'fim', acao:'Exploracao.tela()'}]});
+  },
+  /* o que se fala aqui fora das cenas, pra conferência (chk-baloes): a
+     despedida de cada um no cais e as falas de quem atravessa de Kanto */
+  amostras(){
+    const diz = (q, t) => fala(q, this.semAspas(txt(t)));
+    const out = this.visitantes().map(f => ({onde:'sevii/despedida/' + f.id, dono:f.nome, linhas:[diz(f.nome, f.despedida)]}));
+    if (typeof VIAJANTES_DA_COPA !== 'undefined') for (const id of Object.keys(VIAJANTES_DA_COPA)){
+      const q = quemNaCopa(id);
+      if (q) out.push({onde:'sevii/copa/' + id, dono:q.nome, linhas:[q.torneio, q.vence, q.perde].map(t => diz(q.nome, t))});
+    }
+    return out;
+  },
+  /* "Etta", "Etta e Zev", "Etta, Zev e Oona"; com artigo, "a Etta e o Zev" */
+  nomes(fichas, artigo){
+    const l = fichas.map(f => (artigo ? (f.f ? 'a ' : 'o ') : '') + f.nome);
+    return l.length <= 1 ? l.join('') : l.slice(0, -1).join(', ') + ' e ' + l[l.length - 1];
+  },
+  semAspas(t){ return String(t || '').replace(/^["“]|["”]$/g, ''); },
+  /* o número no PokéNav: a marca fica (quem ainda não tem o aparelho
+     ganha o número junto com ele), e quem tem grava na hora */
+  darNumeros(fichas){
+    const gravou = [];
+    fichas.forEach(f => {
+      Estado.marcar('sv_numero_' + f.id);
+      if (Estado.temPokenav() && Estado.registrarNumero('ilhas_' + f.id)) gravou.push(f);
+    });
+    return gravou.length ? [{tipo:'nav', texto:`Gravou no PokéNav: ${this.nomes(gravou)}.`}] : [];
   }
 };
+
+/* ── PokéNav: quem foi embora das ilhas ──
+   Liga e atende de longe (recados.js, o tipo `longe`), conta de casa,
+   pergunta das ilhas. Revanche não tem: está do outro lado do mar, e a
+   ficha diz isso na linha apagada. Nem recado com presente, nem pedido. */
+function contatosDoElenco(){
+  if (typeof ELENCO_SEVII === 'undefined') return [];
+  return Sevii.visitantes().map(f => ({
+    id:'ilhas_' + f.id, tipo:'treinador', nome:f.nome, papel:'', elenco:f.id,
+    cidade:`${f.de}, ${f.regiao}`,
+    requer:d => !!(d.flags || {})['sv_numero_' + f.id],
+    longe:`Voltou ${Sevii.paraOnde(f)}, em ${f.regiao}. Do outro lado do mar não tem revanche.`,
+    oferece:['revanche']
+  }));
+}
+
 
 /* rosto de quem fala nos capítulos e não é do elenco */
 (function(){
@@ -119531,6 +119843,13 @@ const PISO_COPA = [56, 58, 60, 62];          // o nível mínimo do ás, por rod
 const SUBIDA_COPA = [-6, -5, -4, -3];        // em cima dos seus três mais fortes
 const TAM_COPA = [3, 4, 4, 5];               // o time de cada um, por rodada: os do fim da ficha
 const ERRO_IA_COPA = [14, 12, 10, 8];        // a escolha errada de golpe, por rodada
+/* quem atravessa de Kanto traz o time das linhas (liga.js), sem a
+   ficha montada do elenco: o Pokémon a mais por rodada é o que segura
+   a curva no lugar dela (medido no sim-sevii com PARTIU=1). Quem tem
+   time que o jogador comum não aguenta (a água e o gelo do Ewan, os
+   fantasmas da Morwen) leva menos (`mais` na entrada dele); quem tem
+   espécie que cai fácil, mais. */
+const TAM_VIAJANTE = [1, 1, 1, 1];
 const DIA_DA_COPA = 6;                       // domingo (0 = segunda, como o Calendario)
 const INSCRICAO_COPA = 3000;
 const PREMIO_COPA = [
@@ -119540,6 +119859,60 @@ const PREMIO_COPA = [
   {rodada:'Final',     dinheiro:40000, rep:2, itens:{'Full Restore':2, 'Max Revive':1}}
 ];
 
+/* Depois que quem veio de Johto e de Hoenn embarca no Anne
+   (Sevii.partiu), o domingo da Ilha Sete é de quem atravessa de Kanto
+   na balsa: os inscritos de sempre do Torneio Aberto (liga.js), com o
+   time das linhas deles e as falas daqui, o Magnus e a Noa. `ajuste` é o
+   acerto de nível na chave das ilhas, medido no sim-sevii (PARTIU=1). */
+const VIAJANTES_DA_COPA = {
+  ronan:{torneio:'"Vim de balsa. Dragão não gosta de balsa, e eu não gosto de dragão enjoado. Vamos logo."',
+    vence:'"Vou contar isso no Planalto. Vão dizer que eu inventei."', perde:'"Perdi longe de casa. Pelo menos ninguém do Planalto viu."'},
+  sabine:{torneio:'"Sonhei com esta arena antes de saber que ela existia. A pedra era desta cor."',
+    vence:'"No sonho você ganhava. Sonho também erra."', perde:'"Eu sabia. Vim assim mesmo. É o que eu faço."'},
+  ewan:{torneio:'"Atravessei pela pesca: diz que no cabo da Ilha Dois o Mantine sobe na linha. O torneio é pra pagar a balsa."',
+    vence:'"Paguei a balsa de volta. E a de ida."', perde:'"Tudo bem. A pesca daqui compensa."', mais:[0, 0, 0, 0]},
+  felix:{torneio:'"De Cinnabar até aqui é uma balsa e meia. Faltei na aula de sexta pra chegar a tempo."',
+    vence:'"Vou escrever isso na redação de segunda."', perde:'"Anotei tudo. Na próxima eu chego com a lição feita."'},
+  kaia:{torneio:'"Dormi três noites na praia da Ilha Quatro pra economizar a pousada. A areia daqui é melhor que a de Kanto."',
+    vence:'"Pronto: a pousada desta noite está paga."', perde:'"Volto pra praia, então. Eu gosto da praia."'},
+  rocco:{torneio:'"O dojô me mandou ver se o torneio das ilhas é sério. Se eu voltar de mão vazia, varro o tatame um mês."',
+    vence:'"Isso eu levo pro dojô. A vassoura fica com outro."', perde:'"Um mês de vassoura. Valeu ver isso de perto."', mais:[0, 0, 0, 0]},
+  marina:{torneio:'"Hoje de manhã eu nadei até a pedra do farol e voltei. A água daqui é outra coisa. Agora eu estou quente."',
+    vence:'"Amanhã eu nado até a outra pedra. Comemoração."', perde:'"Vou nadar um pouco. Faz bem pra cabeça."', mais:[0, 0, 0, 0]},
+  avery:{torneio:'"Vim contar Pokémon voador nas ilhas. Já são onze espécies que Kanto não tem. A arena é o intervalo."',
+    vence:'"Dia de sorte: um Noctowl de manhã e uma vitória de tarde."', perde:'"Tudo bem. Na balsa de volta eu conto o que passar voando."', mais:[2, 2, 2, 1]},
+  morwen:{torneio:'"O cânion da Ilha Sete é quieto como a Torre de madrugada. Eu gostei daqui."',
+    vence:'"A arquibancada fez silêncio na hora certa. Agradeço a quem fez."', perde:'"Foi bonito. Eu vou lembrar do barulho da pedra."', mais:[0, 0, 0, -1]},
+  freya:{torneio:'"Lá em casa é gelo. Aqui é pedra quente e sol. Vim ver se o meu time derrete."',
+    vence:'"Não derreteu."', perde:'"Derreteu um pouco. Volto no inverno."', mais:[0, 0, 0, 0]},
+  odette:{torneio:'"Trouxe chapéu, sombrinha e os meus melhores. Os meus melhores enjoaram na balsa. Eu não."',
+    vence:'"Que tarde agradável."', perde:'"Que tarde agradável, mesmo assim. Quase."', mais:[2, 2, 2, 1]},
+  willa:{torneio:'"Folga de três dias, e eu passo dois aqui. O meu chefe acha que eu fui pra casa da minha mãe."',
+    vence:'"Valeu a folga."', perde:'"Ainda tem um dia de folga. Vou passar na praia."'},
+  dax:{torneio:'"O monte da Ilha Um esquenta a sola do sapato. Me senti em casa."',
+    vence:'"Isso aquece mais que forno."', perde:'"Volto pro forno. Lá pelo menos eu sei mexer no fogo."', mais:[2, 2, 2, 1]},
+  zara:{torneio:'"Eu danço no cais pra quem chega de barco. Dessa vez quem chegou de barco fui eu."',
+    vence:'"Agora eu danço pra mim."', perde:'"Dança de despedida, então. Você mereceu."'},
+  remy:{torneio:'"Fechei a cozinha no domingo pra vir. Se eu cair cedo, ainda pego a balsa e abro pro jantar."',
+    vence:'"Hoje o jantar é por minha conta. Na cozinha, não aqui."', perde:'"Tudo bem. Ainda dá tempo de abrir pro jantar."', mais:[0, 0, 0, 0]},
+  ambrose:{torneio:'"Eu atravesso pra cá todo verão desde antes de você nascer. O torneio é novo pra mim; a balsa, não."',
+    vence:'"Um velho também ganha uma de vez em quando."', perde:'"Perdi quase todas, a vida inteira. Esta foi das boas de perder."'},
+  abel:{torneio:'"Eu crio, não batalho. Mas os meus queriam ver o mar, e o mar é aqui."',
+    vence:'"Viu? Os meus batalham."', perde:'"Eles se divertiram. Eu também, um pouco."'},
+  quincy:{torneio:'"Vim pela vitrine: aqui tinha time de Johto e de Hoenn. Foram embora, e sobrou você."',
+    vence:'"Anotei o seu time inteiro. Pra coleção."', perde:'"Vi de perto. Valeu a balsa."'},
+};
+/* quem está na chave: a ficha do elenco, ou o viajante de Kanto, com os
+   campos que a arena lê (nome, classe, de, f, torneio, vence, perde) */
+function quemNaCopa(id){
+  const f = fichaSevii(id);
+  if (f) return f;
+  const v = VIAJANTES_DA_COPA[id], r = v && typeof inscritoDoTorneio === 'function' ? inscritoDoTorneio(id) : null;
+  if (!r || !r.linhas) return null;
+  const lugar = String(r.de || '').replace(/^(do|da|de|dos|das) /, '');
+  return {id, nome:r.nome, classe:r.classe || 'Treinador', f:!!r.f, de:lugar, deDito:r.de || '', regiao:'Kanto',
+    torneio:v.torneio, vence:v.vence, perde:v.perde, ajuste:v.ajuste || 0, mais:v.mais || null, viajante:r};
+}
 /* o inscrito, pela ficha: a vaga dele no save é o id */
 function inscritoDaCopa(f){
   return {id:f.id, nome:f.nome, curto:f.nome, classe:f.classe, f:!!f.f,
@@ -119547,6 +119920,12 @@ function inscritoDaCopa(f){
 }
 function inscritosDaCopa(){
   const d = Estado.dados;
+  if (Sevii.partiu(d)){
+    /* depois do Anne: o Magnus, a Noa se estiver livre, e quem atravessa de Kanto */
+    const locais = ELENCO_SEVII.filter(f => f.regiao === 'Ilhas Sevii' && (f.id !== 'noa' || Sevii.noaInscrita(d)));
+    const viajantes = _embaralhar(Object.keys(VIAJANTES_DA_COPA).map(quemNaCopa).filter(Boolean));
+    return locais.concat(viajantes).slice(0, VAGAS_TORNEIO - 1).map(inscritoDaCopa);
+  }
   const gente = ELENCO_SEVII.filter(f => f.id !== 'magnus' && (f.id !== 'noa' || Sevii.noaInscrita(d)));
   /* o Magnus fecha os dezesseis quando falta um */
   if (gente.length < VAGAS_TORNEIO - 1) gente.push(fichaSevii('magnus'));
@@ -119556,8 +119935,15 @@ function nivelDaCopa(rodada, f){
   return Math.max(PISO_COPA[rodada], nivelDeReferencia() + SUBIDA_COPA[rodada]) + ((f && f.ajuste) || 0);
 }
 function adversarioDaCopa(ins, rodada){
-  const f = fichaSevii(ins.id);
+  const f = quemNaCopa(ins.id);
   if (!f) return null;
+  if (f.viajante){
+    const r = f.viajante;
+    const mais = (f.mais || TAM_VIAJANTE)[rodada];
+    const time = timeDeLinhas(r.linhas, nivelDaCopa(rodada, f), Math.min(6, TAM_COPA[rodada] + mais), r.golpes || [], 90);
+    if (r.segura && time.length) time[time.length - 1].segurando = r.segura;
+    return Object.assign(inscritoDaCopa(f), {time});
+  }
   const time = timeDaFicha(f, nivelDaCopa(rodada, f), TAM_COPA[rodada], Sevii.semDoDono(f.id));
   return Object.assign(inscritoDaCopa(f), {time});
 }
@@ -119569,7 +119955,7 @@ if (typeof CHAVES !== 'undefined') CHAVES.sevii = {
 };
 
 const CopaSevii = {
-  inscrito(id){ return fichaSevii(id); },
+  inscrito(id){ return quemNaCopa(id); },
 
   /* a arena depois do arco: domingo à tarde, uma chave por domingo */
   fechada(){
@@ -119593,7 +119979,9 @@ const CopaSevii = {
     const d = Estado.dados;
     const conta = d.copasVencidas ? `O seu nome está no quadro da entrada ${d.copasVencidas === 1 ? 'uma vez' : porExtensoF(d.copasVencidas) + ' vezes'}.` : 'O quadro da entrada tem dois nomes repetidos, e nenhum é o seu.';
     UI.telaConversa({num:'Ilhas Sevii', titulo:'A arena da Ilha Sete', loc:'Ilha Sete',
-      falas:['A arquibancada de pedra enche devagar, de gente das ilhas e de quem ficou depois da semana do torneio.', conta,
+      falas:[Sevii.partiu(d)
+          ? 'A arquibancada de pedra enche devagar, de gente das ilhas e de quem desce da balsa de Kanto com a mochila nas costas.'
+          : 'A arquibancada de pedra enche devagar, de gente das ilhas e de quem ficou depois da semana do torneio.', conta,
         fala('Magnus', 'Domingo é domingo. Quem quiser, se inscreve. Quem não quiser, assiste e reclama.')],
       botoes:[
         {texto:`Inscrever-se — ${fmtDin(INSCRICAO_COPA)} ₽`, classe:'luta', acao:'CopaSevii.iniciar()'},
@@ -119630,12 +120018,12 @@ const CopaSevii = {
     if (!c) return this.tela();
     if (!Estado.primeiroApto()) return this.resultado({resultado:'derrota'});
     const adv = c.adv || (c.adv = adversarioDaVez(c));
-    const f = fichaSevii(adv.id);
+    const f = quemNaCopa(adv.id);
     Veteranos.iniciarLuta(adv.nome, adv.time, {id:adv.id, tipo:'copa', arena:'ginasio', erroIA:ERRO_IA_COPA[c.rodada]});
     const ja = (Estado.dados.npcs[f.nome] || {}).memorias;
     UI.telaBatalha([`${PREMIO_COPA[c.rodada].rodada} — ${adv.nome}`,
       `${f.nome}: ${txt(f.torneio)}`,
-      ja ? null : `${f.nome} entra pelo túnel do outro lado, ${f.classe.toLowerCase()} de ${f.de}.`].filter(Boolean));
+      ja ? null : `${f.nome} entra pelo túnel do outro lado, ${f.classe.toLowerCase()} ${f.deDito || 'de ' + f.de}.`].filter(Boolean));
   },
 
   premio(venceu){
@@ -119669,7 +120057,7 @@ const CopaSevii = {
     if (fim.resultado === 'gameover'){ Jogo.copaAtual = null; return UI.telaGameOver('Você caiu na arena da Ilha Sete, com a arquibancada de pedra inteira de pé.'); }
     const d = Estado.dados;
     const adv = c.adv || (c.adv = adversarioDaVez(c));
-    const f = fichaSevii(adv.id);
+    const f = quemNaCopa(adv.id);
     const R = PREMIO_COPA.length, pr = PREMIO_COPA[c.rodada];
     const diz = t => fala(f.nome, String(txt(t) || '').replace(/^["“]|["”]$/g, ''));
     const venceu = fim.resultado === 'vitoria';
@@ -119700,6 +120088,7 @@ const CopaSevii = {
         titulo:'Eliminad{o|a}', sub:`Torneio das Ilhas · ${pr.rodada}`, loc:'Ilha Sete',
         quem:f.nome, falas:[diz(f.vence), levou,
           historia ? 'A arquibancada de pedra aplaude quem sai, como aplaude quem fica. Aqui ninguém vaia: a ilha é pequena demais pra isso.'
+                   : Sevii.partiu(d) ? 'O Torneio das Ilhas é todo domingo, e a balsa de Kanto traz gente nova a cada um.'
                    : 'O Torneio das Ilhas é todo domingo. Quem veio de longe ainda está por aqui.'],
         chave, avisos, venceu:false, botoes:this.botoesDoFim({historia})
       }));
@@ -119729,11 +120118,15 @@ const CopaSevii = {
       if (d.copasVencidas === 1){
         /* a tradição do Florian: um ovo da linhagem pra quem chega na final,
            se a caixa térmica voltou pra ele */
-        if (d.flags.sv_rec_ovos){
+        /* depois do Anne, o ovo espera com a dona da pousada, pra quem o Florian conheceu */
+        const foi = Sevii.partiu(d);
+        if (d.flags.sv_rec_ovos && (!foi || Sevii.conheceu('florian', d))){
           d.ovos = d.ovos || [];
           d.ovos.push({dex:133, choca:Creche._agora() + HORAS_DO_OVO});
           Creche.sincronizarOvos();
-          avisos.push({tipo:'item', texto:`O Florian desce da arquibancada com um ovo nas duas mãos. Recebeu 1× ${NOME_DO_OVO}.`});
+          avisos.push({tipo:'item', texto: foi
+            ? `A dona da pousada desce até a arena com uma caixa térmica. Dentro, um ovo e um bilhete na letra do Florian: "Pra quando você ganhar." Recebeu 1× ${NOME_DO_OVO}.`
+            : `O Florian desce da arquibancada com um ovo nas duas mãos. Recebeu 1× ${NOME_DO_OVO}.`});
         }
         Estado.darItem('Troféu das Ilhas', 1);
         ganhos['Troféu das Ilhas'] = 1;
@@ -122846,7 +123239,7 @@ const UI = {
     if (/confia mais em você|te olha diferente/.test(t)) return svgIcone('doar');
     const POR_TIPO = {intuicao:'lua', item:'itens', rep:'liga', cura:'cura', dano:'alerta', perigo:'alerta', gameover:'alerta',
       morte:'luto', pokemon:'bola', insignia:'ginasio', mundo:'mundo', liga:'liga', lei:'patrulha', natureza:'olho',
-      pokedex:'pokedex', evolucao:'brilho', rival:'lutar'};
+      pokedex:'pokedex', evolucao:'brilho', rival:'lutar', nav:'telefone'};
     return svgIcone(POR_TIPO[a.tipo] || 'info');
   },
 
@@ -127894,6 +128287,7 @@ const UI = {
       <div class="linha"><span class="k">Notícia</span><span class="v">não rende nada material · muda o que a pessoa pensa de você</span></div>
       <div class="linha"><span class="k">Gente da estrada</span><span class="v">19 dos treinadores de rota passam o número na primeira vez que perdem pra você · a revanche vem com o time de quem tem duas insígnias a mais, e +2 de nível</span></div>
       <div class="linha"><span class="k">Gente da história</span><span class="v">quem gostou de você o bastante passa o número depois do capítulo em que vocês se conheceram</span></div>
+      <div class="linha"><span class="k">Quem está longe</span><span class="v">quem foi embora pra outra região (o elenco das Ilhas Sevii) liga e atende de lá: conta de casa, pergunta das ilhas e do seu time · revanche não tem, e a ficha diz por quê · nem recado com presente, nem pedido de favor · de longe ninguém fica sabendo das notícias de Kanto · a afinidade anda pelo telefone como a de qualquer um</span></div>
       <div class="linha"><span class="k">Quando toca</span><span class="v">cada ação no mapa rola ${DADOS_DO_TOQUE === 1 ? '1 dado' : DADOS_DO_TOQUE + ' dados'} de chance, e o 6 faz o PokéNav tocar: entrar num lugar, andar pela cidade, conversar com os moradores, procurar Pokémon, ir atrás de quem treina, vasculhar, treinar, pescar, esperar a hora passar, acampar e começar um capítulo · toca primeiro a ligação da história que estiver esperando; sem ela, alguém da agenda liga à toa, manda recado ou pede um favor, ${TOQUES_A_TOA_POR_DIA === 1 ? 'uma vez' : TOQUES_A_TOA_POR_DIA + ' vezes'} por dia no máximo (quem ficou em casa, com notícia que não espera, liga mesmo assim) · sem ninguém que possa ligar, não rola · no meio da luta ou com uma janela aberta, toca depois · toda chamada tem "Não atender"</span></div>
       <div class="linha"><span class="k">Ligação à toa</span><span class="v">alguém da agenda liga só pra conversar · a mesma pessoa não procura de novo antes de ${RECADO_POR_CONTATO_DIAS} dias · quem gosta mais de você liga mais · resposta boa aproxima (+1 de afinidade, até ${AFINIDADE_TETO_LIGACAO}) · resposta ruim ou não atender afasta (−1, até ${String(AFINIDADE_PISO_LIGACAO).replace('-', '−')})</span></div>
       <div class="linha"><span class="k">Só conversar</span><span class="v">você também liga à toa, pela ficha de quem está na agenda · uma vez por dia por pessoa, nunca de madrugada (quem ficou em casa, com notícia que não espera, atende a qualquer hora) · é a mesma conversa da ligação à toa, com a mesma afinidade e o mesmo teto · quem já falou com você hoje, por qualquer lado, não liga de novo no mesmo dia · com chamada perdida da pessoa, a linha é a de retornar</span></div>
@@ -128018,7 +128412,9 @@ const UI = {
       <div class="linha"><span class="k">Torneio das Ilhas</span><span class="v">a mesma chave de dezesseis do Torneio Aberto: oitavas, quartas, semifinal e final · gente de Johto, de Hoenn e das ilhas, cada um com o time dele · na história, a primeira chave é sem inscrição · depois do arco, todo domingo, com a hora da arena (inscrição de manhã até as seis, chaveamento à uma), por ${fmtDin(INSCRICAO_COPA)} ₽</span></div>
       <div class="linha"><span class="k">Nível do torneio</span><span class="v">a média dos seus três mais fortes, ${SUBIDA_COPA.map((x, i) => `${x > 0 ? x + ' acima' : x === 0 ? 'no mesmo nível' : -x + ' abaixo'} ${['nas oitavas', 'nas quartas', 'na semifinal', 'na final'][i]}`).join(', ')}, nunca abaixo de ${PISO_COPA.join(', ')} · o time de cada um é o da ficha dele, os mais fortes: ${TAM_COPA.map((x, i) => `${x} ${['nas oitavas', 'nas quartas', 'na semifinal', 'na final'][i]}`).join(', ')} · golpe de TM e item no ás · erra a escolha do golpe ${ERRO_IA_COPA.map((x, i) => `${x}% ${['nas oitavas', 'nas quartas', 'na semifinal', 'na final'][i]}`).join(', ')} e gasta Vontade com a chance cheia</span></div>
       <div class="linha"><span class="k">Prêmio do torneio</span><span class="v">${PREMIO_COPA.map(r => fmtDin(r.dinheiro)).join(', ')} ₽, com itens · perdendo, 20% do prêmio da rodada · a reputação da semifinal e da final vem só na primeira vez · o primeiro título vem com o Troféu das Ilhas, e com o que mais as ilhas tiverem pra te dar</span></div>
-      <div class="linha"><span class="k">Depois do arco</span><span class="v">na pousada da arena, cada um de quem veio senta com você uma vez por dia e conta mais a cada noite, em três conversas · a sua rival das ilhas, se você tiver uma, fica no cais da Ilha Um, uma vez por semana</span></div>
+      <div class="linha"><span class="k">Depois do arco</span><span class="v">quem veio de Johto e de Hoenn fica ${porExtenso(ESTADIA_DO_ELENCO)} dias depois da final, e na pousada da arena cada um senta com você uma vez por dia e conta mais a cada noite, em três conversas · a sua rival das ilhas, se você tiver uma, fica no cais da Ilha Um, uma vez por semana</span></div>
+      <div class="linha"><span class="k">Quem vai embora</span><span class="v">no fim dessa semana o S.S. Anne passa na Ilha Um e leva quem veio de longe · quem te conhece e não tem nada contra você deixa o número no PokéNav, no cais ou, se você não foi, num envelope no balcão da pousada · quem nunca falou com você embarca sem saber quem você é · o que cada um sabe de você vai junto</span></div>
+      <div class="linha"><span class="k">O domingo depois</span><span class="v">com o elenco fora, a chave é de quem atravessa de Kanto na balsa, do Magnus e da sua rival das ilhas, se ela estiver livre · quem vem de Kanto traz o time dele, não uma ficha montada, e por isso leva um Pokémon a mais por rodada (até seis; quem tem time que pesa mais, menos) · o nível, o erro e o prêmio são os mesmos</span></div>
 
       <h3>O que o crachá muda na história</h3>
       <div class="linha"><span class="k">Opção que só existe com posto</span><span class="v">cais de Vermilion · recepção da Silph · cerca de Fuchsia</span></div>

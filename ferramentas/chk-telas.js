@@ -2533,6 +2533,155 @@ const SUSPEITO = [
       if (Historia.cenaAtual.escolhas.some((e, j) => e.copa && Historia.disponivel(e, 'c38_a_arena', j))) throw new Error('a arena oferece a chave da história de novo');
     }, venceu);
   }
+  /* quem veio de longe vai embora (sevii.js): a semana depois da final,
+     o cais no dia do Anne (quem gosta de você deixa o número, quem tem
+     alguma coisa contra você sobe sem parar, quem nunca falou com você
+     nem olha), o bilhete no balcão pra quem faltou, a agenda de longe
+     (sem revanche, sem presente, sem favor, sem notícia de Kanto, e a
+     conversa de casa), o domingo com quem atravessa de Kanto, o ovo do
+     Florian depois do Anne e o save de antes do carimbo */
+  await page.evaluate(() => {
+    window.semanaDoAnne = () => {
+      nasIlhas(6, 'ilha_sete');
+      const d = Estado.dados;
+      Sevii.reg(d).fimDoArco = d.relogio.dia;
+      Estado.dados.relogio.hora = 10;
+      Estado.marcar('sv_conheceu_soren'); Estado.lembrarNPC('Soren', {opiniao:2, memoria:'Ficou do lado dele na amurada do S.S. Anne.'});
+      Estado.marcar('sv_conheceu_zev'); Estado.lembrarNPC('Zev', {opiniao:-1, memoria:'Perguntou da Rocket no jantar do S.S. Anne.'});
+      Estado.lembrarNPC('Etta', {opiniao:1, memoria:'Perdeu pra você nas Oitavas do Torneio das Ilhas.'});
+      if (!Estado.temPokenav()) Estado.ganharPokenav();
+    };
+  });
+  await restaurar();
+  await tentar('ilhas/a semana do Anne', () => {
+    semanaDoAnne();
+    const d = Estado.dados;
+    if (Sevii.partiu(d)) throw new Error('o elenco foi embora no dia da final');
+    Exploracao.fazer('sevii_pousada');
+    if (!/S\.S\. Anne/.test(document.getElementById('app').innerText)) throw new Error('a pousada não diz quando o Anne passa');
+    d.local = 'ilha_um';
+    if (Sevii.afazeres('ilha_um').some(a => a.id === 'sevii_despedida')) throw new Error('o cais do Anne antes do dia');
+    d.relogio.dia += ESTADIA_DO_ELENCO;
+    if (Sevii.partiu(d)) throw new Error('o elenco foi embora antes do Anne');
+    Exploracao.tela();
+    if (!afazeresDoLocal().some(a => a.id === 'sevii_despedida')) throw new Error('sem o cais do Anne no dia da partida');
+  });
+  await tentar('ilhas/o cais do Anne', () => {
+    const d = Estado.dados;
+    Exploracao.fazer('sevii_despedida');
+    const t = document.getElementById('app').innerText;
+    if (!/Salamence/.test(t)) throw new Error('o Soren não se despediu');
+    if (!/Zev sobe a prancha/.test(t)) throw new Error('o Zev não subiu sem parar');
+    if (!/Os outros embarcam/.test(t)) throw new Error('quem nunca falou com você não aparece');
+    if (!Estado.temNumero('ilhas_soren') || !Estado.temNumero('ilhas_etta')) throw new Error('quem gosta de você não deixou o número');
+    if (Estado.temNumero('ilhas_zev') || Estado.temNumero('ilhas_rhys')) throw new Error('deixou o número quem não devia');
+    if (!Sevii.partiu(d)) throw new Error('o Anne saiu e o elenco ficou');
+    d.local = 'ilha_sete'; Exploracao.tela();
+    const ids = afazeresDoLocal().map(a => a.id);
+    if (ids.includes('sevii_pousada') || ids.includes('sevii_bilhete')) throw new Error('a pousada continua com o elenco depois do Anne');
+    if (Sevii.presentes(d).some(f => f.regiao !== 'Ilhas Sevii')) throw new Error('quem foi embora ainda senta na varanda');
+    const k = Sevii.conhecidos(d);
+    if (k.length !== 3 || !k.find(x => x.id === 'zev' && x.laco === 'atrito') || !k.find(x => x.id === 'etta' && x.voceVenceu === 1)) throw new Error('quem te conhece saiu errado: ' + JSON.stringify(k));
+  });
+  await restaurar();
+  await tentar('ilhas/o bilhete no balcão', () => {
+    semanaDoAnne();
+    const d = Estado.dados;
+    d.relogio.dia += ESTADIA_DO_ELENCO + 1;
+    if (!Sevii.partiu(d)) throw new Error('o Anne não saiu sem você');
+    Exploracao.tela();
+    if (!afazeresDoLocal().some(a => a.id === 'sevii_bilhete')) throw new Error('sem o bilhete no balcão pra quem faltou');
+    Exploracao.fazer('sevii_bilhete');
+    if (!/Salamence/.test(document.getElementById('app').innerText)) throw new Error('o bilhete não tem a linha do Soren');
+    if (!Estado.temNumero('ilhas_soren') || Estado.temNumero('ilhas_zev')) throw new Error('o bilhete gravou o número errado');
+    Exploracao.tela();
+    if (afazeresDoLocal().some(a => a.id === 'sevii_bilhete')) throw new Error('o bilhete ficou no balcão depois de entregue');
+  });
+  /* a agenda de longe: revanche apagada com o motivo, conversa, ligação à toa com cada resposta */
+  await tentar('ilhas/agenda de longe', () => {
+    const c = contatoPorId('ilhas_soren');
+    UI.modalNav('ilhas_soren');
+    const rev = [...document.querySelectorAll('#modal .nav-acao')].find(b => /revanche/i.test(b.innerText));
+    if (!rev || !rev.disabled || !/Blackthorn/.test(rev.innerText)) throw new Error('a revanche de quem foi embora não está apagada com o motivo');
+    if (Recados.podeMandarPresente(c) || Recados.separarPresente(c)) throw new Error('quem está longe separou presente');
+    if (Pedidos.podePedir(c)) throw new Error('quem está longe pede favor');
+    Estado.dados.cemiterio = (Estado.dados.cemiterio || []).concat([Object.assign(criarPokemon(19, 10), {morto:true})]);
+    if (Recados.eventoPara(c)) throw new Error('quem está longe ficou sabendo de notícia de Kanto');
+    UI.fecharModal(true);
+  });
+  for (const t of ['longe_casa', 'longe_ilhas', 'o_time', 'onde', 'rumo']) for (const i of [0, 1, 2, -1]){
+    await tentar(`ilhas/longe/${t}/${i < 0 ? 'não atendeu' : i}`, ([x, i0]) => {
+      Recados.atual = null;
+      UI.telaChamada(Recados.montarLigacao(contatoPorId('ilhas_soren'), x));
+      const ch = Recados.atual;
+      if (!ch || ch.topico !== x) throw new Error('o assunto não serve pra quem está longe: ' + (ch && ch.topico));
+      if (i0 < 0) Jogo.recusarChamada(ch.id); else Jogo.responderChamada(ch.id, i0);
+    }, [t, i]);
+  }
+  await tentar('ilhas/longe/só os assuntos de longe', () => {
+    const ids = Recados.topicosDe(contatoPorId('ilhas_soren')).map(t => t.id);
+    if (ids.some(id => !['longe_casa', 'longe_ilhas', 'o_time', 'onde', 'rumo'].includes(id))) throw new Error('assunto de perto pra quem está longe: ' + ids.join(', '));
+    if (Recados.topicosDe(contatoPorId('casa')).some(t => t.longe)) throw new Error('assunto de longe pra quem está perto');
+  });
+  await tentar('ilhas/longe/retornar e conversar', () => {
+    const d = Estado.dados;
+    UI.fecharModal(true); Recados.atual = null;
+    Recados.doContato('ilhas_soren').falouDia = null;
+    delete Recados.reg().perdidas['ilhas_soren'];
+    Recados.recusar(Recados.montarLigacao(contatoPorId('ilhas_soren'), 'longe_casa').id);
+    if (!Recados.temPerdida('ilhas_soren')) throw new Error('a chamada de longe não ficou perdida');
+    if (!Recados.retornar('ilhas_soren')) throw new Error('não deu pra retornar a ligação de longe');
+    Jogo.responderChamada(Recados.atual.id, 0);
+    UI.fecharModal(true);
+    d.relogio.dia++; Relogio.ate(10);
+    UI.modalNav('ilhas_soren');
+    const b = document.querySelector('#modal .nav-acao.conversar');
+    if (!b || b.disabled) throw new Error('sem "Só conversar" com quem está longe');
+    b.click();
+    if (!Recados.atual) throw new Error('a ligação de longe não abriu');
+    Jogo.responderChamada(Recados.atual.id, 1);
+  });
+  /* o domingo depois do Anne: Magnus, a Noa se estiver livre e quem atravessa de Kanto */
+  for (const rodada of [0, 1, 2, 3]) for (const venceu of [true, false]){
+    await restaurar();
+    await tentar(`ilhas/copa depois do Anne/${rodada}/${venceu ? 'venceu' : 'caiu'}`, ([r, v]) => {
+      semanaDoAnne();
+      const d = Estado.dados;
+      d.relogio.dia += ESTADIA_DO_ELENCO + 1;
+      d.flags.sv_rec_ovos = true; Estado.marcar('sv_conheceu_florian');
+      const t = chaveAteARodada(novaChave('sevii'), r);
+      if (t.inscritos.length !== VAGAS_TORNEIO) throw new Error('a chave de depois do Anne não tem dezesseis vagas');
+      if (t.inscritos.some(x => !x.voce && fichaSevii(x.id) && fichaSevii(x.id).regiao !== 'Ilhas Sevii')) throw new Error('quem foi embora está na chave');
+      if (!t.inscritos.some(x => x.id === 'magnus')) throw new Error('o Magnus não está na chave de domingo');
+      Jogo.copaAtual = t; CopaSevii.tela();
+      if (!quemNaCopa(t.adv.id)) throw new Error('o adversário da vez não tem ficha nem é de Kanto: ' + t.adv.id);
+      Jogo.veteranoAtual = {id:t.adv.id, tipo:'copa'};
+      CopaSevii.resultado({resultado: v ? 'vitoria' : 'derrota'});
+      if (v && r === 3 && !Estado.dados.ovos.some(o => o.dex === 133)) throw new Error('o Florian não deixou o ovo com a pousada');
+    }, [rodada, venceu]);
+  }
+  await restaurar();
+  await tentar('ilhas/ovo do Florian pra quem ele não conhece', () => {
+    semanaDoAnne();
+    const d = Estado.dados;
+    d.relogio.dia += ESTADIA_DO_ELENCO + 1;
+    d.flags.sv_rec_ovos = true; d.ovos = [];
+    const t = chaveAteARodada(novaChave('sevii'), 3);
+    Jogo.copaAtual = t; Jogo.veteranoAtual = {id:t.adv.id, tipo:'copa'};
+    CopaSevii.resultado({resultado:'vitoria'});
+    if (d.ovos.some(o => o.dex === 133)) throw new Error('o Florian deixou ovo pra quem ele nunca viu');
+  });
+  /* o save de antes do carimbo: o arco fechado ganha a semana a partir de hoje */
+  await restaurar();
+  await tentar('ilhas/save de antes do carimbo', () => {
+    nasIlhas(6, 'ilha_sete');
+    const d = Estado.dados;
+    delete Sevii.reg(d).fimDoArco;
+    Estado.abrir(JSON.stringify(d));
+    if (Sevii.fimDoArco(Estado.dados) !== Estado.dados.relogio.dia) throw new Error('o save de antes não ganhou o dia do fim do arco');
+    if (Sevii.partiu(Estado.dados)) throw new Error('o elenco foi embora na carga');
+  });
+
   /* a Noa no cais, depois do arco */
   await restaurar();
   await tentar('ilhas/a Noa no cais', () => {

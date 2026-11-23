@@ -79,6 +79,16 @@ for (const f of ELENCO_SEVII){
   L.push('');
   L.push(`**No torneio:** ${limpa(f.torneio)} · **quando ganha:** ${limpa(f.vence)} · **quando perde:** ${limpa(f.perde)}`);
   L.push('');
+  /* quem veio de longe: o que diz no cais do Anne, e o que liga pra contar de casa */
+  if (f.despedida){
+    const desp = typeof f.despedida === 'function' ? f.despedida({flags:{}, cemiterio:[]}) : f.despedida;
+    L.push(`**No cais do Anne:** ${limpa(desp)}`);
+    L.push('');
+  }
+  if ((f.deLonge || []).length){
+    L.push('**De longe, no PokéNav:** ' + f.deLonge.map(t => '"' + limpa(t) + '"').join(' · '));
+    L.push('');
+  }
 }
 
 L.push('## Quem mais luta nas ilhas');
