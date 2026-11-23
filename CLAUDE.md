@@ -781,7 +781,7 @@ própria tabela (`Dificuldade.regras()`).
 
 Medido no `sim-ginasios.js` (400 lutas por caso, jogador no nível da
 área): Brock 68% / 38% / 18% (Fácil / Normal / Difícil), Misty 57 /
-46 / 26, Sabrina 66 / 48 / 23, Blue 68 / 39 / 21; Surge, Erika, Koga
+46 / 26, Sabrina 66 / 48 / 23, Blue 61 / 34 / 25; Surge, Erika, Koga
 e Blaine ficam perto do teto nas três. A Sabrina era 68 / 48 / 29 e
 caiu pra 54 / 41 / 23 quando a IA passou a errar só entre golpes
 úteis e o Minimize virou esquiva de graça (ver "O combate é
@@ -1670,8 +1670,15 @@ cinco insígnias no capítulo 4 com um time de 14 a 23, a Sabrina
 incluída. O Blue (sete
 insígnias, dificuldade 8) chegava ao capítulo 21, de área 52, com o ás
 no 60 e vencia três de cada quatro times no nível da área; com
-dificuldade 4 vence pouco menos de dois em três e continua o ginásio
-mais duro. `node ferramentas/sim-ginasios.js` mede cada ginásio no
+dificuldade 5 vence dois em três e continua o ginásio mais duro. O
+time dele é o da final contra o Red, a dos catorze minutos de campeão
+(Pidgeot, Alakazam, Rhydon, Arcanine, Exeggutor e o Blastoise, o
+Squirtle que ele escolheu na mesa do avô depois que o Red pegou o
+Charmander, como no Pokémon Origins), e o Blastoise vem dois acima do
+ás de todo líder (`aceAcima`). Ele fechava com o inicial que vence o
+seu, a regra de Red/Blue, e a regra só faz sentido quando quem joga é
+o Red: aqui ele escolheu o dele anos antes de você sair de casa. O
+quintal do capítulo 33 (`Sevii.timeDoBlue`) usa o mesmo time. `node ferramentas/sim-ginasios.js` mede cada ginásio no
 capítulo em que costuma cair, com o time 6 e 3 abaixo, no nível e 2
 acima da área. Nível pesa pouco aqui (um ponto de atributo a cada 7
 níveis): o que decide é espécie e forma, e por isso treinar semanas pro
@@ -3365,7 +3372,17 @@ a 38; o desenho de cada um do elenco está em `docs/SEVII.md`.
   `variar-rostos.py`, com a aparência escrita pelo desenho). Ficha nova
   ou mudada roda `node ferramentas/fichas-sevii.js`, que gera o
   `docs/SEVII.md`. Hoenn só existe no time deles (`hoenn.js`): ninguém
-  pega Pokémon de Hoenn.
+  pega Pokémon de Hoenn. **Especialista num tipo são três** (foi pedido
+  assim: "quero tipo 3 monotype apenas, quero mais variações"): a Etta
+  (Inseto, que veio provar que inseto ganha torneio), o Soren (os
+  dragões do clã que o recusou) e a Oona (Fantasma, com o Chimecho do
+  cume do Monte Pyre). O resto tem `tipo:null` e time variado, no
+  máximo três de um tipo, com o Pokémon que a história liga à pessoa (o
+  Lapras do Gideon, o Blaziken da Calla, o Hariyama da Saskia, o
+  Houndoom do Zev) e o que a vida juntou em volta, dito na jornada.
+  Ninguém repete espécie de outro inscrito, menos o Pinsir e o Snorlax,
+  que já eram de dois. Espécie de Hoenn nova pede arte (só tem arte quem
+  já está num time); a de Kanto e Johto já tem.
 - **O roubo** (`ROUBOS_DE_SEVII`): a Milotic da Esme, a mochila da
   Etta, a caixa de ovos do Florian e os Pokémon da turma do Brody. Cada
   um tem a flag de quando volta; o que não volta sai do time do dono no
@@ -3414,13 +3431,15 @@ a 38; o desenho de cada um do elenco está em `docs/SEVII.md`.
   ficha (`timeDaFicha`: três nas oitavas, quatro nas quartas e na semi,
   cinco na final), então **a ordem do `time` é balanceamento**, e foi
   medida: `node ferramentas/sim-sevii.js` (o jogador ingênuo, o inicial
-  e o mato das ilhas, nos níveis 60, 66 e 72) dá 75% nas oitavas, de
-  46% a 57% nas quartas e na semi, de 17% a 25% na final, e 3% a 5% de
-  título; com `--cada` (e `QUEM=`, `SO=cada`), cada um. O nível pesa
+  e o mato das ilhas, nos níveis 60, 66 e 72) dá 76% a 78% nas oitavas,
+  de 42% a 54% nas quartas e na semi, de 15% a 22% na final, e 2% a 5%
+  de título; com `--cada` (e `QUEM=`, `SO=cada`), cada um. O nível pesa
   pouco (o `ajuste` de cada ficha mexe uns pontos), e quem destoava
   acertou pela ordem: o Ninjask da Etta na rodada de três derrubava as
-  oitavas pra 38%, e a Pelipper e o Tropius da Skye deixavam ela em
-  95%. Ficha que muda de time roda ali e o `fichas-sevii.js`.
+  oitavas pra 38%; quando os times viraram variados, o Feraligatr e o
+  Donphan da Saskia na rodada de três derrubavam pra 44%, e o Tropius,
+  o Absol e o Altaria da Skye deixavam ela em 99%. Ficha que muda de
+  time roda ali e o `fichas-sevii.js`.
 - **Entre os capítulos, a ilha do meio conta alguma coisa**
   (`Sevii.afazeres`): o barco sem luz na Ilha Quatro, a Pokébola M. H.
   da Oona na Ilha Seis. Depois do arco, a pousada da arena, onde cada

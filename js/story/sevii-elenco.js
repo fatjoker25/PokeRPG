@@ -22,6 +22,15 @@
    O que vem da história (o Pokémon roubado, quem entra no torneio)
    mora em sevii.js; aqui é só quem a pessoa é.
 
+   Especialista são três, e foi pedido assim ("quero tipo 3 monotype
+   apenas, quero mais variações"): a Etta (Inseto: ela veio provar que
+   inseto ganha torneio), o Soren (os dragões do clã que o recusou) e a
+   Oona (Fantasma: a zeladora do Monte Pyre, com o Chimecho do cume).
+   O resto tem time variado, com no máximo três de um tipo: quem a
+   história liga a um tipo leva o Pokémon que importa (o Lapras do
+   Gideon, o Blaziken da Calla, o Hariyama da Saskia) e o que a vida
+   juntou em volta dele. Especialista novo só no lugar de um desses.
+
    O docs/SEVII.md é gerado daqui (ferramentas/fichas-sevii.js).
    ============================================================ */
 const ELENCO_SEVII = [
@@ -39,12 +48,13 @@ const ELENCO_SEVII = [
     'Nasceu no Covil dos Dragões de Blackthorn, filho de um guardião do santuário.',
     'Aos nove anos trocou o Rattata do irmão por um ovo com um marinheiro de Hoenn, no porto de Olivine. Do ovo saiu um Bagon.',
     'Os anciãos do clã não deixaram o Bagon entrar no Covil: dragão que não nasceu da água de lá, disseram, não é dragão.',
-    'Ele saiu de Blackthorn aos treze com o Bagon no colo, fez o desafio de Hoenn e foi barrado no fim. O Bagon virou Salamence no dia da segunda recusa do clã.'
+    'Ele saiu de Blackthorn aos treze com o Bagon no colo, fez o desafio de Hoenn e foi barrado no fim. O Bagon virou Salamence no dia da segunda recusa do clã.',
+    'O Dragonair é o único do Covil que saiu com ele. O pai deu na porta, sem o clã ver.'
   ],
   porque:'O Torneio das Ilhas é o único grande que não tem cadeira do clã no júri. Aqui ninguém pergunta de onde veio o dragão.',
   gancho:'Dizem que o clã mandou alguém assistir o torneio. Ele finge que não procura na arquibancada.',
   time:[
-    [130, ['Waterfall', 'Dragon Breath', 'Earthquake', 'Body Slam'], 'Adamant'],
+    [148, ['Dragon Breath', 'Thunder Wave', 'Surf', 'Ice Beam'], 'Modest'],
     [230, ['Surf', 'Dragon Breath', 'Ice Beam', 'Agility'], 'Modest'],
     [142, ['Rock Slide', 'Earthquake', 'Ancient Power', 'Fly'], 'Jolly'],
     [330, ['Earthquake', 'Dragon Claw', 'Rock Slide', 'Fire Blast'], 'Jolly'],
@@ -57,7 +67,7 @@ const ELENCO_SEVII = [
 },
 {
   id:'gideon', nome:'Gideon', sobrenome:'Spruce', f:false, idade:71, nasceu:[30, 3],
-  regiao:'Johto', de:'Olivine', classe:'Pescador', tipo:'Água',
+  regiao:'Johto', de:'Olivine', classe:'Pescador', tipo:null,
   tracos:['paciente', 'brincalhão', 'teimoso'], meta:'campeao', forte:'sorte',
   gosta:{lugar:'agua', tipo:'Água', especie:'Lapras'},
   desgosta:{lugar:'cidade', tipo:'Elétrico', especie:'Qwilfish'},
@@ -66,17 +76,18 @@ const ELENCO_SEVII = [
   jornada:[
     'Pesca no cais de Olivine há cinquenta e tantos anos.',
     'Veio ao Torneio das Ilhas pela primeira vez com dezenove anos e um Lapras novo, e perdeu a final pro Magnus Holm, da Ilha Sete.',
-    'Voltou em todas as edições desde então: quarenta e duas. Nunca ganhou. O Lapras é o mesmo.'
+    'Voltou em todas as edições desde então: quarenta e duas. Nunca ganhou. O Lapras é o mesmo.',
+    'O resto do time é o que o cais juntou em cinquenta anos: o Noctowl da pesca de madrugada, o Sudowoodo que todo mundo acha que é árvore, o Omastar que veio fóssil numa rede.'
   ],
   porque:'"Tem gente que vem pelo torneio. Eu venho pelo barco." É o primeiro ano sem a mulher dele acenando do cais de Olivine na saída.',
   gancho:'Guarda um mapa de pesca de Johto com marcas a lápis nos lugares onde, diz ele, o mar canta.',
   time:[
-    [224, ['Surf', 'Ice Beam', 'Flamethrower', 'Sludge Bomb'], 'Modest'],
-    [195, ['Earthquake', 'Surf', 'Ice Beam', 'Amnesia'], 'Relaxed'],
-    [226, ['Surf', 'Wing Attack', 'Ice Beam', 'Confuse Ray'], 'Calm'],
-    [171, ['Thunderbolt', 'Surf', 'Thunder Wave', 'Confuse Ray'], 'Modest'],
-    [340, ['Earthquake', 'Waterfall', 'Amnesia', 'Ice Beam'], 'Adamant'],
-    [131, ['Surf', 'Ice Beam', 'Body Slam', 'Thunderbolt'], 'Calm', 'Leftovers']
+    [164, ['Hypnosis', 'Dream Eater', 'Psychic', 'Fly'], 'Modest'],
+    [199, ['Surf', 'Psychic', 'Ice Beam', 'Amnesia'], 'Calm'],
+    [227, ['Steel Wing', 'Drill Peck', 'Agility', 'Swift'], 'Impish'],
+    [185, ['Rock Slide', 'Earthquake', 'Body Slam', 'Self-Destruct'], 'Adamant'],
+    [139, ['Surf', 'Ancient Power', 'Ice Beam', 'Spike Cannon'], 'Modest'],
+    [131, ['Surf', 'Ice Beam', 'Body Slam', 'Psychic'], 'Calm', 'Leftovers']
   ],
   torneio:'"Quarenta e duas vezes eu entrei nesta arena, moço. Em quarenta e uma eu saí com o barco cheio de história e sem troféu."',
   vence:'"Viu? O mar devolve. Demora, mas devolve."',
@@ -119,16 +130,17 @@ const ELENCO_SEVII = [
   voz:'Fala como quem está no ar: em vinheta, chamando todo mundo de ouvinte. Quando o microfone desliga, fica quieto de repente.',
   jornada:[
     'Apresenta "Ziggy na Madrugada" na rádio de Goldenrod há seis anos, o programa que todo caminhoneiro de Johto escuta da meia-noite às quatro.',
-    'A rádio vai tirar o programa do ar daqui a três meses. Ninguém mais escuta rádio de madrugada, diz o diretor.'
+    'A rádio vai tirar o programa do ar daqui a três meses. Ninguém mais escuta rádio de madrugada, diz o diretor.',
+    'Dois do time vieram de ouvinte: o Lanturn, de um caminhoneiro de Cianwood; o Typhlosion, de um menino de New Bark que ligou chorando porque ia se mudar pra longe.'
   ],
   porque:'Narrar o torneio ao vivo, lutando nele, num transmissor de mão. Se o Ziggy da madrugada ganhar o Torneio das Ilhas, a rádio não tem coragem de tirar do ar.',
   gancho:'Promete uma entrevista com você "no programa", se o programa existir.',
   time:[
-    [352, ['Shadow Ball', 'Thunderbolt', 'Body Slam', 'Ice Beam'], 'Brave'],
-    [277, ['Double-Edge', 'Fly', 'Quick Attack', 'Steel Wing'], 'Jolly'],
-    [335, ['Swords Dance', 'Slash', 'Shadow Ball', 'Rock Slide'], 'Adamant'],
-    [241, ['Body Slam', 'Earthquake', 'Rollout', 'Attract'], 'Careful'],
+    [124, ['Ice Beam', 'Psychic', 'Lovely Kiss', 'Dream Eater'], 'Modest'],
+    [171, ['Thunderbolt', 'Surf', 'Thunder Wave', 'Confuse Ray'], 'Modest'],
+    [157, ['Flamethrower', 'Earthquake', 'Thunder Punch', 'Quick Attack'], 'Naive'],
     [181, ['Thunderbolt', 'Fire Punch', 'Thunder Wave', 'Light Screen'], 'Modest'],
+    [241, ['Body Slam', 'Earthquake', 'Rollout', 'Attract'], 'Careful'],
     [295, ['Body Slam', 'Earthquake', 'Flamethrower', 'Ice Beam'], 'Lonely', 'Muscle Band']
   ],
   torneio:'"Boa tarde, ouvinte! Agora é comigo e com {o|a} visitante de Kanto, ao vivo das ilhas!"',
@@ -137,7 +149,7 @@ const ELENCO_SEVII = [
 },
 {
   id:'saskia', nome:'Saskia', sobrenome:'Rush', f:true, idade:22, nasceu:[8, 8],
-  regiao:'Johto', de:'Cianwood', classe:'Lutadora', tipo:'Lutador',
+  regiao:'Johto', de:'Cianwood', classe:'Lutadora', tipo:null,
   tracos:['corajosa', 'alegre', 'impulsiva'], meta:'campeao', forte:'forca',
   gosta:{lugar:'agua', tipo:'Lutador', especie:'Hariyama'},
   desgosta:{lugar:'cidade', tipo:'Psíquico', especie:'Alakazam'},
@@ -145,16 +157,17 @@ const ELENCO_SEVII = [
   voz:'Ri alto, fala com o corpo inteiro e cumprimenta apertando o braço, não a mão.',
   jornada:[
     'Cresceu no dojô de Cianwood. Nada até as Ilhas do Redemoinho toda manhã, ida e volta antes do café.',
-    'Passou um ano em Hoenn treinando com os lutadores de Dewford e voltou com um Makuhita, hoje Hariyama: o único Pokémon que a derrubou na areia.'
+    'Passou um ano em Hoenn treinando com os lutadores de Dewford e voltou com um Makuhita, hoje Hariyama: o único Pokémon que a derrubou na areia.',
+    'De manhã, quem nada com ela são o Mantine e o Feraligatr. Luta não é tipo, diz ela: é quem levanta depois de cair.'
   ],
   porque:'Lutar de novo com quem vem de Hoenn. E porque a mãe dela disse que ela nunca termina nada. "Eu vim terminar um torneio."',
   gancho:'Quer atravessar o mar entre Cianwood e as Ilhas Sevii nadando, um dia. Já calculou as paradas.',
   time:[
+    [160, ['Waterfall', 'Slash', 'Earthquake', 'Ice Punch'], 'Adamant'],
+    [226, ['Surf', 'Wing Attack', 'Ice Beam', 'Confuse Ray'], 'Calm'],
+    [335, ['Swords Dance', 'Slash', 'Shadow Ball', 'Rock Slide'], 'Adamant'],
     [237, ['Rolling Kick', 'Dig', 'Quick Attack', 'Detect'], 'Impish'],
-    [62, ['Surf', 'Submission', 'Ice Punch', 'Hypnosis'], 'Adamant'],
-    [308, ['High Jump Kick', 'Fire Punch', 'Ice Punch', 'Thunder Punch'], 'Jolly'],
-    [286, ['Dynamic Punch', 'Giga Drain', 'Stun Spore', 'Swords Dance'], 'Adamant'],
-    [68, ['Cross Chop', 'Rock Slide', 'Earthquake', 'Fire Punch'], 'Adamant'],
+    [232, ['Earthquake', 'Rock Slide', 'Body Slam', 'Rapid Spin'], 'Adamant'],
     [297, ['Seismic Toss', 'Earthquake', 'Rock Slide', 'Fire Punch'], 'Adamant', 'Focus Band']
   ],
   torneio:'"Aperta aqui. Não, de verdade. Eu quero saber a força da mão de quem eu vou enfrentar."',
@@ -172,7 +185,7 @@ const ELENCO_SEVII = [
   jornada:[
     'Neto do casal que cuida da creche da Rota 34. Cresceu entre ovo e cesto de palha.',
     'Cria Eevee há vinte anos e anota tudo em caderno: a temperatura do ovo, o dia, a hora em que rachou.',
-    'Os seis do time dele são da mesma linhagem, filhos e netos de uma Eevee só, que mora na creche até hoje.'
+    'Cinco dos seis do time dele são da mesma linhagem, filhos e netos de uma Eevee só, que mora na creche até hoje. O Snorlax também é da creche: dorme no portão desde antes de ele nascer.'
   ],
   porque:'A creche faz cinquenta anos. Ele trouxe seis ovos da linhagem pra dar de presente a quem chegar na final, que é a tradição dele em todo torneio.',
   gancho:'Quer ver um Eevee da linhagem dele crescer em Hoenn, com alguém de lá.',
@@ -184,13 +197,13 @@ const ELENCO_SEVII = [
     [197, ['Faint Attack', 'Confuse Ray', 'Toxic', 'Protect'], 'Careful'],
     [196, ['Psychic', 'Shadow Ball', 'Swift', 'Reflect'], 'Timid', 'Wise Glasses']
   ],
-  torneio:'"Os seis vieram da mesma avó. Cada um escolheu um caminho. Igual a gente."',
+  torneio:'"Eles vieram da mesma avó. Cada um escolheu um caminho. Igual a gente."',
   vence:'"Noventa e um por cento, eu tinha calculado. Desculpa. Eu sempre calculo."',
   perde:'"Anotado. Não é derrota, é dado."'
 },
 {
-  id:'zev', ajuste:-2, nome:'Zev', sobrenome:'Fernley', f:false, idade:31, nasceu:[13, 12],
-  regiao:'Johto', de:'Mahogany', classe:'Pescador do Lago', tipo:'Sombrio',
+  id:'zev', ajuste:-6, nome:'Zev', sobrenome:'Fernley', f:false, idade:31, nasceu:[13, 12],
+  regiao:'Johto', de:'Mahogany', classe:'Pescador do Lago', tipo:null,
   tracos:['desconfiado', 'solitário', 'protetor'], meta:'heroi', forte:'percepcao',
   gosta:{lugar:'agua', tipo:'Sombrio', especie:'Houndoom'},
   desgosta:{lugar:'cidade', tipo:'Psíquico', especie:'Raticate'},
@@ -199,16 +212,16 @@ const ELENCO_SEVII = [
   jornada:[
     'Há três anos era recruta da Equipe Rocket no esconderijo de Mahogany, o que ficava debaixo da loja de lembrancinhas.',
     'Quando o esconderijo caiu, ele não fugiu: ficou pra abrir as gaiolas. Pegou dois anos.',
-    'Saiu e vive de pesca no Lago da Fúria. Os Pokémon do time são os mesmos de antes, menos um.'
+    'Saiu e vive de pesca no Lago da Fúria. Do time de antes, falta um. No lugar dele está o Gyarados do Lago, que mordeu a linha numa terça de chuva e é o único que nunca viu uniforme.'
   ],
   porque:'Torneio é a única coisa em que ninguém pergunta o que ele fez. Ou era.',
   gancho:'Tem um nome que ele não diz: o do chefe de turno de Mahogany, que fugiu antes da polícia chegar.',
   time:[
     [110, ['Sludge Bomb', 'Flamethrower', 'Thunderbolt', 'Shadow Ball'], 'Bold'],
+    [130, ['Waterfall', 'Earthquake', 'Body Slam', 'Dragon Breath'], 'Adamant'],
     [169, ['Wing Attack', 'Sludge Bomb', 'Confuse Ray', 'Bite'], 'Jolly'],
+    [221, ['Earthquake', 'Ice Beam', 'Rock Slide', 'Body Slam'], 'Brave'],
     [229, ['Flamethrower', 'Crunch', 'Shadow Ball', 'Sludge Bomb'], 'Timid'],
-    [262, ['Crunch', 'Double-Edge', 'Shadow Ball', 'Iron Tail'], 'Adamant'],
-    [332, ['Giga Drain', 'Faint Attack', 'Thunder Punch', 'Cotton Spore'], 'Quiet'],
     [248, ['Crunch', 'Rock Slide', 'Earthquake', 'Thunderbolt'], 'Adamant', 'Leftovers']
   ],
   torneio:'"Pode olhar. Todo mundo olha. Eu prefiro que olhe de frente."',
@@ -218,8 +231,8 @@ const ELENCO_SEVII = [
 
 /* ─────────────────────────── HOENN ─────────────────────────── */
 {
-  id:'skye', ajuste:5, nome:'Skye', sobrenome:'Fernwood', f:true, idade:15, nasceu:[20, 5],
-  regiao:'Hoenn', de:'Fortree', classe:'Escaladora', tipo:'Voador',
+  id:'skye', ajuste:3, nome:'Skye', sobrenome:'Fernwood', f:true, idade:15, nasceu:[20, 5],
+  regiao:'Hoenn', de:'Fortree', classe:'Escaladora', tipo:null,
   tracos:['sonhadora', 'distraída', 'alegre'], meta:'explorar', forte:'sorte',
   gosta:{lugar:'floresta', tipo:'Voador', especie:'Altaria'},
   desgosta:{lugar:'agua', tipo:'Elétrico', especie:'Sharpedo'},
@@ -228,16 +241,17 @@ const ELENCO_SEVII = [
   jornada:[
     'Cresceu nas casas de árvore de Fortree, onde a rua é ponte de corda.',
     'Nunca tinha pisado num barco antes desta viagem. Enjoou as trinta horas de Slateport até aqui.',
-    'O Altaria dela era um Swablu que ficou pra trás numa tempestade, na migração de outono, e ela cuidou dele no telhado de casa.'
+    'O Altaria dela era um Swablu que ficou pra trás numa tempestade, na migração de outono, e ela cuidou dele no telhado de casa.',
+    'O Absol apareceu na véspera daquela tempestade, na ponte de corda, e não foi mais embora. O Kecleon é o que fechava o caminho na saída de Fortree, que só ela enxergava.'
   ],
   porque:'A migração. Os Swablu de Hoenn atravessam o mar até as Ilhas Sevii no outono, e ela quer ver eles chegarem. O torneio é o que dá pra fazer enquanto eles descansam.',
   gancho:'Jura que um dia vai seguir a migração inteira, de Fortree até onde ela acaba.',
   time:[
-    [85, ['Drill Peck', 'Tri Attack', 'Agility', 'Body Slam'], 'Jolly'],
-    [279, ['Surf', 'Ice Beam', 'Wing Attack', 'Steel Wing'], 'Modest'],
+    [352, ['Shadow Ball', 'Thunderbolt', 'Body Slam', 'Ice Beam'], 'Brave'],
     [357, ['Razor Leaf', 'Fly', 'Body Slam', 'Synthesis'], 'Careful'],
     [178, ['Psychic', 'Night Shade', 'Confuse Ray', 'Steel Wing'], 'Timid'],
-    [227, ['Steel Wing', 'Drill Peck', 'Agility', 'Swift'], 'Impish'],
+    [76, ['Earthquake', 'Rock Slide', 'Body Slam', 'Rollout'], 'Adamant'],
+    [359, ['Slash', 'Swords Dance', 'Faint Attack', 'Iron Tail'], 'Adamant'],
     [334, ['Dragon Claw', 'Fly', 'Flamethrower', 'Ice Beam'], 'Jolly', 'Leftovers']
   ],
   torneio:'"Vento de sudoeste hoje. Bom pra voar. Ruim pra você."',
@@ -246,7 +260,7 @@ const ELENCO_SEVII = [
 },
 {
   id:'calla', ajuste:6, nome:'Calla', sobrenome:'Sumac', f:true, idade:24, nasceu:[5, 1],
-  regiao:'Hoenn', de:'Lavaridge', classe:'Dona de Termas', tipo:'Fogo',
+  regiao:'Hoenn', de:'Lavaridge', classe:'Dona de Termas', tipo:null,
   tracos:['orgulhosa', 'impulsiva', 'prática'], meta:'casa', forte:'carisma',
   gosta:{lugar:'vulcao', tipo:'Fogo', especie:'Torkoal'},
   desgosta:{lugar:'agua', tipo:'Água', especie:'Wailord'},
@@ -255,16 +269,17 @@ const ELENCO_SEVII = [
   jornada:[
     'Herdou da avó a pousada de termas mais velha de Lavaridge.',
     'Desde que o vulcão de lá entrou em repouso os turistas sumiram, e as termas novas da beira-mar levaram o resto.',
-    'Ela tem três funcionários, um telhado que pinga e a foto da avó na parede da recepção.'
+    'Ela tem três funcionários, um telhado que pinga e a foto da avó na parede da recepção.',
+    'O time trabalha na pousada: o Torkoal esquenta a água, o Grumpig serve o chá, o Sandslash cuida do banho de areia, o Breloom da casa de ervas e o Persian da recepção, que sabe o preço de tudo.'
   ],
   porque:'O prêmio paga a reforma do telhado. E ela veio olhar as termas da Estrada da Brasa, na Ilha Um, "a concorrência", de perto.',
   gancho:'Quer comprar uma fonte termal fora de Hoenn. Já perguntou o preço de três.',
   time:[
-    [219, ['Flamethrower', 'Rock Slide', 'Earthquake', 'Amnesia'], 'Modest'],
+    [53, ['Slash', 'Pay Day', 'Bite', 'Shadow Ball'], 'Jolly'],
+    [326, ['Psychic', 'Shadow Ball', 'Ice Punch', 'Confuse Ray'], 'Calm'],
+    [28, ['Earthquake', 'Slash', 'Rock Slide', 'Swords Dance'], 'Jolly'],
+    [286, ['Dynamic Punch', 'Giga Drain', 'Stun Spore', 'Swords Dance'], 'Adamant'],
     [324, ['Flamethrower', 'Body Slam', 'Rock Slide', 'Curse'], 'Bold'],
-    [38, ['Flamethrower', 'Confuse Ray', 'Quick Attack', 'Iron Tail'], 'Timid'],
-    [323, ['Earthquake', 'Fire Blast', 'Rock Slide', 'Amnesia'], 'Quiet'],
-    [59, ['Flamethrower', 'Body Slam', 'Iron Tail', 'Dig'], 'Adamant'],
     [257, ['Fire Blast', 'Earthquake', 'Rock Slide', 'Double Kick'], 'Naive', 'Muscle Band']
   ],
   torneio:'"Eu cobro entrada de quem vem ver o meu Blaziken. Hoje é cortesia."',
@@ -272,8 +287,8 @@ const ELENCO_SEVII = [
   perde:'"Tudo bem. Passa lá em casa um dia. Banho de graça pra quem me ganhou."'
 },
 {
-  id:'imogen', nome:'Imogen', sobrenome:'Vetch', f:true, idade:31, nasceu:[11, 8],
-  regiao:'Hoenn', de:'Mossdeep', classe:'Astrônoma', tipo:'Psíquico',
+  id:'imogen', ajuste:3, nome:'Imogen', sobrenome:'Vetch', f:true, idade:31, nasceu:[11, 8],
+  regiao:'Hoenn', de:'Mossdeep', classe:'Astrônoma', tipo:null,
   tracos:['calma', 'observadora', 'curiosa'], meta:'pokedex', forte:'intelecto',
   gosta:{lugar:'montanha', tipo:'Psíquico', especie:'Lunatone'},
   desgosta:{lugar:'cidade', tipo:'Sombrio', especie:'Murkrow'},
@@ -281,16 +296,17 @@ const ELENCO_SEVII = [
   voz:'Precisa e seca. Ri sem som, mede distância em coisa que ninguém mede e responde pergunta com outra.',
   jornada:[
     'Calcula órbita de satélite no centro espacial de Mossdeep.',
-    'O Lunatone e o Solrock dela vieram de um meteorito, no fundo das Cataratas do Meteoro. Ela estava lá no dia em que acharam.'
+    'O Lunatone e o Solrock dela vieram de um meteorito, no fundo das Cataratas do Meteoro. Ela estava lá no dia em que acharam.',
+    'O Porygon2 roda o programa de órbita do centro espacial, e o Magneton segura a antena quando venta. O Clefable veio de Kanto, de um monte onde dizem que eles caíram do céu.'
   ],
   porque:'Uma chuva de meteoros que, este ano, só se vê inteira do sul do arquipélago. O torneio cai na mesma semana e paga a passagem. "É a desculpa que eu dei pro meu chefe."',
   gancho:'Quer subir uma montanha de Johto que, diz ela, tem o céu mais limpo do mundo.',
   time:[
-    [337, ['Psychic', 'Ice Beam', 'Hypnosis', 'Rock Slide'], 'Modest'],
+    [36, ['Ice Beam', 'Thunderbolt', 'Flamethrower', 'Sing'], 'Calm'],
+    [82, ['Thunderbolt', 'Thunder Wave', 'Tri Attack', 'Swift'], 'Modest'],
     [338, ['Psychic', 'Flamethrower', 'Rock Slide', 'Earthquake'], 'Adamant'],
-    [344, ['Earthquake', 'Psychic', 'Ice Beam', 'Shadow Ball'], 'Sassy'],
-    [326, ['Psychic', 'Shadow Ball', 'Ice Punch', 'Confuse Ray'], 'Calm'],
-    [65, ['Psychic', 'Recover', 'Shadow Ball', 'Thunder Wave'], 'Timid'],
+    [233, ['Tri Attack', 'Ice Beam', 'Thunderbolt', 'Recover'], 'Modest'],
+    [337, ['Psychic', 'Ice Beam', 'Hypnosis', 'Rock Slide'], 'Modest'],
     [376, ['Psychic', 'Earthquake', 'Metal Claw', 'Thunder Punch'], 'Adamant', 'Metal Coat']
   ],
   torneio:'"Faltam quatro noites pra chuva. Eu não pretendo perder nenhuma delas."',
@@ -299,7 +315,7 @@ const ELENCO_SEVII = [
 },
 {
   id:'brody', ajuste:-10, nome:'Brody', sobrenome:'Teak', f:false, idade:38, nasceu:[27, 7],
-  regiao:'Hoenn', de:'Slateport', classe:'Estivador', tipo:'Água',
+  regiao:'Hoenn', de:'Slateport', classe:'Estivador', tipo:null,
   tracos:['protetor', 'impulsivo', 'leal'], meta:'heroi', forte:'forca',
   gosta:{lugar:'agua', tipo:'Água', especie:'Wailord'},
   desgosta:{lugar:'cidade', tipo:'Elétrico', especie:'Pelipper'},
@@ -307,15 +323,16 @@ const ELENCO_SEVII = [
   voz:'Grita ordem como quem fala normal, chama todo mundo de chefia e chora fácil, sem vergonha nenhuma.',
   jornada:[
     'Estivador do cais de Slateport há vinte anos e delegado do sindicato.',
-    'Trouxe os doze homens da turma dele numa vaquinha de seis meses. É a primeira viagem da turma inteira na vida.'
+    'Trouxe os doze homens da turma dele numa vaquinha de seis meses. É a primeira viagem da turma inteira na vida.',
+    'O time dele é o do cais: o Machamp que levanta o que o guindaste não alcança, o Ursaring do turno da noite, o Mightyena que dorme na porta do galpão.'
   ],
   porque:'A turma. Ganhar importa menos do que voltar com todo mundo, e com os Pokémon de todo mundo.',
   gancho:'Jurou que o sindicato de Slateport vai visitar o cais de Vermilion. Já escreveu a carta.',
   time:[
+    [262, ['Crunch', 'Double-Edge', 'Shadow Ball', 'Iron Tail'], 'Adamant'],
     [99, ['Crabhammer', 'Swords Dance', 'Body Slam', 'Metal Claw'], 'Adamant'],
-    [73, ['Surf', 'Sludge Bomb', 'Ice Beam', 'Barrier'], 'Calm'],
-    [369, ['Rock Slide', 'Earthquake', 'Waterfall', 'Rest'], 'Impish'],
-    [342, ['Crabhammer', 'Swords Dance', 'Body Slam', 'Ice Beam'], 'Adamant'],
+    [217, ['Slash', 'Earthquake', 'Body Slam', 'Rock Slide'], 'Adamant'],
+    [68, ['Cross Chop', 'Rock Slide', 'Earthquake', 'Fire Punch'], 'Adamant'],
     [321, ['Surf', 'Body Slam', 'Earthquake', 'Rest'], 'Modest'],
     [260, ['Earthquake', 'Surf', 'Ice Beam', 'Rock Slide'], 'Adamant', 'Leftovers']
   ],
@@ -341,7 +358,7 @@ const ELENCO_SEVII = [
     [284, ['Ice Beam', 'Giga Drain', 'Shadow Ball', 'Stun Spore'], 'Modest'],
     [315, ['Giga Drain', 'Sludge Bomb', 'Stun Spore', 'Synthesis'], 'Modest'],
     [272, ['Surf', 'Giga Drain', 'Ice Beam', 'Thunder Punch'], 'Modest'],
-    [359, ['Slash', 'Swords Dance', 'Faint Attack', 'Iron Tail'], 'Adamant'],
+    [38, ['Flamethrower', 'Confuse Ray', 'Quick Attack', 'Iron Tail'], 'Timid'],
     [282, ['Psychic', 'Thunderbolt', 'Shadow Ball', 'Hypnosis'], 'Modest'],
     [350, ['Surf', 'Ice Beam', 'Recover', 'Attract'], 'Bold', 'Leftovers']
   ],

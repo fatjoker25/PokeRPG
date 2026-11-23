@@ -9,16 +9,16 @@ golpes, natureza e o item que o ás segura. O que fica pra depois (o gancho) é 
 | | Nome | De onde | Classe | Especialidade |
 |---|---|---|---|---|
 | <img src="../sprites_nds/npcs/trainers/sevii_soren.png" width="48"> | Soren Larkspur | Blackthorn, Johto | Domador de Dragões | Dragão |
-| <img src="../sprites_nds/npcs/trainers/sevii_gideon.png" width="48"> | Gideon Spruce | Olivine, Johto | Pescador | Água |
+| <img src="../sprites_nds/npcs/trainers/sevii_gideon.png" width="48"> | Gideon Spruce | Olivine, Johto | Pescador | time variado |
 | <img src="../sprites_nds/npcs/trainers/sevii_etta.png" width="48"> | Etta Hemlock | Azalea, Johto | Artesã de Pokébolas | Inseto |
 | <img src="../sprites_nds/npcs/trainers/sevii_ziggy.png" width="48"> | Ziggy Bay | Goldenrod, Johto | Radialista | time variado |
-| <img src="../sprites_nds/npcs/trainers/sevii_saskia.png" width="48"> | Saskia Rush | Cianwood, Johto | Lutadora | Lutador |
+| <img src="../sprites_nds/npcs/trainers/sevii_saskia.png" width="48"> | Saskia Rush | Cianwood, Johto | Lutadora | time variado |
 | <img src="../sprites_nds/npcs/trainers/sevii_florian.png" width="48"> | Florian Ashgrove | Rota 34, Johto | Criador Pokémon | time variado |
-| <img src="../sprites_nds/npcs/trainers/sevii_zev.png" width="48"> | Zev Fernley | Mahogany, Johto | Pescador do Lago | Sombrio |
-| <img src="../sprites_nds/npcs/trainers/sevii_skye.png" width="48"> | Skye Fernwood | Fortree, Hoenn | Escaladora | Voador |
-| <img src="../sprites_nds/npcs/trainers/sevii_calla.png" width="48"> | Calla Sumac | Lavaridge, Hoenn | Dona de Termas | Fogo |
-| <img src="../sprites_nds/npcs/trainers/sevii_imogen.png" width="48"> | Imogen Vetch | Mossdeep, Hoenn | Astrônoma | Psíquico |
-| <img src="../sprites_nds/npcs/trainers/sevii_brody.png" width="48"> | Brody Teak | Slateport, Hoenn | Estivador | Água |
+| <img src="../sprites_nds/npcs/trainers/sevii_zev.png" width="48"> | Zev Fernley | Mahogany, Johto | Pescador do Lago | time variado |
+| <img src="../sprites_nds/npcs/trainers/sevii_skye.png" width="48"> | Skye Fernwood | Fortree, Hoenn | Escaladora | time variado |
+| <img src="../sprites_nds/npcs/trainers/sevii_calla.png" width="48"> | Calla Sumac | Lavaridge, Hoenn | Dona de Termas | time variado |
+| <img src="../sprites_nds/npcs/trainers/sevii_imogen.png" width="48"> | Imogen Vetch | Mossdeep, Hoenn | Astrônoma | time variado |
+| <img src="../sprites_nds/npcs/trainers/sevii_brody.png" width="48"> | Brody Teak | Slateport, Hoenn | Estivador | time variado |
 | <img src="../sprites_nds/npcs/trainers/sevii_esme.png" width="48"> | Esme Wisteria | Lilycove, Hoenn | Coordenadora | time variado |
 | <img src="../sprites_nds/npcs/trainers/sevii_oona.png" width="48"> | Oona Yew | Monte Pyre, Hoenn | Zeladora do Monte Pyre | Fantasma |
 | <img src="../sprites_nds/npcs/trainers/sevii_rhys.png" width="48"> | Rhys Ironwood | Sootopolis, Hoenn | Ás de Hoenn | time variado |
@@ -40,7 +40,7 @@ golpes, natureza e o item que o ás segura. O que fica pra depois (o gancho) é 
 - **Aparência:** Alto e magro, cabelo curto azul-escuro penteado pra trás, roupa justa vinho de domador e a capa comprida com o forro dourado, gasta na barra de tanto arrastar em pedra.
 - **Jeito de falar:** Frase curta. Fala de dragão como quem fala de gente da família, e nunca levanta a voz.
 
-**A jornada.** Nasceu no Covil dos Dragões de Blackthorn, filho de um guardião do santuário. Aos nove anos trocou o Rattata do irmão por um ovo com um marinheiro de Hoenn, no porto de Olivine. Do ovo saiu um Bagon. Os anciãos do clã não deixaram o Bagon entrar no Covil: dragão que não nasceu da água de lá, disseram, não é dragão. Ele saiu de Blackthorn aos treze com o Bagon no colo, fez o desafio de Hoenn e foi barrado no fim. O Bagon virou Salamence no dia da segunda recusa do clã.
+**A jornada.** Nasceu no Covil dos Dragões de Blackthorn, filho de um guardião do santuário. Aos nove anos trocou o Rattata do irmão por um ovo com um marinheiro de Hoenn, no porto de Olivine. Do ovo saiu um Bagon. Os anciãos do clã não deixaram o Bagon entrar no Covil: dragão que não nasceu da água de lá, disseram, não é dragão. Ele saiu de Blackthorn aos treze com o Bagon no colo, fez o desafio de Hoenn e foi barrado no fim. O Bagon virou Salamence no dia da segunda recusa do clã. O Dragonair é o único do Covil que saiu com ele. O pai deu na porta, sem o clã ver.
 
 **Por que veio.** O Torneio das Ilhas é o único grande que não tem cadeira do clã no júri. Aqui ninguém pergunta de onde veio o dragão.
 
@@ -50,7 +50,7 @@ golpes, natureza e o item que o ás segura. O que fica pra depois (o gancho) é 
 
 | Pokémon | Tipo | Região | Golpes | Natureza | Item |
 |---|---|---|---|---|---|
-| Gyarados | Água/Voador | Kanto | Waterfall, Dragon Breath, Earthquake, Body Slam | Adamant | — |
+| Dragonair | Dragão | Kanto | Dragon Breath, Thunder Wave, Surf, Ice Beam | Modest | — |
 | Kingdra | Água/Dragão | Johto | Surf, Dragon Breath, Ice Beam, Agility | Modest | — |
 | Aerodactyl | Pedra/Voador | Kanto | Rock Slide, Earthquake, Ancient Power, Fly | Jolly | — |
 | Flygon | Terrestre/Dragão | Hoenn | Earthquake, Dragon Claw, Rock Slide, Fire Blast | Jolly | — |
@@ -65,7 +65,7 @@ golpes, natureza e o item que o ás segura. O que fica pra depois (o gancho) é 
 
 - **Pescador** · 71 anos · homem · nasceu em 30 de março
 - **De:** Olivine, Johto
-- **Especialidade:** tipo Água
+- **Especialidade:** time variado
 - **Traços:** paciente, brincalhão, teimoso
 - **Objetivo:** ser campeão/campeã
 - **Status forte:** Sorte
@@ -74,7 +74,7 @@ golpes, natureza e o item que o ás segura. O que fica pra depois (o gancho) é 
 - **Aparência:** Velho barrigudo de barba branca, chapéu de pano branco, colete azul de bolso cheio e a mochila de pesca nas costas, com a vara de bambu atravessada.
 - **Jeito de falar:** Conta tudo como causo, no ritmo de quem espera a linha puxar. Chama todo mundo de moço e de moça.
 
-**A jornada.** Pesca no cais de Olivine há cinquenta e tantos anos. Veio ao Torneio das Ilhas pela primeira vez com dezenove anos e um Lapras novo, e perdeu a final pro Magnus Holm, da Ilha Sete. Voltou em todas as edições desde então: quarenta e duas. Nunca ganhou. O Lapras é o mesmo.
+**A jornada.** Pesca no cais de Olivine há cinquenta e tantos anos. Veio ao Torneio das Ilhas pela primeira vez com dezenove anos e um Lapras novo, e perdeu a final pro Magnus Holm, da Ilha Sete. Voltou em todas as edições desde então: quarenta e duas. Nunca ganhou. O Lapras é o mesmo. O resto do time é o que o cais juntou em cinquenta anos: o Noctowl da pesca de madrugada, o Sudowoodo que todo mundo acha que é árvore, o Omastar que veio fóssil numa rede.
 
 **Por que veio.** "Tem gente que vem pelo torneio. Eu venho pelo barco." É o primeiro ano sem a mulher dele acenando do cais de Olivine na saída.
 
@@ -84,12 +84,12 @@ golpes, natureza e o item que o ás segura. O que fica pra depois (o gancho) é 
 
 | Pokémon | Tipo | Região | Golpes | Natureza | Item |
 |---|---|---|---|---|---|
-| Octillery | Água | Johto | Surf, Ice Beam, Flamethrower, Sludge Bomb | Modest | — |
-| Quagsire | Água/Terrestre | Johto | Earthquake, Surf, Ice Beam, Amnesia | Relaxed | — |
-| Mantine | Água/Voador | Johto | Surf, Wing Attack, Ice Beam, Confuse Ray | Calm | — |
-| Lanturn | Água/Elétrico | Johto | Thunderbolt, Surf, Thunder Wave, Confuse Ray | Modest | — |
-| Whiscash | Água/Terrestre | Hoenn | Earthquake, Waterfall, Amnesia, Ice Beam | Adamant | — |
-| Lapras | Água/Gelo | Kanto | Surf, Ice Beam, Body Slam, Thunderbolt | Calm | Leftovers |
+| Noctowl | Normal/Voador | Johto | Hypnosis, Dream Eater, Psychic, Fly | Modest | — |
+| Slowking | Água/Psíquico | Johto | Surf, Psychic, Ice Beam, Amnesia | Calm | — |
+| Skarmory | Metálico/Voador | Johto | Steel Wing, Drill Peck, Agility, Swift | Impish | — |
+| Sudowoodo | Pedra | Johto | Rock Slide, Earthquake, Body Slam, Self-Destruct | Adamant | — |
+| Omastar | Pedra/Água | Kanto | Surf, Ancient Power, Ice Beam, Spike Cannon | Modest | — |
+| Lapras | Água/Gelo | Kanto | Surf, Ice Beam, Body Slam, Psychic | Calm | Leftovers |
 
 **No torneio:** "Quarenta e duas vezes eu entrei nesta arena, moço. Em quarenta e uma eu saí com o barco cheio de história e sem troféu." · **quando ganha:** "Viu? O mar devolve. Demora, mas devolve." · **quando perde:** "Quarenta e três. Número bonito. Ano que vem eu volto."
 
@@ -142,7 +142,7 @@ golpes, natureza e o item que o ás segura. O que fica pra depois (o gancho) é 
 - **Aparência:** Topete azul espetado que não se mexe com vento nenhum, jaqueta marrom aberta e o fio do microfone girando na mão.
 - **Jeito de falar:** Fala como quem está no ar: em vinheta, chamando todo mundo de ouvinte. Quando o microfone desliga, fica quieto de repente.
 
-**A jornada.** Apresenta "Ziggy na Madrugada" na rádio de Goldenrod há seis anos, o programa que todo caminhoneiro de Johto escuta da meia-noite às quatro. A rádio vai tirar o programa do ar daqui a três meses. Ninguém mais escuta rádio de madrugada, diz o diretor.
+**A jornada.** Apresenta "Ziggy na Madrugada" na rádio de Goldenrod há seis anos, o programa que todo caminhoneiro de Johto escuta da meia-noite às quatro. A rádio vai tirar o programa do ar daqui a três meses. Ninguém mais escuta rádio de madrugada, diz o diretor. Dois do time vieram de ouvinte: o Lanturn, de um caminhoneiro de Cianwood; o Typhlosion, de um menino de New Bark que ligou chorando porque ia se mudar pra longe.
 
 **Por que veio.** Narrar o torneio ao vivo, lutando nele, num transmissor de mão. Se o Ziggy da madrugada ganhar o Torneio das Ilhas, a rádio não tem coragem de tirar do ar.
 
@@ -152,11 +152,11 @@ golpes, natureza e o item que o ás segura. O que fica pra depois (o gancho) é 
 
 | Pokémon | Tipo | Região | Golpes | Natureza | Item |
 |---|---|---|---|---|---|
-| Kecleon | Normal | Hoenn | Shadow Ball, Thunderbolt, Body Slam, Ice Beam | Brave | — |
-| Swellow | Normal/Voador | Hoenn | Double-Edge, Fly, Quick Attack, Steel Wing | Jolly | — |
-| Zangoose | Normal | Hoenn | Swords Dance, Slash, Shadow Ball, Rock Slide | Adamant | — |
-| Miltank | Normal | Johto | Body Slam, Earthquake, Rollout, Attract | Careful | — |
+| Jynx | Gelo/Psíquico | Kanto | Ice Beam, Psychic, Lovely Kiss, Dream Eater | Modest | — |
+| Lanturn | Água/Elétrico | Johto | Thunderbolt, Surf, Thunder Wave, Confuse Ray | Modest | — |
+| Typhlosion | Fogo | Johto | Flamethrower, Earthquake, Thunder Punch, Quick Attack | Naive | — |
 | Ampharos | Elétrico | Johto | Thunderbolt, Fire Punch, Thunder Wave, Light Screen | Modest | — |
+| Miltank | Normal | Johto | Body Slam, Earthquake, Rollout, Attract | Careful | — |
 | Exploud | Normal | Hoenn | Body Slam, Earthquake, Flamethrower, Ice Beam | Lonely | Muscle Band |
 
 **No torneio:** "Boa tarde, ouvinte! Agora é comigo e com o/a visitante de Kanto, ao vivo das ilhas!" · **quando ganha:** "E É DO ZIGGY! Repete pro pessoal de Ecruteak que não acreditou!" · **quando perde:** "…e o Ziggy cai, ouvinte. Mas cai bonito. Fica com a gente que depois do intervalo tem mais."
@@ -167,7 +167,7 @@ golpes, natureza e o item que o ás segura. O que fica pra depois (o gancho) é 
 
 - **Lutadora** · 22 anos · mulher · nasceu em 8 de agosto
 - **De:** Cianwood, Johto
-- **Especialidade:** tipo Lutador
+- **Especialidade:** time variado
 - **Traços:** corajosa, alegre, impulsiva
 - **Objetivo:** ser campeão/campeã
 - **Status forte:** Força
@@ -176,7 +176,7 @@ golpes, natureza e o item que o ás segura. O que fica pra depois (o gancho) é 
 - **Aparência:** Cabelo castanho preso, quimono azul de treino com a faixa amarrada duas vezes, descalça, os braços cheios de arranhão de rocha.
 - **Jeito de falar:** Ri alto, fala com o corpo inteiro e cumprimenta apertando o braço, não a mão.
 
-**A jornada.** Cresceu no dojô de Cianwood. Nada até as Ilhas do Redemoinho toda manhã, ida e volta antes do café. Passou um ano em Hoenn treinando com os lutadores de Dewford e voltou com um Makuhita, hoje Hariyama: o único Pokémon que a derrubou na areia.
+**A jornada.** Cresceu no dojô de Cianwood. Nada até as Ilhas do Redemoinho toda manhã, ida e volta antes do café. Passou um ano em Hoenn treinando com os lutadores de Dewford e voltou com um Makuhita, hoje Hariyama: o único Pokémon que a derrubou na areia. De manhã, quem nada com ela são o Mantine e o Feraligatr. Luta não é tipo, diz ela: é quem levanta depois de cair.
 
 **Por que veio.** Lutar de novo com quem vem de Hoenn. E porque a mãe dela disse que ela nunca termina nada. "Eu vim terminar um torneio."
 
@@ -186,11 +186,11 @@ golpes, natureza e o item que o ás segura. O que fica pra depois (o gancho) é 
 
 | Pokémon | Tipo | Região | Golpes | Natureza | Item |
 |---|---|---|---|---|---|
+| Feraligatr | Água | Johto | Waterfall, Slash, Earthquake, Ice Punch | Adamant | — |
+| Mantine | Água/Voador | Johto | Surf, Wing Attack, Ice Beam, Confuse Ray | Calm | — |
+| Zangoose | Normal | Hoenn | Swords Dance, Slash, Shadow Ball, Rock Slide | Adamant | — |
 | Hitmontop | Lutador | Johto | Rolling Kick, Dig, Quick Attack, Detect | Impish | — |
-| Poliwrath | Água/Lutador | Kanto | Surf, Submission, Ice Punch, Hypnosis | Adamant | — |
-| Medicham | Lutador/Psíquico | Hoenn | High Jump Kick, Fire Punch, Ice Punch, Thunder Punch | Jolly | — |
-| Breloom | Grama/Lutador | Hoenn | Dynamic Punch, Giga Drain, Stun Spore, Swords Dance | Adamant | — |
-| Machamp | Lutador | Kanto | Cross Chop, Rock Slide, Earthquake, Fire Punch | Adamant | — |
+| Donphan | Terrestre | Johto | Earthquake, Rock Slide, Body Slam, Rapid Spin | Adamant | — |
 | Hariyama | Lutador | Hoenn | Seismic Toss, Earthquake, Rock Slide, Fire Punch | Adamant | Focus Band |
 
 **No torneio:** "Aperta aqui. Não, de verdade. Eu quero saber a força da mão de quem eu vou enfrentar." · **quando ganha:** "HA! Isso! Agora a gente vai nadar, os dois. É assim que se agradece." · **quando perde:** "Ai. Essa entrou. Entrou bonito. Me mostra de novo como foi?"
@@ -210,7 +210,7 @@ golpes, natureza e o item que o ás segura. O que fica pra depois (o gancho) é 
 - **Aparência:** Boné claro, roupa de trabalho verde de jardineiro e um ovo nas duas mãos, segurado como quem segura vidro.
 - **Jeito de falar:** Fala em porcentagem e depois pede desculpa por falar em porcentagem.
 
-**A jornada.** Neto do casal que cuida da creche da Rota 34. Cresceu entre ovo e cesto de palha. Cria Eevee há vinte anos e anota tudo em caderno: a temperatura do ovo, o dia, a hora em que rachou. Os seis do time dele são da mesma linhagem, filhos e netos de uma Eevee só, que mora na creche até hoje.
+**A jornada.** Neto do casal que cuida da creche da Rota 34. Cresceu entre ovo e cesto de palha. Cria Eevee há vinte anos e anota tudo em caderno: a temperatura do ovo, o dia, a hora em que rachou. Cinco dos seis do time dele são da mesma linhagem, filhos e netos de uma Eevee só, que mora na creche até hoje. O Snorlax também é da creche: dorme no portão desde antes de ele nascer.
 
 **Por que veio.** A creche faz cinquenta anos. Ele trouxe seis ovos da linhagem pra dar de presente a quem chegar na final, que é a tradição dele em todo torneio.
 
@@ -227,7 +227,7 @@ golpes, natureza e o item que o ás segura. O que fica pra depois (o gancho) é 
 | Umbreon | Sombrio | Johto | Faint Attack, Confuse Ray, Toxic, Protect | Careful | — |
 | Espeon | Psíquico | Johto | Psychic, Shadow Ball, Swift, Reflect | Timid | Wise Glasses |
 
-**No torneio:** "Os seis vieram da mesma avó. Cada um escolheu um caminho. Igual a gente." · **quando ganha:** "Noventa e um por cento, eu tinha calculado. Desculpa. Eu sempre calculo." · **quando perde:** "Anotado. Não é derrota, é dado."
+**No torneio:** "Eles vieram da mesma avó. Cada um escolheu um caminho. Igual a gente." · **quando ganha:** "Noventa e um por cento, eu tinha calculado. Desculpa. Eu sempre calculo." · **quando perde:** "Anotado. Não é derrota, é dado."
 
 ## Zev Fernley
 
@@ -235,7 +235,7 @@ golpes, natureza e o item que o ás segura. O que fica pra depois (o gancho) é 
 
 - **Pescador do Lago** · 31 anos · homem · nasceu em 13 de dezembro
 - **De:** Mahogany, Johto
-- **Especialidade:** tipo Sombrio
+- **Especialidade:** time variado
 - **Traços:** desconfiado, solitário, protetor
 - **Objetivo:** proteger quem precisa
 - **Status forte:** Percepção
@@ -244,7 +244,7 @@ golpes, natureza e o item que o ás segura. O que fica pra depois (o gancho) é 
 - **Aparência:** Cabelo preto comprido preso, barba de semanas, jaqueta marrom de viagem e uma Pokébola sempre na mão, nunca no cinto.
 - **Jeito de falar:** Fala pouco, olha nos olhos. Nunca diz "nós" quando fala da Equipe Rocket: diz "eles", mesmo quando era "nós".
 
-**A jornada.** Há três anos era recruta da Equipe Rocket no esconderijo de Mahogany, o que ficava debaixo da loja de lembrancinhas. Quando o esconderijo caiu, ele não fugiu: ficou pra abrir as gaiolas. Pegou dois anos. Saiu e vive de pesca no Lago da Fúria. Os Pokémon do time são os mesmos de antes, menos um.
+**A jornada.** Há três anos era recruta da Equipe Rocket no esconderijo de Mahogany, o que ficava debaixo da loja de lembrancinhas. Quando o esconderijo caiu, ele não fugiu: ficou pra abrir as gaiolas. Pegou dois anos. Saiu e vive de pesca no Lago da Fúria. Do time de antes, falta um. No lugar dele está o Gyarados do Lago, que mordeu a linha numa terça de chuva e é o único que nunca viu uniforme.
 
 **Por que veio.** Torneio é a única coisa em que ninguém pergunta o que ele fez. Ou era.
 
@@ -255,10 +255,10 @@ golpes, natureza e o item que o ás segura. O que fica pra depois (o gancho) é 
 | Pokémon | Tipo | Região | Golpes | Natureza | Item |
 |---|---|---|---|---|---|
 | Weezing | Venenoso | Kanto | Sludge Bomb, Flamethrower, Thunderbolt, Shadow Ball | Bold | — |
+| Gyarados | Água/Voador | Kanto | Waterfall, Earthquake, Body Slam, Dragon Breath | Adamant | — |
 | Crobat | Venenoso/Voador | Johto | Wing Attack, Sludge Bomb, Confuse Ray, Bite | Jolly | — |
+| Piloswine | Gelo/Terrestre | Johto | Earthquake, Ice Beam, Rock Slide, Body Slam | Brave | — |
 | Houndoom | Sombrio/Fogo | Johto | Flamethrower, Crunch, Shadow Ball, Sludge Bomb | Timid | — |
-| Mightyena | Sombrio | Hoenn | Crunch, Double-Edge, Shadow Ball, Iron Tail | Adamant | — |
-| Cacturne | Grama/Sombrio | Hoenn | Giga Drain, Faint Attack, Thunder Punch, Cotton Spore | Quiet | — |
 | Tyranitar | Pedra/Sombrio | Johto | Crunch, Rock Slide, Earthquake, Thunderbolt | Adamant | Leftovers |
 
 **No torneio:** "Pode olhar. Todo mundo olha. Eu prefiro que olhe de frente." · **quando ganha:** "Não foi sorte. Eu treinei mais que todo mundo aqui, porque eu comecei atrasado." · **quando perde:** "Foi limpo. Pra mim isso é muito."
@@ -269,7 +269,7 @@ golpes, natureza e o item que o ás segura. O que fica pra depois (o gancho) é 
 
 - **Escaladora** · 15 anos · mulher · nasceu em 20 de maio
 - **De:** Fortree, Hoenn
-- **Especialidade:** tipo Voador
+- **Especialidade:** time variado
 - **Traços:** sonhadora, distraída, alegre
 - **Objetivo:** conhecer Kanto inteira
 - **Status forte:** Sorte
@@ -278,7 +278,7 @@ golpes, natureza e o item que o ás segura. O que fica pra depois (o gancho) é 
 - **Aparência:** Boné azul-céu, cabelo curto, roupa de trilha azul com o joelho ralado e uma pena de Swablu presa atrás da orelha.
 - **Jeito de falar:** Fala olhando pro céu e conta o vento. Se distrai no meio da frase quando passa alguma coisa voando.
 
-**A jornada.** Cresceu nas casas de árvore de Fortree, onde a rua é ponte de corda. Nunca tinha pisado num barco antes desta viagem. Enjoou as trinta horas de Slateport até aqui. O Altaria dela era um Swablu que ficou pra trás numa tempestade, na migração de outono, e ela cuidou dele no telhado de casa.
+**A jornada.** Cresceu nas casas de árvore de Fortree, onde a rua é ponte de corda. Nunca tinha pisado num barco antes desta viagem. Enjoou as trinta horas de Slateport até aqui. O Altaria dela era um Swablu que ficou pra trás numa tempestade, na migração de outono, e ela cuidou dele no telhado de casa. O Absol apareceu na véspera daquela tempestade, na ponte de corda, e não foi mais embora. O Kecleon é o que fechava o caminho na saída de Fortree, que só ela enxergava.
 
 **Por que veio.** A migração. Os Swablu de Hoenn atravessam o mar até as Ilhas Sevii no outono, e ela quer ver eles chegarem. O torneio é o que dá pra fazer enquanto eles descansam.
 
@@ -288,11 +288,11 @@ golpes, natureza e o item que o ás segura. O que fica pra depois (o gancho) é 
 
 | Pokémon | Tipo | Região | Golpes | Natureza | Item |
 |---|---|---|---|---|---|
-| Dodrio | Normal/Voador | Kanto | Drill Peck, Tri Attack, Agility, Body Slam | Jolly | — |
-| Pelipper | Água/Voador | Hoenn | Surf, Ice Beam, Wing Attack, Steel Wing | Modest | — |
+| Kecleon | Normal | Hoenn | Shadow Ball, Thunderbolt, Body Slam, Ice Beam | Brave | — |
 | Tropius | Grama/Voador | Hoenn | Razor Leaf, Fly, Body Slam, Synthesis | Careful | — |
 | Xatu | Psíquico/Voador | Johto | Psychic, Night Shade, Confuse Ray, Steel Wing | Timid | — |
-| Skarmory | Metálico/Voador | Johto | Steel Wing, Drill Peck, Agility, Swift | Impish | — |
+| Golem | Pedra/Terrestre | Kanto | Earthquake, Rock Slide, Body Slam, Rollout | Adamant | — |
+| Absol | Sombrio | Hoenn | Slash, Swords Dance, Faint Attack, Iron Tail | Adamant | — |
 | Altaria | Dragão/Voador | Hoenn | Dragon Claw, Fly, Flamethrower, Ice Beam | Jolly | Leftovers |
 
 **No torneio:** "Vento de sudoeste hoje. Bom pra voar. Ruim pra você." · **quando ganha:** "Eles chegam na quinta. Você vem ver?" · **quando perde:** "Tudo bem. Daqui eu vejo o céu inteiro do mesmo jeito."
@@ -303,7 +303,7 @@ golpes, natureza e o item que o ás segura. O que fica pra depois (o gancho) é 
 
 - **Dona de Termas** · 24 anos · mulher · nasceu em 5 de janeiro
 - **De:** Lavaridge, Hoenn
-- **Especialidade:** tipo Fogo
+- **Especialidade:** time variado
 - **Traços:** orgulhosa, impulsiva, prática
 - **Objetivo:** voltar pra casa com orgulho
 - **Status forte:** Carisma
@@ -312,7 +312,7 @@ golpes, natureza e o item que o ás segura. O que fica pra depois (o gancho) é 
 - **Aparência:** Cabelo preto em duas mechas, quimono preto com a faixa cor de brasa e o leque fechado na mão como quem segura uma régua.
 - **Jeito de falar:** Afiada e educada ao mesmo tempo. Negocia tudo, até o preço do chá, e sorri do jeito que corta.
 
-**A jornada.** Herdou da avó a pousada de termas mais velha de Lavaridge. Desde que o vulcão de lá entrou em repouso os turistas sumiram, e as termas novas da beira-mar levaram o resto. Ela tem três funcionários, um telhado que pinga e a foto da avó na parede da recepção.
+**A jornada.** Herdou da avó a pousada de termas mais velha de Lavaridge. Desde que o vulcão de lá entrou em repouso os turistas sumiram, e as termas novas da beira-mar levaram o resto. Ela tem três funcionários, um telhado que pinga e a foto da avó na parede da recepção. O time trabalha na pousada: o Torkoal esquenta a água, o Grumpig serve o chá, o Sandslash cuida do banho de areia, o Breloom da casa de ervas e o Persian da recepção, que sabe o preço de tudo.
 
 **Por que veio.** O prêmio paga a reforma do telhado. E ela veio olhar as termas da Estrada da Brasa, na Ilha Um, "a concorrência", de perto.
 
@@ -322,11 +322,11 @@ golpes, natureza e o item que o ás segura. O que fica pra depois (o gancho) é 
 
 | Pokémon | Tipo | Região | Golpes | Natureza | Item |
 |---|---|---|---|---|---|
-| Magcargo | Fogo/Pedra | Johto | Flamethrower, Rock Slide, Earthquake, Amnesia | Modest | — |
+| Persian | Normal | Kanto | Slash, Pay Day, Bite, Shadow Ball | Jolly | — |
+| Grumpig | Psíquico | Hoenn | Psychic, Shadow Ball, Ice Punch, Confuse Ray | Calm | — |
+| Sandslash | Terrestre | Kanto | Earthquake, Slash, Rock Slide, Swords Dance | Jolly | — |
+| Breloom | Grama/Lutador | Hoenn | Dynamic Punch, Giga Drain, Stun Spore, Swords Dance | Adamant | — |
 | Torkoal | Fogo | Hoenn | Flamethrower, Body Slam, Rock Slide, Curse | Bold | — |
-| Ninetales | Fogo | Kanto | Flamethrower, Confuse Ray, Quick Attack, Iron Tail | Timid | — |
-| Camerupt | Fogo/Terrestre | Hoenn | Earthquake, Fire Blast, Rock Slide, Amnesia | Quiet | — |
-| Arcanine | Fogo | Kanto | Flamethrower, Body Slam, Iron Tail, Dig | Adamant | — |
 | Blaziken | Fogo/Lutador | Hoenn | Fire Blast, Earthquake, Rock Slide, Double Kick | Naive | Muscle Band |
 
 **No torneio:** "Eu cobro entrada de quem vem ver o meu Blaziken. Hoje é cortesia." · **quando ganha:** "Isso vai pra parede da pousada. Do lado da foto da minha avó." · **quando perde:** "Tudo bem. Passa lá em casa um dia. Banho de graça pra quem me ganhou."
@@ -337,7 +337,7 @@ golpes, natureza e o item que o ás segura. O que fica pra depois (o gancho) é 
 
 - **Astrônoma** · 31 anos · mulher · nasceu em 11 de agosto
 - **De:** Mossdeep, Hoenn
-- **Especialidade:** tipo Psíquico
+- **Especialidade:** time variado
 - **Traços:** calma, observadora, curiosa
 - **Objetivo:** completar a Pokédex
 - **Status forte:** Intelecto
@@ -346,7 +346,7 @@ golpes, natureza e o item que o ás segura. O que fica pra depois (o gancho) é 
 - **Aparência:** Cabelo preto preso, roupa folgada cor de vinho de quem passa a noite no telhado, as mãos erguidas com duas Pokébolas brilhando.
 - **Jeito de falar:** Precisa e seca. Ri sem som, mede distância em coisa que ninguém mede e responde pergunta com outra.
 
-**A jornada.** Calcula órbita de satélite no centro espacial de Mossdeep. O Lunatone e o Solrock dela vieram de um meteorito, no fundo das Cataratas do Meteoro. Ela estava lá no dia em que acharam.
+**A jornada.** Calcula órbita de satélite no centro espacial de Mossdeep. O Lunatone e o Solrock dela vieram de um meteorito, no fundo das Cataratas do Meteoro. Ela estava lá no dia em que acharam. O Porygon2 roda o programa de órbita do centro espacial, e o Magneton segura a antena quando venta. O Clefable veio de Kanto, de um monte onde dizem que eles caíram do céu.
 
 **Por que veio.** Uma chuva de meteoros que, este ano, só se vê inteira do sul do arquipélago. O torneio cai na mesma semana e paga a passagem. "É a desculpa que eu dei pro meu chefe."
 
@@ -356,11 +356,11 @@ golpes, natureza e o item que o ás segura. O que fica pra depois (o gancho) é 
 
 | Pokémon | Tipo | Região | Golpes | Natureza | Item |
 |---|---|---|---|---|---|
-| Lunatone | Pedra/Psíquico | Hoenn | Psychic, Ice Beam, Hypnosis, Rock Slide | Modest | — |
+| Clefable | Normal | Kanto | Ice Beam, Thunderbolt, Flamethrower, Sing | Calm | — |
+| Magneton | Elétrico | Kanto | Thunderbolt, Thunder Wave, Tri Attack, Swift | Modest | — |
 | Solrock | Pedra/Psíquico | Hoenn | Psychic, Flamethrower, Rock Slide, Earthquake | Adamant | — |
-| Claydol | Terrestre/Psíquico | Hoenn | Earthquake, Psychic, Ice Beam, Shadow Ball | Sassy | — |
-| Grumpig | Psíquico | Hoenn | Psychic, Shadow Ball, Ice Punch, Confuse Ray | Calm | — |
-| Alakazam | Psíquico | Kanto | Psychic, Recover, Shadow Ball, Thunder Wave | Timid | — |
+| Porygon2 | Normal | Johto | Tri Attack, Ice Beam, Thunderbolt, Recover | Modest | — |
+| Lunatone | Pedra/Psíquico | Hoenn | Psychic, Ice Beam, Hypnosis, Rock Slide | Modest | — |
 | Metagross | Metálico/Psíquico | Hoenn | Psychic, Earthquake, Metal Claw, Thunder Punch | Adamant | Metal Coat |
 
 **No torneio:** "Faltam quatro noites pra chuva. Eu não pretendo perder nenhuma delas." · **quando ganha:** "Previsível. Bonito do jeito que órbita é bonita." · **quando perde:** "Interessante. Eu errei a conta em algum lugar. Vou achar onde."
@@ -371,7 +371,7 @@ golpes, natureza e o item que o ás segura. O que fica pra depois (o gancho) é 
 
 - **Estivador** · 38 anos · homem · nasceu em 27 de julho
 - **De:** Slateport, Hoenn
-- **Especialidade:** tipo Água
+- **Especialidade:** time variado
 - **Traços:** protetor, impulsivo, leal
 - **Objetivo:** proteger quem precisa
 - **Status forte:** Força
@@ -380,7 +380,7 @@ golpes, natureza e o item que o ás segura. O que fica pra depois (o gancho) é 
 - **Aparência:** Ombro largo, capacete laranja de estiva, colete refletivo amarelo, luva grossa e a âncora tatuada no braço.
 - **Jeito de falar:** Grita ordem como quem fala normal, chama todo mundo de chefia e chora fácil, sem vergonha nenhuma.
 
-**A jornada.** Estivador do cais de Slateport há vinte anos e delegado do sindicato. Trouxe os doze homens da turma dele numa vaquinha de seis meses. É a primeira viagem da turma inteira na vida.
+**A jornada.** Estivador do cais de Slateport há vinte anos e delegado do sindicato. Trouxe os doze homens da turma dele numa vaquinha de seis meses. É a primeira viagem da turma inteira na vida. O time dele é o do cais: o Machamp que levanta o que o guindaste não alcança, o Ursaring do turno da noite, o Mightyena que dorme na porta do galpão.
 
 **Por que veio.** A turma. Ganhar importa menos do que voltar com todo mundo, e com os Pokémon de todo mundo.
 
@@ -390,10 +390,10 @@ golpes, natureza e o item que o ás segura. O que fica pra depois (o gancho) é 
 
 | Pokémon | Tipo | Região | Golpes | Natureza | Item |
 |---|---|---|---|---|---|
+| Mightyena | Sombrio | Hoenn | Crunch, Double-Edge, Shadow Ball, Iron Tail | Adamant | — |
 | Kingler | Água | Kanto | Crabhammer, Swords Dance, Body Slam, Metal Claw | Adamant | — |
-| Tentacruel | Água/Venenoso | Kanto | Surf, Sludge Bomb, Ice Beam, Barrier | Calm | — |
-| Relicanth | Água/Pedra | Hoenn | Rock Slide, Earthquake, Waterfall, Rest | Impish | — |
-| Crawdaunt | Água/Sombrio | Hoenn | Crabhammer, Swords Dance, Body Slam, Ice Beam | Adamant | — |
+| Ursaring | Normal | Johto | Slash, Earthquake, Body Slam, Rock Slide | Adamant | — |
+| Machamp | Lutador | Kanto | Cross Chop, Rock Slide, Earthquake, Fire Punch | Adamant | — |
 | Wailord | Água | Hoenn | Surf, Body Slam, Earthquake, Rest | Modest | — |
 | Swampert | Água/Terrestre | Hoenn | Earthquake, Surf, Ice Beam, Rock Slide | Adamant | Leftovers |
 
@@ -427,7 +427,7 @@ golpes, natureza e o item que o ás segura. O que fica pra depois (o gancho) é 
 | Masquerain | Inseto/Voador | Hoenn | Ice Beam, Giga Drain, Shadow Ball, Stun Spore | Modest | — |
 | Roselia | Grama/Venenoso | Hoenn | Giga Drain, Sludge Bomb, Stun Spore, Synthesis | Modest | — |
 | Ludicolo | Água/Grama | Hoenn | Surf, Giga Drain, Ice Beam, Thunder Punch | Modest | — |
-| Absol | Sombrio | Hoenn | Slash, Swords Dance, Faint Attack, Iron Tail | Adamant | — |
+| Ninetales | Fogo | Kanto | Flamethrower, Confuse Ray, Quick Attack, Iron Tail | Timid | — |
 | Gardevoir | Psíquico | Hoenn | Psychic, Thunderbolt, Shadow Ball, Hypnosis | Modest | — |
 | Milotic | Água | Hoenn | Surf, Ice Beam, Recover, Attract | Bold | Leftovers |
 

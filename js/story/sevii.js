@@ -184,12 +184,10 @@ const Sevii = {
     if (!l) return [criarPokemon(19, nivel)];
     return timeDeLinhas(l.times, nivel + (l.ajuste || 0), l.times.length, l.golpes || [], 80);
   },
-  /* o Blue no quintal de casa: o time do ginásio, fechado com o inicial
-     que vence o seu, como na porta de Viridian */
+  /* o Blue no quintal de casa: o time do ginásio de Viridian, o da
+     final contra o Red, fechado com o Blastoise dele */
   timeDoBlue(nivel){
-    const contra = {1:6, 4:9, 7:3};
-    const ace = contra[Estado.j.inicialDex] || 6;
-    const time = timeDeLinhas([18, 65, 112, 130, 59, ace], nivel, 6, ['Earthquake', 'Psychic', 'Fire Blast', 'Ice Beam'], 95);
+    const time = timeDeLinhas([18, 65, 112, 59, 103, 9], nivel, 6, ['Earthquake', 'Psychic', 'Fire Blast', 'Ice Beam'], 95);
     if (time.length) time[time.length - 1].segurando = 'Leftovers';
     return time;
   },

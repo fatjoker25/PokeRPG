@@ -317,6 +317,7 @@ c34_zev_lago:{
   texto:[
     'Ele demora. Depois a boca dele faz uma coisa que quase é sorriso.',
     fala('Zev', 'Magikarp. Muito Magikarp. E um Gyarados vermelho, uma vez, faz tempo, que todo mundo viu e ninguém pegou.'),
+    fala('Zev', 'O meu é dos comuns. Mordeu a linha numa terça de chuva.'),
     fala('Zev', 'O lago é bom porque ninguém pergunta nada. Só se o Magikarp está mordendo.')
   ],
   ef:{flag:'sv_conheceu_zev', npc:{nome:'Zev', opiniao:2, memoria:'Perguntou do lago de Mahogany, e não do resto.'},

@@ -381,14 +381,22 @@ const GINASIOS = [
 /* ── VIRIDIAN — BLUE ────────────────────────────────────── */
 {
   id:'viridian', cidade:'Viridian', lider:'Blue', tipo:'variado',
-  /* dificuldade 4, não 8: com 8 ele chegava ao capítulo 21 com o time
+  /* dificuldade 5, não 8: com 8 ele chegava ao capítulo 21 com o time
      inteiro no teto da área e vencia três de cada quatro times no nível
-     dela; com 4 é o ginásio mais duro sem ser parede (sim-ginasios.js) */
-  insignia:'Insígnia Terra', dificuldade:4, requerInsignias:7,
+     dela. Com 4 e o inicial que vencia o seu, era o ginásio mais duro
+     sem ser parede; o Blastoise fixo tirou uns seis pontos dele, e o
+     quinto ponto devolveu (sim-ginasios.js: 61 / 34 / 25) */
+  insignia:'Insígnia Terra', dificuldade:5, requerInsignias:7,
+  /* o time da final contra o Red, a de catorze minutos de campeão:
+     Pidgeot, Alakazam, Rhydon, Arcanine, Exeggutor e o Blastoise, o
+     Squirtle que ele escolheu na mesa do avô depois que o Red pegou o
+     Charmander (Pokémon Origins). O inicial dele é dele: não muda com
+     o seu, porque ele escolheu anos antes de você sair de casa. Nas
+     variações, o Gyarados de Gold/Silver e o Machamp de HeartGold. */
   escaloes:[
-    {min:0, especies:[18, 65, 112, 130, 59, 0], variacoes:[53,85,49,80,113]}       // só existe um escalão: ele só recebe quem tem sete
+    {min:0, especies:[18, 65, 112, 59, 103, 9], variacoes:[130,68,53,85,113]}       // só existe um escalão: ele só recebe quem tem sete
   ],
-  aceContraInicial:true,
+  aceAcima:2,   // o Blastoise vem dois acima do ás de todo líder
   efeito:'A Liga passa a te tratar como alguém que terminou o que começou.',
   premio:{dinheiro:12000, itens:{'Ultra Ball':3,'Full Heal':3,'Hyper Potion':2,'TM43 Sky Attack':1}, rep:2},
   comoDestravar:'O ginásio de Viridian ficou fechado dois anos depois que a Equipe Rocket caiu. Blue reabriu com uma regra: sete insígnias, ou nada.',
@@ -510,14 +518,8 @@ function timeGinasio(g, nForcado){
     }
   }
   const lista = especies.map((dex, i) => ({dex, nivel: base + i}));
-  if (lista.length) lista[lista.length-1].nivel += 2;   // ace, sempre o mesmo
+  if (lista.length) lista[lista.length-1].nivel += 2 + (g.aceAcima || 0);   // ace, sempre o mesmo
 
-  // Blue fecha com o inicial que vence o seu
-  if (g.aceContraInicial){
-    const contra = {1:6, 4:9, 7:3};
-    const ace = contra[Estado.j.inicialDex] || Dados.escolher([3,6,9]);
-    lista[lista.length-1] = {dex:ace, nivel: base + lista.length + 3};
-  }
   /* o teto da área (o piso já entrou no base) */
   const teto = tetoDoGinasio(n);
   if (teto < Infinity) lista.forEach((x, i) => { x.nivel = Math.min(x.nivel, i === lista.length - 1 ? teto + ACIMA_DA_AREA : teto); });
