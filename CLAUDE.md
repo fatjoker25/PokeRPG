@@ -3339,7 +3339,10 @@ a 38; o desenho de cada um do elenco está em `docs/SEVII.md`.
 - **Os capítulos são `posJogo`** (33 A Passagem, 34 O Navio, 35 A
   Maré, 36 Os Faróis, 37 O Armazém, 38 O Torneio das Ilhas): fora da
   sequência (`proximoCapitulo` os pula), e depois do fim o próximo é
-  `Sevii.proximo`, que pede o título de Campeão. Na tela, "Ilhas Sevii
+  `Sevii.proximo`, que pede o título de Campeão e não abre pra quem
+  parou de competir no final (`Depois.ligaFechada`: a Liga fechada pra
+  sempre, ou a licença suspensa até ela voltar), a não ser que o arco já
+  tenha começado: um torneio contradiria o final. Na tela, "Ilhas Sevii
   · III" (`numeroDoCapitulo`). Não chamam cena de linha (a história de
   Kanto fechou cada linha no epílogo). O número não é posição de
   jornada: `capNaJornada` dá 33 a 38, que é depois de tudo.
@@ -3388,27 +3391,31 @@ a 38; o desenho de cada um do elenco está em `docs/SEVII.md`.
   um tem a flag de quando volta; o que não volta sai do time do dono no
   torneio (`Sevii.semDoDono`). O que escapa num capítulo tem segunda
   chance no armazém (`sv_*_subiu`, `_c37Volta`).
-- **O gancho da história principal** (foi pedido assim: o pós-jogo
-  liga na principal e deixa um gancho pequeno pra próxima região).
-  Quem escolhe o que a Maré pega é a Comissão de Kanto, com outro nome:
-  a lista batida à máquina aparece na fábrica (35, `sv_viu_a_lista`) e
-  no farol (36, `sv_viu_a_lista_no_farol`), e no armazém (37) está o
-  pedido original (`C37_PEDIDO`): Instituto de Diversidade Genética de
-  Kanto, o mesmo Registro 11.402 e a mesma sala 704 da CGRB, "coleta de
-  matriz fora da área de convênio" — do lado de cá do mar não tem
-  convênio da Fiscalização, e pra eles isso é coleta, não roubo. O
+- **O pós-jogo não puxa a história principal** (foi pedido assim:
+  "o pós game tem que abraçar qualquer tipo de final, no caso não puxa
+  da própria história principal, quero que o pós game dê apenas o
+  gancho de outra região"). Cada final deixa a Comissão de um jeito
+  (fecha no caminho da Lei, continua menor e com outro nome no 28, ou
+  com você sentado nela), então ela não aparece nas ilhas, nem nada que
+  só existe em alguns finais. O que muda com a jornada é a reação de
+  quem está na cena (o seu lado, por `daLei`, `daRede` e `procurado`, e
+  o que o Blue diz do ginásio dele), nunca o enredo.
+  Quem compra o que a Maré pega é a **Casa Aster**, uma casa de leilão
+  pequena de Goldenrod (a dona, a filha e um homem que bate à máquina),
+  que vende pra quem tem coleção com a procedência escrita à máquina:
+  pra eles não é roubo, é peça. A lista batida à máquina aparece na
+  fábrica (35, `sv_viu_a_lista`) e no farol (36,
+  `sv_viu_a_lista_no_farol`), e no armazém (37) está o pedido original
+  (`C37_PEDIDO`), com a procedência e o lance mínimo de cada um. O
   Penrose mostra o pedido se você pergunta (`c37_o_pedido`); senão ele
   fica embaixo do último caixote (`c37_os_caixotes`), menos pra quem
-  aceita o dinheiro, que devolve a folha. O que você reconhece sai do
-  que viu em Kanto (o 20 fechado, `sabe_do_endereco_704`,
-  `sabe_o_nome_da_comissao`, `sabe_da_matriz`, a cena dos ovos do 19,
-  `achou_o_arquivo` pras etiquetas de quatro linhas), nunca do final
-  que você teve: cada final deixa a Comissão de um jeito, e o pedido
-  vale pra todos. A última linha do pedido é o gancho pra outra região,
-  pequeno de propósito: REMESSA NORTE — ILHAS DO REDEMOINHO (Johto), que
-  o fim do 38 lembra uma vez, se a folha ficou no bolso
-  (`sv_pedido_no_bolso`, item `Folha do pedido`). Não diga mais que
-  isso do norte: o resto é da próxima região.
+  aceita o dinheiro, que devolve a folha. A última linha do pedido é o
+  gancho pra outra região, pequeno de propósito: REMESSA NORTE — ILHAS
+  DO REDEMOINHO (Johto), que o fim do 38 lembra uma vez, se a folha
+  ficou no bolso (`sv_pedido_no_bolso`, item `Folha do pedido`). Não
+  diga mais que isso do norte nem da Casa Aster: o resto é da próxima
+  região. Cena nova das ilhas não depende do que alguém viu ou deixou
+  de ver na história de Kanto.
 - **Quem você ouviu antes volta**: o jantar do Anne (`sv_conheceu_*`,
   três por noite) decide quem aparece pra ajudar no farol e no armazém
   (o Zev, pela opinião), e a pista da Ilha Seis (o Gideon contou do

@@ -73,10 +73,16 @@ const FAIXA_DE_SEVII = {mare:'bw2-homika-dogars', jory:'bw2-homika-dogars', faro
   kaspar:'xd-miror-b', dekker:'colosseum-miror-b', blue:'bw2-kanto-gym-leader'};
 
 const Sevii = {
-  /* quem pode ir: o fim da história e o título de Campeão */
+  /* quem pode ir: o fim da história e o título de Campeão. O final de
+     quem parou de competir (a Liga fechada pra sempre) ou está com a
+     licença suspensa não ganha a passagem: um torneio contradiria o
+     final. Quem já começou o arco não fica preso no meio dele. */
   aberto(d){
     d = d || (typeof Estado !== 'undefined' ? Estado.dados : null);
-    return !!(d && d.depoisDoFim && d.flags && d.flags.campeao_de_kanto);
+    if (!(d && d.depoisDoFim && d.flags && d.flags.campeao_de_kanto)) return false;
+    const comecou = this.feitos(d).length > 0 || SEVII_CAPS.includes(d.capitulo);
+    if (!comecou && typeof Depois !== 'undefined' && Depois.ligaFechada && Depois.ligaFechada()) return false;
+    return true;
   },
   feitos(d){ return ((d || Estado.dados).capitulosFechados || []).filter(n => SEVII_CAPS.includes(n)); },
   /* quantos capítulos das ilhas já fecharam: 0 a 6 */

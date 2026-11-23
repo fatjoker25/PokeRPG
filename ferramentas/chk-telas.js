@@ -2296,6 +2296,23 @@ const SUSPEITO = [
       d.local = local; Mundo.marcarVisitado(local);
     };
   });
+  /* quem parou de competir no final não ganha a passagem; com a
+     licença suspensa, só depois que ela volta; quem já começou o arco
+     segue nele */
+  await restaurar();
+  await tentar('ilhas/final sem Liga', () => {
+    nasIlhas(0, 'pallet');
+    const d = Estado.dados;
+    d.depoisDoFim = {final:'ficou_em_casa', s:'em_casa', semLiga:'O cartão de treinador ficou na caixa de sapato.', fecha:{}, desde:d.relogio.dia};
+    if (Sevii.proximo(d) !== null) throw new Error('quem parou de competir no final ganhou o chamado das ilhas');
+    d.depoisDoFim = {final:'teste', s:'livre', fecha:{}, desde:d.relogio.dia, licencaVolta:d.relogio.dia + 30};
+    if (Sevii.proximo(d) !== null) throw new Error('com a licença suspensa o chamado das ilhas apareceu');
+    d.depoisDoFim.licencaVolta = d.relogio.dia;
+    if (Sevii.proximo(d) !== SEVII_CAPS[0]) throw new Error('com a licença de volta o chamado das ilhas não apareceu');
+    nasIlhas(2, 'ilha_um');
+    d.depoisDoFim = {final:'ficou_em_casa', s:'em_casa', semLiga:'O cartão de treinador ficou na caixa de sapato.', fecha:{}, desde:d.relogio.dia};
+    if (Sevii.proximo(d) !== SEVII_CAPS[2]) throw new Error('quem já estava no meio do arco ficou preso nele');
+  });
   /* o chamado de cada capítulo no lugar dele, e a balsa de cada fase */
   for (let fase = 0; fase <= 6; fase++){
     await restaurar();
