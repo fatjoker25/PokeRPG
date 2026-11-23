@@ -2705,9 +2705,10 @@ const SUSPEITO = [
     /* o dado forçado: o mesmo teste, rolado com muito ou nenhum dado, e o grau que se quer */
     window.dadoForcado = grau => {
       const t = Dados.teste.__orig || Dados.teste, c = Dados.testeComTime.__orig || Dados.testeComTime;
-      const f = (v, dif, nome) => Object.assign(t(grau === 'fracasso' ? 0 : 30, dif, nome), {grau, texto:grau});
+      /* chamadas pelo Dados: o teste lê a parada pelo this (paradaDoTreinador) */
+      const f = (v, dif, nome) => Object.assign(t.call(Dados, grau === 'fracasso' ? 0 : 30, dif, nome), {grau, texto:grau});
       f.__orig = t;
-      const g = (v, dif, nome) => Object.assign(c(grau === 'fracasso' ? 0 : 30, dif, nome), {grau, texto:grau});
+      const g = (v, dif, nome, eixo) => Object.assign(c.call(Dados, grau === 'fracasso' ? 0 : 30, dif, nome, eixo), {grau, texto:grau});
       g.__orig = c;
       Dados.teste = f; Dados.testeComTime = g;
     };
