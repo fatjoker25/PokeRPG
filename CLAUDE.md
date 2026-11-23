@@ -2475,7 +2475,10 @@ Dois e o Sven da Ilha Quatro), em quatro jeitos:
   (`achou` volta a falso). Na coleta, o crítico dá um a mais.
 - **A coleta conta a mochila** (`Estado.contaItem`): o item de enredo
   tem desenho nosso (`ITEM_PIXEL`, pelo `desenhar-itens.py`), e a tela
-  do passo mostra a barra de quanto falta (`htmlProgresso`).
+  do passo mostra a barra de quanto falta (`htmlProgresso`). Na volta
+  sai tudo o que você colheu, não só a meta: de noite vêm duas de uma
+  vez, e a que sobrava ficava nos Itens-chave sem servir pra nada (o
+  balcão não compra item de enredo). Fala da volta não conta quantas.
 - **A volta** (`Tarefas.entregar`) dá o prêmio (itens e dinheiro; no
   mostrar, `MORAL_DO_MOSTRAR` pro Pokémon que foi visto), sobe a
   opinião de quem pediu em `OPINIAO_DA_TAREFA` (o `lembrarNPC` grava o

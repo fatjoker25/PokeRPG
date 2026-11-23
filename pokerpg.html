@@ -120609,7 +120609,7 @@ const TAREFAS = [
   volta:{
     titulo:'Levar as flores-de-sino pra Mirela', falta:'A Mirela continua varrendo a calçada.',
     falas:[
-      'A Mirela segura as três flores pelo talo, juntas, e elas fecham na mão dela, devagar, uma de cada vez.',
+      'A Mirela segura as flores pelo talo, juntas, e elas fecham na mão dela, devagar, uma de cada vez.',
       fala('Mirela', 'Elas fecham quando sentem mão de gente. Lá em cima, abrem de novo.'),
       d => d.tarefas && d.tarefas.caixinha_do_abner && d.tarefas.caixinha_do_abner.entregou
         ? fala('Mirela', 'A caixinha do meu tio está na janela. Ainda engasga na quarta nota.') : '',
@@ -121132,9 +121132,12 @@ const Tarefas = {
     if (!t || !this.pronta(t, d)) return Exploracao.tela();
     const falas = (txt(t.volta.falas) || []).filter(Boolean);
     const pr = t.volta.premio || {}, avisos = [];
+    /* a pessoa fica com tudo o que você colheu: a de noite dá duas de uma
+       vez, e a que sobrava ficava nos Itens-chave sem servir pra nada */
     if (t.tipo === 'coleta'){
-      for (let k = 0; k < t.passo.meta; k++) Estado.usarItem(t.passo.item);
-      avisos.push({tipo:'item', texto:`Entregou ${t.passo.meta}× ${t.passo.item}.`});
+      const n = Estado.contaItem(t.passo.item);
+      for (let k = 0; k < n; k++) Estado.usarItem(t.passo.item);
+      avisos.push({tipo:'item', texto:`Entregou ${n}× ${t.passo.item}.`});
     }
     /* o Pokémon que você mostrou sai contente */
     if (pr.moral){
