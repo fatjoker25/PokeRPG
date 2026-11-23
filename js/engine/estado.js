@@ -1532,7 +1532,10 @@ const Estado = {
                                o 30 chamava ela de Sra. Wren */
                             'Sra. Wren':'a funcionária da guarita',
                             /* a classe saiu do nome (o Roque, o Orin, o Kell) */
-                            'Caçador Roque':'Roque', 'Guia Orin':'Orin', 'Guarda Kell':'Kell'};
+                            'Caçador Roque':'Roque', 'Guia Orin':'Orin', 'Guarda Kell':'Kell',
+                            /* o nome que soava palavra ou brasileiro: a Calla ("cala", de calar,
+                               como o Cale), a Lotte ("lote") e a Mirela (nome daqui) */
+                            'Calla':'Petra', 'Lotte':'Sylvie', 'Mirela':'Elowen'};
       /* a mulher do elevador do 20 também carrega pasta de vinil, e a
          grafia dela era a da advogada do 25, que o 25 diz que você não
          conhece: o elevador fica com ela, a planta com a advogada */

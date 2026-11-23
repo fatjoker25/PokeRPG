@@ -161,7 +161,7 @@ const SUSPEITO = [
     await tentar('liga', () => { UI.fecharModal(true); Jogo.abrirLiga(); });
     await tentar('loja', () => { UI.fecharModal(true); Exploracao.tela(); Cidade.loja(); });
     await tentar('centro', () => { UI.fecharModal(true); Cidade.atenderAqui(); });
-    /* as tarefas da cidade (tarefas.js): a Lotte de Celadon pede, o passo
+    /* as tarefas (tarefas.js): a Sylvie de Celadon pede, o passo
        na Rota 7 com a barra do que falta, a volta pronta na cidade e o selo */
     await tentar('tarefa-pedido', () => { UI.fecharModal(true); Exploracao.tela(); Tarefas.fazer('perfume_da_lotte'); });
     await tentar('tarefa-passo', () => {

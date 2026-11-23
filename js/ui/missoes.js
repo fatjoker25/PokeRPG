@@ -18,7 +18,7 @@
 
    As secundárias são o que alguém te pediu ou marcou, cada uma com o
    que a pessoa disse e onde, nunca a solução:
-     tarefa   — as tarefas da cidade (tarefas.js);
+     tarefa   — as tarefas de quem você topou na cidade ou na rota (tarefas.js);
      favor    — o pedido de quem liga (pedidos.js);
      missao   — o pedido de um contato do PokéNav (faseDaMissao);
      recado   — quem separou alguma coisa e está numa cidade (recados.js);
@@ -34,7 +34,7 @@ const ORDEM_DAS_MISSOES = ['defesa', 'rede', 'favor', 'tarefa', 'missao', 'convi
 
 /* a etiqueta e o desenho de cada jeito de missão (o desenho sai de icones.js) */
 const TIPO_DE_MISSAO = {
-  tarefa:  {nome:'Tarefa da cidade', icone:'exclama'},
+  tarefa:  {nome:'Tarefa', icone:'exclama'},
   favor:   {nome:'Favor · PokéNav', icone:'telefone'},
   missao:  {nome:'Pedido · PokéNav', icone:'telefone'},
   recado:  {nome:'Recado', icone:'convite'},
@@ -83,7 +83,7 @@ const Missoes = {
   /* quantas só falta entregar ou contar: a conta do botão do alto */
   prontas(d){ return this.secundarias(d).filter(m => m.pronta).length; },
 
-  /* as tarefas da cidade: o que a pessoa disse, o passo de agora e onde */
+  /* as tarefas: o que a pessoa disse, o passo de agora e onde */
   deTarefas(d){
     if (typeof TAREFAS === 'undefined' || typeof Tarefas === 'undefined') return [];
     return TAREFAS.filter(t => Tarefas.aberta(t.id, d)).map(t => {

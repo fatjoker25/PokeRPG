@@ -185,6 +185,9 @@ const ITEM_SPRITE = {
   /* papel de enredo que é a coisa dos jogos: a Pokébola velha do 13 e a
      pena do Ho-Oh no 16 (a Rainbow Wing de HG/SS) */
   'Poké Ball velha e arranhada':'pokeball', 'Pena Arco-Íris':'rainbow_wing',
+  /* o que as tarefas pedem e é a coisa dos jogos: o cogumelo das galerias
+     (Tiny Mushroom), a concha do rio (Shoal Shell) e o sal das poças (Shoal Salt) */
+  'Cogumelo':'tiny_mushroom', 'Concha':'shoal_shell', 'Sal grosso':'shoal_salt',
   'Ultra Ball':'ultraball', 'Master Ball':'masterball',
   /* cura */
   'Potion':'potion', 'Super Potion':'super_potion', 'Hyper Potion':'hyper_potion',

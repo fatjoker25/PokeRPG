@@ -16,7 +16,7 @@ golpes, natureza e o item que o ás segura. O que fica pra depois (o gancho) é 
 | <img src="../sprites_nds/npcs/trainers/sevii_florian.png" width="48"> | Florian Ashgrove | Rota 34, Johto | Criador Pokémon | time variado |
 | <img src="../sprites_nds/npcs/trainers/sevii_zev.png" width="48"> | Zev Fernley | Mahogany, Johto | Pescador do Lago | time variado |
 | <img src="../sprites_nds/npcs/trainers/sevii_skye.png" width="48"> | Skye Fernwood | Fortree, Hoenn | Escaladora | time variado |
-| <img src="../sprites_nds/npcs/trainers/sevii_calla.png" width="48"> | Calla Sumac | Lavaridge, Hoenn | Dona de Termas | time variado |
+| <img src="../sprites_nds/npcs/trainers/sevii_calla.png" width="48"> | Petra Sumac | Lavaridge, Hoenn | Dona de Termas | time variado |
 | <img src="../sprites_nds/npcs/trainers/sevii_imogen.png" width="48"> | Imogen Vetch | Mossdeep, Hoenn | Astrônoma | time variado |
 | <img src="../sprites_nds/npcs/trainers/sevii_brody.png" width="48"> | Brody Teak | Slateport, Hoenn | Estivador | time variado |
 | <img src="../sprites_nds/npcs/trainers/sevii_esme.png" width="48"> | Esme Wisteria | Lilycove, Hoenn | Coordenadora | time variado |
@@ -329,9 +329,9 @@ golpes, natureza e o item que o ás segura. O que fica pra depois (o gancho) é 
 
 **De longe, no PokéNav:** "Os Swablu voltaram pra Fortree hoje. Contei quarenta e um. Um a menos que no ano passado. Fiquei olhando o céu até escurecer." · "Vento leste aqui. Ruim pra voar, bom pra pensar. Pensei nas ilhas." · "Tô juntando dinheiro pra seguir a migração inteira. Já tenho o do primeiro barco. Faltam os outros onze."
 
-## Calla Sumac
+## Petra Sumac
 
-<img src="../sprites_nds/npcs/trainers/sevii_calla.png" alt="Calla" width="120">
+<img src="../sprites_nds/npcs/trainers/sevii_calla.png" alt="Petra" width="120">
 
 - **Dona de Termas** · 24 anos · mulher · nasceu em 5 de janeiro
 - **De:** Lavaridge, Hoenn

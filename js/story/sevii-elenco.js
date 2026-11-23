@@ -28,7 +28,7 @@
    Oona (Fantasma: a zeladora do Monte Pyre, com o Chimecho do cume).
    O resto tem time variado, com no máximo três de um tipo: quem a
    história liga a um tipo leva o Pokémon que importa (o Lapras do
-   Gideon, o Blaziken da Calla, o Hariyama da Saskia) e o que a vida
+   Gideon, o Blaziken da Petra, o Hariyama da Saskia) e o que a vida
    juntou em volta dele. Especialista novo só no lugar de um desses.
 
    O docs/SEVII.md é gerado daqui (ferramentas/fichas-sevii.js).
@@ -307,7 +307,7 @@ const ELENCO_SEVII = [
   ]
 },
 {
-  id:'calla', ajuste:6, nome:'Calla', sobrenome:'Sumac', f:true, idade:24, nasceu:[5, 1],
+  id:'calla', ajuste:6, nome:'Petra', sobrenome:'Sumac', f:true, idade:24, nasceu:[5, 1],
   regiao:'Hoenn', de:'Lavaridge', classe:'Dona de Termas', tipo:null,
   tracos:['orgulhosa', 'impulsiva', 'prática'], meta:'casa', forte:'carisma',
   gosta:{lugar:'vulcao', tipo:'Fogo', especie:'Torkoal'},

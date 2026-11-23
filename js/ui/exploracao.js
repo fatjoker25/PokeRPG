@@ -61,8 +61,8 @@ const Exploracao = {
     }).join('');
     /* as portas enchem a linha: três numa, quatro em duas de duas */
     const colunas = portas.length <= 3 ? Math.max(1, portas.length) : portas.length === 4 ? 2 : 3;
-    /* as tarefas da cidade (tarefas.js): quem pede, o passo de fora e a
-       volta, cada uma com o rosto de quem pediu numa moeda e a marca */
+    /* as tarefas (tarefas.js): quem pede (depois de topar com a pessoa), o
+       passo de fora e a volta, cada uma com o rosto de quem pediu numa moeda e a marca */
     const tarefas = todos.filter(a => a.tarefa).map(a => {
       const moeda = Tarefas.moeda(a.rosto, a.tarefa, null, a.quadro);
       if (a.fechada) return `<button class="escolha menu com-icone tarefa espera" disabled>
@@ -625,6 +625,8 @@ const Exploracao = {
     if (acao === 'procurar'){
       Mundo.passar(1);
       this.toque();
+      /* quem pede tarefa: o primeiro encontro é topar com a pessoa (tarefas.js) */
+      if (typeof Tarefas !== 'undefined' && Tarefas.talvezTopar('procurar')) return;
       if (Estrada.talvez('procurar')) return;
       if (Exploracao.repelenteAtivo()){
         return this.tela([
@@ -667,6 +669,7 @@ const Exploracao = {
     const L = Mundo.atual();
     Mundo.passar(1);
     this.toque();
+    if (typeof Tarefas !== 'undefined' && Tarefas.talvezTopar('vasculhar')) return;
     if (this.surge('vasculhar')) return;
     /* estrada também tem situação acontecendo, e nela o temperamento
        do seu time pesa mais do que em cidade */
@@ -777,6 +780,7 @@ const Exploracao = {
   pescar(){
     Mundo.passar(1);
     this.toque();
+    if (typeof Tarefas !== 'undefined' && Tarefas.talvezTopar('pescar')) return;
     const L = Mundo.atual();
     /* Pescar é sorte com vara na mão. A Sorte decide se fisga e o
        quanto vale o que veio. */
@@ -814,6 +818,7 @@ const Exploracao = {
       Mundo.passarHoras(h.de - r0.hora);
     else Mundo.passar(1);
     this.toque();
+    if (typeof Tarefas !== 'undefined' && Tarefas.talvezTopar('esperar')) return;
     if (this.surge('esperar')) return;
     Estado.salvar('auto');
     const r = Estado.dados.relogio;
@@ -855,6 +860,7 @@ const Exploracao = {
     const id = Mundo.id();
     Mundo.descobrir('andou_' + id);
     this.toque();
+    if (typeof Tarefas !== 'undefined' && Tarefas.talvezTopar('andar')) return;
     /* Cidade não é cenário: tem gente no meio de alguma coisa. Antes de
        procurar lugar, vê se tem situação acontecendo. */
     if (typeof Eventos !== 'undefined' && Dados.chance(55)){
@@ -877,6 +883,7 @@ const Exploracao = {
   conversar(){
     Mundo.passar(1);
     this.toque();
+    if (typeof Tarefas !== 'undefined' && Tarefas.talvezTopar('conversar')) return;
     const falas = Conversas.sortear(Mundo.id());
     /* quem falou com você pode te dar alguma coisa antes de você ir:
        teste de Carisma (recados.js) */

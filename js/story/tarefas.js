@@ -1,16 +1,22 @@
 /* ============================================================
-   TAREFAS DA CIDADE — quem mora ali e precisa de uma mão
+   TAREFAS — quem mora ali, ou passa por ali, e precisa de uma mão
    Foi pedido assim: tarefas com gente das cidades — resgatar um
    Pokémon que se perdeu, colher alguma coisa, levar uma encomenda,
-   mostrar um Pokémon —, feitas no jeito de jogo de hoje. Quem pede
-   aparece na tela do lugar, na seção Tarefas, com o rosto numa moeda e
-   a marca (! tem um pedido, ✓ está pronto pra entregar, … ainda espera);
+   mostrar um Pokémon —, feitas no jeito de jogo de hoje. E depois:
+   não só em cidade (tem gente pedindo na rota), mais gente onde mora
+   mais gente (uma em Pallet, três em Vermilion) e o primeiro encontro
+   no sorteio, "tipo topar com eles": ninguém aparece na tela do lugar
+   antes de você topar com a pessoa fazendo alguma coisa ali (andar,
+   conversar, esperar, pescar, vasculhar, procurar; CHANCE_DE_TOPAR).
+   Depois de topar, quem pede fica na seção Tarefas do lugar, com o
+   rosto numa moeda e a marca (! tem um pedido, ✓ está pronto pra
+   entregar, … ainda espera);
    o passo de fora da cidade aparece no lugar onde ele se faz, com o
    rosto de quem pediu; e a aba Missões (missoes.js) guarda o que cada
    um pediu, como memória: o que a pessoa disse, nunca a solução.
 
    Cada tarefa:
-     id, cidade (onde mora quem pede), quem (o nome; o rosto é
+     id, cidade (o lugar onde quem pede está: cidade ou rota), quem (o nome; o rosto é
      trainers/<arq>), quadro ([x, y, lado] da cabeça no desenho de
      80 px, que a moeda recorta), f (mulher), tipo ('resgate',
      'coleta', 'entrega', 'mostrar'), titulo (a linha das Missões), desde
@@ -25,7 +31,10 @@
        escolhas; na coleta, `item` e `meta`; no resgate, `luta` (quem
        está em volta do Pokémon perdido) depois de achar;
      volta {titulo, requer, falta, falas, premio}: de volta a quem
-       pediu, com o que ela pediu (o mostrar só tem a volta).
+       pediu, com o que ela pediu (o mostrar só tem a volta);
+     mostra (no mostrar): o que a pessoa quer ver no seu cinto — {tipo},
+       {fossil}, {evoluido} (um que já foi outro) ou {contente} (moral
+       de MORAL_DE_QUEM_GOSTA pra cima); quem serve é Tarefas.quem(id).
    Cada escolha do passo: {texto, cond, teste:{status, dificuldade,
    nome, eixo}, bom, ruim, resultado, achou, ganha (na coleta; o
    crítico ganha um a mais), gasta {item: n}, desgaste, espera (leva o
@@ -36,6 +45,10 @@
 
 const OPINIAO_DA_TAREFA = 3;      // quanto quem pediu passa a gostar de você
 const MORAL_DO_MOSTRAR = 5;       // o Pokémon que você mostrou sai contente
+const MORAL_DE_QUEM_GOSTA = 80;   // o Pokémon que gosta de verdade de quem anda com ele (o filho do Morris)
+/* topar com quem pede: a chance (em %) de cada ação do mapa, uma pessoa
+   por lugar por dia, nunca de madrugada (Tarefas.talvezTopar) */
+const CHANCE_DE_TOPAR = {andar:35, conversar:30, esperar:20, pescar:25, vasculhar:25, procurar:20};
 
 /* o Pokémon de quem pediu, que a cena chama pelo nome (não é seu) */
 const TAREFAS = [
@@ -124,6 +137,40 @@ const TAREFAS = [
   }
 },
 
+/* ─── Viridian: a escolinha da Maisie ──────────────────── */
+{
+  id:'escolinha_da_maisie', cidade:'viridian', quem:'Maisie', f:true, arq:'maisie', quadro:[12, 16, 26], tipo:'mostrar', desde:3,
+  mostra:{evoluido:true},
+  titulo:'A escolinha da Maisie',
+  oferta:{titulo:'A professora da escolinha', sub:'De avental amarelo, ela junta brinquedo da calçada numa cesta vermelha.'},
+  pedido:[
+    'Na calçada da escolinha, uma moça de avental amarelo e cabelo preso de presilha junta brinquedo do chão numa cesta vermelha. Pela janela, doze crianças te olham ao mesmo tempo.',
+    fala('Maisie', 'Hoje a aula foi de evolução. Com figurinha.'),
+    fala('Maisie', 'Eles não acreditaram. Disseram que o Caterpie e o Butterfree são dois Pokémon diferentes, e que eu inventei o resto.'),
+    fala('Maisie', 'Se você tiver um que já foi outro, traz aqui? Só cinco minutos. Eu seguro as crianças.', 'riso')
+  ],
+  aceitar:'"Eu trago um."', recusar:'"Agora não vai dar."',
+  recusou:[fala('Maisie', 'Tudo bem. Amanhã a aula é de nuvem. Nuvem eles acreditam.')],
+  lembrete:'A Maisie, professora da escolinha de Viridian, quer que as crianças vejam de perto um Pokémon que já evoluiu: na figurinha, ninguém acreditou.',
+  volta:{
+    titulo:d => { const p = Tarefas.quem('escolinha_da_maisie'); return p ? `Levar ${nomeExib(p)} na escolinha da Maisie` : 'Levar um Pokémon que já evoluiu na escolinha'; },
+    falta:'A Maisie quer mostrar pras crianças um Pokémon que já foi outro.',
+    falas:d => {
+      const p = Tarefas.quem('escolinha_da_maisie');
+      if (!p) return [];
+      const n = nomeExib(p), pr = pron(p), antes = (DEX[(DEX[p.dex] || {}).preEvo] || {}).nome;
+      return [
+        `A Maisie abre a porta, e as doze crianças param de falar ao mesmo tempo. ${n} entra devagar, olhando uma por uma.`,
+        fala('Maisie', antes ? `Esse aqui já foi um ${antes}. Pequenininho.` : 'Esse aqui já foi outro. Pequenininho.', null, 'Ela mostra a figurinha.'),
+        `Um menino da primeira fila levanta a mão e pergunta se ${pr.ele} lembra de quando era pequen${pr.o}.`,
+        fala('Maisie', 'Essa fica pra próxima aula.', 'riso'),
+        `Na saída, as doze fazem fila pra encostar em ${n}. ${pr.Ele} deixa todas.`
+      ];
+    },
+    premio:{dinheiro:300, itens:{'Potion':2, 'Repelente':1}, rep:'Levou um Pokémon pra escolinha de Viridian ver de perto'}
+  }
+},
+
 /* ─── Pewter: a vitrine do Oskar ───────────────────────── */
 {
   id:'cacos_do_oskar', cidade:'pewter', quem:'Oskar', arq:'oskar', quadro:[26, 13, 24], tipo:'coleta', desde:5,
@@ -165,6 +212,96 @@ const TAREFAS = [
       fala('Oskar', 'Na vitrine vai ter uma plaquinha. Eu vou pôr o seu nome nela, se você deixar.', null, 'Ele já está escrevendo.')
     ],
     premio:{dinheiro:600, itens:{'Super Potion':2}, rep:'Ajudou o museu de Pewter a montar uma vitrine'}
+  }
+},
+
+/* ─── Pewter: o Seixo do Boyd ──────────────────────────── */
+{
+  id:'seixo_do_boyd', cidade:'pewter', quem:'Boyd', arq:'boyd', quadro:[21, 0, 33], tipo:'resgate', desde:5,
+  titulo:'O Geodude do Boyd',
+  oferta:{titulo:'O escalador da beira da ladeira', sub:'De macacão verde-limão e óculos na testa, ele conta as pedras do barranco com o dedo.'},
+  pedido:[
+    'Na saída de Pewter, um escalador de macacão verde-limão, com os óculos de proteção na testa e uma picareta presa na mochila, conta as pedras do barranco com o dedo.',
+    fala('Boyd', 'Dezoito, dezenove… não. Nenhuma é ele.'),
+    fala('Boyd', 'O Seixo é um Geodude. Ele dormiu encolhido na beira da estrada, o caminhão da pedreira passou, e ele rolou junto com a carga, ladeira abaixo, até a Rota 3.'),
+    fala('Boyd', 'Eu marco ele com um X de giz na cabeça, pra achar no meio das pedras. E quando eu bato duas pedras uma na outra, ele vem. Quase sempre.', 'riso')
+  ],
+  aceitar:'"Eu procuro o Seixo."', recusar:'"Hoje eu não posso."',
+  recusou:[fala('Boyd', 'Tá. Pedra não foge. Pelo menos, não muito.')],
+  lembrete:'O Boyd, escalador de Pewter, perdeu o Seixo, um Geodude que rolou com a carga do caminhão da pedreira até a Rota 3. Ele tem um X de giz na cabeça, e vem quando alguém bate duas pedras.',
+  passo:{
+    onde:'rota3', titulo:'Procurar o Seixo, o Geodude do Boyd', sub:'Uma pedra com um X de giz, no pé da ladeira.',
+    texto:['O pé da ladeira da Rota 3 é um campo de pedra solta. Qualquer uma pode ser um Geodude dormindo.'],
+    escolhas:[
+      {texto:'Procurar uma pedra com X de giz.', teste:{status:'percepcao', dificuldade:6, nome:'Percepção', eixo:'paciencia'},
+       bom:{achou:true, resultado:['No meio de vinte pedras iguais, uma tem um X branco meio apagado. Ela abre um olho quando a sua sombra passa.']},
+       ruim:{resultado:['Você vira pedra por pedra. Todas são pedra.']}},
+      {texto:'Bater duas pedras uma na outra, como o Boyd faz.', teste:{status:'carisma', dificuldade:6, nome:'Carisma'},
+       bom:{achou:true, resultado:['Na terceira batida, uma pedra do barranco desenrola dois braços e vem rolando na sua direção.']},
+       ruim:{resultado:['O barulho só acorda um Sandshrew, que te olha feio e volta pro buraco.']}},
+      {texto:'Empurrar as pedras grandes do barranco.', teste:{status:'forca', dificuldade:7, nome:'Força'},
+       bom:{achou:true, resultado:['A quarta pedra que você empurra resmunga e empurra de volta. Tem um X de giz na testa dela.']},
+       ruim:{resultado:['Três pedras descem a ladeira, e nenhuma reclama.']}}
+    ],
+    luta:{dex:21, intro:['Mas o Seixo não está sozinho: um Spearow pousou em cima dele e bica o X de giz como se fosse comida.'],
+      venceu:['O Spearow vai embora. O Seixo se desenrola, estica os braços e se agarra na alça da sua mochila.'],
+      perdeu:['O Spearow te enxota do pé da ladeira, e o Seixo, de susto, rola pro meio das outras pedras.']}
+  },
+  volta:{
+    titulo:'Levar o Seixo de volta pro Boyd', falta:'O Boyd continua contando pedra na beira da ladeira.',
+    falas:[
+      'O Boyd reconhece o X antes de reconhecer você.',
+      fala('Boyd', 'Seixo!', 'grita'),
+      'O Geodude solta da sua mochila, rola até a bota dele e para ali.',
+      fala('Boyd', 'Eu ia subir a parede norte amanhã sem ele. Ia ser a primeira vez em seis anos.'),
+      fala('Boyd', 'Isso era pra quando eu achasse ele. Achei.', null, 'Ele te passa o que tinha no bolso do macacão.')
+    ],
+    premio:{dinheiro:500, itens:{'Great Ball':2, 'Potion':2}, rep:'Achou o Geodude de um escalador de Pewter'}
+  }
+},
+
+/* ─── Rota 3: a sopa do Mack ───────────────────────────── */
+{
+  id:'sopa_do_mack', cidade:'rota3', quem:'Mack', arq:'mack', quadro:[28, 6, 26], tipo:'coleta', desde:5,
+  titulo:'A sopa do Mack',
+  oferta:{titulo:'O montanhista da panela grande', sub:'De chapéu verde de aba larga e pena vermelha, ele mexe uma panela que só tem água.'},
+  pedido:[
+    'Num acampamento de beira de trilha, perto da boca do Monte da Lua, um montanhista grandalhão, de chapéu verde de aba larga com uma pena vermelha e lenço vermelho no pescoço, mexe uma panela que só tem água.',
+    fala('Mack', 'Faz vinte anos que eu faço a sopa da turma que sobe o Monte da Lua. Sopa de cogumelo.'),
+    fala('Mack', 'O cogumelo bom nasce lá dentro, por onde os Paras passam. O de fora da caverna não tem gosto de nada.'),
+    fala('Mack', 'Três dá uma panela. E o meu joelho não desce mais a galeria.', null, 'Ele bate no joelho com a colher de pau.')
+  ],
+  aceitar:'"Eu trago três."', recusar:'"Hoje eu não entro lá."',
+  recusou:[fala('Mack', 'Então hoje é sopa de água. A turma reclama, mas toma.', 'riso')],
+  lembrete:'O Mack, que faz a sopa dos montanhistas na beira da Rota 3, quer três cogumelos de dentro do Monte da Lua, dos que nascem por onde os Paras passam.',
+  passo:{
+    onde:'monte_lua', titulo:'Colher cogumelo pro Mack', sub:'No chão úmido das galerias, por onde os Paras andam.',
+    item:'Cogumelo', meta:3,
+    texto:['Nas galerias de baixo do Monte da Lua o chão é úmido e escuro. Por onde os Paras passam, nasce cogumelo pequeno, vermelho, de chapéu redondo.'],
+    escolhas:[
+      {texto:d => { const l = Campo.iluminar(); return `Procurar no chão das galerias ${l.como || 'com luz'}.`; }, cond:d => Campo.iluminar().pode,
+       desgaste:d => Campo.iluminar().semPilha ? null : 'Lanterna',
+       teste:{status:'percepcao', dificuldade:4, nome:'Percepção'},
+       bom:{ganha:1, resultado:['A luz pega um ponto vermelho no pé da parede, e depois outro. O primeiro está inteiro.']},
+       ruim:{resultado:['A luz acha pedra molhada, um Zubat de cabeça pra baixo e mais pedra molhada.']}},
+      {texto:'Tatear o chão perto de onde a água pinga.', teste:{status:'percepcao', dificuldade:7, nome:'Percepção', eixo:'paciencia'},
+       bom:{ganha:1, resultado:['Entre duas poças, a sua mão acha uma coisa macia e fria, de chapéu redondo. É um.']},
+       ruim:{resultado:['A sua mão acha lodo, pedra e uma coisa que se mexeu e não era cogumelo.']}},
+      {texto:'Seguir o rastro de pó até onde os Paras dormem.',
+       luta:{dex:46, ganha:2, intro:['O rastro termina num canto forrado de cogumelo, e no meio dele um Paras acorda e levanta as pinças.'],
+         venceu:['O Paras se enfia numa fresta. O canto é seu, e você enche o bolso.'],
+         perdeu:['O Paras solta uma nuvem de pó, e você sai do canto tossindo, de mão vazia.']}}
+    ]
+  },
+  volta:{
+    titulo:'Levar os cogumelos pro Mack', falta:'O Mack continua mexendo a panela de água.',
+    falas:[
+      'O Mack cheira o primeiro cogumelo e fecha os olhos.',
+      fala('Mack', 'Esse. Esse é o da caverna.'),
+      'Em meia hora o acampamento inteiro está em volta da panela, cada um com a sua caneca.',
+      fala('Mack', 'A primeira é sua. E leva isso: o seu time também sobe essa trilha.', null, 'Ele embrulha umas porções de Ração num pano de prato.')
+    ],
+    premio:{itens:{'Ração':2, 'Super Potion':1, 'Éter':1}, rep:'Trouxe cogumelo pra sopa dos montanhistas da Rota 3'}
   }
 },
 
@@ -211,6 +348,104 @@ const TAREFAS = [
   }
 },
 
+/* ─── Cerulean: o colar do Cody ────────────────────────── */
+{
+  id:'colar_do_cody', cidade:'cerulean', quem:'Cody', arq:'cody', quadro:[20, 1, 32], tipo:'coleta', desde:7,
+  titulo:'O colar do Cody',
+  oferta:{titulo:'O nadador do cordão laranja', sub:'Ainda pingando, de óculos de natação na testa, ele enfia um cordão num colar sem nenhuma concha.'},
+  pedido:[
+    'Na beira do rio, um rapaz de calção de natação e óculos na testa, ainda pingando, enfia um cordão laranja num colar que não tem nada pendurado.',
+    fala('Cody', 'Quem atravessa o rio a nado pela primeira vez ganha um colar de concha. É coisa da turma da natação.'),
+    fala('Cody', 'A minha prima atravessa no sábado. As conchas boas ficam no fundo, debaixo da ponte da Rota 24, onde a correnteza deixa.'),
+    fala('Cody', 'Três inteiras. Eu desço lá todo ano, mas machuquei o ombro.', null, 'Ele gira o ombro e faz careta.')
+  ],
+  aceitar:'"Eu trago as conchas."', recusar:'"Hoje não dá."',
+  recusou:[fala('Cody', 'Beleza. O sábado ainda está longe. Mais ou menos.')],
+  lembrete:'O Cody, nadador de Cerulean, quer três conchas inteiras do fundo do rio, debaixo da ponte da Rota 24, pro colar da prima que atravessa o rio no sábado.',
+  passo:{
+    onde:'rota24', titulo:'Juntar concha pro Cody', sub:'Inteiras, no fundo do rio, debaixo da ponte.',
+    item:'Concha', meta:3,
+    texto:['Debaixo da ponte o rio fica fundo e devagar. Entre as pedras do fundo, uma concha branca aparece e some com a água.'],
+    escolhas:[
+      {texto:'Catar na parte rasa, perto da margem.', teste:{status:'percepcao', dificuldade:6, nome:'Percepção', eixo:'paciencia'},
+       bom:{ganha:1, resultado:['Com a água pelo joelho, você vira uma pedra e acha uma concha inteira grudada embaixo.']},
+       ruim:{resultado:['Você acha meia concha, outra meia concha e uma que era pedra.']}},
+      {texto:d => `Ir até o fundo do rio ${Campo.surfar().como}.`, cond:d => Campo.surfar().pode,
+       ganha:2, resultado:d => [`${nomeExib(Campo.surfar().quem)} desce até o fundo e volta com duas conchas inteiras.`]},
+      {texto:'Tirar do monte onde um Poliwag dorme.',
+       luta:{dex:60, ganha:2, intro:['No raso, as conchas boas estão empilhadas, e em cima delas dorme um Poliwag. Ele acorda quando você estica a mão.'],
+         venceu:['O Poliwag volta pra água. O monte é seu: você escolhe as duas mais inteiras.'],
+         perdeu:['O Poliwag te molha da cabeça aos pés e volta a dormir em cima do monte.']}}
+    ]
+  },
+  volta:{
+    titulo:'Levar as conchas pro Cody', falta:'O Cody continua com o colar sem concha.',
+    falas:[
+      'O Cody segura cada concha contra o sol, uma de cada vez, procurando rachadura.',
+      fala('Cody', 'Inteiras. Todas.'),
+      'Ele fura cada uma com a ponta de um prego, devagar, e passa o cordão.',
+      fala('Cody', 'Grava o meu número. No sábado eu te conto se ela atravessou.')
+    ],
+    premio:{dinheiro:800, itens:{'Super Potion':2}, rep:'Trouxe conchas do fundo do rio pra um nadador de Cerulean'}
+  },
+  contato:{rotulo:'Perguntar da travessia', falas:[
+    'Ela atravessou! Chegou do outro lado chorando e rindo, de colar no pescoço.',
+    'A minha prima não tira o colar nem pra dormir. A mãe dela desistiu.',
+    'O ombro melhorou. Desci debaixo da ponte ontem e não achei nenhuma concha inteira. Você levou as melhores.'
+  ]}
+},
+
+/* ─── Rota 9: o Tonel do Gunnar ────────────────────────── */
+{
+  id:'tonel_do_gunnar', cidade:'rota9', quem:'Gunnar', arq:'gunnar', quadro:[23, 0, 33], tipo:'resgate', desde:7,
+  titulo:'O Machop do Gunnar',
+  oferta:{titulo:'O montanhista do saco de lona', sub:'De gorro verde, ele está sentado numa pedra com um saco de lona enorme do lado.'},
+  pedido:[
+    'Na trilha que leva ao Túnel da Rocha, um homem forte de gorro verde e regata está sentado numa pedra, com um saco de lona enorme do lado e uma lanterna apagada na mão.',
+    fala('Gunnar', 'O Tonel carregava a outra metade da carga. É um Machop. Ele carrega qualquer coisa.'),
+    fala('Gunnar', 'A minha lanterna apagou lá dentro, ontem. Eu saí tateando a parede. Ele ficou do outro lado de onde desabou.'),
+    fala('Gunnar', 'Se você chamar o nome dele alto, ele responde. Ele sempre responde.', 'baixo')
+  ],
+  aceitar:'"Eu busco o Tonel."', recusar:'"Agora eu não posso."',
+  recusou:[fala('Gunnar', 'Tudo bem. Ele aguenta. Ele aguenta mais que eu.')],
+  lembrete:'O Gunnar, montanhista da Rota 9, perdeu o Tonel, um Machop, dentro do Túnel da Rocha, quando a lanterna apagou e um pedaço da galeria desabou entre os dois. Ele disse que o Tonel responde quando chamam o nome dele.',
+  passo:{
+    onde:'tunel_rocha', titulo:'Procurar o Tonel, o Machop do Gunnar', sub:'Do outro lado de uma galeria que desabou.',
+    texto:['O Túnel da Rocha não tem uma luz acesa. Em algum lugar, do outro lado de pedra caída, um Machop segura uma carga que não é dele.'],
+    escolhas:[
+      {texto:d => { const l = Campo.iluminar(); return `Iluminar as galerias ${l.como || 'com luz'}.`; }, cond:d => Campo.iluminar().pode,
+       desgaste:d => Campo.iluminar().semPilha ? null : 'Lanterna',
+       teste:{status:'percepcao', dificuldade:5, nome:'Percepção'},
+       bom:{achou:true, resultado:['A luz bate numa pilha de pedra nova, de quina viva. Do outro lado, alguma coisa empurra a carga pro lado pra te ver.']},
+       ruim:{resultado:['A luz acha três galerias iguais. Você volta pela que entrou.']}},
+      {texto:'Chamar "Tonel!" bem alto.', teste:{status:'carisma', dificuldade:7, nome:'Carisma'},
+       bom:{achou:true, resultado:['O eco volta duas vezes. Na terceira, quem responde é um grunhido, e o barulho de uma carga pesada sendo posta no chão.']},
+       ruim:{resultado:['O eco volta, e mais nada. Lá do fundo, um Zubat responde no lugar dele.']}},
+      {texto:'Tirar as pedras da galeria que desabou.', teste:{status:'forca', dificuldade:8, nome:'Força', eixo:'coragem'},
+       bom:{achou:true, resultado:['Você tira pedra por pedra até abrir um buraco do tamanho de um braço. Do outro lado, um braço cinza já está tirando as dele.']},
+       ruim:{resultado:['A pilha mexe por cima de você, e você para antes que ela resolva mexer de vez.']}}
+    ],
+    luta:{dex:74, intro:['O Tonel está ali, com a carga nas costas, e entre vocês dois um Geodude rolou pra boca da passagem e não sai.'],
+      venceu:['O Geodude rola pra outra galeria. O Tonel passa pela abertura sem largar a carga.'],
+      perdeu:['O Geodude fecha a passagem com o corpo, e o Tonel recua pro escuro de novo.']}
+  },
+  volta:{
+    titulo:'Levar o Tonel de volta pro Gunnar', falta:'O Gunnar continua sentado na pedra, do lado do saco de lona.',
+    falas:[
+      'O Gunnar levanta antes de você chegar: ele ouviu o passo do Tonel, que é mais pesado que o seu.',
+      'O Machop põe a carga do lado do saco de lona, alinhada, e só depois deixa ele abraçar.',
+      fala('Gunnar', 'Você nunca larga a carga, né? Nunca.', 'riso'),
+      fala('Gunnar', 'Toma. E grava o meu número: eu subo e desço essa serra toda semana.')
+    ],
+    premio:{dinheiro:800, itens:{'Revive':1, 'Pilha':2}, rep:'Tirou o Machop de um montanhista de dentro do Túnel da Rocha'}
+  },
+  contato:{rotulo:'Perguntar do Tonel', falas:[
+    'O Tonel não entra mais no túnel sem a lanterna acesa na frente. Aprendeu antes de mim.',
+    'Ontem ele carregou o meu saco e o de um turista. O turista não pediu.',
+    'Comprei duas lanternas. Ele carrega a reserva.'
+  ]}
+},
+
 /* ─── Vermilion: a caixinha do Abner ───────────────────── */
 {
   id:'caixinha_do_abner', cidade:'vermilion', quem:'Abner', arq:'abner', quadro:[27, 8, 26], tipo:'entrega', desde:9,
@@ -220,22 +455,22 @@ const TAREFAS = [
     'No banco do cais, um marinheiro velho e largo, de uniforme branco desbotado, segura uma caixinha embrulhada num lenço como se ela estivesse dormindo.',
     fala('Abner', 'A minha sobrinha mora em Lavender. Faz dois anos que eu não subo até lá.'),
     fala('Abner', 'A perna não deixa. E o correio de Lavender perde encomenda. Já perdeu duas.'),
-    fala('Abner', 'É uma caixinha de música. Era da mãe dela. A Mirela vai saber.', null, 'Ele estende a caixinha antes de você dizer que leva.')
+    fala('Abner', 'É uma caixinha de música. Era da mãe dela. A Elowen vai saber.', null, 'Ele estende a caixinha antes de você dizer que leva.')
   ],
   aceitar:'"Eu levo pra ela."', recusar:'"Não vou pra aqueles lados agora."',
   recusou:[fala('Abner', 'Tudo bem. Ela esperou dois anos, espera mais uns dias.', 'baixo')],
   entrega:'Caixinha de música',
-  lembrete:'O Abner, marinheiro aposentado de Vermilion, pediu pra levar uma caixinha de música pra sobrinha dele, a Mirela, em Lavender.',
+  lembrete:'O Abner, marinheiro aposentado de Vermilion, pediu pra levar uma caixinha de música pra sobrinha dele, a Elowen, em Lavender.',
   passo:{
-    onde:'lavender', titulo:'Entregar a caixinha do Abner pra Mirela', sub:'A casa de portão baixo mais perto da Torre.',
+    onde:'lavender', titulo:'Entregar a caixinha do Abner pra Elowen', sub:'A casa de portão baixo mais perto da Torre.',
     texto:[
-      'A Mirela mora na casa de portão baixo mais perto da Torre. Ela abre a porta de roupa branca de médium, e para quando vê o lenço.'
+      'A Elowen mora na casa de portão baixo mais perto da Torre. Ela abre a porta de roupa branca de médium, e para quando vê o lenço.'
     ],
     escolhas:[
       {texto:'Entregar a caixinha.', entrega:true, tempo:0, resultado:[
         'Ela desembrulha ali mesmo, na porta. A caixinha toca três notas e engasga na quarta.',
-        fala('Mirela', 'Era da minha mãe. Ele guardou esse tempo todo.', 'baixo'),
-        fala('Mirela', 'Diz pra ele que ainda engasga na quarta. Ele vai entender.')
+        fala('Elowen', 'Era da minha mãe. Ele guardou esse tempo todo.', 'baixo'),
+        fala('Elowen', 'Diz pra ele que ainda engasga na quarta. Ele vai entender.')
       ]}
     ]
   },
@@ -245,36 +480,112 @@ const TAREFAS = [
       'O Abner está no mesmo banco. Ele não pergunta: espera você dizer.',
       'Você conta que ela desembrulhou na porta, e que a caixinha ainda engasga na quarta nota.',
       fala('Abner', 'Ainda engasga.', 'riso', 'Ele ri pela primeira vez desde que você chegou.'),
-      fala('Abner', 'A mãe dela deixou cair da escada quando a Mirela tinha seis anos. Nunca mais tocou a quarta direito.'),
+      fala('Abner', 'A mãe dela deixou cair da escada quando a Elowen tinha seis anos. Nunca mais tocou a quarta direito.'),
       fala('Abner', 'Toma. E grava o meu número. Marinheiro aposentado tem tempo demais.')
     ],
     premio:{dinheiro:1000, itens:{'Revive':1}, rep:'Levou uma encomenda de Vermilion até Lavender'}
   },
-  contato:{rotulo:'Perguntar da Mirela', falas:[
+  contato:{rotulo:'Perguntar da Elowen', falas:[
     'Ela ligou ontem. Pôs a caixinha no telefone pra eu ouvir. Engasgou na quarta.',
-    'A Mirela vai descer pra Vermilion no mês que vem. Eu já varri o barco três vezes.',
+    'A Elowen vai descer pra Vermilion no mês que vem. Eu já varri o barco três vezes.',
     'Ela disse que você subiu a escada da casa dela sem pisar no degrau que range. Ninguém faz isso.'
   ]}
 },
 
-/* ─── Lavender: as flores da Mirela ────────────────────── */
+/* ─── Vermilion: a pergunta do filho do Morris ─────────── */
 {
-  id:'flores_da_mirela', cidade:'lavender', quem:'Mirela', f:true, arq:'mirela', quadro:[29, 24, 22], tipo:'coleta', desde:8,
-  titulo:'As flores da Mirela',
+  id:'pergunta_do_morris', cidade:'vermilion', quem:'Morris', arq:'morris', quadro:[32, 22, 22], tipo:'mostrar', desde:9,
+  mostra:{contente:true},
+  titulo:'A pergunta do filho do Morris',
+  oferta:{titulo:'O pai do menino de Pikachu', sub:'Careca, de camiseta de Pikachu, ele levanta no alto um menino vestido de Pikachu.'},
+  pedido:[
+    'Na porta do fã-clube de Pokémon, um homem careca de camiseta de Pikachu levanta no alto um menino de uns três anos vestido de Pikachu, com orelha e tudo. O menino ri. O pai ri mais.',
+    fala('Morris', 'Ele pergunta pra todo treinador que passa se o Pokémon gosta dele. Todo mundo diz que sim.'),
+    fala('Morris', 'Agora ele não acredita mais. Diz que todo mundo fala isso.'),
+    fala('Morris', 'Ele quer ver um que goste de verdade. Que dê pra ver de longe. E o único Pikachu lá de casa é esse aqui.', 'riso')
+  ],
+  aceitar:'"Eu volto com um."', recusar:'"Hoje não."',
+  recusou:[fala('Morris', 'Tudo bem. Ele pergunta pro próximo.')],
+  lembrete:'O Morris, do fã-clube de Vermilion, tem um filho pequeno que pergunta pra todo treinador se o Pokémon gosta dele, e não acredita mais em ninguém. Ele quer ver um que goste de verdade, de um jeito que dê pra ver de longe.',
+  volta:{
+    titulo:d => { const p = Tarefas.quem('pergunta_do_morris'); return p ? `Mostrar ${nomeExib(p)} pro filho do Morris` : 'Mostrar um Pokémon pro filho do Morris'; },
+    falta:'O filho do Morris quer ver um Pokémon que goste de verdade de quem anda com ele.',
+    falas:d => {
+      const p = Tarefas.quem('pergunta_do_morris');
+      if (!p) return [];
+      const n = nomeExib(p), pr = pron(p);
+      return [
+        `O menino desce do colo do pai e fica parado na sua frente, de braço cruzado. ${n} não olha pra ele: olha pra você.`,
+        `Você dá dois passos pro lado, e ${n} dá dois passos pro lado. Você senta no degrau, e ${pr.ele} encosta a cabeça no seu joelho sem ninguém mandar.`,
+        'O menino descruza o braço.',
+        fala('Morris', 'Pronto. Agora ele acredita. Vai ser um problema: ele vai querer um igual.', 'riso'),
+        fala('Morris', 'Leva isso. É o sininho que o fã-clube dá pra quem chega com um assim.')
+      ];
+    },
+    premio:{itens:{'Soothe Bell':1}, rep:'Mostrou a um menino de Vermilion um Pokémon que gosta de verdade de quem anda com ele'}
+  }
+},
+
+/* ─── Vermilion: o caldo da Hilde ──────────────────────── */
+{
+  id:'caldo_da_hilde', cidade:'vermilion', quem:'Hilde', f:true, arq:'hilde', quadro:[27, 21, 24], tipo:'coleta', desde:10,
+  titulo:'O caldo da Hilde',
+  oferta:{titulo:'A cozinheira da pensão do porto', sub:'De lenço de flor na cabeça e avental azul, ela prova o caldo e põe a colher de lado.'},
+  pedido:[
+    'Na pensão do porto, onde os marinheiros almoçam em pé, uma moça de lenço florido na cabeça e avental azul prova o caldo da panela e põe a colher de lado.',
+    fala('Hilde', 'Falta o sal. Não o de pacote: o das pedras.'),
+    fala('Hilde', 'Na maré baixa, as poças das pedras da Rota 12 secam e deixam uma casca de sal grosso na borda. É ele que dá o gosto do caldo.'),
+    fala('Hilde', 'Três punhados. Eu ia buscar, mas se eu sair da cozinha, os marinheiros comem a panela crua.', 'riso')
+  ],
+  aceitar:'"Eu trago o sal."', recusar:'"Hoje eu não vou pra lá."',
+  recusou:[fala('Hilde', 'Então hoje é caldo de pacote. Ninguém vai reparar. Eu vou.')],
+  lembrete:'A Hilde, cozinheira da pensão do porto de Vermilion, quer três punhados do sal grosso que seca nas poças das pedras da Rota 12, na maré baixa.',
+  passo:{
+    onde:'rota12', titulo:'Raspar sal grosso pra Hilde', sub:'A casca de sal que seca na borda das poças das pedras.',
+    item:'Sal grosso', meta:3,
+    texto:['Na beira da Rota 12 as pedras fazem poça, e a poça que o sol secou fica branca de sal na borda.'],
+    escolhas:[
+      {texto:'Procurar as poças que o sol já secou.', teste:{status:'percepcao', dificuldade:6, nome:'Percepção', eixo:'paciencia'},
+       bom:{ganha:1, resultado:['Numa poça rasa no alto da pedra, a casca de sal está grossa e seca. Você raspa um punhado inteiro.']},
+       ruim:{resultado:['As poças que você acha ainda estão molhadas. O sal delas escorre pela mão.']}},
+      {texto:d => `Ir até as pedras de fora ${Campo.surfar().como}.`, cond:d => Campo.surfar().pode,
+       ganha:2, resultado:d => [`Nas pedras de fora, onde ninguém chega a pé, as poças estão brancas até o fundo. ${nomeExib(Campo.surfar().quem)} espera enquanto você raspa dois punhados.`]},
+      {texto:'Raspar a poça grande, onde alguma coisa boia.',
+       luta:{dex:72, ganha:2, intro:['A poça grande tem a casca de sal mais grossa de todas, e no meio dela boia um Tentacool que não gosta de mão perto dele.'],
+         venceu:['O Tentacool escorrega pro mar por uma fresta da pedra. A poça é sua.'],
+         perdeu:['O Tentacool te queima o braço, e o sal cai de volta na poça.']}}
+    ]
+  },
+  volta:{
+    titulo:'Levar o sal pra Hilde', falta:'A Hilde continua provando o caldo sem sal.',
+    falas:[
+      'A Hilde joga uma pitada na panela, mexe três vezes e prova.',
+      fala('Hilde', 'Isso. Agora é caldo.'),
+      'Os marinheiros da mesa do canto param de falar quando o cheiro chega neles.',
+      fala('Hilde', 'Leva duas porções pro seu time. E isso aqui, que um cozinheiro de navio deixou comigo faz um ano e nunca voltou pra buscar.', null, 'Ela embrulha num pano de prato.')
+    ],
+    premio:{itens:{'Leftovers':1, 'Ração':2}, rep:'Trouxe sal das pedras pra cozinha da pensão do porto de Vermilion'}
+  }
+},
+
+/* ─── Lavender: as flores da Elowen ────────────────────── */
+{
+  id:'flores_da_mirela', cidade:'lavender', quem:'Elowen', f:true, arq:'elowen', quadro:[29, 24, 22], tipo:'coleta', desde:8,
+  titulo:'As flores da Elowen',
   oferta:{titulo:'A médium do portão baixo', sub:'Ela varre, de roupa branca, uma calçada que já está varrida, e olha pro lado da Rota 8.'},
   pedido:[
     d => d.tarefas && d.tarefas.caixinha_do_abner && d.tarefas.caixinha_do_abner.entregou
-      ? 'A Mirela está na calçada de novo, de vassoura. Ela te reconhece pelo jeito de abrir o portão.'
+      ? 'A Elowen está na calçada de novo, de vassoura. Ela te reconhece pelo jeito de abrir o portão.'
       : 'Na casa de portão baixo mais perto da Torre, uma moça de roupa branca de médium varre uma calçada que já está varrida.',
-    fala('Mirela', 'Toda semana eu subo a Torre com flor-de-sino. Esta semana eu não posso sair de perto dela: é a semana da vigília.'),
-    fala('Mirela', 'A flor-de-sino cresce no capim da Rota 8. De dia ela fica fechada e some no meio do mato. De noite ela abre, branca, e dá pra ver de longe.'),
-    fala('Mirela', 'Três. Não precisa ser bonita. Precisa ser de lá.')
+    fala('Elowen', 'Toda semana eu subo a Torre com flor-de-sino. Esta semana eu não posso sair de perto dela: é a semana da vigília.'),
+    fala('Elowen', 'A flor-de-sino cresce no capim da Rota 8. De dia ela fica fechada e some no meio do mato. De noite ela abre, branca, e dá pra ver de longe.'),
+    fala('Elowen', 'Três. Não precisa ser bonita. Precisa ser de lá.')
   ],
   aceitar:'"Eu trago três."', recusar:'"Esta semana eu não posso."',
-  recusou:[fala('Mirela', 'Ninguém pode, esta semana. Eu entendo.', 'baixo')],
-  lembrete:'A Mirela, médium de Lavender, quer três flores-de-sino do capim da Rota 8. Ela disse que de dia elas ficam fechadas, e de noite abrem.',
+  recusou:[fala('Elowen', 'Ninguém pode, esta semana. Eu entendo.', 'baixo')],
+  lembrete:'A Elowen, médium de Lavender, quer três flores-de-sino do capim da Rota 8. Ela disse que de dia elas ficam fechadas, e de noite abrem.',
   passo:{
-    onde:'rota8', titulo:'Colher flor-de-sino pra Mirela', sub:'No capim da rota: fechadas de dia, abertas de noite.',
+    onde:'rota8', titulo:'Colher flor-de-sino pra Elowen', sub:'No capim da rota: fechadas de dia, abertas de noite.',
     item:'Flor-de-sino', meta:3,
     texto:d => ehNoite()
       ? ['O capim da Rota 8 está pontilhado de branco: as flores-de-sino abertas, balançando sem vento.']
@@ -291,34 +602,111 @@ const TAREFAS = [
     ]
   },
   volta:{
-    titulo:'Levar as flores-de-sino pra Mirela', falta:'A Mirela continua varrendo a calçada.',
+    titulo:'Levar as flores-de-sino pra Elowen', falta:'A Elowen continua varrendo a calçada.',
     falas:[
-      'A Mirela segura as flores pelo talo, juntas, e elas fecham na mão dela, devagar, uma de cada vez.',
-      fala('Mirela', 'Elas fecham quando sentem mão de gente. Lá em cima, abrem de novo.'),
+      'A Elowen segura as flores pelo talo, juntas, e elas fecham na mão dela, devagar, uma de cada vez.',
+      fala('Elowen', 'Elas fecham quando sentem mão de gente. Lá em cima, abrem de novo.'),
       d => d.tarefas && d.tarefas.caixinha_do_abner && d.tarefas.caixinha_do_abner.entregou
-        ? fala('Mirela', 'A caixinha do meu tio está na janela. Ainda engasga na quarta nota.') : '',
-      fala('Mirela', 'Obrigada. Como a minha mãe dizia: obrigada por mim e por quem não pode dizer.', 'baixo')
+        ? fala('Elowen', 'A caixinha do meu tio está na janela. Ainda engasga na quarta nota.') : '',
+      fala('Elowen', 'Obrigada. Como a minha mãe dizia: obrigada por mim e por quem não pode dizer.', 'baixo')
     ],
     premio:{dinheiro:500, itens:{'Repelente':3, 'Full Heal':1}, rep:'Levou flores pra Torre de Lavender na semana da vigília'}
   }
 },
 
-/* ─── Celadon: o perfume da Lotte ──────────────────────── */
+/* ─── Rota 6: o envelope da Poppy ──────────────────────── */
 {
-  id:'perfume_da_lotte', cidade:'celadon', quem:'Lotte', f:true, arq:'lotte', quadro:[26, 7, 26], tipo:'coleta', desde:10,
-  titulo:'O perfume da Lotte',
+  id:'envelope_da_poppy', cidade:'rota6', quem:'Poppy', f:true, arq:'poppy', quadro:[29, 12, 24], tipo:'entrega', desde:9,
+  titulo:'O envelope da Poppy',
+  oferta:{titulo:'A menina do boné verde-água', sub:'De lenço laranja no pescoço, ela está deitada no capim, esperando alguma coisa acordar.'},
+  pedido:[
+    'Deitada de barriga no capim da beira do lago, uma menina de boné verde-água e lenço laranja no pescoço prende a respiração, de olho num Oddish plantado a três passos dela.',
+    fala('Poppy', 'Shh. Ele acorda às cinco. Faz três dias que eu espero ele acordar.', 'baixo'),
+    fala('Poppy', 'As fotos dos três dias estão nesse envelope. O concurso do jornal de Celadon fecha amanhã, e se eu sair daqui, eu perco a quarta.'),
+    fala('Poppy', 'Você leva pra mim? É só pôr na caixa do concurso, na portaria do jornal.', 'baixo')
+  ],
+  aceitar:'"Eu levo."', recusar:'"Não vou pra Celadon agora."',
+  recusou:[fala('Poppy', 'Tá. Shh.', 'baixo')],
+  entrega:'Envelope pardo',
+  lembrete:'A Poppy, que fotografa um Oddish na Rota 6, pediu pra levar o envelope com as fotos dela até a caixa do concurso, na portaria do jornal de Celadon.',
+  passo:{
+    onde:'celadon', titulo:'Pôr o envelope da Poppy na caixa do concurso', sub:'Na portaria do jornal, na avenida.',
+    texto:['O jornal de Celadon ocupa um sobrado da avenida. Na portaria, do lado da catraca, tem uma caixa de madeira com uma fenda e uma etiqueta: CONCURSO DE FOTOGRAFIA.'],
+    escolhas:[
+      {texto:'Pôr o envelope na caixa.', entrega:true, tempo:0, resultado:[
+        'O envelope cai em cima de outros e faz barulho de pouca coisa.',
+        'O porteiro carimba a data num papelzinho e te entrega sem levantar os olhos do jornal. É o recibo.'
+      ]}
+    ]
+  },
+  volta:{
+    titulo:'Contar pra Poppy que o envelope chegou', falta:'A Poppy continua deitada no capim, esperando.',
+    falas:[
+      'A Poppy está no mesmo lugar, de câmera na mão, e o Oddish está acordado na frente dela, olhando a lente.',
+      'Você mostra o recibo carimbado. Ela lê a data duas vezes.',
+      fala('Poppy', 'Chegou a tempo. E ele acordou. Os dois no mesmo dia.', 'riso'),
+      fala('Poppy', 'Toma, é o que sobrou da mesada. E grava o meu número: se eu ganhar, você fica sabendo antes da minha mãe.')
+    ],
+    premio:{dinheiro:1000, itens:{'Great Ball':3}, rep:'Levou as fotos de uma menina da Rota 6 até o concurso do jornal de Celadon'}
+  },
+  contato:{rotulo:'Perguntar do concurso', falas:[
+    'Fiquei em terceiro! A foto saiu no jornal, do lado da previsão do tempo.',
+    'A foto que ganhou é a do Oddish de olho aberto. Eu chamei de "Cinco da Tarde".',
+    'Agora eu espero um Bellsprout acordar. Esse é mais difícil: ele finge.'
+  ]}
+},
+
+/* ─── Rota 12: a bola de cristal da Mavis ──────────────── */
+{
+  id:'cristal_da_mavis', cidade:'rota12', quem:'Mavis', f:true, arq:'mavis', quadro:[28, 14, 24], tipo:'mostrar', desde:10,
+  mostra:{tipo:'Fantasma'},
+  titulo:'A bola de cristal da Mavis',
+  oferta:{titulo:'A cartomante do píer', sub:'De chapéu roxo pontudo, ela lê a sorte dos pescadores com uma bola de cristal no colo.'},
+  pedido:[
+    'No começo do píer, uma moça de chapéu roxo pontudo e capa de redemoinho lê a sorte dos pescadores, com uma bola de cristal no colo. Quando o último vai embora, ela suspira.',
+    fala('Mavis', 'Desde os doze anos eu leio a sorte nesse píer. Eu falo dos espíritos da Torre todo dia.'),
+    fala('Mavis', 'Nunca vi um Pokémon fantasma. De perto, nenhum. Na Torre eu não entro.', 'baixo'),
+    fala('Mavis', 'Eu tenho medo. Não conta pra ninguém.', 'baixo'),
+    fala('Mavis', 'Se você tiver um, traz aqui? Com você do lado, eu acho que eu aguento.')
+  ],
+  aceitar:'"Eu trago."', recusar:'"Isso não é comigo."',
+  recusou:[fala('Mavis', 'Eu sabia que você ia dizer isso. Eu leio a sorte, lembra?', 'riso')],
+  lembrete:'A Mavis, cartomante do píer da Rota 12, fala dos espíritos da Torre todo dia e nunca viu um Pokémon do tipo Fantasma de perto. Ela tem medo, e pediu pra você levar um até ela.',
+  volta:{
+    titulo:d => { const p = Tarefas.quem('cristal_da_mavis'); return p ? `Mostrar ${nomeExib(p)} pra Mavis` : 'Mostrar um Pokémon fantasma pra Mavis'; },
+    falta:'A Mavis quer ver de perto um Pokémon do tipo Fantasma.',
+    falas:d => {
+      const p = Tarefas.quem('cristal_da_mavis');
+      if (!p) return [];
+      const n = nomeExib(p), pr = pron(p);
+      return [
+        `A Mavis aperta a bola de cristal com as duas mãos quando ${n} aparece do seu lado.`,
+        `${n} chega perto da bola, olha o próprio reflexo e faz uma careta pra ele.`,
+        'A Mavis ri antes de conseguir ter medo.',
+        fala('Mavis', `${pr.Ele} é engraçad${pr.o}. Ninguém me disse que eles eram engraçados.`, 'riso'),
+        fala('Mavis', 'Leva isso. Eu ia ler a sua sorte, mas você já sabe ela.')
+      ];
+    },
+    premio:{dinheiro:1000, itens:{'Elixir':1, 'Full Heal':1}, rep:'Mostrou um Pokémon fantasma a uma cartomante do píer da Rota 12'}
+  }
+},
+
+/* ─── Celadon: o perfume da Sylvie ──────────────────────── */
+{
+  id:'perfume_da_lotte', cidade:'celadon', quem:'Sylvie', f:true, arq:'sylvie', quadro:[26, 7, 26], tipo:'coleta', desde:10,
+  titulo:'O perfume da Sylvie',
   oferta:{titulo:'A perfumista da vitrine', sub:'Na vitrine da loja de perfume tem um frasco vazio com uma etiqueta escrita à mão: "Rota 7".'},
   pedido:[
     'A loja de perfume da avenida tem cheiro de dez lojas de perfume. A dona, uma moça loira de vestido rosa, cheira o próprio pulso e faz careta.',
-    fala('Lotte', 'Celadon inteira usa perfume de flor. Eu quero fazer um que tenha cheiro de mato de verdade.'),
-    fala('Lotte', 'O Oddish da Rota 7 solta a folha velha quando se planta pra dormir. Aquela folha tem o cheiro que eu quero.'),
-    fala('Lotte', 'Três folhas inteiras, sem rasgar. E não arranca do Oddish, por favor. Ele chora.')
+    fala('Sylvie', 'Celadon inteira usa perfume de flor. Eu quero fazer um que tenha cheiro de mato de verdade.'),
+    fala('Sylvie', 'O Oddish da Rota 7 solta a folha velha quando se planta pra dormir. Aquela folha tem o cheiro que eu quero.'),
+    fala('Sylvie', 'Três folhas inteiras, sem rasgar. E não arranca do Oddish, por favor. Ele chora.')
   ],
   aceitar:'"Eu trago as folhas."', recusar:'"Agora não."',
-  recusou:[fala('Lotte', 'O frasco espera. Frasco é bom nisso.')],
-  lembrete:'A Lotte, perfumista de Celadon, quer três folhas de Oddish da Rota 7, das que o Oddish solta quando se planta pra dormir.',
+  recusou:[fala('Sylvie', 'O frasco espera. Frasco é bom nisso.')],
+  lembrete:'A Sylvie, perfumista de Celadon, quer três folhas de Oddish da Rota 7, das que o Oddish solta quando se planta pra dormir.',
   passo:{
-    onde:'rota7', titulo:'Juntar folha de Oddish pra Lotte', sub:'As folhas velhas que o Oddish solta quando se planta pra dormir.',
+    onde:'rota7', titulo:'Juntar folha de Oddish pra Sylvie', sub:'As folhas velhas que o Oddish solta quando se planta pra dormir.',
     item:'Folha de Oddish', meta:3,
     texto:d => ehNoite()
       ? ['No capim da Rota 7, os Oddish estão plantados em fila, de olhos fechados, e o chão em volta deles está forrado de folha.']
@@ -335,19 +723,100 @@ const TAREFAS = [
     ]
   },
   volta:{
-    titulo:'Levar as folhas pra Lotte', falta:'A Lotte continua cheirando o próprio pulso.',
+    titulo:'Levar as folhas pra Sylvie', falta:'A Sylvie continua cheirando o próprio pulso.',
     falas:[
-      'A Lotte encosta o nariz na primeira folha e fecha os olhos por tempo demais.',
-      fala('Lotte', 'Isso. Mato molhado, terra e alguma coisa doce que eu não sei o nome.'),
-      fala('Lotte', 'O primeiro frasco é seu. Não tem nome ainda. Se tiver, vai ser Rota 7.', 'riso')
+      'A Sylvie encosta o nariz na primeira folha e fecha os olhos por tempo demais.',
+      fala('Sylvie', 'Isso. Mato molhado, terra e alguma coisa doce que eu não sei o nome.'),
+      fala('Sylvie', 'O primeiro frasco é seu. Não tem nome ainda. Se tiver, vai ser Rota 7.', 'riso')
     ],
     premio:{dinheiro:1200, itens:{'Frasco de perfume':1, 'Super Potion':2}, rep:'Ajudou a perfumista de Celadon a fazer um perfume novo'}
+  }
+},
+
+/* ─── Celadon: o Barão do Percy ────────────────────────── */
+{
+  id:'barao_do_percy', cidade:'celadon', quem:'Percy', arq:'percy', quadro:[26, 11, 24], tipo:'resgate', desde:10,
+  titulo:'O Meowth do Percy',
+  oferta:{titulo:'O menino de terno azul', sub:'Loiro, de terno, ele segura uma coleira dourada vazia na porta de um prédio de mármore.'},
+  pedido:[
+    'Na porta de um prédio de mármore da avenida, um menino loiro de terno azul, de uns onze anos, segura uma coleira dourada vazia e tenta não chorar na frente do porteiro.',
+    fala('Percy', 'O Barão saiu atrás de uma moeda que rolou na calçada. A moeda rolou até a Rota 16. Ele também.'),
+    fala('Percy', 'É um Meowth. Ele tem uma coleira igual a essa. Eu tenho duas porque ele perde.'),
+    fala('Percy', 'Meu pai disse que manda alguém. Ninguém foi. Você vai?', 'baixo')
+  ],
+  aceitar:'"Eu vou buscar o Barão."', recusar:'"Agora não dá."',
+  recusou:[fala('Percy', 'Tudo bem. Eu espero aqui. Eu sou bom de esperar.', 'frio')],
+  lembrete:'O Percy, menino de Celadon, perdeu o Barão, um Meowth de coleira dourada que correu atrás de uma moeda até a Rota 16.',
+  passo:{
+    onde:'rota16', titulo:'Achar o Barão, o Meowth do Percy', sub:'Um Meowth de coleira dourada, no capim alto.',
+    texto:['A Rota 16 é capim alto, com a ciclovia passando por cima. No meio do capim, alguma coisa dourada brilha e some.'],
+    escolhas:[
+      {texto:'Seguir o brilho no capim.', teste:{status:'percepcao', dificuldade:7, nome:'Percepção', eixo:'paciencia'},
+       bom:{achou:true, resultado:['O brilho para, e você chega nele: uma coleira dourada, e um Meowth dentro dela, sentado em cima de uma moeda.']},
+       ruim:{resultado:['O brilho era uma lata vazia. O segundo também.']}},
+      {texto:'Balançar umas moedas no bolso.', teste:{status:'sorte', dificuldade:6, nome:'Sorte'},
+       bom:{achou:true, resultado:['No terceiro tilintar, duas orelhas aparecem no meio do capim, viradas pro seu bolso.']},
+       ruim:{resultado:['O tilintar só chama um Rattata, que não está interessado em moeda nenhuma.']}},
+      {texto:'Espalhar um pouco de Ração e esperar quieto.', cond:d => Estado.contaItem('Ração') > 0, gasta:{'Ração':1}, tempo:2,
+       achou:true, resultado:['Você espera sentad{o|a} na beira da ciclovia. Ele chega pela Ração e fica pela companhia, com a coleira brilhando.']}
+    ],
+    luta:{dex:84, intro:['Mas ele está em cima de um mourão da cerca, de pelo em pé, e embaixo um Doduo bica a coleira dele com as duas cabeças.'],
+      venceu:['O Doduo sai correndo pela trilha. O Barão desce do mourão e sobe no seu ombro como se o ombro fosse dele.'],
+      perdeu:['O Doduo te faz recuar, e o Barão pula do mourão pro meio do capim e some de novo.']}
+  },
+  volta:{
+    titulo:'Levar o Barão de volta pro Percy', falta:'O Percy continua na porta do prédio, segurando a coleira vazia.',
+    falas:[
+      'O Percy esquece que está de terno e se ajoelha na calçada.',
+      fala('Percy', 'Barão! Você não pode correr atrás de toda moeda!', 'grita'),
+      'O Meowth deixa cair na mão dele a moeda que trazia na boca, como quem paga a conta.',
+      fala('Percy', 'Meu pai mandou te dar isso. Na verdade eu mandei, mas ele concordou.', null, 'Ele te passa um envelope e uma moeda antiga de ouro, das de colecionador.')
+    ],
+    premio:{dinheiro:1000, itens:{'Amulet Coin':1}, rep:'Achou o Meowth de um menino de Celadon na Rota 16'}
+  }
+},
+
+/* ─── Celadon: a sacola da Kenzie ──────────────────────── */
+{
+  id:'sacola_da_kenzie', cidade:'celadon', quem:'Kenzie', f:true, arq:'kenzie', quadro:[27, 9, 29], tipo:'entrega', desde:10,
+  titulo:'A sacola da Kenzie',
+  oferta:{titulo:'A ciclista do boné branco', sub:'De cabelo rosa e boné branco, ela gira no dedo uma sacola de peça de bicicleta.'},
+  pedido:[
+    'Na entrada da ciclovia, uma moça de cabelo rosa e boné branco gira no dedo uma sacola de lona cheia de peça de bicicleta, e cada volta faz barulho de metal.',
+    fala('Kenzie', 'O dono da oficina de Cerulean me emprestou isso quando a minha bicicleta quebrou. Eu disse que devolvia em um mês.'),
+    fala('Kenzie', 'Faz três.'),
+    fala('Kenzie', 'Eu não tenho coragem de olhar na cara dele. Você leva? É a oficina da roda pendurada na porta, na rua de trás do Centro.')
+  ],
+  aceitar:'"Eu levo a sacola."', recusar:'"Isso é você que tem que fazer."',
+  recusou:[fala('Kenzie', 'Eu sei. Por isso faz três meses.', 'frio')],
+  entrega:'Sacola de peças',
+  lembrete:'A Kenzie, ciclista de Celadon, pediu pra devolver uma sacola de peças de bicicleta na oficina de Cerulean, a da roda pendurada na porta, na rua de trás do Centro. Ela devia isso fazia três meses.',
+  passo:{
+    onde:'cerulean', titulo:'Devolver a sacola da Kenzie na oficina', sub:'A da roda pendurada na porta, atrás do Centro.',
+    texto:['Na rua de trás do Centro, uma roda de bicicleta pendurada na porta gira com o vento. Lá dentro, um senhor de macacão aperta um raio com os dedos sujos de graxa.'],
+    escolhas:[
+      {texto:'Devolver a sacola.', entrega:true, tempo:0, resultado:[
+        'Ele abre a sacola, conta as peças com o dedo e para na última.',
+        'Diz que tinha esquecido. Diz que a bicicleta dela está com o pneu de trás murcho desde que ela passou aqui, e que é pra ela vir encher, que ele não cobra.'
+      ]}
+    ]
+  },
+  volta:{
+    titulo:'Contar pra Kenzie como foi', falta:'A Kenzie continua na entrada da ciclovia, sem a sacola.',
+    falas:[
+      'Você conta que ele tinha esquecido. A Kenzie fica um tempo olhando a ciclovia.',
+      fala('Kenzie', 'Três meses com vergonha de uma coisa que ele esqueceu.'),
+      'Você conta do pneu murcho. Ela ri pela primeira vez.',
+      fala('Kenzie', 'Toma. Eu achei isso no chão da ciclovia, depois de uma corrida. Quem perdeu era mais rápido do que eu.', null, 'Ela põe na sua mão uma garra pequena e lisa, presa num cordão.')
+    ],
+    premio:{dinheiro:500, itens:{'Quick Claw':1}, rep:'Devolveu as peças de uma ciclista de Celadon na oficina de Cerulean'}
   }
 },
 
 /* ─── Saffron: a janela da Bea ─────────────────────────── */
 {
   id:'janela_da_bea', cidade:'saffron', quem:'Bea', f:true, arq:'bea', quadro:[27, 25, 24], tipo:'mostrar', desde:12,
+  mostra:{tipo:'Gelo'},
   titulo:'A janela da Bea',
   oferta:{titulo:'A menina da janela do segundo andar', sub:'Ela está de pijama de Eevee, com a testa encostada no vidro, acenando pra quem passa.'},
   pedido:[
@@ -361,10 +830,10 @@ const TAREFAS = [
   recusou:[fala('Bea', 'Tá bom. Eu fico olhando a janela, então.')],
   lembrete:'A Bea, menina de Saffron que está de cama, nunca viu um Pokémon do tipo Gelo de perto, e queria encostar num.',
   volta:{
-    titulo:d => { const p = Tarefas.doTipo('Gelo'); return p ? `Mostrar ${nomeExib(p)} pra Bea` : 'Mostrar um Pokémon de gelo pra Bea'; },
-    requer:d => !!Tarefas.doTipo('Gelo'), falta:'A Bea quer encostar num Pokémon do tipo Gelo.',
+    titulo:d => { const p = Tarefas.quem('janela_da_bea'); return p ? `Mostrar ${nomeExib(p)} pra Bea` : 'Mostrar um Pokémon de gelo pra Bea'; },
+    falta:'A Bea quer encostar num Pokémon do tipo Gelo.',
     falas:d => {
-      const p = Tarefas.doTipo('Gelo');
+      const p = Tarefas.quem('janela_da_bea');
       if (!p) return [];
       const n = nomeExib(p), pr = pron(p);
       return [
@@ -375,8 +844,129 @@ const TAREFAS = [
         'A febre não passa por causa disso. Mas ela dorme antes de você ir embora, com a mão ainda fechada, guardando o frio.'
       ];
     },
-    premio:{dinheiro:500, itens:{'Full Heal':2, 'Revive':1}, rep:'Mostrou um Pokémon de gelo a uma menina doente de Saffron', moral:'Gelo'}
+    premio:{dinheiro:500, itens:{'Full Heal':2, 'Revive':1}, rep:'Mostrou um Pokémon de gelo a uma menina doente de Saffron'}
   }
+},
+
+/* ─── Saffron: o chute da Bryn ─────────────────────────── */
+{
+  id:'chute_da_bryn', cidade:'saffron', quem:'Bryn', f:true, arq:'bryn', quadro:[36, 8, 29], tipo:'mostrar', desde:12,
+  mostra:{tipo:'Lutador'},
+  titulo:'O chute da Bryn',
+  oferta:{titulo:'A aluna da porta do dojô', sub:'De rabo de cavalo loiro e roupa laranja de treino, ela chuta o ar na porta do dojô.'},
+  pedido:[
+    'Na porta do dojô de luta, uma moça de rabo de cavalo loiro e roupa laranja de treino chuta o ar, sempre na mesma altura, contando baixinho.',
+    fala('Bryn', 'Quatrocentos e um. Quatrocentos e dois.'),
+    fala('Bryn', 'O mestre diz que eu chuto como um Hitmonlee. Eu nunca vi um Hitmonlee. Eu nunca vi nenhum Pokémon do tipo Lutador treinar de perto.'),
+    fala('Bryn', 'O mestre parou de lutar antes de eu entrar. O dojô ficou só com a gente.'),
+    fala('Bryn', 'Se você tiver um, traz aqui? Eu quero ver como é de verdade.')
+  ],
+  aceitar:'"Eu trago um."', recusar:'"Não tenho como."',
+  recusou:[fala('Bryn', 'Quatrocentos e três.', null, 'Ela volta a chutar o ar.')],
+  lembrete:'A Bryn, aluna do dojô de Saffron, nunca viu um Pokémon do tipo Lutador treinar de perto, e queria ver como é de verdade.',
+  volta:{
+    titulo:d => { const p = Tarefas.quem('chute_da_bryn'); return p ? `Levar ${nomeExib(p)} no dojô da Bryn` : 'Levar um Pokémon lutador no dojô'; },
+    falta:'A Bryn quer ver de perto um Pokémon do tipo Lutador.',
+    falas:d => {
+      const p = Tarefas.quem('chute_da_bryn');
+      if (!p) return [];
+      const n = nomeExib(p);
+      return [
+        `A Bryn para de chutar quando ${n} entra no dojô. Os dois se olham como se olha antes de uma luta.`,
+        `${n} firma os pés. A Bryn firma os dela. Por um minuto inteiro, ninguém respira.`,
+        `Ela chuta. ${n} desvia por um dedo e devolve o golpe parado no ar, a um palmo do nariz dela.`,
+        fala('Bryn', 'De novo. Por favor, de novo.', 'grita'),
+        fala('Bryn', 'Toma. É a faixa que o mestre me deu no primeiro dia. Ela serve mais pra quem bate de verdade.', null, 'Ela tira a faixa do pulso e põe na sua mão.')
+      ];
+    },
+    premio:{dinheiro:500, itens:{'Muscle Band':1}, rep:'Levou um Pokémon lutador pra treinar com uma aluna do dojô de Saffron'}
+  }
+},
+
+/* ─── Saffron: o Soneca da Nyla ────────────────────────── */
+{
+  id:'soneca_da_nyla', cidade:'saffron', quem:'Nyla', f:true, arq:'nyla', quadro:[28, 11, 24], tipo:'resgate', desde:12,
+  titulo:'O Abra da Nyla',
+  oferta:{titulo:'A menina das mãos acesas', sub:'Descalça, de olho fechado, ela segura o ar com as mãos acesas de rosa.'},
+  pedido:[
+    'Na escada de um prédio, uma menina de cabelo roxo, descalça, está de olho fechado, com as duas mãos abertas no ar. As mãos dela brilham rosa, fraco.',
+    fala('Nyla', 'O Soneca teleportou dormindo. Ele faz isso quando sonha que está com medo.'),
+    fala('Nyla', 'Eu sinto ele. Está na Rota 5, num canto quieto, ainda dormindo. Tem alguma coisa do lado dele que não é quieta.', 'baixo'),
+    fala('Nyla', 'A minha mãe não deixa eu sair de Saffron sozinha. Você vai lá por mim?')
+  ],
+  aceitar:'"Eu vou buscar o Soneca."', recusar:'"Agora eu não posso."',
+  recusou:[fala('Nyla', 'Tá. Eu continuo sentindo ele daqui. Ele continua dormindo.')],
+  lembrete:'A Nyla, de Saffron, sente o Soneca, o Abra dela, dormindo num canto quieto da Rota 5: ele teleportou sonhando que estava com medo. Ela disse que tem alguma coisa do lado dele que não é quieta.',
+  passo:{
+    onde:'rota5', titulo:'Achar o Soneca, o Abra da Nyla', sub:'Um Abra dormindo num canto quieto da rota.',
+    texto:['A Rota 5 tem gente demais passando pra um Abra dormir em paz. Se ele está aqui, achou o canto mais quieto.'],
+    escolhas:[
+      {texto:'Pensar onde é o canto mais quieto da rota.', teste:{status:'intelecto', dificuldade:6, nome:'Intelecto', eixo:'discricao'},
+       bom:{achou:true, resultado:['Longe da trilha, atrás da cerca da creche, o capim nem mexe. Lá no meio, um Abra dorme sentado.']},
+       ruim:{resultado:['Você acha três cantos quietos. Os três ficam barulhentos quando você chega.']}},
+      {texto:'Andar devagar pelo capim, sem fazer barulho.', teste:{status:'percepcao', dificuldade:7, nome:'Percepção', eixo:'discricao'},
+       bom:{achou:true, resultado:['No meio do capim, um Abra dorme encolhido, e a cauda dele se mexe como quem sonha.']},
+       ruim:{resultado:['Você pisa num graveto. Tudo que estava quieto vai embora.']}},
+      {texto:'Deixar um pouco de Ração no chão e esperar quieto.', cond:d => Estado.contaItem('Ração') > 0, gasta:{'Ração':1}, tempo:2,
+       achou:true, resultado:['Você espera sentad{o|a} na sombra. Um Abra aparece do lado da Ração sem ninguém ver ele chegar, ainda dormindo.']}
+    ],
+    luta:{dex:56, intro:['Ele dorme encostado numa pedra, e um Mankey está sentado do lado, cutucando ele com um graveto.'],
+      venceu:['O Mankey vai embora gritando. O Soneca, sem acordar, segura a manga da sua camisa.'],
+      perdeu:['O Mankey te enxota, e o Soneca, assustado, some de onde estava. Teleportou de novo.']}
+  },
+  volta:{
+    titulo:'Levar o Soneca de volta pra Nyla', falta:'A Nyla continua na escada, sentindo o Soneca de longe.',
+    falas:[
+      'A Nyla abre os olhos antes de você chegar na escada.',
+      'O Soneca some da sua mão e aparece no colo dela, dormindo. Ela não se assusta: ela sabia.',
+      fala('Nyla', 'Ele sonhou com você. Agora ele dorme melhor.'),
+      fala('Nyla', 'Isso era do meu pai. Ele usava pra ler. Ele disse que é pra quem ajuda a gente.', null, 'Ela te passa um par de óculos de aro redondo.')
+    ],
+    premio:{dinheiro:500, itens:{'Wise Glasses':1}, rep:'Achou o Abra de uma menina de Saffron na Rota 5'}
+  }
+},
+
+/* ─── Rota 16: o doce do Hank ──────────────────────────── */
+{
+  id:'doce_do_hank', cidade:'rota16', quem:'Hank', arq:'hank', quadro:[31, 6, 26], tipo:'entrega', desde:12,
+  titulo:'O doce do Hank',
+  oferta:{titulo:'O motoqueiro do pote de vidro', sub:'Enorme e careca, de colete de gola felpuda, ele segura um pote de vidro com as duas mãos.'},
+  pedido:[
+    'Encostado numa moto no acostamento da ciclovia, um homem enorme e careca, de colete de gola felpuda, segura um pote de vidro com as duas mãos, como se ele fosse quebrar.',
+    fala('Hank', 'Doce de abóbora. Eu que fiz. Do jeito da minha avó.'),
+    fala('Hank', 'Ela mora em Fuchsia, na casa de janela azul perto da Zona Safári. A gente brigou quando eu comprei a moto. Faz dois anos.'),
+    fala('Hank', 'Todo mês eu faço o doce e paro aqui. Eu não chego em Fuchsia.', 'baixo'),
+    fala('Hank', 'Você leva? Não precisa dizer que é meu. Ela vai saber pelo açúcar.')
+  ],
+  aceitar:'"Eu levo o doce."', recusar:'"Leva você, Hank."',
+  recusou:[fala('Hank', 'Mês que vem eu levo. É o que eu digo todo mês.', 'frio')],
+  entrega:'Pote de doce',
+  lembrete:'O Hank, motoqueiro da Rota 16, fez doce de abóbora do jeito da avó e não tem coragem de levar até ela: os dois brigaram faz dois anos. Ela mora na casa de janela azul perto da Zona Safári, em Fuchsia.',
+  passo:{
+    onde:'fuchsia', titulo:'Entregar o doce do Hank pra avó dele', sub:'A casa de janela azul perto da Zona Safári.',
+    texto:['A casa de janela azul fica na rua da cerca da Zona Safári. Uma senhora pequena, de avental, rega uma planta na janela.'],
+    escolhas:[
+      {texto:'Entregar o pote de doce.', entrega:true, tempo:0, resultado:[
+        'Ela abre o pote ali mesmo, prova com a ponta do dedo e fecha de novo.',
+        'Diz que ele pôs açúcar demais, como o avô. Pergunta se ele ainda anda naquela moto. Antes de você responder, diz que a casa tem campainha, e que é pra ele lembrar disso.'
+      ]}
+    ]
+  },
+  volta:{
+    titulo:'Contar pro Hank como foi', falta:'O Hank continua encostado na moto, no acostamento.',
+    falas:[
+      'O Hank não pergunta nada. Ele espera você dizer.',
+      'Você conta do açúcar, do avô e da campainha.',
+      fala('Hank', 'A campainha.', null, 'Ele repete baixo, como quem guarda um endereço.'),
+      fala('Hank', 'Toma. E grava o meu número. Se ela perguntar de você, eu quero saber o que dizer.')
+    ],
+    premio:{dinheiro:1500, itens:{'Hyper Potion':2}, rep:'Levou um doce da Rota 16 até uma avó de Fuchsia'}
+  },
+  contato:{rotulo:'Perguntar da avó', falas:[
+    'Eu toquei a campainha. Ela abriu. Ela disse que eu engordei.',
+    'Domingo é almoço na casa dela. Eu vou de ônibus. A moto fica na esquina, escondida.',
+    'Ela me ensinou a fazer com menos açúcar. Ficou pior. Eu não contei.'
+  ]}
 },
 
 /* ─── Fuchsia: o Slowpoke do Gustav ────────────────────── */
@@ -427,9 +1017,52 @@ const TAREFAS = [
   ]}
 },
 
+/* ─── Fuchsia: o Capitão do Lyle ───────────────────────── */
+{
+  id:'capitao_do_lyle', cidade:'fuchsia', quem:'Lyle', arq:'lyle', quadro:[35, 6, 25], tipo:'resgate', desde:13,
+  titulo:"O Farfetch'd do Lyle",
+  oferta:{titulo:'O rapaz da gaiola aberta', sub:'De cabelo cinza espetado e colete vermelho, ele segura uma gaiola de porta aberta, com um ninho de palha dentro.'},
+  pedido:[
+    'Na saída de Fuchsia pro leste, um rapaz de cabelo cinza espetado e colete vermelho segura uma gaiola de porta aberta. Dentro, só um ninho de palha.',
+    fala('Lyle', 'O Capitão dorme aí. De porta aberta. Ele nunca quis sair.'),
+    fala('Lyle', "Ontem um Farfetch'd selvagem passou cantando, e ele foi atrás. Pro lado da Rota 14."),
+    fala('Lyle', 'O talo dele tem a ponta mordida. Foi ele mesmo que mordeu, quando era filhote. É assim que eu sei qual é ele.')
+  ],
+  aceitar:'"Eu trago o Capitão."', recusar:'"Hoje não dá."',
+  recusou:[fala('Lyle', 'Tá. A porta continua aberta, caso ele volte sozinho.')],
+  lembrete:"O Lyle, de Fuchsia, perdeu o Capitão, um Farfetch'd que foi atrás de outro pro lado da Rota 14. O talo dele tem a ponta mordida.",
+  passo:{
+    onde:'rota13', titulo:"Achar o Capitão, o Farfetch'd do Lyle", sub:'Um Farfetch\'d com o talo mordido na ponta.',
+    texto:["No capim da Rota 14 tem mais de um Farfetch'd, cada um com o seu talo. Só um tem a ponta mordida."],
+    escolhas:[
+      {texto:'Olhar a ponta do talo de cada um.', teste:{status:'percepcao', dificuldade:7, nome:'Percepção', eixo:'paciencia'},
+       bom:{achou:true, resultado:["O quarto Farfetch'd que passa tem o talo mordido na ponta, e anda meio de lado, como quem não é daqui."]},
+       ruim:{resultado:["Todos os talos que você vê estão inteiros, e todos os Farfetch'd te olham como quem quer saber por quê."]}},
+      {texto:'Assobiar do jeito que o Lyle assobia pra gaiola.', teste:{status:'carisma', dificuldade:6, nome:'Carisma'},
+       bom:{achou:true, resultado:["Do capim alto, um Farfetch'd levanta a cabeça e vem andando na sua direção, com o talo mordido em pé, como uma bandeira."]},
+       ruim:{resultado:["O assobio só faz os Farfetch'd da rota irem pra mais longe."]}},
+      {texto:'Deixar um pouco de Ração no chão e esperar quieto.', cond:d => Estado.contaItem('Ração') > 0, gasta:{'Ração':1}, tempo:2,
+       achou:true, resultado:['Você espera sentad{o|a} na beira da estrada. O último a chegar perto da Ração tem o talo mordido na ponta.']}
+    ],
+    luta:{dex:48, intro:['Mas um Venonat está agarrado no talo dele, puxando pro outro lado, e o Capitão não larga.'],
+      venceu:['O Venonat solta e some no capim. O Capitão ajeita o talo debaixo da asa e te segue.'],
+      perdeu:['O Venonat arranca o talo da asa dele, e o Capitão sai correndo atrás, pro meio do capim.']}
+  },
+  volta:{
+    titulo:'Levar o Capitão de volta pro Lyle', falta:'O Lyle continua na saída da cidade, com a gaiola aberta.',
+    falas:[
+      'O Capitão entra na gaiola antes de você chegar perto e se ajeita no ninho de palha como se nunca tivesse saído.',
+      fala('Lyle', 'A porta continua aberta. Ele continua escolhendo ficar.'),
+      fala('Lyle', 'Leva isso. Eu comprei pra quando ele fugisse de vez. Ele não vai fugir de vez.', null, 'Ele te passa duas Ultra Ball e um maço de dinheiro dobrado.')
+    ],
+    premio:{dinheiro:1500, itens:{'Ultra Ball':2}, rep:"Achou o Farfetch'd de um rapaz de Fuchsia na Rota 14"}
+  }
+},
+
 /* ─── Cinnabar: o livro do Linus ───────────────────────── */
 {
   id:'livro_do_linus', cidade:'cinnabar', quem:'Linus', arq:'linus', quadro:[28, 19, 25], tipo:'mostrar', desde:15,
+  mostra:{fossil:true},
   titulo:'O livro do Linus',
   oferta:{titulo:'O menino do livro grosso', sub:'Ele lê um livro de fósseis na escada do laboratório, com o dedo em cima de um desenho.'},
   pedido:[
@@ -442,10 +1075,10 @@ const TAREFAS = [
   recusou:[fala('Linus', 'Tudo bem. O desenho espera. Desenho é bom nisso.')],
   lembrete:'O Linus, menino de Cinnabar, quer ver de perto um Pokémon que voltou de um fóssil, pra conferir o desenho do livro dele.',
   volta:{
-    titulo:d => { const p = Tarefas.doFossil(); return p ? `Mostrar ${nomeExib(p)} pro Linus` : 'Mostrar um Pokémon de fóssil pro Linus'; },
-    requer:d => !!Tarefas.doFossil(), falta:'O Linus quer ver de perto um Pokémon que voltou de um fóssil.',
+    titulo:d => { const p = Tarefas.quem('livro_do_linus'); return p ? `Mostrar ${nomeExib(p)} pro Linus` : 'Mostrar um Pokémon de fóssil pro Linus'; },
+    falta:'O Linus quer ver de perto um Pokémon que voltou de um fóssil.',
     falas:d => {
-      const p = Tarefas.doFossil();
+      const p = Tarefas.quem('livro_do_linus');
       if (!p) return [];
       return [
         `O Linus fecha o livro com o dedo dentro, pra não perder a página, e anda em volta de ${nomeExib(p)} três vezes.`,
@@ -454,7 +1087,7 @@ const TAREFAS = [
         fala('Linus', 'Eu vou escrever pra editora. Você assina como testemunha?')
       ];
     },
-    premio:{itens:{'PP Up':1}, rep:'Mostrou um Pokémon de fóssil a um menino de Cinnabar', moral:'fossil'}
+    premio:{itens:{'PP Up':1}, rep:'Mostrou um Pokémon de fóssil a um menino de Cinnabar'}
   }
 },
 
@@ -589,6 +1222,36 @@ const Tarefas = {
     try { return !t.cond || t.cond(d); } catch(e){ return false; }
   },
 
+  /* já topou com a pessoa: dali em diante ela fica na tela do lugar
+     (recusar vale só pra hoje, e ela continua conhecida) */
+  conheceu(t, d){
+    const r = this.de(t.id, d || Estado.dados);
+    return !!(r && (r.conheceu != null || r.estado || r.recusou != null));
+  },
+
+  /* topar com quem pede, no meio de uma ação do mapa (exploracao.js):
+     na chance da ação, alguém daqui que você ainda não conhece, se a
+     jornada já chegou nele. Uma pessoa por lugar por dia, e de
+     madrugada ninguém está na rua. Devolve true se a conversa abriu,
+     e a ação para ali */
+  talvezTopar(acao){
+    const d = Estado.dados, ch = CHANCE_DE_TOPAR[acao];
+    if (!ch || !d || !d.relogio || d.modo === 'cena') return false;
+    if (typeof sincronizarHora === 'function') sincronizarHora(d.relogio);
+    if (d.relogio.hora < 6) return false;
+    const aqui = Mundo.id();
+    const topou = d.tarefasTopou || (d.tarefasTopou = {});
+    if (topou[aqui] === d.relogio.dia) return false;
+    const quem = TAREFAS.filter(t => t.cidade === aqui && !this.conheceu(t, d) && this.disponivel(t, d));
+    if (!quem.length || !Dados.chance(ch)) return false;
+    const t = Dados.escolher(quem);
+    topou[aqui] = d.relogio.dia;
+    this.reg(d)[t.id] = Object.assign(this.de(t.id, d) || {}, {conheceu:d.relogio.dia});
+    Estado.salvar('auto');
+    this.oferecer(t.id);
+    return true;
+  },
+
   /* ---------- o andamento ---------- */
   passoFeito(t, d){
     d = d || Estado.dados;
@@ -601,6 +1264,7 @@ const Tarefas = {
   pronta(t, d){
     d = d || Estado.dados;
     if (!this.aberta(t.id, d) || !this.passoFeito(t, d)) return false;
+    if (t.mostra && !this.quem(t.id)) return false;
     try { return !t.volta.requer || t.volta.requer(d); } catch(e){ return false; }
   },
   /* quanto falta, pras Missões e pra tela do passo ("2 de 3") */
@@ -608,9 +1272,21 @@ const Tarefas = {
     if (t.tipo !== 'coleta' || !t.passo) return null;
     return {tem:Math.min(t.passo.meta, Estado.contaItem(t.passo.item)), meta:t.passo.meta, item:t.passo.item};
   },
-  /* o Pokémon do seu time que serve pro mostrar */
-  doTipo(tipo){ return (Estado.dados.time || []).find(p => p && !p.morto && p.hp > 0 && (DEX[p.dex] || {}).tipos && DEX[p.dex].tipos.includes(tipo)) || null; },
-  doFossil(){ return (Estado.dados.time || []).find(p => p && !p.morto && p.hp > 0 && DEX_DE_FOSSIL.includes(Number(p.dex))) || null; },
+  /* o Pokémon do seu cinto, de pé, que a pessoa do mostrar quer ver */
+  quem(id){
+    const t = this.porId(id), m = t && t.mostra;
+    if (!m || !Estado.dados) return null;
+    return (Estado.dados.time || []).find(p => p && !p.morto && p.hp > 0 && this.serve(p, m)) || null;
+  },
+  serve(p, m){
+    const e = DEX[p.dex] || {};
+    if (m.tipo) return (e.tipos || []).includes(m.tipo);
+    if (m.fossil) return DEX_DE_FOSSIL.includes(Number(p.dex));
+    if (m.evoluido) return (e.preEvo || 0) > 0;
+    /* o Mewtwo que ainda decide não mostra a moral (mewtwo.js), e o menino não vê o que não aparece */
+    if (m.contente) return (p.moral || 0) >= MORAL_DE_QUEM_GOSTA && !(typeof Mewtwo !== 'undefined' && Mewtwo.escondeMoral(p));
+    return false;
+  },
 
   /* ---------- na tela do lugar ----------
      Cada uma vira uma linha da seção Tarefas: quem pede (marca !), o
@@ -622,7 +1298,8 @@ const Tarefas = {
     for (const t of TAREFAS){
       const rosto = typeof retratoDe === 'function' ? retratoDe(t.quem) : null;
       if (t.cidade === localId){
-        if (this.disponivel(t, d)) out.push({id:'tf_' + t.id, titulo:t.oferta.titulo, sub:t.oferta.sub, tarefa:'nova', rosto, quadro:t.quadro});
+        /* quem você ainda não topou não está na tela: só aparece no sorteio */
+        if (this.disponivel(t, d)){ if (this.conheceu(t, d)) out.push({id:'tf_' + t.id, titulo:t.oferta.titulo, sub:t.oferta.sub, tarefa:'nova', rosto, quadro:t.quadro}); }
         else if (this.pronta(t, d)) out.push({id:'tf_' + t.id + '__volta', titulo:txt(t.volta.titulo), tarefa:'pronta', rosto, quadro:t.quadro});
         /* quem espera fica na tela, apagado, com o que ainda falta */
         else if (this.aberta(t.id, d)) out.push({id:'tf_' + t.id + '__volta', titulo:t.titulo, tarefa:'espera', rosto, quadro:t.quadro, fechada:t.volta.falta});
@@ -660,14 +1337,14 @@ const Tarefas = {
     this.reg(d)[id] = {estado:'aberta', desde:d.relogio.dia};
     const avisos = [{tipo:'tarefa', texto:`Nova tarefa: ${t.titulo}.`}];
     if (t.entrega){ Estado.darItem(t.entrega, 1); avisos.push({tipo:'item', texto:`Recebeu 1× ${t.entrega}.`}); }
-    Estado.registrar(`Aceitou um pedido de ${t.quem}, em ${(LOCAIS[t.cidade] || {}).nome}. ${t.lembrete}`);
+    Estado.registrar(`Aceitou um pedido de ${t.quem}, ${emLocal(t.cidade)}. ${t.lembrete}`);
     Estado.salvar('auto');
     Exploracao.tela(avisos);
   },
   recusar(id){
     const t = this.porId(id), d = Estado.dados;
     if (!t) return Exploracao.tela();
-    this.reg(d)[id] = {recusou:d.relogio.dia};
+    this.reg(d)[id] = {recusou:d.relogio.dia, conheceu:(this.de(id, d) || {}).conheceu != null ? this.de(id, d).conheceu : d.relogio.dia};
     Estado.salvar('auto');
     const L = LOCAIS[t.cidade] || {};
     UI.telaConversa({num:L.nome || '', titulo:t.oferta.titulo, loc:'Tarefa · ' + t.titulo, falas:t.recusou || [], quem:t.quem,
@@ -824,8 +1501,8 @@ const Tarefas = {
       avisos.push({tipo:'item', texto:`Entregou ${n}× ${t.passo.item}.`});
     }
     /* o Pokémon que você mostrou sai contente */
-    if (pr.moral){
-      const p = pr.moral === 'fossil' ? this.doFossil() : this.doTipo(pr.moral);
+    if (t.mostra){
+      const p = this.quem(t.id);
       if (p){ p.moral = Math.min(100, (p.moral || 50) + MORAL_DO_MOSTRAR); avisos.push({tipo:'info', texto:`${nomeExib(p)} gostou da visita.`}); }
     }
     if (pr.dinheiro){ Estado.j.dinheiro += pr.dinheiro; avisos.push({tipo:'item', texto:`+${pr.dinheiro.toLocaleString('pt-BR')} ₽`}); }
@@ -874,7 +1551,7 @@ const Tarefas = {
         out.push({onde:`tarefa/${t.id}/passo`, dono:null, linhas:txt(t.passo.texto) || []});
         (t.passo.escolhas || []).forEach((e, i) => {
           for (const [k, ramo] of [['', e], ['bom', e.bom], ['ruim', e.ruim]])
-            if (ramo && ramo.resultado) out.push({onde:`tarefa/${t.id}/passo>${i}${k}`, dono:t.passo.onde === 'lavender' ? 'Mirela' : null, linhas:txt(ramo.resultado) || []});
+            if (ramo && ramo.resultado) out.push({onde:`tarefa/${t.id}/passo>${i}${k}`, dono:t.passo.onde === 'lavender' ? 'Elowen' : null, linhas:txt(ramo.resultado) || []});
           if (e.luta) for (const k of ['intro', 'venceu', 'perdeu']) out.push({onde:`tarefa/${t.id}/luta${i}/${k}`, dono:null, linhas:e.luta[k] || []});
         });
         if (t.passo.luta) for (const k of ['intro', 'venceu', 'perdeu']) out.push({onde:`tarefa/${t.id}/luta/${k}`, dono:null, linhas:t.passo.luta[k] || []});

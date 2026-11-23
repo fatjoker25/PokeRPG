@@ -1614,7 +1614,9 @@ pescador dono dele", e a Rhoda diz o nome). Título de quem é chamado
 assim ("Líder Brock", "Professor Oak", "Sargento Holt", "Dra. Cordell",
 "Curador Fabre", "Sr. Dane") não é classe, e fica. E o nome não pode ser
 palavra do português: a Reli virou Sally ("reli" é de reler) e o Cale
-virou Liam ("cale" é de calar), os dois nomes de treinador dos jogos; o
+virou Liam ("cale" é de calar), os dois nomes de treinador dos jogos
+(e, pelo mesmo motivo, a Calla das Ilhas virou Petra, e a Lotte das
+tarefas, Sylvie: "lote" é palavra que pesa nesta história); o
 `id` ficou, pro save, e o nome de antes (`nomeAntes`) segue com o
 rosto.
 
@@ -2432,26 +2434,47 @@ mais longe do teto. Cada toque vira um passo `toque` no diário dele,
 com o tipo, e `reg.tel` conta as rolagens e os toques: é dali que se
 mede quantas vezes o telefone toca.
 
-## As tarefas da cidade
+## As tarefas
 Foi pedido assim: tarefa com gente das cidades — resgatar um Pokémon
 que se perdeu, colher alguma coisa, levar uma encomenda —, feita no
-jeito de jogo de hoje. Mora em `js/story/tarefas.js` (`TAREFAS`,
-`Tarefas`) e `css/tarefas.css`: doze, uma em cada cidade de Kanto e
-duas nas ilhas (a Lia de Pallet, o Emil de Viridian… a Hattie da Ilha
-Dois e o Sven da Ilha Quatro), em quatro jeitos:
+jeito de jogo de hoje. E depois: "não precisa ser só em cidades, pode
+ser em rotas, e pode ser mais por cidade, tipo um em Pallet ou três em
+Vermilion, que tem mais gente", com o encontro "no sorteio, tipo topar
+com eles". Mora em `js/story/tarefas.js` (`TAREFAS`, `Tarefas`) e
+`css/tarefas.css`: vinte e sete, pelo tamanho do lugar — uma em
+Pallet, Lavender e Cinnabar, duas em Viridian, Pewter, Cerulean e
+Fuchsia, três em Vermilion, Celadon e Saffron —, cinco nas rotas (o
+Mack na Rota 3, o Gunnar na 9, a Poppy na 6, a Mavis no píer da 12, o
+Hank na 16) e duas nas ilhas (a Hattie e o Sven), em quatro jeitos:
 - **resgate**: o Pokémon de quem pede fugiu pra um lugar perto; achar
   é teste, e quem está em volta dele é luta;
 - **coleta**: três de alguma coisa num lugar, um item de enredo que
   mora na mochila;
 - **entrega**: levar uma encomenda até a casa de alguém de outra
   cidade;
-- **mostrar**: ir até a pessoa com um Pokémon do tipo que ela quer
-  ver no time, ou com um que voltou de fóssil.
+- **mostrar**: ir até a pessoa com um Pokémon que ela quer ver no
+  cinto, de pé — o `mostra` diz qual: `{tipo}`, `{fossil}`,
+  `{evoluido}` (um que já foi outro, `preEvo` na Pokédex) ou
+  `{contente}` (moral `MORAL_DE_QUEM_GOSTA` pra cima; o Mewtwo que
+  ainda decide não serve, porque a moral dele não aparece). Quem serve
+  é `Tarefas.quem(id)`, e é ele que sai contente.
 
 - **Aparece pra quem chegou**: `desde` é a posição na jornada
   (`capNaJornada`, nunca o número cru), `fase` a das ilhas
-  (`Sevii.fase`), e a cidade tem que estar pisada. Recusar vale só pra
+  (`Sevii.fase`), e o lugar tem que estar pisado. Recusar vale só pra
   hoje: a oferta volta no dia seguinte.
+- **O primeiro encontro é sorteio** (`Tarefas.talvezTopar`): ninguém
+  está na tela do lugar antes de você topar com a pessoa fazendo
+  alguma coisa ali. Andar, conversar, esperar, pescar, vasculhar e
+  procurar rolam `CHANCE_DE_TOPAR` da ação logo depois do toque do
+  PokéNav, antes de treinador, selvagem e evento; saiu, abre o pedido
+  de quem você ainda não conhece ali (`conheceu`), e a ação para. Uma
+  pessoa por lugar por dia (`d.tarefasTopou`), e ação que acaba de
+  madrugada (a da noite, que vai até a meia-noite) não topa com
+  ninguém. Depois de topar, a pessoa fica na seção Tarefas do lugar,
+  inclusive se você recusou. Ação nova de mapa onde dá pra topar com
+  alguém chama o `Tarefas.talvezTopar` dela; `chk-telas` desliga o
+  sorteio pra todo o resto e liga na mão no teste do encontro.
 - **Na tela do lugar** a seção é própria, "Tarefas", antes de "O que
   fazer" (`Tarefas.afazeres`, chamado no `afazeresDoLocal`; o
   `Exploracao.tela` separa as linhas que têm `tarefa`). Quem pede vem
@@ -2474,8 +2497,11 @@ Dois e o Sven da Ilha Quatro), em quatro jeitos:
   `uid` guardado se a luta que acabou é a dela: recarregar no meio
   perde a volta, e só isso. Perdeu no resgate, o Pokémon some de novo
   (`achou` volta a falso). Na coleta, o crítico dá um a mais.
-- **A coleta conta a mochila** (`Estado.contaItem`): o item de enredo
-  tem desenho nosso (`ITEM_PIXEL`, pelo `desenhar-itens.py`), e a tela
+- **A coleta conta a mochila** (`Estado.contaItem`): o que se colhe
+  usa o ícone dos jogos quando a coisa existe lá (o Cogumelo é o Tiny
+  Mushroom, a Concha a Shoal Shell, o Sal grosso o Shoal Salt, pelo
+  `ITEM_SPRITE`), e só o que não existe ganha desenho nosso
+  (`ITEM_PIXEL`, pelo `desenhar-itens.py`); a tela
   do passo mostra a barra de quanto falta (`htmlProgresso`). Na volta
   sai tudo o que você colheu, não só a meta: de noite vêm duas de uma
   vez, e a que sobrava ficava nos Itens-chave sem servir pra nada (o
@@ -2495,17 +2521,25 @@ Dois e o Sven da Ilha Quatro), em quatro jeitos:
 - Quem pede tem nome e rosto só dele (`NOMES_DA_HISTORIA`,
   `RETRATO_POR_NOME`, `trainers/<arq>`), tirados do acervo do Showdown
   e conferidos pelos pixels contra todo rosto em uso e as fotos de
-  quem joga. O Pokémon de quem pede (o Pipoca da Lia, o Psyduck do Pim)
-  é da pessoa: nunca entra no seu time.
+  quem joga. O nome segue "Nome de personagem" e não repete nem
+  encosta num que já existe (o Wade, o Barny e a Tilly já eram de
+  gente da estrada e do cassino); a Lotte ("lote") virou Sylvie, a
+  Mirela (nome daqui) virou Elowen, e o id ficou, pro save. O Pokémon
+  de quem pede (o Pipoca da Lia, o Psyduck do Pim) é da pessoa: nunca
+  entra no seu time, e o apelido dele não repete o de outro Pokémon
+  da história (o Duque é o Vaporeon do 6).
 
 Tarefa nova entra com as falas, o `lembrete`, o `quadro` e a regra na
-folha ("Tarefas da cidade", que lê `TAREFAS.length` e as duas
-constantes), e passa pelo `chk-telas` (a oferta, recusar e voltar no
-outro dia, cada escolha do passo em cada grau, a luta ganhando e
-perdendo, a volta com o selo, a opinião, o número e as Missões) e pelo
-`chk-baloes` (`Tarefas.amostras`). O robô entrega a que está pronta,
-faz o passo do lugar onde está (seis vezes por tarefa, no máximo) e
-aceita metade das ofertas, menos quando a jornada espera.
+folha ("Tarefas", que lê `TAREFAS.length`, `CHANCE_DE_TOPAR` e as
+constantes da moral), e passa pelo `chk-telas` (a oferta, recusar e
+voltar no outro dia, cada escolha do passo em cada grau, a luta
+ganhando e perdendo, a volta com o selo, a opinião, o número e as
+Missões; o encontro na cidade e na rota, um por dia, a madrugada) e
+pelo `chk-baloes` (`Tarefas.amostras`). O robô topa com quem pede no
+meio das ações, aceita ou recusa como em qualquer cena, entrega a que
+está pronta, faz o passo do lugar onde está (seis vezes por tarefa, no
+máximo) e aceita metade das ofertas da tela, menos quando a jornada
+espera.
 
 ## A aba Missões
 Foi pedido assim: uma aba de missões em aberto, com a do capítulo
@@ -3515,7 +3549,7 @@ a 38; o desenho de cada um do elenco está em `docs/SEVII.md`.
   dragões do clã que o recusou) e a Oona (Fantasma, com o Chimecho do
   cume do Monte Pyre). O resto tem `tipo:null` e time variado, no
   máximo três de um tipo, com o Pokémon que a história liga à pessoa (o
-  Lapras do Gideon, o Blaziken da Calla, o Hariyama da Saskia, o
+  Lapras do Gideon, o Blaziken da Petra, o Hariyama da Saskia, o
   Houndoom do Zev) e o que a vida juntou em volta, dito na jornada.
   Ninguém repete espécie de outro inscrito, menos o Pinsir e o Snorlax,
   que já eram de dois. Espécie de Hoenn nova pede arte (só tem arte quem

@@ -62,6 +62,10 @@ const SUSPEITO = [
   page.on('dialog', d => d.dismiss());
   await page.goto(RAIZ);
   await page.waitForTimeout(500);
+  /* topar com quem pede tarefa é sorteio em toda ação do mapa (tarefas.js):
+     aqui ele fica desligado, pra cada tela ser a que o teste pede, e o
+     teste do encontro liga na mão */
+  await page.evaluate(() => { if (typeof CHANCE_DE_TOPAR !== 'undefined') Object.keys(CHANCE_DE_TOPAR).forEach(k => CHANCE_DE_TOPAR[k] = 0); });
 
   /* o save cheio */
   const snap = await page.evaluate(() => {
@@ -2724,7 +2728,9 @@ const SUSPEITO = [
       const t = Tarefas.porId(id), d = Estado.dados;
       if (t.fase != null) nasIlhas(6, t.cidade);
       else { d.capitulo = Math.max(d.capitulo || 0, 20); d.modo = 'mundo'; }
-      d.tarefas = {};
+      d.tarefas = {}; d.tarefasTopou = {};
+      /* já topou com a pessoa: o primeiro encontro (o sorteio) tem teste próprio */
+      Tarefas.reg(d)[id] = {conheceu:d.relogio.dia};
       d.local = t.cidade;
       Mundo.marcarVisitado(t.cidade);
       if (t.passo) Mundo.marcarVisitado(t.passo.onde);
@@ -2851,12 +2857,19 @@ const SUSPEITO = [
       if (t.tipo === 'entrega' && Estado.contaItem(t.entrega)) throw new Error('entregou e o item ficou na mochila');
       if (t.tipo === 'mostrar'){
         d.local = t.cidade;
+        /* o cinto sem ninguém que sirva: o mostrar não pode ficar pronto antes */
+        d.time = d.time.filter(p => !Tarefas.serve(p, t.mostra)).slice(0, 5);
+        if (!d.time.length) d.time.push(criarPokemon(19, 30));
         if (Tarefas.pronta(t)) throw new Error('o mostrar ficou pronto sem o Pokémon que ela quer ver');
         Exploracao.tela();
         const b = [...document.querySelectorAll('.escolha.tarefa')].find(z => z.disabled);
         if (!b || !b.querySelector('.esc-trava')) throw new Error('quem espera o Pokémon não fica apagado com o que falta');
-        d.time.push(criarPokemon(x === 'janela_da_bea' ? 131 : 138, 40));
-      }
+        const m = t.mostra, novo = criarPokemon(m.tipo ? {Gelo:131, Fantasma:92, Lutador:66}[m.tipo] : m.fossil ? 138 : m.evoluido ? 17 : 25, 40);
+        if (m.contente) novo.moral = MORAL_DE_QUEM_GOSTA + 5;
+        if (!Tarefas.serve(novo, m)) throw new Error('o Pokémon do teste não serve pro mostrar');
+        d.time.push(novo);
+        window.__mostrado = {uid:novo.uid, moral:novo.moral || 50};
+      } else window.__mostrado = null;
       d.local = t.cidade;
       Exploracao.tela();
       const a = afazeresDoLocal().find(z => z.id === 'tf_' + x + '__volta');
@@ -2869,6 +2882,10 @@ const SUSPEITO = [
       if (pr.dinheiro && Estado.j.dinheiro !== din + pr.dinheiro) throw new Error('o dinheiro do prêmio não chegou');
       for (const [n, q] of Object.entries(pr.itens || {})) if (Estado.contaItem(n) < q) throw new Error(`o prêmio não deu ${n}`);
       if (t.tipo === 'coleta' && Estado.contaItem(t.passo.item)) throw new Error('a coleta ficou na mochila depois de entregue');
+      if (window.__mostrado){
+        const p = d.time.find(q => q.uid === __mostrado.uid);
+        if (!p || p.moral !== Math.min(100, __mostrado.moral + MORAL_DO_MOSTRAR)) throw new Error('quem foi mostrado não saiu contente');
+      }
       if (((d.npcs[t.quem] || {}).opiniao || 0) < OPINIAO_DA_TAREFA) throw new Error('quem pediu não passou a gostar de você');
       if (t.contato && !Estado.temNumero('tarefa_' + x)) throw new Error('quem tem telefone não deixou o número');
       if (afazeresDoLocal().some(z => z.id && z.id.startsWith('tf_' + x))) throw new Error('a tarefa cumprida continua na tela');
@@ -2884,6 +2901,74 @@ const SUSPEITO = [
         UI.fecharModal(true);
       }
     }, id);
+  }
+  /* o primeiro encontro é sorteio: ninguém está na tela antes de você topar
+     com a pessoa fazendo alguma coisa no lugar; uma por lugar por dia, e
+     de madrugada ninguém. O dado fica ligado só aqui (100%) */
+  for (const [lugar, acoes] of [['vermilion', ['andar', 'conversar', 'esperar']], ['rota3', ['vasculhar', 'esperar', 'vasculhar']]]){
+    await restaurar();
+    await tentar(`tarefa/topar em ${lugar}`, ([aqui, ac]) => {
+      const d = Estado.dados;
+      d.capitulo = Math.max(d.capitulo || 0, 20); d.modo = 'mundo';
+      d.tarefas = {}; d.tarefasTopou = {};
+      d.local = aqui; Mundo.marcarVisitado(aqui);
+      Relogio.ate(8);
+      Jogo.depoisDaEstrada = null; Batalha.ativo = false;
+      const daqui = TAREFAS.filter(t => t.cidade === aqui && Tarefas.disponivel(t, d));
+      if (!daqui.length) throw new Error('ninguém pede tarefa aqui');
+      if (Tarefas.afazeres(aqui).some(z => z.tarefa === 'nova')) throw new Error('quem você não topou já está na tela');
+      const conhecidos = () => daqui.filter(t => Tarefas.conheceu(t, d));
+      /* sem telefone, treinador nem selvagem no meio: a tela que fica é a do encontro */
+      const toq = Jogo.talvezToque, est = Estrada.talvez, sur = Exploracao.surge, ch = Object.assign({}, CHANCE_DE_TOPAR);
+      Jogo.talvezToque = () => {}; Estrada.talvez = () => false; Exploracao.surge = () => false;
+      Object.keys(CHANCE_DE_TOPAR).forEach(k => CHANCE_DE_TOPAR[k] = 100);
+      try {
+        Exploracao.fazer(ac[0]);
+        if (conhecidos().length !== 1) throw new Error(`${ac[0]} topou com ${conhecidos().length} pessoas`);
+        const t = conhecidos()[0];
+        const app = document.getElementById('app').innerText;
+        if (!app.includes(t.quem) || !document.querySelector('.fala-retrato')) throw new Error('topou e o pedido não abriu com quem pede');
+        /* no mesmo dia, no mesmo lugar, ninguém mais */
+        Exploracao.fazer(ac[1]);
+        if (conhecidos().length !== 1) throw new Error('topou duas vezes no mesmo dia, no mesmo lugar');
+        /* recusou: fica conhecida, e amanhã está na tela */
+        Tarefas.recusar(t.id);
+        if (Tarefas.afazeres(aqui).some(z => z.id === 'tf_' + t.id)) throw new Error('recusou e a oferta continua hoje');
+        /* de noite pra madrugada, ninguém: a ação acaba à meia-noite */
+        Relogio.ate(20);
+        Exploracao.fazer(ac[0]);
+        if (Estado.dados.relogio.hora >= 6) throw new Error('a ação da noite não acabou de madrugada');
+        if (conhecidos().length !== 1) throw new Error('topou com alguém de madrugada');
+        if (!Tarefas.afazeres(aqui).some(z => z.id === 'tf_' + t.id && z.tarefa === 'nova')) throw new Error('quem você topou e recusou não ficou na tela no outro dia');
+        /* de dia, outra pessoa, se tiver */
+        Relogio.ate(8);
+        Exploracao.fazer(ac[2]);
+        if (conhecidos().length !== Math.min(2, daqui.length)) throw new Error(`${ac[2]} não topou com ninguém de dia`);
+        /* quem é de outro lugar não aparece aqui */
+        if (TAREFAS.some(x => x.cidade !== aqui && Tarefas.conheceu(x, d))) throw new Error('topou com alguém de outro lugar');
+      } finally { Object.assign(CHANCE_DE_TOPAR, ch); Jogo.talvezToque = toq; Estrada.talvez = est; Exploracao.surge = sur; }
+    }, [lugar, acoes]);
+  }
+  /* procurar e pescar também topam (a Rota 9 e o píer da Rota 12) */
+  for (const [lugar, ac] of [['rota9', 'procurar'], ['rota12', 'pescar']]){
+    await restaurar();
+    await tentar(`tarefa/topar ${ac} em ${lugar}`, ([aqui, acao]) => {
+      const d = Estado.dados;
+      d.capitulo = Math.max(d.capitulo || 0, 20); d.modo = 'mundo';
+      d.tarefas = {}; d.tarefasTopou = {};
+      d.local = aqui; Mundo.marcarVisitado(aqui);
+      Relogio.ate(8);
+      Jogo.depoisDaEstrada = null; Batalha.ativo = false;
+      const toq = Jogo.talvezToque, est = Estrada.talvez, ch = Object.assign({}, CHANCE_DE_TOPAR);
+      Jogo.talvezToque = () => {}; Estrada.talvez = () => false;
+      Object.keys(CHANCE_DE_TOPAR).forEach(k => CHANCE_DE_TOPAR[k] = 100);
+      try {
+        Exploracao.fazer(acao);
+        if (Batalha.ativo) throw new Error(`${acao} abriu luta em vez do encontro`);
+        const t = TAREFAS.find(x => x.cidade === aqui && Tarefas.conheceu(x, d));
+        if (!t || !document.getElementById('app').innerText.includes(t.quem)) throw new Error(`${acao} não topou com quem pede aqui`);
+      } finally { Object.assign(CHANCE_DE_TOPAR, ch); Jogo.talvezToque = toq; Estrada.talvez = est; }
+    }, [lugar, ac]);
   }
   /* a tarefa em aberto nas Missões: o lembrete, o passo e quanto falta */
   await restaurar();
