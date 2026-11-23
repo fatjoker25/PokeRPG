@@ -92,7 +92,9 @@ for (const l of Object.values(LUTAS_DE_SEVII))
   L.push(`| <img src="../sprites_nds/npcs/trainers/${l.arq}.png" width="48"> | ${l.nome} | ${l.times.map(especie).join(', ')} |`);
 L.push('');
 L.push('E quem não luta: o **Sargento Lund**, a Guarda das Ilhas inteira (`sevii_lund.png`), e o **Sr. Conrad Penrose**,');
-L.push('dono da fábrica de conserva fechada e patrocinador do torneio (`sevii_penrose.png`).');
+L.push('dono da fábrica de conserva fechada e patrocinador do torneio (`sevii_penrose.png`). Quem compra dele é a Comissão');
+L.push('da história principal com outro nome, o Instituto de Diversidade Genética de Kanto (o mesmo registro e a mesma sala 704),');
+L.push('pela "coleta de matriz fora da área de convênio". O pedido tem uma remessa norte: as Ilhas do Redemoinho, em Johto.');
 L.push('');
 
 fs.writeFileSync(path.join(raiz, 'docs/SEVII.md'), L.join('\n'));

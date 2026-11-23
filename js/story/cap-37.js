@@ -23,6 +23,28 @@ function _c37Volta(d){
   if (d.flags.sv_ovos_subiram) Estado.marcar('sv_rec_ovos');
   if (d.flags.sv_turma_subiu) Estado.marcar('sv_rec_turma');
 }
+/* O pedido de quem compra: o papel que liga as ilhas à Comissão da
+   história principal. O nome em cima é outro; o registro e a sala são os
+   de sempre. O que você reconhece sai do que você viu em Kanto (o
+   cartório e as atas do 18, a Estação 4 do 19, a sala do 20), nunca do
+   final que você teve. A última linha é o norte, e para ali. */
+const C37_PEDIDO = [
+  '**INSTITUTO DE DIVERSIDADE GENÉTICA DE KANTO · Registro 11.402**',
+  '**Rua do Comércio, 118, sala 704 · Saffron**',
+  '**Coleta de matriz fora da área de convênio · Remessa sul: Ilhas Sevii**',
+  d => d.flags.sv_viu_a_lista_no_farol
+    ? 'Embaixo, a lista inteira, batida à máquina, com uma coluna que a cópia dos Faróis não tem: LINHAGEM. Milotic, linhagem de Lilycove. Heracross e Ninjask, linhagem de Azalea. Ovos de Eevee, linhagem da Rota 34. Doze Pokémon de trabalho, linhagem de Slateport.'
+    : 'Embaixo, uma lista batida à máquina, um Pokémon por linha, com uma coluna chamada LINHAGEM. Milotic, linhagem de Lilycove. Heracross e Ninjask, linhagem de Azalea. Ovos de Eevee, linhagem da Rota 34. Doze Pokémon de trabalho, linhagem de Slateport.',
+  d => (d.capitulosFechados || []).includes(20)
+    ? 'Sala 704. O elevador do 118, que é de 1971 e demora, e o corredor de carpete gasto no sétimo andar. Você já esteve lá.'
+    : d.flags.sabe_do_endereco_704 ? 'Rua do Comércio, 118, sala 704. O endereço da ficha do cartório de Saffron.' : '',
+  d => d.flags.sabe_o_nome_da_comissao
+    ? 'Registro 11.402. O número da Comissão de Gestão de Risco Biológico na ficha do cartório. O nome mudou de novo. O número, não.' : '',
+  d => d.flags.sabe_da_matriz ? 'Matriz. A palavra que as atas usavam sem explicar, explicada aqui numa coluna.' : '',
+  d => (d.cenasAplicadas || {})['19:c19_de_onde_vem_os_ovos']
+    ? '"De matriz própria e de coleta autorizada", tinha dito a técnica da Estação 4. Aqui não tem autorização: tem "fora da área de convênio".' : '',
+  'Na última linha, depois da lista, duas palavras e um traço, sem nada na frente: REMESSA NORTE — ILHAS DO REDEMOINHO.'
+];
 
 CAPITULOS.push(
 {
@@ -180,8 +202,9 @@ c37_dekker_ganhou:{
 
 c37_dentro:{
   texto:[
-    'Dentro, debaixo da lâmpada amarela, os caixotes estão abertos e arrumados como prateleira de loja: Pokébola em fila, cada uma com uma etiqueta de papel amarrada no botão, com letra de contador.',
-    'LILYCOVE. ECRUTEAK. FORTREE. MAUVILLE. OLIVINE. GOLDENROD. Vinte e três etiquetas, e do lado de cada nome de cidade, um preço.',
+    'Dentro, debaixo da lâmpada amarela, os caixotes estão abertos e arrumados como prateleira de loja: Pokébola em fila, cada uma com uma etiqueta de papel amarrada no botão.',
+    'Cada etiqueta tem quatro linhas batidas à máquina, espécie, lote, origem e data, e embaixo um preço a lápis, em letra de contador. Na linha da origem: LILYCOVE. ECRUTEAK. FORTREE. MAUVILLE. OLIVINE. GOLDENROD. Vinte e três etiquetas.',
+    d => d.flags.achou_o_arquivo ? 'Espécie, lote, origem, data. É a etiqueta das gavetas do arquivo da Estação 4. Onde lá estava ZS-7, aqui está o nome de uma cidade de fora.' : '',
     'Na ponta da fila, sozinha, presa com uma fita lilás de concurso: a da Milotic. Do lado do preço dela alguém desenhou uma estrela.',
     d => d.flags.sv_mochila_subiu ? 'Numa prateleira de baixo, jogada de qualquer jeito, uma mochila cheia de Pokébola de Apricorn pendurada por fora.' : '',
     d => d.flags.sv_ovos_subiram ? 'Em cima de um caixote, uma caixa térmica azul desligada, com seis ovos frios dentro.' : '',
@@ -209,6 +232,28 @@ c37_penrose:{
   ],
   ef:{flag:'sv_conheceu_penrose', registrar:'No armazém da Ilha Cinco, às duas da manhã: Conrad Penrose, dono da fábrica fechada e patrocinador do torneio. "O torneio traz o estoque. Eu pago o troféu."'},
   escolhas:[
+    {texto:d => d.flags.sv_viu_a_lista || d.flags.sv_viu_a_lista_no_farol ? '"A lista batida à máquina. Quem escreve?"' : '"Pra quem você vende?"',
+     vai:'c37_o_pedido', cond:d => !Historia.jaAconteceu('c37_o_pedido')},
+    {texto:'"Sargento. É ele."', vai:'c37_penrose_preso', cond:d => _c37Lund(d)},
+    {texto:'Amarrar o Penrose num caixote e esperar a Guarda de manhã.', vai:'c37_penrose_amarrado', cond:d => !_c37Lund(d)},
+    {texto:'"Quanto você paga pra eu sair daqui?"', vai:'c37_penrose_oferta'},
+    {texto:'Ir pro cais do armazém e não deixar o barco sair com os caixotes.', vai:'c37_o_barco'}
+  ]
+},
+
+/* quem escolhe o que a Maré pega: o pedido que chega de Kanto */
+c37_o_pedido:{
+  texto:[
+    'O Penrose não responde de primeira. Tira do bolso de dentro do paletó uma folha de papel bom, dobrada em quatro, e abre em cima do caixote, alisando com a palma da mão.',
+    fala('Sr. Penrose', 'Eu não escolho nada. Quem escolhe manda isto toda segunda, no malote do barco de Vermilion. Eu bato à máquina de novo pros Faróis, sem o cabeçalho. Ninguém nas ilhas precisa saber de onde vem.'),
+    ...C37_PEDIDO,
+    fala('Sr. Penrose', 'O convênio da Fiscalização vale do lado de lá do mar. Do lado de cá não tem convênio, não tem Fiscalização e não tem dono de nada. Pra eles isso não é roubo. É coleta.', 'frio'),
+    fala('Sr. Penrose', 'Linhagem de Kanto eles já têm. Eles querem a que nunca viu viveiro, e quem traz isso pra cá, uma vez por ano, de barco, é o torneio.'),
+    fala('Sr. Penrose', 'O sul sou eu. O norte não é comigo, e eu nunca perguntei de quem é.', null, 'Ele bate com o dedo na última linha.')
+  ],
+  ef:{flag:'sv_viu_o_pedido',
+      registrar:'O Penrose mostrou o pedido de quem compra: Instituto de Diversidade Genética de Kanto, Registro 11.402, Rua do Comércio, 118, sala 704, Saffron. "Coleta de matriz fora da área de convênio." Remessa sul: Ilhas Sevii. Remessa norte: Ilhas do Redemoinho.'},
+  escolhas:[
     {texto:'"Sargento. É ele."', vai:'c37_penrose_preso', cond:d => _c37Lund(d)},
     {texto:'Amarrar o Penrose num caixote e esperar a Guarda de manhã.', vai:'c37_penrose_amarrado', cond:d => !_c37Lund(d)},
     {texto:'"Quanto você paga pra eu sair daqui?"', vai:'c37_penrose_oferta'},
@@ -222,6 +267,8 @@ c37_penrose_preso:{
     fala('Sargento Lund', 'Conrad.', null, 'Ele fala o nome como quem fala o nome de alguém com quem jogou bola na rua.'),
     fala('Sargento Lund', 'O seu pai me deu a primeira bicicleta da Guarda. Eu pedalo nela até hoje.', 'baixo'),
     'O Penrose estende os pulsos sozinho, sem ninguém pedir, e olha pro chão.',
+    d => Historia.jaAconteceu('c37_o_pedido') ? 'O Lund pega a folha do pedido de cima do caixote, lê devagar e para na linha do endereço.' : '',
+    d => Historia.jaAconteceu('c37_o_pedido') ? fala('Sargento Lund', 'Saffron. Isso eu não alcanço nem de bicicleta.', 'baixo') : '',
     d => _c37Aliados(d).includes('brody') ? 'Do lado de fora, os doze estivadores de Slateport seguram o barco no cais pela corda, e o homem do motor sai com as mãos pra cima.' : 'Do lado de fora, o barco liga o motor e vai embora vazio, sem luz, pro mar aberto.'
   ],
   ef:{flag:['sv_penrose_preso', 'sv_rec_milotic'], executar:d => _c37Volta(d),
@@ -263,6 +310,7 @@ c37_penrose_oferta:{
 c37_penrose_pagou:{
   texto:[
     'Ele conta o dinheiro em cima de um caixote, nota por nota, e te entrega o bolo com a Pokébola da fita lilás por cima.',
+    d => Historia.jaAconteceu('c37_o_pedido') ? 'A folha do pedido ele pega de volta de cima do caixote, dobra em quatro e guarda no paletó, sem olhar pra você.' : '',
     'O homem do barco entra e começa a levar os caixotes. Um por um. LILYCOVE. ECRUTEAK. FORTREE.',
     d => (d.flags.sv_mochila_subiu || d.flags.sv_ovos_subiram || d.flags.sv_turma_subiu) ? 'Leva também o que você não segurou nas outras ilhas. Você vê sair pela porta, e não diz nada.' : '',
     'O barco vai embora sem luz. O Penrose vai embora nele, de terno branco, acenando da proa, como o velho da varanda da Ilha Dois acena pra todo mundo que passa.'
@@ -296,9 +344,17 @@ c37_os_caixotes:{
     'Vinte e três Pokébolas com etiqueta de cidade de longe e preço de contador. Você tira as etiquetas uma por uma, e no fim tem um monte de papel no chão e vinte e três Pokébolas que não valem nada pra ninguém, só pra quem é dono.',
     'A da Milotic você guarda separada, no bolso de dentro, com a fita lilás.',
     d => d.flags.sv_mochila_subiu ? 'A mochila de Apricorn vai junto, pendurada no seu ombro, batendo bola com bola a cada passo.' : '',
-    d => d.flags.sv_ovos_subiram ? 'A caixa térmica você liga na tomada do armazém antes de qualquer coisa. A luzinha acende.' : ''
+    d => d.flags.sv_ovos_subiram ? 'A caixa térmica você liga na tomada do armazém antes de qualquer coisa. A luzinha acende.' : '',
+    d => Historia.jaAconteceu('c37_o_pedido')
+      ? 'A folha do pedido ficou em cima do caixote onde o Penrose alisou. Você dobra em quatro e guarda.'
+      : 'Embaixo do último caixote, numa pasta de papelão, tem uma folha de papel bom, dobrada em quatro.',
+    ...C37_PEDIDO.map(l => d => Historia.jaAconteceu('c37_o_pedido') ? '' : (typeof l === 'function' ? l(d) : l))
   ],
-  ef:{rep:{eixo:'bom', delta:1, motivo:'Tirou as etiquetas de preço dos Pokémon roubados no armazém da Ilha Cinco'}},
+  ef:{flag:['sv_viu_o_pedido', 'sv_pedido_no_bolso'], itens:{'Folha do pedido':1},
+      rep:{eixo:'bom', delta:1, motivo:'Tirou as etiquetas de preço dos Pokémon roubados no armazém da Ilha Cinco'},
+      registrar:d => Historia.jaAconteceu('c37_o_pedido')
+        ? 'Guardou no bolso a folha do pedido que o Penrose deixou em cima do caixote.'
+        : 'Achou embaixo do último caixote o pedido de quem compra: Instituto de Diversidade Genética de Kanto, Registro 11.402, Rua do Comércio, 118, sala 704, Saffron. Coleta de matriz fora da área de convênio. Remessa sul: Ilhas Sevii. Remessa norte: Ilhas do Redemoinho.'},
   escolhas:[
     {texto:'Esperar o dia clarear na porta do armazém.', vai:'c37_o_amanhecer'}
   ]

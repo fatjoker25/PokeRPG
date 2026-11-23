@@ -3371,6 +3371,27 @@ a 38; o desenho de cada um do elenco está em `docs/SEVII.md`.
   um tem a flag de quando volta; o que não volta sai do time do dono no
   torneio (`Sevii.semDoDono`). O que escapa num capítulo tem segunda
   chance no armazém (`sv_*_subiu`, `_c37Volta`).
+- **O gancho da história principal** (foi pedido assim: o pós-jogo
+  liga na principal e deixa um gancho pequeno pra próxima região).
+  Quem escolhe o que a Maré pega é a Comissão de Kanto, com outro nome:
+  a lista batida à máquina aparece na fábrica (35, `sv_viu_a_lista`) e
+  no farol (36, `sv_viu_a_lista_no_farol`), e no armazém (37) está o
+  pedido original (`C37_PEDIDO`): Instituto de Diversidade Genética de
+  Kanto, o mesmo Registro 11.402 e a mesma sala 704 da CGRB, "coleta de
+  matriz fora da área de convênio" — do lado de cá do mar não tem
+  convênio da Fiscalização, e pra eles isso é coleta, não roubo. O
+  Penrose mostra o pedido se você pergunta (`c37_o_pedido`); senão ele
+  fica embaixo do último caixote (`c37_os_caixotes`), menos pra quem
+  aceita o dinheiro, que devolve a folha. O que você reconhece sai do
+  que viu em Kanto (o 20 fechado, `sabe_do_endereco_704`,
+  `sabe_o_nome_da_comissao`, `sabe_da_matriz`, a cena dos ovos do 19,
+  `achou_o_arquivo` pras etiquetas de quatro linhas), nunca do final
+  que você teve: cada final deixa a Comissão de um jeito, e o pedido
+  vale pra todos. A última linha do pedido é o gancho pra outra região,
+  pequeno de propósito: REMESSA NORTE — ILHAS DO REDEMOINHO (Johto), que
+  o fim do 38 lembra uma vez, se a folha ficou no bolso
+  (`sv_pedido_no_bolso`, item `Folha do pedido`). Não diga mais que
+  isso do norte: o resto é da próxima região.
 - **Quem você ouviu antes volta**: o jantar do Anne (`sv_conheceu_*`,
   três por noite) decide quem aparece pra ajudar no farol e no armazém
   (o Zev, pela opinião), e a pista da Ilha Seis (o Gideon contou do

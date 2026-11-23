@@ -177,8 +177,9 @@ c38_fim:{
     'De noite a varanda da pousada da arena enche: Johto numa ponta, Hoenn na outra, e no meio quem ainda não decidiu de que lado senta.',
     d => d.flags.sv_magnus_mira ? 'O Magnus passa a noite perguntando a quem é de Hoenn quanto tempo leva o barco até Slateport. Pergunta pra todo mundo. Anota.' : '',
     d => d.flags.sv_penrose_preso ? 'Na Ilha Um, o Sargento Lund escreve uma carta por família, uma por uma, com letra grande.' : d.flags.sv_penrose_pagou ? 'Em algum lugar no mar aberto, um barco sem luz vai embora com caixote de etiqueta de preço.' : 'Em algum lugar no mar aberto, um senhor de terno branco vai embora num barco sem luz e sem caixote nenhum.',
-    'O S.S. Anne vai passar na Ilha Um de volta pra Vermilion daqui a uma semana. A balsa das ilhas, agora, vai e volta toda semana.',
-    'E o Torneio das Ilhas, diz o rapaz da cal, volta todo domingo enquanto tiver gente.'
+    'O S.S. Anne vai passar na Ilha Um de volta pra Vermilion daqui a uma semana. A balsa das ilhas, agora, faz a linha inteira todo dia.',
+    'E o Torneio das Ilhas, diz o rapaz da cal, volta todo domingo enquanto tiver gente.',
+    d => d.flags.sv_pedido_no_bolso ? 'No seu bolso, a folha do armazém, dobrada em quatro. Você não precisa desdobrar pra lembrar da última linha: remessa norte, Ilhas do Redemoinho.' : ''
   ],
   ef:{registrar:'Fim da semana do Torneio das Ilhas. A balsa das ilhas vai e volta, e a arena da Ilha Sete abre todo domingo.'},
   fim:true, sai:'ilha_sete',

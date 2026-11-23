@@ -583,4 +583,6 @@ menos a Noa, que tem o Sharpedo que veio grudado num casco) e acompanha o nível
 | <img src="../sprites_nds/npcs/trainers/sevii_dekker.png" width="48"> | Dekker | Primeape, Hitmontop, Hitmonchan, Golem, Machamp |
 
 E quem não luta: o **Sargento Lund**, a Guarda das Ilhas inteira (`sevii_lund.png`), e o **Sr. Conrad Penrose**,
-dono da fábrica de conserva fechada e patrocinador do torneio (`sevii_penrose.png`).
+dono da fábrica de conserva fechada e patrocinador do torneio (`sevii_penrose.png`). Quem compra dele é a Comissão
+da história principal com outro nome, o Instituto de Diversidade Genética de Kanto (o mesmo registro e a mesma sala 704),
+pela "coleta de matriz fora da área de convênio". O pedido tem uma remessa norte: as Ilhas do Redemoinho, em Johto.

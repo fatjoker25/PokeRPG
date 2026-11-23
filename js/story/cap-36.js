@@ -193,12 +193,15 @@ c36_dentro:{
     'Encostado na bancada, um caixote de madeira com o carimbo do porto de Slateport, cheio de Pokébola: doze, com uma plaquinha de lata amarrada em cada uma, com nome de homem.',
     'Do lado, uma caixa térmica azul, desligada da tomada, com a tampa entreaberta.',
     'E um papel preso com prego na parede, escrito a lápis: ARMAZÉM 5 — QUINTA — 2H — P.',
+    d => d.flags.sv_viu_a_lista
+      ? 'No mesmo prego, uma folha batida à máquina igual à da fábrica da Ilha Um, com mais linhas riscadas. A de cima está riscada duas vezes: MILOTIC — LILYCOVE.'
+      : 'No mesmo prego, uma folha batida à máquina, um Pokémon por linha e a cidade do dono do lado. A de cima está riscada duas vezes: MILOTIC — LILYCOVE.',
     'Lá do alto da escada em caracol desce um homem grande, de barba, colete de vinil por cima da camiseta preta, com uma Pokébola em cada mão.',
     fala('Kaspar', 'Visita. No meu farol. Pela janela.', 'riso'),
     fala('Kaspar', 'A caixa térmica! Pela ponte, agora, pro barco!', 'grita', 'Ele grita isso pra porta dos fundos, sem tirar os olhos de você.'),
     'Um rapaz de moto que estava na porta da escada pega a caixa térmica e sai correndo pela porta dos fundos, em direção à ponte. O Kaspar fica entre você e o caixote de Slateport.'
   ],
-  ef:{flag:'sv_sabe_do_armazem', registrar:'No farol da Ilha Três: o caixote com os doze Pokémon da turma do Brody, a caixa térmica do Florian, o caderno das dívidas, e um papel na parede: ARMAZÉM 5 — QUINTA — 2H — P.'},
+  ef:{flag:['sv_sabe_do_armazem', 'sv_viu_a_lista_no_farol'], registrar:'No farol da Ilha Três: o caixote com os doze Pokémon da turma do Brody, a caixa térmica do Florian, o caderno das dívidas, e um papel na parede: ARMAZÉM 5 — QUINTA — 2H — P. No mesmo prego, a lista batida à máquina, com a Milotic riscada.'},
   escolhas:[
     {texto:'Correr atrás da caixa térmica, pela ponte.', vai:'c36_a_ponte'},
     {texto:'Ficar e enfrentar o Kaspar pelo caixote de Slateport.', vai:'c36_o_kaspar'}

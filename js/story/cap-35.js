@@ -201,13 +201,14 @@ c35_dentro:{
   texto:[
     'Da passarela dá pra ver tudo. Embaixo, em cima das esteiras de lata, uns dez moleques e meninas, de treze a dezoito anos, contando Pokébola numa caixa de madeira escrita TRÊS a carvão.',
     'Do lado da caixa, um rapaz de agasalho preto e branco e uma faixa laranja no cabelo, que só pode ser o Jory, anota num caderno de entrega velho, com o timbre da fábrica.',
+    'Pregada na tampa da caixa, uma folha batida à máquina, com letra de escritório que não combina com nada nesta fábrica: um Pokémon por linha e, do lado de cada um, a cidade do dono. Metade das linhas está riscada a lápis.',
     'E de frente pra ele, de jaqueta preta grande demais, a menina do cais.',
     fala('Noa', 'A Milotic era de uma moça que chorou no cais. Eu vi ela chorar.'),
     fala('Jory', 'Todo dono chora. É por isso que tem dono.'),
     fala('Jory', 'O barco do teu pai está na rampa do farol, Noa. Hoje a entrega é tua. A mochila da feira, no fim do cais, às duas.', 'frio'),
     'Ela pega a mochila cheia de Pokébola pendurada e sai pela porta lateral sem dizer nada. O Murkrow sai voando atrás.'
   ],
-  ef:{flag:['sv_ouviu_a_maré', 'sv_sabe_do_barco_da_noa'], registrar:'Na fábrica fechada: o Jory mandou a Noa levar a mochila da Etta pro fim do cais às duas da manhã. O barco do pai dela está na rampa do farol, na Ilha Três.'},
+  ef:{flag:['sv_ouviu_a_maré', 'sv_sabe_do_barco_da_noa', 'sv_viu_a_lista'], registrar:'Na fábrica fechada: o Jory mandou a Noa levar a mochila da Etta pro fim do cais às duas da manhã. O barco do pai dela está na rampa do farol, na Ilha Três. Na tampa da caixa, uma lista batida à máquina, com a cidade de cada dono.'},
   escolhas:[
     {texto:'Descer da passarela, na frente de todo mundo.', vai:'c35_o_jory'},
     {texto:'Sair pela janela e esperar a Noa no fim do cais.', vai:'c35_o_fim_do_cais'}
@@ -264,9 +265,10 @@ c35_comprou_a_caixa:{
     'Ele pensa menos do que devia. Moleque com fome pensa rápido em dinheiro.',
     fala('Jory', 'Quatro mil. E você não esteve aqui.'),
     'Você paga. Ele te entrega a caixa escrita TRÊS, com nove Pokébolas de gente de fora dentro, e uma etiqueta de papel em cada uma: Ecruteak, Fortree, Mauville.',
+    d => Historia.jaAconteceu('c35_dentro') ? '' : 'Na tampa, pregada, uma folha batida à máquina: um Pokémon por linha, a cidade do dono do lado, metade riscada a lápis.',
     fala('Jory', 'Os Faróis vão perguntar. Eu vou dizer que a Guarda levou. O Lund leva a fama, você leva a caixa, e todo mundo fica feliz menos o Kaspar.', 'riso')
   ],
-  ef:{dinheiro:-4000, flag:'sv_caixa_tres', itens:{'Caixa da Maré':1},
+  ef:{dinheiro:-4000, flag:['sv_caixa_tres', 'sv_viu_a_lista'], itens:{'Caixa da Maré':1},
       rep:{eixo:'ruim', delta:1, motivo:'Comprou da Maré, pela rede, a caixa de Pokémon roubados'},
       npc:{nome:'Jory', opiniao:2, memoria:'Comprou a caixa TRÊS pela rede, por quatro mil.'},
       registrar:'Comprou do Jory, pela rede, a caixa com nove Pokébolas roubadas de gente de fora.'},
@@ -291,10 +293,12 @@ c35_jory_caiu:{
     'O último do Jory cai em cima de uma esteira parada, e a esteira range sozinha por um metro.',
     'A molecada da roda olha pro Jory. O Jory olha pra caixa TRÊS.',
     fala('Jory', 'Leva. A caixa. Nove de gente de fora.', null, 'Ele empurra a caixa com o pé.'),
+    d => Historia.jaAconteceu('c35_dentro') ? '' : 'Na tampa da caixa, pregada, uma folha batida à máquina: um Pokémon por linha, a cidade do dono do lado, metade riscada a lápis.',
+    fala('Jory', 'A lista vem dos Faróis toda segunda. Batida à máquina. Ninguém da Maré tem máquina.'),
     fala('Jory', 'A mochila da feira não está aqui. Está com a Noa, no fim do cais, pro bote das duas. A Milotic e a caixa dos ovos já subiram ontem, pros Faróis. O Kaspar escolhe o que fica com ele e o que vai pro homem do armazém.', 'baixo'),
     fala('Jory', 'Eu nunca vi o homem do armazém. Ninguém da Maré viu. A gente só vê o barco sem luz.')
   ],
-  ef:{flag:['sv_jory_vencido', 'sv_caixa_tres', 'sv_sabe_dos_farois'], itens:{'Caixa da Maré':1},
+  ef:{flag:['sv_jory_vencido', 'sv_caixa_tres', 'sv_sabe_dos_farois', 'sv_viu_a_lista'], itens:{'Caixa da Maré':1},
       rep:{eixo:'bom', delta:1, motivo:'Ganhou do Jory na fábrica fechada e tirou da Maré a caixa de Pokémon roubados'},
       registrar:'Ganhou do Jory na fábrica. Ficou com a caixa de nove Pokébolas roubadas. A Milotic e os ovos já subiram pros Faróis; acima dos Faróis tem um homem do armazém que a Maré nunca viu.'},
   escolhas:[
