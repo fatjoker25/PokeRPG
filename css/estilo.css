@@ -198,10 +198,10 @@ body{
 }
 @media (max-width:760px){
   .topo{padding:7px 9px 7px 7px;gap:7px 8px;border-radius:14px}
-  /* o nome cede espaço aos seis botões (e quebra a linha por dentro)
-     até sobrar menos de 130 px pra ele: só aí os botões descem pra
-     linha de baixo, o que acontece em tela de 375 px pra baixo */
-  .topo-quem{flex:1 1 0;min-width:130px}
+  /* o nome cede espaço aos sete botões (e quebra a linha por dentro)
+     até sobrar menos de 120 px pra ele: só aí os botões descem pra
+     linha de baixo, o que acontece em tela de 385 px pra baixo */
+  .topo-quem{flex:1 1 0;min-width:120px}
   .topo-quem{gap:8px}
   .topo-rosto{width:34px;height:34px}
   .topo h1{font-size:15.5px}

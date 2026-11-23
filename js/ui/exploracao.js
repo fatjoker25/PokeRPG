@@ -319,7 +319,8 @@ const Exploracao = {
     return n ? n[1] : L.nome.replace(/^Monte da /, 'Mt. ').replace(/^Túnel da Rocha$/, 'Túnel')
       .replace(/^Caminho da Vitória$/, 'C. Vitória').replace(/^Floresta de Viridian$/, 'Floresta');
   },
-  mapa(origem, regiao){
+  /* foco: o lugar que abre escolhido (o "Ver no mapa" das Missões) */
+  mapa(origem, regiao, foco){
     const aqui = Estado.dados.local;
     /* a página: a da região onde você está, ou a que a aba escolheu */
     const reg = regiao || this.regiaoNoMapa(aqui);
@@ -376,6 +377,7 @@ const Exploracao = {
     /* o topo é o de aparelho: da mochila volta pra mochila; o da parede
        é do Centro, e volta pro balcão quando foi aberto lá */
     const barra = origem === 'mochila' ? UI.abasMochila('mapa')
+      : origem === 'missoes' && typeof Missoes !== 'undefined' ? Missoes.barraDoMapa()
       : UI.barraDoCentro('Mapa da parede', 'mapa', origem === 'centro' && this.temCentro(L));
     /* a aba das duas páginas, pra quem já tem a passagem das ilhas */
     const comIlhas = Mundo.conhecido('ilha_um');
@@ -383,7 +385,7 @@ const Exploracao = {
     const abas = comIlhas ? `<div class="mapa-abas" role="tablist" aria-label="Região do mapa">${['kanto', 'sevii'].map(r =>
       `<button class="mapa-aba${r === reg ? ' ativa' : ''}" role="tab" aria-selected="${r === reg}" ${r === reg ? 'disabled' : `onclick="Exploracao.mapa(Exploracao._origem, '${r}')"`}>${r === 'sevii' ? 'Ilhas Sevii' : 'Kanto'}</button>`).join('')}</div>` : '';
     UI.modal('', barra + `<div class="mapa-kanto${reg === 'sevii' ? ' sevii' : ''}">
-      <div class="mapa-topo"><b>${nomeReg}</b><span>${origem === 'mochila'
+      <div class="mapa-topo"><b>${nomeReg}</b><span>${origem === 'mochila' || origem === 'missoes'
         ? `você está ${UI.esc(emLocal(aqui))}` : `Centro Pokémon de ${UI.esc(L.nome)}`}</span></div>
       ${abas}
       <svg viewBox="0 0 284 226" role="img" aria-label="Mapa de ${nomeReg}">
@@ -396,7 +398,7 @@ const Exploracao = {
       </div>
       <div id="mapa-info" class="mapa-info" aria-live="polite"></div>
     </div>`, false, 'mapa');
-    this.mapaInfo(this.regiaoNoMapa(aqui) === reg ? aqui : (reg === 'sevii' ? 'ilha_um' : 'vermilion'));
+    this.mapaInfo(foco && mostra(foco) ? foco : this.regiaoNoMapa(aqui) === reg ? aqui : (reg === 'sevii' ? 'ilha_um' : 'vermilion'));
   },
 
   /* a ficha do lugar tocado no mapa: o que é, o que liga, se você já

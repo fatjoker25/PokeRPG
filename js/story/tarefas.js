@@ -6,21 +6,21 @@
    aparece na tela do lugar, na seção Tarefas, com o rosto numa moeda e
    a marca (! tem um pedido, ✓ está pronto pra entregar, … ainda espera);
    o passo de fora da cidade aparece no lugar onde ele se faz, com o
-   rosto de quem pediu; e o Diário guarda o que cada um pediu, como
-   memória: o que a pessoa disse, nunca a solução.
+   rosto de quem pediu; e a aba Missões (missoes.js) guarda o que cada
+   um pediu, como memória: o que a pessoa disse, nunca a solução.
 
    Cada tarefa:
      id, cidade (onde mora quem pede), quem (o nome; o rosto é
      trainers/<arq>), quadro ([x, y, lado] da cabeça no desenho de
      80 px, que a moeda recorta), f (mulher), tipo ('resgate',
-     'coleta', 'entrega', 'mostrar'), titulo (a linha do Diário), desde
+     'coleta', 'entrega', 'mostrar'), titulo (a linha das Missões), desde
      (a posição na jornada em que ela aparece, por capNaJornada) ou
      fase (a das Ilhas Sevii, Sevii.fase); contato {rotulo, falas}, de
      quem tem telefone e deixa o número na volta;
      oferta {titulo, sub}: como a pessoa aparece antes de pedir;
      pedido (as falas), aceitar e recusar (os botões), recusou (o que
      ela diz), entrega (o item que ela põe na sua mão, na entrega);
-     lembrete: o que ela pediu, como você lembra (o Diário);
+     lembrete: o que ela pediu, como você lembra (a aba Missões);
      passo: o que se faz fora da cidade — onde, titulo, sub, texto e
        escolhas; na coleta, `item` e `meta`; no resgate, `luta` (quem
        está em volta do Pokémon perdido) depois de achar;
@@ -603,7 +603,7 @@ const Tarefas = {
     if (!this.aberta(t.id, d) || !this.passoFeito(t, d)) return false;
     try { return !t.volta.requer || t.volta.requer(d); } catch(e){ return false; }
   },
-  /* quanto falta, pro Diário e pra tela do passo ("2 de 3") */
+  /* quanto falta, pras Missões e pra tela do passo ("2 de 3") */
   progresso(t, d){
     if (t.tipo !== 'coleta' || !t.passo) return null;
     return {tem:Math.min(t.passo.meta, Estado.contaItem(t.passo.item)), meta:t.passo.meta, item:t.passo.item};
@@ -862,23 +862,6 @@ const Tarefas = {
     const r = typeof retratoDe === 'function' ? retratoDe(t.quem) : null;
     return `<div class="tf-selo">${this.moeda(r, null, null, t.quadro)}
       <span class="tf-selo-t"><small>Tarefa cumprida</small><b>${UI.esc(t.titulo)}</b></span><span class="tf-selo-ok" aria-hidden="true">✓</span></div>`;
-  },
-
-  /* ---------- o Diário: o que cada um pediu, como você lembra ---------- */
-  htmlDiario(){
-    const d = Estado.dados;
-    if (!d) return '';
-    const abertas = TAREFAS.filter(t => this.aberta(t.id, d)), feitas = TAREFAS.filter(t => this.feita(t.id, d));
-    if (!abertas.length && !feitas.length) return '';
-    const rosto = t => this.moeda(typeof retratoDe === 'function' ? retratoDe(t.quem) : null, null, 'pequena', t.quadro);
-    const linha = t => {
-      const p = this.progresso(t, d), pronta = this.pronta(t, d);
-      return `<li class="tf-diario${pronta ? ' pronta' : ''}">${rosto(t)}<span class="tf-d-txt"><b>${UI.esc(t.titulo)}${pronta ? ' <em>pronta pra entregar</em>' : ''}</b>
-        <span>${UI.esc(t.lembrete)}</span>${p ? `<small>${UI.esc(p.item)}: ${p.tem} de ${p.meta}</small>` : ''}</span></li>`;
-    };
-    return `<h3>Tarefas da cidade</h3>
-      ${abertas.length ? `<ul class="tf-lista">${abertas.map(linha).join('')}</ul>` : '<p class="nada">Nenhuma em aberto.</p>'}
-      ${feitas.length ? `<p class="tf-feitas"><span>Cumpridas</span>${feitas.map(t => `<span class="tf-feita" title="${UI.esc(t.titulo)}">${rosto(t)}${UI.esc(t.quem)}</span>`).join('')}</p>` : ''}`;
   },
 
   /* tudo o que se fala aqui, pra conferência (chk-baloes) */

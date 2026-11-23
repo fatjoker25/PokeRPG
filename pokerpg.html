@@ -207,10 +207,10 @@ body{
 }
 @media (max-width:760px){
   .topo{padding:7px 9px 7px 7px;gap:7px 8px;border-radius:14px}
-  /* o nome cede espaço aos seis botões (e quebra a linha por dentro)
-     até sobrar menos de 130 px pra ele: só aí os botões descem pra
-     linha de baixo, o que acontece em tela de 375 px pra baixo */
-  .topo-quem{flex:1 1 0;min-width:130px}
+  /* o nome cede espaço aos sete botões (e quebra a linha por dentro)
+     até sobrar menos de 120 px pra ele: só aí os botões descem pra
+     linha de baixo, o que acontece em tela de 385 px pra baixo */
+  .topo-quem{flex:1 1 0;min-width:120px}
   .topo-quem{gap:8px}
   .topo-rosto{width:34px;height:34px}
   .topo h1{font-size:15.5px}
@@ -7446,10 +7446,12 @@ body.com-cenario .topo{
   .topo-rosto{width:36px;height:36px;box-shadow:0 0 0 2px var(--bg), 0 0 0 3.5px var(--destaque), 0 0 14px -3px var(--destaque-sombra)}
   .topo h1{font-size:16px}
   .topo-rep{font-size:8.5px;padding:1px 6px 0;margin-top:3px;letter-spacing:.1em}
-  /* os seis botões cabem na linha do nome a partir de 385 px, como antes */
-  .topo-acoes{gap:3px}
-  .btn.mini.topo-bt{padding:3px;border-radius:10px}
-  .topo-bt svg.topo-ic{width:24px;height:24px;padding:4.5px;border-radius:8px}
+  /* os sete botões cabem na linha do nome a partir de 390 px, como os
+     seis cabiam: 29 px cada (o desenho de 23 com o mesmo traço de 15 de
+     antes, que só perdeu a folga), 2 px entre eles, e o nome cede até 120 */
+  .topo-acoes{gap:2px}
+  .btn.mini.topo-bt{padding:2px;border-radius:10px}
+  .topo-bt svg.topo-ic{width:23px;height:23px;padding:4px;border-radius:8px}
   .topo-bt .topo-conta{top:-4px;left:auto;right:-3px;min-width:14px;height:14px;padding:0 3px;font-size:9px}
   .topo-chip{font-size:12px;padding:2px 9px 2px 3px;line-height:18px}
   .topo-chip svg.topo-ic{width:18px;height:18px;padding:3px}
@@ -8235,23 +8237,8 @@ h3.sec-tarefas{--sec:#c39bff}
 @keyframes tf-carimbo{from{opacity:0;transform:rotate(-30deg) scale(2.2)}}
 @media (prefers-reduced-motion: reduce){ .tf-selo, .tf-selo-ok{animation:none} }
 
-/* ---------- o Diário: o que cada um pediu ---------- */
-.tf-lista{list-style:none;margin:0 0 8px;padding:0;display:grid;gap:8px}
-.tf-diario{
-  display:grid;grid-template-columns:auto 1fr;align-items:start;gap:12px;padding:10px 12px;border-radius:12px;
-  background:color-mix(in srgb, var(--painel, #10262a) 88%, #a77df0);border:1px solid color-mix(in srgb, #a77df0 30%, var(--borda, #2a4a50));
-}
-.tf-diario.pronta{border-color:color-mix(in srgb, #3cc785 60%, transparent)}
-.tf-diario .tf-moeda{width:34px;height:34px}
-.tf-d-txt{display:grid;gap:3px;min-width:0;font-size:13.5px;line-height:1.45}
-.tf-d-txt b{font:700 14px/1.3 var(--letra-hud, var(--fonte))}
-.tf-d-txt b em{font-style:normal;font-size:11px;font-weight:800;letter-spacing:.06em;margin-left:6px;padding:2px 7px;border-radius:99px;color:#05301a;background:#7fe3ad;vertical-align:1px}
-.tf-d-txt small{font:700 12px/1.2 var(--letra-hud, var(--fonte));color:#cdb6ff;font-variant-numeric:tabular-nums}
+/* a moeda pequena: as tarefas cumpridas, na aba Missões */
 .tf-moeda.pequena{width:30px;height:30px}
-.tf-feitas{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin:6px 0 4px;font:700 13px/1.2 var(--letra-hud, var(--fonte))}
-.tf-feitas > span:first-child{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--texto-fraco, #a9c0bd)}
-.tf-feita{display:inline-flex;align-items:center;gap:6px}
-.tf-feita .tf-moeda{--ac:#3cc785}
 
 @media (max-width:600px){
   .tf-moeda{width:34px;height:34px}
@@ -8260,6 +8247,228 @@ h3.sec-tarefas{--sec:#c39bff}
   .tf-prog-nome{grid-area:nome}
   .tf-prog-n{grid-area:n}
   .tf-prog-barra{grid-area:barra}
+}
+
+</style>
+<style>
+/* ============================================================
+   MISSÕES (missoes.js)
+   A janela das missões em aberto. Em cima, a da história: o capítulo
+   num cartão dourado com a medalha do número (o ouro do logo), a
+   chamada do lugar onde ele espera, ou, em andamento, o título e o fio
+   (a pergunta e as pontas numa trilha). Embaixo, as secundárias, um
+   cartão por missão na cor do jeito dela (a tarefa no lilás da seção
+   Tarefas, o PokéNav no verde do aparelho, o convite no âmbar, o
+   desafio no dourado do ginásio, a rede no vermelho dela, a intuição
+   no lilás da lua): o rosto de quem pediu numa moeda, o que a pessoa
+   disse, o passo de agora, onde e o prazo. A pronta acende no verde.
+   ============================================================ */
+.modal.missoes{max-width:680px}
+
+/* ---------- a conta, no alto ---------- */
+.ms-resumo{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 2px}
+.ms-conta{
+  display:inline-flex;align-items:center;gap:7px;padding:4px 12px 4px 5px;border-radius:999px;
+  font:700 12.5px/1.2 var(--letra-hud, var(--fonte));color:var(--texto);
+  background:var(--vidro-fundo, rgba(0,0,0,.2));border:1px solid var(--fio, rgba(255,255,255,.12));
+}
+.ms-conta b{
+  display:inline-grid;place-items:center;min-width:22px;height:22px;padding:0 6px;border-radius:999px;
+  font-weight:900;font-variant-numeric:tabular-nums;color:#3a1200;
+  background:linear-gradient(180deg, #ffc4ad, #ff7a52);box-shadow:inset 0 -2px 0 rgba(0,0,0,.14);
+}
+.ms-conta.pronta b{color:#05301a;background:linear-gradient(180deg, #b8f5d2, #34c27a)}
+h3.ms-sec small{
+  display:inline-grid;place-items:center;min-width:20px;height:20px;padding:0 6px;margin-left:2px;border-radius:999px;
+  font:800 11.5px/1 var(--letra-hud, var(--fonte));font-variant-numeric:tabular-nums;color:var(--texto);
+  background:color-mix(in srgb, var(--ac, #ff7a52) 26%, var(--vidro-fundo, transparent));
+  border:1px solid color-mix(in srgb, var(--ac, #ff7a52) 50%, transparent);
+}
+.ms-nada{margin:4px 0 6px;padding:12px 14px;border-radius:14px;font-size:14px;color:var(--texto-fraco);
+  border:1.5px dashed var(--fio, rgba(255,255,255,.14))}
+
+/* ---------- a história ---------- */
+.ms-historia{
+  position:relative;display:grid;grid-template-columns:auto minmax(0, 1fr);gap:14px;align-items:start;
+  padding:16px 18px 16px 14px;border-radius:18px;overflow:hidden;isolation:isolate;
+  background:
+    radial-gradient(120% 150% at 0% 0%, color-mix(in srgb, var(--destaque, #ffd429) 20%, transparent), transparent 58%),
+    linear-gradient(180deg, color-mix(in srgb, var(--painel-2, var(--painel)) 90%, var(--destaque, #ffd429)), var(--vidro-fundo, rgba(0,0,0,.2)));
+  border:1.5px solid color-mix(in srgb, var(--destaque, #ffd429) 55%, var(--borda, #2f6076));
+  box-shadow:var(--lume, none), 0 12px 28px -18px color-mix(in srgb, var(--destaque, #ffd429) 80%, transparent);
+}
+/* a exclamação grande, apagada, no canto: é a missão do jogo */
+.ms-historia::after{
+  content:'!';position:absolute;z-index:-1;right:14px;top:-18px;
+  font:400 118px/1 var(--letra-pixel, monospace);color:var(--destaque, #ffd429);opacity:.07;pointer-events:none;
+}
+.ms-historia.fim{border-color:var(--fio-forte, rgba(255,255,255,.2));box-shadow:var(--lume, none)}
+.ms-historia.fim::after{content:none}
+.ms-medalha{
+  display:grid;place-items:center;width:56px;height:56px;border-radius:50%;
+  color:#3a2a00;font:700 25px/1 var(--letra-titulo, var(--fonte));font-variant-numeric:tabular-nums;
+  background:
+    radial-gradient(circle at 32% 26%, rgba(255,250,214,.95) 0 13%, rgba(255,250,214,0) 42%),
+    linear-gradient(180deg, #ffe46b, #d6a40c);
+  box-shadow:inset 0 0 0 2px rgba(255,255,255,.5), inset 0 -4px 0 rgba(0,0,0,.16),
+             0 4px 0 #8a6a00, 0 12px 20px -10px rgba(0,0,0,.85);
+}
+.ms-medalha.romano{font-size:19px;letter-spacing:.02em}
+.ms-medalha svg.icone{width:28px;height:28px;color:#3a2a00}
+.ms-historia.fechada .ms-medalha{
+  background:radial-gradient(circle at 32% 26%, rgba(255,255,255,.6) 0 13%, rgba(255,255,255,0) 42%), linear-gradient(180deg, #b9bfd3, #7b839c);
+  box-shadow:inset 0 0 0 2px rgba(255,255,255,.4), inset 0 -4px 0 rgba(0,0,0,.16), 0 4px 0 #4b5268, 0 12px 20px -10px rgba(0,0,0,.85);
+  color:#232838;
+}
+.ms-historia.fim .ms-medalha{background:linear-gradient(180deg, #c9b8ff, #8f6fe0);box-shadow:inset 0 0 0 2px rgba(255,255,255,.4), 0 4px 0 #4b3790;color:#fff}
+.ms-historia.fim .ms-medalha svg.icone{color:#fff}
+.ms-h-corpo{min-width:0}
+.ms-olho{
+  display:block;font:800 11px/1.25 var(--letra-hud, var(--fonte));letter-spacing:.14em;text-transform:uppercase;
+  color:color-mix(in srgb, var(--destaque, #ffd429) 82%, #fff);
+}
+.ms-historia.fechada .ms-olho{color:var(--texto-fraco)}
+.ms-h-tit{display:block;margin:5px 0 4px;font:700 21px/1.2 var(--letra-titulo, var(--fonte));color:var(--texto);text-wrap:balance}
+.ms-h-txt{margin:4px 0 0;font-size:14.5px;line-height:1.55;color:color-mix(in srgb, var(--texto) 85%, var(--texto-fraco))}
+/* a chamada do lugar: o que se vê de lá, na letra de ler */
+.ms-chamada{margin:7px 0 4px;font-size:15.5px;line-height:1.55;font-style:italic;color:var(--texto);text-wrap:pretty}
+
+/* o fio: a pergunta com o fio dourado e as pontas numa trilha */
+.ms-fio{margin-top:12px;padding:12px 14px 13px;border-radius:14px;background:var(--vidro-fundo, rgba(0,0,0,.2));border:1px solid var(--fio, rgba(255,255,255,.12))}
+.ms-pergunta{margin:0 0 11px;padding-left:12px;border-left:3px solid var(--destaque, #ffd429);
+  font-size:15px;line-height:1.5;font-style:italic;color:var(--texto)}
+.ms-pontas{list-style:none;margin:0;padding:0;display:grid;gap:11px}
+.ms-pontas li{position:relative;display:grid;gap:2px;padding-left:22px}
+.ms-pontas li::before{
+  content:'';position:absolute;left:3px;top:5px;width:10px;height:10px;border-radius:50%;
+  background:var(--destaque, #ffd429);box-shadow:0 0 0 3px color-mix(in srgb, var(--destaque, #ffd429) 22%, transparent);
+}
+.ms-pontas li:not(:last-child)::after{
+  content:'';position:absolute;left:7.5px;top:19px;bottom:-9px;width:1px;
+  background:linear-gradient(180deg, color-mix(in srgb, var(--destaque, #ffd429) 55%, transparent), var(--fio, rgba(255,255,255,.12)));
+}
+.ms-pontas b{font:700 13.5px/1.3 var(--letra-hud, var(--fonte));color:var(--texto)}
+.ms-pontas span{font-size:13.5px;line-height:1.5;color:color-mix(in srgb, var(--texto) 82%, var(--texto-fraco))}
+.ms-fio-nada{margin:0;font-size:13.5px;color:var(--texto-fraco)}
+
+/* ---------- os selos: onde, quando, o prazo e a porta fechada ---------- */
+.ms-meta{display:flex;flex-wrap:wrap;gap:6px 8px;margin-top:8px}
+.ms-onde, .ms-trava, .ms-quando, .ms-prazo{
+  display:inline-flex;align-items:center;gap:5px;max-width:100%;padding:3px 10px 3px 5px;border-radius:999px;
+  font:700 12px/1.25 var(--letra-hud, var(--fonte));color:var(--texto);
+  background:var(--vidro-fundo, rgba(0,0,0,.2));border:1px solid var(--fio, rgba(255,255,255,.12));
+}
+.ms-onde svg.icone, .ms-trava svg.icone, .ms-quando svg.icone, .ms-prazo svg.icone{flex:0 0 auto;width:16px;height:16px;color:var(--ac, currentColor)}
+.ms-onde.aqui{border-color:color-mix(in srgb, #3cc785 60%, transparent);background:color-mix(in srgb, #3cc785 14%, var(--vidro-fundo, transparent))}
+.ms-trava{color:#ffdcd3;border-color:color-mix(in srgb, #e8526a 55%, transparent);background:color-mix(in srgb, #e8526a 14%, var(--vidro-fundo, transparent))}
+.ms-prazo{font-variant-numeric:tabular-nums}
+.ms-prazo.urgente{color:#ffe2dc;border-color:color-mix(in srgb, #e8526a 62%, transparent);background:color-mix(in srgb, #e8526a 26%, var(--vidro-fundo, transparent))}
+.ms-prazo.urgente svg.icone{color:#ff9a8a}
+
+/* ---------- o que dá pra fazer daqui ---------- */
+.ms-acoes{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.btn.ms-bt{display:inline-flex;align-items:center;gap:8px}
+.btn.ms-bt svg.icone{width:18px;height:18px}
+.ms-mini{
+  display:inline-flex;align-items:center;gap:6px;padding:4px 12px 4px 4px;border-radius:999px;cursor:pointer;
+  font:700 12.5px/1.2 var(--letra-hud, var(--fonte));color:var(--texto);
+  background:color-mix(in srgb, var(--ac, #8d97bd) 16%, var(--vidro-fundo, rgba(0,0,0,.2)));
+  border:1px solid color-mix(in srgb, var(--ac, #8d97bd) 50%, var(--fio, transparent));
+  box-shadow:var(--lume, none), 0 2px 0 rgba(0,0,0,.32);
+  transition:background .15s ease, border-color .15s ease;
+}
+.ms-mini svg.icone{
+  width:22px;height:22px;padding:4px;border-radius:50%;color:#fff;
+  background:radial-gradient(circle at 32% 24%, rgba(255,255,255,.5) 0 16%, rgba(255,255,255,0) 44%),
+    linear-gradient(180deg, color-mix(in srgb, var(--ac, #8d97bd) 92%, #fff), color-mix(in srgb, var(--ac, #8d97bd) 70%, #000));
+}
+.ms-mini:hover, .ms-mini:focus-visible{background:color-mix(in srgb, var(--ac, #8d97bd) 28%, var(--vidro-fundo, rgba(0,0,0,.2)));
+  border-color:color-mix(in srgb, var(--ac, #8d97bd) 75%, transparent)}
+.ms-mini:active{transform:translateY(1px);box-shadow:var(--lume, none)}
+.ms-mini:focus-visible{outline:2px solid color-mix(in srgb, var(--ac, #8d97bd) 80%, #fff);outline-offset:2px}
+
+/* ---------- as secundárias ---------- */
+.ms-lista{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.ms-cartao{
+  --ac:#8d97bd;
+  display:grid;grid-template-columns:auto minmax(0, 1fr);gap:12px;align-items:start;
+  padding:13px 15px 13px 13px;border-radius:16px;
+  background:linear-gradient(180deg, color-mix(in srgb, var(--ac) 11%, var(--vidro-fundo, rgba(0,0,0,.2))), var(--vidro-fundo, rgba(0,0,0,.2)));
+  border:1px solid color-mix(in srgb, var(--ac) 40%, var(--fio, transparent));
+  box-shadow:var(--lume, none);
+}
+.ms-cartao[data-tipo="tarefa"]{--ac:#a77df0}
+.ms-cartao[data-tipo="favor"], .ms-cartao[data-tipo="missao"]{--ac:#43b581}
+.ms-cartao[data-tipo="recado"]{--ac:#f0b45a}
+.ms-cartao[data-tipo="convite"]{--ac:#ff9d4d}
+.ms-cartao[data-tipo="defesa"]{--ac:#e8b923}
+.ms-cartao[data-tipo="rede"]{--ac:#d0505e}
+.ms-cartao[data-tipo="intuicao"]{--ac:#b39ddb}
+.ms-cartao.pronta{
+  border-color:color-mix(in srgb, #3cc785 72%, transparent);
+  background:linear-gradient(180deg, color-mix(in srgb, #3cc785 15%, var(--vidro-fundo, rgba(0,0,0,.2))), var(--vidro-fundo, rgba(0,0,0,.2)));
+  box-shadow:var(--lume, none), 0 10px 22px -18px #3cc785;
+}
+/* a moeda: o rosto de quem pediu na cor do jeito da missão, ou o desenho */
+.ms-cartao > .tf-moeda{width:46px;height:46px}
+.ms-ic{
+  display:grid;place-items:center;width:46px;height:46px;border-radius:50%;color:#fff;
+  background:radial-gradient(circle at 32% 24%, rgba(255,255,255,.5) 0 16%, rgba(255,255,255,0) 44%),
+    linear-gradient(180deg, color-mix(in srgb, var(--ac) 94%, #fff), color-mix(in srgb, var(--ac) 70%, #000));
+  box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.3), inset 0 -3px 0 rgba(0,0,0,.16),
+             0 3px 0 color-mix(in srgb, var(--ac) 42%, #000), 0 8px 14px -8px rgba(0,0,0,.85);
+}
+.ms-ic svg.icone{width:24px;height:24px;stroke-width:2}
+.ms-c-corpo{min-width:0}
+.ms-c-topo{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px;min-height:20px}
+.ms-chip{font:800 10.5px/1.2 var(--letra-hud, var(--fonte));letter-spacing:.12em;text-transform:uppercase;
+  color:color-mix(in srgb, var(--ac) 62%, #fff)}
+.ms-ok{
+  flex:0 0 auto;padding:4px 10px;border-radius:999px;font:800 11.5px/1 var(--letra-hud, var(--fonte));
+  color:#05301a;background:linear-gradient(180deg, #b8f5d2, #34c27a);box-shadow:0 2px 0 #157a46;
+}
+.ms-cartao .ms-c-topo .ms-prazo{flex:0 0 auto;padding-block:2px}
+.ms-c-tit{display:block;font:700 15.5px/1.3 var(--letra-hud, var(--fonte));color:var(--texto);text-wrap:balance}
+.ms-quem{display:block;margin-top:2px;font:700 12.5px/1.3 var(--letra-hud, var(--fonte));color:var(--texto-fraco)}
+.ms-c-txt{margin:6px 0 0;font-size:14px;line-height:1.5;color:color-mix(in srgb, var(--texto) 86%, var(--texto-fraco));text-wrap:pretty}
+/* o passo de agora, com a seta na cor da missão */
+.ms-agora{display:flex;gap:7px;margin:7px 0 0;font:700 13px/1.4 var(--letra-hud, var(--fonte));color:var(--texto)}
+.ms-agora::before{content:'';flex:0 0 auto;width:0;height:0;margin-top:4px;
+  border-left:6px solid var(--ac);border-top:5px solid transparent;border-bottom:5px solid transparent}
+.ms-cartao.pronta .ms-agora::before{border-left-color:#3cc785}
+
+/* quanto falta na coleta, com o desenho do que se colhe */
+.ms-prog{
+  display:grid;grid-template-columns:auto auto minmax(40px, 1fr) auto;align-items:center;gap:8px;margin-top:9px;
+  font:700 12.5px/1.2 var(--letra-hud, var(--fonte));color:var(--texto);
+}
+.ms-prog img{width:26px;height:26px;image-rendering:pixelated}
+.ms-prog-barra{position:relative;height:8px;border-radius:99px;background:rgba(0,0,0,.3);overflow:hidden;box-shadow:inset 0 1px 2px rgba(0,0,0,.4)}
+.ms-prog-barra > i{position:absolute;inset:0 auto 0 0;width:var(--feito, 0%);border-radius:inherit;
+  background:linear-gradient(180deg, color-mix(in srgb, var(--ac) 55%, #fff), var(--ac))}
+.ms-cartao.pronta .ms-prog-barra > i{background:linear-gradient(180deg, #b8f5d2, #34c27a)}
+.ms-prog-n{font-variant-numeric:tabular-nums;color:var(--texto-fraco)}
+
+/* ---------- as tarefas cumpridas: os rostos, carimbados ---------- */
+.ms-feitas{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin:14px 0 2px;
+  font:700 13px/1.2 var(--letra-hud, var(--fonte));color:var(--texto)}
+.ms-feitas > span:first-child{flex:1 0 100%;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--texto-fraco)}
+.ms-feita{display:inline-flex;align-items:center;gap:6px}
+.ms-feita .tf-moeda{--ac:#3cc785}
+
+/* ---------- o botão do alto: a conta das prontas, no verde ---------- */
+.topo-bt .topo-conta.pronta{color:#05301a;background:linear-gradient(180deg, #9ff0c2, #34c27a)}
+
+@media (max-width:600px){
+  .ms-historia{gap:12px;padding:14px 14px 14px 12px}
+  .ms-medalha{width:46px;height:46px;font-size:21px}
+  .ms-medalha.romano{font-size:16px}
+  .ms-h-tit{font-size:19px}
+  .ms-chamada{font-size:15px}
+  .ms-cartao{gap:10px;padding:12px}
+  .ms-cartao > .tf-moeda, .ms-ic{width:40px;height:40px}
+  .ms-ic svg.icone{width:21px;height:21px}
+  .ms-c-topo{flex-wrap:wrap}
 }
 
 </style>
@@ -8342,8 +8551,13 @@ h3.sec-tarefas{--sec:#c39bff}
 /* ---------- os botões do topo: pílulas ---------- */
 .btn.mini.topo-bt{border-radius:999px;padding:4px 13px 4px 4px}
 .btn.mini.topo-bt:hover:not(:disabled){transform:none}
+/* Salvar e Ajustes, só com o desenho: o nome fica no title e no aria-label */
+@media (min-width:761px){ .btn.mini.topo-bt.so-icone{padding:4px} }
+.topo-bt.so-icone .topo-rot{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 @media (min-width:761px) and (max-width:860px){ .btn.mini.topo-bt{padding:4px} }
-@media (max-width:760px){ .btn.mini.topo-bt{padding:3px;border-radius:999px} }
+/* os sete botões na linha do nome a partir de 390 px: 2 px de borda,
+   2 px de folga entre eles (pele.css) e o desenho de 23 px */
+@media (max-width:760px){ .btn.mini.topo-bt{padding:2px;border-radius:999px} }
 .topo-chip{border-radius:999px}
 
 /* ---------- o botão: pílula com espessura ---------- */
@@ -8416,6 +8630,7 @@ h3.sec-tarefas{--sec:#c39bff}
 .topo-rep{font-family:var(--letra-hud);font-weight:800}
 
 </style>
+
 
 
 
@@ -11362,6 +11577,8 @@ const ICONE = {
   moeda:'<circle cx="12" cy="12" r="8.5"/><path d="M14.8 9.2c-.6-.9-1.6-1.4-2.8-1.4-1.6 0-2.8.9-2.8 2.1 0 2.9 5.8 1.4 5.8 4.3 0 1.2-1.2 2.1-2.9 2.1-1.3 0-2.4-.6-3-1.5M12 6.2v1.6M12 16.3v1.6"/>',
   tigela:'<path d="M3.5 11h17a8.5 8.5 0 0 1-17 0z"/><path d="M8 8.5c1-1 2.5-1.5 4-1.5s3 .5 4 1.5"/>',
   diario:'<path d="M12 6.5c-2-1.5-5-2-8-1.5v14c3-.5 6 0 8 1.5 2-1.5 5-2 8-1.5V5c-3-.5-6 0-8 1.5z"/><path d="M12 6.5V20.5"/>',
+  /* as missões em aberto: a prancheta com a exclamação de quem espera */
+  missoes:'<path d="M8.5 4.5H6.2A1.7 1.7 0 0 0 4.5 6.2v13.1A1.7 1.7 0 0 0 6.2 21h11.6a1.7 1.7 0 0 0 1.7-1.7V6.2a1.7 1.7 0 0 0-1.7-1.7h-2.3"/><rect x="8.5" y="3" width="7" height="3.2" rx="1"/><path d="M12 9.6v5.2"/><circle cx="12" cy="17.6" r="1" fill="currentColor"/>',
   /* salvar é o disquete (baixa o save num .json); carregar, o arquivo
      subindo da bandeja */
   salvar:'<path d="M5 3.5h11.5l4 4V19a1.5 1.5 0 0 1-1.5 1.5H5A1.5 1.5 0 0 1 3.5 19V5A1.5 1.5 0 0 1 5 3.5z"/><path d="M8 3.5v5h7.5v-5M7 20.5v-6h10v6"/>',
@@ -11401,7 +11618,7 @@ const COR_DO_ICONE = {
   procurar:'#4caf50', vasculhar:'#f0b429', andar:'#4fc3f7', conversar:'#f48fb1', treinar:'#ff7043',
   pescar:'#42a5f5', acampar:'#c49a6c', esperar:'#90a4ae', lutar:'#ef5350', troca:'#26a69a',
   agenda:'#ffca28', convite:'#ffb74d', revanche:'#ff7043', trancado:'#7d88a8',
-  mural:'#ffb74d', pc:'#4dd0e1', mapa:'#66bb6a', dormir:'#7986cb', diario:'#e8b923',
+  mural:'#ffb74d', pc:'#4dd0e1', mapa:'#66bb6a', dormir:'#7986cb', diario:'#e8b923', missoes:'#ff7a52',
   bola:'#4cc38a', pokedex:'#ef5350', itens:'#d9a35b', telefone:'#43b581', lua:'#b39ddb',
   seta:'#5aa7ff', voar:'#9fa8ff', alfinete:'#ffd54f', olho:'#90caf9', pergunta:'#8c9eff', dado:'#4dd0e1', chama:'#a77bff', tigela:'#d9a35b',
   salvar:'#64b5f6', carregar:'#81c784', patrulha:'#9fb3c8', sino:'#ffca28', sino_mudo:'#90a4ae',
@@ -120322,21 +120539,21 @@ const CopaSevii = {
    aparece na tela do lugar, na seção Tarefas, com o rosto numa moeda e
    a marca (! tem um pedido, ✓ está pronto pra entregar, … ainda espera);
    o passo de fora da cidade aparece no lugar onde ele se faz, com o
-   rosto de quem pediu; e o Diário guarda o que cada um pediu, como
-   memória: o que a pessoa disse, nunca a solução.
+   rosto de quem pediu; e a aba Missões (missoes.js) guarda o que cada
+   um pediu, como memória: o que a pessoa disse, nunca a solução.
 
    Cada tarefa:
      id, cidade (onde mora quem pede), quem (o nome; o rosto é
      trainers/<arq>), quadro ([x, y, lado] da cabeça no desenho de
      80 px, que a moeda recorta), f (mulher), tipo ('resgate',
-     'coleta', 'entrega', 'mostrar'), titulo (a linha do Diário), desde
+     'coleta', 'entrega', 'mostrar'), titulo (a linha das Missões), desde
      (a posição na jornada em que ela aparece, por capNaJornada) ou
      fase (a das Ilhas Sevii, Sevii.fase); contato {rotulo, falas}, de
      quem tem telefone e deixa o número na volta;
      oferta {titulo, sub}: como a pessoa aparece antes de pedir;
      pedido (as falas), aceitar e recusar (os botões), recusou (o que
      ela diz), entrega (o item que ela põe na sua mão, na entrega);
-     lembrete: o que ela pediu, como você lembra (o Diário);
+     lembrete: o que ela pediu, como você lembra (a aba Missões);
      passo: o que se faz fora da cidade — onde, titulo, sub, texto e
        escolhas; na coleta, `item` e `meta`; no resgate, `luta` (quem
        está em volta do Pokémon perdido) depois de achar;
@@ -120919,7 +121136,7 @@ const Tarefas = {
     if (!this.aberta(t.id, d) || !this.passoFeito(t, d)) return false;
     try { return !t.volta.requer || t.volta.requer(d); } catch(e){ return false; }
   },
-  /* quanto falta, pro Diário e pra tela do passo ("2 de 3") */
+  /* quanto falta, pras Missões e pra tela do passo ("2 de 3") */
   progresso(t, d){
     if (t.tipo !== 'coleta' || !t.passo) return null;
     return {tem:Math.min(t.passo.meta, Estado.contaItem(t.passo.item)), meta:t.passo.meta, item:t.passo.item};
@@ -121178,23 +121395,6 @@ const Tarefas = {
     const r = typeof retratoDe === 'function' ? retratoDe(t.quem) : null;
     return `<div class="tf-selo">${this.moeda(r, null, null, t.quadro)}
       <span class="tf-selo-t"><small>Tarefa cumprida</small><b>${UI.esc(t.titulo)}</b></span><span class="tf-selo-ok" aria-hidden="true">✓</span></div>`;
-  },
-
-  /* ---------- o Diário: o que cada um pediu, como você lembra ---------- */
-  htmlDiario(){
-    const d = Estado.dados;
-    if (!d) return '';
-    const abertas = TAREFAS.filter(t => this.aberta(t.id, d)), feitas = TAREFAS.filter(t => this.feita(t.id, d));
-    if (!abertas.length && !feitas.length) return '';
-    const rosto = t => this.moeda(typeof retratoDe === 'function' ? retratoDe(t.quem) : null, null, 'pequena', t.quadro);
-    const linha = t => {
-      const p = this.progresso(t, d), pronta = this.pronta(t, d);
-      return `<li class="tf-diario${pronta ? ' pronta' : ''}">${rosto(t)}<span class="tf-d-txt"><b>${UI.esc(t.titulo)}${pronta ? ' <em>pronta pra entregar</em>' : ''}</b>
-        <span>${UI.esc(t.lembrete)}</span>${p ? `<small>${UI.esc(p.item)}: ${p.tem} de ${p.meta}</small>` : ''}</span></li>`;
-    };
-    return `<h3>Tarefas da cidade</h3>
-      ${abertas.length ? `<ul class="tf-lista">${abertas.map(linha).join('')}</ul>` : '<p class="nada">Nenhuma em aberto.</p>'}
-      ${feitas.length ? `<p class="tf-feitas"><span>Cumpridas</span>${feitas.map(t => `<span class="tf-feita" title="${UI.esc(t.titulo)}">${rosto(t)}${UI.esc(t.quem)}</span>`).join('')}</p>` : ''}`;
   },
 
   /* tudo o que se fala aqui, pra conferência (chk-baloes) */
@@ -122629,8 +122829,8 @@ function ehFinalDeVerdade(f){ return !ehEpilogo(f) && f.id !== 'fim'; }
    losango, a conta em linhas agrupadas, o exemplo num cartão. */
 const ICONE_DA_JANELA = {bolas:'bola', regras:'dado', tutorial:'pergunta', ajustes:'engrenagem', rota:'mapa',
   diario:'diario', finais:'liga', credencial:'credenciais', centro:'centro', time:'bola',
-  salvar:'salvar', carregar:'carregar'};
-const JANELAS_DE_LER = new Set(['regras', 'tutorial', 'ajustes', 'rota', 'diario', 'finais', 'credencial']);
+  salvar:'salvar', carregar:'carregar', missoes:'missoes'};
+const JANELAS_DE_LER = new Set(['regras', 'tutorial', 'ajustes', 'rota', 'diario', 'finais', 'credencial', 'missoes']);
 
 const APARELHOS = [
   {id:'pokedex', nome:'Pokédex', item:'Pokédex', abrir:'UI.modalPokedex()',
@@ -122850,6 +123050,8 @@ const UI = {
     const botao = (icone, rot, attrs, extra) =>
       `<button class="btn mini topo-bt${extra || ''}" ${attrs} aria-label="${rot}">${svgIcone(icone, 'topo-ic')}<span class="topo-rot">${rot}</span>`;
     const numeros = Estado.temPokenav() ? Estado.numerosDisponiveis().length : 0;
+    /* as missões que só falta entregar ou contar: a conta no canto do botão */
+    const prontas = typeof Missoes !== 'undefined' ? Missoes.prontas(d) : 0;
     return `<div class="topo">
       <div class="topo-quem">
         <span class="topo-rosto${rosto ? '' : ' vazio'}" aria-hidden="true">${rosto
@@ -122872,9 +123074,13 @@ const UI = {
         ${botao('itens', 'Mochila', emLuta() ? 'disabled title="Na luta, a mochila é pela barra de ações"' : 'title="Mochila" onclick="UI.modalItens()"', numeros ? ' pisca' : '')}${
           numeros ? '<b class="topo-conta">' + numeros + '</b>' : ''}</button>
         ${botao('cartao', 'Ficha', 'title="Ficha" onclick="UI.modalFicha()"')}</button>
+        ${botao('missoes', 'Missões', `title="Missões${prontas ? `: ${prontas} pronta${prontas === 1 ? '' : 's'} pra entregar` : ''}" onclick="UI.modalMissoes()"`)}${
+          prontas ? '<b class="topo-conta pronta">' + prontas + '</b>' : ''}</button>
         ${botao('diario', 'Diário', 'title="Diário" onclick="UI.modalDiario()"')}</button>
-        ${botao('salvar', 'Salvar', 'title="Salvar: baixa o save num arquivo .json" onclick="UI.modalSalvar()"')}</button>
-        ${botao('engrenagem', 'Ajustes', 'title="Ajustes" onclick="UI.modalAjustes()"')}</button>
+        <!-- Salvar e Ajustes vão só com o desenho: com as Missões, sete
+             pílulas com nome não cabem na linha do nome -->
+        ${botao('salvar', 'Salvar', 'title="Salvar: baixa o save num arquivo .json" onclick="UI.modalSalvar()"', ' so-icone')}</button>
+        ${botao('engrenagem', 'Ajustes', 'title="Ajustes" onclick="UI.modalAjustes()"', ' so-icone')}</button>
       </div>
       ${typeof Fome !== 'undefined' ? Fome.tirarAvisos().map(a => `<div class="topo-aviso">${this.esc(a)}</div>`).join('') : ''}
     </div>`;
@@ -128460,6 +128666,11 @@ const UI = {
     return T.filter(t => eficacia(t, tipos) < 1).map(t => t + ' ×' + eficacia(t, tipos));
   },
 
+  /* as missões em aberto: o capítulo e as secundárias (missoes.js) */
+  modalMissoes(){ if (typeof Missoes !== 'undefined') Missoes.abrir(); },
+
+  /* o Diário é o que aconteceu; o que está em aberto (o capítulo, o fio
+     dele e as tarefas) mora nas Missões */
   modalDiario(){
     const log = Estado.dados.log.slice().reverse();
     /* "Time: Pikachu Nv30…" vira linha de ficha; a primeira, que é você, vai grande */
@@ -128468,18 +128679,7 @@ const UI = {
       return m ? `<p class="da-linha"><span class="da-k">${this.esc(m[1])}</span><span class="da-v">${this.esc(m[2])}</span></p>`
                : `<p class="${i ? 'da-solta' : 'da-quem'}">${this.esc(l)}</p>`;
     }).join('');
-    /* o fio do capítulo grande: a pergunta e as pontas que você já puxou (fio.js) */
-    const F = typeof Fio !== 'undefined' ? Fio.doCapitulo(Estado.dados) : null;
-    const fio = F ? `<h3>O fio do capítulo</h3><div class="diario-agora diario-fio">
-        <p class="da-solta df-pergunta">${this.esc(F.pergunta)}</p>
-        ${F.pontas.length ? F.pontas.map(p => `<p class="da-linha"><span class="da-k">${this.esc(p.nome)}</span><span class="da-v">${this.esc(p.texto)}</span></p>`).join('')
-                          : '<p class="da-solta nada">Nenhuma ponta puxada ainda.</p>'}
-      </div>` : '';
-    /* as tarefas da cidade: o que cada um pediu, como você lembra (tarefas.js) */
-    const tarefas = typeof Tarefas !== 'undefined' ? Tarefas.htmlDiario() : '';
     this.modal('Diário de campanha', `
-      ${fio}
-      ${tarefas}
       <h3>Onde você está</h3><div class="diario-agora">${resumo}</div>
       <h3>O que aconteceu</h3>
       ${log.length ? `<ol class="diario-lista">${log.map(l=>`<li><span class="dl-quando">Cap ${l.cap} · dia ${l.dia}</span><span class="dl-texto">${this.esc(l.texto)}</span></li>`).join('')}</ol>`
@@ -128664,6 +128864,7 @@ const UI = {
         <li><b>O primeiro Pokémon.</b> Os três iniciais saem da Pokébola na sua frente; escolha um e, se quiser, dê um apelido.</li>
         <li><b>A licença.</b> No Centro Pokémon (em Pallet, no laboratório). Com ela, o Centro cura de graça.</li>
         <li><b>O mapa.</b> Fora das cenas você está num lugar: <i>Onde entrar</i> são portas (Centro, loja, ginásio, sua casa), <i>O que fazer</i> gasta o tempo (vasculhar, procurar, treinar, acampar à noite) e <i>Para onde ir</i> leva ao vizinho. O capítulo seguinte aparece em <i>Aqui</i>, na cidade em que ele acontece.</li>
+        <li><b>Missões.</b> O botão do alto da tela mostra o que está em aberto: o capítulo (o que está correndo, ou onde o próximo espera) e o que as pessoas te pediram, cada uma com o que a pessoa disse e onde. A que só falta entregar acende em verde, e o botão conta quantas são.</li>
         <li><b>A luta.</b> Lutar escolhe o golpe; Mochila usa item (o item primeiro, depois quem recebe); Time troca quem está na frente; Pokédex lê o adversário. Cada golpe rola dados de seis lados: cada 4, 5 ou 6 é um acerto, e a conta aparece no registro da luta.</li>
         <li><b>Quando cair.</b> Pokémon desmaiado volta com Revive ou no Centro. Se o time inteiro cair diante de um selvagem bravo, quem apanha é você.</li>
         <li><b>Ginásio.</b> Na porta do ginásio, na cidade, na ordem que você quiser. O capítulo seguinte pede um mínimo de insígnias, e a porta fechada diz quantas faltam.</li>
@@ -129371,7 +129572,7 @@ const UI = {
       <div class="linha"><span class="k">Coleta</span><span class="v">juntar o que a pessoa pediu num lugar, uma procura de cada vez · o sucesso dá um, e o crítico, um a mais · uma das procuras costuma ser uma briga com quem guarda o melhor pedaço, que dá mais · tem coisa que só se acha de noite, e dá pra esperar a noite lá · o que você junta vai pra mochila e sai dela na entrega</span></div>
       <div class="linha"><span class="k">Entrega e mostrar</span><span class="v">levar o que a pessoa te deu até quem ela disse, e voltar pra contar · ou mostrar um Pokémon que ela quer ver, de pé no seu cinto (ele sai contente: +${MORAL_DO_MOSTRAR} de moral)</span></div>
       <div class="linha"><span class="k">Cada procura</span><span class="v">leva um período (esperar com Ração, dois), e rola o PokéNav como as outras ações do mapa</span></div>
-      <div class="linha"><span class="k">A volta</span><span class="v">dinheiro e itens, que sobem com a jornada · quem pediu passa a gostar mais de você (+${OPINIAO_DA_TAREFA}) · +1 de reputação boa · quem tem telefone deixa o número no PokéNav · o Diário guarda o que cada um pediu, do jeito que a pessoa disse, e quantos você já juntou</span></div>` : ''}
+      <div class="linha"><span class="k">A volta</span><span class="v">dinheiro e itens, que sobem com a jornada · quem pediu passa a gostar mais de você (+${OPINIAO_DA_TAREFA}) · +1 de reputação boa · quem tem telefone deixa o número no PokéNav · a aba Missões guarda o que cada um pediu, do jeito que a pessoa disse, e quantos você já juntou</span></div>` : ''}
 
       <h3>De onde vem o seu primeiro</h3>
       <div class="linha"><span class="k">Qual dos três</span><span class="v">você escolhe na hora, com os três fora da Pokébola, na sua frente · nenhuma vem escolhida</span></div>
@@ -143749,7 +143950,8 @@ const Exploracao = {
     return n ? n[1] : L.nome.replace(/^Monte da /, 'Mt. ').replace(/^Túnel da Rocha$/, 'Túnel')
       .replace(/^Caminho da Vitória$/, 'C. Vitória').replace(/^Floresta de Viridian$/, 'Floresta');
   },
-  mapa(origem, regiao){
+  /* foco: o lugar que abre escolhido (o "Ver no mapa" das Missões) */
+  mapa(origem, regiao, foco){
     const aqui = Estado.dados.local;
     /* a página: a da região onde você está, ou a que a aba escolheu */
     const reg = regiao || this.regiaoNoMapa(aqui);
@@ -143806,6 +144008,7 @@ const Exploracao = {
     /* o topo é o de aparelho: da mochila volta pra mochila; o da parede
        é do Centro, e volta pro balcão quando foi aberto lá */
     const barra = origem === 'mochila' ? UI.abasMochila('mapa')
+      : origem === 'missoes' && typeof Missoes !== 'undefined' ? Missoes.barraDoMapa()
       : UI.barraDoCentro('Mapa da parede', 'mapa', origem === 'centro' && this.temCentro(L));
     /* a aba das duas páginas, pra quem já tem a passagem das ilhas */
     const comIlhas = Mundo.conhecido('ilha_um');
@@ -143813,7 +144016,7 @@ const Exploracao = {
     const abas = comIlhas ? `<div class="mapa-abas" role="tablist" aria-label="Região do mapa">${['kanto', 'sevii'].map(r =>
       `<button class="mapa-aba${r === reg ? ' ativa' : ''}" role="tab" aria-selected="${r === reg}" ${r === reg ? 'disabled' : `onclick="Exploracao.mapa(Exploracao._origem, '${r}')"`}>${r === 'sevii' ? 'Ilhas Sevii' : 'Kanto'}</button>`).join('')}</div>` : '';
     UI.modal('', barra + `<div class="mapa-kanto${reg === 'sevii' ? ' sevii' : ''}">
-      <div class="mapa-topo"><b>${nomeReg}</b><span>${origem === 'mochila'
+      <div class="mapa-topo"><b>${nomeReg}</b><span>${origem === 'mochila' || origem === 'missoes'
         ? `você está ${UI.esc(emLocal(aqui))}` : `Centro Pokémon de ${UI.esc(L.nome)}`}</span></div>
       ${abas}
       <svg viewBox="0 0 284 226" role="img" aria-label="Mapa de ${nomeReg}">
@@ -143826,7 +144029,7 @@ const Exploracao = {
       </div>
       <div id="mapa-info" class="mapa-info" aria-live="polite"></div>
     </div>`, false, 'mapa');
-    this.mapaInfo(this.regiaoNoMapa(aqui) === reg ? aqui : (reg === 'sevii' ? 'ilha_um' : 'vermilion'));
+    this.mapaInfo(foco && mostra(foco) ? foco : this.regiaoNoMapa(aqui) === reg ? aqui : (reg === 'sevii' ? 'ilha_um' : 'vermilion'));
   },
 
   /* a ficha do lugar tocado no mapa: o que é, o que liga, se você já
@@ -144342,6 +144545,336 @@ const Exploracao = {
     if (clima) linhas.push(clima.linha);
     Batalha.iniciar(meu, selvagem, {tipo, fuga:true, clima:clima && clima.tipo});
     UI.telaBatalha(linhas);
+  }
+};
+
+
+/* ===== js/ui/missoes.js ===== */
+/* ============================================================
+   MISSÕES — o que está em aberto
+   Foi pedido assim: uma aba de missões em aberto, com a do capítulo
+   principal e as secundárias. Abre pelo botão do alto da tela
+   (UI.modalMissoes), e o desenho mora em css/missoes.css.
+
+   A da história é o capítulo:
+     andamento — você está dentro dele (cena de capítulo que não
+                 fechou): o número, o título, onde, e o fio dos
+                 capítulos grandes (fio.js), a pergunta e as pontas
+                 que você já puxou;
+     espera    — o próximo, no lugar dele (Historia.proximoDestino):
+                 o número, a chamada da âncora (ANCORAS) e o lugar, e a
+                 porta fechada se faltar insígnia (travaDoCapitulo). O
+                 título do capítulo que espera não aparece: ele aparece
+                 como uma coisa no lugar;
+     fim       — a história fechou e não tem capítulo pela frente.
+
+   As secundárias são o que alguém te pediu ou marcou, cada uma com o
+   que a pessoa disse e onde, nunca a solução:
+     tarefa   — as tarefas da cidade (tarefas.js);
+     favor    — o pedido de quem liga (pedidos.js);
+     missao   — o pedido de um contato do PokéNav (faseDaMissao);
+     recado   — quem separou alguma coisa e está numa cidade (recados.js);
+     convite  — o convite de um veterano (veteranos.js);
+     defesa   — o desafio marcado no seu ginásio ou na sua porta (defesa.js);
+     rede     — a briga que um serviço da rede comprou (rede.js);
+     intuicao — o que a intuição pede, depois que ela avisou (intuicao.js).
+   Pronta (✓) é a que só falta entregar ou contar, e o botão do alto
+   conta as prontas. Nada aqui cria registro no save: lê o que existe.
+   ============================================================ */
+
+const ORDEM_DAS_MISSOES = ['defesa', 'rede', 'favor', 'tarefa', 'missao', 'convite', 'recado', 'intuicao'];
+
+/* a etiqueta e o desenho de cada jeito de missão (o desenho sai de icones.js) */
+const TIPO_DE_MISSAO = {
+  tarefa:  {nome:'Tarefa da cidade', icone:'exclama'},
+  favor:   {nome:'Favor · PokéNav', icone:'telefone'},
+  missao:  {nome:'Pedido · PokéNav', icone:'telefone'},
+  recado:  {nome:'Recado', icone:'convite'},
+  convite: {nome:'Convite', icone:'convite'},
+  defesa:  {nome:'Desafio marcado', icone:'ginasio'},
+  rede:    {nome:'A rede', icone:'rede'},
+  intuicao:{nome:'Intuição', icone:'lua'}
+};
+
+const Missoes = {
+  /* ---------- a da história ---------- */
+  historia(d){
+    d = d || (typeof Estado !== 'undefined' ? Estado.dados : null);
+    if (!d || typeof Historia === 'undefined') return null;
+    const fechados = d.capitulosFechados || [];
+    const atual = Historia.capitulo(d.capitulo);
+    if (d.modo === 'cena' && d.cena && atual && !fechados.includes(d.capitulo)){
+      const fio = typeof Fio !== 'undefined' ? Fio.doCapitulo(d) : null;
+      return {estado:'andamento', num:d.capitulo, rotulo:this.numero(atual), titulo:atual.titulo, onde:d.local, fio};
+    }
+    const dest = Historia.proximoDestino();
+    if (!dest) return d.depoisDoFim ? {estado:'fim'} : null;
+    const cap = Historia.capitulo(dest.num);
+    const a = (typeof ANCORAS !== 'undefined' && ANCORAS[dest.num]) || {};
+    const trava = typeof travaDoCapitulo === 'function' ? travaDoCapitulo(dest.num) : null;
+    const qualquer = dest.local === '*';
+    return {estado:'espera', num:dest.num, rotulo:this.numero(cap) || 'Capítulo ' + dest.num, chamada:a.chamada || '',
+      onde:qualquer ? null : dest.local, aqui:qualquer || dest.local === d.local, trava};
+  },
+  numero(cap){ return cap ? (typeof numeroDoCapitulo === 'function' ? numeroDoCapitulo(cap) : 'Capítulo ' + cap.num) : ''; },
+
+  /* ---------- as secundárias ---------- */
+  secundarias(d){
+    d = d || (typeof Estado !== 'undefined' ? Estado.dados : null);
+    if (!d) return [];
+    const out = [];
+    const juntar = (fn) => { try { out.push(...(fn.call(this, d) || [])); } catch(e){ console.error('Missões:', e); } };
+    juntar(this.deTarefas); juntar(this.doFavor); juntar(this.dosContatos); juntar(this.dosRecados);
+    juntar(this.dosConvites); juntar(this.daDefesa); juntar(this.daRede); juntar(this.daIntuicao);
+    /* a pronta primeiro, depois a que vence antes, depois pelo jeito */
+    const ordem = m => ORDEM_DAS_MISSOES.indexOf(m.tipo);
+    return out.sort((a, b) => (b.pronta - a.pronta)
+      || ((a.prazo != null ? a.prazo : 999) - (b.prazo != null ? b.prazo : 999))
+      || (ordem(a) - ordem(b)));
+  },
+  /* quantas só falta entregar ou contar: a conta do botão do alto */
+  prontas(d){ return this.secundarias(d).filter(m => m.pronta).length; },
+
+  /* as tarefas da cidade: o que a pessoa disse, o passo de agora e onde */
+  deTarefas(d){
+    if (typeof TAREFAS === 'undefined' || typeof Tarefas === 'undefined') return [];
+    return TAREFAS.filter(t => Tarefas.aberta(t.id, d)).map(t => {
+      const pronta = Tarefas.pronta(t, d), feito = Tarefas.passoFeito(t, d);
+      const passo = t.passo && !feito;
+      const L = LOCAIS[t.cidade] || {};
+      return {tipo:'tarefa', id:t.id, titulo:t.titulo, quem:t.quem, rosto:this.rostoDe(t.quem), quadro:t.quadro,
+        texto:t.lembrete,
+        agora: pronta ? `Voltar pra ${t.quem}, ${emLocal(t.cidade)}.` : passo ? txt(t.passo.titulo) + '.' : (t.volta.falta || ''),
+        onde: passo ? t.passo.onde : t.cidade, ondeQuem: passo ? null : `${t.quem}, ${L.nome || ''}`,
+        progresso: Tarefas.progresso(t, d), pronta};
+    });
+  },
+
+  /* o pedido de quem liga: o que foi pedido, o passo da vez, o prazo */
+  doFavor(d){
+    if (typeof Pedidos === 'undefined' || typeof PEDIDOS === 'undefined') return [];
+    const p = Pedidos.atual();
+    if (!p || !PEDIDOS[p.tipo]) return [];
+    const c = typeof contatoPorId === 'function' ? contatoPorId(p.quem) : null;
+    if (!c) return [];
+    const T = PEDIDOS[p.tipo], x = Recados.contexto(c), nome = Recados.nomeNaNarracao(c);
+    const pronta = Pedidos.pronto(p), travado = Pedidos.travado(p);
+    const prazo = pronta || travado ? null : Math.max(0, p.ate - d.relogio.dia);
+    return [{tipo:'favor', id:p.quem, titulo:cap1(T.resumo(p)) + '.', quem:cap1(textoContato(c, 'nome') || nome), rosto:this.rostoDoContato(c),
+      texto:null, agora: pronta ? T.contar(p) + '.' : T.passo(x, p),
+      onde: pronta ? null : Pedidos.proximoLugar(), prazo, pronta, nav:p.quem}];
+  },
+
+  /* o pedido escrito de um contato da agenda: o que ele quer (a dica),
+     e, cumprido, ligar pra contar */
+  dosContatos(d){
+    if (!Estado.temPokenav() || typeof contatoPorId !== 'function') return [];
+    const out = [];
+    for (const c of Estado.contatosNaAgenda()){
+      if (!c.missao) continue;
+      const fase = Estado.faseDaMissao(c.id);
+      if (fase !== 'fazendo' && fase !== 'entregar') continue;
+      const nome = textoContato(c, 'nome') || '';
+      const pronta = fase === 'entregar';
+      out.push({tipo:'missao', id:c.id, titulo:`O pedido ${this.deQuem(nome)}`, quem:cap1(nome), rosto:this.rostoDoContato(c),
+        texto:txt(c.missao.dica) || '', agora: pronta ? txt(c.missao.rotuloEntrega || 'Ligar e contar') + '.' : null,
+        pronta, nav:c.id});
+    }
+    return out;
+  },
+
+  /* quem separou alguma coisa pra você e está numa cidade */
+  dosRecados(d){
+    const r = d.pokenav && d.pokenav.recados;
+    if (!r || !r.presentes || typeof contatoPorId !== 'function') return [];
+    return Object.entries(r.presentes).map(([cid, p]) => {
+      const c = contatoPorId(cid);
+      if (!c || !p || !LOCAIS[p.onde]) return null;
+      const nome = Recados.nomeNaNarracao(c);
+      return {tipo:'recado', id:cid, titulo: cid === 'casa' ? `Buscar o que ${nome} separou` : `Encontrar ${nome}`,
+        quem:cap1(textoContato(c, 'nome') || nome), rosto:this.rostoDoContato(c),
+        texto: cid === 'casa' ? 'Em cima da mesa, segundo o recado.' : 'O recado dizia que ia estar pela cidade.',
+        onde:p.onde, nav:cid};
+    }).filter(Boolean);
+  },
+
+  /* o convite que você aceitou e ainda não cumpriu */
+  dosConvites(d){
+    if (typeof VETERANOS === 'undefined' || typeof Veteranos === 'undefined') return [];
+    return VETERANOS.filter(v => v.convite && Veteranos.convidado(v.id)).map(v => ({
+      tipo:'convite', id:v.id, titulo:v.convite.titulo, quem:v.nome, rosto:this.rostoDe(v.nome),
+      texto:v.convite.sub || '', onde:v.convite.local, quando:this.horaDoConvite(v.convite.hora)}));
+  },
+  horaDoConvite(h){
+    if (!h || h.h == null) return null;
+    const hora = `${String(h.h).padStart(2, '0')}h`;
+    if (h.dia == null) return `às ${hora}`;
+    /* 0 é segunda, como no Relogio.ateODia */
+    const dia = typeof Calendario !== 'undefined' && Calendario.SEMANA ? Calendario.SEMANA[h.dia] : null;
+    return dia ? `${maiuscula(dia)}, ${hora}` : hora;
+  },
+
+  /* o desafio marcado no seu ginásio e na sua porta */
+  daDefesa(d){
+    if (typeof Defesa === 'undefined') return [];
+    const reg = d.defesa || {};
+    const out = [];
+    for (const tipo of ['lider', 'elite']){
+      const r = reg[tipo], x = r && r.desafio;
+      if (!x) continue;
+      const g = tipo === 'lider';
+      out.push({tipo:'defesa', id:tipo, titulo: g ? `Seu ginásio de ${cidadeDoGinasio(r.ginasio)}` : 'Sua porta na ala',
+        quem:x.curto || x.nome, rosto:this.rostoDe(x.curto || x.nome) || this.rostoDe(x.nome), icone: g ? 'ginasio' : 'liga',
+        texto:`${cap1(Defesa.apresentar(x))} ${g ? 'marcou desafio no ginásio' : 'pediu a sua porta'}${x.ins != null ? ', ' + Defesa.comInsignias(x.ins) : ''}.`,
+        onde: g ? r.ginasio : 'planalto', prazo:Math.max(0, x.ate - d.relogio.dia)});
+    }
+    return out;
+  },
+
+  /* a briga que a escolha de um serviço comprou, esperando no ponto */
+  daRede(d){
+    const a = d.rede && d.rede.pendente;
+    const s = a && typeof servicoDaRede === 'function' ? servicoDaRede(a.id) : null;
+    if (!s) return [];
+    return [{tipo:'rede', id:s.id, titulo:s.titulo, quem:null, icone:'rede',
+      texto:'A escolha já foi feita. Falta a briga.', onde:s.local}];
+  },
+
+  /* a intuição: só depois que ela avisou, e com as palavras dela */
+  daIntuicao(d){
+    if (typeof Intuicao === 'undefined') return [];
+    const p = Intuicao.pendente(d);
+    if (!p || !d.intuicao || d.intuicao[p] == null) return [];
+    return [{tipo:'intuicao', id:p, titulo:'A intuição', quem:null, icone:'lua',
+      texto: p === 'entrega' ? 'Uma coisa sem nome puxa você de volta a Lavender.' : 'A intuição aponta pra Lavender de novo.',
+      onde:'lavender'}];
+  },
+
+  /* ---------- rostos ---------- */
+  rostoDe(nome){ return nome && typeof retratoDe === 'function' ? retratoDe(nome) : null; },
+  /* o mesmo rosto da agenda do PokéNav (UI.navRosto) */
+  rostoDoContato(c){
+    if (!c) return null;
+    if (c.id === 'casa' && typeof retratoDaCasa === 'function') return retratoDaCasa();
+    const nome = textoContato(c, 'nome') || '';
+    return this.rostoDe(nome) || (typeof c.nome === 'string' ? this.rostoDe(c.nome) : null) || (c.falaComo ? this.rostoDe(c.falaComo) : null);
+  },
+  /* "do zelador da Torre", "de Misty" */
+  deQuem(nome){ return /^o /.test(nome) ? 'do ' + nome.slice(2) : /^a /.test(nome) ? 'da ' + nome.slice(2) : 'de ' + nome; },
+
+  /* ---------- a janela ---------- */
+  abrir(){
+    const d = Estado.dados;
+    if (!d) return;
+    const h = this.historia(d), sec = this.secundarias(d);
+    const prontas = sec.filter(m => m.pronta).length;
+    const feitas = typeof TAREFAS !== 'undefined' && typeof Tarefas !== 'undefined' ? TAREFAS.filter(t => Tarefas.feita(t.id, d)) : [];
+    const resumo = `<div class="ms-resumo" role="status">
+      <span class="ms-conta"><b>${(h && h.estado !== 'fim' ? 1 : 0) + sec.length}</b> em aberto</span>
+      ${prontas ? `<span class="ms-conta pronta"><b>${prontas}</b> ${prontas === 1 ? 'pronta' : 'prontas'} pra entregar</span>` : ''}
+    </div>`;
+    const html = `${resumo}
+      <h3 class="ms-sec">História</h3>
+      ${this.htmlHistoria(h)}
+      <h3 class="ms-sec">Secundárias${sec.length ? ` <small>${sec.length}</small>` : ''}</h3>
+      ${sec.length ? `<ul class="ms-lista">${sec.map(m => this.htmlCartao(m)).join('')}</ul>`
+                   : '<p class="ms-nada">Nenhuma em aberto.</p>'}
+      ${feitas.length ? `<div class="ms-feitas"><span>Tarefas cumpridas</span>${feitas.map(t =>
+        `<span class="ms-feita" title="${UI.esc(t.titulo)}">${Tarefas.moeda(this.rostoDe(t.quem), null, 'pequena', t.quadro)}${UI.esc(t.quem)}</span>`).join('')}</div>` : ''}`;
+    UI.modal('Missões', html, false, 'missoes');
+  },
+
+  /* o cartão da história: o capítulo que corre ou o que espera */
+  htmlHistoria(h){
+    if (!h) return '<p class="ms-nada">Nenhum capítulo em aberto.</p>';
+    if (h.estado === 'fim') return `<div class="ms-historia fim"><span class="ms-medalha" aria-hidden="true">${svgIcone('liga')}</span>
+      <div class="ms-h-corpo"><small class="ms-olho">A história</small><b class="ms-h-tit">A história de Kanto terminou.</b>
+      <p class="ms-h-txt">O que vem daqui pra frente é a estrada.</p></div></div>`;
+    const d = Estado.dados, L = h.onde ? LOCAIS[h.onde] : null;
+    /* na medalha, o número do capítulo; no caminho e nas ilhas, a parte ("II") */
+    const parte = /·\s*(\S+)\s*$/.exec(h.rotulo || '');
+    const medalha = `<span class="ms-medalha${parte ? ' romano' : ''}" aria-hidden="true"><b>${UI.esc(parte ? parte[1] : String(h.num).split('.')[0])}</b></span>`;
+    if (h.estado === 'andamento'){
+      const F = h.fio;
+      const fio = F ? `<div class="ms-fio">
+          <p class="ms-pergunta">${UI.esc(F.pergunta)}</p>
+          ${F.pontas.length ? `<ol class="ms-pontas">${F.pontas.map(p =>
+            `<li><b>${UI.esc(p.nome)}</b><span>${UI.esc(p.texto)}</span></li>`).join('')}</ol>`
+            : '<p class="ms-fio-nada">Nenhuma ponta puxada ainda.</p>'}
+        </div>` : '';
+      return `<div class="ms-historia andamento">${medalha}
+        <div class="ms-h-corpo">
+          <small class="ms-olho">${UI.esc(h.rotulo)} · em andamento</small>
+          <b class="ms-h-tit">${UI.esc(h.titulo)}</b>
+          ${L ? `<span class="ms-onde">${svgIcone('alfinete')}${UI.esc(L.nome)}</span>` : ''}
+          ${fio}
+        </div></div>`;
+    }
+    /* espera: a chamada, o lugar, a porta fechada e o que dá pra fazer daqui */
+    const emCena = d.modo === 'cena' || emLuta();
+    const temMapa = Estado.contaItem('Mapa de Kanto') > 0;
+    const botoes = [];
+    if (h.aqui && !h.trava && !emCena)
+      botoes.push(`<button class="btn destaque ms-bt" onclick="UI.fecharModal(true);Exploracao.entrarNoArco()">${svgIcone('exclama')}Seguir</button>`);
+    else if (!h.aqui && h.onde && temMapa && !emCena)
+      botoes.push(`<button class="btn ms-bt" onclick="Missoes.verNoMapa('${h.onde}')">${svgIcone('mapa')}Ver no mapa</button>`);
+    return `<div class="ms-historia espera${h.trava ? ' fechada' : ''}">${medalha}
+      <div class="ms-h-corpo">
+        <small class="ms-olho">${UI.esc(h.rotulo)} · ${h.aqui ? 'aqui' : 'espera você'}</small>
+        ${h.chamada ? `<p class="ms-chamada">${UI.esc(h.chamada)}</p>` : ''}
+        <div class="ms-meta">
+          ${L ? `<span class="ms-onde">${svgIcone('alfinete')}${UI.esc(L.nome)}</span>` : ''}
+          ${h.trava ? `<span class="ms-trava">${svgIcone('trancado')}${UI.esc(textoTrava(h.trava))}</span>` : ''}
+        </div>
+        ${botoes.length ? `<div class="ms-acoes">${botoes.join('')}</div>` : ''}
+      </div></div>`;
+  },
+
+  /* um cartão de secundária: quem pediu, o que disse, o passo de agora, onde e o prazo */
+  htmlCartao(m){
+    const T = TIPO_DE_MISSAO[m.tipo] || {nome:'', icone:'info'};
+    const L = m.onde ? LOCAIS[m.onde] : null;
+    const d = Estado.dados, emCena = d.modo === 'cena' || emLuta();
+    const moeda = m.rosto
+      ? Tarefas.moeda(m.rosto, m.pronta ? 'pronta' : null, null, m.quadro)
+      : `<span class="ms-ic" aria-hidden="true">${svgIcone(m.icone || T.icone)}</span>`;
+    const prazo = m.prazo == null ? '' : `<span class="ms-prazo${m.prazo <= 1 ? ' urgente' : ''}">${svgIcone('relogio')}${
+      m.prazo === 0 ? 'Último dia' : m.prazo === 1 ? 'Falta 1 dia' : `Faltam ${m.prazo} dias`}</span>`;
+    const prog = m.progresso ? `<div class="ms-prog" style="--feito:${Math.round(m.progresso.tem / m.progresso.meta * 100)}%">
+        ${typeof imgItem === 'function' ? imgItem(m.progresso.item) : ''}<span class="ms-prog-nome">${UI.esc(m.progresso.item)}</span>
+        <span class="ms-prog-barra" aria-hidden="true"><i></i></span><span class="ms-prog-n">${m.progresso.tem} de ${m.progresso.meta}</span></div>` : '';
+    const acoes = [];
+    if (m.nav && Estado.temPokenav() && !emLuta())
+      acoes.push(`<button class="ms-mini" onclick="UI.fecharModal(true);UI.modalNav('${UI.esc(m.nav)}')">${svgIcone('telefone')}PokéNav</button>`);
+    if (L && !m.pronta && Estado.contaItem('Mapa de Kanto') > 0 && !emCena && m.onde !== d.local)
+      acoes.push(`<button class="ms-mini" onclick="Missoes.verNoMapa('${UI.esc(m.onde)}')">${svgIcone('mapa')}Ver no mapa</button>`);
+    return `<li class="ms-cartao${m.pronta ? ' pronta' : ''}" data-tipo="${m.tipo}">
+      ${moeda}
+      <div class="ms-c-corpo">
+        <div class="ms-c-topo"><span class="ms-chip">${UI.esc(T.nome)}</span>${m.pronta ? '<span class="ms-ok">✓ Pronta</span>' : prazo}</div>
+        <b class="ms-c-tit">${UI.esc(m.titulo)}</b>
+        ${m.quem && !String(m.titulo).includes(m.quem) && !String(m.texto || '').includes(m.quem) ? `<span class="ms-quem">${UI.esc(m.quem)}</span>` : ''}
+        ${m.texto ? `<p class="ms-c-txt">${UI.esc(m.texto)}</p>` : ''}
+        ${m.agora ? `<p class="ms-agora">${UI.esc(m.agora)}</p>` : ''}
+        ${prog}
+        ${L || m.quando ? `<div class="ms-meta">${L ? `<span class="ms-onde${m.onde === d.local ? ' aqui' : ''}">${svgIcone('alfinete')}${
+          UI.esc(m.onde === d.local ? `${L.nome} · você está aqui` : L.nome)}</span>` : ''}${
+          m.quando ? `<span class="ms-quando">${svgIcone('relogio')}${UI.esc(m.quando)}</span>` : ''}</div>` : ''}
+        ${acoes.length ? `<div class="ms-acoes">${acoes.join('')}</div>` : ''}
+      </div></li>`;
+  },
+
+  /* o mapa aberto daqui volta pra cá ("‹ Missões"), com o lugar escolhido */
+  verNoMapa(id){
+    if (!LOCAIS[id] || typeof Exploracao === 'undefined') return;
+    Exploracao.mapa('missoes', Exploracao.regiaoNoMapa(id), id);
+  },
+  /* a barra do mapa aberto pelas missões */
+  barraDoMapa(){
+    return `<nav class="volta-mochila volta-missoes" aria-label="Missões">
+      <button class="aba-volta" onclick="UI.modalMissoes()">${svgIcone('missoes')}<span>Missões</span></button>
+      <span class="aparelho-aberto">${typeof imgItem === 'function' ? imgItem('Mapa de Kanto') : svgIcone('mapa')}<span>Mapa de Kanto</span></span>
+    </nav>`;
   }
 };
 

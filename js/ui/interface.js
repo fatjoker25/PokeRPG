@@ -140,8 +140,8 @@ function ehFinalDeVerdade(f){ return !ehEpilogo(f) && f.id !== 'fim'; }
    losango, a conta em linhas agrupadas, o exemplo num cartão. */
 const ICONE_DA_JANELA = {bolas:'bola', regras:'dado', tutorial:'pergunta', ajustes:'engrenagem', rota:'mapa',
   diario:'diario', finais:'liga', credencial:'credenciais', centro:'centro', time:'bola',
-  salvar:'salvar', carregar:'carregar'};
-const JANELAS_DE_LER = new Set(['regras', 'tutorial', 'ajustes', 'rota', 'diario', 'finais', 'credencial']);
+  salvar:'salvar', carregar:'carregar', missoes:'missoes'};
+const JANELAS_DE_LER = new Set(['regras', 'tutorial', 'ajustes', 'rota', 'diario', 'finais', 'credencial', 'missoes']);
 
 const APARELHOS = [
   {id:'pokedex', nome:'Pokédex', item:'Pokédex', abrir:'UI.modalPokedex()',
@@ -361,6 +361,8 @@ const UI = {
     const botao = (icone, rot, attrs, extra) =>
       `<button class="btn mini topo-bt${extra || ''}" ${attrs} aria-label="${rot}">${svgIcone(icone, 'topo-ic')}<span class="topo-rot">${rot}</span>`;
     const numeros = Estado.temPokenav() ? Estado.numerosDisponiveis().length : 0;
+    /* as missões que só falta entregar ou contar: a conta no canto do botão */
+    const prontas = typeof Missoes !== 'undefined' ? Missoes.prontas(d) : 0;
     return `<div class="topo">
       <div class="topo-quem">
         <span class="topo-rosto${rosto ? '' : ' vazio'}" aria-hidden="true">${rosto
@@ -383,9 +385,13 @@ const UI = {
         ${botao('itens', 'Mochila', emLuta() ? 'disabled title="Na luta, a mochila é pela barra de ações"' : 'title="Mochila" onclick="UI.modalItens()"', numeros ? ' pisca' : '')}${
           numeros ? '<b class="topo-conta">' + numeros + '</b>' : ''}</button>
         ${botao('cartao', 'Ficha', 'title="Ficha" onclick="UI.modalFicha()"')}</button>
+        ${botao('missoes', 'Missões', `title="Missões${prontas ? `: ${prontas} pronta${prontas === 1 ? '' : 's'} pra entregar` : ''}" onclick="UI.modalMissoes()"`)}${
+          prontas ? '<b class="topo-conta pronta">' + prontas + '</b>' : ''}</button>
         ${botao('diario', 'Diário', 'title="Diário" onclick="UI.modalDiario()"')}</button>
-        ${botao('salvar', 'Salvar', 'title="Salvar: baixa o save num arquivo .json" onclick="UI.modalSalvar()"')}</button>
-        ${botao('engrenagem', 'Ajustes', 'title="Ajustes" onclick="UI.modalAjustes()"')}</button>
+        <!-- Salvar e Ajustes vão só com o desenho: com as Missões, sete
+             pílulas com nome não cabem na linha do nome -->
+        ${botao('salvar', 'Salvar', 'title="Salvar: baixa o save num arquivo .json" onclick="UI.modalSalvar()"', ' so-icone')}</button>
+        ${botao('engrenagem', 'Ajustes', 'title="Ajustes" onclick="UI.modalAjustes()"', ' so-icone')}</button>
       </div>
       ${typeof Fome !== 'undefined' ? Fome.tirarAvisos().map(a => `<div class="topo-aviso">${this.esc(a)}</div>`).join('') : ''}
     </div>`;
@@ -5971,6 +5977,11 @@ const UI = {
     return T.filter(t => eficacia(t, tipos) < 1).map(t => t + ' ×' + eficacia(t, tipos));
   },
 
+  /* as missões em aberto: o capítulo e as secundárias (missoes.js) */
+  modalMissoes(){ if (typeof Missoes !== 'undefined') Missoes.abrir(); },
+
+  /* o Diário é o que aconteceu; o que está em aberto (o capítulo, o fio
+     dele e as tarefas) mora nas Missões */
   modalDiario(){
     const log = Estado.dados.log.slice().reverse();
     /* "Time: Pikachu Nv30…" vira linha de ficha; a primeira, que é você, vai grande */
@@ -5979,18 +5990,7 @@ const UI = {
       return m ? `<p class="da-linha"><span class="da-k">${this.esc(m[1])}</span><span class="da-v">${this.esc(m[2])}</span></p>`
                : `<p class="${i ? 'da-solta' : 'da-quem'}">${this.esc(l)}</p>`;
     }).join('');
-    /* o fio do capítulo grande: a pergunta e as pontas que você já puxou (fio.js) */
-    const F = typeof Fio !== 'undefined' ? Fio.doCapitulo(Estado.dados) : null;
-    const fio = F ? `<h3>O fio do capítulo</h3><div class="diario-agora diario-fio">
-        <p class="da-solta df-pergunta">${this.esc(F.pergunta)}</p>
-        ${F.pontas.length ? F.pontas.map(p => `<p class="da-linha"><span class="da-k">${this.esc(p.nome)}</span><span class="da-v">${this.esc(p.texto)}</span></p>`).join('')
-                          : '<p class="da-solta nada">Nenhuma ponta puxada ainda.</p>'}
-      </div>` : '';
-    /* as tarefas da cidade: o que cada um pediu, como você lembra (tarefas.js) */
-    const tarefas = typeof Tarefas !== 'undefined' ? Tarefas.htmlDiario() : '';
     this.modal('Diário de campanha', `
-      ${fio}
-      ${tarefas}
       <h3>Onde você está</h3><div class="diario-agora">${resumo}</div>
       <h3>O que aconteceu</h3>
       ${log.length ? `<ol class="diario-lista">${log.map(l=>`<li><span class="dl-quando">Cap ${l.cap} · dia ${l.dia}</span><span class="dl-texto">${this.esc(l.texto)}</span></li>`).join('')}</ol>`
@@ -6175,6 +6175,7 @@ const UI = {
         <li><b>O primeiro Pokémon.</b> Os três iniciais saem da Pokébola na sua frente; escolha um e, se quiser, dê um apelido.</li>
         <li><b>A licença.</b> No Centro Pokémon (em Pallet, no laboratório). Com ela, o Centro cura de graça.</li>
         <li><b>O mapa.</b> Fora das cenas você está num lugar: <i>Onde entrar</i> são portas (Centro, loja, ginásio, sua casa), <i>O que fazer</i> gasta o tempo (vasculhar, procurar, treinar, acampar à noite) e <i>Para onde ir</i> leva ao vizinho. O capítulo seguinte aparece em <i>Aqui</i>, na cidade em que ele acontece.</li>
+        <li><b>Missões.</b> O botão do alto da tela mostra o que está em aberto: o capítulo (o que está correndo, ou onde o próximo espera) e o que as pessoas te pediram, cada uma com o que a pessoa disse e onde. A que só falta entregar acende em verde, e o botão conta quantas são.</li>
         <li><b>A luta.</b> Lutar escolhe o golpe; Mochila usa item (o item primeiro, depois quem recebe); Time troca quem está na frente; Pokédex lê o adversário. Cada golpe rola dados de seis lados: cada 4, 5 ou 6 é um acerto, e a conta aparece no registro da luta.</li>
         <li><b>Quando cair.</b> Pokémon desmaiado volta com Revive ou no Centro. Se o time inteiro cair diante de um selvagem bravo, quem apanha é você.</li>
         <li><b>Ginásio.</b> Na porta do ginásio, na cidade, na ordem que você quiser. O capítulo seguinte pede um mínimo de insígnias, e a porta fechada diz quantas faltam.</li>
@@ -6882,7 +6883,7 @@ const UI = {
       <div class="linha"><span class="k">Coleta</span><span class="v">juntar o que a pessoa pediu num lugar, uma procura de cada vez · o sucesso dá um, e o crítico, um a mais · uma das procuras costuma ser uma briga com quem guarda o melhor pedaço, que dá mais · tem coisa que só se acha de noite, e dá pra esperar a noite lá · o que você junta vai pra mochila e sai dela na entrega</span></div>
       <div class="linha"><span class="k">Entrega e mostrar</span><span class="v">levar o que a pessoa te deu até quem ela disse, e voltar pra contar · ou mostrar um Pokémon que ela quer ver, de pé no seu cinto (ele sai contente: +${MORAL_DO_MOSTRAR} de moral)</span></div>
       <div class="linha"><span class="k">Cada procura</span><span class="v">leva um período (esperar com Ração, dois), e rola o PokéNav como as outras ações do mapa</span></div>
-      <div class="linha"><span class="k">A volta</span><span class="v">dinheiro e itens, que sobem com a jornada · quem pediu passa a gostar mais de você (+${OPINIAO_DA_TAREFA}) · +1 de reputação boa · quem tem telefone deixa o número no PokéNav · o Diário guarda o que cada um pediu, do jeito que a pessoa disse, e quantos você já juntou</span></div>` : ''}
+      <div class="linha"><span class="k">A volta</span><span class="v">dinheiro e itens, que sobem com a jornada · quem pediu passa a gostar mais de você (+${OPINIAO_DA_TAREFA}) · +1 de reputação boa · quem tem telefone deixa o número no PokéNav · a aba Missões guarda o que cada um pediu, do jeito que a pessoa disse, e quantos você já juntou</span></div>` : ''}
 
       <h3>De onde vem o seu primeiro</h3>
       <div class="linha"><span class="k">Qual dos três</span><span class="v">você escolhe na hora, com os três fora da Pokébola, na sua frente · nenhuma vem escolhida</span></div>

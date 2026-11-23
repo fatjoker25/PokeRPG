@@ -76,8 +76,13 @@
 /* ---------- os botões do topo: pílulas ---------- */
 .btn.mini.topo-bt{border-radius:999px;padding:4px 13px 4px 4px}
 .btn.mini.topo-bt:hover:not(:disabled){transform:none}
+/* Salvar e Ajustes, só com o desenho: o nome fica no title e no aria-label */
+@media (min-width:761px){ .btn.mini.topo-bt.so-icone{padding:4px} }
+.topo-bt.so-icone .topo-rot{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 @media (min-width:761px) and (max-width:860px){ .btn.mini.topo-bt{padding:4px} }
-@media (max-width:760px){ .btn.mini.topo-bt{padding:3px;border-radius:999px} }
+/* os sete botões na linha do nome a partir de 390 px: 2 px de borda,
+   2 px de folga entre eles (pele.css) e o desenho de 23 px */
+@media (max-width:760px){ .btn.mini.topo-bt{padding:2px;border-radius:999px} }
 .topo-chip{border-radius:999px}
 
 /* ---------- o botão: pílula com espessura ---------- */

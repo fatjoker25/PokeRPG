@@ -883,11 +883,12 @@ const SUSPEITO = [
     await olhar('defesa');
     await page.evaluate(s => { Batalha.ativo = false; UI.fecharModal(true); Jogo.chamadaAdiada = null; Estado.dados = JSON.parse(s); Exploracao.tela(); }, snapDef);
   }
-  /* o fio dos capítulos grandes no Diário: cada cena da lista existe e
-     escreveu no diário, e o Diário abre com nenhuma ponta e com todas */
+  /* o fio dos capítulos grandes nas Missões: cada cena da lista existe e
+     escreveu no diário, e o cartão do capítulo em andamento abre com
+     nenhuma ponta e com todas */
   {
     const r = await page.evaluate(() => {
-      const falhas = [], d = Estado.dados, antes = {cap:d.capitulo, cenas:d.cenasAplicadas};
+      const falhas = [], d = Estado.dados, antes = {cap:d.capitulo, cenas:d.cenasAplicadas, modo:d.modo, cena:d.cena, fechados:d.capitulosFechados};
       for (const [n, F] of Object.entries(FIO_DOS_CAPITULOS)){
         const cap = Historia.capitulo(+n);
         if (!cap){ falhas.push('o fio fala do capítulo ' + n + ', que não existe'); continue; }
@@ -895,17 +896,18 @@ const SUSPEITO = [
           if (!cap.cenas[id]) falhas.push(`fio do ${n}: a ponta "${p.nome}" cita a cena ${id}, que não existe`);
           else if (!(cap.cenas[id].ef || {}).registrar) falhas.push(`fio do ${n}: a cena ${id} não escreve no diário`);
         }
-        d.capitulo = +n; d.cenasAplicadas = {};
-        UI.modalDiario();
-        if (!document.querySelector('.diario-fio')) falhas.push('o Diário do capítulo ' + n + ' não mostra o fio');
+        d.capitulo = +n; d.cenasAplicadas = {}; d.modo = 'cena'; d.cena = F.pontas[0].cenas[0];
+        d.capitulosFechados = (antes.fechados || []).filter(x => x !== +n);
+        UI.modalMissoes();
+        if (!document.querySelector('#modal .ms-fio')) falhas.push('as Missões do capítulo ' + n + ' não mostram o fio');
         UI.fecharModal(true);
         F.pontas.forEach(p => p.cenas.forEach(id => { d.cenasAplicadas[n + ':' + id] = 1; }));
-        UI.modalDiario();
-        const linhas = document.querySelectorAll('.diario-fio .da-linha').length;
-        if (linhas !== F.pontas.length) falhas.push(`o Diário do capítulo ${n} mostra ${linhas} pontas de ${F.pontas.length}`);
+        UI.modalMissoes();
+        const linhas = document.querySelectorAll('#modal .ms-fio .ms-pontas li').length;
+        if (linhas !== F.pontas.length) falhas.push(`as Missões do capítulo ${n} mostram ${linhas} pontas de ${F.pontas.length}`);
         UI.fecharModal(true);
       }
-      d.capitulo = antes.cap; d.cenasAplicadas = antes.cenas;
+      d.capitulo = antes.cap; d.cenasAplicadas = antes.cenas; d.modo = antes.modo; d.cena = antes.cena; d.capitulosFechados = antes.fechados;
       return falhas;
     });
     r.forEach(f => anota('fio', f));
@@ -2870,8 +2872,10 @@ const SUSPEITO = [
       if (((d.npcs[t.quem] || {}).opiniao || 0) < OPINIAO_DA_TAREFA) throw new Error('quem pediu não passou a gostar de você');
       if (t.contato && !Estado.temNumero('tarefa_' + x)) throw new Error('quem tem telefone não deixou o número');
       if (afazeresDoLocal().some(z => z.id && z.id.startsWith('tf_' + x))) throw new Error('a tarefa cumprida continua na tela');
-      UI.modalDiario();
-      if (!/Tarefas da cidade/.test(document.querySelector('#modal').innerText)) throw new Error('o Diário não tem o caderno de tarefas');
+      UI.modalMissoes();
+      if (document.querySelector(`#modal .ms-cartao[data-tipo="tarefa"]`) && [...document.querySelectorAll('#modal .ms-c-tit')].some(z => z.innerText === t.titulo))
+        throw new Error('a tarefa cumprida continua nas Missões');
+      if (![...document.querySelectorAll('#modal .ms-feita')].some(z => z.title === t.titulo)) throw new Error('as Missões não mostram a tarefa cumprida');
       UI.fecharModal(true);
       if (t.contato){
         UI.modalNav('tarefa_' + x);
@@ -2881,16 +2885,178 @@ const SUSPEITO = [
       }
     }, id);
   }
-  /* o Diário com tarefa em aberto: o lembrete e quanto falta */
+  /* a tarefa em aberto nas Missões: o lembrete, o passo e quanto falta */
   await restaurar();
-  await tentar('tarefa/diário em aberto', () => {
-    prepTarefa('tintas_do_emil');
+  await tentar('tarefa/missões em aberto', () => {
+    const t = prepTarefa('tintas_do_emil');
     Tarefas.aceitar('tintas_do_emil');
     Estado.darItem('Frutinha-tinta', 1);
-    UI.modalDiario();
-    const t = document.querySelector('#modal').innerText;
-    if (!/O verde do Emil/.test(t) || !/1 de 3/.test(t)) throw new Error('o caderno não mostra a tarefa aberta com quanto falta');
+    UI.modalMissoes();
+    const c = document.querySelector('#modal .ms-cartao[data-tipo="tarefa"]');
+    if (!c) throw new Error('as Missões não mostram a tarefa aberta');
+    const txt = c.innerText;
+    if (!txt.includes(t.titulo) || !txt.includes(t.lembrete) || !/1 de 3/.test(txt)) throw new Error('o cartão da tarefa não tem o lembrete e quanto falta');
   });
+
+  /* ---------- a aba Missões (missoes.js) ----------
+     O capítulo em cada estado (esperando longe, aqui, com a porta
+     fechada, em andamento com o fio, depois do fim), cada jeito de
+     secundária com o cartão dele, a conta das prontas no botão do alto,
+     e os botões: Ver no mapa (o mapa abre no lugar e volta pras
+     Missões), PokéNav (a ficha do contato) e Seguir (entra no capítulo). */
+  await page.evaluate(() => {
+    /* tira toda missão do save, pra cada teste pôr só a dele */
+    window.semMissoes = () => {
+      const d = Estado.dados;
+      Jogo.depoisDaEstrada = null; Batalha.ativo = false;
+      d.tarefas = {}; d.depoisDoFim = null; d.modo = 'mundo'; d.cena = null;
+      const nav = Estado.nav(); nav.missoes = {};
+      const r = Recados.reg(); r.pedido = null; r.presentes = {};
+      Object.keys(d.flags).filter(k => /^convite_vt_/.test(k)).forEach(k => { delete d.flags[k]; });
+      d.defesa = null; if (d.rede) d.rede.pendente = null;
+      delete d.flags.a_pergunta_do_curador; delete d.flags.o_curador_entregou; d.intuicao = {};
+      Estado.darItem('Mapa de Kanto', 1);
+    };
+    /* o próximo capítulo esperando: fecha até o anterior a ele */
+    window.capEsperando = n => {
+      const d = Estado.dados;
+      d.capitulo = n - 1; d.capitulosFechados = Array.from({length:n - 1}, (_, i) => i + 1);
+      d.modo = 'mundo'; d.cena = null; d.depoisDoFim = null;
+      return Historia.proximoDestino();
+    };
+    window.cartao = tipo => document.querySelector(`#modal .ms-cartao[data-tipo="${tipo}"]`);
+    window.contaNoTopo = () => {
+      const b = document.querySelector('.topo-bt[aria-label="Missões"] .topo-conta');
+      return b ? +b.textContent : 0;
+    };
+  });
+  await restaurar();
+  await tentar('missões/capítulo longe', () => {
+    semMissoes();
+    const dest = capEsperando(7), d = Estado.dados;
+    d.local = 'pewter'; Exploracao.tela();
+    if (!document.querySelector('.topo-bt[aria-label="Missões"]')) throw new Error('o alto da tela não tem o botão das Missões');
+    UI.modalMissoes();
+    const h = document.querySelector('#modal .ms-historia.espera');
+    if (!h) throw new Error('o capítulo que espera não aparece');
+    if (!h.innerText.includes(ANCORAS[7].chamada)) throw new Error('o cartão do capítulo não tem a chamada do lugar');
+    if (!h.innerText.includes(LOCAIS[dest.local].nome)) throw new Error('o cartão do capítulo não diz onde ele espera');
+    if (h.innerText.includes(Historia.capitulo(7).titulo)) throw new Error('o título do capítulo que espera aparece antes da hora');
+    if (!document.querySelector('#modal .ms-nada')) throw new Error('sem secundária, a lista não diz que está vazia');
+    /* o mapa abre no lugar e volta pras Missões */
+    Missoes.verNoMapa(dest.local);
+    if (!document.querySelector(`.mapa-kanto .mp-no.sel[data-id="${dest.local}"]`)) throw new Error('o Ver no mapa não abre no lugar do capítulo');
+    const volta = document.querySelector('#modal .volta-missoes .aba-volta');
+    if (!volta) throw new Error('o mapa aberto pelas Missões não tem a volta');
+    volta.click();
+    if (!document.querySelector('#modal.modal-fundo .modal.missoes, .modal.missoes')) throw new Error('a volta do mapa não reabre as Missões');
+  });
+  await restaurar();
+  await tentar('missões/capítulo aqui', () => {
+    semMissoes();
+    const dest = capEsperando(2), d = Estado.dados;
+    d.local = dest.local; Exploracao.tela();
+    UI.modalMissoes();
+    const b = [...document.querySelectorAll('#modal .ms-historia .btn')].find(z => /Seguir/.test(z.innerText));
+    if (!b) throw new Error('o capítulo que espera aqui não tem o Seguir');
+    b.click();
+    if (d.modo !== 'cena' || d.capitulo !== 2) throw new Error('o Seguir não entra no capítulo');
+  });
+  await restaurar();
+  await tentar('missões/capítulo de porta fechada', () => {
+    semMissoes();
+    const d = Estado.dados;
+    d.insignias = []; capEsperando(10); d.local = 'pewter'; Exploracao.tela();
+    UI.modalMissoes();
+    const tr = travaDoCapitulo(10);
+    if (!tr) throw new Error('o teste não fechou a porta do capítulo 10');
+    const h = document.querySelector('#modal .ms-historia.fechada');
+    if (!h || !h.innerText.includes(textoTrava(tr))) throw new Error('a porta fechada do capítulo não diz o que falta');
+    if ([...h.querySelectorAll('.btn')].some(z => /Seguir/.test(z.innerText))) throw new Error('o capítulo de porta fechada oferece o Seguir');
+  });
+  await restaurar();
+  await tentar('missões/capítulo em andamento', () => {
+    semMissoes();
+    const d = Estado.dados, F = FIO_DOS_CAPITULOS[4], cap = Historia.capitulo(4);
+    d.capitulo = 4; d.capitulosFechados = [1, 2, 3]; d.local = 'pewter';
+    Historia.capAtual = cap; d.cena = F.pontas[0].cenas[0];
+    d.cenasAplicadas = {};
+    F.pontas.slice(0, 2).forEach(p => { d.cenasAplicadas['4:' + p.cenas[0]] = 1; });
+    UI.telaCena(Historia.ir(d.cena, false));
+    UI.modalMissoes();
+    const h = document.querySelector('#modal .ms-historia.andamento');
+    if (!h || !h.innerText.includes(cap.titulo)) throw new Error('o capítulo em andamento não mostra o título');
+    if (!h.innerText.includes(F.pergunta)) throw new Error('o capítulo em andamento não mostra a pergunta do fio');
+    if (h.querySelectorAll('.ms-pontas li').length !== 2) throw new Error('o fio não mostra as duas pontas puxadas');
+    if (h.querySelector('.btn')) throw new Error('o capítulo em andamento oferece botão');
+  });
+  await restaurar();
+  await tentar('missões/depois do fim', () => {
+    semMissoes();
+    const d = Estado.dados;
+    d.depoisDoFim = {final:'fim'}; d.flags.campeao = false;
+    UI.modalMissoes();
+    if (!document.querySelector('#modal .ms-historia.fim') && !document.querySelector('#modal .ms-historia.espera'))
+      throw new Error('depois do fim, a história não diz que terminou');
+  });
+  /* cada jeito de secundária: o cartão, a conta das prontas e o PokéNav */
+  const DA_MISSAO = await page.evaluate(() => {
+    const comMissao = CONTATOS.find(c => c.missao && c.id === 'casa') || CONTATOS.find(c => c.missao);
+    const v = VETERANOS.find(x => x.convite);
+    return {missao:comMissao.id, convite:v.id};
+  });
+  for (const [jeito, pronta] of [['favor', false], ['favor', true], ['missao', false], ['missao', true], ['recado', false],
+    ['convite', false], ['defesa', false], ['rede', false], ['intuicao', false], ['tarefa', true]]){
+    await restaurar();
+    await tentar(`missões/${jeito}${pronta ? ' pronta' : ''}`, ([j, ok, J]) => {
+      semMissoes();
+      const d = Estado.dados, dia = d.relogio.dia;
+      capEsperando(9); d.local = 'vermilion';
+      /* a tela do lugar antes da missão: o botão do alto sai de lá, e o
+         conferir da tela não mexe no que o teste monta depois */
+      Exploracao.tela();
+      if (j === 'favor'){
+        Recados.reg().pedido = {tipo:'perdido', quem:'casa', esp:'Rattata', dex:19, onde:'rota3', centro:'pewter', dia, ate:dia + 4, pronto:ok};
+      } else if (j === 'missao'){
+        Estado.registrarNumero(J.missao); Estado.aceitarMissao(J.missao);
+        if (ok){ const c = contatoPorId(J.missao); const f = c.missao.objetivo; c.missao.objetivo = () => true; window.__volta = () => { c.missao.objetivo = f; }; }
+      } else if (j === 'recado'){
+        Recados.reg().presentes.casa = {item:'Potion', qtd:2, onde:'pallet', dia};
+      } else if (j === 'convite'){
+        d.flags['convite_vt_' + J.convite] = true;
+      } else if (j === 'defesa'){
+        Cargos.conceder('lider');
+        const r = Defesa.reg().lider; Defesa.escolherTipo('Normal'); r.abre = dia;
+        const t = Defesa.sortearDaEstrada(r, 3);
+        r.desafio = {quem:t.id, estrada:true, nome:nomeDeLuta(t), curto:t.nome, classe:t.classe, f:t.artigo === 'uma', de:'', ins:3,
+          fala:'Vim pela insígnia.', fama:0, dia, ate:dia + 1, cap:capNaJornada(d)};
+      } else if (j === 'rede'){
+        Rede.reg().pendente = {tipo:'servico', id:SERVICOS_DA_REDE[0].id, i:0, ramo:null, avisos:[]};
+      } else if (j === 'intuicao'){
+        d.flags.a_pergunta_do_curador = true;
+        d.insignias = ['Insígnia Pedra', 'Insígnia Cascata', 'Insígnia Trovão', 'Insígnia Arco-Íris'];
+        d.intuicao = {entrega:capNaJornada(d)};
+      } else if (j === 'tarefa'){
+        Tarefas.reg(d).flores_da_mirela = {estado:'aberta', desde:dia};
+        Estado.darItem('Flor-de-sino', 3);
+      }
+      UI.atualizarTopo();
+      UI.modalMissoes();
+      try {
+        const c = cartao(j);
+        if (!c) throw new Error(`as Missões não mostram o ${j}`);
+        if (ok !== c.classList.contains('pronta')) throw new Error(`o ${j} ${ok ? 'pronto não acende' : 'acende pronto sem estar'}`);
+        if (contaNoTopo() !== Missoes.prontas(d)) throw new Error(`o botão do alto conta ${contaNoTopo()} prontas, e são ${Missoes.prontas(d)}`);
+        if (ok && !contaNoTopo()) throw new Error('a pronta não aparece na conta do botão do alto');
+        const nav = [...c.querySelectorAll('.ms-mini')].find(z => /PokéNav/.test(z.innerText));
+        if (['favor', 'missao', 'recado'].includes(j)){
+          if (!nav) throw new Error(`o ${j} não tem o botão do PokéNav`);
+          nav.click();
+          if (!document.querySelector('#modal .modal.nav, .modal.nav')) throw new Error(`o PokéNav do ${j} não abre`);
+        }
+      } finally { if (window.__volta){ window.__volta(); window.__volta = null; } }
+    }, [jeito, pronta, DA_MISSAO]);
+  }
 
   /* ---------- lugares e afazeres ---------- */
   for (const id of await page.evaluate(() => Object.keys(LOCAIS))){

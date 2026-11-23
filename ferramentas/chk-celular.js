@@ -5,7 +5,7 @@
    Customização, pelo capítulo 1, e num save do meio do jogo abre o
    lugar, o mapa, a mochila, o time, o PokéNav, a Ficha, a Pokédex, o
    PC, o Salvar, as regras, os ajustes, a Liga, a loja, o Centro, uma
-   tarefa da cidade (o pedido, o passo, a volta e o selo), uma luta (o
+   tarefa da cidade (o pedido, o passo, a volta e o selo), as Missões, uma luta (o
    tutorial dela passo a passo, golpes, mochila e um turno) e a
    evolução. Acusa a página que
    rola de lado, o que fica pra fora da tela sem estar numa caixa que
@@ -173,6 +173,15 @@ const SUSPEITO = [
     });
     await tentar('tarefa-volta', () => { Estado.darItem('Folha de Oddish', 2); Estado.dados.local = 'celadon'; Exploracao.tela(); });
     await tentar('tarefa-selo', () => Tarefas.entregar('perfume_da_lotte'));
+    /* as Missões (missoes.js): o capítulo que espera, uma tarefa aberta,
+       um favor do PokéNav com prazo e a tarefa cumprida no pé */
+    await tentar('missoes', () => {
+      UI.fecharModal(true);
+      const d = Estado.dados, dia = d.relogio.dia;
+      Tarefas.reg(d).pidgey_da_lia = {estado:'aberta', desde:dia};
+      Recados.reg().pedido = {tipo:'perdido', quem:'casa', esp:'Rattata', dex:19, onde:'rota3', centro:'pewter', dia, ate:dia + 4};
+      Exploracao.tela(); UI.modalMissoes();
+    });
     /* o seu ginásio (defesa.js): a ficha do tipo do ginásio, a quadra com o
        regulamento e a escolha do time */
     await tentar('ginasio-ficha', () => {

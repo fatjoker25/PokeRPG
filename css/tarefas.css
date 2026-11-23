@@ -91,23 +91,8 @@ h3.sec-tarefas{--sec:#c39bff}
 @keyframes tf-carimbo{from{opacity:0;transform:rotate(-30deg) scale(2.2)}}
 @media (prefers-reduced-motion: reduce){ .tf-selo, .tf-selo-ok{animation:none} }
 
-/* ---------- o Diário: o que cada um pediu ---------- */
-.tf-lista{list-style:none;margin:0 0 8px;padding:0;display:grid;gap:8px}
-.tf-diario{
-  display:grid;grid-template-columns:auto 1fr;align-items:start;gap:12px;padding:10px 12px;border-radius:12px;
-  background:color-mix(in srgb, var(--painel, #10262a) 88%, #a77df0);border:1px solid color-mix(in srgb, #a77df0 30%, var(--borda, #2a4a50));
-}
-.tf-diario.pronta{border-color:color-mix(in srgb, #3cc785 60%, transparent)}
-.tf-diario .tf-moeda{width:34px;height:34px}
-.tf-d-txt{display:grid;gap:3px;min-width:0;font-size:13.5px;line-height:1.45}
-.tf-d-txt b{font:700 14px/1.3 var(--letra-hud, var(--fonte))}
-.tf-d-txt b em{font-style:normal;font-size:11px;font-weight:800;letter-spacing:.06em;margin-left:6px;padding:2px 7px;border-radius:99px;color:#05301a;background:#7fe3ad;vertical-align:1px}
-.tf-d-txt small{font:700 12px/1.2 var(--letra-hud, var(--fonte));color:#cdb6ff;font-variant-numeric:tabular-nums}
+/* a moeda pequena: as tarefas cumpridas, na aba Missões */
 .tf-moeda.pequena{width:30px;height:30px}
-.tf-feitas{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin:6px 0 4px;font:700 13px/1.2 var(--letra-hud, var(--fonte))}
-.tf-feitas > span:first-child{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--texto-fraco, #a9c0bd)}
-.tf-feita{display:inline-flex;align-items:center;gap:6px}
-.tf-feita .tf-moeda{--ac:#3cc785}
 
 @media (max-width:600px){
   .tf-moeda{width:34px;height:34px}

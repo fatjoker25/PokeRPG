@@ -1,0 +1,219 @@
+/* ============================================================
+   MISSÕES (missoes.js)
+   A janela das missões em aberto. Em cima, a da história: o capítulo
+   num cartão dourado com a medalha do número (o ouro do logo), a
+   chamada do lugar onde ele espera, ou, em andamento, o título e o fio
+   (a pergunta e as pontas numa trilha). Embaixo, as secundárias, um
+   cartão por missão na cor do jeito dela (a tarefa no lilás da seção
+   Tarefas, o PokéNav no verde do aparelho, o convite no âmbar, o
+   desafio no dourado do ginásio, a rede no vermelho dela, a intuição
+   no lilás da lua): o rosto de quem pediu numa moeda, o que a pessoa
+   disse, o passo de agora, onde e o prazo. A pronta acende no verde.
+   ============================================================ */
+.modal.missoes{max-width:680px}
+
+/* ---------- a conta, no alto ---------- */
+.ms-resumo{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 2px}
+.ms-conta{
+  display:inline-flex;align-items:center;gap:7px;padding:4px 12px 4px 5px;border-radius:999px;
+  font:700 12.5px/1.2 var(--letra-hud, var(--fonte));color:var(--texto);
+  background:var(--vidro-fundo, rgba(0,0,0,.2));border:1px solid var(--fio, rgba(255,255,255,.12));
+}
+.ms-conta b{
+  display:inline-grid;place-items:center;min-width:22px;height:22px;padding:0 6px;border-radius:999px;
+  font-weight:900;font-variant-numeric:tabular-nums;color:#3a1200;
+  background:linear-gradient(180deg, #ffc4ad, #ff7a52);box-shadow:inset 0 -2px 0 rgba(0,0,0,.14);
+}
+.ms-conta.pronta b{color:#05301a;background:linear-gradient(180deg, #b8f5d2, #34c27a)}
+h3.ms-sec small{
+  display:inline-grid;place-items:center;min-width:20px;height:20px;padding:0 6px;margin-left:2px;border-radius:999px;
+  font:800 11.5px/1 var(--letra-hud, var(--fonte));font-variant-numeric:tabular-nums;color:var(--texto);
+  background:color-mix(in srgb, var(--ac, #ff7a52) 26%, var(--vidro-fundo, transparent));
+  border:1px solid color-mix(in srgb, var(--ac, #ff7a52) 50%, transparent);
+}
+.ms-nada{margin:4px 0 6px;padding:12px 14px;border-radius:14px;font-size:14px;color:var(--texto-fraco);
+  border:1.5px dashed var(--fio, rgba(255,255,255,.14))}
+
+/* ---------- a história ---------- */
+.ms-historia{
+  position:relative;display:grid;grid-template-columns:auto minmax(0, 1fr);gap:14px;align-items:start;
+  padding:16px 18px 16px 14px;border-radius:18px;overflow:hidden;isolation:isolate;
+  background:
+    radial-gradient(120% 150% at 0% 0%, color-mix(in srgb, var(--destaque, #ffd429) 20%, transparent), transparent 58%),
+    linear-gradient(180deg, color-mix(in srgb, var(--painel-2, var(--painel)) 90%, var(--destaque, #ffd429)), var(--vidro-fundo, rgba(0,0,0,.2)));
+  border:1.5px solid color-mix(in srgb, var(--destaque, #ffd429) 55%, var(--borda, #2f6076));
+  box-shadow:var(--lume, none), 0 12px 28px -18px color-mix(in srgb, var(--destaque, #ffd429) 80%, transparent);
+}
+/* a exclamação grande, apagada, no canto: é a missão do jogo */
+.ms-historia::after{
+  content:'!';position:absolute;z-index:-1;right:14px;top:-18px;
+  font:400 118px/1 var(--letra-pixel, monospace);color:var(--destaque, #ffd429);opacity:.07;pointer-events:none;
+}
+.ms-historia.fim{border-color:var(--fio-forte, rgba(255,255,255,.2));box-shadow:var(--lume, none)}
+.ms-historia.fim::after{content:none}
+.ms-medalha{
+  display:grid;place-items:center;width:56px;height:56px;border-radius:50%;
+  color:#3a2a00;font:700 25px/1 var(--letra-titulo, var(--fonte));font-variant-numeric:tabular-nums;
+  background:
+    radial-gradient(circle at 32% 26%, rgba(255,250,214,.95) 0 13%, rgba(255,250,214,0) 42%),
+    linear-gradient(180deg, #ffe46b, #d6a40c);
+  box-shadow:inset 0 0 0 2px rgba(255,255,255,.5), inset 0 -4px 0 rgba(0,0,0,.16),
+             0 4px 0 #8a6a00, 0 12px 20px -10px rgba(0,0,0,.85);
+}
+.ms-medalha.romano{font-size:19px;letter-spacing:.02em}
+.ms-medalha svg.icone{width:28px;height:28px;color:#3a2a00}
+.ms-historia.fechada .ms-medalha{
+  background:radial-gradient(circle at 32% 26%, rgba(255,255,255,.6) 0 13%, rgba(255,255,255,0) 42%), linear-gradient(180deg, #b9bfd3, #7b839c);
+  box-shadow:inset 0 0 0 2px rgba(255,255,255,.4), inset 0 -4px 0 rgba(0,0,0,.16), 0 4px 0 #4b5268, 0 12px 20px -10px rgba(0,0,0,.85);
+  color:#232838;
+}
+.ms-historia.fim .ms-medalha{background:linear-gradient(180deg, #c9b8ff, #8f6fe0);box-shadow:inset 0 0 0 2px rgba(255,255,255,.4), 0 4px 0 #4b3790;color:#fff}
+.ms-historia.fim .ms-medalha svg.icone{color:#fff}
+.ms-h-corpo{min-width:0}
+.ms-olho{
+  display:block;font:800 11px/1.25 var(--letra-hud, var(--fonte));letter-spacing:.14em;text-transform:uppercase;
+  color:color-mix(in srgb, var(--destaque, #ffd429) 82%, #fff);
+}
+.ms-historia.fechada .ms-olho{color:var(--texto-fraco)}
+.ms-h-tit{display:block;margin:5px 0 4px;font:700 21px/1.2 var(--letra-titulo, var(--fonte));color:var(--texto);text-wrap:balance}
+.ms-h-txt{margin:4px 0 0;font-size:14.5px;line-height:1.55;color:color-mix(in srgb, var(--texto) 85%, var(--texto-fraco))}
+/* a chamada do lugar: o que se vê de lá, na letra de ler */
+.ms-chamada{margin:7px 0 4px;font-size:15.5px;line-height:1.55;font-style:italic;color:var(--texto);text-wrap:pretty}
+
+/* o fio: a pergunta com o fio dourado e as pontas numa trilha */
+.ms-fio{margin-top:12px;padding:12px 14px 13px;border-radius:14px;background:var(--vidro-fundo, rgba(0,0,0,.2));border:1px solid var(--fio, rgba(255,255,255,.12))}
+.ms-pergunta{margin:0 0 11px;padding-left:12px;border-left:3px solid var(--destaque, #ffd429);
+  font-size:15px;line-height:1.5;font-style:italic;color:var(--texto)}
+.ms-pontas{list-style:none;margin:0;padding:0;display:grid;gap:11px}
+.ms-pontas li{position:relative;display:grid;gap:2px;padding-left:22px}
+.ms-pontas li::before{
+  content:'';position:absolute;left:3px;top:5px;width:10px;height:10px;border-radius:50%;
+  background:var(--destaque, #ffd429);box-shadow:0 0 0 3px color-mix(in srgb, var(--destaque, #ffd429) 22%, transparent);
+}
+.ms-pontas li:not(:last-child)::after{
+  content:'';position:absolute;left:7.5px;top:19px;bottom:-9px;width:1px;
+  background:linear-gradient(180deg, color-mix(in srgb, var(--destaque, #ffd429) 55%, transparent), var(--fio, rgba(255,255,255,.12)));
+}
+.ms-pontas b{font:700 13.5px/1.3 var(--letra-hud, var(--fonte));color:var(--texto)}
+.ms-pontas span{font-size:13.5px;line-height:1.5;color:color-mix(in srgb, var(--texto) 82%, var(--texto-fraco))}
+.ms-fio-nada{margin:0;font-size:13.5px;color:var(--texto-fraco)}
+
+/* ---------- os selos: onde, quando, o prazo e a porta fechada ---------- */
+.ms-meta{display:flex;flex-wrap:wrap;gap:6px 8px;margin-top:8px}
+.ms-onde, .ms-trava, .ms-quando, .ms-prazo{
+  display:inline-flex;align-items:center;gap:5px;max-width:100%;padding:3px 10px 3px 5px;border-radius:999px;
+  font:700 12px/1.25 var(--letra-hud, var(--fonte));color:var(--texto);
+  background:var(--vidro-fundo, rgba(0,0,0,.2));border:1px solid var(--fio, rgba(255,255,255,.12));
+}
+.ms-onde svg.icone, .ms-trava svg.icone, .ms-quando svg.icone, .ms-prazo svg.icone{flex:0 0 auto;width:16px;height:16px;color:var(--ac, currentColor)}
+.ms-onde.aqui{border-color:color-mix(in srgb, #3cc785 60%, transparent);background:color-mix(in srgb, #3cc785 14%, var(--vidro-fundo, transparent))}
+.ms-trava{color:#ffdcd3;border-color:color-mix(in srgb, #e8526a 55%, transparent);background:color-mix(in srgb, #e8526a 14%, var(--vidro-fundo, transparent))}
+.ms-prazo{font-variant-numeric:tabular-nums}
+.ms-prazo.urgente{color:#ffe2dc;border-color:color-mix(in srgb, #e8526a 62%, transparent);background:color-mix(in srgb, #e8526a 26%, var(--vidro-fundo, transparent))}
+.ms-prazo.urgente svg.icone{color:#ff9a8a}
+
+/* ---------- o que dá pra fazer daqui ---------- */
+.ms-acoes{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.btn.ms-bt{display:inline-flex;align-items:center;gap:8px}
+.btn.ms-bt svg.icone{width:18px;height:18px}
+.ms-mini{
+  display:inline-flex;align-items:center;gap:6px;padding:4px 12px 4px 4px;border-radius:999px;cursor:pointer;
+  font:700 12.5px/1.2 var(--letra-hud, var(--fonte));color:var(--texto);
+  background:color-mix(in srgb, var(--ac, #8d97bd) 16%, var(--vidro-fundo, rgba(0,0,0,.2)));
+  border:1px solid color-mix(in srgb, var(--ac, #8d97bd) 50%, var(--fio, transparent));
+  box-shadow:var(--lume, none), 0 2px 0 rgba(0,0,0,.32);
+  transition:background .15s ease, border-color .15s ease;
+}
+.ms-mini svg.icone{
+  width:22px;height:22px;padding:4px;border-radius:50%;color:#fff;
+  background:radial-gradient(circle at 32% 24%, rgba(255,255,255,.5) 0 16%, rgba(255,255,255,0) 44%),
+    linear-gradient(180deg, color-mix(in srgb, var(--ac, #8d97bd) 92%, #fff), color-mix(in srgb, var(--ac, #8d97bd) 70%, #000));
+}
+.ms-mini:hover, .ms-mini:focus-visible{background:color-mix(in srgb, var(--ac, #8d97bd) 28%, var(--vidro-fundo, rgba(0,0,0,.2)));
+  border-color:color-mix(in srgb, var(--ac, #8d97bd) 75%, transparent)}
+.ms-mini:active{transform:translateY(1px);box-shadow:var(--lume, none)}
+.ms-mini:focus-visible{outline:2px solid color-mix(in srgb, var(--ac, #8d97bd) 80%, #fff);outline-offset:2px}
+
+/* ---------- as secundárias ---------- */
+.ms-lista{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.ms-cartao{
+  --ac:#8d97bd;
+  display:grid;grid-template-columns:auto minmax(0, 1fr);gap:12px;align-items:start;
+  padding:13px 15px 13px 13px;border-radius:16px;
+  background:linear-gradient(180deg, color-mix(in srgb, var(--ac) 11%, var(--vidro-fundo, rgba(0,0,0,.2))), var(--vidro-fundo, rgba(0,0,0,.2)));
+  border:1px solid color-mix(in srgb, var(--ac) 40%, var(--fio, transparent));
+  box-shadow:var(--lume, none);
+}
+.ms-cartao[data-tipo="tarefa"]{--ac:#a77df0}
+.ms-cartao[data-tipo="favor"], .ms-cartao[data-tipo="missao"]{--ac:#43b581}
+.ms-cartao[data-tipo="recado"]{--ac:#f0b45a}
+.ms-cartao[data-tipo="convite"]{--ac:#ff9d4d}
+.ms-cartao[data-tipo="defesa"]{--ac:#e8b923}
+.ms-cartao[data-tipo="rede"]{--ac:#d0505e}
+.ms-cartao[data-tipo="intuicao"]{--ac:#b39ddb}
+.ms-cartao.pronta{
+  border-color:color-mix(in srgb, #3cc785 72%, transparent);
+  background:linear-gradient(180deg, color-mix(in srgb, #3cc785 15%, var(--vidro-fundo, rgba(0,0,0,.2))), var(--vidro-fundo, rgba(0,0,0,.2)));
+  box-shadow:var(--lume, none), 0 10px 22px -18px #3cc785;
+}
+/* a moeda: o rosto de quem pediu na cor do jeito da missão, ou o desenho */
+.ms-cartao > .tf-moeda{width:46px;height:46px}
+.ms-ic{
+  display:grid;place-items:center;width:46px;height:46px;border-radius:50%;color:#fff;
+  background:radial-gradient(circle at 32% 24%, rgba(255,255,255,.5) 0 16%, rgba(255,255,255,0) 44%),
+    linear-gradient(180deg, color-mix(in srgb, var(--ac) 94%, #fff), color-mix(in srgb, var(--ac) 70%, #000));
+  box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.3), inset 0 -3px 0 rgba(0,0,0,.16),
+             0 3px 0 color-mix(in srgb, var(--ac) 42%, #000), 0 8px 14px -8px rgba(0,0,0,.85);
+}
+.ms-ic svg.icone{width:24px;height:24px;stroke-width:2}
+.ms-c-corpo{min-width:0}
+.ms-c-topo{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px;min-height:20px}
+.ms-chip{font:800 10.5px/1.2 var(--letra-hud, var(--fonte));letter-spacing:.12em;text-transform:uppercase;
+  color:color-mix(in srgb, var(--ac) 62%, #fff)}
+.ms-ok{
+  flex:0 0 auto;padding:4px 10px;border-radius:999px;font:800 11.5px/1 var(--letra-hud, var(--fonte));
+  color:#05301a;background:linear-gradient(180deg, #b8f5d2, #34c27a);box-shadow:0 2px 0 #157a46;
+}
+.ms-cartao .ms-c-topo .ms-prazo{flex:0 0 auto;padding-block:2px}
+.ms-c-tit{display:block;font:700 15.5px/1.3 var(--letra-hud, var(--fonte));color:var(--texto);text-wrap:balance}
+.ms-quem{display:block;margin-top:2px;font:700 12.5px/1.3 var(--letra-hud, var(--fonte));color:var(--texto-fraco)}
+.ms-c-txt{margin:6px 0 0;font-size:14px;line-height:1.5;color:color-mix(in srgb, var(--texto) 86%, var(--texto-fraco));text-wrap:pretty}
+/* o passo de agora, com a seta na cor da missão */
+.ms-agora{display:flex;gap:7px;margin:7px 0 0;font:700 13px/1.4 var(--letra-hud, var(--fonte));color:var(--texto)}
+.ms-agora::before{content:'';flex:0 0 auto;width:0;height:0;margin-top:4px;
+  border-left:6px solid var(--ac);border-top:5px solid transparent;border-bottom:5px solid transparent}
+.ms-cartao.pronta .ms-agora::before{border-left-color:#3cc785}
+
+/* quanto falta na coleta, com o desenho do que se colhe */
+.ms-prog{
+  display:grid;grid-template-columns:auto auto minmax(40px, 1fr) auto;align-items:center;gap:8px;margin-top:9px;
+  font:700 12.5px/1.2 var(--letra-hud, var(--fonte));color:var(--texto);
+}
+.ms-prog img{width:26px;height:26px;image-rendering:pixelated}
+.ms-prog-barra{position:relative;height:8px;border-radius:99px;background:rgba(0,0,0,.3);overflow:hidden;box-shadow:inset 0 1px 2px rgba(0,0,0,.4)}
+.ms-prog-barra > i{position:absolute;inset:0 auto 0 0;width:var(--feito, 0%);border-radius:inherit;
+  background:linear-gradient(180deg, color-mix(in srgb, var(--ac) 55%, #fff), var(--ac))}
+.ms-cartao.pronta .ms-prog-barra > i{background:linear-gradient(180deg, #b8f5d2, #34c27a)}
+.ms-prog-n{font-variant-numeric:tabular-nums;color:var(--texto-fraco)}
+
+/* ---------- as tarefas cumpridas: os rostos, carimbados ---------- */
+.ms-feitas{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin:14px 0 2px;
+  font:700 13px/1.2 var(--letra-hud, var(--fonte));color:var(--texto)}
+.ms-feitas > span:first-child{flex:1 0 100%;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--texto-fraco)}
+.ms-feita{display:inline-flex;align-items:center;gap:6px}
+.ms-feita .tf-moeda{--ac:#3cc785}
+
+/* ---------- o botão do alto: a conta das prontas, no verde ---------- */
+.topo-bt .topo-conta.pronta{color:#05301a;background:linear-gradient(180deg, #9ff0c2, #34c27a)}
+
+@media (max-width:600px){
+  .ms-historia{gap:12px;padding:14px 14px 14px 12px}
+  .ms-medalha{width:46px;height:46px;font-size:21px}
+  .ms-medalha.romano{font-size:16px}
+  .ms-h-tit{font-size:19px}
+  .ms-chamada{font-size:15px}
+  .ms-cartao{gap:10px;padding:12px}
+  .ms-cartao > .tf-moeda, .ms-ic{width:40px;height:40px}
+  .ms-ic svg.icone{width:21px;height:21px}
+  .ms-c-topo{flex-wrap:wrap}
+}

@@ -1241,7 +1241,8 @@ de Johto entram por `idsKanto()` só depois de vistos ou catalogados.
 ## O fio dos capítulos grandes
 Capítulo de cento e tantas cenas (o 4, o 6, o 8, o 9, o 11 e o 18)
 espalha a investigação pela cidade, e quem volta depois de três dias
-não lembra onde estava. O Diário abre com **o fio do capítulo**
+não lembra onde estava. O cartão do capítulo em andamento, na aba
+Missões (ver "A aba Missões"), mostra **o fio do capítulo**
 (`js/story/fio.js`, `FIO_DOS_CAPITULOS`, `Fio.doCapitulo`): a pergunta
 do capítulo e as pontas que você já puxou, cada uma com a linha de
 diário da cena mais adiantada a que você chegou nela. É memória, não
@@ -2487,9 +2488,10 @@ Dois e o Sven da Ilha Quatro), em quatro jeitos:
   tem `contato` deixa o número (`contatosDasTarefas`, no
   `todosContatos`), e a ficha dele no PokéNav tem a linha de perguntar
   como estão as coisas.
-- **O Diário guarda como memória** (`htmlDiario`): o que a pessoa
-  disse (`lembrete`) e quanto falta na coleta, nunca onde nem como. A
-  oferta (`oferta.sub`) repara na pessoa e para ali, como o presságio.
+- **A aba Missões guarda como memória** (`Missoes.deTarefas`): o que
+  a pessoa disse (`lembrete`), o passo de agora, onde ele se faz e
+  quanto falta na coleta, nunca como. A oferta (`oferta.sub`) repara
+  na pessoa e para ali, como o presságio.
 - Quem pede tem nome e rosto só dele (`NOMES_DA_HISTORIA`,
   `RETRATO_POR_NOME`, `trainers/<arq>`), tirados do acervo do Showdown
   e conferidos pelos pixels contra todo rosto em uso e as fotos de
@@ -2500,10 +2502,63 @@ Tarefa nova entra com as falas, o `lembrete`, o `quadro` e a regra na
 folha ("Tarefas da cidade", que lê `TAREFAS.length` e as duas
 constantes), e passa pelo `chk-telas` (a oferta, recusar e voltar no
 outro dia, cada escolha do passo em cada grau, a luta ganhando e
-perdendo, a volta com o selo, a opinião, o número e o Diário) e pelo
+perdendo, a volta com o selo, a opinião, o número e as Missões) e pelo
 `chk-baloes` (`Tarefas.amostras`). O robô entrega a que está pronta,
 faz o passo do lugar onde está (seis vezes por tarefa, no máximo) e
 aceita metade das ofertas, menos quando a jornada espera.
+
+## A aba Missões
+Foi pedido assim: uma aba de missões em aberto, com a do capítulo
+principal e as secundárias. É o botão Missões do alto da tela (a
+prancheta, entre a Ficha e o Diário), que abre `UI.modalMissoes`
+(`js/ui/missoes.js`, `Missoes`; desenho em `css/missoes.css`). O
+Diário ficou com o que aconteceu ("Onde você está" e "O que
+aconteceu"); o que está em aberto, o fio do capítulo e as tarefas
+moram aqui.
+
+- **A da história** (`Missoes.historia`) é o capítulo, num cartão
+  dourado com a medalha do número (a parte, "II", no caminho e nas
+  ilhas): **em andamento** quando você está dentro dele (cena de
+  capítulo que não fechou: o título, onde e o fio, a pergunta e as
+  pontas numa trilha); **espera** quando o próximo aguarda no lugar
+  dele (`Historia.proximoDestino`): a chamada da âncora (`ANCORAS`), o
+  lugar e a porta fechada com o que falta (`travaDoCapitulo`,
+  `textoTrava`). O título do capítulo que espera **não aparece**: ele
+  é uma coisa no lugar até você entrar. Estando lá, "Seguir" entra
+  (`Exploracao.entrarNoArco`); longe, "Ver no mapa". Depois do fim sem
+  capítulo pela frente, o cartão diz que a história de Kanto terminou.
+- **As secundárias** (`Missoes.secundarias`) são o que alguém te
+  pediu ou marcou, um cartão por missão na cor do jeito dela, com o
+  rosto de quem pediu na moeda das tarefas (`Tarefas.moeda`) ou o
+  desenho: a tarefa da cidade, o favor de quem liga (`Pedidos`), o
+  pedido escrito de um contato (`Estado.faseDaMissao`, com a `dica`
+  dele), quem separou um presente (`presentes` do `Recados`), o
+  convite de veterano, o desafio marcado no seu ginásio ou na sua
+  porta, a briga que um serviço da rede comprou (`d.rede.pendente`) e
+  a intuição, só depois que ela avisou (`d.intuicao`), com as palavras
+  do aviso. Cada uma diz o que a pessoa disse, o passo de agora, onde
+  e o prazo, nunca como.
+- **Pronta** é a que só falta entregar ou contar: o cartão acende no
+  verde e vai pro alto da lista, e o botão do alto conta as prontas
+  (`Missoes.prontas`, no `UI.topo`). Depois vem a que vence antes, e
+  depois o jeito (`ORDEM_DAS_MISSOES`).
+- **Nada aqui cria registro**: lê o que existe (`d.defesa`, `d.rede`,
+  `d.pokenav.recados` direto), porque o `Rede.reg()` e o
+  `Recados.reg()` criam o deles, e abrir uma janela não pode dar rede
+  a quem nunca abriu o armário.
+- Os botões levam pra onde a missão se resolve: o PokéNav na ficha
+  do contato (`UI.modalNav(id)`) e o mapa no lugar dela
+  (`Missoes.verNoMapa`, `Exploracao.mapa('missoes', regiao, foco)`),
+  com a barra "‹ Missões" de volta (`Missoes.barraDoMapa`). Mapa só
+  com o item e fora da cena e da luta: do mapa dá pra andar, e andar
+  no meio de um capítulo largaria ele.
+
+Missão de um jeito novo entra com uma função em `Missoes.secundarias`,
+o desenho e a cor em `TIPO_DE_MISSAO` e no CSS (`data-tipo`), o lugar
+em `ORDEM_DAS_MISSOES`, e passa pelo `chk-telas` (o capítulo longe,
+aqui, de porta fechada, em andamento com o fio e depois do fim; cada
+jeito de secundária, pronta e não, a conta do botão do alto, o PokéNav,
+o Ver no mapa e a volta) e pelo `chk-celular`.
 
 ## A luta não acaba no recarregar
 `Estado.salvar` chama `LutaSalva.anotar` (`js/engine/luta-salva.js`): com
@@ -2554,7 +2609,7 @@ vigia age.
 ## O save em arquivo
 O jogo se salva sozinho no navegador (`Estado.salvar`, a cada passo,
 por cima do anterior). O **Salvar** do alto da tela (o disquete, entre
-o Diário e os Ajustes) e dos Ajustes, do lado das Regras, baixa uma
+o Diário e os Ajustes, só com o desenho) e dos Ajustes, do lado das Regras, baixa uma
 cópia em `.json` (`ArquivoSave`, em `js/engine/save-arquivo.js`): o save
 inteiro dentro de uma etiqueta, `{jogo:'PokéRPG', formato, salvoEm,
 save, finais}`, com a luta junto se tiver uma — o `montar` passa pelo
@@ -2607,11 +2662,16 @@ mostrar, pede `Estado.saveCru(n)`; nada de ler `localStorage` à mão.
 - Navegador que não deixa gravar: a jornada roda da memória
   (`Jogo.continuar(dados)`) e o recado (`UI.avisar`, com `dura`) pede
   pra salvar antes de fechar.
-- O topo tem seis botões. No celular eles cabem na linha do nome a
-  partir de 385 px: o nome cede (`.topo-quem` com `flex:1 1 0` e
-  mínimo de 130 px) e, no pior caso, corta com reticências; abaixo disso
-  os botões descem pra linha de baixo, como já desciam. Botão novo no
-  topo mede de novo em 375, 390 e 761 px.
+- O topo tem sete botões (Time, Mochila, Ficha, Missões, Diário,
+  Salvar e Ajustes). No celular eles cabem na linha do nome a partir
+  de 390 px, como os seis cabiam: 29 px cada (o desenho de 23, com o
+  traço do mesmo tamanho de antes), 2 px entre eles, e o nome cede
+  (`.topo-quem` com `flex:1 1 0` e mínimo de 120 px) e, no pior caso,
+  corta com reticências; abaixo disso os botões descem pra linha de
+  baixo, como já desciam. No computador, Salvar e Ajustes vão só com o
+  desenho (`so-icone`, o nome no `title` e no `aria-label`): sete
+  pílulas com nome caíam numa terceira linha. Botão novo no topo mede
+  de novo em 375, 390, 761 e 1280 px, com e sem nome.
 
 ## A inscrição (criação de personagem)
 A criação é a **ficha de inscrição da Liga** (`UI.telaCriacao`, dados em
@@ -3685,7 +3745,7 @@ que o projeto tem:
   junto com ele. A Lilita One e a Jost já foram a letra daqui e
   saíram.
 - **Topo** (`UI.topo`): HUD em duas linhas — rosto, nome e título de
-  quem joga com os seis botões de menu (cada um com o desenho de
+  quem joga com os sete botões de menu (cada um com o desenho de
   `icones.js`; no celular só o desenho, com `aria-label`), e embaixo os
   chips do que se carrega (lugar, hora, HP com barrinha, Vontade,
   dinheiro, Ração). No celular os chips andam numa linha de arrastar. O
@@ -3774,7 +3834,7 @@ fica sem seta. O capítulo que espera aqui é a missão dourada
 **Janela** (`UI.modal`) tem o título em letra de placa, com o desenho
 da janela numa moeda da cor dele (`ICONE_DA_JANELA`, pela classe da
 janela; a cor vira o `--ac` da janela inteira). As janelas de ler
-(`JANELAS_DE_LER`: regras, tutorial, ajustes, rota, diário, códice)
+(`JANELAS_DE_LER`: regras, tutorial, ajustes, rota, diário, missões, códice)
 ganham a classe `.folha`: seção com losango e linha, a conta em linhas
 agrupadas numa ficha (a primeira e a última de cada grupo arredondam
 sozinhas, por `:has`), o exemplo da folha de regras num cartão com o

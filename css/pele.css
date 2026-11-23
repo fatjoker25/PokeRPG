@@ -181,10 +181,12 @@ body.com-cenario .topo{
   .topo-rosto{width:36px;height:36px;box-shadow:0 0 0 2px var(--bg), 0 0 0 3.5px var(--destaque), 0 0 14px -3px var(--destaque-sombra)}
   .topo h1{font-size:16px}
   .topo-rep{font-size:8.5px;padding:1px 6px 0;margin-top:3px;letter-spacing:.1em}
-  /* os seis botões cabem na linha do nome a partir de 385 px, como antes */
-  .topo-acoes{gap:3px}
-  .btn.mini.topo-bt{padding:3px;border-radius:10px}
-  .topo-bt svg.topo-ic{width:24px;height:24px;padding:4.5px;border-radius:8px}
+  /* os sete botões cabem na linha do nome a partir de 390 px, como os
+     seis cabiam: 29 px cada (o desenho de 23 com o mesmo traço de 15 de
+     antes, que só perdeu a folga), 2 px entre eles, e o nome cede até 120 */
+  .topo-acoes{gap:2px}
+  .btn.mini.topo-bt{padding:2px;border-radius:10px}
+  .topo-bt svg.topo-ic{width:23px;height:23px;padding:4px;border-radius:8px}
   .topo-bt .topo-conta{top:-4px;left:auto;right:-3px;min-width:14px;height:14px;padding:0 3px;font-size:9px}
   .topo-chip{font-size:12px;padding:2px 9px 2px 3px;line-height:18px}
   .topo-chip svg.topo-ic{width:18px;height:18px;padding:3px}
