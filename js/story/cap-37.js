@@ -17,6 +17,9 @@ function _c37Aliados(d){
   if (d.flags.sv_conheceu_zev && ((d.npcs['Zev'] || {}).opiniao || 0) >= 3) l.push('zev');
   return l;
 }
+/* as etiquetas do armazém: as vinte e três da lista do Lund, menos as
+   nove da caixa da Maré, se ela voltou no 35 */
+function _c37Etiquetas(d){ return d.flags.sv_caixa_tres ? 'catorze' : 'vinte e três'; }
 /* o que estava no armazém e volta, além da Milotic */
 function _c37Volta(d){
   if (d.flags.sv_mochila_subiu) Estado.marcar('sv_rec_etta');
@@ -57,18 +60,18 @@ c37_a_praca:{
   ],
   escolhas:[
     {texto:'Ler o cartaz do torneio.', vai:'c37_o_cartaz', cond:d => !Historia.jaAconteceu('c37_o_cartaz')},
-    {texto:'Falar com a mulher que estende roupa no varal da praça.', vai:'c37_o_varal', cond:d => !Historia.jaAconteceu('c37_o_varal')},
+    {texto:d => deDia(d) ? 'Falar com a mulher que estende roupa no varal da praça.' : 'Falar com a mulher que recolhe a roupa do varal da praça.', vai:'c37_o_varal', cond:d => !Historia.jaAconteceu('c37_o_varal')},
     {texto:'Atravessar a campina e olhar o armazém de dia.', vai:'c37_de_dia', cond:d => !Historia.jaAconteceu('c37_de_dia')},
-    {texto:'Esperar a quinta-feira à noite.', vai:'c37_a_espera'}
+    {texto:'Esperar a noite de quarta pra quinta.', vai:'c37_a_espera'}
   ]
 },
 c37_a_praca_volta:{
   texto:['O relógio da torre adianta quatro minutos. A campina balança com o vento. O armazém, lá no fundo, não balança.'],
   escolhas:[
     {texto:'Ler o cartaz do torneio.', vai:'c37_o_cartaz', cond:d => !Historia.jaAconteceu('c37_o_cartaz')},
-    {texto:'Falar com a mulher que estende roupa no varal da praça.', vai:'c37_o_varal', cond:d => !Historia.jaAconteceu('c37_o_varal')},
+    {texto:d => deDia(d) ? 'Falar com a mulher que estende roupa no varal da praça.' : 'Falar com a mulher que recolhe a roupa do varal da praça.', vai:'c37_o_varal', cond:d => !Historia.jaAconteceu('c37_o_varal')},
     {texto:'Atravessar a campina e olhar o armazém de dia.', vai:'c37_de_dia', cond:d => !Historia.jaAconteceu('c37_de_dia')},
-    {texto:'Esperar a quinta-feira à noite.', vai:'c37_a_espera'}
+    {texto:'Esperar a noite de quarta pra quinta.', vai:'c37_a_espera'}
   ]
 },
 
@@ -88,7 +91,8 @@ c37_o_cartaz:{
 
 c37_o_varal:{
   texto:[
-    'Ela estende lençol branco com prendedor de madeira, um atrás do outro, sem pressa e sem olhar pra você.',
+    d => deDia(d) ? 'Ela estende lençol branco com prendedor de madeira, um atrás do outro, sem pressa e sem olhar pra você.'
+                  : 'Ela recolhe lençol branco do varal no escuro, prendedor por prendedor, sem pressa e sem olhar pra você.',
     fala('a mulher do varal da praça', 'De noite tem barco sem luz encostando lá no armazém. Eu já disse pra Guarda. A Guarda é um homem só.', 'baixo'),
     fala('a mulher do varal da praça', 'Tem um homem que dorme lá dentro. Careca, grande, jaqueta com um dragão bordado nas costas. Trabalhava na segurança da fábrica, quando tinha fábrica. Era boxeador antes disso, diz o meu marido.'),
     fala('a mulher do varal da praça', 'E toda quinta, de madrugada, desce do barco um senhor de terno branco. Terno branco, de madrugada, na campina. Quem usa terno branco de madrugada não é pescador.')
@@ -106,7 +110,7 @@ c37_de_dia:{
     'Pela fresta da porta dá pra ver caixote empilhado, e em cima de um deles, presa no ferro do cadeado de dentro, uma fita lilás de concurso.',
     'Alguém ronca lá dentro, alto, num catre encostado na parede.'
   ],
-  ef:{flag:'sv_viu_a_fita', registrar:'Pela fresta da porta do armazém da Ilha Cinco: caixotes, e uma fita lilás de concurso presa no cadeado de dentro.'},
+  ef:{flag:'sv_viu_a_fita', executar:d => { if (!deDia(d)) Sevii.deManha(8); }, registrar:'Pela fresta da porta do armazém da Ilha Cinco: caixotes, e uma fita lilás de concurso presa no cadeado de dentro.'},
   escolhas:[
     {texto:'Voltar pela campina e esperar a noite.', vai:'c37_a_praca_volta'}
   ]
@@ -114,10 +118,12 @@ c37_de_dia:{
 
 c37_a_espera:{
   texto:[
-    'Quinta-feira, onze da noite. A praça está vazia e o relógio da torre já marca onze e quatro.',
+    'Quarta-feira, onze da noite. A praça está vazia e o relógio da torre já marca onze e quatro.',
     d => {
       const a = _c37Aliados(d), l = [];
-      if (a.includes('lund')) l.push('O Sargento Lund chega no último barco de pesca da noite, de farda inteira dessa vez, sem pijama nenhum, e senta no banco da praça do seu lado sem dizer nada.');
+      if (a.includes('lund')) l.push(Historia.jaAconteceu('c35_noa_entregue')
+        ? 'O Sargento Lund chega no último barco de pesca da noite, de farda inteira dessa vez, sem pijama nenhum, e senta no banco da praça do seu lado sem dizer nada.'
+        : 'O Sargento Lund chega no último barco de pesca da noite, de farda e quepe, e senta no banco da praça do seu lado sem dizer nada.');
       if (a.includes('brody')) l.push('Doze capacetes laranja descem da mesma balsa, em silêncio, coisa que eles nunca fizeram na vida. O Brody aperta a sua mão com a mão inteira.');
       if (a.includes('noa')) l.push('A Noa está sentada no muro do relógio, de jaqueta fechada até o queixo, com o Murkrow dormindo no ombro.');
       if (a.includes('zev')) l.push('E encostado na torre do relógio, de cabelo preso, sem ninguém ter chamado, o Zev.');
@@ -126,7 +132,7 @@ c37_a_espera:{
     },
     d => _c37Aliados(d).includes('zev') ? fala('Zev', 'Eu sei como é a porta de um lugar desses por dentro. Eu já fui quem segura ela.', 'baixo') : ''
   ],
-  ef:{executar:() => { Relogio.ateODia(3, 23); }},
+  ef:{executar:() => { Relogio.ateODia(2, 23); }},
   escolhas:[
     {texto:'Atravessar a campina no escuro.', vai:'c37_a_campina'}
   ]
@@ -196,7 +202,7 @@ c37_dekker_ganhou:{
 c37_dentro:{
   texto:[
     'Dentro, debaixo da lâmpada amarela, os caixotes estão abertos e arrumados como prateleira de loja: Pokébola em fila, cada uma com uma etiqueta de papel amarrada no botão.',
-    'Cada etiqueta tem quatro linhas batidas à máquina, espécie, lote, origem e data, e embaixo um preço a lápis, em letra de contador. Na linha da origem: LILYCOVE. ECRUTEAK. FORTREE. MAUVILLE. OLIVINE. CIANWOOD. Vinte e três etiquetas.',
+    d => `Cada etiqueta tem quatro linhas batidas à máquina, espécie, lote, origem e data, e embaixo um preço a lápis, em letra de contador. Na linha da origem: LILYCOVE. ECRUTEAK. FORTREE. MAUVILLE. OLIVINE. CIANWOOD. ${cap1(_c37Etiquetas(d))} etiquetas.`,
     'Na ponta da fila, sozinha, presa com uma fita lilás de concurso: a da Milotic. Do lado do preço dela alguém desenhou uma estrela.',
     d => d.flags.sv_mochila_subiu ? 'Numa prateleira de baixo, jogada de qualquer jeito, uma mochila cheia de Pokébola de Apricorn pendurada por fora.' : '',
     d => d.flags.sv_ovos_subiram ? 'Em cima de um caixote, uma caixa térmica azul desligada, com seis ovos frios dentro.' : '',
@@ -277,7 +283,7 @@ c37_penrose_amarrado:{
     'Ele não resiste. Senta no caixote que você aponta, e enquanto você passa a corda ele fala, calmo, como se estivesse numa reunião.',
     fala('Sr. Penrose', '{O senhor|A senhora} sabe que de manhã eu pago a fiança, e na outra semana eu compro de novo. A Guarda é um homem só.'),
     'Lá fora, o barco liga o motor e vai embora vazio, sem luz.',
-    'De manhã, o Lund chega no primeiro barco de pesca. Olha o Penrose amarrado num caixote de conserva, de terno branco amassado, e tira o quepe.',
+    'Antes de clarear, o Lund chega num barco de pesca: a mulher do varal viu a lâmpada do armazém acesa de madrugada e mandou recado pelo rádio do Centro. Ele olha o Penrose amarrado num caixote de conserva, de terno branco amassado, e tira o quepe.',
     fala('Sargento Lund', 'Fiança de quem compra Pokémon roubado de gente de fora quem decide não sou eu. É o juiz de Kanto. E o juiz de Kanto demora pra atravessar o mar.', 'frio')
   ],
   ef:{flag:['sv_penrose_preso', 'sv_rec_milotic'], executar:d => _c37Volta(d),
@@ -334,9 +340,10 @@ c37_o_barco:{
 
 c37_os_caixotes:{
   texto:[
-    'Vinte e três Pokébolas com etiqueta de cidade de longe e preço de contador. Você tira as etiquetas uma por uma, e no fim tem um monte de papel no chão e vinte e três Pokébolas que não valem nada pra ninguém, só pra quem é dono.',
+    d => { const n = _c37Etiquetas(d);
+      return `${cap1(n)} Pokébolas com etiqueta de cidade de longe e preço de contador. Você tira as etiquetas uma por uma, e no fim tem um monte de papel no chão e ${n} Pokébolas que não valem nada pra ninguém, só pra quem é dono.`; },
     'A da Milotic você guarda separada, no bolso de dentro, com a fita lilás.',
-    d => d.flags.sv_mochila_subiu ? 'A mochila de Apricorn vai junto, pendurada no seu ombro, batendo bola com bola a cada passo.' : '',
+    d => d.flags.sv_mochila_subiu ? 'A mochila de Apricorn vai junto, pendurada no seu ombro, batendo Pokébola com Pokébola a cada passo.' : '',
     d => d.flags.sv_ovos_subiram ? 'A caixa térmica você liga na tomada do armazém antes de qualquer coisa. A luzinha acende.' : '',
     d => Historia.jaAconteceu('c37_o_pedido')
       ? 'A folha do pedido ficou em cima do caixote onde o Penrose alisou. Você dobra em quatro e guarda.'
@@ -363,7 +370,7 @@ c37_o_amanhecer:{
     'No relógio da praça são seis e quatro. Na hora que é, são seis.',
     'A balsa da Ilha Sete, que só sai na semana do torneio, está no cais com a bandeira da arena redonda no mastro.'
   ],
-  ef:{registrar:'Amanheceu na Ilha Cinco. A balsa da Ilha Sete está no cais: a semana do torneio começou.'},
+  ef:{executar:() => { Relogio.ate(6); }, registrar:'Amanheceu na Ilha Cinco. A balsa da Ilha Sete está no cais: a semana do torneio começou.'},
   fim:true, sai:'ilha_cinco',
   resumo:'O Armazém: vinte e três Pokébolas com etiqueta de preço, um senhor de terno branco às duas da manhã, e o nome de quem paga o troféu.'
 }

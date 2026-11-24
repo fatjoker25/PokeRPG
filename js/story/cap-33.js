@@ -36,7 +36,7 @@ c33_a_porta:{
     'A casa do Blue fica do lado do laboratório, de muro baixo e caixa de correio torta, pintada de novo por cima da tinta velha sem ninguém lixar.',
     d => (d.flags.recusou_o_ginasio || d.flags.blue_ofereceu_o_ginasio)
       ? 'Desde que ele saiu de Viridian, a janela de cima fica aberta o dia inteiro. Ele está sentado no peitoril, de meia, com uma perna pra fora.'
-      : 'É segunda-feira, o dia em que o ginásio de Viridian fecha. Ele está sentado no peitoril da janela de cima, de meia, com uma perna pra fora.',
+      : 'Hoje o ginásio de Viridian abriu sem o líder. Ele está sentado no peitoril da janela de cima, de meia, com uma perna pra fora.',
     fala('Blue', 'Eu vi você subindo a rua.', null, 'Ele fala lá de cima, sem levantar a voz.'),
     fala('Blue', 'Entra antes que o meu avô te veja. Se ele te vê, são três horas de conversa sobre a Pokédex, e eu preciso de você pra outra coisa.')
   ],
@@ -104,7 +104,7 @@ c33_por_que:{
     fala('Blue', 'Ir com catorze minutos de Campeão é ir de mentira. Eu ia descer do navio e todo mundo ia saber quem entrou pela porta depois de mim.'),
     d => (d.flags.recusou_o_ginasio || d.flags.blue_ofereceu_o_ginasio)
       ? fala('Blue', 'E depois que eu saí de Viridian, eu não sou nem líder. Sou o neto do Professor que mora no quarto de cima.', 'baixo')
-      : fala('Blue', 'E líder de ginásio não tira férias de duas semanas. Tira segunda-feira.', 'riso'),
+      : fala('Blue', 'E líder de ginásio não tira férias de duas semanas. Tira um dia. Hoje é o dia.', 'riso'),
     fala('Blue', 'Você ganhou a cadeira. Quem vai é você.')
   ],
   ef:{npc:{nome:'Blue', opiniao:1, memoria:'Contou por que nunca foi ao Torneio das Ilhas: catorze minutos de Campeão não bastam.'}},

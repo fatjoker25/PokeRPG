@@ -298,18 +298,6 @@ const CopaSevii = {
       sairDaArena();
       d.copasVencidas = (d.copasVencidas || 0) + 1;
       if (d.copasVencidas === 1){
-        /* a tradição do Florian: um ovo da linhagem pra quem chega na final,
-           se a caixa térmica voltou pra ele */
-        /* depois do Anne, o ovo espera com a dona da pousada, pra quem o Florian conheceu */
-        const foi = Sevii.partiu(d);
-        if (d.flags.sv_rec_ovos && (!foi || Sevii.conheceu('florian', d))){
-          d.ovos = d.ovos || [];
-          d.ovos.push({dex:133, choca:Creche._agora() + HORAS_DO_OVO});
-          Creche.sincronizarOvos();
-          avisos.push({tipo:'item', texto: foi
-            ? `A dona da pousada desce até a arena com uma caixa térmica. Dentro, um ovo e um bilhete na letra do Florian: "Pra quando você ganhar." Recebeu 1× ${NOME_DO_OVO}.`
-            : `O Florian desce da arquibancada com um ovo nas duas mãos. Recebeu 1× ${NOME_DO_OVO}.`});
-        }
         Estado.darItem('Troféu das Ilhas', 1);
         ganhos['Troféu das Ilhas'] = 1;
         avisos.push({tipo:'item', texto:'Recebeu 1× Troféu das Ilhas.'});
@@ -327,6 +315,7 @@ const CopaSevii = {
       }); Vitoria.mostrar(festa()); });
     }
     c.adv = adversarioDaVez(c);
+    if (c.rodada === R - 1) this.ovoDoFlorian(d, avisos);
     const tirou = quemOProximoTirou(c);
     Estado.salvar('auto');
     Jogo.resolverPendencias(() => { UI.telaResultadoLiga({
@@ -337,6 +326,23 @@ const CopaSevii = {
         'Meia hora entre uma luta e outra. Dá pra curar o time.'],
       avisos, venceu:true, copa:true
     }); Vitoria.mostrar(festa()); });
+  },
+
+  /* a tradição do Florian (o jantar do Anne): um ovo da linhagem pra quem
+     chega na final, uma vez, se a caixa térmica voltou pra ele. Depois do
+     Anne, o ovo espera com a dona da pousada, pra quem o Florian conheceu.
+     Quem já tinha o título de antes desta regra ganhou o ovo com ele */
+  ovoDoFlorian(d, avisos){
+    if (d.flags.sv_ovo_do_florian || (d.copasVencidas || 0) >= 1 || !d.flags.sv_rec_ovos) return;
+    const foi = Sevii.partiu(d);
+    if (foi && !Sevii.conheceu('florian', d)) return;
+    Estado.marcar('sv_ovo_do_florian');
+    d.ovos = d.ovos || [];
+    d.ovos.push({dex:133, choca:Creche._agora() + HORAS_DO_OVO});
+    Creche.sincronizarOvos();
+    avisos.push({tipo:'item', texto: foi
+      ? `A dona da pousada desce até a arena com uma caixa térmica. Dentro, um ovo e um bilhete na letra do Florian: "Pra quando você chegar na final." Recebeu 1× ${NOME_DO_OVO}.`
+      : `O Florian desce da arquibancada com um ovo nas duas mãos, pra quem chegou na final. Recebeu 1× ${NOME_DO_OVO}.`});
   },
 
   curar(){

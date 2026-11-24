@@ -6,6 +6,10 @@
    primeiro roubo que você vê. Quem você ouve no jantar (sv_conheceu_*)
    volta nos outros capítulos. Ver sevii.js.
    ============================================================ */
+/* o Anne sai do cais com o sol baixo: quem sobe antes das cinco da tarde
+   espera a bordo, e quem sobe depois sai na hora. Uma vez, na prancha */
+function _c34Zarpa(){ const r = Estado.dados.relogio; sincronizarHora(r); if (r.hora < 17) Relogio.ate(17); }
+
 /* quem dá pra ouvir no jantar: três, no máximo, e cada um uma vez */
 function _c34Salao(){
   const ouvidos = d => ['gideon', 'ziggy', 'etta', 'soren', 'saskia', 'florian', 'zev'].filter(id => d.flags['sv_conheceu_' + id]).length;
@@ -51,10 +55,10 @@ c34_o_cais:{
 c34_a_prancha:{
   texto:[
     'O marinheiro olha a passagem, olha você, e rasga o canto devagar, como quem rasga canto de passagem de cabine 14 pela primeira vez.',
-    fala('o marinheiro da prancha', 'Cabine catorze. A do Campeão. O comandante pediu pra avisar que o jantar é às oito e que no Anne ninguém pede autógrafo.'),
+    fala('o marinheiro da prancha', 'Cabine catorze. A do Campeão. O comandante pediu pra avisar que o jantar é no salão, e que no Anne ninguém pede autógrafo.'),
     'Você sobe. Atrás de você, a fila de Johto sobe olhando pras próprias mochilas.'
   ],
-  ef:{perdeItens:{'Passagem':1}},
+  ef:{perdeItens:{'Passagem':1}, executar:_c34Zarpa},
   escolhas:[
     {texto:'Ir pro salão.', vai:'c34_o_salao'}
   ]
@@ -69,7 +73,7 @@ c34_passou:{
     'Um velho de chapéu de pano na sua frente para no meio da prancha pra amarrar o sapato, e a fila inteira se embola em volta dele.',
     'Quando desembola, você já está no convés. Os oficiais ainda estão olhando a folha.'
   ],
-  ef:{perdeItens:{'Passagem':1}, registrar:'Embarcou no S.S. Anne no meio da turma de Johto, debaixo do nariz da Patrulha.'},
+  ef:{perdeItens:{'Passagem':1}, executar:_c34Zarpa, registrar:'Embarcou no S.S. Anne no meio da turma de Johto, debaixo do nariz da Patrulha.'},
   escolhas:[
     {texto:'Ir pro salão.', vai:'c34_o_salao'}
   ]
@@ -81,7 +85,7 @@ c34_quase:{
     'É um homem de barba branca e quepe, com a mão no corrimão. Os oficiais olham um pro outro. Um deles fecha a folha.',
     fala('o comandante do Anne', 'Sobe.')
   ],
-  ef:{perdeItens:{'Passagem':1}, registrar:'A Patrulha quase te parou na prancha do S.S. Anne. O comandante não deixou.'},
+  ef:{perdeItens:{'Passagem':1}, executar:_c34Zarpa, registrar:'A Patrulha quase te parou na prancha do S.S. Anne. O comandante não deixou.'},
   escolhas:[
     {texto:'Subir.', vai:'c34_o_salao'}
   ]
@@ -101,7 +105,7 @@ c34_encarou:{
     'Atrás de você a fila de Johto começou a reclamar em voz alta, num sotaque que nenhum dos dois entende.',
     fala('o oficial da prancha', 'Sobe. Sobe logo.', null, 'E volta pra folha como se a folha tivesse mudado.')
   ],
-  ef:{perdeItens:{'Passagem':1}, registrar:'Subiu no S.S. Anne passando de frente pela Patrulha, de passagem na mão.'},
+  ef:{perdeItens:{'Passagem':1}, executar:_c34Zarpa, registrar:'Subiu no S.S. Anne passando de frente pela Patrulha, de passagem na mão.'},
   escolhas:[
     {texto:'Ir pro salão.', vai:'c34_o_salao'}
   ]
@@ -115,7 +119,7 @@ c34_a_carga:{
     'Ele levanta, abre caminho entre os caixotes e aponta uma escada de ferro.',
     fala('o homem da carga', 'Isso aqui não é favor da rede. É que o comandante não gosta de cinza no navio dele. Sobe.')
   ],
-  ef:{perdeItens:{'Passagem':1}, rep:{eixo:'ruim', delta:1, motivo:'Embarcou no S.S. Anne pela porta da carga, pela rede, fugindo da Patrulha'},
+  ef:{perdeItens:{'Passagem':1}, executar:_c34Zarpa, rep:{eixo:'ruim', delta:1, motivo:'Embarcou no S.S. Anne pela porta da carga, pela rede, fugindo da Patrulha'},
       registrar:'Embarcou no S.S. Anne pela porta da carga. O homem do macacão sabia que você vinha.'},
   escolhas:[
     {texto:'Subir a escada de ferro.', vai:'c34_o_salao'}
@@ -126,7 +130,8 @@ c34_o_salao:{
   texto:[
     d => {
       const n = ['gideon', 'ziggy', 'etta', 'soren', 'saskia', 'florian', 'zev'].filter(id => d.flags['sv_conheceu_' + id]).length;
-      if (n === 0) return 'O navio sai do cais com o sol baixo, e às oito o salão de jantar enche. É o mesmo salão de antes, de lustre e toalha branca, mas a gente que senta nele é outra: quase todo mundo de mochila, quase todo mundo falando de torneio.';
+      if (n === 0) return (horaAgora(d) >= 17 && horaAgora(d) < 20 ? 'O navio sai do cais com o sol baixo, e na hora do jantar o salão enche.' : 'O navio sai do cais no escuro, com o jantar atrasado pra esperar a fila de Johto, e o salão enche.')
+        + ' É o mesmo salão de antes, de lustre e toalha branca, mas a gente que senta nele é outra: quase todo mundo de mochila, quase todo mundo falando de torneio.';
       if (n < 3) return 'O salão continua cheio. Vermilion já virou um risco de luz atrás do navio.';
       return 'O salão começa a esvaziar. Um garçom recolhe as toalhas com pressa de quem quer dormir.';
     },
@@ -195,13 +200,13 @@ c34_etta:{
     fala('Etta', 'Não é Pokébola comum. Ninguém diz "Pokébola comum" na minha mesa.', null, 'Ela diz isso antes de você dizer qualquer coisa.'),
     fala('Etta', 'É Apricorn. Azalea. A rua de baixo da rua do mestre famoso. Todo mundo conhece a de cima.'),
     'Ela pega uma verde, de tampa riscada, e põe na sua mão com cuidado de quem empresta uma coisa viva.',
-    fala('Etta', 'Essa foi a primeira que fechou. Eu tinha nove anos. O Heracross mora nela desde então. Oitenta e quatro bolas eu fiz depois, e eu sei o dia de cada uma.')
+    fala('Etta', 'Essa foi a primeira que fechou. Eu tinha nove anos. O Heracross mora nela desde então. Oitenta e quatro Pokébolas eu fiz depois, e eu sei o dia de cada uma.')
   ],
-  ef:{flag:'sv_conheceu_etta', npc:{nome:'Etta', opiniao:2, memoria:'Viu a mesa de Pokébolas de Apricorn dela no jantar do S.S. Anne, e a bola verde do Heracross.'},
+  ef:{flag:'sv_conheceu_etta', npc:{nome:'Etta', opiniao:2, memoria:'Viu a mesa de Pokébolas de Apricorn dela no jantar do S.S. Anne, e a Pokébola verde do Heracross.'},
       registrar:'No S.S. Anne: a Etta, de Azalea, catorze anos, com oitenta e quatro Pokébolas de Apricorn feitas à mão.'},
   escolhas:[
-    {texto:'Devolver a bola verde com as duas mãos.', vai:'c34_o_salao',
-     ef:{npc:{nome:'Etta', opiniao:1, memoria:'Devolveu a bola do Heracross com as duas mãos.'}}},
+    {texto:'Devolver a Pokébola verde com as duas mãos.', vai:'c34_o_salao',
+     ef:{npc:{nome:'Etta', opiniao:1, memoria:'Devolveu a Pokébola do Heracross com as duas mãos.'}}},
     {texto:'Perguntar quanto custa uma.', vai:'c34_o_salao',
      ef:{npc:{nome:'Etta', opiniao:1, memoria:'Perguntou o preço de uma Pokébola de Apricorn.'}}}
   ]
@@ -302,7 +307,7 @@ c34_zev:{
     'Cabelo preto comprido, preso; barba de semanas. Ele levanta os olhos quando você puxa a cadeira, e não diz nada.',
     fala('Zev', 'Pode olhar. Todo mundo olha. Eu prefiro que olhe de frente.'),
     d => Sevii.daRede(d)
-      ? fala('Zev', 'Esse pino que você usa. Eu tinha um parecido, de outra letra. Tira do peito no navio. Aqui todo mundo sabe ler.', 'baixo')
+      ? fala('Zev', 'Esse pino que você usa. Eu tinha um parecido. Tira do peito no navio. Aqui todo mundo sabe ler.', 'baixo')
       : Sevii.daLei(d)
       ? fala('Zev', 'Você tem cara de quem trabalha com fichário. Eu já tenho ficha. Cumpri o que estava nela.', 'frio')
       : fala('Zev', 'Zev. Mahogany. O resto o salão já te contou.')
@@ -506,7 +511,8 @@ c34_o_fim:{
     'E na ponta do cais, sentados num barco de pesca encalhado, três moleques da ilha olham pra todo mundo que desceu, um por um, como quem conta.',
     'Atrás deles, na ponta do cais, a fábrica de conserva fechada, de portão acorrentado. A placa caiu e ficou de cabeça pra baixo, e ainda dá pra ler: CONSERVAS PENROSE.'
   ],
-  ef:{flag:'sv_chegou', registrar:'Chegou à Ilha Um, nas Ilhas Sevii. No primeiro minuto, levaram a Milotic de uma coordenadora de Hoenn no cais.'},
+  ef:{flag:'sv_chegou', executar:d => { Sevii.reg(d).chegouDia = d.relogio.dia; },
+      registrar:'Chegou à Ilha Um, nas Ilhas Sevii. No primeiro minuto, levaram a Milotic de uma coordenadora de Hoenn no cais.'},
   fim:true, sai:'ilha_um',
   resumo:'O Navio: uma noite de mar com quem veio de Johto, e, no cais da Ilha Um, uma Pokébola arrancada de uma fita no meio do povo.'
 }

@@ -3514,6 +3514,15 @@ a 38; o desenho de cada um do elenco está em `docs/SEVII.md`.
   · III" (`numeroDoCapitulo`). Não chamam cena de linha (a história de
   Kanto fechou cada linha no epílogo). O número não é posição de
   jornada: `capNaJornada` dá 33 a 38, que é depois de tudo.
+- **O relógio anda com o texto** (ver "Relógio e dia marcado"): o
+  Anne sai às cinco da tarde (`_c34Zarpa`: quem sobe antes espera a
+  bordo), o 35 começa de manhã e nunca no dia em que o Anne encostou
+  (`chegouDia`, carimbado no `c34_o_fim`, e o Ziggy conta os dias dali),
+  cada lugar que você pergunta no 35 leva duas horas, o farol do 36 é
+  de noite pra quem esperou com o Brody e às onze pras pedras da Noa, o
+  armazém do 37 é na madrugada de quarta pra quinta (o papel do farol
+  diz QUINTA — 2H), e o livro do Magnus fecha ao meio-dia, antes da
+  chave da uma. Cena que diz "de manhã" passa por `Sevii.deManha(h)`.
 - **A balsa abre uma ilha de cada vez** (`Sevii.trava`, lido pela
   `travaDaPassagem`): a fase é quantos capítulos das ilhas fecharam, e
   `ILHA_ABRE_NA_FASE` diz quando cada lugar abre; a primeira travessia
@@ -3652,8 +3661,10 @@ a 38; o desenho de cada um do elenco está em `docs/SEVII.md`.
   quartas, 42% a 52% na semi, 26% a 36% na final, 4% a 8% de título
   (o elenco fica em 72-80, 39-56, 38-47, 19-25 e 2-5). Rafe, Jett e
   Kian ficaram fora: o time deles cai fácil mesmo com seis. O ovo do
-  Florian, depois do Anne, só pra quem ele conheceu, com a dona da
-  pousada.
+  Florian vem na primeira final a que você chega, como ele disse no
+  jantar do Anne (`CopaSevii.ovoDoFlorian`, quando a semifinal cai), e
+  só se a caixa térmica voltou; depois do Anne, só pra quem ele
+  conheceu, com a dona da pousada.
 - **Entre os capítulos, a ilha do meio conta alguma coisa**
   (`Sevii.afazeres`): o barco sem luz na Ilha Quatro, a Pokébola M. H.
   da Oona na Ilha Seis. Depois do arco, a pousada da arena, onde cada

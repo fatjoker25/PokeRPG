@@ -115,10 +115,10 @@ const ELENCO_SEVII = [
   voz:'Rápida e técnica. Explica a costura de uma Pokébola sem ninguém pedir e corrige quem diz "Pokébola comum".',
   jornada:[
     'A família dela faz Pokébola de Apricorn em Azalea há quatro gerações, na rua de baixo da do mestre famoso. Todo mundo conhece a rua de cima. Ninguém conhece a de baixo.',
-    'Fez o desafio de Johto só com Pokémon que ela mesma pegou com as bolas da família.',
+    'Fez o desafio de Johto só com Pokémon que ela mesma pegou com as Pokébolas da família.',
     'Carrega oitenta e quatro Pokébolas feitas à mão. Sabe o dia em que fez cada uma.'
   ],
-  porque:'Vender as bolas na feira do torneio (quem vem de Hoenn nunca viu uma Apricorn) e provar que inseto ganha torneio.',
+  porque:'Vender as Pokébolas na feira do torneio (quem vem de Hoenn nunca viu uma Apricorn) e provar que inseto ganha torneio.',
   gancho:'Quer abrir uma banca da família em Lilycove, do outro lado do mar.',
   time:[
     [291, ['Slash', 'Fury Cutter', 'Swords Dance', 'Double-Edge'], 'Jolly'],
@@ -128,13 +128,13 @@ const ELENCO_SEVII = [
     [348, ['Rock Slide', 'Earthquake', 'Fury Cutter', 'Swords Dance'], 'Adamant'],
     [212, ['Metal Claw', 'Fury Cutter', 'Swords Dance', 'Quick Attack'], 'Adamant', 'Metal Coat']
   ],
-  torneio:'"Cada bola dessas eu fiz com a mão. Se eu perder, pelo menos você viu o acabamento."',
+  torneio:'"Cada Pokébola dessas eu fiz com a mão. Se eu perder, pelo menos você viu o acabamento."',
   vence:'"Inseto! Escreve aí: inseto!"',
-  perde:'"Tá. Mas olha a costura da bola que você usou. Agora olha a minha."',
+  perde:'"Tá. Mas olha a costura da Pokébola que você usou. Agora olha a minha."',
   despedida:'"Guarda isso: Pokébola de Apricorn não é Pokébola comum. Se alguém disser que é, você corrige."',
   deLonge:[
-    'Vendi trinta e duas bolas na feira das ilhas. Trinta e duas! A rua de cima de Azalea ficou sabendo.',
-    'Tô costurando uma bola nova, verde-escura, com costura dupla. Ainda não tem nome. Quando tiver, você é a segunda a saber.',
+    'Vendi trinta e duas Pokébolas na feira das ilhas. Trinta e duas! A rua de cima de Azalea ficou sabendo.',
+    'Tô costurando uma Pokébola nova, verde-escura, com costura dupla. Ainda não tem nome. Quando tiver, você é a segunda a saber.',
     'Escrevi pra Lilycove perguntando quanto custa uma banca na praia. Responderam com um número que eu não vou repetir.'
   ]
 },

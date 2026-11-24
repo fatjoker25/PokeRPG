@@ -7,6 +7,22 @@
    Noa no fim do cais com a mochila da Etta no colo. O que você faz com
    ela decide a rival (sv_noa_*). Ver sevii.js.
    ============================================================ */
+/* o 35 começa de manhã, e nunca no dia em que o Anne encostou: a caixa
+   do Florian sumiu na noite depois da chegada. Cada lugar que você
+   pergunta leva duas horas, e o sol anda com elas */
+function _c35Amanhece(d){
+  const r = d.relogio; sincronizarHora(r);
+  const chegou = Sevii.reg(d).chegouDia;
+  if (r.hora < 5) Relogio.viver(7 - r.hora);
+  else if (r.hora >= 11 || (chegou != null && r.dia <= chegou)) Relogio.amanhaAs(7);
+}
+function _c35Passa(){ Relogio.avancar(2); }
+/* quantos dias desde a Milotic, pela boca do Ziggy */
+function _c35DesdeOAnne(d){
+  const chegou = Sevii.reg(d).chegouDia;
+  return chegou == null ? 1 : Math.max(1, d.relogio.dia - chegou);
+}
+
 /* o que dá pra investigar de manhã: cada lugar uma vez, e a fábrica sempre */
 function _c35Manha(){
   const ainda = id => d => !Historia.jaAconteceu(id);
@@ -34,11 +50,13 @@ c35_a_manha:{
     d => d.flags.sv_conheceu_ziggy
       ? fala('Ziggy', 'Ouvinte, {o Campeão|a Campeã} de Kanto acabou de chegar na roda! Fica aí, que você vai querer ouvir.', null, 'Ele te vê e acena com o fio do microfone.')
       : fala('Ziggy', 'Ouvinte, aqui é o Ziggy, de Goldenrod, direto do cais da Ilha Um, e as notícias não são boas.'),
-    fala('Ziggy', 'Ontem de manhã, a Milotic de uma coordenadora de Lilycove, aqui neste cais. Ontem de noite, uma caixa térmica com seis ovos, da pousada lá de cima. E hoje cedo, na feira da Ilha Dois, a mochila inteira de uma artesã de Azalea, com oitenta e quatro Pokébolas e dois Pokémon dentro.'),
-    fala('Ziggy', 'Três em um dia, ouvinte. E o torneio nem começou.', 'baixo'),
+    d => { const n = _c35DesdeOAnne(d);
+      return fala('Ziggy', `${n === 1 ? 'Ontem de manhã' : 'Faz ' + porExtenso(n) + ' dias'}, a Milotic de uma coordenadora de Lilycove, aqui neste cais. Ontem de noite, uma caixa térmica com seis ovos, da pousada lá de cima. E hoje cedo, na feira da Ilha Dois, a mochila inteira de uma artesã de Azalea, com oitenta e quatro Pokébolas e dois Pokémon dentro.`); },
+    d => fala('Ziggy', _c35DesdeOAnne(d) === 1 ? 'Três em um dia, ouvinte. E o torneio nem começou.' : 'Três desde que o Anne encostou, ouvinte. E o torneio nem começou.', 'baixo'),
     d => d.flags.sv_conheceu_florian ? 'A caixa térmica é a do Florian. Você lembra da tampa levantada um dedo, dos seis ovos creme em fila.' : '',
-    d => d.flags.sv_conheceu_etta ? 'A mochila é a da Etta. Oitenta e quatro bolas, e ela sabe o dia de cada uma.' : ''
+    d => d.flags.sv_conheceu_etta ? 'A mochila é a da Etta. Oitenta e quatro Pokébolas, e ela sabe o dia de cada uma.' : ''
   ],
+  ef:{executar:_c35Amanhece},
   escolhas:_c35Manha()
 },
 
@@ -63,7 +81,7 @@ c35_o_pescador:{
     'Ele joga um Magikarp pequeno de volta no balde, e o Magikarp pula três vezes antes de se conformar.',
     fala('o pescador de boné', 'A Maré é a molecada do cais. Filho de quem trabalhava na fábrica. Quem manda neles é o Jory, que era o menino da entrega da fábrica. O que eles pegam não fica na ilha: sai de bote, de madrugada, pro norte, pra Três.', 'baixo')
   ],
-  ef:{flag:['sv_sabe_da_noa', 'sv_sabe_do_jory', 'sv_sabe_dos_farois'],
+  ef:{flag:['sv_sabe_da_noa', 'sv_sabe_do_jory', 'sv_sabe_dos_farois'], executar:_c35Passa,
       registrar:'O pescador do cais contou: a menina da jaqueta é a Noa, filha do Kelp; a Maré é a molecada da fábrica fechada, comandada pelo Jory; e o que eles pegam sobe de bote pros Faróis, na Ilha Três.'},
   escolhas:[
     {texto:'Agradecer e comprar um Magikarp grande, pra ele fechar a balança.', vai:'c35_a_hub',
@@ -83,7 +101,7 @@ c35_o_sargento:{
       : 'Ele fecha o caderno.',
     d => Sevii.procurado(d) ? fala('Sargento Lund', 'Kanto que venha buscar. Aqui eu preciso de gente.', 'frio') : ''
   ],
-  ef:{flag:'sv_lund_ouviu', registrar:'Na Guarda das Ilhas, o Sargento Lund mostrou a lista: vinte e três roubos, todos de Pokémon de gente de fora. Alguém escolhe o que a Maré pega.'},
+  ef:{flag:'sv_lund_ouviu', executar:_c35Passa, registrar:'Na Guarda das Ilhas, o Sargento Lund mostrou a lista: vinte e três roubos, todos de Pokémon de gente de fora. Alguém escolhe o que a Maré pega.'},
   escolhas:[
     {texto:'"Me põe como auxiliar da Guarda. Eu vou atrás."', vai:'c35_auxiliar'},
     {texto:'"Por que você não vai na Ilha Três?"', vai:'c35_por_que_nao_vai'},
@@ -126,6 +144,7 @@ c35_a_pousada:{
     fala('Florian', 'Fora da caixa, um ovo aguenta umas quarenta horas. Dentro de uma caixa desligada, menos. Eu calculei. Eu não devia ter calculado.', 'baixo'),
     'A janela do quarto dá pro telhado da varanda. No peitoril tem marca de pé molhado, pequeno, de quem andou descalço, e uma pena preta comprida presa na lasca da madeira.'
   ],
+  ef:{executar:_c35Passa},
   escolhas:[
     {texto:'Olhar a pena de perto.', vai:'c35_a_pena'},
     {texto:'"Eu vou trazer a sua caixa."', vai:'c35_a_hub',
@@ -151,15 +170,15 @@ c35_a_pena:{
 
 c35_a_feira:{
   texto:[
-    'A balsa da manhã leva meia hora até a Ilha Dois. A feira já está montada, de lona colorida de ponta a ponta da praça, e no meio dela uma barraca sem nada em cima: só uma toalha estendida em duas cadeiras.',
+    'A balsa leva meia hora até a Ilha Dois. A feira já está montada, de lona colorida de ponta a ponta da praça, e no meio dela uma barraca sem nada em cima: só uma toalha estendida em duas cadeiras.',
     'A Etta está sentada atrás da toalha, de braço cruzado, olhando pra frente com uma raiva tão grande que as pessoas desviam da barraca.',
     d => d.flags.sv_conheceu_etta ? fala('Etta', 'Sobrou a toalha.', null, 'Ela diz isso antes de você chegar.') : fala('Etta', 'Se veio comprar, sobrou a toalha.'),
-    fala('Etta', 'Uma garota de cabelo comprido, roupa preta. Pediu pra ver a bola azul de perto. Enquanto eu mostrava a azul, outro levou a mochila de baixo da mesa.'),
-    fala('Etta', 'Oitenta e quatro. O Heracross. O Ninjask, que eu peguei com uma bola que levou três meses.', 'baixo'),
+    fala('Etta', 'Uma garota de cabelo comprido, roupa preta. Pediu pra ver a Pokébola azul de perto. Enquanto eu mostrava a azul, outro levou a mochila de baixo da mesa.'),
+    fala('Etta', 'Oitenta e quatro. O Heracross. O Ninjask, que eu peguei com uma Pokébola que levou três meses.', 'baixo'),
     'Ela aperta os olhos e não deixa cair nada.',
     fala('Etta', 'Eu vou lutar sem os dois, se for preciso. Eu não vou chorar na frente de turista.')
   ],
-  ef:{flag:'sv_viu_a_etta', registrar:'Na feira da Ilha Dois, a Etta contou: uma garota de roupa preta pediu pra ver a bola azul enquanto outro levava a mochila.'},
+  ef:{flag:'sv_viu_a_etta', executar:_c35Passa, registrar:'Na feira da Ilha Dois, a Etta contou: uma garota de roupa preta pediu pra ver a Pokébola azul enquanto outro levava a mochila.'},
   escolhas:[
     {texto:'"A garota de roupa preta eu já vi. No cais da Um."', vai:'c35_feira_volta',
      cond:d => !!d.flags.sv_mare_subiu || Historia.jaAconteceu('c34_a_garota'),
@@ -172,7 +191,7 @@ c35_a_feira:{
 c35_feira_volta:{
   texto:[
     'Ela te olha de lado, desconfiada de tudo e de todo mundo, e depois faz que sim com a cabeça uma vez só, curta.',
-    fala('Etta', 'Se você achar, não abre a mochila. As bolas estão em ordem. Eu sei a ordem.')
+    fala('Etta', 'Se você achar, não abre a mochila. As Pokébolas estão em ordem. Eu sei a ordem.')
   ],
   escolhas:[
     {texto:'Pegar a balsa de volta pra Ilha Um.', vai:'c35_a_hub'}
@@ -280,7 +299,7 @@ c35_comprou_a_caixa:{
 c35_o_jory:{
   texto:[
     'O Jory se põe na frente da caixa TRÊS, com o caderno de entrega embaixo do braço e uma Pokébola na mão.',
-    fala('Jory', 'A fábrica fechou e ninguém atravessou o mar pra perguntar como a gente ia comer. Nem a Patrulha, nem a Liga, nem {o Campeão|a Campeã} de Kanto.'),
+    fala('Jory', 'A fábrica fechou e ninguém atravessou o mar pra perguntar como a gente ia comer. Nem a Patrulha, nem o Conselho, nem {o Campeão|a Campeã} de Kanto.'),
     fala('Jory', 'Agora atravessou {um|uma}. Pra quê? Pra levar a mochila de uma artesã de Johto de volta pra ela.', 'frio'),
     'Os moleques fazem roda em volta. Ninguém sai.'
   ],
@@ -336,7 +355,7 @@ c35_jory_solto:{
 },
 c35_jory_conta:{
   texto:[
-    fala('Jory', 'Trinta. Trinta por bola, qualquer bola.', null, 'Ele fala sem raiva nenhuma, de quem já fez essa conta muitas vezes.'),
+    fala('Jory', 'Trinta. Trinta por Pokébola, qualquer uma.', null, 'Ele fala sem raiva nenhuma, de quem já fez essa conta muitas vezes.'),
     fala('Jory', 'Uma Milotic criada vale quarenta mil em Kanto, diz o Kaspar. Ele ri quando diz. A gente ganhou trinta por ela.'),
     'A molecada da roda escuta isso pela primeira vez. Dá pra ver na cara de cada um.'
   ],
@@ -539,20 +558,21 @@ c35_o_fim:{
       ? 'De manhã você pega a primeira balsa pra Ilha Dois, com a mochila da Etta no colo, sem abrir.'
       : 'De manhã você pega a primeira balsa pra Ilha Dois, de mão vazia, pra contar pra Etta.',
     d => d.flags.sv_rec_etta
-      ? 'Ela está na barraca de toalha vazia. Vê a mochila de longe e levanta tão rápido que a cadeira cai. Abre, conta em voz baixa, bola por bola, na ordem: setenta e nove, oitenta, oitenta e um… oitenta e quatro.'
+      ? 'Ela está na barraca de toalha vazia. Vê a mochila de longe e levanta tão rápido que a cadeira cai. Abre, conta em voz baixa, Pokébola por Pokébola, na ordem: setenta e nove, oitenta, oitenta e um… oitenta e quatro.'
       : 'Ela está na barraca de toalha vazia. Você conta. Ela escuta sem piscar, e no fim cruza os braços.',
     d => d.flags.sv_rec_etta
       ? fala('Etta', 'Oitenta e quatro.', null, 'E aí ela chora, na frente de turista e de todo mundo, abraçada na mochila.')
       : fala('Etta', 'Tá. Então o Heracross está na Ilha Três. Então eu vou na Ilha Três.', 'frio'),
-    d => d.flags.sv_rec_etta ? fala('Etta', 'Toma. É Apricorn azul. Fecha igual uma Great Ball, e não fala "comum" perto dela.', null, 'Ela tira uma bola azul da mochila e põe na sua mão.') : '',
+    d => d.flags.sv_rec_etta ? fala('Etta', 'Toma. É Apricorn azul. Fecha igual uma Great Ball, e não fala "comum" perto dela.', null, 'Ela tira uma Pokébola azul da mochila e põe na sua mão.') : '',
     d => d.flags.sv_caixa_tres ? 'A caixa da Maré, com as nove Pokébolas de gente de fora, você deixa na Guarda: o Sargento Lund passa a manhã inteira devolvendo uma por uma, de etiqueta na mão.' : '',
     'Do cais da Ilha Dois dá pra ver a Ilha Três, ao norte, e na ponta dela um farol de pedra que não acende faz anos.',
     'O barqueiro da balsa, quando você pergunta, diz que pra lá ele não vai.'
   ],
   ef:{executar:d => {
+        Sevii.deManha(6);
         if (d.flags.sv_rec_etta){
           Estado.darItem('Great Ball', 1);
-          Historia.aplicar({npc:{nome:'Etta', opiniao:4, memoria:'Trouxe de volta a mochila com as oitenta e quatro bolas, o Heracross e o Ninjask.'}});
+          Historia.aplicar({npc:{nome:'Etta', opiniao:4, memoria:'Trouxe de volta a mochila com as oitenta e quatro Pokébolas, o Heracross e o Ninjask.'}});
           Estado.registrar('Devolveu a mochila da Etta, com as oitenta e quatro Pokébolas de Apricorn. Ela deu uma Apricorn azul.');
         }
         if (d.flags.sv_caixa_tres && (d.itens['Caixa da Maré'] || 0) > 0) Estado.usarItem('Caixa da Maré');

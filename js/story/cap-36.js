@@ -148,6 +148,7 @@ c36_o_farol:{
     d => d.flags.sv_brody_esperou ? 'Você levanta o braço. Lá atrás, na rua, doze capacetes laranja se levantam ao mesmo tempo da calçada.' : '',
     d => d.flags.sv_brody_junto ? 'A turma do Brody para atrás de você, cantando. O homem da moto levanta devagar.' : ''
   ],
+  ef:{executar:d => { const h = horaAgora(d); if (d.flags.sv_brody_esperou && h >= 5 && h < 20) Relogio.ate(20); }},
   escolhas:[
     {texto:'Ir até a porta.', vai:'c36_a_porta'}
   ]
@@ -181,7 +182,8 @@ c36_as_pedras:{
     d => d.flags.sv_noa_guiou ? 'A Noa vai na frente pisando sempre na mesma cor de pedra, a escura, sem olhar pra baixo. Você pisa onde ela pisou.' : 'Você pisa devagar, numa pedra de cada vez, e escorrega duas vezes.',
     'A janela da casa de máquinas está lá, sem grade, à altura do ombro. Lá dentro, cheiro de óleo e de maresia.'
   ],
-  ef:{flag:'sv_entrou_pelas_pedras'},
+  /* a maré baixa às onze, como a Noa disse; pela frente o Brody não espera */
+  ef:{flag:'sv_entrou_pelas_pedras', executar:d => { const h = horaAgora(d); if (d.flags.sv_noa_guiou && !d.flags.sv_brody_sozinho && h >= 5 && h < 23) Relogio.ate(23); }},
   escolhas:[
     {texto:'Pular pra dentro.', vai:'c36_dentro'}
   ]
@@ -309,7 +311,7 @@ c36_kaspar_preso:{
     d => d.flags.sv_lund_auxiliar
       ? 'Um moleque da ilha corre até o cais pra mandar recado pela balsa. "A Guarda pediu." É só o que você manda dizer.'
       : 'Um moleque da ilha corre até o cais pra mandar recado pela balsa pro Sargento Lund.',
-    'O Lund chega de madrugada num barco de pesca emprestado, de farda e pijama, metade de cada, e olha o Kaspar amarrado um tempo comprido.',
+    'O Lund chega de madrugada num barco de pesca emprestado, com o quepe torto e o caderno já aberto, e olha o Kaspar amarrado um tempo comprido.',
     fala('Sargento Lund', 'Vinte anos. Vinte anos eu passo na frente dessa oficina.', 'baixo')
   ],
   ef:{flag:'sv_kaspar_preso', npc:{nome:'Sargento Lund', opiniao:2, memoria:'Você amarrou o Kaspar no farol da Ilha Três e mandou chamar a Guarda.'},
@@ -422,6 +424,7 @@ c36_o_fim:{
     d => (d.flags.sv_turma_subiu || d.flags.sv_ovos_subiram) ? 'O que saiu de barco pro sul, sem luz, foi pro armazém. E o armazém é na Ilha Cinco.' : 'A Milotic da Esme não estava no farol. Estava no papel da parede: no armazém, na Ilha Cinco.'
   ],
   ef:{executar:d => {
+        Sevii.deManha(7);
         if (d.flags.sv_rec_turma) Historia.aplicar({npc:{nome:'Brody', opiniao:4, memoria:'Devolveu os doze Pokémon de trabalho da turma de Slateport.'}});
         if (d.flags.sv_rec_ovos) Historia.aplicar({npc:{nome:'Florian', opiniao:4, memoria:'Trouxe de volta a caixa térmica com os seis ovos.'}});
       }},

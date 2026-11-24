@@ -16,6 +16,7 @@
    Uso:  node ferramentas/bot-jogador.js [minutos] [saida.json]
          CIDADE=Cerulean GENERO=Mulher node ferramentas/bot-jogador.js 20
          CAPITULO=17 NOME=Bento node ferramentas/bot-jogador.js 25
+         CAPITULO=28 POSJOGO=1 node ferramentas/bot-jogador.js 40   (as Ilhas Sevii)
          SAVE=jornada.json node ferramentas/bot-jogador.js 25
          NOME='?' GENERO='?' CIDADE='?' META=pokedex INICIAL=rand TURBO=20 \
            node ferramentas/bot-jogador.js 110 r1.json
@@ -101,6 +102,12 @@ const TURBO = Math.max(1, +(process.env.TURBO || 3));
 const PONTO_MIN = +(process.env.PONTO_MIN || 5);
 const DEPOIS = process.env.DEPOIS === '1';
 const CAPITULO = +(process.env.CAPITULO || 0);
+/* POSJOGO=1: com CAPITULO=28, fecha a história como quem venceu o Red e
+   escolheu "Continuar pela estrada" num final livre, e o robô joga as
+   Ilhas Sevii (o chamado do Blue em Pallet, o Anne, as ilhas, o torneio).
+   NIVEL= põe o time no nível (64 se não vier) */
+const POSJOGO = process.env.POSJOGO === '1';
+const NIVEL_POS = +(process.env.NIVEL || 64);
 const SAVE = process.env.SAVE || '';
 const RETOMAR = process.env.RETOMAR || '';
 const CARGO = process.env.CARGO || '';
@@ -383,6 +390,33 @@ const SUSPEITO = [
     console.log('AVANÇO', JSON.stringify(ff));
     global.__avanco = ff;
     if (ff.erro){ await browser.close(); return; }
+  }
+  if (POSJOGO && !SAVE && !ponto){
+    const pj = await page.evaluate(nv => {
+      const d = Estado.dados;
+      /* o time no nível de quem chega ao fim, os golpes do nível */
+      d.time.forEach((p, i) => {
+        const n = nv - (i ? 1 + i % 3 : 0), forma = formaNoNivel(p.dex, n);
+        if (forma !== p.dex) evoluir(p, forma);
+        p.nivel = n; p.stats = calcularStats(p.dex, n, p.ivs, p.natureza);
+        p.hpMax = p.stats.hp; p.hp = p.hpMax; p.exp = 0; p.expProx = expNecessaria(n);
+        p.golpes = criarPokemon(p.dex, n).golpes; p.moral = 75;
+      });
+      d.insignias = GINASIOS.map(g => g.insignia);
+      ['oito_insignias', 'venceu_a_elite'].forEach(f => Estado.marcar(f));
+      coroarCampeao('Campeão de Kanto');
+      if (!d.capitulosFechados.includes(28)) d.capitulosFechados.push(28);
+      d.capitulo = 28; d.cena = null;
+      /* um final livre (sem Liga fechada, sem casa fechada) */
+      Depois.continuar({id:'quinta', titulo:'TODO DIA, PELO TEMPO QUE FOR'});
+      for (const [n, q] of [['Ultra Ball', 10], ['Hyper Potion', 6], ['Max Revive', 2], ['Full Heal', 4], ['Ração', 10]]) Estado.darItem(n, q);
+      Estado.j.dinheiro += 20000;
+      Estado.salvar('auto');
+      Exploracao.tela();
+      return {local:d.local, prox:Historia.proximoCapitulo(false), destino:Historia.proximoDestino(), sevii:Sevii.proximo(d),
+        time:d.time.map(p => p.nome + ' ' + p.nivel), depois:d.depoisDoFim};
+    }, NIVEL_POS);
+    console.log('POSJOGO', JSON.stringify(pj));
   }
 
   /* o jeito sai do objetivo que ficou na ficha, ou de JEITO= */

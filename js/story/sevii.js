@@ -108,6 +108,12 @@ const Sevii = {
     }
     return null;
   },
+  /* a próxima manhã às h (hoje, se a madrugada ainda não passou dela):
+     cena que diz "de manhã" leva o relógio até lá, com o time comendo */
+  deManha(h){
+    const r = Estado.dados.relogio; sincronizarHora(r);
+    if (r.hora < h) Relogio.viver(h - r.hora); else Relogio.amanhaAs(h);
+  },
   /* está numa cena de capítulo das ilhas agora */
   noArco(d){ d = d || Estado.dados; return !!(d && SEVII_CAPS.includes(d.capitulo) && d.modo === 'cena'); },
   aqui(d){ d = d || Estado.dados; return !!(d && ehSevii(d.local)); },

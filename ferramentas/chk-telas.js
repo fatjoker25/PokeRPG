@@ -2319,6 +2319,46 @@ const SUSPEITO = [
     d.depoisDoFim = {final:'ficou_em_casa', s:'em_casa', semLiga:'O cartão de treinador ficou na caixa de sapato.', fecha:{}, desde:d.relogio.dia};
     if (Sevii.proximo(d) !== SEVII_CAPS[2]) throw new Error('quem já estava no meio do arco ficou preso nele');
   });
+  /* o relógio anda com o texto: o Anne sai às cinco da tarde, o 35 é de
+     manhã e nunca no dia em que o Anne encostou, cada pergunta leva duas
+     horas, o farol é de noite, o armazém na madrugada de quarta pra quinta
+     e o livro do Magnus fecha ao meio-dia */
+  await restaurar();
+  await tentar('ilhas/o relógio dos capítulos', () => {
+    nasIlhas(1, 'vermilion');
+    const d = Estado.dados, r = d.relogio;
+    const ir = (cap, id) => { Historia.capAtual = Historia.capitulo(cap); d.capitulo = cap; d.modo = 'cena'; d.cena = id; Historia.ir(id, true); };
+    const texto = (cap, id) => (Historia.capitulo(cap).cenas[id].texto || []).map(t => typeof t === 'function' ? t(d) : t)
+      .map(t => typeof t === 'string' ? t : (t && t.diz) || '').join(' ');
+    const hora = () => { sincronizarHora(r); return r.hora; };
+    const conf = (onde, h, dia) => {
+      if (hora() !== h) throw new Error(`${onde}: o relógio está em ${r.hora}h, e o texto diz ${h}h`);
+      if (dia != null && Calendario.hoje().semanaIdx !== dia) throw new Error(`${onde}: é ${Calendario.hoje().semana}, e o texto diz ${Calendario.SEMANA[dia]}`);
+    };
+    r.hora = 9; Estado.darItem('Passagem', 1);
+    ir(34, 'c34_o_cais'); ir(34, 'c34_a_prancha'); conf('a prancha do Anne', 17);
+    if (!/sol baixo/.test(texto(34, 'c34_o_salao'))) throw new Error('o navio saiu às cinco e o salão não fala do sol baixo');
+    ir(34, 'c34_a_noite'); ir(34, 'c34_a_chegada'); conf('a chegada à Ilha Um', 8);
+    ir(34, 'c34_o_fim');
+    const chegou = Sevii.reg(d).chegouDia;
+    if (chegou !== r.dia) throw new Error('o fim do 34 não guardou o dia da chegada');
+    ir(35, 'c35_a_manha'); conf('a manhã do 35', 7);
+    if (r.dia !== chegou + 1) throw new Error('o 35 começou no dia em que o Anne encostou');
+    if (!/Ontem de manhã/.test(texto(35, 'c35_a_manha'))) throw new Error('o Ziggy não diz que a Milotic foi ontem');
+    r.dia += 2;
+    if (!/Faz três dias/.test(texto(35, 'c35_a_manha'))) throw new Error('três dias depois, o Ziggy ainda diz ontem');
+    r.dia -= 2;
+    ir(35, 'c35_o_pescador'); ir(35, 'c35_o_sargento'); ir(35, 'c35_a_pousada'); conf('três perguntas no 35', 13);
+    ir(35, 'c35_o_fim_do_cais'); conf('o fim do cais', 2);
+    ir(35, 'c35_o_fim'); conf('a balsa da manhã', 6);
+    d.flags.sv_brody_esperou = true; ir(36, 'c36_o_farol'); conf('o farol com o Brody', 20);
+    d.flags.sv_noa_guiou = true; ir(36, 'c36_as_pedras'); conf('as pedras na maré baixa', 23);
+    ir(36, 'c36_o_fim'); conf('a manhã da Ilha Três', 7);
+    ir(37, 'c37_a_praca'); ir(37, 'c37_a_espera'); conf('a espera do armazém', 23, 2);
+    ir(37, 'c37_dentro'); conf('o barco sem luz', 2, 3);
+    ir(37, 'c37_o_amanhecer'); conf('o amanhecer da campina', 6);
+    r.hora = 20; ir(38, 'c38_a_chegada'); conf('o livro do Magnus', 12);
+  });
   /* o chamado de cada capítulo no lugar dele, e a balsa de cada fase */
   for (let fase = 0; fase <= 6; fase++){
     await restaurar();
@@ -2514,7 +2554,9 @@ const SUSPEITO = [
       if (!v && Jogo.copaAtual) throw new Error('a chave continua aberta depois da derrota');
       if (v && r === 3 && !Estado.dados.flags.sv_campeao_das_ilhas) throw new Error('venceu a final e não virou campeão das ilhas');
       if (v && r === 3 && !Estado.contaItem('Troféu das Ilhas')) throw new Error('o primeiro título não deu o troféu');
-      if (v && r === 3 && !Estado.dados.ovos.some(o => o.dex === 133)) throw new Error('o Florian não deu o ovo da linhagem');
+      /* o ovo do Florian é de quem chega na final: cai a semifinal, ele desce da arquibancada */
+      if (v && r === 2 && !(Estado.dados.ovos || []).some(o => o.dex === 133)) throw new Error('chegou na final e o Florian não deu o ovo da linhagem');
+      if (v && r === 3 && (Estado.dados.ovos || []).some(o => o.dex === 133)) throw new Error('o Florian deu o ovo no título, e não na chegada à final');
     }, [rodada, venceu]);
   }
   /* a chave da história: a cena entrega a vez, e a chave devolve pra cena */
@@ -2663,7 +2705,7 @@ const SUSPEITO = [
       if (!quemNaCopa(t.adv.id)) throw new Error('o adversário da vez não tem ficha nem é de Kanto: ' + t.adv.id);
       Jogo.veteranoAtual = {id:t.adv.id, tipo:'copa'};
       CopaSevii.resultado({resultado: v ? 'vitoria' : 'derrota'});
-      if (v && r === 3 && !Estado.dados.ovos.some(o => o.dex === 133)) throw new Error('o Florian não deixou o ovo com a pousada');
+      if (v && r === 2 && !(Estado.dados.ovos || []).some(o => o.dex === 133)) throw new Error('chegou na final e o Florian não deixou o ovo com a pousada');
     }, [rodada, venceu]);
   }
   await restaurar();
@@ -2672,10 +2714,10 @@ const SUSPEITO = [
     const d = Estado.dados;
     d.relogio.dia += ESTADIA_DO_ELENCO + 1;
     d.flags.sv_rec_ovos = true; d.ovos = [];
-    const t = chaveAteARodada(novaChave('sevii'), 3);
+    const t = chaveAteARodada(novaChave('sevii'), 2);
     Jogo.copaAtual = t; Jogo.veteranoAtual = {id:t.adv.id, tipo:'copa'};
     CopaSevii.resultado({resultado:'vitoria'});
-    if (d.ovos.some(o => o.dex === 133)) throw new Error('o Florian deixou ovo pra quem ele nunca viu');
+    if ((d.ovos || []).some(o => o.dex === 133)) throw new Error('o Florian deixou ovo pra quem ele nunca viu');
   });
   /* o save de antes do carimbo: o arco fechado ganha a semana a partir de hoje */
   await restaurar();

@@ -26,6 +26,9 @@ c38_a_chegada:{
     fala('Magnus', 'Magnus Holm. Fui eu que escrevi a sua carta.', null, 'Ele não levanta. Estende a mão por cima do livro.'),
     fala('Magnus', 'Dois anos eu escrevi pro Campeão de Kanto e recebi silêncio. Esse ano escrevi com o seu nome, e veio gente.')
   ],
+  /* o livro fecha perto da uma, quando a chave sai (entrarNaArena):
+     quem chega de tarde ou de noite assina amanhã, ao meio-dia */
+  ef:{executar:d => { const h = horaAgora(d); if (h >= 13) Relogio.amanhaAs(12); else if (h < 12) Relogio.ate(12); }},
   escolhas:[
     {texto:'"O Blue mandou dizer que leu. Todos."', vai:'c38_o_recado'},
     {texto:'Assinar o livro sem dizer nada.', vai:'c38_o_livro'}
@@ -88,7 +91,7 @@ c38_a_lista:{
           ? 'A Esme está com a fita lilás na cintura de novo, com a Milotic dentro. Quando te vê, ela sorri o sorriso de palco, e depois para de sorrir, porque a ilha inteira já ouviu o que saiu no barco do Penrose.'
           : 'A Esme está com a fita lilás na cintura de novo, com a Milotic dentro, e quando te vê não sorri o sorriso de palco: sorri outro, pequeno, sem foto nenhuma.')
       : 'A Esme está com a fita lilás vazia na cintura, de propósito, pra todo mundo ver.',
-    d => d.flags.sv_rec_etta ? 'A Etta montou a toalha com as oitenta e quatro bolas na arquibancada, e vende pra quem passa, e corrige quem diz "comum".' : 'A Etta está sentada sozinha num degrau, sem mochila, com o braço cruzado.',
+    d => d.flags.sv_rec_etta ? 'A Etta montou a toalha com as oitenta e quatro Pokébolas na arquibancada, e vende pra quem passa, e corrige quem diz "comum".' : 'A Etta está sentada sozinha num degrau, sem mochila, com o braço cruzado.',
     d => d.flags.sv_rec_ovos ? 'O Florian está com a caixa térmica no colo, ligada numa extensão que vai até a pousada, e cumprimenta todo mundo com uma porcentagem.' : 'O Florian está sem a caixa térmica. Ele não fala de porcentagem com ninguém.',
     d => d.flags.sv_rec_turma ? 'Na arquibancada, doze capacetes laranja cantam a música de cais, cada um com um Pokémon de trabalho no colo, e o Brody chora antes de começar.' : 'Na arquibancada, doze capacetes laranja estão quietos, sem Pokémon nenhum no colo, e o Brody olha pro mar.',
     d => Sevii.noaInscrita(d)
@@ -139,7 +142,7 @@ c38_campeao:{
     fala('Magnus', 'Duas vezes eu ganhei isso. Hoje eu entreguei pela primeira vez pra alguém que eu escrevi.'),
     d => d.flags.sv_blue_na_arquibancada ? 'Lá do último degrau, o Blue levanta. Não grita, não aplaude. Fica de pé, que é o jeito dele.' : '',
     d => Sevii.noaInscrita(d) ? 'Do lado de fora da linha da arena, a Noa está de braço cruzado, contando alguma coisa nos dedos.' : '',
-    d => d.flags.sv_rec_ovos ? 'O Florian desce da arquibancada com um ovo nas duas mãos, segurado como quem segura vidro, e não fala de porcentagem nenhuma.' : ''
+    d => d.flags.sv_ovo_do_florian ? 'Na arquibancada, o Florian levanta a caixa térmica pra você ver: no ninho de pano, o lugar do seu ovo está vazio. Ele não fala de porcentagem nenhuma.' : ''
   ],
   ef:{rep:{eixo:'bom', delta:2, motivo:'Venceu o Torneio das Ilhas, na arena da Ilha Sete', notorio:true},
       registrar:'Venceu o Torneio das Ilhas na arena de pedra da Ilha Sete. O Magnus Holm entregou o troféu.'},
