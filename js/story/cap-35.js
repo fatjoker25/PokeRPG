@@ -1,5 +1,5 @@
 /* ============================================================
-   ILHAS SEVII · III — A MARÉ (capítulo 35, pós-jogo)
+   ILHAS SEVII · CAPÍTULO 3 — A MARÉ (pós-jogo; por dentro, o 35)
    Ilha Um e Ilha Dois. A turma do cais (a Maré) é a molecada que
    ficou sem nada quando a fábrica de conserva fechou: eles pegam, e o
    que pegam sobe de bote pra Ilha Três de madrugada. Você pergunta no

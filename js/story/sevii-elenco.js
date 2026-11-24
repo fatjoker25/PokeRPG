@@ -55,8 +55,8 @@ const ELENCO_SEVII = [
   gancho:'Dizem que o clã mandou alguém assistir o torneio. Ele finge que não procura na arquibancada.',
   time:[
     [148, ['Dragon Breath', 'Thunder Wave', 'Surf', 'Ice Beam'], 'Modest'],
-    [230, ['Surf', 'Dragon Breath', 'Ice Beam', 'Agility'], 'Modest'],
     [142, ['Rock Slide', 'Earthquake', 'Ancient Power', 'Fly'], 'Jolly'],
+    [230, ['Surf', 'Dragon Breath', 'Ice Beam', 'Agility'], 'Modest'],
     [330, ['Earthquake', 'Dragon Claw', 'Rock Slide', 'Fire Blast'], 'Jolly'],
     [149, ['Outrage', 'Fly', 'Thunder Wave', 'Fire Blast'], 'Adamant'],
     [373, ['Dragon Claw', 'Crunch', 'Fly', 'Flamethrower'], 'Naive', 'Dragon Scale']
@@ -579,8 +579,11 @@ const LUTAS_DE_SEVII = {
            golpes:['Sludge Bomb', 'Fire Blast']},
   kaspar: {nome:'Kaspar', f:false, arq:'sevii_kaspar', times:[24, 110, 89, 126, 229, 217], ajuste:-2,
            golpes:['Sludge Bomb', 'Earthquake', 'Fire Blast', 'Crunch']},
-  /* o homem do armazém: quem segura a porta pro Penrose */
-  dekker: {nome:'Dekker', f:false, arq:'sevii_dekker', times:[57, 237, 107, 76, 68], ajuste:-1,
+  /* o homem do armazém: quem segura a porta pro Penrose. Com o Primeape
+     eram cinco, e o jogador ingênuo vencia uma vez em quatro: o chefe do
+     armazém pesava mais que o Kaspar e que a final. Com quatro, vence de
+     43% a 55% (sim-sevii --historia) */
+  dekker: {nome:'Dekker', f:false, arq:'sevii_dekker', times:[237, 107, 76, 68], ajuste:-1,
            golpes:['Rock Slide', 'Earthquake', 'Thunder Punch', 'Ice Punch']}
 };
 

@@ -1,5 +1,5 @@
 /* ============================================================
-   ILHAS SEVII · V — O ARMAZÉM (capítulo 37, pós-jogo)
+   ILHAS SEVII · CAPÍTULO 5 — O ARMAZÉM (pós-jogo; por dentro, o 37)
    Ilha Cinco, quinta-feira, duas da manhã. O armazém velho da conserva,
    na campina, onde o barco sem luz encosta. O "P." do papel do farol é
    o Penrose, o dono da fábrica que fechou, e o cartaz do torneio diz o

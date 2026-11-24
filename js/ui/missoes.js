@@ -239,9 +239,11 @@ const Missoes = {
       <div class="ms-h-corpo"><small class="ms-olho">A história</small><b class="ms-h-tit">A história de Kanto terminou.</b>
       <p class="ms-h-txt">O que vem daqui pra frente é a estrada.</p></div></div>`;
     const d = Estado.dados, L = h.onde ? LOCAIS[h.onde] : null;
-    /* na medalha, o número do capítulo; no caminho e nas ilhas, a parte ("II") */
-    const parte = /·\s*(\S+)\s*$/.exec(h.rotulo || '');
-    const medalha = `<span class="ms-medalha${parte ? ' romano' : ''}" aria-hidden="true"><b>${UI.esc(parte ? parte[1] : String(h.num).split('.')[0])}</b></span>`;
+    /* na medalha, o número do capítulo; no caminho, a parte ("II"); nas
+       ilhas, o número delas, que conta do 1 */
+    const ilha = typeof numeroDoPosJogo === 'function' ? numeroDoPosJogo(Historia.capitulo(h.num)) : 0;
+    const parte = ilha ? null : /·\s*(\S+)\s*$/.exec(h.rotulo || '');
+    const medalha = `<span class="ms-medalha${parte ? ' romano' : ''}" aria-hidden="true"><b>${UI.esc(ilha ? String(ilha) : parte ? parte[1] : String(h.num).split('.')[0])}</b></span>`;
     if (h.estado === 'andamento'){
       const F = h.fio;
       const fio = F ? `<div class="ms-fio">

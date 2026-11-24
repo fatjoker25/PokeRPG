@@ -72,15 +72,31 @@ function caminhoNaJanela(de, ate, h){
 }
 
 /* "Capítulo 12" ou, no desvio, o nome do caminho e a parte dele */
+/* o pós-jogo não é parte da história de Kanto e conta de novo, do 1:
+   foi pedido assim. Por dentro o número continua 33 a 38, que é a
+   posição dele depois de tudo (capNaJornada, o save, as flags); na
+   tela, o capítulo das ilhas é o 1 a 6 delas. 0 pra quem não é */
+function numeroDoPosJogo(cap){
+  return cap && cap.posJogo && typeof SEVII_CAPS !== 'undefined' ? SEVII_CAPS.indexOf(cap.num) + 1 : 0;
+}
 function numeroDoCapitulo(cap){
   if (!cap) return '';
-  /* o pós-jogo conta à parte: "Ilhas Sevii · III" */
-  if (cap.posJogo && typeof SEVII_CAPS !== 'undefined')
-    return `Ilhas Sevii · ${['I', 'II', 'III', 'IV', 'V', 'VI'][SEVII_CAPS.indexOf(cap.num)] || ''}`.trim();
+  const k = numeroDoPosJogo(cap);
+  if (k > 0) return `Ilhas Sevii · Capítulo ${k}`;
   if (!cap.caminho) return `Capítulo ${cap.num}`;
   const cm = defCaminho(cap.caminho);
   const parte = cm ? cm.caps.indexOf(cap.num) : -1;
   return `${cm ? cm.nome : 'Caminho'} · ${['I', 'II', 'III'][parte] || ''}`.trim();
+}
+
+/* o número curto, pra marca do diário, da trilha e da Rota: "Cap 12",
+   "Lei · II", "Ilhas · 3". Recebe o número de dentro (o do save) */
+function capituloCurto(n){
+  const cap = typeof CAPITULOS !== 'undefined' ? CAPITULOS.find(c => c.num === n) : null;
+  const k = numeroDoPosJogo(cap);
+  if (k > 0) return `Ilhas · ${k}`;
+  if (cap && cap.caminho) return numeroDoCapitulo(cap);
+  return `Cap ${Number.isInteger(+n) ? +n : Math.floor(+n || 0)}`;
 }
 
 /* o nível de luta de um capítulo de caminho: o do lugar, ou o do seu

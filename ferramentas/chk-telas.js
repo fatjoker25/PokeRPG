@@ -2359,6 +2359,63 @@ const SUSPEITO = [
     ir(37, 'c37_o_amanhecer'); conf('o amanhecer da campina', 6);
     r.hora = 20; ir(38, 'c38_a_chegada'); conf('o livro do Magnus', 12);
   });
+  /* a carona do Pidgeot: o Blue leva você de Pallet ao cais três de
+     Vermilion, duas horas de voo, e o capítulo 2 das ilhas espera ali
+     mesmo; quem sai a pé fica em Pallet */
+  await restaurar();
+  await tentar('ilhas/a carona do Pidgeot', () => {
+    const fazer = (opcao) => {
+      nasIlhas(0, 'pallet');
+      const d = Estado.dados;
+      delete d.flags.sv_foi_de_pidgeot;
+      Historia.iniciarCapitulo(33); d.modo = 'cena';
+      Historia.ir('c33_a_passagem', true); UI.telaCena(Historia.cenaAtual);
+      sincronizarHora(d.relogio); const antes = d.relogio.hora + 24 * d.relogio.dia;
+      const b = [...document.querySelectorAll('#app .escolha')].find(x => opcao.test(x.innerText));
+      if (!b) throw new Error(`a passagem do Blue não tem a opção ${opcao}`);
+      b.click();
+      sincronizarHora(d.relogio);
+      const passou = d.relogio.hora + 24 * d.relogio.dia - antes;
+      Jogo.fecharCapitulo();
+      return {d, passou};
+    };
+    let {d, passou} = fazer(/Pidgeot/);
+    if (!d.flags.sv_foi_de_pidgeot) throw new Error('a carona não marcou sv_foi_de_pidgeot');
+    if (d.local !== 'vermilion') throw new Error(`o Pidgeot deixou você em ${d.local}, não no cais de Vermilion`);
+    if (passou !== 2) throw new Error(`o voo levou ${passou} horas, e o texto conta duas`);
+    if (!(d.capitulosFechados || []).includes(SEVII_CAPS[0])) throw new Error('o capítulo 1 das ilhas não fechou com a carona');
+    if (Sevii.proximo(d) !== SEVII_CAPS[1]) throw new Error('depois da carona o capítulo 2 das ilhas não é o próximo');
+    const dest = Historia.proximoDestino && Historia.proximoDestino();
+    if (dest && dest.local && dest.local !== 'vermilion') throw new Error(`o capítulo 2 das ilhas espera em ${dest.local}`);
+    ({d} = fazer(/porta da frente/));
+    if (d.local !== 'pallet') throw new Error(`quem saiu a pé apareceu em ${d.local}`);
+    if (d.flags.sv_foi_de_pidgeot) throw new Error('quem saiu a pé ficou com a marca da carona');
+  });
+  /* a contagem das ilhas é nova e começa do 1: nenhuma tela diz 33 a 38 */
+  await restaurar();
+  await tentar('ilhas/a contagem do 1', () => {
+    nasIlhas(2, 'ilha_um');
+    const d = Estado.dados;
+    /* o innerText vem com o text-transform da tela (o rótulo em caixa alta) */
+    const cru = /\b(cap|capítulo)\s*3[3-8]\b/i;
+    const confere = (onde, quer) => {
+      const t = document.body.innerText, m = cru.exec(t);
+      if (m) throw new Error(`${onde} mostra "${m[0]}"`);
+      if (quer && !t.toLowerCase().includes(quer.toLowerCase())) throw new Error(`${onde} não diz "${quer}"`);
+    };
+    Exploracao.tela(); confere('o chamado do mapa', 'Ilhas Sevii · Capítulo 3');
+    d.modo = 'cena'; Historia.iniciarCapitulo(35); UI.telaCena(Historia.cenaAtual);
+    confere('a cena do capítulo', 'Ilhas Sevii · Capítulo 3');
+    UI.modalMissoes(); confere('as Missões', 'Ilhas Sevii · Capítulo 3');
+    const med = document.querySelector('#modal .ms-medalha b');
+    if (!med || med.textContent.trim() !== '3') throw new Error(`a medalha das Missões mostra "${med && med.textContent}"`);
+    UI.fecharModal(true);
+    UI.modalDiario(); confere('o Diário', 'Ilhas · 3'); UI.fecharModal(true);
+    UI.modalRota(); confere('a Rota', 'Ilhas · 3'); UI.fecharModal(true);
+    if (UI.navCapitulo(35) !== 'capítulo 3 das Ilhas Sevii') throw new Error('o PokéNav diz ' + UI.navCapitulo(35));
+    if (UI.capituloDoSave(d, true) !== 'Ilhas Sevii · Capítulo 3') throw new Error('o cartão da jornada diz ' + UI.capituloDoSave(d, true));
+    if (capituloCurto(12) !== 'Cap 12' || numeroDoCapitulo(Historia.capitulo(12)) !== 'Capítulo 12') throw new Error('a história de Kanto mudou de conta');
+  });
   /* o chamado de cada capítulo no lugar dele, e a balsa de cada fase */
   for (let fase = 0; fase <= 6; fase++){
     await restaurar();

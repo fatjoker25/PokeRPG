@@ -9,7 +9,8 @@
    potencial. O torneio traz gente de Johto e de Hoenn (o elenco, em
    sevii-elenco.js), e a chave dele mora em sevii-torneio.js.
 
-   Os capítulos são 33 a 38, `posJogo:true`: não entram na sequência
+   Os capítulos são 33 a 38 por dentro e 1 a 6 na tela (a contagem das
+   ilhas é nova, numeroDoPosJogo), `posJogo:true`: não entram na sequência
    da história (Historia.proximoCapitulo os pula) e só existem pra
    quem chegou ao fim (d.depoisDoFim) com o título de Campeão. Depois
    do fim, o próximo capítulo é o daqui (Sevii.proximo), e a âncora de
@@ -631,6 +632,9 @@ function contatosDoElenco(){
 if (typeof RIVAIS_EXTRA !== 'undefined') RIVAIS_EXTRA.push({
   id:'noa', nome:'Noa', npc:'Noa', desde:'Ilha Um', caps:[36, 37],
   f:true, formasFixas:true, aceFixo:true,
+  /* o time cresce a cada luta: no cais ela tinha quatro, e voltar com seis
+     no dia seguinte era outra pessoa. Depois, no cais da Ilha Um, seis */
+  tamPorLuta:[4, 5, 6],
   origem:'A moça do cais da Ilha Um. Trabalhava pra gangue, e você decidiu o que fazer com ela.',
   gatilho:d => !!d.flags.sv_noa_rival,
   nascimento:'A Noa voltou pro cais. Ela anota o seu nome com faca na madeira da beirada, do lado do nome do pai.',

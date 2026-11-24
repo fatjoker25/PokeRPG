@@ -104,7 +104,9 @@ for (const id of quais){
 for (const {id, R, rotulo} of casos){
   /* um encontro já feito, sem placar: o arco é o do começo */
   d.rivais = {[id]: {id, nome:R.nome, vitorias:0, derrotas:0, encontros:1, ultimoCap:0}};
-  for (const cap of R.caps){
+  for (const [k, cap] of R.caps.entries()){
+    /* quem cresce a cada luta (tamPorLuta, a Noa): a luta k é a k-ésima */
+    if (R.tamPorLuta) d.rivais[id].encontros = k;
     const c = Historia.capitulo(cap);
     const area = (c && c.nivelArea) || 20 + cap * 2;
     const ins = insDoCap(cap);

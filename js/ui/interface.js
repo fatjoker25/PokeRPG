@@ -584,7 +584,7 @@ const UI = {
       const dias = save ? Math.max(1, Math.floor(+(save.relogio || {}).dia || 1)) : 0;
       const lugar = save && save.local && LOCAIS[save.local] ? LOCAIS[save.local].nome : '';
       const rosto = FotoJogador.doSave(j, save);
-      const cap = save && !save.depoisDoFim ? Historia.capitulo(save.capitulo) : null;
+      const cap = save && !save.depoisDoFim ? Historia.capitulo(save.capitulo) : save ? this.capDoPosJogoNoSave(save) : null;
       const posFim = save && save.depoisDoFim && save.depoisDoFim.titulo ? String(save.depoisDoFim.titulo) : '';
       const caixa = GINASIOS.map(g => {
         const tem = nIns.includes(g.insignia), src = caminhoInsignia(g.id);
@@ -3334,8 +3334,11 @@ const UI = {
   /* o número do capítulo como o jogador lê: "capítulo 8", ou o do caminho */
   navCapitulo(n){
     if (n == null) return '';
-    if (Number.isInteger(n)) return `capítulo ${n}`;
     const cap = (typeof CAPITULOS !== 'undefined') ? CAPITULOS.find(c => c.num === n) : null;
+    /* as ilhas contam do 1 (numeroDoPosJogo) */
+    const k = typeof numeroDoPosJogo === 'function' ? numeroDoPosJogo(cap) : 0;
+    if (k > 0) return `capítulo ${k} das Ilhas Sevii`;
+    if (Number.isInteger(n)) return `capítulo ${n}`;
     return cap && typeof numeroDoCapitulo === 'function' ? numeroDoCapitulo(cap) : `capítulo ${Math.floor(n)}`;
   },
 
@@ -4581,7 +4584,7 @@ const UI = {
       info: () => {
         const g = generoDe(p);
         const origem = p.capturadoEm
-          ? `Capturad${pron(p).o} no capítulo ${p.capturadoEm.cap}, com ${e(p.capturadoEm.bola || 'Poké Ball')}`
+          ? `Capturad${pron(p).o} no ${e(UI.navCapitulo(p.capturadoEm.cap))}, com ${e(p.capturadoEm.bola || 'Poké Ball')}`
           : p.trocado ? 'Veio de troca' : '';
         return bloco('Ficha', dl([
             ['Espécie', `Nº ${num} · ${e(esp.nome || p.nome)}`],
@@ -4717,7 +4720,15 @@ const UI = {
      pôr ela no lugar da do navegador.
      ======================================================== */
   /* "Capítulo 12 · O título" de um save qualquer; curto, só o número */
+  /* depois do fim, o save só tem capítulo quando está dentro de um das
+     ilhas, que contam do 1 (numeroDoPosJogo); entre um e outro, é o fim */
+  capDoPosJogoNoSave(d){
+    const cap = d && typeof Historia !== 'undefined' ? Historia.capitulo(d.capitulo) : null;
+    return cap && cap.posJogo && !(Array.isArray(d.capitulosFechados) ? d.capitulosFechados : []).includes(cap.num) ? cap : null;
+  },
   capituloDoSave(d, curto){
+    const ilha = d.depoisDoFim ? this.capDoPosJogoNoSave(d) : null;
+    if (ilha && typeof numeroDoCapitulo === 'function') return numeroDoCapitulo(ilha) + (ilha.titulo && !curto ? ' · ' + ilha.titulo : '');
     /* depois do fim: não tem capítulo, tem o final que você viveu */
     if (d.depoisDoFim) return 'Depois do fim' + (!curto && d.depoisDoFim.titulo ? ' · ' + String(d.depoisDoFim.titulo) : '');
     const cap = typeof Historia !== 'undefined' ? Historia.capitulo(d.capitulo) : null;
@@ -4744,7 +4755,7 @@ const UI = {
       `<span class="save-pk" title="${e(nomeExib(p))} · Nv ${e(p.nivel)}">${imgSprite({dex:p.dex, shiny:!!p.shiny}, 'icone')}</span>`).join('');
     const notas = [].concat(nota || []);
     if (d.lutaSalva) notas.push('no meio de uma luta, que volta junto');
-    const cap = typeof Historia !== 'undefined' && !d.depoisDoFim ? Historia.capitulo(d.capitulo) : null;
+    const cap = typeof Historia !== 'undefined' && !d.depoisDoFim ? Historia.capitulo(d.capitulo) : this.capDoPosJogoNoSave(d);
     const titulo = cap ? cap.titulo : d.depoisDoFim && d.depoisDoFim.titulo;
     /* cada fato num chip, como no alto da tela: a linha quebra entre um
        e outro, nunca no meio */
@@ -5637,7 +5648,7 @@ const UI = {
           leTipo() ? 'Lê o tipo de um desconhecido' : ''
         ].filter(Boolean);
         const ferid = (j.ferimentos || []).slice(-4).reverse().map(f =>
-          `<li><span class="mono">−${f.qtd}</span> ${M(f.causa)}${f.cap ? ` <span class="ficha-nota">Capítulo ${f.cap}</span>` : ''}</li>`).join('');
+          `<li><span class="mono">−${f.qtd}</span> ${M(f.causa)}${f.cap ? ` <span class="ficha-nota">${e(numeroDoCapitulo(Historia.capitulo(f.cap)) || 'Capítulo ' + f.cap)}</span>` : ''}</li>`).join('');
         return bloco('Corpo', corpo)
           + bloco('Status', `<div class="fs-tabela">${STATUS_DO_TREINADOR.map(([k]) => this.statusDoTreinador(k, false)).join('')}</div>`,
                   `Teste: status + ${Dados.PERICIA_BASE} de perícia, em d6`)
@@ -5993,7 +6004,7 @@ const UI = {
     this.modal('Diário de campanha', `
       <h3>Onde você está</h3><div class="diario-agora">${resumo}</div>
       <h3>O que aconteceu</h3>
-      ${log.length ? `<ol class="diario-lista">${log.map(l=>`<li><span class="dl-quando">Cap ${l.cap} · dia ${l.dia}</span><span class="dl-texto">${this.esc(l.texto)}</span></li>`).join('')}</ol>`
+      ${log.length ? `<ol class="diario-lista">${log.map(l=>`<li><span class="dl-quando">${this.esc(capituloCurto(l.cap))} · dia ${l.dia}</span><span class="dl-texto">${this.esc(l.texto)}</span></li>`).join('')}</ol>`
                    : '<p class="nada">Nada registrado ainda.</p>'}`, false, 'diario');
   },
 
@@ -6012,11 +6023,11 @@ const UI = {
       <div class="rota-via"><span>Rota narrativa</span><b>${this.esc(NOME_VIA[d.via]||d.via||'neutro')}</b></div>
       <h3>Capítulos vividos</h3>
       <ol class="rota-trilha">${percorridos.map(c=>`<li${c.num === agora ? ' class="agora"' : ''} data-tom="${this.esc(c.tom || '')}">
-        <span class="rt-num">${this.esc(c.caminho ? numeroDoCapitulo(c) : String(c.num))}</span>
+        <span class="rt-num">${this.esc(c.caminho || c.posJogo ? capituloCurto(c.num) : String(c.num))}</span>
         <span class="rt-tit">${this.esc(c.titulo)}</span><span class="rt-fim">${c.num === agora ? '<span class="rt-agora">agora</span>' : ''}${c.tom ? `<span class="rt-tom">${this.esc(c.tom)}</span>` : ''}</span></li>`).join('')}</ol>
       <h3>Decisões que o mundo registrou</h3>
       ${d.reputacao.historico.length
-        ? `<ul class="rota-decisoes">${d.reputacao.historico.slice(-25).map(h=>`<li class="${h.eixo === 'bom' ? 'bom' : 'ruim'}"><span class="rd-cap">Cap ${h.cap}</span><span class="rd-motivo">${this.esc(h.motivo)}</span><span class="rd-delta">${h.eixo === 'bom' ? 'boa' : 'má'} +${h.delta}</span></li>`).join('')}</ul>`
+        ? `<ul class="rota-decisoes">${d.reputacao.historico.slice(-25).map(h=>`<li class="${h.eixo === 'bom' ? 'bom' : 'ruim'}"><span class="rd-cap">${this.esc(capituloCurto(h.cap))}</span><span class="rd-motivo">${this.esc(h.motivo)}</span><span class="rd-delta">${h.eixo === 'bom' ? 'boa' : 'má'} +${h.delta}</span></li>`).join('')}</ul>`
         : '<p class="nada">Nada ainda.</p>'}
     `, false, 'rota');
   },
@@ -6614,7 +6625,13 @@ const UI = {
 
       <h3>Rivais</h3>
       <div class="linha"><span class="k">Arco</span><span class="v">recalculado a cada encontro, pelo que você fez: a opinião dele, a sua reputação, o lado em que você está e o placar · o arco muda as falas, o time, o nível e a moral</span></div>
-      <div class="linha"><span class="k">Tamanho do time</span><span class="v">pelas suas insígnias: 2 sem nenhuma, 3 com 1–2, 4 com 3–4, 5 com 5, 6 com 6 ou mais · o Ezra tem a conta dele</span></div>
+      <div class="linha"><span class="k">Tamanho do time</span><span class="v">pelas suas insígnias: 2 sem nenhuma, 3 com 1–2, 4 com 3–4, 5 com 5, 6 com 6 ou mais · o Ezra tem a conta dele${(() => {
+        /* a rival das ilhas (tamPorLuta, em RIVAIS_EXTRA) */
+        const R = typeof RIVAIS_EXTRA !== 'undefined' && RIVAIS_EXTRA.find(r => Array.isArray(r.tamPorLuta) && r.tamPorLuta.length > 1);
+        if (!R) return '';
+        const t = R.tamPorLuta;
+        return ` · a rival das ilhas cresce de luta em luta com você: ${t.slice(0, -1).map((n, i) => `${n} ${['na primeira', 'na segunda', 'na terceira', 'na quarta'][i]}`).join(', ')} e ${t[t.length - 1]} daí em diante`;
+      })()}</span></div>
       <div class="linha"><span class="k">Golpes</span><span class="v">os de nível da espécie · da ${INSIGNIAS_PRO_TM_DO_RIVAL}ª insígnia sua em diante, o Rory e o Otto trocam o golpe mais fraco de cada Pokémon por um de TM, quando a espécie aprende (como o do veterano, abaixo)</span></div>
       <div class="linha"><span class="k">Ezra</span><span class="v">Parceiro (opinião 5+) · Rival · Ressentido (opinião −2 ou menos) · Perseguidor (reputação ruim 5, duas mortes, rede de Celadon ou Comissão; time contra o seu, +5 níveis) · Quebrado (perdeu 4+ e foi maltratado, −3 níveis)</span></div>
       <div class="linha"><span class="k">Pico</span><span class="v">o parceiro do Ezra é sorteado no começo, pela mesma tabela do inicial aleatório (1d6 de coluna, 1d6 de linha, da sua cidade), nunca da sua espécie · é o último e o mais forte do time dele, e evolui com o nível</span></div>
@@ -6992,7 +7009,7 @@ const UI = {
       <div class="linha"><span class="k">Prêmio do torneio</span><span class="v">${PREMIO_COPA.map(r => fmtDin(r.dinheiro)).join(', ')} ₽, com itens · perdendo, 20% do prêmio da rodada · a reputação da semifinal e da final vem só na primeira vez · o primeiro título vem com o Troféu das Ilhas, e a primeira final, com o que mais as ilhas tiverem pra te dar</span></div>
       <div class="linha"><span class="k">Depois do arco</span><span class="v">quem veio de Johto e de Hoenn fica ${porExtenso(ESTADIA_DO_ELENCO)} dias depois da final, e na pousada da arena cada um senta com você uma vez por dia e conta mais a cada noite, em três conversas · a sua rival das ilhas, se você tiver uma, fica no cais da Ilha Um, uma vez por semana</span></div>
       <div class="linha"><span class="k">Quem vai embora</span><span class="v">no fim dessa semana o S.S. Anne passa na Ilha Um e leva quem veio de longe · quem te conhece e não tem nada contra você deixa o número no PokéNav, no cais ou, se você não foi, num envelope no balcão da pousada · quem nunca falou com você embarca sem saber quem você é · o que cada um sabe de você vai junto</span></div>
-      <div class="linha"><span class="k">O domingo depois</span><span class="v">com o elenco fora, a chave é de quem atravessa de Kanto na balsa, do Magnus e da sua rival das ilhas, se ela estiver livre · quem vem de Kanto traz o time dele, não uma ficha montada, e por isso leva um Pokémon a mais por rodada (até seis; quem tem time que pesa mais, menos) · o nível, o erro e o prêmio são os mesmos</span></div>
+      <div class="linha"><span class="k">O domingo depois</span><span class="v">com o elenco fora, a chave é de quem atravessa de Kanto na balsa, do Magnus e da sua rival das ilhas, se ela estiver livre · quem vem de Kanto traz o time dele, não uma ficha montada, e por isso leva um Pokémon a mais por rodada (até seis; quem tem time que pesa mais leva menos, e quem cai fácil, mais) · o nível, o erro e o prêmio são os mesmos</span></div>
 
       <h3>O que o crachá muda na história</h3>
       <div class="linha"><span class="k">Opção que só existe com posto</span><span class="v">cais de Vermilion · recepção da Silph · cerca de Fuchsia</span></div>

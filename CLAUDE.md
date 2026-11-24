@@ -2551,8 +2551,8 @@ aconteceu"); o que está em aberto, o fio do capítulo e as tarefas
 moram aqui.
 
 - **A da história** (`Missoes.historia`) é o capítulo, num cartão
-  dourado com a medalha do número (a parte, "II", no caminho e nas
-  ilhas): **em andamento** quando você está dentro dele (cena de
+  dourado com a medalha do número (no caminho, a parte, "II"; nas
+  ilhas, o número delas, do 1): **em andamento** quando você está dentro dele (cena de
   capítulo que não fechou: o título, onde e o fio, a pergunta e as
   pontas numa trilha); **espera** quando o próximo aguarda no lugar
   dele (`Historia.proximoDestino`): a chamada da âncora (`ANCORAS`), o
@@ -3510,10 +3510,19 @@ a 38; o desenho de cada um do elenco está em `docs/SEVII.md`.
   `Sevii.proximo`, que pede o título de Campeão e não abre pra quem
   parou de competir no final (`Depois.ligaFechada`: a Liga fechada pra
   sempre, ou a licença suspensa até ela voltar), a não ser que o arco já
-  tenha começado: um torneio contradiria o final. Na tela, "Ilhas Sevii
-  · III" (`numeroDoCapitulo`). Não chamam cena de linha (a história de
-  Kanto fechou cada linha no epílogo). O número não é posição de
-  jornada: `capNaJornada` dá 33 a 38, que é depois de tudo.
+  tenha começado: um torneio contradiria o final. **A contagem das
+  ilhas é nova e começa do 1** (foi pedido assim: o pós-jogo não faz
+  parte da história principal; pode citar ela, mas conta à parte): na
+  tela é "Ilhas Sevii · Capítulo 1" a "Capítulo 6"
+  (`numeroDoCapitulo`, pelo `numeroDoPosJogo`), "Ilhas · 3" no Diário,
+  na Rota e nas decisões (`capituloCurto`), "capítulo 3 das Ilhas
+  Sevii" no PokéNav e no Sumário (`UI.navCapitulo`), o 3 na medalha
+  das Missões, e o cartão da abertura mostra o capítulo das ilhas em
+  andamento. Por dentro o número continua 33 a 38 (save, flags,
+  `SEVII_CAPS`), e tela nova que mostra número de capítulo passa por
+  essas funções, nunca pelo `cap.num` cru. Não chamam cena de linha (a
+  história de Kanto fechou cada linha no epílogo). O número não é
+  posição de jornada: `capNaJornada` dá 33 a 38, que é depois de tudo.
 - **O relógio anda com o texto** (ver "Relógio e dia marcado"): o
   Anne sai às cinco da tarde (`_c34Zarpa`: quem sobe antes espera a
   bordo), o 35 começa de manhã e nunca no dia em que o Anne encostou
@@ -3523,6 +3532,10 @@ a 38; o desenho de cada um do elenco está em `docs/SEVII.md`.
   armazém do 37 é na madrugada de quarta pra quinta (o papel do farol
   diz QUINTA — 2H), e o livro do Magnus fecha ao meio-dia, antes da
   chave da uma. Cena que diz "de manhã" passa por `Sevii.deManha(h)`.
+- **O Blue oferece o Pidgeot até o cais** (`c33_o_pidgeot`, duas horas
+  de voo, `sai:'vermilion'`): Pallet fica no sudoeste e o Anne sai do
+  outro lado de Kanto, e a pé eram o mapa inteiro e dias de jogo entre
+  o 1 e o 2 das ilhas. Sair pela porta da frente continua valendo.
 - **A balsa abre uma ilha de cada vez** (`Sevii.trava`, lido pela
   `travaDaPassagem`): a fase é quantos capítulos das ilhas fecharam, e
   `ILHA_ABRE_NA_FASE` diz quando cada lugar abre; a primeira travessia
@@ -3602,7 +3615,13 @@ a 38; o desenho de cada um do elenco está em `docs/SEVII.md`.
   nasce no fim do cais do 35 (entregar, ajudar ou deixar ir dá o arco
   dela), te para na saída do 35 e do 36, entra no torneio se estiver
   livre da gangue (`Sevii.noaInscrita`) e fica no cais da Ilha Um uma
-  vez por semana depois do arco. Faixa: `oras-trainer`.
+  vez por semana depois do arco. Faixa: `oras-trainer`. O time dela
+  cresce de luta em luta (`tamPorLuta`, lido no `timeRivalExtra` pelos
+  encontros do registro: quatro, cinco e seis, e seis daí em diante):
+  com seis desde a saída do 35, o jogador ingênuo vencia de 22% a 40%
+  (`sim-rivais.js`, que anda os encontros junto) e um robô perdeu as
+  seis; hoje a primeira fica de 84% a 87% e a segunda de 65% a 77%. A
+  do fim do cais, que é luta de cena, tem quatro (55% a 73%).
 - **O Torneio das Ilhas** (`sevii-torneio.js`, `CopaSevii`) é a
   terceira competição no motor da chave de dezesseis (`CHAVES.sevii`),
   com `Jogo.copaAtual` no save (`d.copaAberta`, na `LutaSalva`). Na
@@ -3612,12 +3631,24 @@ a 38; o desenho de cada um do elenco está em `docs/SEVII.md`.
   domingo (`DIA_DA_COPA`), com inscrição. O nível é o da Conferência
   com `PISO_COPA` e `SUBIDA_COPA`; luta pela `Veteranos.iniciarLuta`
   (`tipo:'copa'`), na quadra. O time de cada rodada são os últimos da
-  ficha (`timeDaFicha`: três nas oitavas, quatro nas quartas e na semi,
-  cinco na final), então **a ordem do `time` é balanceamento**, e foi
-  medida: `node ferramentas/sim-sevii.js` (o jogador ingênuo, o inicial
-  e o mato das ilhas, nos níveis 60, 66 e 72) dá 76% a 78% nas oitavas,
-  de 42% a 54% nas quartas e na semi, de 15% a 22% na final, e 2% a 5%
-  de título; com `--cada` (e `QUEM=`, `SO=cada`), cada um. O nível pesa
+  ficha (`timeDaFicha`: três nas oitavas e quatro nas outras), então
+  **a ordem do `time` é balanceamento**, e foi medida: `node
+  ferramentas/sim-sevii.js` (o jogador ingênuo, o inicial e o mato das
+  ilhas, nos níveis 60, 66 e 72) dá 76% a 80% nas oitavas, de 45% a 54%
+  nas quartas, de 48% a 51% na semi, de 36% a 51% na final, e 6% a 11%
+  de título; com `--cada` (e `QUEM=`, `SO=cada`), cada um. A final já
+  foi de cinco, e o título saía de 2% a 5%: quem chegava lá quase nunca
+  levava. Com quatro, os dois primeiros de cada ficha não entram na
+  chave, e a ordem mudou onde a final destoava: o Kingdra do Soren
+  passou na frente do Aerodactyl (sem ele, o domador de dragões era a
+  final mais fácil, 77%; hoje, 36%). O jogador ingênuo não gasta o
+  Dream Eater em quem está acordado (o Gengar do mato dava ele pra
+  sempre num Normal, e 43 lutas passavam dos 150 turnos); `LONGAS=1` diz quem estava na arena quando
+  uma luta passa disso. `--historia` (com `SO=historia` e `CENA=`) mede
+  as lutas de cena das ilhas: as gangues ficam entre 98% e 100%, o Jory
+  de 63% a 90%, o Kaspar de 53% a 63%, o Dekker de 43% a 55% (com o
+  Primeape eram cinco, e ele vencia uma vez em quatro) e o quintal do
+  Blue, que é escolha, de 25% a 33%. O nível pesa
   pouco (o `ajuste` de cada ficha mexe uns pontos), e quem destoava
   acertou pela ordem: o Ninjask da Etta na rodada de três derrubava as
   oitavas pra 38%; quando os times viraram variados, o Feraligatr e o
@@ -3657,9 +3688,11 @@ a 38; o desenho de cada um do elenco está em `docs/SEVII.md`.
   falas daqui, montados por `quemNaCopa`), do Magnus e da Noa livre.
   Sem a ficha montada do elenco, eles levam um Pokémon a mais por
   rodada (`TAM_VIAJANTE`, e `mais` de cada um), e foi medido no
-  `sim-sevii.js` com `PARTIU=1`: 74% a 77% nas oitavas, 47% a 53% nas
-  quartas, 42% a 52% na semi, 26% a 36% na final, 4% a 8% de título
-  (o elenco fica em 72-80, 39-56, 38-47, 19-25 e 2-5). Rafe, Jett e
+  `sim-sevii.js` com `PARTIU=1`: 74% a 76% nas oitavas, 49% a 58% nas
+  quartas, 41% a 54% na semi, 42% a 56% na final, 6% a 13% de título (o
+  elenco fica em 76-80, 45-54, 48-51, 36-51 e 6-11). Na final eles
+  também levam um a menos que antes, menos a Odette e o Dax, que com
+  cinco perdiam a final de 67% a 77% das vezes. Rafe, Jett e
   Kian ficaram fora: o time deles cai fácil mesmo com seis. O ovo do
   Florian vem na primeira final a que você chega, como ele disse no
   jantar do Anne (`CopaSevii.ovoDoFlorian`, quando a semifinal cai), e

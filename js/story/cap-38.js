@@ -1,5 +1,5 @@
 /* ============================================================
-   ILHAS SEVII · VI — O TORNEIO DAS ILHAS (capítulo 38, pós-jogo)
+   ILHAS SEVII · CAPÍTULO 6 — O TORNEIO DAS ILHAS (pós-jogo; por dentro, o 38)
    Ilha Sete, a arena de pedra no alto do morro. Quem chega pro torneio
    chega do jeito que os outros capítulos deixaram: com ou sem o que a
    gangue levou, com ou sem o patrocinador, a Noa inscrita ou na grade.

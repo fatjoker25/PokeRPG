@@ -1,5 +1,5 @@
 /* ============================================================
-   ILHAS SEVII · II — O NAVIO (capítulo 34, pós-jogo)
+   ILHAS SEVII · CAPÍTULO 2 — O NAVIO (pós-jogo; por dentro, o 34)
    O cais três de Vermilion, o S.S. Anne de novo, uma noite de mar com
    o pessoal de Johto que veio de Olivine pro torneio, e a chegada à
    Ilha Um junto com o navio de Hoenn — e, no meio do povo do cais, o

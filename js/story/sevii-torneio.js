@@ -23,7 +23,11 @@
    é o time montado, então quem mexe na curva é o tamanho do time */
 const PISO_COPA = [56, 58, 60, 62];          // o nível mínimo do ás, por rodada
 const SUBIDA_COPA = [-6, -5, -4, -3];        // em cima dos seus três mais fortes
-const TAM_COPA = [3, 4, 4, 5];               // o time de cada um, por rodada: os do fim da ficha
+/* a final era com cinco, e o título saía em 2% a 5% das vezes (a final
+   em 15% a 22%): com quatro, a final fica em 36% a 51% e o título em 6% a
+   11%, e as rodadas de antes não mudam. Quem atravessa de Kanto também
+   leva um a menos na final (a Odette e o Dax, que caíam fácil, não) */
+const TAM_COPA = [3, 4, 4, 4];               // o time de cada um, por rodada: os do fim da ficha
 const ERRO_IA_COPA = [14, 12, 10, 8];        // a escolha errada de golpe, por rodada
 /* quem atravessa de Kanto traz o time das linhas (liga.js), sem a
    ficha montada do elenco: o Pokémon a mais por rodada é o que segura
@@ -68,11 +72,11 @@ const VIAJANTES_DA_COPA = {
   freya:{torneio:'"Lá em casa é gelo. Aqui é pedra quente e sol. Vim ver se o meu time derrete."',
     vence:'"Não derreteu."', perde:'"Derreteu um pouco. Volto no inverno."', mais:[0, 0, 0, 0]},
   odette:{torneio:'"Trouxe chapéu, sombrinha e os meus melhores. Os meus melhores enjoaram na balsa. Eu não."',
-    vence:'"Que tarde agradável."', perde:'"Que tarde agradável, mesmo assim. Quase."', mais:[2, 2, 2, 1]},
+    vence:'"Que tarde agradável."', perde:'"Que tarde agradável, mesmo assim. Quase."', mais:[2, 2, 2, 2]},
   willa:{torneio:'"Folga de três dias, e eu passo dois aqui. O meu chefe acha que eu fui pra casa da minha mãe."',
     vence:'"Valeu a folga."', perde:'"Ainda tem um dia de folga. Vou passar na praia."'},
   dax:{torneio:'"O monte da Ilha Um esquenta a sola do sapato. Me senti em casa."',
-    vence:'"Isso aquece mais que forno."', perde:'"Volto pro forno. Lá pelo menos eu sei mexer no fogo."', mais:[2, 2, 2, 1]},
+    vence:'"Isso aquece mais que forno."', perde:'"Volto pro forno. Lá pelo menos eu sei mexer no fogo."', mais:[2, 2, 2, 2]},
   zara:{torneio:'"Eu danço no cais pra quem chega de barco. Dessa vez quem chegou de barco fui eu."',
     vence:'"Agora eu danço pra mim."', perde:'"Dança de despedida, então. Você mereceu."'},
   remy:{torneio:'"Fechei a cozinha no domingo pra vir. Se eu cair cedo, ainda pego a balsa e abro pro jantar."',

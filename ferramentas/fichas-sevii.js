@@ -36,7 +36,7 @@ const data = ([dia, mes]) => `${dia} de ${['janeiro', 'fevereiro', 'março', 'ab
 const L = [];
 L.push('# O elenco das Ilhas Sevii');
 L.push('');
-L.push('As fichas de quem vem pro Torneio das Ilhas, no pós-jogo (capítulos 33 a 38). Gerado por');
+L.push('As fichas de quem vem pro Torneio das Ilhas, no pós-jogo (os capítulos 1 a 6 das Ilhas Sevii; por dentro, 33 a 38). Gerado por');
 L.push('`node ferramentas/fichas-sevii.js` a partir de `js/story/sevii-elenco.js` — mudou lá, roda de novo.');
 L.push('Cada pessoa tem a ficha no molde da inscrição de quem joga (traços, objetivo, o status forte, gostos,');
 L.push('aparência) e um rosto só dela, em `sprites_nds/npcs/trainers/`. O time vai do mais fraco ao ás, com');

@@ -986,7 +986,13 @@ function timeRivalExtra(R){
      e com seis já são seis: com cinco contra os seis que o jogador tem
      nessa altura, todo rival ficava mole justo na sexta insígnia */
   const ins = numInsignias();
-  const qtd = Math.max(2, Math.min(6, ins >= 6 ? 6 : 2 + Math.round(ins * 0.5)));
+  let qtd = Math.max(2, Math.min(6, ins >= 6 ? 6 : 2 + Math.round(ins * 0.5)));
+  /* quem cresce a cada luta com você (a Noa, que você acabou de ver
+     com quatro no cais): o time de cada encontro, e o último dali em diante */
+  if (Array.isArray(R.tamPorLuta) && R.tamPorLuta.length){
+    const reg = registroRival(R.id), k = reg ? reg.encontros || 0 : 0;
+    qtd = Math.max(2, Math.min(qtd, R.tamPorLuta[Math.min(k, R.tamPorLuta.length - 1)]));
+  }
   const time = [];
   /* a linha evolutiva acompanha o nível: nada de Kingler Nv28
      num rival cujo time inteiro está no Nv9. E ninguém leva dois

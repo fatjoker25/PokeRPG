@@ -1,5 +1,5 @@
 /* ============================================================
-   ILHAS SEVII · I — A PASSAGEM (capítulo 33, pós-jogo)
+   ILHAS SEVII · CAPÍTULO 1 — A PASSAGEM (pós-jogo; por dentro, o 33)
    Depois do fim, com o título de Campeão: o Blue em Pallet, na casa
    onde cresceu, com dois anos de convite do Torneio das Ilhas numa
    pilha amarrada com elástico. Ele entrega a passagem. O jeito dele
@@ -224,6 +224,7 @@ c33_a_passagem:{
     },
     fala('Blue', 'E o senhor da carta. Magnus Holm. Ele perguntou de mim no primeiro convite, e eu nunca respondi.'),
     fala('Blue', 'Se ele perguntar de novo, fala que eu li. Todos. Hoje.', 'baixo'),
+    fala('Blue', 'E o Anne sai de Vermilion, do outro lado de Kanto. Se você quiser, o Pidgeot te deixa no cais três. Ele anda precisando voar.', null, 'Ele diz isso sem olhar pra você, como quem oferece uma coisa à toa.'),
     'Na porta, ele para com a mão no batente.',
     d => d.flags.sv_blue_convidado
       ? fala('Blue', 'A arquibancada de lá é de pedra. Pedra é ruim pra sentar o dia inteiro.', null, 'Ele diz isso olhando pra rua, como quem calcula uma coisa.')
@@ -233,8 +234,26 @@ c33_a_passagem:{
       npc:{nome:'Blue', opiniao:1, memoria:'Te entregou a passagem do S.S. Anne pro Torneio das Ilhas, que chegou com o seu nome.'},
       registrar:'O Blue entregou a passagem do S.S. Anne pras Ilhas Sevii, cabine 14, saindo do cais três de Vermilion.'},
   escolhas:[
-    {texto:'Sair pela porta da frente.', vai:'c33_fim'}
+    {texto:'Aceitar o Pidgeot até o cais três de Vermilion.', vai:'c33_o_pidgeot'},
+    {texto:'Sair pela porta da frente, a pé.', vai:'c33_fim'}
   ]
+},
+
+/* a carona: de Pallet ao cais três, que fica do outro lado de Kanto. Sem
+   ela, o caminho até o Anne é a pé, rota por rota */
+c33_o_pidgeot:{
+  texto:[
+    'No quintal, o Blue assobia uma vez, curto, e o Pidgeot desce do telhado da varanda como se esperasse o assobio desde cedo.',
+    'Ele ajeita a sua mochila nas costas do Pokémon, puxa uma alça, confere outra e bate duas vezes no pescoço dele.',
+    fala('Blue', 'Cais três. E volta direto pra casa, ouviu? Nada de ficar rodando o farol de Vermilion.', null, 'Ele fala com o Pidgeot, não com você.'),
+    'Pallet fica pequena embaixo em dois minutos. A Rota 1 vira um risco, Viridian uma mancha de telhado, e o mar, quando aparece, já é o de Vermilion.',
+    'O Pidgeot pousa no fim do cais três, do lado de um navio branco com uma faixa de lona no costado, e vai embora antes de você agradecer.'
+  ],
+  ef:{flag:'sv_foi_de_pidgeot', executar:() => { Relogio.avancar(2); },
+      npc:{nome:'Blue', opiniao:1, memoria:'Te emprestou o Pidgeot pra chegar ao cais três de Vermilion.'},
+      registrar:'O Pidgeot do Blue te levou de Pallet até o cais três de Vermilion.'},
+  fim:true, sai:'vermilion',
+  resumo:'A Passagem: dois anos de convite numa pilha de elástico, e o deste ano com o seu nome. O Pidgeot do Blue te deixou no cais três de Vermilion.'
 },
 
 c33_fim:{

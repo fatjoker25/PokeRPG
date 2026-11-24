@@ -1,5 +1,5 @@
 /* ============================================================
-   ILHAS SEVII · IV — OS FARÓIS (capítulo 36, pós-jogo)
+   ILHAS SEVII · CAPÍTULO 4 — OS FARÓIS (pós-jogo; por dentro, o 36)
    Ilha Três: a gangue das motos, que empresta óleo fiado e toma barco,
    compra da Maré e manda o que vale pro armazém da Ilha Cinco. A turma
    do Brody perdeu os doze Pokémon de trabalho na noite em que chegou;

@@ -1,6 +1,6 @@
 # O elenco das Ilhas Sevii
 
-As fichas de quem vem pro Torneio das Ilhas, no pós-jogo (capítulos 33 a 38). Gerado por
+As fichas de quem vem pro Torneio das Ilhas, no pós-jogo (os capítulos 1 a 6 das Ilhas Sevii; por dentro, 33 a 38). Gerado por
 `node ferramentas/fichas-sevii.js` a partir de `js/story/sevii-elenco.js` — mudou lá, roda de novo.
 Cada pessoa tem a ficha no molde da inscrição de quem joga (traços, objetivo, o status forte, gostos,
 aparência) e um rosto só dela, em `sprites_nds/npcs/trainers/`. O time vai do mais fraco ao ás, com
@@ -51,8 +51,8 @@ golpes, natureza e o item que o ás segura. O que fica pra depois (o gancho) é 
 | Pokémon | Tipo | Região | Golpes | Natureza | Item |
 |---|---|---|---|---|---|
 | Dragonair | Dragão | Kanto | Dragon Breath, Thunder Wave, Surf, Ice Beam | Modest | — |
-| Kingdra | Água/Dragão | Johto | Surf, Dragon Breath, Ice Beam, Agility | Modest | — |
 | Aerodactyl | Pedra/Voador | Kanto | Rock Slide, Earthquake, Ancient Power, Fly | Jolly | — |
+| Kingdra | Água/Dragão | Johto | Surf, Dragon Breath, Ice Beam, Agility | Modest | — |
 | Flygon | Terrestre/Dragão | Hoenn | Earthquake, Dragon Claw, Rock Slide, Fire Blast | Jolly | — |
 | Dragonite | Dragão/Voador | Kanto | Outrage, Fly, Thunder Wave, Fire Blast | Adamant | — |
 | Salamence | Dragão/Voador | Hoenn | Dragon Claw, Crunch, Fly, Flamethrower | Naive | Dragon Scale |
@@ -636,7 +636,7 @@ menos a Noa, que tem o Sharpedo que veio grudado num casco) e acompanha o nível
 | <img src="../sprites_nds/npcs/trainers/sevii_jory.png" width="48"> | Jory | Raticate, Golbat, Primeape, Granbull, Kingler |
 | <img src="../sprites_nds/npcs/trainers/sevii_farol.png" width="48"> | um dos Faróis | Weezing, Rapidash, Muk |
 | <img src="../sprites_nds/npcs/trainers/sevii_kaspar.png" width="48"> | Kaspar | Arbok, Weezing, Muk, Magmar, Houndoom, Ursaring |
-| <img src="../sprites_nds/npcs/trainers/sevii_dekker.png" width="48"> | Dekker | Primeape, Hitmontop, Hitmonchan, Golem, Machamp |
+| <img src="../sprites_nds/npcs/trainers/sevii_dekker.png" width="48"> | Dekker | Hitmontop, Hitmonchan, Golem, Machamp |
 
 E quem não luta: o **Sargento Lund**, a Guarda das Ilhas inteira (`sevii_lund.png`), e o **Sr. Conrad Penrose**,
 dono da fábrica de conserva fechada e patrocinador do torneio (`sevii_penrose.png`). Quem compra dele é a Casa Aster,
